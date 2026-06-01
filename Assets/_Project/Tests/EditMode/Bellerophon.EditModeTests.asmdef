@@ -1,0 +1,22 @@
+{
+  "name": "Bellerophon.EditModeTests",
+  "rootNamespace": "Bellerophon.Tests.EditMode",
+  "references": [
+    "Bellerophon.Runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "noEngineReferences": false
+}
+

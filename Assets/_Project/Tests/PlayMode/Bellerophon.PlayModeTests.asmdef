@@ -1,0 +1,20 @@
+{
+  "name": "Bellerophon.PlayModeTests",
+  "rootNamespace": "Bellerophon.Tests.PlayMode",
+  "references": [
+    "Bellerophon.Runtime"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "noEngineReferences": false
+}
+

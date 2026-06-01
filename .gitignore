@@ -1,0 +1,53 @@
+# Unity generated folders
+/Library/
+/Temp/
+/Obj/
+/Logs/
+/UserSettings/
+/MemoryCaptures/
+
+# Unity template tutorial assets
+/Assets/Readme.asset
+/Assets/Readme.asset.meta
+/Assets/TutorialInfo/
+/Assets/TutorialInfo.meta
+
+# Build and test outputs
+/Builds/
+/TestResults/
+/Coverage/
+/Recordings/
+/Screenshots/
+
+# Local planning drafts
+/docs/IMPLEMENTATION_PLAN.md
+/docs/SYSTEMS.md
+/docs/ROADMAP.md
+
+# Unity generated project files
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Rider / Visual Studio / VS Code
+/.idea/
+/.vs/
+/.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local logs
+unity-create-project.log
+*.log
