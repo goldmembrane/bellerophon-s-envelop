@@ -2,7 +2,10 @@
   "name": "Bellerophon.Editor",
   "rootNamespace": "Bellerophon.Editor",
   "references": [
-    "Bellerophon.Runtime"
+    "Bellerophon.Runtime",
+    "Unity.InputSystem",
+    "UnityEditor.TestRunner",
+    "UnityEngine.UI"
   ],
   "includePlatforms": [
     "Editor"
@@ -16,4 +19,3 @@
   "versionDefines": [],
   "noEngineReferences": false
 }
-

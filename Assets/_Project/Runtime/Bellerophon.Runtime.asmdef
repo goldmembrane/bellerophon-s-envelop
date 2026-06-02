@@ -1,7 +1,10 @@
 {
   "name": "Bellerophon.Runtime",
   "rootNamespace": "Bellerophon",
-  "references": [],
+  "references": [
+    "Unity.InputSystem",
+    "UnityEngine.UI"
+  ],
   "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
@@ -12,4 +15,3 @@
   "versionDefines": [],
   "noEngineReferences": false
 }
-

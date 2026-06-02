@@ -5,8 +5,40 @@ $unity = & (Join-Path $PSScriptRoot "unity-path.ps1")
 $resultsPath = Join-Path $projectRoot "TestResults\playmode-results.xml"
 $logPath = Join-Path $projectRoot "Logs\PlayModeTests.log"
 
-& (Join-Path $PSScriptRoot "Wait-UnityProjectReady.ps1")
 New-Item -ItemType Directory -Force -Path (Split-Path $resultsPath), (Split-Path $logPath) | Out-Null
+Remove-Item -LiteralPath $resultsPath -Force -ErrorAction SilentlyContinue
+Remove-Item -LiteralPath $logPath -Force -ErrorAction SilentlyContinue
+
+& (Join-Path $PSScriptRoot "Invoke-UnityEditorBridge.ps1") -Command "PlayModeTests" -LogPath $logPath -ResultsPath $resultsPath -TimeoutSeconds 90
+$bridgeExitCode = $LASTEXITCODE
+
+if ($bridgeExitCode -eq 0) {
+  $log = Get-Content -LiteralPath $logPath -Raw
+  if ($log -match "Scripts have compiler errors|error CS\d+|Unity editor bridge failed") {
+    Write-Error "PlayMode test log contains errors. See $logPath"
+    exit 1
+  }
+
+  if (-not (Test-Path -LiteralPath $resultsPath)) {
+    Write-Error "PlayMode test result file was not created. See $logPath"
+    exit 1
+  }
+
+  $results = [xml](Get-Content -LiteralPath $resultsPath -Raw)
+  $testRun = $results.'test-run'
+  if ($testRun.result -ne "Passed" -or [int]$testRun.failed -ne 0) {
+    Write-Error "PlayMode tests failed. See $resultsPath"
+    exit 1
+  }
+
+  exit 0
+}
+
+if ($bridgeExitCode -ne 2) {
+  exit $bridgeExitCode
+}
+
+& (Join-Path $PSScriptRoot "Wait-UnityProjectReady.ps1")
 
 $arguments = @(
   "-batchmode",

@@ -4,8 +4,31 @@ $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $unity = & (Join-Path $PSScriptRoot "unity-path.ps1")
 $logPath = Join-Path $projectRoot "Logs\HarnessValidation.log"
 
-& (Join-Path $PSScriptRoot "Wait-UnityProjectReady.ps1")
 New-Item -ItemType Directory -Force -Path (Split-Path $logPath) | Out-Null
+
+& (Join-Path $PSScriptRoot "Invoke-UnityEditorBridge.ps1") -Command "HarnessValidation" -LogPath $logPath -TimeoutSeconds 180
+$bridgeExitCode = $LASTEXITCODE
+
+if ($bridgeExitCode -eq 0) {
+  $log = Get-Content -LiteralPath $logPath -Raw
+  if ($log -notmatch "Harness validation passed\.") {
+    Write-Error "Harness validation success marker was not found. See $logPath"
+    exit 1
+  }
+
+  if ($log -match "Scripts have compiler errors|error CS\d+|Harness validation failed") {
+    Write-Error "Harness validation log contains errors. See $logPath"
+    exit 1
+  }
+
+  exit 0
+}
+
+if ($bridgeExitCode -ne 2) {
+  exit $bridgeExitCode
+}
+
+& (Join-Path $PSScriptRoot "Wait-UnityProjectReady.ps1")
 
 $arguments = @(
   "-batchmode",

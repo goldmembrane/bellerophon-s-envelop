@@ -5,8 +5,38 @@ $unity = & (Join-Path $PSScriptRoot "unity-path.ps1")
 $outputPath = Join-Path $projectRoot "Builds\WindowsDev\Bellerophon.exe"
 $logPath = Join-Path $projectRoot "Logs\Build-WindowsDev.log"
 
-& (Join-Path $PSScriptRoot "Wait-UnityProjectReady.ps1")
 New-Item -ItemType Directory -Force -Path (Split-Path $outputPath), (Split-Path $logPath) | Out-Null
+Remove-Item -LiteralPath $outputPath -Force -ErrorAction SilentlyContinue
+Remove-Item -LiteralPath $logPath -Force -ErrorAction SilentlyContinue
+
+& (Join-Path $PSScriptRoot "Invoke-UnityEditorBridge.ps1") -Command "WindowsDevBuild" -LogPath $logPath -OutputPath $outputPath -DevelopmentBuild -TimeoutSeconds 1200
+$bridgeExitCode = $LASTEXITCODE
+
+if ($bridgeExitCode -eq 0) {
+  $log = Get-Content -LiteralPath $logPath -Raw
+  if ($log -match "Scripts have compiler errors|error CS\d+|Build failed with result|Unity editor bridge failed") {
+    Write-Error "Windows dev build log contains errors. See $logPath"
+    exit 1
+  }
+
+  if ($log -notmatch "Build Finished, Result: Success") {
+    Write-Error "Windows dev build success marker was not found. See $logPath"
+    exit 1
+  }
+
+  if (-not (Test-Path -LiteralPath $outputPath)) {
+    Write-Error "Windows dev build output was not created at $outputPath. See $logPath"
+    exit 1
+  }
+
+  exit 0
+}
+
+if ($bridgeExitCode -ne 2) {
+  exit $bridgeExitCode
+}
+
+& (Join-Path $PSScriptRoot "Wait-UnityProjectReady.ps1")
 
 $arguments = @(
   "-batchmode",

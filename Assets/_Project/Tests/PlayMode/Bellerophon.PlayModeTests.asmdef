@@ -2,7 +2,9 @@
   "name": "Bellerophon.PlayModeTests",
   "rootNamespace": "Bellerophon.Tests.PlayMode",
   "references": [
-    "Bellerophon.Runtime"
+    "Bellerophon.Runtime",
+    "Unity.InputSystem",
+    "Unity.InputSystem.TestFramework"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
@@ -17,4 +19,3 @@
   ],
   "noEngineReferences": false
 }
-

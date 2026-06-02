@@ -12,8 +12,12 @@ namespace Bellerophon.Editor.Build
         public static void BuildWindows64()
         {
             var outputPath = GetArgument("-buildOutputPath") ?? "Builds/WindowsDev/Bellerophon.exe";
-            outputPath = Path.GetFullPath(outputPath);
+            BuildWindows64(outputPath, HasArgument("-developmentBuild"));
+        }
 
+        public static void BuildWindows64(string outputPath, bool developmentBuild)
+        {
+            outputPath = Path.GetFullPath(outputPath);
             var scenes = EditorBuildSettings.scenes
                 .Where(scene => scene.enabled)
                 .Select(scene => scene.path)
@@ -33,7 +37,7 @@ namespace Bellerophon.Editor.Build
             Directory.CreateDirectory(outputDirectory);
 
             var options = BuildOptions.None;
-            if (HasArgument("-developmentBuild"))
+            if (developmentBuild)
             {
                 options |= BuildOptions.Development | BuildOptions.AllowDebugging;
             }
