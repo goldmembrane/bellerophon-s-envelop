@@ -71,8 +71,10 @@ namespace Bellerophon.Core.Session
             ContractType contractType,
             ContractDifficulty difficulty,
             int durationSeconds,
+            int rewardCredits,
             CargoState cargo,
-            bool isTutorial)
+            bool isTutorial,
+            int requiredCargoHoldScore = 0)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -94,14 +96,26 @@ namespace Bellerophon.Core.Session
                 throw new ArgumentOutOfRangeException(nameof(durationSeconds), "Contract duration must be positive.");
             }
 
+            if (rewardCredits < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(rewardCredits), "Contract reward cannot be negative.");
+            }
+
+            if (requiredCargoHoldScore < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(requiredCargoHoldScore), "Required cargo hold score cannot be negative.");
+            }
+
             Id = id;
             DisplayName = displayName;
             TransportTargetName = transportTargetName;
             ContractType = contractType;
             Difficulty = difficulty;
             DurationSeconds = durationSeconds;
+            RewardCredits = rewardCredits;
             Cargo = cargo;
             IsTutorial = isTutorial;
+            RequiredCargoHoldScore = requiredCargoHoldScore;
         }
 
         public string Id { get; }
@@ -116,9 +130,13 @@ namespace Bellerophon.Core.Session
 
         public int DurationSeconds { get; }
 
+        public int RewardCredits { get; }
+
         public CargoState Cargo { get; }
 
         public bool IsTutorial { get; }
+
+        public int RequiredCargoHoldScore { get; }
 
         public static TransportContractDefinition CreateTutorial()
         {
@@ -129,8 +147,48 @@ namespace Bellerophon.Core.Session
                 ContractType.Association,
                 ContractDifficulty.Intro,
                 60,
+                1000,
                 new CargoState(CargoGrade.Common, 50, 100, 1f, false),
                 true);
+        }
+
+        public static TransportContractDefinition CreateAssociationFollowUp()
+        {
+            return new TransportContractDefinition(
+                "association-local-001",
+                "Association Local Freight",
+                "Cargo Hold Center Cargo",
+                ContractType.Association,
+                ContractDifficulty.VeryEasy,
+                75,
+                900,
+                new CargoState(CargoGrade.Common, 45, 180, 1f, false),
+                false,
+                40);
+        }
+
+        public static TransportContractDefinition CreatePrivateFollowUp()
+        {
+            return new TransportContractDefinition(
+                "private-sample-001",
+                "Private Volatile Sample",
+                "Cargo Hold Center Cargo",
+                ContractType.Private,
+                ContractDifficulty.Normal,
+                90,
+                1800,
+                new CargoState(CargoGrade.Rare, 60, 420, 1f, false),
+                false,
+                65);
+        }
+
+        public static TransportContractDefinition[] CreatePostTutorialContracts()
+        {
+            return new[]
+            {
+                CreateAssociationFollowUp(),
+                CreatePrivateFollowUp()
+            };
         }
     }
 
@@ -184,6 +242,27 @@ namespace Bellerophon.Core.Session
                 NewGameStartFlowPhase.TutorialContractAccepted,
                 Session.StartTransport(tutorial),
                 availableContracts);
+        }
+
+        public NewGameStartFlowState WithSession(GameSessionState session)
+        {
+            return new NewGameStartFlowState(
+                Phase,
+                session,
+                availableContracts);
+        }
+
+        public NewGameStartFlowState PreparePostTransportContracts()
+        {
+            if (Session.CompletedTransportCount <= 0)
+            {
+                return this;
+            }
+
+            return new NewGameStartFlowState(
+                Phase,
+                Session,
+                TransportContractDefinition.CreatePostTutorialContracts());
         }
 
         public TransportContractDefinition GetAvailableContract(int index)

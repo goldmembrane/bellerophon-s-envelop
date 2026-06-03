@@ -106,7 +106,13 @@ namespace Bellerophon.Core.Session
         public const float CargoHoldBlockedThreshold = 0.25f;
         public const float CargoHoldCriticalCargoLossPercent = 0.2f;
         public const float CargoHoldDestroyedCargoDamagePerSecond = 0.001f;
+        public const float AutoPilotOfflineThreshold = DamagedThreshold;
         public const int TotalLossClaimCost = 5000;
+        public const int ShipLossInsurancePayout90 = 500;
+        public const int ShipLossInsurancePayout80 = 1000;
+        public const int ShipLossInsurancePayout70 = 1400;
+        public const int ShipLossInsurancePayout60 = 1450;
+        public const int ShipLossInsurancePayout50 = 1500;
 
         private static readonly ShipRoomId[] RepairRoomOrder =
         {
@@ -173,6 +179,58 @@ namespace Bellerophon.Core.Session
             return ship.IsTotalLoss ? TotalLossClaimCost : 0;
         }
 
+        public static ShipState RepairAllRooms(ShipState ship)
+        {
+            if (ship == null)
+            {
+                throw new ArgumentNullException(nameof(ship));
+            }
+
+            foreach (var roomId in RepairRoomOrder)
+            {
+                var room = ship.GetRoom(roomId);
+                ship = ship.WithRoom(roomId, new ShipRoomState(room.MaxDurability, room.MaxDurability));
+            }
+
+            return ship.WithRunState(ShipRunState.Docked);
+        }
+
+        public static int CalculateShipLossInsurancePayout(ShipState ship)
+        {
+            if (ship == null)
+            {
+                throw new ArgumentNullException(nameof(ship));
+            }
+
+            var averageDurability = ship.AverageDurabilityPercent;
+            if (averageDurability >= 1f || averageDurability < DamagedThreshold)
+            {
+                return 0;
+            }
+
+            if (averageDurability >= 0.9f)
+            {
+                return ShipLossInsurancePayout90;
+            }
+
+            if (averageDurability >= 0.8f)
+            {
+                return ShipLossInsurancePayout80;
+            }
+
+            if (averageDurability >= 0.7f)
+            {
+                return ShipLossInsurancePayout70;
+            }
+
+            if (averageDurability >= 0.6f)
+            {
+                return ShipLossInsurancePayout60;
+            }
+
+            return ShipLossInsurancePayout50;
+        }
+
         public static float CalculateCargoHoldScore(ShipState ship)
         {
             if (ship == null)
@@ -232,6 +290,33 @@ namespace Bellerophon.Core.Session
                 cargoHold.DurabilityPercent <= CargoHoldBlockedThreshold,
                 engineRoom.CurrentDurability <= 0,
                 controlRoom.CurrentDurability <= 0);
+        }
+
+        public static bool CanUseAutoPilot(ShipState ship)
+        {
+            if (ship == null)
+            {
+                throw new ArgumentNullException(nameof(ship));
+            }
+
+            return ship.GetRoom(ShipRoomId.Cockpit).DurabilityPercent > AutoPilotOfflineThreshold;
+        }
+
+        public static int CalculateEffectiveTransportDurationSeconds(int baseDurationSeconds, ShipState ship)
+        {
+            if (baseDurationSeconds <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(baseDurationSeconds), "Transport duration must be positive.");
+            }
+
+            if (ship == null)
+            {
+                throw new ArgumentNullException(nameof(ship));
+            }
+
+            return ship.GetRoom(ShipRoomId.Cockpit).CurrentDurability <= 0
+                ? baseDurationSeconds * 2
+                : baseDurationSeconds;
         }
     }
 }

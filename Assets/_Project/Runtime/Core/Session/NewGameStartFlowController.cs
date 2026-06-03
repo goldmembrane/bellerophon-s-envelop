@@ -43,6 +43,8 @@ namespace Bellerophon.Core.Session
 
         public FirstPersonPlayerInput PlayerInput => playerInput;
 
+        public int AvailableContractCount => FlowState.AvailableContractCount;
+
         public void Configure(
             Text titleLabel,
             Text bodyLabel,
@@ -74,6 +76,7 @@ namespace Bellerophon.Core.Session
             }
 
             flowState = flowState.AcceptAssociationContract();
+            ApplySessionEquipmentToShipDevices();
             Refresh();
         }
 
@@ -89,6 +92,26 @@ namespace Bellerophon.Core.Session
             ApplyActiveCargoToShipDevices();
             Refresh();
             CloseStartUi();
+        }
+
+        public void ApplySessionState(GameSessionState session)
+        {
+            EnsureState();
+            flowState = flowState.WithSession(session);
+            ApplySessionEquipmentToShipDevices();
+            Refresh();
+        }
+
+        public void PreparePostTransportContracts()
+        {
+            EnsureState();
+            flowState = flowState.PreparePostTransportContracts();
+            Refresh();
+        }
+
+        public TransportContractDefinition GetAvailableContract(int index)
+        {
+            return FlowState.GetAvailableContract(index);
         }
 
         private void Awake()
@@ -110,6 +133,7 @@ namespace Bellerophon.Core.Session
         private void Update()
         {
             ApplyCursorMode();
+            TickSeedIntruderOccurrence();
         }
 
         private void OnDisable()
@@ -247,9 +271,9 @@ namespace Bellerophon.Core.Session
             return "Association logo sign: present\n"
                    + "Credits: " + session.Wallet.Credits + "\n"
                    + "Ship: Default Cargo Ship\n"
-                   + "Suit: Basic Protective Suit\n"
-                   + "Weapon: Stick x" + session.StartingLoadout.StickCount + "\n"
-                   + "Available: " + contract.DisplayName + " (" + contract.DurationSeconds + "s)";
+                   + "Suit: " + (session.Equipment.HasBasicProtectiveSuit ? "Basic Protective Suit" : "None") + "\n"
+                   + "Weapon: " + EquipmentRules.FormatItemName(session.Equipment.GetHandSlot(0).ItemKind) + " x" + session.StartingLoadout.StickCount + "\n"
+                   + "Available: " + contract.DisplayName + " (" + contract.DurationSeconds + "s, $" + contract.RewardCredits + ")";
         }
 
         private string BuildAcceptedContractText()
@@ -264,6 +288,7 @@ namespace Bellerophon.Core.Session
             var cargo = session.ActiveCargo.Value;
             return "Contract: " + contract.DisplayName + "\n"
                    + "Duration: " + contract.DurationSeconds + "s\n"
+                   + "Reward: $" + contract.RewardCredits + "\n"
                    + "Target: " + contract.TransportTargetName + "\n"
                    + "Cargo durability: " + Mathf.RoundToInt(cargo.DurabilityPercent * 100f) + "%\n"
                    + "Session: " + session.Phase;
@@ -310,7 +335,33 @@ namespace Bellerophon.Core.Session
                 return;
             }
 
+            shipDeviceState.SetShipState(flowState.Session.Ship);
             shipDeviceState.SetCargoState(flowState.Session.ActiveCargo.Value);
+            shipDeviceState.SetEquipmentState(flowState.Session.Equipment);
+            if (flowState.Session.ActiveTransportContract.HasValue)
+            {
+                shipDeviceState.StartTransportRun(flowState.Session.ActiveTransportContract.Value.DurationSeconds);
+            }
+        }
+
+        private void ApplySessionEquipmentToShipDevices()
+        {
+            if (shipDeviceState == null)
+            {
+                return;
+            }
+
+            shipDeviceState.SetEquipmentState(flowState.Session.Equipment);
+        }
+
+        private void TickSeedIntruderOccurrence()
+        {
+            if (shipDeviceState == null || flowState == null)
+            {
+                return;
+            }
+
+            shipDeviceState.TickSeedIntruderOccurrenceForCurrentRun(Time.deltaTime, flowState.Session);
         }
 
         private void CloseStartUi()

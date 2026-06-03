@@ -148,6 +148,7 @@ namespace Bellerophon.Editor.Validation
             label.alignment = TextAnchor.LowerRight;
             label.color = new Color(0.86f, 0.94f, 0.9f, 1f);
             label.supportRichText = true;
+            label.raycastTarget = false;
             label.text = string.Empty;
             label.enabled = false;
             return label;

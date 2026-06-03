@@ -15,30 +15,40 @@ namespace Bellerophon.Core.Player
         private InputAction useAction;
         private InputAction aimAction;
         private InputAction dropAction;
+        private InputAction reloadAction;
         private CursorLockMode previousCursorLockMode;
         private bool previousCursorVisible;
         private bool cursorStateCaptured;
         private bool cursorLockSuppressed;
+        private bool gameplayInputSuppressed;
 
         public event Action InteractPressed;
 
         public event Action UsePressed;
 
+        public event Action AimPressed;
+
         public event Action DropPressed;
+
+        public event Action ReloadPressed;
 
         public bool CursorLockSuppressed => cursorLockSuppressed;
 
-        public Vector2 Move => cursorLockSuppressed ? Vector2.zero : moveAction?.ReadValue<Vector2>() ?? Vector2.zero;
+        public bool GameplayInputSuppressed => gameplayInputSuppressed;
 
-        public Vector2 Look => cursorLockSuppressed ? Vector2.zero : lookAction?.ReadValue<Vector2>() ?? Vector2.zero;
+        public Vector2 Move => IsInputSuppressed ? Vector2.zero : moveAction?.ReadValue<Vector2>() ?? Vector2.zero;
 
-        public bool JumpPressedThisFrame => !cursorLockSuppressed && jumpAction != null && jumpAction.WasPressedThisFrame();
+        public Vector2 Look => IsInputSuppressed ? Vector2.zero : lookAction?.ReadValue<Vector2>() ?? Vector2.zero;
 
-        public bool SprintHeld => !cursorLockSuppressed && sprintAction != null && sprintAction.IsPressed();
+        public bool JumpPressedThisFrame => !IsInputSuppressed && jumpAction != null && jumpAction.WasPressedThisFrame();
 
-        public bool CrouchHeld => !cursorLockSuppressed && crouchAction != null && crouchAction.IsPressed();
+        public bool SprintHeld => !IsInputSuppressed && sprintAction != null && sprintAction.IsPressed();
 
-        public bool AimHeld => !cursorLockSuppressed && aimAction != null && aimAction.IsPressed();
+        public bool CrouchHeld => !IsInputSuppressed && crouchAction != null && crouchAction.IsPressed();
+
+        public bool AimHeld => !IsInputSuppressed && aimAction != null && aimAction.IsPressed();
+
+        private bool IsInputSuppressed => cursorLockSuppressed || gameplayInputSuppressed;
 
         public void SetCursorLockSuppressed(bool suppressed)
         {
@@ -61,6 +71,11 @@ namespace Bellerophon.Core.Player
             }
         }
 
+        public void SetGameplayInputSuppressed(bool suppressed)
+        {
+            gameplayInputSuppressed = suppressed;
+        }
+
         private void Awake()
         {
             CreateActions();
@@ -74,6 +89,7 @@ namespace Bellerophon.Core.Player
 
         private void OnDisable()
         {
+            gameplayInputSuppressed = false;
             DisableActions();
             RestoreCursorState();
         }
@@ -120,15 +136,20 @@ namespace Bellerophon.Core.Player
 
             aimAction = new InputAction("Aim", InputActionType.Button, "<Mouse>/rightButton");
             aimAction.AddBinding("<Gamepad>/leftTrigger");
+            aimAction.performed += HandleAimPerformed;
 
             dropAction = new InputAction("Drop", InputActionType.Button, "<Keyboard>/b");
             dropAction.AddBinding("<Gamepad>/dpad/down");
             dropAction.performed += HandleDropPerformed;
+
+            reloadAction = new InputAction("Reload", InputActionType.Button, "<Keyboard>/r");
+            reloadAction.AddBinding("<Gamepad>/buttonEast");
+            reloadAction.performed += HandleReloadPerformed;
         }
 
         private void HandleInteractPerformed(InputAction.CallbackContext context)
         {
-            if (cursorLockSuppressed)
+            if (IsInputSuppressed)
             {
                 return;
             }
@@ -138,7 +159,7 @@ namespace Bellerophon.Core.Player
 
         private void HandleUsePerformed(InputAction.CallbackContext context)
         {
-            if (cursorLockSuppressed)
+            if (IsInputSuppressed)
             {
                 return;
             }
@@ -146,14 +167,34 @@ namespace Bellerophon.Core.Player
             UsePressed?.Invoke();
         }
 
+        private void HandleAimPerformed(InputAction.CallbackContext context)
+        {
+            if (IsInputSuppressed)
+            {
+                return;
+            }
+
+            AimPressed?.Invoke();
+        }
+
         private void HandleDropPerformed(InputAction.CallbackContext context)
         {
-            if (cursorLockSuppressed)
+            if (IsInputSuppressed)
             {
                 return;
             }
 
             DropPressed?.Invoke();
+        }
+
+        private void HandleReloadPerformed(InputAction.CallbackContext context)
+        {
+            if (IsInputSuppressed)
+            {
+                return;
+            }
+
+            ReloadPressed?.Invoke();
         }
 
         private void EnableActions()
@@ -167,6 +208,7 @@ namespace Bellerophon.Core.Player
             useAction?.Enable();
             aimAction?.Enable();
             dropAction?.Enable();
+            reloadAction?.Enable();
         }
 
         private void LockCursorForPlay()
@@ -220,6 +262,13 @@ namespace Bellerophon.Core.Player
                 return;
             }
 
+            if (gameplayInputSuppressed)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                return;
+            }
+
             if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
             {
                 Cursor.lockState = CursorLockMode.None;
@@ -247,6 +296,7 @@ namespace Bellerophon.Core.Player
             useAction?.Disable();
             aimAction?.Disable();
             dropAction?.Disable();
+            reloadAction?.Disable();
         }
 
         private void DisposeActions()
@@ -260,6 +310,7 @@ namespace Bellerophon.Core.Player
             useAction?.Dispose();
             aimAction?.Dispose();
             dropAction?.Dispose();
+            reloadAction?.Dispose();
         }
     }
 }

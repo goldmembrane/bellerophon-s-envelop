@@ -7,7 +7,8 @@ namespace Bellerophon.Core.Session
         Ready,
         Transporting,
         Completed,
-        Failed
+        Failed,
+        GameOver
     }
 
     public sealed class GameSessionState
@@ -20,6 +21,8 @@ namespace Bellerophon.Core.Session
             bool isAssociationMember,
             PlanetStartState currentPlanet,
             StartingLoadoutState startingLoadout,
+            PlayerEquipmentState equipment,
+            int completedTransportCount,
             TransportContractDefinition? activeTransportContract,
             CargoState? activeCargo)
         {
@@ -30,6 +33,8 @@ namespace Bellerophon.Core.Session
             IsAssociationMember = isAssociationMember;
             CurrentPlanet = currentPlanet;
             StartingLoadout = startingLoadout;
+            Equipment = equipment;
+            CompletedTransportCount = completedTransportCount;
             ActiveTransportContract = activeTransportContract;
             ActiveCargo = activeCargo;
         }
@@ -48,6 +53,10 @@ namespace Bellerophon.Core.Session
 
         public StartingLoadoutState StartingLoadout { get; }
 
+        public PlayerEquipmentState Equipment { get; }
+
+        public int CompletedTransportCount { get; }
+
         public TransportContractDefinition? ActiveTransportContract { get; }
 
         public CargoState? ActiveCargo { get; }
@@ -64,6 +73,8 @@ namespace Bellerophon.Core.Session
                 false,
                 PlanetStartState.None,
                 StartingLoadoutState.Empty,
+                PlayerEquipmentState.Empty,
+                0,
                 null,
                 null);
         }
@@ -92,6 +103,8 @@ namespace Bellerophon.Core.Session
                 true,
                 planet,
                 loadout,
+                PlayerEquipmentState.CreateDefaultAssociationIssue(),
+                CompletedTransportCount,
                 ActiveTransportContract,
                 ActiveCargo);
         }
@@ -109,18 +122,20 @@ namespace Bellerophon.Core.Session
         public GameSessionState CompleteTransport(SettlementInput settlementInput)
         {
             RequirePhase(GameSessionPhase.Transporting);
-            var result = SettlementCalculator.Calculate(settlementInput);
-            var nextPhase = result.IsGameOver ? GameSessionPhase.Failed : GameSessionPhase.Completed;
-            var nextRunState = nextPhase == GameSessionPhase.Completed ? ShipRunState.Completed : ShipRunState.Failed;
+            var normalizedInput = settlementInput.WithWallet(Wallet);
+            var result = SettlementCalculator.Calculate(normalizedInput);
+            var nextPhase = result.IsGameOver ? GameSessionPhase.GameOver : GameSessionPhase.Completed;
 
             return new GameSessionState(
                 nextPhase,
-                settlementInput.Ship.WithRunState(nextRunState),
-                new WalletState(result.FinalBalance, Wallet.AllowsDebt),
+                normalizedInput.Ship.WithRunState(ShipRunState.Completed),
+                CreateWalletFromSettlement(result),
                 result,
                 IsAssociationMember,
                 CurrentPlanet,
                 StartingLoadout,
+                Equipment,
+                CompletedTransportCount + 1,
                 ActiveTransportContract,
                 ActiveCargo);
         }
@@ -128,24 +143,95 @@ namespace Bellerophon.Core.Session
         public GameSessionState FailTransport(SettlementInput settlementInput)
         {
             RequirePhase(GameSessionPhase.Transporting);
-            var failedInput = settlementInput.WithShip(settlementInput.Ship.WithRunState(ShipRunState.Failed));
+            var failedInput = settlementInput
+                .WithWallet(Wallet)
+                .WithShip(settlementInput.Ship.WithRunState(ShipRunState.Failed));
             var result = SettlementCalculator.Calculate(failedInput);
+            var nextPhase = result.IsGameOver ? GameSessionPhase.GameOver : GameSessionPhase.Failed;
 
             return new GameSessionState(
-                GameSessionPhase.Failed,
+                nextPhase,
                 failedInput.Ship,
-                new WalletState(result.FinalBalance, Wallet.AllowsDebt),
+                CreateWalletFromSettlement(result),
                 result,
                 IsAssociationMember,
                 CurrentPlanet,
                 StartingLoadout,
+                Equipment,
+                CompletedTransportCount,
+                ActiveTransportContract,
+                ActiveCargo);
+        }
+
+        public GameSessionState ApplyMaintenanceRepair(int repairCost)
+        {
+            RequirePhase(GameSessionPhase.Completed);
+            if (repairCost < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(repairCost), "Repair cost cannot be negative.");
+            }
+
+            var nextCredits = Wallet.Credits - repairCost;
+            return new GameSessionState(
+                Phase,
+                ShipStateRules.RepairAllRooms(Ship),
+                new WalletState(nextCredits, Wallet.AllowsDebt, nextCredits < 0),
+                SettlementResult.WithPendingRepairCost(0),
+                IsAssociationMember,
+                CurrentPlanet,
+                StartingLoadout,
+                Equipment,
+                CompletedTransportCount,
+                ActiveTransportContract,
+                ActiveCargo);
+        }
+
+        public GameSessionState WithEquipment(PlayerEquipmentState equipment)
+        {
+            return new GameSessionState(
+                Phase,
+                Ship,
+                Wallet,
+                SettlementResult,
+                IsAssociationMember,
+                CurrentPlanet,
+                StartingLoadout,
+                equipment,
+                CompletedTransportCount,
+                ActiveTransportContract,
+                ActiveCargo);
+        }
+
+        public GameSessionState PurchaseEquipment(EquipmentItemKind itemKind)
+        {
+            var purchase = EquipmentRules.PurchaseItem(Equipment, itemKind);
+            if (!purchase.Purchased)
+            {
+                return WithEquipment(purchase.State);
+            }
+
+            if (Wallet.Credits < purchase.SpentCredits)
+            {
+                return this;
+            }
+
+            return new GameSessionState(
+                Phase,
+                Ship,
+                new WalletState(Wallet.Credits - purchase.SpentCredits, Wallet.AllowsDebt, Wallet.HasUnpaidDebtGrace),
+                SettlementResult,
+                IsAssociationMember,
+                CurrentPlanet,
+                StartingLoadout,
+                purchase.State,
+                CompletedTransportCount,
                 ActiveTransportContract,
                 ActiveCargo);
         }
 
         private GameSessionState StartTransportCore(TransportContractDefinition? contract, CargoState? cargo)
         {
-            RequirePhase(GameSessionPhase.Ready);
+            RequireCanStartTransport();
             return new GameSessionState(
                 GameSessionPhase.Transporting,
                 Ship.WithRunState(ShipRunState.InTransit),
@@ -154,8 +240,18 @@ namespace Bellerophon.Core.Session
                 IsAssociationMember,
                 CurrentPlanet,
                 StartingLoadout,
+                Equipment,
+                CompletedTransportCount,
                 contract,
                 cargo);
+        }
+
+        private WalletState CreateWalletFromSettlement(SettlementResult result)
+        {
+            return new WalletState(
+                result.FinalBalance,
+                Wallet.AllowsDebt,
+                result.DebtStatus == SettlementDebtStatus.GraceActive);
         }
 
         private void RequirePhase(GameSessionPhase expected)
@@ -164,6 +260,16 @@ namespace Bellerophon.Core.Session
             {
                 throw new InvalidOperationException($"Expected session phase {expected}, but current phase is {Phase}.");
             }
+        }
+
+        private void RequireCanStartTransport()
+        {
+            if (Phase == GameSessionPhase.Ready || Phase == GameSessionPhase.Completed)
+            {
+                return;
+            }
+
+            throw new InvalidOperationException($"Cannot start transport while session phase is {Phase}.");
         }
     }
 }

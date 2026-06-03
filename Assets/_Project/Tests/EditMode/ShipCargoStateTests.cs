@@ -29,6 +29,24 @@ namespace Bellerophon.Tests.EditMode
         }
 
         [Test]
+        public void RepairAllRooms_RestoresDurabilityAndClearsDamageFlags()
+        {
+            var ship = ShipState.CreateDefault()
+                .WithRoom(ShipRoomId.ControlRoom, new ShipRoomState(10, 100, true, true, true))
+                .WithRoom(ShipRoomId.EngineRoom, new ShipRoomState(0, 100));
+
+            var repaired = ShipStateRules.RepairAllRooms(ship);
+
+            Assert.That(repaired.RunState, Is.EqualTo(ShipRunState.Docked));
+            Assert.That(repaired.GetRoom(ShipRoomId.ControlRoom).CurrentDurability, Is.EqualTo(100));
+            Assert.That(repaired.GetRoom(ShipRoomId.ControlRoom).IsFunctionOffline, Is.False);
+            Assert.That(repaired.GetRoom(ShipRoomId.ControlRoom).IsBlackout, Is.False);
+            Assert.That(repaired.GetRoom(ShipRoomId.ControlRoom).IsSealed, Is.False);
+            Assert.That(repaired.GetRoom(ShipRoomId.EngineRoom).CurrentDurability, Is.EqualTo(100));
+            Assert.That(repaired.RequiresTowing, Is.False);
+        }
+
+        [Test]
         public void CargoState_DamageUpdatesDurabilityAndLossPercent()
         {
             var cargo = new CargoState(CargoGrade.Rare, 100, 1000, 0.8f, false);

@@ -2,6 +2,37 @@ using System;
 
 namespace Bellerophon.Core.Session
 {
+    public enum SettlementDebtStatus
+    {
+        Clear,
+        GraceActive,
+        FinalGameOver
+    }
+
+    public readonly struct SettlementLineItem
+    {
+        public SettlementLineItem(string label, int amount, bool isRevenue, bool affectsBalance = true)
+        {
+            if (string.IsNullOrWhiteSpace(label))
+            {
+                throw new ArgumentException("Settlement line item label is required.", nameof(label));
+            }
+
+            Label = label;
+            Amount = amount;
+            IsRevenue = isRevenue;
+            AffectsBalance = affectsBalance;
+        }
+
+        public string Label { get; }
+
+        public int Amount { get; }
+
+        public bool IsRevenue { get; }
+
+        public bool AffectsBalance { get; }
+    }
+
     public readonly struct SettlementInput
     {
         public SettlementInput(
@@ -15,7 +46,16 @@ namespace Bellerophon.Core.Session
             int insuranceCost = 0,
             int towingCost = 0,
             int revivalCostPerDeadCrew = 0,
-            float personalCargoSaleMultiplier = 1f)
+            float personalCargoSaleMultiplier = 1f,
+            int contractBasePay = 0,
+            int distancePay = 0,
+            int repairSupportAmount = 0,
+            int safeStreakBonus = 0,
+            int shipLossInsurancePayout = 0,
+            int cargoLossPenalty = 0,
+            int cleaningCostWhenNoSurvivors = 0,
+            int associationBrokerageFee = 0,
+            int associationMaintenanceFee = 0)
         {
             ContractType = contractType;
             Difficulty = difficulty;
@@ -28,6 +68,15 @@ namespace Bellerophon.Core.Session
             TowingCost = RequireNonNegative(towingCost, nameof(towingCost));
             RevivalCostPerDeadCrew = RequireNonNegative(revivalCostPerDeadCrew, nameof(revivalCostPerDeadCrew));
             PersonalCargoSaleMultiplier = personalCargoSaleMultiplier < 0f ? 0f : personalCargoSaleMultiplier;
+            ContractBasePay = RequireNonNegative(contractBasePay, nameof(contractBasePay));
+            DistancePay = RequireNonNegative(distancePay, nameof(distancePay));
+            RepairSupportAmount = RequireNonNegative(repairSupportAmount, nameof(repairSupportAmount));
+            SafeStreakBonus = RequireNonNegative(safeStreakBonus, nameof(safeStreakBonus));
+            ShipLossInsurancePayout = RequireNonNegative(shipLossInsurancePayout, nameof(shipLossInsurancePayout));
+            CargoLossPenalty = RequireNonNegative(cargoLossPenalty, nameof(cargoLossPenalty));
+            CleaningCostWhenNoSurvivors = RequireNonNegative(cleaningCostWhenNoSurvivors, nameof(cleaningCostWhenNoSurvivors));
+            AssociationBrokerageFee = RequireNonNegative(associationBrokerageFee, nameof(associationBrokerageFee));
+            AssociationMaintenanceFee = RequireNonNegative(associationMaintenanceFee, nameof(associationMaintenanceFee));
         }
 
         public ContractType ContractType { get; }
@@ -52,6 +101,24 @@ namespace Bellerophon.Core.Session
 
         public float PersonalCargoSaleMultiplier { get; }
 
+        public int ContractBasePay { get; }
+
+        public int DistancePay { get; }
+
+        public int RepairSupportAmount { get; }
+
+        public int SafeStreakBonus { get; }
+
+        public int ShipLossInsurancePayout { get; }
+
+        public int CargoLossPenalty { get; }
+
+        public int CleaningCostWhenNoSurvivors { get; }
+
+        public int AssociationBrokerageFee { get; }
+
+        public int AssociationMaintenanceFee { get; }
+
         public SettlementInput WithShip(ShipState ship)
         {
             return new SettlementInput(
@@ -65,7 +132,41 @@ namespace Bellerophon.Core.Session
                 InsuranceCost,
                 TowingCost,
                 RevivalCostPerDeadCrew,
-                PersonalCargoSaleMultiplier);
+                PersonalCargoSaleMultiplier,
+                ContractBasePay,
+                DistancePay,
+                RepairSupportAmount,
+                SafeStreakBonus,
+                ShipLossInsurancePayout,
+                CargoLossPenalty,
+                CleaningCostWhenNoSurvivors,
+                AssociationBrokerageFee,
+                AssociationMaintenanceFee);
+        }
+
+        public SettlementInput WithWallet(WalletState wallet)
+        {
+            return new SettlementInput(
+                ContractType,
+                Difficulty,
+                Cargo,
+                Ship,
+                Crew,
+                wallet,
+                RepairCost,
+                InsuranceCost,
+                TowingCost,
+                RevivalCostPerDeadCrew,
+                PersonalCargoSaleMultiplier,
+                ContractBasePay,
+                DistancePay,
+                RepairSupportAmount,
+                SafeStreakBonus,
+                ShipLossInsurancePayout,
+                CargoLossPenalty,
+                CleaningCostWhenNoSurvivors,
+                AssociationBrokerageFee,
+                AssociationMaintenanceFee);
         }
 
         private static int RequireNonNegative(int value, string name)
@@ -81,6 +182,9 @@ namespace Bellerophon.Core.Session
 
     public readonly struct SettlementResult
     {
+        private static readonly SettlementLineItem[] EmptyLineItems = new SettlementLineItem[0];
+        private readonly SettlementLineItem[] lineItems;
+
         public SettlementResult(
             int grossRevenue,
             int expenses,
@@ -90,7 +194,10 @@ namespace Bellerophon.Core.Session
             bool requiresTowing,
             bool isGameOver,
             float cargoHoldScore,
-            float personalCargoSaleMultiplier)
+            float personalCargoSaleMultiplier,
+            SettlementDebtStatus debtStatus = SettlementDebtStatus.Clear,
+            SettlementLineItem[] lineItems = null,
+            int pendingRepairCost = 0)
         {
             GrossRevenue = grossRevenue;
             Expenses = expenses;
@@ -101,6 +208,9 @@ namespace Bellerophon.Core.Session
             IsGameOver = isGameOver;
             CargoHoldScore = cargoHoldScore;
             PersonalCargoSaleMultiplier = personalCargoSaleMultiplier;
+            DebtStatus = debtStatus;
+            this.lineItems = lineItems ?? EmptyLineItems;
+            PendingRepairCost = pendingRepairCost < 0 ? 0 : pendingRepairCost;
         }
 
         public int GrossRevenue { get; }
@@ -120,5 +230,30 @@ namespace Bellerophon.Core.Session
         public float CargoHoldScore { get; }
 
         public float PersonalCargoSaleMultiplier { get; }
+
+        public SettlementDebtStatus DebtStatus { get; }
+
+        public bool RequiresDebtGrace => DebtStatus == SettlementDebtStatus.GraceActive;
+
+        public int PendingRepairCost { get; }
+
+        public SettlementLineItem[] LineItems => lineItems ?? EmptyLineItems;
+
+        public SettlementResult WithPendingRepairCost(int pendingRepairCost)
+        {
+            return new SettlementResult(
+                GrossRevenue,
+                Expenses,
+                NetChange,
+                FinalBalance,
+                IsTransportFailed,
+                RequiresTowing,
+                IsGameOver,
+                CargoHoldScore,
+                PersonalCargoSaleMultiplier,
+                DebtStatus,
+                LineItems,
+                pendingRepairCost);
+        }
     }
 }

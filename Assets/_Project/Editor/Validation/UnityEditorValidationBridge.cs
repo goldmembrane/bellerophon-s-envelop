@@ -75,8 +75,28 @@ namespace Bellerophon.Editor.Validation
                 return;
             }
 
+            if (ShouldWaitForEditModeBeforeStarting(request))
+            {
+                return;
+            }
+
             TryDelete(requestPath);
             StartRequest(request);
+        }
+
+        private static bool ShouldWaitForEditModeBeforeStarting(BridgeRequest request)
+        {
+            if (request.Command != "PlayModeTests" || !EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                return false;
+            }
+
+            if (EditorApplication.isPlaying)
+            {
+                EditorApplication.ExitPlaymode();
+            }
+
+            return true;
         }
 
         private static void StartRequest(BridgeRequest request)
@@ -150,6 +170,114 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Phase7NewGameStartEditorValidation.Run,
                         "Phase 7 new game start editor validation passed.");
+                    break;
+                case "EnsurePhase8TransportRun":
+                    RunSynchronous(
+                        request,
+                        Phase8TransportRunBootstrap.EnsurePhase8Assets,
+                        "Phase 8 transport run assets are ready.");
+                    break;
+                case "ValidatePhase8TransportRun":
+                    RunSynchronous(
+                        request,
+                        Phase8TransportRunEditorValidation.Run,
+                        "Phase 8 transport run editor validation passed.");
+                    break;
+                case "EnsurePhase9SettlementGameOver":
+                    RunSynchronous(
+                        request,
+                        Phase9SettlementGameOverBootstrap.EnsurePhase9Assets,
+                        "Phase 9 settlement and game over assets are ready.");
+                    break;
+                case "ValidatePhase9SettlementGameOver":
+                    RunSynchronous(
+                        request,
+                        Phase9SettlementGameOverEditorValidation.Run,
+                        "Phase 9 settlement game over editor validation passed.");
+                    break;
+                case "EnsurePhase10PlanetMaintenance":
+                    RunSynchronous(
+                        request,
+                        Phase10PlanetMaintenanceBootstrap.EnsurePhase10Assets,
+                        "Phase 10 planet maintenance assets are ready.");
+                    break;
+                case "ValidatePhase10PlanetMaintenance":
+                    RunSynchronous(
+                        request,
+                        Phase10PlanetMaintenanceEditorValidation.Run,
+                        "Phase 10 planet maintenance editor validation passed.");
+                    break;
+                case "EnsurePhase11AsteroidHazard":
+                    RunSynchronous(
+                        request,
+                        Phase11AsteroidHazardBootstrap.EnsurePhase11Assets,
+                        "Phase 11 asteroid hazard assets are ready.");
+                    break;
+                case "ValidatePhase11AsteroidHazard":
+                    RunSynchronous(
+                        request,
+                        Phase11AsteroidHazardEditorValidation.Run,
+                        "Phase 11 asteroid hazard editor validation passed.");
+                    break;
+                case "EnsurePhase12ManualTurret":
+                    RunSynchronous(
+                        request,
+                        Phase12ManualTurretBootstrap.EnsurePhase12Assets,
+                        "Phase 12 manual turret assets are ready.");
+                    break;
+                case "ValidatePhase12ManualTurret":
+                    RunSynchronous(
+                        request,
+                        Phase12ManualTurretEditorValidation.Run,
+                        "Phase 12 manual turret editor validation passed.");
+                    break;
+                case "EnsurePhase13IntruderFramework":
+                    RunSynchronous(
+                        request,
+                        Phase13IntruderFrameworkBootstrap.EnsurePhase13Assets,
+                        "Phase 13 intruder framework assets are ready.");
+                    break;
+                case "ValidatePhase13IntruderFramework":
+                    RunSynchronous(
+                        request,
+                        Phase13IntruderFrameworkEditorValidation.Run,
+                        "Phase 13 intruder framework editor validation passed.");
+                    break;
+                case "EnsurePhase14ParvumIntruder":
+                    RunSynchronous(
+                        request,
+                        Phase14ParvumIntruderBootstrap.EnsurePhase14Assets,
+                        "Phase 14 parvum intruder assets are ready.");
+                    break;
+                case "ValidatePhase14ParvumIntruder":
+                    RunSynchronous(
+                        request,
+                        Phase14ParvumIntruderEditorValidation.Run,
+                        "Phase 14 parvum intruder editor validation passed.");
+                    break;
+                case "EnsurePhase15EquipmentLoop":
+                    RunSynchronous(
+                        request,
+                        Phase15EquipmentLoopBootstrap.EnsurePhase15Assets,
+                        "Phase 15 equipment loop assets are ready.");
+                    break;
+                case "ValidatePhase15EquipmentLoop":
+                    RunSynchronous(
+                        request,
+                        Phase15EquipmentLoopEditorValidation.Run,
+                        "Phase 15 equipment loop editor validation passed.");
+                    break;
+                case "EnsurePhase16HudMapAtmosphere":
+                    RunSynchronous(
+                        request,
+                        Phase16HudMapAtmosphereBootstrap.EnsurePhase16Assets,
+                        "Phase 16 HUD map atmosphere assets are ready.");
+                    break;
+                case "ValidatePhase16HudMapAtmosphere":
+                    RunSynchronous(
+                        request,
+                        Phase16HudMapAtmosphereEditorValidation.Run,
+                        "Phase 16 HUD map atmosphere editor validation passed.");
                     break;
                 default:
                     RunSynchronous(
@@ -388,7 +516,7 @@ namespace Bellerophon.Editor.Validation
         private static string ProjectRoot =>
             Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
 
-        private sealed class TestRunCallbacks : ICallbacks
+        private sealed class TestRunCallbacks : IErrorCallbacks
         {
             private readonly BridgeRequest request;
 
@@ -413,6 +541,18 @@ namespace Bellerophon.Editor.Validation
                 catch (Exception exception)
                 {
                     FailRequest(exception);
+                }
+                finally
+                {
+                    ClearTestRunState();
+                }
+            }
+
+            public void OnError(string message)
+            {
+                try
+                {
+                    FailRequest(new InvalidOperationException(message));
                 }
                 finally
                 {

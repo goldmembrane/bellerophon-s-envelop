@@ -256,6 +256,7 @@ namespace Bellerophon.Editor.Validation
             var tutorial = planetState.GetAvailableContract(0);
             if (!tutorial.IsTutorial ||
                 tutorial.DurationSeconds != 60 ||
+                tutorial.RewardCredits != 1000 ||
                 tutorial.ContractType != ContractType.Association ||
                 tutorial.Difficulty != ContractDifficulty.Intro)
             {

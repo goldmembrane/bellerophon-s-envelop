@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Bellerophon.Core.Session
 {
@@ -16,23 +17,48 @@ namespace Bellerophon.Core.Session
             var transportFailed = input.Ship.IsTransportFailed;
             var cargoHoldScore = CalculateCargoHoldScore(input.Ship);
             var personalCargoSaleMultiplier = input.Cargo.IsPersonalCargo ? input.PersonalCargoSaleMultiplier : 1f;
+            var configuredContractPay = input.ContractBasePay +
+                                        input.DistancePay +
+                                        input.RepairSupportAmount +
+                                        input.SafeStreakBonus;
 
-            var grossRevenue = transportFailed
+            var contractRevenue = transportFailed
                 ? 0
-                : RoundMoney(
-                    input.Cargo.BaseValue *
-                    GetGradeMultiplier(input.Cargo.Grade) *
-                    GetContractMultiplier(input.ContractType) *
-                    GetDifficultyMultiplier(input.Difficulty) *
-                    input.Cargo.DurabilityPercent *
-                    cargoHoldScore *
-                    personalCargoSaleMultiplier);
+                : configuredContractPay > 0
+                    ? configuredContractPay
+                    : CalculateContractRevenue(input, cargoHoldScore, personalCargoSaleMultiplier);
 
+            var shipLossInsurancePayout = transportFailed ? 0 : input.ShipLossInsurancePayout;
+            var grossRevenue = contractRevenue + shipLossInsurancePayout;
             var towingExpense = requiresTowing ? input.TowingCost : 0;
             var revivalExpense = input.Crew.DeadCount * input.RevivalCostPerDeadCrew;
-            var expenses = input.RepairCost + input.InsuranceCost + towingExpense + revivalExpense;
+            var cargoLossPenalty = input.CargoLossPenalty > 0
+                ? input.CargoLossPenalty
+                : CalculateCargoLossPenalty(input);
+            var cleaningExpense = input.Crew.SurvivorCount == 0 ? input.CleaningCostWhenNoSurvivors : 0;
+            var associationExpense = input.AssociationBrokerageFee + input.AssociationMaintenanceFee;
+            var pendingRepairCost = input.RepairCost;
+            var expenses = input.InsuranceCost +
+                           towingExpense +
+                           revivalExpense +
+                           cargoLossPenalty +
+                           cleaningExpense +
+                           associationExpense;
             var finalBalance = input.Wallet.Credits + grossRevenue - expenses;
-            var isGameOver = finalBalance < 0 && !input.Wallet.AllowsDebt;
+            var debtStatus = GetDebtStatus(input.Wallet, finalBalance);
+            var isGameOver = debtStatus == SettlementDebtStatus.FinalGameOver;
+            var lineItems = BuildLineItems(
+                input,
+                contractRevenue,
+                shipLossInsurancePayout,
+                pendingRepairCost,
+                input.InsuranceCost,
+                towingExpense,
+                revivalExpense,
+                cargoLossPenalty,
+                cleaningExpense,
+                input.AssociationBrokerageFee,
+                input.AssociationMaintenanceFee);
 
             return new SettlementResult(
                 grossRevenue,
@@ -43,12 +69,144 @@ namespace Bellerophon.Core.Session
                 requiresTowing,
                 isGameOver,
                 cargoHoldScore,
-                personalCargoSaleMultiplier);
+                personalCargoSaleMultiplier,
+                debtStatus,
+                lineItems,
+                pendingRepairCost);
         }
 
         public static float CalculateCargoHoldScore(ShipState ship)
         {
             return ShipStateRules.CalculateCargoHoldScore(ship);
+        }
+
+        public static int CalculateCargoLossPenalty(SettlementInput input)
+        {
+            if (input.Cargo.IsPersonalCargo || input.Cargo.LossPercent <= 0f)
+            {
+                return 0;
+            }
+
+            return RoundMoney(
+                input.Cargo.BaseValue *
+                GetGradeMultiplier(input.Cargo.Grade) *
+                GetContractMultiplier(input.ContractType) *
+                GetDifficultyMultiplier(input.Difficulty) *
+                input.Cargo.LossPercent);
+        }
+
+        public static int CalculateAssociationSafeStreakBonus(int completedTransportNumber)
+        {
+            if (completedTransportNumber < 3)
+            {
+                return 0;
+            }
+
+            var cappedTransportNumber = Math.Min(completedTransportNumber, 10);
+            return 50 + (cappedTransportNumber - 3) * 20;
+        }
+
+        private static int CalculateContractRevenue(
+            SettlementInput input,
+            float cargoHoldScore,
+            float personalCargoSaleMultiplier)
+        {
+            var cargoDurabilityMultiplier = input.Cargo.IsPersonalCargo
+                ? input.Cargo.DurabilityPercent
+                : 1f;
+
+            return RoundMoney(
+                input.Cargo.BaseValue *
+                GetGradeMultiplier(input.Cargo.Grade) *
+                GetContractMultiplier(input.ContractType) *
+                GetDifficultyMultiplier(input.Difficulty) *
+                cargoHoldScore *
+                personalCargoSaleMultiplier *
+                cargoDurabilityMultiplier);
+        }
+
+        private static SettlementDebtStatus GetDebtStatus(WalletState wallet, int finalBalance)
+        {
+            if (finalBalance >= 0)
+            {
+                return SettlementDebtStatus.Clear;
+            }
+
+            return wallet.HasUnpaidDebtGrace
+                ? SettlementDebtStatus.FinalGameOver
+                : SettlementDebtStatus.GraceActive;
+        }
+
+        private static SettlementLineItem[] BuildLineItems(
+            SettlementInput input,
+            int contractRevenue,
+            int shipLossInsurancePayout,
+            int repairCost,
+            int legacyInsuranceCost,
+            int towingCost,
+            int revivalCost,
+            int cargoLossPenalty,
+            int cleaningCost,
+            int associationBrokerageFee,
+            int associationMaintenanceFee)
+        {
+            var items = new List<SettlementLineItem>();
+            if (contractRevenue > 0 &&
+                (input.ContractBasePay > 0 ||
+                 input.DistancePay > 0 ||
+                 input.RepairSupportAmount > 0 ||
+                 input.SafeStreakBonus > 0))
+            {
+                AddRevenue(items, "Contract reward", input.ContractBasePay);
+                AddRevenue(items, "Distance pay", input.DistancePay);
+                AddRevenue(items, "Association support bonus", input.RepairSupportAmount);
+                AddRevenue(items, "Safe streak bonus", input.SafeStreakBonus);
+            }
+            else
+            {
+                AddRevenue(items, "Contract reward", contractRevenue);
+            }
+
+            AddRevenue(items, "Ship loss insurance payout", shipLossInsurancePayout);
+            AddPendingExpense(items, "Ship repair cost", repairCost);
+            AddExpense(items, "Insurance cost", legacyInsuranceCost);
+            AddExpense(items, "Towing cost", towingCost);
+            AddExpense(items, "Dead crew life insurance", revivalCost);
+            AddExpense(items, "Cargo loss penalty", cargoLossPenalty);
+            AddExpense(items, "No-survivor cleaning cost", cleaningCost);
+            AddExpense(items, "Association brokerage fee", associationBrokerageFee);
+            AddExpense(items, "Association maintenance fee", associationMaintenanceFee);
+            return items.ToArray();
+        }
+
+        private static void AddRevenue(List<SettlementLineItem> items, string label, int amount)
+        {
+            if (amount <= 0)
+            {
+                return;
+            }
+
+            items.Add(new SettlementLineItem(label, amount, true));
+        }
+
+        private static void AddPendingExpense(List<SettlementLineItem> items, string label, int amount)
+        {
+            if (amount <= 0)
+            {
+                return;
+            }
+
+            items.Add(new SettlementLineItem(label, -amount, false, false));
+        }
+
+        private static void AddExpense(List<SettlementLineItem> items, string label, int amount)
+        {
+            if (amount <= 0)
+            {
+                return;
+            }
+
+            items.Add(new SettlementLineItem(label, -amount, false));
         }
 
         private static float GetContractMultiplier(ContractType contractType)
