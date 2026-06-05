@@ -6,7 +6,8 @@ namespace Bellerophon.Platform
 
         bool IsAvailable { get; }
 
+        IPlatformMultiplayerServices Multiplayer { get; }
+
         void UnlockAchievement(string achievementId);
     }
 }
-

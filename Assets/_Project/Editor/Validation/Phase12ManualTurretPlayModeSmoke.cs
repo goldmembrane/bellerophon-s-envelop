@@ -211,6 +211,7 @@ namespace Bellerophon.Editor.Validation
             var deviceHud = UnityEngine.Object.FindFirstObjectByType<ShipDeviceHud>();
             var settlementController = UnityEngine.Object.FindFirstObjectByType<TransportSettlementController>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
+            var contractBoardController = UnityEngine.Object.FindFirstObjectByType<ContractBoardController>();
             var turretView = UnityEngine.Object.FindFirstObjectByType<ManualTurretView>();
             if (startController == null ||
                 playerInput == null ||
@@ -218,9 +219,10 @@ namespace Bellerophon.Editor.Validation
                 deviceHud == null ||
                 settlementController == null ||
                 maintenanceController == null ||
+                contractBoardController == null ||
                 turretView == null)
             {
-                throw new InvalidOperationException("Runtime scene must contain Phase 12 start, player, device, HUD, settlement, maintenance, and turret view controllers.");
+                throw new InvalidOperationException("Runtime scene must contain Phase 12 start, player, device, HUD, settlement, maintenance, contract board, and turret view controllers.");
             }
 
             ClickButtonThroughUi(startController.YesButton);
@@ -228,7 +230,16 @@ namespace Bellerophon.Editor.Validation
             deviceState.TickTransportRun(60f);
             settlementController.ProcessTransportArrival();
             settlementController.ContinueToMaintenance();
-            ClickButtonThroughUi(maintenanceController.AssociationContractButton);
+            ClickButtonThroughUi(maintenanceController.ContractBoardButton);
+            ClickButtonThroughUi(contractBoardController.AssociationContractButton);
+            if (!contractBoardController.IsBoardVisible ||
+                maintenanceController.CurrentSession.Phase != GameSessionPhase.Completed ||
+                contractBoardController.SelectedContractId != "association-local-001")
+            {
+                throw new InvalidOperationException("Association category must select the follow-up contract before acceptance.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.AcceptContractButton);
 
             if (!deviceState.HasActiveTransportHazard ||
                 !deviceState.CurrentExternalTarget.IsActive ||

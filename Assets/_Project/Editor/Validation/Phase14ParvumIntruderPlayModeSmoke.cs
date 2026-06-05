@@ -210,14 +210,16 @@ namespace Bellerophon.Editor.Validation
             var intruderView = UnityEngine.Object.FindFirstObjectByType<SeedIntruderVisualView>();
             var settlementController = UnityEngine.Object.FindFirstObjectByType<TransportSettlementController>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
+            var contractBoardController = UnityEngine.Object.FindFirstObjectByType<ContractBoardController>();
             if (startController == null ||
                 deviceState == null ||
                 deviceHud == null ||
                 intruderView == null ||
                 settlementController == null ||
-                maintenanceController == null)
+                maintenanceController == null ||
+                contractBoardController == null)
             {
-                throw new InvalidOperationException("Runtime scene must contain Phase 14 start, device, HUD, intruder view, settlement, and maintenance controllers.");
+                throw new InvalidOperationException("Runtime scene must contain Phase 14 start, device, HUD, intruder view, settlement, maintenance, and contract board controllers.");
             }
 
             ClickButtonThroughUi(startController.YesButton);
@@ -239,15 +241,32 @@ namespace Bellerophon.Editor.Validation
 
             settlementController.ContinueToMaintenance();
             if (!maintenanceController.IsMaintenanceVisible ||
-                !maintenanceController.AssociationContractButton.interactable)
+                !maintenanceController.ContractBoardButton.interactable)
             {
-                throw new InvalidOperationException("Maintenance screen must expose a ready follow-up association contract.");
+                throw new InvalidOperationException("Maintenance screen must expose the contract board entry for a ready follow-up association contract.");
             }
 
-            ClickButtonThroughUi(maintenanceController.AssociationContractButton);
+            ClickButtonThroughUi(maintenanceController.ContractBoardButton);
+            if (!contractBoardController.IsBoardVisible ||
+                !contractBoardController.AssociationContractButton.interactable ||
+                !contractBoardController.AcceptContractButton.interactable)
+            {
+                throw new InvalidOperationException("Contract board must expose a ready follow-up association contract.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.AssociationContractButton);
+            if (!contractBoardController.IsBoardVisible ||
+                maintenanceController.CurrentSession.Phase != GameSessionPhase.Completed ||
+                contractBoardController.SelectedContractId != "association-local-001")
+            {
+                throw new InvalidOperationException("Association category must select the follow-up contract without starting transport.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.AcceptContractButton);
             settlementController.ResetArrivalGateForValidation();
             var followUp = maintenanceController.CurrentSession;
             if (maintenanceController.IsMaintenanceVisible ||
+                contractBoardController.IsBoardVisible ||
                 followUp.Phase != GameSessionPhase.Transporting ||
                 !deviceState.HasActiveTransportRun)
             {

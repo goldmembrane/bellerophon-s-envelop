@@ -15,6 +15,7 @@ namespace Bellerophon.Editor.Validation
         public const string CargoRunScenePath = Phase9SettlementGameOverBootstrap.CargoRunScenePath;
         public const string Phase10RootName = "Phase 10 Planet Maintenance";
         public const string MaintenanceRootName = "Phase 10 Maintenance Screen";
+        public const string ContractBoardRootName = "Phase 10 Contract Board Screen";
         public const string ContinueButtonName = "Phase 10 Continue To Maintenance Button";
         public const string MaintenanceTitleTextName = "Phase 10 Maintenance Title";
         public const string MaintenanceWalletTextName = "Phase 10 Maintenance Wallet";
@@ -22,11 +23,23 @@ namespace Bellerophon.Editor.Validation
         public const string MaintenanceContractListTextName = "Phase 10 Contract List";
         public const string MaintenanceStatusTextName = "Phase 10 Maintenance Status";
         public const string RepairButtonName = "Phase 10 Repair Button";
+        public const string ContractBoardButtonName = "Phase 10 Contract Board Entry Button";
+        public const string ContractBoardTitleTextName = "Phase 10 Contract Board Title";
+        public const string ContractBoardSummaryTextName = "Phase 10 Contract Board Summary";
+        public const string ContractBoardListTextName = "Phase 10 Contract Board List";
+        public const string ContractBoardStatusTextName = "Phase 10 Contract Board Status";
+        public const string ContractSlotButtonNamePrefix = "Phase 10 Contract Slot Button ";
         public const string AssociationContractButtonName = "Phase 10 Association Contract Button";
         public const string PrivateContractButtonName = "Phase 10 Private Contract Button";
+        public const string SpecialContractButtonName = "Phase 10 Special Contract Button";
+        public const string PreviousContractButtonName = "Phase 10 Previous Contract Button";
+        public const string NextContractButtonName = "Phase 10 Next Contract Button";
+        public const string AcceptContractButtonName = "Phase 10 Accept Contract Button";
+        public const string ContractBoardBackButtonName = "Phase 10 Contract Board Back Button";
         public const string ShopButtonName = "Phase 10 Shop Entry Button";
         public const string PersonalCargoButtonName = "Phase 10 Personal Cargo Entry Button";
         public const string UpgradesButtonName = "Phase 10 Upgrades Entry Button";
+        public const int ContractSlotButtonCount = 8;
 
         [MenuItem("Bellerophon/Bootstrap/Ensure Phase 10 Planet Maintenance")]
         public static void EnsurePhase10Assets()
@@ -54,6 +67,7 @@ namespace Bellerophon.Editor.Validation
 
             var root = CreateRoot(hud.transform);
             var maintenanceRoot = CreateMaintenanceRoot(root.transform);
+            var contractBoardRoot = CreateContractBoardRoot(root.transform);
             var title = CreateText(
                 MaintenanceTitleTextName,
                 maintenanceRoot.transform,
@@ -91,11 +105,47 @@ namespace Bellerophon.Editor.Validation
                 TextAnchor.MiddleCenter);
 
             var repairButton = CreateButton(RepairButtonName, maintenanceRoot.transform, new Vector2(-420f, -218f), "Repair Ship");
-            var associationButton = CreateButton(AssociationContractButtonName, maintenanceRoot.transform, new Vector2(-170f, -218f), "Association Job");
-            var privateButton = CreateButton(PrivateContractButtonName, maintenanceRoot.transform, new Vector2(80f, -218f), "Private Job");
-            var shopButton = CreateButton(ShopButtonName, maintenanceRoot.transform, new Vector2(330f, -218f), "Shop");
-            var personalButton = CreateButton(PersonalCargoButtonName, maintenanceRoot.transform, new Vector2(500f, -218f), "Cargo");
-            var upgradesButton = CreateButton(UpgradesButtonName, maintenanceRoot.transform, new Vector2(670f, -218f), "Upgrades");
+            var contractBoardButton = CreateButton(ContractBoardButtonName, maintenanceRoot.transform, new Vector2(-170f, -218f), "Contracts");
+            var shopButton = CreateButton(ShopButtonName, maintenanceRoot.transform, new Vector2(80f, -218f), "Shop");
+            var personalButton = CreateButton(PersonalCargoButtonName, maintenanceRoot.transform, new Vector2(330f, -218f), "Cargo");
+            var upgradesButton = CreateButton(UpgradesButtonName, maintenanceRoot.transform, new Vector2(580f, -218f), "Upgrades");
+
+            var boardTitle = CreateText(
+                ContractBoardTitleTextName,
+                contractBoardRoot.transform,
+                new Vector2(0f, 310f),
+                new Vector2(980f, 44f),
+                30,
+                TextAnchor.MiddleCenter);
+            var boardSummary = CreateText(
+                ContractBoardSummaryTextName,
+                contractBoardRoot.transform,
+                new Vector2(0f, 245f),
+                new Vector2(1000f, 72f),
+                18,
+                TextAnchor.UpperLeft);
+            var boardList = CreateText(
+                ContractBoardListTextName,
+                contractBoardRoot.transform,
+                new Vector2(0f, 25f),
+                new Vector2(1060f, 360f),
+                16,
+                TextAnchor.UpperLeft);
+            var contractSlotButtons = CreateContractSlotButtons(contractBoardRoot.transform);
+            var boardStatus = CreateText(
+                ContractBoardStatusTextName,
+                contractBoardRoot.transform,
+                new Vector2(0f, -280f),
+                new Vector2(1000f, 54f),
+                18,
+                TextAnchor.MiddleCenter);
+            var associationButton = CreateButton(AssociationContractButtonName, contractBoardRoot.transform, new Vector2(-500f, -218f), "Association");
+            var privateButton = CreateButton(PrivateContractButtonName, contractBoardRoot.transform, new Vector2(-335f, -218f), "Private");
+            var specialButton = CreateButton(SpecialContractButtonName, contractBoardRoot.transform, new Vector2(-170f, -218f), "Special");
+            var previousButton = CreateButton(PreviousContractButtonName, contractBoardRoot.transform, new Vector2(-5f, -218f), "Previous");
+            var nextButton = CreateButton(NextContractButtonName, contractBoardRoot.transform, new Vector2(160f, -218f), "Next");
+            var acceptButton = CreateButton(AcceptContractButtonName, contractBoardRoot.transform, new Vector2(325f, -218f), "Accept");
+            var backButton = CreateButton(ContractBoardBackButtonName, contractBoardRoot.transform, new Vector2(490f, -218f), "Back");
 
             var continueButton = CreateButton(
                 ContinueButtonName,
@@ -104,6 +154,7 @@ namespace Bellerophon.Editor.Validation
                 "Maintenance");
 
             maintenanceRoot.SetActive(false);
+            contractBoardRoot.SetActive(false);
 
             var controller = root.AddComponent<PlanetMaintenanceController>();
             controller.Configure(
@@ -117,11 +168,31 @@ namespace Bellerophon.Editor.Validation
                 contractList,
                 status,
                 repairButton,
-                associationButton,
-                privateButton,
+                null,
+                null,
                 shopButton,
                 personalButton,
                 upgradesButton);
+            var boardController = root.AddComponent<ContractBoardController>();
+            boardController.Configure(
+                startController,
+                deviceState,
+                playerInput,
+                controller,
+                contractBoardRoot,
+                boardTitle,
+                boardSummary,
+                boardList,
+                boardStatus,
+                contractSlotButtons,
+                associationButton,
+                privateButton,
+                specialButton,
+                previousButton,
+                nextButton,
+                acceptButton,
+                backButton);
+            controller.ConfigureContractBoard(boardController, contractBoardButton);
             settlementController.ConfigureMaintenanceContinuation(controller, continueButton);
 
             EditorSceneManager.MarkSceneDirty(scene);
@@ -175,6 +246,23 @@ namespace Bellerophon.Editor.Validation
             return root;
         }
 
+        private static GameObject CreateContractBoardRoot(Transform parent)
+        {
+            var root = new GameObject(ContractBoardRootName, typeof(RectTransform));
+            root.transform.SetParent(parent, false);
+
+            var rectTransform = root.GetComponent<RectTransform>();
+            rectTransform.anchorMin = Vector2.zero;
+            rectTransform.anchorMax = Vector2.one;
+            rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            rectTransform.anchoredPosition = Vector2.zero;
+            rectTransform.sizeDelta = Vector2.zero;
+
+            var background = root.AddComponent<Image>();
+            background.color = new Color(0.018f, 0.024f, 0.036f, 1f);
+            return root;
+        }
+
         private static Text CreateText(
             string name,
             Transform parent,
@@ -204,7 +292,44 @@ namespace Bellerophon.Editor.Validation
             return label;
         }
 
+        private static Button[] CreateContractSlotButtons(Transform parent)
+        {
+            var buttons = new Button[ContractSlotButtonCount];
+            for (var i = 0; i < buttons.Length; i++)
+            {
+                buttons[i] = CreateButton(
+                    ContractSlotButtonNamePrefix + (i + 1),
+                    parent,
+                    new Vector2(0f, 162f - (i * 42f)),
+                    "Contract",
+                    new Vector2(1060f, 34f),
+                    15,
+                    TextAnchor.MiddleLeft);
+            }
+
+            return buttons;
+        }
+
         private static Button CreateButton(string name, Transform parent, Vector2 anchoredPosition, string labelText)
+        {
+            return CreateButton(
+                name,
+                parent,
+                anchoredPosition,
+                labelText,
+                new Vector2(150f, 38f),
+                16,
+                TextAnchor.MiddleCenter);
+        }
+
+        private static Button CreateButton(
+            string name,
+            Transform parent,
+            Vector2 anchoredPosition,
+            string labelText,
+            Vector2 size,
+            int fontSize,
+            TextAnchor textAlignment)
         {
             var buttonObject = new GameObject(name, typeof(RectTransform));
             buttonObject.transform.SetParent(parent, false);
@@ -214,7 +339,7 @@ namespace Bellerophon.Editor.Validation
             rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
             rectTransform.pivot = new Vector2(0.5f, 0.5f);
             rectTransform.anchoredPosition = anchoredPosition;
-            rectTransform.sizeDelta = new Vector2(150f, 38f);
+            rectTransform.sizeDelta = size;
 
             var image = buttonObject.AddComponent<Image>();
             image.color = new Color(0.18f, 0.28f, 0.24f, 1f);
@@ -233,9 +358,9 @@ namespace Bellerophon.Editor.Validation
                 name + " Label",
                 buttonObject.transform,
                 Vector2.zero,
-                new Vector2(138f, 30f),
-                16,
-                TextAnchor.MiddleCenter);
+                new Vector2(Mathf.Max(10f, size.x - 12f), Mathf.Max(10f, size.y - 8f)),
+                fontSize,
+                textAlignment);
             text.text = labelText;
             text.color = new Color(0.94f, 0.98f, 0.94f, 1f);
             return button;

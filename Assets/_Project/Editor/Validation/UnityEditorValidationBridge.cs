@@ -63,6 +63,11 @@ namespace Bellerophon.Editor.Validation
                 return;
             }
 
+            if (TryResumeActivePlayModeRequest())
+            {
+                return;
+            }
+
             var requestPath = Path.Combine(ProjectRoot, "Logs", RequestFileName);
             if (!File.Exists(requestPath))
             {
@@ -279,6 +284,12 @@ namespace Bellerophon.Editor.Validation
                         Phase16HudMapAtmosphereEditorValidation.Run,
                         "Phase 16 HUD map atmosphere editor validation passed.");
                     break;
+                case "ValidatePhase17CoopFoundation":
+                    RunSynchronous(
+                        request,
+                        Phase17CoopFoundationEditorValidation.Run,
+                        "Phase 17 coop foundation editor validation passed.");
+                    break;
                 default:
                     RunSynchronous(
                         request,
@@ -318,7 +329,7 @@ namespace Bellerophon.Editor.Validation
                 }
 
                 activeTestRunnerApi = ScriptableObject.CreateInstance<TestRunnerApi>();
-                activeTestRunCallbacks = new TestRunCallbacks(request);
+                activeTestRunCallbacks = TestRunCallbacks.Create(request);
                 activeTestRunnerApi.RegisterCallbacks(activeTestRunCallbacks);
                 activeTestRunnerApi.Execute(new ExecutionSettings(new Filter { testMode = testMode }));
             }
@@ -339,13 +350,23 @@ namespace Bellerophon.Editor.Validation
 
         private static void CompleteRequest(string successMarker)
         {
-            WriteLog(activeRequest, false, null, successMarker);
+            CompleteRequest(activeRequest, successMarker);
+        }
+
+        private static void CompleteRequest(BridgeRequest request, string successMarker)
+        {
+            WriteLog(request, false, null, successMarker);
             EndRequest();
         }
 
         private static void FailRequest(Exception exception)
         {
-            WriteLog(activeRequest, true, exception, string.Empty);
+            FailRequest(activeRequest, exception);
+        }
+
+        private static void FailRequest(BridgeRequest request, Exception exception)
+        {
+            WriteLog(request, true, exception, string.Empty);
             EndRequest();
         }
 
@@ -428,16 +449,23 @@ namespace Bellerophon.Editor.Validation
             File.WriteAllText(logPath, builder.ToString());
         }
 
-        private static void ClearTestRunState()
+        private static void ClearTestRunState(TestRunCallbacks callbackToClear = null)
         {
             if (activeTestRunCallbacks != null)
             {
                 TestRunnerApi.UnregisterTestCallback(activeTestRunCallbacks);
+                UnityEngine.Object.DestroyImmediate(activeTestRunCallbacks);
             }
 
             if (activeTestRunnerApi != null)
             {
                 UnityEngine.Object.DestroyImmediate(activeTestRunnerApi);
+            }
+
+            if (callbackToClear != null && !ReferenceEquals(callbackToClear, activeTestRunCallbacks))
+            {
+                TestRunnerApi.UnregisterTestCallback(callbackToClear);
+                UnityEngine.Object.DestroyImmediate(callbackToClear);
             }
 
             activeTestRunCallbacks = null;
@@ -488,6 +516,33 @@ namespace Bellerophon.Editor.Validation
             return true;
         }
 
+        private static bool TryResumeActivePlayModeRequest()
+        {
+            if (!File.Exists(ActiveRequestPath))
+            {
+                return false;
+            }
+
+            var request = BridgeRequest.Read(ActiveRequestPath);
+            if (!request.IsValid || request.Command != "PlayModeTests")
+            {
+                TryDelete(ActiveRequestPath);
+                return false;
+            }
+
+            if (activeTestRunCallbacks != null)
+            {
+                return true;
+            }
+
+            BeginRequest(request);
+            activeLog.AppendLine("Resuming PlayModeTests callbacks after domain reload.");
+            activeTestRunnerApi = ScriptableObject.CreateInstance<TestRunnerApi>();
+            activeTestRunCallbacks = TestRunCallbacks.Create(request);
+            activeTestRunnerApi.RegisterCallbacks(activeTestRunCallbacks);
+            return true;
+        }
+
         private static void TryDelete(string path)
         {
             try
@@ -516,47 +571,75 @@ namespace Bellerophon.Editor.Validation
         private static string ProjectRoot =>
             Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
 
-        private sealed class TestRunCallbacks : IErrorCallbacks
+        private sealed class TestRunCallbacks : ScriptableObject, IErrorCallbacks
         {
-            private readonly BridgeRequest request;
+            [SerializeField]
+            private string id;
+            [SerializeField]
+            private string command;
+            [SerializeField]
+            private string logPath;
+            [SerializeField]
+            private string resultsPath;
+            [SerializeField]
+            private string outputPath;
+            [SerializeField]
+            private bool developmentBuild;
+            [SerializeField]
+            private long startUtcTicks;
 
-            public TestRunCallbacks(BridgeRequest request)
+            public static TestRunCallbacks Create(BridgeRequest request)
             {
-                this.request = request;
+                var callbacks = CreateInstance<TestRunCallbacks>();
+                callbacks.Initialize(request);
+                return callbacks;
+            }
+
+            private void Initialize(BridgeRequest request)
+            {
+                id = request.Id;
+                command = request.Command;
+                logPath = request.LogPath;
+                resultsPath = request.ResultsPath;
+                outputPath = request.OutputPath;
+                developmentBuild = request.DevelopmentBuild;
+                startUtcTicks = request.StartUtcTicks;
             }
 
             public void RunStarted(ITestAdaptor testsToRun)
             {
-                Debug.Log($"Running {request.Command} through open editor bridge.");
+                Debug.Log($"Running {command} through open editor bridge.");
             }
 
             public void RunFinished(ITestResultAdaptor result)
             {
+                var request = ToRequest();
                 try
                 {
                     TestRunnerApi.SaveResultToFile(result, request.ResultsPath);
                     TryDelete(ActiveRequestPath);
-                    CompleteRequest($"{request.Command} completed.");
+                    CompleteRequest(request, $"{request.Command} completed.");
                 }
                 catch (Exception exception)
                 {
-                    FailRequest(exception);
+                    FailRequest(request, exception);
                 }
                 finally
                 {
-                    ClearTestRunState();
+                    ClearTestRunState(this);
                 }
             }
 
             public void OnError(string message)
             {
+                var request = ToRequest();
                 try
                 {
-                    FailRequest(new InvalidOperationException(message));
+                    FailRequest(request, new InvalidOperationException(message));
                 }
                 finally
                 {
-                    ClearTestRunState();
+                    ClearTestRunState(this);
                 }
             }
 
@@ -570,6 +653,18 @@ namespace Bellerophon.Editor.Validation
                 {
                     Debug.LogError($"Failed {result.FullName}: {result.Message}");
                 }
+            }
+
+            private BridgeRequest ToRequest()
+            {
+                return BridgeRequest.Create(
+                    id,
+                    command,
+                    logPath,
+                    resultsPath,
+                    outputPath,
+                    developmentBuild,
+                    startUtcTicks);
             }
         }
 
@@ -594,6 +689,27 @@ namespace Bellerophon.Editor.Validation
                     Id = "manual",
                     Command = command,
                     LogPath = logPath
+                };
+            }
+
+            public static BridgeRequest Create(
+                string id,
+                string command,
+                string logPath,
+                string resultsPath,
+                string outputPath,
+                bool developmentBuild,
+                long startUtcTicks)
+            {
+                return new BridgeRequest
+                {
+                    Id = id,
+                    Command = command,
+                    LogPath = logPath,
+                    ResultsPath = resultsPath,
+                    OutputPath = outputPath,
+                    DevelopmentBuild = developmentBuild,
+                    StartUtcTicks = startUtcTicks
                 };
             }
 

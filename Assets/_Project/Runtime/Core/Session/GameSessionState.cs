@@ -22,6 +22,7 @@ namespace Bellerophon.Core.Session
             PlanetStartState currentPlanet,
             StartingLoadoutState startingLoadout,
             PlayerEquipmentState equipment,
+            ReputationState reputation,
             int completedTransportCount,
             TransportContractDefinition? activeTransportContract,
             CargoState? activeCargo)
@@ -34,6 +35,7 @@ namespace Bellerophon.Core.Session
             CurrentPlanet = currentPlanet;
             StartingLoadout = startingLoadout;
             Equipment = equipment;
+            Reputation = reputation;
             CompletedTransportCount = completedTransportCount;
             ActiveTransportContract = activeTransportContract;
             ActiveCargo = activeCargo;
@@ -55,6 +57,8 @@ namespace Bellerophon.Core.Session
 
         public PlayerEquipmentState Equipment { get; }
 
+        public ReputationState Reputation { get; }
+
         public int CompletedTransportCount { get; }
 
         public TransportContractDefinition? ActiveTransportContract { get; }
@@ -74,6 +78,7 @@ namespace Bellerophon.Core.Session
                 PlanetStartState.None,
                 StartingLoadoutState.Empty,
                 PlayerEquipmentState.Empty,
+                ReputationState.Default,
                 0,
                 null,
                 null);
@@ -104,6 +109,7 @@ namespace Bellerophon.Core.Session
                 planet,
                 loadout,
                 PlayerEquipmentState.CreateDefaultAssociationIssue(),
+                Reputation,
                 CompletedTransportCount,
                 ActiveTransportContract,
                 ActiveCargo);
@@ -125,6 +131,7 @@ namespace Bellerophon.Core.Session
             var normalizedInput = settlementInput.WithWallet(Wallet);
             var result = SettlementCalculator.Calculate(normalizedInput);
             var nextPhase = result.IsGameOver ? GameSessionPhase.GameOver : GameSessionPhase.Completed;
+            var nextReputation = ApplyContractReputation(normalizedInput, true);
 
             return new GameSessionState(
                 nextPhase,
@@ -135,6 +142,7 @@ namespace Bellerophon.Core.Session
                 CurrentPlanet,
                 StartingLoadout,
                 Equipment,
+                nextReputation,
                 CompletedTransportCount + 1,
                 ActiveTransportContract,
                 ActiveCargo);
@@ -148,6 +156,7 @@ namespace Bellerophon.Core.Session
                 .WithShip(settlementInput.Ship.WithRunState(ShipRunState.Failed));
             var result = SettlementCalculator.Calculate(failedInput);
             var nextPhase = result.IsGameOver ? GameSessionPhase.GameOver : GameSessionPhase.Failed;
+            var nextReputation = ApplyContractReputation(failedInput, false);
 
             return new GameSessionState(
                 nextPhase,
@@ -158,6 +167,7 @@ namespace Bellerophon.Core.Session
                 CurrentPlanet,
                 StartingLoadout,
                 Equipment,
+                nextReputation,
                 CompletedTransportCount,
                 ActiveTransportContract,
                 ActiveCargo);
@@ -181,6 +191,7 @@ namespace Bellerophon.Core.Session
                 CurrentPlanet,
                 StartingLoadout,
                 Equipment,
+                Reputation,
                 CompletedTransportCount,
                 ActiveTransportContract,
                 ActiveCargo);
@@ -197,6 +208,63 @@ namespace Bellerophon.Core.Session
                 CurrentPlanet,
                 StartingLoadout,
                 equipment,
+                Reputation,
+                CompletedTransportCount,
+                ActiveTransportContract,
+                ActiveCargo);
+        }
+
+        public GameSessionState WithShipState(ShipState ship)
+        {
+            if (ship == null)
+            {
+                throw new ArgumentNullException(nameof(ship));
+            }
+
+            return new GameSessionState(
+                Phase,
+                ship,
+                Wallet,
+                SettlementResult,
+                IsAssociationMember,
+                CurrentPlanet,
+                StartingLoadout,
+                Equipment,
+                Reputation,
+                CompletedTransportCount,
+                ActiveTransportContract,
+                ActiveCargo);
+        }
+
+        public GameSessionState WithReputation(ReputationState reputation)
+        {
+            return new GameSessionState(
+                Phase,
+                Ship,
+                Wallet,
+                SettlementResult,
+                IsAssociationMember,
+                CurrentPlanet,
+                StartingLoadout,
+                Equipment,
+                reputation,
+                CompletedTransportCount,
+                ActiveTransportContract,
+                ActiveCargo);
+        }
+
+        public GameSessionState WithAssociationMembership(bool isAssociationMember)
+        {
+            return new GameSessionState(
+                Phase,
+                Ship,
+                Wallet,
+                SettlementResult,
+                isAssociationMember,
+                CurrentPlanet,
+                StartingLoadout,
+                Equipment,
+                Reputation,
                 CompletedTransportCount,
                 ActiveTransportContract,
                 ActiveCargo);
@@ -224,6 +292,7 @@ namespace Bellerophon.Core.Session
                 CurrentPlanet,
                 StartingLoadout,
                 purchase.State,
+                Reputation,
                 CompletedTransportCount,
                 ActiveTransportContract,
                 ActiveCargo);
@@ -241,6 +310,7 @@ namespace Bellerophon.Core.Session
                 CurrentPlanet,
                 StartingLoadout,
                 Equipment,
+                Reputation,
                 CompletedTransportCount,
                 contract,
                 cargo);
@@ -252,6 +322,22 @@ namespace Bellerophon.Core.Session
                 result.FinalBalance,
                 Wallet.AllowsDebt,
                 result.DebtStatus == SettlementDebtStatus.GraceActive);
+        }
+
+        private ReputationState ApplyContractReputation(SettlementInput input, bool completedTransport)
+        {
+            if (!ActiveTransportContract.HasValue)
+            {
+                return Reputation;
+            }
+
+            var change = ReputationRules.CalculateContractResult(
+                ActiveTransportContract.Value,
+                IsAssociationMember,
+                completedTransport,
+                input.Crew.DeadCount,
+                input.Cargo.LossPercent);
+            return ReputationRules.ApplyChange(Reputation, change);
         }
 
         private void RequirePhase(GameSessionPhase expected)

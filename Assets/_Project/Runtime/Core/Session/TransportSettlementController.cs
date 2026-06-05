@@ -12,8 +12,6 @@ namespace Bellerophon.Core.Session
         private const int AssociationDefaultBasePay = 500;
         private const int AssociationDistancePayPerSecond = 5;
         private const int AssociationSupportBonus = 100;
-        private const int AssociationMaintenanceFee = 100;
-        private const int AssociationMaintenanceStartsAtTransport = 4;
         private const int TowingCost = 2000;
         private const int DeadCrewLifeInsuranceCost = 300;
         private const float DefaultGameOverCutsceneSeconds = 2.5f;
@@ -39,6 +37,7 @@ namespace Bellerophon.Core.Session
         private float gameOverCutsceneElapsed;
         private bool hasObservedPhase;
         private GameSessionPhase lastObservedPhase;
+        private int settlementShownCompletedTransportCount = -1;
         private SettlementResult lastSettlementResult;
 
         public GameObject SettlementRoot => settlementRoot;
@@ -63,6 +62,14 @@ namespace Bellerophon.Core.Session
             IsGameOverVisible && gameOverCutsceneElapsed >= GetCutsceneDuration();
 
         public SettlementResult LastSettlementResult => lastSettlementResult;
+
+        public bool ArrivalGateClosedForValidation => settlementShownForCurrentTransport;
+
+        public int SettlementShownCompletedTransportCountForValidation => settlementShownCompletedTransportCount;
+
+        public bool HasObservedPhaseForValidation => hasObservedPhase;
+
+        public GameSessionPhase LastObservedPhaseForValidation => lastObservedPhase;
 
         public GameSessionState CurrentSession => startFlowController != null
             ? startFlowController.CurrentSession
@@ -119,8 +126,7 @@ namespace Bellerophon.Core.Session
         public void ProcessTransportArrival()
         {
             ObserveSessionPhase();
-            if (settlementShownForCurrentTransport ||
-                startFlowController == null ||
+            if (startFlowController == null ||
                 shipDeviceState == null ||
                 !shipDeviceState.HasActiveTransportRun ||
                 !shipDeviceState.CurrentTransportRun.IsComplete)
@@ -130,6 +136,13 @@ namespace Bellerophon.Core.Session
 
             var session = startFlowController.CurrentSession;
             if (session.Phase != GameSessionPhase.Transporting)
+            {
+                return;
+            }
+
+            var expectedCompletedTransportCount = session.CompletedTransportCount + 1;
+            if (settlementShownForCurrentTransport &&
+                settlementShownCompletedTransportCount == expectedCompletedTransportCount)
             {
                 return;
             }
@@ -145,6 +158,7 @@ namespace Bellerophon.Core.Session
         public void ResetArrivalGateForValidation()
         {
             settlementShownForCurrentTransport = false;
+            settlementShownCompletedTransportCount = -1;
             HideSettlement();
         }
 
@@ -254,6 +268,9 @@ namespace Bellerophon.Core.Session
             startFlowController.ApplySessionState(completedSession);
             lastSettlementResult = completedSession.SettlementResult;
             settlementShownForCurrentTransport = true;
+            settlementShownCompletedTransportCount = completedSession.CompletedTransportCount;
+            hasObservedPhase = true;
+            lastObservedPhase = completedSession.Phase;
             ShowSettlement(completedSession);
 
             if (completedSession.Phase == GameSessionPhase.GameOver)
@@ -301,8 +318,8 @@ namespace Bellerophon.Core.Session
                     : 0,
                 shipLossInsurancePayout: ShipStateRules.CalculateShipLossInsurancePayout(ship),
                 associationMaintenanceFee: session.IsAssociationMember &&
-                                           completedTransportNumber >= AssociationMaintenanceStartsAtTransport
-                    ? AssociationMaintenanceFee
+                                           completedTransportNumber >= DetailedContractCatalogRules.AssociationMaintenanceStartsAtTransport
+                    ? DetailedContractCatalogRules.AssociationMaintenanceFeeCredits
                     : 0);
         }
 

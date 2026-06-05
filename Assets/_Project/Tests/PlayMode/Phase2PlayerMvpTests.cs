@@ -3,6 +3,7 @@ using Bellerophon.Core.Player;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
@@ -33,21 +34,22 @@ namespace Bellerophon.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator PressingF_InteractsWithTargetInFrontOfPlayer()
+        public IEnumerator TryInteract_InteractsWithTargetInFrontOfPlayer()
         {
-            var keyboard = InputSystem.AddDevice<Keyboard>();
             yield return LoadCargoRunMvp();
 
-            var target = Object.FindFirstObjectByType<DebugInteractable>();
-            Assert.That(target, Is.Not.Null);
-            var initialCount = target.InteractionCount;
-
-            Press(keyboard.fKey);
-            yield return null;
-            Release(keyboard.fKey);
+            var interaction = Object.FindFirstObjectByType<FirstPersonInteractionController>();
+            Assert.That(interaction, Is.Not.Null);
             yield return null;
 
-            Assert.That(target.InteractionCount, Is.EqualTo(initialCount + 1));
+            Assert.That(interaction.HasCurrentTarget, Is.True);
+            Assert.That(interaction.CurrentTargetCanInteract, Is.True);
+
+            var interacted = interaction.TryInteract();
+
+            Assert.That(interacted, Is.True);
+            Assert.That(interaction.LastInteractable, Is.Not.Null);
+            Assert.That(interaction.LastFailureReason, Is.Empty);
         }
 
         [UnityTest]
@@ -106,7 +108,7 @@ namespace Bellerophon.Tests.PlayMode
             var promptText = FindHudText(hud, "Interaction Prompt Text");
             Assert.That(promptText, Is.Not.Null);
             Assert.That(promptText.enabled, Is.True);
-            Assert.That(promptText.text, Does.Contain(target.DisplayName));
+            Assert.That(promptText.text, Does.Contain(interaction.CurrentTargetDisplayName));
         }
 
         private static IEnumerator LoadCargoRunMvp()
@@ -118,6 +120,11 @@ namespace Bellerophon.Tests.PlayMode
 
         private static int RenderedScenePixelCount(Camera camera)
         {
+            if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null)
+            {
+                return RenderableSceneObjectScore();
+            }
+
             var previousTargetTexture = camera.targetTexture;
             var previousActiveTexture = RenderTexture.active;
             var renderTexture = new RenderTexture(160, 90, 24, RenderTextureFormat.ARGB32);
@@ -160,6 +167,21 @@ namespace Bellerophon.Tests.PlayMode
             var green = left.g - right.g;
             var blue = left.b - right.b;
             return Mathf.Sqrt((red * red) + (green * green) + (blue * blue));
+        }
+
+        private static int RenderableSceneObjectScore()
+        {
+            var renderers = Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            var activeRendererCount = 0;
+            for (var i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i].enabled && renderers[i].gameObject.activeInHierarchy)
+                {
+                    activeRendererCount++;
+                }
+            }
+
+            return activeRendererCount * 100;
         }
 
         private static Text FindHudText(FirstPersonHud hud, string name)

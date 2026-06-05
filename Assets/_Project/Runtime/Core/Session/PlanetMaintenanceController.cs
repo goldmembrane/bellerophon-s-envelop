@@ -30,11 +30,13 @@ namespace Bellerophon.Core.Session
         [SerializeField] private Text contractListText;
         [SerializeField] private Text statusText;
         [SerializeField] private Button repairButton;
+        [SerializeField] private Button contractBoardButton;
         [SerializeField] private Button associationContractButton;
         [SerializeField] private Button privateContractButton;
         [SerializeField] private Button shopButton;
         [SerializeField] private Button personalCargoButton;
         [SerializeField] private Button upgradesButton;
+        [SerializeField] private ContractBoardController contractBoardController;
 
         private string lastStatus = string.Empty;
 
@@ -47,6 +49,8 @@ namespace Bellerophon.Core.Session
         public Text StatusText => statusText;
 
         public Button RepairButton => repairButton;
+
+        public Button ContractBoardButton => contractBoardButton;
 
         public Button AssociationContractButton => associationContractButton;
 
@@ -101,6 +105,23 @@ namespace Bellerophon.Core.Session
             HideMaintenance();
         }
 
+        public void ConfigureContractBoard(
+            ContractBoardController boardController,
+            Button boardButton)
+        {
+            if (contractBoardButton != null)
+            {
+                contractBoardButton.onClick.RemoveListener(OpenContractBoardEntry);
+            }
+
+            contractBoardController = boardController;
+            contractBoardButton = boardButton;
+            if (contractBoardButton != null)
+            {
+                contractBoardButton.onClick.AddListener(OpenContractBoardEntry);
+            }
+        }
+
         public void ShowMaintenance()
         {
             if (startFlowController == null || maintenanceRoot == null)
@@ -152,13 +173,14 @@ namespace Bellerophon.Core.Session
 
             if (contractListText != null)
             {
-                contractListText.text = BuildContractListText(session);
+                contractListText.text = BuildContractBoardEntryText(session);
             }
 
             var repairCharge = GetRepairCharge(session);
             SetButtonState(repairButton, repairCharge > 0);
-            SetButtonState(associationContractButton, CanStartContract(session, GetContract(0)));
-            SetButtonState(privateContractButton, CanStartContract(session, GetContract(1)));
+            SetButtonState(contractBoardButton, session.Phase == GameSessionPhase.Completed);
+            SetButtonState(associationContractButton, false);
+            SetButtonState(privateContractButton, false);
             SetButtonState(shopButton, true);
             SetButtonState(personalCargoButton, true);
             SetButtonState(upgradesButton, true);
@@ -200,12 +222,25 @@ namespace Bellerophon.Core.Session
 
         public void SelectAssociationContract()
         {
-            StartSelectedContract(GetContract(0));
+            OpenContractBoardEntry();
         }
 
         public void SelectPrivateContract()
         {
-            StartSelectedContract(GetContract(1));
+            OpenContractBoardEntry();
+        }
+
+        public void OpenContractBoardEntry()
+        {
+            if (contractBoardController == null)
+            {
+                lastStatus = "Contract board is not configured.";
+                RefreshMaintenance();
+                return;
+            }
+
+            HideMaintenance();
+            contractBoardController.ShowBoard();
         }
 
         public void OpenShopEntry()
@@ -257,6 +292,11 @@ namespace Bellerophon.Core.Session
                 repairButton.onClick.AddListener(RepairShip);
             }
 
+            if (contractBoardButton != null)
+            {
+                contractBoardButton.onClick.AddListener(OpenContractBoardEntry);
+            }
+
             if (associationContractButton != null)
             {
                 associationContractButton.onClick.AddListener(SelectAssociationContract);
@@ -290,6 +330,11 @@ namespace Bellerophon.Core.Session
                 repairButton.onClick.RemoveListener(RepairShip);
             }
 
+            if (contractBoardButton != null)
+            {
+                contractBoardButton.onClick.RemoveListener(OpenContractBoardEntry);
+            }
+
             if (associationContractButton != null)
             {
                 associationContractButton.onClick.RemoveListener(SelectAssociationContract);
@@ -316,31 +361,6 @@ namespace Bellerophon.Core.Session
             }
         }
 
-        private void StartSelectedContract(TransportContractDefinition contract)
-        {
-            var session = CurrentSession;
-            if (session == null || !CanStartContract(session, contract))
-            {
-                lastStatus = "Repair and cargo hold readiness are required before selecting this contract.";
-                RefreshMaintenance();
-                return;
-            }
-
-            var nextSession = session.StartTransport(contract);
-            startFlowController.ApplySessionState(nextSession);
-            if (shipDeviceState != null)
-            {
-                shipDeviceState.SetShipState(nextSession.Ship);
-                shipDeviceState.SetCargoState(contract.Cargo);
-                shipDeviceState.SetEquipmentState(nextSession.Equipment);
-                shipDeviceState.StartTransportRun(contract.DurationSeconds);
-                shipDeviceState.TryStartAsteroidFieldForCurrentRun(nextSession);
-            }
-
-            lastStatus = "Contract selected: " + contract.DisplayName;
-            HideMaintenance();
-        }
-
         private void TickSeedIntruderOccurrence()
         {
             var session = CurrentSession;
@@ -350,30 +370,6 @@ namespace Bellerophon.Core.Session
             }
 
             shipDeviceState.TickSeedIntruderOccurrenceForCurrentRun(Time.deltaTime, session);
-        }
-
-        private TransportContractDefinition GetContract(int index)
-        {
-            if (startFlowController != null && startFlowController.AvailableContractCount > index)
-            {
-                return startFlowController.GetAvailableContract(index);
-            }
-
-            return index == 0
-                ? TransportContractDefinition.CreateAssociationFollowUp()
-                : TransportContractDefinition.CreatePrivateFollowUp();
-        }
-
-        private static bool CanStartContract(GameSessionState session, TransportContractDefinition contract)
-        {
-            if (session == null || session.Phase != GameSessionPhase.Completed)
-            {
-                return false;
-            }
-
-            var readiness = ShipStateRules.EvaluateStartReadiness(session.Ship);
-            var cargoHoldScore = Mathf.RoundToInt(ShipStateRules.CalculateCargoHoldScore(session.Ship) * 100f);
-            return readiness.CanStartTransport && cargoHoldScore >= contract.RequiredCargoHoldScore;
         }
 
         private static int GetRepairCharge(GameSessionState session)
@@ -414,27 +410,14 @@ namespace Bellerophon.Core.Session
             return builder.ToString();
         }
 
-        private string BuildContractListText(GameSessionState session)
+        private static string BuildContractBoardEntryText(GameSessionState session)
         {
-            var association = GetContract(0);
-            var privateContract = GetContract(1);
-            var builder = new StringBuilder();
-            builder.AppendLine(BuildContractLine("Association", association, session));
-            builder.AppendLine(BuildContractLine("Private", privateContract, session));
-            builder.AppendLine();
-            builder.Append("Entry points: Shop / Personal Cargo / Upgrades");
-            return builder.ToString();
-        }
-
-        private static string BuildContractLine(string prefix, TransportContractDefinition contract, GameSessionState session)
-        {
-            return prefix + ": " +
-                   contract.DisplayName +
-                   " | Reward " + FormatMoney(contract.RewardCredits) +
-                   " | Duration " + contract.DurationSeconds + "s" +
-                   " | Required cargo score " + contract.RequiredCargoHoldScore +
-                   " | Difficulty " + contract.Difficulty +
-                   " | " + (CanStartContract(session, contract) ? "Ready" : "Needs repair");
+            var cargoHoldScore = Mathf.RoundToInt(ShipStateRules.CalculateCargoHoldScore(session.Ship) * 100f);
+            return "Contract Board: separate screen\n" +
+                   "Fame: " + session.Reputation.FameScore +
+                   " | Association fame: " + session.Reputation.AssociationFameScore + "\n" +
+                   "Cargo hold score: " + cargoHoldScore + "\n" +
+                   "Entry points: Contract Board / Shop / Personal Cargo / Upgrades";
         }
 
         private static string BuildStartReadinessText(GameSessionState session)
@@ -538,6 +521,7 @@ namespace Bellerophon.Core.Session
 
             var pointerPosition = Mouse.current.position.ReadValue();
             if (TryClickButtonAtScreenPosition(repairButton, pointerPosition, RepairShip) ||
+                TryClickButtonAtScreenPosition(contractBoardButton, pointerPosition, OpenContractBoardEntry) ||
                 TryClickButtonAtScreenPosition(associationContractButton, pointerPosition, SelectAssociationContract) ||
                 TryClickButtonAtScreenPosition(privateContractButton, pointerPosition, SelectPrivateContract) ||
                 TryClickButtonAtScreenPosition(shopButton, pointerPosition, OpenShopEntry) ||

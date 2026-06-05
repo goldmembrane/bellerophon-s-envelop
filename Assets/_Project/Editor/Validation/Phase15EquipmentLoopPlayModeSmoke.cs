@@ -212,15 +212,17 @@ namespace Bellerophon.Editor.Validation
             var shopController = UnityEngine.Object.FindFirstObjectByType<EquipmentShopController>();
             var settlementController = UnityEngine.Object.FindFirstObjectByType<TransportSettlementController>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
+            var contractBoardController = UnityEngine.Object.FindFirstObjectByType<ContractBoardController>();
             if (startController == null ||
                 deviceState == null ||
                 deviceHud == null ||
                 equipmentController == null ||
                 shopController == null ||
                 settlementController == null ||
-                maintenanceController == null)
+                maintenanceController == null ||
+                contractBoardController == null)
             {
-                throw new InvalidOperationException("Runtime scene must contain Phase 15 start, device, HUD, equipment, shop, settlement, and maintenance controllers.");
+                throw new InvalidOperationException("Runtime scene must contain Phase 15 start, device, HUD, equipment, shop, settlement, maintenance, and contract board controllers.");
             }
 
             ClickButtonThroughUi(startController.YesButton);
@@ -289,7 +291,16 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Phase 15 shop close button must hide the shop after purchase.");
             }
 
-            ClickButtonThroughUi(maintenanceController.AssociationContractButton);
+            ClickButtonThroughUi(maintenanceController.ContractBoardButton);
+            ClickButtonThroughUi(contractBoardController.AssociationContractButton);
+            if (!contractBoardController.IsBoardVisible ||
+                maintenanceController.CurrentSession.Phase != GameSessionPhase.Completed ||
+                contractBoardController.SelectedContractId != "association-local-001")
+            {
+                throw new InvalidOperationException("Association category must select the follow-up contract before acceptance.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.AcceptContractButton);
             settlementController.ResetArrivalGateForValidation();
             var followUp = maintenanceController.CurrentSession;
             if (followUp == null ||

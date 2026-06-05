@@ -25,9 +25,10 @@ namespace Bellerophon.Editor.Validation
 
             var settlementController = UnityEngine.Object.FindFirstObjectByType<TransportSettlementController>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
-            if (settlementController == null || maintenanceController == null)
+            var contractBoardController = UnityEngine.Object.FindFirstObjectByType<ContractBoardController>();
+            if (settlementController == null || maintenanceController == null || contractBoardController == null)
             {
-                throw new InvalidOperationException("Phase 10 requires settlement and maintenance controllers.");
+                throw new InvalidOperationException("Phase 10 requires settlement, maintenance, and contract board controllers.");
             }
 
             if (settlementController.ContinueToMaintenanceButton == null ||
@@ -46,13 +47,40 @@ namespace Bellerophon.Editor.Validation
             }
 
             if (maintenanceController.RepairButton == null ||
-                maintenanceController.AssociationContractButton == null ||
-                maintenanceController.PrivateContractButton == null ||
+                maintenanceController.ContractBoardButton == null ||
                 maintenanceController.ShopButton == null ||
                 maintenanceController.PersonalCargoButton == null ||
                 maintenanceController.UpgradesButton == null)
             {
                 throw new InvalidOperationException("Phase 10 maintenance action buttons are missing.");
+            }
+
+            if (contractBoardController.BoardRoot == null ||
+                contractBoardController.BoardRoot.name != Phase10PlanetMaintenanceBootstrap.ContractBoardRootName ||
+                contractBoardController.SummaryText == null ||
+                contractBoardController.ContractListText == null ||
+                contractBoardController.StatusText == null ||
+                contractBoardController.ContractSlotButtons == null ||
+                contractBoardController.ContractSlotButtons.Length != Phase10PlanetMaintenanceBootstrap.ContractSlotButtonCount ||
+                contractBoardController.AssociationContractButton == null ||
+                contractBoardController.PrivateContractButton == null ||
+                contractBoardController.SpecialContractButton == null ||
+                contractBoardController.PreviousContractButton == null ||
+                contractBoardController.NextContractButton == null ||
+                contractBoardController.AcceptContractButton == null ||
+                contractBoardController.BackButton == null)
+            {
+                throw new InvalidOperationException("Phase 10 contract board screen references are missing.");
+            }
+
+            for (var i = 0; i < contractBoardController.ContractSlotButtons.Length; i++)
+            {
+                var slotButton = contractBoardController.ContractSlotButtons[i];
+                if (slotButton == null ||
+                    slotButton.name != Phase10PlanetMaintenanceBootstrap.ContractSlotButtonNamePrefix + (i + 1))
+                {
+                    throw new InvalidOperationException("Phase 10 contract board slot buttons are missing.");
+                }
             }
 
             var maintenanceRect = maintenanceController.MaintenanceRoot.GetComponent<RectTransform>();
@@ -68,6 +96,21 @@ namespace Bellerophon.Editor.Validation
             if (background == null || background.color.a < 1f)
             {
                 throw new InvalidOperationException("Phase 10 maintenance screen background must be fully opaque.");
+            }
+
+            var boardRect = contractBoardController.BoardRoot.GetComponent<RectTransform>();
+            if (boardRect == null ||
+                boardRect.anchorMin != Vector2.zero ||
+                boardRect.anchorMax != Vector2.one ||
+                boardRect.sizeDelta != Vector2.zero)
+            {
+                throw new InvalidOperationException("Phase 10 contract board screen must cover the full screen.");
+            }
+
+            var boardBackground = contractBoardController.BoardRoot.GetComponent<Image>();
+            if (boardBackground == null || boardBackground.color.a < 1f)
+            {
+                throw new InvalidOperationException("Phase 10 contract board screen background must be fully opaque.");
             }
 
             Debug.Log("Phase 10 planet maintenance editor validation passed.");

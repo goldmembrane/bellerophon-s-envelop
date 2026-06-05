@@ -210,13 +210,15 @@ namespace Bellerophon.Editor.Validation
             var deviceState = UnityEngine.Object.FindFirstObjectByType<ShipDeviceInteractionState>();
             var settlementController = UnityEngine.Object.FindFirstObjectByType<TransportSettlementController>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
+            var contractBoardController = UnityEngine.Object.FindFirstObjectByType<ContractBoardController>();
             if (startController == null ||
                 playerInput == null ||
                 deviceState == null ||
                 settlementController == null ||
-                maintenanceController == null)
+                maintenanceController == null ||
+                contractBoardController == null)
             {
-                throw new InvalidOperationException("Runtime scene must contain Phase 10 start flow, player input, device state, settlement, and maintenance controllers.");
+                throw new InvalidOperationException("Runtime scene must contain Phase 10 start flow, player input, device state, settlement, maintenance, and contract board controllers.");
             }
 
             ClickButtonThroughUi(startController.YesButton);
@@ -266,28 +268,60 @@ namespace Bellerophon.Editor.Validation
                 !maintenanceController.RoomStatusText.text.Contains("Cargo Hold") ||
                 !maintenanceController.RoomStatusText.text.Contains("cargo loss risk") ||
                 maintenanceController.ContractListText == null ||
-                !maintenanceController.ContractListText.text.Contains("Association") ||
-                !maintenanceController.ContractListText.text.Contains("Private") ||
-                !maintenanceController.ContractListText.text.Contains("Reward") ||
-                !maintenanceController.ContractListText.text.Contains("Duration") ||
-                !maintenanceController.ContractListText.text.Contains("Required cargo score") ||
-                !maintenanceController.ContractListText.text.Contains("Difficulty"))
+                !maintenanceController.ContractListText.text.Contains("Contract Board") ||
+                !maintenanceController.ContractListText.text.Contains("Fame") ||
+                !maintenanceController.ContractListText.text.Contains("Entry points"))
             {
-                throw new InvalidOperationException("Maintenance UI must show room risks and association/private contract list details.");
+                throw new InvalidOperationException("Maintenance UI must show room risks and the separate contract board entry summary.");
             }
 
             if (!maintenanceController.RepairButton.interactable ||
-                maintenanceController.AssociationContractButton.interactable ||
-                maintenanceController.PrivateContractButton.interactable)
+                !maintenanceController.ContractBoardButton.interactable ||
+                contractBoardController.IsBoardVisible)
             {
-                throw new InvalidOperationException("Damaged ship must require repair before next contract buttons become interactable.");
+                throw new InvalidOperationException("Damaged ship must keep repair available while exposing the separate contract board entry.");
             }
 
             ClickButtonThroughUi(maintenanceController.ShopButton);
             if (maintenanceController.StatusText == null ||
-                !maintenanceController.StatusText.text.Contains("Shop entry point"))
+                !maintenanceController.StatusText.text.Contains("Shop"))
             {
                 throw new InvalidOperationException("Shop button must expose an entry point without implementing detailed shop features.");
+            }
+
+            ClickButtonThroughUi(maintenanceController.ContractBoardButton);
+            if (!contractBoardController.IsBoardVisible ||
+                maintenanceController.IsMaintenanceVisible ||
+                contractBoardController.ContractListText == null ||
+                !contractBoardController.ContractListText.text.Contains("Association") ||
+                !contractBoardController.ContractListText.text.Contains("Private") ||
+                !contractBoardController.ContractListText.text.Contains("Reward") ||
+                !contractBoardController.ContractListText.text.Contains("Duration") ||
+                !contractBoardController.ContractListText.text.Contains("Required cargo score") ||
+                !contractBoardController.ContractListText.text.Contains("Difficulty") ||
+                contractBoardController.ContractSlotButtons == null ||
+                contractBoardController.ContractSlotButtons.Length == 0 ||
+                !contractBoardController.ContractSlotButtons[0].interactable ||
+                !contractBoardController.AssociationContractButton.interactable ||
+                !contractBoardController.PrivateContractButton.interactable ||
+                contractBoardController.AcceptContractButton.interactable)
+            {
+                throw new InvalidOperationException("Contract board must be a separate screen with selectable contract rows and repair-gated acceptance.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.AssociationContractButton);
+            if (!contractBoardController.IsBoardVisible ||
+                maintenanceController.CurrentSession.Phase != GameSessionPhase.Completed ||
+                contractBoardController.SelectedContractId != "association-local-001" ||
+                contractBoardController.AcceptContractButton.interactable)
+            {
+                throw new InvalidOperationException("Association category must select a row without accepting while the ship still needs repair.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.BackButton);
+            if (!maintenanceController.IsMaintenanceVisible || contractBoardController.IsBoardVisible)
+            {
+                throw new InvalidOperationException("Contract board back button must return to planet maintenance.");
             }
 
             ClickButtonThroughUi(maintenanceController.RepairButton);
@@ -297,17 +331,42 @@ namespace Bellerophon.Editor.Validation
                 repairedSession.SettlementResult.PendingRepairCost != 0 ||
                 repairedSession.Ship.GetRoom(ShipRoomId.CargoHold).CurrentDurability != 100 ||
                 maintenanceController.RepairButton.interactable ||
-                !maintenanceController.AssociationContractButton.interactable ||
-                !maintenanceController.PrivateContractButton.interactable ||
+                !maintenanceController.ContractBoardButton.interactable ||
                 !maintenanceController.RoomStatusText.text.Contains("Cargo Hold: 100% Optimal"))
             {
                 throw new InvalidOperationException(
                     $"Repair must charge pending cost and restore next transport readiness. Balance={repairedSession.Wallet.Credits}; Pending={repairedSession.SettlementResult.PendingRepairCost}");
             }
 
-            ClickButtonThroughUi(maintenanceController.AssociationContractButton);
+            ClickButtonThroughUi(maintenanceController.ContractBoardButton);
+            if (!contractBoardController.IsBoardVisible ||
+                !contractBoardController.AssociationContractButton.interactable ||
+                !contractBoardController.PrivateContractButton.interactable ||
+                !contractBoardController.AcceptContractButton.interactable)
+            {
+                throw new InvalidOperationException("Repaired ship must unlock association/private selection and the separate accept action on the contract board.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.AssociationContractButton);
+            if (!contractBoardController.IsBoardVisible ||
+                maintenanceController.CurrentSession.Phase != GameSessionPhase.Completed ||
+                contractBoardController.SelectedContractId != "association-local-001")
+            {
+                throw new InvalidOperationException("Association button must select the category without immediately starting transport.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.ContractSlotButtons[0]);
+            if (!contractBoardController.IsBoardVisible ||
+                maintenanceController.CurrentSession.Phase != GameSessionPhase.Completed ||
+                contractBoardController.SelectedContractId != "association-local-001")
+            {
+                throw new InvalidOperationException("Contract row click must select the listed contract without immediately starting transport.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.AcceptContractButton);
             var nextRun = maintenanceController.CurrentSession;
             if (maintenanceController.IsMaintenanceVisible ||
+                contractBoardController.IsBoardVisible ||
                 nextRun.Phase != GameSessionPhase.Transporting ||
                 !nextRun.ActiveTransportContract.HasValue ||
                 nextRun.ActiveTransportContract.Value.Id != "association-local-001" ||

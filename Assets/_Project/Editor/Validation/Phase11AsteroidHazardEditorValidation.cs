@@ -28,13 +28,15 @@ namespace Bellerophon.Editor.Validation
             var deviceHud = UnityEngine.Object.FindFirstObjectByType<ShipDeviceHud>();
             var manualView = UnityEngine.Object.FindFirstObjectByType<ManualFlightView>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
+            var contractBoardController = UnityEngine.Object.FindFirstObjectByType<ContractBoardController>();
             if (root == null ||
                 deviceState == null ||
                 deviceHud == null ||
                 manualView == null ||
-                maintenanceController == null)
+                maintenanceController == null ||
+                contractBoardController == null)
             {
-                throw new InvalidOperationException("Phase 11 requires hazard root, device state, HUD, manual flight view, and maintenance controller.");
+                throw new InvalidOperationException("Phase 11 requires hazard root, device state, HUD, manual flight view, maintenance controller, and contract board.");
             }
 
             if (deviceHud.TransportStatusText == null)
@@ -48,10 +50,12 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Phase 11 must reuse the full-screen manual flight asteroid field view.");
             }
 
-            if (maintenanceController.AssociationContractButton == null ||
-                maintenanceController.PrivateContractButton == null)
+            if (maintenanceController.ContractBoardButton == null ||
+                contractBoardController.AssociationContractButton == null ||
+                contractBoardController.PrivateContractButton == null ||
+                contractBoardController.AcceptContractButton == null)
             {
-                throw new InvalidOperationException("Phase 11 requires post-tutorial contract buttons as hazard entry paths.");
+                throw new InvalidOperationException("Phase 11 requires the contract board as the post-tutorial hazard entry path.");
             }
 
             if (TransportHazardRules.AsteroidFieldOccurrencePercent <= 0 ||

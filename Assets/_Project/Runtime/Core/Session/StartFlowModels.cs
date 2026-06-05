@@ -74,7 +74,8 @@ namespace Bellerophon.Core.Session
             int rewardCredits,
             CargoState cargo,
             bool isTutorial,
-            int requiredCargoHoldScore = 0)
+            int requiredCargoHoldScore = 0,
+            bool isRevivalContract = false)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -116,6 +117,7 @@ namespace Bellerophon.Core.Session
             Cargo = cargo;
             IsTutorial = isTutorial;
             RequiredCargoHoldScore = requiredCargoHoldScore;
+            IsRevivalContract = isRevivalContract;
         }
 
         public string Id { get; }
@@ -138,57 +140,26 @@ namespace Bellerophon.Core.Session
 
         public int RequiredCargoHoldScore { get; }
 
+        public bool IsRevivalContract { get; }
+
         public static TransportContractDefinition CreateTutorial()
         {
-            return new TransportContractDefinition(
-                "association-tutorial-001",
-                "Tutorial Delivery",
-                "Cargo Hold Center Cargo",
-                ContractType.Association,
-                ContractDifficulty.Intro,
-                60,
-                1000,
-                new CargoState(CargoGrade.Common, 50, 100, 1f, false),
-                true);
+            return DetailedContractCatalogRules.CreateTutorialContract();
         }
 
         public static TransportContractDefinition CreateAssociationFollowUp()
         {
-            return new TransportContractDefinition(
-                "association-local-001",
-                "Association Local Freight",
-                "Cargo Hold Center Cargo",
-                ContractType.Association,
-                ContractDifficulty.VeryEasy,
-                75,
-                900,
-                new CargoState(CargoGrade.Common, 45, 180, 1f, false),
-                false,
-                40);
+            return DetailedContractCatalogRules.CreateAssociationFollowUpContract();
         }
 
         public static TransportContractDefinition CreatePrivateFollowUp()
         {
-            return new TransportContractDefinition(
-                "private-sample-001",
-                "Private Volatile Sample",
-                "Cargo Hold Center Cargo",
-                ContractType.Private,
-                ContractDifficulty.Normal,
-                90,
-                1800,
-                new CargoState(CargoGrade.Rare, 60, 420, 1f, false),
-                false,
-                65);
+            return DetailedContractCatalogRules.CreatePrivateFollowUpContract();
         }
 
         public static TransportContractDefinition[] CreatePostTutorialContracts()
         {
-            return new[]
-            {
-                CreateAssociationFollowUp(),
-                CreatePrivateFollowUp()
-            };
+            return DetailedContractCatalogRules.CreatePostTutorialContracts();
         }
     }
 

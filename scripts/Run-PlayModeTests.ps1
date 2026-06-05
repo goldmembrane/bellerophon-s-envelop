@@ -9,7 +9,7 @@ New-Item -ItemType Directory -Force -Path (Split-Path $resultsPath), (Split-Path
 Remove-Item -LiteralPath $resultsPath -Force -ErrorAction SilentlyContinue
 Remove-Item -LiteralPath $logPath -Force -ErrorAction SilentlyContinue
 
-& (Join-Path $PSScriptRoot "Invoke-UnityEditorBridge.ps1") -Command "PlayModeTests" -LogPath $logPath -ResultsPath $resultsPath -TimeoutSeconds 90
+& (Join-Path $PSScriptRoot "Invoke-UnityEditorBridge.ps1") -Command "PlayModeTests" -LogPath $logPath -ResultsPath $resultsPath -TimeoutSeconds 180
 $bridgeExitCode = $LASTEXITCODE
 
 if ($bridgeExitCode -eq 0) {

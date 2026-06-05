@@ -5,10 +5,13 @@ namespace Bellerophon.Platform
     public sealed class NullPlatformServices : IPlatformServices
     {
         private readonly HashSet<string> unlockedAchievements = new HashSet<string>();
+        private readonly NullPlatformMultiplayerServices multiplayer = new NullPlatformMultiplayerServices();
 
         public string PlatformName => "Null";
 
         public bool IsAvailable => true;
+
+        public IPlatformMultiplayerServices Multiplayer => multiplayer;
 
         public IReadOnlyCollection<string> UnlockedAchievements => unlockedAchievements;
 

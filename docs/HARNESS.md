@@ -1,5 +1,12 @@
 # Harness Engineering
 
+## Detailed Phase 1 PlayMode Stability
+
+- `Run-PlayModeTests.ps1` must now create `TestResults\playmode-results.xml` as a required validation path.
+- When a Unity editor is already open, `UnityEditorValidationBridge` must still save PlayMode Test Runner results through the open editor path.
+- The PlayMode Test Runner bridge uses a `ScriptableObject` callback so request data survives domain reload during PlayMode entry.
+- Stability status is tracked in `docs/PLAYMODE_TEST_RUNNER_STABILITY.md`.
+
 Bellerophon의 하네스는 AI/사람 개발자가 같은 구조, 같은 명령, 같은 완료 기준으로 작업하게 만드는 프로젝트 운영 계층이다.
 
 ## 목적
@@ -63,6 +70,9 @@ Bellerophon의 하네스는 AI/사람 개발자가 같은 구조, 같은 명령,
 .\scripts\Run-Phase13IntruderFrameworkSmoke.ps1
 .\scripts\Run-Phase14ParvumIntruderSmoke.ps1
 .\scripts\Run-Phase15EquipmentLoopSmoke.ps1
+.\scripts\Run-Phase16HudMapAtmosphereSmoke.ps1
+.\scripts\Run-Phase17CoopFoundationSmoke.ps1
+.\scripts\Run-Phase18MvpPlaytestLoopSmoke.ps1
 .\scripts\Run-AllChecks.ps1
 .\scripts\Build-WindowsDev.ps1
 ```
@@ -74,6 +84,8 @@ Bellerophon의 하네스는 AI/사람 개발자가 같은 구조, 같은 명령,
 열린 에디터가 없으면 기존처럼 batchmode Unity를 실행한다. 열린 에디터 검증은 사용자의 에디터 세션에서 Test Runner와 BuildPipeline을 실행하므로 PlayMode 테스트와 빌드는 에디터 상태를 일시적으로 바꿀 수 있다.
 
 열린 에디터 브리지에서 PlayMode 테스트를 요청할 때 에디터가 이미 Play mode이면 먼저 Edit mode 복귀를 기다린 뒤 Test Runner를 시작한다. Test Runner가 내부 오류를 보고하면 브리지는 실패 로그를 남기고 다음 요청을 받을 수 있는 상태로 복구한다.
+
+PlayMode Test Runner는 Play mode 진입 중 도메인 리로드가 발생하므로, 브리지는 active 요청 파일을 남기고 도메인 리로드 후 콜백 재등록을 시도한다. 그래도 Unity Test Runner가 완료 콜백을 돌려주지 않으면 단계별 PlayMode smoke를 우선 검증 경로로 사용한다.
 
 사용자가 에디터를 직접 확인하는 중에는 전체 `Run-PlayModeTests.ps1`보다 기능별 빠른 PlayMode smoke를 먼저 사용한다. 2단계 플레이어 MVP는 `.\scripts\Run-Phase2PlayModeSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 `CargoRunMvp`를 Play 모드로 짧게 실행하고, 런타임 플레이어/HUD/MainCamera/카메라 렌더/상호작용을 확인한 뒤 다시 Edit 모드로 돌아온다.
 
@@ -100,6 +112,12 @@ Bellerophon의 하네스는 AI/사람 개발자가 같은 구조, 같은 명령,
 14단계 첫 침입자 씨앗체 구현은 `.\scripts\Run-Phase14ParvumIntruderSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 Phase14 파르붐 루트를 재생성하고, Play 모드에서 튜토리얼 첫 운행에는 씨앗체가 발생하지 않는지, 후속 운행 중 2초마다 15% 판정으로 파르붐이 내부 침입자로 발생하는지, 외부 목표가 생성되지 않는지, HUD 표시와 월드 placeholder 표시/숨김이 동작하는지, 파르붐의 0.5초 공격 피해가 정산 후 정비 수리비로 남는지 확인한다.
 
 15단계 무기류와 비품실 기본 루프는 `.\scripts\Run-Phase15EquipmentLoopSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 Phase15 장비 HUD와 상점 루트를 재생성하고, Play 모드에서 협회 기본 지급 장비, 비품창고 3칸 표시, 정비 화면 상점 Buy/Sell 골격, 머스킷 $450 구매, 막대기/머스킷으로 파르붐을 처치하는 전투 연결, 머스킷 R 재장전 골격을 확인한다.
+
+16단계 HUD, 맵, 분위기 1차는 `.\scripts\Run-Phase16HudMapAtmosphereSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 Phase16 HUD, 화물선 내부 맵, 분위기 조명/fog, 사운드 훅을 재생성하고, Play 모드에서 체력/보호막 표시, 현재 구역 맵 갱신, 기본 중앙 조준선 숨김, 머스킷 정밀 조준 레티클 토글, 우클릭 보조 모드 토글을 확인한다.
+
+17단계 협동 플레이 기반은 `.\scripts\Run-Phase17CoopFoundationSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 실제 네트워크 패키지나 Steam 로비를 사용하지 않고, 로컬 권한 세션으로 2명의 플레이어 포즈/상호작용 상태, 장치 소유권, CCTV 상태, 운송 세션 상태, 선박 구역 피해가 같은 스냅샷으로 공유되는지 확인한다.
+
+18단계 반복 가능한 플레이테스트 루프는 `.\scripts\Run-Phase18MvpPlaytestLoopSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 `CargoRunMvp`를 Play 모드로 실행하고, 협회 계약 시작, 튜토리얼 운송 완료, 정산/수리, 후속 협회 의뢰, 수동 회피, 수동 포탑 중립화, 파르붐 침입자 처치, 두 번째 정산과 다음 정비 준비까지 한 번에 확인한다. Phase16 HUD/맵/분위기와 Phase17 로컬 협동 스냅샷 경계도 같은 smoke 안에서 회귀 검증한다.
 
 ## 테스트 정책
 
