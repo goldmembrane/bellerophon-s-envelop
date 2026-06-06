@@ -52,6 +52,13 @@ namespace Bellerophon.Editor.Validation
                 shopController.SellTabButton == null ||
                 shopController.BuyStickButton == null ||
                 shopController.BuyMusketButton == null ||
+                shopController.BuyShotgunButton == null ||
+                shopController.BuyFlashlightButton == null ||
+                shopController.BuyInjuryRelieverButton == null ||
+                shopController.BuyProtectiveSuitButton == null ||
+                shopController.BuyStrengthEnhancerButton == null ||
+                shopController.SellSelectedItemButton == null ||
+                shopController.SellItemButtons.Length == 0 ||
                 shopController.CloseButton == null ||
                 maintenanceController.ShopButton == null)
             {
@@ -94,8 +101,14 @@ namespace Bellerophon.Editor.Validation
             var equipment = PlayerEquipmentState.CreateDefaultAssociationIssue();
             var stick = EquipmentRules.GetDefinition(EquipmentItemKind.Stick);
             var musket = EquipmentRules.GetDefinition(EquipmentItemKind.Musket);
+            var shotgun = EquipmentRules.GetDefinition(EquipmentItemKind.Shotgun);
+            var miniFlamethrower = EquipmentRules.GetDefinition(EquipmentItemKind.MiniFlamethrower);
+            var electricBaton = EquipmentRules.GetDefinition(EquipmentItemKind.ElectricBaton);
+            var dagger = EquipmentRules.GetDefinition(EquipmentItemKind.Dagger);
             if (!equipment.HasBasicProtectiveSuit ||
                 equipment.GetHandSlot(0).ItemKind != EquipmentItemKind.Stick ||
+                equipment.UnlockedHandSlotCount != PlayerEquipmentState.DefaultHandSlotCount ||
+                equipment.UnlockedSupplySlotCount != PlayerEquipmentState.DefaultSupplySlotCount ||
                 equipment.GetSupplySlot(0).IsEmpty == false ||
                 stick.Damage != EquipmentRules.StickDamage ||
                 stick.UseDelaySeconds != EquipmentRules.StickUseDelaySeconds ||
@@ -104,7 +117,16 @@ namespace Bellerophon.Editor.Validation
                 musket.UseDelaySeconds != EquipmentRules.MusketUseDelaySeconds ||
                 !musket.HasPrecisionAimMode ||
                 !musket.HasReloadInputSkeleton ||
-                musket.HasConfirmedMagazineSpec)
+                musket.HasConfirmedMagazineSpec ||
+                shotgun.Damage != EquipmentRules.ShotgunDamage ||
+                shotgun.MinRange != EquipmentRules.ShotgunMinRange ||
+                shotgun.MaxRange != EquipmentRules.ShotgunMaxRange ||
+                !shotgun.HasReloadInputSkeleton ||
+                !shotgun.HasConfirmedMagazineSpec ||
+                miniFlamethrower.Damage != EquipmentRules.MiniFlamethrowerDamage ||
+                electricBaton.Damage != EquipmentRules.ElectricBatonDamage ||
+                dagger.Damage != EquipmentRules.DaggerDamage ||
+                !dagger.HasThrowMode)
             {
                 throw new InvalidOperationException("Phase 15 equipment definitions do not match confirmed scope.");
             }
@@ -117,14 +139,64 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Phase 15 musket shop purchase must deduct credits and equip the musket skeleton.");
             }
 
-            var buyCatalog = EquipmentRules.CreatePhase15BuyCatalog();
-            var sellCatalog = EquipmentRules.CreatePhase15SellCatalog();
-            if (buyCatalog.Length < 6 || sellCatalog.Length < 1)
+            var flashlightSession = purchaseSession.PurchaseEquipment(EquipmentItemKind.Flashlight);
+            var aidSession = flashlightSession.PurchaseEquipment(EquipmentItemKind.InjuryReliever);
+            var disposal = aidSession.DisposePurchasedSupplyEquipment(0);
+            if (flashlightSession.Equipment.GetHandSlot(2).ItemKind != EquipmentItemKind.Flashlight ||
+                aidSession.Equipment.GetSupplySlot(0).ItemKind != EquipmentItemKind.InjuryReliever ||
+                !disposal.Disposed ||
+                disposal.ItemKind != EquipmentItemKind.InjuryReliever ||
+                disposal.ReceivedCredits != 1 ||
+                disposal.State.Equipment.GetHandSlot(1).ItemKind != EquipmentItemKind.Musket ||
+                disposal.State.Equipment.GetSupplySlot(0).IsEmpty == false)
             {
-                throw new InvalidOperationException("Phase 15 shop catalog must include buy categories and a sell skeleton.");
+                throw new InvalidOperationException("Step 7 equipment purchases must use the third hand slot, supply storage, and selected 1% disposal.");
             }
 
-            return $"HandSlots={PlayerEquipmentState.DefaultHandSlotCount}; SupplySlots={PlayerEquipmentState.DefaultSupplySlotCount}; Stick={stick.Damage}/{stick.UseDelaySeconds:0.0}s; Musket={musket.Damage}/{musket.UseDelaySeconds:0.0}s; ReloadSpec=Pending; WalletAfterMusket={purchaseSession.Wallet.Credits}";
+            var step8Session = aidSession
+                .PurchaseEquipment(EquipmentItemKind.ProtectiveSuit)
+                .PurchaseEquipment(EquipmentItemKind.StrengthEnhancer);
+            if (step8Session.Wallet.Credits != 0 ||
+                step8Session.Equipment.GetSupplySlot(1).ItemKind != EquipmentItemKind.ProtectiveSuit ||
+                step8Session.Equipment.GetSupplySlot(2).ItemKind != EquipmentItemKind.StrengthEnhancer)
+            {
+                throw new InvalidOperationException("Step 8 representative protective and enhancement purchases must fit the base supply storage.");
+            }
+
+            var protective = EquipmentRules.UseSupplyItem(step8Session.Equipment, 1);
+            var treatment = EquipmentRules.UseSupplyItem(protective.State, 0);
+            var strength = EquipmentRules.UseSupplyItem(treatment.State, 2);
+            var strengthHit = EquipmentRules.UseActiveEquipment(strength.State.WithActiveHandSlot(0), false, true);
+            if (protective.Outcome != EquipmentUseOutcome.ProtectiveEquipped ||
+                EquipmentRules.CalculateDamageAfterProtection(50, protective.State) != 35 ||
+                treatment.Outcome != EquipmentUseOutcome.TreatmentApplied ||
+                treatment.HealthDelta != EquipmentRules.InjuryRelieverHealAmount ||
+                !treatment.ConsumedItem ||
+                strength.Outcome != EquipmentUseOutcome.EnhancementApplied ||
+                !strength.State.HasActiveStrengthEnhancer ||
+                strengthHit.Damage != 42)
+            {
+                throw new InvalidOperationException("Step 8 supply item effects must apply protective, treatment, and enhancement state.");
+            }
+
+            var lockedPurchase = EquipmentRules.PurchaseItem(equipment, EquipmentItemKind.PresenceDetector);
+            if (lockedPurchase.Purchased)
+            {
+                throw new InvalidOperationException("Step 8 special utility shells must remain locked until their unlock conditions exist.");
+            }
+
+            var buyCatalog = EquipmentRules.CreatePhase15BuyCatalog();
+            var sellCatalog = EquipmentRules.CreatePhase15SellCatalog();
+            if (buyCatalog.Length < 20 ||
+                sellCatalog.Length < 2 ||
+                EquipmentRules.FilterCatalogByAvailability(buyCatalog, EquipmentAvailability.CommonShop).Length < 20 ||
+                EquipmentRules.FilterCatalogByAvailability(buyCatalog, EquipmentAvailability.FameRestrictedShop).Length < 1 ||
+                EquipmentRules.FilterCatalogByAvailability(buyCatalog, EquipmentAvailability.SpecialUnlock).Length < 1)
+            {
+                throw new InvalidOperationException("Step 7 shop catalog must include common, fame-limited, special, and sell sections.");
+            }
+
+            return $"HandSlots={PlayerEquipmentState.DefaultHandSlotCount}/{PlayerEquipmentState.UpgradedHandSlotCount}; SupplySlots={PlayerEquipmentState.DefaultSupplySlotCount}; Stick={stick.Damage}/{stick.UseDelaySeconds:0.0}s; Musket={musket.Damage}/{musket.UseDelaySeconds:0.0}s; Shotgun={shotgun.Damage}; Step8Protection={protective.DamageReductionPercent}; Step8StrengthHit={strengthHit.Damage}; Disposal={disposal.ReceivedCredits}";
         }
 
         private static GameSessionState CreateCompletedTutorialSession()

@@ -2,10 +2,15 @@
 
 ## Implementation Status
 
+- Step 7 completed on 2026-06-06.
+  - Player hand slots now follow the confirmed correction: base 3 slots, pouch upgrade to 4 slots.
+  - Equipment state tracks unlocked hand/supply capacity, durability percentage, purchase-price metadata, purchased-item disposal, and category/availability catalog grouping.
+  - Supply storage capacity follows the equipped Supply Slots upgrade effect values.
+  - Shop Buy separates common, fame-limited, and special products; Sell separates purchased-item 1% disposal from personal cargo sale.
 - Step 3 completed on 2026-06-05.
   - Contract selection is now separated from planet maintenance through `ContractBoardController`.
   - The maintenance screen only exposes repair, contract board, shop, personal cargo, and upgrade entry points.
-  - Contract board category buttons now select categories/rows only; selectable contract rows plus the separate `Accept` button are the only supported acceptance flow.
+  - Contract board category buttons now select categories/rows only; selectable contract rows plus `Accept` add contracts to the pending run, and the separate `Start Run` button begins transport with accepted contracts.
   - Added reputation state and rules for fame, association fame, success/failure deltas, private contract hiding below low fame, one-time revival contracts, and forced association membership for low-fame non-members.
   - Association maintenance fee constants are shared by detailed contract rules and settlement input construction.
   - Phase10/11/12/14/15/18 open-editor smoke tests were updated to use the maintenance -> contract board -> contract selection flow.
@@ -171,10 +176,12 @@
 
 구현 범위:
 
-- 6구역 수리비를 기획서 기준으로 확정한다: 조종실 1%당 30달러, 운송창고 15달러, 동력실 50달러, 통제실 20달러, 무기실 40달러, 비품실 5달러.
+- 수리비는 원본 기획서의 `정산 정리` 문단을 기준으로 확정한다. `행성 - 정비` 문단의 구역별 단가는 따르지 않고, 6구역 전체 결손 내구도 합산 1%당 5달러로 계산한다.
+- 6구역이 모두 0%인 상태는 600% 수리비가 아니라 총파손으로 분리한다. 전체 수리비 상한은 599 x 5 = 2995달러이고, 총파손 비용은 별도 5000달러 청구로 다룬다.
 - 동력실 0% 견인 비용을 운송 횟수별로 계산한다.
 - 화물선 업그레이드 카테고리 추가: 구역 내구도 강화, 포탑/플라즈마, 자동 항법, 비품창고 슬롯, 내부 통제 강화.
-- 업그레이드는 구매 상태와 장착 상태를 분리한다.
+- 업데이트된 원본 기획서의 업그레이드 비용을 적용한다: 구역 내구도 강화 `$1000/$2000/$4000`, 포탑/플라즈마 `$1500/$2500/$4500`, 자동 항법 `$3000/$4800/$6500`, 비품창고 슬롯 `$1000/$2500/$5000`, 내부 통제 강화 `$2500/$5000/$10000`.
+- 구역 내구도 강화는 구매 즉시 적용한다. 포탑/플라즈마, 자동 항법, 비품창고 슬롯, 내부 통제 강화는 구매 상태와 장착 상태를 분리한다.
 - 화물선 외형 꾸미기는 데이터와 UI 슬롯만 준비하고, 최종 비주얼 커스터마이징은 아트 패스에서 구현한다.
 - 정비 화면에서 다음 운송 위험 요소와 현재 구역 기능 제한을 설명한다.
 
@@ -221,7 +228,7 @@
 
 구현 범위:
 
-- 손에 들 수 있는 아이템 2칸과 주머니 업그레이드 1칸을 정식 모델로 만든다.
+- 손에 들 수 있는 아이템 기본 3칸과 주머니 업그레이드 적용 시 4칸 확장을 정식 모델로 만든다.
 - 비품창고 기본 3칸과 업그레이드 슬롯을 구현한다.
 - 비품창고 탭 추가: 전체, 무기, 방호, 치료, 강화, 기타.
 - 상점 구매 탭을 공통 물품, 유명세 제한 상품, 특별 물품으로 구분한다.

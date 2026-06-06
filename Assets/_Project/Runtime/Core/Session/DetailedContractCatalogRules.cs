@@ -298,6 +298,8 @@ namespace Bellerophon.Core.Session
 
             var route = FindRoute(catalog, contract.RouteId);
             var cargo = FindCargo(catalog, contract.CargoId);
+            var originPlanet = FindPlanet(catalog, route.OriginPlanetId);
+            var destinationPlanet = FindPlanet(catalog, route.DestinationPlanetId);
             var reward = CalculateReward(contract, route, cargo, context);
             return new TransportContractDefinition(
                 contract.ContractId,
@@ -315,7 +317,9 @@ namespace Bellerophon.Core.Session
                     cargo.Ownership == CargoOwnership.Personal),
                 contract.IsTutorial,
                 contract.RequiredCargoHoldScore,
-                contract.IsRecoveryContract);
+                contract.IsRecoveryContract,
+                GetPrimaryTrait(originPlanet),
+                GetPrimaryTrait(destinationPlanet));
         }
 
         public static ContractContentDefinition FindContract(DetailedContentCatalog catalog, string contractId)
@@ -356,6 +360,25 @@ namespace Bellerophon.Core.Session
             throw new InvalidOperationException("Route not found: " + routeId);
         }
 
+        public static PlanetContentDefinition FindPlanet(DetailedContentCatalog catalog, string planetId)
+        {
+            if (catalog == null)
+            {
+                throw new ArgumentNullException(nameof(catalog));
+            }
+
+            var planets = catalog.Planets;
+            for (var i = 0; i < planets.Length; i++)
+            {
+                if (string.Equals(planets[i].PlanetId, planetId, StringComparison.Ordinal))
+                {
+                    return planets[i];
+                }
+            }
+
+            throw new InvalidOperationException("Planet not found: " + planetId);
+        }
+
         public static CargoContentDefinition FindCargo(DetailedContentCatalog catalog, string cargoId)
         {
             if (catalog == null)
@@ -378,6 +401,17 @@ namespace Bellerophon.Core.Session
         private static int CalculateWeightedAmount(int value, int percent)
         {
             return (int)Math.Round(value * (percent / 100f), MidpointRounding.AwayFromZero);
+        }
+
+        private static PlanetTrait GetPrimaryTrait(PlanetContentDefinition planet)
+        {
+            var traits = planet.Traits;
+            if (traits.Length == 0)
+            {
+                throw new InvalidOperationException("Planet has no trait: " + planet.PlanetId);
+            }
+
+            return traits[0];
         }
 
         private static void AddContractsByType(
@@ -695,27 +729,46 @@ namespace Bellerophon.Core.Session
         {
             return new[]
             {
-                new ShipRoomContentDefinition(ShipRoomId.Cockpit, "Cockpit", 30, true, true),
-                new ShipRoomContentDefinition(ShipRoomId.CargoHold, "Cargo Hold", 15, true, false),
-                new ShipRoomContentDefinition(ShipRoomId.Armory, "Armory", 40, true, true),
-                new ShipRoomContentDefinition(ShipRoomId.EngineRoom, "Engine Room", 50, true, true),
-                new ShipRoomContentDefinition(ShipRoomId.ControlRoom, "Control Room", 20, true, true),
-                new ShipRoomContentDefinition(ShipRoomId.SupplyRoom, "Supply Room", 5, true, true)
+                new ShipRoomContentDefinition(ShipRoomId.Cockpit, "Cockpit", ShipStateRules.SettlementSummaryRepairRatePerPercent, true, true),
+                new ShipRoomContentDefinition(ShipRoomId.CargoHold, "Cargo Hold", ShipStateRules.SettlementSummaryRepairRatePerPercent, true, false),
+                new ShipRoomContentDefinition(ShipRoomId.Armory, "Armory", ShipStateRules.SettlementSummaryRepairRatePerPercent, true, true),
+                new ShipRoomContentDefinition(ShipRoomId.EngineRoom, "Engine Room", ShipStateRules.SettlementSummaryRepairRatePerPercent, true, true),
+                new ShipRoomContentDefinition(ShipRoomId.ControlRoom, "Control Room", ShipStateRules.SettlementSummaryRepairRatePerPercent, true, true),
+                new ShipRoomContentDefinition(ShipRoomId.SupplyRoom, "Supply Room", ShipStateRules.SettlementSummaryRepairRatePerPercent, true, true)
             };
         }
 
         private static EquipmentContentDefinition[] CreateDefaultEquipment()
         {
-            return new[]
+            var buyCatalog = EquipmentRules.CreatePhase15BuyCatalog();
+            var equipment = new EquipmentContentDefinition[buyCatalog.Length + 1];
+            equipment[0] = CreateEquipmentContent(
+                EquipmentItemKind.BasicProtectiveSuit,
+                ContentImplementationState.Implemented);
+            for (var i = 0; i < buyCatalog.Length; i++)
             {
-                new EquipmentContentDefinition(
-                    "stick",
-                    "Stick",
-                    EquipmentItemCategory.Weapon,
-                    EquipmentAvailability.StartingLoadout,
-                    0,
-                    ContentImplementationState.Implemented)
-            };
+                equipment[i + 1] = CreateEquipmentContent(
+                    buyCatalog[i].ItemKind,
+                    buyCatalog[i].FunctionalInPhase15
+                        ? ContentImplementationState.Implemented
+                        : ContentImplementationState.Planned);
+            }
+
+            return equipment;
+        }
+
+        private static EquipmentContentDefinition CreateEquipmentContent(
+            EquipmentItemKind itemKind,
+            ContentImplementationState implementationState)
+        {
+            var definition = EquipmentRules.GetDefinition(itemKind);
+            return new EquipmentContentDefinition(
+                itemKind.ToString(),
+                definition.DisplayName,
+                definition.Category,
+                definition.Availability,
+                definition.PriceCredits,
+                implementationState);
         }
 
         private static HostileFactionContentDefinition[] CreateDefaultHostileFactions()

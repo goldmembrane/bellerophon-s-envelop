@@ -1,5 +1,18 @@
 # Harness Engineering
 
+## Detailed Step 8 Bridge Recovery
+
+- `UnityEditorValidationBridge` now attempts recovered PlayMode result completion before honoring the in-memory `isRunning` guard.
+- If an EditMode or PlayMode Test Runner request does not return a completion callback within 120 seconds, the bridge writes a failure log, clears Test Runner callback state, and releases later bridge requests instead of staying permanently blocked.
+- If the already-open Unity editor has a stale bridge domain from before this fix, restart or reload the editor before re-running bridge-based validation or Windows builds.
+
+## Detailed Step 8 Phase15 Smoke
+
+- `Run-Phase15EquipmentLoopSmoke.ps1` now covers the detailed step 8 item first pass in addition to the original Phase15 equipment loop.
+- The smoke verifies representative purchases and active effects for flashlight utility, treatment recovery, protective gear damage reduction, and strength-enhanced melee damage.
+- It also verifies the shop Sell tab still sells only the selected listed item after step 8 item usage, then resolves Parvum with strengthened stick damage and base musket damage.
+- After a passing run, the smoke re-applies Phase16 HUD/map/atmosphere assets so `CargoRunMvp` does not remain saved at the lower Phase15-only scene state.
+
 ## Detailed Phase 1 PlayMode Stability
 
 - `Run-PlayModeTests.ps1` must now create `TestResults\playmode-results.xml` as a required validation path.
@@ -111,7 +124,7 @@ PlayMode Test Runner는 Play mode 진입 중 도메인 리로드가 발생하므
 
 14단계 첫 침입자 씨앗체 구현은 `.\scripts\Run-Phase14ParvumIntruderSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 Phase14 파르붐 루트를 재생성하고, Play 모드에서 튜토리얼 첫 운행에는 씨앗체가 발생하지 않는지, 후속 운행 중 2초마다 15% 판정으로 파르붐이 내부 침입자로 발생하는지, 외부 목표가 생성되지 않는지, HUD 표시와 월드 placeholder 표시/숨김이 동작하는지, 파르붐의 0.5초 공격 피해가 정산 후 정비 수리비로 남는지 확인한다.
 
-15단계 무기류와 비품실 기본 루프는 `.\scripts\Run-Phase15EquipmentLoopSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 Phase15 장비 HUD와 상점 루트를 재생성하고, Play 모드에서 협회 기본 지급 장비, 비품창고 3칸 표시, 정비 화면 상점 Buy/Sell 골격, 머스킷 $450 구매, 막대기/머스킷으로 파르붐을 처치하는 전투 연결, 머스킷 R 재장전 골격을 확인한다.
+15단계 무기류와 비품실 기본 루프 및 상세 7단계 장비/상점 확장은 `.\scripts\Run-Phase15EquipmentLoopSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 Phase15 장비 HUD와 상점 루트를 재생성하고, Play 모드에서 협회 기본 지급 장비, 손 슬롯 기본 3칸, 비품창고 3칸, 정비 화면 상점 Buy/Sell, 머스킷/손전등/치료 아이템 구매와 보관, Sell 목록 선택 후 구매품 1% 처분/개인 화물 판매, 막대기/머스킷 파르붐 전투 연결, 머스킷 R 재장전 골격을 확인한다.
 
 16단계 HUD, 맵, 분위기 1차는 `.\scripts\Run-Phase16HudMapAtmosphereSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 Phase16 HUD, 화물선 내부 맵, 분위기 조명/fog, 사운드 훅을 재생성하고, Play 모드에서 체력/보호막 표시, 현재 구역 맵 갱신, 기본 중앙 조준선 숨김, 머스킷 정밀 조준 레티클 토글, 우클릭 보조 모드 토글을 확인한다.
 

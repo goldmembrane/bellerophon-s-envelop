@@ -26,9 +26,15 @@ namespace Bellerophon.Editor.Validation
             var settlementController = UnityEngine.Object.FindFirstObjectByType<TransportSettlementController>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
             var contractBoardController = UnityEngine.Object.FindFirstObjectByType<ContractBoardController>();
-            if (settlementController == null || maintenanceController == null || contractBoardController == null)
+            var personalCargoController = UnityEngine.Object.FindFirstObjectByType<PersonalCargoController>();
+            var shipUpgradeController = UnityEngine.Object.FindFirstObjectByType<ShipUpgradeController>();
+            if (settlementController == null ||
+                maintenanceController == null ||
+                contractBoardController == null ||
+                personalCargoController == null ||
+                shipUpgradeController == null)
             {
-                throw new InvalidOperationException("Phase 10 requires settlement, maintenance, and contract board controllers.");
+                throw new InvalidOperationException("Phase 10 requires settlement, maintenance, contract board, personal cargo, and ship upgrade controllers.");
             }
 
             if (settlementController.ContinueToMaintenanceButton == null ||
@@ -68,9 +74,33 @@ namespace Bellerophon.Editor.Validation
                 contractBoardController.PreviousContractButton == null ||
                 contractBoardController.NextContractButton == null ||
                 contractBoardController.AcceptContractButton == null ||
+                contractBoardController.StartRunButton == null ||
                 contractBoardController.BackButton == null)
             {
                 throw new InvalidOperationException("Phase 10 contract board screen references are missing.");
+            }
+
+            if (personalCargoController.CargoRoot == null ||
+                personalCargoController.CargoRoot.name != Phase10PlanetMaintenanceBootstrap.PersonalCargoRootName ||
+                personalCargoController.BodyText == null ||
+                personalCargoController.StatusText == null ||
+                personalCargoController.CollectButton == null ||
+                personalCargoController.CloseButton == null)
+            {
+                throw new InvalidOperationException("Phase 10 personal cargo screen references are missing.");
+            }
+
+            if (shipUpgradeController.UpgradeRoot == null ||
+                shipUpgradeController.UpgradeRoot.name != Phase10PlanetMaintenanceBootstrap.ShipUpgradeRootName ||
+                shipUpgradeController.BodyText == null ||
+                shipUpgradeController.StatusText == null ||
+                shipUpgradeController.PurchaseButtons == null ||
+                shipUpgradeController.PurchaseButtons.Length != Phase10PlanetMaintenanceBootstrap.ShipUpgradeCategoryButtonCount ||
+                shipUpgradeController.EquipButtons == null ||
+                shipUpgradeController.EquipButtons.Length != Phase10PlanetMaintenanceBootstrap.ShipUpgradeCategoryButtonCount ||
+                shipUpgradeController.CloseButton == null)
+            {
+                throw new InvalidOperationException("Phase 10 ship upgrade screen references are missing.");
             }
 
             for (var i = 0; i < contractBoardController.ContractSlotButtons.Length; i++)
@@ -111,6 +141,36 @@ namespace Bellerophon.Editor.Validation
             if (boardBackground == null || boardBackground.color.a < 1f)
             {
                 throw new InvalidOperationException("Phase 10 contract board screen background must be fully opaque.");
+            }
+
+            var cargoRect = personalCargoController.CargoRoot.GetComponent<RectTransform>();
+            if (cargoRect == null ||
+                cargoRect.anchorMin != Vector2.zero ||
+                cargoRect.anchorMax != Vector2.one ||
+                cargoRect.sizeDelta != Vector2.zero)
+            {
+                throw new InvalidOperationException("Phase 10 personal cargo screen must cover the full screen.");
+            }
+
+            var cargoBackground = personalCargoController.CargoRoot.GetComponent<Image>();
+            if (cargoBackground == null || cargoBackground.color.a < 1f)
+            {
+                throw new InvalidOperationException("Phase 10 personal cargo screen background must be fully opaque.");
+            }
+
+            var upgradeRect = shipUpgradeController.UpgradeRoot.GetComponent<RectTransform>();
+            if (upgradeRect == null ||
+                upgradeRect.anchorMin != Vector2.zero ||
+                upgradeRect.anchorMax != Vector2.one ||
+                upgradeRect.sizeDelta != Vector2.zero)
+            {
+                throw new InvalidOperationException("Phase 10 ship upgrade screen must cover the full screen.");
+            }
+
+            var upgradeBackground = shipUpgradeController.UpgradeRoot.GetComponent<Image>();
+            if (upgradeBackground == null || upgradeBackground.color.a < 1f)
+            {
+                throw new InvalidOperationException("Phase 10 ship upgrade screen background must be fully opaque.");
             }
 
             Debug.Log("Phase 10 planet maintenance editor validation passed.");

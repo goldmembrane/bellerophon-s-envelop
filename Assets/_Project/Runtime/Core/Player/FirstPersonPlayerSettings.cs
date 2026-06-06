@@ -28,7 +28,7 @@ namespace Bellerophon.Core.Player
 
         [Header("Interaction")]
         [SerializeField, Min(0.1f)] private float interactionDistance = 3f;
-        [SerializeField, Min(1)] private int handSlotCount = 2;
+        [SerializeField, Min(1)] private int handSlotCount = Bellerophon.Core.Session.PlayerEquipmentState.DefaultHandSlotCount;
 
         [Header("Vitals")]
         [SerializeField, Min(1)] private int maxHealth = 100;

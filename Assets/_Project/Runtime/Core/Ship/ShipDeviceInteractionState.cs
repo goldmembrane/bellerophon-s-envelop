@@ -1,4 +1,5 @@
 using System;
+using Bellerophon.Core.Player;
 using Bellerophon.Core.Session;
 using UnityEngine;
 
@@ -54,6 +55,7 @@ namespace Bellerophon.Core.Ship
         private ManualTurretState manualTurretState;
         private SeedIntruderState seedIntruderState;
         private EquipmentUseResult lastEquipmentUseResult;
+        private FirstPersonPlayerStatus playerStatus;
         private float seedIntruderCheckAccumulatorSeconds;
         private int seedIntruderCheckCount;
         private string lastInteractionSummary = string.Empty;
@@ -117,11 +119,29 @@ namespace Bellerophon.Core.Ship
 
         public int EngineOverclockActivationCount => engineOverclockActivationCount;
 
-        public int HandSlotCount => PlayerEquipmentState.DefaultHandSlotCount;
+        public int HandSlotCount
+        {
+            get
+            {
+                EnsureInitialized();
+                return equipmentState.UnlockedHandSlotCount;
+            }
+        }
 
-        public int SupplySlotCount => PlayerEquipmentState.DefaultSupplySlotCount;
+        public int SupplySlotCount
+        {
+            get
+            {
+                EnsureInitialized();
+                return ShipStateRules.CalculateSupplyStorageSlotCount(
+                    shipState,
+                    equipmentState.UnlockedSupplySlotCount);
+            }
+        }
 
         public EquipmentUseResult LastEquipmentUseResult => lastEquipmentUseResult;
+
+        public FirstPersonPlayerStatus PlayerStatus => playerStatus;
 
         public string LastInteractionSummary => lastInteractionSummary;
 
@@ -241,6 +261,7 @@ namespace Bellerophon.Core.Ship
             manualTurretState = ManualTurretState.Inactive;
             seedIntruderState = SeedIntruderState.None;
             lastEquipmentUseResult = default;
+            ResolvePlayerStatus();
             seedIntruderCheckAccumulatorSeconds = 0f;
             seedIntruderCheckCount = 0;
             isInitialized = true;
@@ -289,12 +310,28 @@ namespace Bellerophon.Core.Ship
                 return;
             }
 
-            var nextIndex = GetCctvIndex(currentCctvTarget) + (direction > 0 ? 1 : -1);
+            var availableCount = Math.Min(
+                ShipStateRules.CalculateControlRoomAvailableCctvCount(shipState),
+                CctvOrder.Length);
+            if (availableCount <= 0)
+            {
+                currentCctvTarget = CctvOrder[0];
+                lastInteractionSummary = "CCTV is offline because control room damage is critical.";
+                return;
+            }
+
+            var currentIndex = GetCctvIndex(currentCctvTarget);
+            if (currentIndex >= availableCount)
+            {
+                currentIndex = 0;
+            }
+
+            var nextIndex = currentIndex + (direction > 0 ? 1 : -1);
             if (nextIndex < 0)
             {
-                nextIndex = CctvOrder.Length - 1;
+                nextIndex = availableCount - 1;
             }
-            else if (nextIndex >= CctvOrder.Length)
+            else if (nextIndex >= availableCount)
             {
                 nextIndex = 0;
             }
@@ -338,6 +375,23 @@ namespace Bellerophon.Core.Ship
                 transportRunState = transportRunState.WithShipState(shipState);
                 manualFlightModeActive = transportRunState.FlightMode == ShipFlightMode.ManualFlight;
             }
+
+            if (!ShipStateRules.CanUseEngineOverclock(shipState))
+            {
+                engineOverclockActive = false;
+            }
+
+            if (!ShipStateRules.CanUseManualTurret(shipState))
+            {
+                turretManualModeActive = false;
+                manualTurretState = ManualTurretState.Inactive;
+            }
+
+            var availableCctvCount = ShipStateRules.CalculateControlRoomAvailableCctvCount(shipState);
+            if (availableCctvCount <= 0 || GetCctvIndex(currentCctvTarget) >= availableCctvCount)
+            {
+                currentCctvTarget = ShipCctvTarget.Cockpit;
+            }
         }
 
         public void SetCargoState(CargoState nextCargoState)
@@ -360,6 +414,11 @@ namespace Bellerophon.Core.Ship
         public void SetEquipmentStateForValidation(PlayerEquipmentState nextEquipmentState)
         {
             SetEquipmentState(nextEquipmentState);
+        }
+
+        public void SetPlayerStatusForValidation(FirstPersonPlayerStatus status)
+        {
+            playerStatus = status;
         }
 
         public void SelectEquipmentHandSlot(int handSlotIndex)
@@ -393,6 +452,22 @@ namespace Bellerophon.Core.Ship
             return lastEquipmentUseResult;
         }
 
+        public EquipmentUseResult UseSupplyItem(int supplySlotIndex)
+        {
+            EnsureInitialized();
+            lastEquipmentUseResult = EquipmentRules.UseSupplyItem(equipmentState, supplySlotIndex);
+            equipmentState = lastEquipmentUseResult.State;
+            ApplyPlayerRecovery(lastEquipmentUseResult);
+            lastInteractionSummary = lastEquipmentUseResult.Summary;
+            return lastEquipmentUseResult;
+        }
+
+        public int CalculateIncomingDamageAfterProtection(int rawDamage)
+        {
+            EnsureInitialized();
+            return EquipmentRules.CalculateDamageAfterProtection(rawDamage, equipmentState);
+        }
+
         public EquipmentUseResult ReloadActiveEquipment()
         {
             EnsureInitialized();
@@ -415,6 +490,20 @@ namespace Bellerophon.Core.Ship
         {
             EnsureInitialized();
             equipmentState = EquipmentRules.Tick(equipmentState, deltaSeconds);
+        }
+
+        private void ApplyPlayerRecovery(EquipmentUseResult result)
+        {
+            if (result.HealthDelta <= 0 && result.ShieldDelta <= 0)
+            {
+                return;
+            }
+
+            ResolvePlayerStatus();
+            if (playerStatus != null)
+            {
+                playerStatus.ApplyRecovery(result.HealthDelta, result.ShieldDelta);
+            }
         }
 
         public void StartTransportRun(int baseDurationSeconds)
@@ -486,7 +575,7 @@ namespace Bellerophon.Core.Ship
             {
                 seedIntruderCheckAccumulatorSeconds -= SeedIntruderRules.OccurrenceCheckIntervalSeconds;
                 seedIntruderCheckCount++;
-                if (!SeedIntruderRules.ShouldStartSeedIntruder(session, seedIntruderCheckCount))
+                if (!SeedIntruderRules.ShouldStartSeedIntruder(session, seedIntruderCheckCount, shipState))
                 {
                     continue;
                 }
@@ -567,7 +656,18 @@ namespace Bellerophon.Core.Ship
         public void ApplyManualTurretAimInput(float horizontalDelta, float verticalDelta)
         {
             EnsureInitialized();
-            manualTurretState = manualTurretState.ApplyAimInput(horizontalDelta, verticalDelta);
+            if (!ShipStateRules.CanUseManualTurret(shipState))
+            {
+                manualTurretState = ManualTurretState.Inactive;
+                turretManualModeActive = false;
+                lastInteractionSummary = "Manual turret is offline because armory damage is severe.";
+                return;
+            }
+
+            var aimMultiplier = ShipStateRules.CalculateManualTurretAimMultiplier(shipState);
+            manualTurretState = manualTurretState.ApplyAimInput(
+                horizontalDelta * aimMultiplier,
+                verticalDelta * aimMultiplier);
         }
 
         public void SetManualTurretAimForValidation(float aimX, float aimY)
@@ -580,6 +680,14 @@ namespace Bellerophon.Core.Ship
         public void BeginManualTurretReload()
         {
             EnsureInitialized();
+            if (!ShipStateRules.CanUseManualTurret(shipState))
+            {
+                manualTurretState = ManualTurretState.Inactive;
+                turretManualModeActive = false;
+                lastInteractionSummary = "Manual turret is offline because armory damage is severe.";
+                return;
+            }
+
             EnsureManualTurretStarted();
             manualTurretState = manualTurretState.BeginReload();
             if (manualTurretState.IsReloading)
@@ -591,6 +699,15 @@ namespace Bellerophon.Core.Ship
         public ManualTurretFireResult FireManualTurret()
         {
             EnsureInitialized();
+            if (!ShipStateRules.CanUseManualTurret(shipState))
+            {
+                manualTurretState = ManualTurretState.Inactive;
+                turretManualModeActive = false;
+                var inactiveResult = manualTurretState.FireAt(externalTargetState);
+                lastInteractionSummary = FormatManualTurretFireResult(inactiveResult);
+                return inactiveResult;
+            }
+
             EnsureManualTurretStarted();
             var fireResult = manualTurretState.FireAt(externalTargetState);
             manualTurretState = fireResult.Turret;
@@ -692,7 +809,15 @@ namespace Bellerophon.Core.Ship
                 return;
             }
 
-            var result = SeedIntruderRules.TickParvum(seedIntruderState, shipState, cargoState, deltaSeconds);
+            var roomDamage = ShipStateRules.CalculateInternalIntruderRoomDamage(
+                SeedIntruderRules.ParvumShipFacilityDamage,
+                shipState);
+            var result = SeedIntruderRules.TickParvum(
+                seedIntruderState,
+                shipState,
+                cargoState,
+                deltaSeconds,
+                roomDamage);
             seedIntruderState = result.State;
             shipState = result.Ship;
             cargoState = result.Cargo;
@@ -743,11 +868,10 @@ namespace Bellerophon.Core.Ship
 
         private string ActivateEngineScreen()
         {
-            var engineRoom = shipState.GetRoom(ShipRoomId.EngineRoom);
-            if (engineRoom.DurabilityPercent <= 0.2f)
+            if (!ShipStateRules.CanUseEngineOverclock(shipState))
             {
                 engineOverclockActive = false;
-                return "Engine power screen is damaged.";
+                return "Engine power is too damaged for overclock.";
             }
 
             if (engineOverclockUsedThisRun)
@@ -764,6 +888,13 @@ namespace Bellerophon.Core.Ship
         private string ActivateArmoryTurretHandle()
         {
             activePanelMode = ShipDevicePanelMode.TurretManual;
+            if (!ShipStateRules.CanUseManualTurret(shipState))
+            {
+                turretManualModeActive = false;
+                manualTurretState = ManualTurretState.Inactive;
+                return "Manual turret is offline because armory damage is severe.";
+            }
+
             turretManualModeActive = true;
             EnsureManualTurretStarted();
             return externalTargetState.IsActive
@@ -815,6 +946,14 @@ namespace Bellerophon.Core.Ship
             transportHazardState = TransportHazardState.None;
             externalTargetState = ExternalTargetState.None;
             lastInteractionSummary = "External target destroyed; asteroid hazard neutralized.";
+        }
+
+        private void ResolvePlayerStatus()
+        {
+            if (playerStatus == null)
+            {
+                playerStatus = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerStatus>();
+            }
         }
 
         private void StartSeedIntruder(SeedIntruderState intruder)
@@ -906,7 +1045,12 @@ namespace Bellerophon.Core.Ship
             }
 
             var label = EquipmentRules.FormatItemName(slot.ItemKind);
-            return slot.Count > 1 ? label + " x" + slot.Count : label;
+            if (slot.Count > 1)
+            {
+                label += " x" + slot.Count;
+            }
+
+            return label + " " + slot.DurabilityPercent + "%";
         }
 
         private static int GetCctvIndex(ShipCctvTarget target)

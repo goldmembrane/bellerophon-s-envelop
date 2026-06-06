@@ -17,8 +17,10 @@ namespace Bellerophon.Editor.Validation
         private const string ActiveRequestFileName = "UnityEditorBridge.active";
         private const string DefaultTestResultsFileName = "TestResults.xml";
         private const double PollIntervalSeconds = 0.5d;
+        private const double TestRunnerStaleTimeoutSeconds = 120d;
 
         private static double nextPollTime;
+        private static double activeRequestStartTime;
         private static bool isRunning;
         private static BridgeRequest activeRequest;
         private static StringBuilder activeLog;
@@ -41,11 +43,6 @@ namespace Bellerophon.Editor.Validation
 
         private static void PollForRequest()
         {
-            if (isRunning)
-            {
-                return;
-            }
-
             if (EditorApplication.isCompiling || EditorApplication.isUpdating)
             {
                 return;
@@ -60,6 +57,16 @@ namespace Bellerophon.Editor.Validation
 
             if (TryCompleteRecoveredPlayModeRequest())
             {
+                return;
+            }
+
+            if (isRunning)
+            {
+                if (TryFailStaleTestRunnerRequest())
+                {
+                    return;
+                }
+
                 return;
             }
 
@@ -343,6 +350,7 @@ namespace Bellerophon.Editor.Validation
         private static void BeginRequest(BridgeRequest request)
         {
             isRunning = true;
+            activeRequestStartTime = EditorApplication.timeSinceStartup;
             activeRequest = request;
             activeLog = new StringBuilder();
             Application.logMessageReceived += CaptureLog;
@@ -375,6 +383,7 @@ namespace Bellerophon.Editor.Validation
             Application.logMessageReceived -= CaptureLog;
             activeRequest = null;
             activeLog = null;
+            activeRequestStartTime = 0d;
             isRunning = false;
         }
 
@@ -540,6 +549,36 @@ namespace Bellerophon.Editor.Validation
             activeTestRunnerApi = ScriptableObject.CreateInstance<TestRunnerApi>();
             activeTestRunCallbacks = TestRunCallbacks.Create(request);
             activeTestRunnerApi.RegisterCallbacks(activeTestRunCallbacks);
+            return true;
+        }
+
+        private static bool TryFailStaleTestRunnerRequest()
+        {
+            if (activeRequest == null)
+            {
+                EndRequest();
+                return true;
+            }
+
+            if (activeRequest.Command != "EditModeTests" && activeRequest.Command != "PlayModeTests")
+            {
+                return false;
+            }
+
+            if (EditorApplication.timeSinceStartup - activeRequestStartTime < TestRunnerStaleTimeoutSeconds)
+            {
+                return false;
+            }
+
+            var request = activeRequest;
+            ClearTestRunState();
+            FailRequest(
+                request,
+                new TimeoutException(
+                    request.Command +
+                    " did not return a Unity Test Runner completion callback within " +
+                    TestRunnerStaleTimeoutSeconds.ToString("0") +
+                    " seconds."));
             return true;
         }
 

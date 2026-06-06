@@ -1,5 +1,16 @@
 # PlayMode Test Runner Stability
 
+## Step 8 Recheck (2026-06-06)
+
+- During detailed step 8 validation, feature-specific smoke tests completed, but the open-editor `UnityEditorValidationBridge` stopped picking up later bridge requests after a Test Runner pending state.
+- Observed pending-only logs:
+  - `Logs\PlayModeTests.log`
+  - `Logs\Build-WindowsDev.log`
+  - `Logs\HarnessValidation.log` during the final rerun attempt
+- `Run-Phase15EquipmentLoopSmoke.ps1` and `Run-Phase18MvpPlaytestLoopSmoke.ps1` still passed because they use their own PlayMode smoke polling path.
+- `UnityEditorValidationBridge` was updated so recovered PlayMode results are checked before the `isRunning` guard, and stale EditMode/PlayMode Test Runner requests fail out after 120 seconds instead of blocking future bridge requests.
+- The already-open editor did not reload that patched bridge during this run. Restart or script-domain reload the Unity editor before re-running full bridge-based validation or Windows build.
+
 ## Step 3 Recheck (2026-06-05)
 
 - During detailed step 3 validation, the open-editor PlayMode Test Runner entered PlayMode and loaded the generated init scene but did not return the completion callback.

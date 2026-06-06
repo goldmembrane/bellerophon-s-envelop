@@ -16,6 +16,8 @@ namespace Bellerophon.Editor.Validation
         public const string Phase10RootName = "Phase 10 Planet Maintenance";
         public const string MaintenanceRootName = "Phase 10 Maintenance Screen";
         public const string ContractBoardRootName = "Phase 10 Contract Board Screen";
+        public const string PersonalCargoRootName = "Phase 10 Personal Cargo Screen";
+        public const string ShipUpgradeRootName = "Phase 10 Ship Upgrade Screen";
         public const string ContinueButtonName = "Phase 10 Continue To Maintenance Button";
         public const string MaintenanceTitleTextName = "Phase 10 Maintenance Title";
         public const string MaintenanceWalletTextName = "Phase 10 Maintenance Wallet";
@@ -35,11 +37,24 @@ namespace Bellerophon.Editor.Validation
         public const string PreviousContractButtonName = "Phase 10 Previous Contract Button";
         public const string NextContractButtonName = "Phase 10 Next Contract Button";
         public const string AcceptContractButtonName = "Phase 10 Accept Contract Button";
+        public const string StartRunButtonName = "Phase 10 Start Run Button";
         public const string ContractBoardBackButtonName = "Phase 10 Contract Board Back Button";
         public const string ShopButtonName = "Phase 10 Shop Entry Button";
         public const string PersonalCargoButtonName = "Phase 10 Personal Cargo Entry Button";
         public const string UpgradesButtonName = "Phase 10 Upgrades Entry Button";
+        public const string PersonalCargoTitleTextName = "Phase 10 Personal Cargo Title";
+        public const string PersonalCargoBodyTextName = "Phase 10 Personal Cargo Body";
+        public const string PersonalCargoStatusTextName = "Phase 10 Personal Cargo Status";
+        public const string CollectPersonalCargoButtonName = "Phase 10 Collect Personal Cargo Button";
+        public const string ClosePersonalCargoButtonName = "Phase 10 Close Personal Cargo Button";
+        public const string ShipUpgradeTitleTextName = "Phase 10 Ship Upgrade Title";
+        public const string ShipUpgradeBodyTextName = "Phase 10 Ship Upgrade Body";
+        public const string ShipUpgradeStatusTextName = "Phase 10 Ship Upgrade Status";
+        public const string ShipUpgradePurchaseButtonNamePrefix = "Phase 10 Upgrade Purchase Button ";
+        public const string ShipUpgradeEquipButtonNamePrefix = "Phase 10 Upgrade Equip Button ";
+        public const string CloseShipUpgradeButtonName = "Phase 10 Close Ship Upgrade Button";
         public const int ContractSlotButtonCount = 8;
+        public const int ShipUpgradeCategoryButtonCount = 5;
 
         [MenuItem("Bellerophon/Bootstrap/Ensure Phase 10 Planet Maintenance")]
         public static void EnsurePhase10Assets()
@@ -68,6 +83,8 @@ namespace Bellerophon.Editor.Validation
             var root = CreateRoot(hud.transform);
             var maintenanceRoot = CreateMaintenanceRoot(root.transform);
             var contractBoardRoot = CreateContractBoardRoot(root.transform);
+            var personalCargoRoot = CreatePersonalCargoRoot(root.transform);
+            var shipUpgradeRoot = CreateShipUpgradeRoot(root.transform);
             var title = CreateText(
                 MaintenanceTitleTextName,
                 maintenanceRoot.transform,
@@ -139,13 +156,71 @@ namespace Bellerophon.Editor.Validation
                 new Vector2(1000f, 54f),
                 18,
                 TextAnchor.MiddleCenter);
-            var associationButton = CreateButton(AssociationContractButtonName, contractBoardRoot.transform, new Vector2(-500f, -218f), "Association");
-            var privateButton = CreateButton(PrivateContractButtonName, contractBoardRoot.transform, new Vector2(-335f, -218f), "Private");
-            var specialButton = CreateButton(SpecialContractButtonName, contractBoardRoot.transform, new Vector2(-170f, -218f), "Special");
-            var previousButton = CreateButton(PreviousContractButtonName, contractBoardRoot.transform, new Vector2(-5f, -218f), "Previous");
-            var nextButton = CreateButton(NextContractButtonName, contractBoardRoot.transform, new Vector2(160f, -218f), "Next");
-            var acceptButton = CreateButton(AcceptContractButtonName, contractBoardRoot.transform, new Vector2(325f, -218f), "Accept");
-            var backButton = CreateButton(ContractBoardBackButtonName, contractBoardRoot.transform, new Vector2(490f, -218f), "Back");
+            var associationButton = CreateButton(AssociationContractButtonName, contractBoardRoot.transform, new Vector2(-560f, -218f), "Association", new Vector2(132f, 38f), 15, TextAnchor.MiddleCenter);
+            var privateButton = CreateButton(PrivateContractButtonName, contractBoardRoot.transform, new Vector2(-400f, -218f), "Private", new Vector2(132f, 38f), 15, TextAnchor.MiddleCenter);
+            var specialButton = CreateButton(SpecialContractButtonName, contractBoardRoot.transform, new Vector2(-240f, -218f), "Special", new Vector2(132f, 38f), 15, TextAnchor.MiddleCenter);
+            var previousButton = CreateButton(PreviousContractButtonName, contractBoardRoot.transform, new Vector2(-80f, -218f), "Previous", new Vector2(132f, 38f), 15, TextAnchor.MiddleCenter);
+            var nextButton = CreateButton(NextContractButtonName, contractBoardRoot.transform, new Vector2(80f, -218f), "Next", new Vector2(132f, 38f), 15, TextAnchor.MiddleCenter);
+            var acceptButton = CreateButton(AcceptContractButtonName, contractBoardRoot.transform, new Vector2(240f, -218f), "Accept", new Vector2(132f, 38f), 15, TextAnchor.MiddleCenter);
+            var startRunButton = CreateButton(StartRunButtonName, contractBoardRoot.transform, new Vector2(400f, -218f), "Start Run", new Vector2(132f, 38f), 15, TextAnchor.MiddleCenter);
+            var backButton = CreateButton(ContractBoardBackButtonName, contractBoardRoot.transform, new Vector2(560f, -218f), "Back", new Vector2(132f, 38f), 15, TextAnchor.MiddleCenter);
+
+            var cargoTitle = CreateText(
+                PersonalCargoTitleTextName,
+                personalCargoRoot.transform,
+                new Vector2(0f, 310f),
+                new Vector2(980f, 44f),
+                30,
+                TextAnchor.MiddleCenter);
+            var cargoBody = CreateText(
+                PersonalCargoBodyTextName,
+                personalCargoRoot.transform,
+                new Vector2(0f, 35f),
+                new Vector2(980f, 430f),
+                18,
+                TextAnchor.UpperLeft);
+            var cargoStatus = CreateText(
+                PersonalCargoStatusTextName,
+                personalCargoRoot.transform,
+                new Vector2(-210f, -280f),
+                new Vector2(620f, 54f),
+                18,
+                TextAnchor.MiddleCenter);
+            var collectCargoButton = CreateButton(CollectPersonalCargoButtonName, personalCargoRoot.transform, new Vector2(310f, -280f), "Collect");
+            var closeCargoButton = CreateButton(ClosePersonalCargoButtonName, personalCargoRoot.transform, new Vector2(500f, -280f), "Back");
+
+            var upgradeTitle = CreateText(
+                ShipUpgradeTitleTextName,
+                shipUpgradeRoot.transform,
+                new Vector2(0f, 310f),
+                new Vector2(980f, 44f),
+                30,
+                TextAnchor.MiddleCenter);
+            var upgradeBody = CreateText(
+                ShipUpgradeBodyTextName,
+                shipUpgradeRoot.transform,
+                new Vector2(130f, 35f),
+                new Vector2(760f, 430f),
+                17,
+                TextAnchor.UpperLeft);
+            var upgradeStatus = CreateText(
+                ShipUpgradeStatusTextName,
+                shipUpgradeRoot.transform,
+                new Vector2(-140f, -280f),
+                new Vector2(700f, 54f),
+                18,
+                TextAnchor.MiddleCenter);
+            var upgradePurchaseButtons = CreateShipUpgradeButtons(
+                shipUpgradeRoot.transform,
+                ShipUpgradePurchaseButtonNamePrefix,
+                "Buy T",
+                new Vector2(-510f, 160f));
+            var upgradeEquipButtons = CreateShipUpgradeButtons(
+                shipUpgradeRoot.transform,
+                ShipUpgradeEquipButtonNamePrefix,
+                "Equip",
+                new Vector2(-340f, 160f));
+            var closeUpgradeButton = CreateButton(CloseShipUpgradeButtonName, shipUpgradeRoot.transform, new Vector2(500f, -280f), "Back");
 
             var continueButton = CreateButton(
                 ContinueButtonName,
@@ -155,6 +230,8 @@ namespace Bellerophon.Editor.Validation
 
             maintenanceRoot.SetActive(false);
             contractBoardRoot.SetActive(false);
+            personalCargoRoot.SetActive(false);
+            shipUpgradeRoot.SetActive(false);
 
             var controller = root.AddComponent<PlanetMaintenanceController>();
             controller.Configure(
@@ -191,8 +268,33 @@ namespace Bellerophon.Editor.Validation
                 previousButton,
                 nextButton,
                 acceptButton,
+                startRunButton,
                 backButton);
             controller.ConfigureContractBoard(boardController, contractBoardButton);
+            var cargoController = root.AddComponent<PersonalCargoController>();
+            cargoController.Configure(
+                startController,
+                controller,
+                playerInput,
+                personalCargoRoot,
+                cargoTitle,
+                cargoBody,
+                cargoStatus,
+                collectCargoButton,
+                closeCargoButton);
+            var upgradeController = root.AddComponent<ShipUpgradeController>();
+            upgradeController.Configure(
+                startController,
+                controller,
+                playerInput,
+                shipUpgradeRoot,
+                upgradeTitle,
+                upgradeBody,
+                upgradeStatus,
+                upgradePurchaseButtons,
+                upgradeEquipButtons,
+                closeUpgradeButton);
+            controller.ConfigureShipUpgrades(upgradeController);
             settlementController.ConfigureMaintenanceContinuation(controller, continueButton);
 
             EditorSceneManager.MarkSceneDirty(scene);
@@ -263,6 +365,40 @@ namespace Bellerophon.Editor.Validation
             return root;
         }
 
+        private static GameObject CreatePersonalCargoRoot(Transform parent)
+        {
+            var root = new GameObject(PersonalCargoRootName, typeof(RectTransform));
+            root.transform.SetParent(parent, false);
+
+            var rectTransform = root.GetComponent<RectTransform>();
+            rectTransform.anchorMin = Vector2.zero;
+            rectTransform.anchorMax = Vector2.one;
+            rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            rectTransform.anchoredPosition = Vector2.zero;
+            rectTransform.sizeDelta = Vector2.zero;
+
+            var background = root.AddComponent<Image>();
+            background.color = new Color(0.024f, 0.03f, 0.028f, 1f);
+            return root;
+        }
+
+        private static GameObject CreateShipUpgradeRoot(Transform parent)
+        {
+            var root = new GameObject(ShipUpgradeRootName, typeof(RectTransform));
+            root.transform.SetParent(parent, false);
+
+            var rectTransform = root.GetComponent<RectTransform>();
+            rectTransform.anchorMin = Vector2.zero;
+            rectTransform.anchorMax = Vector2.one;
+            rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            rectTransform.anchoredPosition = Vector2.zero;
+            rectTransform.sizeDelta = Vector2.zero;
+
+            var background = root.AddComponent<Image>();
+            background.color = new Color(0.026f, 0.026f, 0.038f, 1f);
+            return root;
+        }
+
         private static Text CreateText(
             string name,
             Transform parent,
@@ -305,6 +441,36 @@ namespace Bellerophon.Editor.Validation
                     new Vector2(1060f, 34f),
                     15,
                     TextAnchor.MiddleLeft);
+            }
+
+            return buttons;
+        }
+
+        private static Button[] CreateShipUpgradeButtons(
+            Transform parent,
+            string namePrefix,
+            string labelPrefix,
+            Vector2 startPosition)
+        {
+            var labels = new[]
+            {
+                "Durability",
+                "Weapons",
+                "Auto Pilot",
+                "Supply",
+                "Control"
+            };
+            var buttons = new Button[ShipUpgradeCategoryButtonCount];
+            for (var i = 0; i < buttons.Length; i++)
+            {
+                buttons[i] = CreateButton(
+                    namePrefix + (i + 1),
+                    parent,
+                    new Vector2(startPosition.x, startPosition.y - (i * 54f)),
+                    labelPrefix + " " + labels[i],
+                    new Vector2(150f, 38f),
+                    14,
+                    TextAnchor.MiddleCenter);
             }
 
             return buttons;

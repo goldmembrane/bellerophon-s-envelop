@@ -24,6 +24,15 @@ namespace Bellerophon.Editor.Validation
         public const string SellTabButtonName = "Phase 15 Sell Tab Button";
         public const string BuyStickButtonName = "Phase 15 Buy Stick Button";
         public const string BuyMusketButtonName = "Phase 15 Buy Musket Button";
+        public const string BuyShotgunButtonName = "Phase 15 Buy Shotgun Button";
+        public const string BuyFlashlightButtonName = "Phase 15 Buy Flashlight Button";
+        public const string BuyInjuryRelieverButtonName = "Phase 15 Buy Injury Reliever Button";
+        public const string BuyProtectiveSuitButtonName = "Phase 15 Buy Protective Suit Button";
+        public const string BuyStrengthEnhancerButtonName = "Phase 15 Buy Strength Enhancer Button";
+        public const string DisposePurchasedItemButtonName = "Phase 15 Dispose Purchased Item Button";
+        public const string SellPersonalCargoButtonName = "Phase 15 Sell Personal Cargo Button";
+        public const string SellSelectedItemButtonName = "Phase 15 Sell Selected Item Button";
+        public const string SellItemRowButtonPrefix = "Phase 15 Sell Item Row Button ";
         public const string CloseShopButtonName = "Phase 15 Close Shop Button";
 
         [MenuItem("Bellerophon/Bootstrap/Ensure Phase 15 Equipment Loop")]
@@ -94,8 +103,21 @@ namespace Bellerophon.Editor.Validation
                 TextAnchor.MiddleCenter);
             var buyTab = CreateButton(BuyTabButtonName, shopRoot.transform, new Vector2(-300f, 175f), "Buy");
             var sellTab = CreateButton(SellTabButtonName, shopRoot.transform, new Vector2(-170f, 175f), "Sell");
-            var buyStick = CreateButton(BuyStickButtonName, shopRoot.transform, new Vector2(140f, 175f), "Buy Stick");
-            var buyMusket = CreateButton(BuyMusketButtonName, shopRoot.transform, new Vector2(300f, 175f), "Buy Musket");
+            var buyStick = CreateButton(BuyStickButtonName, shopRoot.transform, new Vector2(-40f, 175f), "Buy Stick");
+            var buyMusket = CreateButton(BuyMusketButtonName, shopRoot.transform, new Vector2(110f, 175f), "Buy Musket");
+            var buyFlashlight = CreateButton(BuyFlashlightButtonName, shopRoot.transform, new Vector2(260f, 175f), "Flashlight");
+            var buyShotgun = CreateButton(BuyShotgunButtonName, shopRoot.transform, new Vector2(-40f, 135f), "Shotgun");
+            var buyProtectiveSuit = CreateButton(BuyProtectiveSuitButtonName, shopRoot.transform, new Vector2(110f, 135f), "Protect Suit");
+            var buyInjuryReliever = CreateButton(BuyInjuryRelieverButtonName, shopRoot.transform, new Vector2(260f, 135f), "Injury Aid");
+            var buyStrengthEnhancer = CreateButton(BuyStrengthEnhancerButtonName, shopRoot.transform, new Vector2(260f, 95f), "Strength");
+            var sellRows = CreateSellRowButtons(shopRoot.transform);
+            var sellSelected = CreateButton(
+                SellSelectedItemButtonName,
+                shopRoot.transform,
+                new Vector2(260f, 175f),
+                "Sell Selected",
+                new Vector2(150f, 36f),
+                14);
             var closeShop = CreateButton(CloseShopButtonName, shopRoot.transform, new Vector2(390f, 220f), "Close");
 
             var shopController = root.AddComponent<EquipmentShopController>();
@@ -112,7 +134,16 @@ namespace Bellerophon.Editor.Validation
                 sellTab,
                 buyStick,
                 buyMusket,
-                closeShop);
+                closeShop,
+                null,
+                buyFlashlight,
+                buyInjuryReliever,
+                null,
+                sellSelected,
+                sellRows,
+                buyShotgun,
+                buyProtectiveSuit,
+                buyStrengthEnhancer);
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene, CargoRunScenePath);
@@ -195,7 +226,35 @@ namespace Bellerophon.Editor.Validation
             return label;
         }
 
+        private static Button[] CreateSellRowButtons(Transform parent)
+        {
+            var buttons = new Button[8];
+            for (var i = 0; i < buttons.Length; i++)
+            {
+                buttons[i] = CreateButton(
+                    SellItemRowButtonPrefix + (i + 1),
+                    parent,
+                    new Vector2(-382f, 72f - i * 31f),
+                    (i + 1).ToString(),
+                    new Vector2(44f, 28f),
+                    14);
+            }
+
+            return buttons;
+        }
+
         private static Button CreateButton(string name, Transform parent, Vector2 anchoredPosition, string labelText)
+        {
+            return CreateButton(name, parent, anchoredPosition, labelText, new Vector2(140f, 36f), 15);
+        }
+
+        private static Button CreateButton(
+            string name,
+            Transform parent,
+            Vector2 anchoredPosition,
+            string labelText,
+            Vector2 size,
+            int fontSize)
         {
             var buttonObject = new GameObject(name, typeof(RectTransform));
             buttonObject.transform.SetParent(parent, false);
@@ -205,7 +264,7 @@ namespace Bellerophon.Editor.Validation
             rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
             rectTransform.pivot = new Vector2(0.5f, 0.5f);
             rectTransform.anchoredPosition = anchoredPosition;
-            rectTransform.sizeDelta = new Vector2(140f, 36f);
+            rectTransform.sizeDelta = size;
 
             var image = buttonObject.AddComponent<Image>();
             image.color = new Color(0.18f, 0.28f, 0.24f, 1f);
@@ -223,8 +282,8 @@ namespace Bellerophon.Editor.Validation
                 name + " Label",
                 buttonObject.transform,
                 Vector2.zero,
-                new Vector2(130f, 28f),
-                15,
+                new Vector2(Mathf.Max(20f, size.x - 10f), Mathf.Max(18f, size.y - 8f)),
+                fontSize,
                 TextAnchor.MiddleCenter);
             text.text = labelText;
             text.color = new Color(0.94f, 0.98f, 0.94f, 1f);

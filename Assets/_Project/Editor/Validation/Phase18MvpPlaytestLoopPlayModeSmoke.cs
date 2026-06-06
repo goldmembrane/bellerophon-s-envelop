@@ -312,7 +312,8 @@ namespace Bellerophon.Editor.Validation
                 !contractBoardController.ContractSlotButtons[0].interactable ||
                 !contractBoardController.AssociationContractButton.interactable ||
                 !contractBoardController.PrivateContractButton.interactable ||
-                contractBoardController.AcceptContractButton.interactable)
+                contractBoardController.AcceptContractButton.interactable ||
+                contractBoardController.StartRunButton.interactable)
             {
                 throw new InvalidOperationException("Contract board must show selectable association/private rows while blocking acceptance before repair.");
             }
@@ -321,7 +322,8 @@ namespace Bellerophon.Editor.Validation
             if (!contractBoardController.IsBoardVisible ||
                 maintenanceController.CurrentSession.Phase != GameSessionPhase.Completed ||
                 contractBoardController.SelectedContractId != "association-local-001" ||
-                contractBoardController.AcceptContractButton.interactable)
+                contractBoardController.AcceptContractButton.interactable ||
+                contractBoardController.StartRunButton.interactable)
             {
                 throw new InvalidOperationException("Association category must select a row without accepting before repair.");
             }
@@ -341,9 +343,10 @@ namespace Bellerophon.Editor.Validation
             if (!contractBoardController.IsBoardVisible ||
                 !contractBoardController.AssociationContractButton.interactable ||
                 !contractBoardController.PrivateContractButton.interactable ||
-                !contractBoardController.AcceptContractButton.interactable)
+                !contractBoardController.AcceptContractButton.interactable ||
+                contractBoardController.StartRunButton.interactable)
             {
-                throw new InvalidOperationException("Contract board must unlock association/private selection and acceptance after repair.");
+                throw new InvalidOperationException("Contract board must unlock acceptance after repair while keeping Start Run disabled until a contract is accepted.");
             }
 
             ClickButtonThroughUi(contractBoardController.AssociationContractButton, "association follow-up");
@@ -355,12 +358,26 @@ namespace Bellerophon.Editor.Validation
             }
 
             ClickButtonThroughUi(contractBoardController.AcceptContractButton, "accept association follow-up");
+            var acceptedFollowUp = maintenanceController.CurrentSession;
+            if (!contractBoardController.IsBoardVisible ||
+                maintenanceController.IsMaintenanceVisible ||
+                acceptedFollowUp.Phase != GameSessionPhase.Completed ||
+                acceptedFollowUp.PendingTransportContractCount != 1 ||
+                !acceptedFollowUp.IsTransportContractPending("association-local-001") ||
+                contractBoardController.AcceptContractButton.interactable ||
+                !contractBoardController.StartRunButton.interactable)
+            {
+                throw new InvalidOperationException("Accept must queue the association follow-up without starting transport.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.StartRunButton, "start accepted follow-up");
             var followUpSession = maintenanceController.CurrentSession;
             if (maintenanceController.IsMaintenanceVisible ||
                 contractBoardController.IsBoardVisible ||
                 followUpSession.Phase != GameSessionPhase.Transporting ||
                 !followUpSession.ActiveTransportContract.HasValue ||
                 followUpSession.ActiveTransportContract.Value.Id != "association-local-001" ||
+                followUpSession.PendingTransportContractCount != 0 ||
                 !deviceState.HasActiveTransportRun ||
                 !deviceState.HasActiveTransportHazard ||
                 deviceState.CurrentExternalTarget.TargetType != ExternalTargetType.Asteroid)
@@ -450,7 +467,8 @@ namespace Bellerophon.Editor.Validation
             if (!contractBoardController.IsBoardVisible ||
                 !contractBoardController.AssociationContractButton.interactable ||
                 !contractBoardController.PrivateContractButton.interactable ||
-                !contractBoardController.AcceptContractButton.interactable)
+                !contractBoardController.AcceptContractButton.interactable ||
+                contractBoardController.StartRunButton.interactable)
             {
                 throw new InvalidOperationException("Second contract board must be ready for repeated playtest selection.");
             }

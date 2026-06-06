@@ -27,6 +27,7 @@ namespace Bellerophon.Core.Session
         [SerializeField] private Button previousContractButton;
         [SerializeField] private Button nextContractButton;
         [SerializeField] private Button acceptContractButton;
+        [SerializeField] private Button startRunButton;
         [SerializeField] private Button backButton;
 
         private readonly DetailedContentCatalog catalog = DetailedContractCatalogRules.CreateDefaultStepTwoCatalog();
@@ -57,6 +58,8 @@ namespace Bellerophon.Core.Session
         public Button NextContractButton => nextContractButton;
 
         public Button AcceptContractButton => acceptContractButton;
+
+        public Button StartRunButton => startRunButton;
 
         public Button BackButton => backButton;
 
@@ -89,6 +92,7 @@ namespace Bellerophon.Core.Session
             Button previousButton,
             Button nextButton,
             Button acceptButton,
+            Button startRunActionButton,
             Button backActionButton)
         {
             startFlowController = startController;
@@ -107,6 +111,7 @@ namespace Bellerophon.Core.Session
             previousContractButton = previousButton;
             nextContractButton = nextButton;
             acceptContractButton = acceptButton;
+            startRunButton = startRunActionButton;
             backButton = backActionButton;
             DisableTextRaycasts();
             BindButtons();
@@ -185,7 +190,9 @@ namespace Bellerophon.Core.Session
             SetButtonState(
                 acceptContractButton,
                 TryGetSelectedContract(out var selectedContract) &&
-                CanStartContract(session, context, selectedContract));
+                CanStartContract(session, context, selectedContract) &&
+                !session.IsTransportContractPending(selectedContract.ContractId));
+            SetButtonState(startRunButton, CanStartAcceptedContracts(session));
             SetButtonState(backButton, true);
 
             if (statusText != null)
@@ -246,7 +253,41 @@ namespace Bellerophon.Core.Session
                 return;
             }
 
-            StartSelectedContract(session, context, contract);
+            AcceptSelectedContractForPendingRun(session, context, contract);
+        }
+
+        public void StartAcceptedContractRun()
+        {
+            var session = CurrentSession;
+            if (session == null)
+            {
+                return;
+            }
+
+            if (!CanStartAcceptedContracts(session))
+            {
+                lastStatus = session.PendingTransportContractCount <= 0
+                    ? "Accept at least one contract before starting a transport run."
+                    : BuildReadinessFailureText(
+                        ShipStateRules.EvaluateStartReadiness(session.Ship, session.PersonalCargoHold.HasCargo),
+                        true);
+                RefreshBoard();
+                return;
+            }
+
+            var nextSession = session.StartAcceptedTransportContracts();
+            startFlowController.ApplySessionState(nextSession);
+            if (shipDeviceState != null && nextSession.ActiveCargo.HasValue)
+            {
+                shipDeviceState.SetShipState(nextSession.Ship);
+                shipDeviceState.SetCargoState(nextSession.ActiveCargo.Value);
+                shipDeviceState.SetEquipmentState(nextSession.Equipment);
+                shipDeviceState.StartTransportRun(CalculateActiveRunDuration(nextSession));
+                shipDeviceState.TryStartAsteroidFieldForCurrentRun(nextSession);
+            }
+
+            lastStatus = "Started transport with " + nextSession.ActiveTransportContractCount + " accepted contract(s).";
+            HideBoard();
         }
 
         private void Awake()
@@ -306,6 +347,11 @@ namespace Bellerophon.Core.Session
                 acceptContractButton.onClick.AddListener(AcceptSelectedContract);
             }
 
+            if (startRunButton != null)
+            {
+                startRunButton.onClick.AddListener(StartAcceptedContractRun);
+            }
+
             if (backButton != null)
             {
                 backButton.onClick.AddListener(ReturnToMaintenance);
@@ -344,6 +390,11 @@ namespace Bellerophon.Core.Session
             if (acceptContractButton != null)
             {
                 acceptContractButton.onClick.RemoveListener(AcceptSelectedContract);
+            }
+
+            if (startRunButton != null)
+            {
+                startRunButton.onClick.RemoveListener(StartAcceptedContractRun);
             }
 
             if (backButton != null)
@@ -401,7 +452,7 @@ namespace Bellerophon.Core.Session
             selectedContractType = contractType;
             selectedContractIndex = FindFirstContractIndex(contractType);
             lastStatus = selectedContractIndex >= 0
-                ? "Selected " + contractType + " contract category. Press Accept to start the selected contract."
+                ? "Selected " + contractType + " contract category. Press Accept to add the selected contract."
                 : "No " + contractType + " contract is currently visible.";
             RefreshBoard();
         }
@@ -417,7 +468,7 @@ namespace Bellerophon.Core.Session
 
             selectedContractIndex = slotIndex;
             selectedContractType = visibleContracts[slotIndex].ContractType;
-            lastStatus = "Selected " + visibleContracts[slotIndex].DisplayName + ". Press Accept to start this contract.";
+            lastStatus = "Selected " + visibleContracts[slotIndex].DisplayName + ". Press Accept to add this contract.";
             RefreshBoard();
         }
 
@@ -454,11 +505,11 @@ namespace Bellerophon.Core.Session
             }
 
             selectedContractIndex = matchingIndices[nextPosition];
-            lastStatus = "Selected contract changed. Press Accept to start the selected contract.";
+            lastStatus = "Selected contract changed. Press Accept to add the selected contract.";
             RefreshBoard();
         }
 
-        private void StartSelectedContract(
+        private void AcceptSelectedContractForPendingRun(
             GameSessionState session,
             DetailedContractOfferContext context,
             ContractContentDefinition contract)
@@ -469,19 +520,19 @@ namespace Bellerophon.Core.Session
             }
 
             var transportContract = DetailedContractCatalogRules.CreateTransportContract(contract, catalog, context);
-            var nextSession = session.StartTransport(transportContract);
-            startFlowController.ApplySessionState(nextSession);
-            if (shipDeviceState != null)
+            if (session.IsTransportContractPending(transportContract.Id))
             {
-                shipDeviceState.SetShipState(nextSession.Ship);
-                shipDeviceState.SetCargoState(transportContract.Cargo);
-                shipDeviceState.SetEquipmentState(nextSession.Equipment);
-                shipDeviceState.StartTransportRun(transportContract.DurationSeconds);
-                shipDeviceState.TryStartAsteroidFieldForCurrentRun(nextSession);
+                lastStatus = transportContract.DisplayName + " is already accepted for the next run.";
+                RefreshBoard();
+                return;
             }
 
-            lastStatus = "Contract selected: " + transportContract.DisplayName;
-            HideBoard();
+            var nextSession = session.AcceptTransportContract(transportContract);
+            startFlowController.ApplySessionState(nextSession);
+            lastStatus = "Accepted " + transportContract.DisplayName +
+                         ". Accepted contracts: " + nextSession.PendingTransportContractCount +
+                         ". Press Start Run when ready.";
+            RefreshBoard();
         }
 
         private void EnsureSelectedContract()
@@ -629,7 +680,9 @@ namespace Bellerophon.Core.Session
                          "s | Cargo " +
                          contract.RequiredCargoHoldScore +
                          " | " +
-                         (CanStartContract(session, context, contract) ? "Ready" : "Locked");
+                         (session.IsTransportContractPending(contract.ContractId)
+                             ? "Accepted"
+                             : CanStartContract(session, context, contract) ? "Ready" : "Locked");
         }
 
         private static void SetContractSlotVisual(Button button, bool selected)
@@ -682,7 +735,7 @@ namespace Bellerophon.Core.Session
                 return false;
             }
 
-            var readiness = ShipStateRules.EvaluateStartReadiness(session.Ship);
+            var readiness = ShipStateRules.EvaluateStartReadiness(session.Ship, session.PersonalCargoHold.HasCargo);
             return readiness.CanStartTransport &&
                    DetailedContractCatalogRules.CanAcceptContract(context, contract);
         }
@@ -694,6 +747,7 @@ namespace Bellerophon.Core.Session
                    " | Association: " + (session.IsAssociationMember ? "Member" : "Non-member") +
                    "\nCargo hold score: " + context.CargoHoldScore +
                    " | Visible contracts: " + visibleContracts.Length +
+                   " | Accepted: " + session.PendingTransportContractCount +
                    " | Selected: " + (TryGetSelectedContract(out var selected) ? selected.DisplayName : "None") +
                    " | Private contracts: " + (DetailedContractCatalogRules.ShouldShowPrivateContracts(context) ? "Visible" : "Hidden");
         }
@@ -743,7 +797,9 @@ namespace Bellerophon.Core.Session
                 }
 
                 builder.Append(" | ");
-                builder.Append(CanStartContract(session, context, contract) ? "Ready" : "Needs repair");
+                builder.Append(session.IsTransportContractPending(contract.ContractId)
+                    ? "Accepted"
+                    : CanStartContract(session, context, contract) ? "Ready" : "Needs repair");
                 builder.AppendLine();
                 count++;
             }
@@ -756,10 +812,15 @@ namespace Bellerophon.Core.Session
 
         private static string BuildStatusText(GameSessionState session, DetailedContractOfferContext context)
         {
-            var readiness = ShipStateRules.EvaluateStartReadiness(session.Ship);
+            var readiness = ShipStateRules.EvaluateStartReadiness(session.Ship, session.PersonalCargoHold.HasCargo);
             if (!readiness.CanStartTransport)
             {
-                return "Ship repair is required before accepting a board contract.";
+                return BuildReadinessFailureText(readiness, false);
+            }
+
+            if (session.PendingTransportContractCount > 0)
+            {
+                return "Accepted contracts: " + session.PendingTransportContractCount + ". Press Start Run to begin the next transport.";
             }
 
             if (DetailedContractCatalogRules.ShouldShowRevivalContract(context))
@@ -772,7 +833,7 @@ namespace Bellerophon.Core.Session
                 return "Private contracts are hidden because fame is below threshold.";
             }
 
-            return "Select a contract from the list, then press Accept to begin the next transport.";
+            return "Select contracts from the list, press Accept to add them, then press Start Run.";
         }
 
         private void ProcessPointerClickFallback()
@@ -792,6 +853,7 @@ namespace Bellerophon.Core.Session
                 TryClickButtonAtScreenPosition(previousContractButton, pointerPosition, SelectPreviousContract) ||
                 TryClickButtonAtScreenPosition(nextContractButton, pointerPosition, SelectNextContract) ||
                 TryClickButtonAtScreenPosition(acceptContractButton, pointerPosition, AcceptSelectedContract) ||
+                TryClickButtonAtScreenPosition(startRunButton, pointerPosition, StartAcceptedContractRun) ||
                 TryClickButtonAtScreenPosition(backButton, pointerPosition, ReturnToMaintenance))
             {
                 return;
@@ -848,6 +910,63 @@ namespace Bellerophon.Core.Session
                 button.gameObject.SetActive(true);
                 button.interactable = interactable;
             }
+        }
+
+        private static bool CanStartAcceptedContracts(GameSessionState session)
+        {
+            if (session == null ||
+                session.Phase != GameSessionPhase.Completed ||
+                session.PendingTransportContractCount <= 0)
+            {
+                return false;
+            }
+
+            return ShipStateRules.EvaluateStartReadiness(session.Ship, session.PersonalCargoHold.HasCargo)
+                .CanStartTransport;
+        }
+
+        private static string BuildReadinessFailureText(ShipStartAssessment readiness, bool forAcceptedRun)
+        {
+            var action = forAcceptedRun
+                ? "starting the accepted run"
+                : "accepting a board contract";
+
+            if (readiness.IsPersonalCargoBlocked)
+            {
+                return "Personal cargo cannot launch with the current cargo hold damage. Sell it or repair before " +
+                       action + ".";
+            }
+
+            if (readiness.IsCargoHoldBlocked)
+            {
+                return "Cargo hold repair is required before " + action + ".";
+            }
+
+            if (readiness.IsCockpitDestroyed)
+            {
+                return "Cockpit repair is required before " + action + ".";
+            }
+
+            if (readiness.IsEngineRoomDestroyed)
+            {
+                return "Engine room repair is required before " + action + ".";
+            }
+
+            return "Ship repair is required before " + action + ".";
+        }
+
+        private static int CalculateActiveRunDuration(GameSessionState session)
+        {
+            var duration = session.ActiveTransportContract.HasValue
+                ? session.ActiveTransportContract.Value.DurationSeconds
+                : 1;
+            var contracts = session.ActiveTransportContracts;
+            for (var i = 0; i < contracts.Length; i++)
+            {
+                duration = Mathf.Max(duration, contracts[i].DurationSeconds);
+            }
+
+            return duration;
         }
 
         private void SetCursorLockSuppressed(bool suppressed)

@@ -247,7 +247,8 @@ namespace Bellerophon.Editor.Validation
             ClickButtonThroughUi(maintenanceController.ContractBoardButton);
             if (!contractBoardController.IsBoardVisible ||
                 !contractBoardController.AssociationContractButton.interactable ||
-                !contractBoardController.AcceptContractButton.interactable)
+                !contractBoardController.AcceptContractButton.interactable ||
+                contractBoardController.StartRunButton.interactable)
             {
                 throw new InvalidOperationException("Contract board must expose a ready follow-up association contract.");
             }
@@ -261,6 +262,15 @@ namespace Bellerophon.Editor.Validation
             }
 
             ClickButtonThroughUi(contractBoardController.AcceptContractButton);
+            if (!contractBoardController.IsBoardVisible ||
+                maintenanceController.CurrentSession.Phase != GameSessionPhase.Completed ||
+                maintenanceController.CurrentSession.PendingTransportContractCount != 1 ||
+                !contractBoardController.StartRunButton.interactable)
+            {
+                throw new InvalidOperationException("Accept must queue the follow-up contract before Start Run begins transport.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.StartRunButton);
             var followUp = maintenanceController.CurrentSession;
             if (maintenanceController.IsMaintenanceVisible ||
                 contractBoardController.IsBoardVisible ||

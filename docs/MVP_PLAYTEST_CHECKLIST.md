@@ -1,5 +1,54 @@
 # MVP Playtest Checklist
 
+## Detailed Step 8 Regression Extension
+
+- Confirm shop Buy text and buttons expose step 8 representative items: Shotgun, Protective Suit, Strength Enhancer, Flashlight, and Injury Reliever.
+- Confirm expanded weapon definitions match the design source first-pass values for shotgun, mini flamethrower, electric baton, and dagger.
+- Confirm the Presence Detector remains locked until special-contract unlock work exists.
+- Confirm Flashlight use activates a timed utility state and is shown in the equipment HUD.
+- Confirm treatment supply items apply recovery deltas and consume one stored item.
+- Confirm protective supply items equip from storage, lose durability, and add damage reduction on top of the basic protective suit.
+- Confirm Strength Enhancer applies only to melee damage in the current first pass: stick/electric baton +40%, dagger +10, ranged weapons unchanged.
+- Confirm the shop Sell tab still requires selecting a listed item before selling after step 8 item usage.
+- Confirm Phase15 smoke covers step 8 item purchases, active effects, selected personal cargo sale, selected purchased item disposal, and Parvum combat with strengthened stick plus base musket.
+
+## Detailed Step 7 Regression Extension
+
+- Confirm player hand slots start at 3 and the pouch upgrade model expands them to 4.
+- Confirm association start still grants the basic protective suit and one stick without filling the extra hand slots.
+- Confirm supply storage starts at 3 slots and equipped Supply Slots upgrades expand the equipment storage capacity through the existing upgrade effect values.
+- Confirm the supply storage panel shows tabs for All, Weapon, Protective, Treatment, Enhancement, and Utility.
+- Confirm shop Buy text separates common products, fame-limited products, and special products.
+- Confirm shop purchases can enter hand slots or supply storage according to the item storage target.
+- Confirm purchased items keep durability and purchase-price metadata.
+- Confirm shop Sell text separates purchased-item 1% disposal from personal cargo sale, requires selecting a listed item first, and only sells the selected item after pressing Sell Selected.
+- Confirm Phase15 smoke covers musket, flashlight, treatment purchase, selected item disposal, selected personal cargo sale, and the later Parvum combat regression.
+
+## Detailed Step 6 Regression Extension
+
+- Confirm planet maintenance room rows show concrete six-room damage effects, not only generic risk text.
+- Confirm cockpit damage disables auto pilot at the existing threshold and reduces manual flight input response at stable/critical thresholds.
+- Confirm cargo hold damage reduces hold capacity, blocks personal cargo transport at `<=50%`, blocks launch at `<=25%`, and still applies cargo loss at critical/destroyed thresholds.
+- Confirm engine room damage increases transport duration and disables booster/overclock at the damaged threshold.
+- Confirm control room damage limits CCTV channels, disables intrusion detection/cargo warning/suppression at the configured thresholds, and increases seed intruder occurrence/damage when suppression is offline.
+- Confirm armory damage disables auto aim/plasma, reduces turret capability, and destroyed armory disables manual turret operation.
+- Confirm supply room damage reduces usable storage slots and displays security/equipment risk in the supply panel.
+- Confirm contract board and planet maintenance launch readiness account for stored personal cargo when cargo hold damage blocks personal cargo transport.
+- Confirm Phase6 smoke covers damaged CCTV shutdown, storage slot reduction, and destroyed manual turret shutdown.
+- Confirm Phase10/11/12/14/15/18 smoke tests still pass after the six-room rule connections.
+
+## Detailed Step 5 Regression Extension
+
+- Confirm repair charge uses total missing durability across all 6 rooms at `$5` per 1%, not per-room repair rates.
+- Confirm a near-total-loss ship caps normal repair at `$2995`, while all 6 rooms at 0% uses the separate `$5000` total-loss claim.
+- Confirm towing costs increase by towing incident count: `$2000`, `$3000`, `$5000`, then +`$2500` per additional tow.
+- Confirm planet maintenance opens a separate full-screen ship upgrade screen from `Upgrades`.
+- Confirm durability upgrade purchase applies immediately without a separate equip action.
+- Confirm non-durability upgrade purchase and equip remain separate actions.
+- Confirm upgrade costs match the updated design source for durability, weapons, autopilot, supply slots, and internal control.
+- Confirm the upgrade screen returns to planet maintenance through `Back` and does not block later shop, cargo, contract board, repair, or start-run interactions.
+- Confirm Phase10 smoke covers upgrade buy/equip before the repair and contract-board flow.
+
 ## Detailed Step 3 Regression Extension
 
 - Confirm planet maintenance no longer starts association/private contracts directly.
@@ -8,7 +57,9 @@
 - Confirm damaged ships can view the contract board but cannot accept board contracts until repaired.
 - Confirm association/private/special category buttons select categories only and never immediately accept a contract.
 - Confirm a listed contract row can be selected while the board stays open.
-- Confirm repaired ships start the association follow-up contract only after pressing the separate `Accept` button.
+- Confirm repaired ships add selected contracts to the pending run when pressing `Accept` while the board stays open.
+- Confirm multiple accepted contracts can be queued before transport starts.
+- Confirm transport starts only after pressing the separate `Start Run` button.
 - Confirm association, private, and special categories are displayed separately on the contract board.
 - Confirm low fame hides private contracts and shows the one-time association revival contract.
 - Confirm a clean revival contract completion resets fame to zero and marks the revival contract as used.

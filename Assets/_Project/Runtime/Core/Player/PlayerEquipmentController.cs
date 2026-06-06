@@ -237,14 +237,15 @@ namespace Bellerophon.Core.Player
             var cooldown = equipment.UseCooldownSeconds > 0f
                 ? "Cooldown " + equipment.UseCooldownSeconds.ToString("0.0") + "s"
                 : "Ready";
-            var reload = activeSlot.ItemKind == EquipmentItemKind.Musket
+            var reload = !activeSlot.IsEmpty && EquipmentRules.GetDefinition(activeSlot.ItemKind).HasReloadInputSkeleton
                 ? "\nReload: R skeleton, magazine pending confirmation"
                 : string.Empty;
             return "Equipment\n"
                    + "Hand " + (equipment.ActiveHandSlotIndex + 1) + ": " + itemName + "\n"
                    + "Mode: " + mode + "\n"
                    + cooldown
-                   + reload;
+                   + reload
+                   + BuildEffectText(equipment);
         }
 
         private string GetDisplayMode(EquipmentSlotState activeSlot)
@@ -259,7 +260,43 @@ namespace Bellerophon.Core.Player
                 return "Precision Aim";
             }
 
+            if (activeSlot.ItemKind == EquipmentItemKind.Dagger && IsAlternateModeActive())
+            {
+                return "Throwing";
+            }
+
             return "Primary";
+        }
+
+        private static string BuildEffectText(PlayerEquipmentState equipment)
+        {
+            var text = string.Empty;
+            if (equipment.ActiveDamageReductionPercent > 0)
+            {
+                text += "\nProtection: " +
+                        EquipmentRules.FormatItemName(equipment.ActiveProtectiveItemKind) +
+                        " +" +
+                        equipment.ActiveDamageReductionPercent +
+                        "%";
+            }
+
+            if (equipment.HasActiveStrengthEnhancer)
+            {
+                text += "\nStrength: +" +
+                        equipment.StrengthDamageBonusPercent +
+                        "% " +
+                        equipment.StrengthEnhancerRemainingSeconds.ToString("0") +
+                        "s";
+            }
+
+            if (equipment.HasActiveFlashlight)
+            {
+                text += "\nFlashlight: " +
+                        equipment.FlashlightRemainingSeconds.ToString("0") +
+                        "s";
+            }
+
+            return text;
         }
 
         private void RefreshReticle(PlayerEquipmentState equipment, EquipmentSlotState activeSlot)
@@ -373,6 +410,7 @@ namespace Bellerophon.Core.Player
             switch (itemKind)
             {
                 case EquipmentItemKind.Stick:
+                case EquipmentItemKind.Dagger:
                     return EquipmentUseMode.Throwing;
                 case EquipmentItemKind.Musket:
                     return EquipmentUseMode.PrecisionAim;

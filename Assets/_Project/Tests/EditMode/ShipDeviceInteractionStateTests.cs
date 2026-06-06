@@ -1,3 +1,4 @@
+using Bellerophon.Core.Player;
 using Bellerophon.Core.Ship;
 using Bellerophon.Core.Session;
 using NUnit.Framework;
@@ -56,6 +57,61 @@ namespace Bellerophon.Tests.EditMode
         }
 
         [Test]
+        public void RoomDamageEffects_LimitDeviceOperationsAndHudStatus()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            var hudObject = new GameObject("Ship Device HUD Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                var label = new GameObject("Panel Text").AddComponent<UnityEngine.UI.Text>();
+                label.transform.SetParent(hudObject.transform);
+                var hud = hudObject.AddComponent<ShipDeviceHud>();
+                hud.Configure(state, label, null);
+
+                state.SetShipState(ShipState.CreateDefault()
+                    .WithRoom(ShipRoomId.ControlRoom, new ShipRoomState(25, 100)));
+                state.ActivateDevice(ShipDeviceType.ControlRoomMainScreen);
+                state.CycleCctv(1);
+                hud.RefreshPanel();
+
+                Assert.That(state.CurrentCctvTarget, Is.EqualTo(ShipCctvTarget.Cockpit));
+                Assert.That(label.text, Does.Contain("CCTV Channels: 0/4"));
+
+                state.SetShipState(ShipState.CreateDefault()
+                    .WithRoom(ShipRoomId.SupplyRoom, new ShipRoomState(75, 100)));
+                state.ActivateDevice(ShipDeviceType.SupplyRoomStorageCabinet);
+                hud.RefreshPanel();
+
+                Assert.That(state.SupplySlotCount, Is.Zero);
+                Assert.That(label.text, Does.Contain("Usable Slots: 0/3"));
+
+                state.SetShipState(ShipState.CreateDefault()
+                    .WithRoom(ShipRoomId.EngineRoom, new ShipRoomState(50, 100)));
+                state.ActivateDevice(ShipDeviceType.EngineRoomPowerScreen);
+                hud.RefreshPanel();
+
+                Assert.That(state.EngineOverclockUsedThisRun, Is.False);
+                Assert.That(label.text, Does.Contain("Overclock: Offline"));
+
+                state.SetShipState(ShipState.CreateDefault()
+                    .WithRoom(ShipRoomId.Armory, new ShipRoomState(0, 100)));
+                state.ActivateDevice(ShipDeviceType.ArmoryTurretHandle);
+                var fireResult = state.FireManualTurret();
+                hud.RefreshPanel();
+
+                Assert.That(state.TurretManualModeActive, Is.False);
+                Assert.That(fireResult.Outcome, Is.EqualTo(ManualTurretFireOutcome.Inactive));
+                Assert.That(label.text, Does.Contain("Manual Turret: Offline"));
+            }
+            finally
+            {
+                Object.DestroyImmediate(hudObject);
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
         public void CockpitHelm_TogglesManualFlightDuringActiveTransportRun()
         {
             var stateObject = new GameObject("Ship Device State Test");
@@ -76,6 +132,37 @@ namespace Bellerophon.Tests.EditMode
             }
             finally
             {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
+        public void SupplyItemUse_AppliesTreatmentRecoveryToPlayerStatus()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            var statusObject = new GameObject("Player Status Test");
+            var settings = ScriptableObject.CreateInstance<FirstPersonPlayerSettings>();
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                var status = statusObject.AddComponent<FirstPersonPlayerStatus>();
+                status.Configure(settings);
+                status.SetVitalsForValidation(60, 20);
+                state.SetPlayerStatusForValidation(status);
+                state.SetEquipmentStateForValidation(PlayerEquipmentState.CreateDefaultAssociationIssue()
+                    .WithSupplySlot(0, EquipmentSlotState.Purchased(EquipmentItemKind.InjuryReliever, EquipmentRules.InjuryRelieverPriceCredits)));
+
+                var result = state.UseSupplyItem(0);
+
+                Assert.That(result.Outcome, Is.EqualTo(EquipmentUseOutcome.TreatmentApplied));
+                Assert.That(status.CurrentHealth, Is.EqualTo(85));
+                Assert.That(status.CurrentShield, Is.EqualTo(20));
+                Assert.That(state.CurrentEquipmentState.GetSupplySlot(0).IsEmpty, Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(settings);
+                Object.DestroyImmediate(statusObject);
                 Object.DestroyImmediate(stateObject);
             }
         }
@@ -309,6 +396,29 @@ namespace Bellerophon.Tests.EditMode
             finally
             {
                 Object.DestroyImmediate(hudObject);
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
+        public void SeedIntruderDamage_ControlRoomDestroyedIncreasesFacilityDamage()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                state.SetShipState(ShipState.CreateDefault()
+                    .WithRoom(ShipRoomId.ControlRoom, new ShipRoomState(0, 100)));
+                state.StartTransportRun(60);
+                state.StartSeedIntruderForValidation(
+                    SeedIntruderRules.CreateParvumIntrusionForSeed(47, ShipRoomId.Cockpit));
+
+                state.TickTransportRun(SeedIntruderRules.ParvumAttackDelaySeconds);
+
+                Assert.That(state.CurrentSeedIntruder.TotalRoomDamageApplied, Is.EqualTo(9));
+            }
+            finally
+            {
                 Object.DestroyImmediate(stateObject);
             }
         }

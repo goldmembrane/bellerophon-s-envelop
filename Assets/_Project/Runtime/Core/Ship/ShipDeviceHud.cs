@@ -119,8 +119,10 @@ namespace Bellerophon.Core.Ship
 
         private string BuildManualFlightText()
         {
+            var ship = interactionState.CurrentShipState;
             return "Manual Flight\n"
                    + "Mode: " + FormatFlightMode(interactionState.CurrentFlightMode) + "\n"
+                   + "Input Response: " + FormatPercent(ShipStateRules.CalculateManualFlightInputMultiplier(ship)) + "\n"
                    + "Vector: " + FormatSigned(interactionState.ManualFlightOffsetX) + ", " + FormatSigned(interactionState.ManualFlightOffsetY) + "\n"
                    + "Status: " + interactionState.LastInteractionSummary;
         }
@@ -132,6 +134,10 @@ namespace Bellerophon.Core.Ship
             builder.AppendLine("Mode: " + FormatFlightMode(interactionState.CurrentFlightMode));
             builder.AppendLine("Progress: " + FormatPercent(interactionState.TransportProgressPercent));
             builder.AppendLine("Remaining: " + Mathf.CeilToInt(interactionState.TransportRemainingSeconds) + "s");
+            builder.AppendLine("Duration Multiplier: x" +
+                               ShipStateRules.CalculateTransportDurationMultiplier(interactionState.CurrentShipState).ToString("0.##"));
+            builder.AppendLine("Manual Input: " +
+                               FormatPercent(ShipStateRules.CalculateManualFlightInputMultiplier(interactionState.CurrentShipState)));
             builder.Append("Auto Pilot: ");
             builder.Append(interactionState.IsAutoPilotAvailable ? "Available" : "Unavailable");
 
@@ -159,9 +165,15 @@ namespace Bellerophon.Core.Ship
 
         private string BuildEngineStatusText()
         {
-            var engineRoom = interactionState.CurrentShipState.GetRoom(ShipRoomId.EngineRoom);
+            var ship = interactionState.CurrentShipState;
+            var engineRoom = ship.GetRoom(ShipRoomId.EngineRoom);
             return "Engine Room Screen\n"
                    + "Engine Durability: " + FormatRoomStatus(engineRoom) + "\n"
+                   + "Duration Multiplier: x" + ShipStateRules.CalculateTransportDurationMultiplier(ship).ToString("0.##") + "\n"
+                   + "Booster: " + FormatOnline(ShipStateRules.CanUseBooster(ship)) + "\n"
+                   + "Overclock: " + FormatOnline(ShipStateRules.CanUseEngineOverclock(ship)) + "\n"
+                   + "Blackout Rooms: " + ShipStateRules.CalculateEngineBlackoutRoomCount(ship) + "\n"
+                   + "Offline Rooms: " + ShipStateRules.CalculateEngineOfflineRoomCount(ship) + "\n"
                    + "Overclock Used: " + FormatBool(interactionState.EngineOverclockUsedThisRun) + "\n"
                    + "Overclock Active: " + FormatBool(interactionState.EngineOverclockActive) + "\n"
                    + interactionState.LastInteractionSummary;
@@ -169,10 +181,15 @@ namespace Bellerophon.Core.Ship
 
         private string BuildManualTurretText()
         {
+            var ship = interactionState.CurrentShipState;
             var turret = interactionState.CurrentManualTurret;
             var target = interactionState.CurrentExternalTarget;
             var builder = new StringBuilder();
             builder.AppendLine("Manual Turret");
+            builder.AppendLine("Manual Turret: " + FormatOnline(ShipStateRules.CanUseManualTurret(ship)));
+            builder.AppendLine("Auto Aim: " + FormatOnline(ShipStateRules.IsAutoAimOnline(ship)));
+            builder.AppendLine("Plasma: " + FormatOnline(ShipStateRules.IsPlasmaCannonAvailable(ship)));
+            builder.AppendLine("Aim Response: " + FormatPercent(ShipStateRules.CalculateManualTurretAimMultiplier(ship)));
             builder.AppendLine("Ammo: " + turret.AmmoInMagazine + "/" + ManualTurretState.MagazineSize);
             builder.AppendLine("Reloading: " + FormatBool(turret.IsReloading));
             builder.AppendLine("Intruder Exposure: " + FormatBool(turret.IntruderHitPossible));
@@ -185,9 +202,16 @@ namespace Bellerophon.Core.Ship
 
         private string BuildControlRoomText()
         {
+            var ship = interactionState.CurrentShipState;
             var builder = new StringBuilder();
             builder.AppendLine("Control Room Screen");
             builder.AppendLine("CCTV A/D: " + ShipDeviceInteractionState.GetCctvDisplayName(interactionState.CurrentCctvTarget));
+            builder.AppendLine("Corridor Seal: " + ShipStateRules.CalculateControlRoomClosedCorridorPercent(ship) + "%");
+            builder.AppendLine("CCTV Channels: " + ShipStateRules.CalculateControlRoomAvailableCctvCount(ship) +
+                               "/" + ShipStateRules.DefaultControlRoomCctvCount);
+            builder.AppendLine("Intruder Detection: " + FormatOnline(ShipStateRules.IsIntruderDetectionOnline(ship)));
+            builder.AppendLine("Cargo Warning: " + FormatOnline(ShipStateRules.IsCargoDamageWarningOnline(ship)));
+            builder.AppendLine("Suppression: " + FormatOnline(ShipStateRules.IsIntruderSuppressionOnline(ship)));
             builder.AppendLine("Ship Layout");
             AppendRoomLine(builder, "Cockpit", ShipRoomId.Cockpit);
             AppendRoomLine(builder, "Cargo Hold", ShipRoomId.CargoHold);
@@ -200,9 +224,19 @@ namespace Bellerophon.Core.Ship
 
         private string BuildSupplyStorageText()
         {
+            var ship = interactionState.CurrentShipState;
+            var equipment = interactionState.CurrentEquipmentState;
             var builder = new StringBuilder();
             builder.AppendLine("Supply Storage");
-            builder.AppendLine("Suit: " + (interactionState.CurrentEquipmentState.HasBasicProtectiveSuit
+            builder.AppendLine("Usable Slots: " + interactionState.SupplySlotCount +
+                               "/" + equipment.UnlockedSupplySlotCount);
+            builder.AppendLine("Tabs: " + BuildStorageTabsText());
+            builder.AppendLine("Storage Security: " + FormatOnline(ShipStateRules.IsSupplyStorageSecurityOnline(ship)));
+            builder.AppendLine("Equipment Durability Risk: " +
+                               FormatPercent(ShipStateRules.CalculateSupplyEquipmentDurabilityDamagePercent(ship)));
+            builder.AppendLine("Explosion Risk: " +
+                               ShipStateRules.CalculateSupplyEquipmentExplosionChancePercent(ship) + "%");
+            builder.AppendLine("Suit: " + (equipment.HasBasicProtectiveSuit
                 ? "Basic Protective Suit"
                 : "None"));
             builder.AppendLine("Hand Slots");
@@ -228,8 +262,12 @@ namespace Bellerophon.Core.Ship
 
         private string BuildCargoStatusText()
         {
+            var ship = interactionState.CurrentShipState;
             var cargo = interactionState.CurrentCargoState;
             return "Cargo Hold Cargo\n"
+                   + "Hold Capacity: " + FormatPercent(ShipStateRules.CalculateCargoHoldCapacityMultiplier(ship)) + "\n"
+                   + "Personal Cargo: " + FormatOnline(ShipStateRules.CanTransportPersonalCargo(ship)) + "\n"
+                   + "Cargo Loss Rule: " + FormatPercent(ShipStateRules.CalculateCargoLossPercentFromCargoHold(ship)) + "\n"
                    + "Durability: " + FormatPercent(cargo.DurabilityPercent) + "\n"
                    + "Loss: " + FormatPercent(cargo.LossPercent) + "\n"
                    + "Grade: " + cargo.Grade + "\n"
@@ -239,7 +277,8 @@ namespace Bellerophon.Core.Ship
         private void AppendRoomLine(StringBuilder builder, string label, ShipRoomId roomId)
         {
             var room = interactionState.CurrentShipState.GetRoom(roomId);
-            builder.AppendLine(label + ": " + FormatRoomStatus(room));
+            builder.AppendLine(label + ": " + FormatRoomStatus(room) + " | " +
+                               ShipStateRules.BuildRoomDamageEffectSummary(interactionState.CurrentShipState, roomId));
         }
 
         private void AppendSeedIntruderStatus(StringBuilder builder)
@@ -290,6 +329,11 @@ namespace Bellerophon.Core.Ship
         private static string FormatBool(bool value)
         {
             return value ? "Yes" : "No";
+        }
+
+        private static string FormatOnline(bool value)
+        {
+            return value ? "Online" : "Offline";
         }
 
         private static string FormatFlightMode(ShipFlightMode mode)
@@ -371,6 +415,23 @@ namespace Bellerophon.Core.Ship
                 default:
                     return roomId.ToString();
             }
+        }
+
+        private static string BuildStorageTabsText()
+        {
+            var tabs = EquipmentRules.GetStorageTabOrder();
+            var builder = new StringBuilder();
+            for (var i = 0; i < tabs.Length; i++)
+            {
+                if (i > 0)
+                {
+                    builder.Append(", ");
+                }
+
+                builder.Append(EquipmentRules.FormatCategoryTabName(tabs[i]));
+            }
+
+            return builder.ToString();
         }
 
         private static string ColorizeTier(ShipRoomDurabilityTier tier)

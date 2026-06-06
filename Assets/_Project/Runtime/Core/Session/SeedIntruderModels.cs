@@ -196,12 +196,20 @@ namespace Bellerophon.Core.Session
 
         public static bool ShouldStartSeedIntruder(GameSessionState session, int checkIndex)
         {
+            return ShouldStartSeedIntruder(session, checkIndex, session?.Ship);
+        }
+
+        public static bool ShouldStartSeedIntruder(GameSessionState session, int checkIndex, ShipState ship)
+        {
             if (!CanCheckSeedIntruder(session) || checkIndex <= 0)
             {
                 return false;
             }
 
-            return RollSeedIntruderPercent(CreateSeedIntruderSeed(session, checkIndex)) < OccurrencePercent;
+            var occurrencePercent = ShipStateRules.CalculateSeedIntruderOccurrencePercent(
+                OccurrencePercent,
+                ship ?? session.Ship);
+            return RollSeedIntruderPercent(CreateSeedIntruderSeed(session, checkIndex)) < occurrencePercent;
         }
 
         public static SeedIntruderState CreateParvumIntrusion(GameSessionState session, int checkIndex)
@@ -258,9 +266,24 @@ namespace Bellerophon.Core.Session
             CargoState cargo,
             float deltaSeconds)
         {
+            return TickParvum(state, ship, cargo, deltaSeconds, ParvumShipFacilityDamage);
+        }
+
+        public static SeedIntruderTickResult TickParvum(
+            SeedIntruderState state,
+            ShipState ship,
+            CargoState cargo,
+            float deltaSeconds,
+            int roomDamagePerAttack)
+        {
             if (ship == null)
             {
                 throw new ArgumentNullException(nameof(ship));
+            }
+
+            if (roomDamagePerAttack < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(roomDamagePerAttack), "Room damage cannot be negative.");
             }
 
             if (deltaSeconds < 0f)
@@ -291,10 +314,10 @@ namespace Bellerophon.Core.Session
             {
                 attackAccumulator -= ParvumAttackDelaySeconds;
                 attackCount++;
-                roomDamage += ParvumShipFacilityDamage;
+                roomDamage += roomDamagePerAttack;
 
                 var room = nextShip.GetRoom(intruder.TargetRoom);
-                nextShip = nextShip.WithRoom(intruder.TargetRoom, room.WithDamage(ParvumShipFacilityDamage));
+                nextShip = nextShip.WithRoom(intruder.TargetRoom, room.WithDamage(roomDamagePerAttack));
             }
 
             var nextState = state.WithProgress(

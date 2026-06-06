@@ -193,9 +193,21 @@ namespace Bellerophon.Editor.Validation
                 return;
             }
 
+            Phase16HudMapAtmosphereBootstrap.EnsurePhase16Assets();
+            request.Details = AppendDetails(request.Details, "Scene=Phase16HudMapRestored");
             WriteLog(request, false, null);
             TryDelete(ActivePath);
             TryDelete(ErrorsPath);
+        }
+
+        private static string AppendDetails(string details, string addition)
+        {
+            if (string.IsNullOrWhiteSpace(details))
+            {
+                return addition;
+            }
+
+            return details + "; " + addition;
         }
 
         private static string ValidateRuntime()
@@ -206,6 +218,8 @@ namespace Bellerophon.Editor.Validation
             }
 
             var startController = UnityEngine.Object.FindFirstObjectByType<NewGameStartFlowController>();
+            var playerInput = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerInput>();
+            var playerStatus = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerStatus>();
             var deviceState = UnityEngine.Object.FindFirstObjectByType<ShipDeviceInteractionState>();
             var deviceHud = UnityEngine.Object.FindFirstObjectByType<ShipDeviceHud>();
             var equipmentController = UnityEngine.Object.FindFirstObjectByType<PlayerEquipmentController>();
@@ -213,16 +227,20 @@ namespace Bellerophon.Editor.Validation
             var settlementController = UnityEngine.Object.FindFirstObjectByType<TransportSettlementController>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
             var contractBoardController = UnityEngine.Object.FindFirstObjectByType<ContractBoardController>();
+            var personalCargoController = UnityEngine.Object.FindFirstObjectByType<PersonalCargoController>();
             if (startController == null ||
+                playerInput == null ||
+                playerStatus == null ||
                 deviceState == null ||
                 deviceHud == null ||
                 equipmentController == null ||
                 shopController == null ||
                 settlementController == null ||
                 maintenanceController == null ||
-                contractBoardController == null)
+                contractBoardController == null ||
+                personalCargoController == null)
             {
-                throw new InvalidOperationException("Runtime scene must contain Phase 15 start, device, HUD, equipment, shop, settlement, maintenance, and contract board controllers.");
+                throw new InvalidOperationException("Runtime scene must contain Phase 15 start, device, HUD, equipment, shop, settlement, maintenance, contract board, and personal cargo controllers.");
             }
 
             ClickButtonThroughUi(startController.YesButton);
@@ -255,40 +273,182 @@ namespace Bellerophon.Editor.Validation
             deviceHud.RefreshPanel();
             if (deviceHud.PanelText == null ||
                 !deviceHud.PanelText.text.Contains("Basic Protective Suit") ||
-                !deviceHud.PanelText.text.Contains("Hand 1: Stick"))
+                !deviceHud.PanelText.text.Contains("Hand 1: Stick") ||
+                !deviceHud.PanelText.text.Contains("Hand 3: Empty") ||
+                !deviceHud.PanelText.text.Contains("Tabs: All, Weapon, Protective, Treatment, Enhancement, Utility"))
             {
-                throw new InvalidOperationException("Supply storage panel must show suit, hand slots, and the issued stick.");
+                throw new InvalidOperationException("Supply storage panel must show suit, three base hand slots, storage tabs, and the issued stick.");
+            }
+
+            ClickButtonThroughUi(maintenanceController.PersonalCargoButton);
+            if (!personalCargoController.IsCargoVisible ||
+                personalCargoController.BodyText == null ||
+                !personalCargoController.BodyText.text.Contains("Current planet trait") ||
+                !personalCargoController.CollectButton.interactable)
+            {
+                throw new InvalidOperationException("Personal cargo collection screen must open from maintenance with a collect action.");
+            }
+
+            ClickButtonThroughUi(personalCargoController.CollectButton);
+            if (startController.CurrentSession.PersonalCargoHold.Count != 1 ||
+                !personalCargoController.BodyText.text.Contains("Water Rich Common Cargo") ||
+                !playerInput.CursorLockSuppressed)
+            {
+                throw new InvalidOperationException("Collecting personal cargo must add one free cargo item without releasing UI cursor mode.");
+            }
+
+            ClickButtonThroughUi(personalCargoController.CloseButton);
+            if (!maintenanceController.IsMaintenanceVisible || personalCargoController.IsCargoVisible)
+            {
+                throw new InvalidOperationException("Personal cargo back button must return to maintenance.");
             }
 
             ClickButtonThroughUi(maintenanceController.ShopButton);
             if (!shopController.IsShopVisible ||
                 shopController.BodyText == null ||
                 !shopController.BodyText.text.Contains("Musket") ||
-                !shopController.BodyText.text.Contains("Treatment items"))
+                !shopController.BodyText.text.Contains("Shotgun") ||
+                !shopController.BodyText.text.Contains("Protective Suit") ||
+                !shopController.BodyText.text.Contains("Strength Enhancer") ||
+                !shopController.BodyText.text.Contains("Common products") ||
+                !shopController.BodyText.text.Contains("Fame-limited products") ||
+                !shopController.BodyText.text.Contains("Special products") ||
+                !shopController.BodyText.text.Contains("Presence Detector"))
             {
-                throw new InvalidOperationException("Shop buy tab must expose Phase 15 weapons and data-only categories.");
+                throw new InvalidOperationException("Shop buy tab must expose Step 8 common, fame-limited, and special product sections.");
             }
 
             ClickButtonThroughUi(shopController.BuyMusketButton);
             if (startController.CurrentSession.Wallet.Credits != 650 ||
                 startController.CurrentSession.Equipment.GetHandSlot(1).ItemKind != EquipmentItemKind.Musket ||
-                deviceState.CurrentEquipmentState.ActiveHandSlotIndex != 1)
+                deviceState.CurrentEquipmentState.ActiveHandSlotIndex != 1 ||
+                !playerInput.CursorLockSuppressed)
             {
-                throw new InvalidOperationException("Buying a musket must spend $450 and equip it into the second hand slot.");
+                throw new InvalidOperationException("Buying a musket must spend $450, equip it, and keep UI cursor mode active.");
+            }
+
+            ClickButtonThroughUi(shopController.BuyFlashlightButton);
+            if (startController.CurrentSession.Wallet.Credits != 625 ||
+                startController.CurrentSession.Equipment.GetHandSlot(2).ItemKind != EquipmentItemKind.Flashlight ||
+                deviceState.CurrentEquipmentState.ActiveHandSlotIndex != 2)
+            {
+                throw new InvalidOperationException("Buying a flashlight must use the third default hand slot.");
+            }
+
+            ClickButtonThroughUi(shopController.BuyInjuryRelieverButton);
+            if (startController.CurrentSession.Wallet.Credits != 500 ||
+                startController.CurrentSession.Equipment.GetSupplySlot(0).ItemKind != EquipmentItemKind.InjuryReliever ||
+                startController.CurrentSession.Equipment.GetSupplySlot(0).PurchasePriceCredits != EquipmentRules.InjuryRelieverPriceCredits)
+            {
+                throw new InvalidOperationException("Buying treatment equipment must store it in supply storage with purchase metadata.");
+            }
+
+            ClickButtonThroughUi(shopController.BuyProtectiveSuitButton);
+            if (startController.CurrentSession.Wallet.Credits != 100 ||
+                startController.CurrentSession.Equipment.GetSupplySlot(1).ItemKind != EquipmentItemKind.ProtectiveSuit)
+            {
+                throw new InvalidOperationException("Buying protective equipment must store it in the next supply slot.");
+            }
+
+            ClickButtonThroughUi(shopController.BuyStrengthEnhancerButton);
+            if (startController.CurrentSession.Wallet.Credits != 0 ||
+                startController.CurrentSession.Equipment.GetSupplySlot(2).ItemKind != EquipmentItemKind.StrengthEnhancer)
+            {
+                throw new InvalidOperationException("Buying enhancement equipment must use the remaining base supply slot.");
+            }
+
+            deviceState.SetPlayerStatusForValidation(playerStatus);
+            var flashlight = equipmentController.UseActiveEquipmentForValidation(false);
+            deviceState.TickEquipmentState(0.5f);
+            playerStatus.SetVitalsForValidation(60, 20);
+            var treatment = deviceState.UseSupplyItem(0);
+            var protection = deviceState.UseSupplyItem(1);
+            var strength = deviceState.UseSupplyItem(2);
+            startController.ApplySessionState(startController.CurrentSession.WithEquipment(deviceState.CurrentEquipmentState));
+            equipmentController.RefreshHudForValidation();
+            if (flashlight.Outcome != EquipmentUseOutcome.UtilityActivated ||
+                !deviceState.CurrentEquipmentState.HasActiveFlashlight ||
+                treatment.Outcome != EquipmentUseOutcome.TreatmentApplied ||
+                treatment.HealthDelta != EquipmentRules.InjuryRelieverHealAmount ||
+                playerStatus.CurrentHealth != 85 ||
+                protection.Outcome != EquipmentUseOutcome.ProtectiveEquipped ||
+                deviceState.CalculateIncomingDamageAfterProtection(50) != 35 ||
+                strength.Outcome != EquipmentUseOutcome.EnhancementApplied ||
+                !deviceState.CurrentEquipmentState.HasActiveStrengthEnhancer ||
+                !equipmentController.EquipmentHudText.text.Contains("Strength: +40%") ||
+                !equipmentController.EquipmentHudText.text.Contains("Flashlight:"))
+            {
+                throw new InvalidOperationException("Step 8 item use must apply flashlight, treatment, protection, and enhancement effects.");
             }
 
             ClickButtonThroughUi(shopController.SellTabButton);
+            var sellRows = shopController.SellItemButtons;
             if (shopController.BodyText == null ||
-                !shopController.BodyText.text.Contains("Personal cargo sale slot") ||
-                !shopController.BodyText.text.Contains("data-only"))
+                !shopController.BodyText.text.Contains("Purchased item disposal") ||
+                !shopController.BodyText.text.Contains("Selected: None") ||
+                !shopController.BodyText.text.Contains("Sale $4") ||
+                !shopController.BodyText.text.Contains("Contract cargo: Not sellable") ||
+                !shopController.BodyText.text.Contains("Water Rich Common Cargo") ||
+                !shopController.BodyText.text.Contains("Sale $50") ||
+                !shopController.BodyText.text.Contains("Use the numbered row buttons") ||
+                shopController.SellSelectedItemButton == null ||
+                shopController.SellSelectedItemButton.interactable ||
+                sellRows.Length < 4 ||
+                !sellRows[0].interactable ||
+                !sellRows[3].interactable)
             {
-                throw new InvalidOperationException("Shop sell tab must remain a Phase 15 data-only skeleton.");
+                throw new InvalidOperationException("Shop sell tab must list sell candidates and require selecting one before sale.");
+            }
+
+            ClickButtonThroughUi(sellRows[3]);
+            if (!shopController.BodyText.text.Contains("Selected: Personal Cargo 1 Water Rich Common Cargo") ||
+                !shopController.SellSelectedItemButton.interactable)
+            {
+                throw new InvalidOperationException("Selecting a personal cargo row must enable the Sell Selected button.");
+            }
+
+            ClickButtonThroughUi(shopController.SellSelectedItemButton);
+            if (startController.CurrentSession.Wallet.Credits != 50 ||
+                startController.CurrentSession.PersonalCargoHold.Count != 0 ||
+                shopController.SellSelectedItemButton.interactable ||
+                !playerInput.CursorLockSuppressed)
+            {
+                throw new InvalidOperationException("Selling personal cargo must add sale credits, remove it, and keep UI cursor mode active.");
+            }
+
+            sellRows = shopController.SellItemButtons;
+            ClickButtonThroughUi(sellRows[1]);
+            if (!shopController.BodyText.text.Contains("Selected: Hand 3 Flashlight") ||
+                !shopController.SellSelectedItemButton.interactable)
+            {
+                throw new InvalidOperationException("Selecting a purchased equipment row must enable selected disposal.");
+            }
+
+            ClickButtonThroughUi(shopController.SellSelectedItemButton);
+            if (startController.CurrentSession.Wallet.Credits != 51 ||
+                startController.CurrentSession.Equipment.GetHandSlot(1).ItemKind != EquipmentItemKind.Musket ||
+                startController.CurrentSession.Equipment.GetHandSlot(2).ItemKind != EquipmentItemKind.None ||
+                !playerInput.CursorLockSuppressed)
+            {
+                throw new InvalidOperationException("Disposing the selected flashlight must pay 1% of its purchase price while leaving the musket for combat.");
             }
 
             ClickButtonThroughUi(shopController.CloseButton);
-            if (shopController.IsShopVisible)
+            if (shopController.IsShopVisible || !playerInput.CursorLockSuppressed)
             {
-                throw new InvalidOperationException("Phase 15 shop close button must hide the shop after purchase.");
+                throw new InvalidOperationException("Phase 15 shop close button must hide the shop while maintenance keeps UI cursor mode active.");
+            }
+
+            ClickButtonThroughUi(maintenanceController.PersonalCargoButton);
+            if (!personalCargoController.IsCargoVisible || !playerInput.CursorLockSuppressed)
+            {
+                throw new InvalidOperationException("After shop transactions, maintenance must still open the personal cargo screen.");
+            }
+
+            ClickButtonThroughUi(personalCargoController.CloseButton);
+            if (!maintenanceController.IsMaintenanceVisible || personalCargoController.IsCargoVisible || !playerInput.CursorLockSuppressed)
+            {
+                throw new InvalidOperationException("Personal cargo back button must keep maintenance usable after shop transactions.");
             }
 
             ClickButtonThroughUi(maintenanceController.ContractBoardButton);
@@ -301,6 +461,15 @@ namespace Bellerophon.Editor.Validation
             }
 
             ClickButtonThroughUi(contractBoardController.AcceptContractButton);
+            if (!contractBoardController.IsBoardVisible ||
+                maintenanceController.CurrentSession.Phase != GameSessionPhase.Completed ||
+                maintenanceController.CurrentSession.PendingTransportContractCount != 1 ||
+                !contractBoardController.StartRunButton.interactable)
+            {
+                throw new InvalidOperationException("Accept must queue the follow-up contract before Start Run begins transport.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.StartRunButton);
             settlementController.ResetArrivalGateForValidation();
             var followUp = maintenanceController.CurrentSession;
             if (followUp == null ||
@@ -327,10 +496,10 @@ namespace Bellerophon.Editor.Validation
             deviceState.SelectEquipmentHandSlot(0);
             var stickHit = equipmentController.UseActiveEquipmentForValidation(false);
             if (stickHit.Outcome != EquipmentUseOutcome.MeleeHit ||
-                stickHit.Damage != EquipmentRules.StickDamage ||
-                deviceState.CurrentSeedIntruder.Intruder.CurrentHealth != 25)
+                stickHit.Damage != 42 ||
+                deviceState.CurrentSeedIntruder.Intruder.CurrentHealth != 13)
             {
-                throw new InvalidOperationException("Stick must damage the active Parvum by the confirmed 30 damage.");
+                throw new InvalidOperationException("Strength-enhanced stick must damage the active Parvum by 42 damage.");
             }
 
             deviceState.TickEquipmentState(EquipmentRules.StickUseDelaySeconds);
@@ -343,17 +512,26 @@ namespace Bellerophon.Editor.Validation
                 musketHit.Damage != EquipmentRules.MusketDamage ||
                 !deviceState.CurrentSeedIntruder.IsResolved)
             {
-                throw new InvalidOperationException("Musket precision fire must damage Parvum and reload must remain a skeleton.");
+                throw new InvalidOperationException("Musket precision fire must keep base ranged damage and reload must remain a skeleton.");
             }
 
-            return $"Wallet=650; Slots=2/3; StickHit={stickHit.Damage}; MusketHit={musketHit.Damage}; Reload={reload.Outcome}; Intruder={deviceState.CurrentSeedIntruder.Intruder.Resolution}; Shop=BuySellSkeleton";
+            return $"Wallet=51; Slots=3/3; StickHit={stickHit.Damage}; MusketHit={musketHit.Damage}; Reload={reload.Outcome}; Intruder={deviceState.CurrentSeedIntruder.Intruder.Resolution}; Shop=Step8ItemEffects";
         }
 
         private static void ClickButtonThroughUi(Button button)
         {
             if (button == null || !button.gameObject.activeInHierarchy || !button.interactable)
             {
-                throw new InvalidOperationException("Cannot click an inactive or non-interactable Phase 15 button.");
+                var name = button == null ? "<null>" : button.name;
+                var activeSelf = button != null && button.gameObject.activeSelf;
+                var activeInHierarchy = button != null && button.gameObject.activeInHierarchy;
+                var interactable = button != null && button.interactable;
+                throw new InvalidOperationException(
+                    "Cannot click an inactive or non-interactable Phase 15 button: " +
+                    name +
+                    "; activeSelf=" + activeSelf +
+                    "; activeInHierarchy=" + activeInHierarchy +
+                    "; interactable=" + interactable + ".");
             }
 
             if (EventSystem.current == null)

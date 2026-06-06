@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using Bellerophon.Core.Player;
+using Bellerophon.Core.Session;
 using Bellerophon.Core.Ship;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -264,7 +265,36 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Cargo status must display cargo loss percent.");
             }
 
-            return $"Devices=6; ActivePanel={state.ActivePanelMode}; CCTV={state.CurrentCctvTarget}; EngineOverclockCount={state.EngineOverclockActivationCount}; PanelText={deviceHud.PanelText.enabled}";
+            state.SetShipState(ShipState.CreateDefault()
+                .WithRoom(ShipRoomId.ControlRoom, new ShipRoomState(25, 100)));
+            InteractDevice(ShipDeviceType.ControlRoomMainScreen, context);
+            PressCctvKey(Key.D, deviceHud);
+            deviceHud.RefreshPanel();
+            if (state.CurrentCctvTarget != ShipCctvTarget.Cockpit ||
+                !deviceHud.PanelText.text.Contains("CCTV Channels: 0/4"))
+            {
+                throw new InvalidOperationException("Control room damage must disable CCTV channels.");
+            }
+
+            state.SetShipState(ShipState.CreateDefault()
+                .WithRoom(ShipRoomId.SupplyRoom, new ShipRoomState(75, 100)));
+            InteractDevice(ShipDeviceType.SupplyRoomStorageCabinet, context);
+            deviceHud.RefreshPanel();
+            if (state.SupplySlotCount != 0 || !deviceHud.PanelText.text.Contains("Usable Slots: 0/3"))
+            {
+                throw new InvalidOperationException("Supply room damage must reduce usable storage slots.");
+            }
+
+            state.SetShipState(ShipState.CreateDefault()
+                .WithRoom(ShipRoomId.Armory, new ShipRoomState(0, 100)));
+            InteractDevice(ShipDeviceType.ArmoryTurretHandle, context);
+            deviceHud.RefreshPanel();
+            if (state.TurretManualModeActive || !deviceHud.PanelText.text.Contains("Manual Turret: Offline"))
+            {
+                throw new InvalidOperationException("Destroyed armory must disable manual turret operation.");
+            }
+
+            return $"Devices=6; ActivePanel={state.ActivePanelMode}; CCTV={state.CurrentCctvTarget}; EngineOverclockCount={state.EngineOverclockActivationCount}; DamageEffects=Linked; PanelText={deviceHud.PanelText.enabled}";
         }
 
         private static ShipDeviceInteractable InteractDevice(ShipDeviceType deviceType, PlayerInteractionContext context)

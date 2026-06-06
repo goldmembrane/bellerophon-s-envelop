@@ -1,4 +1,5 @@
 using System;
+using Bellerophon.Core.Session;
 using UnityEngine;
 
 namespace Bellerophon.Core.Player
@@ -13,7 +14,7 @@ namespace Bellerophon.Core.Player
 
         public event Action<int> DropRequested;
 
-        public int SlotCount => settings == null ? 2 : settings.HandSlotCount;
+        public int SlotCount => settings == null ? PlayerEquipmentState.DefaultHandSlotCount : settings.HandSlotCount;
 
         public int ActiveSlotIndex => activeSlotIndex;
 

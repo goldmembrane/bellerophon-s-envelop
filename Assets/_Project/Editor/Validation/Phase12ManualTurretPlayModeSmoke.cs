@@ -240,6 +240,15 @@ namespace Bellerophon.Editor.Validation
             }
 
             ClickButtonThroughUi(contractBoardController.AcceptContractButton);
+            if (!contractBoardController.IsBoardVisible ||
+                maintenanceController.CurrentSession.Phase != GameSessionPhase.Completed ||
+                maintenanceController.CurrentSession.PendingTransportContractCount != 1 ||
+                !contractBoardController.StartRunButton.interactable)
+            {
+                throw new InvalidOperationException("Accept must queue the follow-up contract before Start Run begins transport.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.StartRunButton);
 
             if (!deviceState.HasActiveTransportHazard ||
                 !deviceState.CurrentExternalTarget.IsActive ||

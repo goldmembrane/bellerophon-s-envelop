@@ -211,14 +211,16 @@ namespace Bellerophon.Editor.Validation
             var settlementController = UnityEngine.Object.FindFirstObjectByType<TransportSettlementController>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
             var contractBoardController = UnityEngine.Object.FindFirstObjectByType<ContractBoardController>();
+            var shipUpgradeController = UnityEngine.Object.FindFirstObjectByType<ShipUpgradeController>();
             if (startController == null ||
                 playerInput == null ||
                 deviceState == null ||
                 settlementController == null ||
                 maintenanceController == null ||
-                contractBoardController == null)
+                contractBoardController == null ||
+                shipUpgradeController == null)
             {
-                throw new InvalidOperationException("Runtime scene must contain Phase 10 start flow, player input, device state, settlement, maintenance, and contract board controllers.");
+                throw new InvalidOperationException("Runtime scene must contain Phase 10 start flow, player input, device state, settlement, maintenance, contract board, and upgrade controllers.");
             }
 
             ClickButtonThroughUi(startController.YesButton);
@@ -266,13 +268,14 @@ namespace Bellerophon.Editor.Validation
 
             if (maintenanceController.RoomStatusText == null ||
                 !maintenanceController.RoomStatusText.text.Contains("Cargo Hold") ||
-                !maintenanceController.RoomStatusText.text.Contains("cargo loss risk") ||
+                !maintenanceController.RoomStatusText.text.Contains("personal cargo") ||
+                !maintenanceController.RoomStatusText.text.Contains("Capacity") ||
                 maintenanceController.ContractListText == null ||
                 !maintenanceController.ContractListText.text.Contains("Contract Board") ||
                 !maintenanceController.ContractListText.text.Contains("Fame") ||
                 !maintenanceController.ContractListText.text.Contains("Entry points"))
             {
-                throw new InvalidOperationException("Maintenance UI must show room risks and the separate contract board entry summary.");
+                throw new InvalidOperationException("Maintenance UI must show room damage effects and the separate contract board entry summary.");
             }
 
             if (!maintenanceController.RepairButton.interactable ||
@@ -280,6 +283,38 @@ namespace Bellerophon.Editor.Validation
                 contractBoardController.IsBoardVisible)
             {
                 throw new InvalidOperationException("Damaged ship must keep repair available while exposing the separate contract board entry.");
+            }
+
+            ClickButtonThroughUi(maintenanceController.UpgradesButton);
+            if (!shipUpgradeController.IsUpgradeVisible ||
+                maintenanceController.IsMaintenanceVisible ||
+                shipUpgradeController.BodyText == null ||
+                !shipUpgradeController.BodyText.text.Contains("Durability") ||
+                !shipUpgradeController.BodyText.text.Contains("$1000") ||
+                shipUpgradeController.PurchaseButtons.Length != Phase10PlanetMaintenanceBootstrap.ShipUpgradeCategoryButtonCount ||
+                shipUpgradeController.EquipButtons.Length != Phase10PlanetMaintenanceBootstrap.ShipUpgradeCategoryButtonCount ||
+                !shipUpgradeController.PurchaseButtons[0].interactable ||
+                shipUpgradeController.EquipButtons[0].gameObject.activeSelf ||
+                shipUpgradeController.EquipButtons[0].interactable)
+            {
+                throw new InvalidOperationException("Upgrade screen must open with durability auto-apply and separate equip actions for other upgrades.");
+            }
+
+            ClickButtonThroughUi(shipUpgradeController.PurchaseButtons[0]);
+            var purchasedUpgradeSession = maintenanceController.CurrentSession;
+            if (purchasedUpgradeSession.Wallet.Credits != 100 ||
+                purchasedUpgradeSession.ShipUpgrades.GetPurchasedTier(ShipUpgradeCategory.Durability) != 1 ||
+                purchasedUpgradeSession.ShipUpgrades.GetEquippedTier(ShipUpgradeCategory.Durability) != 1 ||
+                shipUpgradeController.EquipButtons[0].gameObject.activeSelf ||
+                shipUpgradeController.EquipButtons[0].interactable)
+            {
+                throw new InvalidOperationException("Durability upgrade purchase must spend credits and apply the tier automatically.");
+            }
+
+            ClickButtonThroughUi(shipUpgradeController.CloseButton);
+            if (!maintenanceController.IsMaintenanceVisible || shipUpgradeController.IsUpgradeVisible)
+            {
+                throw new InvalidOperationException("Upgrade back button must return to planet maintenance.");
             }
 
             ClickButtonThroughUi(maintenanceController.ShopButton);
@@ -304,7 +339,8 @@ namespace Bellerophon.Editor.Validation
                 !contractBoardController.ContractSlotButtons[0].interactable ||
                 !contractBoardController.AssociationContractButton.interactable ||
                 !contractBoardController.PrivateContractButton.interactable ||
-                contractBoardController.AcceptContractButton.interactable)
+                contractBoardController.AcceptContractButton.interactable ||
+                contractBoardController.StartRunButton.interactable)
             {
                 throw new InvalidOperationException("Contract board must be a separate screen with selectable contract rows and repair-gated acceptance.");
             }
@@ -313,23 +349,27 @@ namespace Bellerophon.Editor.Validation
             if (!contractBoardController.IsBoardVisible ||
                 maintenanceController.CurrentSession.Phase != GameSessionPhase.Completed ||
                 contractBoardController.SelectedContractId != "association-local-001" ||
-                contractBoardController.AcceptContractButton.interactable)
+                contractBoardController.AcceptContractButton.interactable ||
+                contractBoardController.StartRunButton.interactable)
             {
                 throw new InvalidOperationException("Association category must select a row without accepting while the ship still needs repair.");
             }
 
             ClickButtonThroughUi(contractBoardController.BackButton);
-            if (!maintenanceController.IsMaintenanceVisible || contractBoardController.IsBoardVisible)
+            if (!maintenanceController.IsMaintenanceVisible ||
+                contractBoardController.IsBoardVisible ||
+                shipUpgradeController.IsUpgradeVisible)
             {
-                throw new InvalidOperationException("Contract board back button must return to planet maintenance.");
+                throw new InvalidOperationException("Contract board back button must return to planet maintenance without opening upgrades.");
             }
 
             ClickButtonThroughUi(maintenanceController.RepairButton);
             var repairedSession = maintenanceController.CurrentSession;
-            if (repairedSession.Wallet.Credits != 1100 - expectedRepairCost ||
+            if (repairedSession.Wallet.Credits != 100 - expectedRepairCost ||
                 !repairedSession.Wallet.HasUnpaidDebtGrace ||
                 repairedSession.SettlementResult.PendingRepairCost != 0 ||
                 repairedSession.Ship.GetRoom(ShipRoomId.CargoHold).CurrentDurability != 100 ||
+                repairedSession.ShipUpgrades.GetEquippedTier(ShipUpgradeCategory.Durability) != 1 ||
                 maintenanceController.RepairButton.interactable ||
                 !maintenanceController.ContractBoardButton.interactable ||
                 !maintenanceController.RoomStatusText.text.Contains("Cargo Hold: 100% Optimal"))
@@ -342,9 +382,10 @@ namespace Bellerophon.Editor.Validation
             if (!contractBoardController.IsBoardVisible ||
                 !contractBoardController.AssociationContractButton.interactable ||
                 !contractBoardController.PrivateContractButton.interactable ||
-                !contractBoardController.AcceptContractButton.interactable)
+                !contractBoardController.AcceptContractButton.interactable ||
+                contractBoardController.StartRunButton.interactable)
             {
-                throw new InvalidOperationException("Repaired ship must unlock association/private selection and the separate accept action on the contract board.");
+                throw new InvalidOperationException("Repaired ship must unlock selection and acceptance while keeping Start Run disabled until a contract is accepted.");
             }
 
             ClickButtonThroughUi(contractBoardController.AssociationContractButton);
@@ -364,21 +405,57 @@ namespace Bellerophon.Editor.Validation
             }
 
             ClickButtonThroughUi(contractBoardController.AcceptContractButton);
+            var acceptedAssociation = maintenanceController.CurrentSession;
+            if (!contractBoardController.IsBoardVisible ||
+                maintenanceController.IsMaintenanceVisible ||
+                acceptedAssociation.Phase != GameSessionPhase.Completed ||
+                acceptedAssociation.PendingTransportContractCount != 1 ||
+                !acceptedAssociation.IsTransportContractPending("association-local-001") ||
+                contractBoardController.AcceptContractButton.interactable ||
+                !contractBoardController.StartRunButton.interactable)
+            {
+                throw new InvalidOperationException("Accept must add the association follow-up to the pending run without starting transport.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.PrivateContractButton);
+            if (!contractBoardController.IsBoardVisible ||
+                maintenanceController.CurrentSession.Phase != GameSessionPhase.Completed ||
+                contractBoardController.SelectedContractId != "private-sample-001" ||
+                !contractBoardController.AcceptContractButton.interactable)
+            {
+                throw new InvalidOperationException("Private category must select a second acceptable contract while the board stays open.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.AcceptContractButton);
+            var acceptedPrivate = maintenanceController.CurrentSession;
+            if (!contractBoardController.IsBoardVisible ||
+                acceptedPrivate.Phase != GameSessionPhase.Completed ||
+                acceptedPrivate.PendingTransportContractCount != 2 ||
+                !acceptedPrivate.IsTransportContractPending("association-local-001") ||
+                !acceptedPrivate.IsTransportContractPending("private-sample-001") ||
+                !contractBoardController.StartRunButton.interactable)
+            {
+                throw new InvalidOperationException("Contract board must allow multiple accepted contracts before starting a run.");
+            }
+
+            ClickButtonThroughUi(contractBoardController.StartRunButton);
             var nextRun = maintenanceController.CurrentSession;
             if (maintenanceController.IsMaintenanceVisible ||
                 contractBoardController.IsBoardVisible ||
                 nextRun.Phase != GameSessionPhase.Transporting ||
                 !nextRun.ActiveTransportContract.HasValue ||
                 nextRun.ActiveTransportContract.Value.Id != "association-local-001" ||
+                nextRun.ActiveTransportContractCount != 2 ||
+                nextRun.PendingTransportContractCount != 0 ||
                 !deviceState.HasActiveTransportRun ||
-                deviceState.CurrentTransportRun.BaseDurationSeconds != 75 ||
+                deviceState.CurrentTransportRun.BaseDurationSeconds != 90 ||
                 deviceState.CurrentShipState.GetRoom(ShipRoomId.CargoHold).CurrentDurability != 100)
             {
-                throw new InvalidOperationException("Association follow-up contract must start a repaired next transport run.");
+                throw new InvalidOperationException("Start Run must begin a repaired transport with all accepted contracts.");
             }
 
             var cargoScore = Mathf.RoundToInt(ShipStateRules.CalculateCargoHoldScore(nextRun.Ship) * 100f);
-            return $"RepairCost={expectedRepairCost}; Balance={nextRun.Wallet.Credits}; Contract={nextRun.ActiveTransportContract.Value.Id}; Duration={deviceState.CurrentTransportRun.BaseDurationSeconds}; CargoScore={cargoScore}";
+            return $"RepairCost={expectedRepairCost}; Upgrade=DurabilityT{nextRun.ShipUpgrades.GetEquippedTier(ShipUpgradeCategory.Durability)}; Balance={nextRun.Wallet.Credits}; Contracts={nextRun.ActiveTransportContractCount}; Duration={deviceState.CurrentTransportRun.BaseDurationSeconds}; CargoScore={cargoScore}";
         }
 
         private static void ClickButtonThroughUi(Button button)

@@ -12,7 +12,6 @@ namespace Bellerophon.Core.Session
         private const int AssociationDefaultBasePay = 500;
         private const int AssociationDistancePayPerSecond = 5;
         private const int AssociationSupportBonus = 100;
-        private const int TowingCost = 2000;
         private const int DeadCrewLifeInsuranceCost = 300;
         private const float DefaultGameOverCutsceneSeconds = 2.5f;
 
@@ -290,8 +289,11 @@ namespace Bellerophon.Core.Session
             var contractType = hasContract ? contract.ContractType : ContractType.Association;
             var difficulty = hasContract ? contract.Difficulty : ContractDifficulty.Normal;
             var completedTransportNumber = session.CompletedTransportCount + 1;
-            var isAssociationContract = session.IsAssociationMember && contractType == ContractType.Association;
-            var hasFixedReward = hasContract && contract.RewardCredits > 0;
+            var isAssociationContract = session.IsAssociationMember &&
+                                        (contractType == ContractType.Association ||
+                                         HasActiveContractType(session, ContractType.Association));
+            var fixedRewardTotal = CalculateActiveContractRewardCredits(session);
+            var hasFixedReward = fixedRewardTotal > 0;
             var repairCost = ship.IsTotalLoss
                 ? ShipStateRules.CalculateTotalLossClaimCost(ship)
                 : ShipStateRules.CalculateRepairCost(ship);
@@ -304,10 +306,10 @@ namespace Bellerophon.Core.Session
                 new CrewState(1, 0),
                 session.Wallet,
                 repairCost: repairCost,
-                towingCost: TowingCost,
+                towingCost: ShipStateRules.CalculateTowingCost(session.TowingIncidentCount + 1),
                 revivalCostPerDeadCrew: DeadCrewLifeInsuranceCost,
                 contractBasePay: hasFixedReward
-                    ? contract.RewardCredits
+                    ? fixedRewardTotal
                     : isAssociationContract ? AssociationDefaultBasePay : 0,
                 distancePay: isAssociationContract && hasContract && !hasFixedReward
                     ? contract.DurationSeconds * AssociationDistancePayPerSecond
@@ -455,6 +457,11 @@ namespace Bellerophon.Core.Session
             var result = session.SettlementResult;
             var builder = new StringBuilder();
             builder.AppendLine("Transport count: " + session.CompletedTransportCount);
+            if (session.ActiveTransportContractCount > 1)
+            {
+                builder.AppendLine("Completed contracts: " + session.ActiveTransportContractCount);
+            }
+
             builder.AppendLine("Gross revenue: " + FormatMoney(result.GrossRevenue));
             builder.AppendLine("Expenses: " + FormatMoney(result.Expenses));
             builder.AppendLine("Net change: " + FormatSignedMoney(result.NetChange));
@@ -487,6 +494,39 @@ namespace Bellerophon.Core.Session
                 default:
                     return "Settlement clear.";
             }
+        }
+
+        private static int CalculateActiveContractRewardCredits(GameSessionState session)
+        {
+            var contracts = session.ActiveTransportContracts;
+            if (contracts.Length == 0)
+            {
+                return session.ActiveTransportContract.HasValue
+                    ? session.ActiveTransportContract.Value.RewardCredits
+                    : 0;
+            }
+
+            var total = 0;
+            for (var i = 0; i < contracts.Length; i++)
+            {
+                total += contracts[i].RewardCredits;
+            }
+
+            return total;
+        }
+
+        private static bool HasActiveContractType(GameSessionState session, ContractType contractType)
+        {
+            var contracts = session.ActiveTransportContracts;
+            for (var i = 0; i < contracts.Length; i++)
+            {
+                if (contracts[i].ContractType == contractType)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private float GetCutsceneDuration()

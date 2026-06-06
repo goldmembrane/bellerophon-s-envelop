@@ -43,6 +43,35 @@ namespace Bellerophon.Tests.EditMode
         }
 
         [Test]
+        public void ShouldStartSeedIntruder_ControlRoomDestroyedDoublesOccurrenceChance()
+        {
+            var session = CreateFollowUpTransportSession();
+            var controlDestroyed = session.Ship.WithRoom(ShipRoomId.ControlRoom, new ShipRoomState(0, 100));
+            var triggeringCheck = 0;
+            var triggeringRoll = 100;
+
+            for (var checkIndex = 1; checkIndex <= 200; checkIndex++)
+            {
+                var roll = SeedIntruderRules.RollSeedIntruderPercent(
+                    SeedIntruderRules.CreateSeedIntruderSeed(session, checkIndex));
+                if (roll < SeedIntruderRules.OccurrencePercent ||
+                    roll >= SeedIntruderRules.OccurrencePercent * 2)
+                {
+                    continue;
+                }
+
+                triggeringCheck = checkIndex;
+                triggeringRoll = roll;
+                break;
+            }
+
+            Assert.That(triggeringCheck, Is.GreaterThan(0));
+            Assert.That(SeedIntruderRules.ShouldStartSeedIntruder(session, triggeringCheck), Is.False);
+            Assert.That(SeedIntruderRules.ShouldStartSeedIntruder(session, triggeringCheck, controlDestroyed), Is.True);
+            Assert.That(triggeringRoll, Is.InRange(SeedIntruderRules.OccurrencePercent, SeedIntruderRules.OccurrencePercent * 2 - 1));
+        }
+
+        [Test]
         public void CreateParvumIntrusion_UsesConfirmedParvumStatsAndInternalBoarding()
         {
             var state = SeedIntruderRules.CreateParvumIntrusionForSeed(42, ShipRoomId.Cockpit);
@@ -77,6 +106,20 @@ namespace Bellerophon.Tests.EditMode
             Assert.That(result.Ship.GetRoom(result.State.TargetRoom).CurrentDurability, Is.EqualTo(100 - result.RoomDamageApplied));
             Assert.That(ShipStateRules.CalculateRepairCost(result.Ship), Is.GreaterThan(0));
             Assert.That(result.Cargo.DurabilityPercent, Is.EqualTo(1f));
+        }
+
+        [Test]
+        public void TickParvum_UsesProvidedRoomDamagePerAttack()
+        {
+            var state = SeedIntruderRules.CreateParvumIntrusionForSeed(47, ShipRoomId.Cockpit);
+            var ship = ShipState.CreateDefault();
+            var cargo = new CargoState(CargoGrade.Common, 45, 180, 1f, false);
+
+            var result = SeedIntruderRules.TickParvum(state, ship, cargo, SeedIntruderRules.ParvumAttackDelaySeconds, 9);
+
+            Assert.That(result.AttackCount, Is.EqualTo(1));
+            Assert.That(result.RoomDamageApplied, Is.EqualTo(9));
+            Assert.That(result.Ship.GetRoom(result.State.TargetRoom).CurrentDurability, Is.EqualTo(91));
         }
 
         [Test]

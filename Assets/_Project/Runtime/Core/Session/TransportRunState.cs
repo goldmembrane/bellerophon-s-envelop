@@ -122,8 +122,9 @@ namespace Bellerophon.Core.Session
                 return this;
             }
 
-            var nextX = ManualOffsetX + Clamp(horizontal, -1f, 1f) * ManualFlightInputSpeed * deltaSeconds;
-            var nextY = ManualOffsetY + Clamp(vertical, -1f, 1f) * ManualFlightInputSpeed * deltaSeconds;
+            var inputMultiplier = ShipStateRules.CalculateManualFlightInputMultiplier(Ship);
+            var nextX = ManualOffsetX + Clamp(horizontal, -1f, 1f) * ManualFlightInputSpeed * inputMultiplier * deltaSeconds;
+            var nextY = ManualOffsetY + Clamp(vertical, -1f, 1f) * ManualFlightInputSpeed * inputMultiplier * deltaSeconds;
             return new TransportRunState(
                 BaseDurationSeconds,
                 EffectiveDurationSeconds,

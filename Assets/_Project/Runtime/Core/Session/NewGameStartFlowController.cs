@@ -17,6 +17,7 @@ namespace Bellerophon.Core.Session
 
         private NewGameStartFlowState flowState;
         private bool buttonsBound;
+        private bool ownsCursorSuppression;
 
         public NewGameStartFlowState FlowState
         {
@@ -238,7 +239,16 @@ namespace Bellerophon.Core.Session
 
         private void ApplyCursorMode()
         {
-            SetCursorLockSuppressed(RequiresPointerInput());
+            if (RequiresPointerInput())
+            {
+                SetCursorLockSuppressed(true);
+                return;
+            }
+
+            if (ownsCursorSuppression)
+            {
+                SetCursorLockSuppressed(false);
+            }
         }
 
         private bool RequiresPointerInput()
@@ -253,7 +263,13 @@ namespace Bellerophon.Core.Session
             EnsurePlayerInput();
             if (playerInput != null)
             {
+                if (!suppressed && !ownsCursorSuppression)
+                {
+                    return;
+                }
+
                 playerInput.SetCursorLockSuppressed(suppressed);
+                ownsCursorSuppression = suppressed;
                 return;
             }
 
@@ -261,7 +277,11 @@ namespace Bellerophon.Core.Session
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+                ownsCursorSuppression = true;
+                return;
             }
+
+            ownsCursorSuppression = false;
         }
 
         private string BuildPlanetStartText()

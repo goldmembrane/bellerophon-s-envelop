@@ -40,5 +40,36 @@ namespace Bellerophon.Core.Player
             currentHealth = settings.MaxHealth;
             currentShield = settings.MaxShield;
         }
+
+        public void ApplyRecovery(int healthAmount, int shieldAmount)
+        {
+            if (healthAmount > 0)
+            {
+                currentHealth = Mathf.Clamp(currentHealth + healthAmount, 0, MaxHealth);
+            }
+
+            if (shieldAmount > 0)
+            {
+                currentShield = Mathf.Clamp(currentShield + shieldAmount, 0, MaxShield);
+            }
+        }
+
+        public void ApplyDamage(int damage)
+        {
+            if (damage <= 0)
+            {
+                return;
+            }
+
+            var shieldDamage = Mathf.Min(currentShield, damage);
+            currentShield -= shieldDamage;
+            currentHealth = Mathf.Clamp(currentHealth - (damage - shieldDamage), 0, MaxHealth);
+        }
+
+        public void SetVitalsForValidation(int health, int shield)
+        {
+            currentHealth = Mathf.Clamp(health, 0, MaxHealth);
+            currentShield = Mathf.Clamp(shield, 0, MaxShield);
+        }
     }
 }

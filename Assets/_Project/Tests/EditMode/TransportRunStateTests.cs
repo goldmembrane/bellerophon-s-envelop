@@ -45,6 +45,30 @@ namespace Bellerophon.Tests.EditMode
         }
 
         [Test]
+        public void TransportRun_CockpitDamageReducesManualInputResponse()
+        {
+            var damagedCockpit = ShipState.CreateDefault()
+                .WithRoom(ShipRoomId.Cockpit, new ShipRoomState(75, 100));
+            var criticalCockpit = ShipState.CreateDefault()
+                .WithRoom(ShipRoomId.Cockpit, new ShipRoomState(25, 100));
+            var destroyedCockpit = ShipState.CreateDefault()
+                .WithRoom(ShipRoomId.Cockpit, new ShipRoomState(0, 100));
+
+            var damagedRun = TransportRunState.Start(60, damagedCockpit)
+                .EnterManualFlight()
+                .ApplyManualFlightInput(1f, 0f, 0.5f);
+            var criticalRun = TransportRunState.Start(60, criticalCockpit)
+                .EnterManualFlight()
+                .ApplyManualFlightInput(1f, 0f, 0.5f);
+            var destroyedRun = TransportRunState.Start(60, destroyedCockpit)
+                .ApplyManualFlightInput(1f, 0f, 0.5f);
+
+            Assert.That(damagedRun.ManualOffsetX, Is.EqualTo(0.6f).Within(0.0001f));
+            Assert.That(criticalRun.ManualOffsetX, Is.EqualTo(0.4f).Within(0.0001f));
+            Assert.That(destroyedRun.ManualOffsetX, Is.Zero);
+        }
+
+        [Test]
         public void ShipRules_CockpitDestroyedBlocksStartAndDoublesDurationRule()
         {
             var ship = ShipState.CreateDefault()

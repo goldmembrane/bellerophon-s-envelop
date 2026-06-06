@@ -75,7 +75,9 @@ namespace Bellerophon.Core.Session
             CargoState cargo,
             bool isTutorial,
             int requiredCargoHoldScore = 0,
-            bool isRevivalContract = false)
+            bool isRevivalContract = false,
+            PlanetTrait originTrait = PlanetTrait.CommonMineralRich,
+            PlanetTrait destinationTrait = PlanetTrait.WaterRich)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -118,6 +120,8 @@ namespace Bellerophon.Core.Session
             IsTutorial = isTutorial;
             RequiredCargoHoldScore = requiredCargoHoldScore;
             IsRevivalContract = isRevivalContract;
+            OriginTrait = originTrait;
+            DestinationTrait = destinationTrait;
         }
 
         public string Id { get; }
@@ -141,6 +145,10 @@ namespace Bellerophon.Core.Session
         public int RequiredCargoHoldScore { get; }
 
         public bool IsRevivalContract { get; }
+
+        public PlanetTrait OriginTrait { get; }
+
+        public PlanetTrait DestinationTrait { get; }
 
         public static TransportContractDefinition CreateTutorial()
         {

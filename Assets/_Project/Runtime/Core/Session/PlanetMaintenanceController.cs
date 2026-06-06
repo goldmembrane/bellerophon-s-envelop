@@ -37,8 +37,10 @@ namespace Bellerophon.Core.Session
         [SerializeField] private Button personalCargoButton;
         [SerializeField] private Button upgradesButton;
         [SerializeField] private ContractBoardController contractBoardController;
+        [SerializeField] private ShipUpgradeController shipUpgradeController;
 
         private string lastStatus = string.Empty;
+        private int maintenanceShownFrame = -1;
 
         public GameObject MaintenanceRoot => maintenanceRoot;
 
@@ -61,6 +63,8 @@ namespace Bellerophon.Core.Session
         public Button PersonalCargoButton => personalCargoButton;
 
         public Button UpgradesButton => upgradesButton;
+
+        public ShipUpgradeController UpgradeController => shipUpgradeController;
 
         public bool IsMaintenanceVisible => maintenanceRoot != null && maintenanceRoot.activeSelf;
 
@@ -122,6 +126,11 @@ namespace Bellerophon.Core.Session
             }
         }
 
+        public void ConfigureShipUpgrades(ShipUpgradeController upgradeController)
+        {
+            shipUpgradeController = upgradeController;
+        }
+
         public void ShowMaintenance()
         {
             if (startFlowController == null || maintenanceRoot == null)
@@ -131,6 +140,7 @@ namespace Bellerophon.Core.Session
 
             startFlowController.PreparePostTransportContracts();
             maintenanceRoot.SetActive(true);
+            maintenanceShownFrame = Time.frameCount;
             DisableTextRaycasts();
             SetCursorLockSuppressed(true);
             RefreshMaintenance();
@@ -251,14 +261,21 @@ namespace Bellerophon.Core.Session
 
         public void OpenPersonalCargoEntry()
         {
-            lastStatus = "Personal cargo entry point available. Collection and trading are scheduled for a later phase.";
+            lastStatus = "Personal cargo collection is available. Collected cargo is sold from the shop Sell tab.";
             RefreshMaintenance();
         }
 
         public void OpenUpgradesEntry()
         {
-            lastStatus = "Upgrades entry point available. Detailed upgrades are scheduled for a later phase.";
-            RefreshMaintenance();
+            if (shipUpgradeController == null)
+            {
+                lastStatus = "Ship upgrades are not configured.";
+                RefreshMaintenance();
+                return;
+            }
+
+            HideMaintenance();
+            shipUpgradeController.ShowUpgrades();
         }
 
         private void Awake()
@@ -400,7 +417,7 @@ namespace Bellerophon.Core.Session
                 builder.Append("% ");
                 builder.Append(room.DurabilityTier);
                 builder.Append(" - ");
-                builder.Append(GetRiskNotice(roomId, room));
+                builder.Append(ShipStateRules.BuildRoomDamageEffectSummary(ship, roomId));
                 if (i < RoomOrder.Length - 1)
                 {
                     builder.AppendLine();
@@ -417,15 +434,37 @@ namespace Bellerophon.Core.Session
                    "Fame: " + session.Reputation.FameScore +
                    " | Association fame: " + session.Reputation.AssociationFameScore + "\n" +
                    "Cargo hold score: " + cargoHoldScore + "\n" +
+                   "Upgrades equipped: " + BuildUpgradeSummary(session.ShipUpgrades) + "\n" +
                    "Entry points: Contract Board / Shop / Personal Cargo / Upgrades";
         }
 
         private static string BuildStartReadinessText(GameSessionState session)
         {
-            var readiness = ShipStateRules.EvaluateStartReadiness(session.Ship);
+            var readiness = ShipStateRules.EvaluateStartReadiness(session.Ship, session.PersonalCargoHold.HasCargo);
             var cargoHoldScore = Mathf.RoundToInt(ShipStateRules.CalculateCargoHoldScore(session.Ship) * 100f);
             if (!readiness.CanStartTransport)
             {
+                if (readiness.IsPersonalCargoBlocked)
+                {
+                    return "Personal cargo cannot launch with current cargo hold damage. Sell it or repair. Cargo hold score: " +
+                           cargoHoldScore;
+                }
+
+                if (readiness.IsCargoHoldBlocked)
+                {
+                    return "Cargo hold repair required before next transport. Cargo hold score: " + cargoHoldScore;
+                }
+
+                if (readiness.IsCockpitDestroyed)
+                {
+                    return "Cockpit repair required before next transport. Cargo hold score: " + cargoHoldScore;
+                }
+
+                if (readiness.IsEngineRoomDestroyed)
+                {
+                    return "Engine room repair required before next transport. Cargo hold score: " + cargoHoldScore;
+                }
+
                 return "Repair required before next transport. Cargo hold score: " + cargoHoldScore;
             }
 
@@ -453,38 +492,18 @@ namespace Bellerophon.Core.Session
             }
         }
 
-        private static string GetRiskNotice(ShipRoomId roomId, ShipRoomState room)
+        private static string BuildUpgradeSummary(ShipUpgradeState upgrades)
         {
-            if (room.DurabilityTier == ShipRoomDurabilityTier.Optimal)
+            var categories = ShipUpgradeRules.GetCategoryOrder();
+            var equippedTotal = 0;
+            var purchasedTotal = 0;
+            for (var i = 0; i < categories.Length; i++)
             {
-                return "No active maintenance risk.";
+                equippedTotal += upgrades.GetEquippedTier(categories[i]);
+                purchasedTotal += upgrades.GetPurchasedTier(categories[i]);
             }
 
-            switch (roomId)
-            {
-                case ShipRoomId.Cockpit:
-                    return room.CurrentDurability <= 0
-                        ? "Launch control blocked; transport duration penalty applies."
-                        : "Auto pilot reliability risk.";
-                case ShipRoomId.CargoHold:
-                    return room.DurabilityPercent <= ShipStateRules.CargoHoldBlockedThreshold
-                        ? "Cargo hold readiness blocked; cargo loss risk."
-                        : "Cargo safety score reduced.";
-                case ShipRoomId.EngineRoom:
-                    return room.CurrentDurability <= 0
-                        ? "Towing and transport failure risk."
-                        : "Travel time and power stability risk.";
-                case ShipRoomId.ControlRoom:
-                    return room.CurrentDurability <= 0
-                        ? "Control warning active; monitoring unreliable."
-                        : "Control screen stability risk.";
-                case ShipRoomId.Armory:
-                    return "Turret response risk.";
-                case ShipRoomId.SupplyRoom:
-                    return "Supply access risk.";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(roomId), roomId, null);
-            }
+            return equippedTotal + "/" + purchasedTotal + " tiers";
         }
 
         private void SetCursorLockSuppressed(bool suppressed)
@@ -512,6 +531,7 @@ namespace Bellerophon.Core.Session
         private void ProcessPointerClickFallback()
         {
             if (!IsMaintenanceVisible ||
+                Time.frameCount == maintenanceShownFrame ||
                 IsEquipmentShopVisible() ||
                 Mouse.current == null ||
                 !Mouse.current.leftButton.wasPressedThisFrame)
