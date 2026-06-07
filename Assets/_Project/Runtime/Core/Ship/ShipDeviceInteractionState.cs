@@ -31,7 +31,115 @@ namespace Bellerophon.Core.Ship
         Cockpit,
         CargoHold,
         EngineRoom,
-        Armory
+        Armory,
+        SupplyRoom
+    }
+
+    public enum ShipControlRoomScreenMode
+    {
+        MainCctv,
+        VerticalRoomList,
+        HorizontalShipLayout
+    }
+
+    public enum ShipWeaponOperationMode
+    {
+        AutoTurret,
+        ManualTurret
+    }
+
+    public readonly struct ControlRoomPurificationState
+    {
+        public const int DurationSeconds = 30;
+        public const int TotalFireDamage = 500;
+
+        private ControlRoomPurificationState(
+            bool isActive,
+            ShipRoomId targetRoom,
+            float elapsedSeconds,
+            int appliedFireDamage)
+        {
+            IsActive = isActive;
+            TargetRoom = targetRoom;
+            ElapsedSeconds = Mathf.Clamp(elapsedSeconds, 0f, DurationSeconds);
+            AppliedFireDamage = Mathf.Clamp(appliedFireDamage, 0, TotalFireDamage);
+        }
+
+        public bool IsActive { get; }
+
+        public ShipRoomId TargetRoom { get; }
+
+        public float ElapsedSeconds { get; }
+
+        public float RemainingSeconds => IsActive
+            ? Mathf.Max(0f, DurationSeconds - ElapsedSeconds)
+            : 0f;
+
+        public int AppliedFireDamage { get; }
+
+        public static ControlRoomPurificationState Inactive => new ControlRoomPurificationState(
+            false,
+            ShipRoomId.Cockpit,
+            0f,
+            0);
+
+        public static ControlRoomPurificationState Start(ShipRoomId targetRoom)
+        {
+            return new ControlRoomPurificationState(true, targetRoom, 0f, 0);
+        }
+
+        public ControlRoomPurificationTickResult Tick(float deltaSeconds)
+        {
+            if (deltaSeconds < 0f)
+            {
+                throw new ArgumentOutOfRangeException(nameof(deltaSeconds), "Delta seconds cannot be negative.");
+            }
+
+            if (!IsActive || deltaSeconds <= 0f)
+            {
+                return new ControlRoomPurificationTickResult(this, TargetRoom, 0, false);
+            }
+
+            var nextElapsed = Mathf.Min(DurationSeconds, ElapsedSeconds + deltaSeconds);
+            var nextApplied = nextElapsed >= DurationSeconds
+                ? TotalFireDamage
+                : Mathf.RoundToInt(TotalFireDamage * (nextElapsed / DurationSeconds));
+            var fireDamageThisTick = Mathf.Max(0, nextApplied - AppliedFireDamage);
+            var completed = nextElapsed >= DurationSeconds;
+            var next = new ControlRoomPurificationState(
+                !completed,
+                TargetRoom,
+                nextElapsed,
+                nextApplied);
+            return new ControlRoomPurificationTickResult(
+                next,
+                TargetRoom,
+                fireDamageThisTick,
+                completed);
+        }
+    }
+
+    public readonly struct ControlRoomPurificationTickResult
+    {
+        public ControlRoomPurificationTickResult(
+            ControlRoomPurificationState state,
+            ShipRoomId targetRoom,
+            int fireDamageThisTick,
+            bool completedThisTick)
+        {
+            State = state;
+            TargetRoom = targetRoom;
+            FireDamageThisTick = Mathf.Max(0, fireDamageThisTick);
+            CompletedThisTick = completedThisTick;
+        }
+
+        public ControlRoomPurificationState State { get; }
+
+        public ShipRoomId TargetRoom { get; }
+
+        public int FireDamageThisTick { get; }
+
+        public bool CompletedThisTick { get; }
     }
 
     public sealed class ShipDeviceInteractionState : MonoBehaviour
@@ -39,9 +147,12 @@ namespace Bellerophon.Core.Ship
         private ShipState shipState;
         private CargoState cargoState;
         private PlayerEquipmentState equipmentState;
+        private ShipUpgradeState shipUpgradeState;
         private bool isInitialized;
         private ShipDevicePanelMode activePanelMode;
         private ShipCctvTarget currentCctvTarget;
+        private ShipControlRoomScreenMode controlRoomScreenMode;
+        private ControlRoomPurificationState controlRoomPurificationState;
         private bool manualFlightModeActive;
         private bool turretManualModeActive;
         private bool engineOverclockActive;
@@ -58,6 +169,15 @@ namespace Bellerophon.Core.Ship
         private FirstPersonPlayerStatus playerStatus;
         private float seedIntruderCheckAccumulatorSeconds;
         private int seedIntruderCheckCount;
+        private float asteroidHazardCheckAccumulatorSeconds;
+        private int asteroidHazardCheckCount;
+        private float cargoFreedomHazardCheckAccumulatorSeconds;
+        private int cargoFreedomHazardCheckCount;
+        private float spacePirateHazardCheckAccumulatorSeconds;
+        private int spacePirateHazardCheckCount;
+        private float alienLifeHazardCheckAccumulatorSeconds;
+        private int alienLifeHazardCheckCount;
+        private int lastPurificationPlayerDamage;
         private string lastInteractionSummary = string.Empty;
 
         public ShipState CurrentShipState
@@ -87,13 +207,37 @@ namespace Bellerophon.Core.Ship
             }
         }
 
+        public ShipUpgradeState CurrentShipUpgradeState
+        {
+            get
+            {
+                EnsureInitialized();
+                return shipUpgradeState;
+            }
+        }
+
         public ShipDevicePanelMode ActivePanelMode => activePanelMode;
 
         public ShipCctvTarget CurrentCctvTarget => currentCctvTarget;
 
+        public ShipControlRoomScreenMode CurrentControlRoomScreenMode => controlRoomScreenMode;
+
+        public ControlRoomPurificationState CurrentControlRoomPurification
+        {
+            get
+            {
+                EnsureInitialized();
+                return controlRoomPurificationState;
+            }
+        }
+
         public bool ManualFlightModeActive => manualFlightModeActive;
 
         public bool TurretManualModeActive => turretManualModeActive;
+
+        public ShipWeaponOperationMode CurrentWeaponOperationMode => turretManualModeActive
+            ? ShipWeaponOperationMode.ManualTurret
+            : ShipWeaponOperationMode.AutoTurret;
 
         public ManualTurretState CurrentManualTurret
         {
@@ -208,6 +352,8 @@ namespace Bellerophon.Core.Ship
 
         public int SeedIntruderCheckCount => seedIntruderCheckCount;
 
+        public int LastPurificationPlayerDamage => lastPurificationPlayerDamage;
+
         public ShipFlightMode CurrentFlightMode => hasTransportRun
             ? transportRunState.FlightMode
             : manualFlightModeActive ? ShipFlightMode.ManualFlight : ShipFlightMode.AutoPilot;
@@ -239,7 +385,14 @@ namespace Bellerophon.Core.Ship
         private void Update()
         {
             TickEquipmentState(Time.deltaTime);
-            TickTransportRun(Time.deltaTime);
+            if (hasTransportRun)
+            {
+                TickTransportRun(Time.deltaTime);
+            }
+            else
+            {
+                TickControlRoomOperations(Time.deltaTime);
+            }
         }
 
         public void EnsureInitialized()
@@ -252,8 +405,11 @@ namespace Bellerophon.Core.Ship
             shipState = ShipState.CreateDefault();
             cargoState = new CargoState(CargoGrade.Common, 50, 100, 1f, false);
             equipmentState = PlayerEquipmentState.Empty;
+            shipUpgradeState = ShipUpgradeState.Empty;
             activePanelMode = ShipDevicePanelMode.None;
             currentCctvTarget = ShipCctvTarget.Cockpit;
+            controlRoomScreenMode = ShipControlRoomScreenMode.MainCctv;
+            controlRoomPurificationState = ControlRoomPurificationState.Inactive;
             hasTransportRun = false;
             transportHazardState = TransportHazardState.None;
             lastTransportHazardResult = TransportHazardResult.None;
@@ -264,6 +420,8 @@ namespace Bellerophon.Core.Ship
             ResolvePlayerStatus();
             seedIntruderCheckAccumulatorSeconds = 0f;
             seedIntruderCheckCount = 0;
+            ResetTransportHazardOccurrenceChecks();
+            lastPurificationPlayerDamage = 0;
             isInitialized = true;
         }
 
@@ -282,7 +440,8 @@ namespace Bellerophon.Core.Ship
                     break;
                 case ShipDeviceType.ControlRoomMainScreen:
                     activePanelMode = ShipDevicePanelMode.ControlRoom;
-                    lastInteractionSummary = "Control room screen opened.";
+                    controlRoomScreenMode = ShipControlRoomScreenMode.MainCctv;
+                    lastInteractionSummary = "Control room main CCTV screen opened.";
                     break;
                 case ShipDeviceType.ArmoryTurretHandle:
                     lastInteractionSummary = ActivateArmoryTurretHandle();
@@ -305,7 +464,9 @@ namespace Bellerophon.Core.Ship
         public void CycleCctv(int direction)
         {
             EnsureInitialized();
-            if (activePanelMode != ShipDevicePanelMode.ControlRoom || direction == 0)
+            if (activePanelMode != ShipDevicePanelMode.ControlRoom ||
+                controlRoomScreenMode != ShipControlRoomScreenMode.MainCctv ||
+                direction == 0)
             {
                 return;
             }
@@ -338,6 +499,189 @@ namespace Bellerophon.Core.Ship
 
             currentCctvTarget = CctvOrder[nextIndex];
             lastInteractionSummary = "CCTV target changed to " + GetCctvDisplayName(currentCctvTarget) + ".";
+        }
+
+        public void SwitchControlRoomScreenByRightClick()
+        {
+            EnsureInitialized();
+            if (activePanelMode != ShipDevicePanelMode.ControlRoom)
+            {
+                return;
+            }
+
+            switch (controlRoomScreenMode)
+            {
+                case ShipControlRoomScreenMode.MainCctv:
+                    SetControlRoomScreenMode(ShipControlRoomScreenMode.VerticalRoomList);
+                    break;
+                case ShipControlRoomScreenMode.VerticalRoomList:
+                    SetControlRoomScreenMode(ShipControlRoomScreenMode.HorizontalShipLayout);
+                    break;
+                case ShipControlRoomScreenMode.HorizontalShipLayout:
+                    SetControlRoomScreenMode(ShipControlRoomScreenMode.MainCctv);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public void SetControlRoomScreenMode(ShipControlRoomScreenMode screenMode)
+        {
+            EnsureInitialized();
+            if (activePanelMode != ShipDevicePanelMode.ControlRoom)
+            {
+                activePanelMode = ShipDevicePanelMode.ControlRoom;
+            }
+
+            controlRoomScreenMode = screenMode;
+            lastInteractionSummary = "Control room screen switched to " + FormatControlRoomScreenMode(screenMode) + ".";
+        }
+
+        public bool SelectControlRoomVerticalRoomByDisplayIndex(int displayIndex)
+        {
+            EnsureInitialized();
+            if (displayIndex < 1 || displayIndex > ControlRoomVerticalRoomOrder.Length)
+            {
+                lastInteractionSummary = "Select a listed control room target from 1 to " +
+                                         ControlRoomVerticalRoomOrder.Length + ".";
+                return false;
+            }
+
+            return SelectControlRoomPurificationTarget(ControlRoomVerticalRoomOrder[displayIndex - 1]);
+        }
+
+        public bool SelectControlRoomPurificationTarget(ShipRoomId roomId)
+        {
+            EnsureInitialized();
+            if (activePanelMode != ShipDevicePanelMode.ControlRoom ||
+                controlRoomScreenMode != ShipControlRoomScreenMode.VerticalRoomList)
+            {
+                lastInteractionSummary = "Vertical control room screen is required for room purification.";
+                return false;
+            }
+
+            if (!ShipStateRules.CanUseControlRoomRoomOperation(shipState))
+            {
+                OpenAllSealedRooms();
+                controlRoomPurificationState = ControlRoomPurificationState.Inactive;
+                lastInteractionSummary = "Control room damage prevents room closure and internal purification.";
+                return false;
+            }
+
+            if (controlRoomPurificationState.IsActive)
+            {
+                lastInteractionSummary = "Internal purification is already running in " +
+                                         FormatRoomName(controlRoomPurificationState.TargetRoom) + ".";
+                return false;
+            }
+
+            var room = shipState.GetRoom(roomId);
+            shipState = shipState.WithRoom(roomId, room.WithSealed(true));
+            if (hasTransportRun)
+            {
+                transportRunState = transportRunState.WithShipState(shipState);
+            }
+
+            controlRoomPurificationState = ControlRoomPurificationState.Start(roomId);
+            lastPurificationPlayerDamage = 0;
+            lastInteractionSummary = "Internal purification started in " + FormatRoomName(roomId) + ".";
+            return true;
+        }
+
+        public ControlRoomPurificationTickResult TickControlRoomOperations(float deltaSeconds)
+        {
+            return TickControlRoomOperations(deltaSeconds, ResolveCurrentPlayerRoom());
+        }
+
+        public ControlRoomPurificationTickResult TickControlRoomOperations(
+            float deltaSeconds,
+            ShipRoomId? playerRoom)
+        {
+            EnsureInitialized();
+            if (deltaSeconds < 0f)
+            {
+                throw new ArgumentOutOfRangeException(nameof(deltaSeconds), "Delta seconds cannot be negative.");
+            }
+
+            lastPurificationPlayerDamage = 0;
+            if (!controlRoomPurificationState.IsActive || deltaSeconds <= 0f)
+            {
+                return new ControlRoomPurificationTickResult(
+                    controlRoomPurificationState,
+                    controlRoomPurificationState.TargetRoom,
+                    0,
+                    false);
+            }
+
+            var targetRoom = controlRoomPurificationState.TargetRoom;
+            if (!ShipStateRules.CanUseControlRoomRoomOperation(shipState))
+            {
+                OpenAllSealedRooms();
+                controlRoomPurificationState = ControlRoomPurificationState.Inactive;
+                lastInteractionSummary = "Control room damage opened sealed rooms and stopped internal purification.";
+                return new ControlRoomPurificationTickResult(
+                    controlRoomPurificationState,
+                    targetRoom,
+                    0,
+                    true);
+            }
+
+            var result = controlRoomPurificationState.Tick(deltaSeconds);
+            controlRoomPurificationState = result.State;
+            if (result.FireDamageThisTick > 0 &&
+                playerRoom.HasValue &&
+                playerRoom.Value == targetRoom)
+            {
+                var damageResult = ApplyPlayerDamage(new PlayerDamageProfile(
+                    result.FireDamageThisTick,
+                    CombatDamageSourceKind.Fire));
+                lastPurificationPlayerDamage = damageResult.HealthDamage + damageResult.ShieldDamage;
+            }
+
+            if (result.CompletedThisTick)
+            {
+                var room = shipState.GetRoom(targetRoom);
+                shipState = shipState.WithRoom(targetRoom, room.WithSealed(false));
+                if (hasTransportRun)
+                {
+                    transportRunState = transportRunState.WithShipState(shipState);
+                }
+
+                lastInteractionSummary = "Internal purification completed in " + FormatRoomName(targetRoom) + ".";
+            }
+            else if (result.FireDamageThisTick > 0)
+            {
+                lastInteractionSummary = "Internal purification is burning " + FormatRoomName(targetRoom) + ".";
+            }
+
+            return result;
+        }
+
+        public bool ExitActiveDevicePanel()
+        {
+            EnsureInitialized();
+            switch (activePanelMode)
+            {
+                case ShipDevicePanelMode.None:
+                    return false;
+                case ShipDevicePanelMode.ManualFlight:
+                    return ExitManualFlightToAutoPilot();
+                case ShipDevicePanelMode.TurretManual:
+                    return ExitManualTurretMode();
+                case ShipDevicePanelMode.ControlRoom:
+                    activePanelMode = ShipDevicePanelMode.None;
+                    controlRoomScreenMode = ShipControlRoomScreenMode.MainCctv;
+                    lastInteractionSummary = "Control room screen closed.";
+                    return true;
+                case ShipDevicePanelMode.EngineStatus:
+                case ShipDevicePanelMode.SupplyStorage:
+                case ShipDevicePanelMode.CargoStatus:
+                    activePanelMode = ShipDevicePanelMode.None;
+                    lastInteractionSummary = "Ship device panel closed.";
+                    return true;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public string GetSupplySlotLabel(int index)
@@ -386,6 +730,19 @@ namespace Bellerophon.Core.Ship
                 turretManualModeActive = false;
                 manualTurretState = ManualTurretState.Inactive;
             }
+            else
+            {
+                manualTurretState = manualTurretState.WithMagazineCapacity(
+                    ShipStateRules.CalculateManualTurretMagazineCapacity(shipUpgradeState),
+                    ShipStateRules.IsPlasmaCannonInstalled(shipUpgradeState));
+            }
+
+            if (!ShipStateRules.CanUseControlRoomRoomOperation(shipState))
+            {
+                OpenAllSealedRooms();
+                controlRoomPurificationState = ControlRoomPurificationState.Inactive;
+                lastPurificationPlayerDamage = 0;
+            }
 
             var availableCctvCount = ShipStateRules.CalculateControlRoomAvailableCctvCount(shipState);
             if (availableCctvCount <= 0 || GetCctvIndex(currentCctvTarget) >= availableCctvCount)
@@ -416,6 +773,20 @@ namespace Bellerophon.Core.Ship
             SetEquipmentState(nextEquipmentState);
         }
 
+        public void SetShipUpgradeState(ShipUpgradeState nextShipUpgradeState)
+        {
+            EnsureInitialized();
+            shipUpgradeState = nextShipUpgradeState;
+            manualTurretState = manualTurretState.WithMagazineCapacity(
+                ShipStateRules.CalculateManualTurretMagazineCapacity(shipUpgradeState),
+                ShipStateRules.IsPlasmaCannonInstalled(shipUpgradeState));
+        }
+
+        public void SetShipUpgradeStateForValidation(ShipUpgradeState nextShipUpgradeState)
+        {
+            SetShipUpgradeState(nextShipUpgradeState);
+        }
+
         public void SetPlayerStatusForValidation(FirstPersonPlayerStatus status)
         {
             playerStatus = status;
@@ -431,17 +802,32 @@ namespace Bellerophon.Core.Ship
         public EquipmentUseResult UseActiveEquipment(bool alternateMode)
         {
             EnsureInitialized();
+            ResolvePlayerStatus();
             lastEquipmentUseResult = EquipmentRules.UseActiveEquipment(
                 equipmentState,
                 alternateMode,
-                seedIntruderState.IsActive);
+                seedIntruderState.IsActive,
+                playerStatus == null ? null : playerStatus.ActiveStatusEffects);
             equipmentState = lastEquipmentUseResult.State;
 
-            if (lastEquipmentUseResult.AppliesIntruderDamage && seedIntruderState.IsActive)
+            if (seedIntruderState.IsActive &&
+                (lastEquipmentUseResult.AppliesIntruderDamage ||
+                 lastEquipmentUseResult.StatusEffectToApply.HasEffect))
             {
-                seedIntruderState = SeedIntruderRules.ApplyDamage(
-                    seedIntruderState,
-                    lastEquipmentUseResult.Damage);
+                if (lastEquipmentUseResult.AppliesIntruderDamage)
+                {
+                    seedIntruderState = SeedIntruderRules.ApplyDamage(
+                        seedIntruderState,
+                        lastEquipmentUseResult.Damage);
+                }
+
+                if (lastEquipmentUseResult.StatusEffectToApply.HasEffect && seedIntruderState.IsActive)
+                {
+                    seedIntruderState = SeedIntruderRules.ApplyStatusEffect(
+                        seedIntruderState,
+                        lastEquipmentUseResult.StatusEffectToApply);
+                }
+
                 lastInteractionSummary = seedIntruderState.IsResolved
                     ? EquipmentRules.FormatItemName(lastEquipmentUseResult.ItemKind) + " neutralized Parvum."
                     : lastEquipmentUseResult.Summary;
@@ -457,7 +843,7 @@ namespace Bellerophon.Core.Ship
             EnsureInitialized();
             lastEquipmentUseResult = EquipmentRules.UseSupplyItem(equipmentState, supplySlotIndex);
             equipmentState = lastEquipmentUseResult.State;
-            ApplyPlayerRecovery(lastEquipmentUseResult);
+            ApplyPlayerUseEffects(lastEquipmentUseResult);
             lastInteractionSummary = lastEquipmentUseResult.Summary;
             return lastEquipmentUseResult;
         }
@@ -466,6 +852,24 @@ namespace Bellerophon.Core.Ship
         {
             EnsureInitialized();
             return EquipmentRules.CalculateDamageAfterProtection(rawDamage, equipmentState);
+        }
+
+        public PlayerDamageResult ApplyPlayerDamage(
+            PlayerDamageProfile profile,
+            int statusRollPercent = 0)
+        {
+            EnsureInitialized();
+            ResolvePlayerStatus();
+            if (playerStatus == null)
+            {
+                return default;
+            }
+
+            var result = playerStatus.ApplyIncomingDamage(profile, equipmentState, statusRollPercent);
+            lastInteractionSummary = result.WasKilled
+                ? "Player was killed by incoming damage."
+                : "Player damage applied: shield -" + result.ShieldDamage + ", health -" + result.HealthDamage + ".";
+            return result;
         }
 
         public EquipmentUseResult ReloadActiveEquipment()
@@ -492,9 +896,13 @@ namespace Bellerophon.Core.Ship
             equipmentState = EquipmentRules.Tick(equipmentState, deltaSeconds);
         }
 
-        private void ApplyPlayerRecovery(EquipmentUseResult result)
+        private void ApplyPlayerUseEffects(EquipmentUseResult result)
         {
-            if (result.HealthDelta <= 0 && result.ShieldDelta <= 0)
+            if (result.HealthDelta <= 0 &&
+                result.ShieldDelta <= 0 &&
+                result.StatusEffectToClear == CombatStatusEffectKind.None &&
+                !result.StatusEffectToApply.HasEffect &&
+                !result.DelayedStatusEffectToApply.HasEffect)
             {
                 return;
             }
@@ -503,6 +911,22 @@ namespace Bellerophon.Core.Ship
             if (playerStatus != null)
             {
                 playerStatus.ApplyRecovery(result.HealthDelta, result.ShieldDelta);
+                if (result.StatusEffectToClear != CombatStatusEffectKind.None)
+                {
+                    playerStatus.ClearStatusEffect(result.StatusEffectToClear);
+                }
+
+                if (result.StatusEffectToApply.HasEffect)
+                {
+                    playerStatus.ApplyStatusEffect(result.StatusEffectToApply);
+                }
+
+                if (result.DelayedStatusEffectToApply.HasEffect)
+                {
+                    playerStatus.ScheduleStatusEffect(
+                        result.DelayedStatusEffectToApply,
+                        result.DelayedStatusEffectDelaySeconds);
+                }
             }
         }
 
@@ -518,6 +942,7 @@ namespace Bellerophon.Core.Ship
             seedIntruderState = SeedIntruderState.None;
             seedIntruderCheckAccumulatorSeconds = 0f;
             seedIntruderCheckCount = 0;
+            ResetTransportHazardOccurrenceChecks();
             turretManualModeActive = false;
             engineOverclockActive = false;
             engineOverclockUsedThisRun = false;
@@ -547,7 +972,8 @@ namespace Bellerophon.Core.Ship
 
             var activeTransportSeconds = Mathf.Min(deltaSeconds, transportRunState.RemainingSeconds);
             transportRunState = transportRunState.Tick(deltaSeconds);
-            manualTurretState = manualTurretState.Tick(deltaSeconds);
+            TickManualTurretState(deltaSeconds);
+            TickControlRoomOperations(deltaSeconds);
             TickTransportHazard(deltaSeconds);
             TickSeedIntruderDamage(activeTransportSeconds);
             manualFlightModeActive = transportRunState.FlightMode == ShipFlightMode.ManualFlight;
@@ -617,6 +1043,60 @@ namespace Bellerophon.Core.Ship
             return seedIntruderState;
         }
 
+        public bool TickTransportHazardOccurrenceForCurrentRun(float deltaSeconds, GameSessionState session)
+        {
+            EnsureInitialized();
+            if (deltaSeconds < 0f)
+            {
+                throw new ArgumentOutOfRangeException(nameof(deltaSeconds), "Delta seconds cannot be negative.");
+            }
+
+            if (!hasTransportRun ||
+                transportRunState.IsComplete ||
+                transportHazardState.HasActiveHazard ||
+                !TransportHazardRules.CanCheckTransportHazard(session))
+            {
+                return false;
+            }
+
+            if (TickTransportHazardOccurrence(
+                    ref asteroidHazardCheckAccumulatorSeconds,
+                    ref asteroidHazardCheckCount,
+                    TransportHazardType.AsteroidFieldSmall,
+                    deltaSeconds,
+                    session))
+            {
+                return true;
+            }
+
+            if (TickTransportHazardOccurrence(
+                    ref cargoFreedomHazardCheckAccumulatorSeconds,
+                    ref cargoFreedomHazardCheckCount,
+                    TransportHazardType.CargoFreedomLeagueRegion,
+                    deltaSeconds,
+                    session))
+            {
+                return true;
+            }
+
+            if (TickTransportHazardOccurrence(
+                    ref spacePirateHazardCheckAccumulatorSeconds,
+                    ref spacePirateHazardCheckCount,
+                    TransportHazardType.SpacePirateRegion,
+                    deltaSeconds,
+                    session))
+            {
+                return true;
+            }
+
+            return TickTransportHazardOccurrence(
+                ref alienLifeHazardCheckAccumulatorSeconds,
+                ref alienLifeHazardCheckCount,
+                TransportHazardType.AlienLifeRegion,
+                deltaSeconds,
+                session);
+        }
+
         public bool TryStartAsteroidFieldForCurrentRun(GameSessionState session)
         {
             EnsureInitialized();
@@ -628,6 +1108,23 @@ namespace Bellerophon.Core.Ship
             }
 
             StartTransportHazard(TransportHazardRules.CreateAsteroidField(session));
+            return true;
+        }
+
+        public bool TryStartTransportHazardForCurrentRun(
+            GameSessionState session,
+            TransportHazardType hazardType,
+            int checkIndex)
+        {
+            EnsureInitialized();
+            if (!hasTransportRun ||
+                transportHazardState.HasActiveHazard ||
+                !TransportHazardRules.ShouldStartHazard(session, hazardType, checkIndex))
+            {
+                return false;
+            }
+
+            StartTransportHazard(TransportHazardRules.CreateHazard(session, hazardType, checkIndex));
             return true;
         }
 
@@ -647,9 +1144,9 @@ namespace Bellerophon.Core.Ship
             transportHazardState = hazard;
             lastTransportHazardResult = TransportHazardResult.None;
             externalTargetState = TransportHazardRules.CreateExternalTarget(hazard);
-            if (hazard.HazardType == TransportHazardType.AsteroidField)
+            if (hazard.HazardType != TransportHazardType.None)
             {
-                lastInteractionSummary = "Asteroid field detected.";
+                lastInteractionSummary = TransportHazardRules.FormatHazardType(hazard.HazardType) + " detected.";
             }
         }
 
@@ -721,6 +1218,42 @@ namespace Bellerophon.Core.Ship
             return fireResult;
         }
 
+        public ManualTurretPlasmaResult FireManualTurretPlasma()
+        {
+            EnsureInitialized();
+            if (!ShipStateRules.CanUseManualTurret(shipState))
+            {
+                manualTurretState = ManualTurretState.Inactive;
+                turretManualModeActive = false;
+                var inactiveResult = new ManualTurretPlasmaResult(
+                    ManualTurretPlasmaOutcome.Inactive,
+                    manualTurretState,
+                    externalTargetState,
+                    0);
+                lastInteractionSummary = FormatManualTurretPlasmaResult(inactiveResult);
+                return inactiveResult;
+            }
+
+            if (!ShipStateRules.IsPlasmaCannonAvailable(shipState, shipUpgradeState))
+            {
+                EnsureManualTurretStarted();
+                var unavailableResult = new ManualTurretPlasmaResult(
+                    ManualTurretPlasmaOutcome.Unavailable,
+                    manualTurretState,
+                    externalTargetState,
+                    0);
+                lastInteractionSummary = FormatManualTurretPlasmaResult(unavailableResult);
+                return unavailableResult;
+            }
+
+            EnsureManualTurretStarted();
+            var result = manualTurretState.FirePlasmaCannon(externalTargetState);
+            manualTurretState = result.Turret;
+            externalTargetState = result.Target;
+            lastInteractionSummary = FormatManualTurretPlasmaResult(result);
+            return result;
+        }
+
         public bool ExitManualTurretMode()
         {
             EnsureInitialized();
@@ -730,6 +1263,46 @@ namespace Bellerophon.Core.Ship
                 ? ShipDevicePanelMode.ManualFlight
                 : ShipDevicePanelMode.None;
             lastInteractionSummary = "Manual turret mode frame exited.";
+            return true;
+        }
+
+        public bool UseManualFlightBooster()
+        {
+            EnsureInitialized();
+            if (!hasTransportRun || !transportHazardState.HasActiveHazard)
+            {
+                lastInteractionSummary = "Manual flight booster has no active hazard target.";
+                return false;
+            }
+
+            if (transportRunState.FlightMode != ShipFlightMode.ManualFlight)
+            {
+                lastInteractionSummary = "Manual flight booster requires manual flight mode.";
+                return false;
+            }
+
+            if (!ShipStateRules.CanUseBooster(shipState))
+            {
+                lastInteractionSummary = "Engine room damage prevents booster use.";
+                return false;
+            }
+
+            var reductionSeconds = TransportHazardRules.GetManualFlightBoosterReductionSeconds(
+                transportHazardState.HazardType);
+            if (reductionSeconds <= 0)
+            {
+                lastInteractionSummary = "Manual flight booster has no effect on this hazard.";
+                return false;
+            }
+
+            transportHazardState = TransportHazardRules.ApplyManualFlightBooster(transportHazardState);
+            lastInteractionSummary = "Manual flight booster reduced hazard duration by " +
+                                     reductionSeconds + " seconds.";
+            if (transportHazardState.IsComplete)
+            {
+                ResolveCompletedTransportHazard();
+            }
+
             return true;
         }
 
@@ -793,13 +1366,7 @@ namespace Bellerophon.Core.Ship
                 return;
             }
 
-            lastTransportHazardResult = TransportHazardRules.ResolveAsteroidField(transportHazardState);
-            shipState = TransportHazardRules.ApplyHazardResult(shipState, lastTransportHazardResult);
-            transportRunState = transportRunState.WithShipState(shipState);
-            transportHazardState = TransportHazardState.None;
-            externalTargetState = ExternalTargetState.None;
-            manualFlightModeActive = transportRunState.FlightMode == ShipFlightMode.ManualFlight;
-            lastInteractionSummary = FormatHazardResult(lastTransportHazardResult);
+            ResolveCompletedTransportHazard();
         }
 
         private void TickSeedIntruderDamage(float deltaSeconds)
@@ -825,7 +1392,8 @@ namespace Bellerophon.Core.Ship
             manualFlightModeActive = transportRunState.FlightMode == ShipFlightMode.ManualFlight;
             if (result.AttackCount > 0)
             {
-                lastInteractionSummary = "Parvum is chewing through " + FormatRoomName(seedIntruderState.TargetRoom) + ".";
+                lastInteractionSummary = "Parvum is chewing through " +
+                                         FormatRoomName(seedIntruderState.Intruder.CurrentRoom) + ".";
             }
         }
 
@@ -861,9 +1429,35 @@ namespace Bellerophon.Core.Ship
                     return "Engine Room";
                 case ShipCctvTarget.Armory:
                     return "Armory";
+                case ShipCctvTarget.SupplyRoom:
+                    return "Supply Room";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(target), target, null);
             }
+        }
+
+        public static ShipRoomId GetRoomForCctvTarget(ShipCctvTarget target)
+        {
+            switch (target)
+            {
+                case ShipCctvTarget.Cockpit:
+                    return ShipRoomId.Cockpit;
+                case ShipCctvTarget.CargoHold:
+                    return ShipRoomId.CargoHold;
+                case ShipCctvTarget.EngineRoom:
+                    return ShipRoomId.EngineRoom;
+                case ShipCctvTarget.Armory:
+                    return ShipRoomId.Armory;
+                case ShipCctvTarget.SupplyRoom:
+                    return ShipRoomId.SupplyRoom;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(target), target, null);
+            }
+        }
+
+        public static ShipRoomId[] GetControlRoomVerticalRoomOrder()
+        {
+            return (ShipRoomId[])ControlRoomVerticalRoomOrder.Clone();
         }
 
         private string ActivateEngineScreen()
@@ -887,6 +1481,14 @@ namespace Bellerophon.Core.Ship
 
         private string ActivateArmoryTurretHandle()
         {
+            if (hasTransportRun && transportRunState.FlightMode == ShipFlightMode.ManualFlight)
+            {
+                turretManualModeActive = false;
+                manualTurretState = manualTurretState.Stop();
+                activePanelMode = ShipDevicePanelMode.None;
+                return "Manual flight forces weapon room auto turret mode.";
+            }
+
             activePanelMode = ShipDevicePanelMode.TurretManual;
             if (!ShipStateRules.CanUseManualTurret(shipState))
             {
@@ -929,8 +1531,39 @@ namespace Bellerophon.Core.Ship
         {
             if (!manualTurretState.IsActive)
             {
-                manualTurretState = ManualTurretState.Start(true);
+                manualTurretState = ManualTurretState.Start(
+                    true,
+                    ShipStateRules.CalculateManualTurretMagazineCapacity(shipUpgradeState),
+                    ShipStateRules.IsPlasmaCannonInstalled(shipUpgradeState));
             }
+        }
+
+        private void TickManualTurretState(float deltaSeconds)
+        {
+            var result = manualTurretState.TickWithPlasma(deltaSeconds, externalTargetState);
+            manualTurretState = result.Turret;
+            externalTargetState = result.Target;
+            if (result.DamageApplied > 0)
+            {
+                lastInteractionSummary = "Plasma cannon burned external target for " +
+                                         result.DamageApplied + " damage.";
+            }
+
+            if (result.DestroyedTarget)
+            {
+                ResolveActiveHazardFromTurret();
+            }
+        }
+
+        private void ResolveCompletedTransportHazard()
+        {
+            lastTransportHazardResult = TransportHazardRules.ResolveTransportHazard(transportHazardState);
+            shipState = TransportHazardRules.ApplyHazardResult(shipState, lastTransportHazardResult);
+            transportRunState = transportRunState.WithShipState(shipState);
+            transportHazardState = TransportHazardState.None;
+            externalTargetState = ExternalTargetState.None;
+            manualFlightModeActive = transportRunState.FlightMode == ShipFlightMode.ManualFlight;
+            lastInteractionSummary = FormatHazardResult(lastTransportHazardResult);
         }
 
         private void ResolveActiveHazardFromTurret()
@@ -940,12 +1573,56 @@ namespace Bellerophon.Core.Ship
                 return;
             }
 
-            lastTransportHazardResult = TransportHazardRules.ResolveAsteroidField(transportHazardState, true);
+            lastTransportHazardResult = TransportHazardRules.ResolveTransportHazard(transportHazardState, true);
             shipState = TransportHazardRules.ApplyHazardResult(shipState, lastTransportHazardResult);
             transportRunState = transportRunState.WithShipState(shipState);
             transportHazardState = TransportHazardState.None;
             externalTargetState = ExternalTargetState.None;
-            lastInteractionSummary = "External target destroyed; asteroid hazard neutralized.";
+            lastInteractionSummary = "External target destroyed; " +
+                                     TransportHazardRules.FormatHazardType(lastTransportHazardResult.HazardType) +
+                                     " neutralized.";
+        }
+
+        private bool TickTransportHazardOccurrence(
+            ref float accumulatorSeconds,
+            ref int checkCount,
+            TransportHazardType hazardType,
+            float deltaSeconds,
+            GameSessionState session)
+        {
+            var intervalSeconds = TransportHazardRules.GetOccurrenceCheckIntervalSeconds(hazardType);
+            if (intervalSeconds <= 0 || deltaSeconds <= 0f)
+            {
+                return false;
+            }
+
+            accumulatorSeconds += deltaSeconds;
+            while (accumulatorSeconds + 0.0001f >= intervalSeconds)
+            {
+                accumulatorSeconds -= intervalSeconds;
+                checkCount++;
+                if (!TransportHazardRules.ShouldStartHazard(session, hazardType, checkCount))
+                {
+                    continue;
+                }
+
+                StartTransportHazard(TransportHazardRules.CreateHazard(session, hazardType, checkCount));
+                return true;
+            }
+
+            return false;
+        }
+
+        private void ResetTransportHazardOccurrenceChecks()
+        {
+            asteroidHazardCheckAccumulatorSeconds = 0f;
+            asteroidHazardCheckCount = 0;
+            cargoFreedomHazardCheckAccumulatorSeconds = 0f;
+            cargoFreedomHazardCheckCount = 0;
+            spacePirateHazardCheckAccumulatorSeconds = 0f;
+            spacePirateHazardCheckCount = 0;
+            alienLifeHazardCheckAccumulatorSeconds = 0f;
+            alienLifeHazardCheckCount = 0;
         }
 
         private void ResolvePlayerStatus()
@@ -954,6 +1631,17 @@ namespace Bellerophon.Core.Ship
             {
                 playerStatus = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerStatus>();
             }
+        }
+
+        private ShipRoomId? ResolveCurrentPlayerRoom()
+        {
+            ResolvePlayerStatus();
+            if (playerStatus == null)
+            {
+                return null;
+            }
+
+            return ShipInteriorMapRules.FindCurrentRoom(playerStatus.transform.position);
         }
 
         private void StartSeedIntruder(SeedIntruderState intruder)
@@ -975,23 +1663,35 @@ namespace Bellerophon.Core.Ship
 
         private static string FormatHazardResult(TransportHazardResult result)
         {
-            if (result.HazardType != TransportHazardType.AsteroidField)
+            if (result.HazardType == TransportHazardType.None)
             {
                 return "Transport hazard resolved.";
             }
 
+            var hazardName = TransportHazardRules.FormatHazardType(result.HazardType);
             switch (result.Resolution)
             {
                 case TransportHazardResolution.Neutralized:
-                    return "Asteroid field neutralized by turret.";
+                    return hazardName + " neutralized by turret.";
                 case TransportHazardResolution.Avoided:
-                    return "Asteroid field avoided.";
+                    return hazardName + " passed without effect.";
                 case TransportHazardResolution.GlancingHit:
-                    return "Asteroid field grazed the ship.";
+                    return hazardName + " partially affected the ship.";
                 case TransportHazardResolution.DirectHit:
-                    return "Asteroid field damaged the ship.";
+                    if (result.HazardType == TransportHazardType.SpacePirateRegion)
+                    {
+                        return hazardName + " caused " + result.BoardingEventCount +
+                               " boarding event(s) and " + result.BombardmentHitCount + " bombardment hit(s).";
+                    }
+
+                    if (result.BoardingEventCount > 0)
+                    {
+                        return hazardName + " caused " + result.BoardingEventCount + " boarding event(s).";
+                    }
+
+                    return hazardName + " damaged the ship.";
                 default:
-                    return "Asteroid field resolved.";
+                    return hazardName + " resolved.";
             }
         }
 
@@ -1013,6 +1713,58 @@ namespace Bellerophon.Core.Ship
                     return "Manual turret is inactive.";
                 default:
                     return "Manual turret fired.";
+            }
+        }
+
+        private static string FormatManualTurretPlasmaResult(ManualTurretPlasmaResult result)
+        {
+            switch (result.Outcome)
+            {
+                case ManualTurretPlasmaOutcome.Activated:
+                    return "Plasma cannon fired.";
+                case ManualTurretPlasmaOutcome.Unavailable:
+                    return "Plasma cannon is unavailable.";
+                case ManualTurretPlasmaOutcome.Cooldown:
+                    return "Plasma cannon is cooling down.";
+                case ManualTurretPlasmaOutcome.AlreadyActive:
+                    return "Plasma cannon is already firing.";
+                case ManualTurretPlasmaOutcome.Inactive:
+                    return "Manual turret is inactive.";
+                default:
+                    return "Plasma cannon input received.";
+            }
+        }
+
+        private static string FormatControlRoomScreenMode(ShipControlRoomScreenMode screenMode)
+        {
+            switch (screenMode)
+            {
+                case ShipControlRoomScreenMode.MainCctv:
+                    return "main CCTV";
+                case ShipControlRoomScreenMode.VerticalRoomList:
+                    return "vertical room list";
+                case ShipControlRoomScreenMode.HorizontalShipLayout:
+                    return "horizontal ship layout";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(screenMode), screenMode, null);
+            }
+        }
+
+        private void OpenAllSealedRooms()
+        {
+            for (var i = 0; i < AllRoomOrder.Length; i++)
+            {
+                var roomId = AllRoomOrder[i];
+                var room = shipState.GetRoom(roomId);
+                if (room.IsSealed)
+                {
+                    shipState = shipState.WithRoom(roomId, room.WithSealed(false));
+                }
+            }
+
+            if (hasTransportRun)
+            {
+                transportRunState = transportRunState.WithShipState(shipState);
             }
         }
 
@@ -1071,7 +1823,28 @@ namespace Bellerophon.Core.Ship
             ShipCctvTarget.Cockpit,
             ShipCctvTarget.CargoHold,
             ShipCctvTarget.EngineRoom,
-            ShipCctvTarget.Armory
+            ShipCctvTarget.Armory,
+            ShipCctvTarget.SupplyRoom
+        };
+
+        private static readonly ShipRoomId[] ControlRoomVerticalRoomOrder =
+        {
+            ShipRoomId.Cockpit,
+            ShipRoomId.CargoHold,
+            ShipRoomId.SupplyRoom,
+            ShipRoomId.EngineRoom,
+            ShipRoomId.ControlRoom,
+            ShipRoomId.Armory
+        };
+
+        private static readonly ShipRoomId[] AllRoomOrder =
+        {
+            ShipRoomId.Cockpit,
+            ShipRoomId.CargoHold,
+            ShipRoomId.Armory,
+            ShipRoomId.SupplyRoom,
+            ShipRoomId.EngineRoom,
+            ShipRoomId.ControlRoom
         };
     }
 }

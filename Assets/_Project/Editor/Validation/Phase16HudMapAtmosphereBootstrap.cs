@@ -20,6 +20,7 @@ namespace Bellerophon.Editor.Validation
         public const string VitalRootName = "Phase 16 Vitals";
         public const string HealthBarFillName = "Phase 16 Health Fill";
         public const string ShieldBarFillName = "Phase 16 Shield Fill";
+        public const string StatusEffectsTextName = "Phase 16 Status Effects";
         public const string MapRootName = "Phase 16 Ship Map";
         public const string MapCurrentRoomTextName = "Phase 16 Map Current Room";
         public const string MapCurrentRoomMarkerName = "Phase 16 Current Room Marker";
@@ -70,7 +71,8 @@ namespace Bellerophon.Editor.Validation
                 interaction,
                 FindText(hud.transform, "Interaction Prompt Text"),
                 vitals.HealthFill,
-                vitals.ShieldFill);
+                vitals.ShieldFill,
+                vitals.StatusText);
             map.RefreshForValidation();
             atmosphere.ApplyAtmosphere();
             audioHooks.TriggerShipInteriorHook();
@@ -168,6 +170,14 @@ namespace Bellerophon.Editor.Validation
                 new Vector2(72f, 26f),
                 18,
                 TextAnchor.MiddleRight);
+            var statusText = ReparentOrCreateText(
+                null,
+                StatusEffectsTextName,
+                root.transform,
+                new Vector2(84f, 90f),
+                new Vector2(252f, 26f),
+                15,
+                TextAnchor.MiddleLeft);
 
             hud.Configure(
                 status,
@@ -176,9 +186,10 @@ namespace Bellerophon.Editor.Validation
                 interaction,
                 FindText(hud.transform, "Interaction Prompt Text"),
                 healthFill,
-                shieldFill);
+                shieldFill,
+                statusText);
 
-            return new VitalHudRefs(healthText, shieldText, healthFill, shieldFill);
+            return new VitalHudRefs(healthText, shieldText, statusText, healthFill, shieldFill);
         }
 
         private static ShipInteriorMapHud CreateMap(
@@ -540,10 +551,11 @@ namespace Bellerophon.Editor.Validation
 
         private readonly struct VitalHudRefs
         {
-            public VitalHudRefs(Text healthText, Text shieldText, Image healthFill, Image shieldFill)
+            public VitalHudRefs(Text healthText, Text shieldText, Text statusText, Image healthFill, Image shieldFill)
             {
                 HealthText = healthText;
                 ShieldText = shieldText;
+                StatusText = statusText;
                 HealthFill = healthFill;
                 ShieldFill = shieldFill;
             }
@@ -551,6 +563,8 @@ namespace Bellerophon.Editor.Validation
             public Text HealthText { get; }
 
             public Text ShieldText { get; }
+
+            public Text StatusText { get; }
 
             public Image HealthFill { get; }
 

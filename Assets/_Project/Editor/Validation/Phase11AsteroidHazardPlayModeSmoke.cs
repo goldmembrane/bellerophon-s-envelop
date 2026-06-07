@@ -275,19 +275,18 @@ namespace Bellerophon.Editor.Validation
             if (maintenanceController.IsMaintenanceVisible ||
                 contractBoardController.IsBoardVisible ||
                 followUp.Phase != GameSessionPhase.Transporting ||
-                !deviceState.HasActiveTransportRun ||
-                !deviceState.HasActiveTransportHazard ||
-                deviceState.CurrentTransportHazard.HazardType != TransportHazardType.AsteroidField)
+                !deviceState.HasActiveTransportRun)
             {
-                throw new InvalidOperationException("Follow-up transport must start with an active asteroid field hazard.");
+                throw new InvalidOperationException("Follow-up transport must start before Phase 11 hazard validation.");
             }
 
+            deviceState.StartTransportHazardForValidation(TransportHazardState.StartAsteroidFieldSmall(0, 10));
             var sessionHazard = deviceState.CurrentTransportHazard;
             deviceHud.RefreshTransportStatus();
             if (deviceHud.TransportStatusText == null ||
-                !deviceHud.TransportStatusText.text.Contains("Hazard: Asteroid Field"))
+                !deviceHud.TransportStatusText.text.Contains("Hazard: Asteroid Field Small"))
             {
-                throw new InvalidOperationException("Transport HUD must show the active asteroid field hazard.");
+                throw new InvalidOperationException("Transport HUD must show the active small asteroid field hazard.");
             }
 
             var repairBeforeAuto = ShipStateRules.CalculateRepairCost(deviceState.CurrentShipState);
@@ -296,14 +295,16 @@ namespace Bellerophon.Editor.Validation
             var repairAfterAuto = ShipStateRules.CalculateRepairCost(deviceState.CurrentShipState);
             if (deviceState.HasActiveTransportHazard ||
                 autoResult.Resolution != TransportHazardResolution.DirectHit ||
+                autoResult.RoomDamages.Length <= 0 ||
+                autoResult.RoomDamages[0].Damage != TransportHazardRules.AsteroidFieldSmallDamage ||
                 repairAfterAuto <= repairBeforeAuto)
             {
                 throw new InvalidOperationException(
-                    $"Auto pilot ignored asteroid field must damage ship. Result={autoResult.Resolution}; Repair={repairAfterAuto}");
+                    $"Auto pilot ignored small asteroid field must damage ship. Result={autoResult.Resolution}; Repair={repairAfterAuto}");
             }
 
             deviceState.SetShipState(ShipState.CreateDefault());
-            deviceState.StartTransportHazardForValidation(TransportHazardState.StartAsteroidField(4421, 10));
+            deviceState.StartTransportHazardForValidation(TransportHazardState.StartAsteroidFieldLarge(0, 10));
             deviceState.ActivateDevice(ShipDeviceType.CockpitHelm);
             deviceState.ApplyManualFlightInput(1f, 1f, 1f);
             deviceState.TickTransportRun(10f);
@@ -317,7 +318,59 @@ namespace Bellerophon.Editor.Validation
                     $"Manual flight asteroid avoidance must prevent damage. Result={manualResult.Resolution}; Repair={manualRepairCost}");
             }
 
-            return $"Hazard={sessionHazard.HazardType}; Duration={sessionHazard.DurationSeconds}; Auto={autoResult.Resolution}; RepairCost={repairAfterAuto}; Manual={manualResult.Resolution}";
+            deviceState.SetShipState(ShipState.CreateDefault());
+            deviceState.ExitManualFlightToAutoPilot();
+            deviceState.StartTransportHazardForValidation(TransportHazardState.Start(
+                TransportHazardType.CargoFreedomLeagueRegion,
+                0,
+                6));
+            deviceState.TickTransportRun(6f);
+            var cargoFreedomResult = deviceState.LastTransportHazardResult;
+            if (cargoFreedomResult.HazardType != TransportHazardType.CargoFreedomLeagueRegion ||
+                cargoFreedomResult.BoardingEventCount <= 0 ||
+                cargoFreedomResult.RoomDamages.Length != 0)
+            {
+                throw new InvalidOperationException(
+                    $"Cargo Freedom League region must create boarding events without invented room damage. Boardings={cargoFreedomResult.BoardingEventCount}; Damage={cargoFreedomResult.RoomDamages.Length}");
+            }
+
+            deviceState.SetShipState(ShipState.CreateDefault());
+            deviceState.ExitManualFlightToAutoPilot();
+            deviceState.StartTransportHazardForValidation(TransportHazardState.Start(
+                TransportHazardType.SpacePirateRegion,
+                0,
+                60));
+            deviceState.TickTransportRun(60f);
+            var pirateResult = deviceState.LastTransportHazardResult;
+            var pirateRepairCost = ShipStateRules.CalculateRepairCost(deviceState.CurrentShipState);
+            if (pirateResult.HazardType != TransportHazardType.SpacePirateRegion ||
+                pirateResult.BoardingEventCount <= 0 ||
+                pirateResult.BombardmentHitCount <= 0 ||
+                pirateResult.RoomDamages.Length != pirateResult.BombardmentHitCount ||
+                pirateResult.RoomDamages[0].Damage != TransportHazardRules.SpacePirateBombardmentDamage ||
+                pirateRepairCost <= 0)
+            {
+                throw new InvalidOperationException(
+                    $"Space Pirate region must combine boarding and bombardment. Boardings={pirateResult.BoardingEventCount}; Bombardment={pirateResult.BombardmentHitCount}; Repair={pirateRepairCost}");
+            }
+
+            deviceState.SetShipState(ShipState.CreateDefault());
+            deviceState.ExitManualFlightToAutoPilot();
+            deviceState.StartTransportHazardForValidation(TransportHazardState.Start(
+                TransportHazardType.AlienLifeRegion,
+                0,
+                30));
+            deviceState.TickTransportRun(30f);
+            var alienResult = deviceState.LastTransportHazardResult;
+            if (alienResult.HazardType != TransportHazardType.AlienLifeRegion ||
+                alienResult.BoardingEventCount <= 0 ||
+                alienResult.RoomDamages.Length != 0)
+            {
+                throw new InvalidOperationException(
+                    $"Alien Life region must create boarding events without direct ship-damage placeholder. Boardings={alienResult.BoardingEventCount}; Damage={alienResult.RoomDamages.Length}");
+            }
+
+            return $"Asteroid={autoResult.Resolution}/{autoResult.RoomDamages[0].Damage}; Manual={manualResult.Resolution}; CargoFreedomBoardings={cargoFreedomResult.BoardingEventCount}; PirateBoardings={pirateResult.BoardingEventCount}; PirateBombardment={pirateResult.BombardmentHitCount}; AlienBoardings={alienResult.BoardingEventCount}";
         }
 
         private static void ClickButtonThroughUi(Button button)

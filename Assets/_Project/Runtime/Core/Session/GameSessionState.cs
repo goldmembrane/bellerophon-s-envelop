@@ -36,7 +36,8 @@ namespace Bellerophon.Core.Session
             TransportContractDefinition? activeTransportContract,
             CargoState? activeCargo,
             TransportContractDefinition[] pendingTransportContracts,
-            TransportContractDefinition[] activeTransportContracts)
+            TransportContractDefinition[] activeTransportContracts,
+            TransportHazardUnlockState transportHazardUnlocks = default)
         {
             Phase = phase;
             Ship = ship;
@@ -56,6 +57,7 @@ namespace Bellerophon.Core.Session
             TowingIncidentCount = RequireNonNegative(towingIncidentCount, nameof(towingIncidentCount));
             ActiveTransportContract = activeTransportContract;
             ActiveCargo = activeCargo;
+            TransportHazardUnlocks = transportHazardUnlocks.WithFameScore(reputation.FameScore);
             this.pendingTransportContracts = CloneContracts(pendingTransportContracts);
             this.activeTransportContracts = CloneContracts(activeTransportContracts);
         }
@@ -93,6 +95,8 @@ namespace Bellerophon.Core.Session
         public CargoState? ActiveCargo { get; }
 
         public bool HasActiveCargo => ActiveCargo.HasValue;
+
+        public TransportHazardUnlockState TransportHazardUnlocks { get; }
 
         public TransportContractDefinition[] PendingTransportContracts => CloneContracts(pendingTransportContracts);
 
@@ -161,7 +165,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 pendingTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
         }
 
         public GameSessionState StartTransport()
@@ -200,7 +205,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 AppendContract(pendingTransportContracts, contract),
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
         }
 
         public bool IsTransportContractPending(string contractId)
@@ -254,7 +260,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 EmptyTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
         }
 
         public GameSessionState FailTransport(SettlementInput settlementInput)
@@ -289,7 +296,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 EmptyTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
         }
 
         public GameSessionState ApplyMaintenanceRepair(int repairCost)
@@ -319,7 +327,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 pendingTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
         }
 
         public GameSessionState WithEquipment(PlayerEquipmentState equipment)
@@ -342,7 +351,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 pendingTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
         }
 
         public GameSessionState WithShipState(ShipState ship)
@@ -370,7 +380,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 pendingTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
         }
 
         public GameSessionState WithReputation(ReputationState reputation)
@@ -393,7 +404,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 pendingTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
         }
 
         public GameSessionState WithAssociationMembership(bool isAssociationMember)
@@ -416,7 +428,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 pendingTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
         }
 
         public GameSessionState WithShipUpgrades(ShipUpgradeState upgrades)
@@ -440,7 +453,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 pendingTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
         }
 
         public ShipUpgradePurchaseResult PurchaseShipUpgrade(ShipUpgradeCategory category)
@@ -491,7 +505,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 pendingTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
 
             return new ShipUpgradePurchaseResult(
                 true,
@@ -589,7 +604,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 pendingTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
 
             return new PersonalCargoSaleResult(
                 true,
@@ -619,7 +635,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 pendingTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
         }
 
         public GameSessionState PurchaseEquipment(EquipmentItemKind itemKind)
@@ -653,7 +670,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 pendingTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
         }
 
         public EquipmentDisposalSessionResult DisposeFirstPurchasedEquipment()
@@ -704,7 +722,8 @@ namespace Bellerophon.Core.Session
                 ActiveTransportContract,
                 ActiveCargo,
                 pendingTransportContracts,
-                activeTransportContracts);
+                activeTransportContracts,
+                TransportHazardUnlocks);
 
             return new EquipmentDisposalSessionResult(
                 true,
@@ -738,7 +757,8 @@ namespace Bellerophon.Core.Session
                 contract,
                 cargo,
                 EmptyTransportContracts,
-                activeContracts);
+                activeContracts,
+                TransportHazardUnlocks);
         }
 
         private static PlayerEquipmentState ApplyEquipmentCapacityForUpgrades(

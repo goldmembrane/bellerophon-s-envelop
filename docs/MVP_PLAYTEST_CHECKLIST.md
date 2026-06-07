@@ -1,5 +1,22 @@
 # MVP Playtest Checklist
 
+## Detailed Step 10 Regression Extension
+
+- Confirm manual-flight booster reduces the active asteroid hazard duration by the source value of 10 seconds.
+- Confirm engine room damage at the booster-disabled threshold blocks manual-flight booster use.
+- Confirm manual flight prevents weapon-room manual turret operation and forces auto turret mode.
+- Confirm weapon systems upgrades set manual turret magazine capacity through the source values `50`, `60`, `75`, and `100`.
+- Confirm upgraded plasma is available only after the weapon systems tier that includes plasma, fires from manual turret right click, lasts 3 seconds, deals 50 damage every 0.1 seconds, and has a 1 minute cooldown that recovers outside manual mode.
+- Confirm armory damage at `<=75%` blocks plasma/auto-aim and destroyed armory blocks weapon operation.
+- Confirm control-room CCTV uses the five non-control rooms and includes Supply Room.
+- Confirm control-room main screen right click progresses from main CCTV to vertical room list and then to horizontal ship layout.
+- Confirm ESC closes the control-room screen and restores first-person input/cursor state.
+- Confirm ESC closes the engine-room and supply-room interaction panels without leaving their HUD text on screen.
+- Confirm vertical room list room buttons are clickable and number keys `1` through `6` select the same listed rooms.
+- Confirm control-room internal purification is the selected-room operation from the vertical screen: selected room only, temporary seal, 30 seconds, total fire damage 500, players inside are damaged too, room durability is not damaged by purification itself, and the selected room reopens afterward.
+- Confirm the control-room selected-room internal purification is not the special item `복도 정화 장치`; the special item targets all corridors and remains a separate future implementation path.
+- Confirm Phase6 and Phase12 smoke tests cover these step 10 regressions.
+
 ## Detailed Step 8 Regression Extension
 
 - Confirm shop Buy text and buttons expose step 8 representative items: Shotgun, Protective Suit, Strength Enhancer, Flashlight, and Injury Reliever.
@@ -88,7 +105,7 @@
 
 - Unity `6000.3.16f1` 에디터에서 `CargoRunMvp` 씬을 연다.
 - 실행 전 `.\scripts\Run-HarnessValidation.ps1`와 `.\scripts\Run-EditModeTests.ps1`가 통과했는지 확인한다.
-- 빠른 자동 루프는 `.\scripts\Run-Phase18MvpPlaytestLoopSmoke.ps1`로 먼저 확인한다.
+- 전체 phase 회귀는 `.\scripts\Run-Phase1To18Smokes.ps1`로 먼저 확인한다. MVP end-to-end 루프만 좁혀 볼 때는 `.\scripts\Run-Phase18MvpPlaytestLoopSmoke.ps1`를 사용한다.
 
 ## 시작과 튜토리얼
 
@@ -111,7 +128,9 @@
 
 - 수리 후 협회 후속 의뢰와 개인 의뢰 버튼이 활성화된다.
 - 협회 후속 의뢰를 시작하면 운송 상태로 돌아가고 정비 화면은 닫힌다.
-- 후속 운송에서는 소행성 지대가 발생한다.
+- 후속 운송에서는 원본 확률과 유명세 해금 상태에 따라 소행성 지대, 화물 자유 연대 출몰 지역, 우주 해적 출몰 지역, 외계 생명체 출몰 구역이 운행 중 주기 체크로 발생할 수 있다.
+- 유명세 조건은 세션 단위 해금으로 유지되어 한 번 해금된 위험은 유명세가 다시 내려가도 게임오버 초기화 전까지 재잠금되지 않는다.
+- 은폐 블랙홀은 후반 위험 확장으로 보류되어 현재 후속 운송에서 발생하지 않는다.
 - 조종대 수동 운행으로 회피에 성공하면 선박 수리비가 추가되지 않는다.
 - 무기실 수동 포탑으로 외부 목표를 파괴하면 위험 결과가 중립화된다.
 - 파르붐 침입자는 막대기와 머스킷 공격으로 처치할 수 있다.
@@ -125,5 +144,6 @@
 
 ## 자동 검증 대응
 
+- `Run-Phase1To18Smokes.ps1`는 Phase 1부터 Phase 18까지 순서대로 실행하는 기본 회귀 검증이다.
 - `MvpPlaytestLoopTests`는 시작 상태, 튜토리얼 정산/수리, 후속 위험 대응, 파르붐 처치, 로컬 협동 스냅샷, 정산 도착 게이트 회귀를 검증한다.
 - `Run-Phase18MvpPlaytestLoopSmoke.ps1`는 실제 `CargoRunMvp` PlayMode에서 시작부터 두 번째 정비 준비까지 연결 흐름을 검증한다.

@@ -1,10 +1,14 @@
 using System;
 using System.IO;
+using System.Reflection;
 using Bellerophon.Core.Player;
 using Bellerophon.Core.Ship;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -15,6 +19,7 @@ namespace Bellerophon.Editor.Validation
         public const string CargoRunScenePath = Phase4CargoShipGrayboxBootstrap.CargoRunScenePath;
         public const string Phase6RootName = "Phase 6 Room Interactions";
         public const string DevicePanelTextName = "Ship Device Panel Text";
+        private const string ProjectInputActionsPath = "Assets/InputSystem_Actions.inputactions";
 
         [MenuItem("Bellerophon/Bootstrap/Ensure Phase 6 Room Interactions")]
         public static void EnsurePhase6Assets()
@@ -66,6 +71,7 @@ namespace Bellerophon.Editor.Validation
                 "Inspect Cargo");
 
             ConfigureDeviceHud(interactionState);
+            EnsureEventSystem();
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene, CargoRunScenePath);
@@ -128,6 +134,64 @@ namespace Bellerophon.Editor.Validation
 
             deviceHud.Configure(interactionState, panelText);
             EditorUtility.SetDirty(hud.gameObject);
+        }
+
+        private static void EnsureEventSystem()
+        {
+            var eventSystem = UnityEngine.Object.FindFirstObjectByType<EventSystem>();
+            if (eventSystem == null)
+            {
+                var eventSystemObject = new GameObject("EventSystem");
+                eventSystem = eventSystemObject.AddComponent<EventSystem>();
+                AssignDefaultInputActions(eventSystemObject.AddComponent<InputSystemUIInputModule>());
+                return;
+            }
+
+            AssignDefaultInputActions(ReplaceInputSystemUiModule(eventSystem.gameObject));
+        }
+
+        private static void AssignDefaultInputActions(InputSystemUIInputModule inputModule)
+        {
+            var inputActions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(ProjectInputActionsPath);
+            if (inputActions != null)
+            {
+                inputModule.actionsAsset = inputActions;
+                inputModule.point = CreateActionReference(inputActions, "UI/Point");
+                inputModule.leftClick = CreateActionReference(inputActions, "UI/Click");
+                inputModule.rightClick = CreateActionReference(inputActions, "UI/RightClick");
+                inputModule.middleClick = CreateActionReference(inputActions, "UI/MiddleClick");
+                inputModule.scrollWheel = CreateActionReference(inputActions, "UI/ScrollWheel");
+                inputModule.move = CreateActionReference(inputActions, "UI/Navigate");
+                inputModule.submit = CreateActionReference(inputActions, "UI/Submit");
+                inputModule.cancel = CreateActionReference(inputActions, "UI/Cancel");
+                inputModule.trackedDevicePosition = CreateActionReference(inputActions, "UI/TrackedDevicePosition");
+                inputModule.trackedDeviceOrientation = CreateActionReference(inputActions, "UI/TrackedDeviceOrientation");
+                EditorUtility.SetDirty(inputModule);
+                return;
+            }
+
+            var method = typeof(InputSystemUIInputModule).GetMethod(
+                "AssignDefaultActions",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            method?.Invoke(inputModule, null);
+            EditorUtility.SetDirty(inputModule);
+        }
+
+        private static InputSystemUIInputModule ReplaceInputSystemUiModule(GameObject eventSystemObject)
+        {
+            var existingModule = eventSystemObject.GetComponent<InputSystemUIInputModule>();
+            if (existingModule != null)
+            {
+                UnityEngine.Object.DestroyImmediate(existingModule);
+            }
+
+            return eventSystemObject.AddComponent<InputSystemUIInputModule>();
+        }
+
+        private static InputActionReference CreateActionReference(InputActionAsset inputActions, string actionName)
+        {
+            var action = inputActions.FindAction(actionName, true);
+            return InputActionReference.Create(action);
         }
 
         private static Text CreateDevicePanelText(Transform parent)

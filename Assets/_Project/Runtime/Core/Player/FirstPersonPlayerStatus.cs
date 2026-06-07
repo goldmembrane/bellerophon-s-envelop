@@ -1,4 +1,5 @@
 using UnityEngine;
+using Bellerophon.Core.Session;
 
 namespace Bellerophon.Core.Player
 {
@@ -8,6 +9,10 @@ namespace Bellerophon.Core.Player
         [SerializeField] private int currentHealth;
         [SerializeField] private int currentShield;
 
+        // Runtime-only source status effects; pure rules live in PlayerCombatRules.
+        private CombatStatusEffectState[] activeStatusEffects = new CombatStatusEffectState[0];
+        private ScheduledStatusEffect[] scheduledStatusEffects = new ScheduledStatusEffect[0];
+
         public int CurrentHealth => currentHealth;
 
         public int CurrentShield => currentShield;
@@ -15,6 +20,21 @@ namespace Bellerophon.Core.Player
         public int MaxHealth => settings == null ? currentHealth : settings.MaxHealth;
 
         public int MaxShield => settings == null ? currentShield : settings.MaxShield;
+
+        public CombatStatusEffectState[] ActiveStatusEffects =>
+            CombatStatusEffectRules.CloneEffects(activeStatusEffects);
+
+        public string StatusEffectSummary => CombatStatusEffectRules.BuildHudSummary(activeStatusEffects);
+
+        public bool IsDead => currentHealth <= 0;
+
+        public bool IsActionBlocked => CombatStatusEffectRules.BlocksActions(activeStatusEffects);
+
+        public bool IsMovementBlocked => CombatStatusEffectRules.BlocksMovement(activeStatusEffects);
+
+        public bool IsSprintBlocked => CombatStatusEffectRules.BlocksSprint(activeStatusEffects);
+
+        public float MovementMultiplier => CombatStatusEffectRules.CalculateMovementMultiplier(activeStatusEffects);
 
         public void Configure(FirstPersonPlayerSettings playerSettings)
         {
@@ -30,6 +50,11 @@ namespace Bellerophon.Core.Player
             }
         }
 
+        private void Update()
+        {
+            TickStatusEffects(Time.deltaTime);
+        }
+
         public void ResetVitals()
         {
             if (settings == null)
@@ -39,37 +64,153 @@ namespace Bellerophon.Core.Player
 
             currentHealth = settings.MaxHealth;
             currentShield = settings.MaxShield;
+            activeStatusEffects = new CombatStatusEffectState[0];
+            scheduledStatusEffects = new ScheduledStatusEffect[0];
         }
 
         public void ApplyRecovery(int healthAmount, int shieldAmount)
         {
-            if (healthAmount > 0)
-            {
-                currentHealth = Mathf.Clamp(currentHealth + healthAmount, 0, MaxHealth);
-            }
+            ApplyCombatState(PlayerCombatRules.ApplyRecovery(CurrentCombatState, healthAmount, shieldAmount));
+        }
 
-            if (shieldAmount > 0)
-            {
-                currentShield = Mathf.Clamp(currentShield + shieldAmount, 0, MaxShield);
-            }
+        public PlayerDamageResult ApplyIncomingDamage(
+            PlayerDamageProfile profile,
+            PlayerEquipmentState equipment,
+            int statusRollPercent = 0)
+        {
+            var result = PlayerCombatRules.ApplyIncomingDamage(
+                CurrentCombatState,
+                equipment,
+                profile,
+                statusRollPercent);
+            ApplyCombatState(result.State);
+            return result;
         }
 
         public void ApplyDamage(int damage)
         {
-            if (damage <= 0)
+            ApplyIncomingDamage(
+                new PlayerDamageProfile(damage, CombatDamageSourceKind.Generic),
+                PlayerEquipmentState.Empty);
+        }
+
+        public void ApplyStatusEffect(CombatStatusEffectApplication application)
+        {
+            ApplyCombatState(PlayerCombatRules.ApplyStatusEffect(CurrentCombatState, application));
+        }
+
+        public void ClearStatusEffect(CombatStatusEffectKind kind)
+        {
+            ApplyCombatState(PlayerCombatRules.ClearStatusEffect(CurrentCombatState, kind));
+        }
+
+        public bool HasStatusEffect(CombatStatusEffectKind kind)
+        {
+            return CombatStatusEffectRules.HasEffect(activeStatusEffects, kind);
+        }
+
+        public void ScheduleStatusEffect(CombatStatusEffectApplication application, float delaySeconds)
+        {
+            if (!application.HasEffect)
             {
                 return;
             }
 
-            var shieldDamage = Mathf.Min(currentShield, damage);
-            currentShield -= shieldDamage;
-            currentHealth = Mathf.Clamp(currentHealth - (damage - shieldDamage), 0, MaxHealth);
+            var next = new ScheduledStatusEffect[scheduledStatusEffects.Length + 1];
+            for (var i = 0; i < scheduledStatusEffects.Length; i++)
+            {
+                next[i] = scheduledStatusEffects[i];
+            }
+
+            next[next.Length - 1] = new ScheduledStatusEffect(application, Mathf.Max(0f, delaySeconds));
+            scheduledStatusEffects = next;
+        }
+
+        public PlayerDamageResult TickStatusEffects(float deltaSeconds)
+        {
+            if (deltaSeconds <= 0f)
+            {
+                return default;
+            }
+
+            var result = PlayerCombatRules.TickStatusEffects(CurrentCombatState, deltaSeconds);
+            ApplyCombatState(result.State);
+            TickScheduledStatusEffects(deltaSeconds);
+            return result;
         }
 
         public void SetVitalsForValidation(int health, int shield)
         {
             currentHealth = Mathf.Clamp(health, 0, MaxHealth);
             currentShield = Mathf.Clamp(shield, 0, MaxShield);
+        }
+
+        public void ClearStatusEffectsForValidation()
+        {
+            activeStatusEffects = new CombatStatusEffectState[0];
+            scheduledStatusEffects = new ScheduledStatusEffect[0];
+        }
+
+        private PlayerCombatState CurrentCombatState => new PlayerCombatState(
+            MaxHealth,
+            MaxShield,
+            currentHealth,
+            currentShield,
+            activeStatusEffects);
+
+        private void ApplyCombatState(PlayerCombatState state)
+        {
+            currentHealth = Mathf.Clamp(state.CurrentHealth, 0, MaxHealth);
+            currentShield = Mathf.Clamp(state.CurrentShield, 0, MaxShield);
+            activeStatusEffects = state.StatusEffects;
+        }
+
+        private void TickScheduledStatusEffects(float deltaSeconds)
+        {
+            if (scheduledStatusEffects.Length == 0)
+            {
+                return;
+            }
+
+            var next = new ScheduledStatusEffect[scheduledStatusEffects.Length];
+            var nextCount = 0;
+            for (var i = 0; i < scheduledStatusEffects.Length; i++)
+            {
+                var scheduled = scheduledStatusEffects[i].Tick(deltaSeconds);
+                if (scheduled.RemainingDelaySeconds <= 0.0001f)
+                {
+                    ApplyStatusEffect(scheduled.Application);
+                    continue;
+                }
+
+                next[nextCount] = scheduled;
+                nextCount++;
+            }
+
+            if (nextCount != next.Length)
+            {
+                System.Array.Resize(ref next, nextCount);
+            }
+
+            scheduledStatusEffects = next;
+        }
+
+        private readonly struct ScheduledStatusEffect
+        {
+            public ScheduledStatusEffect(CombatStatusEffectApplication application, float remainingDelaySeconds)
+            {
+                Application = application;
+                RemainingDelaySeconds = Mathf.Max(0f, remainingDelaySeconds);
+            }
+
+            public CombatStatusEffectApplication Application { get; }
+
+            public float RemainingDelaySeconds { get; }
+
+            public ScheduledStatusEffect Tick(float deltaSeconds)
+            {
+                return new ScheduledStatusEffect(Application, RemainingDelaySeconds - Mathf.Max(0f, deltaSeconds));
+            }
         }
     }
 }

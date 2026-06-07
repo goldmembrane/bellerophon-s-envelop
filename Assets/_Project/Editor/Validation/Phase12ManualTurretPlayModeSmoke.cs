@@ -249,6 +249,7 @@ namespace Bellerophon.Editor.Validation
             }
 
             ClickButtonThroughUi(contractBoardController.StartRunButton);
+            deviceState.StartTransportHazardForValidation(TransportHazardState.StartAsteroidFieldSmall(0, 10));
 
             if (!deviceState.HasActiveTransportHazard ||
                 !deviceState.CurrentExternalTarget.IsActive ||
@@ -305,7 +306,7 @@ namespace Bellerophon.Editor.Validation
             if (firstShot.Outcome != ManualTurretFireOutcome.Hit ||
                 blockedHeldShot.Outcome != ManualTurretFireOutcome.None ||
                 firstShot.Turret.AmmoInMagazine != ManualTurretState.MagazineSize - 1 ||
-                firstShot.Target.CurrentHealth != ManualTurretState.DefaultAsteroidTargetHealth - ManualTurretState.ShotDamage)
+                firstShot.Target.CurrentHealth != target.MaxHealth - ManualTurretState.ShotDamage)
             {
                 throw new InvalidOperationException("Manual turret first held shot must hit, consume ammo, and respect the repeat-fire interval.");
             }
@@ -332,6 +333,11 @@ namespace Bellerophon.Editor.Validation
                 ManualTurretState.HeldFireIntervalSeconds,
                 true,
                 false);
+            while (deviceState.CurrentExternalTarget.IsActive)
+            {
+                destroyedShot = deviceState.FireManualTurret();
+            }
+
             deviceHud.RefreshTransportStatus();
             if (repeatedShot.Outcome != ManualTurretFireOutcome.Hit ||
                 destroyedShot.Outcome != ManualTurretFireOutcome.Destroyed ||
@@ -358,7 +364,57 @@ namespace Bellerophon.Editor.Validation
                     $"Ignoring the external target in turret mode must leave the asteroid hazard damaging the ship. Result={failureResult.Resolution}; Repair={failureRepairCost}");
             }
 
-            return $"First={firstShot.Outcome}; HoldBlocked={blockedHeldShot.Outcome}; HeldRepeat={destroyedShot.Outcome}; Delay={ManualTurretState.HeldFireIntervalSeconds:0.00}; AmmoAfterReload={ammoAfterReload}; Success={TransportHazardResolution.Neutralized}; Failure={failureResult.Resolution}; RepairCost={failureRepairCost}";
+            var weaponUpgrades = ShipUpgradeState.Empty
+                .WithPurchasedTier(ShipUpgradeCategory.WeaponSystems, 2)
+                .WithEquippedTier(ShipUpgradeCategory.WeaponSystems, 2);
+            deviceState.SetShipState(ShipState.CreateDefault());
+            deviceState.SetShipUpgradeStateForValidation(weaponUpgrades);
+            deviceState.StartTransportHazardForValidation(TransportHazardState.StartAsteroidField(7712, 10));
+            deviceState.ActivateDevice(ShipDeviceType.ArmoryTurretHandle);
+            target = deviceState.CurrentExternalTarget;
+            deviceState.SetManualTurretAimForValidation(target.PositionX, target.PositionY);
+            var plasma = deviceState.FireManualTurretPlasma();
+            deviceState.TickTransportRun(0.9f);
+            if (deviceState.CurrentManualTurret.MagazineCapacity != 75 ||
+                plasma.Outcome != ManualTurretPlasmaOutcome.Activated ||
+                deviceState.HasActiveTransportHazard ||
+                deviceState.LastTransportHazardResult.Resolution != TransportHazardResolution.Neutralized)
+            {
+                throw new InvalidOperationException("Weapon Systems tier 2 must upgrade magazine capacity and let right-click plasma neutralize an external target.");
+            }
+
+            deviceState.TickTransportRun(ManualTurretState.PlasmaCannonDurationSeconds);
+            deviceState.ExitManualTurretMode();
+            deviceState.SetShipState(ShipState.CreateDefault());
+            deviceState.StartTransportHazardForValidation(TransportHazardState.StartAsteroidField(8831, 12));
+            deviceState.ActivateDevice(ShipDeviceType.CockpitHelm);
+            var boosted = deviceState.UseManualFlightBooster();
+            deviceState.TickTransportRun(2f);
+            if (!boosted ||
+                deviceState.HasActiveTransportHazard ||
+                deviceState.LastTransportHazardResult.Resolution != TransportHazardResolution.Avoided)
+            {
+                throw new InvalidOperationException(
+                    "Manual flight booster must reduce asteroid hazard time and resolve the hazard through the manual avoidance path. " +
+                    $"Boosted={boosted}; Mode={deviceState.CurrentFlightMode}; ActiveHazard={deviceState.HasActiveTransportHazard}; " +
+                    $"Result={deviceState.LastTransportHazardResult.Resolution}; Summary={deviceState.LastInteractionSummary}");
+            }
+
+            deviceState.SetShipState(ShipState.CreateDefault());
+            deviceState.StartTransportHazardForValidation(TransportHazardState.StartAsteroidField(8832, 12));
+            if (deviceState.CurrentFlightMode != ShipFlightMode.ManualFlight)
+            {
+                deviceState.ActivateDevice(ShipDeviceType.CockpitHelm);
+            }
+
+            deviceState.ActivateDevice(ShipDeviceType.ArmoryTurretHandle);
+            if (deviceState.CurrentWeaponOperationMode != ShipWeaponOperationMode.AutoTurret ||
+                deviceState.TurretManualModeActive)
+            {
+                throw new InvalidOperationException("Manual flight must force the weapon room into auto turret mode.");
+            }
+
+            return $"First={firstShot.Outcome}; HoldBlocked={blockedHeldShot.Outcome}; HeldRepeat={destroyedShot.Outcome}; Delay={ManualTurretState.HeldFireIntervalSeconds:0.00}; AmmoAfterReload={ammoAfterReload}; Success={TransportHazardResolution.Neutralized}; Failure={failureResult.Resolution}; RepairCost={failureRepairCost}; Plasma={plasma.Outcome}; Booster={TransportHazardResolution.Avoided}";
         }
 
         private static void ClickButtonThroughUi(Button button)

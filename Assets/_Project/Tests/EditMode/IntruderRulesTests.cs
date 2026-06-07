@@ -24,6 +24,7 @@ namespace Bellerophon.Tests.EditMode
             Assert.That(definition.MovementSpeed, Is.EqualTo(1.5f));
             Assert.That(definition.AttackRange, Is.EqualTo(2f));
             Assert.That(definition.AttackDelaySeconds, Is.EqualTo(1.25f));
+            Assert.That(definition.MobilityKind, Is.EqualTo(IntruderMobilityKind.Walking));
             Assert.That(priorities.Length, Is.EqualTo(2));
             Assert.That(priorities[0].TargetType, Is.EqualTo(IntruderTargetType.Ship));
         }
@@ -161,6 +162,185 @@ namespace Bellerophon.Tests.EditMode
             Assert.That(result.RoomDamageApplied, Is.EqualTo(25));
             Assert.That(ShipStateRules.CalculateRepairCost(result.Ship), Is.GreaterThan(0));
             Assert.That(result.Cargo.DurabilityPercent, Is.EqualTo(1f));
+        }
+
+        [Test]
+        public void SelectTarget_WithShipStateSkipsSealedRoomPriority()
+        {
+            var definition = CreateDefinition(
+                IntruderObjectiveType.DestroyShip,
+                new[]
+                {
+                    new IntruderTargetPriority(IntruderTargetType.Ship, ShipRoomId.EngineRoom, 0),
+                    new IntruderTargetPriority(IntruderTargetType.Ship, ShipRoomId.ControlRoom, 1)
+                });
+            var ship = ShipState.CreateDefault()
+                .WithRoom(ShipRoomId.EngineRoom, ShipState.CreateDefault().GetRoom(ShipRoomId.EngineRoom).WithSealed(true));
+
+            var target = IntruderRules.SelectTarget(definition, 5, ShipRoomId.Cockpit, ship);
+
+            Assert.That(target.TargetType, Is.EqualTo(IntruderTargetType.Ship));
+            Assert.That(target.RoomId, Is.EqualTo(ShipRoomId.ControlRoom));
+        }
+
+        [Test]
+        public void AssessRoute_UsesShipMapCorridorsAndClosedCorridors()
+        {
+            var definition = CreateDefinition(
+                IntruderObjectiveType.DestroyShip,
+                new[]
+                {
+                    new IntruderTargetPriority(IntruderTargetType.Ship, ShipRoomId.Armory, 0)
+                });
+            var attempt = IntruderRules.CreateAttempt("route-open", definition, 0, ShipRoomId.Cockpit);
+            var boarded = IntruderRules.ResolveAttempt(attempt, false);
+            var intruder = IntruderRules.CreateBoardedIntruder(boarded, definition);
+            var openRoute = IntruderRules.AssessRoute(intruder, ShipState.CreateDefault());
+
+            Assert.That(intruder.CurrentRoom, Is.EqualTo(ShipRoomId.Cockpit));
+            Assert.That(openRoute.HasPath, Is.True);
+            Assert.That(openRoute.NextRoom, Is.EqualTo(ShipRoomId.CargoHold));
+            Assert.That(openRoute.RemainingStepCount, Is.EqualTo(2));
+
+            var criticalControl = ShipState.CreateDefault()
+                .WithRoom(ShipRoomId.ControlRoom, new ShipRoomState(25, 100));
+            var closedRoute = IntruderRules.AssessRoute(intruder, criticalControl);
+
+            Assert.That(closedRoute.ClosedCorridorPercent, Is.EqualTo(90));
+            Assert.That(closedRoute.ClosedCorridorCount, Is.EqualTo(9));
+            Assert.That(closedRoute.HasPath, Is.False);
+        }
+
+        [Test]
+        public void AssessRoute_FlyingIgnoresClosedCorridorsButNotSealedRooms()
+        {
+            var flying = new IntruderDefinition(
+                "framework-flying",
+                "Framework Flying",
+                IntruderFaction.AlienLifeform,
+                IntruderObjectiveType.DestroyShip,
+                maxHealth: 70,
+                movementSpeed: 3.5f,
+                attackRange: 1f,
+                attackDelaySeconds: 1f,
+                targetPriorities: new[]
+                {
+                    new IntruderTargetPriority(IntruderTargetType.Ship, ShipRoomId.Armory, 0)
+                },
+                mobilityKind: IntruderMobilityKind.Flying);
+            var attempt = IntruderRules.CreateAttempt("route-flying", flying, 0, ShipRoomId.Cockpit);
+            var boarded = IntruderRules.ResolveAttempt(attempt, false);
+            var intruder = IntruderRules.CreateBoardedIntruder(boarded, flying);
+            var criticalControl = ShipState.CreateDefault()
+                .WithRoom(ShipRoomId.ControlRoom, new ShipRoomState(25, 100));
+
+            var flyingRoute = IntruderRules.AssessRoute(intruder, criticalControl);
+
+            Assert.That(flyingRoute.HasPath, Is.True);
+            Assert.That(flyingRoute.ClosedCorridorCount, Is.Zero);
+
+            var sealedTarget = criticalControl
+                .WithRoom(ShipRoomId.Armory, criticalControl.GetRoom(ShipRoomId.Armory).WithSealed(true));
+            var sealedRoute = IntruderRules.AssessRoute(intruder, sealedTarget);
+
+            Assert.That(sealedRoute.HasPath, Is.False);
+            Assert.That(sealedRoute.BlockedBySealedRoom, Is.True);
+        }
+
+        [Test]
+        public void AssessEnvironment_ReflectsControlRoomCctvDetectionSuppressionAndBlackout()
+        {
+            var definition = CreateDefinition(IntruderObjectiveType.DestroyShip);
+            var ship = ShipState.CreateDefault()
+                .WithRoom(ShipRoomId.ControlRoom, new ShipRoomState(0, 100))
+                .WithRoom(ShipRoomId.EngineRoom, new ShipRoomState(50, 100));
+
+            var assessment = IntruderRules.AssessEnvironment(definition, ship, 3);
+
+            Assert.That(assessment.ClosedCorridorPercent, Is.Zero);
+            Assert.That(assessment.BlackoutRoomCount, Is.EqualTo(5));
+            Assert.That(assessment.AvailableCctvCount, Is.Zero);
+            Assert.That(assessment.IntruderDetectionOnline, Is.False);
+            Assert.That(assessment.IntruderSuppressionOnline, Is.False);
+            Assert.That(assessment.StatMultiplier, Is.EqualTo(ShipStateRules.ControlRoomDestroyedIntruderStatMultiplier));
+            Assert.That(assessment.EffectiveMovementSpeed, Is.EqualTo(4.5f));
+            Assert.That(assessment.EffectiveRoomDamage, Is.EqualTo(9));
+        }
+
+        [Test]
+        public void DetermineRelation_UsesSourceFactionRelationshipRules()
+        {
+            var cargoBond = IntruderRules.DetermineRelation(
+                IntruderFaction.CargoFreedomLeague,
+                IntruderFaction.CargoFreedomLeague);
+            var pirateBond = IntruderRules.DetermineRelation(
+                IntruderFaction.SpacePirate,
+                IntruderFaction.SpacePirate);
+            var seedCompetition = IntruderRules.DetermineRelation(
+                IntruderFaction.SeedEntity,
+                IntruderFaction.SeedEntity);
+            var alienAlliance = IntruderRules.DetermineRelation(
+                IntruderFaction.AlienLifeform,
+                IntruderFaction.AlienLifeform);
+            var seedAlienHostility = IntruderRules.DetermineRelation(
+                IntruderFaction.SeedEntity,
+                IntruderFaction.AlienLifeform);
+            var alienPirateCompetition = IntruderRules.DetermineRelation(
+                IntruderFaction.AlienLifeform,
+                IntruderFaction.SpacePirate);
+            var cargoPirateHostility = IntruderRules.DetermineRelation(
+                IntruderFaction.CargoFreedomLeague,
+                IntruderFaction.SpacePirate);
+
+            Assert.That(cargoBond.RelationKind, Is.EqualTo(IntruderRelationKind.Bonded));
+            Assert.That(cargoBond.MarkerKind, Is.EqualTo(IntruderRelationMarkerKind.GreenCircle));
+            Assert.That(cargoBond.FriendlyFireDamagesHealth, Is.False);
+            Assert.That(cargoBond.FriendlyFireAppliesStatusEffects, Is.False);
+            Assert.That(pirateBond.RelationKind, Is.EqualTo(IntruderRelationKind.Bonded));
+            Assert.That(seedCompetition.RelationKind, Is.EqualTo(IntruderRelationKind.Competitive));
+            Assert.That(seedCompetition.MarkerKind, Is.EqualTo(IntruderRelationMarkerKind.GrayCircle));
+            Assert.That(seedCompetition.FriendlyFireDamagesHealth, Is.True);
+            Assert.That(seedCompetition.FriendlyFireAppliesStatusEffects, Is.True);
+            Assert.That(alienAlliance.RelationKind, Is.EqualTo(IntruderRelationKind.Allied));
+            Assert.That(alienAlliance.FriendlyFireDamagesHealth, Is.False);
+            Assert.That(alienAlliance.FriendlyFireAppliesStatusEffects, Is.True);
+            Assert.That(seedAlienHostility.RelationKind, Is.EqualTo(IntruderRelationKind.Hostile));
+            Assert.That(seedAlienHostility.CanDirectlyAttack, Is.True);
+            Assert.That(alienPirateCompetition.RelationKind, Is.EqualTo(IntruderRelationKind.Competitive));
+            Assert.That(cargoPirateHostility.RelationKind, Is.EqualTo(IntruderRelationKind.Hostile));
+        }
+
+        [Test]
+        public void DetermineRelation_CommandingDefinitionUsesCommandedRelationForSameFaction()
+        {
+            var commander = new IntruderDefinition(
+                "framework-commander",
+                "Framework Commander",
+                IntruderFaction.SpacePirate,
+                IntruderObjectiveType.DestroyShip,
+                maxHealth: 120,
+                movementSpeed: 1.5f,
+                attackRange: 3f,
+                attackDelaySeconds: 1.5f,
+                targetPriorities: null,
+                issuesFactionCommands: true);
+            var subordinate = new IntruderDefinition(
+                "framework-subordinate",
+                "Framework Subordinate",
+                IntruderFaction.SpacePirate,
+                IntruderObjectiveType.AttackPlayer,
+                maxHealth: 80,
+                movementSpeed: 2f,
+                attackRange: 2f,
+                attackDelaySeconds: 1f,
+                targetPriorities: null);
+
+            var relation = IntruderRules.DetermineRelation(commander, subordinate);
+
+            Assert.That(relation.RelationKind, Is.EqualTo(IntruderRelationKind.Commanded));
+            Assert.That(relation.CanDirectlyAttack, Is.False);
+            Assert.That(relation.FriendlyFireDamagesHealth, Is.False);
+            Assert.That(relation.FriendlyFireAppliesStatusEffects, Is.False);
         }
 
         private static IntruderEntityState CreateActiveIntruder(IntruderDefinition definition)

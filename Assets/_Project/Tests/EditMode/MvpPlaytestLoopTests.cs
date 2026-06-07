@@ -70,8 +70,7 @@ namespace Bellerophon.Tests.EditMode
         [Test]
         public void MvpLoop_PostTutorialHazardsCanBeAvoidedAndNeutralized()
         {
-            var postTutorialRun = CreatePostTutorialTransport();
-            var hazard = TransportHazardRules.CreateAsteroidField(postTutorialRun);
+            var hazard = TransportHazardState.StartAsteroidFieldSmall(0, 12);
 
             var avoidedHazard = hazard
                 .Tick(hazard.DurationSeconds * 0.5f, true)
@@ -79,15 +78,19 @@ namespace Bellerophon.Tests.EditMode
             var avoided = TransportHazardRules.ResolveAsteroidField(avoidedHazard);
             var target = TransportHazardRules.CreateExternalTarget(hazard);
             var turret = ManualTurretState.Start(true).SetAim(target.PositionX, target.PositionY);
-            var firstShot = turret.FireAt(target);
-            var secondShot = firstShot.Turret.FireAt(firstShot.Target);
-            var thirdShot = secondShot.Turret.FireAt(secondShot.Target);
-            var neutralized = TransportHazardRules.ResolveAsteroidField(hazard, thirdShot.DestroyedTarget);
+            ManualTurretFireResult shot = default;
+            for (var i = 0; i < 20 && !target.IsDestroyed; i++)
+            {
+                shot = turret.FireAt(target);
+                turret = shot.Turret;
+                target = shot.Target;
+            }
 
-            Assert.That(TransportHazardRules.ShouldStartAsteroidField(postTutorialRun), Is.True);
+            var neutralized = TransportHazardRules.ResolveAsteroidField(hazard, target.IsDestroyed);
+
             Assert.That(avoided.Resolution, Is.EqualTo(TransportHazardResolution.Avoided));
             Assert.That(avoided.RoomDamages, Is.Empty);
-            Assert.That(thirdShot.Outcome, Is.EqualTo(ManualTurretFireOutcome.Destroyed));
+            Assert.That(shot.Outcome, Is.EqualTo(ManualTurretFireOutcome.Destroyed));
             Assert.That(neutralized.Resolution, Is.EqualTo(TransportHazardResolution.Neutralized));
             Assert.That(TransportHazardRules.ApplyHazardResult(ShipState.CreateDefault(), neutralized).AverageDurabilityPercent, Is.EqualTo(1f));
         }

@@ -81,7 +81,8 @@ namespace Bellerophon.Core.Session
         ProtectiveEquipped,
         TreatmentApplied,
         EnhancementApplied,
-        UtilityActivated
+        UtilityActivated,
+        ActionBlocked
     }
 
     public enum EquipmentShopSection
@@ -373,7 +374,11 @@ namespace Bellerophon.Core.Session
             bool consumedItem = false,
             int damageReductionPercent = 0,
             int damageBonusPercent = 0,
-            float effectDurationSeconds = 0f)
+            float effectDurationSeconds = 0f,
+            CombatStatusEffectApplication statusEffectToApply = default,
+            CombatStatusEffectKind statusEffectToClear = CombatStatusEffectKind.None,
+            CombatStatusEffectApplication delayedStatusEffectToApply = default,
+            float delayedStatusEffectDelaySeconds = 0f)
         {
             State = state;
             Outcome = outcome;
@@ -387,6 +392,10 @@ namespace Bellerophon.Core.Session
             DamageReductionPercent = ClampPercent(damageReductionPercent);
             DamageBonusPercent = Math.Max(0, damageBonusPercent);
             EffectDurationSeconds = Math.Max(0f, effectDurationSeconds);
+            StatusEffectToApply = statusEffectToApply;
+            StatusEffectToClear = statusEffectToClear;
+            DelayedStatusEffectToApply = delayedStatusEffectToApply;
+            DelayedStatusEffectDelaySeconds = Math.Max(0f, delayedStatusEffectDelaySeconds);
         }
 
         public PlayerEquipmentState State { get; }
@@ -412,6 +421,14 @@ namespace Bellerophon.Core.Session
         public int DamageBonusPercent { get; }
 
         public float EffectDurationSeconds { get; }
+
+        public CombatStatusEffectApplication StatusEffectToApply { get; }
+
+        public CombatStatusEffectKind StatusEffectToClear { get; }
+
+        public CombatStatusEffectApplication DelayedStatusEffectToApply { get; }
+
+        public float DelayedStatusEffectDelaySeconds { get; }
 
         public bool AppliesIntruderDamage =>
             Outcome == EquipmentUseOutcome.MeleeHit ||
@@ -523,6 +540,7 @@ namespace Bellerophon.Core.Session
         private readonly EquipmentSlotState[] handSlots;
         private readonly EquipmentSlotState[] supplySlots;
 
+        // Tracks source-defined timed weapon state that must survive equipment state copies.
         public PlayerEquipmentState(
             bool hasBasicProtectiveSuit,
             EquipmentSlotState[] handSlots,
@@ -537,7 +555,10 @@ namespace Bellerophon.Core.Session
             int activeDamageReductionPercent = 0,
             float strengthEnhancerRemainingSeconds = 0f,
             int strengthDamageBonusPercent = 0,
-            float flashlightRemainingSeconds = 0f)
+            float flashlightRemainingSeconds = 0f,
+            float electricBatonChargeCooldownSeconds = 0f,
+            float miniFlamethrowerContinuousHitSeconds = 0f,
+            float miniFlamethrowerHitGapSeconds = 0f)
         {
             var normalizedHandCount = RequireHandSlotCount(unlockedHandSlotCount, nameof(unlockedHandSlotCount));
             var normalizedSupplyCount = RequireSupplySlotCount(unlockedSupplySlotCount, nameof(unlockedSupplySlotCount));
@@ -560,6 +581,9 @@ namespace Bellerophon.Core.Session
             StrengthEnhancerRemainingSeconds = Math.Max(0f, strengthEnhancerRemainingSeconds);
             StrengthDamageBonusPercent = Math.Max(0, strengthDamageBonusPercent);
             FlashlightRemainingSeconds = Math.Max(0f, flashlightRemainingSeconds);
+            ElectricBatonChargeCooldownSeconds = Math.Max(0f, electricBatonChargeCooldownSeconds);
+            MiniFlamethrowerContinuousHitSeconds = Math.Max(0f, miniFlamethrowerContinuousHitSeconds);
+            MiniFlamethrowerHitGapSeconds = Math.Max(0f, miniFlamethrowerHitGapSeconds);
         }
 
         public bool HasBasicProtectiveSuit { get; }
@@ -586,9 +610,17 @@ namespace Bellerophon.Core.Session
 
         public float FlashlightRemainingSeconds { get; }
 
+        public float ElectricBatonChargeCooldownSeconds { get; }
+
+        public float MiniFlamethrowerContinuousHitSeconds { get; }
+
+        public float MiniFlamethrowerHitGapSeconds { get; }
+
         public bool HasActiveStrengthEnhancer => StrengthEnhancerRemainingSeconds > 0.0001f && StrengthDamageBonusPercent > 0;
 
         public bool HasActiveFlashlight => FlashlightRemainingSeconds > 0.0001f;
+
+        public bool IsElectricBatonCharged => ElectricBatonChargeCooldownSeconds <= 0.0001f;
 
         public EquipmentSlotState ActiveHandSlot => GetHandSlot(ActiveHandSlotIndex);
 
@@ -679,7 +711,10 @@ namespace Bellerophon.Core.Session
                 ActiveDamageReductionPercent,
                 StrengthEnhancerRemainingSeconds,
                 StrengthDamageBonusPercent,
-                FlashlightRemainingSeconds);
+                FlashlightRemainingSeconds,
+                ElectricBatonChargeCooldownSeconds,
+                MiniFlamethrowerContinuousHitSeconds,
+                MiniFlamethrowerHitGapSeconds);
         }
 
         public PlayerEquipmentState WithHandSlot(int index, EquipmentSlotState slot)
@@ -705,7 +740,10 @@ namespace Bellerophon.Core.Session
                 ActiveDamageReductionPercent,
                 StrengthEnhancerRemainingSeconds,
                 StrengthDamageBonusPercent,
-                FlashlightRemainingSeconds);
+                FlashlightRemainingSeconds,
+                ElectricBatonChargeCooldownSeconds,
+                MiniFlamethrowerContinuousHitSeconds,
+                MiniFlamethrowerHitGapSeconds);
         }
 
         public PlayerEquipmentState WithSupplySlot(int index, EquipmentSlotState slot)
@@ -731,7 +769,10 @@ namespace Bellerophon.Core.Session
                 ActiveDamageReductionPercent,
                 StrengthEnhancerRemainingSeconds,
                 StrengthDamageBonusPercent,
-                FlashlightRemainingSeconds);
+                FlashlightRemainingSeconds,
+                ElectricBatonChargeCooldownSeconds,
+                MiniFlamethrowerContinuousHitSeconds,
+                MiniFlamethrowerHitGapSeconds);
         }
 
         public PlayerEquipmentState WithActiveHandSlot(int activeSlotIndex)
@@ -750,7 +791,10 @@ namespace Bellerophon.Core.Session
                 ActiveDamageReductionPercent,
                 StrengthEnhancerRemainingSeconds,
                 StrengthDamageBonusPercent,
-                FlashlightRemainingSeconds);
+                FlashlightRemainingSeconds,
+                ElectricBatonChargeCooldownSeconds,
+                MiniFlamethrowerContinuousHitSeconds,
+                MiniFlamethrowerHitGapSeconds);
         }
 
         public PlayerEquipmentState WithUnlockedHandSlotCount(int unlockedHandSlotCount)
@@ -769,7 +813,10 @@ namespace Bellerophon.Core.Session
                 ActiveDamageReductionPercent,
                 StrengthEnhancerRemainingSeconds,
                 StrengthDamageBonusPercent,
-                FlashlightRemainingSeconds);
+                FlashlightRemainingSeconds,
+                ElectricBatonChargeCooldownSeconds,
+                MiniFlamethrowerContinuousHitSeconds,
+                MiniFlamethrowerHitGapSeconds);
         }
 
         public PlayerEquipmentState WithPouchUpgrade(bool enabled)
@@ -793,7 +840,10 @@ namespace Bellerophon.Core.Session
                 ActiveDamageReductionPercent,
                 StrengthEnhancerRemainingSeconds,
                 StrengthDamageBonusPercent,
-                FlashlightRemainingSeconds);
+                FlashlightRemainingSeconds,
+                ElectricBatonChargeCooldownSeconds,
+                MiniFlamethrowerContinuousHitSeconds,
+                MiniFlamethrowerHitGapSeconds);
         }
 
         public PlayerEquipmentState WithCooldown(float cooldownSeconds)
@@ -812,7 +862,10 @@ namespace Bellerophon.Core.Session
                 ActiveDamageReductionPercent,
                 StrengthEnhancerRemainingSeconds,
                 StrengthDamageBonusPercent,
-                FlashlightRemainingSeconds);
+                FlashlightRemainingSeconds,
+                ElectricBatonChargeCooldownSeconds,
+                MiniFlamethrowerContinuousHitSeconds,
+                MiniFlamethrowerHitGapSeconds);
         }
 
         public PlayerEquipmentState WithModeAndSummary(EquipmentUseMode mode, string summary)
@@ -831,7 +884,10 @@ namespace Bellerophon.Core.Session
                 ActiveDamageReductionPercent,
                 StrengthEnhancerRemainingSeconds,
                 StrengthDamageBonusPercent,
-                FlashlightRemainingSeconds);
+                FlashlightRemainingSeconds,
+                ElectricBatonChargeCooldownSeconds,
+                MiniFlamethrowerContinuousHitSeconds,
+                MiniFlamethrowerHitGapSeconds);
         }
 
         public PlayerEquipmentState WithCooldownModeAndSummary(
@@ -853,7 +909,10 @@ namespace Bellerophon.Core.Session
                 ActiveDamageReductionPercent,
                 StrengthEnhancerRemainingSeconds,
                 StrengthDamageBonusPercent,
-                FlashlightRemainingSeconds);
+                FlashlightRemainingSeconds,
+                ElectricBatonChargeCooldownSeconds,
+                MiniFlamethrowerContinuousHitSeconds,
+                MiniFlamethrowerHitGapSeconds);
         }
 
         public PlayerEquipmentState WithProtection(EquipmentItemKind itemKind, int damageReductionPercent, string summary)
@@ -872,7 +931,10 @@ namespace Bellerophon.Core.Session
                 damageReductionPercent,
                 StrengthEnhancerRemainingSeconds,
                 StrengthDamageBonusPercent,
-                FlashlightRemainingSeconds);
+                FlashlightRemainingSeconds,
+                ElectricBatonChargeCooldownSeconds,
+                MiniFlamethrowerContinuousHitSeconds,
+                MiniFlamethrowerHitGapSeconds);
         }
 
         public PlayerEquipmentState WithStrengthEnhancer(float remainingSeconds, int damageBonusPercent, string summary)
@@ -891,7 +953,10 @@ namespace Bellerophon.Core.Session
                 ActiveDamageReductionPercent,
                 remainingSeconds,
                 damageBonusPercent,
-                FlashlightRemainingSeconds);
+                FlashlightRemainingSeconds,
+                ElectricBatonChargeCooldownSeconds,
+                MiniFlamethrowerContinuousHitSeconds,
+                MiniFlamethrowerHitGapSeconds);
         }
 
         public PlayerEquipmentState WithFlashlight(float remainingSeconds, string summary)
@@ -910,10 +975,18 @@ namespace Bellerophon.Core.Session
                 ActiveDamageReductionPercent,
                 StrengthEnhancerRemainingSeconds,
                 StrengthDamageBonusPercent,
-                remainingSeconds);
+                remainingSeconds,
+                ElectricBatonChargeCooldownSeconds,
+                MiniFlamethrowerContinuousHitSeconds,
+                MiniFlamethrowerHitGapSeconds);
         }
 
-        public PlayerEquipmentState WithTimedEffects(float strengthEnhancerRemainingSeconds, float flashlightRemainingSeconds)
+        public PlayerEquipmentState WithTimedEffects(
+            float strengthEnhancerRemainingSeconds,
+            float flashlightRemainingSeconds,
+            float electricBatonChargeCooldownSeconds,
+            float miniFlamethrowerContinuousHitSeconds,
+            float miniFlamethrowerHitGapSeconds)
         {
             return new PlayerEquipmentState(
                 HasBasicProtectiveSuit,
@@ -929,7 +1002,57 @@ namespace Bellerophon.Core.Session
                 ActiveDamageReductionPercent,
                 strengthEnhancerRemainingSeconds,
                 StrengthDamageBonusPercent,
-                flashlightRemainingSeconds);
+                flashlightRemainingSeconds,
+                electricBatonChargeCooldownSeconds,
+                miniFlamethrowerContinuousHitSeconds,
+                miniFlamethrowerHitGapSeconds);
+        }
+
+        public PlayerEquipmentState WithElectricBatonChargeCooldown(float cooldownSeconds, string summary)
+        {
+            return new PlayerEquipmentState(
+                HasBasicProtectiveSuit,
+                HandSlots,
+                SupplySlots,
+                ActiveHandSlotIndex,
+                UseCooldownSeconds,
+                ActiveMode,
+                summary,
+                UnlockedHandSlotCount,
+                UnlockedSupplySlotCount,
+                ActiveProtectiveItemKind,
+                ActiveDamageReductionPercent,
+                StrengthEnhancerRemainingSeconds,
+                StrengthDamageBonusPercent,
+                FlashlightRemainingSeconds,
+                cooldownSeconds,
+                MiniFlamethrowerContinuousHitSeconds,
+                MiniFlamethrowerHitGapSeconds);
+        }
+
+        public PlayerEquipmentState WithMiniFlamethrowerHitWindow(
+            float continuousHitSeconds,
+            float hitGapSeconds,
+            string summary)
+        {
+            return new PlayerEquipmentState(
+                HasBasicProtectiveSuit,
+                HandSlots,
+                SupplySlots,
+                ActiveHandSlotIndex,
+                UseCooldownSeconds,
+                ActiveMode,
+                summary,
+                UnlockedHandSlotCount,
+                UnlockedSupplySlotCount,
+                ActiveProtectiveItemKind,
+                ActiveDamageReductionPercent,
+                StrengthEnhancerRemainingSeconds,
+                StrengthDamageBonusPercent,
+                FlashlightRemainingSeconds,
+                ElectricBatonChargeCooldownSeconds,
+                continuousHitSeconds,
+                hitGapSeconds);
         }
 
         public static PlayerEquipmentState Empty => new PlayerEquipmentState(
@@ -1048,6 +1171,7 @@ namespace Bellerophon.Core.Session
         public const float MiniFlamethrowerMinRange = 1f;
         public const float MiniFlamethrowerMaxRange = 3f;
         public const float MiniFlamethrowerUseDelaySeconds = 0.5f;
+        public const float MiniFlamethrowerSustainedHitGraceSeconds = 0.1f;
         public const int MiniFlamethrowerPriceCredits = 800;
 
         public const int ElectricBatonDamage = 25;
@@ -1065,10 +1189,23 @@ namespace Bellerophon.Core.Session
         public const int FlashlightPriceCredits = 25;
         public const int InjuryRelieverPriceCredits = 125;
         public const int InjuryRelieverHealAmount = 25;
+        public const int BandageSetHealAmount = 10;
+        public const int AuxiliaryBatteryShieldAmount = 10;
+        public const int ShieldChargeBatteryShieldAmount = 25;
+        public const int NanomachineTreatmentHealAmount = 100;
+        public const int RapidShieldBufferShieldAmount = 50;
         public const int ProtectiveSuitReductionPercent = 20;
+        public const int InsulatedSuitReductionPercent = 20;
+        public const int FireproofSuitReductionPercent = 20;
+        public const int HeadProtectorReductionPercent = 20;
+        public const int PhysicalProtectiveSuitReductionPercent = 30;
         public const int SuppressionShieldReductionPercent = 30;
+        public const int ProtectiveEnhancerReductionPercent = 20;
+        public const float MoveSpeedEnhancerDurationSeconds = 10f;
         public const int StrengthEnhancerDamageBonusPercent = 40;
         public const float StrengthEnhancerDurationSeconds = 60f;
+        public const float ProtectiveEnhancerDurationSeconds = 60f;
+        public const float FocusEnhancerDurationSeconds = 60f;
         public const float FlashlightDurationSeconds = 45f;
 
         private static readonly EquipmentItemCategory[] StorageTabOrder =
@@ -1452,15 +1589,46 @@ namespace Bellerophon.Core.Session
             var next = state.UseCooldownSeconds <= 0f
                 ? state
                 : state.WithCooldown(Math.Max(0f, state.UseCooldownSeconds - deltaSeconds));
+            var electricBatonCooldown = next.ElectricBatonChargeCooldownSeconds;
+            if (HasHandItem(next, EquipmentItemKind.ElectricBaton))
+            {
+                electricBatonCooldown = Math.Max(0f, electricBatonCooldown - deltaSeconds);
+            }
+
+            var miniFlamethrowerContinuousHitSeconds = next.MiniFlamethrowerContinuousHitSeconds;
+            var miniFlamethrowerHitGapSeconds = next.MiniFlamethrowerHitGapSeconds;
+            if (miniFlamethrowerContinuousHitSeconds > 0.0001f)
+            {
+                miniFlamethrowerHitGapSeconds += deltaSeconds;
+                if (miniFlamethrowerHitGapSeconds >
+                    MiniFlamethrowerUseDelaySeconds + MiniFlamethrowerSustainedHitGraceSeconds)
+                {
+                    miniFlamethrowerContinuousHitSeconds = 0f;
+                    miniFlamethrowerHitGapSeconds = 0f;
+                }
+            }
+
             return next.WithTimedEffects(
                 Math.Max(0f, next.StrengthEnhancerRemainingSeconds - deltaSeconds),
-                Math.Max(0f, next.FlashlightRemainingSeconds - deltaSeconds));
+                Math.Max(0f, next.FlashlightRemainingSeconds - deltaSeconds),
+                electricBatonCooldown,
+                miniFlamethrowerContinuousHitSeconds,
+                miniFlamethrowerHitGapSeconds);
         }
 
         public static EquipmentUseResult UseActiveEquipment(
             PlayerEquipmentState state,
             bool alternateMode,
             bool hasIntruderTarget)
+        {
+            return UseActiveEquipment(state, alternateMode, hasIntruderTarget, null);
+        }
+
+        public static EquipmentUseResult UseActiveEquipment(
+            PlayerEquipmentState state,
+            bool alternateMode,
+            bool hasIntruderTarget,
+            CombatStatusEffectState[] playerStatusEffects)
         {
             var slot = state.ActiveHandSlot;
             if (slot.IsEmpty)
@@ -1473,6 +1641,20 @@ namespace Bellerophon.Core.Session
                     EquipmentUseMode.None,
                     0,
                     noItemState.LastActionSummary);
+            }
+
+            if (CombatStatusEffectRules.BlocksActions(playerStatusEffects))
+            {
+                var blockedState = state.WithModeAndSummary(
+                    state.ActiveMode,
+                    "Player action is blocked by " + CombatStatusEffectRules.BuildHudSummary(playerStatusEffects) + ".");
+                return new EquipmentUseResult(
+                    blockedState,
+                    EquipmentUseOutcome.ActionBlocked,
+                    slot.ItemKind,
+                    state.ActiveMode,
+                    0,
+                    blockedState.LastActionSummary);
             }
 
             if (state.UseCooldownSeconds > 0.0001f)
@@ -1490,19 +1672,21 @@ namespace Bellerophon.Core.Session
             switch (slot.ItemKind)
             {
                 case EquipmentItemKind.Stick:
-                    return UseStick(state, alternateMode, hasIntruderTarget);
+                    return UseStick(state, alternateMode, hasIntruderTarget, playerStatusEffects);
                 case EquipmentItemKind.Musket:
-                    return UseMusket(state, alternateMode, hasIntruderTarget);
+                    return UseMusket(state, alternateMode, hasIntruderTarget, playerStatusEffects);
                 case EquipmentItemKind.Shotgun:
-                    return UseRangedWeapon(state, EquipmentItemKind.Shotgun, hasIntruderTarget);
+                    return UseRangedWeapon(state, EquipmentItemKind.Shotgun, hasIntruderTarget, playerStatusEffects);
                 case EquipmentItemKind.MiniFlamethrower:
-                    return UseRangedWeapon(state, EquipmentItemKind.MiniFlamethrower, hasIntruderTarget);
+                    return UseMiniFlamethrower(state, hasIntruderTarget, playerStatusEffects);
                 case EquipmentItemKind.ElectricBaton:
-                    return UseMeleeWeapon(state, EquipmentItemKind.ElectricBaton, hasIntruderTarget);
+                    return UseElectricBaton(state, hasIntruderTarget, playerStatusEffects);
                 case EquipmentItemKind.Dagger:
                     return alternateMode
-                        ? UseThrownDagger(state, hasIntruderTarget)
-                        : UseMeleeWeapon(state, EquipmentItemKind.Dagger, hasIntruderTarget);
+                        ? UseThrownDagger(state, hasIntruderTarget, playerStatusEffects)
+                        : UseMeleeWeapon(state, EquipmentItemKind.Dagger, hasIntruderTarget, playerStatusEffects);
+                case EquipmentItemKind.Flashbang:
+                    return UseFlashbang(state, hasIntruderTarget);
                 case EquipmentItemKind.Flashlight:
                     return UseFlashlight(state);
                 default:
@@ -1538,14 +1722,39 @@ namespace Bellerophon.Core.Session
                     return UseProtectiveSupplyItem(state, supplySlotIndex, SuppressionShieldReductionPercent);
                 case EquipmentItemKind.ProtectiveSuit:
                     return UseProtectiveSupplyItem(state, supplySlotIndex, ProtectiveSuitReductionPercent);
+                case EquipmentItemKind.InsulatedSuit:
+                    return UseProtectiveSupplyItem(state, supplySlotIndex, InsulatedSuitReductionPercent);
+                case EquipmentItemKind.FireproofSuit:
+                    return UseProtectiveSupplyItem(state, supplySlotIndex, FireproofSuitReductionPercent);
+                case EquipmentItemKind.HeadProtector:
+                    return UseProtectiveSupplyItem(state, supplySlotIndex, HeadProtectorReductionPercent);
+                case EquipmentItemKind.PhysicalProtectiveSuit:
+                    return UseProtectiveSupplyItem(state, supplySlotIndex, PhysicalProtectiveSuitReductionPercent);
                 case EquipmentItemKind.InjuryReliever:
                     return UseTreatmentSupplyItem(state, supplySlotIndex, InjuryRelieverHealAmount, 0);
                 case EquipmentItemKind.BandageSet:
-                    return UseTreatmentSupplyItem(state, supplySlotIndex, 15, 0);
+                    return UseTreatmentSupplyItem(
+                        state,
+                        supplySlotIndex,
+                        BandageSetHealAmount,
+                        0,
+                        CombatStatusEffectKind.Bleeding);
+                case EquipmentItemKind.AuxiliaryBattery:
+                    return UseTreatmentSupplyItem(state, supplySlotIndex, 0, AuxiliaryBatteryShieldAmount);
                 case EquipmentItemKind.ShieldChargeBattery:
-                    return UseTreatmentSupplyItem(state, supplySlotIndex, 0, 30);
+                    return UseTreatmentSupplyItem(state, supplySlotIndex, 0, ShieldChargeBatteryShieldAmount);
+                case EquipmentItemKind.NanomachineTreatment:
+                    return UseTreatmentSupplyItem(state, supplySlotIndex, NanomachineTreatmentHealAmount, 0);
+                case EquipmentItemKind.RapidShieldBuffer:
+                    return UseTreatmentSupplyItem(state, supplySlotIndex, 0, RapidShieldBufferShieldAmount);
+                case EquipmentItemKind.MoveSpeedEnhancer:
+                    return UseMoveSpeedEnhancer(state, supplySlotIndex);
                 case EquipmentItemKind.StrengthEnhancer:
                     return UseStrengthEnhancer(state, supplySlotIndex);
+                case EquipmentItemKind.ProtectiveEnhancer:
+                    return UseProtectiveEnhancer(state, supplySlotIndex);
+                case EquipmentItemKind.FocusEnhancer:
+                    return UseFocusEnhancer(state, supplySlotIndex);
                 default:
                     var definition = GetDefinition(slot.ItemKind);
                     var unsupportedState = state.WithModeAndSummary(
@@ -1897,7 +2106,8 @@ namespace Bellerophon.Core.Session
         private static EquipmentUseResult UseStick(
             PlayerEquipmentState state,
             bool alternateMode,
-            bool hasIntruderTarget)
+            bool hasIntruderTarget,
+            CombatStatusEffectState[] playerStatusEffects)
         {
             if (alternateMode)
             {
@@ -1918,8 +2128,9 @@ namespace Bellerophon.Core.Session
             var summary = hasIntruderTarget
                 ? "Stick hit active intruder for " + damage + " damage."
                 : "Stick swing found no active intruder target.";
+            var cooldown = CombatStatusEffectRules.CalculateWeaponDelay(playerStatusEffects, false, StickUseDelaySeconds);
             var nextState = ApplyActiveHandUseDurability(state, 1)
-                .WithCooldownModeAndSummary(StickUseDelaySeconds, EquipmentUseMode.Primary, summary);
+                .WithCooldownModeAndSummary(cooldown, EquipmentUseMode.Primary, summary);
             return new EquipmentUseResult(
                 nextState,
                 outcome,
@@ -1932,7 +2143,8 @@ namespace Bellerophon.Core.Session
         private static EquipmentUseResult UseMusket(
             PlayerEquipmentState state,
             bool alternateMode,
-            bool hasIntruderTarget)
+            bool hasIntruderTarget,
+            CombatStatusEffectState[] playerStatusEffects)
         {
             var mode = alternateMode ? EquipmentUseMode.PrecisionAim : EquipmentUseMode.Primary;
             var outcome = hasIntruderTarget ? EquipmentUseOutcome.RangedHit : EquipmentUseOutcome.RangedMiss;
@@ -1940,8 +2152,9 @@ namespace Bellerophon.Core.Session
             var summary = hasIntruderTarget
                 ? "Musket fired at active intruder for " + damage + " damage."
                 : "Musket fired with no active intruder target.";
+            var cooldown = CombatStatusEffectRules.CalculateWeaponDelay(playerStatusEffects, true, MusketUseDelaySeconds);
             var nextState = ApplyActiveHandUseDurability(state, 1)
-                .WithCooldownModeAndSummary(MusketUseDelaySeconds, mode, summary);
+                .WithCooldownModeAndSummary(cooldown, mode, summary);
             return new EquipmentUseResult(
                 nextState,
                 outcome,
@@ -1954,29 +2167,44 @@ namespace Bellerophon.Core.Session
         private static EquipmentUseResult UseMeleeWeapon(
             PlayerEquipmentState state,
             EquipmentItemKind itemKind,
-            bool hasIntruderTarget)
+            bool hasIntruderTarget,
+            CombatStatusEffectState[] playerStatusEffects,
+            CombatStatusEffectApplication statusEffectToApply = default,
+            int damageOverride = -1)
         {
             var definition = GetDefinition(itemKind);
             var outcome = hasIntruderTarget ? EquipmentUseOutcome.MeleeHit : EquipmentUseOutcome.MeleeMiss;
-            var damage = CalculateWeaponDamage(state, itemKind, definition.Damage);
+            var damage = damageOverride >= 0 ? damageOverride : CalculateWeaponDamage(state, itemKind, definition.Damage);
             var summary = hasIntruderTarget
                 ? definition.DisplayName + " hit active intruder for " + damage + " damage."
                 : definition.DisplayName + " attack found no active intruder target.";
+            if (hasIntruderTarget && statusEffectToApply.HasEffect)
+            {
+                summary += " " + CombatStatusEffectRules.FormatEffectName(statusEffectToApply.Kind) + " applied.";
+            }
+
+            var cooldown = CombatStatusEffectRules.CalculateWeaponDelay(
+                playerStatusEffects,
+                false,
+                definition.UseDelaySeconds);
             var nextState = ApplyActiveHandUseDurability(state, 1)
-                .WithCooldownModeAndSummary(definition.UseDelaySeconds, EquipmentUseMode.Primary, summary);
+                .WithCooldownModeAndSummary(cooldown, EquipmentUseMode.Primary, summary);
             return new EquipmentUseResult(
                 nextState,
                 outcome,
                 itemKind,
                 EquipmentUseMode.Primary,
                 hasIntruderTarget ? damage : 0,
-                summary);
+                summary,
+                statusEffectToApply: hasIntruderTarget ? statusEffectToApply : default);
         }
 
         private static EquipmentUseResult UseRangedWeapon(
             PlayerEquipmentState state,
             EquipmentItemKind itemKind,
-            bool hasIntruderTarget)
+            bool hasIntruderTarget,
+            CombatStatusEffectState[] playerStatusEffects,
+            CombatStatusEffectApplication statusEffectToApply = default)
         {
             var definition = GetDefinition(itemKind);
             var outcome = hasIntruderTarget ? EquipmentUseOutcome.RangedHit : EquipmentUseOutcome.RangedMiss;
@@ -1984,26 +2212,40 @@ namespace Bellerophon.Core.Session
             var summary = hasIntruderTarget
                 ? definition.DisplayName + " hit active intruder for " + damage + " damage."
                 : definition.DisplayName + " fired with no active intruder target.";
+            if (hasIntruderTarget && statusEffectToApply.HasEffect)
+            {
+                summary += " " + CombatStatusEffectRules.FormatEffectName(statusEffectToApply.Kind) + " applied.";
+            }
+
+            var cooldown = CombatStatusEffectRules.CalculateWeaponDelay(
+                playerStatusEffects,
+                true,
+                definition.UseDelaySeconds);
             var nextState = ApplyActiveHandUseDurability(state, 1)
-                .WithCooldownModeAndSummary(definition.UseDelaySeconds, EquipmentUseMode.Primary, summary);
+                .WithCooldownModeAndSummary(cooldown, EquipmentUseMode.Primary, summary);
             return new EquipmentUseResult(
                 nextState,
                 outcome,
                 itemKind,
                 EquipmentUseMode.Primary,
                 hasIntruderTarget ? damage : 0,
-                summary);
+                summary,
+                statusEffectToApply: hasIntruderTarget ? statusEffectToApply : default);
         }
 
-        private static EquipmentUseResult UseThrownDagger(PlayerEquipmentState state, bool hasIntruderTarget)
+        private static EquipmentUseResult UseThrownDagger(
+            PlayerEquipmentState state,
+            bool hasIntruderTarget,
+            CombatStatusEffectState[] playerStatusEffects = null)
         {
             var damage = CalculateWeaponDamage(state, EquipmentItemKind.Dagger, DaggerDamage);
             var outcome = hasIntruderTarget ? EquipmentUseOutcome.RangedHit : EquipmentUseOutcome.RangedMiss;
             var summary = hasIntruderTarget
                 ? "Dagger throw hit active intruder for " + damage + " damage."
                 : "Dagger throw found no active intruder target.";
+            var cooldown = CombatStatusEffectRules.CalculateWeaponDelay(playerStatusEffects, true, DaggerUseDelaySeconds);
             var nextState = ApplyActiveHandUseDurability(state, 3)
-                .WithCooldownModeAndSummary(DaggerUseDelaySeconds, EquipmentUseMode.Throwing, summary);
+                .WithCooldownModeAndSummary(cooldown, EquipmentUseMode.Throwing, summary);
             return new EquipmentUseResult(
                 nextState,
                 outcome,
@@ -2011,6 +2253,109 @@ namespace Bellerophon.Core.Session
                 EquipmentUseMode.Throwing,
                 hasIntruderTarget ? damage : 0,
                 summary);
+        }
+
+        private static EquipmentUseResult UseMiniFlamethrower(
+            PlayerEquipmentState state,
+            bool hasIntruderTarget,
+            CombatStatusEffectState[] playerStatusEffects)
+        {
+            var continuousHitSeconds = 0f;
+            var statusEffect = default(CombatStatusEffectApplication);
+            if (hasIntruderTarget)
+            {
+                continuousHitSeconds =
+                    state.MiniFlamethrowerHitGapSeconds <=
+                    MiniFlamethrowerUseDelaySeconds + MiniFlamethrowerSustainedHitGraceSeconds
+                        ? state.MiniFlamethrowerContinuousHitSeconds + MiniFlamethrowerUseDelaySeconds
+                        : MiniFlamethrowerUseDelaySeconds;
+                if (continuousHitSeconds + 0.0001f >= CombatStatusEffectRules.MiniFlamethrowerBurnTriggerSeconds)
+                {
+                    statusEffect = CombatStatusEffectRules.CreateBurn(
+                        CombatStatusEffectRules.BurnDefaultDurationSeconds,
+                        CombatStatusEffectRules.BurnDefaultTickDamage);
+                }
+            }
+
+            var result = UseRangedWeapon(
+                state,
+                EquipmentItemKind.MiniFlamethrower,
+                hasIntruderTarget,
+                playerStatusEffects,
+                statusEffect);
+            var nextState = result.State.WithMiniFlamethrowerHitWindow(
+                hasIntruderTarget ? continuousHitSeconds : 0f,
+                0f,
+                result.Summary);
+            return new EquipmentUseResult(
+                nextState,
+                result.Outcome,
+                result.ItemKind,
+                result.Mode,
+                result.Damage,
+                result.Summary,
+                effectDurationSeconds: result.StatusEffectToApply.DurationSeconds,
+                statusEffectToApply: result.StatusEffectToApply);
+        }
+
+        private static EquipmentUseResult UseElectricBaton(
+            PlayerEquipmentState state,
+            bool hasIntruderTarget,
+            CombatStatusEffectState[] playerStatusEffects)
+        {
+            var charged = state.IsElectricBatonCharged;
+            var consumedCharge = hasIntruderTarget && charged;
+            var baseDamage = CalculateWeaponDamage(state, EquipmentItemKind.ElectricBaton, ElectricBatonDamage);
+            var damage = consumedCharge
+                ? baseDamage + CombatStatusEffectRules.ElectricBatonChargedDamageBonus
+                : baseDamage;
+            var statusEffect = consumedCharge
+                ? CombatStatusEffectRules.CreateStopped(
+                    CombatStatusEffectRules.ElectricBatonChargedStoppedDurationSeconds)
+                : default;
+            var result = UseMeleeWeapon(
+                state,
+                EquipmentItemKind.ElectricBaton,
+                hasIntruderTarget,
+                playerStatusEffects,
+                statusEffect,
+                damage);
+            var nextCooldown = consumedCharge
+                ? CombatStatusEffectRules.ElectricBatonChargeCooldownSeconds
+                : state.ElectricBatonChargeCooldownSeconds;
+            var nextState = result.State.WithElectricBatonChargeCooldown(nextCooldown, result.Summary);
+            return new EquipmentUseResult(
+                nextState,
+                result.Outcome,
+                result.ItemKind,
+                result.Mode,
+                result.Damage,
+                result.Summary,
+                effectDurationSeconds: result.StatusEffectToApply.DurationSeconds,
+                statusEffectToApply: result.StatusEffectToApply);
+        }
+
+        private static EquipmentUseResult UseFlashbang(PlayerEquipmentState state, bool hasIntruderTarget)
+        {
+            var status = hasIntruderTarget
+                ? CombatStatusEffectRules.CreateConfusion(
+                    CombatStatusEffectRules.FlashbangConfusionDurationSeconds)
+                : default;
+            var summary = hasIntruderTarget
+                ? "Flashbang detonated; " + CombatStatusEffectRules.FormatEffectName(CombatStatusEffectKind.Confusion) + " applied."
+                : "Flashbang detonated with no active intruder target.";
+            var nextState = ApplyActiveHandUseDurability(state, 100)
+                .WithCooldownModeAndSummary(0.5f, EquipmentUseMode.Throwing, summary);
+            return new EquipmentUseResult(
+                nextState,
+                EquipmentUseOutcome.UtilityActivated,
+                EquipmentItemKind.Flashbang,
+                EquipmentUseMode.Throwing,
+                hasIntruderTarget ? 5 : 0,
+                summary,
+                consumedItem: true,
+                effectDurationSeconds: status.DurationSeconds,
+                statusEffectToApply: status);
         }
 
         private static EquipmentUseResult UseFlashlight(PlayerEquipmentState state)
@@ -2053,7 +2398,8 @@ namespace Bellerophon.Core.Session
             PlayerEquipmentState state,
             int supplySlotIndex,
             int healthDelta,
-            int shieldDelta)
+            int shieldDelta,
+            CombatStatusEffectKind statusEffectToClear = CombatStatusEffectKind.None)
         {
             var slot = state.GetSupplySlot(supplySlotIndex);
             var definition = GetDefinition(slot.ItemKind);
@@ -2068,6 +2414,11 @@ namespace Bellerophon.Core.Session
                 summary += " Shield +" + shieldDelta + ".";
             }
 
+            if (statusEffectToClear != CombatStatusEffectKind.None)
+            {
+                summary += " Clears " + CombatStatusEffectRules.FormatEffectName(statusEffectToClear) + ".";
+            }
+
             var nextState = state
                 .WithSupplySlot(supplySlotIndex, RemoveOne(slot))
                 .WithModeAndSummary(state.ActiveMode, summary);
@@ -2080,7 +2431,33 @@ namespace Bellerophon.Core.Session
                 summary,
                 healthDelta,
                 shieldDelta,
-                true);
+                true,
+                statusEffectToClear: statusEffectToClear);
+        }
+
+        private static EquipmentUseResult UseMoveSpeedEnhancer(PlayerEquipmentState state, int supplySlotIndex)
+        {
+            var slot = state.GetSupplySlot(supplySlotIndex);
+            var summary = "Move Speed Enhancer applied for " +
+                          MathfCeilToInt(MoveSpeedEnhancerDurationSeconds) +
+                          " seconds; " +
+                          CombatStatusEffectRules.FormatEffectName(CombatStatusEffectKind.Exhaustion) +
+                          " follows.";
+            var nextState = state
+                .WithSupplySlot(supplySlotIndex, RemoveOne(slot))
+                .WithModeAndSummary(state.ActiveMode, summary);
+            return new EquipmentUseResult(
+                nextState,
+                EquipmentUseOutcome.EnhancementApplied,
+                EquipmentItemKind.MoveSpeedEnhancer,
+                state.ActiveMode,
+                0,
+                summary,
+                consumedItem: true,
+                effectDurationSeconds: MoveSpeedEnhancerDurationSeconds,
+                delayedStatusEffectToApply: CombatStatusEffectRules.CreateExhaustion(
+                    CombatStatusEffectRules.ExhaustionDefaultDurationSeconds),
+                delayedStatusEffectDelaySeconds: MoveSpeedEnhancerDurationSeconds);
         }
 
         private static EquipmentUseResult UseStrengthEnhancer(PlayerEquipmentState state, int supplySlotIndex)
@@ -2106,7 +2483,58 @@ namespace Bellerophon.Core.Session
                 summary,
                 consumedItem: true,
                 damageBonusPercent: StrengthEnhancerDamageBonusPercent,
-                effectDurationSeconds: StrengthEnhancerDurationSeconds);
+                effectDurationSeconds: StrengthEnhancerDurationSeconds,
+                delayedStatusEffectToApply: CombatStatusEffectRules.CreateFatigue(
+                    CombatStatusEffectRules.FatigueDefaultDurationSeconds),
+                delayedStatusEffectDelaySeconds: StrengthEnhancerDurationSeconds);
+        }
+
+        private static EquipmentUseResult UseProtectiveEnhancer(PlayerEquipmentState state, int supplySlotIndex)
+        {
+            var slot = state.GetSupplySlot(supplySlotIndex);
+            var summary = "Protective Enhancer applied; incoming damage reduction +" +
+                          ProtectiveEnhancerReductionPercent +
+                          "% for " +
+                          MathfCeilToInt(ProtectiveEnhancerDurationSeconds) +
+                          " seconds.";
+            var nextState = state
+                .WithSupplySlot(supplySlotIndex, RemoveOne(slot))
+                .WithProtection(EquipmentItemKind.ProtectiveEnhancer, ProtectiveEnhancerReductionPercent, summary);
+            return new EquipmentUseResult(
+                nextState,
+                EquipmentUseOutcome.EnhancementApplied,
+                EquipmentItemKind.ProtectiveEnhancer,
+                state.ActiveMode,
+                0,
+                summary,
+                consumedItem: true,
+                damageReductionPercent: ProtectiveEnhancerReductionPercent,
+                effectDurationSeconds: ProtectiveEnhancerDurationSeconds);
+        }
+
+        private static EquipmentUseResult UseFocusEnhancer(PlayerEquipmentState state, int supplySlotIndex)
+        {
+            var slot = state.GetSupplySlot(supplySlotIndex);
+            var summary = "Focus Enhancer applied for " +
+                          MathfCeilToInt(FocusEnhancerDurationSeconds) +
+                          " seconds; " +
+                          CombatStatusEffectRules.FormatEffectName(CombatStatusEffectKind.Dizziness) +
+                          " follows.";
+            var nextState = state
+                .WithSupplySlot(supplySlotIndex, RemoveOne(slot))
+                .WithModeAndSummary(state.ActiveMode, summary);
+            return new EquipmentUseResult(
+                nextState,
+                EquipmentUseOutcome.EnhancementApplied,
+                EquipmentItemKind.FocusEnhancer,
+                state.ActiveMode,
+                0,
+                summary,
+                consumedItem: true,
+                effectDurationSeconds: FocusEnhancerDurationSeconds,
+                delayedStatusEffectToApply: CombatStatusEffectRules.CreateDizziness(
+                    CombatStatusEffectRules.DizzinessDefaultDurationSeconds),
+                delayedStatusEffectDelaySeconds: FocusEnhancerDurationSeconds);
         }
 
         private static int CalculateWeaponDamage(
@@ -2138,6 +2566,24 @@ namespace Bellerophon.Core.Session
                 default:
                     return false;
             }
+        }
+
+        private static bool HasHandItem(PlayerEquipmentState state, EquipmentItemKind itemKind)
+        {
+            if (itemKind == EquipmentItemKind.None)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < state.UnlockedHandSlotCount; i++)
+            {
+                if (state.GetHandSlot(i).ItemKind == itemKind)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static PlayerEquipmentState ApplyActiveHandUseDurability(PlayerEquipmentState state, int damagePercent)

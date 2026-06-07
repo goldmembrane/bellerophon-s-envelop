@@ -119,8 +119,8 @@ namespace Bellerophon.Core.Session
         public const float CockpitStableManualInputMultiplier = 0.75f;
         public const float CockpitCriticalManualInputMultiplier = 0.5f;
         public const float ArmoryCriticalManualAimMultiplier = 0.5f;
-        public const int DefaultControlRoomCctvCount = 4;
-        public const int ControlRoomDamagedCctvCount = 2;
+        public const int DefaultControlRoomCctvCount = 5;
+        public const int ControlRoomDamagedCctvCount = 3;
         public const int SupplyRoomStableSlotPenalty = 3;
         public const int SupplyRoomDamagedAdditionalSlotPenalty = 2;
         public const float SupplyRoomCriticalEquipmentDamagePercent = 0.1f;
@@ -541,6 +541,23 @@ namespace Bellerophon.Core.Session
             return armory.DurabilityPercent > StableThreshold && !armory.IsFunctionOffline;
         }
 
+        public static int CalculateManualTurretMagazineCapacity(ShipUpgradeState upgrades)
+        {
+            return ShipUpgradeRules.GetEffectValue(
+                ShipUpgradeCategory.WeaponSystems,
+                upgrades.GetEquippedTier(ShipUpgradeCategory.WeaponSystems));
+        }
+
+        public static bool IsPlasmaCannonInstalled(ShipUpgradeState upgrades)
+        {
+            return upgrades.GetEquippedTier(ShipUpgradeCategory.WeaponSystems) >= 2;
+        }
+
+        public static bool IsPlasmaCannonAvailable(ShipState ship, ShipUpgradeState upgrades)
+        {
+            return IsPlasmaCannonInstalled(upgrades) && IsPlasmaCannonAvailable(ship);
+        }
+
         public static bool IsAutoAimOnline(ShipState ship)
         {
             return IsPlasmaCannonAvailable(ship);
@@ -633,6 +650,17 @@ namespace Bellerophon.Core.Session
         public static bool CanUseControlRoomCctv(ShipState ship)
         {
             return CalculateControlRoomAvailableCctvCount(ship) > 0;
+        }
+
+        public static bool CanUseControlRoomRoomOperation(ShipState ship)
+        {
+            if (ship == null)
+            {
+                throw new ArgumentNullException(nameof(ship));
+            }
+
+            var controlRoom = ship.GetRoom(ShipRoomId.ControlRoom);
+            return controlRoom.CurrentDurability > 0 && !controlRoom.IsFunctionOffline;
         }
 
         public static bool IsIntruderDetectionOnline(ShipState ship)

@@ -7,6 +7,7 @@ namespace Bellerophon.Core.Player
     {
         [SerializeField] private FirstPersonPlayerSettings settings;
         [SerializeField] private FirstPersonPlayerInput input;
+        [SerializeField] private FirstPersonPlayerStatus playerStatus;
         [SerializeField] private Transform playerCamera;
 
         private CharacterController characterController;
@@ -29,6 +30,7 @@ namespace Bellerophon.Core.Player
         {
             settings = playerSettings;
             input = playerInput;
+            playerStatus = GetComponent<FirstPersonPlayerStatus>();
             playerCamera = cameraTransform;
             ApplyBodySettings(false, true);
         }
@@ -39,6 +41,11 @@ namespace Bellerophon.Core.Player
             if (input == null)
             {
                 input = GetComponent<FirstPersonPlayerInput>();
+            }
+
+            if (playerStatus == null)
+            {
+                playerStatus = GetComponent<FirstPersonPlayerStatus>();
             }
 
             ApplyBodySettings(false, true);
@@ -74,7 +81,10 @@ namespace Bellerophon.Core.Player
                 verticalVelocity = -1f;
             }
 
-            if (characterController.isGrounded && input.JumpPressedThisFrame && !crouching)
+            if (characterController.isGrounded &&
+                input.JumpPressedThisFrame &&
+                !crouching &&
+                (playerStatus == null || !playerStatus.IsMovementBlocked))
             {
                 verticalVelocity = settings.JumpSpeed;
             }
@@ -92,12 +102,23 @@ namespace Bellerophon.Core.Player
 
         private float GetMoveSpeed(bool crouching)
         {
+            float baseSpeed;
             if (crouching)
             {
-                return settings.CrouchSpeed;
+                baseSpeed = settings.CrouchSpeed;
+            }
+            else
+            {
+                var canSprint = playerStatus == null || !playerStatus.IsSprintBlocked;
+                baseSpeed = input.SprintHeld && canSprint ? settings.SprintSpeed : settings.WalkSpeed;
             }
 
-            return input.SprintHeld ? settings.SprintSpeed : settings.WalkSpeed;
+            return baseSpeed * GetStatusMovementMultiplier();
+        }
+
+        private float GetStatusMovementMultiplier()
+        {
+            return playerStatus == null ? 1f : playerStatus.MovementMultiplier;
         }
 
         private void ApplyBodySettings(bool crouching, bool immediate)

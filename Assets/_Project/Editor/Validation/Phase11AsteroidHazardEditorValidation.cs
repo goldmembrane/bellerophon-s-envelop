@@ -58,13 +58,19 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Phase 11 requires the contract board as the post-tutorial hazard entry path.");
             }
 
-            if (TransportHazardRules.AsteroidFieldOccurrencePercent <= 0 ||
-                TransportHazardRules.MinimumAsteroidFieldDurationSeconds <= 0)
+            if (TransportHazardRules.AsteroidFieldOccurrencePercent != 30 ||
+                TransportHazardRules.AsteroidFieldSmallDamage != 10 ||
+                TransportHazardRules.AsteroidFieldLargeDamage != 20 ||
+                TransportHazardRules.CargoFreedomLeagueFameThreshold != 1800 ||
+                TransportHazardRules.SpacePirateFameThreshold != 3000 ||
+                TransportHazardRules.AlienLifeFameThreshold != 900 ||
+                TransportHazardRules.ConcealedBlackHoleFameThreshold != 4500 ||
+                TransportHazardRules.GetManualFlightBoosterReductionSeconds(TransportHazardType.ConcealedBlackHole) != 0)
             {
-                throw new InvalidOperationException("Phase 11 asteroid hazard occurrence and duration rules must be configured.");
+                throw new InvalidOperationException("Phase 11 external hazard source values and black-hole deferral must be configured.");
             }
 
-            Debug.Log("Phase 11 asteroid hazard editor validation passed.");
+            Debug.Log("Phase 11 external hazard editor validation passed.");
         }
     }
 }

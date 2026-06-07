@@ -1,4 +1,5 @@
 using Bellerophon.Core.Player;
+using Bellerophon.Core.Session;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -65,7 +66,7 @@ namespace Bellerophon.Core.Ship
 
             SetPlayerInputSuppressed(true);
 
-            if (Keyboard.current.escapeKey.wasPressedThisFrame)
+            if (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.escapeKey.isPressed)
             {
                 interactionState.ExitManualFlightToAutoPilot();
                 return;
@@ -145,7 +146,7 @@ namespace Bellerophon.Core.Ship
                        + "Remaining: " + Mathf.CeilToInt(interactionState.TransportRemainingSeconds) + "s\n";
             if (interactionState.HasActiveTransportHazard)
             {
-                text += "Hazard: Asteroid Field "
+                text += "Hazard: " + TransportHazardRules.FormatHazardType(interactionState.CurrentTransportHazard.HazardType) + " "
                         + Mathf.CeilToInt(interactionState.CurrentTransportHazard.RemainingSeconds)
                         + "s\n";
             }

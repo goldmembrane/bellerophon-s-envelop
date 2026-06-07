@@ -76,7 +76,7 @@ namespace Bellerophon.Tests.EditMode
                 hud.RefreshPanel();
 
                 Assert.That(state.CurrentCctvTarget, Is.EqualTo(ShipCctvTarget.Cockpit));
-                Assert.That(label.text, Does.Contain("CCTV Channels: 0/4"));
+                Assert.That(label.text, Does.Contain("CCTV Channels: 0/5"));
 
                 state.SetShipState(ShipState.CreateDefault()
                     .WithRoom(ShipRoomId.SupplyRoom, new ShipRoomState(75, 100)));
@@ -129,6 +129,177 @@ namespace Bellerophon.Tests.EditMode
                 Assert.That(state.ExitManualFlightToAutoPilot(), Is.True);
                 Assert.That(state.ManualFlightModeActive, Is.False);
                 Assert.That(state.CurrentFlightMode, Is.EqualTo(ShipFlightMode.AutoPilot));
+            }
+            finally
+            {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
+        public void ControlRoomCctv_IncludesSupplyRoomAndSwitchesOriginalScreenModes()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+
+                state.ActivateDevice(ShipDeviceType.ControlRoomMainScreen);
+                state.CycleCctv(1);
+                state.CycleCctv(1);
+                state.CycleCctv(1);
+                state.CycleCctv(1);
+
+                Assert.That(state.CurrentCctvTarget, Is.EqualTo(ShipCctvTarget.SupplyRoom));
+
+                state.SwitchControlRoomScreenByRightClick();
+                Assert.That(state.CurrentControlRoomScreenMode, Is.EqualTo(ShipControlRoomScreenMode.VerticalRoomList));
+
+                state.SwitchControlRoomScreenByRightClick();
+                Assert.That(state.CurrentControlRoomScreenMode, Is.EqualTo(ShipControlRoomScreenMode.HorizontalShipLayout));
+            }
+            finally
+            {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
+        public void ControlRoomDisplayIndexSelection_StartsPurificationFromVerticalList()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                state.ActivateDevice(ShipDeviceType.ControlRoomMainScreen);
+                state.SetControlRoomScreenMode(ShipControlRoomScreenMode.VerticalRoomList);
+
+                var selected = state.SelectControlRoomVerticalRoomByDisplayIndex(6);
+
+                Assert.That(selected, Is.True);
+                Assert.That(state.CurrentControlRoomPurification.IsActive, Is.True);
+                Assert.That(state.CurrentControlRoomPurification.TargetRoom, Is.EqualTo(ShipRoomId.Armory));
+                Assert.That(state.CurrentShipState.GetRoom(ShipRoomId.Armory).IsSealed, Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
+        public void ControlRoomPanelExit_ClosesPanelWithoutStoppingActivePurification()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                state.ActivateDevice(ShipDeviceType.ControlRoomMainScreen);
+                state.SetControlRoomScreenMode(ShipControlRoomScreenMode.VerticalRoomList);
+                state.SelectControlRoomPurificationTarget(ShipRoomId.Armory);
+
+                var exited = state.ExitActiveDevicePanel();
+
+                Assert.That(exited, Is.True);
+                Assert.That(state.ActivePanelMode, Is.EqualTo(ShipDevicePanelMode.None));
+                Assert.That(state.CurrentControlRoomScreenMode, Is.EqualTo(ShipControlRoomScreenMode.MainCctv));
+                Assert.That(state.CurrentControlRoomPurification.IsActive, Is.True);
+                Assert.That(state.CurrentShipState.GetRoom(ShipRoomId.Armory).IsSealed, Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
+        public void ControlRoomPurification_SealsSelectedRoomAndDamagesPlayerInsideWithoutRoomDamage()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            var statusObject = new GameObject("Player Status Test");
+            var settings = ScriptableObject.CreateInstance<FirstPersonPlayerSettings>();
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                var status = statusObject.AddComponent<FirstPersonPlayerStatus>();
+                status.Configure(settings);
+                state.SetPlayerStatusForValidation(status);
+                state.ActivateDevice(ShipDeviceType.ControlRoomMainScreen);
+                state.SetControlRoomScreenMode(ShipControlRoomScreenMode.VerticalRoomList);
+
+                var started = state.SelectControlRoomPurificationTarget(ShipRoomId.Armory);
+                var firstTick = state.TickControlRoomOperations(3f, ShipRoomId.Armory);
+
+                Assert.That(started, Is.True);
+                Assert.That(state.CurrentShipState.GetRoom(ShipRoomId.Armory).IsSealed, Is.True);
+                Assert.That(firstTick.FireDamageThisTick, Is.EqualTo(50));
+                Assert.That(status.CurrentShield, Is.Zero);
+                Assert.That(status.CurrentHealth, Is.EqualTo(100));
+                Assert.That(state.LastPurificationPlayerDamage, Is.EqualTo(50));
+                Assert.That(state.CurrentShipState.GetRoom(ShipRoomId.Armory).CurrentDurability, Is.EqualTo(100));
+
+                state.TickControlRoomOperations(27f, ShipRoomId.Armory);
+
+                Assert.That(state.CurrentControlRoomPurification.IsActive, Is.False);
+                Assert.That(state.CurrentShipState.GetRoom(ShipRoomId.Armory).IsSealed, Is.False);
+                Assert.That(state.CurrentShipState.GetRoom(ShipRoomId.Armory).CurrentDurability, Is.EqualTo(100));
+            }
+            finally
+            {
+                Object.DestroyImmediate(settings);
+                Object.DestroyImmediate(statusObject);
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
+        public void ControlRoomPurification_DoesNotDamagePlayerOutsideSelectedRoom()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            var statusObject = new GameObject("Player Status Test");
+            var settings = ScriptableObject.CreateInstance<FirstPersonPlayerSettings>();
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                var status = statusObject.AddComponent<FirstPersonPlayerStatus>();
+                status.Configure(settings);
+                state.SetPlayerStatusForValidation(status);
+                state.ActivateDevice(ShipDeviceType.ControlRoomMainScreen);
+                state.SetControlRoomScreenMode(ShipControlRoomScreenMode.VerticalRoomList);
+                state.SelectControlRoomPurificationTarget(ShipRoomId.Armory);
+
+                state.TickControlRoomOperations(3f, ShipRoomId.Cockpit);
+
+                Assert.That(status.CurrentShield, Is.EqualTo(50));
+                Assert.That(status.CurrentHealth, Is.EqualTo(100));
+                Assert.That(state.LastPurificationPlayerDamage, Is.Zero);
+            }
+            finally
+            {
+                Object.DestroyImmediate(settings);
+                Object.DestroyImmediate(statusObject);
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
+        public void ControlRoomDestroyed_OpensSealedRoomAndBlocksPurification()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                state.ActivateDevice(ShipDeviceType.ControlRoomMainScreen);
+                state.SetControlRoomScreenMode(ShipControlRoomScreenMode.VerticalRoomList);
+                Assert.That(state.SelectControlRoomPurificationTarget(ShipRoomId.CargoHold), Is.True);
+
+                state.SetShipState(ShipState.CreateDefault()
+                    .WithRoom(ShipRoomId.ControlRoom, new ShipRoomState(0, 100))
+                    .WithRoom(ShipRoomId.CargoHold, new ShipRoomState(100, 100, false, false, true)));
+
+                Assert.That(state.CurrentControlRoomPurification.IsActive, Is.False);
+                Assert.That(state.CurrentShipState.GetRoom(ShipRoomId.CargoHold).IsSealed, Is.False);
+                Assert.That(state.SelectControlRoomPurificationTarget(ShipRoomId.Cockpit), Is.False);
             }
             finally
             {
@@ -237,6 +408,138 @@ namespace Bellerophon.Tests.EditMode
         }
 
         [Test]
+        public void TransportHazardOccurrence_ChecksScheduledAsteroidAndFameUnlocks()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                var session = CreatePostTutorialTransport();
+                var asteroidCheck = FindStartingCheck(session, TransportHazardType.AsteroidFieldSmall);
+                var asteroidInterval = TransportHazardRules.AsteroidFieldOccurrenceCheckIntervalSeconds;
+                state.StartTransportRun(60);
+
+                var startedBeforeInterval = state.TickTransportHazardOccurrenceForCurrentRun(
+                    asteroidInterval * asteroidCheck - 0.1f,
+                    session);
+                var startedAtInterval = state.TickTransportHazardOccurrenceForCurrentRun(0.1f, session);
+
+                Assert.That(startedBeforeInterval, Is.False);
+                Assert.That(startedAtInterval, Is.True);
+                Assert.That(state.HasActiveTransportHazard, Is.True);
+                Assert.That(
+                    state.CurrentTransportHazard.HazardType == TransportHazardType.AsteroidFieldSmall ||
+                    state.CurrentTransportHazard.HazardType == TransportHazardType.AsteroidFieldLarge,
+                    Is.True);
+
+                var cargoSession = session
+                    .WithReputation(new ReputationState(1800, 0, false))
+                    .WithReputation(new ReputationState(100, 0, false));
+                var cargoCheck = FindStartingCheck(cargoSession, TransportHazardType.CargoFreedomLeagueRegion);
+                state.TickTransportRun(state.CurrentTransportHazard.DurationSeconds);
+                var cargoStarted = state.TryStartTransportHazardForCurrentRun(
+                    cargoSession,
+                    TransportHazardType.CargoFreedomLeagueRegion,
+                    cargoCheck);
+
+                Assert.That(cargoSession.TransportHazardUnlocks.CargoFreedomLeagueUnlocked, Is.True);
+                Assert.That(cargoStarted, Is.True);
+                Assert.That(state.CurrentTransportHazard.HazardType, Is.EqualTo(TransportHazardType.CargoFreedomLeagueRegion));
+            }
+            finally
+            {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
+        public void ManualFlightBooster_ReducesAsteroidDurationAndRequiresEngineRoom()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                state.StartTransportRun(60);
+                state.StartTransportHazardForValidation(TransportHazardState.StartAsteroidField(991, 12));
+                state.ActivateDevice(ShipDeviceType.CockpitHelm);
+
+                var used = state.UseManualFlightBooster();
+
+                Assert.That(used, Is.True);
+                Assert.That(state.CurrentTransportHazard.ManualAvoidanceSeconds, Is.EqualTo(10f).Within(0.0001f));
+
+                state.TickTransportRun(2f);
+
+                Assert.That(state.HasActiveTransportHazard, Is.False);
+                Assert.That(state.LastTransportHazardResult.Resolution, Is.EqualTo(TransportHazardResolution.Avoided));
+                Assert.That(ShipStateRules.CalculateRepairCost(state.CurrentShipState), Is.Zero);
+
+                state.SetShipState(ShipState.CreateDefault()
+                    .WithRoom(ShipRoomId.EngineRoom, new ShipRoomState(50, 100)));
+                state.StartTransportRun(60);
+                state.StartTransportHazardForValidation(TransportHazardState.StartAsteroidField(991, 12));
+                state.ActivateDevice(ShipDeviceType.CockpitHelm);
+
+                Assert.That(state.UseManualFlightBooster(), Is.False);
+            }
+            finally
+            {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        private static GameSessionState CreatePostTutorialTransport()
+        {
+            var tutorialRun = GameSessionState.StartAssociationSession()
+                .StartTransport(TransportContractDefinition.CreateTutorial());
+            var completed = tutorialRun.CompleteTransport(new SettlementInput(
+                ContractType.Association,
+                ContractDifficulty.Intro,
+                TransportContractDefinition.CreateTutorial().Cargo,
+                ShipState.CreateDefault(),
+                new CrewState(1, 0),
+                tutorialRun.Wallet,
+                contractBasePay: 1000,
+                repairSupportAmount: 100));
+            return completed.StartTransport(TransportContractDefinition.CreateAssociationFollowUp());
+        }
+
+        private static int FindStartingCheck(GameSessionState session, TransportHazardType hazardType)
+        {
+            for (var i = 1; i <= 1000; i++)
+            {
+                if (TransportHazardRules.ShouldStartHazard(session, hazardType, i))
+                {
+                    return i;
+                }
+            }
+
+            throw new AssertionException("No deterministic hazard check found for " + hazardType + ".");
+        }
+
+        [Test]
+        public void ManualFlight_ForcesArmoryIntoAutoTurretMode()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                state.StartTransportRun(60);
+                state.ActivateDevice(ShipDeviceType.CockpitHelm);
+
+                state.ActivateDevice(ShipDeviceType.ArmoryTurretHandle);
+
+                Assert.That(state.CurrentWeaponOperationMode, Is.EqualTo(ShipWeaponOperationMode.AutoTurret));
+                Assert.That(state.TurretManualModeActive, Is.False);
+                Assert.That(state.ActivePanelMode, Is.EqualTo(ShipDevicePanelMode.None));
+            }
+            finally
+            {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
         public void ManualTurret_DestroysExternalTargetAndNeutralizesAsteroidHazard()
         {
             var stateObject = new GameObject("Ship Device State Test");
@@ -249,15 +552,76 @@ namespace Bellerophon.Tests.EditMode
                 state.ActivateDevice(ShipDeviceType.ArmoryTurretHandle);
                 var target = state.CurrentExternalTarget;
                 state.SetManualTurretAimForValidation(target.PositionX, target.PositionY);
-                state.FireManualTurret();
-                state.FireManualTurret();
-                var finalShot = state.FireManualTurret();
+                ManualTurretFireResult finalShot = default;
+                for (var i = 0; i < 20 && state.CurrentExternalTarget.IsActive; i++)
+                {
+                    finalShot = state.FireManualTurret();
+                }
 
                 Assert.That(finalShot.Outcome, Is.EqualTo(ManualTurretFireOutcome.Destroyed));
                 Assert.That(state.HasActiveTransportHazard, Is.False);
                 Assert.That(state.CurrentExternalTarget.IsActive, Is.False);
                 Assert.That(state.LastTransportHazardResult.Resolution, Is.EqualTo(TransportHazardResolution.Neutralized));
                 Assert.That(ShipStateRules.CalculateRepairCost(state.CurrentShipState), Is.Zero);
+            }
+            finally
+            {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
+        public void ManualTurret_UpgradeMagazineAndPlasmaNeutralizeExternalTarget()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var upgrades = ShipUpgradeState.Empty
+                    .WithPurchasedTier(ShipUpgradeCategory.WeaponSystems, 2)
+                    .WithEquippedTier(ShipUpgradeCategory.WeaponSystems, 2);
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                state.SetShipUpgradeStateForValidation(upgrades);
+                state.StartTransportRun(60);
+                state.StartTransportHazardForValidation(TransportHazardState.StartAsteroidField(991, 10));
+                state.ActivateDevice(ShipDeviceType.ArmoryTurretHandle);
+                var target = state.CurrentExternalTarget;
+                state.SetManualTurretAimForValidation(target.PositionX, target.PositionY);
+
+                var plasma = state.FireManualTurretPlasma();
+                state.TickTransportRun(0.9f);
+
+                Assert.That(state.CurrentManualTurret.MagazineCapacity, Is.EqualTo(75));
+                Assert.That(plasma.Outcome, Is.EqualTo(ManualTurretPlasmaOutcome.Activated));
+                Assert.That(state.HasActiveTransportHazard, Is.False);
+                Assert.That(state.LastTransportHazardResult.Resolution, Is.EqualTo(TransportHazardResolution.Neutralized));
+            }
+            finally
+            {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
+        public void ManualTurret_ArmoryDamageBlocksUpgradedPlasma()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var upgrades = ShipUpgradeState.Empty
+                    .WithPurchasedTier(ShipUpgradeCategory.WeaponSystems, 2)
+                    .WithEquippedTier(ShipUpgradeCategory.WeaponSystems, 2);
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                state.SetShipUpgradeStateForValidation(upgrades);
+                state.SetShipState(ShipState.CreateDefault()
+                    .WithRoom(ShipRoomId.Armory, new ShipRoomState(75, 100)));
+                state.StartTransportRun(60);
+                state.StartTransportHazardForValidation(TransportHazardState.StartAsteroidField(991, 10));
+                state.ActivateDevice(ShipDeviceType.ArmoryTurretHandle);
+
+                var plasma = state.FireManualTurretPlasma();
+
+                Assert.That(plasma.Outcome, Is.EqualTo(ManualTurretPlasmaOutcome.Unavailable));
+                Assert.That(state.HasActiveTransportHazard, Is.True);
             }
             finally
             {

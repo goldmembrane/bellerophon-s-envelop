@@ -221,21 +221,21 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Tutorial transport must start before Phase 9 settlement smoke.");
             }
 
+            var tutorialContract = startController.CurrentSession.ActiveTransportContract.Value;
             var damagedShip = ShipState.CreateDefault()
-                .WithRoom(ShipRoomId.CargoHold, new ShipRoomState(1, 100))
-                .WithRoom(ShipRoomId.Armory, new ShipRoomState(0, 100))
-                .WithRoom(ShipRoomId.SupplyRoom, new ShipRoomState(0, 100))
-                .WithRoom(ShipRoomId.ControlRoom, new ShipRoomState(0, 100));
+                .WithRoom(ShipRoomId.Armory, new ShipRoomState(70, 100));
             var expectedPendingRepairCost = ShipStateRules.CalculateRepairCost(damagedShip);
+            var expectedInsurancePayout = ShipStateRules.CalculateShipLossInsurancePayout(damagedShip);
+            var expectedGrossRevenue = tutorialContract.RewardCredits + 100 + expectedInsurancePayout;
             deviceState.SetShipState(damagedShip);
             deviceState.TickTransportRun(60f);
             settlementController.ProcessTransportArrival();
 
             var firstSettlement = settlementController.CurrentSession;
             if (firstSettlement.Phase != GameSessionPhase.Completed ||
-                firstSettlement.Wallet.Credits != 1100 ||
+                firstSettlement.Wallet.Credits != expectedGrossRevenue ||
                 firstSettlement.Wallet.HasUnpaidDebtGrace ||
-                firstSettlement.SettlementResult.GrossRevenue != 1100 ||
+                firstSettlement.SettlementResult.GrossRevenue != expectedGrossRevenue ||
                 firstSettlement.SettlementResult.Expenses != 0 ||
                 firstSettlement.SettlementResult.PendingRepairCost != expectedPendingRepairCost ||
                 firstSettlement.SettlementResult.DebtStatus != SettlementDebtStatus.Clear ||
@@ -248,7 +248,7 @@ namespace Bellerophon.Editor.Validation
 
             if (settlementController.SettlementBodyText == null ||
                 !settlementController.SettlementBodyText.text.Contains("Contract reward") ||
-                !settlementController.SettlementBodyText.text.Contains("+$1000") ||
+                !settlementController.SettlementBodyText.text.Contains("+$" + tutorialContract.RewardCredits) ||
                 !settlementController.SettlementBodyText.text.Contains("Association support bonus") ||
                 !settlementController.SettlementBodyText.text.Contains("+$100") ||
                 !settlementController.SettlementBodyText.text.Contains("Ship repair cost") ||
@@ -267,7 +267,9 @@ namespace Bellerophon.Editor.Validation
             var nextRun = firstSettlement.StartTransport(firstSettlement.ActiveTransportContract.Value);
             startController.ApplySessionState(nextRun);
             settlementController.ResetArrivalGateForValidation();
-            var firstDebtInput = CreateDebtSettlementInput(nextRun, 2500);
+            var firstDebtInput = CreateDebtSettlementInput(
+                nextRun,
+                CalculateCargoPenaltyForTargetBalance(nextRun, -300));
             settlementController.CompleteCurrentTransportForValidation(firstDebtInput);
 
             var debtSettlement = settlementController.CurrentSession;
@@ -316,6 +318,12 @@ namespace Bellerophon.Editor.Validation
             }
 
             return $"ArrivalBalance={firstSettlement.Wallet.Credits}; PendingRepair={firstSettlement.SettlementResult.PendingRepairCost}; FirstDebt={debtSettlement.Wallet.Credits}; FinalBalance={gameOver.Wallet.Credits}; Pod={podStart.x:0},{podStart.y:0}->{podEnd.x:0},{podEnd.y:0}; Suppressed={playerInput.GameplayInputSuppressed}";
+        }
+
+        private static int CalculateCargoPenaltyForTargetBalance(GameSessionState session, int targetFinalBalance)
+        {
+            var contract = session.ActiveTransportContract.Value;
+            return session.Wallet.Credits + contract.RewardCredits + 100 - targetFinalBalance;
         }
 
         private static SettlementInput CreateDebtSettlementInput(GameSessionState session, int cargoLossPenalty)

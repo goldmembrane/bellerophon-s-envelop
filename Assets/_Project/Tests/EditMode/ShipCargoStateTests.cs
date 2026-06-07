@@ -193,7 +193,7 @@ namespace Bellerophon.Tests.EditMode
             Assert.That(ShipStateRules.CanUseManualTurret(armoryDestroyed), Is.False);
 
             Assert.That(ShipStateRules.CalculateControlRoomClosedCorridorPercent(controlDamaged), Is.EqualTo(50));
-            Assert.That(ShipStateRules.CalculateControlRoomAvailableCctvCount(controlDamaged), Is.EqualTo(2));
+            Assert.That(ShipStateRules.CalculateControlRoomAvailableCctvCount(controlDamaged), Is.EqualTo(3));
             Assert.That(ShipStateRules.IsIntruderDetectionOnline(controlDamaged), Is.False);
             Assert.That(ShipStateRules.CalculateControlRoomAvailableCctvCount(controlCritical), Is.Zero);
             Assert.That(ShipStateRules.IsCargoDamageWarningOnline(controlCritical), Is.False);

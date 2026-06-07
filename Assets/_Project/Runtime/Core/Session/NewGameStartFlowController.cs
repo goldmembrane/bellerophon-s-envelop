@@ -134,6 +134,7 @@ namespace Bellerophon.Core.Session
         private void Update()
         {
             ApplyCursorMode();
+            TickTransportHazardOccurrence();
             TickSeedIntruderOccurrence();
         }
 
@@ -358,6 +359,7 @@ namespace Bellerophon.Core.Session
             shipDeviceState.SetShipState(flowState.Session.Ship);
             shipDeviceState.SetCargoState(flowState.Session.ActiveCargo.Value);
             shipDeviceState.SetEquipmentState(flowState.Session.Equipment);
+            shipDeviceState.SetShipUpgradeState(flowState.Session.ShipUpgrades);
             if (flowState.Session.ActiveTransportContract.HasValue)
             {
                 shipDeviceState.StartTransportRun(flowState.Session.ActiveTransportContract.Value.DurationSeconds);
@@ -372,6 +374,7 @@ namespace Bellerophon.Core.Session
             }
 
             shipDeviceState.SetEquipmentState(flowState.Session.Equipment);
+            shipDeviceState.SetShipUpgradeState(flowState.Session.ShipUpgrades);
         }
 
         private void TickSeedIntruderOccurrence()
@@ -382,6 +385,16 @@ namespace Bellerophon.Core.Session
             }
 
             shipDeviceState.TickSeedIntruderOccurrenceForCurrentRun(Time.deltaTime, flowState.Session);
+        }
+
+        private void TickTransportHazardOccurrence()
+        {
+            if (shipDeviceState == null || flowState == null)
+            {
+                return;
+            }
+
+            shipDeviceState.TickTransportHazardOccurrenceForCurrentRun(Time.deltaTime, flowState.Session);
         }
 
         private void CloseStartUi()

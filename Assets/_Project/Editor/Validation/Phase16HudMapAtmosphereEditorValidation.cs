@@ -46,10 +46,11 @@ namespace Bellerophon.Editor.Validation
             hud.ResolveGeneratedHudReferencesForValidation();
             if (hud.HealthText == null ||
                 hud.ShieldText == null ||
+                hud.StatusEffectsText == null ||
                 hud.HealthFillImage == null ||
                 hud.ShieldFillImage == null)
             {
-                throw new InvalidOperationException("Phase 16 health and shield bar references are missing.");
+                throw new InvalidOperationException("Phase 16 health, shield, and status references are missing.");
             }
 
             if (hud.HealthFillImage.type != Image.Type.Filled ||
@@ -62,6 +63,7 @@ namespace Bellerophon.Editor.Validation
 
             AssertTextNonBlocking(hud.HealthText, "health percent");
             AssertTextNonBlocking(hud.ShieldText, "shield percent");
+            AssertTextNonBlocking(hud.StatusEffectsText, "status effects");
             AssertTextAlignedWithBar(hud.HealthText, hud.HealthFillImage, "health");
             AssertTextAlignedWithBar(hud.ShieldText, hud.ShieldFillImage, "shield");
             AssertDefaultCrosshairHidden();

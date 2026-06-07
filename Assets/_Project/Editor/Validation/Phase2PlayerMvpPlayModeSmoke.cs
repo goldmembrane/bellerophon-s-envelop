@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using Bellerophon.Core.Player;
+using Bellerophon.Core.Session;
 using Bellerophon.Core.Ship;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -215,6 +216,8 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Runtime scene must contain player motor/input/interaction and HUD.");
             }
 
+            CompleteBlockingStartFlowIfPresent();
+
             if (Cursor.lockState != CursorLockMode.Locked || Cursor.visible)
             {
                 throw new InvalidOperationException(
@@ -278,6 +281,25 @@ namespace Bellerophon.Editor.Validation
             }
 
             return $"Scene={CargoRunSceneName}; RenderedPixels={renderedPixels}; VisibleRenderers={visibleRenderers}; InteractionCount={interactionCount}; Target={target.DisplayName}; Cursor={Cursor.lockState}";
+        }
+
+        private static void CompleteBlockingStartFlowIfPresent()
+        {
+            var startFlow = UnityEngine.Object.FindFirstObjectByType<NewGameStartFlowController>();
+            if (startFlow == null || !startFlow.gameObject.activeInHierarchy)
+            {
+                return;
+            }
+
+            if (startFlow.FlowState.Phase == NewGameStartFlowPhase.ContractPrompt)
+            {
+                startFlow.AcceptAssociationContract();
+            }
+
+            if (startFlow.FlowState.Phase == NewGameStartFlowPhase.AssociationPlanet)
+            {
+                startFlow.AcceptTutorialContract();
+            }
         }
 
         private static int GetInteractionCount(IPlayerInteractable target)

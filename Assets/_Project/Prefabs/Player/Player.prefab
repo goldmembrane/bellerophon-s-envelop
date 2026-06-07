@@ -89,6 +89,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Bellerophon.Runtime::Bellerophon.Core.Player.FirstPersonPlayerMotor
   settings: {fileID: 11400000, guid: 938e82585b536224993d1cb2dda763e1, type: 2}
   input: {fileID: 7793603886624764618}
+  playerStatus: {fileID: 2514492278183668435}
   playerCamera: {fileID: 8079079478921381917}
 --- !u!114 &2514492278183668435
 MonoBehaviour:

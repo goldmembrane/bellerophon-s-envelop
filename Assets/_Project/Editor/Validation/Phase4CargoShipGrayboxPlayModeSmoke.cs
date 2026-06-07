@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using Bellerophon.Core.Player;
+using Bellerophon.Core.Session;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -229,6 +230,8 @@ namespace Bellerophon.Editor.Validation
             RequireObject("Corridor - Cargo Hold to Armory");
             RequireObject("Corridor - Cargo Hold to Supply Room");
 
+            CompleteBlockingStartFlowIfPresent();
+
             if (Cursor.lockState != CursorLockMode.Locked || Cursor.visible)
             {
                 throw new InvalidOperationException($"Runtime cursor must be locked and hidden. LockState={Cursor.lockState}, Visible={Cursor.visible}");
@@ -296,6 +299,25 @@ namespace Bellerophon.Editor.Validation
             }
 
             return $"Scene={CargoRunSceneName}; RenderedPixels={renderedPixels}; VisibleRenderers={visibleRenderers}; Rooms=6; Corridors=10; InteractionTarget={currentTarget.DisplayName}; Moved={moved.ToString("0.00", CultureInfo.InvariantCulture)}; ArmoryCargoRoute={armoryCargoRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}";
+        }
+
+        private static void CompleteBlockingStartFlowIfPresent()
+        {
+            var startFlow = UnityEngine.Object.FindFirstObjectByType<NewGameStartFlowController>();
+            if (startFlow == null || !startFlow.gameObject.activeInHierarchy)
+            {
+                return;
+            }
+
+            if (startFlow.FlowState.Phase == NewGameStartFlowPhase.ContractPrompt)
+            {
+                startFlow.AcceptAssociationContract();
+            }
+
+            if (startFlow.FlowState.Phase == NewGameStartFlowPhase.AssociationPlanet)
+            {
+                startFlow.AcceptTutorialContract();
+            }
         }
 
         private static float ValidateArmoryCargoRoute(FirstPersonPlayerMotor playerMotor, CharacterController controller)

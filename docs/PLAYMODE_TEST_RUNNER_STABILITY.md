@@ -1,5 +1,34 @@
 # PlayMode Test Runner Stability
 
+## Step 10 Open Editor Recheck (2026-06-07)
+
+- Unity editor was open for `D:\Bellerophon2\Bellerophon` with Unity `6000.3.16f1`.
+- Step 10 feature smokes passed:
+  - `.\scripts\Run-Phase6RoomInteractionsSmoke.ps1`
+  - `.\scripts\Run-Phase11AsteroidHazardSmoke.ps1`
+  - `.\scripts\Run-Phase12ManualTurretSmoke.ps1`
+  - `.\scripts\Run-Phase16HudMapAtmosphereSmoke.ps1`
+  - `.\scripts\Run-Phase18MvpPlaytestLoopSmoke.ps1`
+- `.\scripts\Run-EditModeTests.ps1` passed with `177/177`.
+- `.\scripts\Build-WindowsDev.ps1` passed.
+- Open-editor `.\scripts\Run-PlayModeTests.ps1` still failed with `PlayModeTests did not return a Unity Test Runner completion callback within 120 seconds.`
+- No `TestResults\playmode-results.xml` was produced in that open-editor Test Runner path.
+- The editor remained in Play mode after the timeout. Restarting the Unity editor cleared the stuck state, and `.\scripts\Run-Phase16HudMapAtmosphereSmoke.ps1` passed afterward.
+
+## Step 9 Open Editor Recheck (2026-06-07)
+
+- Unity editor was launched for `D:\Bellerophon2\Bellerophon` with Unity `6000.3.16f1`.
+- Open-editor feature smoke tests passed:
+  - `.\scripts\Run-Phase15EquipmentLoopSmoke.ps1`
+  - `.\scripts\Run-Phase16HudMapAtmosphereSmoke.ps1`
+  - `.\scripts\Run-Phase18MvpPlaytestLoopSmoke.ps1`
+- Full open-editor phase smoke recheck passed for all currently available phase smoke scripts through Phase18: Phase2, Phase4, Phase6, Phase7, Phase8, Phase9, Phase10, Phase11, Phase12, Phase13, Phase14, Phase15, Phase16, Phase17, and Phase18.
+- Phase1, Phase3, and Phase5 do not currently have dedicated smoke scripts.
+- Open-editor `.\scripts\Run-PlayModeTests.ps1` still failed twice with `PlayModeTests did not return a Unity Test Runner completion callback within 120 seconds.`
+- A later open-editor retry after the Phase18 smoke recheck failed with the same callback timeout and produced no `TestResults\playmode-results.xml`.
+- No PlayMode result XML was produced in the open-editor Test Runner path.
+- `.\scripts\Build-WindowsDev.ps1` passed afterward through the open-editor bridge, so the stale Test Runner request did not block later bridge commands.
+
 ## Step 8 Recheck (2026-06-06)
 
 - During detailed step 8 validation, feature-specific smoke tests completed, but the open-editor `UnityEditorValidationBridge` stopped picking up later bridge requests after a Test Runner pending state.

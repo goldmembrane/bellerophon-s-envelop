@@ -75,13 +75,66 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Phase 13 ship destruction objective must damage a target ship room.");
             }
 
+            var routeDefinition = CreateDefinition(
+                IntruderObjectiveType.DestroyShip,
+                new[]
+                {
+                    new IntruderTargetPriority(IntruderTargetType.Ship, ShipRoomId.Armory, 0)
+                });
+            var routeAttempt = IntruderRules.CreateAttempt(
+                "phase13-route",
+                routeDefinition,
+                0,
+                ShipRoomId.Cockpit);
+            var routeIntruder = IntruderRules.CreateBoardedIntruder(
+                IntruderRules.ResolveAttempt(routeAttempt, false),
+                routeDefinition);
+            var criticalControl = ShipState.CreateDefault()
+                .WithRoom(ShipRoomId.ControlRoom, new ShipRoomState(25, 100));
+            var closedRoute = IntruderRules.AssessRoute(routeIntruder, criticalControl);
+            if (closedRoute.HasPath ||
+                closedRoute.ClosedCorridorPercent != 90 ||
+                closedRoute.ClosedCorridorCount != 9)
+            {
+                throw new InvalidOperationException("Phase 13 route validation must reflect critical control-room corridor closure.");
+            }
+
+            var destroyedControl = ShipState.CreateDefault()
+                .WithRoom(ShipRoomId.ControlRoom, new ShipRoomState(0, 100));
+            var environment = IntruderRules.AssessEnvironment(routeDefinition, destroyedControl, 3);
+            if (environment.IntruderSuppressionOnline ||
+                environment.StatMultiplier != ShipStateRules.ControlRoomDestroyedIntruderStatMultiplier ||
+                environment.EffectiveRoomDamage != 9)
+            {
+                throw new InvalidOperationException("Phase 13 environment validation must reflect disabled internal intruder suppression.");
+            }
+
+            var bond = IntruderRules.DetermineRelation(
+                IntruderFaction.CargoFreedomLeague,
+                IntruderFaction.CargoFreedomLeague);
+            var alienPirate = IntruderRules.DetermineRelation(
+                IntruderFaction.AlienLifeform,
+                IntruderFaction.SpacePirate);
+            var seedAlien = IntruderRules.DetermineRelation(
+                IntruderFaction.SeedEntity,
+                IntruderFaction.AlienLifeform);
+            if (bond.RelationKind != IntruderRelationKind.Bonded ||
+                bond.MarkerKind != IntruderRelationMarkerKind.GreenCircle ||
+                bond.FriendlyFireDamagesHealth ||
+                bond.FriendlyFireAppliesStatusEffects ||
+                alienPirate.RelationKind != IntruderRelationKind.Competitive ||
+                seedAlien.RelationKind != IntruderRelationKind.Hostile)
+            {
+                throw new InvalidOperationException("Phase 13 faction relation validation must match the source design.");
+            }
+
             var attempt = IntruderRules.CreateAttempt(
                 "phase13-summary",
                 CreateDefinition(IntruderObjectiveType.AttackCargo, null),
                 42,
                 ShipRoomId.Cockpit);
 
-            return $"Attempt={attempt.Phase}; Entry={attempt.EntryRoom}; Cargo={cargoImpact.Cargo.DurabilityPercent:0.00}; RoomOffline={roomImpact.Ship.GetRoom(ShipRoomId.ControlRoom).IsFunctionOffline}; PlayerThreat={playerImpact.ThreatensPlayer}; ShipDamage={shipImpact.RoomDamageApplied}";
+            return $"Attempt={attempt.Phase}; Entry={attempt.EntryRoom}; Cargo={cargoImpact.Cargo.DurabilityPercent:0.00}; RoomOffline={roomImpact.Ship.GetRoom(ShipRoomId.ControlRoom).IsFunctionOffline}; PlayerThreat={playerImpact.ThreatensPlayer}; ShipDamage={shipImpact.RoomDamageApplied}; ClosedCorridors={closedRoute.ClosedCorridorCount}; Suppression={environment.IntruderSuppressionOnline}; Relation={bond.RelationKind}/{alienPirate.RelationKind}/{seedAlien.RelationKind}";
         }
 
         private static IntruderImpactResult ApplyImpact(IntruderDefinition definition)

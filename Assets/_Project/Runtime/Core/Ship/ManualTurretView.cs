@@ -102,6 +102,11 @@ namespace Bellerophon.Core.Ship
                 deltaSeconds,
                 Mouse.current.leftButton.isPressed,
                 Mouse.current.leftButton.wasPressedThisFrame);
+
+            if (Mouse.current.rightButton.wasPressedThisFrame)
+            {
+                interactionState.FireManualTurretPlasma();
+            }
         }
 
         public ManualTurretFireResult ProcessHeldFireForValidation(
@@ -238,10 +243,16 @@ namespace Bellerophon.Core.Ship
             var turret = interactionState.CurrentManualTurret;
             var target = interactionState.CurrentExternalTarget;
             var text = "Manual Turret\n"
-                       + "Ammo: " + turret.AmmoInMagazine + "/" + ManualTurretState.MagazineSize + "\n";
+                       + "Ammo: " + turret.AmmoInMagazine + "/" + turret.MagazineCapacity + "\n";
             if (turret.IsReloading)
             {
                 text += "Reload: " + Mathf.CeilToInt(turret.ReloadRemainingSeconds) + "s\n";
+            }
+
+            if (turret.PlasmaCannonInstalled)
+            {
+                text += "Plasma: " + Mathf.CeilToInt(turret.PlasmaActiveRemainingSeconds) + "s"
+                        + " / Cooldown " + Mathf.CeilToInt(turret.PlasmaCooldownRemainingSeconds) + "s\n";
             }
 
             text += target.IsActive

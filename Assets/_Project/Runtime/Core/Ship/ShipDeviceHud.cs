@@ -1,4 +1,5 @@
 using System.Text;
+using Bellerophon.Core.Player;
 using Bellerophon.Core.Session;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,10 +12,20 @@ namespace Bellerophon.Core.Ship
         [SerializeField] private ShipDeviceInteractionState interactionState;
         [SerializeField] private Text panelText;
         [SerializeField] private Text transportStatusText;
+        [SerializeField] private FirstPersonPlayerInput playerInput;
+
+        private const string ControlRoomButtonRootName = "Control Room Vertical Room Buttons";
+
+        private GameObject controlRoomButtonRoot;
+        private Button[] controlRoomRoomButtons;
+        private bool ownsCursorSuppression;
+        private bool ownsGameplaySuppression;
 
         public Text PanelText => panelText;
 
         public Text TransportStatusText => transportStatusText;
+
+        public Button[] ControlRoomRoomButtons => controlRoomRoomButtons ?? new Button[0];
 
         public void Configure(ShipDeviceInteractionState state, Text label)
         {
@@ -27,6 +38,7 @@ namespace Bellerophon.Core.Ship
             panelText = label;
             transportStatusText = transportLabel;
             DisableTextRaycasts();
+            EnsureControlRoomRoomButtons();
             RefreshPanel();
             RefreshTransportStatus();
         }
@@ -38,30 +50,59 @@ namespace Bellerophon.Core.Ship
             RefreshTransportStatus();
         }
 
+        private void OnDisable()
+        {
+            SetControlRoomInputMode(false);
+        }
+
+        private void OnDestroy()
+        {
+            SetControlRoomInputMode(false);
+        }
+
         public void ProcessDeviceInput()
         {
             if (interactionState == null ||
-                interactionState.ActivePanelMode != ShipDevicePanelMode.ControlRoom ||
-                Keyboard.current == null)
+                interactionState.ActivePanelMode == ShipDevicePanelMode.None)
             {
                 return;
             }
 
-            if (Keyboard.current.aKey.wasPressedThisFrame)
+            if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+            {
+                interactionState.ExitActiveDevicePanel();
+                return;
+            }
+
+            if (interactionState.ActivePanelMode != ShipDevicePanelMode.ControlRoom)
+            {
+                return;
+            }
+
+            if (Keyboard.current != null && Keyboard.current.aKey.wasPressedThisFrame)
             {
                 interactionState.CycleCctv(-1);
             }
 
-            if (Keyboard.current.dKey.wasPressedThisFrame)
+            if (Keyboard.current != null && Keyboard.current.dKey.wasPressedThisFrame)
             {
                 interactionState.CycleCctv(1);
             }
+
+            if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
+            {
+                interactionState.SwitchControlRoomScreenByRightClick();
+            }
+
+            ProcessControlRoomSelectionKeys();
         }
 
         public void RefreshPanel()
         {
             if (panelText == null)
             {
+                SetControlRoomInputMode(false);
+                SetControlRoomRoomButtonsVisible(false);
                 return;
             }
 
@@ -70,11 +111,18 @@ namespace Bellerophon.Core.Ship
             {
                 panelText.enabled = false;
                 panelText.text = string.Empty;
+                SetControlRoomInputMode(false);
+                SetControlRoomRoomButtonsVisible(false);
                 return;
             }
 
             panelText.enabled = true;
             panelText.text = BuildPanelText();
+            var isControlRoom = interactionState.ActivePanelMode == ShipDevicePanelMode.ControlRoom;
+            SetControlRoomInputMode(isControlRoom);
+            UpdateControlRoomRoomButtons(
+                isControlRoom &&
+                interactionState.CurrentControlRoomScreenMode == ShipControlRoomScreenMode.VerticalRoomList);
         }
 
         public void RefreshTransportStatus()
@@ -123,6 +171,7 @@ namespace Bellerophon.Core.Ship
             return "Manual Flight\n"
                    + "Mode: " + FormatFlightMode(interactionState.CurrentFlightMode) + "\n"
                    + "Input Response: " + FormatPercent(ShipStateRules.CalculateManualFlightInputMultiplier(ship)) + "\n"
+                   + "Booster: " + FormatOnline(ShipStateRules.CanUseBooster(ship)) + "\n"
                    + "Vector: " + FormatSigned(interactionState.ManualFlightOffsetX) + ", " + FormatSigned(interactionState.ManualFlightOffsetY) + "\n"
                    + "Status: " + interactionState.LastInteractionSummary;
         }
@@ -186,12 +235,17 @@ namespace Bellerophon.Core.Ship
             var target = interactionState.CurrentExternalTarget;
             var builder = new StringBuilder();
             builder.AppendLine("Manual Turret");
+            builder.AppendLine("Weapon Mode: " + FormatWeaponOperationMode(interactionState.CurrentWeaponOperationMode));
             builder.AppendLine("Manual Turret: " + FormatOnline(ShipStateRules.CanUseManualTurret(ship)));
             builder.AppendLine("Auto Aim: " + FormatOnline(ShipStateRules.IsAutoAimOnline(ship)));
-            builder.AppendLine("Plasma: " + FormatOnline(ShipStateRules.IsPlasmaCannonAvailable(ship)));
+            builder.AppendLine("Plasma: " + FormatOnline(ShipStateRules.IsPlasmaCannonAvailable(
+                ship,
+                interactionState.CurrentShipUpgradeState)));
             builder.AppendLine("Aim Response: " + FormatPercent(ShipStateRules.CalculateManualTurretAimMultiplier(ship)));
-            builder.AppendLine("Ammo: " + turret.AmmoInMagazine + "/" + ManualTurretState.MagazineSize);
+            builder.AppendLine("Ammo: " + turret.AmmoInMagazine + "/" + turret.MagazineCapacity);
             builder.AppendLine("Reloading: " + FormatBool(turret.IsReloading));
+            builder.AppendLine("Plasma Active: " + FormatSeconds(turret.PlasmaActiveRemainingSeconds));
+            builder.AppendLine("Plasma Cooldown: " + FormatSeconds(turret.PlasmaCooldownRemainingSeconds));
             builder.AppendLine("Intruder Exposure: " + FormatBool(turret.IntruderHitPossible));
             builder.AppendLine(target.IsActive
                 ? "Target: " + FormatExternalTargetType(target.TargetType) + " " + target.CurrentHealth + "/" + target.MaxHealth
@@ -204,22 +258,318 @@ namespace Bellerophon.Core.Ship
         {
             var ship = interactionState.CurrentShipState;
             var builder = new StringBuilder();
-            builder.AppendLine("Control Room Screen");
-            builder.AppendLine("CCTV A/D: " + ShipDeviceInteractionState.GetCctvDisplayName(interactionState.CurrentCctvTarget));
+            builder.AppendLine("Control Room Screen: " +
+                               FormatControlRoomScreenMode(interactionState.CurrentControlRoomScreenMode));
             builder.AppendLine("Corridor Seal: " + ShipStateRules.CalculateControlRoomClosedCorridorPercent(ship) + "%");
             builder.AppendLine("CCTV Channels: " + ShipStateRules.CalculateControlRoomAvailableCctvCount(ship) +
                                "/" + ShipStateRules.DefaultControlRoomCctvCount);
             builder.AppendLine("Intruder Detection: " + FormatOnline(ShipStateRules.IsIntruderDetectionOnline(ship)));
             builder.AppendLine("Cargo Warning: " + FormatOnline(ShipStateRules.IsCargoDamageWarningOnline(ship)));
             builder.AppendLine("Suppression: " + FormatOnline(ShipStateRules.IsIntruderSuppressionOnline(ship)));
+            AppendPurificationLine(builder);
+
+            switch (interactionState.CurrentControlRoomScreenMode)
+            {
+                case ShipControlRoomScreenMode.MainCctv:
+                    AppendMainCctvScreen(builder);
+                    break;
+                case ShipControlRoomScreenMode.VerticalRoomList:
+                    AppendVerticalRoomListScreen(builder);
+                    break;
+                case ShipControlRoomScreenMode.HorizontalShipLayout:
+                    AppendHorizontalShipLayoutScreen(builder);
+                    break;
+            }
+
+            return builder.ToString();
+        }
+
+        private void AppendMainCctvScreen(StringBuilder builder)
+        {
+            builder.AppendLine("CCTV A/D: " +
+                               ShipDeviceInteractionState.GetCctvDisplayName(interactionState.CurrentCctvTarget));
+            var roomId = ShipDeviceInteractionState.GetRoomForCctvTarget(interactionState.CurrentCctvTarget);
+            AppendRoomLine(builder, ShipDeviceInteractionState.GetCctvDisplayName(interactionState.CurrentCctvTarget), roomId);
+            AppendRoomPresenceLine(builder, roomId);
+        }
+
+        private void AppendVerticalRoomListScreen(StringBuilder builder)
+        {
+            builder.AppendLine("Vertical Room List");
+            builder.AppendLine("Click a listed room or press 1-6.");
+            var rooms = ShipDeviceInteractionState.GetControlRoomVerticalRoomOrder();
+            for (var i = 0; i < rooms.Length; i++)
+            {
+                var roomId = rooms[i];
+                var room = interactionState.CurrentShipState.GetRoom(roomId);
+                builder.AppendLine((i + 1) + ". " + FormatRoomName(roomId) +
+                                   " | Sealed: " + FormatBool(room.IsSealed) +
+                                   " | Durability: " + FormatRoomStatus(room));
+            }
+        }
+
+        public Button GetControlRoomRoomButtonForValidation(ShipRoomId roomId)
+        {
+            EnsureControlRoomRoomButtons();
+            var rooms = ShipDeviceInteractionState.GetControlRoomVerticalRoomOrder();
+            for (var i = 0; i < rooms.Length; i++)
+            {
+                if (rooms[i] == roomId && controlRoomRoomButtons != null && i < controlRoomRoomButtons.Length)
+                {
+                    return controlRoomRoomButtons[i];
+                }
+            }
+
+            return null;
+        }
+
+        private void ProcessControlRoomSelectionKeys()
+        {
+            if (Keyboard.current == null ||
+                interactionState == null ||
+                interactionState.CurrentControlRoomScreenMode != ShipControlRoomScreenMode.VerticalRoomList)
+            {
+                return;
+            }
+
+            for (var i = 0; i < 6; i++)
+            {
+                if (IsDisplayIndexPressed(i + 1))
+                {
+                    interactionState.SelectControlRoomVerticalRoomByDisplayIndex(i + 1);
+                    return;
+                }
+            }
+        }
+
+        private bool IsDisplayIndexPressed(int displayIndex)
+        {
+            switch (displayIndex)
+            {
+                case 1:
+                    return Keyboard.current[Key.Digit1].wasPressedThisFrame ||
+                           Keyboard.current[Key.Numpad1].wasPressedThisFrame;
+                case 2:
+                    return Keyboard.current[Key.Digit2].wasPressedThisFrame ||
+                           Keyboard.current[Key.Numpad2].wasPressedThisFrame;
+                case 3:
+                    return Keyboard.current[Key.Digit3].wasPressedThisFrame ||
+                           Keyboard.current[Key.Numpad3].wasPressedThisFrame;
+                case 4:
+                    return Keyboard.current[Key.Digit4].wasPressedThisFrame ||
+                           Keyboard.current[Key.Numpad4].wasPressedThisFrame;
+                case 5:
+                    return Keyboard.current[Key.Digit5].wasPressedThisFrame ||
+                           Keyboard.current[Key.Numpad5].wasPressedThisFrame;
+                case 6:
+                    return Keyboard.current[Key.Digit6].wasPressedThisFrame ||
+                           Keyboard.current[Key.Numpad6].wasPressedThisFrame;
+                default:
+                    return false;
+            }
+        }
+
+        private void EnsureControlRoomRoomButtons()
+        {
+            if (controlRoomButtonRoot != null || panelText == null)
+            {
+                return;
+            }
+
+            var parent = panelText.transform.parent;
+            if (parent == null)
+            {
+                return;
+            }
+
+            var existing = parent.Find(ControlRoomButtonRootName);
+            if (existing != null)
+            {
+                DestroyUnityObject(existing.gameObject);
+            }
+
+            controlRoomButtonRoot = new GameObject(ControlRoomButtonRootName);
+            controlRoomButtonRoot.transform.SetParent(parent, false);
+
+            var panelRect = panelText.rectTransform;
+            var rootRect = controlRoomButtonRoot.AddComponent<RectTransform>();
+            rootRect.anchorMin = panelRect.anchorMin;
+            rootRect.anchorMax = panelRect.anchorMax;
+            rootRect.pivot = panelRect.pivot;
+            rootRect.anchoredPosition = panelRect.anchoredPosition;
+            rootRect.sizeDelta = panelRect.sizeDelta;
+
+            var rooms = ShipDeviceInteractionState.GetControlRoomVerticalRoomOrder();
+            controlRoomRoomButtons = new Button[rooms.Length];
+            for (var i = 0; i < rooms.Length; i++)
+            {
+                controlRoomRoomButtons[i] = CreateControlRoomRoomButton(rootRect, rooms[i], i + 1);
+            }
+
+            SetControlRoomRoomButtonsVisible(false);
+        }
+
+        private Button CreateControlRoomRoomButton(RectTransform parent, ShipRoomId roomId, int displayIndex)
+        {
+            var buttonObject = new GameObject("Control Room " + FormatRoomName(roomId) + " Button");
+            buttonObject.transform.SetParent(parent, false);
+
+            var rectTransform = buttonObject.AddComponent<RectTransform>();
+            rectTransform.anchorMin = new Vector2(1f, 0f);
+            rectTransform.anchorMax = new Vector2(1f, 0f);
+            rectTransform.pivot = new Vector2(1f, 0f);
+            rectTransform.anchoredPosition = new Vector2(-16f, 48f + (displayIndex - 1) * 34f);
+            rectTransform.sizeDelta = new Vector2(260f, 30f);
+
+            var image = buttonObject.AddComponent<Image>();
+            image.color = new Color(0.08f, 0.12f, 0.12f, 0.82f);
+
+            var button = buttonObject.AddComponent<Button>();
+            var capturedIndex = displayIndex;
+            button.onClick.AddListener(() =>
+            {
+                if (interactionState != null)
+                {
+                    interactionState.SelectControlRoomVerticalRoomByDisplayIndex(capturedIndex);
+                }
+            });
+
+            var textObject = new GameObject("Label");
+            textObject.transform.SetParent(buttonObject.transform, false);
+            var textRect = textObject.AddComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = new Vector2(10f, 0f);
+            textRect.offsetMax = new Vector2(-10f, 0f);
+
+            var label = textObject.AddComponent<Text>();
+            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            label.fontSize = 16;
+            label.alignment = TextAnchor.MiddleLeft;
+            label.color = new Color(0.9f, 0.96f, 0.93f, 1f);
+            label.raycastTarget = false;
+            label.text = displayIndex + ". " + FormatRoomName(roomId);
+
+            return button;
+        }
+
+        private void UpdateControlRoomRoomButtons(bool visible)
+        {
+            EnsureControlRoomRoomButtons();
+            SetControlRoomRoomButtonsVisible(visible);
+            if (!visible || controlRoomRoomButtons == null)
+            {
+                return;
+            }
+
+            var canUse = interactionState != null &&
+                         ShipStateRules.CanUseControlRoomRoomOperation(interactionState.CurrentShipState) &&
+                         !interactionState.CurrentControlRoomPurification.IsActive;
+            for (var i = 0; i < controlRoomRoomButtons.Length; i++)
+            {
+                if (controlRoomRoomButtons[i] != null)
+                {
+                    controlRoomRoomButtons[i].interactable = canUse;
+                }
+            }
+        }
+
+        private void SetControlRoomRoomButtonsVisible(bool visible)
+        {
+            if (controlRoomButtonRoot != null && controlRoomButtonRoot.activeSelf != visible)
+            {
+                controlRoomButtonRoot.SetActive(visible);
+            }
+        }
+
+        private void SetControlRoomInputMode(bool active)
+        {
+            if (playerInput == null)
+            {
+                playerInput = Object.FindFirstObjectByType<FirstPersonPlayerInput>();
+            }
+
+            if (playerInput == null)
+            {
+                if (Application.isPlaying && active)
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                }
+
+                ownsCursorSuppression = active;
+                ownsGameplaySuppression = active;
+                return;
+            }
+
+            if (active)
+            {
+                if (!ownsCursorSuppression)
+                {
+                    playerInput.SetCursorLockSuppressed(true);
+                    ownsCursorSuppression = true;
+                }
+
+                if (!ownsGameplaySuppression)
+                {
+                    playerInput.SetGameplayInputSuppressed(true);
+                    ownsGameplaySuppression = true;
+                }
+
+                return;
+            }
+
+            if (ownsGameplaySuppression)
+            {
+                playerInput.SetGameplayInputSuppressed(false);
+                ownsGameplaySuppression = false;
+            }
+
+            if (ownsCursorSuppression)
+            {
+                playerInput.SetCursorLockSuppressed(false);
+                ownsCursorSuppression = false;
+            }
+        }
+
+        private void AppendHorizontalShipLayoutScreen(StringBuilder builder)
+        {
             builder.AppendLine("Ship Layout");
             AppendRoomLine(builder, "Cockpit", ShipRoomId.Cockpit);
+            AppendRoomPresenceLine(builder, ShipRoomId.Cockpit);
             AppendRoomLine(builder, "Cargo Hold", ShipRoomId.CargoHold);
+            AppendRoomPresenceLine(builder, ShipRoomId.CargoHold);
             AppendRoomLine(builder, "Engine Room", ShipRoomId.EngineRoom);
+            AppendRoomPresenceLine(builder, ShipRoomId.EngineRoom);
             AppendRoomLine(builder, "Control Room", ShipRoomId.ControlRoom);
+            AppendRoomPresenceLine(builder, ShipRoomId.ControlRoom);
             AppendRoomLine(builder, "Armory", ShipRoomId.Armory);
+            AppendRoomPresenceLine(builder, ShipRoomId.Armory);
             AppendRoomLine(builder, "Supply Room", ShipRoomId.SupplyRoom);
-            return builder.ToString();
+            AppendRoomPresenceLine(builder, ShipRoomId.SupplyRoom);
+        }
+
+        private void AppendPurificationLine(StringBuilder builder)
+        {
+            var purification = interactionState.CurrentControlRoomPurification;
+            if (!purification.IsActive)
+            {
+                builder.AppendLine("Internal Purification: Offline");
+                return;
+            }
+
+            builder.AppendLine("Internal Purification: " + FormatRoomName(purification.TargetRoom) +
+                               " " + Mathf.CeilToInt(purification.RemainingSeconds) + "s" +
+                               " | Fire " + purification.AppliedFireDamage + "/" +
+                               ControlRoomPurificationState.TotalFireDamage +
+                               " | Player Damage " + interactionState.LastPurificationPlayerDamage);
+        }
+
+        private void AppendRoomPresenceLine(StringBuilder builder, ShipRoomId roomId)
+        {
+            var hostileCount = CountHostileEntities(roomId);
+            var friendlyCount = CountFriendlyEntities(roomId);
+            builder.AppendLine("  Friendly: " + friendlyCount + " | Hostile: " + hostileCount);
         }
 
         private string BuildSupplyStorageText()
@@ -279,6 +629,23 @@ namespace Bellerophon.Core.Ship
             var room = interactionState.CurrentShipState.GetRoom(roomId);
             builder.AppendLine(label + ": " + FormatRoomStatus(room) + " | " +
                                ShipStateRules.BuildRoomDamageEffectSummary(interactionState.CurrentShipState, roomId));
+        }
+
+        private int CountFriendlyEntities(ShipRoomId roomId)
+        {
+            var playerStatus = Object.FindFirstObjectByType<FirstPersonPlayerStatus>();
+            if (playerStatus == null)
+            {
+                return 0;
+            }
+
+            return ShipInteriorMapRules.FindCurrentRoom(playerStatus.transform.position) == roomId ? 1 : 0;
+        }
+
+        private int CountHostileEntities(ShipRoomId roomId)
+        {
+            var seedIntruder = interactionState.CurrentSeedIntruder;
+            return seedIntruder.IsActive && seedIntruder.Intruder.CurrentRoom == roomId ? 1 : 0;
         }
 
         private void AppendSeedIntruderStatus(StringBuilder builder)
@@ -341,15 +708,34 @@ namespace Bellerophon.Core.Ship
             return mode == ShipFlightMode.AutoPilot ? "Auto Pilot" : "Manual Flight";
         }
 
+        private static string FormatWeaponOperationMode(ShipWeaponOperationMode mode)
+        {
+            return mode == ShipWeaponOperationMode.ManualTurret ? "Manual Turret" : "Auto Turret";
+        }
+
+        private static string FormatControlRoomScreenMode(ShipControlRoomScreenMode mode)
+        {
+            switch (mode)
+            {
+                case ShipControlRoomScreenMode.MainCctv:
+                    return "Main CCTV";
+                case ShipControlRoomScreenMode.VerticalRoomList:
+                    return "Vertical Room List";
+                case ShipControlRoomScreenMode.HorizontalShipLayout:
+                    return "Horizontal Ship Layout";
+                default:
+                    return mode.ToString();
+            }
+        }
+
+        private static string FormatSeconds(float seconds)
+        {
+            return Mathf.CeilToInt(Mathf.Max(0f, seconds)) + "s";
+        }
+
         private static string FormatHazardType(TransportHazardType hazardType)
         {
-            switch (hazardType)
-            {
-                case TransportHazardType.AsteroidField:
-                    return "Asteroid Field";
-                default:
-                    return "None";
-            }
+            return TransportHazardRules.FormatHazardType(hazardType);
         }
 
         private static string FormatHazardResolution(TransportHazardResolution resolution)
@@ -463,6 +849,28 @@ namespace Bellerophon.Core.Ship
             if (transportStatusText != null)
             {
                 transportStatusText.raycastTarget = false;
+            }
+        }
+
+        private static void DestroyUnityObject(Object target)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            if (Application.isPlaying)
+            {
+                if (target is GameObject gameObject)
+                {
+                    gameObject.SetActive(false);
+                }
+
+                Destroy(target);
+            }
+            else
+            {
+                DestroyImmediate(target);
             }
         }
     }

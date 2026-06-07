@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Bellerophon.Core.Session
 {
@@ -9,6 +10,13 @@ namespace Bellerophon.Core.Session
         AlienLifeform,
         CargoFreedomLeague,
         SpacePirate
+    }
+
+    public enum IntruderMobilityKind
+    {
+        Walking,
+        Flying,
+        Stationary
     }
 
     public enum IntruderObjectiveType
@@ -36,6 +44,25 @@ namespace Bellerophon.Core.Session
         Room,
         Player,
         Ship
+    }
+
+    public enum IntruderRelationKind
+    {
+        None,
+        Hostile,
+        Competitive,
+        Allied,
+        Bonded,
+        Commanded
+    }
+
+    public enum IntruderRelationMarkerKind
+    {
+        None,
+        RedCircle,
+        GrayCircle,
+        SkyBlueCircle,
+        GreenCircle
     }
 
     public enum IntruderResolution
@@ -90,6 +117,126 @@ namespace Bellerophon.Core.Session
         public ShipRoomId RoomId { get; }
     }
 
+    public readonly struct IntruderRelationProfile
+    {
+        public IntruderRelationProfile(
+            IntruderRelationKind relationKind,
+            IntruderRelationMarkerKind markerKind,
+            bool canDirectlyAttack,
+            bool friendlyFireDamagesHealth,
+            bool friendlyFireAppliesStatusEffects)
+        {
+            if (relationKind == IntruderRelationKind.None)
+            {
+                throw new ArgumentOutOfRangeException(nameof(relationKind), "Intruder relation requires a concrete relation kind.");
+            }
+
+            RelationKind = relationKind;
+            MarkerKind = markerKind;
+            CanDirectlyAttack = canDirectlyAttack;
+            FriendlyFireDamagesHealth = friendlyFireDamagesHealth;
+            FriendlyFireAppliesStatusEffects = friendlyFireAppliesStatusEffects;
+        }
+
+        public IntruderRelationKind RelationKind { get; }
+
+        public IntruderRelationMarkerKind MarkerKind { get; }
+
+        public bool CanDirectlyAttack { get; }
+
+        public bool FriendlyFireDamagesHealth { get; }
+
+        public bool FriendlyFireAppliesStatusEffects { get; }
+    }
+
+    public readonly struct IntruderEnvironmentAssessment
+    {
+        public IntruderEnvironmentAssessment(
+            int closedCorridorPercent,
+            int closedCorridorCount,
+            int blackoutRoomCount,
+            int availableCctvCount,
+            bool intruderDetectionOnline,
+            bool intruderSuppressionOnline,
+            float statMultiplier,
+            float effectiveMovementSpeed,
+            int effectiveRoomDamage)
+        {
+            ClosedCorridorPercent = Math.Max(0, closedCorridorPercent);
+            ClosedCorridorCount = Math.Max(0, closedCorridorCount);
+            BlackoutRoomCount = Math.Max(0, blackoutRoomCount);
+            AvailableCctvCount = Math.Max(0, availableCctvCount);
+            IntruderDetectionOnline = intruderDetectionOnline;
+            IntruderSuppressionOnline = intruderSuppressionOnline;
+            StatMultiplier = statMultiplier < 0f ? 0f : statMultiplier;
+            EffectiveMovementSpeed = effectiveMovementSpeed < 0f ? 0f : effectiveMovementSpeed;
+            EffectiveRoomDamage = Math.Max(0, effectiveRoomDamage);
+        }
+
+        public int ClosedCorridorPercent { get; }
+
+        public int ClosedCorridorCount { get; }
+
+        public int BlackoutRoomCount { get; }
+
+        public int AvailableCctvCount { get; }
+
+        public bool IntruderDetectionOnline { get; }
+
+        public bool IntruderSuppressionOnline { get; }
+
+        public float StatMultiplier { get; }
+
+        public float EffectiveMovementSpeed { get; }
+
+        public int EffectiveRoomDamage { get; }
+    }
+
+    public readonly struct IntruderRouteAssessment
+    {
+        public IntruderRouteAssessment(
+            ShipRoomId currentRoom,
+            ShipRoomId targetRoom,
+            ShipRoomId nextRoom,
+            bool hasPath,
+            bool isAtTarget,
+            bool blockedBySealedRoom,
+            int closedCorridorPercent,
+            int closedCorridorCount,
+            int remainingStepCount)
+        {
+            CurrentRoom = currentRoom;
+            TargetRoom = targetRoom;
+            NextRoom = nextRoom;
+            HasPath = hasPath;
+            IsAtTarget = isAtTarget;
+            BlockedBySealedRoom = blockedBySealedRoom;
+            ClosedCorridorPercent = Math.Max(0, closedCorridorPercent);
+            ClosedCorridorCount = Math.Max(0, closedCorridorCount);
+            RemainingStepCount = Math.Max(0, remainingStepCount);
+        }
+
+        public ShipRoomId CurrentRoom { get; }
+
+        public ShipRoomId TargetRoom { get; }
+
+        public ShipRoomId NextRoom { get; }
+
+        public bool HasPath { get; }
+
+        public bool IsAtTarget { get; }
+
+        public bool BlockedBySealedRoom { get; }
+
+        public int ClosedCorridorPercent { get; }
+
+        public int ClosedCorridorCount { get; }
+
+        public int RemainingStepCount { get; }
+
+        public bool CanAdvance => HasPath && !IsAtTarget && !BlockedBySealedRoom;
+    }
+
     public readonly struct IntruderDefinition
     {
         private static readonly IntruderTargetPriority[] EmptyPriorities = new IntruderTargetPriority[0];
@@ -104,7 +251,9 @@ namespace Bellerophon.Core.Session
             float movementSpeed,
             float attackRange,
             float attackDelaySeconds,
-            IntruderTargetPriority[] targetPriorities)
+            IntruderTargetPriority[] targetPriorities,
+            IntruderMobilityKind mobilityKind = IntruderMobilityKind.Walking,
+            bool issuesFactionCommands = false)
         {
             if (string.IsNullOrWhiteSpace(definitionId))
             {
@@ -154,6 +303,8 @@ namespace Bellerophon.Core.Session
             MovementSpeed = movementSpeed;
             AttackRange = attackRange;
             AttackDelaySeconds = attackDelaySeconds;
+            MobilityKind = mobilityKind;
+            IssuesFactionCommands = issuesFactionCommands;
             this.targetPriorities = targetPriorities == null || targetPriorities.Length == 0
                 ? EmptyPriorities
                 : (IntruderTargetPriority[])targetPriorities.Clone();
@@ -174,6 +325,10 @@ namespace Bellerophon.Core.Session
         public float AttackRange { get; }
 
         public float AttackDelaySeconds { get; }
+
+        public IntruderMobilityKind MobilityKind { get; }
+
+        public bool IssuesFactionCommands { get; }
 
         public IntruderTargetPriority[] TargetPriorities => targetPriorities == null
             ? EmptyPriorities
@@ -312,6 +467,9 @@ namespace Bellerophon.Core.Session
 
     public readonly struct IntruderEntityState
     {
+        private static readonly CombatStatusEffectState[] EmptyStatusEffects = new CombatStatusEffectState[0];
+        private readonly CombatStatusEffectState[] statusEffects;
+
         private IntruderEntityState(
             string instanceId,
             string definitionId,
@@ -322,8 +480,11 @@ namespace Bellerophon.Core.Session
             ShipRoomId currentRoom,
             ShipRoomId targetRoom,
             IntruderTargetType targetType,
+            IntruderMobilityKind mobilityKind,
+            bool issuesFactionCommands,
             IntrusionPhase phase,
-            IntruderResolution resolution)
+            IntruderResolution resolution,
+            CombatStatusEffectState[] statusEffects = null)
         {
             InstanceId = instanceId ?? string.Empty;
             DefinitionId = definitionId ?? string.Empty;
@@ -334,8 +495,11 @@ namespace Bellerophon.Core.Session
             CurrentRoom = currentRoom;
             TargetRoom = targetRoom;
             TargetType = targetType;
+            MobilityKind = mobilityKind;
+            IssuesFactionCommands = issuesFactionCommands;
             Phase = phase;
             Resolution = resolution;
+            this.statusEffects = CombatStatusEffectRules.CloneEffects(statusEffects);
         }
 
         public string InstanceId { get; }
@@ -356,13 +520,25 @@ namespace Bellerophon.Core.Session
 
         public IntruderTargetType TargetType { get; }
 
+        public IntruderMobilityKind MobilityKind { get; }
+
+        public bool IssuesFactionCommands { get; }
+
         public IntrusionPhase Phase { get; }
 
         public IntruderResolution Resolution { get; }
 
+        public CombatStatusEffectState[] StatusEffects =>
+            statusEffects == null ? EmptyStatusEffects : CombatStatusEffectRules.CloneEffects(statusEffects);
+
         public bool IsActive => Phase == IntrusionPhase.Active && CurrentHealth > 0;
 
         public bool IsResolved => Phase == IntrusionPhase.Resolved;
+
+        public bool HasStatusEffect(CombatStatusEffectKind kind)
+        {
+            return CombatStatusEffectRules.HasEffect(statusEffects, kind);
+        }
 
         public static IntruderEntityState None => new IntruderEntityState(
             string.Empty,
@@ -374,6 +550,8 @@ namespace Bellerophon.Core.Session
             ShipRoomId.Cockpit,
             ShipRoomId.Cockpit,
             IntruderTargetType.None,
+            IntruderMobilityKind.Walking,
+            false,
             IntrusionPhase.None,
             IntruderResolution.None);
 
@@ -401,6 +579,8 @@ namespace Bellerophon.Core.Session
                 attempt.EntryRoom,
                 attempt.TargetRoom,
                 attempt.TargetType,
+                definition.MobilityKind,
+                definition.IssuesFactionCommands,
                 IntrusionPhase.Active,
                 IntruderResolution.None);
         }
@@ -422,8 +602,35 @@ namespace Bellerophon.Core.Session
                 TargetRoom,
                 TargetRoom,
                 TargetType,
+                MobilityKind,
+                IssuesFactionCommands,
                 Phase,
-                Resolution);
+                Resolution,
+                statusEffects);
+        }
+
+        public IntruderEntityState MoveToRoom(ShipRoomId roomId)
+        {
+            if (!IsActive)
+            {
+                return this;
+            }
+
+            return new IntruderEntityState(
+                InstanceId,
+                DefinitionId,
+                Faction,
+                Objective,
+                CurrentHealth,
+                MaxHealth,
+                roomId,
+                TargetRoom,
+                TargetType,
+                MobilityKind,
+                IssuesFactionCommands,
+                Phase,
+                Resolution,
+                statusEffects);
         }
 
         public IntruderEntityState WithDamage(int damage)
@@ -451,11 +658,33 @@ namespace Bellerophon.Core.Session
                     CurrentRoom,
                     TargetRoom,
                     TargetType,
+                    MobilityKind,
+                    IssuesFactionCommands,
                     Phase,
-                    Resolution);
+                    Resolution,
+                    statusEffects);
             }
 
             return Resolve(IntruderResolution.Neutralized);
+        }
+
+        public IntruderEntityState WithStatusEffects(CombatStatusEffectState[] effects)
+        {
+            return new IntruderEntityState(
+                InstanceId,
+                DefinitionId,
+                Faction,
+                Objective,
+                CurrentHealth,
+                MaxHealth,
+                CurrentRoom,
+                TargetRoom,
+                TargetType,
+                MobilityKind,
+                IssuesFactionCommands,
+                Phase,
+                Resolution,
+                effects);
         }
 
         public IntruderEntityState Resolve(IntruderResolution resolution)
@@ -475,8 +704,11 @@ namespace Bellerophon.Core.Session
                 CurrentRoom,
                 TargetRoom,
                 TargetType,
+                MobilityKind,
+                IssuesFactionCommands,
                 IntrusionPhase.Resolved,
-                resolution);
+                resolution,
+                statusEffects);
         }
 
         private static int Clamp(int value, int min, int max)
@@ -552,14 +784,38 @@ namespace Bellerophon.Core.Session
             ShipRoomId.ControlRoom
         };
 
+        private static readonly ShipRoomCorridorLink[] CorridorLinks =
+        {
+            new ShipRoomCorridorLink(ShipRoomId.CargoHold, ShipRoomId.Cockpit),
+            new ShipRoomCorridorLink(ShipRoomId.CargoHold, ShipRoomId.EngineRoom),
+            new ShipRoomCorridorLink(ShipRoomId.CargoHold, ShipRoomId.ControlRoom),
+            new ShipRoomCorridorLink(ShipRoomId.CargoHold, ShipRoomId.Armory),
+            new ShipRoomCorridorLink(ShipRoomId.CargoHold, ShipRoomId.SupplyRoom),
+            new ShipRoomCorridorLink(ShipRoomId.SupplyRoom, ShipRoomId.Armory),
+            new ShipRoomCorridorLink(ShipRoomId.Cockpit, ShipRoomId.EngineRoom),
+            new ShipRoomCorridorLink(ShipRoomId.Cockpit, ShipRoomId.ControlRoom),
+            new ShipRoomCorridorLink(ShipRoomId.EngineRoom, ShipRoomId.ControlRoom),
+            new ShipRoomCorridorLink(ShipRoomId.ControlRoom, ShipRoomId.Armory)
+        };
+
         public static IntrusionAttemptState CreateAttempt(
             string attemptId,
             IntruderDefinition definition,
             int seed,
             ShipRoomId playerRoom)
         {
+            return CreateAttempt(attemptId, definition, seed, playerRoom, null);
+        }
+
+        public static IntrusionAttemptState CreateAttempt(
+            string attemptId,
+            IntruderDefinition definition,
+            int seed,
+            ShipRoomId playerRoom,
+            ShipState ship)
+        {
             var entryRoom = SelectEntryRoom(seed);
-            var target = SelectTarget(definition, seed, playerRoom);
+            var target = SelectTarget(definition, seed, playerRoom, ship);
             return IntrusionAttemptState.Start(attemptId, definition, seed, entryRoom, target);
         }
 
@@ -584,10 +840,44 @@ namespace Bellerophon.Core.Session
             return IntruderEntityState.Board(attempt, definition);
         }
 
+        public static IntruderEntityState ApplyStatusEffect(
+            IntruderEntityState intruder,
+            CombatStatusEffectApplication application)
+        {
+            if (!intruder.IsActive || !application.HasEffect)
+            {
+                return intruder;
+            }
+
+            return intruder.WithStatusEffects(
+                CombatStatusEffectRules.ApplyEffect(intruder.StatusEffects, application));
+        }
+
+        public static IntruderEntityState TickStatusEffects(IntruderEntityState intruder, float deltaSeconds)
+        {
+            if (!intruder.IsActive || deltaSeconds <= 0f)
+            {
+                return intruder;
+            }
+
+            var ticked = CombatStatusEffectRules.TickEffects(intruder.StatusEffects, deltaSeconds);
+            var next = intruder.WithStatusEffects(ticked.Effects);
+            return ticked.HealthDamage > 0 ? next.WithDamage(ticked.HealthDamage) : next;
+        }
+
         public static IntruderTargetSelection SelectTarget(
             IntruderDefinition definition,
             int seed,
             ShipRoomId playerRoom)
+        {
+            return SelectTarget(definition, seed, playerRoom, null);
+        }
+
+        public static IntruderTargetSelection SelectTarget(
+            IntruderDefinition definition,
+            int seed,
+            ShipRoomId playerRoom,
+            ShipState ship)
         {
             var priorities = definition.TargetPriorities;
             if (priorities.Length == 0)
@@ -600,6 +890,11 @@ namespace Bellerophon.Core.Session
             for (var i = 0; i < priorities.Length; i++)
             {
                 if (priorities[i].Priority >= bestPriority)
+                {
+                    continue;
+                }
+
+                if (!CanUseTargetPriority(priorities[i], ship))
                 {
                     continue;
                 }
@@ -627,6 +922,208 @@ namespace Bellerophon.Core.Session
                 default:
                     throw new ArgumentOutOfRangeException(nameof(definition), selected.TargetType, "Unsupported intruder target type.");
             }
+        }
+
+        public static IntruderEnvironmentAssessment AssessEnvironment(
+            IntruderDefinition definition,
+            ShipState ship)
+        {
+            return AssessEnvironment(definition, ship, DefaultRoomDamage);
+        }
+
+        public static IntruderEnvironmentAssessment AssessEnvironment(
+            IntruderDefinition definition,
+            ShipState ship,
+            int baseRoomDamage)
+        {
+            if (ship == null)
+            {
+                throw new ArgumentNullException(nameof(ship));
+            }
+
+            if (baseRoomDamage < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(baseRoomDamage), "Room damage cannot be negative.");
+            }
+
+            var suppressionOnline = ShipStateRules.IsIntruderSuppressionOnline(ship);
+            var statMultiplier = suppressionOnline ? 1f : ShipStateRules.ControlRoomDestroyedIntruderStatMultiplier;
+            var movementSpeed = definition.MobilityKind == IntruderMobilityKind.Stationary
+                ? 0f
+                : definition.MovementSpeed * statMultiplier;
+            return new IntruderEnvironmentAssessment(
+                ShipStateRules.CalculateControlRoomClosedCorridorPercent(ship),
+                CalculateClosedCorridorCount(ship),
+                ShipStateRules.CalculateEngineBlackoutRoomCount(ship),
+                ShipStateRules.CalculateControlRoomAvailableCctvCount(ship),
+                ShipStateRules.IsIntruderDetectionOnline(ship),
+                suppressionOnline,
+                statMultiplier,
+                movementSpeed,
+                ShipStateRules.CalculateInternalIntruderRoomDamage(baseRoomDamage, ship));
+        }
+
+        public static IntruderRelationProfile DetermineRelation(
+            IntruderFaction sourceFaction,
+            IntruderFaction targetFaction)
+        {
+            if (sourceFaction == IntruderFaction.None || targetFaction == IntruderFaction.None)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sourceFaction), "Intruder relation requires concrete factions.");
+            }
+
+            if (sourceFaction == targetFaction)
+            {
+                switch (sourceFaction)
+                {
+                    case IntruderFaction.SeedEntity:
+                        return CreateRelationProfile(IntruderRelationKind.Competitive);
+                    case IntruderFaction.AlienLifeform:
+                        return CreateRelationProfile(IntruderRelationKind.Allied);
+                    case IntruderFaction.CargoFreedomLeague:
+                    case IntruderFaction.SpacePirate:
+                        return CreateRelationProfile(IntruderRelationKind.Bonded);
+                }
+            }
+
+            if (sourceFaction == IntruderFaction.AlienLifeform || targetFaction == IntruderFaction.AlienLifeform)
+            {
+                return sourceFaction == IntruderFaction.SeedEntity || targetFaction == IntruderFaction.SeedEntity
+                    ? CreateRelationProfile(IntruderRelationKind.Hostile)
+                    : CreateRelationProfile(IntruderRelationKind.Competitive);
+            }
+
+            return CreateRelationProfile(IntruderRelationKind.Hostile);
+        }
+
+        public static IntruderRelationProfile DetermineRelation(
+            IntruderDefinition source,
+            IntruderDefinition target)
+        {
+            if (source.IssuesFactionCommands && source.Faction == target.Faction)
+            {
+                return CreateRelationProfile(IntruderRelationKind.Commanded);
+            }
+
+            return DetermineRelation(source.Faction, target.Faction);
+        }
+
+        public static IntruderRelationProfile DetermineRelation(
+            IntruderEntityState source,
+            IntruderEntityState target)
+        {
+            if (source.IssuesFactionCommands && source.Faction == target.Faction)
+            {
+                return CreateRelationProfile(IntruderRelationKind.Commanded);
+            }
+
+            return DetermineRelation(source.Faction, target.Faction);
+        }
+
+        public static IntruderRouteAssessment AssessRoute(
+            IntruderEntityState intruder,
+            ShipState ship)
+        {
+            if (!intruder.IsActive)
+            {
+                return new IntruderRouteAssessment(
+                    intruder.CurrentRoom,
+                    intruder.TargetRoom,
+                    intruder.CurrentRoom,
+                    false,
+                    false,
+                    false,
+                    ship == null ? 0 : ShipStateRules.CalculateControlRoomClosedCorridorPercent(ship),
+                    ship == null ? 0 : CalculateClosedCorridorCount(ship),
+                    0);
+            }
+
+            return AssessRoute(intruder.CurrentRoom, intruder.TargetRoom, intruder.MobilityKind, ship);
+        }
+
+        public static IntruderRouteAssessment AssessRoute(
+            ShipRoomId currentRoom,
+            ShipRoomId targetRoom,
+            IntruderMobilityKind mobilityKind,
+            ShipState ship)
+        {
+            if (ship == null)
+            {
+                throw new ArgumentNullException(nameof(ship));
+            }
+
+            var closedPercent = ShipStateRules.CalculateControlRoomClosedCorridorPercent(ship);
+            var closedCount = mobilityKind == IntruderMobilityKind.Flying ? 0 : CalculateClosedCorridorCount(ship);
+            if (currentRoom == targetRoom)
+            {
+                return new IntruderRouteAssessment(
+                    currentRoom,
+                    targetRoom,
+                    currentRoom,
+                    true,
+                    true,
+                    IsRoomSealed(ship, currentRoom),
+                    closedPercent,
+                    closedCount,
+                    0);
+            }
+
+            if (mobilityKind == IntruderMobilityKind.Stationary ||
+                IsRoomSealed(ship, currentRoom) ||
+                IsRoomSealed(ship, targetRoom))
+            {
+                return new IntruderRouteAssessment(
+                    currentRoom,
+                    targetRoom,
+                    currentRoom,
+                    false,
+                    false,
+                    true,
+                    closedPercent,
+                    closedCount,
+                    0);
+            }
+
+            if (!TryFindPath(currentRoom, targetRoom, mobilityKind, ship, closedCount, out var nextRoom, out var remainingSteps))
+            {
+                return new IntruderRouteAssessment(
+                    currentRoom,
+                    targetRoom,
+                    currentRoom,
+                    false,
+                    false,
+                    false,
+                    closedPercent,
+                    closedCount,
+                    0);
+            }
+
+            return new IntruderRouteAssessment(
+                currentRoom,
+                targetRoom,
+                nextRoom,
+                true,
+                false,
+                false,
+                closedPercent,
+                closedCount,
+                remainingSteps);
+        }
+
+        public static IntruderEntityState AdvanceOneRoomTowardTarget(
+            IntruderEntityState intruder,
+            ShipState ship)
+        {
+            var route = AssessRoute(intruder, ship);
+            return route.CanAdvance ? intruder.MoveToRoom(route.NextRoom) : intruder;
+        }
+
+        public static IntruderEntityState MoveToReachableTargetRoom(
+            IntruderEntityState intruder,
+            ShipState ship)
+        {
+            var route = AssessRoute(intruder, ship);
+            return route.CanAdvance || route.IsAtTarget ? intruder.MoveToRoom(route.TargetRoom) : intruder;
         }
 
         public static IntruderImpactResult ApplyObjectivePressure(
@@ -741,6 +1238,177 @@ namespace Bellerophon.Core.Session
             return BoardableRoomOrder[PositiveModulo(seed, BoardableRoomOrder.Length)];
         }
 
+        public static int CalculateClosedCorridorCount(ShipState ship)
+        {
+            if (ship == null)
+            {
+                throw new ArgumentNullException(nameof(ship));
+            }
+
+            return CalculateClosedCorridorCount(ShipStateRules.CalculateControlRoomClosedCorridorPercent(ship));
+        }
+
+        public static int CalculateClosedCorridorCount(int closedCorridorPercent)
+        {
+            var clampedPercent = Math.Max(0, Math.Min(100, closedCorridorPercent));
+            return Math.Min(
+                CorridorLinks.Length,
+                (int)Math.Round(CorridorLinks.Length * (clampedPercent / 100f), MidpointRounding.AwayFromZero));
+        }
+
+        private static bool CanUseTargetPriority(IntruderTargetPriority priority, ShipState ship)
+        {
+            if (ship == null)
+            {
+                return true;
+            }
+
+            switch (priority.TargetType)
+            {
+                case IntruderTargetType.Cargo:
+                    return !IsRoomSealed(ship, ShipRoomId.CargoHold);
+                case IntruderTargetType.Room:
+                case IntruderTargetType.Ship:
+                    return !IsRoomSealed(ship, priority.RoomId);
+                case IntruderTargetType.Player:
+                    return true;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(priority), priority.TargetType, "Unsupported intruder target type.");
+            }
+        }
+
+        private static IntruderRelationProfile CreateRelationProfile(IntruderRelationKind relationKind)
+        {
+            switch (relationKind)
+            {
+                case IntruderRelationKind.Hostile:
+                    return new IntruderRelationProfile(
+                        relationKind,
+                        IntruderRelationMarkerKind.RedCircle,
+                        canDirectlyAttack: true,
+                        friendlyFireDamagesHealth: true,
+                        friendlyFireAppliesStatusEffects: true);
+                case IntruderRelationKind.Competitive:
+                    return new IntruderRelationProfile(
+                        relationKind,
+                        IntruderRelationMarkerKind.GrayCircle,
+                        canDirectlyAttack: false,
+                        friendlyFireDamagesHealth: true,
+                        friendlyFireAppliesStatusEffects: true);
+                case IntruderRelationKind.Allied:
+                    return new IntruderRelationProfile(
+                        relationKind,
+                        IntruderRelationMarkerKind.SkyBlueCircle,
+                        canDirectlyAttack: false,
+                        friendlyFireDamagesHealth: false,
+                        friendlyFireAppliesStatusEffects: true);
+                case IntruderRelationKind.Bonded:
+                    return new IntruderRelationProfile(
+                        relationKind,
+                        IntruderRelationMarkerKind.GreenCircle,
+                        canDirectlyAttack: false,
+                        friendlyFireDamagesHealth: false,
+                        friendlyFireAppliesStatusEffects: false);
+                case IntruderRelationKind.Commanded:
+                    return new IntruderRelationProfile(
+                        relationKind,
+                        IntruderRelationMarkerKind.None,
+                        canDirectlyAttack: false,
+                        friendlyFireDamagesHealth: false,
+                        friendlyFireAppliesStatusEffects: false);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(relationKind), relationKind, "Unsupported intruder relation.");
+            }
+        }
+
+        private static bool TryFindPath(
+            ShipRoomId currentRoom,
+            ShipRoomId targetRoom,
+            IntruderMobilityKind mobilityKind,
+            ShipState ship,
+            int closedCorridorCount,
+            out ShipRoomId nextRoom,
+            out int remainingSteps)
+        {
+            nextRoom = currentRoom;
+            remainingSteps = 0;
+            var visited = new HashSet<ShipRoomId>();
+            var previous = new Dictionary<ShipRoomId, ShipRoomId>();
+            var queue = new Queue<ShipRoomId>();
+            visited.Add(currentRoom);
+            queue.Enqueue(currentRoom);
+
+            while (queue.Count > 0)
+            {
+                var room = queue.Dequeue();
+                for (var i = 0; i < CorridorLinks.Length; i++)
+                {
+                    if (!CorridorLinks[i].Connects(room, out var neighbor))
+                    {
+                        continue;
+                    }
+
+                    if (!CanTraverseCorridor(i, mobilityKind, closedCorridorCount) ||
+                        IsRoomSealed(ship, neighbor) ||
+                        visited.Contains(neighbor))
+                    {
+                        continue;
+                    }
+
+                    visited.Add(neighbor);
+                    previous[neighbor] = room;
+                    if (neighbor == targetRoom)
+                    {
+                        return ResolvePath(currentRoom, targetRoom, previous, out nextRoom, out remainingSteps);
+                    }
+
+                    queue.Enqueue(neighbor);
+                }
+            }
+
+            return false;
+        }
+
+        private static bool ResolvePath(
+            ShipRoomId currentRoom,
+            ShipRoomId targetRoom,
+            Dictionary<ShipRoomId, ShipRoomId> previous,
+            out ShipRoomId nextRoom,
+            out int remainingSteps)
+        {
+            nextRoom = targetRoom;
+            remainingSteps = 0;
+            var walker = targetRoom;
+            while (previous.TryGetValue(walker, out var parent))
+            {
+                remainingSteps++;
+                if (parent == currentRoom)
+                {
+                    nextRoom = walker;
+                    return true;
+                }
+
+                walker = parent;
+            }
+
+            nextRoom = currentRoom;
+            remainingSteps = 0;
+            return false;
+        }
+
+        private static bool CanTraverseCorridor(
+            int corridorIndex,
+            IntruderMobilityKind mobilityKind,
+            int closedCorridorCount)
+        {
+            return mobilityKind == IntruderMobilityKind.Flying || corridorIndex >= closedCorridorCount;
+        }
+
+        private static bool IsRoomSealed(ShipState ship, ShipRoomId roomId)
+        {
+            return ship.GetRoom(roomId).IsSealed;
+        }
+
         private static IntruderTargetSelection CreateFallbackTarget(
             IntruderObjectiveType objective,
             int seed,
@@ -770,6 +1438,37 @@ namespace Bellerophon.Core.Session
 
             var result = value % divisor;
             return result < 0 ? result + divisor : result;
+        }
+
+        private readonly struct ShipRoomCorridorLink
+        {
+            public ShipRoomCorridorLink(ShipRoomId from, ShipRoomId to)
+            {
+                From = from;
+                To = to;
+            }
+
+            public ShipRoomId From { get; }
+
+            public ShipRoomId To { get; }
+
+            public bool Connects(ShipRoomId roomId, out ShipRoomId neighbor)
+            {
+                if (From == roomId)
+                {
+                    neighbor = To;
+                    return true;
+                }
+
+                if (To == roomId)
+                {
+                    neighbor = From;
+                    return true;
+                }
+
+                neighbor = roomId;
+                return false;
+            }
         }
     }
 }

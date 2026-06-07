@@ -301,23 +301,40 @@ namespace Bellerophon.Core.Session
                 throw new ArgumentOutOfRangeException(nameof(state), state.Kind, "Unsupported seed intruder kind.");
             }
 
-            var intruder = state.Intruder.CurrentRoom == state.Intruder.TargetRoom
-                ? state.Intruder
-                : state.Intruder.MoveToTargetRoom();
+            var tickedIntruder = IntruderRules.TickStatusEffects(state.Intruder, deltaSeconds);
+            if (!tickedIntruder.IsActive)
+            {
+                return new SeedIntruderTickResult(
+                    state.WithIntruder(tickedIntruder),
+                    ship,
+                    cargo,
+                    0,
+                    0,
+                    0f);
+            }
+
+            var movementBlocked = CombatStatusEffectRules.BlocksMovement(tickedIntruder.StatusEffects);
+            var actionBlocked = CombatStatusEffectRules.BlocksActions(tickedIntruder.StatusEffects);
+            var intruder = movementBlocked || tickedIntruder.CurrentRoom == tickedIntruder.TargetRoom
+                ? tickedIntruder
+                : IntruderRules.MoveToReachableTargetRoom(tickedIntruder, ship);
             var elapsed = state.ElapsedSeconds + deltaSeconds;
-            var attackAccumulator = state.AttackAccumulatorSeconds + deltaSeconds;
+            var attackAccumulator = actionBlocked
+                ? state.AttackAccumulatorSeconds
+                : state.AttackAccumulatorSeconds + deltaSeconds;
             var attackCount = 0;
             var roomDamage = 0;
             var nextShip = ship;
+            var pressureRoom = intruder.CurrentRoom;
 
-            while (attackAccumulator + 0.0001f >= ParvumAttackDelaySeconds)
+            while (!actionBlocked && attackAccumulator + 0.0001f >= ParvumAttackDelaySeconds)
             {
                 attackAccumulator -= ParvumAttackDelaySeconds;
                 attackCount++;
                 roomDamage += roomDamagePerAttack;
 
-                var room = nextShip.GetRoom(intruder.TargetRoom);
-                nextShip = nextShip.WithRoom(intruder.TargetRoom, room.WithDamage(roomDamagePerAttack));
+                var room = nextShip.GetRoom(pressureRoom);
+                nextShip = nextShip.WithRoom(pressureRoom, room.WithDamage(roomDamagePerAttack));
             }
 
             var nextState = state.WithProgress(
@@ -329,6 +346,18 @@ namespace Bellerophon.Core.Session
                 state.TotalCargoDamagePercentApplied);
 
             return new SeedIntruderTickResult(nextState, nextShip, cargo, attackCount, roomDamage, 0f);
+        }
+
+        public static SeedIntruderState ApplyStatusEffect(
+            SeedIntruderState state,
+            CombatStatusEffectApplication application)
+        {
+            if (!state.IsActive || !application.HasEffect)
+            {
+                return state;
+            }
+
+            return state.WithIntruder(IntruderRules.ApplyStatusEffect(state.Intruder, application));
         }
 
         public static SeedIntruderState ApplyDamage(SeedIntruderState state, int damage)

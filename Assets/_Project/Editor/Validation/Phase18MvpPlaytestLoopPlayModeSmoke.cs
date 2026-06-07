@@ -372,6 +372,7 @@ namespace Bellerophon.Editor.Validation
 
             ClickButtonThroughUi(contractBoardController.StartRunButton, "start accepted follow-up");
             var followUpSession = maintenanceController.CurrentSession;
+            deviceState.StartTransportHazardForValidation(TransportHazardState.StartAsteroidFieldSmall(0, 12));
             if (maintenanceController.IsMaintenanceVisible ||
                 contractBoardController.IsBoardVisible ||
                 followUpSession.Phase != GameSessionPhase.Transporting ||
@@ -382,7 +383,7 @@ namespace Bellerophon.Editor.Validation
                 !deviceState.HasActiveTransportHazard ||
                 deviceState.CurrentExternalTarget.TargetType != ExternalTargetType.Asteroid)
             {
-                throw new InvalidOperationException("Association follow-up must start transport and spawn the post-tutorial asteroid hazard.");
+                throw new InvalidOperationException("Association follow-up must start transport and accept a validation asteroid hazard.");
             }
 
             deviceState.ActivateDevice(ShipDeviceType.CockpitHelm);
@@ -400,12 +401,13 @@ namespace Bellerophon.Editor.Validation
             var turretTarget = deviceState.CurrentExternalTarget;
             deviceState.ActivateDevice(ShipDeviceType.ArmoryTurretHandle);
             deviceState.SetManualTurretAimForValidation(turretTarget.PositionX, turretTarget.PositionY);
-            var shot1 = deviceState.FireManualTurret();
-            var shot2 = deviceState.FireManualTurret();
-            var shot3 = deviceState.FireManualTurret();
-            if (!shot1.HitTarget ||
-                !shot2.HitTarget ||
-                !shot3.DestroyedTarget ||
+            ManualTurretFireResult finalShot = default;
+            for (var i = 0; i < 20 && deviceState.CurrentExternalTarget.IsActive; i++)
+            {
+                finalShot = deviceState.FireManualTurret();
+            }
+
+            if (finalShot.Outcome != ManualTurretFireOutcome.Destroyed ||
                 deviceState.HasActiveTransportHazard ||
                 deviceState.LastTransportHazardResult.Resolution != TransportHazardResolution.Neutralized)
             {

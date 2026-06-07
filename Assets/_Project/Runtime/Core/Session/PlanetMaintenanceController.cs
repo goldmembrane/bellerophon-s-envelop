@@ -286,6 +286,7 @@ namespace Bellerophon.Core.Session
 
         private void Update()
         {
+            TickTransportHazardOccurrence();
             TickSeedIntruderOccurrence();
             ProcessPointerClickFallback();
         }
@@ -387,6 +388,17 @@ namespace Bellerophon.Core.Session
             }
 
             shipDeviceState.TickSeedIntruderOccurrenceForCurrentRun(Time.deltaTime, session);
+        }
+
+        private void TickTransportHazardOccurrence()
+        {
+            var session = CurrentSession;
+            if (shipDeviceState == null || session == null)
+            {
+                return;
+            }
+
+            shipDeviceState.TickTransportHazardOccurrenceForCurrentRun(Time.deltaTime, session);
         }
 
         private static int GetRepairCharge(GameSessionState session)

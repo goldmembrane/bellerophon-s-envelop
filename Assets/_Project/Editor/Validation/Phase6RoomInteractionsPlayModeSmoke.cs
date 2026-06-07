@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Bellerophon.Core.Player;
 using Bellerophon.Core.Session;
@@ -7,9 +9,12 @@ using Bellerophon.Core.Ship;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Bellerophon.Editor.Validation
 {
@@ -204,11 +209,14 @@ namespace Bellerophon.Editor.Validation
             }
 
             var playerMotor = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerMotor>();
+            var playerStatus = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerStatus>();
+            var playerInput = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerInput>();
             var state = UnityEngine.Object.FindFirstObjectByType<ShipDeviceInteractionState>();
             var deviceHud = UnityEngine.Object.FindFirstObjectByType<ShipDeviceHud>();
-            if (playerMotor == null || state == null || deviceHud == null || deviceHud.PanelText == null)
+            if (playerMotor == null || playerStatus == null || playerInput == null ||
+                state == null || deviceHud == null || deviceHud.PanelText == null)
             {
-                throw new InvalidOperationException("Runtime scene must contain player, phase 6 state, and phase 6 device HUD.");
+                throw new InvalidOperationException("Runtime scene must contain player, player input/status, phase 6 state, and phase 6 device HUD.");
             }
 
             var context = new PlayerInteractionContext(playerMotor.gameObject, Camera.main?.transform, new RaycastHit());
@@ -221,9 +229,17 @@ namespace Bellerophon.Editor.Validation
 
             var engine = InteractDevice(ShipDeviceType.EngineRoomPowerScreen, context);
             engine.Interact(context);
+            deviceHud.RefreshPanel();
             if (!state.EngineOverclockUsedThisRun || state.EngineOverclockActivationCount != 1)
             {
                 throw new InvalidOperationException($"Engine overclock must activate once per run. Count={state.EngineOverclockActivationCount}");
+            }
+
+            PressDeviceKey(Key.Escape, deviceHud);
+            deviceHud.RefreshPanel();
+            if (state.ActivePanelMode != ShipDevicePanelMode.None || deviceHud.PanelText.enabled)
+            {
+                throw new InvalidOperationException("Escape must close the engine room interaction panel.");
             }
 
             InteractDevice(ShipDeviceType.ControlRoomMainScreen, context);
@@ -245,6 +261,59 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException($"A key must switch CCTV to Cockpit. Current={state.CurrentCctvTarget}");
             }
 
+            state.SwitchControlRoomScreenByRightClick();
+            deviceHud.RefreshPanel();
+            if (state.CurrentControlRoomScreenMode != ShipControlRoomScreenMode.VerticalRoomList ||
+                !deviceHud.PanelText.text.Contains("Vertical Room List"))
+            {
+                throw new InvalidOperationException("Control room right-click must switch from main CCTV to the vertical room list.");
+            }
+
+            if (!playerInput.CursorLockSuppressed || !playerInput.GameplayInputSuppressed)
+            {
+                throw new InvalidOperationException("Control room screen must unlock the cursor and suppress first-person input while open.");
+            }
+
+            var shieldBeforePurification = playerStatus.CurrentShield;
+            var armoryPurificationButton = deviceHud.GetControlRoomRoomButtonForValidation(ShipRoomId.Armory);
+            ClickButtonThroughUi(armoryPurificationButton);
+            deviceHud.RefreshPanel();
+            if (!state.CurrentControlRoomPurification.IsActive ||
+                state.CurrentControlRoomPurification.TargetRoom != ShipRoomId.Armory)
+            {
+                throw new InvalidOperationException("Vertical control room list click must start selected-room internal purification.");
+            }
+
+            state.TickControlRoomOperations(3f, ShipRoomId.Armory);
+            deviceHud.RefreshPanel();
+            if (!state.CurrentControlRoomPurification.IsActive ||
+                !state.CurrentShipState.GetRoom(ShipRoomId.Armory).IsSealed ||
+                state.CurrentShipState.GetRoom(ShipRoomId.Armory).CurrentDurability != 100 ||
+                playerStatus.CurrentShield >= shieldBeforePurification ||
+                !deviceHud.PanelText.text.Contains("Internal Purification"))
+            {
+                throw new InvalidOperationException("Internal purification must seal only the selected room, avoid room durability damage, and damage players inside that room.");
+            }
+
+            state.TickControlRoomOperations(27f, ShipRoomId.Cockpit);
+            if (state.CurrentControlRoomPurification.IsActive ||
+                state.CurrentShipState.GetRoom(ShipRoomId.Armory).IsSealed)
+            {
+                throw new InvalidOperationException("Internal purification must reopen the selected room after 30 seconds.");
+            }
+
+            InteractDevice(ShipDeviceType.ControlRoomMainScreen, context);
+            deviceHud.RefreshPanel();
+            PressControlRoomKey(Key.Escape, deviceHud);
+            deviceHud.RefreshPanel();
+            if (state.ActivePanelMode != ShipDevicePanelMode.None ||
+                deviceHud.PanelText.enabled ||
+                playerInput.CursorLockSuppressed ||
+                playerInput.GameplayInputSuppressed)
+            {
+                throw new InvalidOperationException("Escape must close the control room screen and restore first-person input.");
+            }
+
             InteractDevice(ShipDeviceType.ArmoryTurretHandle, context);
             if (!state.TurretManualModeActive || state.ActivePanelMode != ShipDevicePanelMode.TurretManual)
             {
@@ -256,6 +325,13 @@ namespace Bellerophon.Editor.Validation
             if (!deviceHud.PanelText.text.Contains("Slot 3"))
             {
                 throw new InvalidOperationException("Supply storage must display the default 3 storage slots.");
+            }
+
+            PressDeviceKey(Key.Escape, deviceHud);
+            deviceHud.RefreshPanel();
+            if (state.ActivePanelMode != ShipDevicePanelMode.None || deviceHud.PanelText.enabled)
+            {
+                throw new InvalidOperationException("Escape must close the supply room interaction panel.");
             }
 
             InteractDevice(ShipDeviceType.CargoHoldCargoStatus, context);
@@ -271,7 +347,7 @@ namespace Bellerophon.Editor.Validation
             PressCctvKey(Key.D, deviceHud);
             deviceHud.RefreshPanel();
             if (state.CurrentCctvTarget != ShipCctvTarget.Cockpit ||
-                !deviceHud.PanelText.text.Contains("CCTV Channels: 0/4"))
+                !deviceHud.PanelText.text.Contains("CCTV Channels: 0/5"))
             {
                 throw new InvalidOperationException("Control room damage must disable CCTV channels.");
             }
@@ -294,7 +370,7 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Destroyed armory must disable manual turret operation.");
             }
 
-            return $"Devices=6; ActivePanel={state.ActivePanelMode}; CCTV={state.CurrentCctvTarget}; EngineOverclockCount={state.EngineOverclockActivationCount}; DamageEffects=Linked; PanelText={deviceHud.PanelText.enabled}";
+            return $"Devices=6; ActivePanel={state.ActivePanelMode}; CCTV={state.CurrentCctvTarget}; EngineOverclockCount={state.EngineOverclockActivationCount}; Purification=SelectedRoom; DamageEffects=Linked; PanelText={deviceHud.PanelText.enabled}";
         }
 
         private static ShipDeviceInteractable InteractDevice(ShipDeviceType deviceType, PlayerInteractionContext context)
@@ -329,9 +405,19 @@ namespace Bellerophon.Editor.Validation
 
         private static void PressCctvKey(Key key, ShipDeviceHud deviceHud)
         {
+            PressControlRoomKey(key, deviceHud);
+        }
+
+        private static void PressControlRoomKey(Key key, ShipDeviceHud deviceHud)
+        {
+            PressDeviceKey(key, deviceHud);
+        }
+
+        private static void PressDeviceKey(Key key, ShipDeviceHud deviceHud)
+        {
             if (Keyboard.current == null)
             {
-                throw new InvalidOperationException("Keyboard input is required for Phase 6 CCTV smoke.");
+                throw new InvalidOperationException("Keyboard input is required for Phase 6 device smoke.");
             }
 
             InputSystem.QueueStateEvent(Keyboard.current, new KeyboardState(key));
@@ -339,6 +425,73 @@ namespace Bellerophon.Editor.Validation
             deviceHud.ProcessDeviceInput();
             InputSystem.QueueStateEvent(Keyboard.current, new KeyboardState());
             InputSystem.Update();
+        }
+
+        private static void ClickButtonThroughUi(Button button)
+        {
+            if (button == null || !button.gameObject.activeInHierarchy || !button.interactable)
+            {
+                throw new InvalidOperationException("Cannot click an inactive or non-interactable Phase 6 button.");
+            }
+
+            EnsureRuntimeEventSystem();
+
+            Canvas.ForceUpdateCanvases();
+            var rectTransform = button.GetComponent<RectTransform>();
+            var position = RectTransformUtility.WorldToScreenPoint(null, rectTransform.TransformPoint(rectTransform.rect.center));
+            var pointer = new PointerEventData(EventSystem.current)
+            {
+                position = position,
+                button = PointerEventData.InputButton.Left,
+                eligibleForClick = true,
+                clickCount = 1
+            };
+
+            var results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointer, results);
+            var hitButton = false;
+            for (var i = 0; i < results.Count; i++)
+            {
+                if (results[i].gameObject == button.gameObject ||
+                    results[i].gameObject.transform.IsChildOf(button.transform))
+                {
+                    hitButton = true;
+                    break;
+                }
+            }
+
+            if (!hitButton)
+            {
+                hitButton = RectTransformUtility.RectangleContainsScreenPoint(rectTransform, position, null);
+                if (!hitButton)
+                {
+                    var hitNames = results.Count == 0
+                        ? "none"
+                        : string.Join(", ", results.Select(result => result.gameObject.name));
+                    throw new InvalidOperationException(
+                        $"Phase 6 button is not reachable by UI raycast: {button.name}; Position={position}; Hits={hitNames}");
+                }
+            }
+
+            ExecuteEvents.ExecuteHierarchy(button.gameObject, pointer, ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.ExecuteHierarchy(button.gameObject, pointer, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.ExecuteHierarchy(button.gameObject, pointer, ExecuteEvents.pointerClickHandler);
+        }
+
+        private static void EnsureRuntimeEventSystem()
+        {
+            if (EventSystem.current != null)
+            {
+                return;
+            }
+
+            var eventSystemObject = new GameObject("Phase 6 Runtime EventSystem");
+            eventSystemObject.AddComponent<EventSystem>();
+            eventSystemObject.AddComponent<InputSystemUIInputModule>();
+            if (EventSystem.current == null)
+            {
+                throw new InvalidOperationException("Phase 6 UI click requires an active EventSystem.");
+            }
         }
 
         private static void CaptureLog(string condition, string stackTrace, LogType type)

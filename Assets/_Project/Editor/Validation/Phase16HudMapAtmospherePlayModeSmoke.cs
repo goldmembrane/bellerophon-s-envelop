@@ -210,15 +210,17 @@ namespace Bellerophon.Editor.Validation
             var equipmentController = UnityEngine.Object.FindFirstObjectByType<PlayerEquipmentController>();
             var deviceState = UnityEngine.Object.FindFirstObjectByType<ShipDeviceInteractionState>();
             var player = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerMotor>();
+            var playerStatus = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerStatus>();
             if (hud == null ||
                 map == null ||
                 atmosphere == null ||
                 audioHooks == null ||
                 equipmentController == null ||
                 deviceState == null ||
-                player == null)
+                player == null ||
+                playerStatus == null)
             {
-                throw new InvalidOperationException("Runtime scene must contain Phase 16 HUD, map, atmosphere, audio, equipment, device state, and player.");
+                throw new InvalidOperationException("Runtime scene must contain Phase 16 HUD, map, atmosphere, audio, equipment, device state, player, and player status.");
             }
 
             AssertDefaultCrosshairHidden();
@@ -226,10 +228,11 @@ namespace Bellerophon.Editor.Validation
                 hud.ShieldFillImage == null ||
                 hud.HealthText == null ||
                 hud.ShieldText == null ||
+                hud.StatusEffectsText == null ||
                 hud.HealthText.text != "100%" ||
                 hud.ShieldText.text != "100%")
             {
-                throw new InvalidOperationException("Runtime Phase 16 vitals must show full health and shield percentages.");
+                throw new InvalidOperationException("Runtime Phase 16 vitals must show full health, shield, and status references.");
             }
 
             if (!RenderSettings.fog ||
@@ -289,6 +292,16 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Runtime right-click alternate mode must toggle musket precision aim off.");
             }
 
+            playerStatus.ApplyStatusEffect(
+                CombatStatusEffectRules.CreateBurn(
+                    CombatStatusEffectRules.BurnDefaultDurationSeconds,
+                    CombatStatusEffectRules.BurnDefaultTickDamage));
+            hud.RefreshForValidation();
+            if (!hud.StatusEffectsText.text.Contains(CombatStatusEffectRules.FormatEffectName(CombatStatusEffectKind.Burn)))
+            {
+                throw new InvalidOperationException("Runtime Phase 16 HUD must display active source-named status effects.");
+            }
+
             deviceState.SetEquipmentStateForValidation(
                 deviceState.CurrentEquipmentState.WithActiveHandSlot(0));
             equipmentController.RefreshHudForValidation();
@@ -300,7 +313,7 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Runtime right-click alternate mode must toggle stick throwing mode without showing the precision reticle.");
             }
 
-            return "Vitals=100/100; Map=Cockpit after move; Crosshair=Hidden; Fog=On; AudioSignals=3; RightClick=Toggle";
+            return "Vitals=100/100; Status=화상; Map=Cockpit after move; Crosshair=Hidden; Fog=On; AudioSignals=3; RightClick=Toggle";
         }
 
         private static void AssertDefaultCrosshairHidden()

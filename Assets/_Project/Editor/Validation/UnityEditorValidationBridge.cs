@@ -135,6 +135,12 @@ namespace Bellerophon.Editor.Validation
                         () => BuildCli.BuildWindows64(request.OutputPath, request.DevelopmentBuild),
                         "Build Finished, Result: Success");
                     break;
+                case "ValidatePhase1SessionModels":
+                    RunSynchronous(
+                        request,
+                        Phase1SessionModelsEditorValidation.Run,
+                        "Phase 1 session models editor validation passed.");
+                    break;
                 case "EnsurePhase2PlayerMvp":
                     RunSynchronous(
                         request,
@@ -147,6 +153,12 @@ namespace Bellerophon.Editor.Validation
                         Phase2PlayerMvpEditorValidation.Run,
                         "Phase 2 player MVP editor validation passed.");
                     break;
+                case "ValidatePhase3InteractionSystem":
+                    RunSynchronous(
+                        request,
+                        Phase3InteractionSystemEditorValidation.Run,
+                        "Phase 3 interaction system editor validation passed.");
+                    break;
                 case "EnsurePhase4CargoShipGraybox":
                     RunSynchronous(
                         request,
@@ -158,6 +170,12 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Phase4CargoShipGrayboxEditorValidation.Run,
                         "Phase 4 cargo ship graybox editor validation passed.");
+                    break;
+                case "ValidatePhase5ShipStateModels":
+                    RunSynchronous(
+                        request,
+                        Phase5ShipStateModelsEditorValidation.Run,
+                        "Phase 5 ship state models editor validation passed.");
                     break;
                 case "EnsurePhase6RoomInteractions":
                     RunSynchronous(

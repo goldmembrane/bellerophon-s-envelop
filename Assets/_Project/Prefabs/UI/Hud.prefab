@@ -438,6 +438,7 @@ MonoBehaviour:
   interactionController: {fileID: 0}
   healthText: {fileID: 3818187952255462453}
   shieldText: {fileID: 3854516526553496370}
+  statusEffectsText: {fileID: 0}
   interactionPromptText: {fileID: 1116216161528447286}
   healthFillImage: {fileID: 0}
   shieldFillImage: {fileID: 0}

@@ -1,5 +1,20 @@
 # Harness Engineering
 
+## Full Phase 1-18 Smoke Sweep
+
+- `Run-Phase1To18Smokes.ps1` is the default phase smoke sweep when validating MVP phase coverage.
+- It runs Phase 1 through Phase 18 in numeric order and stops on the first failing phase.
+- Phase 1, Phase 3, and Phase 5 use focused editor/model smoke validations; Phase 2, Phase 4, and Phase 6 through Phase 18 use the existing phase smoke scripts.
+- After fixing a phase regression, rerun the full sweep unless the current task is only diagnosing a single failing phase.
+
+## Detailed Step 10 Phase6/Phase12 Smoke
+
+- `Run-Phase6RoomInteractionsSmoke.ps1` now covers the detailed step 10 control-room extension.
+- The Phase6 smoke verifies right-click screen progression from main CCTV to the vertical room list, the actual room-button UI click path for selected-room internal purification, player damage inside the selected room, no room durability damage from purification itself, room reopening after the 30 second operation, ESC closing the control-room interaction screen, and ESC closing the engine-room and supply-room interaction panels.
+- This control-room internal purification check is intentionally scoped to the clicked room only and must not be treated as the special item `복도 정화 장치`, which targets all corridors.
+- `Run-Phase12ManualTurretSmoke.ps1` now covers the detailed step 10 armory/cockpit extension.
+- The Phase12 smoke verifies upgraded weapon magazine/plasma behavior, plasma target neutralization, manual-flight booster reduction for the active asteroid hazard, and the rule that manual flight forces weapon-room auto turret mode.
+
 ## Detailed Step 8 Bridge Recovery
 
 - `UnityEditorValidationBridge` now attempts recovered PlayMode result completion before honoring the in-memory `isRunning` guard.
@@ -71,8 +86,12 @@ Bellerophon의 하네스는 AI/사람 개발자가 같은 구조, 같은 명령,
 .\scripts\Run-HarnessValidation.ps1
 .\scripts\Run-EditModeTests.ps1
 .\scripts\Run-PlayModeTests.ps1
+.\scripts\Run-Phase1To18Smokes.ps1
+.\scripts\Run-Phase1SessionModelsSmoke.ps1
 .\scripts\Run-Phase2PlayModeSmoke.ps1
+.\scripts\Run-Phase3InteractionSystemSmoke.ps1
 .\scripts\Run-Phase4CargoShipGrayboxSmoke.ps1
+.\scripts\Run-Phase5ShipStateModelsSmoke.ps1
 .\scripts\Run-Phase6RoomInteractionsSmoke.ps1
 .\scripts\Run-Phase7NewGameStartSmoke.ps1
 .\scripts\Run-Phase8TransportRunSmoke.ps1
@@ -116,7 +135,7 @@ PlayMode Test Runner는 Play mode 진입 중 도메인 리로드가 발생하므
 
 10단계 행성 정비와 다음 운송 준비는 `.\scripts\Run-Phase10PlanetMaintenanceSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 정산 후 정비 화면, 수리 버튼, 후속 의뢰 목록, 상점/개인 화물/업그레이드 진입점을 재생성하고, Play 모드에서 정산 후 정비 화면 이동, 수리비 청구와 6구역 회복, 후속 협회 의뢰 선택과 다음 운송 시작을 확인한 뒤 다시 Edit 모드로 돌아온다.
 
-11단계 소행성 지대 위험 1차는 `.\scripts\Run-Phase11AsteroidHazardSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 소행성 위험 런타임을 최신 운송/정산/정비 흐름에 연결하고, Play 모드에서 튜토리얼 운행에는 위험이 발생하지 않는지, 후속 의뢰 운행에는 소행성 지대가 발생하는지, 자동 조종 방치와 수동 운행 회피 결과가 선박 손상/정비 비용에 반영되는지 확인한 뒤 다시 Edit 모드로 돌아온다.
+11단계 외부 위험 구간 확장은 `.\scripts\Run-Phase11AsteroidHazardSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 외부 위험 런타임을 최신 운송/정산/정비 흐름에 연결하고, Play 모드에서 튜토리얼 운행에는 위험이 발생하지 않는지, 검증용 소행성 小/大, 화물 자유 연대 출몰 지역, 우주 해적 출몰 지역, 외계 생명체 출몰 구역 결과가 각각 선박 손상, 침입 이벤트, 포격 이벤트 중 원본에 맞는 결과로 이어지는지 확인한 뒤 다시 Edit 모드로 돌아온다. 은폐 블랙홀은 후반 위험 확장으로 보류되어 이 smoke에서 시작하지 않는다.
 
 12단계 수동 포탑과 외부 목표는 `.\scripts\Run-Phase12ManualTurretSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 무기실 포탑 전체 화면, 외부 목표, 좌클릭 누르고 있기 연속 발사, 0.25초 연사 딜레이, 탄창/재장전, 명중 판정을 재생성하고, Play 모드에서 튜토리얼 이후 소행성 목표를 수동 포탑으로 파괴해 위험을 중립화하는 성공 경로와 목표를 방치해 선박 손상으로 이어지는 실패 경로를 확인한 뒤 다시 Edit 모드로 돌아온다.
 

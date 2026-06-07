@@ -9,12 +9,14 @@ namespace Bellerophon.Core.Player
         private const string Phase16ShieldPercentName = "Phase 16 Shield Percent";
         private const string Phase16HealthFillName = "Phase 16 Health Fill";
         private const string Phase16ShieldFillName = "Phase 16 Shield Fill";
+        private const string Phase16StatusEffectsName = "Phase 16 Status Effects";
         private const string InteractionPromptName = "Interaction Prompt Text";
 
         [SerializeField] private FirstPersonPlayerStatus playerStatus;
         [SerializeField] private FirstPersonInteractionController interactionController;
         [SerializeField] private Text healthText;
         [SerializeField] private Text shieldText;
+        [SerializeField] private Text statusEffectsText;
         [SerializeField] private Text interactionPromptText;
         [SerializeField] private Image healthFillImage;
         [SerializeField] private Image shieldFillImage;
@@ -22,6 +24,8 @@ namespace Bellerophon.Core.Player
         public Text HealthText => healthText;
 
         public Text ShieldText => shieldText;
+
+        public Text StatusEffectsText => statusEffectsText;
 
         public Text InteractionPromptText => interactionPromptText;
 
@@ -36,11 +40,13 @@ namespace Bellerophon.Core.Player
             FirstPersonInteractionController interaction = null,
             Text promptLabel = null,
             Image healthFill = null,
-            Image shieldFill = null)
+            Image shieldFill = null,
+            Text statusLabel = null)
         {
             playerStatus = status;
             healthText = healthLabel;
             shieldText = shieldLabel;
+            statusEffectsText = statusLabel;
             interactionController = interaction;
             interactionPromptText = promptLabel;
             healthFillImage = healthFill;
@@ -61,6 +67,11 @@ namespace Bellerophon.Core.Player
         public void ResolveGeneratedHudReferencesForValidation()
         {
             ResolveGeneratedHudReferences();
+        }
+
+        public void RefreshForValidation()
+        {
+            Refresh();
         }
 
         private void Refresh()
@@ -84,6 +95,13 @@ namespace Bellerophon.Core.Player
             if (shieldText != null)
             {
                 shieldText.text = FormatPercent(playerStatus.CurrentShield, playerStatus.MaxShield);
+            }
+
+            if (statusEffectsText != null)
+            {
+                var summary = playerStatus.StatusEffectSummary;
+                statusEffectsText.enabled = !string.IsNullOrWhiteSpace(summary);
+                statusEffectsText.text = summary;
             }
 
             if (healthFillImage != null)
@@ -164,6 +182,12 @@ namespace Bellerophon.Core.Player
             if (phase16ShieldFill != null)
             {
                 shieldFillImage = phase16ShieldFill;
+            }
+
+            var phase16StatusText = FindText(Phase16StatusEffectsName);
+            if (phase16StatusText != null)
+            {
+                statusEffectsText = phase16StatusText;
             }
 
             if (interactionPromptText == null)

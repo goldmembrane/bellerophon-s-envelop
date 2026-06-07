@@ -282,8 +282,8 @@ namespace Bellerophon.Core.Session
                 shipDeviceState.SetShipState(nextSession.Ship);
                 shipDeviceState.SetCargoState(nextSession.ActiveCargo.Value);
                 shipDeviceState.SetEquipmentState(nextSession.Equipment);
+                shipDeviceState.SetShipUpgradeState(nextSession.ShipUpgrades);
                 shipDeviceState.StartTransportRun(CalculateActiveRunDuration(nextSession));
-                shipDeviceState.TryStartAsteroidFieldForCurrentRun(nextSession);
             }
 
             lastStatus = "Started transport with " + nextSession.ActiveTransportContractCount + " accepted contract(s).";
