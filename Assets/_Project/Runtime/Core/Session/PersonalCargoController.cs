@@ -11,6 +11,7 @@ namespace Bellerophon.Core.Session
     {
         [SerializeField] private NewGameStartFlowController startFlowController;
         [SerializeField] private PlanetMaintenanceController maintenanceController;
+        [SerializeField] private PlanetStayController planetStayController;
         [SerializeField] private FirstPersonPlayerInput playerInput;
         [SerializeField] private GameObject cargoRoot;
         [SerializeField] private Text titleText;
@@ -20,6 +21,7 @@ namespace Bellerophon.Core.Session
         [SerializeField] private Button closeButton;
 
         private string lastStatus = string.Empty;
+        private bool returnToPlanet;
 
         public GameObject CargoRoot => cargoRoot;
 
@@ -58,13 +60,29 @@ namespace Bellerophon.Core.Session
             HideCargoCollection();
         }
 
+        public void ConfigurePlanetStay(PlanetStayController planetController)
+        {
+            planetStayController = planetController;
+        }
+
         public void ShowCargoCollection()
+        {
+            ShowCargoCollection(returnToPlanetAfterClose: false);
+        }
+
+        public void ShowCargoCollectionFromPlanet()
+        {
+            ShowCargoCollection(returnToPlanetAfterClose: true);
+        }
+
+        private void ShowCargoCollection(bool returnToPlanetAfterClose)
         {
             if (cargoRoot == null)
             {
                 return;
             }
 
+            returnToPlanet = returnToPlanetAfterClose;
             if (maintenanceController != null)
             {
                 maintenanceController.HideMaintenance();
@@ -89,6 +107,14 @@ namespace Bellerophon.Core.Session
         public void ReturnToMaintenance()
         {
             HideCargoCollection();
+            if (returnToPlanet && planetStayController != null)
+            {
+                returnToPlanet = false;
+                planetStayController.ShowPlanet();
+                return;
+            }
+
+            returnToPlanet = false;
             if (maintenanceController != null)
             {
                 maintenanceController.ShowMaintenance();

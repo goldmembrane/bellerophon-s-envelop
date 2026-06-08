@@ -22,7 +22,9 @@ namespace Bellerophon.Editor.Validation
         public const string BodyTextName = "Phase 7 Start Body";
         public const string StatusTextName = "Phase 7 Start Status";
         public const string YesButtonName = "Phase 7 Association Yes Button";
+        public const string NoButtonName = "Phase 7 Association No Button";
         public const string TutorialButtonName = "Phase 7 Tutorial Contract Button";
+        public const string SkipTutorialButtonName = "Phase 7 Skip Tutorial Button";
 
         private const string ProjectInputActionsPath = "Assets/InputSystem_Actions.inputactions";
 
@@ -46,12 +48,24 @@ namespace Bellerophon.Editor.Validation
             var titleText = CreateText(TitleTextName, root.transform, new Vector2(0f, 158f), new Vector2(600f, 44f), 28, TextAnchor.MiddleLeft);
             var bodyText = CreateText(BodyTextName, root.transform, new Vector2(0f, 32f), new Vector2(600f, 190f), 21, TextAnchor.UpperLeft);
             var statusText = CreateText(StatusTextName, root.transform, new Vector2(0f, -126f), new Vector2(600f, 48f), 18, TextAnchor.UpperLeft);
-            var yesButton = CreateButton(YesButtonName, "Yes", root.transform, new Vector2(-168f, -178f));
-            var tutorialButton = CreateButton(TutorialButtonName, "Accept Tutorial", root.transform, new Vector2(12f, -178f), new Vector2(240f, 48f));
+            var noButton = CreateButton(NoButtonName, "No", root.transform, new Vector2(-256f, -178f), new Vector2(104f, 48f));
+            var yesButton = CreateButton(YesButtonName, "Yes", root.transform, new Vector2(-136f, -178f), new Vector2(104f, 48f));
+            var tutorialButton = CreateButton(TutorialButtonName, "Accept Tutorial", root.transform, new Vector2(56f, -178f), new Vector2(220f, 48f));
+            var skipTutorialButton = CreateButton(SkipTutorialButtonName, "Skip Tutorial", root.transform, new Vector2(272f, -178f), new Vector2(180f, 48f));
             EnsureEventSystem();
 
             var controller = root.AddComponent<NewGameStartFlowController>();
-            controller.Configure(titleText, bodyText, statusText, yesButton, tutorialButton, deviceState, playerInput);
+            controller.ConfigurePersistence(true, SaveGameService.DefaultSlotId, false);
+            controller.Configure(
+                titleText,
+                bodyText,
+                statusText,
+                yesButton,
+                tutorialButton,
+                deviceState,
+                playerInput,
+                noButton,
+                skipTutorialButton);
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene, CargoRunScenePath);

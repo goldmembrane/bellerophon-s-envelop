@@ -36,8 +36,10 @@ namespace Bellerophon.Core.Session
         [SerializeField] private Button shopButton;
         [SerializeField] private Button personalCargoButton;
         [SerializeField] private Button upgradesButton;
+        [SerializeField] private Button planetBackButton;
         [SerializeField] private ContractBoardController contractBoardController;
         [SerializeField] private ShipUpgradeController shipUpgradeController;
+        [SerializeField] private PlanetStayController planetStayController;
 
         private string lastStatus = string.Empty;
         private int maintenanceShownFrame = -1;
@@ -64,7 +66,11 @@ namespace Bellerophon.Core.Session
 
         public Button UpgradesButton => upgradesButton;
 
+        public Button PlanetBackButton => planetBackButton;
+
         public ShipUpgradeController UpgradeController => shipUpgradeController;
+
+        public PlanetStayController PlanetStayController => planetStayController;
 
         public bool IsMaintenanceVisible => maintenanceRoot != null && maintenanceRoot.activeSelf;
 
@@ -131,6 +137,23 @@ namespace Bellerophon.Core.Session
             shipUpgradeController = upgradeController;
         }
 
+        public void ConfigurePlanetStay(
+            PlanetStayController planetController,
+            Button backToPlanetButton)
+        {
+            if (planetBackButton != null)
+            {
+                planetBackButton.onClick.RemoveListener(ReturnToPlanet);
+            }
+
+            planetStayController = planetController;
+            planetBackButton = backToPlanetButton;
+            if (planetBackButton != null)
+            {
+                planetBackButton.onClick.AddListener(ReturnToPlanet);
+            }
+        }
+
         public void ShowMaintenance()
         {
             if (startFlowController == null || maintenanceRoot == null)
@@ -187,13 +210,15 @@ namespace Bellerophon.Core.Session
             }
 
             var repairCharge = GetRepairCharge(session);
-            SetButtonState(repairButton, repairCharge > 0);
-            SetButtonState(contractBoardButton, session.Phase == GameSessionPhase.Completed);
+            var hub = PlanetStayRules.CreateHubState(session);
+            SetButtonState(repairButton, hub.CanOpenRepairShop && repairCharge > 0);
+            SetButtonState(contractBoardButton, hub.CanOpenContractOffice);
             SetButtonState(associationContractButton, false);
             SetButtonState(privateContractButton, false);
-            SetButtonState(shopButton, true);
-            SetButtonState(personalCargoButton, true);
-            SetButtonState(upgradesButton, true);
+            SetButtonState(shopButton, hub.CanOpenShop);
+            SetButtonState(personalCargoButton, hub.CanOpenPersonalCargoDepot);
+            SetButtonState(upgradesButton, hub.CanOpenShip);
+            SetButtonState(planetBackButton, planetStayController != null && session.Phase == GameSessionPhase.Completed);
 
             if (statusText != null)
             {
@@ -278,6 +303,19 @@ namespace Bellerophon.Core.Session
             shipUpgradeController.ShowUpgrades();
         }
 
+        public void ReturnToPlanet()
+        {
+            if (planetStayController == null)
+            {
+                lastStatus = "Planet hub is not configured.";
+                RefreshMaintenance();
+                return;
+            }
+
+            HideMaintenance();
+            planetStayController.ShowPlanet();
+        }
+
         private void Awake()
         {
             BindButtons();
@@ -339,6 +377,11 @@ namespace Bellerophon.Core.Session
             {
                 upgradesButton.onClick.AddListener(OpenUpgradesEntry);
             }
+
+            if (planetBackButton != null)
+            {
+                planetBackButton.onClick.AddListener(ReturnToPlanet);
+            }
         }
 
         private void UnbindButtons()
@@ -376,6 +419,11 @@ namespace Bellerophon.Core.Session
             if (upgradesButton != null)
             {
                 upgradesButton.onClick.RemoveListener(OpenUpgradesEntry);
+            }
+
+            if (planetBackButton != null)
+            {
+                planetBackButton.onClick.RemoveListener(ReturnToPlanet);
             }
         }
 
@@ -442,12 +490,16 @@ namespace Bellerophon.Core.Session
         private static string BuildContractBoardEntryText(GameSessionState session)
         {
             var cargoHoldScore = Mathf.RoundToInt(ShipStateRules.CalculateCargoHoldScore(session.Ship) * 100f);
-            return "Contract Board: separate screen\n" +
+            var hub = PlanetStayRules.CreateHubState(session);
+            return "Planet Map: Shop / Repair Shop / Ship / Cargo Supply Depot\n" +
+                   "Contract Board: Association " + hub.ContractBoard.AssociationContractCount +
+                   " | Private " + hub.ContractBoard.PrivateContractCount +
+                   " | Special " + hub.ContractBoard.SpecialContractCount + "\n" +
                    "Fame: " + session.Reputation.FameScore +
                    " | Association fame: " + session.Reputation.AssociationFameScore + "\n" +
                    "Cargo hold score: " + cargoHoldScore + "\n" +
                    "Upgrades equipped: " + BuildUpgradeSummary(session.ShipUpgrades) + "\n" +
-                   "Entry points: Contract Board / Shop / Personal Cargo / Upgrades";
+                   "Entry points: Repair / Contract Office / Shop / Cargo Depot / Ship";
         }
 
         private static string BuildStartReadinessText(GameSessionState session)
@@ -558,7 +610,8 @@ namespace Bellerophon.Core.Session
                 TryClickButtonAtScreenPosition(privateContractButton, pointerPosition, SelectPrivateContract) ||
                 TryClickButtonAtScreenPosition(shopButton, pointerPosition, OpenShopEntry) ||
                 TryClickButtonAtScreenPosition(personalCargoButton, pointerPosition, OpenPersonalCargoEntry) ||
-                TryClickButtonAtScreenPosition(upgradesButton, pointerPosition, OpenUpgradesEntry))
+                TryClickButtonAtScreenPosition(upgradesButton, pointerPosition, OpenUpgradesEntry) ||
+                TryClickButtonAtScreenPosition(planetBackButton, pointerPosition, ReturnToPlanet))
             {
                 return;
             }

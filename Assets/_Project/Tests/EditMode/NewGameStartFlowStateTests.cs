@@ -8,7 +8,7 @@ namespace Bellerophon.Tests.EditMode
         [Test]
         public void AssociationContract_StartsAssociationPlanetWithDefaultIssue()
         {
-            var flow = NewGameStartFlowState.CreateNewGame();
+            var flow = CreateScrolledContractPrompt();
 
             var accepted = flow.AcceptAssociationContract();
 
@@ -25,7 +25,7 @@ namespace Bellerophon.Tests.EditMode
         [Test]
         public void TutorialContract_IsOnlyIntroContractAndRegistersCargoForTransport()
         {
-            var accepted = NewGameStartFlowState.CreateNewGame()
+            var accepted = CreateScrolledContractPrompt()
                 .AcceptAssociationContract()
                 .AcceptTutorialContract();
 
@@ -46,7 +46,7 @@ namespace Bellerophon.Tests.EditMode
         [Test]
         public void PostTransportContracts_ExposeAssociationAndPrivateOptions()
         {
-            var accepted = NewGameStartFlowState.CreateNewGame()
+            var accepted = CreateScrolledContractPrompt()
                 .AcceptAssociationContract()
                 .AcceptTutorialContract();
             var contract = accepted.Session.ActiveTransportContract.Value;
@@ -70,6 +70,77 @@ namespace Bellerophon.Tests.EditMode
             Assert.That(postTransport.GetAvailableContract(1).ContractType, Is.EqualTo(ContractType.Private));
             Assert.That(postTransport.GetAvailableContract(1).RewardCredits, Is.EqualTo(1800));
             Assert.That(postTransport.GetAvailableContract(1).RequiredCargoHoldScore, Is.EqualTo(65));
+        }
+
+        [Test]
+        public void AssociationContractScroll_UsesSixtySecondAutoAndThreeSecondDownArrowRules()
+        {
+            var flow = NewGameStartFlowState.CreateNewGame();
+
+            var half = flow.TickAssociationContractScroll(30f);
+            var fast = flow.TickAssociationContractDownArrowFastMove(3f);
+
+            Assert.That(flow.CanAcceptAssociationContract, Is.False);
+            Assert.That(half.AssociationContractScroll.ProgressPercent, Is.EqualTo(50));
+            Assert.That(half.CanAcceptAssociationContract, Is.False);
+            Assert.That(fast.AssociationContractScroll.HasReachedBottom, Is.True);
+            Assert.That(fast.CanAcceptAssociationContract, Is.True);
+        }
+
+        [Test]
+        public void AssociationContractNo_IsBlockedAfterTentativeConsent()
+        {
+            var flow = CreateScrolledContractPrompt();
+
+            var rejected = flow.RejectAssociationContract();
+
+            Assert.That(flow.IsAssociationNoBlocked, Is.True);
+            Assert.That(rejected.Blocked, Is.True);
+            Assert.That(rejected.State.Phase, Is.EqualTo(NewGameStartFlowPhase.ContractPrompt));
+            Assert.That(rejected.Summary, Is.EqualTo("이미 잠정적으로 동의한 상태입니다"));
+        }
+
+        [Test]
+        public void HiddenPrivateBusinessRoute_RequiresStopThenCancelBeforeBottom()
+        {
+            var flow = NewGameStartFlowState.CreateNewGame()
+                .TickAssociationContractScroll(10f);
+
+            var blocked = flow.StartPrivateBusinessRouteFromStoppedContract();
+            var started = flow
+                .StopAssociationContractScroll()
+                .StartPrivateBusinessRouteFromStoppedContract();
+
+            Assert.That(blocked.Blocked, Is.True);
+            Assert.That(started.Succeeded, Is.True);
+            Assert.That(started.State.Phase, Is.EqualTo(NewGameStartFlowPhase.PrivateBusinessPlanet));
+            Assert.That(started.State.Session.IsAssociationMember, Is.False);
+            Assert.That(started.State.Session.CurrentPlanet.HasAssociationLogoSign, Is.False);
+        }
+
+        [Test]
+        public void ReturningPlayerTutorialSkip_GrantsCreditsAndShowsPostTutorialContracts()
+        {
+            var association = NewGameStartFlowState.CreateReturningPlayerNewGame()
+                .MoveAssociationContractToBottom()
+                .AcceptAssociationContract();
+
+            var skipped = association.SkipTutorialForReturningPlayer();
+
+            Assert.That(association.CanSkipTutorial, Is.True);
+            Assert.That(skipped.TutorialSkipped, Is.True);
+            Assert.That(skipped.Session.Phase, Is.EqualTo(GameSessionPhase.Completed));
+            Assert.That(NewGameStartFlowState.TutorialSkipRepairSupportCredits, Is.EqualTo(100));
+            Assert.That(skipped.Session.Wallet.Credits, Is.EqualTo(NewGameStartFlowState.TutorialSkipRewardCredits));
+            Assert.That(skipped.Session.CompletedTransportCount, Is.EqualTo(1));
+            Assert.That(skipped.AvailableContractCount, Is.EqualTo(2));
+            Assert.That(skipped.GetAvailableContract(0).IsTutorial, Is.False);
+        }
+
+        private static NewGameStartFlowState CreateScrolledContractPrompt()
+        {
+            return NewGameStartFlowState.CreateNewGame()
+                .MoveAssociationContractToBottom();
         }
     }
 }

@@ -14,8 +14,10 @@ namespace Bellerophon.Core.Session
     {
         [SerializeField] private NewGameStartFlowController startFlowController;
         [SerializeField] private PlanetMaintenanceController maintenanceController;
+        [SerializeField] private PlanetStayController planetStayController;
         [SerializeField] private ShipDeviceInteractionState shipDeviceState;
         [SerializeField] private PlayerEquipmentController equipmentController;
+        [SerializeField] private FirstPersonPlayerInput playerInput;
         [SerializeField] private GameObject shopRoot;
         [SerializeField] private Text titleText;
         [SerializeField] private Text bodyText;
@@ -79,6 +81,7 @@ namespace Bellerophon.Core.Session
         private SellItemSource selectedSellSource = SellItemSource.None;
         private int selectedSellIndex = -1;
         private string lastStatus = string.Empty;
+        private bool returnToPlanet;
 
         public GameObject ShopRoot => shopRoot;
 
@@ -113,6 +116,10 @@ namespace Bellerophon.Core.Session
         public Button SellPersonalCargoButton => sellPersonalCargoButton;
 
         public Button CloseButton => closeButton;
+
+        public PlanetMaintenanceController MaintenanceController => maintenanceController;
+
+        public PlanetStayController PlanetStayController => planetStayController;
 
         public bool IsShopVisible => shopRoot != null && shopRoot.activeSelf;
 
@@ -167,28 +174,61 @@ namespace Bellerophon.Core.Session
             HideShop();
         }
 
+        public void ConfigurePlanetStay(PlanetStayController planetController)
+        {
+            planetStayController = planetController;
+        }
+
+        public void ConfigureMaintenance(PlanetMaintenanceController maintenance)
+        {
+            if (maintenanceController != null && maintenanceController.ShopButton != null)
+            {
+                maintenanceController.ShopButton.onClick.RemoveListener(ShowBuyTab);
+            }
+
+            maintenanceController = maintenance;
+            if (maintenanceController != null && maintenanceController.ShopButton != null)
+            {
+                maintenanceController.ShopButton.onClick.AddListener(ShowBuyTab);
+            }
+        }
+
         public void ShowBuyTab()
         {
             activeSection = EquipmentShopSection.Buy;
             ClearSellSelection();
-            ShowShop();
+            ShowShop(returnToPlanet);
+        }
+
+        public void ShowBuyTabFromPlanet()
+        {
+            activeSection = EquipmentShopSection.Buy;
+            ClearSellSelection();
+            ShowShop(returnToPlanetAfterClose: true);
         }
 
         public void ShowSellTab()
         {
             activeSection = EquipmentShopSection.Sell;
             ClearSellSelection();
-            ShowShop();
+            ShowShop(returnToPlanet);
         }
 
         public void ShowShop()
+        {
+            ShowShop(returnToPlanetAfterClose: false);
+        }
+
+        private void ShowShop(bool returnToPlanetAfterClose)
         {
             if (shopRoot == null)
             {
                 return;
             }
 
+            returnToPlanet = returnToPlanetAfterClose;
             shopRoot.SetActive(true);
+            SetCursorLockSuppressed(true);
             DisableTextRaycasts();
             RefreshShop();
         }
@@ -199,6 +239,27 @@ namespace Bellerophon.Core.Session
             {
                 shopRoot.SetActive(false);
             }
+
+            SetCursorLockSuppressed(false);
+        }
+
+        public void CloseShop()
+        {
+            if (shopRoot != null)
+            {
+                shopRoot.SetActive(false);
+            }
+
+            if (returnToPlanet && planetStayController != null)
+            {
+                SetCursorLockSuppressed(false);
+                returnToPlanet = false;
+                planetStayController.ShowPlanet();
+                return;
+            }
+
+            SetCursorLockSuppressed(maintenanceController != null && maintenanceController.IsMaintenanceVisible);
+            returnToPlanet = false;
         }
 
         public void BuyStick()
@@ -383,6 +444,7 @@ namespace Bellerophon.Core.Session
         private void OnDestroy()
         {
             UnbindButtons();
+            SetCursorLockSuppressed(false);
         }
 
         private void BindButtons()
@@ -457,7 +519,7 @@ namespace Bellerophon.Core.Session
 
             if (closeButton != null)
             {
-                closeButton.onClick.AddListener(HideShop);
+                closeButton.onClick.AddListener(CloseShop);
             }
         }
 
@@ -533,6 +595,7 @@ namespace Bellerophon.Core.Session
             if (closeButton != null)
             {
                 closeButton.onClick.RemoveListener(HideShop);
+                closeButton.onClick.RemoveListener(CloseShop);
             }
         }
 
@@ -546,7 +609,10 @@ namespace Bellerophon.Core.Session
                 return;
             }
 
-            var purchasePreview = EquipmentRules.PurchaseItem(session.Equipment, itemKind);
+            var purchasePreview = EquipmentRules.PurchaseItem(
+                session.Equipment,
+                itemKind,
+                session.SpecialContracts.EquipmentUnlocks);
             if (!purchasePreview.Purchased)
             {
                 lastStatus = purchasePreview.Summary;
@@ -950,7 +1016,7 @@ namespace Bellerophon.Core.Session
             }
 
             var pointerPosition = Mouse.current.position.ReadValue();
-            if (TryClickButtonAtScreenPosition(closeButton, pointerPosition, HideShop) ||
+            if (TryClickButtonAtScreenPosition(closeButton, pointerPosition, CloseShop) ||
                 TryClickButtonAtScreenPosition(buyTabButton, pointerPosition, ShowBuyTab) ||
                 TryClickButtonAtScreenPosition(sellTabButton, pointerPosition, ShowSellTab) ||
                 TryClickButtonAtScreenPosition(buyStickButton, pointerPosition, BuyStick) ||
@@ -1002,6 +1068,19 @@ namespace Bellerophon.Core.Session
 
             action();
             return true;
+        }
+
+        private void SetCursorLockSuppressed(bool suppressed)
+        {
+            if (playerInput == null)
+            {
+                playerInput = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerInput>();
+            }
+
+            if (playerInput != null)
+            {
+                playerInput.SetCursorLockSuppressed(suppressed);
+            }
         }
 
         private void DisableTextRaycasts()

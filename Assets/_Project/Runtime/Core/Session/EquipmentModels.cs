@@ -35,6 +35,9 @@ namespace Bellerophon.Core.Session
         RepairDevice,
         MarkerSpray,
         PresenceDetector,
+        LightBlade,
+        ElectricMine,
+        CorridorPurifier,
         Shotgun,
         MiniFlamethrower,
         ElectricBaton,
@@ -1186,6 +1189,14 @@ namespace Bellerophon.Core.Session
         public const float DaggerUseDelaySeconds = 2f;
         public const int DaggerPriceCredits = 150;
 
+        public const int LightBladeDamage = 55;
+        public const float LightBladeMinRange = 2f;
+        public const float LightBladeMaxRange = 4f;
+        public const float LightBladeUseDelaySeconds = 1.5f;
+        public const int LightBladePriceCredits = 1000;
+        public const int ElectricMinePriceCredits = 1000;
+        public const int CorridorPurifierPriceCredits = 600;
+
         public const int FlashlightPriceCredits = 25;
         public const int InjuryRelieverPriceCredits = 125;
         public const int InjuryRelieverHealAmount = 25;
@@ -1252,7 +1263,10 @@ namespace Bellerophon.Core.Session
             BuyEntry(EquipmentItemKind.RapidShieldBuffer, true),
             BuyEntry(EquipmentItemKind.RepairDevice, true),
             BuyEntry(EquipmentItemKind.MarkerSpray, true),
-            BuyEntry(EquipmentItemKind.PresenceDetector, false)
+            BuyEntry(EquipmentItemKind.PresenceDetector, false),
+            BuyEntry(EquipmentItemKind.LightBlade, true),
+            BuyEntry(EquipmentItemKind.ElectricMine, false),
+            BuyEntry(EquipmentItemKind.CorridorPurifier, false)
         };
 
         private static readonly EquipmentShopCatalogEntry[] Phase15SellCatalog =
@@ -1369,6 +1383,22 @@ namespace Bellerophon.Core.Session
                         false,
                         false,
                         1f);
+                case EquipmentItemKind.LightBlade:
+                    return Weapon(
+                        EquipmentItemKind.LightBlade,
+                        "Light Blade",
+                        LightBladeDamage,
+                        LightBladeMinRange,
+                        LightBladeMaxRange,
+                        LightBladeUseDelaySeconds,
+                        LightBladePriceCredits,
+                        false,
+                        false,
+                        false,
+                        false,
+                        true,
+                        1f,
+                        EquipmentAvailability.SpecialUnlock);
                 case EquipmentItemKind.BasicProtectiveSuit:
                     return new EquipmentItemDefinition(
                         EquipmentItemKind.BasicProtectiveSuit,
@@ -1484,6 +1514,23 @@ namespace Bellerophon.Core.Session
                         1000,
                         true,
                         1,
+                        EquipmentAvailability.SpecialUnlock);
+                case EquipmentItemKind.ElectricMine:
+                    return Utility(
+                        itemKind,
+                        "Electric Mine",
+                        ElectricMinePriceCredits,
+                        false,
+                        2,
+                        EquipmentAvailability.SpecialUnlock);
+                case EquipmentItemKind.CorridorPurifier:
+                    return SupplyItem(
+                        itemKind,
+                        "Corridor Purifier",
+                        EquipmentItemCategory.Utility,
+                        CorridorPurifierPriceCredits,
+                        false,
+                        2,
                         EquipmentAvailability.SpecialUnlock);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(itemKind), itemKind, null);
@@ -1685,6 +1732,8 @@ namespace Bellerophon.Core.Session
                     return alternateMode
                         ? UseThrownDagger(state, hasIntruderTarget, playerStatusEffects)
                         : UseMeleeWeapon(state, EquipmentItemKind.Dagger, hasIntruderTarget, playerStatusEffects);
+                case EquipmentItemKind.LightBlade:
+                    return UseMeleeWeapon(state, EquipmentItemKind.LightBlade, hasIntruderTarget, playerStatusEffects);
                 case EquipmentItemKind.Flashbang:
                     return UseFlashbang(state, hasIntruderTarget);
                 case EquipmentItemKind.Flashlight:
@@ -1859,6 +1908,14 @@ namespace Bellerophon.Core.Session
             PlayerEquipmentState state,
             EquipmentItemKind itemKind)
         {
+            return PurchaseItem(state, itemKind, SpecialEquipmentUnlockState.None);
+        }
+
+        public static EquipmentPurchaseResult PurchaseItem(
+            PlayerEquipmentState state,
+            EquipmentItemKind itemKind,
+            SpecialEquipmentUnlockState specialUnlocks)
+        {
             if (itemKind == EquipmentItemKind.None)
             {
                 return new EquipmentPurchaseResult(
@@ -1882,12 +1939,15 @@ namespace Bellerophon.Core.Session
 
             if (definition.Availability == EquipmentAvailability.SpecialUnlock)
             {
-                return new EquipmentPurchaseResult(
-                    state,
-                    false,
-                    0,
-                    itemKind,
-                    definition.DisplayName + " requires a special contract unlock before purchase.");
+                if (!specialUnlocks.IsUnlocked(itemKind))
+                {
+                    return new EquipmentPurchaseResult(
+                        state,
+                        false,
+                        0,
+                        itemKind,
+                        definition.DisplayName + " requires a special contract unlock before purchase.");
+                }
             }
 
             if (definition.IsUniquePerShip && state.HasAnyItem(itemKind))
@@ -2562,9 +2622,89 @@ namespace Bellerophon.Core.Session
                 case EquipmentItemKind.Stick:
                 case EquipmentItemKind.ElectricBaton:
                 case EquipmentItemKind.Dagger:
+                case EquipmentItemKind.LightBlade:
                     return true;
                 default:
                     return false;
+            }
+        }
+
+        public static EquipmentPurchaseResult GrantItem(
+            PlayerEquipmentState state,
+            EquipmentItemKind itemKind)
+        {
+            if (itemKind == EquipmentItemKind.None)
+            {
+                return new EquipmentPurchaseResult(
+                    state,
+                    false,
+                    0,
+                    itemKind,
+                    "No reward item was granted.");
+            }
+
+            var definition = GetDefinition(itemKind);
+            if (definition.Availability == EquipmentAvailability.StartingLoadout)
+            {
+                return new EquipmentPurchaseResult(
+                    state.WithBasicProtectiveSuit(true).WithModeAndSummary(state.ActiveMode, definition.DisplayName + " is part of the starting state."),
+                    true,
+                    0,
+                    itemKind,
+                    definition.DisplayName + " is already part of the starting state.");
+            }
+
+            if (definition.IsUniquePerShip && state.HasAnyItem(itemKind))
+            {
+                return new EquipmentPurchaseResult(
+                    state.WithModeAndSummary(state.ActiveMode, definition.DisplayName + " is already held or stored."),
+                    true,
+                    0,
+                    itemKind,
+                    definition.DisplayName + " is already held or stored.");
+            }
+
+            PlayerEquipmentState stackState;
+            EquipmentPurchaseResult result;
+            switch (definition.StorageTarget)
+            {
+                case EquipmentStorageTarget.HandOnly:
+                    if (TryGrantStackHandItem(state, definition, out stackState))
+                    {
+                        return GrantSucceeded(stackState, definition, "Granted and stacked " + definition.DisplayName + ".");
+                    }
+
+                    return TryGrantInHand(state, definition, out result)
+                        ? result
+                        : PurchaseFailed(state, itemKind, "No hand slot is available for reward item.");
+                case EquipmentStorageTarget.SupplyOnly:
+                    if (TryGrantStackSupplyItem(state, definition, out stackState))
+                    {
+                        return GrantSucceeded(stackState, definition, "Granted and stacked " + definition.DisplayName + ".");
+                    }
+
+                    return TryGrantInSupply(state, definition, out result)
+                        ? result
+                        : PurchaseFailed(state, itemKind, "No supply slot is available for reward item.");
+                default:
+                    if (TryGrantStackHandItem(state, definition, out stackState))
+                    {
+                        return GrantSucceeded(stackState, definition, "Granted and stacked " + definition.DisplayName + ".");
+                    }
+
+                    if (TryGrantInHand(state, definition, out result))
+                    {
+                        return result;
+                    }
+
+                    if (TryGrantStackSupplyItem(state, definition, out stackState))
+                    {
+                        return GrantSucceeded(stackState, definition, "Granted and stacked " + definition.DisplayName + ".");
+                    }
+
+                    return TryGrantInSupply(state, definition, out result)
+                        ? result
+                        : PurchaseFailed(state, itemKind, "No hand or supply slot is available for reward item.");
             }
         }
 
@@ -2657,6 +2797,53 @@ namespace Bellerophon.Core.Session
             return false;
         }
 
+        private static bool TryGrantStackHandItem(
+            PlayerEquipmentState state,
+            EquipmentItemDefinition definition,
+            out PlayerEquipmentState nextState)
+        {
+            nextState = state;
+            for (var i = 0; i < state.UnlockedHandSlotCount; i++)
+            {
+                var slot = state.GetHandSlot(i);
+                if (slot.ItemKind != definition.ItemKind || slot.Count >= definition.MaxStackCount)
+                {
+                    continue;
+                }
+
+                nextState = state
+                    .WithHandSlot(i, slot.WithCount(slot.Count + 1))
+                    .WithActiveHandSlot(i)
+                    .WithModeAndSummary(EquipmentUseMode.Primary, "Granted and stacked " + definition.DisplayName + ".");
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryGrantStackSupplyItem(
+            PlayerEquipmentState state,
+            EquipmentItemDefinition definition,
+            out PlayerEquipmentState nextState)
+        {
+            nextState = state;
+            for (var i = 0; i < state.UnlockedSupplySlotCount; i++)
+            {
+                var slot = state.GetSupplySlot(i);
+                if (slot.ItemKind != definition.ItemKind || slot.Count >= definition.MaxStackCount)
+                {
+                    continue;
+                }
+
+                nextState = state
+                    .WithSupplySlot(i, slot.WithCount(slot.Count + 1))
+                    .WithModeAndSummary(state.ActiveMode, "Granted and stacked " + definition.DisplayName + ".");
+                return true;
+            }
+
+            return false;
+        }
+
         private static bool TryStoreInHand(
             PlayerEquipmentState state,
             EquipmentItemDefinition definition,
@@ -2714,6 +2901,63 @@ namespace Bellerophon.Core.Session
             return false;
         }
 
+        private static bool TryGrantInHand(
+            PlayerEquipmentState state,
+            EquipmentItemDefinition definition,
+            out EquipmentPurchaseResult result)
+        {
+            for (var i = 0; i < state.UnlockedHandSlotCount; i++)
+            {
+                if (!state.GetHandSlot(i).IsEmpty)
+                {
+                    continue;
+                }
+
+                var handState = state
+                    .WithHandSlot(i, EquipmentSlotState.One(definition.ItemKind))
+                    .WithActiveHandSlot(i)
+                    .WithModeAndSummary(EquipmentUseMode.Primary, "Granted and equipped " + definition.DisplayName + ".");
+                result = new EquipmentPurchaseResult(
+                    handState,
+                    true,
+                    0,
+                    definition.ItemKind,
+                    handState.LastActionSummary);
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
+        private static bool TryGrantInSupply(
+            PlayerEquipmentState state,
+            EquipmentItemDefinition definition,
+            out EquipmentPurchaseResult result)
+        {
+            for (var i = 0; i < state.UnlockedSupplySlotCount; i++)
+            {
+                if (!state.GetSupplySlot(i).IsEmpty)
+                {
+                    continue;
+                }
+
+                var supplyState = state
+                    .WithSupplySlot(i, EquipmentSlotState.One(definition.ItemKind))
+                    .WithModeAndSummary(state.ActiveMode, "Granted and stored " + definition.DisplayName + ".");
+                result = new EquipmentPurchaseResult(
+                    supplyState,
+                    true,
+                    0,
+                    definition.ItemKind,
+                    supplyState.LastActionSummary);
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
         private static EquipmentPurchaseResult PurchaseSucceeded(
             PlayerEquipmentState state,
             EquipmentItemDefinition definition,
@@ -2723,6 +2967,19 @@ namespace Bellerophon.Core.Session
                 state.WithModeAndSummary(state.ActiveMode, summary),
                 true,
                 definition.PriceCredits,
+                definition.ItemKind,
+                summary);
+        }
+
+        private static EquipmentPurchaseResult GrantSucceeded(
+            PlayerEquipmentState state,
+            EquipmentItemDefinition definition,
+            string summary)
+        {
+            return new EquipmentPurchaseResult(
+                state.WithModeAndSummary(state.ActiveMode, summary),
+                true,
+                0,
                 definition.ItemKind,
                 summary);
         }
@@ -2753,7 +3010,8 @@ namespace Bellerophon.Core.Session
             bool hasPrecisionAimMode,
             bool hasReloadInputSkeleton,
             bool hasConfirmedMagazineSpec,
-            float precisionAimMoveMultiplier)
+            float precisionAimMoveMultiplier,
+            EquipmentAvailability availability = EquipmentAvailability.CommonShop)
         {
             return new EquipmentItemDefinition(
                 itemKind,
@@ -2774,7 +3032,7 @@ namespace Bellerophon.Core.Session
                 1,
                 100,
                 true,
-                EquipmentAvailability.CommonShop);
+                availability);
         }
 
         private static EquipmentItemDefinition SupplyItem(

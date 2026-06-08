@@ -28,11 +28,13 @@ namespace Bellerophon.Editor.Validation
             var root = GameObject.Find(Phase15EquipmentLoopBootstrap.Phase15RootName);
             var equipmentController = UnityEngine.Object.FindFirstObjectByType<PlayerEquipmentController>();
             var shopController = UnityEngine.Object.FindFirstObjectByType<EquipmentShopController>();
+            var planetController = UnityEngine.Object.FindFirstObjectByType<PlanetStayController>();
             var deviceState = UnityEngine.Object.FindFirstObjectByType<ShipDeviceInteractionState>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
             if (root == null ||
                 equipmentController == null ||
                 shopController == null ||
+                planetController == null ||
                 deviceState == null ||
                 maintenanceController == null)
             {
@@ -71,9 +73,25 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Phase 15 shop panel background must be fully opaque.");
             }
 
+            var shopRootRect = shopController.ShopRoot.GetComponent<RectTransform>();
+            if (shopRootRect == null ||
+                shopRootRect.anchorMin != Vector2.zero ||
+                shopRootRect.anchorMax != Vector2.one ||
+                shopRootRect.sizeDelta != Vector2.zero)
+            {
+                throw new InvalidOperationException("Phase 15 shop root must cover the full screen so ship interior UI does not show behind it.");
+            }
+
             if (shopController.IsShopVisible)
             {
                 throw new InvalidOperationException("Phase 15 shop must start hidden.");
+            }
+
+            if (planetController.ShopController != shopController ||
+                shopController.PlanetStayController != planetController ||
+                shopController.MaintenanceController != maintenanceController)
+            {
+                throw new InvalidOperationException("Phase 15 shop must be linked to both the planet hub and maintenance screen.");
             }
 
             AssertNonBlockingText(equipmentController.EquipmentHudText, "equipment HUD");

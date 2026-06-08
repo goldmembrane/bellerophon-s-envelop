@@ -793,6 +793,55 @@ namespace Bellerophon.Core.Session
                     IntruderFaction.SeedEntity,
                     HostileUnitRole.ShipSaboteur,
                     IntruderObjectiveType.DestroyShip,
+                    ContentImplementationState.Implemented),
+                new HostileUnitContentDefinition(
+                    "seed-fuga",
+                    "Fuga",
+                    IntruderFaction.SeedEntity,
+                    HostileUnitRole.ShipSaboteur,
+                    IntruderObjectiveType.DestroyShip,
+                    ContentImplementationState.Implemented),
+                new HostileUnitContentDefinition(
+                    "seed-longa-arma",
+                    "Longa Arma",
+                    IntruderFaction.SeedEntity,
+                    HostileUnitRole.ShipSaboteur,
+                    IntruderObjectiveType.DestroyShip,
+                    ContentImplementationState.Implemented),
+                new HostileUnitContentDefinition(
+                    "seed-tergo",
+                    "Tergo",
+                    IntruderFaction.SeedEntity,
+                    HostileUnitRole.PlayerHunter,
+                    IntruderObjectiveType.AttackPlayer,
+                    ContentImplementationState.Implemented),
+                new HostileUnitContentDefinition(
+                    "seed-urzere",
+                    "Urzere",
+                    IntruderFaction.SeedEntity,
+                    HostileUnitRole.RoomOccupier,
+                    IntruderObjectiveType.OccupyRoom,
+                    ContentImplementationState.Implemented),
+                new HostileUnitContentDefinition(
+                    "seed-societas",
+                    "Societas",
+                    IntruderFaction.SeedEntity,
+                    HostileUnitRole.ShipSaboteur,
+                    IntruderObjectiveType.DestroyShip,
+                    ContentImplementationState.Implemented),
+                new HostileUnitContentDefinition(
+                    "seed-monstrum",
+                    "Monstrum",
+                    IntruderFaction.SeedEntity,
+                    HostileUnitRole.ShipSaboteur,
+                    IntruderObjectiveType.DestroyShip,
+                    ContentImplementationState.Implemented),
+                new HostileUnitContentDefinition(
+                    "seed-mimesis",
+                    "Mimesis",
+                    IntruderFaction.SeedEntity,
+                    HostileUnitRole.PlayerHunter,
+                    IntruderObjectiveType.AttackPlayer,
                     ContentImplementationState.Implemented)
             };
         }

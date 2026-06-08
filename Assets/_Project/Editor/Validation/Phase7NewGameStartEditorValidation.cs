@@ -40,7 +40,9 @@ namespace Bellerophon.Editor.Validation
                 controller.BodyText == null ||
                 controller.StatusText == null ||
                 controller.YesButton == null ||
-                controller.TutorialContractButton == null)
+                controller.NoButton == null ||
+                controller.TutorialContractButton == null ||
+                controller.SkipTutorialButton == null)
             {
                 throw new InvalidOperationException("Phase 7 start UI is not fully wired.");
             }
@@ -58,11 +60,23 @@ namespace Bellerophon.Editor.Validation
             }
 
             if (!controller.YesButton.gameObject.activeSelf ||
+                !controller.NoButton.gameObject.activeSelf ||
                 !controller.TutorialContractButton.gameObject.activeSelf ||
-                !controller.YesButton.interactable ||
-                controller.TutorialContractButton.interactable)
+                !controller.SkipTutorialButton.gameObject.activeSelf ||
+                controller.YesButton.interactable ||
+                controller.NoButton.interactable ||
+                controller.TutorialContractButton.interactable ||
+                controller.SkipTutorialButton.interactable ||
+                controller.FlowState.AssociationContractScroll.ProgressPercent != 0)
             {
-                throw new InvalidOperationException("Phase 7 initial UI must allow only the association Yes button.");
+                throw new InvalidOperationException("Phase 7 initial UI must wait for the association contract scroll before enabling decisions.");
+            }
+
+            var yesPosition = controller.YesButton.GetComponent<RectTransform>().anchoredPosition.x;
+            var noPosition = controller.NoButton.GetComponent<RectTransform>().anchoredPosition.x;
+            if (yesPosition <= noPosition)
+            {
+                throw new InvalidOperationException("Phase 7 association Yes button must be placed to the right of the No button.");
             }
 
             if (GameObject.Find("Cargo Hold Central Cargo") == null)

@@ -214,6 +214,7 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Runtime scene must contain Phase 9 start flow, player input, device state, and settlement controller.");
             }
 
+            startController.FastForwardAssociationContractForValidation();
             ClickButtonThroughUi(startController.YesButton);
             ClickButtonThroughUi(startController.TutorialContractButton);
             if (!deviceState.HasActiveTransportRun)

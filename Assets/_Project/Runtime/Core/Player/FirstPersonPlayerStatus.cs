@@ -12,6 +12,7 @@ namespace Bellerophon.Core.Player
         // Runtime-only source status effects; pure rules live in PlayerCombatRules.
         private CombatStatusEffectState[] activeStatusEffects = new CombatStatusEffectState[0];
         private ScheduledStatusEffect[] scheduledStatusEffects = new ScheduledStatusEffect[0];
+        private PlayerPostureState postureState = PlayerPostureState.Standing;
 
         public int CurrentHealth => currentHealth;
 
@@ -26,15 +27,22 @@ namespace Bellerophon.Core.Player
 
         public string StatusEffectSummary => CombatStatusEffectRules.BuildHudSummary(activeStatusEffects);
 
+        public PlayerPostureState PostureState => postureState;
+
         public bool IsDead => currentHealth <= 0;
 
-        public bool IsActionBlocked => CombatStatusEffectRules.BlocksActions(activeStatusEffects);
+        public bool IsActionBlocked => postureState != PlayerPostureState.Standing ||
+                                       CombatStatusEffectRules.BlocksActions(activeStatusEffects);
 
-        public bool IsMovementBlocked => CombatStatusEffectRules.BlocksMovement(activeStatusEffects);
+        public bool IsMovementBlocked => postureState != PlayerPostureState.Standing ||
+                                         CombatStatusEffectRules.BlocksMovement(activeStatusEffects);
 
-        public bool IsSprintBlocked => CombatStatusEffectRules.BlocksSprint(activeStatusEffects);
+        public bool IsSprintBlocked => postureState != PlayerPostureState.Standing ||
+                                       CombatStatusEffectRules.BlocksSprint(activeStatusEffects);
 
-        public float MovementMultiplier => CombatStatusEffectRules.CalculateMovementMultiplier(activeStatusEffects);
+        public float MovementMultiplier => postureState == PlayerPostureState.Standing
+            ? CombatStatusEffectRules.CalculateMovementMultiplier(activeStatusEffects)
+            : 0f;
 
         public void Configure(FirstPersonPlayerSettings playerSettings)
         {
@@ -66,6 +74,7 @@ namespace Bellerophon.Core.Player
             currentShield = settings.MaxShield;
             activeStatusEffects = new CombatStatusEffectState[0];
             scheduledStatusEffects = new ScheduledStatusEffect[0];
+            postureState = PlayerPostureState.Standing;
         }
 
         public void ApplyRecovery(int healthAmount, int shieldAmount)
@@ -102,6 +111,16 @@ namespace Bellerophon.Core.Player
         public void ClearStatusEffect(CombatStatusEffectKind kind)
         {
             ApplyCombatState(PlayerCombatRules.ClearStatusEffect(CurrentCombatState, kind));
+        }
+
+        public void ApplyPostureState(PlayerPostureState state)
+        {
+            ApplyCombatState(PlayerCombatRules.ApplyPostureState(CurrentCombatState, state));
+        }
+
+        public void ClearPostureState()
+        {
+            ApplyCombatState(PlayerCombatRules.ClearPostureState(CurrentCombatState));
         }
 
         public bool HasStatusEffect(CombatStatusEffectKind kind)
@@ -149,6 +168,7 @@ namespace Bellerophon.Core.Player
         {
             activeStatusEffects = new CombatStatusEffectState[0];
             scheduledStatusEffects = new ScheduledStatusEffect[0];
+            postureState = PlayerPostureState.Standing;
         }
 
         private PlayerCombatState CurrentCombatState => new PlayerCombatState(
@@ -156,13 +176,15 @@ namespace Bellerophon.Core.Player
             MaxShield,
             currentHealth,
             currentShield,
-            activeStatusEffects);
+            activeStatusEffects,
+            postureState);
 
         private void ApplyCombatState(PlayerCombatState state)
         {
             currentHealth = Mathf.Clamp(state.CurrentHealth, 0, MaxHealth);
             currentShield = Mathf.Clamp(state.CurrentShield, 0, MaxShield);
             activeStatusEffects = state.StatusEffects;
+            postureState = state.PostureState;
         }
 
         private void TickScheduledStatusEffects(float deltaSeconds)

@@ -217,6 +217,7 @@ namespace Bellerophon.Editor.Validation
             var playerInput = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerInput>();
             var deviceState = UnityEngine.Object.FindFirstObjectByType<ShipDeviceInteractionState>();
             var settlementController = UnityEngine.Object.FindFirstObjectByType<TransportSettlementController>();
+            var planetController = UnityEngine.Object.FindFirstObjectByType<PlanetStayController>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
             var contractBoardController = UnityEngine.Object.FindFirstObjectByType<ContractBoardController>();
             var hud = UnityEngine.Object.FindFirstObjectByType<FirstPersonHud>();
@@ -226,18 +227,20 @@ namespace Bellerophon.Editor.Validation
                 playerInput == null ||
                 deviceState == null ||
                 settlementController == null ||
+                planetController == null ||
                 maintenanceController == null ||
                 contractBoardController == null ||
                 hud == null ||
                 map == null ||
                 equipmentController == null)
             {
-                throw new InvalidOperationException("Runtime scene must contain the MVP start, HUD, map, equipment, device, settlement, maintenance, and contract board controllers.");
+                throw new InvalidOperationException("Runtime scene must contain the MVP start, HUD, map, equipment, device, settlement, planet, maintenance, and contract board controllers.");
             }
 
             AssertPhase16HudStillPresent(hud, map, equipmentController);
             AssertLocalCoopFoundationStillWorks();
 
+            startController.FastForwardAssociationContractForValidation();
             ClickButtonThroughUi(startController.YesButton, "association yes");
             if (startController.CurrentSession.Phase != GameSessionPhase.Ready ||
                 !startController.CurrentSession.IsAssociationMember ||
@@ -289,17 +292,30 @@ namespace Bellerophon.Editor.Validation
                     "; RunComplete=" + (deviceState.HasActiveTransportRun && deviceState.CurrentTransportRun.IsComplete));
             }
 
-            ClickButtonThroughUi(settlementController.ContinueToMaintenanceButton, "maintenance continuation");
+            ClickButtonThroughUi(settlementController.ContinueToMaintenanceButton, "planet continuation");
             var firstSettlementBalance = settlementController.CurrentSession.Wallet.Credits;
+            if (!planetController.IsPlanetVisible ||
+                settlementController.IsSettlementVisible ||
+                maintenanceController.IsMaintenanceVisible ||
+                planetController.BodyText == null ||
+                !planetController.BodyText.text.Contains("Surface map") ||
+                !planetController.BodyText.text.Contains("Repair Shop") ||
+                !planetController.ContractOfficeButton.interactable)
+            {
+                throw new InvalidOperationException("Planet stay screen must replace settlement before maintenance.");
+            }
+
+            ClickButtonThroughUi(planetController.RepairShopButton, "repair shop entry");
             if (!maintenanceController.IsMaintenanceVisible ||
                 settlementController.IsSettlementVisible ||
+                planetController.IsPlanetVisible ||
                 maintenanceController.ContractListText == null ||
                 !maintenanceController.ContractListText.text.Contains("Contract Board") ||
                 !maintenanceController.RepairButton.interactable ||
                 !maintenanceController.ContractBoardButton.interactable ||
                 contractBoardController.IsBoardVisible)
             {
-                throw new InvalidOperationException("Maintenance must replace settlement and expose a separate repair-gated contract board.");
+                throw new InvalidOperationException("Repair shop must replace planet and expose a separate repair-gated contract board.");
             }
 
             ClickButtonThroughUi(maintenanceController.ContractBoardButton, "contract board before repair");
@@ -457,8 +473,17 @@ namespace Bellerophon.Editor.Validation
                     "; LastObserved=" + settlementController.LastObservedPhaseForValidation);
             }
 
-            ClickButtonThroughUi(settlementController.ContinueToMaintenanceButton, "second maintenance continuation");
+            ClickButtonThroughUi(settlementController.ContinueToMaintenanceButton, "second planet continuation");
+            if (!planetController.IsPlanetVisible ||
+                maintenanceController.IsMaintenanceVisible ||
+                !planetController.ContractOfficeButton.interactable)
+            {
+                throw new InvalidOperationException("Second settlement must return to the planet stay hub.");
+            }
+
+            ClickButtonThroughUi(planetController.RepairShopButton, "second repair shop entry");
             if (!maintenanceController.IsMaintenanceVisible ||
+                planetController.IsPlanetVisible ||
                 !maintenanceController.ContractBoardButton.interactable ||
                 contractBoardController.IsBoardVisible)
             {

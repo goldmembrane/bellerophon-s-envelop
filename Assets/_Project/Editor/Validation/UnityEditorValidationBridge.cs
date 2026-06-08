@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using Bellerophon.Editor.Build;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEditor.TestTools.TestRunner.Api;
 using UnityEngine;
 
@@ -26,6 +27,7 @@ namespace Bellerophon.Editor.Validation
         private static StringBuilder activeLog;
         private static TestRunnerApi activeTestRunnerApi;
         private static TestRunCallbacks activeTestRunCallbacks;
+        private static string activeTestRunGuid;
 
         static UnityEditorValidationBridge()
         {
@@ -315,6 +317,66 @@ namespace Bellerophon.Editor.Validation
                         Phase17CoopFoundationEditorValidation.Run,
                         "Phase 17 coop foundation editor validation passed.");
                     break;
+                case "ValidateDetailedStep13SeedEntity":
+                    RunSynchronous(
+                        request,
+                        DetailedStep13SeedEntityEditorValidation.Run,
+                        "Detailed step 13 seed entity editor validation passed.");
+                    break;
+                case "ValidateDetailedStep14AlienLifeform":
+                    RunSynchronous(
+                        request,
+                        DetailedStep14AlienLifeformEditorValidation.Run,
+                        "Detailed step 14 alien lifeform editor validation passed.");
+                    break;
+                case "ValidateDetailedStep15CargoFreedomLeague":
+                    RunSynchronous(
+                        request,
+                        DetailedStep15CargoFreedomLeagueEditorValidation.Run,
+                        "Detailed step 15 Cargo Freedom League editor validation passed.");
+                    break;
+                case "ValidateDetailedStep16SpacePirate":
+                    RunSynchronous(
+                        request,
+                        DetailedStep16SpacePirateEditorValidation.Run,
+                        "Detailed step 16 space pirate editor validation passed.");
+                    break;
+                case "ValidateDetailedStep17SpecialContracts":
+                    RunSynchronous(
+                        request,
+                        DetailedStep17SpecialContractsEditorValidation.Run,
+                        "Detailed step 17 special contracts editor validation passed.");
+                    break;
+                case "ValidateDetailedStep18PlanetUx":
+                    RunSynchronous(
+                        request,
+                        DetailedStep18PlanetUxEditorValidation.Run,
+                        "Detailed step 18 planet UX editor validation passed.");
+                    break;
+                case "ValidateDetailedStep19SaveSettingsPlatform":
+                    RunSynchronous(
+                        request,
+                        DetailedStep19SaveSettingsPlatformEditorValidation.Run,
+                        "Detailed step 19 save settings platform editor validation passed.");
+                    break;
+                case "EnsurePhase20Presentation":
+                    RunSynchronous(
+                        request,
+                        Phase20PresentationBootstrap.EnsurePhase20Assets,
+                        "Phase 20 presentation polish assets are ready.");
+                    break;
+                case "ValidatePhase20Presentation":
+                    RunSynchronous(
+                        request,
+                        Phase20PresentationEditorValidation.Run,
+                        "Phase 20 presentation polish editor validation passed.");
+                    break;
+                case "ValidateDetailedStep20Presentation":
+                    RunSynchronous(
+                        request,
+                        DetailedStep20PresentationEditorValidation.Run,
+                        "Detailed step 20 presentation editor validation passed.");
+                    break;
                 default:
                     RunSynchronous(
                         request,
@@ -348,6 +410,7 @@ namespace Bellerophon.Editor.Validation
                 Directory.CreateDirectory(Path.GetDirectoryName(request.ResultsPath));
                 if (testMode == TestMode.PlayMode)
                 {
+                    PreparePlayModeTestRunnerEnvironment();
                     request.StartUtcTicks = DateTime.UtcNow.Ticks;
                     TryDelete(DefaultTestResultsPath);
                     request.Write(ActiveRequestPath);
@@ -356,13 +419,26 @@ namespace Bellerophon.Editor.Validation
                 activeTestRunnerApi = ScriptableObject.CreateInstance<TestRunnerApi>();
                 activeTestRunCallbacks = TestRunCallbacks.Create(request);
                 activeTestRunnerApi.RegisterCallbacks(activeTestRunCallbacks);
-                activeTestRunnerApi.Execute(new ExecutionSettings(new Filter { testMode = testMode }));
+                activeTestRunGuid = activeTestRunnerApi.Execute(new ExecutionSettings(new Filter { testMode = testMode }));
             }
             catch (Exception exception)
             {
-                ClearTestRunState();
+                ClearTestRunState(cancelActiveRun: true);
                 FailRequest(exception);
             }
+        }
+
+        private static void PreparePlayModeTestRunnerEnvironment()
+        {
+            if (EditorSceneManager.playModeStartScene == null)
+            {
+                return;
+            }
+
+            activeLog.AppendLine(
+                "Clearing Play Mode start scene for Unity Test Runner: " +
+                AssetDatabase.GetAssetPath(EditorSceneManager.playModeStartScene));
+            EditorSceneManager.playModeStartScene = null;
         }
 
         private static void BeginRequest(BridgeRequest request)
@@ -476,8 +552,20 @@ namespace Bellerophon.Editor.Validation
             File.WriteAllText(logPath, builder.ToString());
         }
 
-        private static void ClearTestRunState(TestRunCallbacks callbackToClear = null)
+        private static void ClearTestRunState(TestRunCallbacks callbackToClear = null, bool cancelActiveRun = false)
         {
+            if (cancelActiveRun && !string.IsNullOrWhiteSpace(activeTestRunGuid))
+            {
+                try
+                {
+                    TestRunnerApi.CancelTestRun(activeTestRunGuid);
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogException(exception);
+                }
+            }
+
             if (activeTestRunCallbacks != null)
             {
                 TestRunnerApi.UnregisterTestCallback(activeTestRunCallbacks);
@@ -497,6 +585,7 @@ namespace Bellerophon.Editor.Validation
 
             activeTestRunCallbacks = null;
             activeTestRunnerApi = null;
+            activeTestRunGuid = null;
             TryDelete(ActiveRequestPath);
         }
 
@@ -537,7 +626,15 @@ namespace Bellerophon.Editor.Validation
             }
             finally
             {
-                TryDelete(ActiveRequestPath);
+                if (activeRequest != null && activeRequest.Id == request.Id)
+                {
+                    ClearTestRunState();
+                    EndRequest();
+                }
+                else
+                {
+                    TryDelete(ActiveRequestPath);
+                }
             }
 
             return true;
@@ -589,7 +686,12 @@ namespace Bellerophon.Editor.Validation
             }
 
             var request = activeRequest;
-            ClearTestRunState();
+            ClearTestRunState(cancelActiveRun: true);
+            if (EditorApplication.isPlaying)
+            {
+                EditorApplication.ExitPlaymode();
+            }
+
             FailRequest(
                 request,
                 new TimeoutException(

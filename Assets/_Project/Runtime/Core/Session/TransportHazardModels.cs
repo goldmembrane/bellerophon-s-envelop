@@ -330,6 +330,7 @@ namespace Bellerophon.Core.Session
         public const int AlienLifeBoardingCheckIntervalSeconds = 3;
         public const int AlienLifeBoardingPercent = 80;
         public const int AlienLifeManualBoosterReductionSeconds = 10;
+        public const int AlienLifeExternalTargetHealth = AlienLifeformRules.ExternalIntrusionObjectHealth;
 
         public const int ConcealedBlackHoleFameThreshold = 4500;
         public const int ConcealedBlackHoleOccurrencePercent = 1;
@@ -549,6 +550,12 @@ namespace Bellerophon.Core.Session
                     return CreateAsteroidExternalTarget(hazard, AsteroidFieldSmallTargetHealth);
                 case TransportHazardType.AsteroidFieldLarge:
                     return CreateAsteroidExternalTarget(hazard, AsteroidFieldLargeTargetHealth);
+                case TransportHazardType.CargoFreedomLeagueRegion:
+                    return CargoFreedomLeagueRules.CreateBoardingCraftExternalTarget(hazard);
+                case TransportHazardType.SpacePirateRegion:
+                    return SpacePirateRules.CreateBoardingCraftExternalTarget(hazard);
+                case TransportHazardType.AlienLifeRegion:
+                    return CreateAlienLifeformExternalTarget(hazard);
                 default:
                     return ExternalTargetState.None;
             }
@@ -730,6 +737,18 @@ namespace Bellerophon.Core.Session
                 maxHealth,
                 CreateTargetCoordinate(hazard.Seed, 17, 0.58f),
                 CreateTargetCoordinate(hazard.Seed, 31, 0.42f),
+                ManualTurretState.DefaultAsteroidHitRadius);
+        }
+
+        private static ExternalTargetState CreateAlienLifeformExternalTarget(TransportHazardState hazard)
+        {
+            return new ExternalTargetState(
+                "alien-lifeform-" + hazard.Seed,
+                ExternalTargetType.AlienLifeform,
+                AlienLifeExternalTargetHealth,
+                AlienLifeExternalTargetHealth,
+                CreateTargetCoordinate(hazard.Seed, 53, 0.58f),
+                CreateTargetCoordinate(hazard.Seed, 71, 0.42f),
                 ManualTurretState.DefaultAsteroidHitRadius);
         }
 

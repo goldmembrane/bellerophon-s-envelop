@@ -193,8 +193,8 @@ namespace Bellerophon.Editor.Validation
                 return;
             }
 
-            Phase16HudMapAtmosphereBootstrap.EnsurePhase16Assets();
-            request.Details = AppendDetails(request.Details, "Scene=Phase16HudMapRestored");
+            Phase20PresentationBootstrap.EnsurePhase20Assets();
+            request.Details = AppendDetails(request.Details, "Scene=Phase20Restored");
             WriteLog(request, false, null);
             TryDelete(ActivePath);
             TryDelete(ErrorsPath);
@@ -225,6 +225,7 @@ namespace Bellerophon.Editor.Validation
             var equipmentController = UnityEngine.Object.FindFirstObjectByType<PlayerEquipmentController>();
             var shopController = UnityEngine.Object.FindFirstObjectByType<EquipmentShopController>();
             var settlementController = UnityEngine.Object.FindFirstObjectByType<TransportSettlementController>();
+            var planetController = UnityEngine.Object.FindFirstObjectByType<PlanetStayController>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
             var contractBoardController = UnityEngine.Object.FindFirstObjectByType<ContractBoardController>();
             var personalCargoController = UnityEngine.Object.FindFirstObjectByType<PersonalCargoController>();
@@ -236,6 +237,7 @@ namespace Bellerophon.Editor.Validation
                 equipmentController == null ||
                 shopController == null ||
                 settlementController == null ||
+                planetController == null ||
                 maintenanceController == null ||
                 contractBoardController == null ||
                 personalCargoController == null)
@@ -243,6 +245,7 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Runtime scene must contain Phase 15 start, device, HUD, equipment, shop, settlement, maintenance, contract board, and personal cargo controllers.");
             }
 
+            startController.FastForwardAssociationContractForValidation();
             ClickButtonThroughUi(startController.YesButton);
             if (!startController.CurrentSession.Equipment.HasBasicProtectiveSuit ||
                 startController.CurrentSession.Equipment.GetHandSlot(0).ItemKind != EquipmentItemKind.Stick ||
@@ -268,7 +271,33 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Tutorial transport must complete before Phase 15 shop validation.");
             }
 
-            settlementController.ContinueToMaintenance();
+            settlementController.ContinueToPlanet();
+            if (!planetController.IsPlanetVisible || !planetController.ShopButton.interactable)
+            {
+                throw new InvalidOperationException("Planet hub must be visible after settlement and keep the shop entry enabled.");
+            }
+
+            ClickButtonThroughUi(planetController.ShopButton);
+            if (!shopController.IsShopVisible ||
+                planetController.IsPlanetVisible ||
+                shopController.BodyText == null ||
+                !shopController.BodyText.text.Contains("Musket"))
+            {
+                throw new InvalidOperationException("Planet hub shop button must open the equipment shop.");
+            }
+
+            ClickButtonThroughUi(shopController.CloseButton);
+            if (shopController.IsShopVisible || !planetController.IsPlanetVisible)
+            {
+                throw new InvalidOperationException("Closing the planet hub shop must return to the planet hub.");
+            }
+
+            ClickButtonThroughUi(planetController.RepairShopButton);
+            if (!maintenanceController.IsMaintenanceVisible || planetController.IsPlanetVisible)
+            {
+                throw new InvalidOperationException("Planet hub repair button must open maintenance after returning from shop.");
+            }
+
             deviceState.ActivateDevice(ShipDeviceType.SupplyRoomStorageCabinet);
             deviceHud.RefreshPanel();
             if (deviceHud.PanelText == null ||

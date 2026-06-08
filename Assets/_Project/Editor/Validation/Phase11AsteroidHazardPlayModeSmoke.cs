@@ -220,6 +220,7 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Runtime scene must contain Phase 11 start, device, HUD, settlement, maintenance, and contract board controllers.");
             }
 
+            startController.FastForwardAssociationContractForValidation();
             ClickButtonThroughUi(startController.YesButton);
             ClickButtonThroughUi(startController.TutorialContractButton);
 

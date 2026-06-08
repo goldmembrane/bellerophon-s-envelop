@@ -5,7 +5,10 @@ namespace Bellerophon.Core.Session
     public enum ExternalTargetType
     {
         None,
-        Asteroid
+        Asteroid,
+        AlienLifeform,
+        CargoFreedomLeagueBoardingCraft,
+        SpacePirateBoardingCraft
     }
 
     public enum ManualTurretFireOutcome

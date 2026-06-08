@@ -24,23 +24,45 @@ namespace Bellerophon.Editor.Validation
             }
 
             var settlementController = UnityEngine.Object.FindFirstObjectByType<TransportSettlementController>();
+            var planetController = UnityEngine.Object.FindFirstObjectByType<PlanetStayController>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
             var contractBoardController = UnityEngine.Object.FindFirstObjectByType<ContractBoardController>();
+            var shopController = UnityEngine.Object.FindFirstObjectByType<EquipmentShopController>();
             var personalCargoController = UnityEngine.Object.FindFirstObjectByType<PersonalCargoController>();
             var shipUpgradeController = UnityEngine.Object.FindFirstObjectByType<ShipUpgradeController>();
             if (settlementController == null ||
+                planetController == null ||
                 maintenanceController == null ||
                 contractBoardController == null ||
                 personalCargoController == null ||
                 shipUpgradeController == null)
             {
-                throw new InvalidOperationException("Phase 10 requires settlement, maintenance, contract board, personal cargo, and ship upgrade controllers.");
+                throw new InvalidOperationException("Phase 10 requires settlement, planet stay, maintenance, contract board, personal cargo, and ship upgrade controllers.");
             }
 
             if (settlementController.ContinueToMaintenanceButton == null ||
                 settlementController.ContinueToMaintenanceButton.name != Phase10PlanetMaintenanceBootstrap.ContinueButtonName)
             {
                 throw new InvalidOperationException("Phase 10 settlement continuation button is not configured.");
+            }
+
+            if (settlementController.PlanetStayController != planetController)
+            {
+                throw new InvalidOperationException("Phase 20 settlement continuation must target the planet stay screen before maintenance.");
+            }
+
+            if (planetController.PlanetRoot == null ||
+                planetController.PlanetRoot.name != Phase10PlanetMaintenanceBootstrap.PlanetStayRootName ||
+                planetController.TitleText == null ||
+                planetController.BodyText == null ||
+                planetController.StatusText == null ||
+                planetController.RepairShopButton == null ||
+                planetController.ContractOfficeButton == null ||
+                planetController.ShopButton == null ||
+                planetController.CargoDepotButton == null ||
+                planetController.ShipButton == null)
+            {
+                throw new InvalidOperationException("Phase 20 planet stay screen references are missing.");
             }
 
             if (maintenanceController.MaintenanceRoot == null ||
@@ -56,9 +78,23 @@ namespace Bellerophon.Editor.Validation
                 maintenanceController.ContractBoardButton == null ||
                 maintenanceController.ShopButton == null ||
                 maintenanceController.PersonalCargoButton == null ||
-                maintenanceController.UpgradesButton == null)
+                maintenanceController.UpgradesButton == null ||
+                maintenanceController.PlanetBackButton == null)
             {
                 throw new InvalidOperationException("Phase 10 maintenance action buttons are missing.");
+            }
+
+            if (maintenanceController.PlanetStayController != planetController)
+            {
+                throw new InvalidOperationException("Phase 10 repair screen must be able to return to the planet stay screen.");
+            }
+
+            if (shopController != null &&
+                (planetController.ShopController != shopController ||
+                 shopController.PlanetStayController != planetController ||
+                 shopController.MaintenanceController != maintenanceController))
+            {
+                throw new InvalidOperationException("Existing Phase 15 equipment shop must stay linked to the Phase 20 planet stay hub.");
             }
 
             if (contractBoardController.BoardRoot == null ||
@@ -126,6 +162,21 @@ namespace Bellerophon.Editor.Validation
             if (background == null || background.color.a < 1f)
             {
                 throw new InvalidOperationException("Phase 10 maintenance screen background must be fully opaque.");
+            }
+
+            var planetRect = planetController.PlanetRoot.GetComponent<RectTransform>();
+            if (planetRect == null ||
+                planetRect.anchorMin != Vector2.zero ||
+                planetRect.anchorMax != Vector2.one ||
+                planetRect.sizeDelta != Vector2.zero)
+            {
+                throw new InvalidOperationException("Phase 20 planet stay screen must cover the full screen.");
+            }
+
+            var planetBackground = planetController.PlanetRoot.GetComponent<Image>();
+            if (planetBackground == null || planetBackground.color.a < 1f)
+            {
+                throw new InvalidOperationException("Phase 20 planet stay screen background must be fully opaque.");
             }
 
             var boardRect = contractBoardController.BoardRoot.GetComponent<RectTransform>();

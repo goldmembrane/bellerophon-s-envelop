@@ -13,7 +13,7 @@ namespace Bellerophon.Tests.EditMode
         {
             var flow = NewGameStartFlowState.CreateNewGame();
 
-            var association = flow.AcceptAssociationContract();
+            var association = flow.MoveAssociationContractToBottom().AcceptAssociationContract();
             var tutorial = association.AcceptTutorialContract();
 
             Assert.That(flow.Phase, Is.EqualTo(NewGameStartFlowPhase.ContractPrompt));
@@ -31,7 +31,7 @@ namespace Bellerophon.Tests.EditMode
         [Test]
         public void MvpLoop_TutorialSettlementRepairAndFollowUpContractStayConnected()
         {
-            var tutorialFlow = NewGameStartFlowState.CreateNewGame()
+            var tutorialFlow = CreateScrolledContractPrompt()
                 .AcceptAssociationContract()
                 .AcceptTutorialContract();
             var damagedShip = ShipState.CreateDefault()
@@ -189,6 +189,7 @@ namespace Bellerophon.Tests.EditMode
                     null,
                     null);
 
+                start.FastForwardAssociationContractForValidation();
                 start.AcceptAssociationContract();
                 start.AcceptTutorialContract();
                 device.TickTransportRun(60f);
@@ -222,7 +223,7 @@ namespace Bellerophon.Tests.EditMode
 
         private static GameSessionState CreatePostTutorialTransport()
         {
-            var tutorial = NewGameStartFlowState.CreateNewGame()
+            var tutorial = CreateScrolledContractPrompt()
                 .AcceptAssociationContract()
                 .AcceptTutorialContract();
             var completed = tutorial.Session.CompleteTransport(new SettlementInput(
@@ -235,6 +236,12 @@ namespace Bellerophon.Tests.EditMode
                 contractBasePay: tutorial.Session.ActiveTransportContract.Value.RewardCredits,
                 repairSupportAmount: 100));
             return completed.StartTransport(TransportContractDefinition.CreateAssociationFollowUp());
+        }
+
+        private static NewGameStartFlowState CreateScrolledContractPrompt()
+        {
+            return NewGameStartFlowState.CreateNewGame()
+                .MoveAssociationContractToBottom();
         }
     }
 }

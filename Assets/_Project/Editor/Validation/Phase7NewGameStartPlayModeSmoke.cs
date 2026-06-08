@@ -215,10 +215,13 @@ namespace Bellerophon.Editor.Validation
 
             if (controller.FlowState.Phase != NewGameStartFlowPhase.ContractPrompt ||
                 controller.YesButton == null ||
+                controller.NoButton == null ||
                 controller.TutorialContractButton == null ||
                 !controller.YesButton.gameObject.activeInHierarchy ||
+                !controller.NoButton.gameObject.activeInHierarchy ||
                 !controller.TutorialContractButton.gameObject.activeInHierarchy ||
-                !controller.YesButton.interactable ||
+                controller.YesButton.interactable ||
+                controller.NoButton.interactable ||
                 controller.TutorialContractButton.interactable)
             {
                 throw new InvalidOperationException("Phase 7 initial contract UI state is invalid.");
@@ -228,6 +231,27 @@ namespace Bellerophon.Editor.Validation
             {
                 throw new InvalidOperationException(
                     $"Phase 7 contract UI must unlock the cursor. Suppressed={playerInput.CursorLockSuppressed}; Lock={Cursor.lockState}; Visible={Cursor.visible}");
+            }
+
+            var yesPosition = controller.YesButton.GetComponent<RectTransform>().anchoredPosition.x;
+            var noPosition = controller.NoButton.GetComponent<RectTransform>().anchoredPosition.x;
+            if (yesPosition <= noPosition)
+            {
+                throw new InvalidOperationException("Phase 7 association Yes button must be placed to the right of the No button.");
+            }
+
+            controller.FastForwardAssociationContractForValidation();
+            if (!controller.YesButton.interactable || !controller.NoButton.interactable)
+            {
+                throw new InvalidOperationException("Phase 7 association decisions must unlock after the contract reaches the bottom.");
+            }
+
+            ClickButtonThroughUi(controller.NoButton);
+            if (controller.FlowState.Phase != NewGameStartFlowPhase.ContractPrompt ||
+                controller.StatusText == null ||
+                !controller.StatusText.text.Contains("이미 잠정적으로 동의한 상태입니다"))
+            {
+                throw new InvalidOperationException("Association No button must be blocked after tentative consent.");
             }
 
             ClickButtonThroughUi(controller.YesButton);

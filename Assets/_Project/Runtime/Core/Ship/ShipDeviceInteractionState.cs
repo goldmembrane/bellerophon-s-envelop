@@ -829,7 +829,8 @@ namespace Bellerophon.Core.Ship
                 }
 
                 lastInteractionSummary = seedIntruderState.IsResolved
-                    ? EquipmentRules.FormatItemName(lastEquipmentUseResult.ItemKind) + " neutralized Parvum."
+                    ? EquipmentRules.FormatItemName(lastEquipmentUseResult.ItemKind) + " neutralized " +
+                      SeedIntruderRules.FormatSeedIntruderKind(seedIntruderState.Kind) + "."
                     : lastEquipmentUseResult.Summary;
                 return lastEquipmentUseResult;
             }
@@ -1039,7 +1040,8 @@ namespace Bellerophon.Core.Ship
             seedIntruderState = SeedIntruderRules.ApplyDamage(
                 seedIntruderState,
                 seedIntruderState.Intruder.CurrentHealth);
-            lastInteractionSummary = "Parvum intruder neutralized.";
+            lastInteractionSummary = SeedIntruderRules.FormatSeedIntruderKind(seedIntruderState.Kind) +
+                                     " intruder neutralized.";
             return seedIntruderState;
         }
 
@@ -1376,15 +1378,17 @@ namespace Bellerophon.Core.Ship
                 return;
             }
 
+            var profile = SeedIntruderRules.GetProfile(seedIntruderState.Kind);
             var roomDamage = ShipStateRules.CalculateInternalIntruderRoomDamage(
-                SeedIntruderRules.ParvumShipFacilityDamage,
+                profile.ShipFacilityDamage,
                 shipState);
-            var result = SeedIntruderRules.TickParvum(
+            var result = SeedIntruderRules.TickSeedIntruder(
                 seedIntruderState,
                 shipState,
                 cargoState,
                 deltaSeconds,
-                roomDamage);
+                roomDamage,
+                CargoMaterial.Unspecified);
             seedIntruderState = result.State;
             shipState = result.Ship;
             cargoState = result.Cargo;
@@ -1392,7 +1396,8 @@ namespace Bellerophon.Core.Ship
             manualFlightModeActive = transportRunState.FlightMode == ShipFlightMode.ManualFlight;
             if (result.AttackCount > 0)
             {
-                lastInteractionSummary = "Parvum is chewing through " +
+                lastInteractionSummary = SeedIntruderRules.FormatSeedIntruderKind(seedIntruderState.Kind) +
+                                         " is pressuring " +
                                          FormatRoomName(seedIntruderState.Intruder.CurrentRoom) + ".";
             }
         }
@@ -1407,7 +1412,8 @@ namespace Bellerophon.Core.Ship
             seedIntruderState = SeedIntruderRules.ResolveActiveIntruder(
                 seedIntruderState,
                 IntruderResolution.ObjectiveApplied);
-            lastInteractionSummary = "Parvum intrusion ended at arrival; damage remains for settlement.";
+            lastInteractionSummary = SeedIntruderRules.FormatSeedIntruderKind(seedIntruderState.Kind) +
+                                     " intrusion ended at arrival; damage remains for settlement.";
         }
 
         private bool IsManualHazardAvoidanceActive()

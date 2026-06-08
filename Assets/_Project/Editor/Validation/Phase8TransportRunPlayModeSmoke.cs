@@ -224,6 +224,7 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Runtime scene must contain Phase 8 controller, player, device state, HUD, and manual flight view.");
             }
 
+            controller.FastForwardAssociationContractForValidation();
             ClickButtonThroughUi(controller.YesButton);
             ClickButtonThroughUi(controller.TutorialContractButton);
 

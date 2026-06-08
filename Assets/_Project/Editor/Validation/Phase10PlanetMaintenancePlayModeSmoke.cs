@@ -193,9 +193,21 @@ namespace Bellerophon.Editor.Validation
                 return;
             }
 
+            Phase20PresentationBootstrap.EnsurePhase20Assets();
+            request.Details = AppendDetails(request.Details, "Scene=Phase20Restored");
             WriteLog(request, false, null);
             TryDelete(ActivePath);
             TryDelete(ErrorsPath);
+        }
+
+        private static string AppendDetails(string details, string addition)
+        {
+            if (string.IsNullOrWhiteSpace(details))
+            {
+                return addition;
+            }
+
+            return details + "; " + addition;
         }
 
         private static string ValidateRuntime()
@@ -209,20 +221,24 @@ namespace Bellerophon.Editor.Validation
             var playerInput = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerInput>();
             var deviceState = UnityEngine.Object.FindFirstObjectByType<ShipDeviceInteractionState>();
             var settlementController = UnityEngine.Object.FindFirstObjectByType<TransportSettlementController>();
+            var planetController = UnityEngine.Object.FindFirstObjectByType<PlanetStayController>();
             var maintenanceController = UnityEngine.Object.FindFirstObjectByType<PlanetMaintenanceController>();
             var contractBoardController = UnityEngine.Object.FindFirstObjectByType<ContractBoardController>();
             var shipUpgradeController = UnityEngine.Object.FindFirstObjectByType<ShipUpgradeController>();
+            var shopController = UnityEngine.Object.FindFirstObjectByType<EquipmentShopController>();
             if (startController == null ||
                 playerInput == null ||
                 deviceState == null ||
                 settlementController == null ||
+                planetController == null ||
                 maintenanceController == null ||
                 contractBoardController == null ||
                 shipUpgradeController == null)
             {
-                throw new InvalidOperationException("Runtime scene must contain Phase 10 start flow, player input, device state, settlement, maintenance, contract board, and upgrade controllers.");
+                throw new InvalidOperationException("Runtime scene must contain Phase 10 start flow, player input, device state, settlement, planet, maintenance, contract board, and upgrade controllers.");
             }
 
+            startController.FastForwardAssociationContractForValidation();
             ClickButtonThroughUi(startController.YesButton);
             ClickButtonThroughUi(startController.TutorialContractButton);
 
@@ -254,9 +270,63 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Maintenance continuation click fallback must activate inside the continue button bounds.");
             }
 
-            if (!maintenanceController.IsMaintenanceVisible || settlementController.IsSettlementVisible)
+            if (!planetController.IsPlanetVisible ||
+                settlementController.IsSettlementVisible ||
+                maintenanceController.IsMaintenanceVisible ||
+                planetController.BodyText == null ||
+                !planetController.BodyText.text.Contains("Surface map") ||
+                !planetController.BodyText.text.Contains("Repair Shop") ||
+                !planetController.ContractOfficeButton.interactable ||
+                !planetController.CargoDepotButton.interactable)
             {
-                throw new InvalidOperationException("Maintenance screen must replace the settlement panel.");
+                throw new InvalidOperationException("Planet stay screen must replace settlement and expose surface map entry points.");
+            }
+
+            EnsurePlanetMapMarkersDoNotOverlapBody(planetController.BodyText.GetComponent<RectTransform>());
+
+            if (shopController != null)
+            {
+                if (!planetController.ShopButton.interactable)
+                {
+                    throw new InvalidOperationException("Planet stay shop button must stay enabled when an equipment shop controller exists.");
+                }
+
+                ClickButtonThroughUi(planetController.ShopButton);
+                if (!shopController.IsShopVisible ||
+                    planetController.IsPlanetVisible ||
+                    shopController.BodyText == null ||
+                    !shopController.BodyText.text.Contains("Musket"))
+                {
+                    throw new InvalidOperationException("Planet stay shop entry must open the equipment shop.");
+                }
+
+                ClickButtonThroughUi(shopController.CloseButton);
+                if (shopController.IsShopVisible || !planetController.IsPlanetVisible)
+                {
+                    throw new InvalidOperationException("Closing a shop opened from the planet stay screen must return to the planet hub.");
+                }
+            }
+
+            ClickButtonThroughUi(planetController.RepairShopButton);
+            if (!maintenanceController.IsMaintenanceVisible ||
+                settlementController.IsSettlementVisible ||
+                planetController.IsPlanetVisible ||
+                maintenanceController.PlanetBackButton == null ||
+                !maintenanceController.PlanetBackButton.interactable)
+            {
+                throw new InvalidOperationException("Repair shop entry must replace the planet stay screen with maintenance.");
+            }
+
+            ClickButtonThroughUi(maintenanceController.PlanetBackButton);
+            if (!planetController.IsPlanetVisible || maintenanceController.IsMaintenanceVisible)
+            {
+                throw new InvalidOperationException("Repair shop back button must return to the planet stay screen.");
+            }
+
+            ClickButtonThroughUi(planetController.RepairShopButton);
+            if (!maintenanceController.IsMaintenanceVisible || planetController.IsPlanetVisible)
+            {
+                throw new InvalidOperationException("Repair shop must still reopen after returning to the planet hub.");
             }
 
             Canvas.ForceUpdateCanvases();
@@ -510,6 +580,59 @@ namespace Bellerophon.Editor.Validation
             ExecuteEvents.ExecuteHierarchy(button.gameObject, pointer, ExecuteEvents.pointerDownHandler);
             ExecuteEvents.ExecuteHierarchy(button.gameObject, pointer, ExecuteEvents.pointerUpHandler);
             ExecuteEvents.ExecuteHierarchy(button.gameObject, pointer, ExecuteEvents.pointerClickHandler);
+        }
+
+        private static void EnsurePlanetMapMarkersDoNotOverlapBody(RectTransform bodyRect)
+        {
+            if (bodyRect == null)
+            {
+                throw new InvalidOperationException("Planet stay body text must have a RectTransform.");
+            }
+
+            var bodyBounds = GetWorldRect(bodyRect);
+            var markerNames = new[]
+            {
+                "Phase 20 Planet Map Shop Marker",
+                "Phase 20 Planet Map Repair Marker",
+                "Phase 20 Planet Map Ship Marker",
+                "Phase 20 Planet Map Cargo Marker"
+            };
+
+            for (var i = 0; i < markerNames.Length; i++)
+            {
+                var marker = GameObject.Find(markerNames[i]);
+                var markerRect = marker != null
+                    ? marker.GetComponent<RectTransform>()
+                    : null;
+                if (markerRect == null)
+                {
+                    throw new InvalidOperationException("Missing planet map marker: " + markerNames[i]);
+                }
+
+                if (bodyBounds.Overlaps(GetWorldRect(markerRect)))
+                {
+                    throw new InvalidOperationException("Planet map marker overlaps the body text: " + markerNames[i]);
+                }
+            }
+        }
+
+        private static Rect GetWorldRect(RectTransform rectTransform)
+        {
+            var corners = new Vector3[4];
+            rectTransform.GetWorldCorners(corners);
+            var minX = corners[0].x;
+            var minY = corners[0].y;
+            var maxX = corners[0].x;
+            var maxY = corners[0].y;
+            for (var i = 1; i < corners.Length; i++)
+            {
+                minX = Mathf.Min(minX, corners[i].x);
+                minY = Mathf.Min(minY, corners[i].y);
+                maxX = Mathf.Max(maxX, corners[i].x);
+                maxY = Mathf.Max(maxY, corners[i].y);
+            }
+
+            return Rect.MinMaxRect(minX, minY, maxX, maxY);
         }
 
         private static void CaptureLog(string condition, string stackTrace, LogType type)

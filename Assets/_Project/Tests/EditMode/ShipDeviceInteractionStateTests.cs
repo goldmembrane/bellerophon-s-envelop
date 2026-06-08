@@ -571,6 +571,114 @@ namespace Bellerophon.Tests.EditMode
         }
 
         [Test]
+        public void ManualTurret_DestroysAlienLifeformExternalTargetAndNeutralizesHazard()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                state.StartTransportRun(60);
+                state.StartTransportHazardForValidation(
+                    TransportHazardState.Start(TransportHazardType.AlienLifeRegion, 991, 30));
+
+                Assert.That(state.CurrentExternalTarget.TargetType, Is.EqualTo(ExternalTargetType.AlienLifeform));
+                Assert.That(state.CurrentExternalTarget.MaxHealth, Is.EqualTo(350));
+
+                state.ActivateDevice(ShipDeviceType.ArmoryTurretHandle);
+                var target = state.CurrentExternalTarget;
+                state.SetManualTurretAimForValidation(target.PositionX, target.PositionY);
+                ManualTurretFireResult finalShot = default;
+                for (var i = 0; i < 7 && state.CurrentExternalTarget.IsActive; i++)
+                {
+                    finalShot = state.FireManualTurret();
+                }
+
+                Assert.That(finalShot.Outcome, Is.EqualTo(ManualTurretFireOutcome.Destroyed));
+                Assert.That(state.HasActiveTransportHazard, Is.False);
+                Assert.That(state.CurrentExternalTarget.IsActive, Is.False);
+                Assert.That(state.LastTransportHazardResult.Resolution, Is.EqualTo(TransportHazardResolution.Neutralized));
+                Assert.That(state.LastTransportHazardResult.RoomDamages, Is.Empty);
+                Assert.That(ShipStateRules.CalculateRepairCost(state.CurrentShipState), Is.Zero);
+            }
+            finally
+            {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
+        public void ManualTurret_DestroysCargoFreedomLeagueCraftAndNeutralizesHazard()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                state.StartTransportRun(60);
+                state.StartTransportHazardForValidation(
+                    TransportHazardState.Start(TransportHazardType.CargoFreedomLeagueRegion, 3, 30));
+
+                Assert.That(state.CurrentExternalTarget.TargetType, Is.EqualTo(ExternalTargetType.CargoFreedomLeagueBoardingCraft));
+                Assert.That(state.CurrentExternalTarget.MaxHealth, Is.EqualTo(CargoFreedomLeagueRules.RevolutionBoardingCraftHealth));
+
+                state.ActivateDevice(ShipDeviceType.ArmoryTurretHandle);
+                var target = state.CurrentExternalTarget;
+                state.SetManualTurretAimForValidation(target.PositionX, target.PositionY);
+                ManualTurretFireResult finalShot = default;
+                for (var i = 0; i < 20 && state.CurrentExternalTarget.IsActive; i++)
+                {
+                    finalShot = state.FireManualTurret();
+                }
+
+                Assert.That(finalShot.Outcome, Is.EqualTo(ManualTurretFireOutcome.Destroyed));
+                Assert.That(state.HasActiveTransportHazard, Is.False);
+                Assert.That(state.CurrentExternalTarget.IsActive, Is.False);
+                Assert.That(state.LastTransportHazardResult.Resolution, Is.EqualTo(TransportHazardResolution.Neutralized));
+                Assert.That(state.LastTransportHazardResult.RoomDamages, Is.Empty);
+                Assert.That(ShipStateRules.CalculateRepairCost(state.CurrentShipState), Is.Zero);
+            }
+            finally
+            {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
+        public void ManualTurret_DestroysSpacePirateAtaCraftAndNeutralizesHazard()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                state.StartTransportRun(60);
+                state.StartTransportHazardForValidation(
+                    TransportHazardState.Start(TransportHazardType.SpacePirateRegion, 3, 60));
+
+                Assert.That(state.CurrentExternalTarget.TargetType, Is.EqualTo(ExternalTargetType.SpacePirateBoardingCraft));
+                Assert.That(state.CurrentExternalTarget.MaxHealth, Is.EqualTo(SpacePirateRules.AtaBoardingCraftHealth));
+
+                state.ActivateDevice(ShipDeviceType.ArmoryTurretHandle);
+                var target = state.CurrentExternalTarget;
+                state.SetManualTurretAimForValidation(target.PositionX, target.PositionY);
+                ManualTurretFireResult finalShot = default;
+                for (var i = 0; i < 24 && state.CurrentExternalTarget.IsActive; i++)
+                {
+                    finalShot = state.FireManualTurret();
+                }
+
+                Assert.That(finalShot.Outcome, Is.EqualTo(ManualTurretFireOutcome.Destroyed));
+                Assert.That(state.HasActiveTransportHazard, Is.False);
+                Assert.That(state.CurrentExternalTarget.IsActive, Is.False);
+                Assert.That(state.LastTransportHazardResult.Resolution, Is.EqualTo(TransportHazardResolution.Neutralized));
+                Assert.That(state.LastTransportHazardResult.RoomDamages, Is.Empty);
+                Assert.That(ShipStateRules.CalculateRepairCost(state.CurrentShipState), Is.Zero);
+            }
+            finally
+            {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
         public void ManualTurret_UpgradeMagazineAndPlasmaNeutralizeExternalTarget()
         {
             var stateObject = new GameObject("Ship Device State Test");

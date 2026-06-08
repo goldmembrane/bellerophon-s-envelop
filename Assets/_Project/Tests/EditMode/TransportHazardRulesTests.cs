@@ -45,6 +45,7 @@ namespace Bellerophon.Tests.EditMode
             Assert.That(TransportHazardRules.AlienLifeOccurrencePercent, Is.EqualTo(10));
             Assert.That(TransportHazardRules.MinimumAlienLifeDurationSeconds, Is.EqualTo(30));
             Assert.That(TransportHazardRules.MaximumAlienLifeDurationSeconds, Is.EqualTo(300));
+            Assert.That(TransportHazardRules.AlienLifeExternalTargetHealth, Is.EqualTo(350));
 
             Assert.That(TransportHazardRules.ConcealedBlackHoleFameThreshold, Is.EqualTo(4500));
             Assert.That(TransportHazardRules.GetManualFlightBoosterReductionSeconds(TransportHazardType.ConcealedBlackHole), Is.Zero);
@@ -128,12 +129,23 @@ namespace Bellerophon.Tests.EditMode
             var cargoResult = TransportHazardRules.ResolveTransportHazard(cargoFreedom);
             var alienResult = TransportHazardRules.ResolveTransportHazard(alienLife);
             var pirateResult = TransportHazardRules.ResolveTransportHazard(pirate);
+            var cargoTarget = TransportHazardRules.CreateExternalTarget(cargoFreedom);
+            var alienTarget = TransportHazardRules.CreateExternalTarget(alienLife);
+            var pirateTarget = TransportHazardRules.CreateExternalTarget(pirate);
             var pirateDamagedShip = TransportHazardRules.ApplyHazardResult(ShipState.CreateDefault(), pirateResult);
 
             Assert.That(cargoResult.BoardingEventCount, Is.GreaterThan(0));
             Assert.That(cargoResult.RoomDamages, Is.Empty);
+            Assert.That(cargoTarget.TargetType, Is.EqualTo(ExternalTargetType.CargoFreedomLeagueBoardingCraft));
+            Assert.That(cargoTarget.MaxHealth, Is.EqualTo(CargoFreedomLeagueRules.GetBoardingCraftProfile(
+                CargoFreedomLeagueRules.SelectKindForSeed(cargoFreedom.Seed)).Health));
             Assert.That(alienResult.BoardingEventCount, Is.GreaterThan(0));
             Assert.That(alienResult.RoomDamages, Is.Empty);
+            Assert.That(alienTarget.TargetType, Is.EqualTo(ExternalTargetType.AlienLifeform));
+            Assert.That(alienTarget.MaxHealth, Is.EqualTo(350));
+            Assert.That(pirateTarget.TargetType, Is.EqualTo(ExternalTargetType.SpacePirateBoardingCraft));
+            Assert.That(pirateTarget.MaxHealth, Is.EqualTo(SpacePirateRules.GetBoardingCraftProfile(
+                SpacePirateRules.SelectKindForSeed(pirate.Seed)).Health));
             Assert.That(pirateResult.BoardingEventCount, Is.GreaterThan(0));
             Assert.That(pirateResult.BombardmentHitCount, Is.EqualTo(pirateResult.RoomDamages.Length));
             Assert.That(pirateResult.RoomDamages[0].Damage, Is.EqualTo(TransportHazardRules.SpacePirateBombardmentDamage));

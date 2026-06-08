@@ -16,6 +16,11 @@ namespace Bellerophon.Tests.EditMode
             Assert.That(catalog.Routes.Length, Is.GreaterThanOrEqualTo(8));
             Assert.That(catalog.Contracts.Length, Is.GreaterThanOrEqualTo(8));
             Assert.That(catalog.Cargo.Length, Is.GreaterThanOrEqualTo(8));
+            Assert.That(catalog.HostileUnits.Length, Is.GreaterThanOrEqualTo(8));
+            Assert.That(catalog.HostileUnits, Has.Some.Matches<HostileUnitContentDefinition>(unit =>
+                unit.UnitId == SeedIntruderRules.FugaDefinitionId && unit.DisplayName == "Fuga"));
+            Assert.That(catalog.HostileUnits, Has.Some.Matches<HostileUnitContentDefinition>(unit =>
+                unit.UnitId == SeedIntruderRules.MimesisDefinitionId && unit.PrimaryObjective == IntruderObjectiveType.AttackPlayer));
             Assert.That(catalog.Planets, Has.Some.Matches<PlanetContentDefinition>(planet =>
                 planet.HasTrait(PlanetTrait.WaterRich) && planet.HasTrait(PlanetTrait.OrganicRich)));
         }

@@ -311,6 +311,7 @@ namespace Bellerophon.Editor.Validation
 
             if (startFlow.FlowState.Phase == NewGameStartFlowPhase.ContractPrompt)
             {
+                startFlow.FastForwardAssociationContractForValidation();
                 startFlow.AcceptAssociationContract();
             }
 

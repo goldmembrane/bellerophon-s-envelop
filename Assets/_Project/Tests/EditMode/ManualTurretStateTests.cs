@@ -54,6 +54,96 @@ namespace Bellerophon.Tests.EditMode
         }
 
         [Test]
+        public void ManualTurret_RepeatedHitsDestroyAlienLifeformExternalTargetInSevenShots()
+        {
+            var target = new ExternalTargetState(
+                "alien-lifeform-test",
+                ExternalTargetType.AlienLifeform,
+                AlienLifeformRules.ExternalIntrusionObjectHealth,
+                AlienLifeformRules.ExternalIntrusionObjectHealth,
+                0.2f,
+                -0.1f,
+                ManualTurretState.DefaultAsteroidHitRadius);
+            var turret = ManualTurretState.Start(true)
+                .SetAim(target.PositionX, target.PositionY);
+
+            ManualTurretFireResult shot = default;
+            var shotCount = 0;
+            while (!target.IsDestroyed)
+            {
+                shot = turret.FireAt(target);
+                turret = shot.Turret;
+                target = shot.Target;
+                shotCount++;
+            }
+
+            Assert.That(shotCount, Is.EqualTo(7));
+            Assert.That(shot.Outcome, Is.EqualTo(ManualTurretFireOutcome.Destroyed));
+            Assert.That(shot.Target.IsDestroyed, Is.True);
+            Assert.That(shot.Turret.AmmoInMagazine, Is.EqualTo(ManualTurretState.MagazineSize - 7));
+        }
+
+        [Test]
+        public void ManualTurret_RepeatedHitsDestroyCargoFreedomLeagueRevolutionCraftInTwentyShots()
+        {
+            var target = new ExternalTargetState(
+                "cargo-freedom-revolution-test",
+                ExternalTargetType.CargoFreedomLeagueBoardingCraft,
+                CargoFreedomLeagueRules.RevolutionBoardingCraftHealth,
+                CargoFreedomLeagueRules.RevolutionBoardingCraftHealth,
+                0.2f,
+                -0.1f,
+                ManualTurretState.DefaultAsteroidHitRadius);
+            var turret = ManualTurretState.Start(true)
+                .SetAim(target.PositionX, target.PositionY);
+
+            ManualTurretFireResult shot = default;
+            var shotCount = 0;
+            while (!target.IsDestroyed)
+            {
+                shot = turret.FireAt(target);
+                turret = shot.Turret;
+                target = shot.Target;
+                shotCount++;
+            }
+
+            Assert.That(shotCount, Is.EqualTo(20));
+            Assert.That(shot.Outcome, Is.EqualTo(ManualTurretFireOutcome.Destroyed));
+            Assert.That(shot.Target.IsDestroyed, Is.True);
+            Assert.That(shot.Turret.AmmoInMagazine, Is.EqualTo(ManualTurretState.MagazineSize - 20));
+        }
+
+        [Test]
+        public void ManualTurret_RepeatedHitsDestroySpacePirateAtaCraftInTwentyFourShots()
+        {
+            var target = new ExternalTargetState(
+                "space-pirate-ata-test",
+                ExternalTargetType.SpacePirateBoardingCraft,
+                SpacePirateRules.AtaBoardingCraftHealth,
+                SpacePirateRules.AtaBoardingCraftHealth,
+                0.2f,
+                -0.1f,
+                ManualTurretState.DefaultAsteroidHitRadius);
+            var turret = ManualTurretState.Start(true)
+                .SetAim(target.PositionX, target.PositionY);
+
+            ManualTurretFireResult shot = default;
+            var shotCount = 0;
+            while (!target.IsDestroyed)
+            {
+                shot = turret.FireAt(target);
+                turret = shot.Turret;
+                target = shot.Target;
+                shotCount++;
+            }
+
+            Assert.That(shotCount, Is.EqualTo(24));
+            Assert.That(shot.Outcome, Is.EqualTo(ManualTurretFireOutcome.Destroyed));
+            Assert.That(shot.Target.IsDestroyed, Is.True);
+            Assert.That(shot.Turret.AmmoInMagazine, Is.EqualTo(ManualTurretState.MagazineSize - 24));
+        }
+
+        [Test]
         public void ManualTurret_ReloadRestoresMagazineAfterTwoSeconds()
         {
             var target = CreateTarget();

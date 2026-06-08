@@ -263,8 +263,33 @@ namespace Bellerophon.Tests.EditMode
 
             Assert.That(EquipmentRules.FilterCatalogByAvailability(catalog, EquipmentAvailability.CommonShop).Length, Is.GreaterThan(10));
             Assert.That(EquipmentRules.FilterCatalogByAvailability(catalog, EquipmentAvailability.FameRestrictedShop).Length, Is.GreaterThan(0));
-            Assert.That(EquipmentRules.FilterCatalogByAvailability(catalog, EquipmentAvailability.SpecialUnlock).Length, Is.GreaterThan(0));
+            Assert.That(EquipmentRules.FilterCatalogByAvailability(catalog, EquipmentAvailability.SpecialUnlock).Length, Is.EqualTo(4));
             Assert.That(EquipmentRules.FilterCatalogByCategory(catalog, EquipmentItemCategory.Treatment).Length, Is.GreaterThan(0));
+        }
+
+        [Test]
+        public void SpecialUnlockEquipment_RequiresContractUnlockBeforePurchase()
+        {
+            var lightBlade = EquipmentRules.GetDefinition(EquipmentItemKind.LightBlade);
+            var electricMine = EquipmentRules.GetDefinition(EquipmentItemKind.ElectricMine);
+            var corridorPurifier = EquipmentRules.GetDefinition(EquipmentItemKind.CorridorPurifier);
+            var locked = EquipmentRules.PurchaseItem(PlayerEquipmentState.Empty, EquipmentItemKind.LightBlade);
+            var unlocks = SpecialEquipmentUnlockState.None.WithUnlocked(EquipmentItemKind.LightBlade);
+            var unlocked = EquipmentRules.PurchaseItem(
+                PlayerEquipmentState.Empty,
+                EquipmentItemKind.LightBlade,
+                unlocks);
+
+            Assert.That(lightBlade.Availability, Is.EqualTo(EquipmentAvailability.SpecialUnlock));
+            Assert.That(lightBlade.Damage, Is.EqualTo(EquipmentRules.LightBladeDamage));
+            Assert.That(lightBlade.PriceCredits, Is.EqualTo(1000));
+            Assert.That(electricMine.Availability, Is.EqualTo(EquipmentAvailability.SpecialUnlock));
+            Assert.That(electricMine.MaxStackCount, Is.EqualTo(2));
+            Assert.That(corridorPurifier.Availability, Is.EqualTo(EquipmentAvailability.SpecialUnlock));
+            Assert.That(corridorPurifier.MaxStackCount, Is.EqualTo(2));
+            Assert.That(locked.Purchased, Is.False);
+            Assert.That(unlocked.Purchased, Is.True);
+            Assert.That(unlocked.State.HasAnyItem(EquipmentItemKind.LightBlade), Is.True);
         }
 
         [Test]

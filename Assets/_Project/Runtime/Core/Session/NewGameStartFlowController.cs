@@ -1,6 +1,8 @@
+using System;
 using Bellerophon.Core.Player;
 using Bellerophon.Core.Ship;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Bellerophon.Core.Session
@@ -12,12 +14,20 @@ namespace Bellerophon.Core.Session
         [SerializeField] private Text bodyText;
         [SerializeField] private Text statusText;
         [SerializeField] private Button yesButton;
+        [SerializeField] private Button noButton;
         [SerializeField] private Button tutorialContractButton;
+        [SerializeField] private Button skipTutorialButton;
         [SerializeField] private FirstPersonPlayerInput playerInput;
+        [SerializeField] private bool enableLocalPersistence;
+        [SerializeField] private bool loadFullSavedSessionOnStartup;
+        [SerializeField] private string saveSlotId = SaveGameService.DefaultSlotId;
 
         private NewGameStartFlowState flowState;
+        private SaveGameService saveGameService;
+        private GameSettingsState currentSettings = GameSettingsState.Default;
         private bool buttonsBound;
         private bool ownsCursorSuppression;
+        private string lastStatus = string.Empty;
 
         public NewGameStartFlowState FlowState
         {
@@ -38,7 +48,11 @@ namespace Bellerophon.Core.Session
 
         public Button YesButton => yesButton;
 
+        public Button NoButton => noButton;
+
         public Button TutorialContractButton => tutorialContractButton;
+
+        public Button SkipTutorialButton => skipTutorialButton;
 
         public ShipDeviceInteractionState ShipDeviceState => shipDeviceState;
 
@@ -53,19 +67,33 @@ namespace Bellerophon.Core.Session
             Button acceptAssociationButton,
             Button acceptTutorialButton,
             ShipDeviceInteractionState deviceState,
-            FirstPersonPlayerInput firstPersonInput = null)
+            FirstPersonPlayerInput firstPersonInput = null,
+            Button rejectAssociationButton = null,
+            Button skipTutorialActionButton = null)
         {
             titleText = titleLabel;
             bodyText = bodyLabel;
             statusText = statusLabel;
             yesButton = acceptAssociationButton;
+            noButton = rejectAssociationButton;
             tutorialContractButton = acceptTutorialButton;
+            skipTutorialButton = skipTutorialActionButton;
             shipDeviceState = deviceState;
             playerInput = firstPersonInput;
             EnsureState();
             EnsurePlayerInput();
             BindButtons();
             Refresh();
+        }
+
+        public void ConfigurePersistence(
+            bool enabled,
+            string slotId = SaveGameService.DefaultSlotId,
+            bool loadFullSavedSession = false)
+        {
+            enableLocalPersistence = enabled;
+            saveSlotId = string.IsNullOrWhiteSpace(slotId) ? SaveGameService.DefaultSlotId : slotId;
+            loadFullSavedSessionOnStartup = loadFullSavedSession;
         }
 
         public void AcceptAssociationContract()
@@ -76,8 +104,71 @@ namespace Bellerophon.Core.Session
                 return;
             }
 
+            if (!flowState.CanAcceptAssociationContract)
+            {
+                lastStatus = "Contract agreement is still scrolling. Down reaches the bottom faster.";
+                Refresh();
+                return;
+            }
+
             flowState = flowState.AcceptAssociationContract();
+            lastStatus = string.Empty;
             ApplySessionEquipmentToShipDevices();
+            Refresh();
+            SaveCurrentFlow();
+        }
+
+        public void RejectAssociationContract()
+        {
+            EnsureState();
+            if (flowState.Phase != NewGameStartFlowPhase.ContractPrompt)
+            {
+                return;
+            }
+
+            var result = flowState.RejectAssociationContract();
+            flowState = result.State;
+            lastStatus = result.Summary;
+            Refresh();
+            SaveCurrentFlow();
+        }
+
+        public void SkipTutorialForReturningPlayer()
+        {
+            EnsureState();
+            if (!flowState.CanSkipTutorial)
+            {
+                lastStatus = "Tutorial skip is only available after the first tutorial has been completed.";
+                Refresh();
+                return;
+            }
+
+            flowState = flowState.SkipTutorialForReturningPlayer();
+            lastStatus = "Tutorial skipped. $1100 granted and post-tutorial contracts are visible.";
+            ApplySessionEquipmentToShipDevices();
+            Refresh();
+            SaveCurrentFlow();
+            OpenPostTutorialPlanetStayIfConfigured();
+        }
+
+        public void SetTutorialCompletedBefore(bool hasCompletedTutorialBefore)
+        {
+            EnsureState();
+            flowState = flowState.WithTutorialCompletedBefore(hasCompletedTutorialBefore);
+            Refresh();
+            SaveCurrentFlow();
+        }
+
+        public void FastForwardAssociationContractForValidation()
+        {
+            EnsureState();
+            if (flowState.Phase != NewGameStartFlowPhase.ContractPrompt)
+            {
+                return;
+            }
+
+            flowState = flowState.MoveAssociationContractToBottom();
+            lastStatus = string.Empty;
             Refresh();
         }
 
@@ -90,8 +181,10 @@ namespace Bellerophon.Core.Session
             }
 
             flowState = flowState.AcceptTutorialContract();
+            lastStatus = string.Empty;
             ApplyActiveCargoToShipDevices();
             Refresh();
+            SaveCurrentFlow();
             CloseStartUi();
         }
 
@@ -101,6 +194,7 @@ namespace Bellerophon.Core.Session
             flowState = flowState.WithSession(session);
             ApplySessionEquipmentToShipDevices();
             Refresh();
+            SaveCurrentFlow();
         }
 
         public void PreparePostTransportContracts()
@@ -108,6 +202,7 @@ namespace Bellerophon.Core.Session
             EnsureState();
             flowState = flowState.PreparePostTransportContracts();
             Refresh();
+            SaveCurrentFlow();
         }
 
         public TransportContractDefinition GetAvailableContract(int index)
@@ -133,6 +228,7 @@ namespace Bellerophon.Core.Session
 
         private void Update()
         {
+            ProcessAssociationContractInput();
             ApplyCursorMode();
             TickTransportHazardOccurrence();
             TickSeedIntruderOccurrence();
@@ -155,6 +251,16 @@ namespace Bellerophon.Core.Session
                 tutorialContractButton.onClick.RemoveListener(AcceptTutorialContract);
             }
 
+            if (noButton != null)
+            {
+                noButton.onClick.RemoveListener(RejectAssociationContract);
+            }
+
+            if (skipTutorialButton != null)
+            {
+                skipTutorialButton.onClick.RemoveListener(SkipTutorialForReturningPlayer);
+            }
+
             buttonsBound = false;
             SetCursorLockSuppressed(false);
         }
@@ -163,7 +269,61 @@ namespace Bellerophon.Core.Session
         {
             if (flowState == null)
             {
-                flowState = NewGameStartFlowState.CreateNewGame();
+                flowState = CreateInitialFlowState();
+            }
+        }
+
+        private NewGameStartFlowState CreateInitialFlowState()
+        {
+            if (!enableLocalPersistence || !Application.isPlaying)
+            {
+                return NewGameStartFlowState.CreateNewGame();
+            }
+
+            try
+            {
+                NewGameStartFlowState loadedFlow;
+                GameSettingsState loadedSettings;
+                var service = GetSaveGameService();
+                if (loadFullSavedSessionOnStartup &&
+                    service.TryLoad(saveSlotId, out loadedFlow, out loadedSettings))
+                {
+                    currentSettings = loadedSettings;
+                    return loadedFlow;
+                }
+
+                if (service.TryCreateNewGameFromProfile(saveSlotId, out loadedFlow))
+                {
+                    return loadedFlow;
+                }
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning("Failed to load Bellerophon save slot '" + saveSlotId + "': " + exception.Message);
+            }
+
+            return NewGameStartFlowState.CreateNewGame();
+        }
+
+        private SaveGameService GetSaveGameService()
+        {
+            return saveGameService ?? (saveGameService = new SaveGameService(FileSaveGameRepository.CreateDefault()));
+        }
+
+        private void SaveCurrentFlow()
+        {
+            if (!enableLocalPersistence || !Application.isPlaying || flowState == null)
+            {
+                return;
+            }
+
+            try
+            {
+                GetSaveGameService().Save(saveSlotId, flowState, currentSettings);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning("Failed to save Bellerophon slot '" + saveSlotId + "': " + exception.Message);
             }
         }
 
@@ -182,10 +342,24 @@ namespace Bellerophon.Core.Session
                 hasButton = true;
             }
 
+            if (noButton != null)
+            {
+                noButton.onClick.RemoveListener(RejectAssociationContract);
+                noButton.onClick.AddListener(RejectAssociationContract);
+                hasButton = true;
+            }
+
             if (tutorialContractButton != null)
             {
                 tutorialContractButton.onClick.RemoveListener(AcceptTutorialContract);
                 tutorialContractButton.onClick.AddListener(AcceptTutorialContract);
+                hasButton = true;
+            }
+
+            if (skipTutorialButton != null)
+            {
+                skipTutorialButton.onClick.RemoveListener(SkipTutorialForReturningPlayer);
+                skipTutorialButton.onClick.AddListener(SkipTutorialForReturningPlayer);
                 hasButton = true;
             }
 
@@ -196,7 +370,7 @@ namespace Bellerophon.Core.Session
         {
             if (playerInput == null)
             {
-                playerInput = Object.FindFirstObjectByType<FirstPersonPlayerInput>();
+                playerInput = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerInput>();
             }
         }
 
@@ -207,12 +381,30 @@ namespace Bellerophon.Core.Session
 
             if (yesButton != null)
             {
-                SetButtonVisible(yesButton, flowState.Phase == NewGameStartFlowPhase.ContractPrompt);
+                SetButtonVisible(yesButton, flowState.CanAcceptAssociationContract);
+            }
+
+            if (noButton != null)
+            {
+                SetButtonVisible(
+                    noButton,
+                    flowState.Phase == NewGameStartFlowPhase.ContractPrompt &&
+                    flowState.AssociationContractScroll.HasReachedBottom);
             }
 
             if (tutorialContractButton != null)
             {
-                SetButtonVisible(tutorialContractButton, flowState.Phase == NewGameStartFlowPhase.AssociationPlanet);
+                SetButtonVisible(
+                    tutorialContractButton,
+                    flowState.Phase == NewGameStartFlowPhase.AssociationPlanet &&
+                    flowState.AvailableContractCount == 1 &&
+                    flowState.GetAvailableContract(0).IsTutorial &&
+                    !flowState.TutorialSkipped);
+            }
+
+            if (skipTutorialButton != null)
+            {
+                SetButtonVisible(skipTutorialButton, flowState.CanSkipTutorial);
             }
 
             switch (flowState.Phase)
@@ -220,21 +412,77 @@ namespace Bellerophon.Core.Session
                 case NewGameStartFlowPhase.ContractPrompt:
                     SetText(
                         "Association Contract",
-                        "Transport Association membership agreement.\n\nProceed with association membership.",
-                        "Start state: contract pending.");
+                        BuildContractPromptText(),
+                        GetStatusText("Contract scroll: " + flowState.AssociationContractScroll.ProgressPercent + "%."));
                     break;
                 case NewGameStartFlowPhase.AssociationPlanet:
                     SetText(
                         "Association Start Planet",
                         BuildPlanetStartText(),
-                        "Only the 60 second tutorial contract is available.");
+                        GetStatusText(flowState.TutorialSkipped
+                            ? "Tutorial skipped. Post-tutorial contracts are visible."
+                            : "Only the 60 second tutorial contract is available."));
+                    break;
+                case NewGameStartFlowPhase.PrivateBusinessPlanet:
+                    SetText(
+                        "Private Business Route",
+                        BuildPrivateBusinessStartText(),
+                        GetStatusText("Association contract cancelled before tentative consent."));
                     break;
                 case NewGameStartFlowPhase.TutorialContractAccepted:
                     SetText(
                         "Tutorial Contract Accepted",
                         BuildAcceptedContractText(),
-                        "Cargo Hold Center Cargo is registered as the active transport target.");
+                        GetStatusText("Cargo Hold Center Cargo is registered as the active transport target."));
                     break;
+            }
+        }
+
+        private void ProcessAssociationContractInput()
+        {
+            EnsureState();
+            if (flowState.Phase != NewGameStartFlowPhase.ContractPrompt)
+            {
+                return;
+            }
+
+            var keyboard = Keyboard.current;
+            var nextState = flowState;
+            var forceRefresh = false;
+            if (keyboard != null &&
+                (keyboard.leftCtrlKey.isPressed || keyboard.rightCtrlKey.isPressed) &&
+                keyboard.cKey.wasPressedThisFrame)
+            {
+                nextState = nextState.StopAssociationContractScroll();
+                lastStatus = "Association contract scrolling stopped. Ctrl+X starts the private business route.";
+                forceRefresh = true;
+            }
+            else if (keyboard != null &&
+                     (keyboard.leftCtrlKey.isPressed || keyboard.rightCtrlKey.isPressed) &&
+                     keyboard.xKey.wasPressedThisFrame)
+            {
+                var result = nextState.StartPrivateBusinessRouteFromStoppedContract();
+                nextState = result.State;
+                lastStatus = result.Summary;
+                forceRefresh = true;
+            }
+            else if (keyboard != null && keyboard.downArrowKey.isPressed)
+            {
+                nextState = nextState.TickAssociationContractDownArrowFastMove(Time.deltaTime);
+            }
+            else
+            {
+                nextState = nextState.TickAssociationContractScroll(Time.deltaTime);
+            }
+
+            if (forceRefresh || !ReferenceEquals(nextState, flowState))
+            {
+                flowState = nextState;
+                Refresh();
+                if (forceRefresh)
+                {
+                    SaveCurrentFlow();
+                }
             }
         }
 
@@ -256,7 +504,8 @@ namespace Bellerophon.Core.Session
         {
             EnsureState();
             return flowState.Phase == NewGameStartFlowPhase.ContractPrompt ||
-                   flowState.Phase == NewGameStartFlowPhase.AssociationPlanet;
+                   flowState.Phase == NewGameStartFlowPhase.AssociationPlanet ||
+                   flowState.Phase == NewGameStartFlowPhase.PrivateBusinessPlanet;
         }
 
         private void SetCursorLockSuppressed(bool suppressed)
@@ -288,13 +537,41 @@ namespace Bellerophon.Core.Session
         private string BuildPlanetStartText()
         {
             var session = flowState.Session;
+            var builder = "Association logo sign: present\n"
+                          + "Credits: " + session.Wallet.Credits + "\n"
+                          + "Ship: Default Cargo Ship\n"
+                          + "Suit: " + (session.Equipment.HasBasicProtectiveSuit ? "Basic Protective Suit" : "None") + "\n"
+                          + "Weapon: " + EquipmentRules.FormatItemName(session.Equipment.GetHandSlot(0).ItemKind) + " x" + session.StartingLoadout.StickCount + "\n";
+            if (flowState.AvailableContractCount <= 0)
+            {
+                return builder + "Available: None";
+            }
+
             var contract = flowState.GetAvailableContract(0);
-            return "Association logo sign: present\n"
-                   + "Credits: " + session.Wallet.Credits + "\n"
-                   + "Ship: Default Cargo Ship\n"
-                   + "Suit: " + (session.Equipment.HasBasicProtectiveSuit ? "Basic Protective Suit" : "None") + "\n"
-                   + "Weapon: " + EquipmentRules.FormatItemName(session.Equipment.GetHandSlot(0).ItemKind) + " x" + session.StartingLoadout.StickCount + "\n"
-                   + "Available: " + contract.DisplayName + " (" + contract.DurationSeconds + "s, $" + contract.RewardCredits + ")";
+            return builder + "Available: " + contract.DisplayName + " (" + contract.DurationSeconds + "s, $" + contract.RewardCredits + ")";
+        }
+
+        private string BuildContractPromptText()
+        {
+            return "Transport Association membership agreement.\n\n" +
+                   "Auto scroll reaches the bottom in 60 seconds.\n" +
+                   "Down reaches the bottom in 3 seconds.\n" +
+                   "Ctrl+C stops the scroll; Ctrl+X starts the private business route only after Ctrl+C.\n" +
+                   "Progress: " + flowState.AssociationContractScroll.ProgressPercent + "%";
+        }
+
+        private string BuildPrivateBusinessStartText()
+        {
+            var session = flowState.Session;
+            return "Association: Non-member\n" +
+                   "Association logo sign: absent\n" +
+                   "Credits: " + session.Wallet.Credits + "\n" +
+                   "Available route: Private business start";
+        }
+
+        private string GetStatusText(string defaultStatus)
+        {
+            return string.IsNullOrWhiteSpace(lastStatus) ? defaultStatus : lastStatus;
         }
 
         private string BuildAcceptedContractText()
@@ -401,6 +678,19 @@ namespace Bellerophon.Core.Session
         {
             SetCursorLockSuppressed(false);
             gameObject.SetActive(false);
+        }
+
+        private void OpenPostTutorialPlanetStayIfConfigured()
+        {
+            var planetStay = UnityEngine.Object.FindFirstObjectByType<PlanetStayController>();
+            if (planetStay == null)
+            {
+                CloseStartUi();
+                return;
+            }
+
+            CloseStartUi();
+            planetStay.ShowPlanet();
         }
     }
 }

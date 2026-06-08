@@ -88,6 +88,21 @@ namespace Bellerophon.Tests.EditMode
         }
 
         [Test]
+        public void PlayerPostureState_IsSeparateFromSourceNamedStatusEffects()
+        {
+            var state = new PlayerCombatState(100, 100, 100, 100, null);
+            var knockedDown = PlayerCombatRules.ApplyPostureState(
+                state,
+                PlayerPostureState.KnockedDownByTergo);
+            var cleared = PlayerCombatRules.ClearPostureState(knockedDown);
+
+            Assert.That(knockedDown.PostureState, Is.EqualTo(PlayerPostureState.KnockedDownByTergo));
+            Assert.That(knockedDown.IsPostureRestrained, Is.True);
+            Assert.That(knockedDown.StatusEffects.Length, Is.Zero);
+            Assert.That(cleared.PostureState, Is.EqualTo(PlayerPostureState.Standing));
+        }
+
+        [Test]
         public void PhysicalProtectiveSuit_HalvesStoppedAndBurnApplicationChance()
         {
             var equipment = PlayerEquipmentState.CreateDefaultAssociationIssue()
@@ -185,6 +200,16 @@ namespace Bellerophon.Tests.EditMode
                 var state = stateObject.AddComponent<ShipDeviceInteractionState>();
                 var status = statusObject.AddComponent<FirstPersonPlayerStatus>();
                 status.Configure(settings);
+                status.ApplyPostureState(PlayerPostureState.KnockedDownByTergo);
+
+                Assert.That(status.PostureState, Is.EqualTo(PlayerPostureState.KnockedDownByTergo));
+                Assert.That(status.IsMovementBlocked, Is.True);
+                Assert.That(status.IsActionBlocked, Is.True);
+                Assert.That(status.MovementMultiplier, Is.Zero);
+
+                status.ClearPostureState();
+                Assert.That(status.PostureState, Is.EqualTo(PlayerPostureState.Standing));
+
                 state.SetPlayerStatusForValidation(status);
                 state.SetEquipmentStateForValidation(PlayerEquipmentState.CreateDefaultAssociationIssue()
                     .WithHandSlot(1, EquipmentSlotState.Purchased(EquipmentItemKind.Flashbang, 100))

@@ -761,6 +761,12 @@ namespace Bellerophon.Core.Ship
             {
                 case ExternalTargetType.Asteroid:
                     return "Asteroid";
+                case ExternalTargetType.AlienLifeform:
+                    return "Alien Lifeform";
+                case ExternalTargetType.CargoFreedomLeagueBoardingCraft:
+                    return "Cargo Freedom Boarding Craft";
+                case ExternalTargetType.SpacePirateBoardingCraft:
+                    return "Space Pirate Boarding Craft";
                 default:
                     return "None";
             }
@@ -773,13 +779,7 @@ namespace Bellerophon.Core.Ship
 
         private static string FormatSeedIntruderKind(SeedIntruderKind kind)
         {
-            switch (kind)
-            {
-                case SeedIntruderKind.Parvum:
-                    return "Parvum";
-                default:
-                    return "None";
-            }
+            return SeedIntruderRules.FormatSeedIntruderKind(kind);
         }
 
         private static string FormatRoomName(ShipRoomId roomId)

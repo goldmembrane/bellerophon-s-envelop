@@ -225,6 +225,7 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Runtime scene must contain Phase 12 start, player, device, HUD, settlement, maintenance, contract board, and turret view controllers.");
             }
 
+            startController.FastForwardAssociationContractForValidation();
             ClickButtonThroughUi(startController.YesButton);
             ClickButtonThroughUi(startController.TutorialContractButton);
             deviceState.TickTransportRun(60f);

@@ -24,6 +24,7 @@ namespace Bellerophon.Core.Session
         [SerializeField] private Text settlementStatusText;
         [SerializeField] private Button continueToMaintenanceButton;
         [SerializeField] private PlanetMaintenanceController maintenanceController;
+        [SerializeField] private PlanetStayController planetStayController;
         [SerializeField] private GameObject gameOverRoot;
         [SerializeField] private RectTransform cargoShipVisual;
         [SerializeField] private RectTransform podVisual;
@@ -44,6 +45,8 @@ namespace Bellerophon.Core.Session
         public Text SettlementBodyText => settlementBodyText;
 
         public Button ContinueToMaintenanceButton => continueToMaintenanceButton;
+
+        public PlanetStayController PlanetStayController => planetStayController;
 
         public GameObject GameOverRoot => gameOverRoot;
 
@@ -111,13 +114,39 @@ namespace Bellerophon.Core.Session
             if (continueToMaintenanceButton != null)
             {
                 continueToMaintenanceButton.onClick.RemoveListener(ContinueToMaintenance);
+                continueToMaintenanceButton.onClick.RemoveListener(ContinueToPlanet);
             }
 
             maintenanceController = planetMaintenanceController;
+            planetStayController = null;
             continueToMaintenanceButton = continueButton;
             if (continueToMaintenanceButton != null)
             {
                 continueToMaintenanceButton.onClick.AddListener(ContinueToMaintenance);
+                continueToMaintenanceButton.gameObject.SetActive(false);
+            }
+        }
+
+        public void ConfigurePlanetContinuation(
+            PlanetStayController planetController,
+            Button continueButton)
+        {
+            if (continueToMaintenanceButton != null)
+            {
+                continueToMaintenanceButton.onClick.RemoveListener(ContinueToMaintenance);
+                continueToMaintenanceButton.onClick.RemoveListener(ContinueToPlanet);
+            }
+
+            planetStayController = planetController;
+            if (planetController != null && planetController.MaintenanceController != null)
+            {
+                maintenanceController = planetController.MaintenanceController;
+            }
+
+            continueToMaintenanceButton = continueButton;
+            if (continueToMaintenanceButton != null)
+            {
+                continueToMaintenanceButton.onClick.AddListener(ContinueToPlanet);
                 continueToMaintenanceButton.gameObject.SetActive(false);
             }
         }
@@ -184,6 +213,19 @@ namespace Bellerophon.Core.Session
             maintenanceController.ShowMaintenance();
         }
 
+        public void ContinueToPlanet()
+        {
+            if (planetStayController == null ||
+                CurrentSession == null ||
+                CurrentSession.Phase != GameSessionPhase.Completed)
+            {
+                return;
+            }
+
+            HideSettlement();
+            planetStayController.ShowPlanet();
+        }
+
         private void Awake()
         {
             BindMaintenanceContinuation();
@@ -214,6 +256,7 @@ namespace Bellerophon.Core.Session
             if (continueToMaintenanceButton != null)
             {
                 continueToMaintenanceButton.onClick.RemoveListener(ContinueToMaintenance);
+                continueToMaintenanceButton.onClick.RemoveListener(ContinueToPlanet);
             }
 
             SetCursorLockSuppressed(false);
@@ -228,6 +271,13 @@ namespace Bellerophon.Core.Session
             }
 
             continueToMaintenanceButton.onClick.RemoveListener(ContinueToMaintenance);
+            continueToMaintenanceButton.onClick.RemoveListener(ContinueToPlanet);
+            if (planetStayController != null)
+            {
+                continueToMaintenanceButton.onClick.AddListener(ContinueToPlanet);
+                return;
+            }
+
             continueToMaintenanceButton.onClick.AddListener(ContinueToMaintenance);
         }
 
@@ -565,7 +615,7 @@ namespace Bellerophon.Core.Session
         private void ProcessContinueButtonPointerClick()
         {
             if (continueToMaintenanceButton == null ||
-                maintenanceController == null ||
+                (maintenanceController == null && planetStayController == null) ||
                 !continueToMaintenanceButton.gameObject.activeInHierarchy ||
                 !continueToMaintenanceButton.interactable ||
                 Mouse.current == null ||
@@ -586,7 +636,7 @@ namespace Bellerophon.Core.Session
         private bool TryContinueToMaintenanceAtScreenPosition(Vector2 screenPosition)
         {
             if (continueToMaintenanceButton == null ||
-                maintenanceController == null ||
+                (maintenanceController == null && planetStayController == null) ||
                 !continueToMaintenanceButton.gameObject.activeInHierarchy ||
                 !continueToMaintenanceButton.interactable)
             {
@@ -600,7 +650,15 @@ namespace Bellerophon.Core.Session
                 return false;
             }
 
-            ContinueToMaintenance();
+            if (planetStayController != null)
+            {
+                ContinueToPlanet();
+            }
+            else
+            {
+                ContinueToMaintenance();
+            }
+
             return true;
         }
 

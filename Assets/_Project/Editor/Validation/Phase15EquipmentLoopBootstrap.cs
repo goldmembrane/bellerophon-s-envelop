@@ -144,6 +144,11 @@ namespace Bellerophon.Editor.Validation
                 buyShotgun,
                 buyProtectiveSuit,
                 buyStrengthEnhancer);
+            var planetController = UnityEngine.Object.FindFirstObjectByType<PlanetStayController>();
+            if (planetController != null)
+            {
+                Phase10PlanetMaintenanceBootstrap.RelinkPlanetStayDestinations();
+            }
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene, CargoRunScenePath);
@@ -185,11 +190,11 @@ namespace Bellerophon.Editor.Validation
             root.transform.SetParent(parent, false);
 
             var rectTransform = root.GetComponent<RectTransform>();
-            rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
-            rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+            rectTransform.anchorMin = Vector2.zero;
+            rectTransform.anchorMax = Vector2.one;
             rectTransform.pivot = new Vector2(0.5f, 0.5f);
             rectTransform.anchoredPosition = Vector2.zero;
-            rectTransform.sizeDelta = new Vector2(860f, 520f);
+            rectTransform.sizeDelta = Vector2.zero;
 
             var background = root.AddComponent<Image>();
             background.color = new Color(0.025f, 0.032f, 0.034f, 1f);

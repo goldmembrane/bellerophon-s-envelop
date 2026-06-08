@@ -15,6 +15,7 @@ namespace Bellerophon.Core.Session
         [SerializeField] private ShipDeviceInteractionState shipDeviceState;
         [SerializeField] private FirstPersonPlayerInput playerInput;
         [SerializeField] private PlanetMaintenanceController maintenanceController;
+        [SerializeField] private PlanetStayController planetStayController;
         [SerializeField] private GameObject boardRoot;
         [SerializeField] private Text titleText;
         [SerializeField] private Text summaryText;
@@ -36,6 +37,7 @@ namespace Bellerophon.Core.Session
         private ContractType selectedContractType = ContractType.Association;
         private int selectedContractIndex = -1;
         private string lastStatus = string.Empty;
+        private bool returnToPlanet;
 
         public GameObject BoardRoot => boardRoot;
 
@@ -118,13 +120,29 @@ namespace Bellerophon.Core.Session
             HideBoard();
         }
 
+        public void ConfigurePlanetStay(PlanetStayController planetController)
+        {
+            planetStayController = planetController;
+        }
+
         public void ShowBoard()
+        {
+            ShowBoard(returnToPlanetAfterClose: false);
+        }
+
+        public void ShowBoardFromPlanet()
+        {
+            ShowBoard(returnToPlanetAfterClose: true);
+        }
+
+        private void ShowBoard(bool returnToPlanetAfterClose)
         {
             if (startFlowController == null || boardRoot == null)
             {
                 return;
             }
 
+            returnToPlanet = returnToPlanetAfterClose;
             startFlowController.PreparePostTransportContracts();
             lastStatus = string.Empty;
             boardRoot.SetActive(true);
@@ -146,6 +164,14 @@ namespace Bellerophon.Core.Session
         public void ReturnToMaintenance()
         {
             HideBoard();
+            if (returnToPlanet && planetStayController != null)
+            {
+                returnToPlanet = false;
+                planetStayController.ShowPlanet();
+                return;
+            }
+
+            returnToPlanet = false;
             if (maintenanceController != null)
             {
                 maintenanceController.ShowMaintenance();
@@ -721,7 +747,7 @@ namespace Bellerophon.Core.Session
                 session.Reputation.AssociationFameScore,
                 session.CompletedTransportCount,
                 repairCost,
-                false,
+                PlanetStayRules.HasAnySpecialContractOffer(session),
                 session.Reputation.HasUsedRevivalContract);
         }
 

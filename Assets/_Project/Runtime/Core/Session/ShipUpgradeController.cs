@@ -11,6 +11,7 @@ namespace Bellerophon.Core.Session
     {
         [SerializeField] private NewGameStartFlowController startFlowController;
         [SerializeField] private PlanetMaintenanceController maintenanceController;
+        [SerializeField] private PlanetStayController planetStayController;
         [SerializeField] private FirstPersonPlayerInput playerInput;
         [SerializeField] private GameObject upgradeRoot;
         [SerializeField] private Text titleText;
@@ -30,6 +31,7 @@ namespace Bellerophon.Core.Session
         };
 
         private string lastStatus = string.Empty;
+        private bool returnToPlanet;
 
         public GameObject UpgradeRoot => upgradeRoot;
 
@@ -72,13 +74,29 @@ namespace Bellerophon.Core.Session
             HideUpgrades();
         }
 
+        public void ConfigurePlanetStay(PlanetStayController planetController)
+        {
+            planetStayController = planetController;
+        }
+
         public void ShowUpgrades()
+        {
+            ShowUpgrades(returnToPlanetAfterClose: false);
+        }
+
+        public void ShowUpgradesFromPlanet()
+        {
+            ShowUpgrades(returnToPlanetAfterClose: true);
+        }
+
+        private void ShowUpgrades(bool returnToPlanetAfterClose)
         {
             if (upgradeRoot == null)
             {
                 return;
             }
 
+            returnToPlanet = returnToPlanetAfterClose;
             if (maintenanceController != null)
             {
                 maintenanceController.HideMaintenance();
@@ -103,6 +121,14 @@ namespace Bellerophon.Core.Session
         public void ReturnToMaintenance()
         {
             HideUpgrades();
+            if (returnToPlanet && planetStayController != null)
+            {
+                returnToPlanet = false;
+                planetStayController.ShowPlanet();
+                return;
+            }
+
+            returnToPlanet = false;
             if (maintenanceController != null)
             {
                 maintenanceController.ShowMaintenance();

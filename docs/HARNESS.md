@@ -151,6 +151,10 @@ PlayMode Test Runner는 Play mode 진입 중 도메인 리로드가 발생하므
 
 18단계 반복 가능한 플레이테스트 루프는 `.\scripts\Run-Phase18MvpPlaytestLoopSmoke.ps1`로 검증한다. 이 스크립트는 열린 에디터에서 `CargoRunMvp`를 Play 모드로 실행하고, 협회 계약 시작, 튜토리얼 운송 완료, 정산/수리, 후속 협회 의뢰, 수동 회피, 수동 포탑 중립화, 파르붐 침입자 처치, 두 번째 정산과 다음 정비 준비까지 한 번에 확인한다. Phase16 HUD/맵/분위기와 Phase17 로컬 협동 스냅샷 경계도 같은 smoke 안에서 회귀 검증한다.
 
+19단계 저장, 설정, 플랫폼 경계는 `.\scripts\Run-DetailedStep19SaveSettingsPlatformSmoke.ps1`로 검증한다. 이 스크립트는 저장 프로필에서 튜토리얼 스킵 가능 여부와 `$1100` 스킵 보상이 복구되는지, 설정 저장값과 저장 파일 버전 마이그레이션이 동작하는지, Steam SDK 없이 Null 업적/클라우드/통계 경계가 동작하는지 확인한다.
+
+20단계 행성 허브, 프레젠테이션, 사운드 placeholder는 `.\scripts\Run-DetailedStep20PresentationSmoke.ps1`로 검증한다. 이 스크립트는 settlement 이후 행성 체류 허브가 정비 화면보다 먼저 연결되는지, 행성 허브의 시설 진입점과 지도 마커가 구성되는지, 선내 방별 프레젠테이션 placeholder 오브젝트와 `ShipSignalAudioHooks` cue hook이 유지되는지 확인한다.
+
 ## 테스트 정책
 
 EditMode 테스트는 빠르고 결정적이어야 한다.
@@ -173,6 +177,7 @@ PlayMode 테스트는 Unity 런타임 통합을 확인한다.
 Steamworks SDK는 직접 게임 로직에 물리지 않는다. 다음 계층을 유지한다.
 
 - `IPlatformServices`: 런타임이 바라보는 플랫폼 인터페이스
+- `IPlatformAchievementServices`, `IPlatformCloudSaveServices`, `IPlatformStatsServices`: 업적, 클라우드 저장, 통계 세부 인터페이스
 - 개발/테스트: Mock 또는 Null 구현
 - Steam 빌드: Steam 구현
 

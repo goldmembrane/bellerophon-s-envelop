@@ -2,6 +2,13 @@ using System;
 
 namespace Bellerophon.Core.Session
 {
+    public enum PlayerPostureState
+    {
+        Standing,
+        KnockedDownByTergo,
+        PinnedByTergo
+    }
+
     public readonly struct PlayerCombatState
     {
         public PlayerCombatState(
@@ -9,13 +16,15 @@ namespace Bellerophon.Core.Session
             int maxShield,
             int currentHealth,
             int currentShield,
-            CombatStatusEffectState[] statusEffects)
+            CombatStatusEffectState[] statusEffects,
+            PlayerPostureState postureState = PlayerPostureState.Standing)
         {
             MaxHealth = Math.Max(0, maxHealth);
             MaxShield = Math.Max(0, maxShield);
             CurrentHealth = Clamp(currentHealth, 0, MaxHealth);
             CurrentShield = Clamp(currentShield, 0, MaxShield);
             StatusEffects = CombatStatusEffectRules.CloneEffects(statusEffects);
+            PostureState = postureState;
         }
 
         public int MaxHealth { get; }
@@ -28,16 +37,26 @@ namespace Bellerophon.Core.Session
 
         public CombatStatusEffectState[] StatusEffects { get; }
 
+        // Tergo uses posture as a special pin state, separate from the source-named status effects.
+        public PlayerPostureState PostureState { get; }
+
         public bool IsDead => CurrentHealth <= 0;
+
+        public bool IsPostureRestrained => PostureState != PlayerPostureState.Standing;
 
         public PlayerCombatState WithVitals(int currentHealth, int currentShield)
         {
-            return new PlayerCombatState(MaxHealth, MaxShield, currentHealth, currentShield, StatusEffects);
+            return new PlayerCombatState(MaxHealth, MaxShield, currentHealth, currentShield, StatusEffects, PostureState);
         }
 
         public PlayerCombatState WithStatusEffects(CombatStatusEffectState[] statusEffects)
         {
-            return new PlayerCombatState(MaxHealth, MaxShield, CurrentHealth, CurrentShield, statusEffects);
+            return new PlayerCombatState(MaxHealth, MaxShield, CurrentHealth, CurrentShield, statusEffects, PostureState);
+        }
+
+        public PlayerCombatState WithPostureState(PlayerPostureState postureState)
+        {
+            return new PlayerCombatState(MaxHealth, MaxShield, CurrentHealth, CurrentShield, StatusEffects, postureState);
         }
 
         private static int Clamp(int value, int min, int max)
@@ -187,6 +206,18 @@ namespace Bellerophon.Core.Session
         public static PlayerCombatState ClearStatusEffect(PlayerCombatState state, CombatStatusEffectKind kind)
         {
             return state.WithStatusEffects(CombatStatusEffectRules.ClearEffect(state.StatusEffects, kind));
+        }
+
+        public static PlayerCombatState ApplyPostureState(
+            PlayerCombatState state,
+            PlayerPostureState postureState)
+        {
+            return state.WithPostureState(postureState);
+        }
+
+        public static PlayerCombatState ClearPostureState(PlayerCombatState state)
+        {
+            return state.WithPostureState(PlayerPostureState.Standing);
         }
 
         private static bool ShouldPreventStatus(

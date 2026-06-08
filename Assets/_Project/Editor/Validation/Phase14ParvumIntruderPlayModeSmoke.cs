@@ -222,6 +222,7 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Runtime scene must contain Phase 14 start, device, HUD, intruder view, settlement, maintenance, and contract board controllers.");
             }
 
+            startController.FastForwardAssociationContractForValidation();
             ClickButtonThroughUi(startController.YesButton);
             ClickButtonThroughUi(startController.TutorialContractButton);
             if (deviceState.TickSeedIntruderOccurrenceForCurrentRun(20f, startController.CurrentSession) ||

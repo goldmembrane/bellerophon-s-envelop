@@ -633,6 +633,43 @@ namespace Bellerophon.Core.Session
                 statusEffects);
         }
 
+        public IntruderEntityState WithTarget(
+            IntruderTargetType targetType,
+            ShipRoomId targetRoom,
+            IntruderObjectiveType objective)
+        {
+            if (!IsActive)
+            {
+                return this;
+            }
+
+            if (targetType == IntruderTargetType.None)
+            {
+                throw new ArgumentOutOfRangeException(nameof(targetType), "Intruder target cannot be none.");
+            }
+
+            if (objective == IntruderObjectiveType.None)
+            {
+                throw new ArgumentOutOfRangeException(nameof(objective), "Intruder objective cannot be none.");
+            }
+
+            return new IntruderEntityState(
+                InstanceId,
+                DefinitionId,
+                Faction,
+                objective,
+                CurrentHealth,
+                MaxHealth,
+                CurrentRoom,
+                targetRoom,
+                targetType,
+                MobilityKind,
+                IssuesFactionCommands,
+                Phase,
+                Resolution,
+                statusEffects);
+        }
+
         public IntruderEntityState WithDamage(int damage)
         {
             if (damage < 0)
@@ -666,6 +703,35 @@ namespace Bellerophon.Core.Session
             }
 
             return Resolve(IntruderResolution.Neutralized);
+        }
+
+        public IntruderEntityState WithRecoveredHealth(int healthAmount)
+        {
+            if (healthAmount < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(healthAmount), "Intruder recovery amount cannot be negative.");
+            }
+
+            if (!IsActive || healthAmount == 0)
+            {
+                return this;
+            }
+
+            return new IntruderEntityState(
+                InstanceId,
+                DefinitionId,
+                Faction,
+                Objective,
+                CurrentHealth + healthAmount,
+                MaxHealth,
+                CurrentRoom,
+                TargetRoom,
+                TargetType,
+                MobilityKind,
+                IssuesFactionCommands,
+                Phase,
+                Resolution,
+                statusEffects);
         }
 
         public IntruderEntityState WithStatusEffects(CombatStatusEffectState[] effects)
@@ -1277,7 +1343,7 @@ namespace Bellerophon.Core.Session
             }
         }
 
-        private static IntruderRelationProfile CreateRelationProfile(IntruderRelationKind relationKind)
+        public static IntruderRelationProfile CreateRelationProfile(IntruderRelationKind relationKind)
         {
             switch (relationKind)
             {

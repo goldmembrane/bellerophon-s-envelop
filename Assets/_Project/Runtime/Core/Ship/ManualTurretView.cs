@@ -287,6 +287,12 @@ namespace Bellerophon.Core.Ship
             {
                 case ExternalTargetType.Asteroid:
                     return "Asteroid";
+                case ExternalTargetType.AlienLifeform:
+                    return "Alien Lifeform";
+                case ExternalTargetType.CargoFreedomLeagueBoardingCraft:
+                    return "Cargo Freedom Craft";
+                case ExternalTargetType.SpacePirateBoardingCraft:
+                    return "Space Pirate Craft";
                 default:
                     return "None";
             }
