@@ -126,8 +126,10 @@ namespace Bellerophon.Core.Player
             {
                 handInventory.UseRequested -= HandleUseRequested;
                 handInventory.DropRequested -= HandleDropRequested;
+                handInventory.SlotSelected -= HandleSlotSelected;
                 handInventory.UseRequested += HandleUseRequested;
                 handInventory.DropRequested += HandleDropRequested;
+                handInventory.SlotSelected += HandleSlotSelected;
             }
 
             if (playerInput != null)
@@ -145,6 +147,7 @@ namespace Bellerophon.Core.Player
             {
                 handInventory.UseRequested -= HandleUseRequested;
                 handInventory.DropRequested -= HandleDropRequested;
+                handInventory.SlotSelected -= HandleSlotSelected;
             }
 
             if (playerInput != null)
@@ -167,6 +170,19 @@ namespace Bellerophon.Core.Player
             }
 
             shipDeviceState.UseActiveEquipment(IsAlternateModeActive());
+            RefreshHud();
+        }
+
+        private void HandleSlotSelected(int slotIndex)
+        {
+            if (shipDeviceState == null ||
+                slotIndex < 0 ||
+                slotIndex >= shipDeviceState.HandSlotCount)
+            {
+                return;
+            }
+
+            shipDeviceState.SelectEquipmentHandSlot(slotIndex);
             RefreshHud();
         }
 
@@ -218,6 +234,11 @@ namespace Bellerophon.Core.Player
 
             var equipment = shipDeviceState.CurrentEquipmentState;
             var activeSlot = equipment.ActiveHandSlot;
+            if (handInventory != null)
+            {
+                handInventory.SyncActiveSlotIndex(equipment.ActiveHandSlotIndex);
+            }
+
             DisableAlternateModeIfIncompatible(activeSlot);
             if (equipmentHudText != null)
             {

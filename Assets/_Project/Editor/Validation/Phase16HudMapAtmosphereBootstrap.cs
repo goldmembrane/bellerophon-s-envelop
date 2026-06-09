@@ -28,12 +28,24 @@ namespace Bellerophon.Editor.Validation
         public const string AudioHooksName = "Phase 16 Signal Audio Hooks";
 
         private const string ShipSettingsDirectory = "Assets/_Project/Settings/Ship";
+        private const string ShipArtMaterialsDirectory = "Assets/_Project/Art/Ship/Materials";
         private const string GrayboxFloorMaterialPath = ShipSettingsDirectory + "/GrayboxFloorMaterial.mat";
         private const string GrayboxCorridorMaterialPath = ShipSettingsDirectory + "/GrayboxCorridorMaterial.mat";
         private const string GrayboxWallMaterialPath = ShipSettingsDirectory + "/GrayboxWallMaterial.mat";
         private const string GrayboxConsoleMaterialPath = ShipSettingsDirectory + "/GrayboxConsoleMaterial.mat";
         private const string GrayboxCargoMaterialPath = ShipSettingsDirectory + "/GrayboxCargoMaterial.mat";
         private const string GrayboxInteractableMaterialPath = ShipSettingsDirectory + "/GrayboxInteractableMaterial.mat";
+        private const string ProductionFloorMaterialPath = ShipArtMaterialsDirectory + "/ShipInteriorFloor_Rough.mat";
+        private const string ProductionCorridorMaterialPath = ShipArtMaterialsDirectory + "/ShipInteriorCorridorFloor_Rough.mat";
+        private const string ProductionWallMaterialPath = ShipArtMaterialsDirectory + "/ShipInteriorWall_Rough.mat";
+        private const string ProductionCeilingMaterialPath = ShipArtMaterialsDirectory + "/ShipInteriorCeiling_Rough.mat";
+        private const string ProductionDoorFrameMaterialPath = ShipArtMaterialsDirectory + "/ShipInteriorDoorFrame_Worn.mat";
+        private const string ProductionCableMaterialPath = ShipArtMaterialsDirectory + "/ShipInteriorCableTray_Dark.mat";
+        private const string ProductionDamageMaterialPath = ShipArtMaterialsDirectory + "/ShipInteriorDamageState_Warning.mat";
+        private const string ProductionGlassMaterialPath = ShipArtMaterialsDirectory + "/CockpitGlass_Dirty.mat";
+        private const string ProductionConsoleMaterialPath = ShipArtMaterialsDirectory + "/ShipInteriorConsole_Aged.mat";
+        private const string ProductionCargoMaterialPath = ShipArtMaterialsDirectory + "/ShipInteriorCargo_Worn.mat";
+        private const string ProductionInteractableMaterialPath = ShipArtMaterialsDirectory + "/ShipInteriorInteractable_WornYellow.mat";
 
         [MenuItem("Bellerophon/Bootstrap/Ensure Phase 16 HUD Map Atmosphere")]
         public static void EnsurePhase16Assets()
@@ -236,7 +248,6 @@ namespace Bellerophon.Editor.Validation
             CreateMapLine(mapRoot, ShipRoomId.Cockpit, ShipRoomId.EngineRoom);
             CreateMapLine(mapRoot, ShipRoomId.Cockpit, ShipRoomId.ControlRoom);
             CreateMapLine(mapRoot, ShipRoomId.EngineRoom, ShipRoomId.ControlRoom);
-            CreateMapLine(mapRoot, ShipRoomId.ControlRoom, ShipRoomId.Armory);
 
             var cockpit = CreateMapRoom(mapRoot, ShipRoomId.Cockpit);
             var cargoHold = CreateMapRoom(mapRoot, ShipRoomId.CargoHold);
@@ -485,12 +496,24 @@ namespace Bellerophon.Editor.Validation
         private static void ApplyLowSaturationMaterials()
         {
             Directory.CreateDirectory(ShipSettingsDirectory);
+            Directory.CreateDirectory(ShipArtMaterialsDirectory);
             SetMaterialColor(GrayboxFloorMaterialPath, new Color(0.105f, 0.122f, 0.12f, 1f));
             SetMaterialColor(GrayboxCorridorMaterialPath, new Color(0.07f, 0.086f, 0.084f, 1f));
             SetMaterialColor(GrayboxWallMaterialPath, new Color(0.16f, 0.18f, 0.18f, 1f));
             SetMaterialColor(GrayboxConsoleMaterialPath, new Color(0.035f, 0.052f, 0.052f, 1f));
             SetMaterialColor(GrayboxCargoMaterialPath, new Color(0.31f, 0.25f, 0.18f, 1f));
             SetMaterialColor(GrayboxInteractableMaterialPath, new Color(0.55f, 0.48f, 0.28f, 1f));
+            SetMaterialColor(ProductionFloorMaterialPath, new Color(0.105f, 0.116f, 0.105f, 1f));
+            SetMaterialColor(ProductionCorridorMaterialPath, new Color(0.075f, 0.084f, 0.078f, 1f));
+            SetMaterialColor(ProductionWallMaterialPath, new Color(0.145f, 0.158f, 0.148f, 1f));
+            SetMaterialColor(ProductionCeilingMaterialPath, new Color(0.075f, 0.082f, 0.075f, 1f));
+            SetMaterialColor(ProductionDoorFrameMaterialPath, new Color(0.22f, 0.215f, 0.18f, 1f));
+            SetMaterialColor(ProductionCableMaterialPath, new Color(0.032f, 0.034f, 0.03f, 1f));
+            SetMaterialColor(ProductionDamageMaterialPath, new Color(0.5f, 0.19f, 0.06f, 1f));
+            SetMaterialColor(ProductionGlassMaterialPath, new Color(0.075f, 0.16f, 0.18f, 0.55f));
+            SetMaterialColor(ProductionConsoleMaterialPath, new Color(0.028f, 0.043f, 0.04f, 1f));
+            SetMaterialColor(ProductionCargoMaterialPath, new Color(0.26f, 0.21f, 0.15f, 1f));
+            SetMaterialColor(ProductionInteractableMaterialPath, new Color(0.48f, 0.4f, 0.2f, 1f));
         }
 
         private static void SetMaterialColor(string path, Color color)

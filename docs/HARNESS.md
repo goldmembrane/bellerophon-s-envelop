@@ -1,5 +1,13 @@
 # Harness Engineering
 
+## Unity Editor Launch
+
+- Open the interactive Unity editor with `.\scripts\Open-UnityProject.ps1`.
+- When the editor may be stale, opened from the wrong shell state, or blocked by a leftover lock/import worker, use `.\scripts\Open-UnityProject.ps1 -Restart -ValidateCargoRunScene`.
+- Do not open `.unity` scene files directly and do not hand-compose ad hoc `Start-Process Unity.exe ...` commands for the interactive editor.
+- The launch script validates the project root, Unity version path, `CargoRunMvp` scene path, `-projectPath` command line, and then sends `OpenCargoRunMvpScene` through the editor bridge so the active scene is not Unity's default `Untitled` scene.
+- The optional `-ValidateCargoRunScene` switch runs the CargoRun scene validation smoke after opening the scene.
+
 ## Full Phase 1-18 Smoke Sweep
 
 - `Run-Phase1To18Smokes.ps1` is the default phase smoke sweep when validating MVP phase coverage.
@@ -35,6 +43,13 @@
 - The PlayMode Test Runner bridge uses a `ScriptableObject` callback so request data survives domain reload during PlayMode entry.
 - Stability status is tracked in `docs/PLAYMODE_TEST_RUNNER_STABILITY.md`.
 
+## Detailed Step 21 Balance And Playtest Hardening
+
+- `Run-DetailedStep21BalancePlaytestHardeningSmoke.ps1` validates the step 21 balance/playtest guardrails through the open editor bridge when possible, with the same batchmode fallback pattern as earlier detailed-step smokes.
+- The smoke pins source-valued economy, repair, towing, hazard cadence, equipment price, special-route, and debt-recovery values. It is a guardrail against accidental tuning drift, not an approval path for changing source-valued balance.
+- `Run-DetailedStep21FullSmokeSuite.ps1` runs the MVP phase sweep plus detailed step 13 through 21 smoke scripts in order and stops on the first failure.
+- After changing balance-sensitive rules, run the focused step 21 smoke first, then the full detailed smoke suite when the change could affect prior detailed domains.
+
 Bellerophon의 하네스는 AI/사람 개발자가 같은 구조, 같은 명령, 같은 완료 기준으로 작업하게 만드는 프로젝트 운영 계층이다.
 
 ## 목적
@@ -67,6 +82,7 @@ Bellerophon의 하네스는 AI/사람 개발자가 같은 구조, 같은 명령,
 - 생성물 폴더는 커밋하지 않는다.
 - 기획서에 없거나 애매한 기능 요구는 에이전트가 임의로 보강하지 않는다. 구현 전에 사용자에게 의도를 확인하고 답변을 받은 뒤 작업한다.
 - 구현 계획을 세운 뒤 저장해둔 원본 기획서와 비교해 계획이 원본 방향과 맞는지 확인한다.
+- 모델링, UI, 애니메이션, 머티리얼, VFX, 사운드처럼 아트와 연관이 깊은 작업은 실제 게임에 붙이기 전에 저장소 루트의 `artSample/`에 사용자가 검사할 수 있는 샘플 파일을 만들고, 사용자 승인 후 실제 씬/프리팹/런타임 자산/UI 흐름에 연결한다.
 
 ### Convergence
 
@@ -105,6 +121,8 @@ Bellerophon의 하네스는 AI/사람 개발자가 같은 구조, 같은 명령,
 .\scripts\Run-Phase16HudMapAtmosphereSmoke.ps1
 .\scripts\Run-Phase17CoopFoundationSmoke.ps1
 .\scripts\Run-Phase18MvpPlaytestLoopSmoke.ps1
+.\scripts\Run-DetailedStep21BalancePlaytestHardeningSmoke.ps1
+.\scripts\Run-DetailedStep21FullSmokeSuite.ps1
 .\scripts\Run-AllChecks.ps1
 .\scripts\Build-WindowsDev.ps1
 ```

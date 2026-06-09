@@ -137,6 +137,31 @@ namespace Bellerophon.Tests.EditMode
         }
 
         [Test]
+        public void StartTransportRun_ClearsPreviousManualTurretPanel()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+
+                state.ActivateDevice(ShipDeviceType.ArmoryTurretHandle);
+                Assert.That(state.ActivePanelMode, Is.EqualTo(ShipDevicePanelMode.TurretManual));
+                Assert.That(state.TurretManualModeActive, Is.True);
+
+                state.StartTransportRun(60);
+
+                Assert.That(state.HasActiveTransportRun, Is.True);
+                Assert.That(state.ActivePanelMode, Is.EqualTo(ShipDevicePanelMode.None));
+                Assert.That(state.TurretManualModeActive, Is.False);
+                Assert.That(state.CurrentManualTurret.IsActive, Is.False);
+            }
+            finally
+            {
+                Object.DestroyImmediate(stateObject);
+            }
+        }
+
+        [Test]
         public void ControlRoomCctv_IncludesSupplyRoomAndSwitchesOriginalScreenModes()
         {
             var stateObject = new GameObject("Ship Device State Test");

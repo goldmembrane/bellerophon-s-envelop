@@ -1,5 +1,13 @@
 # MVP Playtest Checklist
 
+## Detailed Step 21 Balance And Playtest Hardening
+
+- MVP baseline: run `Run-Phase1To18Smokes.ps1` and confirm the start, tutorial, settlement, repair, follow-up transport, hazard, intruder, equipment, HUD, local-coop foundation, and repeatable MVP loop still pass.
+- New detailed domain: run `Run-DetailedStep21BalancePlaytestHardeningSmoke.ps1` and confirm source-valued repair, towing, reward, hazard cadence, equipment price, special-route, and debt recovery pins are unchanged.
+- Regression risk: run `Run-DetailedStep21FullSmokeSuite.ps1` after balance-sensitive changes to confirm detailed steps 13 through 21 remain compatible with the MVP sweep.
+- Manual confirmation: record any proposed change to source-valued rewards, repair/towing costs, hazard probabilities, enemy stats, or item prices as a user-confirmed design change before implementation.
+- Playtest scenario coverage: keep at least one early tutorial scenario, one mid-risk fame-gated hazard scenario, one high-risk special-contract scenario, and one failure-recovery scenario available in automated validation or the manual notes.
+
 ## Detailed Step 10 Regression Extension
 
 - Confirm manual-flight booster reduces the active asteroid hazard duration by the source value of 10 seconds.

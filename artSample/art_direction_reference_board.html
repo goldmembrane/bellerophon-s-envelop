@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bellerophon Art Direction Reference Board</title>
+  <style>
+    :root {
+      --bg: #101312;
+      --panel: #191f1d;
+      --panel-2: #222b28;
+      --text: #d8d5ca;
+      --muted: #aaa597;
+      --line: #3a4440;
+      --amber: #d89a3d;
+      --red: #a33b35;
+      --cyan: #6fa7a8;
+      --green: #4d6a58;
+      --bluegray: #52616a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, "Malgun Gothic", sans-serif;
+      line-height: 1.55;
+    }
+
+    header {
+      min-height: 72vh;
+      padding: 56px clamp(20px, 5vw, 72px);
+      display: grid;
+      align-content: end;
+      background:
+        linear-gradient(180deg, rgba(16, 19, 18, 0.15), rgba(16, 19, 18, 0.92)),
+        radial-gradient(circle at 72% 28%, rgba(111, 167, 168, 0.18), transparent 28%),
+        linear-gradient(135deg, #18211f 0%, #101312 45%, #0b0d0c 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: clamp(38px, 6vw, 78px);
+      line-height: 0.96;
+      letter-spacing: 0;
+      max-width: 980px;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 14px;
+      max-width: 820px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 780px;
+    }
+
+    .notice {
+      margin-top: 24px;
+      padding: 14px 16px;
+      border-left: 4px solid var(--amber);
+      background: rgba(216, 154, 61, 0.08);
+      max-width: 900px;
+      color: #e3d8bd;
+    }
+
+    main {
+      padding: 36px clamp(20px, 5vw, 72px) 72px;
+    }
+
+    section {
+      margin: 0 0 44px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      min-height: 156px;
+      padding: 18px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .card strong {
+      color: #f1ead5;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .swatch {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .chip {
+      height: 88px;
+    }
+
+    .swatch div:last-child {
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .material {
+      min-height: 200px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--panel);
+    }
+
+    .material-preview {
+      height: 108px;
+      border-bottom: 1px solid var(--line);
+      background-size: 40px 40px, 100% 100%;
+    }
+
+    .mat-painted {
+      background-image:
+        linear-gradient(45deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.05) 75%, transparent 75%, transparent),
+        linear-gradient(135deg, #2c3532, #52616a);
+    }
+
+    .mat-metal {
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 34%, rgba(0, 0, 0, 0.3) 72%),
+        linear-gradient(135deg, #111413, #3a4541);
+    }
+
+    .mat-rubber {
+      background-image:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px 10px),
+        linear-gradient(135deg, #1d211f, #3c413b);
+    }
+
+    .mat-glass {
+      background-image:
+        linear-gradient(120deg, transparent 0 38%, rgba(255, 255, 255, 0.22) 39% 41%, transparent 42%),
+        linear-gradient(135deg, rgba(111, 167, 168, 0.32), rgba(16, 19, 18, 0.9));
+    }
+
+    .mat-warning {
+      background-image:
+        repeating-linear-gradient(135deg, #d89a3d 0 18px, #151715 18px 36px);
+    }
+
+    .mat-organic {
+      background-image:
+        radial-gradient(circle at 22% 34%, rgba(183, 178, 162, 0.15), transparent 12%),
+        radial-gradient(circle at 72% 64%, rgba(0, 0, 0, 0.38), transparent 18%),
+        linear-gradient(135deg, #203128, #4d6a58);
+    }
+
+    .material-body {
+      padding: 14px;
+    }
+
+    .lighting-strip {
+      height: 130px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--panel);
+    }
+
+    .light-normal {
+      background: linear-gradient(90deg, #101312 0%, #2c3532 38%, #52616a 58%, #101312 100%);
+    }
+
+    .light-damaged {
+      background: linear-gradient(90deg, #090b0a 0%, #a33b35 35%, #2c1614 55%, #080909 100%);
+    }
+
+    .light-corridor {
+      background: linear-gradient(90deg, #080909 0%, #0c1615 36%, #6fa7a8 48%, #101312 100%);
+    }
+
+    .light-hazard {
+      background: repeating-linear-gradient(90deg, #15120c 0 40px, #d89a3d 40px 66px, #15120c 66px 112px);
+    }
+
+    .light-planet {
+      background: linear-gradient(90deg, #161815 0%, #566451 44%, #b7b2a2 64%, #222b28 100%);
+    }
+
+    .label {
+      padding: 10px 12px;
+      color: var(--muted);
+      font-size: 13px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .image-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    figure {
+      margin: 0;
+      padding: 12px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    figure img {
+      width: 100%;
+      height: 180px;
+      object-fit: contain;
+      background: #0b0d0c;
+      border: 1px solid #27302d;
+    }
+
+    figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      border: 1px solid var(--line);
+    }
+
+    th,
+    td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      color: #f1ead5;
+      background: var(--panel-2);
+    }
+
+    td {
+      color: var(--muted);
+    }
+
+    .footer-note {
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Bellerophon Art Direction Reference Board</h1>
+    <p class="subtitle">상세 구현 이후 1단계 검사용 샘플. 모델링, UI, 애니메이션, 머티리얼, VFX, 사운드 제작 전에 공유할 기준 보드입니다.</p>
+    <div class="notice">
+      이 파일은 검사용 샘플입니다. Unity 씬, 프리팹, 런타임 자산, UI 흐름에는 연결하지 않았습니다. 사용자가 승인한 뒤에만 실제 게임 제작물로 이어질 수 있습니다.
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Visual Pillars</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Heavy Industrial Ship</h3>
+          <p>낡은 금속, 케이블, 브래킷, 스트랩, 수리 흔적 중심. 깨끗한 고급 SF가 아니라 실제 운송선 같은 표면감.</p>
+        </div>
+        <div class="card">
+          <h3>Navigation Under Stress</h3>
+          <p>어둡지만 길과 상호작용 장치는 읽혀야 함. 방마다 한눈에 구분되는 실루엣과 조명 cue를 둠.</p>
+        </div>
+        <div class="card">
+          <h3>Threat By Signal</h3>
+          <p>위협은 먼저 소리, 깜빡임, 화면 노이즈, 멀리 보이는 실루엣으로 전달. 자세한 텍스처보다 인식 우선.</p>
+        </div>
+        <div class="card">
+          <h3>Functional UI</h3>
+          <p>정산, 수리, 계약, 상점은 반복 조작 도구. 정보 밀도와 숫자 가독성이 장식보다 우선.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Palette</h2>
+      <div class="swatches">
+        <div class="swatch"><div class="chip" style="background:#101312"></div><div>Deep ship shadow<br>#101312</div></div>
+        <div class="swatch"><div class="chip" style="background:#2c3532"></div><div>Oxidized dark metal<br>#2C3532</div></div>
+        <div class="swatch"><div class="chip" style="background:#52616a"></div><div>Worn blue gray<br>#52616A</div></div>
+        <div class="swatch"><div class="chip" style="background:#566451"></div><div>Desaturated olive<br>#566451</div></div>
+        <div class="swatch"><div class="chip" style="background:#b7b2a2"></div><div>Bone label<br>#B7B2A2</div></div>
+        <div class="swatch"><div class="chip" style="background:#d89a3d"></div><div>Hazard amber<br>#D89A3D</div></div>
+        <div class="swatch"><div class="chip" style="background:#a33b35"></div><div>Emergency red<br>#A33B35</div></div>
+        <div class="swatch"><div class="chip" style="background:#6fa7a8"></div><div>Screen cyan<br>#6FA7A8</div></div>
+        <div class="swatch"><div class="chip" style="background:#4d6a58"></div><div>Organic bruise green<br>#4D6A58</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Material Targets</h2>
+      <div class="board">
+        <div class="material">
+          <div class="material-preview mat-painted"></div>
+          <div class="material-body">
+            <h3>Worn Painted Metal</h3>
+            <p>주요 벽/패널. 모서리 벗겨짐, 때, 낮은 채도 도장.</p>
+          </div>
+        </div>
+        <div class="material">
+          <div class="material-preview mat-metal"></div>
+          <div class="material-body">
+            <h3>Exposed Dark Metal</h3>
+            <p>프레임, 브래킷, 문턱. 묵직한 구조와 기름때.</p>
+          </div>
+        </div>
+        <div class="material">
+          <div class="material-preview mat-rubber"></div>
+          <div class="material-body">
+            <h3>Cargo Strap / Rubber</h3>
+            <p>화물칸 정체성. 고정 스트랩, 손잡이, 씰.</p>
+          </div>
+        </div>
+        <div class="material">
+          <div class="material-preview mat-glass"></div>
+          <div class="material-body">
+            <h3>Cockpit / Screen Glass</h3>
+            <p>제한적 반사, 오염, 낮은 강도의 화면 glow.</p>
+          </div>
+        </div>
+        <div class="material">
+          <div class="material-preview mat-warning"></div>
+          <div class="material-body">
+            <h3>Warning Paint</h3>
+            <p>상호작용, 위험, 통로 방향에만 제한적으로 사용.</p>
+          </div>
+        </div>
+        <div class="material">
+          <div class="material-preview mat-organic"></div>
+          <div class="material-body">
+            <h3>Organic Intrusion</h3>
+            <p>씨앗체/외계 생명체 잔재. 배경 금속과 즉시 구분.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Lighting States</h2>
+      <div class="grid">
+        <div class="lighting-strip light-normal"><div class="label">Normal ship state</div></div>
+        <div class="lighting-strip light-damaged"><div class="label">Damaged room state</div></div>
+        <div class="lighting-strip light-corridor"><div class="label">Low visibility corridor</div></div>
+        <div class="lighting-strip light-hazard"><div class="label">Hazard alert state</div></div>
+        <div class="lighting-strip light-planet"><div class="label">Planet hub state</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Enemy Reference Sample</h2>
+      <p>전체 목록은 <code>docs/ENEMY_REFERENCES.md</code> 기준입니다. 1차 실루엣 승인은 현재 플레이 루프에 직접 보이는 개체부터 진행합니다.</p>
+      <div class="image-row">
+        <figure>
+          <img src="../image/parvum(파르붐).png" alt="Parvum front reference">
+          <figcaption>Parvum front: 1차 내부 침입자</figcaption>
+        </figure>
+        <figure>
+          <img src="../image/parvum-back.png" alt="Parvum back reference">
+          <figcaption>Parvum back: 후면 실루엣 확인</figcaption>
+        </figure>
+        <figure>
+          <img src="../image/parvum-beside.png" alt="Parvum side reference">
+          <figcaption>Parvum side: 이동/공격 자세 기준</figcaption>
+        </figure>
+        <figure>
+          <img src="../image/transfer(운송자).png" alt="Transfer reference">
+          <figcaption>Transfer: 플레이어/운송자 스케일 기준</figcaption>
+        </figure>
+        <figure>
+          <img src="../image/rébellion(리벨리온).png" alt="Rebellion reference">
+          <figcaption>Cargo Freedom League sample silhouette</figcaption>
+        </figure>
+        <figure>
+          <img src="../image/pāḫḫur(파후르).png" alt="Pahur reference">
+          <figcaption>Space pirate sample silhouette</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>First Production Slice</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Asset</th>
+            <th>Why First</th>
+            <th>Review Sample</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cargo hold shell and strap kit</td>
+            <td>핵심 운송 공간이자 가장 자주 보는 방</td>
+            <td>material/lighting blockout</td>
+          </tr>
+          <tr>
+            <td>Main corridor kit</td>
+            <td>방향 감각과 폐쇄감의 기준</td>
+            <td>straight/curve/ramp preview</td>
+          </tr>
+          <tr>
+            <td>Cockpit helm and forward frame</td>
+            <td>운송 시작과 첫 인상</td>
+            <td>cockpit composition preview</td>
+          </tr>
+          <tr>
+            <td>Armory turret handle</td>
+            <td>수동 포탑 루프의 상호작용 anchor</td>
+            <td>prop close-up preview</td>
+          </tr>
+          <tr>
+            <td>First-person arms, stick, musket</td>
+            <td>항상 화면에 보이는 장비 경험</td>
+            <td>first-person pose preview</td>
+          </tr>
+          <tr>
+            <td>Parvum</td>
+            <td>현재 플레이 가능한 첫 침입자</td>
+            <td>silhouette and turntable preview</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Approval Questions</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Approve or Revise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Palette</td>
+            <td>저채도 산업 색감과 amber/red/cyan 경고 체계가 맞는지 확인</td>
+          </tr>
+          <tr>
+            <td>Material targets</td>
+            <td>낡은 도장 금속, 어두운 노출 금속, 유기체 침입 재질 방향 확인</td>
+          </tr>
+          <tr>
+            <td>Lighting states</td>
+            <td>정상/손상/저시야/위험/행성 허브의 대비 방향 확인</td>
+          </tr>
+          <tr>
+            <td>Enemy priority</td>
+            <td>Parvum, Transfer, 외부 목표 3종을 먼저 보는 순서 확인</td>
+          </tr>
+          <tr>
+            <td>First production slice</td>
+            <td>화물칸, 복도, 조종석, 포탑, 1인칭 장비, Parvum부터 진행할지 확인</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <p class="footer-note">
+      Reference docs: docs/ART_DIRECTION_BIBLE.md, docs/ASSET_PRODUCTION_LIST.md, docs/ENEMY_REFERENCES.md, docs/GAME_DESIGN.md.
+      This sample is not a Unity runtime asset and has not been connected to the game.
+    </p>
+  </main>
+</body>
+</html>

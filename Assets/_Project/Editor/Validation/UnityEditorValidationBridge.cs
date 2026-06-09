@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEditor.TestTools.TestRunner.Api;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Bellerophon.Editor.Validation
 {
@@ -377,6 +378,24 @@ namespace Bellerophon.Editor.Validation
                         DetailedStep20PresentationEditorValidation.Run,
                         "Detailed step 20 presentation editor validation passed.");
                     break;
+                case "ValidateDetailedStep21BalancePlaytestHardening":
+                    RunSynchronous(
+                        request,
+                        DetailedStep21BalancePlaytestHardeningEditorValidation.Run,
+                        "Detailed step 21 balance playtest hardening editor validation passed.");
+                    break;
+                case "ValidatePostDetailedStage2ShipInterior":
+                    RunSynchronous(
+                        request,
+                        PostDetailedStage2ShipInteriorEditorValidation.Run,
+                        "Post-detailed stage 2 ship interior editor validation passed.");
+                    break;
+                case "OpenCargoRunMvpScene":
+                    RunSynchronous(
+                        request,
+                        OpenCargoRunMvpScene,
+                        "CargoRunMvp scene opened.");
+                    break;
                 default:
                     RunSynchronous(
                         request,
@@ -384,6 +403,36 @@ namespace Bellerophon.Editor.Validation
                         string.Empty);
                     break;
             }
+        }
+
+        private static void OpenCargoRunMvpScene()
+        {
+            var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(Phase4CargoShipGrayboxBootstrap.CargoRunScenePath);
+            if (sceneAsset == null)
+            {
+                throw new InvalidOperationException("CargoRunMvp scene asset was not found: " + Phase4CargoShipGrayboxBootstrap.CargoRunScenePath);
+            }
+
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw new InvalidOperationException("Cannot open CargoRunMvp while Unity is entering or leaving Play Mode.");
+            }
+
+            EditorSceneManager.OpenScene(Phase4CargoShipGrayboxBootstrap.CargoRunScenePath, OpenSceneMode.Single);
+            var activeScene = SceneManager.GetActiveScene();
+            if (activeScene.path != Phase4CargoShipGrayboxBootstrap.CargoRunScenePath)
+            {
+                throw new InvalidOperationException("CargoRunMvp did not become the active scene. ActiveScene=" + activeScene.path);
+            }
+
+            Selection.activeObject = sceneAsset;
+            EditorGUIUtility.PingObject(sceneAsset);
+            Debug.Log("CargoRunMvp scene opened from validation bridge.");
         }
 
         private static void RunSynchronous(BridgeRequest request, Action action, string successMarker)

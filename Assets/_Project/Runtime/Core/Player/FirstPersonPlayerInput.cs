@@ -21,6 +21,7 @@ namespace Bellerophon.Core.Player
         private bool cursorStateCaptured;
         private bool cursorLockSuppressed;
         private bool gameplayInputSuppressed;
+        private bool cursorUnlockedByEscape;
 
         public event Action InteractPressed;
 
@@ -36,6 +37,10 @@ namespace Bellerophon.Core.Player
 
         public bool GameplayInputSuppressed => gameplayInputSuppressed;
 
+        public bool GameplayActionInputSuppressed => IsInputSuppressed;
+
+        public bool CursorUnlockedByEscape => cursorUnlockedByEscape;
+
         public Vector2 Move => IsInputSuppressed ? Vector2.zero : moveAction?.ReadValue<Vector2>() ?? Vector2.zero;
 
         public Vector2 Look => IsInputSuppressed ? Vector2.zero : lookAction?.ReadValue<Vector2>() ?? Vector2.zero;
@@ -48,7 +53,21 @@ namespace Bellerophon.Core.Player
 
         public bool AimHeld => !IsInputSuppressed && aimAction != null && aimAction.IsPressed();
 
-        private bool IsInputSuppressed => cursorLockSuppressed || gameplayInputSuppressed;
+        private bool IsInputSuppressed => IsGameplayActionSuppressed(
+            cursorLockSuppressed,
+            gameplayInputSuppressed,
+            cursorUnlockedByEscape);
+
+        public static bool IsGameplayActionSuppressedForValidation(
+            bool isCursorLockSuppressed,
+            bool isGameplayInputSuppressed,
+            bool wasCursorUnlockedByEscape)
+        {
+            return IsGameplayActionSuppressed(
+                isCursorLockSuppressed,
+                isGameplayInputSuppressed,
+                wasCursorUnlockedByEscape);
+        }
 
         public void SetCursorLockSuppressed(bool suppressed)
         {
@@ -60,6 +79,7 @@ namespace Bellerophon.Core.Player
 
             if (suppressed)
             {
+                cursorUnlockedByEscape = false;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
                 return;
@@ -89,6 +109,7 @@ namespace Bellerophon.Core.Player
 
         private void OnDisable()
         {
+            cursorUnlockedByEscape = false;
             gameplayInputSuppressed = false;
             DisableActions();
             RestoreCursorState();
@@ -232,6 +253,7 @@ namespace Bellerophon.Core.Player
                 return;
             }
 
+            cursorUnlockedByEscape = false;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
@@ -257,6 +279,7 @@ namespace Bellerophon.Core.Player
 
             if (cursorLockSuppressed)
             {
+                cursorUnlockedByEscape = false;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
                 return;
@@ -264,6 +287,7 @@ namespace Bellerophon.Core.Player
 
             if (gameplayInputSuppressed)
             {
+                cursorUnlockedByEscape = false;
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
                 return;
@@ -271,6 +295,7 @@ namespace Bellerophon.Core.Player
 
             if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
             {
+                cursorUnlockedByEscape = true;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
                 return;
@@ -280,9 +305,20 @@ namespace Bellerophon.Core.Player
                 Mouse.current != null &&
                 Mouse.current.leftButton.wasPressedThisFrame)
             {
+                cursorUnlockedByEscape = false;
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
+        }
+
+        private static bool IsGameplayActionSuppressed(
+            bool isCursorLockSuppressed,
+            bool isGameplayInputSuppressed,
+            bool wasCursorUnlockedByEscape)
+        {
+            return isCursorLockSuppressed ||
+                   isGameplayInputSuppressed ||
+                   wasCursorUnlockedByEscape;
         }
 
         private void DisableActions()

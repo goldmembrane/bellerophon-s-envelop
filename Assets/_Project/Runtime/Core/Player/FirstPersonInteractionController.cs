@@ -117,6 +117,11 @@ namespace Bellerophon.Core.Player
                 return;
             }
 
+            if (input != null && input.CursorUnlockedByEscape)
+            {
+                return;
+            }
+
             var ray = new Ray(interactionOrigin.position, interactionOrigin.forward);
             if (!Physics.Raycast(ray, out currentHit, settings.InteractionDistance, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
             {

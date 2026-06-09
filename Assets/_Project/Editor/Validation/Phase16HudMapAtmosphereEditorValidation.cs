@@ -84,6 +84,10 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Phase 16 ship map must be wired and scaled to 80%.");
             }
 
+            RequireMissingMapCorridor("ControlRoom", "Armory");
+            RequireMissingMapCorridor("ControlRoom", "SupplyRoom");
+            RequireMissingMapCorridor("SupplyRoom", "ControlRoom");
+
             map.RefreshForValidation();
             if (map.CurrentRoom != ShipRoomId.CargoHold ||
                 !map.CurrentRoomText.text.Contains("Cargo Hold"))
@@ -143,6 +147,15 @@ namespace Bellerophon.Editor.Validation
                 {
                     throw new InvalidOperationException("Phase 16 default center crosshair must be hidden.");
                 }
+            }
+        }
+
+        private static void RequireMissingMapCorridor(string fromRoom, string toRoom)
+        {
+            var corridorName = "Phase 16 Map Corridor - " + fromRoom + " to " + toRoom;
+            if (GameObject.Find(corridorName) != null)
+            {
+                throw new InvalidOperationException("Phase 16 map must not show undefined corridor " + corridorName + ".");
             }
         }
 

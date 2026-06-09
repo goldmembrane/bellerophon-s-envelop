@@ -287,7 +287,11 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Runtime player must have a CharacterController.");
             }
 
-            var armoryCargoRouteDistance = ValidateArmoryCargoRoute(playerMotor, controller);
+            var armoryCargoRouteDistance = ValidateCorridorRoute(playerMotor, controller, "Armory", "Cargo Hold");
+            var controlCargoRouteDistance = ValidateCorridorRoute(playerMotor, controller, "Control Room", "Cargo Hold");
+            var supplyCargoRouteDistance = ValidateCorridorRoute(playerMotor, controller, "Supply Room", "Cargo Hold");
+            var supplyArmoryRouteDistance = ValidateCorridorRoute(playerMotor, controller, "Supply Room", "Armory");
+            var validatedRouteCount = ValidateAllDefinedCorridorRoutes(playerMotor, controller);
 
             var start = playerMotor.transform.position;
             controller.Move(Vector3.forward * 1.0f);
@@ -298,7 +302,32 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException($"Runtime player could not move on graybox floor. Moved={moved:0.00}");
             }
 
-            return $"Scene={CargoRunSceneName}; RenderedPixels={renderedPixels}; VisibleRenderers={visibleRenderers}; Rooms=6; Corridors=10; InteractionTarget={currentTarget.DisplayName}; Moved={moved.ToString("0.00", CultureInfo.InvariantCulture)}; ArmoryCargoRoute={armoryCargoRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}";
+            return $"Scene={CargoRunSceneName}; RenderedPixels={renderedPixels}; VisibleRenderers={visibleRenderers}; Rooms=6; Corridors=9; InteractionTarget={currentTarget.DisplayName}; Moved={moved.ToString("0.00", CultureInfo.InvariantCulture)}; ValidatedRoutes={validatedRouteCount}; ArmoryCargoRoute={armoryCargoRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}; ControlCargoRoute={controlCargoRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}; SupplyCargoRoute={supplyCargoRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}; SupplyArmoryRoute={supplyArmoryRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}";
+        }
+
+        private static int ValidateAllDefinedCorridorRoutes(
+            FirstPersonPlayerMotor playerMotor,
+            CharacterController controller)
+        {
+            var routes = new[]
+            {
+                ("Cargo Hold", "Cockpit"),
+                ("Cargo Hold", "Engine Room"),
+                ("Cargo Hold", "Control Room"),
+                ("Cargo Hold", "Armory"),
+                ("Cargo Hold", "Supply Room"),
+                ("Supply Room", "Armory"),
+                ("Cockpit", "Engine Room"),
+                ("Cockpit", "Control Room"),
+                ("Engine Room", "Control Room")
+            };
+
+            for (var i = 0; i < routes.Length; i++)
+            {
+                ValidateCorridorRoute(playerMotor, controller, routes[i].Item1, routes[i].Item2);
+            }
+
+            return routes.Length;
         }
 
         private static void CompleteBlockingStartFlowIfPresent()
@@ -321,7 +350,11 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
-        private static float ValidateArmoryCargoRoute(FirstPersonPlayerMotor playerMotor, CharacterController controller)
+        private static float ValidateCorridorRoute(
+            FirstPersonPlayerMotor playerMotor,
+            CharacterController controller,
+            string from,
+            string to)
         {
             var savedPosition = playerMotor.transform.position;
             var savedRotation = playerMotor.transform.rotation;
@@ -331,27 +364,22 @@ namespace Bellerophon.Editor.Validation
             {
                 playerMotor.enabled = false;
 
-                var cargoToArmoryRoute = Phase4CargoShipGrayboxBootstrap.ArmoryCargoCorridorRoute();
-                if (cargoToArmoryRoute.Length < 2)
+                var route = Phase4CargoShipGrayboxBootstrap.CorridorRoute(from, to);
+                if (route.Length < 2)
                 {
-                    throw new InvalidOperationException("Armory to Cargo Hold route must contain at least two points.");
-                }
-
-                var armoryToCargoRoute = new Vector3[cargoToArmoryRoute.Length];
-                for (var i = 0; i < cargoToArmoryRoute.Length; i++)
-                {
-                    armoryToCargoRoute[i] = cargoToArmoryRoute[cargoToArmoryRoute.Length - i - 1];
+                    throw new InvalidOperationException(from + " to " + to + " route must contain at least two points.");
                 }
 
                 controller.enabled = false;
-                playerMotor.transform.SetPositionAndRotation(armoryToCargoRoute[0] + Vector3.up * 0.05f, Quaternion.identity);
+                playerMotor.transform.SetPositionAndRotation(CreateRouteStart(route) + Vector3.up * 0.05f, Quaternion.identity);
                 controller.enabled = true;
                 Physics.SyncTransforms();
 
                 var traveledDistance = 0f;
-                for (var i = 1; i < armoryToCargoRoute.Length; i++)
+                for (var i = 1; i < route.Length; i++)
                 {
-                    traveledDistance += MoveControllerAlongRouteSegment(controller, armoryToCargoRoute[i], i);
+                    var target = i == route.Length - 1 ? CreateRouteEnd(route) : route[i];
+                    traveledDistance += MoveControllerAlongRouteSegment(controller, target, i, from + " to " + to);
                 }
 
                 return traveledDistance;
@@ -366,12 +394,29 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
-        private static float MoveControllerAlongRouteSegment(CharacterController controller, Vector3 target, int segmentIndex)
+        private static Vector3 CreateRouteStart(Vector3[] route)
         {
-            const float stepDistance = 0.2f;
+            var planarDirection = new Vector3(route[1].x - route[0].x, 0f, route[1].z - route[0].z).normalized;
+            return route[0] + (planarDirection * 0.35f);
+        }
+
+        private static Vector3 CreateRouteEnd(Vector3[] route)
+        {
+            var last = route.Length - 1;
+            var planarDirection = new Vector3(route[last].x - route[last - 1].x, 0f, route[last].z - route[last - 1].z).normalized;
+            return route[last] + (planarDirection * 0.35f);
+        }
+
+        private static float MoveControllerAlongRouteSegment(
+            CharacterController controller,
+            Vector3 target,
+            int segmentIndex,
+            string routeName)
+        {
+            const float stepDistance = 0.12f;
             const float arrivalTolerance = 0.45f;
-            const int maxSteps = 220;
-            const int maxStuckSteps = 8;
+            const int maxSteps = 700;
+            const int maxStuckSteps = 12;
 
             var traveledDistance = 0f;
             var stuckSteps = 0;
@@ -380,27 +425,31 @@ namespace Bellerophon.Editor.Validation
                 var current = controller.transform.position;
                 var planarToTarget = new Vector3(target.x - current.x, 0f, target.z - current.z);
                 var remainingDistance = planarToTarget.magnitude;
-                if (remainingDistance <= arrivalTolerance)
+                var verticalDistance = Mathf.Abs(target.y - current.y);
+                if (remainingDistance <= arrivalTolerance && verticalDistance <= 0.6f)
                 {
                     return traveledDistance;
                 }
 
-                var desiredPlanarMove = planarToTarget.normalized * Mathf.Min(stepDistance, remainingDistance);
-                controller.Move(desiredPlanarMove + Vector3.down * 0.04f);
+                var desiredPlanarMove = remainingDistance <= arrivalTolerance
+                    ? Vector3.zero
+                    : planarToTarget.normalized * Mathf.Min(stepDistance, remainingDistance);
+                controller.Move(desiredPlanarMove + Vector3.down * 0.08f);
                 Physics.SyncTransforms();
 
                 var nextPosition = controller.transform.position;
                 var nextPlanarToTarget = new Vector3(target.x - nextPosition.x, 0f, target.z - nextPosition.z);
                 var progress = remainingDistance - nextPlanarToTarget.magnitude;
+                var verticalProgress = verticalDistance - Mathf.Abs(target.y - nextPosition.y);
                 traveledDistance += Mathf.Max(0f, progress);
 
-                if (progress < 0.03f)
+                if (progress < 0.03f && verticalProgress < 0.03f)
                 {
                     stuckSteps++;
                     if (stuckSteps >= maxStuckSteps)
                     {
                         throw new InvalidOperationException(
-                            $"Armory to Cargo Hold route is blocked at segment {segmentIndex}. Position={nextPosition}, Remaining={nextPlanarToTarget.magnitude:0.00}");
+                            $"{routeName} route is blocked at segment {segmentIndex}. Position={nextPosition}, Remaining={nextPlanarToTarget.magnitude:0.00}, Nearby={DescribeNearbyColliders(controller)}, Ahead={DescribeAheadCollider(controller, desiredPlanarMove)}");
                     }
 
                     continue;
@@ -409,7 +458,62 @@ namespace Bellerophon.Editor.Validation
                 stuckSteps = 0;
             }
 
-            throw new InvalidOperationException($"Armory to Cargo Hold route did not reach segment {segmentIndex} target within {maxSteps} steps.");
+            throw new InvalidOperationException($"{routeName} route did not reach segment {segmentIndex} target within {maxSteps} steps.");
+        }
+
+        private static string DescribeNearbyColliders(CharacterController controller)
+        {
+            var center = controller.transform.position + controller.center;
+            var capsuleHalf = Mathf.Max(0f, (controller.height * 0.5f) - controller.radius);
+            var bottom = center + (Vector3.down * capsuleHalf);
+            var top = center + (Vector3.up * capsuleHalf);
+            var colliders = Physics.OverlapCapsule(bottom, top, controller.radius + 0.05f);
+            if (colliders.Length == 0)
+            {
+                return "None";
+            }
+
+            var builder = new StringBuilder();
+            var count = 0;
+            for (var i = 0; i < colliders.Length && count < 8; i++)
+            {
+                var collider = colliders[i];
+                if (collider == null || collider.transform == controller.transform)
+                {
+                    continue;
+                }
+
+                if (count > 0)
+                {
+                    builder.Append("|");
+                }
+
+                builder.Append(collider.name);
+                count++;
+            }
+
+            return count == 0 ? "None" : builder.ToString();
+        }
+
+        private static string DescribeAheadCollider(CharacterController controller, Vector3 planarMove)
+        {
+            var direction = new Vector3(planarMove.x, 0f, planarMove.z);
+            if (direction.sqrMagnitude < 0.001f)
+            {
+                return "None";
+            }
+
+            direction.Normalize();
+            var center = controller.transform.position + controller.center;
+            var capsuleHalf = Mathf.Max(0f, (controller.height * 0.5f) - controller.radius);
+            var bottom = center + (Vector3.down * capsuleHalf);
+            var top = center + (Vector3.up * capsuleHalf);
+            if (!Physics.CapsuleCast(bottom, top, controller.radius + 0.03f, direction, out var hit, 0.6f))
+            {
+                return "None";
+            }
+
+            return hit.collider == null ? "None" : hit.collider.name;
         }
 
         private static void RequireObject(string objectName)

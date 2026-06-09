@@ -339,5 +339,41 @@ namespace Bellerophon.Tests.EditMode
                 Object.DestroyImmediate(stateObject);
             }
         }
+
+        [Test]
+        public void EquipmentController_HandInventorySelectionStaysSyncedWithPurchasedWeapon()
+        {
+            var stateObject = new GameObject("Ship Device State Test");
+            var inventoryObject = new GameObject("Hand Inventory Test");
+            var controllerObject = new GameObject("Equipment Controller Test");
+            try
+            {
+                var state = stateObject.AddComponent<ShipDeviceInteractionState>();
+                var equipment = PlayerEquipmentState.CreateDefaultAssociationIssue()
+                    .WithHandSlot(1, EquipmentSlotState.Purchased(EquipmentItemKind.Musket, EquipmentRules.MusketPriceCredits))
+                    .WithActiveHandSlot(1);
+                state.SetEquipmentStateForValidation(equipment);
+
+                var inventory = inventoryObject.AddComponent<FirstPersonHandInventory>();
+                var controller = controllerObject.AddComponent<PlayerEquipmentController>();
+                controller.Configure(inventory, null, state, null, null);
+
+                Assert.That(inventory.ActiveSlotIndex, Is.EqualTo(1));
+                Assert.That(state.CurrentEquipmentState.ActiveHandSlotIndex, Is.EqualTo(1));
+
+                inventory.SelectSlotForValidation(0);
+                Assert.That(state.CurrentEquipmentState.ActiveHandSlotIndex, Is.EqualTo(0));
+
+                inventory.SelectSlotForValidation(1);
+                Assert.That(state.CurrentEquipmentState.ActiveHandSlotIndex, Is.EqualTo(1));
+                Assert.That(state.UseActiveEquipment(false).ItemKind, Is.EqualTo(EquipmentItemKind.Musket));
+            }
+            finally
+            {
+                Object.DestroyImmediate(controllerObject);
+                Object.DestroyImmediate(inventoryObject);
+                Object.DestroyImmediate(stateObject);
+            }
+        }
     }
 }

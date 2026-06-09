@@ -1,5 +1,13 @@
 # Bellerophon Agent Harness
 
+## Unity 에디터 실행 규칙
+
+- Unity 에디터를 열거나 재시작할 때는 직접 `Unity.exe`, `.unity` 씬 파일, 또는 임의의 `Start-Process` 명령을 사용하지 않는다.
+- 에디터 실행은 `.\scripts\Open-UnityProject.ps1`를 사용한다.
+- stale 컴파일, 잘못 열린 에디터, 남은 `Temp\UnityLockfile`, AssetImportWorker 잔여 프로세스가 의심되면 `.\scripts\Open-UnityProject.ps1 -Restart -ValidateCargoRunScene`를 사용한다.
+- 이 스크립트는 `ProjectSettings\ProjectVersion.txt`와 `Assets\_Project\Scenes\CargoRunMvp.unity` 존재를 확인하고, `-projectPath D:\Bellerophon2\Bellerophon`로 열린 실제 프로젝트 에디터만 정상으로 인정한다.
+- 에디터가 기본 `Untitled` 씬만 보여주는 상태는 정상 실행으로 보지 않는다. `Open-UnityProject.ps1`는 열린 에디터 브리지에 `OpenCargoRunMvpScene` 명령을 보내 `CargoRunMvp`가 활성 씬이 되도록 해야 한다.
+
 ## 이어서 작업할 때
 
 - 이어서 작업을 시작하기 전 `docs/PROGRESS_2026-06-02.md`를 먼저 읽고, 현재 구현 상태와 다음 단계 범위를 확인한다.
@@ -20,6 +28,13 @@
 - 런타임 게임 로직은 가능한 한 `MonoBehaviour`에서 분리해 EditMode 테스트가 가능하게 만든다.
 - Steam, 저장소, 업적, 클라우드 같은 플랫폼 기능은 인터페이스 뒤에 둔다. 게임 로직이 Steamworks SDK를 직접 참조하지 않게 한다.
 - 새 기능은 최소 하나 이상의 검증 경로를 가져야 한다. 순수 로직은 EditMode 테스트, 씬/입력/물리/UI는 PlayMode 테스트를 우선한다.
+
+## 아트/에셋 승인 규칙
+
+- 모델링, UI, 애니메이션, 머티리얼, VFX, 사운드처럼 아트와 연관이 깊은 작업은 실제 게임 씬, 프리팹, 런타임 자산, UI 흐름에 붙이기 전에 먼저 저장소 루트의 `artSample/`에 사용자가 볼 수 있는 샘플 파일로 저장한다.
+- 샘플 파일은 사용자가 검사할 수 있는 형식이어야 한다. 예: PNG/JPG/WebP 이미지, MP4/GIF 영상, HTML 미리보기, FBX/GLB 같은 범용 3D 파일, 또는 독립적으로 확인 가능한 Unity 샘플 씬/프리팹과 설명 문서.
+- 사용자가 `artSample/`의 샘플을 검사하고 승인한 뒤에만 해당 아트/UI/애니메이션 결과물을 실제 게임에 연결한다.
+- 승인 전에는 해당 결과물을 실제 게임 씬, 프리팹, 런타임 자산, UI 흐름에 붙이지 않는다. 단, `artSample/` 생성을 위한 임시 파일과 미리보기 파일은 허용한다.
 
 ## 검증 사다리
 
