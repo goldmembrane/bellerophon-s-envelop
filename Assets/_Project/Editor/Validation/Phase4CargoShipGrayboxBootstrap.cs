@@ -5,6 +5,7 @@ using Bellerophon.Core.Player;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 namespace Bellerophon.Editor.Validation
@@ -20,6 +21,7 @@ namespace Bellerophon.Editor.Validation
         private const string FloorMaterialPath = ArtShipMaterialsDirectory + "/ShipInteriorFloor_Rough.mat";
         private const string CorridorMaterialPath = ArtShipMaterialsDirectory + "/ShipInteriorCorridorFloor_Rough.mat";
         private const string WallMaterialPath = ArtShipMaterialsDirectory + "/ShipInteriorWall_Rough.mat";
+        private const string CargoOutboundCorridorWallMaterialPath = ArtShipMaterialsDirectory + "/CargoOutboundCorridorWall_Unlit.mat";
         private const string CeilingMaterialPath = ArtShipMaterialsDirectory + "/ShipInteriorCeiling_Rough.mat";
         private const string DoorFrameMaterialPath = ArtShipMaterialsDirectory + "/ShipInteriorDoorFrame_Worn.mat";
         private const string CableMaterialPath = ArtShipMaterialsDirectory + "/ShipInteriorCableTray_Dark.mat";
@@ -34,6 +36,7 @@ namespace Bellerophon.Editor.Validation
         public const float ProductionDoorWidth = 3.4f;
         public const float ProductionDoorHeight = 2.25f;
         public const float ProductionWallHeight = 2.75f;
+        private const float AdjacentRoomDoorOffset = 1.8f;
         private const float WallThickness = 0.28f;
         private const float CeilingThickness = 0.12f;
         private const float CorridorFloorOverlap = 1.0f;
@@ -62,6 +65,7 @@ namespace Bellerophon.Editor.Validation
             new CorridorSpec("Cargo Hold", "Control Room"),
             new CorridorSpec("Cargo Hold", "Armory"),
             new CorridorSpec("Cargo Hold", "Supply Room"),
+            new CorridorSpec("Control Room", "Armory"),
             new CorridorSpec("Supply Room", "Armory"),
             new CorridorSpec("Cockpit", "Engine Room"),
             new CorridorSpec("Cockpit", "Control Room"),
@@ -86,6 +90,7 @@ namespace Bellerophon.Editor.Validation
             var floorMaterial = EnsureMaterial(FloorMaterialPath, new Color(0.16f, 0.17f, 0.15f, 1f));
             var corridorMaterial = EnsureMaterial(CorridorMaterialPath, new Color(0.11f, 0.12f, 0.11f, 1f));
             var wallMaterial = EnsureMaterial(WallMaterialPath, new Color(0.25f, 0.27f, 0.25f, 1f));
+            EnsureCargoHoldOutboundCorridorWallMaterial();
             var ceilingMaterial = EnsureMaterial(CeilingMaterialPath, new Color(0.12f, 0.13f, 0.12f, 1f));
             var doorFrameMaterial = EnsureMaterial(DoorFrameMaterialPath, new Color(0.34f, 0.33f, 0.28f, 1f));
             var cableMaterial = EnsureMaterial(CableMaterialPath, new Color(0.055f, 0.058f, 0.052f, 1f));
@@ -406,7 +411,7 @@ namespace Bellerophon.Editor.Validation
             CreateBox(
                 name,
                 parent,
-                new Vector3(point.x, point.y - 0.035f, point.z),
+                new Vector3(point.x, point.y - 0.06f, point.z),
                 new Vector3(width + CorridorLandingExtraWidth, 0.08f, width + CorridorLandingExtraWidth),
                 Quaternion.identity,
                 floorMaterial,
@@ -886,7 +891,9 @@ namespace Bellerophon.Editor.Validation
             mesh.RecalculateNormals();
 
             prism.AddComponent<MeshFilter>().sharedMesh = mesh;
-            prism.AddComponent<MeshRenderer>().sharedMaterial = material;
+            var renderer = prism.AddComponent<MeshRenderer>();
+            renderer.sharedMaterial = material;
+            ConfigureRendererForGeneratedGeometry(name, renderer);
 
             if (keepCollider)
             {
@@ -905,6 +912,76 @@ namespace Bellerophon.Editor.Validation
             triangles.Add(c);
             triangles.Add(b);
             triangles.Add(a);
+        }
+
+        private static void ConfigureRendererForGeneratedGeometry(string objectName, MeshRenderer renderer)
+        {
+            if (IsCargoHoldOutboundCorridorUniformWallSurface(objectName))
+            {
+                renderer.sharedMaterial = EnsureCargoHoldOutboundCorridorWallMaterial();
+            }
+
+            if (!IsCargoHoldOutboundCorridorVisualSurface(objectName))
+            {
+                return;
+            }
+
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            renderer.lightProbeUsage = LightProbeUsage.Off;
+            renderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
+        }
+
+        public static Material EnsureCargoHoldOutboundCorridorWallMaterial()
+        {
+            return EnsureUnlitMaterial(CargoOutboundCorridorWallMaterialPath, new Color(0.145f, 0.158f, 0.148f, 1f));
+        }
+
+        public static bool IsCargoHoldOutboundCorridorVisualSurface(string objectName)
+        {
+            if (!objectName.StartsWith("Corridor - Cargo Hold to ", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            if (objectName.EndsWith(" Floor", StringComparison.Ordinal) ||
+                objectName.EndsWith(" Floor Lip", StringComparison.Ordinal) ||
+                objectName.EndsWith(" Worn Threshold Plate", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            return objectName.Contains(" Wall") ||
+                   objectName.Contains("Ceiling") ||
+                   objectName.Contains("Bulkhead") ||
+                   objectName.Contains("Closure") ||
+                   objectName.Contains("Reveal") ||
+                   objectName.Contains("Sleeve") ||
+                   objectName.Contains("Wedge Fill") ||
+                   objectName.Contains("Cable Tray");
+        }
+
+        public static bool IsCargoHoldOutboundCorridorUniformWallSurface(string objectName)
+        {
+            if (!objectName.StartsWith("Corridor - Cargo Hold to ", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            if (objectName.EndsWith(" Floor", StringComparison.Ordinal) ||
+                objectName.EndsWith(" Floor Lip", StringComparison.Ordinal) ||
+                objectName.EndsWith(" Worn Threshold Plate", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            return objectName.Contains(" Wall") ||
+                   objectName.Contains("Ceiling") ||
+                   objectName.Contains("Bulkhead") ||
+                   objectName.Contains("Closure") ||
+                   objectName.Contains("Reveal") ||
+                   objectName.Contains("Sleeve") ||
+                   objectName.Contains("Wedge Fill");
         }
 
         private static WallSide GetEndpointWallSide(string roomName, Vector3 worldPoint)
@@ -1287,13 +1364,15 @@ namespace Bellerophon.Editor.Validation
                 case "Control Room":
                     return new[]
                     {
-                        new DoorOpening(WallSide.South, -2.8f, 3.4f, "Cargo"),
+                        new DoorOpening(WallSide.South, -AdjacentRoomDoorOffset, ProductionDoorWidth, "Cargo"),
+                        new DoorOpening(WallSide.South, AdjacentRoomDoorOffset, ProductionDoorWidth, "Armory"),
                         new DoorOpening(WallSide.West, 0f, 2.5f, "Cockpit"),
                         new DoorOpening(WallSide.North, -2.0f, ProductionDoorWidth, "Engine")
                     };
                 case "Armory":
                     return new[]
                     {
+                        new DoorOpening(WallSide.North, -AdjacentRoomDoorOffset, ProductionDoorWidth, "Control"),
                         new DoorOpening(WallSide.North, 2.8f, ProductionDoorWidth, "Cargo"),
                         new DoorOpening(WallSide.East, 0f, ProductionDoorWidth, "Supply")
                     };
@@ -1522,7 +1601,9 @@ namespace Bellerophon.Editor.Validation
             box.transform.localPosition = position;
             box.transform.localRotation = rotation;
             box.transform.localScale = scale;
-            box.GetComponent<MeshRenderer>().sharedMaterial = material;
+            var renderer = box.GetComponent<MeshRenderer>();
+            renderer.sharedMaterial = material;
+            ConfigureRendererForGeneratedGeometry(name, renderer);
 
             if (!keepCollider)
             {
@@ -1547,8 +1628,8 @@ namespace Bellerophon.Editor.Validation
             textMesh.text = text;
             textMesh.anchor = TextAnchor.MiddleCenter;
             textMesh.alignment = TextAlignment.Center;
-            textMesh.characterSize = 0.18f;
-            textMesh.fontSize = 64;
+            textMesh.characterSize = 0.055f;
+            textMesh.fontSize = 48;
             textMesh.color = new Color(0.82f, 0.92f, 0.88f, 1f);
         }
 
@@ -1563,6 +1644,37 @@ namespace Bellerophon.Editor.Validation
             }
 
             material.color = color;
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        private static Material EnsureUnlitMaterial(string path, Color color)
+        {
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            var shader = Shader.Find("Universal Render Pipeline/Unlit") ??
+                         Shader.Find("Unlit/Color") ??
+                         Shader.Find("Standard");
+            if (material == null)
+            {
+                material = new Material(shader);
+                AssetDatabase.CreateAsset(material, path);
+            }
+            else if (shader != null && material.shader != shader)
+            {
+                material.shader = shader;
+            }
+
+            material.color = color;
+            if (material.HasProperty("_BaseColor"))
+            {
+                material.SetColor("_BaseColor", color);
+            }
+
+            if (material.HasProperty("_Color"))
+            {
+                material.SetColor("_Color", color);
+            }
+
             EditorUtility.SetDirty(material);
             return material;
         }
@@ -1641,6 +1753,7 @@ namespace Bellerophon.Editor.Validation
                 FloorMaterialPath,
                 CorridorMaterialPath,
                 WallMaterialPath,
+                CargoOutboundCorridorWallMaterialPath,
                 CeilingMaterialPath,
                 DoorFrameMaterialPath,
                 CableMaterialPath,
@@ -1706,7 +1819,9 @@ namespace Bellerophon.Editor.Validation
                 switch (otherRoomName)
                 {
                     case "Cargo Hold":
-                        return RoomPoint(roomName, -2.8f, 0f, -halfZ);
+                        return RoomPoint(roomName, -AdjacentRoomDoorOffset, 0f, -halfZ);
+                    case "Armory":
+                        return RoomPoint(roomName, AdjacentRoomDoorOffset, 0f, -halfZ);
                     case "Cockpit":
                         return RoomPoint(roomName, -halfX, 0f, 0f);
                     case "Engine Room":
@@ -1720,6 +1835,8 @@ namespace Bellerophon.Editor.Validation
                 {
                     case "Cargo Hold":
                         return RoomPoint(roomName, 2.8f, 0f, halfZ);
+                    case "Control Room":
+                        return RoomPoint(roomName, -AdjacentRoomDoorOffset, 0f, halfZ);
                     case "Supply Room":
                         return RoomPoint(roomName, halfX, 0f, 0f);
                 }
@@ -1774,6 +1891,19 @@ namespace Bellerophon.Editor.Validation
                 {
                     GetCorridorEndpoint("Cargo Hold", "Supply Room"),
                     GetCorridorEndpoint("Supply Room", "Cargo Hold")
+                });
+            }
+
+            if (Connects(from, to, "Control Room", "Armory"))
+            {
+                var controlEndpoint = GetCorridorEndpoint("Control Room", "Armory");
+                var armoryEndpoint = GetCorridorEndpoint("Armory", "Control Room");
+                return OrientRoute(from, to, "Control Room", "Armory", new[]
+                {
+                    controlEndpoint,
+                    new Vector3(controlEndpoint.x, UpperDeckY, 8f),
+                    new Vector3(armoryEndpoint.x, UpperDeckY, -8.1f),
+                    armoryEndpoint
                 });
             }
 

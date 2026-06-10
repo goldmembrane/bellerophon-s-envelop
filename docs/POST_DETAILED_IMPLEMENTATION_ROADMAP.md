@@ -258,6 +258,20 @@
 - 1인칭 장비 에셋이 중앙 시야나 HUD를 가리지 않는다.
 - 핵심 interactable이 텍스트에만 의존하지 않고 시각적으로 구분된다.
 
+2026-06-10 샘플 상태:
+
+- `artSample/gameplay_props_equipment_sample.html`을 준비했다.
+- 샘플 범위는 1인칭 stick/musket 배치, protective suit readout, 무기실 turret grip/mount, cockpit/control/engine/cargo/supply 장치 표면, contract/personal cargo와 strap/bracket, 특수 장비 silhouette, corridor purifier 정비 장착형 icon 방향, normal/damaged material variant다.
+- 승인 전 샘플이며 Unity 씬, 프리팹, 런타임 자산, UI 흐름에는 연결하지 않았다.
+
+2026-06-10 구현 상태:
+
+- 사용자가 stage 3 샘플을 승인했고, 해당 방향을 `CargoRunMvp`에 통합했다.
+- 런타임 씬 생성은 `PostDetailedStage3GameplayPropsBootstrap`가 담당하며, 월드 prop은 `Post Detailed Stage 3 Gameplay Props` 루트 아래에 생성하고 1인칭 장비 preview는 `Player Camera` 하위 `Stage 3 First Person Equipment Preview`에 붙인다.
+- 생성 범위는 cockpit helm/status screens, control CCTV terminal, engine power terminal, supply cabinet, cargo status panel, armory turret grip/mount, contract/personal cargo containers, cargo strap/bracket kit, warning labels, repair/damaged panels, escape pod visual, first-person crowbar/musket/protective suit readout, special equipment silhouettes, corridor purifier maintenance icon, terminal shell, button mesh, screen backing, normal/damaged material panels이다.
+- Contract cargo strap은 승인된 가운데 가로 strap과 세로 strap만 유지하며, 제거된 아래쪽 가로 strap은 검증에서 금지한다.
+- 검증 경로는 `.\scripts\Run-PostDetailedStage3GameplayPropsSmoke.ps1`이다.
+
 ### 4. 적과 캐릭터 모델링 패스
 
 목표: 적 placeholder를 읽기 쉬운 production model과 기본 animation으로 교체한다.
@@ -601,6 +615,14 @@
 - `Control Room -> Armory` perimeter route는 더 남쪽 외곽으로 이동해 cargo-supply 하부 램프와 겹치지 않게 했다.
 - 경사 복도 벽은 시각 벽과 물리 가드 콜라이더를 분리했고, cargo-supply 하부 램프는 좁은 코너 통행을 막지 않도록 별도 side guard collider를 두지 않는다.
 - 전용 검증은 최종적으로 `ArmoryCargoSegments=4`, `SupplyCargoSegments=2`, `ControlArmorySegments=4`와 실제 `CharacterController` traversal을 확인한다.
+
+# 2026-06-10 통제실-무기고 복도 복구 기준
+
+- 사용자 확인으로 아래 2026-06-09의 `Control Room -> Armory` 금지 기준은 폐기한다. `Control Room -> Armory`는 다시 허용된 물리 복도와 HUD 맵 선이다.
+- 새 복도는 통제실 남쪽의 `Cargo Hold` 출입구 바로 옆에 `Armory` 출입구를 두고, 무기고 북쪽의 `Cargo Hold` 출입구 옆으로 연결한다.
+- 무기고 쪽에서는 기존 `Cargo Hold -> Armory` 램프 입구를 막지 않는 3-segment 경로를 사용하고, 중간 랜딩 높이를 세그먼트 바닥과 맞춰 턱을 만들지 않는다.
+- 계속 금지되는 우회 연결은 `Control Room -> Supply Room`, `Supply Room -> Control Room`뿐이다.
+- 최신 검증 기준은 `Corridors=10`, `ValidatedRoutes=10`, `ArmoryCargoSegments=1`, `SupplyCargoSegments=1`, `SupplyArmorySegments=1`, `ControlArmorySegments=3`이다.
 
 # 2026-06-09 2단계 복도 구조 재수정 최종 기준
 

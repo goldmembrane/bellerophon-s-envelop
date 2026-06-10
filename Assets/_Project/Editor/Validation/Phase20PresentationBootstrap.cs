@@ -249,11 +249,30 @@ namespace Bellerophon.Editor.Validation
             var material = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (material == null)
             {
-                material = new Material(Shader.Find("Standard"));
+                var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+                material = new Material(shader);
                 AssetDatabase.CreateAsset(material, path);
+            }
+            else
+            {
+                var shader = Shader.Find("Universal Render Pipeline/Lit");
+                if (shader != null && material.shader != shader)
+                {
+                    material.shader = shader;
+                }
             }
 
             material.color = color;
+            if (material.HasProperty("_BaseColor"))
+            {
+                material.SetColor("_BaseColor", color);
+            }
+
+            if (material.HasProperty("_Color"))
+            {
+                material.SetColor("_Color", color);
+            }
+
             EditorUtility.SetDirty(material);
             return material;
         }

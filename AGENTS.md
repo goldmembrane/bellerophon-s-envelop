@@ -4,7 +4,8 @@
 
 - Unity 에디터를 열거나 재시작할 때는 직접 `Unity.exe`, `.unity` 씬 파일, 또는 임의의 `Start-Process` 명령을 사용하지 않는다.
 - 에디터 실행은 `.\scripts\Open-UnityProject.ps1`를 사용한다.
-- stale 컴파일, 잘못 열린 에디터, 남은 `Temp\UnityLockfile`, AssetImportWorker 잔여 프로세스가 의심되면 `.\scripts\Open-UnityProject.ps1 -Restart -ValidateCargoRunScene`를 사용한다.
+- 코드/에셋 변경을 열린 Unity 에디터에 반영해야 할 때는 재시작보다 `.\scripts\Refresh-UnityProject.ps1`를 먼저 사용한다.
+- stale 컴파일, 잘못 열린 에디터, 남은 `Temp\UnityLockfile`, AssetImportWorker 잔여 프로세스가 의심되어도 먼저 리프레시와 열린 에디터 브리지 재시도를 시도한다. `.\scripts\Open-UnityProject.ps1 -Restart -ValidateCargoRunScene`는 리프레시가 실패하거나 에디터가 잘못된 프로젝트를 열고 있는 경우의 최후 수단으로만 사용한다.
 - 이 스크립트는 `ProjectSettings\ProjectVersion.txt`와 `Assets\_Project\Scenes\CargoRunMvp.unity` 존재를 확인하고, `-projectPath D:\Bellerophon2\Bellerophon`로 열린 실제 프로젝트 에디터만 정상으로 인정한다.
 - 에디터가 기본 `Untitled` 씬만 보여주는 상태는 정상 실행으로 보지 않는다. `Open-UnityProject.ps1`는 열린 에디터 브리지에 `OpenCargoRunMvpScene` 명령을 보내 `CargoRunMvp`가 활성 씬이 되도록 해야 한다.
 
@@ -18,6 +19,7 @@
 ## 기본 규칙
 
 - 대화는 한국어로 한다.
+- 모든 대화는 항상 존댓말로 한다.
 - 코드 식별자, 네임스페이스, 파일명은 영어를 사용한다.
 - 애매모호하거나 없었던 사항은 멋대로 판단하여 구현하지 말고 사용자에게 정확한 설명을 요청하고 답변을 받은 뒤에 작업한다.
 - 계획을 세우고 나서 저장해둔 원본 기획서와 계획이 맞게 구성되었는지 비교한다.
@@ -33,6 +35,7 @@
 
 - 모델링, UI, 애니메이션, 머티리얼, VFX, 사운드처럼 아트와 연관이 깊은 작업은 실제 게임 씬, 프리팹, 런타임 자산, UI 흐름에 붙이기 전에 먼저 저장소 루트의 `artSample/`에 사용자가 볼 수 있는 샘플 파일로 저장한다.
 - 샘플 파일은 사용자가 검사할 수 있는 형식이어야 한다. 예: PNG/JPG/WebP 이미지, MP4/GIF 영상, HTML 미리보기, FBX/GLB 같은 범용 3D 파일, 또는 독립적으로 확인 가능한 Unity 샘플 씬/프리팹과 설명 문서.
+- `artSample/`의 설명 문구는 한국어를 기본으로 작성한다. 영어는 파일명, 코드 식별자, 고유 명사, 장비명처럼 필요한 경우에만 사용하고, 어설픈 혼합 표현으로 설명을 흐리지 않는다.
 - 사용자가 `artSample/`의 샘플을 검사하고 승인한 뒤에만 해당 아트/UI/애니메이션 결과물을 실제 게임에 연결한다.
 - 승인 전에는 해당 결과물을 실제 게임 씬, 프리팹, 런타임 자산, UI 흐름에 붙이지 않는다. 단, `artSample/` 생성을 위한 임시 파일과 미리보기 파일은 허용한다.
 

@@ -37,22 +37,26 @@ namespace Bellerophon.Editor.Validation
             RequireObject("Corridor - Cargo Hold to Armory Segment 1 Floor");
             RequireObject("Corridor - Cargo Hold to Supply Room Segment 1 Floor");
             RequireObject("Corridor - Supply Room to Armory Segment 1 Floor");
+            RequireObject("Corridor - Control Room to Armory Segment 1 Floor");
+            RequireObject("Corridor - Control Room to Armory Segment 2 Floor");
+            RequireObject("Corridor - Control Room to Armory Segment 3 Floor");
             RequireObject("Ceiling - Cargo Hold");
             RequireObject("Door Frame - Cargo Hold - North Cockpit Lintel");
             RequireObject("Door Frame - Armory - North Cargo Lintel");
             RequireObject("Door Frame - Supply Room - North Cargo Lintel");
+            RequireObject("Door Frame - Control Room - South Armory Lintel");
+            RequireObject("Door Frame - Armory - North Control Lintel");
             RequireDoorHeaderWalls();
             RequireThresholdSeals();
             RequireSlopedEndpointSeals();
             RequireCorridorJointSeals();
+            Phase4CargoShipGrayboxEditorValidation.RequireCargoHoldOutboundCorridorUniformWallLighting();
             RequireMissingObject("Corridor - Cargo Hold to Armory Segment 2 Floor");
             RequireMissingObject("Corridor - Cargo Hold to Supply Room Segment 2 Floor");
             RequireMissingObject("Corridor - Control Room to Supply Room");
             RequireMissingObject("Corridor - Supply Room to Control Room");
-            RequireMissingObject("Corridor - Control Room to Armory");
             RequireMissingObject("Phase 16 Map Corridor - ControlRoom to SupplyRoom");
             RequireMissingObject("Phase 16 Map Corridor - SupplyRoom to ControlRoom");
-            RequireMissingObject("Phase 16 Map Corridor - ControlRoom to Armory");
 
             var armoryCargoSegments = Phase4CargoShipGrayboxBootstrap.CorridorSegmentCount("Cargo Hold", "Armory");
             if (armoryCargoSegments != 1)
@@ -74,7 +78,15 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Post-detailed stage 2 requires only the defined one-segment supply-armory corridor, not a control-supply bypass. Segments=" + supplyArmorySegments);
             }
 
+            var controlArmorySegments = Phase4CargoShipGrayboxBootstrap.CorridorSegmentCount("Control Room", "Armory");
+            if (controlArmorySegments != 3)
+            {
+                throw new InvalidOperationException("Post-detailed stage 2 requires the restored control-armory corridor to use a smooth three-segment route beside the cargo doorway. Segments=" + controlArmorySegments);
+            }
+
+            RequireControlArmoryWalkingSurfaceFlush();
             RequireSeparatedRoutes("Cargo Hold", "Armory", "Cargo Hold", "Supply Room", 3.0f);
+            RequireSeparatedRoutes("Control Room", "Armory", "Control Room", "Cargo Hold", 3.0f);
             RequireCorridorFloorsHaveColliders();
 
             if (Phase4CargoShipGrayboxBootstrap.ProductionCorridorWidth < 2.4f ||
@@ -101,6 +113,8 @@ namespace Bellerophon.Editor.Validation
                 supplyCargoSegments +
                 "; SupplyArmorySegments=" +
                 supplyArmorySegments +
+                "; ControlArmorySegments=" +
+                controlArmorySegments +
                 "; ClosedShell=True; RuntimeIntegration=True");
         }
 
@@ -123,6 +137,41 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
+        private static void RequireControlArmoryWalkingSurfaceFlush()
+        {
+            var firstFloor = RequireObject("Corridor - Control Room to Armory Segment 1 Floor");
+            var secondFloor = RequireObject("Corridor - Control Room to Armory Segment 2 Floor");
+            var thirdFloor = RequireObject("Corridor - Control Room to Armory Segment 3 Floor");
+            var firstJointLanding = RequireObject("Corridor - Control Room to Armory Landing 2");
+            var secondJointLanding = RequireObject("Corridor - Control Room to Armory Landing 3");
+            var expectedTop = WalkingSurfaceTop(firstFloor);
+
+            RequireWalkingSurfaceTop(expectedTop, secondFloor);
+            RequireWalkingSurfaceTop(expectedTop, thirdFloor);
+            RequireWalkingSurfaceTop(expectedTop, firstJointLanding);
+            RequireWalkingSurfaceTop(expectedTop, secondJointLanding);
+        }
+
+        private static void RequireWalkingSurfaceTop(float expectedTop, GameObject target)
+        {
+            var actualTop = WalkingSurfaceTop(target);
+            if (Mathf.Abs(actualTop - expectedTop) > 0.015f)
+            {
+                throw new InvalidOperationException(
+                    "Control-armory walking surfaces must stay flush without a raised bump. Object=" +
+                    target.name +
+                    ", ExpectedTop=" +
+                    expectedTop.ToString("0.000") +
+                    ", ActualTop=" +
+                    actualTop.ToString("0.000"));
+            }
+        }
+
+        private static float WalkingSurfaceTop(GameObject target)
+        {
+            return target.transform.position.y + (target.transform.lossyScale.y * 0.5f);
+        }
+
         private static void RequireDoorHeaderWalls()
         {
             var requiredHeaders = new[]
@@ -136,7 +185,9 @@ namespace Bellerophon.Editor.Validation
                 "Door Header Wall - Engine Room - South Cargo",
                 "Door Header Wall - Engine Room - North Control",
                 "Door Header Wall - Control Room - South Cargo",
+                "Door Header Wall - Control Room - South Armory",
                 "Door Header Wall - Control Room - North Engine",
+                "Door Header Wall - Armory - North Control",
                 "Door Header Wall - Armory - North Cargo",
                 "Door Header Wall - Supply Room - North Cargo"
             };
@@ -156,6 +207,7 @@ namespace Bellerophon.Editor.Validation
                 "Corridor - Cargo Hold to Control Room",
                 "Corridor - Cargo Hold to Armory",
                 "Corridor - Cargo Hold to Supply Room",
+                "Corridor - Control Room to Armory",
                 "Corridor - Supply Room to Armory",
                 "Corridor - Cockpit to Engine Room",
                 "Corridor - Cockpit to Control Room",
@@ -275,6 +327,8 @@ namespace Bellerophon.Editor.Validation
         {
             RequireCorridorJointSeal("Corridor - Engine Room to Control Room", 1);
             RequireCorridorJointSeal("Corridor - Engine Room to Control Room", 2);
+            RequireCorridorJointSeal("Corridor - Control Room to Armory", 1);
+            RequireCorridorJointSeal("Corridor - Control Room to Armory", 2);
         }
 
         private static void RequireCorridorJointSeal(string corridorName, int jointIndex)

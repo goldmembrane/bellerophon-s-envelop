@@ -291,6 +291,7 @@ namespace Bellerophon.Editor.Validation
             var controlCargoRouteDistance = ValidateCorridorRoute(playerMotor, controller, "Control Room", "Cargo Hold");
             var supplyCargoRouteDistance = ValidateCorridorRoute(playerMotor, controller, "Supply Room", "Cargo Hold");
             var supplyArmoryRouteDistance = ValidateCorridorRoute(playerMotor, controller, "Supply Room", "Armory");
+            var controlArmoryRouteDistance = ValidateCorridorRoute(playerMotor, controller, "Control Room", "Armory");
             var validatedRouteCount = ValidateAllDefinedCorridorRoutes(playerMotor, controller);
 
             var start = playerMotor.transform.position;
@@ -302,7 +303,7 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException($"Runtime player could not move on graybox floor. Moved={moved:0.00}");
             }
 
-            return $"Scene={CargoRunSceneName}; RenderedPixels={renderedPixels}; VisibleRenderers={visibleRenderers}; Rooms=6; Corridors=9; InteractionTarget={currentTarget.DisplayName}; Moved={moved.ToString("0.00", CultureInfo.InvariantCulture)}; ValidatedRoutes={validatedRouteCount}; ArmoryCargoRoute={armoryCargoRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}; ControlCargoRoute={controlCargoRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}; SupplyCargoRoute={supplyCargoRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}; SupplyArmoryRoute={supplyArmoryRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}";
+            return $"Scene={CargoRunSceneName}; RenderedPixels={renderedPixels}; VisibleRenderers={visibleRenderers}; Rooms=6; Corridors=10; InteractionTarget={currentTarget.DisplayName}; Moved={moved.ToString("0.00", CultureInfo.InvariantCulture)}; ValidatedRoutes={validatedRouteCount}; ArmoryCargoRoute={armoryCargoRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}; ControlCargoRoute={controlCargoRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}; SupplyCargoRoute={supplyCargoRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}; SupplyArmoryRoute={supplyArmoryRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}; ControlArmoryRoute={controlArmoryRouteDistance.ToString("0.00", CultureInfo.InvariantCulture)}";
         }
 
         private static int ValidateAllDefinedCorridorRoutes(
@@ -316,6 +317,7 @@ namespace Bellerophon.Editor.Validation
                 ("Cargo Hold", "Control Room"),
                 ("Cargo Hold", "Armory"),
                 ("Cargo Hold", "Supply Room"),
+                ("Control Room", "Armory"),
                 ("Supply Room", "Armory"),
                 ("Cockpit", "Engine Room"),
                 ("Cockpit", "Control Room"),

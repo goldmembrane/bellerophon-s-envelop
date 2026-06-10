@@ -1,6 +1,16 @@
 # Post-detailed Stage 2 Corridor Sealing Notes - 2026-06-09
 
-## 최신 기준
+## 2026-06-10 최신 기준
+
+- 사용자 확인으로 `Control Room -> Armory` 물리 복도와 `Phase 16 Map Corridor - ControlRoom to Armory` HUD 맵 선은 다시 생성한다.
+- `Control Room -> Armory` 복도는 통제실 남쪽의 `Cargo Hold` 출입구 바로 옆에서 시작하고, 무기고 북쪽의 `Cargo Hold` 출입구 옆으로 연결한다.
+- 무기고 쪽에서는 기존 `Cargo Hold -> Armory` 램프 입구를 막지 않는 3-segment 경로를 사용하고, 중간 랜딩은 세그먼트 바닥과 같은 높이로 맞춰 턱이 생기지 않게 한다.
+- 계속 금지되는 물리 복도와 HUD 맵 선은 `Control Room -> Supply Room`, `Supply Room -> Control Room`뿐이다.
+- 최신 허용 복도는 10개다. 기존 9개 복도에 `Control Room -> Armory`를 추가한다.
+- `Phase4CargoShipGrayboxPlayModeSmoke`는 10개 정의 복도를 모두 CharacterController로 통과해야 한다.
+- 최신 통과 기준은 `Corridors=10`, `ValidatedRoutes=10`, `ArmoryCargoSegments=1`, `SupplyCargoSegments=1`, `SupplyArmorySegments=1`, `ControlArmorySegments=3`이다.
+
+## 2026-06-09 이전 기준
 
 - 정의되지 않은 `Control Room -> Armory`, `Control Room -> Supply Room`, `Supply Room -> Control Room` 물리 복도와 HUD 맵 선은 만들지 않는다.
 - 최종 허용 복도는 9개다: Cargo Hold에서 Cockpit, Engine Room, Control Room, Armory, Supply Room으로 가는 복도, Supply Room에서 Armory로 가는 복도, Cockpit에서 Engine Room 및 Control Room으로 가는 복도, Engine Room에서 Control Room으로 가는 복도.

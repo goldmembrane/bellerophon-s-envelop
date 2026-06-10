@@ -3,6 +3,7 @@ using Bellerophon.Core.Player;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 namespace Bellerophon.Editor.Validation
@@ -26,6 +27,7 @@ namespace Bellerophon.Editor.Validation
             ("Cargo Hold", "Control Room"),
             ("Cargo Hold", "Armory"),
             ("Cargo Hold", "Supply Room"),
+            ("Control Room", "Armory"),
             ("Supply Room", "Armory"),
             ("Cockpit", "Engine Room"),
             ("Cockpit", "Control Room"),
@@ -87,11 +89,14 @@ namespace Bellerophon.Editor.Validation
             RequireSeparatedCargoEntrance("Control Room", "Cargo Hold");
             RequireSeparatedCargoEntrance("Armory", "Cargo Hold");
             RequireAngledArmoryCargoCorridor();
+            RequireControlArmoryEntranceBesideCargoEntrance();
+            RequireControlArmoryWalkingSurfaceFlush();
             RequireNoUndefinedControlSupplyCorridor();
             RequireCorridorGeometryClearance(root.transform);
             RequireCorridorJointSeals(root.transform);
             RequireSlopedCorridorEndpointSeals();
             RequireCorridorCeilingsSitOnWalls(root.transform);
+            RequireCargoHoldOutboundCorridorUniformWallLighting();
             RequireProductionMaterials();
 
             var interactables = UnityEngine.Object.FindObjectsByType<DebugInteractable>(
@@ -180,13 +185,74 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
+        private static void RequireControlArmoryEntranceBesideCargoEntrance()
+        {
+            var segmentCount = Phase4CargoShipGrayboxBootstrap.CorridorSegmentCount("Control Room", "Armory");
+            if (segmentCount != 3)
+            {
+                throw new InvalidOperationException(
+                    "Control Room to Armory corridor must use a smooth three-segment route that exits beside the cargo doorway without overlapping the cargo route. SegmentCount=" +
+                    segmentCount);
+            }
+
+            RequireAdjacentDoorway("Control Room", "Cargo Hold", "Armory", 3.8f);
+            RequireAdjacentDoorway("Armory", "Cargo Hold", "Control Room", 4.8f);
+        }
+
+        private static void RequireControlArmoryWalkingSurfaceFlush()
+        {
+            var firstFloor = RequireObject("Corridor - Control Room to Armory Segment 1 Floor");
+            var secondFloor = RequireObject("Corridor - Control Room to Armory Segment 2 Floor");
+            var thirdFloor = RequireObject("Corridor - Control Room to Armory Segment 3 Floor");
+            var firstJointLanding = RequireObject("Corridor - Control Room to Armory Landing 2");
+            var secondJointLanding = RequireObject("Corridor - Control Room to Armory Landing 3");
+            var expectedTop = WalkingSurfaceTop(firstFloor);
+
+            RequireWalkingSurfaceTop(expectedTop, secondFloor);
+            RequireWalkingSurfaceTop(expectedTop, thirdFloor);
+            RequireWalkingSurfaceTop(expectedTop, firstJointLanding);
+            RequireWalkingSurfaceTop(expectedTop, secondJointLanding);
+        }
+
+        private static void RequireWalkingSurfaceTop(float expectedTop, GameObject target)
+        {
+            var actualTop = WalkingSurfaceTop(target);
+            if (Mathf.Abs(actualTop - expectedTop) > 0.015f)
+            {
+                throw new InvalidOperationException(
+                    $"Control Room to Armory walking surfaces must stay flush without a raised bump. Object={target.name}, ExpectedTop={expectedTop:0.000}, ActualTop={actualTop:0.000}");
+            }
+        }
+
+        private static float WalkingSurfaceTop(GameObject target)
+        {
+            return target.transform.position.y + (target.transform.lossyScale.y * 0.5f);
+        }
+
+        private static void RequireAdjacentDoorway(string roomName, string cargoRoomName, string adjacentRoomName, float maximumDistance)
+        {
+            var cargoEntrance = Phase4CargoShipGrayboxBootstrap.CorridorEndpoint(roomName, cargoRoomName);
+            var adjacentEntrance = Phase4CargoShipGrayboxBootstrap.CorridorEndpoint(roomName, adjacentRoomName);
+            var sameWall =
+                Mathf.Abs(cargoEntrance.x - adjacentEntrance.x) < 0.05f ||
+                Mathf.Abs(cargoEntrance.z - adjacentEntrance.z) < 0.05f;
+            var distance = Vector3.Distance(
+                new Vector3(cargoEntrance.x, 0f, cargoEntrance.z),
+                new Vector3(adjacentEntrance.x, 0f, adjacentEntrance.z));
+
+            if (!sameWall || distance > maximumDistance)
+            {
+                throw new InvalidOperationException(
+                    $"{roomName} {adjacentRoomName} corridor entrance must sit directly beside the Cargo Hold corridor entrance. Distance={distance:0.00}, Cargo={cargoEntrance}, Adjacent={adjacentEntrance}");
+            }
+        }
+
         private static void RequireNoUndefinedControlSupplyCorridor()
         {
             if (GameObject.Find("Corridor - Control Room to Supply Room") != null ||
-                GameObject.Find("Corridor - Supply Room to Control Room") != null ||
-                GameObject.Find("Corridor - Control Room to Armory") != null)
+                GameObject.Find("Corridor - Supply Room to Control Room") != null)
             {
-                throw new InvalidOperationException("Production ship interior must not create undefined control-supply or control-armory bypass corridors.");
+                throw new InvalidOperationException("Production ship interior must not create undefined control-supply bypass corridors.");
             }
         }
 
@@ -464,6 +530,56 @@ namespace Bellerophon.Editor.Validation
         private static float NormalizeEulerAngle(float angle)
         {
             return angle > 180f ? angle - 360f : angle;
+        }
+
+        public static void RequireCargoHoldOutboundCorridorUniformWallLighting()
+        {
+            var renderers = UnityEngine.Object.FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None);
+            var uniformWallMaterial = Phase4CargoShipGrayboxBootstrap.EnsureCargoHoldOutboundCorridorWallMaterial();
+            var checkedSurfaceCount = 0;
+            var checkedUniformWallCount = 0;
+            for (var i = 0; i < renderers.Length; i++)
+            {
+                var renderer = renderers[i];
+                if (!Phase4CargoShipGrayboxBootstrap.IsCargoHoldOutboundCorridorVisualSurface(renderer.name))
+                {
+                    continue;
+                }
+
+                checkedSurfaceCount++;
+                if (renderer.shadowCastingMode != ShadowCastingMode.Off ||
+                    renderer.receiveShadows ||
+                    renderer.lightProbeUsage != LightProbeUsage.Off ||
+                    renderer.reflectionProbeUsage != ReflectionProbeUsage.Off)
+                {
+                    throw new InvalidOperationException(
+                        "Cargo Hold outbound corridor wall/ceiling surfaces must use uniform visual lighting without cast/received shadows: " +
+                        renderer.name);
+                }
+
+                if (!Phase4CargoShipGrayboxBootstrap.IsCargoHoldOutboundCorridorUniformWallSurface(renderer.name))
+                {
+                    continue;
+                }
+
+                checkedUniformWallCount++;
+                if (renderer.sharedMaterial != uniformWallMaterial)
+                {
+                    throw new InvalidOperationException(
+                        "Cargo Hold outbound corridor wall/ceiling surfaces must use the unlit uniform wall material: " +
+                        renderer.name);
+                }
+            }
+
+            if (checkedSurfaceCount == 0)
+            {
+                throw new InvalidOperationException("No Cargo Hold outbound corridor wall/ceiling surfaces were found for uniform lighting validation.");
+            }
+
+            if (checkedUniformWallCount == 0)
+            {
+                throw new InvalidOperationException("No Cargo Hold outbound corridor wall color surfaces were found for material validation.");
+            }
         }
 
         private static void RequireProductionMaterials()

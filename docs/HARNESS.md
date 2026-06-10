@@ -3,7 +3,8 @@
 ## Unity Editor Launch
 
 - Open the interactive Unity editor with `.\scripts\Open-UnityProject.ps1`.
-- When the editor may be stale, opened from the wrong shell state, or blocked by a leftover lock/import worker, use `.\scripts\Open-UnityProject.ps1 -Restart -ValidateCargoRunScene`.
+- When code or asset changes need to be picked up by an already-open editor, run `.\scripts\Refresh-UnityProject.ps1` before considering an editor restart.
+- Use `.\scripts\Open-UnityProject.ps1 -Restart -ValidateCargoRunScene` only as a last resort when refresh/bridge retry fails, the editor is opened on the wrong project, or a leftover lock/import worker keeps the project unusable.
 - Do not open `.unity` scene files directly and do not hand-compose ad hoc `Start-Process Unity.exe ...` commands for the interactive editor.
 - The launch script validates the project root, Unity version path, `CargoRunMvp` scene path, `-projectPath` command line, and then sends `OpenCargoRunMvpScene` through the editor bridge so the active scene is not Unity's default `Untitled` scene.
 - The optional `-ValidateCargoRunScene` switch runs the CargoRun scene validation smoke after opening the scene.
@@ -27,7 +28,15 @@
 
 - `UnityEditorValidationBridge` now attempts recovered PlayMode result completion before honoring the in-memory `isRunning` guard.
 - If an EditMode or PlayMode Test Runner request does not return a completion callback within 120 seconds, the bridge writes a failure log, clears Test Runner callback state, and releases later bridge requests instead of staying permanently blocked.
-- If the already-open Unity editor has a stale bridge domain from before this fix, restart or reload the editor before re-running bridge-based validation or Windows builds.
+- If the already-open Unity editor has a stale bridge domain from before this fix, refresh or reload the editor before re-running bridge-based validation or Windows builds. Prefer `.\scripts\Refresh-UnityProject.ps1`; restart only when refresh cannot recover the editor.
+
+## Art Validation Harness
+
+- Generic harness, EditMode tests, PlayMode tests, and builds do not prove that art work matches the approved `artSample/` direction.
+- For art-heavy runtime integration, use a focused art smoke or editor validation that checks the approved sample scope explicitly: required objects exist, sample-only review objects are absent, unpurchased or inactive equipment is hidden, generated materials use supported shaders, and first-person items do not block the camera/HUD.
+- The focused art validation log must expose art-specific markers instead of only a generic pass marker. Example: `SampleOnlyLooseProps=0`, `CargoStraps=2`, `DeviceSurfaces=7`, `ArtSampleMatch=True`, or another task-specific count.
+- When the art issue is visual shape, silhouette, placement, lighting, or screen readability, run a screenshot/render review path or capture a comparable preview before claiming completion. Structural tests alone are insufficient.
+- `artSample/` files must explain review intent in Korean by default. Use English only for file names, code identifiers, proper names, and unavoidable asset labels.
 
 ## Detailed Step 8 Phase15 Smoke
 
@@ -99,6 +108,7 @@ Bellerophon의 하네스는 AI/사람 개발자가 같은 구조, 같은 명령,
 ```powershell
 .\scripts\Setup-GitForUnity.ps1
 .\scripts\Bootstrap-UnityProject.ps1
+.\scripts\Refresh-UnityProject.ps1
 .\scripts\Run-HarnessValidation.ps1
 .\scripts\Run-EditModeTests.ps1
 .\scripts\Run-PlayModeTests.ps1
@@ -121,6 +131,8 @@ Bellerophon의 하네스는 AI/사람 개발자가 같은 구조, 같은 명령,
 .\scripts\Run-Phase16HudMapAtmosphereSmoke.ps1
 .\scripts\Run-Phase17CoopFoundationSmoke.ps1
 .\scripts\Run-Phase18MvpPlaytestLoopSmoke.ps1
+.\scripts\Run-PostDetailedStage3GameplayPropsSmoke.ps1
+.\scripts\Run-PostDetailedStage3GameplayPropsArtValidation.ps1
 .\scripts\Run-DetailedStep21BalancePlaytestHardeningSmoke.ps1
 .\scripts\Run-DetailedStep21FullSmokeSuite.ps1
 .\scripts\Run-AllChecks.ps1
@@ -172,6 +184,8 @@ PlayMode Test Runner는 Play mode 진입 중 도메인 리로드가 발생하므
 19단계 저장, 설정, 플랫폼 경계는 `.\scripts\Run-DetailedStep19SaveSettingsPlatformSmoke.ps1`로 검증한다. 이 스크립트는 저장 프로필에서 튜토리얼 스킵 가능 여부와 `$1100` 스킵 보상이 복구되는지, 설정 저장값과 저장 파일 버전 마이그레이션이 동작하는지, Steam SDK 없이 Null 업적/클라우드/통계 경계가 동작하는지 확인한다.
 
 20단계 행성 허브, 프레젠테이션, 사운드 placeholder는 `.\scripts\Run-DetailedStep20PresentationSmoke.ps1`로 검증한다. 이 스크립트는 settlement 이후 행성 체류 허브가 정비 화면보다 먼저 연결되는지, 행성 허브의 시설 진입점과 지도 마커가 구성되는지, 선내 방별 프레젠테이션 placeholder 오브젝트와 `ShipSignalAudioHooks` cue hook이 유지되는지 확인한다.
+
+Stage 3 gameplay props/equipment art work must finish with an art validation after the normal validation ladder. First regenerate or update the scene with `.\scripts\Run-PostDetailedStage3GameplayPropsSmoke.ps1`. Then run the normal checks such as `Run-HarnessValidation.ps1`, `Run-EditModeTests.ps1`, `Run-PlayModeTests.ps1`, and `Build-WindowsDev.ps1` when the scene changed. Only after those pass, run `.\scripts\Run-PostDetailedStage3GameplayPropsArtValidation.ps1`. Completion may be reported only when that final art validation also passes and confirms art-specific markers such as `SampleOnlyLooseProps=0`, `CargoStraps=2`, `DeviceSurfaces=7`, and `ArtSampleMatch=True`.
 
 ## 테스트 정책
 

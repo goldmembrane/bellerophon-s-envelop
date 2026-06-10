@@ -138,6 +138,12 @@ namespace Bellerophon.Editor.Validation
                         () => BuildCli.BuildWindows64(request.OutputPath, request.DevelopmentBuild),
                         "Build Finished, Result: Success");
                     break;
+                case "RefreshAssets":
+                    RunSynchronous(
+                        request,
+                        RefreshAssets,
+                        "Unity assets refreshed.");
+                    break;
                 case "ValidatePhase1SessionModels":
                     RunSynchronous(
                         request,
@@ -390,6 +396,18 @@ namespace Bellerophon.Editor.Validation
                         PostDetailedStage2ShipInteriorEditorValidation.Run,
                         "Post-detailed stage 2 ship interior editor validation passed.");
                     break;
+                case "ValidatePostDetailedStage3GameplayProps":
+                    RunSynchronous(
+                        request,
+                        PostDetailedStage3GameplayPropsEditorValidation.Run,
+                        "Post-detailed stage 3 gameplay props editor validation passed.");
+                    break;
+                case "ValidatePostDetailedStage3GameplayPropsArtOnly":
+                    RunSynchronous(
+                        request,
+                        PostDetailedStage3GameplayPropsEditorValidation.ValidateScene,
+                        "Post-detailed stage 3 gameplay props editor validation passed.");
+                    break;
                 case "OpenCargoRunMvpScene":
                     RunSynchronous(
                         request,
@@ -403,6 +421,23 @@ namespace Bellerophon.Editor.Validation
                         string.Empty);
                     break;
             }
+        }
+
+        private static void RefreshAssets()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw new InvalidOperationException("Cannot refresh assets while Unity is entering or leaving Play Mode.");
+            }
+
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+            AssetDatabase.SaveAssets();
+            Debug.Log("Unity assets refreshed from validation bridge.");
         }
 
         private static void OpenCargoRunMvpScene()

@@ -244,6 +244,7 @@ namespace Bellerophon.Editor.Validation
             CreateMapLine(mapRoot, ShipRoomId.CargoHold, ShipRoomId.ControlRoom);
             CreateMapLine(mapRoot, ShipRoomId.CargoHold, ShipRoomId.Armory);
             CreateMapLine(mapRoot, ShipRoomId.CargoHold, ShipRoomId.SupplyRoom);
+            CreateMapLine(mapRoot, ShipRoomId.ControlRoom, ShipRoomId.Armory);
             CreateMapLine(mapRoot, ShipRoomId.SupplyRoom, ShipRoomId.Armory);
             CreateMapLine(mapRoot, ShipRoomId.Cockpit, ShipRoomId.EngineRoom);
             CreateMapLine(mapRoot, ShipRoomId.Cockpit, ShipRoomId.ControlRoom);

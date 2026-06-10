@@ -84,7 +84,7 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Phase 16 ship map must be wired and scaled to 80%.");
             }
 
-            RequireMissingMapCorridor("ControlRoom", "Armory");
+            RequireMapCorridor("ControlRoom", "Armory");
             RequireMissingMapCorridor("ControlRoom", "SupplyRoom");
             RequireMissingMapCorridor("SupplyRoom", "ControlRoom");
 
@@ -156,6 +156,15 @@ namespace Bellerophon.Editor.Validation
             if (GameObject.Find(corridorName) != null)
             {
                 throw new InvalidOperationException("Phase 16 map must not show undefined corridor " + corridorName + ".");
+            }
+        }
+
+        private static void RequireMapCorridor(string fromRoom, string toRoom)
+        {
+            var corridorName = "Phase 16 Map Corridor - " + fromRoom + " to " + toRoom;
+            if (GameObject.Find(corridorName) == null)
+            {
+                throw new InvalidOperationException("Phase 16 map must show defined corridor " + corridorName + ".");
             }
         }
 
