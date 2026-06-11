@@ -168,34 +168,38 @@ namespace Bellerophon.Editor.Validation
         private static void CreateControlRoomCctvTerminal(Transform parent, Stage3Materials materials)
         {
             var root = CreateChildRoot(ControlRoomCctvTerminalName, parent);
-            CreateBox(ControlRoomCctvTerminalName + " Desk", root.transform, new Vector3(14f, 0.52f, 20.12f), new Vector3(2.6f, 0.42f, 0.9f), materials.Metal);
+            CreateBox(ControlRoomCctvTerminalName + " Desk", root.transform, new Vector3(14f, 0.72f, 21.42f), new Vector3(2.55f, 0.32f, 0.48f), materials.Metal);
+            CreateBox(ControlRoomCctvTerminalName + " Wall Cable Rail", root.transform, new Vector3(14f, 1.68f, 21.84f), new Vector3(2.7f, 0.08f, 0.07f), materials.DarkRubber);
             for (var i = 0; i < 3; i++)
             {
                 var x = 13.15f + (i * 0.85f);
-                CreateBox(ControlRoomCctvTerminalName + " Monitor Frame " + (i + 1), root.transform, new Vector3(x, 1.28f, 19.76f), new Vector3(0.72f, 0.08f, 0.5f), materials.Metal, Quaternion.Euler(0f, 0f, 0f));
-                CreateBox(ControlRoomCctvTerminalName + " Monitor Glow " + (i + 1), root.transform, new Vector3(x, 1.33f, 19.72f), new Vector3(0.56f, 0.035f, 0.34f), materials.Screen);
+                CreateBox(ControlRoomCctvTerminalName + " Monitor Frame " + (i + 1), root.transform, new Vector3(x, 1.34f, 21.78f), new Vector3(0.72f, 0.52f, 0.075f), materials.Metal);
+                CreateBox(ControlRoomCctvTerminalName + " Monitor Glow " + (i + 1), root.transform, new Vector3(x, 1.34f, 21.72f), new Vector3(0.56f, 0.34f, 0.035f), materials.Screen);
+                CreateBox(ControlRoomCctvTerminalName + " Monitor Foot " + (i + 1), root.transform, new Vector3(x, 1.02f, 21.55f), new Vector3(0.12f, 0.22f, 0.08f), materials.Metal);
             }
 
             for (var i = 0; i < 5; i++)
             {
-                CreateBox(ControlRoomCctvTerminalName + " Tactile Button " + (i + 1), root.transform, new Vector3(13.1f + (i * 0.45f), 0.78f, 19.64f), new Vector3(0.18f, 0.08f, 0.12f), i % 2 == 0 ? materials.Warning : materials.Yellow);
+                CreateBox(ControlRoomCctvTerminalName + " Tactile Button " + (i + 1), root.transform, new Vector3(13.1f + (i * 0.45f), 0.94f, 21.15f), new Vector3(0.18f, 0.08f, 0.12f), i % 2 == 0 ? materials.Warning : materials.Yellow);
             }
         }
 
         private static void CreateEngineRoomPowerTerminal(Transform parent, Stage3Materials materials)
         {
             var root = CreateChildRoot(EngineRoomPowerTerminalName, parent);
-            CreateBox(EngineRoomPowerTerminalName + " Cabinet", root.transform, new Vector3(-14.1f, 0.82f, 17.25f), new Vector3(1.05f, 1.35f, 0.28f), materials.Metal);
-            CreateBox(EngineRoomPowerTerminalName + " Power Screen", root.transform, new Vector3(-14.1f, 1.18f, 17.08f), new Vector3(0.72f, 0.42f, 0.035f), materials.Screen);
-            CreateBox(EngineRoomPowerTerminalName + " Overclock Warning", root.transform, new Vector3(-14.1f, 0.6f, 17.06f), new Vector3(0.8f, 0.12f, 0.035f), materials.Warning);
-            CreateBox(EngineRoomPowerTerminalName + " Breaker Left", root.transform, new Vector3(-14.42f, 0.23f, 17.04f), new Vector3(0.13f, 0.28f, 0.04f), materials.DarkRubber);
-            CreateBox(EngineRoomPowerTerminalName + " Breaker Right", root.transform, new Vector3(-13.78f, 0.23f, 17.04f), new Vector3(0.13f, 0.28f, 0.04f), materials.DarkRubber);
+            CreateBox(EngineRoomPowerTerminalName + " Cabinet", root.transform, new Vector3(-10.2f, 0.96f, 17.72f), new Vector3(0.16f, 1.28f, 0.94f), materials.Metal);
+            CreateBox(EngineRoomPowerTerminalName + " Power Screen", root.transform, new Vector3(-10.3f, 1.24f, 17.72f), new Vector3(0.045f, 0.46f, 0.56f), materials.Screen);
+            CreateBox(EngineRoomPowerTerminalName + " Overclock Warning", root.transform, new Vector3(-10.32f, 0.63f, 17.72f), new Vector3(0.04f, 0.12f, 0.68f), materials.Warning);
+            CreateBox(EngineRoomPowerTerminalName + " Breaker Left", root.transform, new Vector3(-10.33f, 0.28f, 17.5f), new Vector3(0.05f, 0.27f, 0.12f), materials.DarkRubber);
+            CreateBox(EngineRoomPowerTerminalName + " Breaker Right", root.transform, new Vector3(-10.33f, 0.28f, 17.94f), new Vector3(0.05f, 0.27f, 0.12f), materials.DarkRubber);
+            CreateCylinder(EngineRoomPowerTerminalName + " Top Pipe", root.transform, new Vector3(-10.25f, 1.68f, 17.72f), new Vector3(0.045f, 0.62f, 0.045f), materials.DarkRubber, Quaternion.Euler(90f, 0f, 0f));
+            CreateCylinder(EngineRoomPowerTerminalName + " Lower Cable", root.transform, new Vector3(-10.28f, 0.12f, 17.72f), new Vector3(0.025f, 0.52f, 0.025f), materials.Warning, Quaternion.Euler(90f, 0f, 0f));
         }
 
         private static void CreateSupplyRoomStorageCabinet(Transform parent, Stage3Materials materials)
         {
             var root = CreateChildRoot(SupplyRoomStorageCabinetName, parent);
-            CreateBox(SupplyRoomStorageCabinetName + " Back Plate", root.transform, new Vector3(12.1f, 1.04f, -15.04f), new Vector3(2.4f, 1.5f, 0.16f), materials.Metal);
+            CreateBox(SupplyRoomStorageCabinetName + " Back Plate", root.transform, new Vector3(17.58f, 1.04f, -14.1f), new Vector3(0.16f, 1.5f, 2.36f), materials.Metal);
             for (var row = 0; row < 2; row++)
             {
                 for (var col = 0; col < 3; col++)
@@ -204,14 +208,14 @@ namespace Bellerophon.Editor.Validation
                     CreateBox(
                         SupplyRoomStorageCabinetName + " Locker Door " + index,
                         root.transform,
-                        new Vector3(11.35f + (col * 0.75f), 0.72f + (row * 0.62f), -15.15f),
-                        new Vector3(0.58f, 0.48f, 0.08f),
+                        new Vector3(17.46f, 0.72f + (row * 0.62f), -14.82f + (col * 0.72f)),
+                        new Vector3(0.08f, 0.48f, 0.58f),
                         materials.Cargo);
                     CreateBox(
                         SupplyRoomStorageCabinetName + " Handle " + index,
                         root.transform,
-                        new Vector3(11.55f + (col * 0.75f), 0.72f + (row * 0.62f), -15.22f),
-                        new Vector3(0.06f, 0.22f, 0.045f),
+                        new Vector3(17.38f, 0.72f + (row * 0.62f), -14.62f + (col * 0.72f)),
+                        new Vector3(0.045f, 0.22f, 0.06f),
                         materials.DarkRubber);
                 }
             }
@@ -220,21 +224,24 @@ namespace Bellerophon.Editor.Validation
         private static void CreateCargoHoldStatusPanel(Transform parent, Stage3Materials materials)
         {
             var root = CreateChildRoot(CargoHoldStatusPanelName, parent);
-            CreateBox(CargoHoldStatusPanelName + " Panel Frame", root.transform, new Vector3(3.2f, -1.12f, 2.15f), new Vector3(1.0f, 0.72f, 0.1f), materials.Metal);
-            CreateBox(CargoHoldStatusPanelName + " Load Screen", root.transform, new Vector3(3.2f, -0.98f, 2.08f), new Vector3(0.76f, 0.32f, 0.035f), materials.Screen);
-            CreateBox(CargoHoldStatusPanelName + " Secure Indicator", root.transform, new Vector3(2.92f, -1.35f, 2.05f), new Vector3(0.22f, 0.1f, 0.035f), materials.Yellow);
-            CreateBox(CargoHoldStatusPanelName + " Overload Indicator", root.transform, new Vector3(3.48f, -1.35f, 2.05f), new Vector3(0.22f, 0.1f, 0.035f), materials.Warning);
+            CreateBox(CargoHoldStatusPanelName + " Panel Frame", root.transform, new Vector3(0f, -1.55f, -2.82f), new Vector3(1.9f, 1.04f, 0.1f), materials.Metal);
+            CreateBox(CargoHoldStatusPanelName + " Load Screen", root.transform, new Vector3(0f, -1.38f, -2.9f), new Vector3(1.36f, 0.44f, 0.035f), materials.Screen);
+            CreateBox(CargoHoldStatusPanelName + " Secure Indicator", root.transform, new Vector3(-0.46f, -1.83f, -2.93f), new Vector3(0.28f, 0.12f, 0.035f), materials.Yellow);
+            CreateBox(CargoHoldStatusPanelName + " Overload Indicator", root.transform, new Vector3(0.46f, -1.83f, -2.93f), new Vector3(0.28f, 0.12f, 0.035f), materials.Warning);
+            CreateBox(CargoHoldStatusPanelName + " Left Clamp", root.transform, new Vector3(-0.98f, -1.55f, -2.76f), new Vector3(0.1f, 1.18f, 0.16f), materials.DarkRubber);
+            CreateBox(CargoHoldStatusPanelName + " Right Clamp", root.transform, new Vector3(0.98f, -1.55f, -2.76f), new Vector3(0.1f, 1.18f, 0.16f), materials.DarkRubber);
+            CreateBox(CargoHoldStatusPanelName + " Lower Cable Brace", root.transform, new Vector3(0f, -2.17f, -2.64f), new Vector3(1.58f, 0.08f, 0.08f), materials.DarkRubber);
         }
 
         private static void CreateArmoryTurretGripMount(Transform parent, Stage3Materials materials)
         {
             var root = CreateChildRoot(ArmoryTurretGripMountName, parent);
-            CreateBox(ArmoryTurretGripMountName + " Rail", root.transform, new Vector3(-14f, 1.12f, -11.2f), new Vector3(2.2f, 0.18f, 0.26f), materials.Metal);
-            CreateCylinder(ArmoryTurretGripMountName + " Pivot", root.transform, new Vector3(-14f, 0.88f, -11.22f), new Vector3(0.16f, 0.22f, 0.16f), materials.Metal, Quaternion.Euler(90f, 0f, 0f));
-            CreateBox(ArmoryTurretGripMountName + " Left Grip", root.transform, new Vector3(-14.38f, 0.58f, -11.18f), new Vector3(0.14f, 0.52f, 0.14f), materials.DarkRubber, Quaternion.Euler(0f, 0f, 10f));
-            CreateBox(ArmoryTurretGripMountName + " Right Grip", root.transform, new Vector3(-13.62f, 0.58f, -11.18f), new Vector3(0.14f, 0.52f, 0.14f), materials.DarkRubber, Quaternion.Euler(0f, 0f, -10f));
-            CreateBox(ArmoryTurretGripMountName + " Sight Hood", root.transform, new Vector3(-14f, 1.38f, -11.08f), new Vector3(0.72f, 0.18f, 0.32f), materials.Metal);
-            CreateBox(ArmoryTurretGripMountName + " Trigger Bar", root.transform, new Vector3(-14f, 0.48f, -11.02f), new Vector3(0.58f, 0.08f, 0.08f), materials.Warning);
+            CreateBox(ArmoryTurretGripMountName + " Rail", root.transform, new Vector3(-14f, 1.22f, -10.52f), new Vector3(2.05f, 0.18f, 0.2f), materials.Metal);
+            CreateCylinder(ArmoryTurretGripMountName + " Pivot", root.transform, new Vector3(-14f, 0.98f, -10.58f), new Vector3(0.18f, 0.18f, 0.18f), materials.Metal, Quaternion.Euler(90f, 0f, 0f));
+            CreateBox(ArmoryTurretGripMountName + " Left Grip", root.transform, new Vector3(-14.42f, 0.68f, -10.72f), new Vector3(0.14f, 0.56f, 0.14f), materials.DarkRubber, Quaternion.Euler(0f, 0f, 10f));
+            CreateBox(ArmoryTurretGripMountName + " Right Grip", root.transform, new Vector3(-13.58f, 0.68f, -10.72f), new Vector3(0.14f, 0.56f, 0.14f), materials.DarkRubber, Quaternion.Euler(0f, 0f, -10f));
+            CreateBox(ArmoryTurretGripMountName + " Sight Hood", root.transform, new Vector3(-14f, 1.5f, -10.72f), new Vector3(0.72f, 0.18f, 0.32f), materials.Metal);
+            CreateBox(ArmoryTurretGripMountName + " Trigger Bar", root.transform, new Vector3(-14f, 0.58f, -10.88f), new Vector3(0.62f, 0.08f, 0.08f), materials.Warning);
         }
 
         private static void CreateCargoProps(Transform parent, Stage3Materials materials)
@@ -247,34 +254,34 @@ namespace Bellerophon.Editor.Validation
         private static void CreateContractCargoContainer(Transform parent, Stage3Materials materials)
         {
             var root = CreateChildRoot(ContractCargoContainerName, parent);
-            CreateBox(ContractCargoBodyName, root.transform, new Vector3(0f, -1.78f, -0.05f), new Vector3(2.6f, 1.18f, 1.55f), materials.Cargo);
-            CreateBox(ContractCargoContainerName + " Top Frame", root.transform, new Vector3(0f, -1.16f, -0.05f), new Vector3(2.78f, 0.08f, 1.72f), materials.Metal);
-            CreateBox(ContractCargoContainerName + " Bottom Frame", root.transform, new Vector3(0f, -2.4f, -0.05f), new Vector3(2.78f, 0.08f, 1.72f), materials.Metal);
-            CreateBox(ContractCargoContainerName + " Left Frame", root.transform, new Vector3(-1.38f, -1.78f, -0.05f), new Vector3(0.08f, 1.22f, 1.72f), materials.Metal);
-            CreateBox(ContractCargoContainerName + " Right Frame", root.transform, new Vector3(1.38f, -1.78f, -0.05f), new Vector3(0.08f, 1.22f, 1.72f), materials.Metal);
-            CreateBox(ContractCargoStrapHorizontalName, root.transform, new Vector3(0f, -1.78f, -0.86f), new Vector3(2.85f, 0.13f, 0.08f), materials.DarkRubber);
-            CreateBox(ContractCargoStrapVerticalName, root.transform, new Vector3(0f, -1.78f, -0.89f), new Vector3(0.13f, 1.18f, 0.08f), materials.DarkRubber);
-            CreateBox(ContractCargoContainerName + " Bracket Left", root.transform, new Vector3(-1.47f, -1.78f, -0.92f), new Vector3(0.14f, 0.32f, 0.11f), materials.Metal);
-            CreateBox(ContractCargoContainerName + " Bracket Right", root.transform, new Vector3(1.47f, -1.78f, -0.92f), new Vector3(0.14f, 0.32f, 0.11f), materials.Metal);
-            CreateBox(ContractCargoContainerName + " Bracket Top", root.transform, new Vector3(0f, -1.09f, -0.92f), new Vector3(0.36f, 0.12f, 0.11f), materials.Metal);
-            CreateBox(ContractCargoContainerName + " Bracket Bottom", root.transform, new Vector3(0f, -2.47f, -0.92f), new Vector3(0.36f, 0.12f, 0.11f), materials.Metal);
-            CreateBox(ContractCargoContainerName + " Lock Tag", root.transform, new Vector3(0.35f, -1.55f, -0.94f), new Vector3(0.26f, 0.18f, 0.035f), materials.Yellow);
+            CreateBox(ContractCargoBodyName, root.transform, new Vector3(0f, -2.3f, 0f), new Vector3(2.62f, 1.38f, 3.02f), materials.Cargo);
+            CreateBox(ContractCargoContainerName + " Top Frame", root.transform, new Vector3(0f, -1.56f, 0f), new Vector3(2.82f, 0.08f, 3.18f), materials.Metal);
+            CreateBox(ContractCargoContainerName + " Bottom Frame", root.transform, new Vector3(0f, -2.96f, 0f), new Vector3(2.82f, 0.08f, 3.18f), materials.Metal);
+            CreateBox(ContractCargoContainerName + " Left Frame", root.transform, new Vector3(-1.38f, -2.3f, 0f), new Vector3(0.08f, 1.38f, 3.18f), materials.Metal);
+            CreateBox(ContractCargoContainerName + " Right Frame", root.transform, new Vector3(1.38f, -2.3f, 0f), new Vector3(0.08f, 1.38f, 3.18f), materials.Metal);
+            CreateBox(ContractCargoStrapHorizontalName, root.transform, new Vector3(0f, -2.3f, -1.56f), new Vector3(2.95f, 0.18f, 0.11f), materials.DarkRubber);
+            CreateBox(ContractCargoStrapVerticalName, root.transform, new Vector3(0f, -2.3f, -1.59f), new Vector3(0.18f, 1.32f, 0.11f), materials.DarkRubber);
+            CreateBox(ContractCargoContainerName + " Bracket Left", root.transform, new Vector3(-1.49f, -2.3f, -1.64f), new Vector3(0.15f, 0.34f, 0.12f), materials.Metal);
+            CreateBox(ContractCargoContainerName + " Bracket Right", root.transform, new Vector3(1.49f, -2.3f, -1.64f), new Vector3(0.15f, 0.34f, 0.12f), materials.Metal);
+            CreateBox(ContractCargoContainerName + " Bracket Top", root.transform, new Vector3(0f, -1.54f, -1.64f), new Vector3(0.38f, 0.14f, 0.12f), materials.Metal);
+            CreateBox(ContractCargoContainerName + " Bracket Bottom", root.transform, new Vector3(0f, -2.9f, -1.64f), new Vector3(0.38f, 0.14f, 0.12f), materials.Metal);
+            CreateBox(ContractCargoContainerName + " Lock Tag", root.transform, new Vector3(0.36f, -2.04f, -1.68f), new Vector3(0.28f, 0.2f, 0.045f), materials.Yellow);
         }
 
         private static void CreatePersonalCargoContainer(Transform parent, Stage3Materials materials)
         {
             var root = CreateChildRoot(PersonalCargoContainerName, parent);
-            CreateBox(PersonalCargoContainerName + " Body", root.transform, new Vector3(3.05f, -2.03f, -0.55f), new Vector3(1.2f, 0.68f, 0.92f), materials.Cargo);
-            CreateBox(PersonalCargoContainerName + " Lid Rail", root.transform, new Vector3(3.05f, -1.64f, -0.55f), new Vector3(1.3f, 0.08f, 1.0f), materials.Metal);
-            CreateBox(PersonalCargoContainerName + " Front Strap", root.transform, new Vector3(3.05f, -2.03f, -1.05f), new Vector3(1.32f, 0.1f, 0.07f), materials.DarkRubber);
-            CreateBox(PersonalCargoContainerName + " Name Plate", root.transform, new Vector3(2.68f, -1.86f, -1.09f), new Vector3(0.32f, 0.16f, 0.04f), materials.Yellow);
+            CreateBox(PersonalCargoContainerName + " Body", root.transform, new Vector3(3.05f, -2.66f, -0.55f), new Vector3(1.2f, 0.68f, 0.92f), materials.Cargo);
+            CreateBox(PersonalCargoContainerName + " Lid Rail", root.transform, new Vector3(3.05f, -2.28f, -0.55f), new Vector3(1.3f, 0.08f, 1.0f), materials.Metal);
+            CreateBox(PersonalCargoContainerName + " Front Strap", root.transform, new Vector3(3.05f, -2.66f, -1.05f), new Vector3(1.32f, 0.1f, 0.07f), materials.DarkRubber);
+            CreateBox(PersonalCargoContainerName + " Name Plate", root.transform, new Vector3(2.68f, -2.49f, -1.09f), new Vector3(0.32f, 0.16f, 0.04f), materials.Yellow);
         }
 
         private static void CreateWarningLabelSet(Transform parent, Stage3Materials materials)
         {
             var root = CreateChildRoot(WarningLabelSetName, parent);
-            CreateBox(WarningLabelSetName + " Cargo Warning", root.transform, new Vector3(-0.58f, -1.44f, -0.94f), new Vector3(0.34f, 0.18f, 0.035f), materials.Warning);
-            CreateBox(WarningLabelSetName + " Cargo Mass Label", root.transform, new Vector3(-0.98f, -1.44f, -0.94f), new Vector3(0.34f, 0.18f, 0.035f), materials.Yellow);
+            CreateBox(WarningLabelSetName + " Cargo Warning", root.transform, new Vector3(-0.58f, -1.98f, -1.68f), new Vector3(0.34f, 0.18f, 0.035f), materials.Warning);
+            CreateBox(WarningLabelSetName + " Cargo Mass Label", root.transform, new Vector3(-0.98f, -1.98f, -1.68f), new Vector3(0.34f, 0.18f, 0.035f), materials.Yellow);
             CreateBox(WarningLabelSetName + " Supply Caution", root.transform, new Vector3(11.22f, 0.32f, -14.92f), new Vector3(0.44f, 0.2f, 0.04f), materials.Warning);
             CreateBox(WarningLabelSetName + " Armory Hot Surface", root.transform, new Vector3(-13.35f, 1.05f, -11.02f), new Vector3(0.34f, 0.16f, 0.04f), materials.Yellow);
         }
@@ -367,15 +374,15 @@ namespace Bellerophon.Editor.Validation
         private static void CreateDiegeticTerminalShell(Transform parent, Stage3Materials materials)
         {
             var root = CreateChildRoot(DiegeticTerminalShellName, parent);
-            CreateBox(DiegeticTerminalShellName + " Pedestal", root.transform, new Vector3(2.15f, -1.95f, 2.78f), new Vector3(0.58f, 0.82f, 0.46f), materials.Metal);
-            CreateBox(DiegeticTerminalShellName + " Angled Shell", root.transform, new Vector3(2.15f, -1.42f, 2.64f), new Vector3(1.15f, 0.42f, 0.32f), materials.Metal, Quaternion.Euler(-16f, 0f, 0f));
-            CreateBox(DiegeticTerminalScreenBackingName, root.transform, new Vector3(2.15f, -1.29f, 2.45f), new Vector3(0.86f, 0.26f, 0.035f), materials.Screen, Quaternion.Euler(-16f, 0f, 0f));
+            CreateBox(DiegeticTerminalShellName + " Pedestal", root.transform, new Vector3(2.15f, -2.59f, 2.78f), new Vector3(0.58f, 0.82f, 0.46f), materials.Metal);
+            CreateBox(DiegeticTerminalShellName + " Angled Shell", root.transform, new Vector3(2.15f, -2.06f, 2.64f), new Vector3(1.15f, 0.42f, 0.32f), materials.Metal, Quaternion.Euler(-16f, 0f, 0f));
+            CreateBox(DiegeticTerminalScreenBackingName, root.transform, new Vector3(2.15f, -1.93f, 2.45f), new Vector3(0.86f, 0.26f, 0.035f), materials.Screen, Quaternion.Euler(-16f, 0f, 0f));
             for (var i = 0; i < 6; i++)
             {
                 CreateBox(
                     DiegeticTerminalButtonMeshName + " " + (i + 1),
                     root.transform,
-                    new Vector3(1.78f + (i * 0.15f), -1.55f, 2.38f),
+                    new Vector3(1.78f + (i * 0.15f), -2.19f, 2.38f),
                     new Vector3(0.08f, 0.045f, 0.035f),
                     i % 3 == 0 ? materials.Warning : materials.Yellow,
                     Quaternion.Euler(-16f, 0f, 0f));
@@ -416,9 +423,9 @@ namespace Bellerophon.Editor.Validation
         private static GameObject CreateFirstPersonCrowbar(Transform parent, Stage3Materials materials)
         {
             var root = CreateChildRoot(CrowbarModelName, parent);
-            root.transform.localPosition = new Vector3(0.44f, -0.54f, 1.06f);
-            root.transform.localRotation = Quaternion.Euler(8f, -18f, -27f);
-            root.transform.localScale = Vector3.one * 0.92f;
+            root.transform.localPosition = new Vector3(0.15f, 0f, 0.88f);
+            root.transform.localRotation = Quaternion.Euler(32f, -18f, -42f);
+            root.transform.localScale = Vector3.one * 1.02f;
 
             CreateCrowbarContinuousBody(root.transform, materials.CrowbarSteel);
             return root;
@@ -564,16 +571,16 @@ namespace Bellerophon.Editor.Validation
 
             AppendCrowbarBezierSections(
                 sections,
-                new Vector3(0.080f, -0.560f, 0f),
-                new Vector3(0.052f, -0.548f, 0f),
-                new Vector3(0.018f, -0.486f, 0f),
+                new Vector3(0.118f, -0.670f, 0f),
+                new Vector3(0.094f, -0.642f, 0f),
+                new Vector3(0.024f, -0.520f, 0f),
                 new Vector3(0.004f, -0.420f, 0f),
-                8,
+                10,
                 false,
-                0.012f,
-                0.028f,
-                0.008f,
-                0.026f);
+                0.003f,
+                0.040f,
+                0.002f,
+                0.034f);
 
             AppendCrowbarLineSections(
                 sections,
@@ -581,10 +588,10 @@ namespace Bellerophon.Editor.Validation
                 new Vector3(-0.002f, 0.390f, 0f),
                 22,
                 true,
-                0.028f,
-                0.027f,
-                0.026f,
-                0.027f);
+                0.038f,
+                0.036f,
+                0.034f,
+                0.036f);
 
             AppendCrowbarBezierSections(
                 sections,
@@ -594,23 +601,23 @@ namespace Bellerophon.Editor.Validation
                 new Vector3(-0.130f, 0.504f, 0f),
                 14,
                 true,
-                0.027f,
-                0.024f,
-                0.027f,
-                0.021f);
+                0.036f,
+                0.032f,
+                0.036f,
+                0.028f);
 
             AppendCrowbarBezierSections(
                 sections,
                 new Vector3(-0.130f, 0.504f, 0f),
-                new Vector3(-0.170f, 0.504f, 0f),
-                new Vector3(-0.204f, 0.480f, 0f),
-                new Vector3(-0.218f, 0.444f, 0f),
-                10,
+                new Vector3(-0.176f, 0.504f, 0f),
+                new Vector3(-0.226f, 0.472f, 0f),
+                new Vector3(-0.255f, 0.430f, 0f),
+                12,
                 true,
-                0.024f,
-                0.010f,
-                0.021f,
-                0.008f);
+                0.032f,
+                0.004f,
+                0.028f,
+                0.003f);
 
             return sections;
         }

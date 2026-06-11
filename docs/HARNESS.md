@@ -36,6 +36,7 @@
 - For art-heavy runtime integration, use a focused art smoke or editor validation that checks the approved sample scope explicitly: required objects exist, sample-only review objects are absent, unpurchased or inactive equipment is hidden, generated materials use supported shaders, and first-person items do not block the camera/HUD.
 - The focused art validation log must expose art-specific markers instead of only a generic pass marker. Example: `SampleOnlyLooseProps=0`, `CargoStraps=2`, `DeviceSurfaces=7`, `ArtSampleMatch=True`, or another task-specific count.
 - When the art issue is visual shape, silhouette, placement, lighting, or screen readability, run a screenshot/render review path or capture a comparable preview before claiming completion. Structural tests alone are insufficient.
+- Before creating an `artSample/` file, define how the approved sample would be translated into Unity: target scene or prefab, runtime root, anchor/interactable, camera viewpoint, scale, collision boundary, state-driven visibility, and which sample-only elements must stay out of live placement.
 - `artSample/` files must explain review intent in Korean by default. Use English only for file names, code identifiers, proper names, and unavoidable asset labels.
 
 ## Detailed Step 8 Phase15 Smoke

@@ -23,6 +23,8 @@ Proposed runtime asset folders:
 
 Do not create or attach runtime assets in these folders until the relevant `artSample/` review is approved.
 
+Before drawing or building an `artSample/` preview, write down how the approved sample would become Unity content: target scene or prefab, runtime root, existing anchor or interactable, camera viewpoint, scale, collision boundary, state-driven visibility, and which review-only pieces must remain outside live placement. The sample should make those runtime assumptions visible enough that approval can be translated into implementation without guessing.
+
 ## Naming Policy
 
 Use stable ASCII asset names for runtime files.

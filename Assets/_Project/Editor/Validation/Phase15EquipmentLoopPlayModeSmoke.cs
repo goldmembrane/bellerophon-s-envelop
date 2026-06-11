@@ -261,6 +261,8 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Equipment HUD must show the issued stick.");
             }
 
+            AssertStage3FirstPersonStickVisualIfPresent();
+
             ClickButtonThroughUi(startController.TutorialContractButton);
             deviceState.TickTransportRun(60f);
             settlementController.ProcessTransportArrival();
@@ -545,6 +547,49 @@ namespace Bellerophon.Editor.Validation
             }
 
             return $"Wallet=51; Slots=3/3; StickHit={stickHit.Damage}; MusketHit={musketHit.Damage}; Reload={reload.Outcome}; Intruder={deviceState.CurrentSeedIntruder.Intruder.Resolution}; Shop=Step8ItemEffects";
+        }
+
+        private static void AssertStage3FirstPersonStickVisualIfPresent()
+        {
+            var visualController = UnityEngine.Object.FindFirstObjectByType<FirstPersonEquipmentVisualController>();
+            if (visualController == null)
+            {
+                return;
+            }
+
+            visualController.RefreshForValidation();
+            if (visualController.StickVisual == null || !visualController.StickVisual.activeInHierarchy)
+            {
+                throw new InvalidOperationException("Stage 3 first-person stick/crowbar visual must be active after the association stick is issued.");
+            }
+
+            var renderer = visualController.StickVisual.GetComponentInChildren<MeshRenderer>(false);
+            if (renderer == null || !renderer.enabled)
+            {
+                throw new InvalidOperationException("Stage 3 first-person stick/crowbar visual must have an enabled active renderer in Play Mode.");
+            }
+
+            var camera = Camera.main ?? UnityEngine.Object.FindFirstObjectByType<Camera>();
+            if (camera == null)
+            {
+                throw new InvalidOperationException("Stage 3 first-person stick/crowbar Play Mode validation requires a camera.");
+            }
+
+            var viewportCenter = camera.WorldToViewportPoint(renderer.bounds.center);
+            if (viewportCenter.z <= 0f ||
+                viewportCenter.x < 0.35f ||
+                viewportCenter.x > 0.9f ||
+                viewportCenter.y < 0.05f ||
+                viewportCenter.y > 0.75f)
+            {
+                throw new InvalidOperationException(
+                    "Stage 3 first-person stick/crowbar visual must be inside the playable camera view. ViewportCenter=" +
+                    viewportCenter.x.ToString("0.00") +
+                    "," +
+                    viewportCenter.y.ToString("0.00") +
+                    "," +
+                    viewportCenter.z.ToString("0.00"));
+            }
         }
 
         private static void ClickButtonThroughUi(Button button)

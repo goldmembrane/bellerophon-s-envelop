@@ -1628,9 +1628,9 @@ namespace Bellerophon.Editor.Validation
             textMesh.text = text;
             textMesh.anchor = TextAnchor.MiddleCenter;
             textMesh.alignment = TextAlignment.Center;
-            textMesh.characterSize = 0.055f;
-            textMesh.fontSize = 48;
-            textMesh.color = new Color(0.82f, 0.92f, 0.88f, 1f);
+            textMesh.characterSize = 0.026f;
+            textMesh.fontSize = 30;
+            textMesh.color = new Color(0.82f, 0.92f, 0.88f, 0.45f);
         }
 
         private static Material EnsureMaterial(string path, Color color)

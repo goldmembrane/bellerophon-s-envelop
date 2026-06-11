@@ -264,6 +264,13 @@
 - 샘플 범위는 1인칭 stick/musket 배치, protective suit readout, 무기실 turret grip/mount, cockpit/control/engine/cargo/supply 장치 표면, contract/personal cargo와 strap/bracket, 특수 장비 silhouette, corridor purifier 정비 장착형 icon 방향, normal/damaged material variant다.
 - 승인 전 샘플이며 Unity 씬, 프리팹, 런타임 자산, UI 흐름에는 연결하지 않았다.
 
+2026-06-11 artSample Unity 반영 규칙:
+
+- 이후 `artSample/`을 만들 때는 독립적인 그림이나 장식 시안으로만 만들지 않는다.
+- 샘플 작성 전에 승인 후 Unity에서 어느 씬, 프리팹, 런타임 루트, 상호작용 앵커, 카메라 시점, 충돌 기준에 어떻게 반영될지 먼저 정한다.
+- 샘플에는 축척, 위치, 부품 경계, 상태 전환, 표시/비표시 조건, 샘플 전용으로만 남겨야 하는 요소를 드러낸다.
+- 런타임 통합 때는 샘플의 모든 시각 요소를 무조건 배치하지 말고, 실제 게임 상태와 연결되는 요소만 씬에 붙인다.
+
 2026-06-10 구현 상태:
 
 - 사용자가 stage 3 샘플을 승인했고, 해당 방향을 `CargoRunMvp`에 통합했다.

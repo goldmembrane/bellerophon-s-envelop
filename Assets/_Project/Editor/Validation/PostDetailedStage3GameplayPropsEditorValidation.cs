@@ -12,6 +12,8 @@ namespace Bellerophon.Editor.Validation
 {
     public static class PostDetailedStage3GameplayPropsEditorValidation
     {
+        private const float CargoHoldDeckY = -3f;
+
         [MenuItem("Bellerophon/Validation/Run Post-Detailed Stage 3 Gameplay Props Validation")]
         public static void Run()
         {
@@ -34,6 +36,7 @@ namespace Bellerophon.Editor.Validation
 
             Phase20PresentationEditorValidation.Run();
             RequireStage2Anchors();
+            AssertGeneratedLabelsAreSubtle();
 
             var stageRoot = RequireObject(PostDetailedStage3GameplayPropsBootstrap.Stage3RootName);
             var worldRendererCount = AssertRendererCount(stageRoot, 60, "stage 3 world prop root");
@@ -49,6 +52,7 @@ namespace Bellerophon.Editor.Validation
 
             AssertPresentationObject(PostDetailedStage3GameplayPropsBootstrap.ContractCargoContainerName, 12);
             AssertContractCargoStraps();
+            AssertCargoHoldPropGroundingAndInteractionConnection();
             AssertPresentationObject(PostDetailedStage3GameplayPropsBootstrap.PersonalCargoContainerName, 4);
             AssertPresentationObject(PostDetailedStage3GameplayPropsBootstrap.WarningLabelSetName, 4);
             AssertNoSampleOnlyLooseProps();
@@ -110,6 +114,46 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
+        private static void AssertCargoHoldPropGroundingAndInteractionConnection()
+        {
+            var centralCargo = RequireObject("Cargo Hold Central Cargo");
+            var body = RequireObject(PostDetailedStage3GameplayPropsBootstrap.ContractCargoBodyName);
+            if (Vector3.Distance(body.transform.position, centralCargo.transform.position) > 0.16f)
+            {
+                throw new InvalidOperationException("Stage 3 contract cargo must remain aligned with the original cargo-hold central cargo target.");
+            }
+
+            if (Mathf.Abs(body.transform.lossyScale.y - centralCargo.transform.lossyScale.y) > 0.12f ||
+                Mathf.Abs(body.transform.lossyScale.z - centralCargo.transform.lossyScale.z) > 0.16f)
+            {
+                throw new InvalidOperationException("Stage 3 contract cargo must read as a fitted upgrade to the original beige cargo brick.");
+            }
+
+            var statusInteractable = RequireObject("Interactable - Cargo Hold Cargo Status");
+            var statusPanel = RequireObject(PostDetailedStage3GameplayPropsBootstrap.CargoHoldStatusPanelName + " Panel Frame");
+            if (Vector3.Distance(statusPanel.transform.position, statusInteractable.transform.position) > 0.32f)
+            {
+                throw new InvalidOperationException("Stage 3 cargo status panel must be attached to the existing cargo status interactable block.");
+            }
+
+            if (statusPanel.transform.position.z >= statusInteractable.transform.position.z)
+            {
+                throw new InvalidOperationException("Stage 3 cargo status panel must sit on the visible front side of the cargo status interactable.");
+            }
+
+            AssertBottomNearCargoHoldDeck(RequireObject(PostDetailedStage3GameplayPropsBootstrap.PersonalCargoContainerName + " Body"), "personal cargo container");
+            AssertBottomNearCargoHoldDeck(RequireObject(PostDetailedStage3GameplayPropsBootstrap.DiegeticTerminalShellName + " Pedestal"), "diegetic terminal pedestal");
+        }
+
+        private static void AssertBottomNearCargoHoldDeck(GameObject gameObject, string label)
+        {
+            var bottom = gameObject.transform.position.y - (gameObject.transform.lossyScale.y * 0.5f);
+            if (Mathf.Abs(bottom - CargoHoldDeckY) > 0.08f)
+            {
+                throw new InvalidOperationException("Stage 3 " + label + " must rest on the cargo hold deck. BottomY=" + bottom.ToString("0.00"));
+            }
+        }
+
         private static void AssertNoSampleOnlyLooseProps()
         {
             RequireMissingObject(PostDetailedStage3GameplayPropsBootstrap.RepairPanelKitName);
@@ -140,7 +184,7 @@ namespace Bellerophon.Editor.Validation
             AssertContinuousCrowbarModel();
             AssertPresentationObject(PostDetailedStage3GameplayPropsBootstrap.MusketModelName, 12);
             AssertPresentationObject(PostDetailedStage3GameplayPropsBootstrap.ProtectiveSuitReadoutName, 3);
-            AssertActiveFirstPersonWeaponVisuals(visualController, deviceState);
+            AssertActiveFirstPersonWeaponVisuals(visualController, deviceState, cameraObject.GetComponent<Camera>());
             AssertMaterials(preview, "stage 3 first-person preview");
             AssertFirstPersonBounds(preview, cameraObject.transform);
             return preview.GetComponentsInChildren<MeshRenderer>(true).Length;
@@ -167,6 +211,35 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Stage 3 crowbar continuous mesh is too coarse to read as a smooth crowbar.");
             }
 
+            var bounds = mesh.bounds;
+            if (bounds.min.y > -0.64f || bounds.max.x < 0.11f)
+            {
+                throw new InvalidOperationException("Stage 3 crowbar must have an extended pointed pry tip instead of a blunt rounded end.");
+            }
+
+            var lowerTipMin = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+            var lowerTipMax = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
+            var lowerTipVertexCount = 0;
+            var vertices = mesh.vertices;
+            for (var i = 0; i < vertices.Length; i++)
+            {
+                if (vertices[i].y > bounds.min.y + 0.025f)
+                {
+                    continue;
+                }
+
+                lowerTipMin = Vector3.Min(lowerTipMin, vertices[i]);
+                lowerTipMax = Vector3.Max(lowerTipMax, vertices[i]);
+                lowerTipVertexCount++;
+            }
+
+            if (lowerTipVertexCount == 0 ||
+                lowerTipMax.x - lowerTipMin.x > 0.035f ||
+                lowerTipMax.z - lowerTipMin.z > 0.035f)
+            {
+                throw new InvalidOperationException("Stage 3 crowbar lower tip must taper to a sharp weapon-like point.");
+            }
+
             RequireMissingObject(PostDetailedStage3GameplayPropsBootstrap.CrowbarModelName + " Round Main Shaft");
             RequireMissingObject(PostDetailedStage3GameplayPropsBootstrap.CrowbarModelName + " Upper Hook Neck");
             RequireMissingObject(PostDetailedStage3GameplayPropsBootstrap.CrowbarModelName + " Hook Flattened Claw");
@@ -176,7 +249,8 @@ namespace Bellerophon.Editor.Validation
 
         private static void AssertActiveFirstPersonWeaponVisuals(
             FirstPersonEquipmentVisualController visualController,
-            ShipDeviceInteractionState deviceState)
+            ShipDeviceInteractionState deviceState,
+            Camera camera)
         {
             if (visualController.StickVisual == null ||
                 visualController.MusketVisual == null ||
@@ -185,22 +259,152 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Stage 3 first-person visual controller is missing one or more configured visual roots.");
             }
 
+            if (camera == null)
+            {
+                throw new InvalidOperationException("Stage 3 first-person crowbar visibility validation requires a Camera component on Player Camera.");
+            }
+
             var original = deviceState.CurrentEquipmentState;
             var stickState = PlayerEquipmentState.CreateDefaultAssociationIssue();
             var musketState = stickState
                 .WithHandSlot(1, EquipmentSlotState.One(EquipmentItemKind.Musket))
                 .WithActiveHandSlot(1);
 
-            deviceState.SetEquipmentState(stickState);
-            visualController.RefreshForValidation();
-            AssertWeaponVisualState(visualController, true, false, false, "Stick default state");
+            try
+            {
+                deviceState.SetEquipmentState(stickState);
+                visualController.RefreshForValidation();
+                AssertWeaponVisualState(visualController, true, false, false, "Stick default state");
+                AssertActiveStickViewportVisibility(camera, visualController.StickVisual);
 
-            deviceState.SetEquipmentState(musketState);
-            visualController.RefreshForValidation();
-            AssertWeaponVisualState(visualController, false, true, false, "Musket active state");
+                deviceState.SetEquipmentState(musketState);
+                visualController.RefreshForValidation();
+                AssertWeaponVisualState(visualController, false, true, false, "Musket active state");
+            }
+            finally
+            {
+                deviceState.SetEquipmentState(original);
+                visualController.RefreshForValidation();
+            }
+        }
 
-            deviceState.SetEquipmentState(original);
-            visualController.RefreshForValidation();
+        private static void AssertActiveStickViewportVisibility(Camera camera, GameObject stickVisual)
+        {
+            var renderer = stickVisual.GetComponentInChildren<MeshRenderer>(false);
+            if (renderer == null)
+            {
+                throw new InvalidOperationException("Stage 3 stick/crowbar visual is active but has no active renderer.");
+            }
+
+            var viewportBounds = CalculateViewportBounds(camera, renderer, renderer.name);
+            var center = viewportBounds.center;
+            if (viewportBounds.width < 0.035f || viewportBounds.height < 0.16f)
+            {
+                throw new InvalidOperationException(
+                    "Stage 3 crowbar is too small or edge-on in the first-person camera. ViewportSize=" +
+                    viewportBounds.width.ToString("0.00") +
+                    "x" +
+                    viewportBounds.height.ToString("0.00"));
+            }
+
+            if (center.x < 0.5f || center.x > 0.88f || center.y < 0.16f || center.y > 0.62f)
+            {
+                throw new InvalidOperationException(
+                    "Stage 3 crowbar must sit in the lower-right first-person equipment band. ViewportCenter=" +
+                    center.x.ToString("0.00") +
+                    "," +
+                    center.y.ToString("0.00"));
+            }
+
+            if (viewportBounds.xMax > 0.9f && viewportBounds.yMin < 0.32f)
+            {
+                throw new InvalidOperationException(
+                    "Stage 3 crowbar overlaps the minimap-safe corner too strongly. ViewportBounds=" +
+                    viewportBounds.xMin.ToString("0.00") +
+                    "," +
+                    viewportBounds.yMin.ToString("0.00") +
+                    "-" +
+                    viewportBounds.xMax.ToString("0.00") +
+                    "," +
+                    viewportBounds.yMax.ToString("0.00"));
+            }
+        }
+
+        private static Rect CalculateViewportBounds(Camera camera, MeshRenderer renderer, string label)
+        {
+            var meshFilter = renderer.GetComponent<MeshFilter>();
+            if (meshFilter != null && meshFilter.sharedMesh != null && meshFilter.sharedMesh.vertexCount > 0)
+            {
+                return CalculateViewportBounds(camera, meshFilter.sharedMesh.vertices, renderer.transform, label);
+            }
+
+            return CalculateViewportBounds(camera, renderer.bounds, label);
+        }
+
+        private static Rect CalculateViewportBounds(Camera camera, Vector3[] localVertices, Transform vertexTransform, string label)
+        {
+            var min = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+            var max = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
+            var visibleVertexCount = 0;
+            var step = Mathf.Max(1, localVertices.Length / 512);
+
+            for (var i = 0; i < localVertices.Length; i += step)
+            {
+                var worldPoint = vertexTransform.TransformPoint(localVertices[i]);
+                var viewportPoint = camera.WorldToViewportPoint(worldPoint);
+                if (viewportPoint.z <= 0f)
+                {
+                    continue;
+                }
+
+                var viewportPosition = new Vector2(viewportPoint.x, viewportPoint.y);
+                min = Vector2.Min(min, viewportPosition);
+                max = Vector2.Max(max, viewportPosition);
+                visibleVertexCount++;
+            }
+
+            if (visibleVertexCount == 0)
+            {
+                throw new InvalidOperationException("Stage 3 first-person mesh is behind the camera: " + label);
+            }
+
+            return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+        }
+
+        private static Rect CalculateViewportBounds(Camera camera, Bounds bounds, string label)
+        {
+            var extents = bounds.extents;
+            var min = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+            var max = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
+            var visibleCornerCount = 0;
+
+            for (var x = -1; x <= 1; x += 2)
+            {
+                for (var y = -1; y <= 1; y += 2)
+                {
+                    for (var z = -1; z <= 1; z += 2)
+                    {
+                        var corner = bounds.center + new Vector3(extents.x * x, extents.y * y, extents.z * z);
+                        var viewportPoint = camera.WorldToViewportPoint(corner);
+                        if (viewportPoint.z <= 0f)
+                        {
+                            continue;
+                        }
+
+                        var viewportPosition = new Vector2(viewportPoint.x, viewportPoint.y);
+                        min = Vector2.Min(min, viewportPosition);
+                        max = Vector2.Max(max, viewportPosition);
+                        visibleCornerCount++;
+                    }
+                }
+            }
+
+            if (visibleCornerCount == 0)
+            {
+                throw new InvalidOperationException("Stage 3 first-person renderer is behind the camera: " + label);
+            }
+
+            return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
         }
 
         private static void AssertWeaponVisualState(
@@ -260,6 +464,36 @@ namespace Bellerophon.Editor.Validation
                         center.x.ToString("0.00") +
                         ", LocalY=" +
                         center.y.ToString("0.00"));
+                }
+            }
+        }
+
+        private static void AssertGeneratedLabelsAreSubtle()
+        {
+            var activeScene = SceneManager.GetActiveScene();
+            var textMeshes = Resources.FindObjectsOfTypeAll<TextMesh>();
+            for (var i = 0; i < textMeshes.Length; i++)
+            {
+                var textMesh = textMeshes[i];
+                if (textMesh == null ||
+                    textMesh.gameObject.scene != activeScene ||
+                    (!textMesh.name.StartsWith("Label - ", StringComparison.Ordinal) &&
+                     !textMesh.name.StartsWith("Sign - ", StringComparison.Ordinal)))
+                {
+                    continue;
+                }
+
+                if (textMesh.characterSize > 0.03f || textMesh.fontSize > 32 || textMesh.color.a > 0.6f)
+                {
+                    throw new InvalidOperationException(
+                        "Production room labels must stay subtle after Stage 3 art integration. Label=" +
+                        textMesh.name +
+                        ", CharacterSize=" +
+                        textMesh.characterSize.ToString("0.000") +
+                        ", FontSize=" +
+                        textMesh.fontSize +
+                        ", Alpha=" +
+                        textMesh.color.a.ToString("0.00"));
                 }
             }
         }
