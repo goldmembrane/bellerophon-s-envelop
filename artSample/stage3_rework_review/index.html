@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stage 3 Rework Review Sample</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101211;
+      --panel: #171a18;
+      --line: #323833;
+      --text: #e8ece7;
+      --muted: #a9b0aa;
+      --accent: #78b39a;
+      --warn: #e3c36d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif;
+      line-height: 1.55;
+    }
+
+    header {
+      padding: 28px 32px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #111412;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 1120px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    main {
+      width: min(1480px, calc(100vw - 48px));
+      margin: 24px auto 48px;
+    }
+
+    .notice {
+      margin-bottom: 24px;
+      padding: 14px 16px;
+      border: 1px solid #4b4230;
+      background: #1a1710;
+      color: #e9d9ad;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 22px;
+    }
+
+    article {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .card-head {
+      display: grid;
+      gap: 10px;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tag {
+      border: 1px solid #3c4740;
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: #131714;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #0b0c0b;
+    }
+
+    .details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 16px 20px 20px;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    li + li {
+      margin-top: 3px;
+    }
+
+    code {
+      color: #dfe7df;
+      background: #0d100e;
+      border: 1px solid #28302a;
+      border-radius: 4px;
+      padding: 1px 4px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      header {
+        padding: 22px 18px 14px;
+      }
+
+      main {
+        width: min(100vw - 24px, 1480px);
+        margin-top: 14px;
+      }
+
+      .details {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Stage 3 게임플레이 소품 재검수 샘플</h1>
+    <p class="lead">현재 씬에 붙은 Stage 3 소품을 전면 교체하기 전에 보는 아트 검수용 샘플입니다. 각 보드는 부품별 클로즈업과 실제 구역 적용 모습을 함께 보여줍니다.</p>
+  </header>
+
+  <main>
+    <div class="notice">
+      승인 전 검토용입니다. 이 샘플은 현재 Unity 씬, 프리팹, 런타임 자산, UI 흐름에는 새로 연결하지 않았습니다. 2026-06-12 수정본은 통제실 CCTV를 단일 대형 스크린 구조로, 막대기를 빠루형 갈고리 끝단이 있는 양손 무기로 읽히는 길이와 자세로 고쳤습니다.
+    </div>
+
+    <section class="grid">
+      <article>
+        <div class="card-head">
+          <h2>조종실 조타 장치와 상태 화면</h2>
+          <div class="meta">
+            <span class="tag">조종실</span>
+            <span class="tag">조타 맵</span>
+            <span class="tag">상태 화면</span>
+          </div>
+        </div>
+        <img src="01_cockpit_helm_and_status_review.png" alt="조종실 조타 장치와 상태 화면 검수 보드">
+        <div class="details">
+          <div>
+            <h3>포함 항목</h3>
+            <ul>
+              <li>조종 콘솔 받침대, 기울어진 화면, 수동 출항 준비 상태 화면</li>
+              <li>조타 기둥, 조타 맵 조각, 좌우 손잡이</li>
+              <li>상태 화면 받침대와 발광 화면</li>
+            </ul>
+          </div>
+          <div>
+            <h3>적용 기준</h3>
+            <ul>
+              <li>조종대 상호작용 거리와 1인칭 시야를 가리지 않아야 합니다.</li>
+              <li>화려한 함교가 아니라 낡고 실용적인 화물선 조종석으로 보여야 합니다.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <div class="card-head">
+          <h2>통제실 단일 대형 CCTV 스크린</h2>
+          <div class="meta">
+            <span class="tag">통제실</span>
+            <span class="tag">대형 스크린</span>
+            <span class="tag">가로형 보조 스크린</span>
+            <span class="tag">세로형 스크린</span>
+          </div>
+        </div>
+        <img src="02_control_room_cctv_terminal_review.png" alt="통제실 단일 대형 CCTV 스크린 검수 보드">
+        <div class="details">
+          <div>
+            <h3>포함 항목</h3>
+            <ul>
+              <li>벽면 대형 CCTV 스크린 1개</li>
+              <li>대형 스크린 왼쪽 상단의 가로형 보조 스크린</li>
+              <li>대형 스크린 오른쪽의 세로형 구역 스크린</li>
+              <li>A/D 전환 버튼과 기능 버튼, 케이블 레일</li>
+            </ul>
+          </div>
+          <div>
+            <h3>적용 기준</h3>
+            <ul>
+              <li>모니터 여러 개가 나란히 달린 CCTV 뱅크로 만들지 않습니다.</li>
+              <li>CCTV는 대형 스크린 한 장에서 구역을 넘겨 보는 구조여야 합니다.</li>
+              <li>세로형 스크린은 구역 임시 폐쇄와 내부 정화 시스템 화면으로 이어질 수 있어야 합니다.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <div class="card-head">
+          <h2>동력실 전력 단말</h2>
+          <div class="meta">
+            <span class="tag">동력실</span>
+            <span class="tag">오버클럭</span>
+            <span class="tag">차단기</span>
+          </div>
+        </div>
+        <img src="03_engine_room_power_terminal_review.png" alt="동력실 전력 단말 검수 보드">
+        <div class="details">
+          <div>
+            <h3>포함 항목</h3>
+            <ul>
+              <li>단말 캐비닛, 전력 화면, 오버클럭 경고 표시</li>
+              <li>좌우 차단기와 상단 파이프, 하단 케이블</li>
+            </ul>
+          </div>
+          <div>
+            <h3>적용 기준</h3>
+            <ul>
+              <li>동력실 벽에 붙어 있는 전력 제어 장치로 보여야 합니다.</li>
+              <li>경고 표시는 화면 텍스트에 의존하지 않고 색과 형태로 읽혀야 합니다.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <div class="card-head">
+          <h2>비품창고 보관장</h2>
+          <div class="meta">
+            <span class="tag">비품창고</span>
+            <span class="tag">보관장</span>
+            <span class="tag">슬라이딩 문</span>
+          </div>
+        </div>
+        <img src="04_supply_room_storage_cabinet_review.png" alt="비품창고 보관장 검수 보드">
+        <div class="details">
+          <div>
+            <h3>포함 항목</h3>
+            <ul>
+              <li>보관장 뒤판</li>
+              <li>슬라이딩 문 1~6</li>
+              <li>손잡이 1~6</li>
+            </ul>
+          </div>
+          <div>
+            <h3>적용 기준</h3>
+            <ul>
+              <li>비품창고의 3칸 보관 루프를 시각적으로 뒷받침해야 합니다.</li>
+              <li>가정용 가구가 아니라 선박용 금속 보관장으로 보여야 합니다.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <div class="card-head">
+          <h2>운송창고 소품과 입출력 단말</h2>
+          <div class="meta">
+            <span class="tag">운송창고</span>
+            <span class="tag">화물 상태</span>
+            <span class="tag">의뢰 화물</span>
+            <span class="tag">개인 화물</span>
+          </div>
+        </div>
+        <img src="05_cargo_hold_props_and_terminal_review.png" alt="운송창고 소품과 입출력 단말 검수 보드">
+        <div class="details">
+          <div>
+            <h3>포함 항목</h3>
+            <ul>
+              <li>화물 상태 패널, 적재 상태 화면, 고정/과적 표시등, 클램프, 케이블 지지대</li>
+              <li>의뢰 화물 컨테이너 본체, 프레임, 가로/세로 스트랩, 브래킷, 잠금 태그</li>
+              <li>개인 화물 컨테이너 본체, 수평 레일, 전면 스트랩, 이름판</li>
+              <li>화물/비품/무기고 경고 라벨, 다이제틱 단말 받침대와 버튼</li>
+            </ul>
+          </div>
+          <div>
+            <h3>적용 기준</h3>
+            <ul>
+              <li>기존 <code>Cargo Hold Central Cargo</code>와 상태 상호작용 앵커에 맞아야 합니다.</li>
+              <li>화물은 직접 집는 물건이 아니라 운송 대상과 상태 오브젝트로 보여야 합니다.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <div class="card-head">
+          <h2>무기실 포탑 손잡이 마운트</h2>
+          <div class="meta">
+            <span class="tag">무기실</span>
+            <span class="tag">수동 포탑</span>
+            <span class="tag">조작 패드</span>
+          </div>
+        </div>
+        <img src="06_armory_turret_grip_mount_review.png" alt="무기실 포탑 손잡이 마운트 검수 보드">
+        <div class="details">
+          <div>
+            <h3>포함 항목</h3>
+            <ul>
+              <li>포탑 손잡이 레일과 회전축</li>
+              <li>왼쪽 손잡이, 오른쪽 손잡이</li>
+              <li>조작 패드와 방아쇠 바</li>
+            </ul>
+          </div>
+          <div>
+            <h3>적용 기준</h3>
+            <ul>
+              <li>손에 드는 총이 아니라 선박 포탑 조작 장치로 보여야 합니다.</li>
+              <li>상호작용 프롬프트 위치는 포탑 화면 진입 동선을 유지해야 합니다.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <div class="card-head">
+          <h2>1인칭 장비와 양손 막대기</h2>
+          <div class="meta">
+            <span class="tag">1인칭</span>
+            <span class="tag">막대기</span>
+            <span class="tag">머스켓</span>
+            <span class="tag">방호복 손목 표시 장치</span>
+          </div>
+        </div>
+        <img src="07_first_person_equipment_review.png" alt="1인칭 장비와 양손 막대기 검수 보드">
+        <div class="details">
+          <div>
+            <h3>포함 항목</h3>
+            <ul>
+              <li>양손으로 잡을 수 있는 긴 막대기 본체, 상하 길이감, 양손 그립 간격</li>
+              <li>빠루처럼 굽은 갈고리형 프라이 팁, 손잡이 감김, 금속 보강 링</li>
+              <li>머스켓 참고 형상과 방호복 손목 표시 장치</li>
+            </ul>
+          </div>
+          <div>
+            <h3>적용 기준</h3>
+            <ul>
+              <li>끝부분은 빠루처럼 갈고리 느낌이 나야 하지만, 전체 비율은 짧은 한손 크로우바가 아니라 양손 막대기로 보여야 합니다.</li>
+              <li>1인칭 적용 장면에서 두 손으로 들고 위에서 아래로 내려찍을 수 있는 자세가 보여야 합니다.</li>
+              <li>중앙 조작 시야, 오른쪽 하단 맵, 왼쪽 하단 체력/보호막 영역을 과하게 가리면 안 됩니다.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

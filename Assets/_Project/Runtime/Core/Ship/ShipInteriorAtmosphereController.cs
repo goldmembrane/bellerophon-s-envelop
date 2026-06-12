@@ -4,7 +4,7 @@ namespace Bellerophon.Core.Ship
 {
     public sealed class ShipInteriorAtmosphereController : MonoBehaviour
     {
-        public const float TargetFogDensity = 0.035f;
+        public const float TargetFogDensity = 0.044f;
         public const float TargetCameraFarClip = 42f;
 
         [SerializeField] private Camera targetCamera;
@@ -43,16 +43,16 @@ namespace Bellerophon.Core.Ship
 
         public void ApplyAtmosphere()
         {
-            RenderSettings.ambientLight = new Color(0.025f, 0.03f, 0.032f, 1f);
+            RenderSettings.ambientLight = new Color(0.006f, 0.007f, 0.007f, 1f);
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.ExponentialSquared;
-            RenderSettings.fogColor = new Color(0.018f, 0.022f, 0.024f, 1f);
+            RenderSettings.fogColor = new Color(0.006f, 0.007f, 0.008f, 1f);
             RenderSettings.fogDensity = TargetFogDensity;
 
             if (targetCamera != null)
             {
                 targetCamera.clearFlags = CameraClearFlags.SolidColor;
-                targetCamera.backgroundColor = new Color(0.012f, 0.015f, 0.017f, 1f);
+                targetCamera.backgroundColor = new Color(0.004f, 0.005f, 0.006f, 1f);
                 targetCamera.farClipPlane = TargetCameraFarClip;
             }
 
@@ -71,13 +71,13 @@ namespace Bellerophon.Core.Ship
 
                 if (light.type == LightType.Directional)
                 {
-                    light.intensity = 0.22f;
-                    light.color = new Color(0.62f, 0.69f, 0.66f, 1f);
+                    light.intensity = 0.065f;
+                    light.color = new Color(0.38f, 0.43f, 0.40f, 1f);
                     continue;
                 }
 
-                light.intensity = Mathf.Min(light.intensity, 0.8f);
-                light.color = new Color(0.52f, 0.68f, 0.62f, 1f);
+                light.intensity = Mathf.Min(light.intensity, 0.38f);
+                light.color = new Color(0.46f, 0.52f, 0.46f, 1f);
             }
         }
     }

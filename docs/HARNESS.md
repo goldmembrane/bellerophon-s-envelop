@@ -38,6 +38,9 @@
 - When the art issue is visual shape, silhouette, placement, lighting, or screen readability, run a screenshot/render review path or capture a comparable preview before claiming completion. Structural tests alone are insufficient.
 - Before creating an `artSample/` file, define how the approved sample would be translated into Unity: target scene or prefab, runtime root, anchor/interactable, camera viewpoint, scale, collision boundary, state-driven visibility, and which sample-only elements must stay out of live placement.
 - `artSample/` files must explain review intent in Korean by default. Use English only for file names, code identifiers, proper names, and unavoidable asset labels.
+- If an existing `artSample/` image is the modeling or texturing target, the validation path must treat it as a reproduction target. Break it down into silhouette, proportions, major forms, individual parts, surface material, wear pattern, lighting, and camera angle, then compare a Blender/DCC render against the reference before runtime integration.
+- For 2D-only references, validate the matched camera render first. Any backside, interior, scale, or mechanical detail that is not visible in the image must come from `docs/GAME_DESIGN_SOURCE.txt` or be explicitly documented as inference.
+- Art validation must not pass solely on renderer counts, object existence, FBX/GLB export existence, or material assignment. Those checks may support the process, but a side-by-side visual comparison remains required for shape, texture, and placement claims.
 
 ## Detailed Step 8 Phase15 Smoke
 

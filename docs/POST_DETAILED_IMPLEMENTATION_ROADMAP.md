@@ -271,6 +271,28 @@
 - 샘플에는 축척, 위치, 부품 경계, 상태 전환, 표시/비표시 조건, 샘플 전용으로만 남겨야 하는 요소를 드러낸다.
 - 런타임 통합 때는 샘플의 모든 시각 요소를 무조건 배치하지 말고, 실제 게임 상태와 연결되는 요소만 씬에 붙인다.
 
+2026-06-12 Stage 3 재검수 분위기 고정:
+
+- `artSample/stage3_rework_review/index.html`을 이후 아트 관련 작업의 현재 분위기 기준으로 사용한다.
+- 새 소품, 장비, UI 표면, 조명, VFX, 적 표현 샘플은 해당 보드의 폐쇄적이고 낡은 산업용 화물선 톤과 어우러져야 한다.
+- 핵심 재질 방향은 저채도 낡은 금속, 어두운 고무, 긁힌 화면 유리, 볼트/그라임/까진 도장, 제한적인 녹색 화면광과 드문 적색/황색 경고색이다.
+- 기존 Stage 3 런타임 결과물은 기능 연결 기준으로만 남기고, 미래 시각 품질 기준으로 삼지 않는다.
+- 방이나 1인칭 화면에 들어갈 새 샘플은 부품별 클로즈업과 실제 Unity 적용 구역 모습을 함께 보여줘야 한다.
+- 통제실 CCTV는 원본 기획서의 단일 대형 스크린 구조를 따른다. 대형 스크린 왼쪽 상단에는 가로형 보조 스크린, 오른쪽에는 세로형 스크린이 붙으며, 모니터 여러 개를 나란히 배치한 형태로 만들지 않는다.
+- 막대기 샘플은 끝부분이 빠루처럼 굽은 갈고리 느낌을 가져야 한다. 다만 전체 비율은 짧은 한손 크로우바가 아니라 두 손으로 잡을 수 있는 상하 길이, 그립 간격, 내려찍기 자세가 보이는 기본 양손 근접무기로 잡는다.
+
+2026-06-12 Stage 3 재검수 런타임 반영:
+
+- 사용자가 승인한 `stage3_rework_review` 7개 이미지군을 `CargoRunMvp` 생성 루트에 반영했다.
+- `scripts/GenerateStage3ReworkBlenderAssets.py`와 `Stage3BlenderReviewAssetBuilder`가 Blender 원본, 이미지군별 FBX, 공용 mesh library, HD texture PNG를 `Assets/_Project/Art/Props/Stage3Rework` 아래에 생성하고 Unity import를 고정한다.
+- `PostDetailedStage3GameplayPropsBootstrap`는 cockpit helm/status, control-room CCTV terminal, engine-room power terminal, supply-room storage cabinet, cargo-hold crates/terminal, armory turret grip/mount, first-person equipment/cargo corridor 구역을 Blender-authored FBX mesh와 HD texture material로 배치한다.
+- `Stage 3 Art Sample Room Dressings` 루트는 조종실, 통제실, 동력실, 비품창고, 화물칸, 무기실, 화물 시작 시야에 천장/바닥 패널, 벽 패널, 배관, 케이블, 경고 띠, CRT/조명 표면, 크레이트와 선반 소품을 추가한다.
+- 통제실 CCTV는 대형 스크린 1개, 좌상단 가로형 보조 스크린, 우측 세로형 스크린, A/D 버튼, 기능 버튼, 케이블 레일과 브래킷으로 생성한다.
+- 1인칭 막대기는 긴 양손 샤프트, 빠루형 갈고리 끝단, 양손 그립 랩, 금속 칼라, 간단한 양손 장갑 실루엣으로 생성한다.
+- 기존 상호작용 루트와 장비 표시 컨트롤러는 유지하고, artSample 분위기를 가리는 기존 graybox/interactable placeholder renderer만 숨겼다.
+- 실제 Unity 비교 캡처는 `artSample/stage3_rework_review/unity_current_pass/`에 저장한다.
+- 검증은 `Run-PostDetailedStage3GameplayPropsSmoke.ps1`, `Run-PostDetailedStage3GameplayPropsArtValidation.ps1`, `Run-HarnessValidation.ps1`, `Run-EditModeTests.ps1`, `Run-PlayModeTests.ps1`, `Build-WindowsDev.ps1`, `git diff --check`가 통과했다.
+
 2026-06-10 구현 상태:
 
 - 사용자가 stage 3 샘플을 승인했고, 해당 방향을 `CargoRunMvp`에 통합했다.

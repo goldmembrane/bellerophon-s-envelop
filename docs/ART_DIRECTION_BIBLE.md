@@ -2,11 +2,13 @@
 
 Date: 2026-06-09
 
-Status: stage 1 production target approved by user on 2026-06-09. This document defines the visual target for later modeling, UI, animation, VFX, lighting, and sound presentation work. It does not attach any asset to the game. Specific model, UI, animation, VFX, material, and sound results still require their own `artSample/` review before runtime integration.
+Status: stage 1 production target approved by user on 2026-06-09. On 2026-06-12, the Stage 3 rework review sample was fixed as the current mood and finish reference for future art-related work. This document defines the visual target for later modeling, UI, animation, VFX, lighting, and sound presentation work. It does not attach any asset to the game. Specific model, UI, animation, VFX, material, and sound results still require their own `artSample/` review before runtime integration.
 
 Related sample:
 
 - `artSample/art_direction_reference_board.html`
+- `artSample/stage3_rework_review/index.html`
+- `artSample/stage3_rework_review/unity_current_pass/` stores the current Unity comparison renders for the integrated Stage 3 rework pass.
 
 ## Core Direction
 
@@ -21,6 +23,27 @@ Use `docs/GAME_DESIGN.md` as the top-level source:
 - Limited visibility.
 - Uncertain threats.
 - Lethal Company is a mood and texture reference only. Do not copy its exploration/scavenging structure, quota loop, or visual identity wholesale.
+
+## Locked Art Mood Reference
+
+As of 2026-06-12, all new art-related samples and runtime art proposals must visually fit with `artSample/stage3_rework_review/index.html`.
+
+This reference locks the following mood:
+
+- Closed, cramped, practical cargo-ship interiors.
+- Low-key lighting with readable silhouettes, not full black voids.
+- Desaturated worn metal, scratched screen glass, dark rubber, bolts, grime, chipped paint, and used industrial surfaces.
+- Controlled green/cyan display glow plus rare red/amber warning accents.
+- Heavy functional props that look installed into the ship, not decorative standalone objects.
+- First-person equipment that reads as worn survival gear and stays out of critical HUD/map sightlines.
+- Control room CCTV surfaces follow the source layout: one large main screen, one small horizontal screen at the upper-left of the main screen, and one vertical screen to the right. Do not reinterpret this as a row of separate CCTV monitors.
+- The basic stick must read as a two-handed melee weapon in first-person samples: long enough vertical silhouette, two-hand grip spacing, and an overhead/downward strike pose. Its end may have a crowbar-like hooked pry tip, but the full weapon must not collapse into a short one-handed crowbar silhouette.
+
+Rules:
+
+- Future ship props, equipment, UI surfaces, VFX previews, enemy presentation scenes, and lighting samples must harmonize with this Stage 3 rework review mood unless the user explicitly approves a different direction.
+- Do not use the earlier primitive Stage 3 runtime implementation as the visual quality target for future work. It remains a functional placeholder/integration reference only.
+- New `artSample/` files should include both isolated asset views and the applied Unity-style zone view when the asset will appear in a room, first-person camera, or gameplay screen.
 
 ## Visual Pillars
 

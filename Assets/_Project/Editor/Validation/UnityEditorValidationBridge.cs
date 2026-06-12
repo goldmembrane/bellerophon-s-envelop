@@ -408,6 +408,12 @@ namespace Bellerophon.Editor.Validation
                         PostDetailedStage3GameplayPropsEditorValidation.ValidateScene,
                         "Post-detailed stage 3 gameplay props editor validation passed.");
                     break;
+                case "CapturePostDetailedStage3GameplayPropsArtSnapshots":
+                    RunSynchronous(
+                        request,
+                        PostDetailedStage3GameplayPropsEditorValidation.CaptureUnityComparisonSnapshots,
+                        "Stage 3 art sample Unity comparison snapshots saved:");
+                    break;
                 case "OpenCargoRunMvpScene":
                     RunSynchronous(
                         request,

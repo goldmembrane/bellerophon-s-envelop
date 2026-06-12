@@ -57,3 +57,15 @@
 - 관련 테스트가 통과해야 한다.
 - Unity 콘솔 에러를 새로 만들지 않아야 한다.
 - 하네스 규칙을 바꿨다면 `docs/HARNESS.md`와 관련 스크립트를 같이 갱신한다.
+
+## Art Validation Rule Override (2026-06-12)
+
+- This section has highest priority within this file and overrides earlier art/asset approval rules when they conflict.
+- For art, modeling, and texturing work, first save inspectable samples under `artSample/` and receive explicit user approval before implementing them in Unity runtime scenes, prefabs, assets, or UI flows.
+- Approved `artSample/` outputs are not mood references. When implementing them in Unity, the goal is to reproduce the approved `artSample/` sample as closely and exactly as possible.
+- During Unity implementation, repeatedly compare the Unity result against the approved `artSample/` sample and iterate until the visual sync rate is acceptable.
+- Do not replace visual sync with renderer-count, object-presence, or other internal validation checks. Internal validation may support the process, but user-approved `artSample/` visual matching is the quality gate.
+- When an existing `artSample/` image is the target for modeling or texturing, treat it as a reproduction target rather than a creative prompt. Break the image into silhouette, proportions, major forms, individual parts, surface material, wear pattern, lighting, and camera angle, then model and texture those elements in Blender or the appropriate DCC tool.
+- For approval samples made from a 2D reference, match the reference camera render first. Unseen backsides, interiors, exact dimensions, or mechanical details must be derived from `docs/GAME_DESIGN_SOURCE.txt` or explicitly marked as inference; do not invent visible design changes without user confirmation.
+- Art/modeling/texturing completion requires side-by-side visual comparison against the target `artSample/` render or image. Do not report completion only because assets, renderers, object counts, FBX files, or materials exist.
+- Texturing must include the material qualities needed by the reference, such as albedo variation, chipped paint, dirt, roughness/metalness response, and normal/bump detail. Superficial line scratches or flat colors are not enough when the reference shows rough worn surfaces.

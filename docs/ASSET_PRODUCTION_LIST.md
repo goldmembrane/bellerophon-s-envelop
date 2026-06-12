@@ -2,7 +2,7 @@
 
 Date: 2026-06-09
 
-Status: stage 1 direction approved; stage 2 ship interior sample approved; stage 3 gameplay props/equipment sample approved and integrated. This list organizes the post-detailed-implementation asset work. It is not an implementation checklist for attaching assets to the game. Any art-heavy result must first be reviewed through `artSample/` and approved before runtime integration.
+Status: stage 1 direction approved; stage 2 ship interior sample approved; stage 3 gameplay props/equipment sample was previously approved and integrated, but the 2026-06-12 rework review sample now supersedes the old Stage 3 visual direction for future art. The 2026-06-12 `stage3_rework_review` pass has been converted into Blender/FBX/HD texture assets and integrated into `CargoRunMvp` for the seven approved image groups. This list organizes the post-detailed-implementation asset work. It is not an implementation checklist for attaching assets to the game. Any art-heavy result must first be reviewed through `artSample/` and approved before runtime integration.
 
 ## Folder Policy
 
@@ -58,7 +58,27 @@ Display names can remain Korean in UI text. Runtime file names should stay ASCII
 | `Runtime Integrated` | attached to actual scene/prefab/runtime asset |
 | `Deferred` | intentionally postponed |
 
-Current status: stage 1 direction is approved, stage 2 ship interior P0 samples are approved/integrated, and stage 3 gameplay props/equipment samples are approved/integrated through generated scene assets.
+Current status: stage 1 direction is approved, stage 2 ship interior P0 samples are approved/integrated, and the 2026-06-12 Stage 3 rework is runtime integrated for the seven approved `artSample/stage3_rework_review` image groups. The current Unity comparison captures are stored under `artSample/stage3_rework_review/unity_current_pass/`; they are the active runtime comparison target, while the approved review PNGs and `index.html` remain the visual mood reference for future replacements.
+
+2026-06-12 stage 3 rework mood lock:
+
+- `artSample/stage3_rework_review/index.html` is the current visual mood reference for future art-related work.
+- Future assets should match its closed, worn, low-key industrial cargo-ship tone, with desaturated metal, dark rubber, scratched screens, rare red/amber warnings, and practical installed forms.
+- New art samples should include both part close-ups and the applied Unity-style room or first-person view when relevant.
+- Existing primitive Stage 3 generated Unity objects should not be extended as the target look. The 2026-06-12 runtime pass replaces the visible Stage 3 presentation with Blender-authored FBX meshes, HD texture materials, room dressings, darker atmosphere, and hidden legacy graybox renderers where they blocked the approved art direction.
+- Do not extend the earlier primitive Stage 3 runtime look as a visual quality target.
+- Control room CCTV art must use the source layout: one large main screen, a small horizontal screen at the large screen's upper-left, and one vertical screen on the right. Avoid side-by-side multi-monitor CCTV banks.
+- Stick art must read as a two-handed basic melee weapon with enough vertical length and two-hand grip spacing. The end can use a crowbar-like hooked pry tip, but the whole silhouette must not become a short one-handed crowbar.
+
+2026-06-12 stage 3 runtime rework integration:
+
+- `scripts/GenerateStage3ReworkBlenderAssets.py` and `Stage3BlenderReviewAssetBuilder` produce and import `Stage3Rework_All.blend`, per-image FBX files, a mesh library, and HD texture PNGs under `Assets/_Project/Art/Props/Stage3Rework`.
+- `PostDetailedStage3GameplayPropsBootstrap` now builds the seven approved image groups into `CargoRunMvp`: cockpit helm/status surfaces, control-room CCTV wall terminal, engine-room power terminal, supply-room storage cabinet wall, cargo-hold crates/terminal dressing, armory turret grip/mount, and first-person equipment/cargo corridor view.
+- `Stage 3 Art Sample Room Dressings` adds per-zone floor/ceiling/wall panels, cables, pipes, rails, hazard strips, CRT/screen glows, crates, shelves, and installed prop silhouettes so the live scene compares against the approved `stage3_rework_review` board instead of the previous primitive look.
+- The old side-by-side control monitor bank and visible graybox/interactable placeholder renderers are hidden where they block the art pass, while colliders and gameplay components remain intact.
+- The first-person stick now uses a longer hooked continuous mesh, two-hand grip wraps, metal collars, gloved-hand silhouettes, and a camera-safe placement that keeps HUD/map visibility.
+- `PostDetailedStage3GameplayPropsEditorValidation` validates the Blender source, FBX mesh use, HD textures, material mix, room dressing coverage, hidden legacy placeholders, control-room source layout, and hooked two-handed stick shape against `artSample/stage3_rework_review/index.html`.
+- Verification passed through Stage 3 smoke, Stage 3 art validation, harness, EditMode, PlayMode, Windows dev build, and `git diff --check`.
 
 2026-06-10 stage 3 sample update:
 
@@ -100,7 +120,7 @@ The recommended first modeling slice after user approval:
 | P0 | Ramp/threshold segment | Preserve cargo hold lower-position identity. | Approved For Runtime |
 | P0 | Cockpit helm and forward glass frame | First transport interaction. | Approved For Runtime |
 | P0 | Armory turret station | Manual turret interaction anchor. | Approved For Runtime |
-| P1 | Control room screen bank | CCTV/control readability. | Sample Required |
+| P1 | Control room single large screen set | CCTV/control readability; source layout is one large screen, upper-left horizontal helper screen, and right vertical screen. | Runtime Integrated |
 | P1 | Engine room core | Overclock/damage feedback area. | Sample Required |
 | P1 | Supply cabinet wall | Inventory/supply interaction anchor. | Sample Required |
 | P1 | Room doors/threshold frames | Orientation and room identity. | Sample Required |
@@ -119,7 +139,7 @@ The recommended first modeling slice after user approval:
 | P0 | Cargo strap/bracket set | Cargo hold identity. | Approved And Integrated |
 | P0 | Cockpit status screens | Transport progress/readiness surface. | Approved And Integrated |
 | P0 | Manual turret grip and mount | Armory interaction identity. | Approved And Integrated |
-| P1 | Control room CCTV terminal | CCTV target display. | Approved And Integrated |
+| P1 | Control room CCTV terminal | CCTV target display; single large screen rework integrated on 2026-06-12. | Runtime Integrated |
 | P1 | Engine room power terminal | Overclock/damage state display. | Approved And Integrated |
 | P1 | Supply room storage cabinet | Inventory storage surface. | Approved And Integrated |
 | P1 | Cargo hold status panel | Cargo state readout. | Approved And Integrated |
@@ -133,7 +153,7 @@ The recommended first modeling slice after user approval:
 | Priority | Asset | Notes | Approval State |
 | --- | --- | --- | --- |
 | P0 | First-person arms | Required for weapon animation and scale. | Sample Required |
-| P0 | Stick first-person model | Default weapon. | Approved And Integrated |
+| P0 | Stick first-person model | Default weapon; hooked two-handed first-person rework integrated on 2026-06-12. | Runtime Integrated |
 | P0 | Musket first-person model | Early shop weapon. | Approved And Integrated |
 | P1 | Basic protective suit model/readout | Player identity and future multiplayer readability. | Approved And Integrated |
 | P1 | Presence detector | Special contract equipment. | Sample Approved; Runtime Placement Deferred |
