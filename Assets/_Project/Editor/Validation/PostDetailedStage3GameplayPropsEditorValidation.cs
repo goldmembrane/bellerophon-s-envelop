@@ -189,11 +189,14 @@ namespace Bellerophon.Editor.Validation
 
         private static void CaptureCamera(Camera camera, string path)
         {
-            const int width = 1280;
-            const int height = 720;
+            CaptureCamera(camera, path, 1280, 720);
+        }
+
+        private static void CaptureCamera(Camera camera, string path, int width, int height)
+        {
             var previousTargetTexture = camera.targetTexture;
             var previousActiveTexture = RenderTexture.active;
-            var renderTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32);
+            var renderTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
             var readableTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
 
             try
