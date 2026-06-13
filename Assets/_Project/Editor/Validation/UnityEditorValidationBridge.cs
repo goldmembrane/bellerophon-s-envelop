@@ -414,6 +414,42 @@ namespace Bellerophon.Editor.Validation
                         PostDetailedStage3GameplayPropsEditorValidation.CaptureUnityComparisonSnapshots,
                         "Stage 3 art sample Unity comparison snapshots saved:");
                     break;
+                case "ValidateAssetStoreShipDressingStep1":
+                    RunSynchronous(
+                        request,
+                        AssetStoreShipDressingEditorValidation.Run,
+                        "Asset Store ship dressing step 1 validation passed.");
+                    break;
+                case "ValidateAssetStoreShipDressingStep2":
+                    RunSynchronous(
+                        request,
+                        AssetStoreShipDressingEditorValidation.RunStep2,
+                        "Asset Store ship dressing step 2 corridor validation passed.");
+                    break;
+                case "CaptureAssetDressingStep02Sample":
+                    RunSynchronous(
+                        request,
+                        AssetDressingStep02SampleRenderer.Capture,
+                        "Asset dressing step 02 sample renders saved:");
+                    break;
+                case "CaptureAssetDressingStep02WornSample":
+                    RunSynchronous(
+                        request,
+                        AssetDressingStep02SampleRenderer.CaptureWorn,
+                        "Asset dressing step 02 worn sample renders saved:");
+                    break;
+                case "CaptureAssetDressingStep02SteelPlateSample":
+                    RunSynchronous(
+                        request,
+                        AssetDressingStep02SampleRenderer.CaptureSteelPlate,
+                        "Asset dressing step 02 steel plate sample renders saved:");
+                    break;
+                case "CaptureAssetDressingStep02BumpyWornPlateSample":
+                    RunSynchronous(
+                        request,
+                        AssetDressingStep02SampleRenderer.CaptureBumpyWornPlate,
+                        "Asset dressing step 02 bumpy worn plate sample renders saved:");
+                    break;
                 case "OpenCargoRunMvpScene":
                     RunSynchronous(
                         request,
