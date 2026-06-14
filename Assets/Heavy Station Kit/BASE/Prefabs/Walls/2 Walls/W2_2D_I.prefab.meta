@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 11071970856d5fa4a93d12c0eea027e9
+timeCreated: 1552338682
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/BASE/Prefabs/Walls/2 Walls/W2_2D_I.prefab
+  uploadId: 751942

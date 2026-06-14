@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 2dac005a196b11e448853c630dba49c5
+timeCreated: 1505623717
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/_common/Scripts/Gateway/DotHskGateHangars.cs
+  uploadId: 751942

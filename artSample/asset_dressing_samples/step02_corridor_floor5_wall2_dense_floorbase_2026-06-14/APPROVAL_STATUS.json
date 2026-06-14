@@ -1,0 +1,10 @@
+{
+  "sampleName": "Step 02 corridor Floor_5_base_Plate + Wall 2 + dense Floor Base 1 F sample",
+  "createdDate": "2026-06-14",
+  "approvalState": "미승인",
+  "unityApplicationAllowed": false,
+  "runtimeSceneModified": false,
+  "reviewable": true,
+  "userSelectedAssets": true,
+  "nextStep": "사용자가 이 시안을 승인하면 같은 조합을 기준으로 CargoRunMvp 복도 적용안을 만든다."
+}

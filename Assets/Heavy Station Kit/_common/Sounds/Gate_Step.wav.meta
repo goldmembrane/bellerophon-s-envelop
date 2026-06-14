@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: e9e90281ca7667d4d8c035406652b6d4
+AudioImporter:
+  externalObjects: {}
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 0
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 1
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  preloadAudioData: 1
+  loadInBackground: 0
+  ambisonic: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/_common/Sounds/Gate_Step.wav
+  uploadId: 751942

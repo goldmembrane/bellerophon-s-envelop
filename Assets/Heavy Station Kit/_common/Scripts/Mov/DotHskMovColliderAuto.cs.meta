@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: cf61f5852a5989a44b3c61b5b0e4e694
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/_common/Scripts/Mov/DotHskMovColliderAuto.cs
+  uploadId: 751942

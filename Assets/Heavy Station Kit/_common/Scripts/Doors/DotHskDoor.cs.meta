@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 7b064b34aa46af343acb123805864cc4
+timeCreated: 1502363896
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/_common/Scripts/Doors/DotHskDoor.cs
+  uploadId: 751942

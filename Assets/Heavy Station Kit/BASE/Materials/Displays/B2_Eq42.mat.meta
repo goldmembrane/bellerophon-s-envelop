@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 49f0a6814fe374e4e965586aa45e37c6
+timeCreated: 1515742352
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/BASE/Materials/Displays/B2_Eq42.mat
+  uploadId: 751942

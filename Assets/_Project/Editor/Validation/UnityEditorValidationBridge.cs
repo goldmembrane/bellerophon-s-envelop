@@ -426,6 +426,12 @@ namespace Bellerophon.Editor.Validation
                         AssetStoreShipDressingEditorValidation.RunStep2,
                         "Asset Store ship dressing step 2 corridor validation passed.");
                     break;
+                case "CaptureAssetStoreShipDressingStep2Comparison":
+                    RunSynchronous(
+                        request,
+                        AssetStoreShipDressingEditorValidation.CaptureApprovedStep2Comparison,
+                        "Asset Store ship dressing step 2 Unity comparison snapshots saved:");
+                    break;
                 case "CaptureAssetDressingStep02Sample":
                     RunSynchronous(
                         request,
@@ -449,6 +455,18 @@ namespace Bellerophon.Editor.Validation
                         request,
                         AssetDressingStep02SampleRenderer.CaptureBumpyWornPlate,
                         "Asset dressing step 02 bumpy worn plate sample renders saved:");
+                    break;
+                case "CaptureAssetInventoryCatalog":
+                    RunSynchronous(
+                        request,
+                        AssetInventoryCatalogRenderer.Capture,
+                        "Asset inventory catalog saved:");
+                    break;
+                case "CaptureAssetDressingStep02SelectedCorridorSample":
+                    RunSynchronous(
+                        request,
+                        AssetDressingStep02SelectedCorridorSampleRenderer.Capture,
+                        "Asset dressing step 02 selected corridor sample renders saved:");
                     break;
                 case "OpenCargoRunMvpScene":
                     RunSynchronous(

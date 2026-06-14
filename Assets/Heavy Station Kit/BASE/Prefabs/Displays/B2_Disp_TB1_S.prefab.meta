@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f2d1cbc80ed83d348bf4c4a8cd3c278b
+timeCreated: 1516291288
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/BASE/Prefabs/Displays/B2_Disp_TB1_S.prefab
+  uploadId: 751942

@@ -1,5 +1,4 @@
 * text=auto
-
 *.cs text diff=csharp
 *.asmdef text
 *.asmref text
@@ -7,7 +6,6 @@
 *.json text
 *.md text
 *.ps1 text
-
 *.shader text
 *.hlsl text
 *.cginc text
@@ -15,7 +13,6 @@
 *.uxml text
 *.uss text
 *.inputactions text
-
 *.asset text merge=unityyamlmerge
 *.unity text merge=unityyamlmerge
 *.prefab text merge=unityyamlmerge
@@ -29,7 +26,6 @@
 *.renderTexture text merge=unityyamlmerge
 *.lighting text merge=unityyamlmerge
 *.meta text
-
 *.png filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.jpeg filter=lfs diff=lfs merge=lfs -text
@@ -80,3 +76,4 @@
 *.7z filter=lfs diff=lfs merge=lfs -text
 *.gz filter=lfs diff=lfs merge=lfs -text
 *.unitypackage filter=lfs diff=lfs merge=lfs -text
+Assets/Heavy[[:space:]]Station[[:space:]]Kit/BASE/Scenes/Base/LightingData.asset filter=lfs diff=lfs merge=lfs -text

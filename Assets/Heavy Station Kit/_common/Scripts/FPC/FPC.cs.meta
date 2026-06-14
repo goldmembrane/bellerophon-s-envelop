@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 29323b44111524f4bb59c1dc42142e2e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/_common/Scripts/FPC/FPC.cs
+  uploadId: 751942

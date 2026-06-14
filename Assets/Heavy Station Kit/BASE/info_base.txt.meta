@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 524ddd2be93c69c4f9a1e955f637c1d5
+timeCreated: 1559652683
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/BASE/info_base.txt
+  uploadId: 751942

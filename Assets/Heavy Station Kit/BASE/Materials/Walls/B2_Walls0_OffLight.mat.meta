@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2e35e4fe0f3cc6f40b876b09af10de6d
+timeCreated: 1510228373
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/BASE/Materials/Walls/B2_Walls0_OffLight.mat
+  uploadId: 751942

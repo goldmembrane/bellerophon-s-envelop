@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ff738153779d52741b872c383f8fd0f5
+timeCreated: 1493830099
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/BASE/Prefabs/Top-Down/TD_base_arch.prefab
+  uploadId: 751942

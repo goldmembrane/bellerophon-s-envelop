@@ -1,0 +1,111 @@
+﻿-------------
+DOCUMENTATION - https://dotteam.xyz/pdf/Heavy_Station_Kit_2025.pdf
+------------- 
+
+HEAVY STATION KIT
+
+-----------------
+B  A  S  E   2.7
+-----------------
+
+- Re-Submitted using Unity 6 LTS;
+- Fix some non-critical bugs.
+
+---
+
+- Re-Submitted using Unity 2022.3 LTS;
+- Updated DotAnimatedTexture.cs with support for HDRP and URP;
+- Updated DotFPCElevator2ConControlItems.cs;
+- Updated DotHskGate.cs.
+
+-----------------
+B  A  S  E   2.62
+-----------------
+
+- Fixed Top Down demo scene;
+- Updated Visuals, including Lighting and Post-Processing.
+
+-----------------
+B  A  S  E   2.60
+-----------------
+
+- Re-Submitted using LTS version, Unity 2019.4;
+- Updated FPC and other Scripts;
+- Updated Visuals, including Lighting and Post-Processing;
+- Updated Sounds. All sounds are brand new;
+- Replaced Sky;
+- Fixed some Textures and Meshes;
+- Reorganized Content to meet Asset Store Specifications.
+
+-----------------
+B  A  S  E   2.50
+-----------------
+
+Supporting Unity 2019.3.0+ with the additional package, which has:
+
+- Dependancy on "Standard Assets Characters Package" removed via deprecating the old/adding the new FPC (Class FPC);
+- Scripts updated with fixes and support for newer Unity versions;
+- All asset classes placed in common namespace DotTeam.HSK.
+
+The other package supporting 5.6.7 to 2019.2.21 is still available for download.
+
+-----------------
+B  A  S  E   2.50
+-----------------
+
+MAPPING
+To significantly reduce Drawcalls, most models were packaged into Themes. Each theme uses a single Material. Some UVs have a bit of free space, which has been reserved for future updates (thus adding new objects will not require additional materials).
+
+MODELING
+An amplified look and optimization for the old objects; new objects were added to expand Your opportunities for creative development. For triangle count please refer to the Documentation.
+
+TEXTURING
+Adventuring in the world of PBR, all the materials now possess Metallic maps, in addition to Albedo, Normal, Occlusion, and for some objects Emission, in sizes up to 4k, and are using PNG and TGA formats.
+PSD for GUI is included.
+
+SCRIPTING
+Earlier scripts have been corrected and expanded upon, and for widening the possibilities of the kit, new scripts have been created.
+
+Additionally:
+- New Textures (Albedo, Metallic, Normal, Occlusion, Emission)
+– Animated materials for Displays
+- Universal Doors Control
+– One-sided Floors and Ceilings
+- Added new Prefabs
+
+- Added Crouching option and Flash light control to Dot FPC (which is First Person Controller)
+- Scripts and selected Prefabs were updated and unified with other Heavy Station Kit assets
+
+Includes prefabs of Base v1.30
+
+------------------
+B  A  S  E    1.30
+------------------
+
+- Overall -50% tris from colliders. Colliders were redone for all prefabs, with box colliders and low poly mesh.
+- Light leaks were fixed, by modifying light source.
+- Added Top-Down support with 5 new prefabs (for Walls, Partitions2 and Arches, new Outwall element).
+- Top-Down Demo Scene.
+- New Metal Material for all Prefabs.
+- Three new prefabs were added, Solid Floor, Wall lights On, Wall lights Off.
+
+------------------
+B  A  S  E    1.20
+------------------
+
+- Added lighting to prefabs: Walls, Channels, Stairs, Equipment, Top Bottom.
+- Optimized colliders for: Arms, Arches, Stairs, Support, Equipment, Partitions2, Props.
+- Done 10 pages Booklet of Prefabs, which shows in artistic way quantity and materials of all prefabs.
+
+------------------
+B  A  S  E    1.10
+------------------
+
+- Improved Textures and Materials
+- Unity3D 5.x GI Supported
+- Unity3D WebGL Compatible
+
+
+
+https://dotteam.xyz
+info@dotteam.xyz

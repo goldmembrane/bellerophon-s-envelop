@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: d3cb4e0f6d8b1d64fb8f1b8675edff44
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/_common/Scripts/Shuttle/DotHskShuttleCollider.cs
+  uploadId: 751942

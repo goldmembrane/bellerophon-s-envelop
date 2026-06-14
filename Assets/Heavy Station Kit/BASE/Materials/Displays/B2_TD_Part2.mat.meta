@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ff2b6b75bf0eb0f43890826c15f4d1d7
+timeCreated: 1516378744
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/BASE/Materials/Displays/B2_TD_Part2.mat
+  uploadId: 751942

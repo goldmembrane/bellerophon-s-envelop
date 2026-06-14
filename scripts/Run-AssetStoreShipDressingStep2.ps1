@@ -66,8 +66,13 @@ if ($log -notmatch "ThresholdCenterBlockers=0") {
   exit 1
 }
 
-if ($log -notmatch "SolidWallBackers=\d+") {
-  Write-Error "Asset Store ship dressing step 2 did not report solid wall backers. See $logPath"
+if ($log -notmatch "Wall2Panels=\d+") {
+  Write-Error "Asset Store ship dressing step 2 did not report approved Wall 2 panels. See $logPath"
+  exit 1
+}
+
+if ($log -notmatch "HorizontalWallBandLiners=\d+") {
+  Write-Error "Asset Store ship dressing step 2 did not report approved horizontal wall band overlays. See $logPath"
   exit 1
 }
 
@@ -76,8 +81,68 @@ if ($log -notmatch "OpaqueWallBackings=\d+") {
   exit 1
 }
 
+if ($log -notmatch "DenseFloorOverlays=\d+") {
+  Write-Error "Asset Store ship dressing step 2 did not report dense Floor Base 1 F overlays. See $logPath"
+  exit 1
+}
+
+if ($log -notmatch "WallPillarSeams=\d+") {
+  Write-Error "Asset Store ship dressing step 2 did not report Wall Pillar seams. See $logPath"
+  exit 1
+}
+
+if ($log -notmatch "CargoCeilingPanels=\d+") {
+  Write-Error "Asset Store ship dressing step 2 did not report TB_2 cargo ceiling panels. See $logPath"
+  exit 1
+}
+
+if ($log -notmatch "OpaqueCeilingCaps=\d+") {
+  Write-Error "Asset Store ship dressing step 2 did not report opaque ceiling caps. See $logPath"
+  exit 1
+}
+
+if ($log -notmatch "OpaqueCeilingSideSkirts=\d+") {
+  Write-Error "Asset Store ship dressing step 2 did not report opaque ceiling side skirts. See $logPath"
+  exit 1
+}
+
+if ($log -notmatch "CorridorWallFillLights=\d+") {
+  Write-Error "Asset Store ship dressing step 2 did not report corridor wall fill lights. See $logPath"
+  exit 1
+}
+
+if ($log -notmatch "CargoHoldDenseFloorOverlays=\d+") {
+  Write-Error "Asset Store ship dressing step 2 did not report Cargo Hold connected dense floor overlays. See $logPath"
+  exit 1
+}
+
+if ($log -notmatch "CargoHoldWall2Panels=\d+") {
+  Write-Error "Asset Store ship dressing step 2 did not report Cargo Hold connected Wall 2 panels. See $logPath"
+  exit 1
+}
+
+if ($log -notmatch "ControlArmoryDenseFloorOverlays=\d+") {
+  Write-Error "Asset Store ship dressing step 2 did not report Control Room to Armory dense floor overlays. See $logPath"
+  exit 1
+}
+
 if ($log -notmatch "EnabledLegacyCorridorRenderers=0") {
   Write-Error "Asset Store ship dressing step 2 must hide legacy graybox corridor renderers. See $logPath"
+  exit 1
+}
+
+if ($log -notmatch "EnabledStage3CargoStartRenderers=0") {
+  Write-Error "Asset Store ship dressing step 2 must hide older Stage 3 cargo-start corridor renderers. See $logPath"
+  exit 1
+}
+
+if ($log -notmatch "Stage3GameplayPropRoots=0") {
+  Write-Error "Asset Store ship dressing step 2 must remove generated Stage 3 room/background dressing roots. See $logPath"
+  exit 1
+}
+
+if ($log -notmatch "EnabledLegacyClearanceColliders=0") {
+  Write-Error "Asset Store ship dressing step 2 must disable legacy invisible doorway/joint protrusion colliders. See $logPath"
   exit 1
 }
 

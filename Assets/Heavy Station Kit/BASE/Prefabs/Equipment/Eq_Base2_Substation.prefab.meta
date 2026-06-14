@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5f0cfd228631cae499d9615add646ac8
+timeCreated: 1493893364
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/BASE/Prefabs/Equipment/Eq_Base2_Substation.prefab
+  uploadId: 751942

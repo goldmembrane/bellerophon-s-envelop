@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2c625e8ad9ed5f9449f5e4faa4d58218
+timeCreated: 1494004648
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/BASE/Prefabs/Doors/B2_EGateA_OFF.prefab
+  uploadId: 751942

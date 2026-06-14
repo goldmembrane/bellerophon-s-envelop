@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d61c547d792b1c549bfd0d08f78ec996
+timeCreated: 1442090461
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/BASE/Prefabs/Channels/Arms.prefab
+  uploadId: 751942

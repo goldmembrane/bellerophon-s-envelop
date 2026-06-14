@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ae26cbe12c94faa47866f773fc064fa9
+timeCreated: 1440936285
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/BASE/Prefabs/Equipment/Eq_8_1.prefab
+  uploadId: 751942

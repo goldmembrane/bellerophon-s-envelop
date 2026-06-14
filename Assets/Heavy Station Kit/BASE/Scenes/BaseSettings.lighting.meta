@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 163f2f4d5446e3745b4f8304882858cc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 4890085278179872738
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/BASE/Scenes/BaseSettings.lighting
+  uploadId: 751942

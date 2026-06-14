@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 737225839d5105b41bdefc511c0be79a
+timeCreated: 1511379998
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 49151
+  packageName: Sci-Fi Heavy Station Kit base
+  packageVersion: 2.7
+  assetPath: Assets/Heavy Station Kit/BASE/Materials/Top-Bottom/B2_Top_Bottom.mat
+  uploadId: 751942
