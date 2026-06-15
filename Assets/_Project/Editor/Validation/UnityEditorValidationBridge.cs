@@ -468,6 +468,174 @@ namespace Bellerophon.Editor.Validation
                         AssetDressingStep02SelectedCorridorSampleRenderer.Capture,
                         "Asset dressing step 02 selected corridor sample renders saved:");
                     break;
+                case "EnsureApprovedCockpitStructure":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitStructureBootstrap.EnsureApprovedCockpitStructure,
+                        "Approved cockpit 01 structure applied.");
+                    break;
+                case "ValidateApprovedCockpitStructure":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitStructureBootstrap.ValidateScene,
+                        "Approved cockpit 01 structure validation passed.");
+                    break;
+                case "CaptureApprovedCockpitStructureComparison":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitStructureBootstrap.CaptureUnityComparison,
+                        "Approved cockpit 01 Unity comparison snapshots saved:");
+                    break;
+                case "EnsureApprovedCockpitWindow":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitWindowBootstrap.EnsureApprovedCockpitWindow,
+                        "Approved cockpit 01 window applied.");
+                    break;
+                case "ValidateApprovedCockpitWindow":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitWindowBootstrap.ValidateScene,
+                        "Approved cockpit 01 window validation passed.");
+                    break;
+                case "CaptureApprovedCockpitWindowComparison":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitWindowBootstrap.CaptureUnityComparison,
+                        "Approved cockpit 01 window Unity comparison snapshots saved:");
+                    break;
+                case "CaptureApprovedCockpitWindowCurrentTransforms":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitWindowBootstrap.CaptureCurrentEditorTransforms,
+                        "Approved cockpit 01 window current transform capture saved:");
+                    break;
+                case "EnsureApprovedCockpitConsole":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitConsoleBootstrap.EnsureApprovedCockpitConsole,
+                        "Approved cockpit 02 console applied.");
+                    break;
+                case "ValidateApprovedCockpitConsole":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitConsoleBootstrap.ValidateScene,
+                        "Approved cockpit 02 console validation passed.");
+                    break;
+                case "CaptureApprovedCockpitConsoleComparison":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitConsoleBootstrap.CaptureUnityComparison,
+                        "Approved cockpit 02 console Unity comparison snapshots saved:");
+                    break;
+                case "CaptureApprovedCockpitConsoleCurrentObjects":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitConsoleBootstrap.CaptureCurrentEditorObjects,
+                        "Approved cockpit 02 console current object capture saved:");
+                    break;
+                case "EnsureApprovedCockpitWarning":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitWarningBootstrap.EnsureApprovedCockpitWarning,
+                        "Approved cockpit 04 warning applied.");
+                    break;
+                case "ValidateApprovedCockpitWarning":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitWarningBootstrap.ValidateScene,
+                        "Approved cockpit 04 warning validation passed.");
+                    break;
+                case "CaptureApprovedCockpitWarningComparison":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitWarningBootstrap.CaptureUnityComparison,
+                        "Approved cockpit 04 warning Unity comparison snapshots saved:");
+                    break;
+                case "CaptureApprovedCockpitWarningCurrentObjects":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitWarningBootstrap.CaptureCurrentEditorObjects,
+                        "Approved cockpit 04 warning current object capture saved:");
+                    break;
+                case "EnsureApprovedCockpitDirection":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitDirectionBootstrap.EnsureApprovedCockpitDirection,
+                        "Approved cockpit 11 direction applied.");
+                    break;
+                case "ValidateApprovedCockpitDirection":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitDirectionBootstrap.ValidateScene,
+                        "Approved cockpit 11 direction validation passed.");
+                    break;
+                case "CaptureApprovedCockpitDirectionComparison":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitDirectionBootstrap.CaptureUnityComparison,
+                        "Approved cockpit 11 direction Unity comparison snapshots saved:");
+                    break;
+                case "CaptureApprovedCockpitDirectionCurrentObjects":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitDirectionBootstrap.CaptureCurrentEditorObjects,
+                        "Approved cockpit 11 direction current object capture saved:");
+                    break;
+                case "CaptureApprovedCockpitWarningBackupObjects":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitWarningBootstrap.CaptureBackupEditorObjects,
+                        "Approved cockpit 04 warning backup object capture saved.");
+                    break;
+                case "CaptureApprovedCockpitBackupDiff":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitWarningBootstrap.CaptureApprovedCockpitBackupDiff,
+                        "Approved cockpit backup diff saved:");
+                    break;
+                case "CaptureSceneBackupDiff":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitWarningBootstrap.CaptureSceneBackupDiff,
+                        "Scene backup diff saved:");
+                    break;
+                case "CaptureSceneTransformBackupDiff":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitWarningBootstrap.CaptureSceneTransformBackupDiff,
+                        "Scene transform backup diff saved:");
+                    break;
+                case "DisableTutorialLogicForModeling":
+                    RunSynchronous(
+                        request,
+                        ModelingInspectionModeBootstrap.DisableTutorialLogicForModeling,
+                        "Tutorial logic disabled for modeling inspection.");
+                    break;
+                case "ValidateModelingInspectionMode":
+                    RunSynchronous(
+                        request,
+                        ModelingInspectionModeBootstrap.ValidateScene,
+                        "Modeling inspection mode validation passed.");
+                    break;
+                case "EnableModelingInspectionFreeCamera":
+                    RunSynchronous(
+                        request,
+                        ModelingInspectionModeBootstrap.EnableFreeCameraForModeling,
+                        "Modeling inspection free camera enabled.");
+                    break;
+                case "ValidateModelingInspectionFreeCamera":
+                    RunSynchronous(
+                        request,
+                        ModelingInspectionModeBootstrap.ValidateFreeCamera,
+                        "Modeling inspection free camera validation passed.");
+                    break;
+                case "DisableCargoShipVisualModeling":
+                    RunSynchronous(
+                        request,
+                        CargoShipVisualModelingBootstrap.DisableVisualModeling,
+                        "Cargo ship visual modeling disabled.");
+                    break;
                 case "OpenCargoRunMvpScene":
                     RunSynchronous(
                         request,

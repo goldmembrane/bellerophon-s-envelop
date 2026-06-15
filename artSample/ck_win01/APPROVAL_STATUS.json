@@ -1,0 +1,13 @@
+{
+  "sample": "ck_win01",
+  "approvalState": "미승인",
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": true,
+  "scope": "조종실 전면 단일 유리, 외곽 금속 프레임, 내부 파노라마 화면, 상하 보강 프레임, 상단 라이트 슬롯",
+  "excluded": [
+    "조종대",
+    "콘솔",
+    "복도 연결",
+    "수동 운행 UI 로직"
+  ]
+}

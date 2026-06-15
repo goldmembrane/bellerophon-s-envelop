@@ -1,0 +1,17 @@
+# Scene Transform Backup Diff
+# Current = saved CargoRunMvp. Backup = preserved Unity scene recovery backup.
+
+CurrentTransformCount = 1186
+BackupTransformCount = 1186
+RemovedInBackupCount = 0
+AddedInBackupCount = 0
+ChangedInBackupCount = 0
+
+[RemovedInBackup]
+None
+
+[AddedInBackup]
+None
+
+[ChangedInBackup]
+None

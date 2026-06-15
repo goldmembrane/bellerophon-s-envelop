@@ -1,0 +1,163 @@
+Approved Cockpit 02 Console current object capture
+Note=Compare current open scene console against script-generated expected console. This command does not reapply or save the scene.
+CurrentRoot=Approved Cockpit 02 Console
+MatchingRootCount=1
+- Approved Cockpit 02 Console|active=True|position=0.00,0.00,15.65|transforms=74|renderers=72
+RawSourceTransformCount=122
+RawSourceRendererCount=111
+RawMissingTransformCountBeforeScriptFilter=49
+RawMissingRendererCountBeforeScriptFilter=39
+ExpectedTransformCount=73
+CurrentTransformCount=73
+ExpectedRendererCount=72
+CurrentRendererCount=72
+MissingTransformCount=0
+AddedTransformCount=0
+MissingRendererCount=0
+AddedRendererCount=0
+ChangedTransformCount=0
+RawTopMissingTransformsBeforeScriptFilter=40
+- CK-02 main cockpit console sample/context asset pilot_seat scale reference only
+- CK-02 main cockpit console sample/left caution label strip
+- CK-02 main cockpit console sample/left mechanical switch panel
+- CK-02 main cockpit console sample/left toggle switch 1-1
+- CK-02 main cockpit console sample/left toggle switch 1-2
+- CK-02 main cockpit console sample/left toggle switch 1-3
+- CK-02 main cockpit console sample/left toggle switch 1-4
+- CK-02 main cockpit console sample/left toggle switch 2-1
+- CK-02 main cockpit console sample/left toggle switch 2-2
+- CK-02 main cockpit console sample/left toggle switch 2-3
+- CK-02 main cockpit console sample/left toggle switch 2-4
+- CK-02 main cockpit console sample/paint worn bright edge chip 1
+- CK-02 main cockpit console sample/paint worn bright edge chip 2
+- CK-02 main cockpit console sample/paint worn bright edge chip 3
+- CK-02 main cockpit console sample/paint worn bright edge chip 4
+- CK-02 main cockpit console sample/right caution label strip
+- CK-02 main cockpit console sample/right lever forward stop block
+- CK-02 main cockpit console sample/right lever travel notch 1
+- CK-02 main cockpit console sample/right lever travel notch 2
+- CK-02 main cockpit console sample/right lever travel notch 3
+- CK-02 main cockpit console sample/right lever travel notch 4
+- CK-02 main cockpit console sample/right lever travel notch 5
+- CK-02 main cockpit console sample/right mechanical switch panel
+- CK-02 main cockpit console sample/right toggle switch 1-1
+- CK-02 main cockpit console sample/right toggle switch 1-2
+- CK-02 main cockpit console sample/right toggle switch 1-3
+- CK-02 main cockpit console sample/right toggle switch 1-4
+- CK-02 main cockpit console sample/right toggle switch 2-1
+- CK-02 main cockpit console sample/right toggle switch 2-2
+- CK-02 main cockpit console sample/right toggle switch 2-3
+- CK-02 main cockpit console sample/right toggle switch 2-4
+- CK-02 placement context - cockpit front only
+- cam_detail
+- cam_front
+- cam_player
+- cam_side
+- cam_top
+- green console spill light
+- large cockpit console key light
+- warm edge inspection light
+RawMissingTransformsBeforeScriptFilter=49
+- CK-02 main cockpit console sample/context asset pilot_seat scale reference only
+- CK-02 main cockpit console sample/context asset pilot_seat scale reference only/context asset pilot_seat scale reference only mesh
+- CK-02 main cockpit console sample/left caution label strip
+- CK-02 main cockpit console sample/left mechanical switch panel
+- CK-02 main cockpit console sample/left toggle switch 1-1
+- CK-02 main cockpit console sample/left toggle switch 1-2
+- CK-02 main cockpit console sample/left toggle switch 1-3
+- CK-02 main cockpit console sample/left toggle switch 1-4
+- CK-02 main cockpit console sample/left toggle switch 2-1
+- CK-02 main cockpit console sample/left toggle switch 2-2
+- CK-02 main cockpit console sample/left toggle switch 2-3
+- CK-02 main cockpit console sample/left toggle switch 2-4
+- CK-02 main cockpit console sample/paint worn bright edge chip 1
+- CK-02 main cockpit console sample/paint worn bright edge chip 2
+- CK-02 main cockpit console sample/paint worn bright edge chip 3
+- CK-02 main cockpit console sample/paint worn bright edge chip 4
+- CK-02 main cockpit console sample/right caution label strip
+- CK-02 main cockpit console sample/right lever forward stop block
+- CK-02 main cockpit console sample/right lever travel notch 1
+- CK-02 main cockpit console sample/right lever travel notch 2
+- CK-02 main cockpit console sample/right lever travel notch 3
+- CK-02 main cockpit console sample/right lever travel notch 4
+- CK-02 main cockpit console sample/right lever travel notch 5
+- CK-02 main cockpit console sample/right mechanical switch panel
+- CK-02 main cockpit console sample/right toggle switch 1-1
+- CK-02 main cockpit console sample/right toggle switch 1-2
+- CK-02 main cockpit console sample/right toggle switch 1-3
+- CK-02 main cockpit console sample/right toggle switch 1-4
+- CK-02 main cockpit console sample/right toggle switch 2-1
+- CK-02 main cockpit console sample/right toggle switch 2-2
+- CK-02 main cockpit console sample/right toggle switch 2-3
+- CK-02 main cockpit console sample/right toggle switch 2-4
+- CK-02 placement context - cockpit front only
+- CK-02 placement context - cockpit front only/cockpit floor footprint proxy
+- CK-02 placement context - cockpit front only/console front anchor marker
+- CK-02 placement context - cockpit front only/front broad window screen proxy
+- CK-02 placement context - cockpit front only/front lower sill proxy
+- CK-02 placement context - cockpit front only/front upper frame proxy
+- CK-02 placement context - cockpit front only/left cockpit wall proxy
+- CK-02 placement context - cockpit front only/player clearance marker
+- CK-02 placement context - cockpit front only/right cockpit wall proxy
+- cam_detail
+- cam_front
+- cam_player
+- cam_side
+- cam_top
+- green console spill light
+- large cockpit console key light
+- warm edge inspection light
+RawMissingRenderersBeforeScriptFilter=39
+- CK-02 main cockpit console sample/context asset pilot_seat scale reference only/context asset pilot_seat scale reference only mesh|enabled=True|active=True
+- CK-02 main cockpit console sample/left caution label strip|enabled=True|active=True
+- CK-02 main cockpit console sample/left mechanical switch panel|enabled=True|active=True
+- CK-02 main cockpit console sample/left toggle switch 1-1|enabled=True|active=True
+- CK-02 main cockpit console sample/left toggle switch 1-2|enabled=True|active=True
+- CK-02 main cockpit console sample/left toggle switch 1-3|enabled=True|active=True
+- CK-02 main cockpit console sample/left toggle switch 1-4|enabled=True|active=True
+- CK-02 main cockpit console sample/left toggle switch 2-1|enabled=True|active=True
+- CK-02 main cockpit console sample/left toggle switch 2-2|enabled=True|active=True
+- CK-02 main cockpit console sample/left toggle switch 2-3|enabled=True|active=True
+- CK-02 main cockpit console sample/left toggle switch 2-4|enabled=True|active=True
+- CK-02 main cockpit console sample/paint worn bright edge chip 1|enabled=True|active=True
+- CK-02 main cockpit console sample/paint worn bright edge chip 2|enabled=True|active=True
+- CK-02 main cockpit console sample/paint worn bright edge chip 3|enabled=True|active=True
+- CK-02 main cockpit console sample/paint worn bright edge chip 4|enabled=True|active=True
+- CK-02 main cockpit console sample/right caution label strip|enabled=True|active=True
+- CK-02 main cockpit console sample/right lever forward stop block|enabled=True|active=True
+- CK-02 main cockpit console sample/right lever travel notch 1|enabled=True|active=True
+- CK-02 main cockpit console sample/right lever travel notch 2|enabled=True|active=True
+- CK-02 main cockpit console sample/right lever travel notch 3|enabled=True|active=True
+- CK-02 main cockpit console sample/right lever travel notch 4|enabled=True|active=True
+- CK-02 main cockpit console sample/right lever travel notch 5|enabled=True|active=True
+- CK-02 main cockpit console sample/right mechanical switch panel|enabled=True|active=True
+- CK-02 main cockpit console sample/right toggle switch 1-1|enabled=True|active=True
+- CK-02 main cockpit console sample/right toggle switch 1-2|enabled=True|active=True
+- CK-02 main cockpit console sample/right toggle switch 1-3|enabled=True|active=True
+- CK-02 main cockpit console sample/right toggle switch 1-4|enabled=True|active=True
+- CK-02 main cockpit console sample/right toggle switch 2-1|enabled=True|active=True
+- CK-02 main cockpit console sample/right toggle switch 2-2|enabled=True|active=True
+- CK-02 main cockpit console sample/right toggle switch 2-3|enabled=True|active=True
+- CK-02 main cockpit console sample/right toggle switch 2-4|enabled=True|active=True
+- CK-02 placement context - cockpit front only/cockpit floor footprint proxy|enabled=True|active=True
+- CK-02 placement context - cockpit front only/console front anchor marker|enabled=True|active=True
+- CK-02 placement context - cockpit front only/front broad window screen proxy|enabled=True|active=True
+- CK-02 placement context - cockpit front only/front lower sill proxy|enabled=True|active=True
+- CK-02 placement context - cockpit front only/front upper frame proxy|enabled=True|active=True
+- CK-02 placement context - cockpit front only/left cockpit wall proxy|enabled=True|active=True
+- CK-02 placement context - cockpit front only/player clearance marker|enabled=True|active=True
+- CK-02 placement context - cockpit front only/right cockpit wall proxy|enabled=True|active=True
+TopMissingTransformsForScript=0
+MissingTransforms=0
+AddedTransforms=0
+MissingRenderers=0
+AddedRenderers=0
+ChangedTransforms=0
+NamedTransformSearch=central blank armored control plate
+- CK-02 main cockpit console sample/central blank armored control plate
+  expectedLocalPosition=0,0.00684,0.009
+  expectedLocalEuler=50.00001,0,0
+  expectedLocalScale=1,1,1
+  currentLocalPosition=0,0.00684,0.009
+  currentLocalEuler=50.00001,0,0
+  currentLocalScale=1,1,1

@@ -1,0 +1,29 @@
+{
+  "sample": "ck_dir11",
+  "objectId": "CK-11",
+  "scope": "Cockpit physical direction labels and room route signs sample.",
+  "sourceBasis": [
+    "docs/COCKPIT_OBJECTS.md: CK-11 방향 표시 / 방 라벨",
+    "docs/GAME_DESIGN_SOURCE.txt:115 조종실 왼쪽은 동력실, 오른쪽은 통제실, 뒤쪽은 운송창고 방향",
+    "docs/MVP_IMPLEMENTATION_ORDER.md:98 조종실은 동력실/통제실/운송창고 연결 방향을 알아볼 수 있게 만든다"
+  ],
+  "included": [
+    "왼쪽 동력실 방향 표식",
+    "오른쪽 통제실 방향 표식",
+    "뒤쪽 운송창고 방향 표식",
+    "벽면 보조 화살표",
+    "후방 바닥 화살표",
+    "천장 루트 라벨 레일"
+  ],
+  "excluded": [
+    "복도 본체 모델링",
+    "문/출입구 기능",
+    "상호작용 로직",
+    "Unity 런타임 연결"
+  ],
+  "unityApplicationAllowed": true,
+  "unityApplied": true,
+  "unityAppliedComparison": "artSample/ck_dir11/unity_applied_comparison/index.html",
+  "approvalState": "승인",
+  "approvalCondition": "Unity 적용 시 조종실 구조에 맞는 위치에 배치"
+}
