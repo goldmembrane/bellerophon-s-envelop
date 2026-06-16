@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Bellerophon.Core.Player;
 using Bellerophon.Core.Session;
 using UnityEditor;
@@ -69,6 +70,39 @@ namespace Bellerophon.Editor.Validation
                 disabledControllers +
                 "; " +
                 details);
+        }
+
+        [MenuItem("Bellerophon/Bootstrap/Restore Gameplay Mode After Modeling Inspection")]
+        public static void RestoreGameplayModeAfterInspection()
+        {
+            var scene = OpenCargoRunScene();
+
+            var disabledInspectionCamera = DisableInspectionCamera();
+            var enabledPlayerObjects = EnablePlayerObjects();
+            var enabledPlayerCamera = EnablePlayerCamera();
+            var restoredHudRoots = ShowFirstPersonHudRoots();
+            var bakedAreaLights = BakeUnsupportedAreaLightsForUrp();
+            var disabledPunctualShadows = DisableAdditionalPunctualLightShadows();
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, Phase4CargoShipGrayboxBootstrap.CargoRunScenePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            ValidateGameplayModeRestored();
+            Debug.Log(
+                "Gameplay mode restored after modeling inspection. DisabledInspectionCamera=" +
+                disabledInspectionCamera +
+                "; EnabledPlayerObjects=" +
+                enabledPlayerObjects +
+                "; EnabledPlayerCamera=" +
+                enabledPlayerCamera +
+                "; RestoredHudRoots=" +
+                restoredHudRoots +
+                "; BakedAreaLights=" +
+                bakedAreaLights +
+                "; DisabledPunctualShadows=" +
+                disabledPunctualShadows);
         }
 
         public static string ApplyFreeCameraForModeling()
@@ -209,6 +243,30 @@ namespace Bellerophon.Editor.Validation
                 "Modeling inspection free camera validation passed. MainCamera=" +
                 camera.gameObject.name +
                 "; OtherEnabledCameras=0; ActivePlayerViewComponents=0; ActiveHudRoots=0");
+        }
+
+        private static void ValidateGameplayModeRestored()
+        {
+            var playerMotor = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerMotor>();
+            var playerInput = UnityEngine.Object.FindFirstObjectByType<FirstPersonPlayerInput>();
+            var interaction = UnityEngine.Object.FindFirstObjectByType<FirstPersonInteractionController>();
+            var hud = UnityEngine.Object.FindFirstObjectByType<FirstPersonHud>();
+            var camera = Camera.main;
+            if (playerMotor == null ||
+                playerInput == null ||
+                interaction == null ||
+                hud == null ||
+                camera == null ||
+                !camera.isActiveAndEnabled)
+            {
+                throw new InvalidOperationException("Gameplay mode restore failed to reactivate player, HUD, interaction, and player camera.");
+            }
+
+            var inspectionCamera = FindNamedObject(FreeCameraRootName);
+            if (inspectionCamera != null && inspectionCamera.activeInHierarchy)
+            {
+                throw new InvalidOperationException("Modeling inspection camera must be inactive after gameplay restore.");
+            }
         }
 
         private static Scene OpenCargoRunScene()
@@ -385,6 +443,93 @@ namespace Bellerophon.Editor.Validation
                    DisableActiveComponents<FirstPersonEquipmentVisualController>();
         }
 
+        private static int DisableInspectionCamera()
+        {
+            var changed = 0;
+            var root = FindNamedObject(FreeCameraRootName);
+            if (root == null)
+            {
+                return changed;
+            }
+
+            if (root.CompareTag("MainCamera"))
+            {
+                root.tag = "Untagged";
+                changed++;
+            }
+
+            changed += DisableComponentsOnObject<Camera>(root);
+            changed += DisableComponentsOnObject<AudioListener>(root);
+            changed += DisableComponentsOnObject<ModelingInspectionFreeCamera>(root);
+            if (root.activeSelf)
+            {
+                root.SetActive(false);
+                changed++;
+            }
+
+            return changed;
+        }
+
+        private static int EnablePlayerObjects()
+        {
+            return EnableComponentsWithOwners<FirstPersonPlayerInput>() +
+                   EnableComponentsWithOwners<FirstPersonPlayerMotor>() +
+                   EnableComponentsWithOwners<FirstPersonInteractionController>() +
+                   EnableComponentsWithOwners<FirstPersonHandInventory>() +
+                   EnableComponentsWithOwners<PlayerEquipmentController>() +
+                   EnableComponentsWithOwners<FirstPersonEquipmentVisualController>();
+        }
+
+        private static int EnablePlayerCamera()
+        {
+            var changed = 0;
+            var motors = UnityEngine.Object.FindObjectsByType<FirstPersonPlayerMotor>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+            for (var i = 0; i < motors.Length; i++)
+            {
+                var motor = motors[i];
+                if (motor == null)
+                {
+                    continue;
+                }
+
+                var cameras = motor.GetComponentsInChildren<Camera>(true);
+                for (var j = 0; j < cameras.Length; j++)
+                {
+                    var camera = cameras[j];
+                    if (camera == null)
+                    {
+                        continue;
+                    }
+
+                    SetObjectAndParentsActive(camera.gameObject);
+                    if (!camera.enabled)
+                    {
+                        camera.enabled = true;
+                        changed++;
+                    }
+
+                    if (!camera.CompareTag("MainCamera"))
+                    {
+                        camera.gameObject.tag = "MainCamera";
+                        changed++;
+                    }
+
+                    var listener = camera.GetComponent<AudioListener>();
+                    if (listener != null && !listener.enabled)
+                    {
+                        listener.enabled = true;
+                        changed++;
+                    }
+
+                    return changed;
+                }
+            }
+
+            return changed;
+        }
+
         private static int HideEquipmentVisuals()
         {
             var changed = 0;
@@ -431,6 +576,90 @@ namespace Bellerophon.Editor.Validation
             return changed;
         }
 
+        private static int ShowFirstPersonHudRoots()
+        {
+            var changed = 0;
+            var huds = UnityEngine.Object.FindObjectsByType<FirstPersonHud>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+            for (var i = 0; i < huds.Length; i++)
+            {
+                var hud = huds[i];
+                if (hud == null)
+                {
+                    continue;
+                }
+
+                SetObjectAndParentsActive(hud.gameObject);
+                if (!hud.enabled)
+                {
+                    hud.enabled = true;
+                    changed++;
+                }
+
+                var behaviours = hud.GetComponentsInChildren<Behaviour>(true);
+                for (var j = 0; j < behaviours.Length; j++)
+                {
+                    var behaviour = behaviours[j];
+                    if (behaviour != null && !behaviour.enabled)
+                    {
+                        behaviour.enabled = true;
+                        changed++;
+                    }
+                }
+            }
+
+            return changed;
+        }
+
+        private static int BakeUnsupportedAreaLightsForUrp()
+        {
+            var changed = 0;
+            var lights = UnityEngine.Object.FindObjectsByType<Light>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+            for (var i = 0; i < lights.Length; i++)
+            {
+                var light = lights[i];
+                if (light == null ||
+                    light.type != LightType.Rectangle ||
+                    light.lightmapBakeType == LightmapBakeType.Baked)
+                {
+                    continue;
+                }
+
+                light.lightmapBakeType = LightmapBakeType.Baked;
+                EditorUtility.SetDirty(light);
+                changed++;
+            }
+
+            return changed;
+        }
+
+        private static int DisableAdditionalPunctualLightShadows()
+        {
+            var changed = 0;
+            var lights = UnityEngine.Object.FindObjectsByType<Light>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+            for (var i = 0; i < lights.Length; i++)
+            {
+                var light = lights[i];
+                if (light == null ||
+                    light.type == LightType.Directional ||
+                    light.shadows == LightShadows.None)
+                {
+                    continue;
+                }
+
+                light.shadows = LightShadows.None;
+                EditorUtility.SetDirty(light);
+                changed++;
+            }
+
+            return changed;
+        }
+
         private static int SetObjectInactive(GameObject target)
         {
             if (target == null || !target.activeSelf)
@@ -462,6 +691,68 @@ namespace Bellerophon.Editor.Validation
             }
 
             return changed;
+        }
+
+        private static int DisableComponentsOnObject<T>(GameObject root)
+            where T : Behaviour
+        {
+            var changed = 0;
+            var components = root.GetComponents<T>();
+            for (var i = 0; i < components.Length; i++)
+            {
+                if (components[i] != null && components[i].enabled)
+                {
+                    components[i].enabled = false;
+                    changed++;
+                }
+            }
+
+            return changed;
+        }
+
+        private static int EnableComponentsWithOwners<T>()
+            where T : Behaviour
+        {
+            var changed = 0;
+            var components = UnityEngine.Object.FindObjectsByType<T>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+            for (var i = 0; i < components.Length; i++)
+            {
+                var component = components[i];
+                if (component == null)
+                {
+                    continue;
+                }
+
+                SetObjectAndParentsActive(component.gameObject);
+                if (!component.enabled)
+                {
+                    component.enabled = true;
+                    changed++;
+                }
+            }
+
+            return changed;
+        }
+
+        private static void SetObjectAndParentsActive(GameObject target)
+        {
+            var parents = new List<Transform>();
+            var current = target.transform;
+            while (current != null)
+            {
+                parents.Add(current);
+                current = current.parent;
+            }
+
+            for (var i = parents.Count - 1; i >= 0; i--)
+            {
+                if (!parents[i].gameObject.activeSelf)
+                {
+                    parents[i].gameObject.SetActive(true);
+                }
+            }
         }
 
         private static ModelingInspectionFreeCamera FindActiveFreeCameraController()

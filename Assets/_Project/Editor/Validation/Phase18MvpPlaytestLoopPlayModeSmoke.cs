@@ -520,7 +520,7 @@ namespace Bellerophon.Editor.Validation
             map.RefreshForValidation();
             if (map.CurrentRoomText == null ||
                 map.CurrentRoomMarker == null ||
-                map.CurrentRoom != ShipRoomId.CargoHold)
+                map.CurrentRoom != ShipRoomId.Cockpit)
             {
                 throw new InvalidOperationException("Phase 18 loop requires Phase 16 ship map to remain active.");
             }

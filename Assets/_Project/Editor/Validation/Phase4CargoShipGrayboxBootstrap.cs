@@ -105,6 +105,7 @@ namespace Bellerophon.Editor.Validation
             CreateCorridors(root.transform, corridorMaterial, wallMaterial, ceilingMaterial, doorFrameMaterial, cableMaterial);
             CreateRoomFeatures(root.transform, wallMaterial, glassMaterial, consoleMaterial, cargoMaterial, interactableMaterial, damageMaterial);
             CreateDirectionSigns(root.transform);
+            HideLegacyCockpitModeling(root.transform);
             ConfigurePlayerStart();
             ConfigureLighting();
 
@@ -120,6 +121,29 @@ namespace Bellerophon.Editor.Validation
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("Phase 4 cargo ship graybox assets are ready.");
+        }
+
+        [MenuItem("Bellerophon/Bootstrap/Apply Modeled Cockpit Play Start")]
+        public static void ApplyModeledCockpitPlayStart()
+        {
+            var scene = SceneManager.GetActiveScene();
+            if (scene.path != CargoRunScenePath)
+            {
+                scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            }
+
+            var root = RequireRootObject(GrayboxRootName);
+            var disabledLegacyRenderers = HideLegacyCockpitModeling(root.transform);
+            ConfigurePlayerStart();
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, CargoRunScenePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log(
+                "Modeled cockpit play start applied. PlayerStart=(0,0,20.6); PlayerYaw=180; DisabledLegacyCockpitRenderers=" +
+                disabledLegacyRenderers);
         }
 
         private static void CreateRooms(
@@ -1553,7 +1577,49 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Phase 4 graybox requires the Phase 2 Player prefab in CargoRunMvp.");
             }
 
-            player.transform.SetPositionAndRotation(RoomPoint("Cargo Hold", 0f, 0f, -5f), Quaternion.identity);
+            player.transform.SetPositionAndRotation(RoomPoint("Cockpit", 0f, 0f, 2.6f), Quaternion.Euler(0f, 180f, 0f));
+        }
+
+        private static int HideLegacyCockpitModeling(Transform grayboxRoot)
+        {
+            var disabled = 0;
+            var renderers = grayboxRoot.GetComponentsInChildren<Renderer>(true);
+            for (var i = 0; i < renderers.Length; i++)
+            {
+                var renderer = renderers[i];
+                if (renderer == null ||
+                    !renderer.enabled ||
+                    !IsLegacyCockpitModelingRenderer(renderer.transform))
+                {
+                    continue;
+                }
+
+                renderer.enabled = false;
+                disabled++;
+            }
+
+            return disabled;
+        }
+
+        private static bool IsLegacyCockpitModelingRenderer(Transform transform)
+        {
+            var current = transform;
+            while (current != null)
+            {
+                if (current.gameObject.name == "Room - Cockpit")
+                {
+                    return true;
+                }
+
+                current = current.parent;
+            }
+
+            var name = transform.gameObject.name;
+            return name.StartsWith("Cockpit ", StringComparison.Ordinal) ||
+                   name.StartsWith("Door Frame - Cockpit", StringComparison.Ordinal) ||
+                   name.StartsWith("Door Header Wall - Cockpit", StringComparison.Ordinal) ||
+                   name.StartsWith("Cable Tray - Cockpit", StringComparison.Ordinal) ||
+                   name.StartsWith("Wear Patch - Cockpit", StringComparison.Ordinal);
         }
 
         private static void ConfigureLighting()
@@ -1931,6 +1997,20 @@ namespace Bellerophon.Editor.Validation
         {
             var room = FindRoom(roomName);
             return room.Center + new Vector3(localX, localY, localZ);
+        }
+
+        private static GameObject RequireRootObject(string rootName)
+        {
+            var roots = SceneManager.GetActiveScene().GetRootGameObjects();
+            for (var i = 0; i < roots.Length; i++)
+            {
+                if (roots[i].name == rootName)
+                {
+                    return roots[i];
+                }
+            }
+
+            throw new InvalidOperationException("Missing root object: " + rootName);
         }
 
         private static bool Connects(string from, string to, string first, string second)

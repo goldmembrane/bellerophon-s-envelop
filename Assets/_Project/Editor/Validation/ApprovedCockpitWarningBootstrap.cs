@@ -31,11 +31,12 @@ namespace Bellerophon.Editor.Validation
         private static readonly Vector3 CockpitCenter = new Vector3(0f, 0f, 18f);
         private static readonly Vector3 RootWorldPosition = CockpitCenter;
         private static readonly Vector3 ScreenBarTargetCenter = CockpitCenter + new Vector3(0f, 2.68f, -3.45f);
-        private static readonly Vector3 CeilingBeaconTargetCenter = CockpitCenter + new Vector3(0f, 2.92f, 0f);
+        private static readonly Vector3 CeilingBeaconTargetCenter = CockpitCenter + new Vector3(0.23f, 2.92f, 0f);
         private static readonly string[] RemovedAfterEditorReviewObjectNames =
         {
             "upper alarm bar hazard tab 1",
-            "upper alarm bar hazard tab 2"
+            "upper alarm bar hazard tab 2",
+            "central ceiling emergency rotary beacon ceiling power cable"
         };
 
         [MenuItem("Bellerophon/Bootstrap/Ensure Approved Cockpit 04 Warning")]

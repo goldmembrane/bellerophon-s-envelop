@@ -84,6 +84,16 @@ namespace Bellerophon.Editor.Validation
                 "CK-02 main cockpit console sample/central blank armored control plate",
                 new Vector3(0f, 0.00684f, 0.009f),
                 Quaternion.Euler(50f, 0f, 0f),
+                Vector3.one),
+            new TransformOverride(
+                "CK-02 main cockpit console sample/F interaction anchor plate",
+                new Vector3(0f, -0.00178f, 0.0062f),
+                Quaternion.Euler(354f, 0f, 0f),
+                Vector3.one),
+            new TransformOverride(
+                "CK-02 main cockpit console sample/F interaction letter marker",
+                new Vector3(0f, -0.00212f, 0.00614f),
+                Quaternion.Euler(84.00002f, 0f, 0f),
                 Vector3.one)
         };
 

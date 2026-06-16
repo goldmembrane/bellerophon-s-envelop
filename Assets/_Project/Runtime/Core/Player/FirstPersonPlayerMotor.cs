@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Bellerophon.Core.Player
 {
@@ -22,6 +23,16 @@ namespace Bellerophon.Core.Player
         public Transform PlayerCamera => playerCamera;
 
         public FirstPersonPlayerSettings Settings => settings;
+
+        public static Vector3 CalculatePlaytestFreeMoveDirectionForValidation(
+            Vector3 forward,
+            Vector3 right,
+            Vector2 planarInput,
+            bool ascend,
+            bool descend)
+        {
+            return CalculatePlaytestFreeMoveDirection(forward, right, planarInput, ascend, descend);
+        }
 
         public void Configure(
             FirstPersonPlayerSettings playerSettings,
@@ -73,6 +84,12 @@ namespace Bellerophon.Core.Player
 
         private void UpdateMovement()
         {
+            if (ShouldUseEditorPlaytestFreeMovement())
+            {
+                UpdateEditorPlaytestFreeMovement();
+                return;
+            }
+
             var crouching = input.CrouchHeld;
             ApplyBodySettings(crouching, false);
 
@@ -100,6 +117,45 @@ namespace Bellerophon.Core.Player
             characterController.Move(velocity * Time.deltaTime);
         }
 
+        private bool ShouldUseEditorPlaytestFreeMovement()
+        {
+#if UNITY_EDITOR
+            return Application.isPlaying && settings.EditorPlaytestFreeMovementEnabled;
+#else
+            return false;
+#endif
+        }
+
+        private void UpdateEditorPlaytestFreeMovement()
+        {
+            verticalVelocity = 0f;
+
+            var movementBasis = playerCamera != null ? playerCamera : transform;
+            var direction = CalculatePlaytestFreeMoveDirection(
+                movementBasis.forward,
+                movementBasis.right,
+                Vector2.ClampMagnitude(input.Move, 1f),
+                input.JumpHeld || IsUnsuppressedKeyHeld(Key.E),
+                input.CrouchHeld || IsUnsuppressedKeyHeld(Key.Q));
+
+            if (direction.sqrMagnitude <= 0.0001f)
+            {
+                return;
+            }
+
+            var speed = settings.EditorPlaytestFreeMoveSpeed;
+            if (input.SprintHeld)
+            {
+                speed *= settings.EditorPlaytestFreeMoveFastMultiplier;
+            }
+            else if (IsUnsuppressedKeyHeld(Key.LeftAlt) || IsUnsuppressedKeyHeld(Key.RightAlt))
+            {
+                speed *= settings.EditorPlaytestFreeMoveSlowMultiplier;
+            }
+
+            transform.position += direction * speed * Time.unscaledDeltaTime;
+        }
+
         private float GetMoveSpeed(bool crouching)
         {
             float baseSpeed;
@@ -119,6 +175,36 @@ namespace Bellerophon.Core.Player
         private float GetStatusMovementMultiplier()
         {
             return playerStatus == null ? 1f : playerStatus.MovementMultiplier;
+        }
+
+        private static Vector3 CalculatePlaytestFreeMoveDirection(
+            Vector3 forward,
+            Vector3 right,
+            Vector2 planarInput,
+            bool ascend,
+            bool descend)
+        {
+            var safeForward = forward.sqrMagnitude > 0.0001f ? forward.normalized : Vector3.forward;
+            var safeRight = right.sqrMagnitude > 0.0001f ? right.normalized : Vector3.right;
+            var direction = safeRight * planarInput.x + safeForward * planarInput.y;
+            if (ascend)
+            {
+                direction += Vector3.up;
+            }
+
+            if (descend)
+            {
+                direction -= Vector3.up;
+            }
+
+            return direction.sqrMagnitude > 1f ? direction.normalized : direction;
+        }
+
+        private bool IsUnsuppressedKeyHeld(Key key)
+        {
+            return !input.GameplayActionInputSuppressed &&
+                   Keyboard.current != null &&
+                   Keyboard.current[key].isPressed;
         }
 
         private void ApplyBodySettings(bool crouching, bool immediate)

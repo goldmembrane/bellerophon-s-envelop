@@ -1,0 +1,7 @@
+{
+  "sample": "ck_dmg09",
+  "approvalState": "미승인",
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": true,
+  "conditionToReview": "조종실 내구도 0% 시 기존 CK-02 조종대를 숨기고 이 CK-09 파손 상태를 표시하는 용도"
+}

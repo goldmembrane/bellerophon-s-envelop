@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ck_dmg09</title>
+  <style>
+    body { margin: 0; background: #101414; color: #eee9dc; font-family: Arial, sans-serif; }
+    main { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    p { color: #cdc5b8; line-height: 1.55; }
+    .notice { border-left: 4px solid #b64c2c; padding: 10px 14px; background: #211a17; margin: 16px 0 20px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    figure { margin: 0; border: 1px solid #39413f; background: #1b2220; padding: 10px; }
+    img { width: 100%; display: block; background: #060807; }
+    figcaption { margin-top: 8px; color: #ddd4c6; font-size: 14px; }
+    code { color: #9bdad1; }
+    @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>ck_dmg09</h1>
+  <p>CK-09 조종대 파손 / 폭파 상태 부품 샘플입니다. 아직 Unity 씬에는 적용하지 않았습니다.</p>
+  <p>이 샘플은 승인된 <code>ck_ctl02_low</code> Blender 파일의 원본 오브젝트를 불러온 뒤, 원본 타륜과 오른쪽 전진 레버를 파손 상태로 변형한 버전입니다.</p>
+  <div class="notice">조건: 승인 후 Unity에 붙일 경우 <code>조종실 내구도 0%</code>일 때만 기존 CK-02 조종대를 숨기고 이 파손 상태를 표시합니다.</div>
+  <section class="grid">
+    <figure><a href="renders/01_front.png"><img src="renders/01_front.png" alt="전면: 조종대 폭파 상태 전체"></a><figcaption>전면: 조종대 폭파 상태 전체</figcaption></figure>
+<figure><a href="renders/02_player.png"><img src="renders/02_player.png" alt="플레이어 접근 방향: 통행을 막지 않는 파손 상태"></a><figcaption>플레이어 접근 방향: 통행을 막지 않는 파손 상태</figcaption></figure>
+<figure><a href="renders/03_side.png"><img src="renders/03_side.png" alt="측면: 조종대 높이와 전면 화면 거리"></a><figcaption>측면: 조종대 높이와 전면 화면 거리</figcaption></figure>
+<figure><a href="renders/04_top.png"><img src="renders/04_top.png" alt="상단: 파편과 그을림 범위"></a><figcaption>상단: 파편과 그을림 범위</figcaption></figure>
+<figure><a href="renders/05_detail.png"><img src="renders/05_detail.png" alt="상세: 부서진 타륜, 휘어진 레버, 노출 배선"></a><figcaption>상세: 부서진 타륜, 휘어진 레버, 노출 배선</figcaption></figure>
+<figure><a href="renders/06_condition_swap.png"><img src="renders/06_condition_swap.png" alt="조건부 교체 확인: 정상 조종대 위치의 파손 상태"></a><figcaption>조건부 교체 확인: 정상 조종대 위치의 파손 상태</figcaption></figure>
+  </section>
+</main>
+</body>
+</html>

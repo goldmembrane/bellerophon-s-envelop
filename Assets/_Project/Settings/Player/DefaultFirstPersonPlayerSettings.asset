@@ -17,6 +17,10 @@ MonoBehaviour:
   crouchSpeed: 2.2
   jumpSpeed: 4.8
   gravity: 18
+  editorPlaytestFreeMovementEnabled: 1
+  editorPlaytestFreeMoveSpeed: 7.5
+  editorPlaytestFreeMoveFastMultiplier: 3
+  editorPlaytestFreeMoveSlowMultiplier: 0.25
   mouseSensitivity: 0.12
   minPitch: -82
   maxPitch: 82

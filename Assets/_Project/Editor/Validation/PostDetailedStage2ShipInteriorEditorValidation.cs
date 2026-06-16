@@ -95,10 +95,10 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Post-detailed stage 2 corridor width must stay inside the approved two-person target.");
             }
 
-            var mapRoom = ShipInteriorMapRules.FindCurrentRoom(new Vector3(0f, -3f, -5f));
-            if (mapRoom != Bellerophon.Core.Session.ShipRoomId.CargoHold)
+            var mapRoom = ShipInteriorMapRules.FindCurrentRoom(new Vector3(0f, 0f, 20.6f));
+            if (mapRoom != Bellerophon.Core.Session.ShipRoomId.Cockpit)
             {
-                throw new InvalidOperationException("Post-detailed stage 2 must preserve the player start in Cargo Hold.");
+                throw new InvalidOperationException("Post-detailed stage 2 must preserve the player start near the Cockpit.");
             }
 
             Debug.Log("Post-detailed stage 2 ship interior editor validation passed.");

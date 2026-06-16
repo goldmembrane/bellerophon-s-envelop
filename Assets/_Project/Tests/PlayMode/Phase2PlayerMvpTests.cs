@@ -1,5 +1,7 @@
 using System.Collections;
 using Bellerophon.Core.Player;
+using Bellerophon.Core.Session;
+using Bellerophon.Core.Ship;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,10 +19,17 @@ namespace Bellerophon.Tests.PlayMode
         {
             yield return LoadCargoRunMvp();
 
-            Assert.That(Object.FindFirstObjectByType<FirstPersonPlayerMotor>(), Is.Not.Null);
+            var player = Object.FindFirstObjectByType<FirstPersonPlayerMotor>();
+            Assert.That(player, Is.Not.Null);
             Assert.That(Object.FindFirstObjectByType<FirstPersonPlayerInput>(), Is.Not.Null);
             Assert.That(Object.FindFirstObjectByType<FirstPersonHud>(), Is.Not.Null);
             Assert.That(Camera.main, Is.Not.Null);
+
+            Assert.That(ShipInteriorMapRules.FindCurrentRoom(player.transform.position), Is.EqualTo(ShipRoomId.Cockpit));
+            Assert.That(player.transform.position.x, Is.EqualTo(0f).Within(0.01f));
+            Assert.That(player.transform.position.y, Is.EqualTo(0f).Within(0.01f));
+            Assert.That(player.transform.position.z, Is.EqualTo(20.6f).Within(0.01f));
+            Assert.That(Quaternion.Angle(player.transform.rotation, Quaternion.Euler(0f, 180f, 0f)), Is.LessThan(0.1f));
         }
 
         [UnityTest]
@@ -37,13 +46,14 @@ namespace Bellerophon.Tests.PlayMode
         public IEnumerator TryInteract_InteractsWithTargetInFrontOfPlayer()
         {
             yield return LoadCargoRunMvp();
+            yield return PlacePlayerAtInteractionTestStart();
 
             var interaction = Object.FindFirstObjectByType<FirstPersonInteractionController>();
             Assert.That(interaction, Is.Not.Null);
             yield return null;
 
-            Assert.That(interaction.HasCurrentTarget, Is.True);
-            Assert.That(interaction.CurrentTargetCanInteract, Is.True);
+            Assert.That(interaction.HasCurrentTarget, Is.True, DescribeInteractionState(interaction));
+            Assert.That(interaction.CurrentTargetCanInteract, Is.True, DescribeInteractionState(interaction));
 
             var interacted = interaction.TryInteract();
 
@@ -89,9 +99,38 @@ namespace Bellerophon.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator CargoRunMvp_EditorPlaytestFreeMovementAllowsVerticalTravel()
+        {
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            yield return LoadCargoRunMvp();
+
+            var player = Object.FindFirstObjectByType<FirstPersonPlayerMotor>();
+            var input = Object.FindFirstObjectByType<FirstPersonPlayerInput>();
+            Assert.That(player, Is.Not.Null);
+            Assert.That(input, Is.Not.Null);
+
+            input.SetCursorLockSuppressed(false);
+            input.SetGameplayInputSuppressed(false);
+            var start = player.transform.position;
+            var forward = player.PlayerCamera != null ? player.PlayerCamera.forward : player.transform.forward;
+
+            Press(keyboard.wKey);
+            Press(keyboard.spaceKey);
+            yield return null;
+            yield return null;
+            Release(keyboard.spaceKey);
+            Release(keyboard.wKey);
+
+            var delta = player.transform.position - start;
+            Assert.That(delta.y, Is.GreaterThan(0.01f));
+            Assert.That(Vector3.Dot(delta, forward), Is.GreaterThan(0.01f));
+        }
+
+        [UnityTest]
         public IEnumerator CargoRunMvp_ShowsInteractionPromptForTarget()
         {
             yield return LoadCargoRunMvp();
+            yield return PlacePlayerAtInteractionTestStart();
 
             var interaction = Object.FindFirstObjectByType<FirstPersonInteractionController>();
             var target = Object.FindFirstObjectByType<DebugInteractable>();
@@ -102,8 +141,8 @@ namespace Bellerophon.Tests.PlayMode
 
             yield return null;
 
-            Assert.That(interaction.HasCurrentTarget, Is.True);
-            Assert.That(interaction.CurrentTargetCanInteract, Is.True);
+            Assert.That(interaction.HasCurrentTarget, Is.True, DescribeInteractionState(interaction));
+            Assert.That(interaction.CurrentTargetCanInteract, Is.True, DescribeInteractionState(interaction));
 
             var promptText = FindHudText(hud, "Interaction Prompt Text");
             Assert.That(promptText, Is.Not.Null);
@@ -116,6 +155,61 @@ namespace Bellerophon.Tests.PlayMode
             SceneManager.LoadScene("CargoRunMvp");
             yield return null;
             yield return null;
+        }
+
+        private static IEnumerator PlacePlayerAtInteractionTestStart()
+        {
+            var player = Object.FindFirstObjectByType<FirstPersonPlayerMotor>();
+            var input = Object.FindFirstObjectByType<FirstPersonPlayerInput>();
+            var target = FindInteractionTestTarget();
+            var camera = Camera.main;
+            Assert.That(player, Is.Not.Null);
+            Assert.That(target, Is.Not.Null);
+            Assert.That(camera, Is.Not.Null);
+
+            input?.SetCursorLockSuppressed(false);
+            input?.SetGameplayInputSuppressed(false);
+
+            var targetCollider = target.GetComponent<Collider>();
+            Assert.That(targetCollider, Is.Not.Null);
+
+            var cameraOffset = camera.transform.position - player.transform.position;
+            var targetPoint = targetCollider.bounds.center;
+            player.transform.SetPositionAndRotation(targetPoint - cameraOffset - (Vector3.forward * 0.8f), Quaternion.identity);
+            camera.transform.localRotation = Quaternion.identity;
+
+            Physics.SyncTransforms();
+            yield return null;
+        }
+
+        private static string DescribeInteractionState(FirstPersonInteractionController interaction)
+        {
+            var player = Object.FindFirstObjectByType<FirstPersonPlayerMotor>();
+            var camera = Camera.main;
+            return "Failure='" +
+                   interaction.CurrentTargetFailureReason +
+                   "' Player=" +
+                   (player == null ? "<null>" : player.transform.position.ToString("F3")) +
+                   " Camera=" +
+                   (camera == null ? "<null>" : camera.transform.position.ToString("F3")) +
+                   " Forward=" +
+                   (camera == null ? "<null>" : camera.transform.forward.ToString("F3"));
+        }
+
+        private static DebugInteractable FindInteractionTestTarget()
+        {
+            var targets = Object.FindObjectsByType<DebugInteractable>(
+                FindObjectsInactive.Exclude,
+                FindObjectsSortMode.None);
+            for (var i = 0; i < targets.Length; i++)
+            {
+                if (targets[i].DisplayName == "Cargo Hold Cargo Status")
+                {
+                    return targets[i];
+                }
+            }
+
+            return targets.Length > 0 ? targets[0] : null;
         }
 
         private static int RenderedScenePixelCount(Camera camera)

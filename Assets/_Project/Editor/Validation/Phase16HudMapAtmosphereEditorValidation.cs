@@ -89,14 +89,14 @@ namespace Bellerophon.Editor.Validation
             RequireMissingMapCorridor("SupplyRoom", "ControlRoom");
 
             map.RefreshForValidation();
-            if (map.CurrentRoom != ShipRoomId.CargoHold ||
-                !map.CurrentRoomText.text.Contains("Cargo Hold"))
+            if (map.CurrentRoom != ShipRoomId.Cockpit ||
+                !map.CurrentRoomText.text.Contains("Cockpit"))
             {
-                throw new InvalidOperationException("Phase 16 map must show the Cargo Hold as the player start room.");
+                throw new InvalidOperationException("Phase 16 map must show the Cockpit as the player start room.");
             }
 
-            var cargoMapRoom = ShipInteriorMapRules.GetRoom(ShipRoomId.CargoHold);
-            if (Vector2.Distance(map.CurrentRoomMarker.sizeDelta, cargoMapRoom.MapSize * ShipInteriorMapRules.ShipInteriorMapScale) > 0.01f)
+            var cockpitMapRoom = ShipInteriorMapRules.GetRoom(ShipRoomId.Cockpit);
+            if (Vector2.Distance(map.CurrentRoomMarker.sizeDelta, cockpitMapRoom.MapSize * ShipInteriorMapRules.ShipInteriorMapScale) > 0.01f)
             {
                 throw new InvalidOperationException("Phase 16 current room marker must use the 80% room size.");
             }

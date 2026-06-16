@@ -47,6 +47,8 @@ namespace Bellerophon.Core.Player
 
         public bool JumpPressedThisFrame => !IsInputSuppressed && jumpAction != null && jumpAction.WasPressedThisFrame();
 
+        public bool JumpHeld => !IsInputSuppressed && jumpAction != null && jumpAction.IsPressed();
+
         public bool SprintHeld => !IsInputSuppressed && sprintAction != null && sprintAction.IsPressed();
 
         public bool CrouchHeld => !IsInputSuppressed && crouchAction != null && crouchAction.IsPressed();

@@ -1,0 +1,26 @@
+{
+  "sample": "ck_light12",
+  "objectId": "CK-12",
+  "title": "조종실 내부 조명 / 점검등",
+  "approvalState": "조건부 승인",
+  "unityApplicationAllowed": true,
+  "targetUnityRoot": "Approved Cockpit 12 Inspection Lighting",
+  "targetScene": "Assets/_Project/Scenes/CargoRunMvp.unity",
+  "integrationRule": "CK-01/CK-02/CK-04/CK-11을 교체하지 않고 별도 조명 루트로 배치한다. 왼쪽 동력실, 오른쪽 통제실, 뒤쪽 운송창고 입구에 점검등을 두고 천장등은 기존 CK-04 경고등과 겹치지 않는다.",
+  "includedParts": [
+    "전면 천장 냉백색 점검등 바",
+    "좌우 벽면 서비스 라이트 스트립",
+    "뒤쪽 운송창고 방향 문턱 다운라이트",
+    "조종대 하부 작업등",
+    "바닥 toe-kick 점검 마커",
+    "천장 모서리 유지보수 램프 포드",
+    "저전압 케이블과 마운팅 브래킷"
+  ],
+  "excludedParts": [
+    "CK-04 비상 경고등 교체",
+    "수동 운행 UI",
+    "실제 게임플레이 상태 로직",
+    "콜라이더",
+    "사운드"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "sample": "ck_light12",
+  "approvalState": "조건부 승인",
+  "unityApplicationAllowed": true,
+  "requiresUserApprovalBeforeUnity": false,
+  "conditionToReview": "왼쪽 동력실, 오른쪽 통제실, 뒤쪽 운송창고 입구마다 점검등을 배치하고 천장등은 기존 CK-04 경고등과 겹치지 않는 조건으로 승인"
+}

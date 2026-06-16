@@ -24,8 +24,8 @@ namespace Bellerophon.Editor.Validation
 
         private static readonly Vector3 CockpitCenter = new Vector3(0f, 0f, 18f);
         private static readonly Bounds ExpectedLocalBounds = new Bounds(
-            new Vector3(0f, 1.55f, -0.18f),
-            new Vector3(10.4f, 3.45f, 8.8f));
+            new Vector3(0f, 1.52f, 0.16f),
+            new Vector3(10.24f, 3.4f, 8.56f));
 
         [MenuItem("Bellerophon/Bootstrap/Ensure Approved Cockpit 01 Structure")]
         public static void EnsureApprovedCockpitStructure()

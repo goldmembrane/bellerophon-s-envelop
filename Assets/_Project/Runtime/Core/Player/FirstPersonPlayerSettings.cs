@@ -13,6 +13,13 @@ namespace Bellerophon.Core.Player
         [SerializeField, Min(0.01f)] private float jumpSpeed = 4.8f;
         [SerializeField, Min(0.01f)] private float gravity = 18f;
 
+        [Header("Editor Playtest")]
+        // These values affect Unity Editor Play mode only. Player builds keep the grounded CharacterController movement path.
+        [SerializeField] private bool editorPlaytestFreeMovementEnabled = true;
+        [SerializeField, Min(0.01f)] private float editorPlaytestFreeMoveSpeed = 7.5f;
+        [SerializeField, Min(1f)] private float editorPlaytestFreeMoveFastMultiplier = 3f;
+        [SerializeField, Min(0.01f)] private float editorPlaytestFreeMoveSlowMultiplier = 0.25f;
+
         [Header("View")]
         [SerializeField, Min(0.001f)] private float mouseSensitivity = 0.12f;
         [SerializeField] private float minPitch = -82f;
@@ -43,6 +50,14 @@ namespace Bellerophon.Core.Player
         public float JumpSpeed => Mathf.Max(0.01f, jumpSpeed);
 
         public float Gravity => Mathf.Max(0.01f, gravity);
+
+        public bool EditorPlaytestFreeMovementEnabled => editorPlaytestFreeMovementEnabled;
+
+        public float EditorPlaytestFreeMoveSpeed => Mathf.Max(0.01f, editorPlaytestFreeMoveSpeed);
+
+        public float EditorPlaytestFreeMoveFastMultiplier => Mathf.Max(1f, editorPlaytestFreeMoveFastMultiplier);
+
+        public float EditorPlaytestFreeMoveSlowMultiplier => Mathf.Clamp(editorPlaytestFreeMoveSlowMultiplier, 0.01f, 1f);
 
         public float MouseSensitivity => Mathf.Max(0.001f, mouseSensitivity);
 

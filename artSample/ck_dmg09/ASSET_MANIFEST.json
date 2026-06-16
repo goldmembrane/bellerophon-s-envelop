@@ -1,0 +1,43 @@
+{
+  "sample": "ck_dmg09",
+  "objectId": "CK-09",
+  "scope": "조종대 파손 / 폭파 상태 부품 샘플",
+  "sourceBasis": [
+    "docs/COCKPIT_OBJECTS.md: CK-09 조종대 파손 / 폭파 상태 부품",
+    "artSample/ck_ctl02_low/blender/ck_ctl02_low.blend: 승인된 CK-02 낮은 본체 조종대 원본 오브젝트",
+    "docs/GAME_DESIGN_SOURCE.txt:121 조종실 내구도 0% 시 조종대 폭파 및 주변 유저 피해",
+    "docs/PROGRESS_2026-06-16.md: 조종실 오브젝트는 artSample 승인 후 Unity 적용"
+  ],
+  "baseSample": "ck_ctl02_low",
+  "baseAsset": "D:\\Bellerophon2\\Bellerophon\\artSample\\ck_ctl02_low\\blender\\ck_ctl02_low.blend",
+  "conditionalVisibility": {
+    "futureUnityRule": "ShipRoomId.Cockpit durability <= 0 일 때만 표시",
+    "normalState": "CK-02 메인 조종대가 표시되고 CK-09는 숨김",
+    "destroyedState": "CK-02 메인 조종대는 숨기고 CK-09 파손 상태를 표시",
+    "notTriggeredBy": [
+      "조종실 내구도 50% 이하 자동 조종 불가",
+      "아타 자동 조종 사보타주",
+      "부분 손상 상태",
+      "수동 운행 UI 진입"
+    ]
+  },
+  "included": [
+    "ck_ctl02_low 원본 조종대 형상",
+    "폭파로 갈라진 조종대 외피",
+    "접힌 상단 패널",
+    "부서진 타륜 조작 핸들",
+    "휘어진 오른쪽 전진 레버",
+    "노출 배선과 작은 스파크",
+    "바닥 파편과 그을림",
+    "연기 위치 확인용 투명 위습"
+  ],
+  "excluded": [
+    "Unity 런타임 연결",
+    "실제 피해 판정",
+    "실제 파티클/VFX",
+    "사운드",
+    "게임플레이 콜라이더"
+  ],
+  "unityApplicationAllowed": false,
+  "approvalState": "미승인"
+}

@@ -180,6 +180,12 @@ namespace Bellerophon.Editor.Validation
                         Phase4CargoShipGrayboxEditorValidation.Run,
                         "Phase 4 cargo ship graybox editor validation passed.");
                     break;
+                case "ApplyModeledCockpitPlayStart":
+                    RunSynchronous(
+                        request,
+                        Phase4CargoShipGrayboxBootstrap.ApplyModeledCockpitPlayStart,
+                        "Modeled cockpit play start applied.");
+                    break;
                 case "ValidatePhase5ShipStateModels":
                     RunSynchronous(
                         request,
@@ -534,6 +540,42 @@ namespace Bellerophon.Editor.Validation
                         ApprovedCockpitConsoleBootstrap.CaptureCurrentEditorObjects,
                         "Approved cockpit 02 console current object capture saved:");
                     break;
+                case "EnsureApprovedCockpitDestroyedConsole":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitDestroyedConsoleBootstrap.EnsureApprovedCockpitDestroyedConsole,
+                        "Approved cockpit 09 destroyed console applied.");
+                    break;
+                case "ValidateApprovedCockpitDestroyedConsole":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitDestroyedConsoleBootstrap.ValidateScene,
+                        "Approved cockpit 09 destroyed console validation passed.");
+                    break;
+                case "CaptureApprovedCockpitDestroyedConsoleComparison":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitDestroyedConsoleBootstrap.CaptureUnityComparison,
+                        "Approved cockpit 09 destroyed console Unity comparison snapshots saved:");
+                    break;
+                case "ShowApprovedCockpitDestroyedConsoleForInspection":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitDestroyedConsoleBootstrap.ShowDestroyedConsoleForInspection,
+                        "Approved cockpit 09 destroyed console shown for inspection.");
+                    break;
+                case "ShowApprovedCockpitNormalConsoleForInspection":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitDestroyedConsoleBootstrap.ShowNormalConsoleForInspection,
+                        "Approved cockpit 02 normal console shown for inspection.");
+                    break;
+                case "CaptureApprovedCockpitDestroyedConsoleCurrentObjects":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitDestroyedConsoleBootstrap.CaptureCurrentEditorObjects,
+                        "Approved cockpit 09 current object capture saved:");
+                    break;
                 case "EnsureApprovedCockpitWarning":
                     RunSynchronous(
                         request,
@@ -582,6 +624,48 @@ namespace Bellerophon.Editor.Validation
                         ApprovedCockpitDirectionBootstrap.CaptureCurrentEditorObjects,
                         "Approved cockpit 11 direction current object capture saved:");
                     break;
+                case "EnsureApprovedCockpitLighting":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitLightingBootstrap.EnsureApprovedCockpitLighting,
+                        "Approved cockpit 12 inspection lighting applied.");
+                    break;
+                case "ValidateApprovedCockpitLighting":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitLightingBootstrap.ValidateScene,
+                        "Approved cockpit 12 inspection lighting validation passed.");
+                    break;
+                case "CaptureApprovedCockpitLightingComparison":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitLightingBootstrap.CaptureUnityComparison,
+                        "Approved cockpit 12 inspection lighting Unity comparison snapshots saved:");
+                    break;
+                case "CaptureApprovedCockpitLightingCurrentObjects":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitLightingBootstrap.CaptureCurrentEditorObjects,
+                        "Approved cockpit 12 lighting current object capture saved:");
+                    break;
+                case "CaptureApprovedCockpitCurrentStateRecoverySnapshot":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitCurrentStateRecoveryBootstrap.CaptureCurrentStateRecoverySnapshot,
+                        "Approved cockpit current state recovery snapshot captured:");
+                    break;
+                case "ValidateApprovedCockpitCurrentStateRecoverySnapshot":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitCurrentStateRecoveryBootstrap.ValidateSnapshotAgainstCurrentScene,
+                        "Approved cockpit current state recovery snapshot validation passed.");
+                    break;
+                case "RestoreApprovedCockpitCurrentState":
+                    RunSynchronous(
+                        request,
+                        ApprovedCockpitCurrentStateRecoveryBootstrap.RestoreCurrentState,
+                        "Approved cockpit current state restored from recovery snapshot:");
+                    break;
                 case "CaptureApprovedCockpitWarningBackupObjects":
                     RunSynchronous(
                         request,
@@ -618,6 +702,12 @@ namespace Bellerophon.Editor.Validation
                         ModelingInspectionModeBootstrap.ValidateScene,
                         "Modeling inspection mode validation passed.");
                     break;
+                case "RestoreGameplayModeAfterModelingInspection":
+                    RunSynchronous(
+                        request,
+                        ModelingInspectionModeBootstrap.RestoreGameplayModeAfterInspection,
+                        "Gameplay mode restored after modeling inspection.");
+                    break;
                 case "EnableModelingInspectionFreeCamera":
                     RunSynchronous(
                         request,
@@ -641,6 +731,12 @@ namespace Bellerophon.Editor.Validation
                         request,
                         OpenCargoRunMvpScene,
                         "CargoRunMvp scene opened.");
+                    break;
+                case "ClearUnityConsole":
+                    RunSynchronous(
+                        request,
+                        ClearUnityConsole,
+                        "Unity console cleared.");
                     break;
                 default:
                     RunSynchronous(
@@ -666,6 +762,19 @@ namespace Bellerophon.Editor.Validation
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
             AssetDatabase.SaveAssets();
             Debug.Log("Unity assets refreshed from validation bridge.");
+        }
+
+        private static void ClearUnityConsole()
+        {
+            var logEntriesType = Type.GetType("UnityEditor.LogEntries,UnityEditor.dll");
+            var clearMethod = logEntriesType?.GetMethod("Clear", BindingFlags.Static | BindingFlags.Public);
+            if (clearMethod == null)
+            {
+                throw new InvalidOperationException("Unity console clear API could not be resolved.");
+            }
+
+            clearMethod.Invoke(null, null);
+            Debug.Log("Unity console cleared.");
         }
 
         private static void OpenCargoRunMvpScene()

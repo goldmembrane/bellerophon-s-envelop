@@ -2,8 +2,8 @@
 # Generated from the currently open Unity editor scene without reopening or regenerating the scene.
 
 Root = Approved Cockpit 04 Warning
-ExpectedApprovedRendererCount = 29
-CurrentApprovedRendererCount = 29
+ExpectedApprovedRendererCount = 28
+CurrentApprovedRendererCount = 28
 MissingApprovedRendererCount = 0
 ChangedTransformCount = 0
 ChangedStatusCount = 0
@@ -32,7 +32,6 @@ None
 - central ceiling emergency rotary beacon cage rib 2.01
 - central ceiling emergency rotary beacon cage rib 3.58
 - central ceiling emergency rotary beacon cage rib 5.15
-- central ceiling emergency rotary beacon ceiling power cable
 - central ceiling emergency rotary beacon circular swivel base
 - central ceiling emergency rotary beacon front alarm sounder grille plate
 - central ceiling emergency rotary beacon hanging red glass dome
@@ -63,7 +62,6 @@ None
 - central ceiling emergency rotary beacon cage rib 2.01
 - central ceiling emergency rotary beacon cage rib 3.58
 - central ceiling emergency rotary beacon cage rib 5.15
-- central ceiling emergency rotary beacon ceiling power cable
 - central ceiling emergency rotary beacon circular swivel base
 - central ceiling emergency rotary beacon front alarm sounder grille plate
 - central ceiling emergency rotary beacon hanging red glass dome
@@ -82,3 +80,11 @@ None
 - upper alarm bar internal dark baffle.003
 - upper frame narrow red alarm bar housing
 - upper frame red alarm bar glass
+
+[StructureRootSnapshot]
+position=new Vector3(0f, 0f, 18f)
+euler=new Vector3(0f, 0f, 0f)
+scale=new Vector3(1f, 1f, 1f)
+enabledRenderers=23
+boundsCenter=new Vector3(0f, 1.519999f, 18.16f)
+boundsSize=new Vector3(10.24f, 3.4f, 8.560001f)

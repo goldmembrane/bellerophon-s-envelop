@@ -244,17 +244,17 @@ namespace Bellerophon.Editor.Validation
             }
 
             map.RefreshForValidation();
-            if (map.CurrentRoom != ShipRoomId.CargoHold ||
-                !map.CurrentRoomText.text.Contains("Cargo Hold"))
-            {
-                throw new InvalidOperationException("Runtime Phase 16 map must start at Cargo Hold.");
-            }
-
-            player.transform.position = new Vector3(0f, 0f, 18f);
-            Physics.SyncTransforms();
-            map.RefreshForValidation();
             if (map.CurrentRoom != ShipRoomId.Cockpit ||
                 !map.CurrentRoomText.text.Contains("Cockpit"))
+            {
+                throw new InvalidOperationException("Runtime Phase 16 map must start at Cockpit.");
+            }
+
+            player.transform.position = new Vector3(0f, -3f, -5f);
+            Physics.SyncTransforms();
+            map.RefreshForValidation();
+            if (map.CurrentRoom != ShipRoomId.CargoHold ||
+                !map.CurrentRoomText.text.Contains("Cargo Hold"))
             {
                 throw new InvalidOperationException("Runtime Phase 16 map must update the current room from player position.");
             }
@@ -313,7 +313,7 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("Runtime right-click alternate mode must toggle stick throwing mode without showing the precision reticle.");
             }
 
-            return "Vitals=100/100; Status=화상; Map=Cockpit after move; Crosshair=Hidden; Fog=On; AudioSignals=3; RightClick=Toggle";
+            return "Vitals=100/100; Status=화상; Map=Cockpit start+CargoHold after move; Crosshair=Hidden; Fog=On; AudioSignals=3; RightClick=Toggle";
         }
 
         private static void AssertDefaultCrosshairHidden()
