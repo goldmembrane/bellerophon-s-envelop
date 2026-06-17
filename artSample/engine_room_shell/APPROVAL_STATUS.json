@@ -1,8 +1,8 @@
 {
   "sample": "engine_room_shell",
   "objectId": "ER-01",
-  "approvalState": "미승인",
-  "unityApplicationAllowed": false,
-  "requiresUserApprovalBeforeUnity": true,
-  "note": "사용자 승인 전 Unity 씬, 프리팹, 런타임 자산에 반영하지 않습니다."
+  "approvalState": "승인",
+  "unityApplicationAllowed": true,
+  "requiresUserApprovalBeforeUnity": false,
+  "note": "2026-06-17 사용자 승인 완료. Unity 적용 시 개별 오브젝트로 분리해 Inspector에서 위치, 회전, 크기를 편집할 수 있게 합니다."
 }

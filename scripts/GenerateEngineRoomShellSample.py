@@ -25,6 +25,33 @@ WALL_THICKNESS = 0.34
 DOOR_OPENING_HEIGHT = 1.92
 DOOR_OPENING_HALF_DEGREES = 10.0
 
+ENTRANCES = (
+    {
+        "key": "cockpit",
+        "label": "-> 조종실",
+        "clock": "1시",
+        "degree": 60.0,
+        "kind": "corridor",
+        "render": "02_cockpit_entry.png",
+    },
+    {
+        "key": "control",
+        "label": "-> 통제실",
+        "clock": "3시",
+        "degree": 0.0,
+        "kind": "corridor",
+        "render": "03_control_entry.png",
+    },
+    {
+        "key": "cargo",
+        "label": "-> 운송창고",
+        "clock": "5시",
+        "degree": -60.0,
+        "kind": "ramp",
+        "render": "04_cargo_ramp.png",
+    },
+)
+
 
 def ensure_dirs() -> None:
     for path in (SAMPLE_ROOT, BLENDER_DIR, RENDER_DIR, EXPORT_DIR, COMPARISON_DIR):
@@ -347,15 +374,19 @@ def add_corridor_opened_cylindrical_shell(
     height: float,
     mat: bpy.types.Material,
 ) -> None:
-    # Openings align to corridor axes: control/east, cockpit/north, cargo/south.
+    # Openings align to the approved top-down clock layout: 1시, 3시, 5시.
     # Only the lower doorway height is cut; the upper wall remains sealed.
     door_half = DOOR_OPENING_HALF_DEGREES
-    solid_ranges = (
-        (-180.0, -90.0 - door_half),
-        (-90.0 + door_half, -door_half),
-        (door_half, 90.0 - door_half),
-        (90.0 + door_half, 180.0),
-    )
+    doorway_ranges = sorted((entry["degree"] - door_half, entry["degree"] + door_half) for entry in ENTRANCES)
+    solid_ranges = []
+    cursor = -180.0
+    for start_deg, end_deg in doorway_ranges:
+        if start_deg > cursor:
+            solid_ranges.append((cursor, start_deg))
+        cursor = max(cursor, end_deg)
+    if cursor < 180.0:
+        solid_ranges.append((cursor, 180.0))
+
     lower_height = min(DOOR_OPENING_HEIGHT, height)
     for index, (start_deg, end_deg) in enumerate(solid_ranges, start=1):
         arc_degrees = abs(end_deg - start_deg)
@@ -397,34 +428,61 @@ def radial_orientation(degree: float) -> float:
     return math.radians(degree - 90.0)
 
 
+def radial_tangent_vectors(degree: float) -> tuple[Vector, Vector]:
+    angle = math.radians(degree)
+    radial = Vector((math.cos(angle), math.sin(angle), 0.0))
+    tangent = Vector((-math.sin(angle), math.cos(angle), 0.0))
+    return radial, tangent
+
+
+def local_entry_position(degree: float, radial_distance: float, tangent_offset: float, z: float) -> tuple[float, float, float]:
+    radial, tangent = radial_tangent_vectors(degree)
+    loc = radial * radial_distance + tangent * tangent_offset
+    return (loc.x, loc.y, z)
+
+
+def add_oriented_entry_box(
+    name: str,
+    parent: bpy.types.Object,
+    degree: float,
+    radial_distance: float,
+    tangent_offset: float,
+    z: float,
+    scale: tuple[float, float, float],
+    mat: bpy.types.Material,
+    *,
+    tilt_degrees: float = 0.0,
+    bevel_width: float = 0.015,
+) -> bpy.types.Object:
+    return add_box(
+        name,
+        parent,
+        local_entry_position(degree, radial_distance, tangent_offset, z),
+        scale,
+        mat,
+        (math.radians(tilt_degrees), 0.0, radial_orientation(degree)),
+        bevel_width,
+    )
+
+
 def add_direction_label(
     name: str,
     parent: bpy.types.Object,
     text: str,
-    loc: tuple[float, float, float],
-    face: str,
+    degree: float,
     mats: dict[str, bpy.types.Material],
 ) -> None:
-    if face in ("north", "south"):
-        plate_scale = (1.16, 0.045, 0.34)
-        plate_rot = (0.0, 0.0, 0.0)
-        if face == "north":
-            text_loc = (loc[0], loc[1] + 0.032, loc[2] - 0.02)
-            text_rot = (math.radians(90), 0.0, 0.0)
-        else:
-            text_loc = (loc[0], loc[1] - 0.032, loc[2] - 0.02)
-            text_rot = (math.radians(90), 0.0, math.radians(180))
-    else:
-        plate_scale = (0.045, 1.16, 0.34)
-        plate_rot = (0.0, 0.0, 0.0)
-        if face == "east":
-            text_loc = (loc[0] + 0.032, loc[1], loc[2] - 0.02)
-            text_rot = (math.radians(90), 0.0, math.radians(-90))
-        else:
-            text_loc = (loc[0] - 0.032, loc[1], loc[2] - 0.02)
-            text_rot = (math.radians(90), 0.0, math.radians(90))
-
+    label_radius = OUTER_RADIUS + 0.09
+    label_z = 1.42 if text != "-> 운송창고" else 1.30
+    loc = local_entry_position(degree, label_radius, 0.0, label_z)
+    plate_scale = (1.16, 0.045, 0.34)
+    plate_rot = (0.0, 0.0, radial_orientation(degree))
     add_box(name + " wall label plate", parent, loc, plate_scale, mats["label_plate"], plate_rot, 0.010)
+
+    radial, _ = radial_tangent_vectors(degree)
+    text_vec = Vector((loc[0], loc[1], loc[2] - 0.02)) + radial * 0.032
+    text_loc = (text_vec.x, text_vec.y, text_vec.z)
+    text_rot = (math.radians(90), 0.0, radial_orientation(degree))
     bpy.ops.object.text_add(location=text_loc, rotation=text_rot)
     label = bpy.context.object
     label.name = name + " text"
@@ -465,6 +523,65 @@ def add_floor_grating(
         )
 
 
+def add_entry_corridor(root: bpy.types.Object, mats: dict[str, bpy.types.Material], entry: dict[str, object]) -> None:
+    key = str(entry["key"])
+    clock = str(entry["clock"])
+    degree = float(entry["degree"])
+    kind = str(entry["kind"])
+
+    if kind == "ramp":
+        add_oriented_entry_box(
+            f"{key} {clock} descending ramp slab outside sealed wall",
+            root,
+            degree,
+            OUTER_RADIUS + 1.70,
+            0.0,
+            -0.20,
+            (1.78, 1.70, 0.18),
+            mats["ramp_floor"],
+            tilt_degrees=-7.0,
+            bevel_width=0.012,
+        )
+        for side in (-1.10, 1.10):
+            add_oriented_entry_box(
+                f"{key} {clock} ramp side wall outside sealed wall",
+                root,
+                degree,
+                OUTER_RADIUS + 1.70,
+                side,
+                WALL_HEIGHT * 0.45 - 0.12,
+                (0.26, 1.70, WALL_HEIGHT * 0.92),
+                mats["outer_wall"],
+                tilt_degrees=-7.0,
+                bevel_width=0.014,
+            )
+        return
+
+    add_oriented_entry_box(
+        f"{key} {clock} corridor floor stub outside sealed wall",
+        root,
+        degree,
+        OUTER_RADIUS + 1.62,
+        0.0,
+        0.0,
+        (1.55, 1.50, FLOOR_THICKNESS),
+        mats["corridor_floor"],
+        bevel_width=0.015,
+    )
+    for side in (-0.96, 0.96):
+        add_oriented_entry_box(
+            f"{key} {clock} corridor side wall outside sealed wall",
+            root,
+            degree,
+            OUTER_RADIUS + 1.62,
+            side,
+            WALL_HEIGHT * 0.5,
+            (0.26, 1.50, WALL_HEIGHT),
+            mats["outer_wall"],
+            bevel_width=0.014,
+        )
+
+
 def add_doorway_side_seals(root: bpy.types.Object, mats: dict[str, bpy.types.Material]) -> None:
     seal_height = DOOR_OPENING_HEIGHT * 0.5
     seal_z = DOOR_OPENING_HEIGHT * 0.5
@@ -472,33 +589,22 @@ def add_doorway_side_seals(root: bpy.types.Object, mats: dict[str, bpy.types.Mat
     seal_offset = 0.88
     radial_center = OUTER_RADIUS + 0.48
 
-    for side_x in (-seal_offset, seal_offset):
-        add_box(
-            "cockpit doorway sealed side return wall",
-            root,
-            (side_x, radial_center, seal_z),
-            (0.24, seal_depth, seal_height * 2.0),
-            mats["outer_wall"],
-            bevel_width=0.012,
-        )
-        add_box(
-            "cargo doorway sealed side return wall",
-            root,
-            (side_x, -radial_center, seal_z),
-            (0.24, seal_depth, seal_height * 2.0),
-            mats["outer_wall"],
-            bevel_width=0.012,
-        )
-
-    for side_y in (-seal_offset, seal_offset):
-        add_box(
-            "control doorway sealed side return wall",
-            root,
-            (radial_center, side_y, seal_z),
-            (seal_depth, 0.24, seal_height * 2.0),
-            mats["outer_wall"],
-            bevel_width=0.012,
-        )
+    for entry in ENTRANCES:
+        key = str(entry["key"])
+        clock = str(entry["clock"])
+        degree = float(entry["degree"])
+        for side in (-seal_offset, seal_offset):
+            add_oriented_entry_box(
+                f"{key} {clock} doorway sealed side return wall",
+                root,
+                degree,
+                radial_center,
+                side,
+                seal_z,
+                (0.24, seal_depth, seal_height * 2.0),
+                mats["outer_wall"],
+                bevel_width=0.012,
+            )
 
 
 def build_engine_room_shell(mats: dict[str, bpy.types.Material]) -> None:
@@ -532,17 +638,8 @@ def build_engine_room_shell(mats: dict[str, bpy.types.Material]) -> None:
     add_annular_sector("solid outer upper maintenance rim", root, OUTER_RADIUS - 0.18, OUTER_RADIUS + 0.30, -178, 178, WALL_HEIGHT + 0.07, 0.14, mats["rim"], 18)
 
     # Corridor mouths and walls.
-    add_box("cockpit corridor floor stub outside sealed wall", root, (0, OUTER_RADIUS + 1.62, 0.0), (1.55, 1.50, FLOOR_THICKNESS), mats["corridor_floor"], bevel_width=0.015)
-    add_box("cockpit corridor left wall outside sealed wall", root, (-0.96, OUTER_RADIUS + 1.62, WALL_HEIGHT * 0.5), (0.26, 1.50, WALL_HEIGHT), mats["outer_wall"], bevel_width=0.014)
-    add_box("cockpit corridor right wall outside sealed wall", root, (0.96, OUTER_RADIUS + 1.62, WALL_HEIGHT * 0.5), (0.26, 1.50, WALL_HEIGHT), mats["outer_wall"], bevel_width=0.014)
-
-    add_box("control corridor floor stub outside sealed wall", root, (OUTER_RADIUS + 1.62, 0, 0.0), (1.50, 1.55, FLOOR_THICKNESS), mats["corridor_floor"], bevel_width=0.015)
-    add_box("control corridor upper wall outside sealed wall", root, (OUTER_RADIUS + 1.62, 0.96, WALL_HEIGHT * 0.5), (1.50, 0.26, WALL_HEIGHT), mats["outer_wall"], bevel_width=0.014)
-    add_box("control corridor lower wall outside sealed wall", root, (OUTER_RADIUS + 1.62, -0.96, WALL_HEIGHT * 0.5), (1.50, 0.26, WALL_HEIGHT), mats["outer_wall"], bevel_width=0.014)
-
-    add_box("cargo descending ramp slab outside sealed wall", root, (0, -OUTER_RADIUS - 1.70, -0.20), (1.78, 1.70, 0.18), mats["ramp_floor"], (math.radians(-7), 0, 0), bevel_width=0.012)
-    add_box("cargo ramp left wall outside sealed wall", root, (-1.10, -OUTER_RADIUS - 1.70, WALL_HEIGHT * 0.45 - 0.12), (0.26, 1.70, WALL_HEIGHT * 0.92), mats["outer_wall"], (math.radians(-7), 0, 0), 0.014)
-    add_box("cargo ramp right wall outside sealed wall", root, (1.10, -OUTER_RADIUS - 1.70, WALL_HEIGHT * 0.45 - 0.12), (0.26, 1.70, WALL_HEIGHT * 0.92), mats["outer_wall"], (math.radians(-7), 0, 0), 0.014)
+    for entry in ENTRANCES:
+        add_entry_corridor(root, mats, entry)
     add_doorway_side_seals(root, mats)
 
     # Sealed transparent central cylinder. It is isolated from the room and shows the inner power contents.
@@ -562,21 +659,54 @@ def build_engine_room_shell(mats: dict[str, bpy.types.Material]) -> None:
     add_floor_grating(root, mats, 112, 160, 5)
 
     # Ramp and threshold markings.
+    cargo_entry = next(entry for entry in ENTRANCES if entry["key"] == "cargo")
+    cargo_degree = float(cargo_entry["degree"])
     for offset in (-0.54, -0.18, 0.18, 0.54):
-        add_box("cargo ramp amber hazard stripe", root, (offset, -OUTER_RADIUS - 0.24, 0.025), (0.12, 0.82, 0.032), mats["hazard"], (0, 0, math.radians(0)), 0.002)
-    for degree in (-148, -128, -52, -32, 32, 52, 128, 148):
+        add_oriented_entry_box(
+            "cargo ramp amber hazard stripe",
+            root,
+            cargo_degree,
+            OUTER_RADIUS + 0.24,
+            offset,
+            0.025,
+            (0.12, 0.82, 0.032),
+            mats["hazard"],
+            bevel_width=0.002,
+        )
+    for degree in (-150, -120, -95, -35, 35, 95, 120, 150):
         loc = angle_to_xy(OUTER_RADIUS + 0.03, degree, 0.28)
         add_cylinder("outer wall exposed structural bolt", root, loc, 0.045, 0.036, mats["bolt"], (math.radians(90), 0, math.radians(degree)), 16)
 
-    add_direction_label("cockpit direction", root, "-> 조종실", (0.0, OUTER_RADIUS + 0.09, 1.42), "north", mats)
-    add_direction_label("control direction", root, "-> 통제실", (OUTER_RADIUS + 0.09, 0.0, 1.42), "east", mats)
-    add_direction_label("cargo direction", root, "-> 운송창고", (0.0, -OUTER_RADIUS - 0.08, 1.30), "south", mats)
+    for entry in ENTRANCES:
+        add_direction_label(
+            f"{entry['key']} direction",
+            root,
+            str(entry["label"]),
+            float(entry["degree"]),
+            mats,
+        )
 
     # Cables and pipes are shell dressing only; no engine machinery is included.
     for y in (-0.45, 0.45):
         add_cylinder_between("ceiling conduit across shell opening", root, (-OUTER_RADIUS + 0.45, y, WALL_HEIGHT + 0.25), (OUTER_RADIUS - 0.45, y, WALL_HEIGHT + 0.25), 0.026, mats["conduit"], 14)
-    add_cylinder_between("cargo ramp side utility pipe left", root, (-1.24, -OUTER_RADIUS - 2.30, 0.72), (-1.24, -OUTER_RADIUS - 0.28, 0.98), 0.030, mats["conduit"], 14)
-    add_cylinder_between("cargo ramp side utility pipe right", root, (1.24, -OUTER_RADIUS - 2.30, 0.72), (1.24, -OUTER_RADIUS - 0.28, 0.98), 0.030, mats["conduit"], 14)
+    add_cylinder_between(
+        "cargo ramp side utility pipe left",
+        root,
+        local_entry_position(cargo_degree, OUTER_RADIUS + 2.30, -1.24, 0.72),
+        local_entry_position(cargo_degree, OUTER_RADIUS + 0.28, -1.24, 0.98),
+        0.030,
+        mats["conduit"],
+        14,
+    )
+    add_cylinder_between(
+        "cargo ramp side utility pipe right",
+        root,
+        local_entry_position(cargo_degree, OUTER_RADIUS + 2.30, 1.24, 0.72),
+        local_entry_position(cargo_degree, OUTER_RADIUS + 0.28, 1.24, 0.98),
+        0.030,
+        mats["conduit"],
+        14,
+    )
 
 
 def configure_rendering() -> None:
@@ -795,6 +925,7 @@ def write_docs() -> None:
         "sourceBasis": [
             "docs/GAME_DESIGN_SOURCE.txt:122 - 동력실은 중앙 원통형 동력기계, 도넛형 구조, 위/아래/옆 복도 연결, 통로 옆면 구역 표시, 운송창고 방향 경사 복도를 가진다.",
             "사용자 확인 - 우주선 내부이므로 외벽과 바닥은 막힌 구조여야 하며, 중앙 원통은 외부와 단절된 투명 밀폐 구조로 내부 내용물이 보여야 한다.",
+            "사용자 확인 - 위에서 내려다본 기준 입구를 조종실 1시, 통제실 3시, 운송창고 5시 방향으로 배치한다.",
         ],
         "generatedFiles": [
             "blender/engine_room_shell.blend",
@@ -810,9 +941,9 @@ def write_docs() -> None:
         "includedParts": [
             "완전히 메워진 원형 바닥",
             "통로 입구를 제외하고 막힌 금속 외벽",
-            "조종실 방향 통로 입구",
-            "통제실 방향 통로 입구",
-            "운송창고 방향 하강 경사 통로",
+            "1시 방향 조종실 통로 입구",
+            "3시 방향 통제실 통로 입구",
+            "5시 방향 운송창고 하강 경사 통로",
             "벽면 부착 방향 라벨",
             "외부와 단절된 투명 밀폐 원통",
             "투명 원통 안에 보이는 동력 코어 내용물",
@@ -853,8 +984,9 @@ ER-01 동력실 룸 쉘 승인용 Blender 샘플입니다.
 - 바닥은 전체가 메워진 연속 바닥입니다.
 - 중앙 원통은 외부와 단절된 밀폐 구조입니다.
 - 중앙 원통은 투명 재질이며, 안쪽의 동력 코어 내용물이 보여야 합니다.
-- 조종실, 통제실, 운송창고 방향 통로 입구만 열려 있습니다.
-- 운송창고 방향 통로는 아래로 내려가는 경사 구조입니다.
+- 위에서 내려다본 기준 조종실 입구는 1시 방향, 통제실 입구는 3시 방향, 운송창고 입구는 5시 방향입니다.
+- 세 입구 외의 외벽은 막혀 있습니다.
+- 5시 방향 운송창고 통로는 아래로 내려가는 경사 구조입니다.
 
 ## 포함
 
@@ -909,7 +1041,7 @@ ER-01 동력실 룸 쉘 승인용 Blender 샘플입니다.
 <body>
 <main>
   <h1>engine_room_shell</h1>
-  <p>ER-01 동력실 룸 쉘 승인용 Blender 샘플입니다. 외벽과 바닥은 막힌 우주선 내부 구조이며, 중앙에는 외부와 단절된 투명 밀폐 원통과 내부 동력 코어가 보이도록 배치했습니다. 조종실, 통제실, 운송창고 방향 통로만 열려 있습니다.</p>
+  <p>ER-01 동력실 룸 쉘 승인용 Blender 샘플입니다. 외벽과 바닥은 막힌 우주선 내부 구조이며, 중앙에는 외부와 단절된 투명 밀폐 원통과 내부 동력 코어가 보이도록 배치했습니다. 위에서 내려다본 기준 조종실은 1시, 통제실은 3시, 운송창고 경사 통로는 5시 방향으로 열려 있습니다.</p>
   <section class="grid">
 {cards}
   </section>
@@ -952,11 +1084,19 @@ def main() -> None:
     build_engine_room_shell(mats)
     add_render_lights()
 
+    entry_by_key = {str(entry["key"]): entry for entry in ENTRANCES}
+
+    def entry_camera_loc(key: str, radial_distance: float, z: float) -> tuple[float, float, float]:
+        return local_entry_position(float(entry_by_key[key]["degree"]), radial_distance, 0.0, z)
+
+    def entry_camera_target(key: str, radial_distance: float, z: float) -> tuple[float, float, float]:
+        return local_entry_position(float(entry_by_key[key]["degree"]), radial_distance, 0.0, z)
+
     cameras = [
         ("top", (0.0, 0.0, 12.5), (0.0, 0.0, 0.0), 50, "01_top.png", 10.8),
-        ("cockpit_entry", (0.0, 8.9, 2.35), (0.0, 0.35, 1.05), 32, "02_cockpit_entry.png", None),
-        ("control_entry", (8.9, 0.0, 2.35), (0.35, 0.0, 1.05), 32, "03_control_entry.png", None),
-        ("cargo_ramp", (0.0, -9.3, 2.15), (0.0, -1.25, 0.72), 34, "04_cargo_ramp.png", None),
+        ("cockpit_entry", entry_camera_loc("cockpit", 8.9, 2.35), entry_camera_target("cockpit", 0.35, 1.05), 32, "02_cockpit_entry.png", None),
+        ("control_entry", entry_camera_loc("control", 8.9, 2.35), entry_camera_target("control", 0.35, 1.05), 32, "03_control_entry.png", None),
+        ("cargo_ramp", entry_camera_loc("cargo", 9.3, 2.15), entry_camera_target("cargo", 1.25, 0.72), 34, "04_cargo_ramp.png", None),
         ("inner_ring", (-2.65, 2.85, 1.72), (0.0, 0.0, 1.10), 32, "05_inner_ring.png", None),
         ("sealed_wall", (-1.45, -2.15, 1.55), (-4.05, -0.35, 1.28), 38, "06_sealed_wall.png", None),
     ]

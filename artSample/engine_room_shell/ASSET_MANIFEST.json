@@ -2,12 +2,14 @@
   "sample": "engine_room_shell",
   "objectId": "ER-01",
   "title": "동력실 룸 쉘",
-  "approvalState": "미승인",
-  "unityApplicationAllowed": false,
-  "requiresUserApprovalBeforeUnity": true,
+  "approvalState": "승인",
+  "unityApplicationAllowed": true,
+  "requiresUserApprovalBeforeUnity": false,
   "sourceBasis": [
     "docs/GAME_DESIGN_SOURCE.txt:122 - 동력실은 중앙 원통형 동력기계, 도넛형 구조, 위/아래/옆 복도 연결, 통로 옆면 구역 표시, 운송창고 방향 경사 복도를 가진다.",
-    "사용자 확인 - 우주선 내부이므로 외벽과 바닥은 막힌 구조여야 하며, 중앙 원통은 외부와 단절된 투명 밀폐 구조로 내부 내용물이 보여야 한다."
+    "사용자 확인 - 우주선 내부이므로 외벽과 바닥은 막힌 구조여야 하며, 중앙 원통은 외부와 단절된 투명 밀폐 구조로 내부 내용물이 보여야 한다.",
+    "사용자 확인 - 위에서 내려다본 기준 입구를 조종실 1시, 통제실 3시, 운송창고 5시 방향으로 배치한다.",
+    "2026-06-17 사용자 승인 - Unity 적용 시 하나로 합친 메시가 아니라 개별 편집 가능한 오브젝트 계층으로 구현한다."
   ],
   "generatedFiles": [
     "blender/engine_room_shell.blend",
@@ -23,9 +25,9 @@
   "includedParts": [
     "완전히 메워진 원형 바닥",
     "통로 입구를 제외하고 막힌 금속 외벽",
-    "조종실 방향 통로 입구",
-    "통제실 방향 통로 입구",
-    "운송창고 방향 하강 경사 통로",
+    "1시 방향 조종실 통로 입구",
+    "3시 방향 통제실 통로 입구",
+    "5시 방향 운송창고 하강 경사 통로",
     "벽면 부착 방향 라벨",
     "외부와 단절된 투명 밀폐 원통",
     "투명 원통 안에 보이는 동력 코어 내용물"

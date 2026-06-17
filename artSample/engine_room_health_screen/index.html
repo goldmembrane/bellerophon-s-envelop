@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>engine_room_health_screen review</title>
+  <style>
+    body { margin: 0; background: #151817; color: #e8e1d2; font-family: Arial, sans-serif; }
+    main { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    p { color: #c8c0af; line-height: 1.55; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    figure { margin: 0; border: 1px solid #3e453f; background: #202521; padding: 10px; }
+    img { width: 100%; display: block; background: #0c0f0e; }
+    figcaption { margin-top: 8px; color: #d9cfba; font-size: 14px; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>engine_room_health_screen</h1>
+  <p>ER-09 동력기계 내구도 스크린 샘플입니다. 기존 하우징 모델은 유지하고, 디스플레이 면에는 B2_Eq41_E.png의 반복 화면 중 좌상단 단일 화면 타일만 꽉 차게 넣었습니다. 내구도 색상과 수치 같은 세부 UI는 모델링하지 않았습니다.</p>
+  <section class="grid">
+    <figure><a href="renders/01_front_all_states.png"><img src="renders/01_front_all_states.png" alt="01 전체 벽면 배치와 B2_Eq41_E 화면"></a><figcaption>01 전체 벽면 배치와 B2_Eq41_E 화면</figcaption></figure>
+    <figure><a href="renders/02_normal_green.png"><img src="renders/02_normal_green.png" alt="02 디스플레이 면 확대"></a><figcaption>02 디스플레이 면 확대</figcaption></figure>
+    <figure><a href="renders/03_warning_orange.png"><img src="renders/03_warning_orange.png" alt="03 케이블과 후면 장착부"></a><figcaption>03 케이블과 후면 장착부</figcaption></figure>
+    <figure><a href="renders/04_side_mount.png"><img src="renders/04_side_mount.png" alt="04 측면 깊이와 벽 고정 기준"></a><figcaption>04 측면 깊이와 벽 고정 기준</figcaption></figure>
+    <figure><a href="renders/05_detail_reserved_port.png"><img src="renders/05_detail_reserved_port.png" alt="05 ER-10 하단 예비 연결부"></a><figcaption>05 ER-10 하단 예비 연결부</figcaption></figure>
+  </section>
+</main>
+</body>
+</html>

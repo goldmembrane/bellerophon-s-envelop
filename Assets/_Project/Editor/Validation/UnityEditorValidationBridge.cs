@@ -144,6 +144,18 @@ namespace Bellerophon.Editor.Validation
                         RefreshAssets,
                         "Unity assets refreshed.");
                     break;
+                case "EnsureApprovedEngineRoomShell":
+                    RunSynchronous(
+                        request,
+                        ApprovedEngineRoomShellBootstrap.EnsureApprovedEngineRoomShell,
+                        "Approved engine room 01 shell applied.");
+                    break;
+                case "CaptureApprovedEngineRoomShellCurrentObjects":
+                    RunSynchronous(
+                        request,
+                        ApprovedEngineRoomShellBootstrap.CaptureCurrentEditorObjects,
+                        "Approved engine room 01 current object capture saved:");
+                    break;
                 case "ValidatePhase1SessionModels":
                     RunSynchronous(
                         request,
