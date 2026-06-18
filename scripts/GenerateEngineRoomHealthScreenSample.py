@@ -22,6 +22,11 @@ HEAVY_STATION_ROOT = PROJECT_ROOT / "Assets" / "Heavy Station Kit"
 PRIMARY_PREFAB = ASSET_PACK_ROOT / "Prefabs" / "Decorative elements" / "big_screen.prefab"
 SCREEN_TEXTURE = HEAVY_STATION_ROOT / "BASE" / "Textures" / "Displays" / "B2_Eq41_E.png"
 SCREEN_TEXTURE_UV_RECT = (0.0, 0.75, 0.5, 1.0)
+# Decorative extra display tiles keep ER-09 from reading as one isolated wall screen.
+AUXILIARY_SCREEN_TEXTURE_UV_RECTS = [
+    (0.5, 0.75, 1.0, 1.0),
+    (0.0, 0.5, 0.5, 0.75),
+]
 SECONDARY_PREFABS = [
     ASSET_PACK_ROOT / "Prefabs" / "Decorative elements" / "console_screen.prefab",
     ASSET_PACK_ROOT / "Prefabs" / "Decorative elements" / "computer_station.prefab",
@@ -241,6 +246,17 @@ def add_corner_bolts(parent: bpy.types.Object, mats: dict[str, bpy.types.Materia
             add_bolt(parent, "asset screen corner bolt", sx * width * 0.45, z_center + sz * height * 0.42, mats["bolt"])
 
 
+def add_auxiliary_bolt(
+    parent: bpy.types.Object,
+    name: str,
+    x: float,
+    z: float,
+    mat: bpy.types.Material,
+    radius: float = 0.026,
+) -> None:
+    add_cylinder(name, parent, (x, -0.316, z), radius, 0.012, mat, (math.radians(90), 0, 0), 16)
+
+
 def add_wear(parent: bpy.types.Object, mats: dict[str, bpy.types.Material]) -> None:
     chips = [
         (-1.10, 2.52, 0.13, 0.020, 6),
@@ -275,6 +291,53 @@ def add_runtime_ui_anchor_markers(parent: bpy.types.Object, mats: dict[str, bpy.
         )
 
 
+def add_decorative_auxiliary_screen(
+    parent: bpy.types.Object,
+    mats: dict[str, bpy.types.Material],
+    name: str,
+    center_x: float,
+    center_z: float,
+    screen_width: float,
+    screen_height: float,
+    uv_rect: tuple[float, float, float, float],
+    *,
+    cable_side: int,
+) -> None:
+    screen = add_empty(name, parent)
+    frame_width = screen_width + 0.30
+    frame_height = screen_height + 0.30
+    mount_width = frame_width + 0.18
+    mount_height = frame_height + 0.18
+
+    add_box(f"{name} recessed mount pad", screen, (center_x, -0.118, center_z), (mount_width, 0.080, mount_height), mats["mount"], bevel_width=0.014)
+    add_box(f"{name} dark vibration gasket", screen, (center_x, -0.178, center_z), (frame_width + 0.08, 0.050, frame_height + 0.08), mats["rubber"], bevel_width=0.012)
+    add_box(f"{name} compact worn frame", screen, (center_x, -0.230, center_z), (frame_width, 0.105, frame_height), mats["frame"], bevel_width=0.020)
+    add_box(f"{name} inner smoked lip", screen, (center_x, -0.292, center_z), (screen_width + 0.08, 0.018, screen_height + 0.08), mats["glass_lip"], bevel_width=0.006)
+    add_textured_panel(f"{name} decorative B2_Eq41_E display tile", screen, (center_x, -0.322, center_z), screen_width, screen_height, mats["computer_screen"], uv_rect)
+
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            add_auxiliary_bolt(
+                screen,
+                f"{name} compact corner bolt",
+                center_x + sx * frame_width * 0.42,
+                center_z + sz * frame_height * 0.40,
+                mats["bolt"],
+            )
+
+    cable_x = center_x + cable_side * (mount_width * 0.50 + 0.10)
+    add_box(f"{name} side cable socket", screen, (cable_x, -0.220, center_z), (0.085, 0.120, screen_height * 0.58), mats["hinge"], bevel_width=0.009)
+    add_cylinder(f"{name} round cable gland", screen, (cable_x + cable_side * 0.075, -0.218, center_z), 0.032, 0.090, mats["conduit"], (0, math.radians(90), 0), 18)
+    add_box(
+        f"{name} short decorative cable run",
+        screen,
+        (cable_x + cable_side * 0.055, -0.105, center_z + frame_height * 0.38),
+        (0.050, 0.050, frame_height * 0.42),
+        mats["conduit"],
+        bevel_width=0.010,
+    )
+
+
 def add_asset_like_wall_screen(parent: bpy.types.Object, mats: dict[str, bpy.types.Material]) -> None:
     screen = add_empty("ER-09 asset based wall health screen proxy", parent)
 
@@ -305,6 +368,28 @@ def add_asset_like_wall_screen(parent: bpy.types.Object, mats: dict[str, bpy.typ
 
     add_corner_bolts(screen, mats, 2.50, 1.86, 1.48)
     add_wear(screen, mats)
+    add_decorative_auxiliary_screen(
+        screen,
+        mats,
+        "left decorative auxiliary wall screen",
+        -1.95,
+        1.78,
+        0.68,
+        0.92,
+        AUXILIARY_SCREEN_TEXTURE_UV_RECTS[0],
+        cable_side=-1,
+    )
+    add_decorative_auxiliary_screen(
+        screen,
+        mats,
+        "right decorative auxiliary wall screen",
+        1.94,
+        0.88,
+        0.92,
+        0.58,
+        AUXILIARY_SCREEN_TEXTURE_UV_RECTS[1],
+        cable_side=1,
+    )
 
 
 def build_health_screen_sample(mats: dict[str, bpy.types.Material]) -> None:
@@ -390,7 +475,7 @@ def write_docs() -> None:
     manifest = {
         "sample": SAMPLE_NAME,
         "objectId": "ER-09",
-        "title": "동력기계 내구도 스크린 컴퓨터 화면 에셋 샘플",
+        "title": "동력기계 내구도 스크린과 장식용 보조 스크린 에셋 샘플",
         "approvalState": "미승인",
         "unityApplicationAllowed": False,
         "requiresUserApprovalBeforeUnity": True,
@@ -406,6 +491,7 @@ def write_docs() -> None:
             "docs/GAME_DESIGN_SOURCE.txt:124 - 동력실 내부 옆면 스크린으로 동력기계 내구도를 확인합니다.",
             "docs/ENGINE_ROOM_OBJECTS.md - ER-09 내구도 스크린과 ER-10 연결 여지를 분리해 관리합니다.",
             "사용자 확인: B2_Eq41_E.png의 반복 화면 중 한 장만 디스플레이 전체에 꽉 차게 넣고, 세부 내구도 UI는 별도로 구현합니다.",
+            "사용자 확인: 스크린 하나만 있으면 허전하므로 별도 기능 없이 장식용 보조 스크린을 추가합니다.",
         ],
         "generatedFiles": [
             "blender/engine_room_health_screen.blend",
@@ -416,10 +502,12 @@ def write_docs() -> None:
             "renders/03_warning_orange.png",
             "renders/04_side_mount.png",
             "renders/05_detail_reserved_port.png",
+            "renders/06_auxiliary_screen_pair.png",
         ],
         "includedParts": [
             "big_screen 프리팹 비율 기반 벽면 스크린 하우징",
             "B2_Eq41_E.png의 좌상단 단일 화면 타일을 입힌 디스플레이 면",
+            "기능 없는 장식용 보조 스크린 2개",
             "런타임 UI 정렬용 코너 탭",
             "후면 서비스 플레이트, 진동 패드, 볼트, 힌지, 케이블 소켓",
             "ER-10 오버클럭 장치 연결을 위한 하단 예비 커버",
@@ -432,6 +520,7 @@ def write_docs() -> None:
             "실제 오버클럭 상호작용 장치 ER-10",
             "Unity 씬 배치와 충돌 설정",
             "상호작용 로직",
+            "보조 스크린의 별도 기능 또는 런타임 UI 의미",
         ],
     }
     (SAMPLE_ROOT / "ASSET_MANIFEST.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -454,6 +543,7 @@ ER-09 동력기계 내구도 스크린의 승인용 Blender 샘플입니다.
 
 동력실 옆면에 붙는 물리 스크린 하우징에 기존 에셋의 컴퓨터 화면 텍스처를 넣어 확인하기 위한 샘플입니다.  
 내구도 색상, 수치, 게이지, 경고 문구 같은 세부 표시 정보는 모델링하지 않고 런타임 UI 구현 대상으로 남겼습니다.
+메인 스크린 하나만 배치했을 때 벽면이 허전해 보이는 문제를 줄이기 위해, 별도 기능을 갖지 않는 장식용 보조 스크린 2개를 함께 배치했습니다.
 
 ## 에셋 기준
 
@@ -466,6 +556,7 @@ ER-09 동력기계 내구도 스크린의 승인용 Blender 샘플입니다.
 
 - 벽면 부착형 스크린 프레임
 - `B2_Eq41_E.png`의 반복 화면 중 좌상단 단일 화면 타일이 꽉 차게 들어간 디스플레이 면
+- 기능 없는 장식용 보조 스크린 2개
 - 런타임 UI 정렬용 코너 탭
 - 후면 서비스 플레이트, 볼트, 힌지, 케이블 소켓
 - ER-10 오버클럭 장치 연결을 위한 하단 예비 커버
@@ -478,15 +569,17 @@ ER-09 동력기계 내구도 스크린의 승인용 Blender 샘플입니다.
 - 스크린 파괴 상태
 - 실제 오버클럭 상호작용 장치
 - Unity 씬 배치와 충돌 설정
+- 보조 스크린의 별도 기능 또는 런타임 UI 의미
 """
     (SAMPLE_ROOT / "README.md").write_text(readme, encoding="utf-8")
 
     images = [
-        ("01_front_all_states.png", "01 전체 벽면 배치와 B2_Eq41_E 화면"),
-        ("02_normal_green.png", "02 디스플레이 면 확대"),
+        ("01_front_all_states.png", "01 전체 벽면 배치와 보조 스크린 2개"),
+        ("02_normal_green.png", "02 메인 디스플레이 면 확대"),
         ("03_warning_orange.png", "03 케이블과 후면 장착부"),
         ("04_side_mount.png", "04 측면 깊이와 벽 고정 기준"),
         ("05_detail_reserved_port.png", "05 ER-10 하단 예비 연결부"),
+        ("06_auxiliary_screen_pair.png", "06 장식용 보조 스크린 배치"),
     ]
     cards = "\n".join(
         f'    <figure><a href="renders/{name}"><img src="renders/{name}" alt="{label}"></a><figcaption>{label}</figcaption></figure>'
@@ -513,7 +606,7 @@ ER-09 동력기계 내구도 스크린의 승인용 Blender 샘플입니다.
 <body>
 <main>
   <h1>engine_room_health_screen</h1>
-  <p>ER-09 동력기계 내구도 스크린 샘플입니다. 기존 하우징 모델은 유지하고, 디스플레이 면에는 B2_Eq41_E.png의 반복 화면 중 좌상단 단일 화면 타일만 꽉 차게 넣었습니다. 내구도 색상과 수치 같은 세부 UI는 모델링하지 않았습니다.</p>
+  <p>ER-09 동력기계 내구도 스크린 샘플입니다. 기존 하우징 모델은 유지하고, 디스플레이 면에는 B2_Eq41_E.png의 반복 화면 중 좌상단 단일 화면 타일만 꽉 차게 넣었습니다. 벽면이 허전해 보이지 않도록 기능 없는 장식용 보조 스크린 2개를 추가했으며, 내구도 색상과 수치 같은 세부 UI는 모델링하지 않았습니다.</p>
   <section class="grid">
 {cards}
   </section>
@@ -553,11 +646,12 @@ def main() -> None:
     add_render_lights()
 
     cameras = [
-        ("front_all_states", (0.0, -6.0, 1.58), (0.0, -0.10, 1.48), 45, "01_front_all_states.png", None),
+        ("front_all_states", (0.0, -6.0, 1.58), (0.0, -0.10, 1.48), 45, "01_front_all_states.png", 3.58),
         ("normal_green", (0.0, -3.9, 1.50), (0.0, -0.18, 1.48), 58, "02_normal_green.png", None),
         ("warning_orange", (2.6, -3.5, 1.86), (1.14, -0.12, 1.72), 52, "03_warning_orange.png", None),
         ("side_mount", (3.8, -2.9, 1.70), (1.24, -0.10, 1.45), 47, "04_side_mount.png", None),
         ("reserved_port", (0.0, -2.8, 0.55), (0.0, -0.18, 0.38), 68, "05_detail_reserved_port.png", None),
+        ("auxiliary_screen_pair", (0.0, -5.4, 1.44), (0.0, -0.12, 1.34), 44, "06_auxiliary_screen_pair.png", 2.82),
     ]
     for name, loc, target, lens, output, ortho_scale in cameras:
         camera = add_camera(name, loc, target, lens, ortho_scale=ortho_scale)

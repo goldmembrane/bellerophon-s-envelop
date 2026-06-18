@@ -150,6 +150,18 @@ namespace Bellerophon.Editor.Validation
                         ApprovedEngineRoomShellBootstrap.EnsureApprovedEngineRoomShell,
                         "Approved engine room 01 shell applied.");
                     break;
+                case "EnsureApprovedEngineRoomHealthScreen":
+                    RunSynchronous(
+                        request,
+                        ApprovedEngineRoomHealthScreenBootstrap.EnsureApprovedEngineRoomHealthScreen,
+                        "Approved ER-09 engine room health screen applied.");
+                    break;
+                case "CaptureApprovedEngineRoomHealthScreenCurrentObjects":
+                    RunSynchronous(
+                        request,
+                        ApprovedEngineRoomHealthScreenBootstrap.CaptureCurrentEditorObjects,
+                        "Approved ER-09 current object capture saved:");
+                    break;
                 case "CaptureApprovedEngineRoomShellCurrentObjects":
                     RunSynchronous(
                         request,
