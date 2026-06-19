@@ -1,0 +1,8 @@
+{
+  "sample": "engine_room_overclock_control",
+  "objectId": "ER-10",
+  "approvalState": "승인",
+  "unityApplicationAllowed": true,
+  "requiresUserApprovalBeforeUnity": false,
+  "note": "2026-06-19 사용자 승인 완료. Unity 동력실 씬 반영을 허용합니다."
+}

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>engine_room_broken_health_screen review</title>
+  <style>
+    body { margin: 0; background: #151817; color: #e8e1d2; font-family: Arial, sans-serif; }
+    main { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    p { color: #c8c0af; line-height: 1.55; }
+    .primary { border: 1px solid #3e453f; background: #202521; padding: 10px; margin: 18px 0; }
+    .primary img { width: 100%; display: block; background: #0c0f0e; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    figure { margin: 0; border: 1px solid #3e453f; background: #202521; padding: 10px; }
+    img { width: 100%; display: block; background: #0c0f0e; }
+    figcaption { margin-top: 8px; color: #d9cfba; font-size: 14px; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>engine_room_broken_health_screen</h1>
+  <p>ER-11 동력실 스크린 꺼짐 상태 승인용 샘플입니다. ER-09 메인 스크린 비율과 프레임은 유지하고, 화면은 꺼진 검은 디스플레이로만 표현했습니다. 기존 동력실과 조종실 오브젝트는 수정하지 않았습니다.</p>
+  <section class="primary" aria-label="꺼진 디스플레이 미리보기">
+    <img src="renders/01_front_destroyed.png" alt="꺼진 스크린 전체">
+  </section>
+  <section class="grid">
+    <figure><a href="renders/01_front_destroyed.png"><img src="renders/01_front_destroyed.png" alt="01 꺼진 스크린 전체"></a><figcaption>01 꺼진 스크린 전체</figcaption></figure>
+    <figure><a href="renders/02_cracked_display_detail.png"><img src="renders/02_cracked_display_detail.png" alt="02 꺼진 디스플레이 세부"></a><figcaption>02 꺼진 디스플레이 세부</figcaption></figure>
+    <figure><a href="renders/03_disabled_overclock_port.png"><img src="renders/03_disabled_overclock_port.png" alt="03 비활성 하단 커넥터"></a><figcaption>03 비활성 하단 커넥터</figcaption></figure>
+    <figure><a href="renders/04_exposed_cables.png"><img src="renders/04_exposed_cables.png" alt="04 상단 케이블 연결부"></a><figcaption>04 상단 케이블 연결부</figcaption></figure>
+    <figure><a href="renders/05_side_mount_damage.png"><img src="renders/05_side_mount_damage.png" alt="05 측면 장착 깊이"></a><figcaption>05 측면 장착 깊이</figcaption></figure>
+    <figure><a href="renders/06_frame_and_glass_damage.png"><img src="renders/06_frame_and_glass_damage.png" alt="06 프레임과 꺼진 유리면"></a><figcaption>06 프레임과 꺼진 유리면</figcaption></figure>
+  </section>
+</main>
+</body>
+</html>

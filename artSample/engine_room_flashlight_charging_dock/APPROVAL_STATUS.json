@@ -1,0 +1,8 @@
+{
+  "sample": "engine_room_flashlight_charging_dock",
+  "objectId": "ER-15",
+  "approvalState": "승인",
+  "unityApplicationAllowed": true,
+  "requiresUserApprovalBeforeUnity": false,
+  "note": "사용자 승인 조건: ER-15는 대형 스크린 왼쪽 보조 스크린보다 더 왼쪽으로 떨어진 동력실 벽면에 붙이고, 벽 밖으로 삐져나가지 않게 배치합니다."
+}

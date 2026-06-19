@@ -156,6 +156,12 @@ namespace Bellerophon.Editor.Validation
                         ApprovedEngineRoomHealthScreenBootstrap.EnsureApprovedEngineRoomHealthScreen,
                         "Approved ER-09 engine room health screen applied.");
                     break;
+                case "FlipApprovedEngineRoomHealthScreenDisplayUvs":
+                    RunSynchronous(
+                        request,
+                        ApprovedEngineRoomHealthScreenBootstrap.FlipApprovedEngineRoomHealthScreenDisplayUvs,
+                        "Approved ER-09 display UVs flipped horizontally:");
+                    break;
                 case "CaptureApprovedEngineRoomHealthScreenCurrentObjects":
                     RunSynchronous(
                         request,
