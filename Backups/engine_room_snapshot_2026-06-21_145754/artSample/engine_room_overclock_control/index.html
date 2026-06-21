@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>engine_room_overclock_control review</title>
+  <style>
+    body { margin: 0; background: #151817; color: #e8e1d2; font-family: Arial, sans-serif; }
+    main { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    p { color: #c8c0af; line-height: 1.55; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    figure { margin: 0; border: 1px solid #3e453f; background: #202521; padding: 10px; }
+    img { width: 100%; display: block; background: #0c0f0e; }
+    figcaption { margin-top: 8px; color: #d9cfba; font-size: 14px; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>engine_room_overclock_control</h1>
+  <p>ER-10 오버클럭 레버 스위치 샘플입니다. 평소 위쪽 레버, 조작 중 아래로 내려간 레버, 복귀 후 위쪽 레버와 빨간 점조등 점등 상태를 분리해 볼 수 있게 구성했습니다. 사용자 승인 전에는 Unity 씬이나 런타임 자산에 연결하지 않습니다.</p>
+  <section class="grid">
+    <figure><a href="renders/01_state_sequence.png"><img src="renders/01_state_sequence.png" alt="01 평상시, 조작 중, 활성화 상태 순서"></a><figcaption>01 평상시, 조작 중, 활성화 상태 순서</figcaption></figure>
+    <figure><a href="renders/02_idle_lever_up.png"><img src="renders/02_idle_lever_up.png" alt="02 평상시 위쪽 레버와 꺼진 점조등"></a><figcaption>02 평상시 위쪽 레버와 꺼진 점조등</figcaption></figure>
+    <figure><a href="renders/03_pull_down_position.png"><img src="renders/03_pull_down_position.png" alt="03 위에서 아래로 내린 조작 상태"></a><figcaption>03 위에서 아래로 내린 조작 상태</figcaption></figure>
+    <figure><a href="renders/04_returned_up_beacon_on.png"><img src="renders/04_returned_up_beacon_on.png" alt="04 복귀 후 위쪽 레버와 빨간 점조등 점등"></a><figcaption>04 복귀 후 위쪽 레버와 빨간 점조등 점등</figcaption></figure>
+    <figure><a href="renders/05_side_mount.png"><img src="renders/05_side_mount.png" alt="05 얕은 벽면 장착 깊이"></a><figcaption>05 얕은 벽면 장착 깊이</figcaption></figure>
+    <figure><a href="renders/06_red_beacon_detail.png"><img src="renders/06_red_beacon_detail.png" alt="06 빨간 점조등 세부"></a><figcaption>06 빨간 점조등 세부</figcaption></figure>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "sample": "engine_room_overclock_control",
+  "objectId": "ER-10",
+  "title": "동력실 오버클럭 복귀형 레버 스위치 샘플",
+  "approvalState": "미승인",
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": true,
+  "sourceBasis": [
+    "docs/GAME_DESIGN_SOURCE.txt:123 - 동력기계는 운행당 1회 오버클럭 가능하며 1분 뒤 원상복귀합니다.",
+    "docs/GAME_DESIGN_SOURCE.txt:124 - 스크린과 상호작용 시 오버클럭을 활성화합니다.",
+    "사용자 확인: 오버클럭 스위치는 레버 형식이며 평소에는 위에 있습니다.",
+    "사용자 확인: 조작할 때 위에서 아래로 내리고, 내리면 다시 위로 되돌아옵니다.",
+    "사용자 확인: 되돌아온 뒤 레버 옆 빨간 점조등이 켜져 오버클럭 활성화 상태를 알립니다."
+  ],
+  "generatedFiles": [
+    "blender/engine_room_overclock_control.blend",
+    "exports/engine_room_overclock_control.fbx",
+    "exports/engine_room_overclock_control.glb",
+    "renders/01_state_sequence.png",
+    "renders/02_idle_lever_up.png",
+    "renders/03_pull_down_position.png",
+    "renders/04_returned_up_beacon_on.png",
+    "renders/05_side_mount.png",
+    "renders/06_red_beacon_detail.png"
+  ],
+  "includedParts": [
+    "벽면 부착형 오버클럭 조작 패널",
+    "평상시 위쪽 위치의 복귀형 레버",
+    "조작 중 아래로 내려간 레버 상태",
+    "복귀 후 위쪽 위치로 돌아온 레버 상태",
+    "오버클럭 활성화를 알리는 레버 옆 빨간 점조등",
+    "레버 보호 레일, 상하 하드 스톱, 피벗 축, 케이블 글랜드",
+    "ER-09 근처 벽면에 붙일 수 있는 얕은 장착 깊이"
+  ],
+  "excludedParts": [
+    "실제 오버클럭 게임 로직",
+    "운행당 1회 사용 제한 로직",
+    "1분 타이머 UI",
+    "스크린 내구도 20% 이하 파괴 연동",
+    "Unity 씬, 프리팹, 런타임 자산 연결",
+    "상호작용 프롬프트와 입력 처리"
+  ]
+}

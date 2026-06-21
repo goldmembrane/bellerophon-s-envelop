@@ -1,0 +1,39 @@
+{
+  "sample": "engine_room_broken_health_screen",
+  "objectId": "ER-11",
+  "title": "동력실 내구도 스크린 꺼짐 상태 샘플",
+  "approvalState": "미승인",
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": true,
+  "sourceBasis": [
+    "docs/GAME_DESIGN_SOURCE.txt:124 - 동력실 내구도 20% 이하에서는 스크린 파괴로 내구도 파악 및 오버클럭 활성화가 불가능합니다.",
+    "사용자 확인: 기존 ER-09를 기반으로 하되 이번 artSample에서는 이펙트 없이 디스플레이가 꺼진 상태만 표현합니다.",
+    "사용자 제한: 기존 동력실 오브젝트와 조종실 오브젝트는 건드리지 않고 artSample 승인용 샘플만 제작합니다."
+  ],
+  "generatedFiles": [
+    "blender/engine_room_broken_health_screen.blend",
+    "exports/engine_room_broken_health_screen.fbx",
+    "exports/engine_room_broken_health_screen.glb",
+    "renders/01_front_destroyed.png",
+    "renders/02_cracked_display_detail.png",
+    "renders/03_disabled_overclock_port.png",
+    "renders/04_exposed_cables.png",
+    "renders/05_side_mount_damage.png",
+    "renders/06_frame_and_glass_damage.png"
+  ],
+  "includedParts": [
+    "ER-09 메인 스크린 비율과 프레임을 유지한 꺼진 디스플레이",
+    "검은 화면과 약한 비활성 유리 반사",
+    "닫힌 하단 커넥터 커버",
+    "승인 전 검토용 벽면 배치 프록시"
+  ],
+  "excludedParts": [
+    "Unity 씬, 프리팹, 런타임 자산 연결",
+    "기존 ER-01~ER-10 동력실 오브젝트 수정",
+    "조종실 관련 오브젝트 또는 파일 수정",
+    "실제 내구도 20% 이하 상태 전환 로직",
+    "오버클럭 차단 로직",
+    "상호작용 입력 처리",
+    "연기, 불꽃, 전기 스파크, 애니메이션 오버레이"
+  ]
+}

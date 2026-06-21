@@ -150,6 +150,42 @@ namespace Bellerophon.Editor.Validation
                         ApprovedEngineRoomShellBootstrap.EnsureApprovedEngineRoomShell,
                         "Approved engine room 01 shell applied.");
                     break;
+                case "EnsureApprovedControlRoomShell":
+                    RunSynchronous(
+                        request,
+                        ApprovedControlRoomShellBootstrap.EnsureApprovedControlRoomShell,
+                        "Approved CR-01 control room shell applied.");
+                    break;
+                case "EnsureApprovedControlRoomAuxScreen":
+                    RunSynchronous(
+                        request,
+                        ApprovedControlRoomAuxScreenBootstrap.EnsureApprovedControlRoomAuxScreen,
+                        "Approved CR-07 control room auxiliary screen applied.");
+                    break;
+                case "EnsureApprovedControlRoomVerticalAuxScreens":
+                    RunSynchronous(
+                        request,
+                        ApprovedControlRoomVerticalAuxScreensBootstrap.EnsureApprovedControlRoomVerticalAuxScreens,
+                        "Approved CR-08 control room vertical auxiliary screens applied.");
+                    break;
+                case "EnsureApprovedControlRoomDirectionLabels":
+                    RunSynchronous(
+                        request,
+                        ApprovedControlRoomDirectionLabelsBootstrap.EnsureApprovedControlRoomDirectionLabels,
+                        "Approved CR-17 control room direction labels applied.");
+                    break;
+                case "CaptureApprovedControlRoomShellCurrentObjects":
+                    RunSynchronous(
+                        request,
+                        ApprovedControlRoomShellBootstrap.CaptureCurrentEditorObjects,
+                        "Approved CR-01 current object capture saved:");
+                    break;
+                case "CaptureApprovedControlRoomCurrentState":
+                    RunSynchronous(
+                        request,
+                        ApprovedControlRoomCurrentStateCapture.CaptureCurrentEditorObjects,
+                        "Approved control room current state capture saved:");
+                    break;
                 case "EnsureApprovedEngineRoomHealthScreen":
                     RunSynchronous(
                         request,
