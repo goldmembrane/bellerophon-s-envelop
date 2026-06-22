@@ -1,0 +1,45 @@
+{
+  "sample": "armory_shell",
+  "objectId": "AR-01",
+  "title": "무기실 룸 셸",
+  "approvalState": "미승인",
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": true,
+  "sourceBasis": [
+    "docs/GAME_DESIGN_SOURCE.txt:130 - 무기실 중앙 기둥, 기둥 뒤편 계단, 기둥 위 포탑 핸들, 기둥 앞 가로 커브형 대형 스크린.",
+    "docs/GAME_DESIGN_SOURCE.txt:131 - 스크린 벽 기준 뒤쪽 통제실 복도, 오른쪽 비품실 복도, 비품실 복도 바로 옆 운송창고 경사 복도.",
+    "docs/ARMORY_OBJECTS.md - AR-01 무기실 룸 셸: 바닥, 벽, 스크린 벽, 출입구 3개, 중앙 기둥 주변 이동 공간."
+  ],
+  "generatedFiles": [
+    "blender/armory_shell.blend",
+    "exports/armory_shell.fbx",
+    "exports/armory_shell.glb",
+    "renders/01_overview.png",
+    "renders/02_floor_plan.png",
+    "renders/03_forward_screen_wall.png",
+    "renders/04_central_pillar_context.png",
+    "renders/05_side_entries.png",
+    "renders/06_cargo_ramp.png",
+    "index.html",
+    "README.md",
+    "ASSET_MANIFEST.json",
+    "APPROVAL_STATUS.json"
+  ],
+  "includedParts": [
+    "천장을 제외한 무기실 바닥과 벽 셸",
+    "중앙이 뒤로 들어가고 양 끝이 앞으로 나온 오목형 정면 가로 커브 스크린 자리 표시",
+    "중앙 기둥, 후면 계단, 상부 발판, 포탑 핸들의 낮은 밀도 위치 관계 표시",
+    "스크린 벽 기준 뒤쪽 통제실 방향 출입구와 복도 스텁",
+    "스크린 벽 기준 오른쪽 비품실 방향 출입구와 복도 스텁",
+    "비품실 복도 바로 옆 오른쪽 운송창고 방향 하강 경사 복도",
+    "영어 메인 방향 표시와 색상 출입구 프레임"
+  ],
+  "excludedParts": [
+    "실제 포탑 조준/발사 로직",
+    "포탑 수동 모드 UI",
+    "외부 선체 포탑 모델",
+    "소행성, 침입선, 외계 생명체 외부 목표",
+    "개인 휴대 무기 진열 랙과 탄약 보관함",
+    "Unity 씬 배치"
+  ]
+}
