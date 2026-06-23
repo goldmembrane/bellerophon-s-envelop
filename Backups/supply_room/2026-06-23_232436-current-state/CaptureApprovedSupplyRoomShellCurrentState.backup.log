@@ -1,0 +1,7 @@
+Unity editor bridge request completed: 83824e13f7874ccea7acbb68c8eb7918
+Unity editor bridge command: CaptureApprovedSupplyRoomShellCurrentState
+Unity editor bridge mode: open editor
+Approved supply room 01 current state capture saved.
+
+Captured Unity log:
+Log: Approved supply room 01 current state capture saved. Root=Approved Supply Room 01 Shell; TransformStates=160; Output=Assets/_Project/Editor/Validation/ApprovedSupplyRoomShellCurrentState.cs

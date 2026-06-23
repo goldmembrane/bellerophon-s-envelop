@@ -1,0 +1,8 @@
+{
+  "sample": "supply_room_shell",
+  "objectId": "SR-01",
+  "approvalState": "승인",
+  "unityApplicationAllowed": true,
+  "requiresUserApprovalBeforeUnity": false,
+  "note": "사용자가 비품실 샘플을 승인했으므로 Unity 적용을 허용합니다."
+}
