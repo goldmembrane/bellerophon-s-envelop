@@ -411,15 +411,15 @@ def add_curved_screen_placeholder(root: bpy.types.Object, mats: dict[str, bpy.ty
 
 def add_central_pillar_context(root: bpy.types.Object, mats: dict[str, bpy.types.Material]) -> None:
     # AR-01 shell sample includes low-detail placeholders so the room proportions and walking path are readable.
-    add_cylinder("AR-02 placeholder central turret support pillar", root, (0, -0.28, 1.12), 0.54, 2.24, mats["pillar"], vertices=48)
-    add_cylinder("AR-04 placeholder top operating platform", root, (0, -0.28, 2.26), 1.18, 0.20, mats["platform"], vertices=64)
-    add_cylinder("AR-04 placeholder platform safety rim", root, (0, -0.28, 2.42), 1.24, 0.10, mats["rim"], vertices=64)
+    add_cylinder("AR-02 placeholder central turret support pillar", root, (0, -0.28, 0.54), 0.54, 1.08, mats["pillar"], vertices=48)
+    add_cylinder("AR-04 placeholder top operating platform", root, (0, -0.28, 1.10), 1.18, 0.20, mats["platform"], vertices=64)
+    add_cylinder("AR-04 placeholder platform safety rim", root, (0, -0.28, 1.26), 1.24, 0.10, mats["rim"], vertices=64)
 
-    step_count = 12
+    step_count = 8
     for i in range(step_count):
         t = i / (step_count - 1)
         y = -3.25 + t * 1.79
-        z = 0.22 + t * 2.06
+        z = 0.22 + t * 0.90
         width = 1.42 - t * 0.18
         add_box(f"AR-03 placeholder rear stair tread {i + 1:02d}", root, (0, y, z), (width, 0.28, 0.16), mats["stair"], (0, 0, 0), 0.008)
     for x in (-0.86, 0.86):
@@ -427,25 +427,45 @@ def add_central_pillar_context(root: bpy.types.Object, mats: dict[str, bpy.types
             "AR-03 placeholder stair side rail",
             root,
             (x, -3.32, 0.46),
-            (x, -1.40, 2.46),
+            (x, -1.40, 1.30),
             0.030,
             mats["rail"],
             12,
         )
 
-    add_box("AR-05 placeholder turret handle console base", root, (0, 0.38, 2.48), (0.72, 0.42, 0.22), mats["console"], (0, 0, 0), 0.010)
-    add_cylinder_between("AR-05 placeholder handle support column", root, (0, 0.56, 2.52), (0, 0.78, 2.80), 0.045, mats["rail"], 14)
-    add_torus(
-        "AR-05 placeholder two-hand turret wheel",
-        root,
-        (0, 0.82, 2.82),
-        mats["handle"],
-        (math.radians(90), 0, 0),
-        0.24,
-        0.026,
-    )
-    add_cylinder_between("AR-05 placeholder horizontal grip bar", root, (-0.29, 0.82, 2.82), (0.29, 0.82, 2.82), 0.020, mats["handle"], 10)
-    add_cylinder_between("AR-05 placeholder vertical grip bar", root, (0, 0.82, 2.54), (0, 0.82, 3.10), 0.018, mats["handle"], 10)
+    add_box("AR-05 placeholder turret handle console base", root, (0, 0.38, 1.32), (0.78, 0.46, 0.22), mats["console"], (0, 0, 0), 0.010)
+    add_box("AR-05 U-yoke hinge housing", root, (0, 0.61, 1.50), (0.44, 0.18, 0.18), mats["console"], (math.radians(-12), 0, 0), 0.010)
+    add_cylinder_between("AR-05 U-yoke angled support column", root, (0, 0.56, 1.38), (0, 0.79, 1.62), 0.046, mats["rail"], 14)
+    add_cylinder_between("AR-05 U-shaped turret handle lower crossbar", root, (-0.42, 0.84, 1.62), (0.42, 0.84, 1.62), 0.045, mats["handle"], 16)
+    for side_name, x in (("left", -0.42), ("right", 0.42)):
+        add_cylinder_between(
+            f"AR-05 {side_name} vertical thumb grip",
+            root,
+            (x, 0.84, 1.62),
+            (x, 0.84, 1.94),
+            0.058,
+            mats["handle"],
+            18,
+        )
+        add_box(
+            f"AR-05 {side_name} thumb switch top cap",
+            root,
+            (x, 0.84, 1.962),
+            (0.12, 0.085, 0.045),
+            mats["thumb_switch"],
+            (0, 0, 0),
+            0.012,
+        )
+        add_cylinder_between(
+            f"AR-05 {side_name} thumb switch guard rail",
+            root,
+            (x - 0.105 if x < 0 else x + 0.105, 0.84, 1.92),
+            (x - 0.105 if x < 0 else x + 0.105, 0.84, 1.975),
+            0.014,
+            mats["rail"],
+            8,
+        )
+    add_cylinder_between("AR-05 U-yoke center pivot pin", root, (-0.18, 0.81, 1.62), (0.18, 0.81, 1.62), 0.032, mats["rail"], 12)
 
 
 def add_corridor_stub(
@@ -626,6 +646,7 @@ def write_docs() -> None:
             "renders/04_central_pillar_context.png",
             "renders/05_side_entries.png",
             "renders/06_cargo_ramp.png",
+            "renders/07_turret_handle_detail.png",
             "index.html",
             "README.md",
             "ASSET_MANIFEST.json",
@@ -634,7 +655,8 @@ def write_docs() -> None:
         "includedParts": [
             "천장을 제외한 무기실 바닥과 벽 셸",
             "중앙이 뒤로 들어가고 양 끝이 앞으로 나온 오목형 정면 가로 커브 스크린 자리 표시",
-            "중앙 기둥, 후면 계단, 상부 발판, 포탑 핸들의 낮은 밀도 위치 관계 표시",
+            "중앙 기둥, 후면 계단, 상부 발판, U자형 포탑 핸들의 낮은 밀도 위치 관계 표시",
+            "AR-05 포탑 핸들은 타륜이 아니라 양손 U자형 그립과 상단 엄지 스위치로 표시",
             "스크린 벽 기준 뒤쪽 통제실 방향 출입구와 복도 스텁",
             "스크린 벽 기준 오른쪽 비품실 방향 출입구와 복도 스텁",
             "비품실 복도 바로 옆 오른쪽 운송창고 방향 하강 경사 복도",
@@ -677,6 +699,7 @@ AR-01 무기실 룸 셸 승인용 Blender 샘플입니다.
 - 비품실 방향 출입구 바로 옆에는 운송창고 방향 출입구와 아래로 내려가는 경사 복도 스텁을 두었습니다.
 - 정면 벽에는 화물선 정면을 보여줄 가로 커브형 대형 스크린 자리를 표시했습니다. 방 안에서 볼 때 중앙은 뒤로 들어가고 양 끝은 앞으로 나온 오목형 커브이며, 곡면 레일과 세로 분할선을 함께 넣었습니다.
 - 중앙에는 기둥, 기둥 뒤편 계단, 상부 조작 발판, 포탑 핸들 위치 관계를 낮은 밀도 자리 표시로 넣었습니다.
+- AR-05 포탑 핸들은 타륜이 아니라 양손으로 잡는 U자형 그립이며, 각 그립 위쪽에 엄지로 누를 수 있는 스위치 캡을 넣었습니다.
 - 개인 휴대 무기 진열 랙과 탄약 보관함은 원본 기준 무기실 고정 오브젝트가 아니므로 넣지 않았습니다.
 - 내부 구조 확인이 쉽도록 천장은 제외했습니다.
 
@@ -708,6 +731,7 @@ AR-01 무기실 룸 셸 승인용 Blender 샘플입니다.
         ("04_central_pillar_context.png", "04 중앙 기둥과 포탑 핸들 위치 관계"),
         ("05_side_entries.png", "05 오른쪽 비품실과 운송창고 인접 출입구"),
         ("06_cargo_ramp.png", "06 오른쪽 운송창고 방향 하강 경사 복도"),
+        ("07_turret_handle_detail.png", "07 U자형 포탑 핸들과 상단 엄지 스위치"),
     ]
     cards = "\n".join(
         f'    <figure><a href="renders/{name}"><img src="renders/{name}" alt="{label}"></a><figcaption>{label}</figcaption></figure>'
@@ -734,7 +758,7 @@ AR-01 무기실 룸 셸 승인용 Blender 샘플입니다.
 <body>
 <main>
   <h1>armory_shell</h1>
-  <p>AR-01 무기실 룸 셸 승인용 샘플입니다. 수정된 기획서 기준에 따라 스크린 벽 기준 뒤쪽에는 통제실 복도, 오른쪽에는 비품실 복도, 비품실 복도 바로 옆에는 운송창고 경사 복도를 배치했습니다. 정면에는 방 안에서 볼 때 중앙은 뒤로 들어가고 양 끝은 앞으로 나온 오목형 가로 커브 스크린을 표시했고, 중앙 기둥과 후면 계단, 상부 포탑 핸들은 위치 관계 확인용 낮은 밀도 자리 표시로 넣었습니다. 개인 휴대 무기 진열 랙은 원본 기준 무기실 고정 오브젝트가 아니므로 포함하지 않았습니다.</p>
+  <p>AR-01 무기실 룸 셸 승인용 샘플입니다. 수정된 기획서 기준에 따라 스크린 벽 기준 뒤쪽에는 통제실 복도, 오른쪽에는 비품실 복도, 비품실 복도 바로 옆에는 운송창고 경사 복도를 배치했습니다. 정면에는 방 안에서 볼 때 중앙은 뒤로 들어가고 양 끝은 앞으로 나온 오목형 가로 커브 스크린을 표시했고, 중앙 기둥과 후면 계단, 상부 포탑 핸들은 위치 관계 확인용 낮은 밀도 자리 표시로 넣었습니다. AR-05 포탑 핸들은 타륜이 아니라 양손 U자형 그립과 상단 엄지 스위치로 바꾸었습니다. 개인 휴대 무기 진열 랙은 원본 기준 무기실 고정 오브젝트가 아니므로 포함하지 않았습니다.</p>
   <section class="grid">
 {cards}
   </section>
@@ -768,6 +792,7 @@ def main() -> None:
         "rail": noisy_metal("armory stair rail and supports", (0.42, 0.41, 0.35, 1)),
         "console": noisy_metal("armory turret handle console", (0.16, 0.18, 0.18, 1)),
         "handle": noisy_metal("armory turret handle worn grip", (0.48, 0.46, 0.38, 1)),
+        "thumb_switch": material("armory turret thumb switch red cap", (0.82, 0.08, 0.045, 1), roughness=0.48, emission=(0.30, 0.018, 0.010, 1), emission_strength=0.10),
         "beam": noisy_metal("armory wall structural rib", (0.30, 0.31, 0.28, 1)),
         "conduit": noisy_metal("armory wall utility conduit", (0.045, 0.052, 0.052, 1)),
         "label_text": material("armory pale direction label text", (0.78, 0.88, 0.84, 1), roughness=0.70, emission=(0.16, 0.32, 0.29, 1), emission_strength=0.08),
@@ -787,6 +812,7 @@ def main() -> None:
         ("central_pillar_context", (4.8, -4.1, 2.95), (0.0, -0.35, 1.78), 35, "04_central_pillar_context.png", None),
         ("side_entries", (ROOM_WIDTH * 0.5 + 0.72, (SUPPLY_DOOR_Y + CARGO_DOOR_Y) * 0.5, 11.0), (ROOM_WIDTH * 0.5 + 0.72, (SUPPLY_DOOR_Y + CARGO_DOOR_Y) * 0.5, 0.0), 50, "05_side_entries.png", 5.2),
         ("cargo_ramp", (8.4, CARGO_DOOR_Y, 2.12), (ROOM_WIDTH * 0.5, CARGO_DOOR_Y, 0.54), 34, "06_cargo_ramp.png", None),
+        ("turret_handle_detail", (1.55, -0.15, 3.30), (0.0, 0.82, 2.95), 70, "07_turret_handle_detail.png", None),
     ]
     for name, loc, target, lens, output, ortho_scale in cameras:
         camera = add_camera(name, loc, target, lens, ortho_scale=ortho_scale)

@@ -162,6 +162,18 @@ namespace Bellerophon.Editor.Validation
                         ApprovedArmoryShellBootstrap.CreateApprovedSupplyRoomShell,
                         "Approved supply room 01 shell created.");
                     break;
+                case "CreateApprovedCargoHoldShell":
+                    RunSynchronous(
+                        request,
+                        ApprovedArmoryShellBootstrap.CreateApprovedCargoHoldShell,
+                        "Approved cargo hold 01 shell created.");
+                    break;
+                case "AddApprovedCargoHoldCh10DirectionMarkersOnly":
+                    RunSynchronous(
+                        request,
+                        ApprovedArmoryShellBootstrap.AddApprovedCargoHoldCh10DirectionMarkersOnly,
+                        "Approved cargo hold CH-10 direction markers added only.");
+                    break;
                 case "MoveApprovedSupplyRoomShellBelowEngineRoom":
                     RunSynchronous(
                         request,
@@ -204,11 +216,23 @@ namespace Bellerophon.Editor.Validation
                         ApprovedArmoryShellBootstrap.CaptureApprovedSupplyRoomShellCurrentState,
                         "Approved supply room 01 current state capture saved.");
                     break;
+                case "CaptureApprovedCargoHoldShellCurrentState":
+                    RunSynchronous(
+                        request,
+                        ApprovedArmoryShellBootstrap.CaptureApprovedCargoHoldShellCurrentState,
+                        "Approved cargo hold 01 current state capture saved.");
+                    break;
                 case "RestoreApprovedSupplyRoomShellCurrentState":
                     RunSynchronous(
                         request,
                         ApprovedArmoryShellBootstrap.RestoreApprovedSupplyRoomShellCurrentState,
                         "Approved supply room 01 current state restored and saved.");
+                    break;
+                case "RestoreApprovedCargoHoldShellCurrentState":
+                    RunSynchronous(
+                        request,
+                        ApprovedArmoryShellBootstrap.RestoreApprovedCargoHoldShellCurrentState,
+                        "Approved cargo hold 01 current state restored and saved.");
                     break;
                 case "RestoreApprovedSupplyRoomShellCurrentStateByName":
                     RunSynchronous(

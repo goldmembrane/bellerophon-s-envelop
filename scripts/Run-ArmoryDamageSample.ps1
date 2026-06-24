@@ -2,11 +2,11 @@ $ErrorActionPreference = "Stop"
 
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $logDir = Join-Path $projectRoot "Logs"
-$logPath = Join-Path $logDir "ArmoryShellSample.log"
-$stdoutPath = Join-Path $logDir "ArmoryShellSample.stdout.log"
-$stderrPath = Join-Path $logDir "ArmoryShellSample.stderr.log"
-$scriptPath = Join-Path $projectRoot "scripts\GenerateArmoryShellSample.py"
-$sampleRoot = Join-Path $projectRoot "artSample\armory_shell"
+$logPath = Join-Path $logDir "ArmoryDamageSample.log"
+$stdoutPath = Join-Path $logDir "ArmoryDamageSample.stdout.log"
+$stderrPath = Join-Path $logDir "ArmoryDamageSample.stderr.log"
+$scriptPath = Join-Path $projectRoot "scripts\GenerateArmoryDamageSample.py"
+$sampleRoot = Join-Path $projectRoot "artSample\armory_damage_state"
 
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
 Remove-Item -LiteralPath $logPath -Force -ErrorAction SilentlyContinue
@@ -61,22 +61,19 @@ $requiredFiles = @(
   "README.md",
   "ASSET_MANIFEST.json",
   "APPROVAL_STATUS.json",
-  "blender\armory_shell.blend",
-  "exports\armory_shell.fbx",
-  "exports\armory_shell.glb",
+  "blender\armory_damage_state.blend",
+  "exports\armory_damage_state.fbx",
+  "exports\armory_damage_state.glb",
   "renders\01_overview.png",
-  "renders\02_floor_plan.png",
-  "renders\03_forward_screen_wall.png",
-  "renders\04_central_pillar_context.png",
-  "renders\05_side_entries.png",
-  "renders\06_cargo_ramp.png",
-  "renders\07_turret_handle_detail.png"
+  "renders\02_monitor_crack_detail.png",
+  "renders\03_left_tilt_profile.png",
+  "renders\04_smoke_effect.png"
 )
 
 foreach ($relative in $requiredFiles) {
   $path = Join-Path $sampleRoot $relative
   if (-not (Test-Path -LiteralPath $path)) {
-    Write-Error "Missing generated armory shell sample file: $path"
+    Write-Error "Missing generated armory damage sample file: $path"
     exit 1
   }
 }

@@ -25,6 +25,10 @@ namespace Bellerophon.Editor.Validation
         private const string SupplyRoomHskOpenCloseTexturePath = "Assets/Heavy Station Kit/_common/Textures/GUI/HSK_Open_Close.png";
         private const string SupplyRoomSr07InactiveScreenName = "SR-07 visible ejection terminal inactive screen";
         private const string SupplyRoomSr07HskScreenName = "SR-07 ejection terminal HSK open close screen texture";
+        private const string CargoHoldRootName = "Approved Cargo Hold 01 Shell";
+        private const string CargoHoldApprovalStatusRelativePath = "artSample/cargo_hold_shell/APPROVAL_STATUS.json";
+        private const string CargoHoldCurrentStateUnityPath = "Assets/_Project/Editor/Validation/ApprovedCargoHoldShellCurrentState.cs";
+        private const float CargoHoldUnityScale = 2.2f;
 
         private static readonly Vector3 ArmoryCenterBelowControlRoom = new Vector3(13.20795f, -4.6f, 19.265f);
 
@@ -128,6 +132,136 @@ namespace Bellerophon.Editor.Validation
                 "; Bounds=" +
                 FormatBounds(supplyBounds) +
                 "; ArmoryLineAligned=True; ZBelowEngineRoom=True; ExistingObjectsUntouched=True");
+        }
+
+        [MenuItem("Bellerophon/Bootstrap/Create Approved Cargo Hold 01 Shell")]
+        public static void CreateApprovedCargoHoldShell()
+        {
+            var scene = EditorSceneManager.OpenScene(Phase4CargoShipGrayboxBootstrap.CargoRunScenePath, OpenSceneMode.Single);
+            RequireApprovedCargoHoldSample();
+
+            var protectedRoots = FindSceneRootObjectsExcept(CargoHoldRootName);
+            var protectedSnapshots = CaptureProtectedSnapshots(protectedRoots);
+
+            DeleteGeneratedObject(CargoHoldRootName);
+
+            var root = new GameObject(CargoHoldRootName);
+            root.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            root.transform.localScale = Vector3.one * CargoHoldUnityScale;
+
+            CreateCargoHoldFromApprovedSample(root.transform);
+            DisableAllColliders(root.transform);
+
+            var targetPosition = FindCargoHoldPlacement(root.transform, protectedRoots);
+            root.transform.SetPositionAndRotation(targetPosition, Quaternion.identity);
+            root.transform.localScale = Vector3.one * CargoHoldUnityScale;
+
+            var cargoBounds = GetRendererBounds(root.transform);
+            EnsureCargoHoldPlacementConstraints(root.transform, cargoBounds);
+            EnsureProtectedObjectsUntouched(protectedSnapshots);
+            WriteCargoHoldCurrentStateScript(CaptureCurrentTransformStates(root.transform));
+
+            Selection.activeGameObject = root;
+            EditorGUIUtility.PingObject(root);
+
+            EditorUtility.SetDirty(root);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, Phase4CargoShipGrayboxBootstrap.CargoRunScenePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log(
+                "Approved cargo hold 01 shell created. Root=" +
+                CargoHoldRootName +
+                "; Center=" +
+                FormatVector(targetPosition) +
+                "; Bounds=" +
+                FormatBounds(cargoBounds) +
+                "; UnityScale=" +
+                CargoHoldUnityScale.ToString("0.00", CultureInfo.InvariantCulture) +
+                "; XAlignedWithCockpit=True; ZBelowArmory=True; CurrentStateSaved=True; ExistingObjectsUntouched=True");
+        }
+
+        [MenuItem("Bellerophon/Bootstrap/Capture Approved Cargo Hold 01 Current State")]
+        public static void CaptureApprovedCargoHoldShellCurrentState()
+        {
+            var scene = RequireCargoRunMvpActiveScene();
+            var root = RequireObject(CargoHoldRootName);
+            var states = CaptureCurrentTransformStates(root.transform);
+
+            WriteCargoHoldCurrentStateScript(states);
+
+            EditorUtility.SetDirty(root);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, Phase4CargoShipGrayboxBootstrap.CargoRunScenePath);
+            AssetDatabase.SaveAssets();
+
+            Debug.Log(
+                "Approved cargo hold 01 current state capture saved. Root=" +
+                CargoHoldRootName +
+                "; TransformStates=" +
+                states.Count.ToString(CultureInfo.InvariantCulture) +
+                "; Output=" +
+                CargoHoldCurrentStateUnityPath);
+        }
+
+        [MenuItem("Bellerophon/Bootstrap/Restore Approved Cargo Hold 01 Current State")]
+        public static void RestoreApprovedCargoHoldShellCurrentState()
+        {
+            var scene = RequireCargoRunMvpActiveScene();
+            var root = RequireObject(CargoHoldRootName);
+            var protectedRoots = FindSceneRootObjectsExcept(CargoHoldRootName);
+            var protectedSnapshots = CaptureProtectedSnapshots(protectedRoots);
+
+            ApplyCapturedTransformStates(root.transform, ApprovedCargoHoldShellCurrentState.Transforms);
+            EnsureExactCapturedHierarchy(root.transform, ApprovedCargoHoldShellCurrentState.Transforms);
+            EnsureProtectedObjectsUntouched(protectedSnapshots);
+
+            EditorUtility.SetDirty(root);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, Phase4CargoShipGrayboxBootstrap.CargoRunScenePath);
+            AssetDatabase.SaveAssets();
+
+            Debug.Log(
+                "Approved cargo hold 01 current state restored and saved. Root=" +
+                CargoHoldRootName +
+                "; TransformStates=" +
+                ApprovedCargoHoldShellCurrentState.Transforms.Length.ToString(CultureInfo.InvariantCulture) +
+                "; ExistingObjectsUntouched=True");
+        }
+
+        [MenuItem("Bellerophon/Bootstrap/Add Approved Cargo Hold CH-10 Direction Markers Only")]
+        public static void AddApprovedCargoHoldCh10DirectionMarkersOnly()
+        {
+            var scene = EditorSceneManager.OpenScene(Phase4CargoShipGrayboxBootstrap.CargoRunScenePath, OpenSceneMode.Single);
+            RequireApprovedCargoHoldSample();
+
+            var root = RequireObject(CargoHoldRootName);
+            var protectedRoots = FindSceneRootObjectsExcept(CargoHoldRootName);
+            var protectedSnapshots = CaptureProtectedSnapshots(protectedRoots);
+            var nonCh10CargoSnapshots = CaptureNonCh10CargoHoldSnapshots(root.transform);
+
+            DeleteExistingCargoHoldCh10Objects(root.transform);
+            var mats = CreateCargoHoldMaterials();
+            CreateCargoHoldCh10DirectionMarkersOnly(root.transform, mats);
+
+            EnsureProtectedObjectsUntouched(nonCh10CargoSnapshots);
+            EnsureOnlyCargoHoldCh10ObjectsAdded(root.transform, nonCh10CargoSnapshots);
+            EnsureProtectedObjectsUntouched(protectedSnapshots);
+            WriteCargoHoldCurrentStateScript(CaptureCurrentTransformStates(root.transform));
+
+            EditorUtility.SetDirty(root);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, Phase4CargoShipGrayboxBootstrap.CargoRunScenePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log(
+                "Approved cargo hold CH-10 direction markers added only. Root=" +
+                CargoHoldRootName +
+                "; Ch10Objects=" +
+                CountCargoHoldCh10Objects(root.transform).ToString(CultureInfo.InvariantCulture) +
+                "; NonCh10CargoHoldObjectsUntouched=True; ExistingObjectsUntouched=True");
         }
 
         [MenuItem("Bellerophon/Bootstrap/Move Approved Supply Room 01 Shell Below Engine Room")]
@@ -482,9 +616,9 @@ namespace Bellerophon.Editor.Validation
 
             const float screenWidth = 0.59f;
             const float screenHeight = 0.405f;
-            const float uvMinX = 0.0f;
+            const float uvMinX = 0.86f;
             const float uvMinY = 0.075f;
-            const float uvMaxX = 0.86f;
+            const float uvMaxX = 0.0f;
             const float uvMaxY = 0.925f;
             var halfWidth = screenWidth * 0.5f;
             var halfHeight = screenHeight * 0.5f;
@@ -769,6 +903,7 @@ namespace Bellerophon.Editor.Validation
             DeleteExistingAr03Objects(root.transform);
             CreateAr02FromApprovedSample(root.transform, pillarMaterial);
             CreateAr03LowEightStepFromApprovedSample(root.transform, stairMaterial, railMaterial);
+            MoveAr04PlatformToLowerPillarHeight(root.transform);
 
             EnsureProtectedObjectsUntouched(protectedSnapshots);
             EnsureProtectedObjectsUntouched(nonAr02Ar03ArmorySnapshots);
@@ -781,7 +916,7 @@ namespace Bellerophon.Editor.Validation
             Debug.Log(
                 "Approved armory AR-02 pillar and AR-03 stairs updated only. Root=" +
                 RootName +
-                "; PillarHeight=1.08; Treads=8; ExistingObjectsUntouched=True; NonAr02Ar03ArmoryObjectsUntouched=True");
+                "; PillarHeight=0.48; Treads=5; PlatformHeight=0.48; ExistingObjectsUntouched=True; NonAr02Ar03ArmoryObjectsUntouched=True");
         }
 
         [MenuItem("Bellerophon/Bootstrap/Capture Approved Armory 01 Current State")]
@@ -866,6 +1001,373 @@ namespace Bellerophon.Editor.Validation
             CreateSupplyCorridorStub(root, "SR-10 cargo hold direction", -1.18f, "CARGO HOLD", mats["cargo_marker"], mats);
             CreateSupplyOutlineMarkers(root, mats);
             CreateSupplyText("SR-01 room shell title floor label", root, "SUPPLY ROOM SHELL", new Vector3(0f, 0f, 0.245f), Quaternion.Euler(90f, 0f, 0f), 0.20f, mats["label_text"]);
+        }
+
+        private static void RequireApprovedCargoHoldSample()
+        {
+            var approvalPath = Path.Combine(ProjectRoot, CargoHoldApprovalStatusRelativePath);
+            if (!File.Exists(approvalPath))
+            {
+                throw new InvalidOperationException("Missing approved cargo hold sample status file: " + approvalPath);
+            }
+
+            var approval = File.ReadAllText(approvalPath);
+            var approvedState =
+                approval.IndexOf("\"approvalState\": \"approved_with_unity_constraints\"", StringComparison.Ordinal) >= 0 ||
+                approval.IndexOf("\"approvalState\": \"approved\"", StringComparison.Ordinal) >= 0 ||
+                approval.IndexOf("\"approvalState\": \"승인\"", StringComparison.Ordinal) >= 0;
+            if (!approvedState ||
+                approval.IndexOf("\"unityApplicationAllowed\": true", StringComparison.Ordinal) < 0)
+            {
+                throw new InvalidOperationException("Cargo hold shell sample has not been approved for Unity application: " + approvalPath);
+            }
+        }
+
+        private static void CreateCargoHoldFromApprovedSample(Transform root)
+        {
+            var mats = CreateCargoHoldMaterials();
+
+            CreateSupplyBox("CH-01 sealed cargo hold deck floor", root, new Vector3(0f, 0f, 0f), new Vector3(9.8f, 8.7f, 0.18f), mats["floor"]);
+            CreateCargoWallYWithDoors(root, "CH-05 cockpit connection north wall", 4.35f, new[] { 0f }, new[] { mats["cockpit_marker"] }, mats);
+            CreateCargoWallYWithDoors(root, "CH-08 CH-09 aft connection wall", -4.35f, new[] { -3.58f, 3.58f }, new[] { mats["supply_marker"], mats["armory_marker"] }, mats);
+            CreateCargoWallXWithDoor(root, "CH-06 engine connection west wall", -4.9f, 0f, mats["engine_marker"], mats);
+            CreateCargoWallXWithDoor(root, "CH-07 control connection east wall", 4.9f, 0f, mats["control_marker"], mats);
+
+            CreateCargoCorridorStub(root, "CH-05 cockpit corridor at 12 oclock", new Vector3(0f, 5.40f, 0f), new Vector3(1.87f, 2.10f, 0.18f), false, mats["cockpit_marker"], mats);
+            CreateCargoCorridorStub(root, "CH-07 control corridor at 3 oclock", new Vector3(6.00f, 0f, 0f), new Vector3(2.18f, 1.87f, 0.18f), true, mats["control_marker"], mats);
+            CreateCargoCorridorStub(root, "CH-06 engine corridor at 9 oclock", new Vector3(-6.00f, 0f, 0f), new Vector3(2.18f, 1.87f, 0.18f), true, mats["engine_marker"], mats);
+            CreateCargoCorridorStub(root, "CH-08 armory corridor at right aft edge", new Vector3(3.58f, -5.40f, 0f), new Vector3(1.87f, 2.10f, 0.18f), false, mats["armory_marker"], mats);
+            CreateCargoCorridorStub(root, "CH-09 supply corridor at left aft edge", new Vector3(-3.58f, -5.40f, 0f), new Vector3(1.87f, 2.10f, 0.18f), false, mats["supply_marker"], mats);
+
+            CreateCargoFloorGrid(root, mats);
+            CreateCargoEdgeWalkway(root, mats);
+            CreateCargoContainer(root, mats);
+            CreateCargoStatusPanel(root, mats);
+            CreateCargoWallDressing(root, mats);
+            CreateCargoHoldCh10DirectionMarkersOnly(root, mats);
+            CreateSupplyText("CH-01 cargo hold shell title floor label", root, "CARGO HOLD SHELL", new Vector3(0f, 3.05f, 0.245f), Quaternion.Euler(90f, 0f, 0f), 0.22f, mats["label_text"]);
+        }
+
+        private static Dictionary<string, Material> CreateCargoHoldMaterials()
+        {
+            return new Dictionary<string, Material>(StringComparer.Ordinal)
+            {
+                { "floor", CreateSupplyMaterial("CH-01 worn cargo hold deck", new Color(0.14f, 0.16f, 0.16f, 1f), 0.24f, 0.84f) },
+                { "floor_panel", CreateSupplyMaterial("CH-01 removable cargo deck plate", new Color(0.20f, 0.21f, 0.19f, 1f), 0.22f, 0.86f) },
+                { "deck_rib", CreateSupplyMaterial("CH-01 dark raised cargo deck rib", new Color(0.07f, 0.08f, 0.08f, 1f), 0.24f, 0.84f) },
+                { "wall", CreateSupplyMaterial("CH-01 thick cargo hold armored wall", new Color(0.22f, 0.25f, 0.25f, 1f), 0.18f, 0.82f) },
+                { "wall_dark", CreateSupplyMaterial("CH-01 dark cargo corridor wall", new Color(0.09f, 0.11f, 0.12f, 1f), 0.16f, 0.86f) },
+                { "door_frame", CreateSupplyMaterial("CH-01 heavy cargo doorway frame", new Color(0.36f, 0.35f, 0.30f, 1f), 0.24f, 0.76f) },
+                { "beam", CreateSupplyMaterial("CH-01 cargo wall structural rib", new Color(0.29f, 0.31f, 0.29f, 1f), 0.18f, 0.82f) },
+                { "corridor_floor", CreateSupplyMaterial("CH-01 corridor continuation steel", new Color(0.16f, 0.19f, 0.19f, 1f), 0.18f, 0.84f) },
+                { "walkway", CreateSupplyMaterial("CH-06 raised edge handling walkway", new Color(0.19f, 0.20f, 0.18f, 1f), 0.24f, 0.82f) },
+                { "cargo_zone", CreateSupplyMaterial("CH-02 central cargo locked zone plate", new Color(0.18f, 0.23f, 0.20f, 1f), 0.20f, 0.82f) },
+                { "container_body", CreateSupplyMaterial("CH-03 single central container worn body", new Color(0.48f, 0.37f, 0.24f, 1f), 0.18f, 0.86f) },
+                { "container_panel", CreateSupplyMaterial("CH-03 single central container darker side panel", new Color(0.34f, 0.27f, 0.20f, 1f), 0.16f, 0.88f) },
+                { "container_edge", CreateSupplyMaterial("CH-03 single central container reinforced edge", new Color(0.17f, 0.18f, 0.16f, 1f), 0.28f, 0.78f) },
+                { "screen_frame", CreateSupplyMaterial("CH-11 cargo status panel frame", new Color(0.12f, 0.13f, 0.13f, 1f), 0.20f, 0.80f) },
+                { "screen_glow", CreateSupplyMaterial("CH-11 cargo status panel green display", new Color(0.08f, 0.44f, 0.32f, 1f), 0f, 0.42f) },
+                { "screen_dim", CreateSupplyMaterial("CH-11 cargo status panel dim scan line", new Color(0.02f, 0.09f, 0.08f, 1f), 0f, 0.66f) },
+                { "label_text", CreateSupplyMaterial("CH-01 pale cargo hold floor label text", new Color(0.82f, 0.91f, 0.84f, 1f), 0f, 0.66f) },
+                { "marker_backing", CreateSupplyMaterial("CH-10 dark direction label backing", new Color(0.030f, 0.036f, 0.038f, 1f), 0f, 0.78f) },
+                { "marker_arrow", CreateSupplyMaterial("CH-10 worn pale direction arrow", new Color(0.84f, 0.89f, 0.82f, 1f), 0f, 0.68f) },
+                { "marker_wear", CreateSupplyMaterial("CH-10 scraped direction marker trim", new Color(0.70f, 0.62f, 0.46f, 1f), 0.02f, 0.90f) },
+                { "cockpit_marker", CreateSupplyMaterial("CH-05 cockpit direction blue marker", new Color(0.13f, 0.30f, 0.58f, 1f), 0.02f, 0.70f) },
+                { "control_marker", CreateSupplyMaterial("CH-07 control direction cyan marker", new Color(0.08f, 0.42f, 0.52f, 1f), 0.02f, 0.70f) },
+                { "engine_marker", CreateSupplyMaterial("CH-06 engine direction amber marker", new Color(0.70f, 0.43f, 0.12f, 1f), 0.02f, 0.74f) },
+                { "armory_marker", CreateSupplyMaterial("CH-08 armory direction red marker", new Color(0.58f, 0.16f, 0.13f, 1f), 0.02f, 0.76f) },
+                { "supply_marker", CreateSupplyMaterial("CH-09 supply direction green marker", new Color(0.18f, 0.43f, 0.28f, 1f), 0.02f, 0.74f) },
+                { "hazard", CreateSupplyMaterial("CH-11 muted cargo status hazard paint", new Color(0.82f, 0.58f, 0.14f, 1f), 0.02f, 0.82f) },
+                { "shadow", CreateSupplyMaterial("CH-01 recessed cargo hold shadow", new Color(0.018f, 0.020f, 0.019f, 1f), 0f, 0.92f) },
+            };
+        }
+
+        private static void CreateCargoWallYWithDoors(
+            Transform root,
+            string name,
+            float y,
+            IReadOnlyList<float> doorCenters,
+            IReadOnlyList<Material> doorMarkers,
+            Dictionary<string, Material> mats)
+        {
+            const float wallWidth = 9.8f;
+            const float wallThickness = 0.34f;
+            const float wallHeight = 3.2f;
+            const float doorWidth = 1.55f;
+            const float doorHeight = 2.12f;
+
+            var sortedCenters = new List<float>(doorCenters);
+            sortedCenters.Sort();
+            var cursor = -wallWidth * 0.5f;
+            for (var i = 0; i < sortedCenters.Count; i++)
+            {
+                var left = sortedCenters[i] - (doorWidth * 0.5f);
+                if (left > cursor + 0.05f)
+                {
+                    var length = left - cursor;
+                CreateSupplyBox(name + " sealed wall segment " + (i + 1).ToString(CultureInfo.InvariantCulture), root, new Vector3(cursor + (length * 0.5f), y, wallHeight * 0.5f), new Vector3(length, wallThickness, wallHeight), mats["wall"]);
+                }
+
+                var marker = doorMarkers[Mathf.Min(i, doorMarkers.Count - 1)];
+                CreateSupplyBox(name + " doorway header " + (i + 1).ToString(CultureInfo.InvariantCulture), root, new Vector3(sortedCenters[i], y, doorHeight + ((wallHeight - doorHeight) * 0.5f)), new Vector3(doorWidth + 0.42f, wallThickness, wallHeight - doorHeight), mats["wall"]);
+                CreateSupplyBox(name + " doorway left frame " + (i + 1).ToString(CultureInfo.InvariantCulture), root, new Vector3(sortedCenters[i] - (doorWidth * 0.5f), y, doorHeight * 0.5f), new Vector3(0.16f, wallThickness + 0.12f, doorHeight), mats["door_frame"]);
+                CreateSupplyBox(name + " doorway right frame " + (i + 1).ToString(CultureInfo.InvariantCulture), root, new Vector3(sortedCenters[i] + (doorWidth * 0.5f), y, doorHeight * 0.5f), new Vector3(0.16f, wallThickness + 0.12f, doorHeight), mats["door_frame"]);
+                CreateSupplyBox(name + " doorway colored threshold " + (i + 1).ToString(CultureInfo.InvariantCulture), root, new Vector3(sortedCenters[i], y, 0.22f), new Vector3(doorWidth + 0.28f, 0.62f, 0.055f), marker);
+                cursor = sortedCenters[i] + (doorWidth * 0.5f);
+            }
+
+            var rightEdge = wallWidth * 0.5f;
+            if (rightEdge > cursor + 0.05f)
+            {
+                var length = rightEdge - cursor;
+                CreateSupplyBox(name + " sealed wall segment end", root, new Vector3(cursor + (length * 0.5f), y, wallHeight * 0.5f), new Vector3(length, wallThickness, wallHeight), mats["wall"]);
+            }
+        }
+
+        private static void CreateCargoWallXWithDoor(
+            Transform root,
+            string name,
+            float x,
+            float doorCenterY,
+            Material marker,
+            Dictionary<string, Material> mats)
+        {
+            const float wallDepth = 8.7f;
+            const float wallThickness = 0.34f;
+            const float wallHeight = 3.2f;
+            const float doorWidth = 1.55f;
+            const float doorHeight = 2.12f;
+            var lowerEdge = -wallDepth * 0.5f;
+            var upperEdge = wallDepth * 0.5f;
+            var doorLower = doorCenterY - (doorWidth * 0.5f);
+            var doorUpper = doorCenterY + (doorWidth * 0.5f);
+
+            if (doorLower > lowerEdge + 0.05f)
+            {
+                var length = doorLower - lowerEdge;
+                CreateSupplyBox(name + " lower sealed wall segment", root, new Vector3(x, lowerEdge + (length * 0.5f), wallHeight * 0.5f), new Vector3(wallThickness, length, wallHeight), mats["wall"]);
+            }
+
+            CreateSupplyBox(name + " doorway header", root, new Vector3(x, doorCenterY, doorHeight + ((wallHeight - doorHeight) * 0.5f)), new Vector3(wallThickness, doorWidth + 0.42f, wallHeight - doorHeight), mats["wall"]);
+            CreateSupplyBox(name + " doorway lower frame", root, new Vector3(x, doorLower, doorHeight * 0.5f), new Vector3(wallThickness + 0.12f, 0.16f, doorHeight), mats["door_frame"]);
+            CreateSupplyBox(name + " doorway upper frame", root, new Vector3(x, doorUpper, doorHeight * 0.5f), new Vector3(wallThickness + 0.12f, 0.16f, doorHeight), mats["door_frame"]);
+            CreateSupplyBox(name + " doorway colored threshold", root, new Vector3(x, doorCenterY, 0.22f), new Vector3(0.62f, doorWidth + 0.28f, 0.055f), marker);
+
+            if (upperEdge > doorUpper + 0.05f)
+            {
+                var length = upperEdge - doorUpper;
+                CreateSupplyBox(name + " upper sealed wall segment", root, new Vector3(x, doorUpper + (length * 0.5f), wallHeight * 0.5f), new Vector3(wallThickness, length, wallHeight), mats["wall"]);
+            }
+        }
+
+        private static void CreateCargoCorridorStub(
+            Transform root,
+            string name,
+            Vector3 blenderCenter,
+            Vector3 blenderScale,
+            bool corridorRunsAlongX,
+            Material marker,
+            Dictionary<string, Material> mats)
+        {
+            CreateSupplyBox(name + " floor continuation", root, blenderCenter, blenderScale, mats["corridor_floor"]);
+            CreateSupplyBox(name + " colored threshold slab", root, new Vector3(blenderCenter.x, blenderCenter.y, 0.215f), new Vector3(Mathf.Min(blenderScale.x + 0.18f, 2.30f), Mathf.Min(blenderScale.y + 0.18f, 2.30f), 0.055f), marker);
+
+            if (corridorRunsAlongX)
+            {
+                CreateSupplyBox(name + " upper side wall", root, new Vector3(blenderCenter.x, blenderCenter.y + (blenderScale.y * 0.5f), 1.08f), new Vector3(blenderScale.x, 0.20f, 2.16f), mats["wall_dark"]);
+                CreateSupplyBox(name + " lower side wall", root, new Vector3(blenderCenter.x, blenderCenter.y - (blenderScale.y * 0.5f), 1.08f), new Vector3(blenderScale.x, 0.20f, 2.16f), mats["wall_dark"]);
+            }
+            else
+            {
+                CreateSupplyBox(name + " left side wall", root, new Vector3(blenderCenter.x - (blenderScale.x * 0.5f), blenderCenter.y, 1.08f), new Vector3(0.20f, blenderScale.y, 2.16f), mats["wall_dark"]);
+                CreateSupplyBox(name + " right side wall", root, new Vector3(blenderCenter.x + (blenderScale.x * 0.5f), blenderCenter.y, 1.08f), new Vector3(0.20f, blenderScale.y, 2.16f), mats["wall_dark"]);
+            }
+        }
+
+        private static void CreateCargoFloorGrid(Transform root, Dictionary<string, Material> mats)
+        {
+            var floorPlateXs = new[] { -3.85f, -2.55f, -1.25f, 1.25f, 2.55f, 3.85f };
+            for (var i = 0; i < floorPlateXs.Length; i++)
+            {
+                var x = floorPlateXs[i];
+                CreateSupplyBox("CH-01 removable cargo floor plate " + x.ToString("+0.00;-0.00;0.00", CultureInfo.InvariantCulture), root, new Vector3(x, 0f, 0.115f), new Vector3(1.05f, 7.8f, 0.042f), mats["floor_panel"]);
+            }
+
+            var ribYs = new[] { -3.55f, -2.40f, -1.25f, 0f, 1.25f, 2.40f, 3.55f };
+            for (var i = 0; i < ribYs.Length; i++)
+            {
+                var y = ribYs[i];
+                CreateSupplyBox("CH-01 transverse cargo deck rib " + y.ToString("+0.00;-0.00;0.00", CultureInfo.InvariantCulture), root, new Vector3(0f, y, 0.152f), new Vector3(8.98f, 0.046f, 0.048f), mats["deck_rib"]);
+            }
+        }
+
+        private static void CreateCargoEdgeWalkway(Transform root, Dictionary<string, Material> mats)
+        {
+            CreateSupplyBox("CH-04 forward raised handling walkway band", root, new Vector3(0f, 2.62f, 0.235f), new Vector3(6.70f, 0.58f, 0.075f), mats["walkway"]);
+            CreateSupplyBox("CH-04 aft raised handling walkway band", root, new Vector3(0f, -2.62f, 0.235f), new Vector3(6.70f, 0.58f, 0.075f), mats["walkway"]);
+            CreateSupplyBox("CH-04 west raised handling walkway band", root, new Vector3(-3.20f, 0f, 0.235f), new Vector3(0.58f, 4.70f, 0.075f), mats["walkway"]);
+            CreateSupplyBox("CH-04 east raised handling walkway band", root, new Vector3(3.20f, 0f, 0.235f), new Vector3(0.58f, 4.70f, 0.075f), mats["walkway"]);
+            CreateSupplyBox("CH-02 central cargo zone outline", root, new Vector3(0f, 0f, 0.212f), new Vector3(4.85f, 3.20f, 0.055f), mats["cargo_zone"]);
+        }
+
+        private static void CreateCargoContainer(Transform root, Dictionary<string, Material> mats)
+        {
+            CreateSupplyBox("CH-03 single central cargo container body", root, new Vector3(0f, 0f, 0.92f), new Vector3(3.75f, 2.12f, 1.55f), mats["container_body"]);
+            CreateSupplyBox("CH-03 single central cargo container top cap", root, new Vector3(0f, 0f, 1.735f), new Vector3(3.95f, 2.30f, 0.12f), mats["container_edge"]);
+            CreateSupplyBox("CH-03 single central cargo container bottom skid", root, new Vector3(0f, 0f, 0.145f), new Vector3(4.05f, 2.34f, 0.16f), mats["container_edge"]);
+            CreateSupplyBox("CH-03 single central cargo container left side panel", root, new Vector3(0f, 1.095f, 0.92f), new Vector3(3.56f, 0.065f, 1.34f), mats["container_panel"]);
+            CreateSupplyBox("CH-03 single central cargo container right side panel", root, new Vector3(0f, -1.095f, 0.92f), new Vector3(3.56f, 0.065f, 1.34f), mats["container_panel"]);
+
+            var cornerXs = new[] { -1.95f, 1.95f };
+            var cornerYs = new[] { -1.16f, 1.16f };
+            for (var xIndex = 0; xIndex < cornerXs.Length; xIndex++)
+            {
+                for (var yIndex = 0; yIndex < cornerYs.Length; yIndex++)
+                {
+                    CreateSupplyBox(
+                        "CH-03 single central cargo container reinforced corner " + (xIndex + 1).ToString(CultureInfo.InvariantCulture) + "-" + (yIndex + 1).ToString(CultureInfo.InvariantCulture),
+                        root,
+                        new Vector3(cornerXs[xIndex], cornerYs[yIndex], 0.94f),
+                        new Vector3(0.13f, 0.13f, 1.62f),
+                        mats["container_edge"]);
+                }
+            }
+
+            var ribXs = new[] { -1.40f, -0.90f, -0.40f, 0.10f, 0.60f, 1.10f, 1.60f };
+            for (var i = 0; i < ribXs.Length; i++)
+            {
+                CreateSupplyBox("CH-03 single central cargo container left corrugation rib " + (i + 1).ToString(CultureInfo.InvariantCulture), root, new Vector3(ribXs[i], 1.137f, 0.96f), new Vector3(0.055f, 0.035f, 1.22f), mats["container_edge"]);
+                CreateSupplyBox("CH-03 single central cargo container right corrugation rib " + (i + 1).ToString(CultureInfo.InvariantCulture), root, new Vector3(ribXs[i], -1.137f, 0.96f), new Vector3(0.055f, 0.035f, 1.22f), mats["container_edge"]);
+            }
+
+            CreateSupplyBox("CH-03 single central cargo container left end double door seam", root, new Vector3(-1.91f, 0f, 0.96f), new Vector3(0.045f, 1.86f, 1.24f), mats["container_edge"]);
+            CreateSupplyBox("CH-03 single central cargo container right end double door seam", root, new Vector3(1.91f, 0f, 0.96f), new Vector3(0.045f, 1.86f, 1.24f), mats["container_edge"]);
+            CreateSupplyText("CH-03 single central cargo container floor label", root, "SINGLE CONTAINER", new Vector3(0f, 0f, 1.84f), Quaternion.Euler(90f, 0f, 0f), 0.14f, mats["label_text"]);
+        }
+
+        private static void CreateCargoStatusPanel(Transform root, Dictionary<string, Material> mats)
+        {
+            CreateSupplyBox("CH-11 cargo status panel wall body", root, new Vector3(4.68f, -2.25f, 1.62f), new Vector3(0.16f, 1.42f, 0.96f), mats["screen_frame"]);
+            CreateSupplyBox("CH-11 cargo status panel green display", root, new Vector3(4.592f, -2.25f, 1.68f), new Vector3(0.045f, 1.08f, 0.66f), mats["screen_glow"]);
+            CreateSupplyBox("CH-11 cargo status panel top scan line", root, new Vector3(4.560f, -2.25f, 1.90f), new Vector3(0.024f, 0.92f, 0.035f), mats["screen_dim"]);
+            CreateSupplyBox("CH-11 cargo status panel middle scan line", root, new Vector3(4.560f, -2.25f, 1.68f), new Vector3(0.024f, 0.78f, 0.035f), mats["screen_dim"]);
+            CreateSupplyBox("CH-11 cargo status panel bottom scan line", root, new Vector3(4.560f, -2.25f, 1.46f), new Vector3(0.024f, 0.54f, 0.035f), mats["screen_dim"]);
+            CreateSupplyBox("CH-11 cargo status panel amber status lamp", root, new Vector3(4.552f, -1.61f, 1.20f), new Vector3(0.035f, 0.16f, 0.12f), mats["hazard"]);
+        }
+
+        private static void CreateCargoWallDressing(Transform root, Dictionary<string, Material> mats)
+        {
+            var northXs = new[] { -4f, -2f, 0f, 2f, 4f };
+            for (var i = 0; i < northXs.Length; i++)
+            {
+                CreateSupplyBox("CH-01 north cargo wall vertical service rib " + (i + 1).ToString(CultureInfo.InvariantCulture), root, new Vector3(northXs[i], 4.19f, 1.64f), new Vector3(0.10f, 0.14f, 2.50f), mats["beam"]);
+            }
+
+            var southXs = new[] { -2f, 0f, 2f };
+            for (var i = 0; i < southXs.Length; i++)
+            {
+                CreateSupplyBox("CH-01 aft cargo wall vertical service rib " + (i + 1).ToString(CultureInfo.InvariantCulture), root, new Vector3(southXs[i], -4.19f, 1.64f), new Vector3(0.10f, 0.14f, 2.50f), mats["beam"]);
+            }
+
+            CreateSupplyBox("CH-01 west cargo wall recessed conduit", root, new Vector3(-4.72f, -2.80f, 1.70f), new Vector3(0.08f, 1.85f, 0.10f), mats["shadow"]);
+            CreateSupplyBox("CH-01 east cargo wall recessed conduit", root, new Vector3(4.72f, 2.35f, 1.70f), new Vector3(0.08f, 1.85f, 0.10f), mats["shadow"]);
+        }
+
+        private static void CreateCargoHoldCh10DirectionMarkersOnly(Transform root, Dictionary<string, Material> mats)
+        {
+            var markerScale = new Vector3(1.97f, 0.58f, 0.050f);
+            CreateCargoHoldCh10DirectionMarker(root, "CH-10 cockpit 12 oclock direction marker", "COCKPIT", new Vector3(0f, 3.89f, 0.225f), markerScale, 0f, 0f, 0f, mats["cockpit_marker"], mats);
+            CreateCargoHoldCh10DirectionMarker(root, "CH-10 control 3 oclock direction marker", "CONTROL", new Vector3(4.44f, 0f, 0.225f), markerScale, 90f, -90f, 90f, mats["control_marker"], mats);
+            CreateCargoHoldCh10DirectionMarker(root, "CH-10 engine 9 oclock direction marker", "ENGINE", new Vector3(-4.44f, 0f, 0.225f), markerScale, 90f, 90f, 90f, mats["engine_marker"], mats);
+            CreateCargoHoldCh10DirectionMarker(root, "CH-10 armory 5 oclock direction marker", "ARMORY", new Vector3(3.58f, -3.89f, 0.225f), markerScale, 0f, 180f, 0f, mats["armory_marker"], mats);
+            CreateCargoHoldCh10DirectionMarker(root, "CH-10 supply 7 oclock direction marker", "SUPPLY", new Vector3(-3.58f, -3.89f, 0.225f), markerScale, 0f, 180f, 0f, mats["supply_marker"], mats);
+        }
+
+        private static void CreateCargoHoldCh10DirectionMarker(
+            Transform root,
+            string name,
+            string label,
+            Vector3 blenderPosition,
+            Vector3 blenderScale,
+            float plateRotZ,
+            float arrowRotZ,
+            float textRotZ,
+            Material marker,
+            Dictionary<string, Material> mats)
+        {
+            var group = new GameObject(name);
+            group.transform.SetParent(root, false);
+            group.transform.localPosition = Vector3.zero;
+            group.transform.localRotation = Quaternion.identity;
+            group.transform.localScale = Vector3.one;
+
+            var labelBackWidth = Mathf.Min(blenderScale.x * 0.72f, 1.34f);
+            var trimForward = (blenderScale.y * 0.5f) - 0.035f;
+            CreateCargoHoldCh10Box(name + " colored direction plate", group.transform, blenderPosition, blenderScale, marker, plateRotZ);
+            CreateCargoHoldCh10Box(name + " dark recessed label backing", group.transform, OffsetCargoHoldCh10Marker(blenderPosition, 0f, -0.13f, plateRotZ, 0.042f), new Vector3(labelBackWidth, 0.18f, 0.034f), mats["marker_backing"], plateRotZ);
+            CreateCargoHoldCh10Box(name + " pale arrow stem", group.transform, OffsetCargoHoldCh10Marker(blenderPosition, 0f, 0.13f, arrowRotZ, 0.056f), new Vector3(0.085f, 0.32f, 0.032f), mats["marker_arrow"], arrowRotZ);
+            CreateCargoHoldCh10Box(name + " pale arrow head left wing", group.transform, OffsetCargoHoldCh10Marker(blenderPosition, -0.065f, 0.330f, arrowRotZ, 0.058f), new Vector3(0.23f, 0.060f, 0.034f), mats["marker_arrow"], arrowRotZ - 34f);
+            CreateCargoHoldCh10Box(name + " pale arrow head right wing", group.transform, OffsetCargoHoldCh10Marker(blenderPosition, 0.065f, 0.330f, arrowRotZ, 0.058f), new Vector3(0.23f, 0.060f, 0.034f), mats["marker_arrow"], arrowRotZ + 34f);
+            CreateCargoHoldCh10Box(name + " worn front trim", group.transform, OffsetCargoHoldCh10Marker(blenderPosition, 0f, trimForward, plateRotZ, 0.070f), new Vector3(blenderScale.x * 0.92f, 0.035f, 0.026f), mats["marker_wear"], plateRotZ);
+            CreateCargoHoldCh10Box(name + " worn rear trim", group.transform, OffsetCargoHoldCh10Marker(blenderPosition, 0f, -trimForward, plateRotZ, 0.070f), new Vector3(blenderScale.x * 0.92f, 0.035f, 0.026f), mats["marker_wear"], plateRotZ);
+            CreateCargoHoldCh10ReadableLabel(
+                name + " readable floor label",
+                group.transform,
+                label,
+                OffsetCargoHoldCh10Marker(blenderPosition, 0f, -0.13f, textRotZ, 0.088f),
+                textRotZ,
+                labelBackWidth);
+        }
+
+        private static void CreateCargoHoldCh10ReadableLabel(
+            string name,
+            Transform parent,
+            string label,
+            Vector3 blenderPosition,
+            float textRotZ,
+            float labelBackWidth)
+        {
+            var fitWidth = Mathf.Min(labelBackWidth * 0.78f, 1.04f);
+            var characterSize = label.Length > 6 ? 0.095f : 0.105f;
+            const float objectScale = 0.32f;
+            CreateSupplyReadableTextGroup(
+                name,
+                parent,
+                label,
+                BlenderToUnity(blenderPosition),
+                Quaternion.Euler(90f, textRotZ, 0f),
+                characterSize,
+                fitWidth,
+                new Color(0.82f, 0.91f, 0.84f, 1f),
+                objectScale);
+        }
+
+        private static Vector3 OffsetCargoHoldCh10Marker(Vector3 basePosition, float right, float forward, float rotZDegrees, float zDelta)
+        {
+            var radians = rotZDegrees * Mathf.Deg2Rad;
+            var cos = Mathf.Cos(radians);
+            var sin = Mathf.Sin(radians);
+            return new Vector3(
+                basePosition.x + (right * cos) - (forward * sin),
+                basePosition.y + (right * sin) + (forward * cos),
+                basePosition.z + zDelta);
+        }
+
+        private static void CreateCargoHoldCh10Box(
+            string name,
+            Transform parent,
+            Vector3 blenderPosition,
+            Vector3 blenderScale,
+            Material material,
+            float rotZDegrees)
+        {
+            CreateSupplyBoxLocal(
+                name,
+                parent,
+                BlenderToUnity(blenderPosition),
+                BlenderBoxScaleToUnity(blenderScale),
+                material,
+                Quaternion.Euler(0f, rotZDegrees, 0f));
         }
 
         private static Dictionary<string, Material> CreateSupplyRoomMaterials()
@@ -1605,7 +2107,8 @@ namespace Bellerophon.Editor.Validation
             Quaternion localRotation,
             float characterSize,
             float fitWidth,
-            Color color)
+            Color color,
+            float objectScale = 1f)
         {
             var group = new GameObject(name);
             group.transform.SetParent(parent, false);
@@ -1632,7 +2135,8 @@ namespace Bellerophon.Editor.Validation
                     new Vector3(offset, 0f, 0f),
                     Quaternion.identity,
                     characterSize,
-                    color);
+                    color,
+                    objectScale);
             }
         }
 
@@ -1643,13 +2147,14 @@ namespace Bellerophon.Editor.Validation
             Vector3 localPosition,
             Quaternion localRotation,
             float characterSize,
-            Color color)
+            Color color,
+            float objectScale = 1f)
         {
             var obj = new GameObject(name);
             obj.transform.SetParent(parent, false);
             obj.transform.localPosition = localPosition;
             obj.transform.localRotation = localRotation;
-            obj.transform.localScale = Vector3.one;
+            obj.transform.localScale = Vector3.one * objectScale;
 
             var textMesh = obj.AddComponent<TextMesh>();
             textMesh.text = text;
@@ -1775,6 +2280,117 @@ namespace Bellerophon.Editor.Validation
                 " after " +
                 maxAttempts.ToString(CultureInfo.InvariantCulture) +
                 " attempts.");
+        }
+
+        private static Vector3 FindCargoHoldPlacement(Transform root, IReadOnlyList<GameObject> protectedRoots)
+        {
+            var cockpitRoot =
+                FindNamedObject("Room - Cockpit") ??
+                FindNamedObject("Approved Cockpit 01 Shell") ??
+                FindObjectByNameTokens("cockpit");
+            if (cockpitRoot == null)
+            {
+                throw new InvalidOperationException("Cannot place cargo hold X-aligned with cockpit because no cockpit root could be found.");
+            }
+
+            var armoryRoot = FindNamedObject(RootName) ?? FindObjectByNameTokens("armory");
+            if (armoryRoot == null)
+            {
+                throw new InvalidOperationException("Cannot place cargo hold Z-below armory because no armory root could be found.");
+            }
+
+            var originalPosition = root.position;
+            var cargoBoundsAtOrigin = GetRendererBounds(root);
+            var hasArmoryBounds = TryGetRendererBounds(armoryRoot.transform, out var armoryBounds);
+            var firstZ = hasArmoryBounds
+                ? armoryBounds.min.z - cargoBoundsAtOrigin.extents.z - 2.0f
+                : armoryRoot.transform.position.z - 24.0f;
+            var targetY = armoryRoot.transform.position.y;
+            const float step = 2.5f;
+            const int maxAttempts = 160;
+
+            try
+            {
+                for (var i = 0; i < maxAttempts; i++)
+                {
+                    var candidate = new Vector3(cockpitRoot.transform.position.x, targetY, firstZ - (i * step));
+                    root.position = candidate;
+
+                    var candidateBounds = GetRendererBounds(root);
+                    var belowArmory = hasArmoryBounds
+                        ? candidateBounds.max.z < armoryBounds.min.z - 0.05f
+                        : candidate.z < armoryRoot.transform.position.z;
+                    if (belowArmory && !IntersectsAnyProtectedBounds(candidateBounds, protectedRoots))
+                    {
+                        return candidate;
+                    }
+                }
+            }
+            finally
+            {
+                root.position = originalPosition;
+            }
+
+            throw new InvalidOperationException(
+                "Could not find a non-overlapping X-aligned and Z-below-armory position for " +
+                CargoHoldRootName +
+                " after " +
+                maxAttempts.ToString(CultureInfo.InvariantCulture) +
+                " attempts.");
+        }
+
+        private static void EnsureCargoHoldPlacementConstraints(Transform root, Bounds cargoBounds)
+        {
+            var cockpitRoot =
+                FindNamedObject("Room - Cockpit") ??
+                FindNamedObject("Approved Cockpit 01 Shell") ??
+                FindObjectByNameTokens("cockpit");
+            if (cockpitRoot == null)
+            {
+                throw new InvalidOperationException("Cannot verify cargo hold X alignment because no cockpit root could be found.");
+            }
+
+            var armoryRoot = FindNamedObject(RootName) ?? FindObjectByNameTokens("armory");
+            if (armoryRoot == null)
+            {
+                throw new InvalidOperationException("Cannot verify cargo hold Z-below-armory placement because no armory root could be found.");
+            }
+
+            if (Mathf.Abs(root.position.x - cockpitRoot.transform.position.x) > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    "Cargo hold root is not X-aligned with cockpit. CargoX=" +
+                    root.position.x.ToString("0.###", CultureInfo.InvariantCulture) +
+                    "; CockpitX=" +
+                    cockpitRoot.transform.position.x.ToString("0.###", CultureInfo.InvariantCulture));
+            }
+
+            if (root.localScale.x < 2.0f || root.localScale.y < 2.0f || root.localScale.z < 2.0f)
+            {
+                throw new InvalidOperationException(
+                    "Cargo hold approved Unity scale must be at least 2x. Actual=" +
+                    FormatVector(root.localScale));
+            }
+
+            if (TryGetRendererBounds(armoryRoot.transform, out var armoryBounds))
+            {
+                if (cargoBounds.max.z >= armoryBounds.min.z - 0.05f)
+                {
+                    throw new InvalidOperationException(
+                        "Cargo hold bounds are not Z-below armory bounds. CargoMaxZ=" +
+                        cargoBounds.max.z.ToString("0.###", CultureInfo.InvariantCulture) +
+                        "; ArmoryMinZ=" +
+                        armoryBounds.min.z.ToString("0.###", CultureInfo.InvariantCulture));
+                }
+            }
+            else if (root.position.z >= armoryRoot.transform.position.z)
+            {
+                throw new InvalidOperationException(
+                    "Cargo hold root is not Z-below armory root. CargoZ=" +
+                    root.position.z.ToString("0.###", CultureInfo.InvariantCulture) +
+                    "; ArmoryZ=" +
+                    armoryRoot.transform.position.z.ToString("0.###", CultureInfo.InvariantCulture));
+            }
         }
 
         private static Vector3 FindSupplyRoomBelowEngineRoomPosition(Transform root, IReadOnlyList<GameObject> protectedRoots)
@@ -2010,12 +2626,52 @@ namespace Bellerophon.Editor.Validation
             return snapshots;
         }
 
+        private static List<ProtectedTransformSnapshot> CaptureNonCh10CargoHoldSnapshots(Transform root)
+        {
+            var snapshots = new List<ProtectedTransformSnapshot>();
+            var transforms = root.GetComponentsInChildren<Transform>(true);
+            for (var i = 0; i < transforms.Length; i++)
+            {
+                var transform = transforms[i];
+                if (transform == null || IsCargoHoldCh10Transform(root, transform))
+                {
+                    continue;
+                }
+
+                snapshots.Add(new ProtectedTransformSnapshot(
+                    CargoHoldRootName + "/" + GetRelativePath(root, transform),
+                    transform,
+                    transform.localPosition,
+                    transform.localRotation,
+                    transform.localScale,
+                    transform.gameObject.activeSelf));
+            }
+
+            return snapshots;
+        }
+
         private static bool IsSupplyRoomSr08Transform(Transform root, Transform transform)
         {
             var current = transform;
             while (current != null && current != root)
             {
                 if (current.name.StartsWith("SR-08", StringComparison.Ordinal))
+                {
+                    return true;
+                }
+
+                current = current.parent;
+            }
+
+            return false;
+        }
+
+        private static bool IsCargoHoldCh10Transform(Transform root, Transform transform)
+        {
+            var current = transform;
+            while (current != null && current != root)
+            {
+                if (current.name.StartsWith("CH-10", StringComparison.Ordinal))
                 {
                     return true;
                 }
@@ -2203,6 +2859,34 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
+        private static void DeleteExistingCargoHoldCh10Objects(Transform root)
+        {
+            var removals = new List<Transform>();
+            var transforms = root.GetComponentsInChildren<Transform>(true);
+            for (var i = 0; i < transforms.Length; i++)
+            {
+                var transform = transforms[i];
+                if (transform == null || transform == root)
+                {
+                    continue;
+                }
+
+                if (IsCargoHoldCh10Transform(root, transform))
+                {
+                    removals.Add(transform);
+                }
+            }
+
+            removals.Sort((left, right) => GetDepth(right).CompareTo(GetDepth(left)));
+            for (var i = 0; i < removals.Count; i++)
+            {
+                if (removals[i] != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(removals[i].gameObject);
+                }
+            }
+        }
+
         private static void EnsureOnlySr08ObjectsAdded(
             Transform root,
             IReadOnlyList<ProtectedTransformSnapshot> nonSr08Snapshots)
@@ -2228,6 +2912,35 @@ namespace Bellerophon.Editor.Validation
                 if (!IsSupplyRoomSr08Transform(root, transform))
                 {
                     throw new InvalidOperationException("Non-SR-08 supply room object was added during SR-08-only update: " + GetRelativePath(root, transform));
+                }
+            }
+        }
+
+        private static void EnsureOnlyCargoHoldCh10ObjectsAdded(
+            Transform root,
+            IReadOnlyList<ProtectedTransformSnapshot> nonCh10Snapshots)
+        {
+            var protectedTransforms = new HashSet<Transform>();
+            for (var i = 0; i < nonCh10Snapshots.Count; i++)
+            {
+                if (nonCh10Snapshots[i].Transform != null)
+                {
+                    protectedTransforms.Add(nonCh10Snapshots[i].Transform);
+                }
+            }
+
+            var transforms = root.GetComponentsInChildren<Transform>(true);
+            for (var i = 0; i < transforms.Length; i++)
+            {
+                var transform = transforms[i];
+                if (transform == null || protectedTransforms.Contains(transform))
+                {
+                    continue;
+                }
+
+                if (!IsCargoHoldCh10Transform(root, transform))
+                {
+                    throw new InvalidOperationException("Non-CH-10 cargo hold object was added during CH-10-only update: " + GetRelativePath(root, transform));
                 }
             }
         }
@@ -2432,6 +3145,21 @@ namespace Bellerophon.Editor.Validation
             for (var i = 0; i < transforms.Length; i++)
             {
                 if (transforms[i] != null && IsSupplyRoomSr07HskScreenTransform(root, transforms[i]))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private static int CountCargoHoldCh10Objects(Transform root)
+        {
+            var count = 0;
+            var transforms = root.GetComponentsInChildren<Transform>(true);
+            for (var i = 0; i < transforms.Length; i++)
+            {
+                if (transforms[i] != null && IsCargoHoldCh10Transform(root, transforms[i]))
                 {
                     count++;
                 }
@@ -2819,6 +3547,13 @@ namespace Bellerophon.Editor.Validation
             File.WriteAllText(outputPath, BuildSupplyRoomCurrentStateScript(states), new UTF8Encoding(false));
         }
 
+        private static void WriteCargoHoldCurrentStateScript(IReadOnlyList<CurrentTransformState> states)
+        {
+            var outputPath = Path.Combine(ProjectRoot, CargoHoldCurrentStateUnityPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+            File.WriteAllText(outputPath, BuildCargoHoldCurrentStateScript(states), new UTF8Encoding(false));
+        }
+
         private static string BuildCurrentStateScript(IReadOnlyList<CurrentTransformState> states)
         {
             var builder = new StringBuilder();
@@ -2857,6 +3592,33 @@ namespace Bellerophon.Editor.Validation
             builder.AppendLine("namespace Bellerophon.Editor.Validation");
             builder.AppendLine("{");
             builder.AppendLine("    internal static class ApprovedSupplyRoomShellCurrentState");
+            builder.AppendLine("    {");
+            builder.AppendLine("        public static readonly ApprovedArmoryShellBootstrap.CurrentTransformState[] Transforms =");
+            builder.AppendLine("        {");
+            for (var i = 0; i < states.Count; i++)
+            {
+                builder.Append("            ");
+                AppendCurrentTransformState(builder, states[i]);
+                builder.AppendLine(",");
+            }
+
+            builder.AppendLine("        };");
+            builder.AppendLine("    }");
+            builder.AppendLine("}");
+            return builder.ToString();
+        }
+
+        private static string BuildCargoHoldCurrentStateScript(IReadOnlyList<CurrentTransformState> states)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("// <auto-generated>");
+            builder.AppendLine("// Captured from the current Unity editor cargo hold state.");
+            builder.AppendLine("// </auto-generated>");
+            builder.AppendLine("using UnityEngine;");
+            builder.AppendLine();
+            builder.AppendLine("namespace Bellerophon.Editor.Validation");
+            builder.AppendLine("{");
+            builder.AppendLine("    internal static class ApprovedCargoHoldShellCurrentState");
             builder.AppendLine("    {");
             builder.AppendLine("        public static readonly ApprovedArmoryShellBootstrap.CurrentTransformState[] Transforms =");
             builder.AppendLine("        {");
@@ -2994,7 +3756,10 @@ namespace Bellerophon.Editor.Validation
             for (var i = 0; i < transforms.Length; i++)
             {
                 var transform = transforms[i];
-                if (transform == null || IsAr02Transform(root, transform) || IsAr03Transform(root, transform))
+                if (transform == null ||
+                    IsAr02Transform(root, transform) ||
+                    IsAr03Transform(root, transform) ||
+                    IsAr04PlatformTransform(root, transform))
                 {
                     continue;
                 }
@@ -3017,6 +3782,23 @@ namespace Bellerophon.Editor.Validation
             while (current != null && current != root)
             {
                 if (current.name.StartsWith("AR-02", StringComparison.Ordinal))
+                {
+                    return true;
+                }
+
+                current = current.parent;
+            }
+
+            return false;
+        }
+
+        private static bool IsAr04PlatformTransform(Transform root, Transform transform)
+        {
+            var current = transform;
+            while (current != null && current != root)
+            {
+                if (string.Equals(current.name, "AR-04 placeholder top operating platform", StringComparison.Ordinal) ||
+                    string.Equals(current.name, "AR-04 placeholder platform safety rim", StringComparison.Ordinal))
                 {
                     return true;
                 }
@@ -3187,25 +3969,25 @@ namespace Bellerophon.Editor.Validation
                 "AR-02 placeholder central turret support pillar",
                 group.transform,
                 BlenderToUnity(new Vector3(0f, -0.28f, 0f)),
-                BlenderToUnity(new Vector3(0f, -0.28f, 1.08f)),
+                BlenderToUnity(new Vector3(0f, -0.28f, 0.48f)),
                 0.54f,
                 pillarMaterial);
         }
 
         private static void CreateAr03LowEightStepFromApprovedSample(Transform root, Material stairMaterial, Material railMaterial)
         {
-            var group = new GameObject("AR-03 low eight-step stair assembly");
+            var group = new GameObject("AR-03 low five-step stair assembly");
             group.transform.SetParent(root, false);
             group.transform.localPosition = Vector3.zero;
             group.transform.localRotation = Quaternion.identity;
             group.transform.localScale = Vector3.one;
 
-            const int stepCount = 8;
+            const int stepCount = 5;
             for (var i = 0; i < stepCount; i++)
             {
                 var t = i / (float)(stepCount - 1);
                 var blenderY = -3.25f + (t * 1.79f);
-                var blenderZ = 0.22f + (t * 0.90f);
+                var blenderZ = 0.12f + (t * 0.36f);
                 var width = 1.42f - (t * 0.18f);
                 CreateAr03Box(
                     "AR-03 placeholder rear stair tread " + (i + 1).ToString("00", CultureInfo.InvariantCulture),
@@ -3218,17 +4000,51 @@ namespace Bellerophon.Editor.Validation
             CreateAr03CylinderBetween(
                 "AR-03 placeholder stair side rail left",
                 group.transform,
-                BlenderToUnity(new Vector3(-0.86f, -3.32f, 0.46f)),
-                BlenderToUnity(new Vector3(-0.86f, -1.40f, 1.30f)),
+                BlenderToUnity(new Vector3(-0.86f, -3.32f, 0.26f)),
+                BlenderToUnity(new Vector3(-0.86f, -1.40f, 0.66f)),
                 0.030f,
                 railMaterial);
             CreateAr03CylinderBetween(
                 "AR-03 placeholder stair side rail right",
                 group.transform,
-                BlenderToUnity(new Vector3(0.86f, -3.32f, 0.46f)),
-                BlenderToUnity(new Vector3(0.86f, -1.40f, 1.30f)),
+                BlenderToUnity(new Vector3(0.86f, -3.32f, 0.26f)),
+                BlenderToUnity(new Vector3(0.86f, -1.40f, 0.66f)),
                 0.030f,
                 railMaterial);
+        }
+
+        private static void MoveAr04PlatformToLowerPillarHeight(Transform root)
+        {
+            SetAr04PlatformLocalZ(root, "AR-04 placeholder top operating platform", 0.0048f);
+            SetAr04PlatformLocalZ(root, "AR-04 placeholder platform safety rim", 0.0064f);
+        }
+
+        private static void SetAr04PlatformLocalZ(Transform root, string objectName, float localZ)
+        {
+            var target = FindDescendantByName(root, objectName);
+            if (target == null)
+            {
+                throw new InvalidOperationException("Missing armory platform object: " + objectName);
+            }
+
+            var position = target.localPosition;
+            position.z = localZ;
+            target.localPosition = position;
+        }
+
+        private static Transform FindDescendantByName(Transform root, string objectName)
+        {
+            var transforms = root.GetComponentsInChildren<Transform>(true);
+            for (var i = 0; i < transforms.Length; i++)
+            {
+                var transform = transforms[i];
+                if (transform != null && string.Equals(transform.name, objectName, StringComparison.Ordinal))
+                {
+                    return transform;
+                }
+            }
+
+            return null;
         }
 
         private static void DeleteExistingAr05Objects(Transform root)
