@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>cargo_hold_shell review</title>
+  <style>
+    body { margin: 0; background: #111314; color: #e8e0d0; font-family: Arial, sans-serif; }
+    main { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    p { color: #c9bfad; line-height: 1.55; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    figure { margin: 0; border: 1px solid #3f4542; background: #1c2121; padding: 10px; }
+    img { width: 100%; display: block; background: #0b0e0e; }
+    figcaption { margin-top: 8px; color: #ded3bd; font-size: 14px; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>cargo_hold_shell</h1>
+  <p>CH-01 운송창고 룸 셸 승인용 Blender 샘플입니다. 원본 기획서와 운송창고 오브젝트 목록 기준에 따라 중앙에는 여러 의뢰를 받아도 하나로 보이는 단일 컨테이너 화물을 배치했고, 그 주변에는 가장자리 이동 영역을 표시했습니다. 위에서 내려다본 기준으로 12시에는 조종실, 3시에는 통제실, 9시에는 동력실, 5시에는 무기실, 7시에는 비품실로 이어지는 5개 연결 지점을 넣고, 각 지점 안쪽에 CH-10 연결 방향 표시를 기존 룸 셸 샘플 안에 통합했습니다. CH-10 표시는 컬러 바닥 플레이트, 흰색 진행 화살표, 어두운 라벨 백킹, 돌출 텍스트, 마모 트림으로 구성했습니다. CH-11 상태 패널 화면에는 B2_Eq2_E.png 오른쪽 아래 디스플레이의 실제 UI 영역만 잘라 적용했습니다. 화물 직접 집기, 운반, 납품 상호작용과 크레인, 지게차, 컨베이어, 선반, 자동 포탑은 원본 기준 운송창고 고정 오브젝트가 아니므로 포함하지 않았습니다.</p>
+  <section class="grid">
+    <figure><a href="renders/01_overview.png"><img src="renders/01_overview.png" alt="01 전체 운송창고 룸 셸"></a><figcaption>01 전체 운송창고 룸 셸</figcaption></figure>
+    <figure><a href="renders/02_floor_plan.png"><img src="renders/02_floor_plan.png" alt="02 상단 배치와 5방향 연결 지점"></a><figcaption>02 상단 배치와 5방향 연결 지점</figcaption></figure>
+    <figure><a href="renders/03_single_container.png"><img src="renders/03_single_container.png" alt="03 중앙 단일 컨테이너 화물"></a><figcaption>03 중앙 단일 컨테이너 화물</figcaption></figure>
+    <figure><a href="renders/04_edge_walkway.png"><img src="renders/04_edge_walkway.png" alt="04 중앙 컨테이너 주변 가장자리 이동 영역"></a><figcaption>04 중앙 컨테이너 주변 가장자리 이동 영역</figcaption></figure>
+    <figure><a href="renders/05_connection_points.png"><img src="renders/05_connection_points.png" alt="05 12시/3시/9시/5시/7시 연결 지점과 CH-10 방향 표시"></a><figcaption>05 12시/3시/9시/5시/7시 연결 지점과 CH-10 방향 표시</figcaption></figure>
+    <figure><a href="renders/06_status_display.png"><img src="renders/06_status_display.png" alt="06 B2 디스플레이가 적용된 CH-11 패널"></a><figcaption>06 B2 디스플레이가 적용된 CH-11 패널</figcaption></figure>
+  </section>
+</main>
+</body>
+</html>

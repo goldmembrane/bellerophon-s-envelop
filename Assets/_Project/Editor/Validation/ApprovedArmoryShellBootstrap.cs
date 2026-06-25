@@ -28,6 +28,7 @@ namespace Bellerophon.Editor.Validation
         private const string CargoHoldRootName = "Approved Cargo Hold 01 Shell";
         private const string CargoHoldApprovalStatusRelativePath = "artSample/cargo_hold_shell/APPROVAL_STATUS.json";
         private const string CargoHoldCurrentStateUnityPath = "Assets/_Project/Editor/Validation/ApprovedCargoHoldShellCurrentState.cs";
+        private const string CargoHoldCh11DisplayTexturePath = "Assets/_Project/Art/Ship/CargoHold/Textures/B2_Eq2_E_bottom_right.png";
         private const float CargoHoldUnityScale = 2.2f;
 
         private static readonly Vector3 ArmoryCenterBelowControlRoom = new Vector3(13.20795f, -4.6f, 19.265f);
@@ -262,6 +263,94 @@ namespace Bellerophon.Editor.Validation
                 "; Ch10Objects=" +
                 CountCargoHoldCh10Objects(root.transform).ToString(CultureInfo.InvariantCulture) +
                 "; NonCh10CargoHoldObjectsUntouched=True; ExistingObjectsUntouched=True");
+        }
+
+        [MenuItem("Bellerophon/Bootstrap/Update Approved Cargo Hold Entrance Colors Only")]
+        public static void UpdateApprovedCargoHoldEntranceColorsOnly()
+        {
+            var root = RequireObject(CargoHoldRootName);
+            var mats = CreateCargoHoldMaterials();
+
+            ApplyEntranceMaterial("CH-07 control connection east wall doorway colored threshold", mats["engine_marker"]);
+            ApplyEntranceMaterial("CH-07 control corridor at 3 oclock colored threshold slab", mats["engine_marker"]);
+            ApplyEntranceMaterial("CH-06 engine connection west wall doorway colored threshold", mats["control_marker"]);
+            ApplyEntranceMaterial("CH-06 engine corridor at 9 oclock colored threshold slab", mats["control_marker"]);
+            ApplyEntranceMaterial("CH-08 CH-09 aft connection wall doorway colored threshold 1", mats["armory_marker"]);
+            ApplyEntranceMaterial("CH-09 supply corridor at left aft edge colored threshold slab", mats["armory_marker"]);
+            ApplyEntranceMaterial("CH-08 CH-09 aft connection wall doorway colored threshold 2", mats["supply_marker"]);
+            ApplyEntranceMaterial("CH-08 armory corridor at right aft edge colored threshold slab", mats["supply_marker"]);
+
+            WriteCargoHoldCurrentStateScript(CaptureCurrentTransformStates(root.transform));
+            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(root.scene);
+            UnityEditor.SceneManagement.EditorSceneManager.SaveScene(root.scene);
+
+            Debug.Log(
+                "Approved cargo hold entrance colors updated only. Root=" +
+                CargoHoldRootName +
+                "; Objects=8; CurrentStateSaved=True; ExistingObjectsUntouched=True");
+
+            void ApplyEntranceMaterial(string objectName, Material material)
+            {
+                var target = FindCargoHoldChildByExactName(objectName);
+                var renderer = target.GetComponent<Renderer>();
+                if (renderer == null)
+                {
+                    renderer = target.GetComponentInChildren<Renderer>(true);
+                }
+
+                if (renderer == null)
+                {
+                    throw new InvalidOperationException("Cargo hold entrance color renderer not found: " + objectName);
+                }
+
+                renderer.sharedMaterial = material;
+            }
+
+            Transform FindCargoHoldChildByExactName(string objectName)
+            {
+                var transforms = root.transform.GetComponentsInChildren<Transform>(true);
+                for (var i = 0; i < transforms.Length; i++)
+                {
+                    if (transforms[i] != null && transforms[i].name == objectName)
+                    {
+                        return transforms[i];
+                    }
+                }
+
+                throw new InvalidOperationException("Cargo hold entrance color object not found: " + objectName);
+            }
+        }
+
+        [MenuItem("Bellerophon/Bootstrap/Update Approved Cargo Hold CH-11 Display Only")]
+        public static void UpdateApprovedCargoHoldCh11DisplayOnly()
+        {
+            var root = RequireObject(CargoHoldRootName);
+            var protectedRoots = FindSceneRootObjectsExcept(CargoHoldRootName);
+            var protectedSnapshots = CaptureProtectedSnapshots(protectedRoots);
+            var nonCh11DisplaySnapshots = CaptureNonCh11DisplayCargoHoldSnapshots(root.transform);
+
+            AssetDatabase.ImportAsset(CargoHoldCh11DisplayTexturePath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+            DeleteExistingCargoHoldCh11DisplayObjects(root.transform);
+            CreateCargoHoldCh11DisplayOnly(root.transform);
+
+            EnsureProtectedObjectsUntouched(nonCh11DisplaySnapshots);
+            EnsureOnlyCargoHoldCh11DisplayObjectsAdded(root.transform, nonCh11DisplaySnapshots);
+            EnsureProtectedObjectsUntouched(protectedSnapshots);
+
+            WriteCargoHoldCurrentStateScript(CaptureCurrentTransformStates(root.transform));
+
+            EditorUtility.SetDirty(root);
+            EditorSceneManager.MarkSceneDirty(root.scene);
+            EditorSceneManager.SaveScene(root.scene, Phase4CargoShipGrayboxBootstrap.CargoRunScenePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log(
+                "Approved cargo hold CH-11 display updated only. Root=" +
+                CargoHoldRootName +
+                "; Ch11DisplayObjects=" +
+                CountCargoHoldCh11DisplayObjects(root.transform).ToString(CultureInfo.InvariantCulture) +
+                "; NonCh11CargoHoldObjectsUntouched=True; ExistingObjectsUntouched=True; CurrentStateSaved=True");
         }
 
         [MenuItem("Bellerophon/Bootstrap/Move Approved Supply Room 01 Shell Below Engine Room")]
@@ -1029,15 +1118,15 @@ namespace Bellerophon.Editor.Validation
 
             CreateSupplyBox("CH-01 sealed cargo hold deck floor", root, new Vector3(0f, 0f, 0f), new Vector3(9.8f, 8.7f, 0.18f), mats["floor"]);
             CreateCargoWallYWithDoors(root, "CH-05 cockpit connection north wall", 4.35f, new[] { 0f }, new[] { mats["cockpit_marker"] }, mats);
-            CreateCargoWallYWithDoors(root, "CH-08 CH-09 aft connection wall", -4.35f, new[] { -3.58f, 3.58f }, new[] { mats["supply_marker"], mats["armory_marker"] }, mats);
-            CreateCargoWallXWithDoor(root, "CH-06 engine connection west wall", -4.9f, 0f, mats["engine_marker"], mats);
-            CreateCargoWallXWithDoor(root, "CH-07 control connection east wall", 4.9f, 0f, mats["control_marker"], mats);
+            CreateCargoWallYWithDoors(root, "CH-08 CH-09 aft connection wall", -4.35f, new[] { -3.58f, 3.58f }, new[] { mats["armory_marker"], mats["supply_marker"] }, mats);
+            CreateCargoWallXWithDoor(root, "CH-06 engine connection west wall", -4.9f, 0f, mats["control_marker"], mats);
+            CreateCargoWallXWithDoor(root, "CH-07 control connection east wall", 4.9f, 0f, mats["engine_marker"], mats);
 
             CreateCargoCorridorStub(root, "CH-05 cockpit corridor at 12 oclock", new Vector3(0f, 5.40f, 0f), new Vector3(1.87f, 2.10f, 0.18f), false, mats["cockpit_marker"], mats);
-            CreateCargoCorridorStub(root, "CH-07 control corridor at 3 oclock", new Vector3(6.00f, 0f, 0f), new Vector3(2.18f, 1.87f, 0.18f), true, mats["control_marker"], mats);
-            CreateCargoCorridorStub(root, "CH-06 engine corridor at 9 oclock", new Vector3(-6.00f, 0f, 0f), new Vector3(2.18f, 1.87f, 0.18f), true, mats["engine_marker"], mats);
-            CreateCargoCorridorStub(root, "CH-08 armory corridor at right aft edge", new Vector3(3.58f, -5.40f, 0f), new Vector3(1.87f, 2.10f, 0.18f), false, mats["armory_marker"], mats);
-            CreateCargoCorridorStub(root, "CH-09 supply corridor at left aft edge", new Vector3(-3.58f, -5.40f, 0f), new Vector3(1.87f, 2.10f, 0.18f), false, mats["supply_marker"], mats);
+            CreateCargoCorridorStub(root, "CH-07 control corridor at 3 oclock", new Vector3(6.00f, 0f, 0f), new Vector3(2.18f, 1.87f, 0.18f), true, mats["engine_marker"], mats);
+            CreateCargoCorridorStub(root, "CH-06 engine corridor at 9 oclock", new Vector3(-6.00f, 0f, 0f), new Vector3(2.18f, 1.87f, 0.18f), true, mats["control_marker"], mats);
+            CreateCargoCorridorStub(root, "CH-08 armory corridor at right aft edge", new Vector3(3.58f, -5.40f, 0f), new Vector3(1.87f, 2.10f, 0.18f), false, mats["supply_marker"], mats);
+            CreateCargoCorridorStub(root, "CH-09 supply corridor at left aft edge", new Vector3(-3.58f, -5.40f, 0f), new Vector3(1.87f, 2.10f, 0.18f), false, mats["armory_marker"], mats);
 
             CreateCargoFloorGrid(root, mats);
             CreateCargoEdgeWalkway(root, mats);
@@ -1255,6 +1344,108 @@ namespace Bellerophon.Editor.Validation
             CreateSupplyBox("CH-11 cargo status panel amber status lamp", root, new Vector3(4.552f, -1.61f, 1.20f), new Vector3(0.035f, 0.16f, 0.12f), mats["hazard"]);
         }
 
+        private static void CreateCargoHoldCh11DisplayOnly(Transform root)
+        {
+            var material = CreateCargoHoldCh11DisplayMaterial();
+            var screenObject = new GameObject("CH-11 B2_Eq2_E bottom right display surface");
+            screenObject.transform.SetParent(root, false);
+            screenObject.transform.localPosition = BlenderToUnity(new Vector3(4.564f, -2.25f, 1.68f));
+            screenObject.transform.localRotation = Quaternion.identity;
+            screenObject.transform.localScale = Vector3.one;
+
+            var mesh = CreateCargoHoldCh11DisplayMesh(1.08f, 0.66f);
+            screenObject.AddComponent<MeshFilter>().sharedMesh = mesh;
+            screenObject.AddComponent<MeshRenderer>().sharedMaterial = material;
+        }
+
+        private static Mesh CreateCargoHoldCh11DisplayMesh(float width, float height)
+        {
+            var halfWidth = width * 0.5f;
+            var halfHeight = height * 0.5f;
+            var mesh = new Mesh
+            {
+                name = "CH-11 B2_Eq2_E bottom right display mesh",
+                vertices = new[]
+                {
+                    new Vector3(0f, -halfHeight, -halfWidth),
+                    new Vector3(0f, halfHeight, -halfWidth),
+                    new Vector3(0f, halfHeight, halfWidth),
+                    new Vector3(0f, -halfHeight, halfWidth),
+                },
+                triangles = new[] { 0, 2, 1, 0, 3, 2 },
+                uv = new[]
+                {
+                    new Vector2(1f, 0f),
+                    new Vector2(1f, 1f),
+                    new Vector2(0f, 1f),
+                    new Vector2(0f, 0f),
+                }
+            };
+
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
+        private static Material CreateCargoHoldCh11DisplayMaterial()
+        {
+            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(CargoHoldCh11DisplayTexturePath);
+            if (texture == null)
+            {
+                throw new InvalidOperationException("Missing CH-11 cargo hold display texture: " + CargoHoldCh11DisplayTexturePath);
+            }
+
+            var shader = Shader.Find("Universal Render Pipeline/Unlit");
+            if (shader == null)
+            {
+                shader = Shader.Find("Unlit/Texture");
+            }
+
+            if (shader == null)
+            {
+                shader = Shader.Find("Standard");
+            }
+
+            if (shader == null)
+            {
+                throw new InvalidOperationException("No shader was found for CH-11 cargo hold display material.");
+            }
+
+            var material = new Material(shader)
+            {
+                name = "CH-11 B2_Eq2_E bottom right display material",
+                mainTexture = texture,
+                color = Color.white
+            };
+
+            if (material.HasProperty("_BaseMap"))
+            {
+                material.SetTexture("_BaseMap", texture);
+            }
+
+            if (material.HasProperty("_MainTex"))
+            {
+                material.SetTexture("_MainTex", texture);
+            }
+
+            if (material.HasProperty("_BaseColor"))
+            {
+                material.SetColor("_BaseColor", Color.white);
+            }
+
+            if (material.HasProperty("_Color"))
+            {
+                material.SetColor("_Color", Color.white);
+            }
+
+            if (material.HasProperty("_Surface"))
+            {
+                material.SetFloat("_Surface", 0f);
+            }
+
+            return material;
+        }
+
         private static void CreateCargoWallDressing(Transform root, Dictionary<string, Material> mats)
         {
             var northXs = new[] { -4f, -2f, 0f, 2f, 4f };
@@ -1277,10 +1468,10 @@ namespace Bellerophon.Editor.Validation
         {
             var markerScale = new Vector3(1.97f, 0.58f, 0.050f);
             CreateCargoHoldCh10DirectionMarker(root, "CH-10 cockpit 12 oclock direction marker", "COCKPIT", new Vector3(0f, 3.89f, 0.225f), markerScale, 0f, 0f, 0f, mats["cockpit_marker"], mats);
-            CreateCargoHoldCh10DirectionMarker(root, "CH-10 control 3 oclock direction marker", "CONTROL", new Vector3(4.44f, 0f, 0.225f), markerScale, 90f, -90f, 90f, mats["control_marker"], mats);
-            CreateCargoHoldCh10DirectionMarker(root, "CH-10 engine 9 oclock direction marker", "ENGINE", new Vector3(-4.44f, 0f, 0.225f), markerScale, 90f, 90f, 90f, mats["engine_marker"], mats);
-            CreateCargoHoldCh10DirectionMarker(root, "CH-10 armory 5 oclock direction marker", "ARMORY", new Vector3(3.58f, -3.89f, 0.225f), markerScale, 0f, 180f, 0f, mats["armory_marker"], mats);
-            CreateCargoHoldCh10DirectionMarker(root, "CH-10 supply 7 oclock direction marker", "SUPPLY", new Vector3(-3.58f, -3.89f, 0.225f), markerScale, 0f, 180f, 0f, mats["supply_marker"], mats);
+            CreateCargoHoldCh10DirectionMarker(root, "CH-10 control 3 oclock direction marker", "ENGINE", new Vector3(4.44f, 0f, 0.225f), markerScale, 90f, -90f, 90f, mats["engine_marker"], mats);
+            CreateCargoHoldCh10DirectionMarker(root, "CH-10 engine 9 oclock direction marker", "CONTROL", new Vector3(-4.44f, 0f, 0.225f), markerScale, 90f, 90f, 90f, mats["control_marker"], mats);
+            CreateCargoHoldCh10DirectionMarker(root, "CH-10 armory 5 oclock direction marker", "SUPPLY", new Vector3(3.58f, -3.89f, 0.225f), markerScale, 0f, 180f, 0f, mats["supply_marker"], mats);
+            CreateCargoHoldCh10DirectionMarker(root, "CH-10 supply 7 oclock direction marker", "ARMORY", new Vector3(-3.58f, -3.89f, 0.225f), markerScale, 0f, 180f, 0f, mats["armory_marker"], mats);
         }
 
         private static void CreateCargoHoldCh10DirectionMarker(
@@ -2650,6 +2841,30 @@ namespace Bellerophon.Editor.Validation
             return snapshots;
         }
 
+        private static List<ProtectedTransformSnapshot> CaptureNonCh11DisplayCargoHoldSnapshots(Transform root)
+        {
+            var snapshots = new List<ProtectedTransformSnapshot>();
+            var transforms = root.GetComponentsInChildren<Transform>(true);
+            for (var i = 0; i < transforms.Length; i++)
+            {
+                var transform = transforms[i];
+                if (transform == null || IsCargoHoldCh11DisplayTransform(transform))
+                {
+                    continue;
+                }
+
+                snapshots.Add(new ProtectedTransformSnapshot(
+                    CargoHoldRootName + "/" + GetRelativePath(root, transform),
+                    transform,
+                    transform.localPosition,
+                    transform.localRotation,
+                    transform.localScale,
+                    transform.gameObject.activeSelf));
+            }
+
+            return snapshots;
+        }
+
         private static bool IsSupplyRoomSr08Transform(Transform root, Transform transform)
         {
             var current = transform;
@@ -2680,6 +2895,21 @@ namespace Bellerophon.Editor.Validation
             }
 
             return false;
+        }
+
+        private static bool IsCargoHoldCh11DisplayTransform(Transform transform)
+        {
+            if (transform == null)
+            {
+                return false;
+            }
+
+            return string.Equals(transform.name, "CH-11 cargo status panel green display", StringComparison.Ordinal) ||
+                   string.Equals(transform.name, "CH-11 cargo status panel top scan line", StringComparison.Ordinal) ||
+                   string.Equals(transform.name, "CH-11 cargo status panel middle scan line", StringComparison.Ordinal) ||
+                   string.Equals(transform.name, "CH-11 cargo status panel bottom scan line", StringComparison.Ordinal) ||
+                   string.Equals(transform.name, "CH-11 cargo status panel amber status lamp", StringComparison.Ordinal) ||
+                   string.Equals(transform.name, "CH-11 B2_Eq2_E bottom right display surface", StringComparison.Ordinal);
         }
 
         private static bool IsSupplyRoomSr07HskScreenTransform(Transform root, Transform transform)
@@ -2831,6 +3061,34 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
+        private static void DeleteExistingCargoHoldCh11DisplayObjects(Transform root)
+        {
+            var removals = new List<Transform>();
+            var transforms = root.GetComponentsInChildren<Transform>(true);
+            for (var i = 0; i < transforms.Length; i++)
+            {
+                var transform = transforms[i];
+                if (transform == null || transform == root)
+                {
+                    continue;
+                }
+
+                if (IsCargoHoldCh11DisplayTransform(transform))
+                {
+                    removals.Add(transform);
+                }
+            }
+
+            removals.Sort((left, right) => GetDepth(right).CompareTo(GetDepth(left)));
+            for (var i = 0; i < removals.Count; i++)
+            {
+                if (removals[i] != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(removals[i].gameObject);
+                }
+            }
+        }
+
         private static void DeleteExistingSupplyRoomSr07HskScreenObjects(Transform root)
         {
             var removals = new List<Transform>();
@@ -2941,6 +3199,35 @@ namespace Bellerophon.Editor.Validation
                 if (!IsCargoHoldCh10Transform(root, transform))
                 {
                     throw new InvalidOperationException("Non-CH-10 cargo hold object was added during CH-10-only update: " + GetRelativePath(root, transform));
+                }
+            }
+        }
+
+        private static void EnsureOnlyCargoHoldCh11DisplayObjectsAdded(
+            Transform root,
+            IReadOnlyList<ProtectedTransformSnapshot> nonCh11DisplaySnapshots)
+        {
+            var protectedTransforms = new HashSet<Transform>();
+            for (var i = 0; i < nonCh11DisplaySnapshots.Count; i++)
+            {
+                if (nonCh11DisplaySnapshots[i].Transform != null)
+                {
+                    protectedTransforms.Add(nonCh11DisplaySnapshots[i].Transform);
+                }
+            }
+
+            var transforms = root.GetComponentsInChildren<Transform>(true);
+            for (var i = 0; i < transforms.Length; i++)
+            {
+                var transform = transforms[i];
+                if (transform == null || protectedTransforms.Contains(transform))
+                {
+                    continue;
+                }
+
+                if (!IsCargoHoldCh11DisplayTransform(transform))
+                {
+                    throw new InvalidOperationException("Non-CH-11-display cargo hold object was added during CH-11-display-only update: " + GetRelativePath(root, transform));
                 }
             }
         }
@@ -3160,6 +3447,21 @@ namespace Bellerophon.Editor.Validation
             for (var i = 0; i < transforms.Length; i++)
             {
                 if (transforms[i] != null && IsCargoHoldCh10Transform(root, transforms[i]))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private static int CountCargoHoldCh11DisplayObjects(Transform root)
+        {
+            var count = 0;
+            var transforms = root.GetComponentsInChildren<Transform>(true);
+            for (var i = 0; i < transforms.Length; i++)
+            {
+                if (transforms[i] != null && IsCargoHoldCh11DisplayTransform(transforms[i]))
                 {
                     count++;
                 }

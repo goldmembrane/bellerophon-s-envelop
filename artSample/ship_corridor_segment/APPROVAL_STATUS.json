@@ -1,0 +1,8 @@
+{
+  "sample": "ship_corridor_segment",
+  "objectId": "SHIP-CORRIDOR-SEGMENT",
+  "approvalState": "미승인",
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": true,
+  "note": "사용자 승인 전에는 Unity 씬, 프리팹, 런타임 자산, UI 흐름에 반영하지 않습니다."
+}

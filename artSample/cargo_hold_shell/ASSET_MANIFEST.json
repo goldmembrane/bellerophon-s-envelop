@@ -1,0 +1,46 @@
+{
+  "sample": "cargo_hold_shell",
+  "objectId": "CH-01",
+  "title": "운송창고 룸 셸",
+  "approvalState": "미승인",
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": true,
+  "sourceBasis": [
+    "docs/CARGO_HOLD_OBJECTS.md - CH-01 운송창고 룸 셸, CH-03 단일 컨테이너 화물, CH-04 가장자리 이동 영역, CH-05~CH-09 연결 지점, CH-10 연결 방향 표시.",
+    "docs/CARGO_HOLD_OBJECTS.md - 사용자 확정: 중앙 화물은 여러 개 의뢰를 받아도 단일 컨테이너로 보이게 한다.",
+    "docs/CARGO_HOLD_OBJECTS.md - 화물 직접 집기, 운반, 납품 상호작용은 구현하지 않는다."
+  ],
+  "generatedFiles": [
+    "blender/cargo_hold_shell.blend",
+    "exports/cargo_hold_shell.fbx",
+    "exports/cargo_hold_shell.glb",
+    "renders/01_overview.png",
+    "renders/02_floor_plan.png",
+    "renders/03_single_container.png",
+    "renders/04_edge_walkway.png",
+    "renders/05_connection_points.png",
+    "renders/06_status_display.png",
+    "textures/B2_Eq2_E_bottom_right.png",
+    "index.html",
+    "README.md",
+    "ASSET_MANIFEST.json",
+    "APPROVAL_STATUS.json"
+  ],
+  "includedParts": [
+    "천장을 제외한 운송창고 바닥과 벽 셸",
+    "여러 의뢰를 받아도 하나로 보이는 중앙 단일 컨테이너 화물",
+    "중앙 컨테이너 주변 가장자리 이동 영역",
+    "12시 조종실, 3시 통제실, 9시 동력실, 5시 무기실, 7시 비품실 방향 연결 출입구와 복도 스텁",
+    "각 연결 방향을 보여주는 CH-10 영어 방향 표시, 화살표, 색상 출입구 프레임",
+    "CH-11 벽면 상태 패널과 B2_Eq2_E.png 오른쪽 아래 디스플레이의 실제 UI 영역 크롭 적용 화면",
+    "Blender 원본 모델, FBX, GLB 범용 모델 파일"
+  ],
+  "excludedParts": [
+    "화물 직접 집기/운반/납품 상호작용",
+    "크레인, 지게차, 컨베이어, 선반, 팔레트 랙",
+    "운송창고 자동 포탑",
+    "개별 화물 종류별 모델",
+    "Unity 씬 배치와 충돌 설정",
+    "런타임 게임 로직"
+  ]
+}

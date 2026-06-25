@@ -1,0 +1,50 @@
+{
+  "sample": "ship_corridor_segment",
+  "objectId": "SHIP-CORRIDOR-SEGMENT",
+  "title": "화물선 복도 단품 샘플",
+  "approvalState": "미승인",
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": true,
+  "generatedDate": "2026-06-25",
+  "sourceBasis": [
+    "docs/GAME_DESIGN_SOURCE.txt - 화물선은 6개 방을 이어주는 복도가 존재한다.",
+    "docs/GAME_DESIGN_SOURCE.txt - 조종실/동력실/통제실/무기실에서 운송창고로 이어지는 복도는 아래쪽 경사가 존재한다고 명시되어 있다.",
+    "docs/GAME_DESIGN_SOURCE.txt - 통제실 손상도에 따라 복도 폐쇄가 발생하며, 폐쇄된 복도 문을 임시 개방하는 장치와 복도 정화 장치가 존재한다.",
+    "docs/MVP_IMPLEMENTATION_ORDER.md - 방 크기, 복도 폭, 경사 길이는 임시 스케일로 진행하고 추후 실제 길이를 확정한다."
+  ],
+  "includedParts": [
+    "방 연결 없이 분리된 수평 복도 샘플 1개",
+    "방 연결 없이 분리된 아래쪽 경사 복도 샘플 1개",
+    "바닥, 양쪽 벽, 상단 핸드레일, 크로스 리브",
+    "상부 하우징에서 아래로 내려와 복도 높이를 막는 전체 높이 폐쇄 셔터",
+    "폐쇄 셔터 가이드 레일과 경고 라이트 스트립",
+    "방향 문구를 붙일 수 있는 blank route label mounting plate",
+    "상태 표시 화면 자리와 임시 스케일 표시",
+    "Blender 원본 모델, FBX, GLB 범용 모델 파일"
+  ],
+  "excludedParts": [
+    "구역끼리 연결한 네트워크 배치",
+    "조종실, 운송창고, 무기실, 비품실, 동력실, 통제실 룸 앵커",
+    "Unity 씬, 프리팹, 런타임 자산 반영",
+    "충돌체, 네비게이션, 플레이어 이동 로직",
+    "실제 복도 폐쇄/개방/정화 시스템 로직",
+    "최종 복도 폭, 길이, 경사 길이 확정"
+  ],
+  "generatedFiles": [
+    "blender/ship_corridor_segment.blend",
+    "exports/ship_corridor_segment.fbx",
+    "exports/ship_corridor_segment.glb",
+    "renders/01_horizontal_overview.png",
+    "renders/02_horizontal_top.png",
+    "renders/03_horizontal_shutter_front.png",
+    "renders/04_horizontal_side.png",
+    "renders/05_sloped_overview.png",
+    "renders/06_sloped_top.png",
+    "renders/07_sloped_shutter_front.png",
+    "renders/08_sloped_side.png",
+    "index.html",
+    "README.md",
+    "ASSET_MANIFEST.json",
+    "APPROVAL_STATUS.json"
+  ]
+}

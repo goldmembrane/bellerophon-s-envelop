@@ -16,6 +16,9 @@ SAMPLE_ROOT = PROJECT_ROOT / "artSample" / SAMPLE_NAME
 BLENDER_DIR = SAMPLE_ROOT / "blender"
 RENDER_DIR = SAMPLE_ROOT / "renders"
 EXPORT_DIR = SAMPLE_ROOT / "exports"
+TEXTURE_DIR = SAMPLE_ROOT / "textures"
+CH11_DISPLAY_TEXTURE_PATH = PROJECT_ROOT / "Assets" / "Heavy Station Kit" / "BASE" / "Textures" / "Displays" / "B2_Eq2_E.png"
+CH11_DISPLAY_CROP_PATH = TEXTURE_DIR / "B2_Eq2_E_bottom_right.png"
 
 ROOM_WIDTH = 9.8
 ROOM_NORTH_Y = 4.35
@@ -36,12 +39,12 @@ ARMORY_5_OCLOCK_X = 3.58
 
 
 def ensure_dirs() -> None:
-    for path in (SAMPLE_ROOT, BLENDER_DIR, RENDER_DIR, EXPORT_DIR):
+    for path in (SAMPLE_ROOT, BLENDER_DIR, RENDER_DIR, EXPORT_DIR, TEXTURE_DIR):
         path.mkdir(parents=True, exist_ok=True)
 
 
 def clean_generated_files() -> None:
-    for directory in (BLENDER_DIR, RENDER_DIR, EXPORT_DIR):
+    for directory in (BLENDER_DIR, RENDER_DIR, EXPORT_DIR, TEXTURE_DIR):
         if directory.exists():
             for item in directory.iterdir():
                 if item.is_file():
@@ -113,6 +116,59 @@ def noisy_metal(name: str, base: tuple[float, float, float, float]) -> bpy.types
     return mat
 
 
+def image_emission_material(
+    name: str,
+    image_path: Path,
+    *,
+    emission_strength: float = 0.42,
+) -> bpy.types.Material:
+    mat = material(
+        name,
+        (0.02, 0.07, 0.09, 1),
+        roughness=0.36,
+        emission=(0.02, 0.18, 0.22, 1),
+        emission_strength=emission_strength,
+    )
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    bsdf = nodes.get("Principled BSDF")
+    if bsdf is None:
+        return mat
+
+    image = bpy.data.images.load(str(image_path), check_existing=True)
+    texture = nodes.new(type="ShaderNodeTexImage")
+    texture.image = image
+    texture.extension = "CLIP"
+    texture.interpolation = "Closest"
+    links.new(texture.outputs["Color"], bsdf.inputs["Base Color"])
+    links.new(texture.outputs["Color"], bsdf.inputs["Emission Color"])
+    return mat
+
+
+def crop_ch11_display_texture() -> Path:
+    source = bpy.data.images.load(str(CH11_DISPLAY_TEXTURE_PATH), check_existing=True)
+    width = int(source.size[0])
+    height = int(source.size[1])
+    crop_width = width // 2
+    crop_height = int((height // 2) * 0.44)
+    start_x = width - crop_width
+    start_y = 0
+
+    source_pixels = list(source.pixels[:])
+    cropped_pixels = [0.0] * (crop_width * crop_height * 4)
+    for y in range(crop_height):
+        source_start = ((start_y + y) * width + start_x) * 4
+        target_start = y * crop_width * 4
+        cropped_pixels[target_start:target_start + (crop_width * 4)] = source_pixels[source_start:source_start + (crop_width * 4)]
+
+    cropped = bpy.data.images.new("CH-11 B2_Eq2_E bottom right display crop", crop_width, crop_height, alpha=True)
+    cropped.pixels[:] = cropped_pixels
+    cropped.filepath_raw = str(CH11_DISPLAY_CROP_PATH)
+    cropped.file_format = "PNG"
+    cropped.save()
+    return CH11_DISPLAY_CROP_PATH
+
+
 def add_empty(name: str, parent: bpy.types.Object | None = None) -> bpy.types.Object:
     empty = bpy.data.objects.new(name, None)
     bpy.context.collection.objects.link(empty)
@@ -142,6 +198,47 @@ def add_box(
         bevel.width = bevel_width
         bevel.segments = 1
         obj.modifiers.new("weighted normals", "WEIGHTED_NORMAL")
+    return obj
+
+
+def add_yz_image_plane(
+    name: str,
+    parent: bpy.types.Object,
+    x: float,
+    y: float,
+    z: float,
+    width: float,
+    height: float,
+    mat: bpy.types.Material,
+    uv_rect: tuple[float, float, float, float],
+) -> bpy.types.Object:
+    half_width = width * 0.5
+    half_height = height * 0.5
+    mesh = bpy.data.meshes.new(name + " mesh")
+    mesh.from_pydata(
+        [
+            (x, y - half_width, z - half_height),
+            (x, y + half_width, z - half_height),
+            (x, y + half_width, z + half_height),
+            (x, y - half_width, z + half_height),
+        ],
+        [],
+        [(0, 3, 2, 1)],
+    )
+    mesh.update()
+
+    u0, v0, u1, v1 = uv_rect
+    uv_layer = mesh.uv_layers.new(name="UVMap")
+    for loop_index, uv in zip(
+        mesh.polygons[0].loop_indices,
+        [(u0, v0), (u0, v1), (u1, v1), (u1, v0)],
+    ):
+        uv_layer.data[loop_index].uv = uv
+
+    obj = bpy.data.objects.new(name, mesh)
+    bpy.context.collection.objects.link(obj)
+    obj.data.materials.append(mat)
+    obj.parent = parent
     return obj
 
 
@@ -515,17 +612,17 @@ def add_status_panel(root: bpy.types.Object, mats: dict[str, bpy.types.Material]
     y = -2.25
     add_box("CH-11 wall mounted cargo status panel body", root, (x, y, 1.62), (0.16, 1.42, 0.96), mats["panel_body"], bevel_width=0.018)
     add_box("CH-11 cargo status glowing screen", root, (x - 0.088, y, 1.68), (0.045, 1.08, 0.66), mats["screen"], bevel_width=0.006)
-    add_text_label("CH-11 cargo status screen label", root, "CARGO STATUS", (x - 0.118, y, 1.92), (math.radians(90), 0, math.radians(-90)), mats["label_text"], 0.105)
-    for idx, (label, z, width, mat_name) in enumerate(
-        [
-            ("HEALTH", 1.70, 0.72, "health_bar"),
-            ("LOSS", 1.54, 0.18, "loss_bar"),
-            ("SCORE", 1.38, 0.56, "score_bar"),
-        ],
-        start=1,
-    ):
-        add_box(f"CH-11 {label.lower()} status bar slot", root, (x - 0.121, y - 0.16, z), (0.030, 0.82, 0.045), mats["bar_slot"], bevel_width=0.002)
-        add_box(f"CH-11 {label.lower()} status bar value", root, (x - 0.138, y - 0.16 - (0.82 - width) * 0.5, z), (0.022, width, 0.035), mats[mat_name], bevel_width=0.002)
+    add_yz_image_plane(
+        "CH-11 B2_Eq2_E bottom right display surface",
+        root,
+        x - 0.116,
+        y,
+        1.68,
+        1.02,
+        0.58,
+        mats["screen_display"],
+        (1.0, 0.0, 0.0, 1.0),
+    )
 
 
 def add_wall_dressing(root: bpy.types.Object, mats: dict[str, bpy.types.Material]) -> None:
@@ -673,6 +770,7 @@ def write_docs() -> None:
             "renders/04_edge_walkway.png",
             "renders/05_connection_points.png",
             "renders/06_status_display.png",
+            "textures/B2_Eq2_E_bottom_right.png",
             "index.html",
             "README.md",
             "ASSET_MANIFEST.json",
@@ -684,7 +782,7 @@ def write_docs() -> None:
             "중앙 컨테이너 주변 가장자리 이동 영역",
             "12시 조종실, 3시 통제실, 9시 동력실, 5시 무기실, 7시 비품실 방향 연결 출입구와 복도 스텁",
             "각 연결 방향을 보여주는 CH-10 영어 방향 표시, 화살표, 색상 출입구 프레임",
-            "화물 내구도, 손실률, 창고 점수를 표시할 CH-11 상태 패널 자리",
+            "CH-11 벽면 상태 패널과 B2_Eq2_E.png 오른쪽 아래 디스플레이의 실제 UI 영역 크롭 적용 화면",
             "Blender 원본 모델, FBX, GLB 범용 모델 파일",
         ],
         "excludedParts": [
@@ -723,7 +821,7 @@ CH-01 운송창고 룸 셸 승인용 Blender 샘플입니다.
 - 중앙 컨테이너 주변에는 플레이어가 이동할 수 있는 가장자리 이동 영역을 표시했습니다.
 - 위에서 내려다본 기준으로 12시에는 조종실, 3시에는 통제실, 9시에는 동력실, 5시에는 무기실, 7시에는 비품실 방향 연결 출입구와 복도 스텁을 두었습니다.
 - 각 연결 지점 안쪽에는 `CH-10` 영어 방향 표시, 진행 화살표, 어두운 라벨 백킹, 마모 트림을 넣었습니다.
-- 화물 내구도, 손실률, 창고 점수를 표시할 CH-11 상태 패널 위치를 벽면 패널 자리로 넣었습니다.
+- CH-11 벽면 패널 화면에는 `B2_Eq2_E.png` 오른쪽 아래 디스플레이의 실제 UI 영역만 잘라 넣었습니다.
 - 내부 구조 확인이 쉽도록 천장은 제외했습니다.
 
 ## 포함
@@ -732,6 +830,7 @@ CH-01 운송창고 룸 셸 승인용 Blender 샘플입니다.
 - `exports/cargo_hold_shell.fbx`
 - `exports/cargo_hold_shell.glb`
 - `renders/*.png` 6개 구도
+- `textures/B2_Eq2_E_bottom_right.png`
 - `index.html`
 - `ASSET_MANIFEST.json`
 - `APPROVAL_STATUS.json`
@@ -753,7 +852,7 @@ CH-01 운송창고 룸 셸 승인용 Blender 샘플입니다.
         ("03_single_container.png", "03 중앙 단일 컨테이너 화물"),
         ("04_edge_walkway.png", "04 중앙 컨테이너 주변 가장자리 이동 영역"),
         ("05_connection_points.png", "05 12시/3시/9시/5시/7시 연결 지점과 CH-10 방향 표시"),
-        ("06_status_display.png", "06 화물 상태 표시 패널 자리"),
+        ("06_status_display.png", "06 B2 디스플레이가 적용된 CH-11 패널"),
     ]
     cards = "\n".join(
         f'    <figure><a href="renders/{name}"><img src="renders/{name}" alt="{label}"></a><figcaption>{label}</figcaption></figure>'
@@ -780,7 +879,7 @@ CH-01 운송창고 룸 셸 승인용 Blender 샘플입니다.
 <body>
 <main>
   <h1>cargo_hold_shell</h1>
-  <p>CH-01 운송창고 룸 셸 승인용 Blender 샘플입니다. 원본 기획서와 운송창고 오브젝트 목록 기준에 따라 중앙에는 여러 의뢰를 받아도 하나로 보이는 단일 컨테이너 화물을 배치했고, 그 주변에는 가장자리 이동 영역을 표시했습니다. 위에서 내려다본 기준으로 12시에는 조종실, 3시에는 통제실, 9시에는 동력실, 5시에는 무기실, 7시에는 비품실로 이어지는 5개 연결 지점을 넣고, 각 지점 안쪽에 CH-10 연결 방향 표시를 기존 룸 셸 샘플 안에 통합했습니다. CH-10 표시는 컬러 바닥 플레이트, 흰색 진행 화살표, 어두운 라벨 백킹, 돌출 텍스트, 마모 트림으로 구성했습니다. 화물 내구도와 손실률을 확인할 CH-11 상태 패널 자리를 벽면 패널로 배치했습니다. 화물 직접 집기, 운반, 납품 상호작용과 크레인, 지게차, 컨베이어, 선반, 자동 포탑은 원본 기준 운송창고 고정 오브젝트가 아니므로 포함하지 않았습니다.</p>
+  <p>CH-01 운송창고 룸 셸 승인용 Blender 샘플입니다. 원본 기획서와 운송창고 오브젝트 목록 기준에 따라 중앙에는 여러 의뢰를 받아도 하나로 보이는 단일 컨테이너 화물을 배치했고, 그 주변에는 가장자리 이동 영역을 표시했습니다. 위에서 내려다본 기준으로 12시에는 조종실, 3시에는 통제실, 9시에는 동력실, 5시에는 무기실, 7시에는 비품실로 이어지는 5개 연결 지점을 넣고, 각 지점 안쪽에 CH-10 연결 방향 표시를 기존 룸 셸 샘플 안에 통합했습니다. CH-10 표시는 컬러 바닥 플레이트, 흰색 진행 화살표, 어두운 라벨 백킹, 돌출 텍스트, 마모 트림으로 구성했습니다. CH-11 상태 패널 화면에는 B2_Eq2_E.png 오른쪽 아래 디스플레이의 실제 UI 영역만 잘라 적용했습니다. 화물 직접 집기, 운반, 납품 상호작용과 크레인, 지게차, 컨베이어, 선반, 자동 포탑은 원본 기준 운송창고 고정 오브젝트가 아니므로 포함하지 않았습니다.</p>
   <section class="grid">
 {cards}
   </section>
@@ -796,6 +895,7 @@ def main() -> None:
     clean_generated_files()
     reset_scene()
     configure_rendering()
+    display_texture = crop_ch11_display_texture()
 
     mats = {
         "floor": noisy_metal("cargo hold worn sealed deck", (0.15, 0.17, 0.16, 1)),
@@ -812,6 +912,7 @@ def main() -> None:
         "container_rib": noisy_metal("cargo hold container worn rib", (0.58, 0.41, 0.32, 1)),
         "panel_body": noisy_metal("cargo hold status panel body", (0.11, 0.13, 0.13, 1)),
         "screen": material("cargo hold status screen cyan glow", (0.020, 0.075, 0.090, 1), roughness=0.34, emission=(0.02, 0.23, 0.27, 1), emission_strength=0.42),
+        "screen_display": image_emission_material("CH-11 B2_Eq2_E bottom right display", display_texture, emission_strength=0.54),
         "bar_slot": material("cargo hold status bar dark slot", (0.020, 0.025, 0.026, 1), roughness=0.74),
         "health_bar": material("cargo hold health status green", (0.20, 0.70, 0.42, 1), roughness=0.45, emission=(0.05, 0.35, 0.13, 1), emission_strength=0.22),
         "loss_bar": material("cargo hold loss status red", (0.78, 0.16, 0.11, 1), roughness=0.50, emission=(0.35, 0.04, 0.02, 1), emission_strength=0.16),
@@ -839,7 +940,7 @@ def main() -> None:
         ("single_container", (4.9, -4.9, 2.65), (0.0, 0.0, 1.05), 40, "03_single_container.png", None),
         ("edge_walkway", (0.0, -6.9, 4.05), (0.0, 0.0, 0.72), 34, "04_edge_walkway.png", None),
         ("connection_points", (0.0, 0.0, 12.4), (0.0, 0.0, 0.0), 50, "05_connection_points.png", 11.8),
-        ("status_display", (7.0, -3.0, 2.45), (ROOM_WIDTH * 0.5 - 0.16, -2.25, 1.68), 58, "06_status_display.png", None),
+        ("status_display", (2.65, -3.35, 2.35), (ROOM_WIDTH * 0.5 - 0.34, -2.25, 1.68), 72, "06_status_display.png", None),
     ]
     for name, loc, target, lens, output, ortho_scale in cameras:
         camera = add_camera(name, loc, target, lens, ortho_scale=ortho_scale)
