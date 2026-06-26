@@ -30,6 +30,18 @@ namespace Bellerophon.Editor.Validation
         private const string CargoHoldCurrentStateUnityPath = "Assets/_Project/Editor/Validation/ApprovedCargoHoldShellCurrentState.cs";
         private const string CargoHoldCh11DisplayTexturePath = "Assets/_Project/Art/Ship/CargoHold/Textures/B2_Eq2_E_bottom_right.png";
         private const float CargoHoldUnityScale = 2.2f;
+        private const string ShipCorridorSegmentsRootName = "Approved Ship Corridor Segments";
+        private const int ShipCorridorHorizontalCount = 5;
+        private const int ShipCorridorSlopedCount = 5;
+        private const float ShipCorridorLength = 6.2f;
+        private const float ShipCorridorWidth = 1.28f;
+        private const float ShipCorridorFloorThickness = 0.16f;
+        private const float ShipCorridorWallHeight = 1.22f;
+        private const float ShipCorridorWallThickness = 0.18f;
+        private const float ShipCorridorSlopeRise = 0.58f;
+        private const float ShipCorridorShutterHousingHeight = 0.18f;
+        private const float ShipCorridorShutterSideClearance = 0.06f;
+        private const float ShipCorridorUnityScale = CargoHoldUnityScale;
 
         private static readonly Vector3 ArmoryCenterBelowControlRoom = new Vector3(13.20795f, -4.6f, 19.265f);
 
@@ -351,6 +363,58 @@ namespace Bellerophon.Editor.Validation
                 "; Ch11DisplayObjects=" +
                 CountCargoHoldCh11DisplayObjects(root.transform).ToString(CultureInfo.InvariantCulture) +
                 "; NonCh11CargoHoldObjectsUntouched=True; ExistingObjectsUntouched=True; CurrentStateSaved=True");
+        }
+
+        [MenuItem("Bellerophon/Bootstrap/Add Approved Ship Corridor Segments Only")]
+        public static void AddApprovedShipCorridorSegmentsOnly()
+        {
+            var scene = EditorSceneManager.OpenScene(Phase4CargoShipGrayboxBootstrap.CargoRunScenePath, OpenSceneMode.Single);
+            if (FindNamedObject(ShipCorridorSegmentsRootName) != null)
+            {
+                throw new InvalidOperationException("Ship corridor segment root already exists. Existing objects are not modified by this command: " + ShipCorridorSegmentsRootName);
+            }
+
+            var cargoRoot = RequireObject(CargoHoldRootName);
+            var protectedRoots = FindSceneRootObjectsExcept(ShipCorridorSegmentsRootName);
+            var protectedSnapshots = CaptureProtectedSnapshots(protectedRoots);
+
+            var root = new GameObject(ShipCorridorSegmentsRootName);
+            root.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            root.transform.localScale = Vector3.one * ShipCorridorUnityScale;
+
+            CreateShipCorridorSegments(root.transform);
+            DisableAllColliders(root.transform);
+
+            var targetPosition = FindShipCorridorSegmentsPlacementRightOfCargo(root.transform, cargoRoot, protectedRoots);
+            root.transform.SetPositionAndRotation(targetPosition, Quaternion.identity);
+            root.transform.localScale = Vector3.one * ShipCorridorUnityScale;
+
+            var corridorBounds = GetRendererBounds(root.transform);
+            EnsureShipCorridorSegmentsRightOfCargo(corridorBounds, GetRendererBounds(cargoRoot.transform));
+            EnsureNoOverlap(corridorBounds, protectedRoots);
+            EnsureProtectedObjectsUntouched(protectedSnapshots);
+
+            Selection.activeGameObject = root;
+            EditorGUIUtility.PingObject(root);
+
+            EditorUtility.SetDirty(root);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, Phase4CargoShipGrayboxBootstrap.CargoRunScenePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log(
+                "Approved ship corridor segments added only. Root=" +
+                ShipCorridorSegmentsRootName +
+                "; HorizontalSegments=" +
+                ShipCorridorHorizontalCount.ToString(CultureInfo.InvariantCulture) +
+                "; SlopedSegments=" +
+                ShipCorridorSlopedCount.ToString(CultureInfo.InvariantCulture) +
+                "; Center=" +
+                FormatVector(targetPosition) +
+                "; Bounds=" +
+                FormatBounds(corridorBounds) +
+                "; RightOfCargoHold=True; CorridorSegmentsNonOverlapping=True; ExistingObjectsUntouched=True");
         }
 
         [MenuItem("Bellerophon/Bootstrap/Move Approved Supply Room 01 Shell Below Engine Room")]
@@ -1169,6 +1233,423 @@ namespace Bellerophon.Editor.Validation
                 { "hazard", CreateSupplyMaterial("CH-11 muted cargo status hazard paint", new Color(0.82f, 0.58f, 0.14f, 1f), 0.02f, 0.82f) },
                 { "shadow", CreateSupplyMaterial("CH-01 recessed cargo hold shadow", new Color(0.018f, 0.020f, 0.019f, 1f), 0f, 0.92f) },
             };
+        }
+
+        private static Dictionary<string, Material> CreateShipCorridorMaterials()
+        {
+            return new Dictionary<string, Material>(StringComparer.Ordinal)
+            {
+                { "floor", CreateSupplyMaterial("SC worn modular corridor floor", new Color(0.17f, 0.19f, 0.18f, 1f), 0.20f, 0.86f) },
+                { "ramp_floor", CreateSupplyMaterial("SC worn down slope corridor floor", new Color(0.20f, 0.18f, 0.13f, 1f), 0.20f, 0.86f) },
+                { "wall", CreateSupplyMaterial("SC armored corridor side wall", new Color(0.10f, 0.13f, 0.13f, 1f), 0.20f, 0.86f) },
+                { "rib", CreateSupplyMaterial("SC deck cross rib", new Color(0.47f, 0.45f, 0.38f, 1f), 0.20f, 0.82f) },
+                { "slot", CreateSupplyMaterial("SC black recessed shutter upper block", new Color(0.020f, 0.025f, 0.027f, 1f), 0.20f, 0.88f) },
+                { "shutter", CreateSupplyMaterial("SC lowered corridor closure shutter", new Color(0.055f, 0.065f, 0.067f, 1f), 0.20f, 0.86f) },
+                { "shutter_face", CreateSupplyMaterial("SC dark shutter face armor", new Color(0.12f, 0.135f, 0.13f, 1f), 0.20f, 0.84f) },
+                { "label_back", CreateSupplyMaterial("SC route label mounting plate", new Color(0.030f, 0.037f, 0.038f, 1f), 0.12f, 0.84f) },
+                { "label", CreateSupplyMaterial("SC pale corridor stencil text", new Color(0.86f, 0.91f, 0.86f, 1f), 0f, 0.66f) },
+                { "amber", CreateSupplyMaterial("SC amber slope caution paint", new Color(0.95f, 0.58f, 0.12f, 1f), 0.02f, 0.70f) },
+                { "red", CreateSupplyMaterial("SC red closure warning strip", new Color(0.88f, 0.08f, 0.05f, 1f), 0.02f, 0.62f) },
+                { "cyan", CreateSupplyMaterial("SC cyan route display placeholder", new Color(0.04f, 0.55f, 0.68f, 1f), 0f, 0.46f) },
+            };
+        }
+
+        private static void CreateShipCorridorSegments(Transform root)
+        {
+            var mats = CreateShipCorridorMaterials();
+            const float xSpacing = ShipCorridorLength + 1.35f;
+            const float zSpacing = ShipCorridorWidth + 1.65f;
+            var startX = (ShipCorridorHorizontalCount - 1) * xSpacing * -0.5f;
+
+            for (var i = 0; i < ShipCorridorHorizontalCount; i++)
+            {
+                var origin = new Vector3(startX + (i * xSpacing), 0f, zSpacing * 0.5f);
+                CreateShipCorridorSegment(
+                    root,
+                    "SC-H" + (i + 1).ToString("00", CultureInfo.InvariantCulture) + " horizontal corridor sample",
+                    origin,
+                    slope: false,
+                    mats);
+            }
+
+            for (var i = 0; i < ShipCorridorSlopedCount; i++)
+            {
+                var origin = new Vector3(startX + (i * xSpacing), 0f, zSpacing * -0.5f);
+                CreateShipCorridorSegment(
+                    root,
+                    "SC-S" + (i + 1).ToString("00", CultureInfo.InvariantCulture) + " sloped corridor sample",
+                    origin,
+                    slope: true,
+                    mats);
+            }
+
+            EnsureShipCorridorSegmentsDoNotOverlap(root);
+        }
+
+        private static void CreateShipCorridorSegment(
+            Transform root,
+            string name,
+            Vector3 origin,
+            bool slope,
+            Dictionary<string, Material> mats)
+        {
+            var segment = new GameObject(name);
+            segment.transform.SetParent(root, false);
+            segment.transform.localPosition = origin;
+            segment.transform.localRotation = Quaternion.identity;
+            segment.transform.localScale = Vector3.one;
+
+            var pitch = slope ? Mathf.Atan2(ShipCorridorSlopeRise, ShipCorridorLength) : 0f;
+            var pitchRotation = Quaternion.Euler(0f, 0f, pitch * Mathf.Rad2Deg);
+            var centerY = 0.18f + (slope ? ShipCorridorSlopeRise * 0.5f : 0f);
+
+            if (slope)
+            {
+                CreateShipCorridorRampFloor(
+                    name + " sloped floor slab",
+                    segment.transform,
+                    ShipCorridorLength,
+                    ShipCorridorWidth,
+                    lowY: 0.16f,
+                    highY: 0.16f + ShipCorridorSlopeRise,
+                    thickness: ShipCorridorFloorThickness,
+                    mats["ramp_floor"]);
+            }
+            else
+            {
+                CreateShipCorridorBox(
+                    name + " straight floor slab",
+                    segment.transform,
+                    new Vector3(0f, 0.08f, 0f),
+                    new Vector3(ShipCorridorLength, ShipCorridorFloorThickness, ShipCorridorWidth),
+                    mats["floor"],
+                    Quaternion.identity);
+            }
+
+            foreach (var side in new[] { 1f, -1f })
+            {
+                var sideName = side > 0f ? "left" : "right";
+                var sideZ = side * ((ShipCorridorWidth * 0.5f) + (ShipCorridorWallThickness * 0.5f));
+                CreateShipCorridorBox(
+                    name + " " + sideName + " armored wall",
+                    segment.transform,
+                    new Vector3(0f, centerY + (ShipCorridorWallHeight * 0.5f), sideZ),
+                    new Vector3(ShipCorridorLength, ShipCorridorWallHeight, ShipCorridorWallThickness),
+                    mats["wall"],
+                    pitchRotation);
+            }
+
+            var ribPositions = new[] { -2.32f, -1.15f, 0f, 1.15f, 2.32f };
+            for (var i = 0; i < ribPositions.Length; i++)
+            {
+                var x = ribPositions[i];
+                var y = slope
+                    ? ShipCorridorHeightAt(x, 0.22f, 0.22f + ShipCorridorSlopeRise)
+                    : 0.22f;
+                CreateShipCorridorBox(
+                    name + " cross deck rib " + (i + 1).ToString(CultureInfo.InvariantCulture),
+                    segment.transform,
+                    new Vector3(x, y, 0f),
+                    new Vector3(0.09f, 0.085f, ShipCorridorWidth + 0.18f),
+                    mats["rib"],
+                    Quaternion.identity);
+            }
+
+            CreateShipCorridorEndShutter(name + " low end", segment.transform, -ShipCorridorLength * 0.5f + 0.26f, pitch, slope, mats);
+            CreateShipCorridorEndShutter(name + " high end", segment.transform, ShipCorridorLength * 0.5f - 0.26f, pitch, slope, mats);
+            CreateShipCorridorLabelAndDisplay(name, segment.transform, pitch, slope, mats);
+        }
+
+        private static void CreateShipCorridorEndShutter(
+            string name,
+            Transform parent,
+            float x,
+            float pitch,
+            bool slope,
+            Dictionary<string, Material> mats)
+        {
+            var floorY = slope
+                ? ShipCorridorHeightAt(x, 0.16f, 0.16f + ShipCorridorSlopeRise)
+                : 0.16f;
+            var ceilingY = floorY + ShipCorridorWallHeight;
+            var housingVerticalSpan =
+                (0.46f * Mathf.Abs(Mathf.Sin(pitch))) +
+                (ShipCorridorShutterHousingHeight * Mathf.Abs(Mathf.Cos(pitch)));
+            var shutterHeight = ShipCorridorWallHeight - housingVerticalSpan;
+            var shutterCenterY = floorY + (shutterHeight * 0.5f);
+            var housingY = ceilingY - (housingVerticalSpan * 0.5f);
+            var shutterWidth = ShipCorridorWidth - ShipCorridorShutterSideClearance;
+            var pitchRotation = Quaternion.Euler(0f, 0f, pitch * Mathf.Rad2Deg);
+
+            CreateShipCorridorBox(
+                name + " overhead shutter housing",
+                parent,
+                new Vector3(x, housingY, 0f),
+                new Vector3(0.46f, ShipCorridorShutterHousingHeight, shutterWidth),
+                mats["slot"],
+                pitchRotation);
+            CreateShipCorridorBox(
+                name + " lowered full height closure shutter",
+                parent,
+                new Vector3(x, shutterCenterY, 0f),
+                new Vector3(0.19f, shutterHeight, shutterWidth),
+                mats["shutter"],
+                Quaternion.identity);
+            CreateShipCorridorBox(
+                name + " shutter center armor face",
+                parent,
+                new Vector3(x - 0.101f, shutterCenterY + 0.03f, 0f),
+                new Vector3(0.032f, Mathf.Max(0.08f, shutterHeight - 0.24f), shutterWidth - 0.16f),
+                mats["shutter_face"],
+                Quaternion.identity);
+            CreateShipCorridorBox(
+                name + " red closure warning strip",
+                parent,
+                new Vector3(x - 0.122f, floorY + 0.28f, 0f),
+                new Vector3(0.035f, 0.075f, shutterWidth - 0.10f),
+                mats["red"],
+                Quaternion.identity);
+        }
+
+        private static void CreateShipCorridorLabelAndDisplay(
+            string name,
+            Transform parent,
+            float pitch,
+            bool slope,
+            Dictionary<string, Material> mats)
+        {
+            var pitchDegrees = pitch * Mathf.Rad2Deg;
+            var pitchRotation = Quaternion.Euler(0f, 0f, pitchDegrees);
+            var labelX = -0.72f;
+            var labelY = slope
+                ? ShipCorridorHeightAt(labelX, 0.24f, 0.24f + ShipCorridorSlopeRise)
+                : 0.22f;
+
+            CreateShipCorridorBox(
+                name + " blank route label floor mounting plate",
+                parent,
+                new Vector3(labelX, labelY + 0.025f, -ShipCorridorWidth * 0.22f),
+                new Vector3(1.22f, 0.035f, 0.32f),
+                mats["label_back"],
+                pitchRotation);
+            CreateSupplyReadableTextGroup(
+                name + " route label slot text",
+                parent,
+                "ROUTE LABEL SLOT",
+                new Vector3(labelX, labelY + 0.058f, -ShipCorridorWidth * 0.22f),
+                Quaternion.Euler(90f, 0f, pitchDegrees),
+                0.095f,
+                1.08f,
+                new Color(0.86f, 0.91f, 0.86f, 1f),
+                0.42f);
+
+            var screenX = 0.95f;
+            var screenY = slope
+                ? ShipCorridorHeightAt(screenX, 0.28f, 0.28f + ShipCorridorSlopeRise)
+                : 0.33f;
+            CreateShipCorridorBox(
+                name + " small corridor status display placeholder",
+                parent,
+                new Vector3(screenX, screenY + 0.05f, ShipCorridorWidth * 0.5f + 0.126f),
+                new Vector3(0.74f, 0.24f, 0.075f),
+                mats["cyan"],
+                pitchRotation);
+
+            if (slope)
+            {
+                CreateShipCorridorBox(
+                    name + " slope amber left edge stripe",
+                    parent,
+                    new Vector3(0f, 0.54f, ShipCorridorWidth * 0.5f - 0.10f),
+                    new Vector3(ShipCorridorLength - 0.82f, 0.035f, 0.045f),
+                    mats["amber"],
+                    pitchRotation);
+                CreateShipCorridorBox(
+                    name + " slope amber right edge stripe",
+                    parent,
+                    new Vector3(0f, 0.54f, -ShipCorridorWidth * 0.5f + 0.10f),
+                    new Vector3(ShipCorridorLength - 0.82f, 0.035f, 0.045f),
+                    mats["amber"],
+                    pitchRotation);
+                CreateSupplyReadableTextGroup(
+                    name + " down slope floor stencil",
+                    parent,
+                    "DOWN SLOPE",
+                    new Vector3(0f, 0.56f, 0f),
+                    Quaternion.Euler(90f, 0f, pitchDegrees),
+                    0.16f,
+                    1.18f,
+                    new Color(0.95f, 0.58f, 0.12f, 1f),
+                    0.48f);
+            }
+            else
+            {
+                CreateSupplyReadableTextGroup(
+                    name + " straight module floor stencil",
+                    parent,
+                    "HORIZONTAL CORRIDOR",
+                    new Vector3(0f, 0.27f, 0f),
+                    Quaternion.Euler(90f, 0f, 0f),
+                    0.13f,
+                    2.10f,
+                    new Color(0.86f, 0.91f, 0.86f, 1f),
+                    0.42f);
+            }
+        }
+
+        private static void CreateShipCorridorRampFloor(
+            string name,
+            Transform parent,
+            float length,
+            float width,
+            float lowY,
+            float highY,
+            float thickness,
+            Material material)
+        {
+            var halfLength = length * 0.5f;
+            var halfWidth = width * 0.5f;
+            var mesh = new Mesh
+            {
+                name = name + " mesh"
+            };
+
+            mesh.vertices = new[]
+            {
+                new Vector3(-halfLength, lowY, -halfWidth),
+                new Vector3(-halfLength, lowY, halfWidth),
+                new Vector3(halfLength, highY, halfWidth),
+                new Vector3(halfLength, highY, -halfWidth),
+                new Vector3(-halfLength, lowY - thickness, -halfWidth),
+                new Vector3(-halfLength, lowY - thickness, halfWidth),
+                new Vector3(halfLength, highY - thickness, halfWidth),
+                new Vector3(halfLength, highY - thickness, -halfWidth),
+            };
+            mesh.triangles = new[]
+            {
+                0, 1, 2, 0, 2, 3,
+                4, 7, 6, 4, 6, 5,
+                0, 4, 5, 0, 5, 1,
+                1, 5, 6, 1, 6, 2,
+                2, 6, 7, 2, 7, 3,
+                3, 7, 4, 3, 4, 0,
+            };
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+
+            var obj = new GameObject(name);
+            obj.transform.SetParent(parent, false);
+            obj.transform.localPosition = Vector3.zero;
+            obj.transform.localRotation = Quaternion.identity;
+            obj.transform.localScale = Vector3.one;
+            obj.AddComponent<MeshFilter>().sharedMesh = mesh;
+            var renderer = obj.AddComponent<MeshRenderer>();
+            renderer.sharedMaterial = material;
+        }
+
+        private static void CreateShipCorridorBox(
+            string name,
+            Transform parent,
+            Vector3 localPosition,
+            Vector3 localScale,
+            Material material,
+            Quaternion localRotation)
+        {
+            CreateSupplyBoxLocal(name, parent, localPosition, localScale, material, localRotation);
+        }
+
+        private static float ShipCorridorHeightAt(float x, float lowY, float highY)
+        {
+            var t = Mathf.Clamp01((x + (ShipCorridorLength * 0.5f)) / ShipCorridorLength);
+            return Mathf.Lerp(lowY, highY, t);
+        }
+
+        private static Vector3 FindShipCorridorSegmentsPlacementRightOfCargo(
+            Transform root,
+            GameObject cargoRoot,
+            IReadOnlyList<GameObject> protectedRoots)
+        {
+            var originalPosition = root.position;
+            var corridorBoundsAtOrigin = GetRendererBounds(root);
+            var cargoBounds = GetRendererBounds(cargoRoot.transform);
+            var firstX = cargoBounds.max.x + corridorBoundsAtOrigin.extents.x + 2.0f;
+            var targetY = cargoRoot.transform.position.y;
+            var targetZ = cargoBounds.center.z;
+            const float step = 2.5f;
+            const int maxAttempts = 160;
+
+            try
+            {
+                for (var i = 0; i < maxAttempts; i++)
+                {
+                    var candidate = new Vector3(firstX + (i * step), targetY, targetZ);
+                    root.position = candidate;
+
+                    var candidateBounds = GetRendererBounds(root);
+                    if (candidateBounds.min.x > cargoBounds.max.x + 0.5f &&
+                        !IntersectsAnyProtectedBounds(candidateBounds, protectedRoots))
+                    {
+                        return candidate;
+                    }
+                }
+            }
+            finally
+            {
+                root.position = originalPosition;
+            }
+
+            throw new InvalidOperationException(
+                "Could not find a non-overlapping right-of-cargo-hold position for " +
+                ShipCorridorSegmentsRootName +
+                " after " +
+                maxAttempts.ToString(CultureInfo.InvariantCulture) +
+                " attempts.");
+        }
+
+        private static void EnsureShipCorridorSegmentsRightOfCargo(Bounds corridorBounds, Bounds cargoBounds)
+        {
+            if (corridorBounds.min.x <= cargoBounds.max.x + 0.5f)
+            {
+                throw new InvalidOperationException(
+                    "Ship corridor segments are not fully right of cargo hold. CorridorBounds=" +
+                    FormatBounds(corridorBounds) +
+                    "; CargoBounds=" +
+                    FormatBounds(cargoBounds));
+            }
+        }
+
+        private static void EnsureShipCorridorSegmentsDoNotOverlap(Transform root)
+        {
+            for (var i = 0; i < root.childCount; i++)
+            {
+                var current = root.GetChild(i);
+                if (!TryGetRendererBounds(current, out var currentBounds))
+                {
+                    continue;
+                }
+
+                for (var j = i + 1; j < root.childCount; j++)
+                {
+                    var other = root.GetChild(j);
+                    if (!TryGetRendererBounds(other, out var otherBounds))
+                    {
+                        continue;
+                    }
+
+                    if (currentBounds.Intersects(otherBounds))
+                    {
+                        throw new InvalidOperationException(
+                            "Ship corridor segment overlap detected: " +
+                            current.name +
+                            " / " +
+                            other.name +
+                            ". CurrentBounds=" +
+                            FormatBounds(currentBounds) +
+                            "; OtherBounds=" +
+                            FormatBounds(otherBounds));
+                    }
+                }
+            }
         }
 
         private static void CreateCargoWallYWithDoors(

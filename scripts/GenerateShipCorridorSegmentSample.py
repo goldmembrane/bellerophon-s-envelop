@@ -22,6 +22,8 @@ CORRIDOR_WIDTH = 1.28
 FLOOR_THICKNESS = 0.16
 WALL_HEIGHT = 1.22
 WALL_THICKNESS = 0.18
+SHUTTER_HOUSING_HEIGHT = 0.18
+SHUTTER_SIDE_CLEARANCE = 0.06
 
 
 def ensure_dirs() -> None:
@@ -267,15 +269,6 @@ def add_common_corridor_parts(
             (0.0, -pitch, 0.0),
             bevel_width=0.014,
         )
-        add_box(
-            f"{prefix} {side} upper hand rail",
-            root,
-            (ox, side_y - (0.018 if side == "left" else -0.018), center_z + WALL_HEIGHT + 0.12),
-            (length - 0.34, 0.085, 0.095),
-            mats["rail"],
-            (0.0, -pitch, 0.0),
-            bevel_width=0.010,
-        )
 
     for index, x in enumerate((-2.32, -1.15, 0.0, 1.15, 2.32), start=1):
         z = module_height_at(ox + x, ox, length, 0.22, 0.80) if slope else 0.22
@@ -290,22 +283,26 @@ def add_common_corridor_parts(
 
     for end_name, x in (("low end" if slope else "end a", ox - half_l + 0.26), ("high end" if slope else "end b", ox + half_l - 0.26)):
         floor_z = module_height_at(x, ox, length, 0.16, 0.74) if slope else 0.16
-        shutter_height = WALL_HEIGHT + 0.34
+        ceiling_z = floor_z + WALL_HEIGHT
+        housing_vertical_span = SHUTTER_HOUSING_HEIGHT / math.cos(pitch)
+        shutter_height = WALL_HEIGHT - housing_vertical_span
         shutter_center_z = floor_z + shutter_height * 0.5
-        housing_z = floor_z + shutter_height + 0.14
+        housing_z = ceiling_z - housing_vertical_span * 0.5
+        shutter_width = CORRIDOR_WIDTH - SHUTTER_SIDE_CLEARANCE
         add_box(
             f"{prefix} {end_name} overhead shutter housing",
             root,
             (x, oy, housing_z),
-            (0.46, CORRIDOR_WIDTH + WALL_THICKNESS * 2.65, 0.28),
+            (0.46, shutter_width, SHUTTER_HOUSING_HEIGHT),
             mats["slot"],
+            (0.0, -pitch, 0.0),
             bevel_width=0.006,
         )
         add_box(
             f"{prefix} {end_name} lowered full height closure shutter",
             root,
             (x, oy, shutter_center_z),
-            (0.19, CORRIDOR_WIDTH + WALL_THICKNESS * 1.65, shutter_height),
+            (0.19, shutter_width, shutter_height),
             mats["shutter"],
             bevel_width=0.006,
         )
@@ -313,31 +310,15 @@ def add_common_corridor_parts(
             f"{prefix} {end_name} shutter center armor face",
             root,
             (x - 0.101, oy, shutter_center_z + 0.03),
-            (0.032, CORRIDOR_WIDTH + 0.16, shutter_height - 0.24),
+            (0.032, shutter_width - 0.16, shutter_height - 0.24),
             mats["shutter_face"],
-            bevel_width=0.004,
-        )
-        add_box(
-            f"{prefix} {end_name} left vertical shutter guide rail",
-            root,
-            (x, oy + CORRIDOR_WIDTH * 0.5 + WALL_THICKNESS * 0.36, shutter_center_z),
-            (0.30, 0.065, shutter_height + 0.16),
-            mats["rail"],
-            bevel_width=0.004,
-        )
-        add_box(
-            f"{prefix} {end_name} right vertical shutter guide rail",
-            root,
-            (x, oy - CORRIDOR_WIDTH * 0.5 - WALL_THICKNESS * 0.36, shutter_center_z),
-            (0.30, 0.065, shutter_height + 0.16),
-            mats["rail"],
             bevel_width=0.004,
         )
         add_box(
             f"{prefix} {end_name} red full height closure warning strip",
             root,
             (x - 0.122, oy, floor_z + 0.28),
-            (0.035, CORRIDOR_WIDTH + 0.30, 0.075),
+            (0.035, shutter_width - 0.10, 0.075),
             mats["red"],
             bevel_width=0.004,
         )
@@ -485,9 +466,10 @@ def write_docs() -> None:
         "includedParts": [
             "방 연결 없이 분리된 수평 복도 샘플 1개",
             "방 연결 없이 분리된 아래쪽 경사 복도 샘플 1개",
-            "바닥, 양쪽 벽, 상단 핸드레일, 크로스 리브",
-            "상부 하우징에서 아래로 내려와 복도 높이를 막는 전체 높이 폐쇄 셔터",
-            "폐쇄 셔터 가이드 레일과 경고 라이트 스트립",
+            "바닥, 양쪽 벽, 크로스 리브",
+            "벽 안쪽 폭과 천장 높이 안에 들어간 셔터 상부 블록과 그 아래로 내려와 닫히는 폐쇄 셔터",
+            "경사 복도 경사각에 맞춰 기울어진 셔터 상부 블록",
+            "폐쇄 셔터 경고 라이트 스트립",
             "방향 문구를 붙일 수 있는 blank route label mounting plate",
             "상태 표시 화면 자리와 임시 스케일 표시",
             "Blender 원본 모델, FBX, GLB 범용 모델 파일",
@@ -552,9 +534,10 @@ def write_docs() -> None:
 - 수평 복도 샘플 1개
 - 아래쪽 경사 복도 샘플 1개
 - 각 샘플의 전체 사선, 상단, 셔터 정면, 측면 구도 렌더
-- 바닥, 양쪽 벽, 상단 핸드레일, 크로스 리브
-- 상부 하우징에서 아래로 내려와 바닥까지 막는 전체 높이 폐쇄 셔터
-- 폐쇄 셔터 가이드 레일과 경고 라이트 스트립
+- 바닥, 양쪽 벽, 크로스 리브
+- 벽 안쪽 폭과 천장 높이 안에 들어간 셔터 상부 블록과 그 아래로 내려와 닫히는 폐쇄 셔터
+- 경사 복도 경사각에 맞춰 기울어진 셔터 상부 블록
+- 폐쇄 셔터 경고 라이트 스트립
 - 방향 문구 부착용 blank route label mounting plate
 - 상태 표시 화면 자리와 임시 스케일 표시
 
@@ -604,7 +587,7 @@ def write_docs() -> None:
 <body>
 <main>
   <h1>ship_corridor_segment</h1>
-  <p>화물선 복도 단품 승인용 Blender 샘플입니다. 방 또는 구역 앵커 없이 수평 복도 샘플 1개와 아래쪽 경사 복도 샘플 1개만 배치했습니다. 각 복도에는 상부 하우징에서 아래로 내려와 바닥까지 막는 전체 높이 폐쇄 셔터, 가이드 레일, 경고 라이트 스트립, 방향 문구 부착 위치, 상태 표시 화면 자리를 넣었습니다. 수평 복도와 경사 복도를 각각 전체 사선, 상단, 셔터 정면, 측면 구도로 확인할 수 있습니다. 이 샘플은 artSample 검토용이며 Unity 씬, 프리팹, 런타임 자산에는 반영하지 않았습니다.</p>
+  <p>화물선 복도 단품 승인용 Blender 샘플입니다. 방 또는 구역 앵커 없이 수평 복도 샘플 1개와 아래쪽 경사 복도 샘플 1개만 배치했습니다. 각 복도에는 벽 안쪽 폭과 천장 높이 안에 들어간 셔터 상부 블록과 그 아래로 내려와 닫히는 폐쇄 셔터, 경고 라이트 스트립, 방향 문구 부착 위치, 상태 표시 화면 자리를 넣었습니다. 경사 복도의 셔터 상부 블록은 복도 경사각에 맞춰 기울였습니다. 수평 복도와 경사 복도를 각각 전체 사선, 상단, 셔터 정면, 측면 구도로 확인할 수 있습니다. 이 샘플은 artSample 검토용이며 Unity 씬, 프리팹, 런타임 자산에는 반영하지 않았습니다.</p>
   <section class="grid">
 {cards}
   </section>

@@ -186,6 +186,12 @@ namespace Bellerophon.Editor.Validation
                         ApprovedArmoryShellBootstrap.UpdateApprovedCargoHoldCh11DisplayOnly,
                         "Approved cargo hold CH-11 display updated only.");
                     break;
+                case "AddApprovedShipCorridorSegmentsOnly":
+                    RunSynchronous(
+                        request,
+                        ApprovedArmoryShellBootstrap.AddApprovedShipCorridorSegmentsOnly,
+                        "Approved ship corridor segments added only.");
+                    break;
                 case "MoveApprovedSupplyRoomShellBelowEngineRoom":
                     RunSynchronous(
                         request,

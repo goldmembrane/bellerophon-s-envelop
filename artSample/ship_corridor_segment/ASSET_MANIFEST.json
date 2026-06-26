@@ -5,7 +5,7 @@
   "approvalState": "미승인",
   "unityApplicationAllowed": false,
   "requiresUserApprovalBeforeUnity": true,
-  "generatedDate": "2026-06-25",
+  "generatedDate": "2026-06-26",
   "sourceBasis": [
     "docs/GAME_DESIGN_SOURCE.txt - 화물선은 6개 방을 이어주는 복도가 존재한다.",
     "docs/GAME_DESIGN_SOURCE.txt - 조종실/동력실/통제실/무기실에서 운송창고로 이어지는 복도는 아래쪽 경사가 존재한다고 명시되어 있다.",
@@ -15,9 +15,10 @@
   "includedParts": [
     "방 연결 없이 분리된 수평 복도 샘플 1개",
     "방 연결 없이 분리된 아래쪽 경사 복도 샘플 1개",
-    "바닥, 양쪽 벽, 상단 핸드레일, 크로스 리브",
-    "상부 하우징에서 아래로 내려와 복도 높이를 막는 전체 높이 폐쇄 셔터",
-    "폐쇄 셔터 가이드 레일과 경고 라이트 스트립",
+    "바닥, 양쪽 벽, 크로스 리브",
+    "벽 안쪽 폭과 천장 높이 안에 들어간 셔터 상부 블록과 그 아래로 내려와 닫히는 폐쇄 셔터",
+    "경사 복도 경사각에 맞춰 기울어진 셔터 상부 블록",
+    "폐쇄 셔터 경고 라이트 스트립",
     "방향 문구를 붙일 수 있는 blank route label mounting plate",
     "상태 표시 화면 자리와 임시 스케일 표시",
     "Blender 원본 모델, FBX, GLB 범용 모델 파일"
