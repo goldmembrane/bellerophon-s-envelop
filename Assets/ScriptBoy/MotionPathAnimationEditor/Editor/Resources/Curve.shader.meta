@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 5421be8b136b0c74fab686159639e2f4
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 241255
+  packageName: Motion Path Animation Editor
+  packageVersion: 2.8.2
+  assetPath: Assets/ScriptBoy/MotionPathAnimationEditor/Editor/Resources/Curve.shader
+  uploadId: 782680

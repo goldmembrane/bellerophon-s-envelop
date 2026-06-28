@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 03b76d38bb5bd1b4e9fe3893bd36a731
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 241255
+  packageName: Motion Path Animation Editor
+  packageVersion: 2.8.2
+  assetPath: Assets/ScriptBoy/MotionPathAnimationEditor/Editor/CustomGUILayout.GroupScope.cs
+  uploadId: 782680

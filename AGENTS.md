@@ -89,3 +89,38 @@
 - For approval samples made from a 2D reference, match the reference camera render first. Unseen backsides, interiors, exact dimensions, or mechanical details must be derived from `docs/GAME_DESIGN_SOURCE.txt` or explicitly marked as inference; do not invent visible design changes without user confirmation.
 - Art/modeling/texturing completion requires side-by-side visual comparison against the target `artSample/` render or image. Do not report completion only because assets, renderers, object counts, FBX files, or materials exist.
 - Texturing must include the material qualities needed by the reference, such as albedo variation, chipped paint, dirt, roughness/metalness response, and normal/bump detail. Superficial line scratches or flat colors are not enough when the reference shows rough worn surfaces.
+
+## 적대 개체 샘플 제작 규칙 - 절대 규칙 (2026-06-28)
+
+- 이 섹션은 적대 개체 샘플 제작에 적용되는 절대 규칙이며, 적대 개체 샘플을 완료로 보고하기 전에 반드시 충족해야 한다.
+- 적대 개체 샘플은 먼저 `artSample/enemies/{enemy_id}/` 아래에 생성해야 하며, 사용자의 명시 승인 전에는 Unity 런타임 씬, 프리팹, 에셋, AI, 피격 판정, UI 흐름에 연결하지 않는다.
+- 적대 개체 샘플은 `docs/GAME_DESIGN_SOURCE.txt`, 사용자 확인 사항, `image/` 폴더의 기준 이미지를 참고해 제작해야 한다.
+- 적대 개체 샘플은 기준 이미지의 외형, 실루엣, 비율, 주요 부위, 색 분포, 재질, 질감, 표면 특성을 최대한 맞춰야 한다.
+- 적대 개체 샘플에는 텍스처 적용과 머티리얼 적용을 반드시 포함해야 한다. 텍스처나 머티리얼이 없으면 직접 만든 절차적/생성 텍스처와 머티리얼이라도 제작해 적용해야 한다.
+- 텍스처 또는 머티리얼 제작이 어렵거나 불완전할 경우, 기준 이미지를 분석해 색 분포, 표면 패턴, 거칠기, 광택, 투명도, 금속성/비금속성, 오염/손상, 요철감, 젖음/점액/분말/섬유/피부 같은 표면 성질을 정리하고 그 분석을 제작에 반영해야 한다.
+- 단순 단색 머티리얼, 기본 셰이더, 임시 재질만 적용한 상태는 적대 개체 샘플 완료로 보지 않는다.
+- 적대 개체 샘플은 사용자가 검사할 수 있는 정적 렌더와 검토에 필요한 원본/내보내기 파일을 포함해야 한다. 예: Blender, FBX, GLB, README, 승인 상태, 에셋 매니페스트, HTML 미리보기 파일.
+- 애니메이션 GIF 또는 애니메이션 샘플은 적대 개체 샘플의 필수 조건이 아니다. 애니메이션은 Unity 적용 단계에서 사용자가 별도 승인한 범위 안에서 기능형 애니메이션 작업으로 다룬다.
+- 승인된 적대 개체를 Unity에 구현할 때는 사용자가 Unity 적용 범위를 명시적으로 제한하지 않는 한, 승인된 `artSample/enemies/{enemy_id}/`의 시각 모델, 텍스처, 머티리얼 의도를 가능한 한 가깝게 재현해야 한다.
+
+## 적대 개체 Unity 적용 규칙 - 절대 규칙 (2026-06-28)
+
+- 이 섹션은 승인된 `artSample/enemies/{enemy_id}/` 적대 개체를 Unity 씬, 프리팹, 런타임 에셋에 적용할 때 적용되는 절대 규칙이다.
+- 적대 개체를 Unity에 적용할 때는 사용자가 배치 범위를 명시적으로 다르게 지시하지 않는 한, 복도 오브젝트 아래쪽에 해당 적대 개체를 최소 5개 이상 배치해야 한다.
+- 배치된 적대 개체 중 1개체는 기준 정적 상태 또는 비교용 상태로 둘 수 있다.
+- 1개체를 제외한 나머지 적대 개체에는 각각 서로 다른 필요 애니메이션을 적용해야 한다.
+- 필요 애니메이션은 해당 적대 개체의 Unity 적용 범위에서 요구되는 기능형 애니메이션을 의미한다. 예: 대기, 이동, 공격, 피격, 사망.
+- 적대 개체 샘플 단계에서 애니메이션 GIF가 필수 조건이 아니더라도, Unity 적용 단계에서 이 규칙이 승인 범위에 포함되면 Unity `AnimationClip`, `Animator`, 기존 클립, 또는 승인된 기능형 애니메이션 방식으로 각 개체의 서로 다른 애니메이션 상태를 확인 가능하게 구성해야 한다.
+
+## 물리 기반 모션 및 애니메이션 도구 규칙 - 절대 규칙 (2026-06-28)
+
+- 물리 기반 모션이 필요한 모델, 적대 개체, 플레이어, 오브젝트는 단순 `transform.position` 또는 `transform.Translate` 직접 이동을 기본 구현으로 사용하지 않는다.
+- 런타임 루트 이동은 `Rigidbody`와 `Collider`를 기준으로 하고, 물리 이동 처리는 `FixedUpdate`에서 수행한다.
+- Motion Path Animation Editor는 실제 Transform 직접 이동 도구가 아니라 경로, 궤적, 목표점 편집 도구로 사용한다. 런타임 실제 이동은 Motion Path 목표값을 `Rigidbody.linearVelocity`, velocity 제어, 또는 `AddForce`로 추종하게 구성한다.
+- Blender로 생성된 모델링에 Unity 애니메이션을 부여할 때는 가능한 한 `Rigidbody + Collider + Motion Path target + Animation Rigging IK + ConfigurableJoint + Jiggle Physics` 구조를 우선 검토한다.
+- `Animation Rigging`은 손, 발, 머리, 시선, 촉수 끝점, 무기/도구 잡기, 접지 보정처럼 IK/constraint가 필요한 부위에 사용한다.
+- `ConfigurableJoint`는 active ragdoll, 물리 추종 관절, 흔들리는 부속물, 충돌 반응을 물리로 처리해야 하는 부위에 사용한다.
+- `Jiggle Physics` 또는 동등한 보조 물리 도구는 슬라임, 액체형 몸체, 살덩이, 장비, 촉수, 표면 흔들림 같은 secondary motion에 사용한다.
+- 같은 Transform을 Motion Path, Rigidbody, IK, Joint, Jiggle이 동시에 직접 움직이지 않게 한다. 역할은 `Motion Path=목표`, `Rigidbody=루트 이동`, `Joint=물리 관절`, `IK=끝점 보정`, `Jiggle=보조 흔들림`으로 분리한다.
+- 코드로 `.anim` 커브를 직접 생성하는 방식은 임시 검증용 또는 단순 보조 모션에 한정한다. 승인용/실제 적용용 모션은 Blender 모델 구조와 Unity 물리/IK/Joint/Jiggle 조합을 우선한다.
+- Asset Store 유료 도구는 프로젝트에 실제 임포트된 뒤에만 해당 도구를 기준으로 작업한다. 에이전트는 Unity 계정 구매, 다운로드, 라이선스 인증을 대신하지 않는다.

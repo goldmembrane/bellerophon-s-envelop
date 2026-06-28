@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b52bb393d77449d48b624fc148389891, type: 3}
+  m_Name: Icons
+  m_EditorClassIdentifier: 
+  editModeOff: {fileID: 2800000, guid: a4f174b95868b97439498a662fced809, type: 3}
+  editModeOn: {fileID: 2800000, guid: 95a127fb223b508479d66693a6f8ccc0, type: 3}
+  settingsOff: {fileID: 2800000, guid: 24850399b8edf2c4eaeb58bd2b0dd5e4, type: 3}
+  settingsOn: {fileID: 2800000, guid: 88ca36d55bc90654d86a442f9564b290, type: 3}
+  visibilityOff: {fileID: 2800000, guid: 672a23784301f2241813c9f3f4b78d72, type: 3}
+  visibilityOn: {fileID: 2800000, guid: e5932c40609aec84b8d1f51d9b63f9fc, type: 3}
+  editOff: {fileID: 2800000, guid: b50b642b5a736ac41b495138c7bdab86, type: 3}
+  editOn: {fileID: 2800000, guid: 36513932c0afb614b90089f5ed19372e, type: 3}
+  loopOff: {fileID: 2800000, guid: 0cb08ac39da77a54fa6bbe6b47ee378a, type: 3}
+  loopOn: {fileID: 2800000, guid: 2400e66b57da4624a9586f13b1aac8eb, type: 3}

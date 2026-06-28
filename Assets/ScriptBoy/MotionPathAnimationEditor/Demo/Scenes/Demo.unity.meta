@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 970382c7573b7c441a77dc05ac1c35d8
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 241255
+  packageName: Motion Path Animation Editor
+  packageVersion: 2.8.2
+  assetPath: Assets/ScriptBoy/MotionPathAnimationEditor/Demo/Scenes/Demo.unity
+  uploadId: 782680

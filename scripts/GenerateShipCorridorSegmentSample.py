@@ -23,7 +23,8 @@ FLOOR_THICKNESS = 0.16
 WALL_HEIGHT = 1.22
 WALL_THICKNESS = 0.18
 SHUTTER_HOUSING_HEIGHT = 0.18
-SHUTTER_SIDE_CLEARANCE = 0.06
+SHUTTER_SIDE_OVERLAP = 0.08
+SHUTTER_FLOOR_OVERLAP = 0.04
 
 
 def ensure_dirs() -> None:
@@ -285,10 +286,11 @@ def add_common_corridor_parts(
         floor_z = module_height_at(x, ox, length, 0.16, 0.74) if slope else 0.16
         ceiling_z = floor_z + WALL_HEIGHT
         housing_vertical_span = SHUTTER_HOUSING_HEIGHT / math.cos(pitch)
-        shutter_height = WALL_HEIGHT - housing_vertical_span
-        shutter_center_z = floor_z + shutter_height * 0.5
+        shutter_bottom_z = floor_z - SHUTTER_FLOOR_OVERLAP
+        shutter_height = WALL_HEIGHT - housing_vertical_span + SHUTTER_FLOOR_OVERLAP
+        shutter_center_z = shutter_bottom_z + shutter_height * 0.5
         housing_z = ceiling_z - housing_vertical_span * 0.5
-        shutter_width = CORRIDOR_WIDTH - SHUTTER_SIDE_CLEARANCE
+        shutter_width = CORRIDOR_WIDTH + SHUTTER_SIDE_OVERLAP
         add_box(
             f"{prefix} {end_name} overhead shutter housing",
             root,
@@ -467,7 +469,7 @@ def write_docs() -> None:
             "방 연결 없이 분리된 수평 복도 샘플 1개",
             "방 연결 없이 분리된 아래쪽 경사 복도 샘플 1개",
             "바닥, 양쪽 벽, 크로스 리브",
-            "벽 안쪽 폭과 천장 높이 안에 들어간 셔터 상부 블록과 그 아래로 내려와 닫히는 폐쇄 셔터",
+            "복도 폭 끝까지 닿고 바닥 틈 없이 내려와 양쪽 벽 안쪽 면과 맞물리는 셔터 상부 블록과 폐쇄 셔터",
             "경사 복도 경사각에 맞춰 기울어진 셔터 상부 블록",
             "폐쇄 셔터 경고 라이트 스트립",
             "방향 문구를 붙일 수 있는 blank route label mounting plate",
@@ -535,7 +537,7 @@ def write_docs() -> None:
 - 아래쪽 경사 복도 샘플 1개
 - 각 샘플의 전체 사선, 상단, 셔터 정면, 측면 구도 렌더
 - 바닥, 양쪽 벽, 크로스 리브
-- 벽 안쪽 폭과 천장 높이 안에 들어간 셔터 상부 블록과 그 아래로 내려와 닫히는 폐쇄 셔터
+- 복도 폭 끝까지 닿고 바닥 틈 없이 내려와 양쪽 벽 안쪽 면과 맞물리는 셔터 상부 블록과 폐쇄 셔터
 - 경사 복도 경사각에 맞춰 기울어진 셔터 상부 블록
 - 폐쇄 셔터 경고 라이트 스트립
 - 방향 문구 부착용 blank route label mounting plate
@@ -587,7 +589,7 @@ def write_docs() -> None:
 <body>
 <main>
   <h1>ship_corridor_segment</h1>
-  <p>화물선 복도 단품 승인용 Blender 샘플입니다. 방 또는 구역 앵커 없이 수평 복도 샘플 1개와 아래쪽 경사 복도 샘플 1개만 배치했습니다. 각 복도에는 벽 안쪽 폭과 천장 높이 안에 들어간 셔터 상부 블록과 그 아래로 내려와 닫히는 폐쇄 셔터, 경고 라이트 스트립, 방향 문구 부착 위치, 상태 표시 화면 자리를 넣었습니다. 경사 복도의 셔터 상부 블록은 복도 경사각에 맞춰 기울였습니다. 수평 복도와 경사 복도를 각각 전체 사선, 상단, 셔터 정면, 측면 구도로 확인할 수 있습니다. 이 샘플은 artSample 검토용이며 Unity 씬, 프리팹, 런타임 자산에는 반영하지 않았습니다.</p>
+  <p>화물선 복도 단품 승인용 Blender 샘플입니다. 방 또는 구역 앵커 없이 수평 복도 샘플 1개와 아래쪽 경사 복도 샘플 1개만 배치했습니다. 각 복도에는 복도 폭 끝까지 닿고 바닥 틈 없이 내려와 양쪽 벽 안쪽 면과 맞물리는 셔터 상부 블록과 폐쇄 셔터, 경고 라이트 스트립, 방향 문구 부착 위치, 상태 표시 화면 자리를 넣었습니다. 경사 복도의 셔터 상부 블록은 복도 경사각에 맞춰 기울였습니다. 수평 복도와 경사 복도를 각각 전체 사선, 상단, 셔터 정면, 측면 구도로 확인할 수 있습니다. 이 샘플은 artSample 검토용이며 Unity 씬, 프리팹, 런타임 자산에는 반영하지 않았습니다.</p>
   <section class="grid">
 {cards}
   </section>

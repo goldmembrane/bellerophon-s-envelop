@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cb7db06b5cfcbdb4c9361382c6e2370c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 241255
+  packageName: Motion Path Animation Editor
+  packageVersion: 2.8.2
+  assetPath: Assets/ScriptBoy/MotionPathAnimationEditor/Demo/Animations/Circle.controller
+  uploadId: 782680

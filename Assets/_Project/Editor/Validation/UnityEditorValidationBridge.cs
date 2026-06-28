@@ -192,6 +192,36 @@ namespace Bellerophon.Editor.Validation
                         ApprovedArmoryShellBootstrap.AddApprovedShipCorridorSegmentsOnly,
                         "Approved ship corridor segments added only.");
                     break;
+                case "CaptureApprovedShipCorridorSegmentsState":
+                    RunSynchronous(
+                        request,
+                        ApprovedArmoryShellBootstrap.CaptureApprovedShipCorridorSegmentsState,
+                        "Approved ship corridor segments current state captured.");
+                    break;
+                case "BackupApprovedShipCorridorSegmentsOnly":
+                    RunSynchronous(
+                        request,
+                        ApprovedArmoryShellBootstrap.BackupApprovedShipCorridorSegmentsOnly,
+                        "Approved ship corridor segments backup captured.");
+                    break;
+                case "RestoreApprovedShipCorridorSegmentsCurrentState":
+                    RunSynchronous(
+                        request,
+                        ApprovedArmoryShellBootstrap.RestoreApprovedShipCorridorSegmentsCurrentState,
+                        "Approved ship corridor segments current state restored and saved.");
+                    break;
+                case "ApplyApprovedParvumEnemyPlacement":
+                    RunSynchronous(
+                        request,
+                        ApprovedParvumEnemyUnityPlacementBootstrap.ApplyApprovedParvumEnemyPlacement,
+                        "Approved Parvum enemy placement applied.");
+                    break;
+                case "ValidateApprovedParvumEnemyPlacement":
+                    RunSynchronous(
+                        request,
+                        ApprovedParvumEnemyUnityPlacementBootstrap.ValidateApprovedParvumEnemyPlacement,
+                        "Approved Parvum enemy placement validated.");
+                    break;
                 case "MoveApprovedSupplyRoomShellBelowEngineRoom":
                     RunSynchronous(
                         request,

@@ -1,0 +1,105 @@
+Version 2.8.2
+- Fixed: NullReferenceException (MotionPath.cs:470) when enabling 'Filter by Selection' in the Animation Window.
+
+Version 2.8.1
+- Fixed: ArgumentOutOfRangeException (MotionPath.cs:652) when 'Loop' was enabled on objects without animation curves.
+
+Version 2.8.0
+- Added support for mismatched keyframe counts and non-aligned keyframe times between x, y, and z axes.
+
+Version 2.7.2
+- Fixed: NullReferenceException (AnimEditor.cs:554)
+- Fixed: NullReferenceException (AnimEditorWindow.cs:161)
+- Fixed: Issue with Motion Path List selection.
+
+Version 2.7.1
+- Fixed: The missing motion path doesn't automatically recover.
+- Fixed: IndexOutOfRangeException (AnimEditorWindow.cs:205)
+
+Version 2.7.0
+- Added the Auto Rotation feature that automatically generates rotation keyframes based on the movement direction.
+- The Motion Path Lists are now permanently stored per animation clip.
+- Deprecated the Motion Path Utility that was added in Version 2.6.0.
+- Removed the Loop button in the Motion Path List.
+
+Version 2.6.0
+- Removed the Sync Time Range option from the Preferences window.
+- Removed the Time Range slider from the Motion Path Anim Editor window.
+- Updated the Time Range feature to automatically operate based on the visible time range in the Animation window.
+- Added the Show Time Ticks option in the Preferences window to display time ticks along motion paths.
+- Added the Show Time Labels option in the Preferences window to display time labels along motion paths.
+- Added the ability to toggle a column of buttons on or off in the Motion Path List with a right-click.
+- Added the Motion Path Utility API for creating or removing motion paths.
+- Fixed the issue with the Path Accuracy option not saving in the Preferences window.
+
+Version 2.5.4
+- Fixed: NullReferenceException (MotionPath.cs:179)
+- Fixed: ArgumentOutOfRangeException (MotionPath.cs:265)
+
+Version 2.5.3
+- Fixed selection bug when the Sync Selection feature is enabled.
+- Fixed incorrect rotation and scaling of a selection of handles when the Magnet feature is enabled.
+- Fixed error: Null texture passed to GUI.DrawTexture. 
+
+Version 2.5.2
+- Fixed error: Quaternion To Matrix conversion failed because input Quaternion is invalid.
+
+Version 2.5.1
+- Fixed errors when opening the Path Animation Editor window for Unity 2023 and Unity 6. 
+- Fixed missing Motion Path Animation Editor tab in the Preferences window for Unity 2023 and Unity 6.  
+
+Version 2.5.0
+- Added Sync Selection feature to synchronize handle selection with keyframe selection.
+
+Version 2.4.0
+- Added Hide Handles feature to hide controls or tangents.
+- Added Magnet feature to smoothly drag neighboring handles of selected handles. 
+- Added Time Range feature to hide all handles and paths outside of a time range. 
+- Added a button in Settings to quickly open the Preferences window. 
+- Fixed an error when selecting an animation clip that doesn't have keyframes. 
+
+Version 2.3.0
+- Added support for older Unity versions from (2018.4) and later.
+ 
+Version 2.2.2
+- Fixed the pick size of handles in the 3D view.
+
+Version 2.2.1
+- Fixed the NullReferenceException when using Ctrl + Z.
+
+Version 2.2.0
+- Fixed the IndexOutOfRangeException when keyframes are missing.
+- Fixed an issue where the Unity tools are hidden when there is no selected root object.
+- Added a feature where the MotionPath list is restored based on the root object.
+- Added a feature to apply a custom offset to the path of the root object.
+- Added preferences for the MotionPath list to hide the EditPath button.
+
+Version 2.1.0
+- Added the DependencySolver.
+- Added preferences for the color and shape of handles.
+- Added preferences for the MotionPath list to show the full name of motion paths.
+- Fixed an issue where curves are not visible in isometric view.
+- Fixed an issue where looping feature doesn't work.
+- Fixed hotkeys issues.
+
+Version 2.0.0
+- Renamed from AnimHelper to MotionPathAnimationEditor.
+- Added a feature to visualize motion paths through world space.
+- Added a feature to select multiple handles then edit them together.
+- Added a feature to snap handles to the local grid related to the parent object. (2D only)
+- Improved the CurveRenderer performance.
+- Removed the TransformGroup feature.
+- Changed hotkeys.
+
+Notes:
+- Delete the old version (1.x.x) before importing the new version (2.x.x).
+- The new version (2.x.x) has a different workflow and doesn't show the motion path automatically. (Please read the PDF file)
+
+
+Old Versions
+Version 1.1.1
+- Added support for the UI animation.
+- Fixed the size of handles.
+
+Version 1.0.0
+- First release.

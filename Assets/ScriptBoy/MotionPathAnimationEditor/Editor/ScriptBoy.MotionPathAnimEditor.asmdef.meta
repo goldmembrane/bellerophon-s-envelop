@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: cbe63e8691f7a6c4ab55e29657b8cc07
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 241255
+  packageName: Motion Path Animation Editor
+  packageVersion: 2.8.2
+  assetPath: Assets/ScriptBoy/MotionPathAnimationEditor/Editor/ScriptBoy.MotionPathAnimEditor.asmdef
+  uploadId: 782680

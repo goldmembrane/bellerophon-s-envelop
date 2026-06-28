@@ -31,6 +31,8 @@ namespace Bellerophon.Editor.Validation
         private const string CargoHoldCh11DisplayTexturePath = "Assets/_Project/Art/Ship/CargoHold/Textures/B2_Eq2_E_bottom_right.png";
         private const float CargoHoldUnityScale = 2.2f;
         private const string ShipCorridorSegmentsRootName = "Approved Ship Corridor Segments";
+        private const string ShipCorridorSegmentsCurrentStateUnityPath = "Assets/_Project/Editor/Validation/ApprovedShipCorridorSegmentsCurrentState.cs";
+        private const string ShipCorridorSegmentsBackupDirectory = "Assets/_Project/Backups/ApprovedShipCorridorSegments";
         private const int ShipCorridorHorizontalCount = 5;
         private const int ShipCorridorSlopedCount = 5;
         private const float ShipCorridorLength = 6.2f;
@@ -40,7 +42,8 @@ namespace Bellerophon.Editor.Validation
         private const float ShipCorridorWallThickness = 0.18f;
         private const float ShipCorridorSlopeRise = 0.58f;
         private const float ShipCorridorShutterHousingHeight = 0.18f;
-        private const float ShipCorridorShutterSideClearance = 0.06f;
+        private const float ShipCorridorShutterSideOverlap = 0.08f;
+        private const float ShipCorridorShutterFloorOverlap = 0.04f;
         private const float ShipCorridorUnityScale = CargoHoldUnityScale;
 
         private static readonly Vector3 ArmoryCenterBelowControlRoom = new Vector3(13.20795f, -4.6f, 19.265f);
@@ -393,6 +396,7 @@ namespace Bellerophon.Editor.Validation
             EnsureShipCorridorSegmentsRightOfCargo(corridorBounds, GetRendererBounds(cargoRoot.transform));
             EnsureNoOverlap(corridorBounds, protectedRoots);
             EnsureProtectedObjectsUntouched(protectedSnapshots);
+            WriteShipCorridorSegmentsCurrentStateScript(CaptureCurrentTransformStates(root.transform));
 
             Selection.activeGameObject = root;
             EditorGUIUtility.PingObject(root);
@@ -414,7 +418,88 @@ namespace Bellerophon.Editor.Validation
                 FormatVector(targetPosition) +
                 "; Bounds=" +
                 FormatBounds(corridorBounds) +
-                "; RightOfCargoHold=True; CorridorSegmentsNonOverlapping=True; ExistingObjectsUntouched=True");
+                "; RightOfCargoHold=True; CorridorSegmentsNonOverlapping=True; CurrentStateSaved=True; ExistingObjectsUntouched=True");
+        }
+
+        [MenuItem("Bellerophon/Bootstrap/Capture Approved Ship Corridor Segments Current State")]
+        public static void CaptureApprovedShipCorridorSegmentsState()
+        {
+            var scene = RequireCargoRunMvpActiveScene();
+            var root = RequireObject(ShipCorridorSegmentsRootName);
+            var states = CaptureCurrentTransformStates(root.transform);
+
+            WriteShipCorridorSegmentsCurrentStateScript(states);
+            AssetDatabase.Refresh();
+
+            Debug.Log(
+                "Approved ship corridor segments current state captured. Root=" +
+                ShipCorridorSegmentsRootName +
+                "; TransformStates=" +
+                states.Count.ToString(CultureInfo.InvariantCulture) +
+                "; Output=" +
+                ShipCorridorSegmentsCurrentStateUnityPath +
+                "; Scene=" +
+                scene.path);
+        }
+
+        [MenuItem("Bellerophon/Bootstrap/Restore Approved Ship Corridor Segments Current State")]
+        public static void RestoreApprovedShipCorridorSegmentsCurrentState()
+        {
+            var scene = RequireCargoRunMvpActiveScene();
+            var root = RequireObject(ShipCorridorSegmentsRootName);
+            var protectedRoots = FindSceneRootObjectsExcept(ShipCorridorSegmentsRootName);
+            var protectedSnapshots = CaptureProtectedSnapshots(protectedRoots);
+
+            ApplyCapturedTransformStates(root.transform, ApprovedShipCorridorSegmentsCurrentState.Transforms);
+            EnsureExactCapturedHierarchy(root.transform, ApprovedShipCorridorSegmentsCurrentState.Transforms);
+            EnsureProtectedObjectsUntouched(protectedSnapshots);
+
+            EditorUtility.SetDirty(root);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, Phase4CargoShipGrayboxBootstrap.CargoRunScenePath);
+            AssetDatabase.SaveAssets();
+
+            Debug.Log(
+                "Approved ship corridor segments current state restored and saved. Root=" +
+                ShipCorridorSegmentsRootName +
+                "; TransformStates=" +
+                ApprovedShipCorridorSegmentsCurrentState.Transforms.Length.ToString(CultureInfo.InvariantCulture) +
+                "; ExistingObjectsUntouched=True");
+        }
+
+        [MenuItem("Bellerophon/Bootstrap/Backup Approved Ship Corridor Segments Only")]
+        public static void BackupApprovedShipCorridorSegmentsOnly()
+        {
+            var scene = RequireCargoRunMvpActiveScene();
+            var root = RequireObject(ShipCorridorSegmentsRootName);
+            var rootSnapshots = CaptureProtectedSnapshots(new[] { root });
+            var protectedRoots = FindSceneRootObjectsExcept(ShipCorridorSegmentsRootName);
+            var protectedSnapshots = CaptureProtectedSnapshots(protectedRoots);
+            var states = CaptureCurrentTransformStates(root.transform);
+            var backupPrefabPath = CreateShipCorridorSegmentsDatedBackupPrefabPath();
+
+            EnsureShipCorridorSegmentsBackupDirectory();
+            var saved = PrefabUtility.SaveAsPrefabAsset(root, backupPrefabPath, out var success);
+            if (!success || saved == null)
+            {
+                throw new InvalidOperationException("Failed to save approved ship corridor segments backup prefab: " + backupPrefabPath);
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            EnsureProtectedObjectsUntouched(rootSnapshots);
+            EnsureProtectedObjectsUntouched(protectedSnapshots);
+
+            Debug.Log(
+                "Approved ship corridor segments backup captured. Root=" +
+                ShipCorridorSegmentsRootName +
+                "; TransformStates=" +
+                states.Count.ToString(CultureInfo.InvariantCulture) +
+                "; Prefab=" +
+                backupPrefabPath +
+                "; Scene=" +
+                scene.path +
+                "; CorridorObjectsUntouched=True; ExistingObjectsUntouched=True");
         }
 
         [MenuItem("Bellerophon/Bootstrap/Move Approved Supply Room 01 Shell Below Engine Room")]
@@ -1375,10 +1460,11 @@ namespace Bellerophon.Editor.Validation
             var housingVerticalSpan =
                 (0.46f * Mathf.Abs(Mathf.Sin(pitch))) +
                 (ShipCorridorShutterHousingHeight * Mathf.Abs(Mathf.Cos(pitch)));
-            var shutterHeight = ShipCorridorWallHeight - housingVerticalSpan;
-            var shutterCenterY = floorY + (shutterHeight * 0.5f);
+            var shutterBottomY = floorY - ShipCorridorShutterFloorOverlap;
+            var shutterHeight = ShipCorridorWallHeight - housingVerticalSpan + ShipCorridorShutterFloorOverlap;
+            var shutterCenterY = shutterBottomY + (shutterHeight * 0.5f);
             var housingY = ceilingY - (housingVerticalSpan * 0.5f);
-            var shutterWidth = ShipCorridorWidth - ShipCorridorShutterSideClearance;
+            var shutterWidth = ShipCorridorWidth + ShipCorridorShutterSideOverlap;
             var pitchRotation = Quaternion.Euler(0f, 0f, pitch * Mathf.Rad2Deg);
 
             CreateShipCorridorBox(
@@ -4337,6 +4423,27 @@ namespace Bellerophon.Editor.Validation
             File.WriteAllText(outputPath, BuildCargoHoldCurrentStateScript(states), new UTF8Encoding(false));
         }
 
+        private static void WriteShipCorridorSegmentsCurrentStateScript(IReadOnlyList<CurrentTransformState> states)
+        {
+            var outputPath = Path.Combine(ProjectRoot, ShipCorridorSegmentsCurrentStateUnityPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+            File.WriteAllText(outputPath, BuildShipCorridorSegmentsCurrentStateScript(states), new UTF8Encoding(false));
+        }
+
+        private static void EnsureShipCorridorSegmentsBackupDirectory()
+        {
+            var outputPath = Path.Combine(ProjectRoot, ShipCorridorSegmentsBackupDirectory);
+            Directory.CreateDirectory(outputPath);
+        }
+
+        private static string CreateShipCorridorSegmentsDatedBackupPrefabPath()
+        {
+            return ShipCorridorSegmentsBackupDirectory +
+                   "/ApprovedShipCorridorSegments_" +
+                   DateTime.Now.ToString("yyyy-MM-dd_HHmmss", CultureInfo.InvariantCulture) +
+                   ".prefab";
+        }
+
         private static string BuildCurrentStateScript(IReadOnlyList<CurrentTransformState> states)
         {
             var builder = new StringBuilder();
@@ -4402,6 +4509,33 @@ namespace Bellerophon.Editor.Validation
             builder.AppendLine("namespace Bellerophon.Editor.Validation");
             builder.AppendLine("{");
             builder.AppendLine("    internal static class ApprovedCargoHoldShellCurrentState");
+            builder.AppendLine("    {");
+            builder.AppendLine("        public static readonly ApprovedArmoryShellBootstrap.CurrentTransformState[] Transforms =");
+            builder.AppendLine("        {");
+            for (var i = 0; i < states.Count; i++)
+            {
+                builder.Append("            ");
+                AppendCurrentTransformState(builder, states[i]);
+                builder.AppendLine(",");
+            }
+
+            builder.AppendLine("        };");
+            builder.AppendLine("    }");
+            builder.AppendLine("}");
+            return builder.ToString();
+        }
+
+        private static string BuildShipCorridorSegmentsCurrentStateScript(IReadOnlyList<CurrentTransformState> states)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("// <auto-generated>");
+            builder.AppendLine("// Captured from the current Unity editor ship corridor segments state.");
+            builder.AppendLine("// </auto-generated>");
+            builder.AppendLine("using UnityEngine;");
+            builder.AppendLine();
+            builder.AppendLine("namespace Bellerophon.Editor.Validation");
+            builder.AppendLine("{");
+            builder.AppendLine("    internal static class ApprovedShipCorridorSegmentsCurrentState");
             builder.AppendLine("    {");
             builder.AppendLine("        public static readonly ApprovedArmoryShellBootstrap.CurrentTransformState[] Transforms =");
             builder.AppendLine("        {");
