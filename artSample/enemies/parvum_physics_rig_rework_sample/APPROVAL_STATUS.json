@@ -1,0 +1,7 @@
+{
+  "sample": "parvum_physics_rig_rework_sample",
+  "approvalState": "승인",
+  "unityApplicationAllowed": true,
+  "requiresUserApprovalBeforeUnity": false,
+  "note": "2026-06-29 사용자 승인에 따라 Unity 씬, 프리팹, 런타임 에셋 적용을 허용합니다."
+}

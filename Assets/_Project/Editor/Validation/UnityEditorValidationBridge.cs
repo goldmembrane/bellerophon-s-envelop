@@ -222,6 +222,12 @@ namespace Bellerophon.Editor.Validation
                         ApprovedParvumEnemyUnityPlacementBootstrap.ValidateApprovedParvumEnemyPlacement,
                         "Approved Parvum enemy placement validated.");
                     break;
+                case "ApplyApprovedParvumToCurrentCargoRunScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumCargoRunSceneApplyAndReview.ApplyApprovedSampleToCurrentCargoRunScene,
+                        "Approved Parvum sample applied to current CargoRunMvp scene.");
+                    break;
                 case "MoveApprovedSupplyRoomShellBelowEngineRoom":
                     RunSynchronous(
                         request,

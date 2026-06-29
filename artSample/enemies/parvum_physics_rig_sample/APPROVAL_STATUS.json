@@ -1,0 +1,14 @@
+{
+  "sample": "parvum_physics_rig_sample",
+  "objectId": "ENEMY-SEED-PARVUM",
+  "approvalState": "승인",
+  "unityApplicationAllowed": true,
+  "requiresUserApprovalBeforeUnity": false,
+  "unityApplicationConstraints": [
+    "Unity 적용 시 여러 덩어리, 프록시, 보조체 구조는 사용할 수 있습니다.",
+    "최종 Unity 시각 결과에서는 덩어리끼리의 경계선, 겹침선, 틈, 재질 경계가 보이면 안 됩니다.",
+    "경계 비노출을 위해 공통 머티리얼/쉐이더, 투명도/깊이 정렬, 외피 오버레이, 겹침 배치, 메시 병합 또는 스킨/쉐이프키 보강을 사용합니다.",
+    "내부 오브젝트 존재 확인만으로 완료 처리하지 않고 승인 샘플 렌더와 시각 비교해야 합니다."
+  ],
+  "note": "사용자가 승인한 샘플입니다. Unity 적용 시 덩어리 경계선이 보이지 않도록 구현해야 합니다."
+}
