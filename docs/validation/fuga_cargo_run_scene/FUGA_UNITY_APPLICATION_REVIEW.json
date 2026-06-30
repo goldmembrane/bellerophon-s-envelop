@@ -1,0 +1,76 @@
+{
+    "createdAt": "2026-06-30 21:58:34",
+    "scenePath": "Assets/_Project/Scenes/CargoRunMvp.unity",
+    "placementRoot": "Approved Fuga Enemy Placement",
+    "placedCount": 7,
+    "placementRule": "Fuga is placed below Approved Parvum Enemy Placement on negative Z, with the review camera on the current visual front of the rotated Fuga.",
+    "sceneScaleX": 0.25,
+    "sceneScaleY": 0.25,
+    "sceneScaleZ": 0.25,
+    "requestedUniformScale": 0.25,
+    "facingYawDegrees": 180.0,
+    "placementXSpacing": 2.450000047683716,
+    "minimumXClearance": 0.3499999940395355,
+    "measuredMinimumXGap": 0.4659233093261719,
+    "cameraPositionX": 57.86534881591797,
+    "cameraPositionY": 1.7954537868499756,
+    "cameraPositionZ": -36.199241638183597,
+    "cameraFrontDirectionX": 0.0,
+    "cameraFrontDirectionY": 0.0,
+    "cameraFrontDirectionZ": -1.0,
+    "cameraFrontDistance": 5.250001907348633,
+    "targetHeightMeters": 0.6000000238418579,
+    "targetWidthMeters": 0.4000000059604645,
+    "targetDepthMeters": 0.20000000298023225,
+    "staticBoundsX": 1.4916915893554688,
+    "staticBoundsY": 0.5658736228942871,
+    "staticBoundsZ": 0.882598876953125,
+    "parvumZGap": 7.37700080871582,
+    "corridorParvumZGap": 7.376999855041504,
+    "desiredFugaParvumZGap": 7.376999855041504,
+    "parvumZClearance": 0.30000001192092898,
+    "animationStates": [
+        {
+            "objectName": "Fuga_00_Static",
+            "clipName": "Static comparison",
+            "description": "Static comparison pose",
+            "looping": false
+        },
+        {
+            "objectName": "Fuga_01_Idle",
+            "clipName": "Fuga_Idle_SlowWingbeat",
+            "description": "Idle: slow continuous wingbeat",
+            "looping": true
+        },
+        {
+            "objectName": "Fuga_02_Move",
+            "clipName": "Fuga_Move_FastWingbeat",
+            "description": "Move: faster and larger wingbeat",
+            "looping": true
+        },
+        {
+            "objectName": "Fuga_03_Attack",
+            "clipName": "Fuga_Attack_WingtipStrike",
+            "description": "Attack: lean back, lunge, strike with wingtip",
+            "looping": true
+        },
+        {
+            "objectName": "Fuga_04_Hit",
+            "clipName": "Fuga_Hit_SquashRecoil",
+            "description": "Hit: recoil, squash recovery, wing droop",
+            "looping": true
+        },
+        {
+            "objectName": "Fuga_05_Death",
+            "clipName": "Fuga_Death_FallAndFold",
+            "description": "Death: lose lift, fall, fold wings near floor",
+            "looping": false
+        },
+        {
+            "objectName": "Fuga_06_Consume",
+            "clipName": "Fuga_Consume_BiteForward",
+            "description": "Consume: open mouth, lean forward, bite",
+            "looping": true
+        }
+    ]
+}

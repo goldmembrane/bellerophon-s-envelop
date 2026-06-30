@@ -228,6 +228,18 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.ParvumCargoRunScene.ParvumCargoRunSceneApplyAndReview.ApplyApprovedSampleToCurrentCargoRunScene,
                         "Approved Parvum sample applied to current CargoRunMvp scene.");
                     break;
+                case "ApplyApprovedFugaToCurrentCargoRunScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaCargoRunSceneApplyAndReview.ApplyApprovedSampleToCurrentCargoRunScene,
+                        "Approved Fuga sample applied to current CargoRunMvp scene.");
+                    break;
+                case "InspectApprovedFugaCargoRunSceneState":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaCargoRunSceneApplyAndReview.InspectAppliedSceneState,
+                        "Approved Fuga CargoRunMvp scene state inspected.");
+                    break;
                 case "MoveApprovedSupplyRoomShellBelowEngineRoom":
                     RunSynchronous(
                         request,
