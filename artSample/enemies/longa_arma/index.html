@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>롱가 아르마 모델링 샘플</title>
+  <style>
+    body { margin: 0; font-family: Arial, "Malgun Gothic", sans-serif; background: #18201a; color: #edf2e6; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    section { margin: 30px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; background: #222b24; border: 1px solid #435041; padding: 14px; }
+    .comparison h3 { grid-column: 1 / -1; }
+    figure { margin: 0; background: #111711; border: 1px solid #364236; padding: 10px; }
+    img { width: 100%; height: auto; display: block; object-fit: contain; }
+    figcaption { margin-top: 8px; font-size: 13px; color: #cdd7c5; word-break: break-all; }
+    p, li { line-height: 1.55; }
+    code { color: #d7e6c8; }
+    @media (max-width: 760px) { .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>롱가 아르마 모델링 샘플</h1>
+  <p>기준 이미지를 직접 비교하기 위한 승인 전 샘플입니다. 몸체는 더 큰 괴물 체형으로 키웠고, 왼팔 칼날은 낮은 반달형과 위로 솟은 칼끝으로 다시 잡았습니다. 표면 점액 표현 오브젝트, 액체 줄기, 방울, 웅덩이는 생성하지 않았습니다.</p>
+
+  <section>
+    <h2>기준 이미지와 생성 렌더 비교</h2>
+    <article class="comparison">
+      <h3>정면</h3>
+      <figure><img src="../../../image/longa arma(롱가 아르마).png" alt="정면 기준 이미지"><figcaption>기준 이미지: ../../../image/longa arma(롱가 아르마).png</figcaption></figure>
+      <figure><img src="renders/front.png" alt="정면 생성 렌더"><figcaption>생성 렌더: renders/front.png</figcaption></figure>
+    </article>
+    <article class="comparison">
+      <h3>측면</h3>
+      <figure><img src="../../../image/longa arma-beside.png" alt="측면 기준 이미지"><figcaption>기준 이미지: ../../../image/longa arma-beside.png</figcaption></figure>
+      <figure><img src="renders/side.png" alt="측면 생성 렌더"><figcaption>생성 렌더: renders/side.png</figcaption></figure>
+    </article>
+    <article class="comparison">
+      <h3>후면</h3>
+      <figure><img src="../../../image/longa arma-back.png" alt="후면 기준 이미지"><figcaption>기준 이미지: ../../../image/longa arma-back.png</figcaption></figure>
+      <figure><img src="renders/back.png" alt="후면 생성 렌더"><figcaption>생성 렌더: renders/back.png</figcaption></figure>
+    </article>
+  </section>
+
+  <section>
+    <h2>생성 렌더</h2>
+    <div class="grid">
+      <figure><img src="renders/front.png" alt="front"><figcaption>front.png</figcaption></figure>
+      <figure><img src="renders/side.png" alt="side"><figcaption>side.png</figcaption></figure>
+      <figure><img src="renders/back.png" alt="back"><figcaption>back.png</figcaption></figure>
+      <figure><img src="renders/reference_comparison.png" alt="reference comparison"><figcaption>reference_comparison.png</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>사용 텍스처</h2>
+    <div class="grid">
+      <figure><img src="textures/longa_arma_wet_green_albedo.png" alt="body albedo"><figcaption>longa_arma_wet_green_albedo.png</figcaption></figure>
+      <figure><img src="textures/longa_arma_wet_green_bump.png" alt="body bump"><figcaption>longa_arma_wet_green_bump.png</figcaption></figure>
+      <figure><img src="textures/longa_arma_wet_green_roughness.png" alt="body roughness"><figcaption>longa_arma_wet_green_roughness.png</figcaption></figure>
+      <figure><img src="textures/longa_arma_dark_blade_albedo.png" alt="blade albedo"><figcaption>longa_arma_dark_blade_albedo.png</figcaption></figure>
+      <figure><img src="textures/longa_arma_dark_blade_roughness.png" alt="blade roughness"><figcaption>longa_arma_dark_blade_roughness.png</figcaption></figure>
+    </div>
+  </section>
+</main>
+</body>
+</html>

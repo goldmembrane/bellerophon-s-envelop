@@ -1,0 +1,7 @@
+{
+  "enemyId": "longa_arma",
+  "status": "pending_user_approval",
+  "approved": false,
+  "createdAt": "2026-07-02 00:08:44",
+  "note": "Unity 적용 전 사용자 검토와 승인이 필요한 artSample 샘플입니다. 표면 점액 표현 오브젝트는 제외했습니다."
+}

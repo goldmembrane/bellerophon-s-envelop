@@ -1,0 +1,50 @@
+{
+  "enemyId": "longa_arma",
+  "createdAt": "2026-07-02 00:08:44",
+  "status": "pending_user_approval",
+  "sourceReferences": [
+    "docs/GAME_DESIGN_SOURCE.txt",
+    "docs/LONGA_ARMA_IMPLEMENTATION_PLAN_2026-07-01.md",
+    "image/longa arma(롱가 아르마).png",
+    "image/longa arma-beside.png",
+    "image/longa arma-back.png"
+  ],
+  "revisionNotes": [
+    "Fuga-style review HTML with direct reference/render comparisons.",
+    "Surface slime representation objects are not generated.",
+    "Coarse procedural body material and displacement reduce the previous smooth surface look.",
+    "Body, neck, and head are fused into one continuous section mesh.",
+    "Body, shoulder, haunch, limb, foot, and toe radii were enlarged for a heavier monster silhouette.",
+    "The local-left blade profile is no longer a curled hook; only the blade tip rises upward.",
+    "The local-left weapon arm transitions into the blade through fleshy growth, blackened underside, webbing, and calcified root geometry."
+  ],
+  "modelScaleMeters": {
+    "height": 0.8,
+    "width": 0.7,
+    "depth": 1.5
+  },
+  "localLeftWeaponArm": true,
+  "attackDamagePlan": {
+    "downslamDamage": 30,
+    "scrapeDamage": 0
+  },
+  "files": [
+    "README.md",
+    "TEXTURE_ANALYSIS.md",
+    "APPROVAL_STATUS.json",
+    "ASSET_MANIFEST.json",
+    "index.html",
+    "blender/longa_arma.blend",
+    "exports/longa_arma.fbx",
+    "exports/longa_arma.glb",
+    "textures/longa_arma_wet_green_albedo.png",
+    "textures/longa_arma_wet_green_roughness.png",
+    "textures/longa_arma_wet_green_bump.png",
+    "textures/longa_arma_dark_blade_albedo.png",
+    "textures/longa_arma_dark_blade_roughness.png",
+    "renders/front.png",
+    "renders/side.png",
+    "renders/back.png",
+    "renders/reference_comparison.png"
+  ]
+}
