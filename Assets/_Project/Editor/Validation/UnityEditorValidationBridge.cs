@@ -240,6 +240,24 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.FugaCargoRunScene.FugaCargoRunSceneApplyAndReview.InspectAppliedSceneState,
                         "Approved Fuga CargoRunMvp scene state inspected.");
                     break;
+                case "ApplyApprovedLongaArmaToCurrentCargoRunScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.LongaArmaCargoRunScene.LongaArmaCargoRunSceneApplyAndReview.ApplyApprovedSampleToCurrentCargoRunScene,
+                        "Approved Longa Arma sample applied to current CargoRunMvp scene.");
+                    break;
+                case "InspectApprovedLongaArmaCargoRunSceneState":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.LongaArmaCargoRunScene.LongaArmaCargoRunSceneApplyAndReview.InspectAppliedSceneState,
+                        "Approved Longa Arma CargoRunMvp scene state inspected.");
+                    break;
+                case "CaptureLongaArmaUnityVisualComparison":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.LongaArmaCargoRunScene.LongaArmaCargoRunSceneApplyAndReview.CaptureUnityVisualComparison,
+                        "Approved Longa Arma Unity visual comparison captured.");
+                    break;
                 case "MoveApprovedSupplyRoomShellBelowEngineRoom":
                     RunSynchronous(
                         request,

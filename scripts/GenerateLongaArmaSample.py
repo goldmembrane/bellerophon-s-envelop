@@ -209,13 +209,13 @@ def create_wet_body_material(name: str) -> bpy.types.Material:
 
         ramp = nodes.new(type="ShaderNodeValToRGB")
         ramp.color_ramp.elements[0].position = 0.18
-        ramp.color_ramp.elements[0].color = (0.004, 0.018, 0.014, 1.0)
+        ramp.color_ramp.elements[0].color = (0.002, 0.010, 0.008, 1.0)
         ramp.color_ramp.elements[1].position = 1.00
-        ramp.color_ramp.elements[1].color = (0.075, 0.205, 0.135, 1.0)
+        ramp.color_ramp.elements[1].color = (0.050, 0.145, 0.094, 1.0)
         mid = ramp.color_ramp.elements.new(0.50)
-        mid.color = (0.020, 0.076, 0.052, 1.0)
+        mid.color = (0.014, 0.060, 0.040, 1.0)
         dark_mid = ramp.color_ramp.elements.new(0.34)
-        dark_mid.color = (0.010, 0.044, 0.032, 1.0)
+        dark_mid.color = (0.006, 0.030, 0.022, 1.0)
 
         bump_noise = nodes.new(type="ShaderNodeTexNoise")
         bump_noise.inputs["Scale"].default_value = 96.0
@@ -232,8 +232,8 @@ def create_wet_body_material(name: str) -> bpy.types.Material:
         links.new(bump_node.outputs["Normal"], bsdf.inputs["Normal"])
 
         set_principled_input(mat, "Metallic", 0.0)
-        set_principled_input(mat, "Roughness", 0.84)
-    mat.diffuse_color = (0.016, 0.070, 0.048, 1.0)
+        set_principled_input(mat, "Roughness", 0.66)
+    mat.diffuse_color = (0.010, 0.055, 0.038, 1.0)
     return mat
 
 
@@ -797,6 +797,644 @@ def add_reference_rough_skin_detail(dark: bpy.types.Material) -> None:
     # These are dark recessed skin folds, not slime/drip/puddle effects.
 
 
+def build_single_visible_morph_mesh(materials: dict[str, bpy.types.Material]) -> None:
+    mat_keys = ["body", "blade", "blade_edge", "dark", "eye"]
+    mat_lookup = {key: materials[key] for key in mat_keys if key in materials}
+    vertices: list[tuple[float, float, float]] = []
+    faces: list[tuple[int, ...]] = []
+    face_materials: list[str] = []
+
+    def add_vertex(point: Vector) -> int:
+        vertices.append((point.x, point.y, point.z))
+        return len(vertices) - 1
+
+    def add_face(indices: list[int] | tuple[int, ...], material_key: str) -> None:
+        faces.append(tuple(indices))
+        face_materials.append(material_key)
+
+    def basis_from_points(points: list[Vector], index: int) -> tuple[Vector, Vector, Vector]:
+        if index == 0:
+            tangent = points[1] - points[index]
+        elif index == len(points) - 1:
+            tangent = points[index] - points[index - 1]
+        else:
+            tangent = points[index + 1] - points[index - 1]
+        if tangent.length < 0.0001:
+            tangent = Vector((0.0, 1.0, 0.0))
+        forward = tangent.normalized()
+        up_ref = Vector((0.0, 0.0, 1.0))
+        if abs(forward.dot(up_ref)) > 0.92:
+            up_ref = Vector((0.0, 1.0, 0.0))
+        right = forward.cross(up_ref)
+        if right.length < 0.0001:
+            right = Vector((1.0, 0.0, 0.0))
+        right.normalize()
+        up = right.cross(forward)
+        up.normalize()
+        return forward, right, up
+
+    def add_tube(
+        points_raw: list[tuple[float, float, float]] | list[Vector],
+        radii: list[tuple[float, float]],
+        material_key: str,
+        *,
+        radial_segments: int = 32,
+        ripple: float = 0.018,
+        cap_start: bool = True,
+        cap_end: bool = True,
+    ) -> list[list[int]]:
+        points = [point if isinstance(point, Vector) else Vector(point) for point in points_raw]
+        rings: list[list[int]] = []
+        for point_index, point in enumerate(points):
+            _, right, up = basis_from_points(points, point_index)
+            radius_x, radius_z = radii[point_index]
+            ring: list[int] = []
+            phase = point_index * 0.79 + point.y * 3.7
+            for radial_index in range(radial_segments):
+                theta = (math.tau * radial_index) / radial_segments
+                sin_t = math.sin(theta)
+                cos_t = math.cos(theta)
+                organic = 1.0
+                organic += ripple * math.sin(theta * 3.0 + phase)
+                organic += ripple * 0.55 * math.sin(theta * 7.0 - phase * 1.31)
+                if sin_t < -0.25:
+                    organic *= 1.0 + 0.045 * (-sin_t)
+                vertex = point + right * (cos_t * radius_x * organic) + up * (sin_t * radius_z * organic)
+                ring.append(add_vertex(vertex))
+            rings.append(ring)
+
+        for point_index in range(len(rings) - 1):
+            current = rings[point_index]
+            next_ring = rings[point_index + 1]
+            for radial_index in range(radial_segments):
+                add_face(
+                    [
+                        current[radial_index],
+                        current[(radial_index + 1) % radial_segments],
+                        next_ring[(radial_index + 1) % radial_segments],
+                        next_ring[radial_index],
+                    ],
+                    material_key,
+                )
+        if cap_start:
+            add_face(list(reversed(rings[0])), material_key)
+        if cap_end:
+            add_face(rings[-1], material_key)
+        return rings
+
+    def add_flat_ellipse(
+        center_raw: tuple[float, float, float],
+        normal_raw: tuple[float, float, float],
+        radius_a: float,
+        radius_b: float,
+        material_key: str,
+        *,
+        segments: int = 18,
+    ) -> None:
+        center = Vector(center_raw)
+        normal = Vector(normal_raw).normalized()
+        ref = Vector((0.0, 0.0, 1.0))
+        if abs(normal.dot(ref)) > 0.90:
+            ref = Vector((0.0, 1.0, 0.0))
+        axis_a = normal.cross(ref).normalized()
+        axis_b = normal.cross(axis_a).normalized()
+        center_index = add_vertex(center)
+        ring = []
+        for index in range(segments):
+            theta = math.tau * index / segments
+            point = center + axis_a * (math.cos(theta) * radius_a) + axis_b * (math.sin(theta) * radius_b)
+            ring.append(add_vertex(point))
+        for index in range(segments):
+            add_face([center_index, ring[index], ring[(index + 1) % segments]], material_key)
+
+    def add_blade() -> None:
+        x_center = -0.830
+        half_thickness = 0.034
+        profile = [
+            (-1.100, 0.115),
+            (-1.285, 0.112),
+            (-1.505, 0.170),
+            (-1.725, 0.285),
+            (-1.910, 0.455),
+            (-1.955, 0.355),
+            (-1.790, 0.120),
+            (-1.560, 0.018),
+            (-1.300, 0.030),
+            (-1.105, 0.070),
+        ]
+        front: list[int] = []
+        back: list[int] = []
+        for y, z in profile:
+            front.append(add_vertex(Vector((x_center - half_thickness, y, z))))
+        for y, z in profile:
+            back.append(add_vertex(Vector((x_center + half_thickness, y, z))))
+        add_face(front, "blade")
+        add_face(list(reversed(back)), "blade")
+        for index in range(len(profile)):
+            add_face(
+                [
+                    front[index],
+                    front[(index + 1) % len(profile)],
+                    back[(index + 1) % len(profile)],
+                    back[index],
+                ],
+                "blade",
+            )
+
+        add_tube(
+            [Vector((x_center - 0.040, y, z + 0.006)) for y, z in profile[:5]],
+            [(0.008, 0.006), (0.007, 0.005), (0.006, 0.004), (0.005, 0.004), (0.004, 0.003)],
+            "blade_edge",
+            radial_segments=8,
+            ripple=0.002,
+        )
+        add_tube(
+            [
+                Vector((x_center, -1.020, 0.110)),
+                Vector((x_center, -1.140, 0.085)),
+                Vector((x_center, -1.260, 0.078)),
+                Vector((x_center, -1.380, 0.092)),
+            ],
+            [(0.095, 0.035), (0.130, 0.030), (0.155, 0.026), (0.165, 0.022)],
+            "body",
+            radial_segments=24,
+            ripple=0.012,
+        )
+        add_tube(
+            [
+                Vector((x_center - 0.018, -1.080, 0.070)),
+                Vector((x_center - 0.016, -1.230, 0.046)),
+                Vector((x_center - 0.012, -1.410, 0.052)),
+                Vector((x_center - 0.006, -1.560, 0.085)),
+            ],
+            [(0.055, 0.013), (0.095, 0.012), (0.135, 0.010), (0.145, 0.008)],
+            "blade",
+            radial_segments=18,
+            ripple=0.004,
+        )
+
+    main_points = [
+        (0.000, 1.170, 0.465),
+        (0.000, 1.035, 0.515),
+        (0.000, 0.790, 0.560),
+        (0.000, 0.430, 0.585),
+        (0.000, 0.080, 0.592),
+        (0.000, -0.260, 0.605),
+        (0.000, -0.485, 0.680),
+        (0.000, -0.690, 0.815),
+        (0.000, -0.910, 0.875),
+        (0.000, -1.105, 0.765),
+        (0.000, -1.290, 0.635),
+        (0.000, -1.420, 0.565),
+    ]
+    main_radii = [
+        (0.034, 0.026),
+        (0.150, 0.110),
+        (0.238, 0.174),
+        (0.275, 0.190),
+        (0.250, 0.170),
+        (0.205, 0.160),
+        (0.142, 0.156),
+        (0.102, 0.142),
+        (0.090, 0.132),
+        (0.086, 0.112),
+        (0.070, 0.075),
+        (0.050, 0.040),
+    ]
+    add_tube(main_points, main_radii, "body", radial_segments=64, ripple=0.038)
+
+    for side in [-1.0, 1.0]:
+        add_tube(
+            [
+                Vector((side * 0.052, -0.970, 0.910)),
+                Vector((side * 0.074, -0.956, 1.015)),
+                Vector((side * 0.064, -0.990, 1.120)),
+            ],
+            [(0.034, 0.024), (0.025, 0.018), (0.004, 0.004)],
+            "body",
+            radial_segments=14,
+            ripple=0.005,
+        )
+        add_flat_ellipse((side * 0.078, -1.150, 0.730), (side, -0.45, 0.10), 0.017, 0.011, "eye", segments=16)
+
+    add_flat_ellipse((0.000, -1.430, 0.545), (0.0, -1.0, -0.10), 0.044, 0.010, "dark", segments=18)
+
+    add_tube(
+        [
+            Vector((-0.175, -0.375, 0.560)),
+            Vector((-0.310, -0.575, 0.405)),
+            Vector((-0.500, -0.790, 0.245)),
+            Vector((-0.690, -1.010, 0.135)),
+            Vector((-0.815, -1.170, 0.100)),
+            Vector((-0.850, -1.315, 0.094)),
+        ],
+        [(0.170, 0.105), (0.155, 0.092), (0.128, 0.070), (0.102, 0.048), (0.088, 0.036), (0.070, 0.030)],
+        "body",
+        radial_segments=42,
+        ripple=0.026,
+    )
+    add_tube(
+        [Vector((-0.120, -0.300, 0.595)), Vector((-0.220, -0.425, 0.535)), Vector((-0.310, -0.575, 0.405))],
+        [(0.118, 0.080), (0.150, 0.088), (0.155, 0.092)],
+        "body",
+        radial_segments=28,
+        ripple=0.018,
+    )
+    add_blade()
+
+    leg_specs = [
+        (
+            [
+                Vector((0.150, -0.315, 0.505)),
+                Vector((0.195, -0.485, 0.310)),
+                Vector((0.180, -0.635, 0.098)),
+                Vector((0.250, -0.755, 0.038)),
+            ],
+            Vector((0.0, -1.0, 0.0)),
+            4,
+        ),
+        (
+            [
+                Vector((-0.125, 0.455, 0.505)),
+                Vector((-0.255, 0.650, 0.315)),
+                Vector((-0.330, 0.875, 0.112)),
+                Vector((-0.420, 1.030, 0.038)),
+            ],
+            Vector((0.0, 1.0, 0.0)),
+            3,
+        ),
+        (
+            [
+                Vector((0.145, 0.465, 0.505)),
+                Vector((0.310, 0.695, 0.312)),
+                Vector((0.445, 0.900, 0.116)),
+                Vector((0.535, 1.055, 0.038)),
+            ],
+            Vector((0.0, 1.0, 0.0)),
+            3,
+        ),
+    ]
+    for points, forward, toe_count in leg_specs:
+        add_tube(
+            points,
+            [(0.104, 0.072), (0.070, 0.052), (0.042, 0.032), (0.030, 0.022)],
+            "body",
+            radial_segments=28,
+            ripple=0.014,
+        )
+        foot_root = points[-1]
+        side_axis = Vector((1.0, 0.0, 0.0))
+        for toe_index in range(toe_count):
+            spread = (toe_index - (toe_count - 1) * 0.5) * 0.038
+            start = foot_root + side_axis * spread
+            end = start + forward.normalized() * 0.115 + side_axis * spread * 0.25
+            add_tube(
+                [start, end],
+                [(0.015, 0.010), (0.005, 0.004)],
+                "body",
+                radial_segments=10,
+                ripple=0.003,
+            )
+
+    add_tube(
+        [
+            Vector((0.000, 0.920, 0.475)),
+            Vector((0.010, 1.025, 0.350)),
+            Vector((0.000, 1.050, 0.230)),
+        ],
+        [(0.050, 0.036), (0.030, 0.022), (0.008, 0.008)],
+        "body",
+        radial_segments=14,
+        ripple=0.006,
+    )
+
+    surface_lines = [
+        [Vector((0.038, -1.050, 0.760)), Vector((0.052, -0.880, 0.708)), Vector((0.040, -0.650, 0.680))],
+        [Vector((-0.038, -1.040, 0.758)), Vector((-0.054, -0.860, 0.704)), Vector((-0.044, -0.625, 0.674))],
+        [Vector((0.030, -0.540, 0.748)), Vector((0.046, -0.350, 0.674)), Vector((0.038, -0.120, 0.615))],
+        [Vector((0.210, -0.150, 0.650)), Vector((0.255, 0.090, 0.590)), Vector((0.220, 0.360, 0.535))],
+        [Vector((-0.210, -0.120, 0.650)), Vector((-0.250, 0.130, 0.590)), Vector((-0.220, 0.390, 0.535))],
+        [Vector((0.240, 0.420, 0.660)), Vector((0.290, 0.620, 0.575)), Vector((0.255, 0.840, 0.500))],
+        [Vector((-0.240, 0.420, 0.660)), Vector((-0.290, 0.620, 0.575)), Vector((-0.255, 0.840, 0.500))],
+        [Vector((-0.375, -0.660, 0.392)), Vector((-0.520, -0.875, 0.255)), Vector((-0.710, -1.100, 0.125))],
+        [Vector((-0.235, -0.600, 0.485)), Vector((-0.420, -0.840, 0.310)), Vector((-0.650, -1.140, 0.145))],
+    ]
+    for line_index, line_points in enumerate(surface_lines, start=1):
+        add_tube(
+            line_points,
+            [(0.010, 0.006), (0.008, 0.005), (0.005, 0.003)],
+            "dark",
+            radial_segments=8,
+            ripple=0.002,
+        )
+
+    drip_specs = [
+        (0.020, -1.405, 0.535, 0.140),
+        (0.060, -1.120, 0.720, 0.180),
+        (-0.065, -1.090, 0.715, 0.150),
+        (0.160, -0.120, 0.420, 0.190),
+        (-0.140, 0.160, 0.415, 0.150),
+        (0.240, 0.580, 0.430, 0.190),
+        (-0.680, -1.030, 0.135, 0.135),
+        (-0.900, -1.355, 0.095, 0.110),
+    ]
+    for drip_index, (x, y, z, length) in enumerate(drip_specs, start=1):
+        add_tube(
+            [Vector((x, y, z)), Vector((x + 0.010 * math.sin(drip_index), y + 0.010 * math.cos(drip_index), z - length))],
+            [(0.0065, 0.0065), (0.0025, 0.0025)],
+            "body",
+            radial_segments=8,
+            ripple=0.001,
+        )
+
+    mesh = bpy.data.meshes.new("Longa_Arma_Single_Visible_Morph_Mesh_Data")
+    mesh.from_pydata(vertices, [], faces)
+    mesh.update()
+    obj = bpy.data.objects.new("Longa_Arma_Single_Visible_Morph_Mesh", mesh)
+    bpy.context.collection.objects.link(obj)
+    for key in mat_keys:
+        obj.data.materials.append(mat_lookup[key])
+    material_indices = {key: index for index, key in enumerate(mat_keys)}
+    for polygon, material_key in zip(obj.data.polygons, face_materials):
+        polygon.material_index = material_indices.get(material_key, 0)
+        polygon.use_smooth = material_key not in {"blade", "blade_edge"}
+    obj.modifiers.new("single mesh weighted normals", "WEIGHTED_NORMAL")
+    register(obj)
+
+
+def build_continuous_field_morph_mesh(materials: dict[str, bpy.types.Material]) -> None:
+    mat_keys = ["body", "blade", "blade_edge", "dark"]
+
+    bpy.ops.object.metaball_add(type="BALL", radius=0.10, location=(0.0, 0.0, 0.0))
+    meta_obj = bpy.context.object
+    meta_obj.name = "Longa_Arma_Continuous_Field_Source"
+    meta_obj.data.name = "Longa_Arma_Continuous_Field_Source_Data"
+    meta_obj.data.resolution = 0.035
+    meta_obj.data.render_resolution = 0.024
+    try:
+        meta_obj.data.threshold = 0.46
+    except Exception:
+        pass
+
+    first_element = True
+
+    def add_ball(point: Vector, radius: float) -> None:
+        nonlocal first_element
+        if first_element:
+            element = meta_obj.data.elements[0]
+            first_element = False
+        else:
+            element = meta_obj.data.elements.new(type="BALL")
+        element.co = point
+        element.radius = radius
+        element.stiffness = 2.0
+
+    def add_field_path(points: list[Vector], radii: list[float], *, steps_per_segment: int = 5) -> None:
+        if len(points) != len(radii):
+            raise ValueError("points and radii must have the same length")
+        for index in range(len(points) - 1):
+            start = points[index]
+            end = points[index + 1]
+            r0 = radii[index]
+            r1 = radii[index + 1]
+            for step in range(steps_per_segment):
+                if index > 0 and step == 0:
+                    continue
+                t = step / float(steps_per_segment)
+                point = start.lerp(end, t)
+                radius = r0 + (r1 - r0) * t
+                add_ball(point, radius)
+        add_ball(points[-1], radii[-1])
+
+    # Body, neck, and head are one continuous field, not independent mesh islands.
+    add_field_path(
+        [
+            Vector((0.000, 0.930, 0.740)),
+            Vector((0.000, 0.780, 0.835)),
+            Vector((0.000, 0.540, 0.905)),
+            Vector((0.000, 0.185, 0.920)),
+            Vector((0.000, -0.195, 0.935)),
+            Vector((0.000, -0.455, 1.050)),
+            Vector((0.000, -0.625, 1.190)),
+            Vector((0.000, -0.770, 1.270)),
+            Vector((0.000, -0.910, 1.215)),
+            Vector((0.000, -1.045, 1.060)),
+            Vector((0.000, -1.160, 0.900)),
+        ],
+        [0.065, 0.190, 0.285, 0.295, 0.240, 0.190, 0.185, 0.195, 0.190, 0.165, 0.135],
+        steps_per_segment=6,
+    )
+    add_field_path(
+        [
+            Vector((0.000, -0.910, 1.035)),
+            Vector((0.000, -1.035, 0.880)),
+            Vector((0.000, -1.125, 0.760)),
+        ],
+        [0.142, 0.130, 0.098],
+        steps_per_segment=5,
+    )
+    add_ball(Vector((0.000, -1.020, 0.960)), 0.150)
+    add_ball(Vector((0.000, -1.140, 0.830)), 0.120)
+    for side in (-1.0, 1.0):
+        add_field_path(
+            [Vector((side * 0.078, -0.805, 1.280)), Vector((side * 0.104, -0.800, 1.385)), Vector((side * 0.092, -0.830, 1.485))],
+            [0.062, 0.052, 0.032],
+            steps_per_segment=4,
+        )
+        add_field_path(
+            [Vector((side * 0.105, -0.900, 1.085)), Vector((side * 0.150, -1.030, 0.965)), Vector((side * 0.135, -1.150, 0.830))],
+            [0.082, 0.096, 0.076],
+            steps_per_segment=4,
+        )
+        add_ball(Vector((side * 0.128, -1.000, 1.050)), 0.044)
+        add_ball(Vector((side * 0.128, -1.140, 0.800)), 0.060)
+
+    # A few offset masses widen the torso and haunch without becoming separate objects.
+    for side in (-1.0, 1.0):
+        add_field_path(
+            [Vector((side * 0.075, 0.660, 0.820)), Vector((side * 0.112, 0.455, 0.880)), Vector((side * 0.112, 0.150, 0.885))],
+            [0.075, 0.105, 0.110],
+            steps_per_segment=4,
+        )
+        add_field_path(
+            [Vector((side * 0.100, -0.120, 0.930)), Vector((side * 0.145, -0.325, 0.985)), Vector((side * 0.105, -0.500, 1.030))],
+            [0.125, 0.145, 0.110],
+            steps_per_segment=4,
+        )
+
+    # Local-left weapon arm starts inside the shoulder field and fuses into the hardened blade field.
+    add_field_path(
+        [
+            Vector((-0.060, -0.225, 0.940)),
+            Vector((-0.205, -0.410, 0.810)),
+            Vector((-0.395, -0.650, 0.580)),
+            Vector((-0.610, -0.920, 0.330)),
+            Vector((-0.800, -1.160, 0.170)),
+            Vector((-0.930, -1.320, 0.130)),
+        ],
+        [0.186, 0.202, 0.185, 0.155, 0.148, 0.148],
+        steps_per_segment=6,
+    )
+    add_field_path(
+        [
+            Vector((-0.735, -1.065, 0.225)),
+            Vector((-0.895, -1.215, 0.155)),
+            Vector((-1.020, -1.385, 0.130)),
+        ],
+        [0.156, 0.160, 0.152],
+        steps_per_segment=5,
+    )
+    add_field_path(
+        [
+            Vector((-0.930, -1.300, 0.135)),
+            Vector((-1.060, -1.500, 0.065)),
+            Vector((-1.160, -1.735, 0.190)),
+            Vector((-1.080, -1.995, 0.515)),
+            Vector((-0.910, -2.210, 0.875)),
+        ],
+        [0.148, 0.116, 0.088, 0.062, 0.040],
+        steps_per_segment=13,
+    )
+    add_field_path(
+        [
+            Vector((-0.900, -1.285, 0.080)),
+            Vector((-1.045, -1.535, -0.005)),
+            Vector((-1.115, -1.780, 0.040)),
+            Vector((-1.035, -2.035, 0.305)),
+            Vector((-0.905, -2.185, 0.730)),
+        ],
+        [0.138, 0.100, 0.076, 0.054, 0.034],
+        steps_per_segment=13,
+    )
+    add_field_path(
+        [
+            Vector((-0.920, -1.295, 0.105)),
+            Vector((-1.045, -1.515, 0.045)),
+            Vector((-1.135, -1.755, 0.110)),
+            Vector((-1.055, -2.010, 0.405)),
+            Vector((-0.908, -2.190, 0.800)),
+        ],
+        [0.140, 0.108, 0.082, 0.058, 0.038],
+        steps_per_segment=13,
+    )
+
+    leg_paths = [
+        (
+            [Vector((0.125, -0.180, 0.930)), Vector((0.170, -0.205, 0.665)), Vector((0.200, -0.215, 0.360)), Vector((0.230, -0.245, 0.090)), Vector((0.320, -0.270, 0.040))],
+            [0.236, 0.195, 0.153, 0.118, 0.092],
+            Vector((0.0, -1.0, 0.0)),
+            4,
+        ),
+        (
+            [Vector((-0.145, 0.835, 0.995)), Vector((-0.190, 0.910, 0.720)), Vector((-0.220, 0.980, 0.410)), Vector((-0.285, 1.045, 0.095)), Vector((-0.410, 1.090, 0.045))],
+            [0.244, 0.204, 0.160, 0.123, 0.097],
+            Vector((0.0, 1.0, 0.0)),
+            3,
+        ),
+        (
+            [Vector((0.150, 0.870, 0.995)), Vector((0.230, 0.955, 0.720)), Vector((0.285, 1.030, 0.410)), Vector((0.385, 1.100, 0.095)), Vector((0.525, 1.150, 0.045))],
+            [0.248, 0.209, 0.162, 0.125, 0.097],
+            Vector((0.0, 1.0, 0.0)),
+            3,
+        ),
+    ]
+    for points, radii, _forward, _toe_count in leg_paths:
+        add_field_path(points, radii, steps_per_segment=6)
+
+    # Feet are overlapping continuation strokes in the same field so the ends stay fused.
+    for points, radii in [
+        (
+            [Vector((0.200, -0.215, 0.360)), Vector((0.250, -0.250, 0.075)), Vector((0.360, -0.275, 0.035)), Vector((0.455, -0.260, 0.040))],
+            [0.140, 0.116, 0.096, 0.067],
+        ),
+        (
+            [Vector((-0.220, 0.980, 0.410)), Vector((-0.320, 1.070, 0.075)), Vector((-0.445, 1.125, 0.035)), Vector((-0.535, 1.115, 0.042))],
+            [0.145, 0.118, 0.097, 0.070],
+        ),
+        (
+            [Vector((0.285, 1.030, 0.410)), Vector((0.430, 1.125, 0.075)), Vector((0.560, 1.185, 0.035)), Vector((0.655, 1.175, 0.042))],
+            [0.145, 0.118, 0.097, 0.070],
+        ),
+    ]:
+        add_field_path(points, radii, steps_per_segment=5)
+
+    # Convert the continuous field to a single mesh object and then color material regions by face position.
+    bpy.ops.object.select_all(action="DESELECT")
+    meta_obj.select_set(True)
+    bpy.context.view_layer.objects.active = meta_obj
+    bpy.ops.object.convert(target="MESH")
+    obj = bpy.context.object
+    obj.name = "Longa_Arma_Continuous_Single_Surface_Mesh"
+    obj.data.name = "Longa_Arma_Continuous_Single_Surface_Mesh_Data"
+
+    for key in mat_keys:
+        obj.data.materials.append(materials[key])
+    material_indices = {key: index for index, key in enumerate(mat_keys)}
+
+    for vertex in obj.data.vertices:
+        co = vertex.co
+        foot_region = (
+            (co.z < 0.070 and 0.130 < co.x < 0.560 and -0.360 < co.y < -0.180)
+            or (co.z < 0.070 and -0.600 < co.x < -0.250 and 1.000 < co.y < 1.190)
+            or (co.z < 0.070 and 0.360 < co.x < 0.740 and 1.060 < co.y < 1.260)
+        )
+        if foot_region:
+            co.z = max(co.z, 0.026)
+        if co.y > 0.560 and co.z > 0.720:
+            rear_t = max(0.0, min(1.0, (co.y - 0.560) / 0.420))
+            height_t = max(0.0, min(1.0, (co.z - 0.720) / 0.360))
+            smoothing = rear_t * height_t
+            co.y -= 0.095 * smoothing
+            co.x *= 1.0 - 0.16 * smoothing
+        if co.x < -0.650 and co.y < -1.170 and co.z < 0.980:
+            t = max(0.0, min(1.0, (-co.y - 1.220) / 1.000))
+            if t < 0.22:
+                squash = 0.84 - 0.08 * t
+            else:
+                squash = max(0.055, 0.44 - 0.38 * t)
+            co.x = -0.935 + (co.x + 0.935) * squash
+            crescent_center_z = 0.050 + 0.075 * t + 0.690 * (t * t)
+            root_thickness = 0.135 * max(0.0, 1.0 - t * 4.0)
+            cutting_thickness = 0.136 * math.sin(math.pi * min(1.0, t)) + 0.028 * (1.0 - t)
+            crescent_thickness = max(0.035, root_thickness + cutting_thickness)
+            signed_band = max(-1.0, min(1.0, (co.z - crescent_center_z) / crescent_thickness))
+            signed_band = math.sin(signed_band * math.pi * 0.5)
+            co.z = crescent_center_z + signed_band * crescent_thickness * 0.78
+            if co.y < -1.900:
+                tip_t = max(0.0, min(1.0, (-co.y - 1.900) / 0.330))
+                co.x = co.x * (1.0 - tip_t * 0.78) + (-0.910) * tip_t * 0.78
+                co.y = co.y * (1.0 - tip_t * 0.34) + (-2.170) * tip_t * 0.34
+                co.z = co.z * (1.0 - tip_t * 0.78) + (0.790) * tip_t * 0.78
+
+    for polygon in obj.data.polygons:
+        center = sum((obj.data.vertices[index].co for index in polygon.vertices), Vector()) / len(polygon.vertices)
+        material_key = "body"
+        if center.x < -0.600 and center.y < -1.230 and center.z < 0.960:
+            material_key = "blade"
+        if center.x < -0.760 and center.y < -2.100 and 0.810 < center.z < 0.940:
+            material_key = "blade_edge"
+        if abs(center.x) < 0.050 and center.y < -1.350 and 0.505 < center.z < 0.590:
+            material_key = "dark"
+        polygon.material_index = material_indices.get(material_key, 0)
+        polygon.use_smooth = True
+
+    blade_smooth_vertices = [
+        vertex.index
+        for vertex in obj.data.vertices
+        if vertex.co.x < -0.620 and vertex.co.y < -1.210 and vertex.co.z < 1.000
+    ]
+    if blade_smooth_vertices:
+        blade_smooth_group = obj.vertex_groups.new(name="Blade_Surface_Smooth_Region")
+        blade_smooth_group.add(blade_smooth_vertices, 1.0, "ADD")
+        blade_smooth = obj.modifiers.new("smooth continuous blade surface", "SMOOTH")
+        blade_smooth.factor = 0.32
+        blade_smooth.iterations = 3
+        blade_smooth.vertex_group = blade_smooth_group.name
+
+    obj.modifiers.new("continuous field weighted normals", "WEIGHTED_NORMAL")
+    register(obj)
+
+
 def build_reference_matched_model(materials: dict[str, bpy.types.Material]) -> None:
     body = materials["body"]
     blade = materials["blade"]
@@ -1006,7 +1644,7 @@ def build_reference_matched_model(materials: dict[str, bpy.types.Material]) -> N
 
 
 def build_model(materials: dict[str, bpy.types.Material]) -> None:
-    build_reference_matched_model(materials)
+    build_continuous_field_morph_mesh(materials)
     return
 
     body = materials["body"]
@@ -1676,11 +2314,11 @@ def write_docs_fuga_style() -> None:
 ## 반영 내용
 
 - 푸가 샘플처럼 기준 이미지와 생성 렌더를 정면/측면/후면으로 직접 비교할 수 있게 `index.html`을 구성했습니다.
-- 표면 점액 표현용 별도 오브젝트, 액체 줄기, 방울, 웅덩이 오브젝트는 생성하지 않습니다.
-- 몸체와 사지는 절차형 거친 녹색 피부 머티리얼, 강한 bump, coarse displacement로 매끈한 표면감을 줄였습니다.
-- 몸체, 어깨, 엉덩이, 사지 반경을 키워 이전보다 덩치 큰 괴물 체형으로 조정했습니다.
-- 목과 머리는 몸통과 하나의 연속 메쉬로 이어지게 구성했습니다.
-- 로컬 기준 왼쪽 긴 팔은 몸통 안쪽에서 자라 나와, 낮은 반달형 칼날과 위로 솟은 칼끝으로 경화되는 구조로 조정했습니다.
+- 표면 주름과 흘러내림은 같은 메쉬 내부 지오메트리로만 넣고, 점액 줄기/방울/웅덩이용 별도 오브젝트는 생성하지 않습니다.
+- 머리, 몸통, 다리, 발가락, 귀, 로컬 왼팔, 칼날은 모두 하나의 연속 필드에서 융합한 뒤 `Longa_Arma_Continuous_Single_Surface_Mesh` 하나의 오브젝트와 하나의 메쉬 데이터로 변환했습니다.
+- 칼날은 별도 오브젝트나 별도 판 부품이 아니라 같은 연속 표면 안에서 로컬 왼팔 끝이 검게 경화되고 납작해져 반달형 칼날로 변형되는 형태로 구성했습니다.
+- 몸체와 사지는 절차형 거친 녹색 피부 머티리얼과 bump로 매끈한 표면감을 줄였습니다.
+- 몸체, 어깨, 엉덩이, 사지 반경을 조정해 기준 이미지의 말/사냥개형 괴물 체형에 더 가깝게 다시 잡았습니다.
 
 ## 검토 파일
 
@@ -1722,12 +2360,12 @@ def write_docs_fuga_style() -> None:
         ],
         "revisionNotes": [
             "Fuga-style review HTML with direct reference/render comparisons.",
-            "Surface slime representation objects are not generated.",
-            "Coarse procedural body material and displacement reduce the previous smooth surface look.",
-            "Body, neck, and head are fused into one continuous section mesh.",
-            "Body, shoulder, haunch, limb, foot, and toe radii were enlarged for a heavier monster silhouette.",
-            "The local-left blade profile is no longer a curled hook; only the blade tip rises upward.",
-            "The local-left weapon arm transitions into the blade through fleshy growth, blackened underside, webbing, and calcified root geometry.",
+            "Separate surface slime, drip, drop, or puddle objects are not generated; small drip forms are fused into the same continuous field.",
+            "Head, body, legs, toes, ears, the local-left weapon arm, and the blade are fused from one continuous field and converted into one Blender object and one mesh datablock.",
+            "The local-left blade is not a separate object or mesh island; it is a flattened hardened crescent deformation of the arm end in the same continuous surface.",
+            "The former separate tube/limb/head/blade/foot mesh-island construction path is no longer used by build_model.",
+            "Coarse procedural body material and bump reduce the previous smooth surface look.",
+            "Body, shoulder, haunch, limb, foot, and toe radii were revised toward the reference horse-like monster silhouette.",
         ],
         "modelScaleMeters": {"height": MODEL_HEIGHT_M, "width": MODEL_WIDTH_M, "depth": MODEL_DEPTH_M},
         "localLeftWeaponArm": True,
@@ -1759,7 +2397,7 @@ def write_docs_fuga_style() -> None:
         "status": "pending_user_approval",
         "approved": False,
         "createdAt": created_at,
-        "note": "Unity 적용 전 사용자 검토와 승인이 필요한 artSample 샘플입니다. 표면 점액 표현 오브젝트는 제외했습니다.",
+        "note": "Unity 적용 전 사용자 검토와 승인이 필요한 artSample 샘플입니다. 점액 줄기/방울/웅덩이용 별도 오브젝트는 제외했습니다.",
     }
     (SAMPLE_ROOT / "APPROVAL_STATUS.json").write_text(json.dumps(approval, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -1857,7 +2495,7 @@ def main() -> None:
     setup_lighting()
     setup_render()
     render_view("front.png", (-0.85, -4.0, 0.62), (-0.28, -0.42, 0.50), 3.05)
-    render_view("side.png", (4.0, -0.20, 0.58), (-0.24, -0.72, 0.48), 4.05)
+    render_view("side.png", (4.0, -0.05, 0.58), (-0.20, -0.35, 0.48), 4.70)
     render_view("back.png", (0.0, 4.0, 0.58), (0.0, -0.04, 0.46), 2.90)
     export_model()
     render_reference_comparison()

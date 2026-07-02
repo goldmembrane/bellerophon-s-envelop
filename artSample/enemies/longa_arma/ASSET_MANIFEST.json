@@ -1,6 +1,6 @@
 {
   "enemyId": "longa_arma",
-  "createdAt": "2026-07-02 00:08:44",
+  "createdAt": "2026-07-02 14:33:28",
   "status": "pending_user_approval",
   "sourceReferences": [
     "docs/GAME_DESIGN_SOURCE.txt",
@@ -11,12 +11,12 @@
   ],
   "revisionNotes": [
     "Fuga-style review HTML with direct reference/render comparisons.",
-    "Surface slime representation objects are not generated.",
-    "Coarse procedural body material and displacement reduce the previous smooth surface look.",
-    "Body, neck, and head are fused into one continuous section mesh.",
-    "Body, shoulder, haunch, limb, foot, and toe radii were enlarged for a heavier monster silhouette.",
-    "The local-left blade profile is no longer a curled hook; only the blade tip rises upward.",
-    "The local-left weapon arm transitions into the blade through fleshy growth, blackened underside, webbing, and calcified root geometry."
+    "Separate surface slime, drip, drop, or puddle objects are not generated; small drip forms are fused into the same continuous field.",
+    "Head, body, legs, toes, ears, the local-left weapon arm, and the blade are fused from one continuous field and converted into one Blender object and one mesh datablock.",
+    "The local-left blade is not a separate object or mesh island; it is a flattened hardened crescent deformation of the arm end in the same continuous surface.",
+    "The former separate tube/limb/head/blade/foot mesh-island construction path is no longer used by build_model.",
+    "Coarse procedural body material and bump reduce the previous smooth surface look.",
+    "Body, shoulder, haunch, limb, foot, and toe radii were revised toward the reference horse-like monster silhouette."
   ],
   "modelScaleMeters": {
     "height": 0.8,
