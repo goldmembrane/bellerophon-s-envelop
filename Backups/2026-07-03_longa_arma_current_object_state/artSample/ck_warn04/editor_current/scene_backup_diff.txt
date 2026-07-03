@@ -1,0 +1,17 @@
+# Approved Cockpit Backup Diff
+# Current = saved CargoRunMvp. Backup = preserved Unity scene recovery backup.
+
+CurrentRendererCount = 833
+BackupRendererCount = 833
+RemovedInBackupCount = 0
+AddedInBackupCount = 0
+ChangedInBackupCount = 0
+
+[RemovedInBackup]
+None
+
+[AddedInBackup]
+None
+
+[ChangedInBackup]
+None

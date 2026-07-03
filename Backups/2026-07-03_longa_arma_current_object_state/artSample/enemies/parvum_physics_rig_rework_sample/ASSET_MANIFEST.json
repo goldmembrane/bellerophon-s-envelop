@@ -1,0 +1,102 @@
+{
+  "sample": "parvum_physics_rig_rework_sample",
+  "objectId": "ENEMY-SEED-PARVUM",
+  "title": "파르붐 기준 이미지 재반영 단일 메시 샘플",
+  "approvalState": "승인",
+  "unityApplicationAllowed": true,
+  "requiresUserApprovalBeforeUnity": false,
+  "generatedDate": "2026-06-29",
+  "sourceBasis": [
+    "image/parvum(파르붐).png",
+    "image/parvum-back.png",
+    "image/parvum-beside.png",
+    "사용자 지시: 몸체를 기준 이미지에 더 가깝게 변형",
+    "사용자 지시: 주둥이를 원통형 오브젝트가 아니라 몸통과 자연스럽게 이어지도록 수정",
+    "사용자 지시: 머티리얼과 텍스처 적용 규칙 준수"
+  ],
+  "visibleObjects": [
+    "Unified_Parvum_Reference_Matched_Single_Mesh"
+  ],
+  "visualRule": "One visible mesh. The front body surface is deformed into the muzzle; no separate front object or separate slime body objects.",
+  "modelingCorrections": [
+    "원통형 주둥이 부착 구조 제거",
+    "몸체 표면 변형으로 주둥이 돌출부 제작",
+    "넓은 바닥과 높은 중앙 돔형 실루엣 유지",
+    "주둥이와 몸체 경계가 물리적 부품 경계처럼 보이지 않도록 같은 메시 표면으로 구성",
+    "초록 점액 몸체에 알베도, 거칠기, 범프, 흰 박락 마스크, 컬러 속성 블렌딩 적용",
+    "회녹색 주둥이를 별도 오브젝트가 아니라 몸체 표면 face/컬러 블렌딩으로 통합하고 비늘 텍스처 적용",
+    "입, 치아, 혀에 부위별 알베도 텍스처와 재질 특성 적용",
+    "내부 물방울, 검은 두 줄, 분리된 점액 덩어리 오브젝트 미생성"
+  ],
+  "textures": [
+    "textures/parvum_slime_albedo.png",
+    "textures/parvum_slime_roughness.png",
+    "textures/parvum_slime_bump.png",
+    "textures/parvum_white_fleck_mask.png",
+    "textures/parvum_muzzle_scale_albedo.png",
+    "textures/parvum_muzzle_scale_bump.png",
+    "textures/parvum_mouth_cavity_albedo.png",
+    "textures/parvum_tooth_albedo.png",
+    "textures/parvum_tongue_albedo.png"
+  ],
+  "materials": [
+    {
+      "name": "M_Parvum_Wet_Marbled_Green_Slime_Texture",
+      "part": "몸통 단일 메시 대부분",
+      "note": "점액 알베도, 거칠기, 범프, 흰 박락 마스크, 컬러 속성 블렌딩"
+    },
+    {
+      "name": "M_Parvum_Embedded_Grey_Green_Muzzle_Texture",
+      "part": "몸통 전면 주둥이 face 영역",
+      "note": "회녹색 알베도, 비늘 범프, 거칠기 응답"
+    },
+    {
+      "name": "M_Parvum_Dark_Muzzle_Pores",
+      "part": "콧구멍",
+      "note": "작은 어두운 모공"
+    },
+    {
+      "name": "M_Parvum_Deep_Mouth_Cavity_No_Line_Objects",
+      "part": "입 내부",
+      "note": "검은 두 줄 오브젝트 없는 어두운 젖은 구강"
+    },
+    {
+      "name": "M_Parvum_Irregular_Embedded_Teeth",
+      "part": "치아",
+      "note": "누런 알베도와 미세 거칠기"
+    },
+    {
+      "name": "M_Parvum_Mouth_Tongue_Detail",
+      "part": "혀",
+      "note": "젖은 붉은 표면"
+    }
+  ],
+  "shapeKeys": [
+    "Idle_Pulse_Surface_Jiggle",
+    "Move_Squash_Forward_Slosh",
+    "Attack_Bite_Core_Kick",
+    "Hit_Recoil_Side_Wave",
+    "Death_Flatten_Liquid_Spread"
+  ],
+  "generatedFiles": [
+    "blender/parvum_physics_rig_rework_sample.blend",
+    "exports/parvum_physics_rig_rework_sample.fbx",
+    "exports/parvum_physics_rig_rework_sample.glb",
+    "renders/01_front_single_slime_body_reference.png",
+    "renders/02_side_lower_mouth_merged_into_body.png",
+    "renders/03_back_no_lobe_boundaries.png",
+    "renders/04_top_single_surface_no_proxy_objects.png",
+    "renders/05_three_quarter_clean_runtime_visual.png",
+    "renders/06_idle_single_surface_pulse_pose.png",
+    "renders/07_move_single_body_squash_slosh_pose.png",
+    "renders/08_attack_mouth_supported_by_body_pose.png",
+    "renders/09_hit_recoil_single_mass_wave_pose.png",
+    "renders/10_death_single_slime_flatten_pose.png",
+    "README.md",
+    "PHYSICS_RIG_NOTES.md",
+    "TEXTURE_ANALYSIS.md",
+    "ASSET_MANIFEST.json",
+    "APPROVAL_STATUS.json",
+    "index.html"
+  ]
+}

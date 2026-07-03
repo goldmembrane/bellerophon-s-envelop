@@ -90,6 +90,16 @@
 - Art/modeling/texturing completion requires side-by-side visual comparison against the target `artSample/` render or image. Do not report completion only because assets, renderers, object counts, FBX files, or materials exist.
 - Texturing must include the material qualities needed by the reference, such as albedo variation, chipped paint, dirt, roughness/metalness response, and normal/bump detail. Superficial line scratches or flat colors are not enough when the reference shows rough worn surfaces.
 
+## 모델링 교체 및 Unity 적용 범위 규칙 - 절대 규칙 (2026-07-03)
+
+- 모델링 교체 작업은 승인된 모델 파일, 내보내기 파일, 텍스처, 머티리얼, 프리팹, 또는 사용자가 명시한 Unity 루트 오브젝트에만 한정한다.
+- 사용자가 씬 전체 작업을 명시적으로 승인하지 않은 경우, 모델링 교체를 이유로 Unity 씬 전체를 열거나 저장하거나 덮어쓰지 않는다.
+- Unity 씬 반영이 필요한 경우에는 대상 씬 경로, 대상 루트 오브젝트 이름, 교체할 하위 오브젝트, 유지해야 할 기존 오브젝트, 삭제 또는 비활성화할 오브젝트를 승인 요청에 구체적으로 적어야 한다.
+- `Player`, `Hud`, `EventSystem`, 조명, 카메라, Phase 루트, graybox, 방 상호작용 루트처럼 모델 교체 대상이 아닌 기존 씬 루트는 사용자가 이름으로 명시하지 않는 한 읽기, 복사, 삭제, 비활성화, 저장 대상에 포함하지 않는다.
+- 승인된 `artSample/` 모델을 Unity에 적용할 때도 샘플 승인과 런타임 씬 적용은 별도 작업으로 취급한다. 샘플 승인만으로 씬, 프리팹, 런타임 에셋을 변경하지 않는다.
+- 모델 교체 스크립트나 Unity 브리지 명령을 작성할 때는 씬 전체를 여는 패턴을 기본값으로 삼지 않는다. 먼저 모델 임포트, 프리팹 교체, 지정 루트 하위 교체처럼 더 좁은 범위의 적용 방법을 검토한다.
+- 기존 씬을 열어야만 하는 경우에는 `OpenSceneMode.Single` 사용 여부와 저장 여부를 승인 요청에 명시해야 하며, 승인받은 루트 외의 씬 오브젝트가 생성, 삭제, 복원, 이동, 이름 변경, 활성 상태 변경되지 않아야 한다.
+
 ## 적대 개체 샘플 제작 규칙 - 절대 규칙 (2026-06-28)
 
 - 이 섹션은 적대 개체 샘플 제작에 적용되는 절대 규칙이며, 적대 개체 샘플을 완료로 보고하기 전에 반드시 충족해야 한다.

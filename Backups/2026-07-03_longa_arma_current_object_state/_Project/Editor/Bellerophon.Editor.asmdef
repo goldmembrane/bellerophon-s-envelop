@@ -1,0 +1,21 @@
+{
+  "name": "Bellerophon.Editor",
+  "rootNamespace": "Bellerophon.Editor",
+  "references": [
+    "Bellerophon.Runtime",
+    "Unity.InputSystem",
+    "UnityEditor.TestRunner",
+    "UnityEngine.UI"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

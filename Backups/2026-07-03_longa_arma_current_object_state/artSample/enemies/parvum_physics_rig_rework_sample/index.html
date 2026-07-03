@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>파르붐 기준 이미지 재반영 단일 메시 샘플</title>
+  <style>
+    body { margin: 0; background: #f1f5ec; color: #18201b; font-family: system-ui, sans-serif; }
+    header { padding: 24px 28px 10px; }
+    h1 { margin: 0 0 8px; font-size: 24px; }
+    p { margin: 0; color: #4f5e53; line-height: 1.5; }
+    .compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 14px; padding: 14px 24px 4px; }
+    main { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 14px; padding: 18px 24px 28px; }
+    section.detail { padding: 4px 24px 28px; }
+    section.detail h2 { margin: 24px 0 12px; font-size: 20px; }
+    .texture-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    table { width: 100%; border-collapse: collapse; background: #ffffff; border: 1px solid #ccd8ce; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #dde6de; text-align: left; vertical-align: top; font-size: 14px; }
+    th { background: #e7efe8; color: #26332a; }
+    figure { margin: 0; background: #ffffff; border: 1px solid #ccd8ce; border-radius: 6px; overflow: hidden; }
+    img { display: block; width: 100%; height: auto; }
+    figcaption { padding: 10px 12px; font-size: 14px; color: #334037; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>파르붐 기준 이미지 재반영 단일 메시 샘플</h1>
+    <p>기준 이미지와 비교할 수 있도록 정면, 측면, 후면 기준 이미지를 함께 배치했습니다. Unity에는 아직 반영하지 않았습니다.</p>
+  </header>
+  <section class="compare">
+    <figure><img src="../../../image/parvum(파르붐).png" alt="파르붐 기준 정면"><figcaption>기준 이미지 정면</figcaption></figure>
+    <figure><img src="../../../image/parvum-beside.png" alt="파르붐 기준 측면"><figcaption>기준 이미지 측면</figcaption></figure>
+    <figure><img src="../../../image/parvum-back.png" alt="파르붐 기준 후면"><figcaption>기준 이미지 후면</figcaption></figure>
+  </section>
+  <main>
+    <figure><img src='renders/01_front_single_slime_body_reference.png' alt='정면: 기준 이미지형 점액 몸체와 통합 주둥이'><figcaption>정면: 기준 이미지형 점액 몸체와 통합 주둥이</figcaption></figure>
+<figure><img src='renders/02_side_lower_mouth_merged_into_body.png' alt='측면: 주둥이가 원통 부착물이 아니라 몸체 표면에서 이어진 상태'><figcaption>측면: 주둥이가 원통 부착물이 아니라 몸체 표면에서 이어진 상태</figcaption></figure>
+<figure><img src='renders/03_back_no_lobe_boundaries.png' alt='후면: 독립 덩어리 경계 없는 단일 점액 몸체'><figcaption>후면: 독립 덩어리 경계 없는 단일 점액 몸체</figcaption></figure>
+<figure><img src='renders/04_top_single_surface_no_proxy_objects.png' alt='상단: 보이는 보조 오브젝트 없이 단일 표면'><figcaption>상단: 보이는 보조 오브젝트 없이 단일 표면</figcaption></figure>
+<figure><img src='renders/05_three_quarter_clean_runtime_visual.png' alt='3/4: Unity 적용 기준 검토 시점'><figcaption>3/4: Unity 적용 기준 검토 시점</figcaption></figure>
+<figure><img src='renders/06_idle_single_surface_pulse_pose.png' alt='대기: 단일 표면 맥동'><figcaption>대기: 단일 표면 맥동</figcaption></figure>
+<figure><img src='renders/07_move_single_body_squash_slosh_pose.png' alt='이동: 한 덩어리 몸체 쏠림'><figcaption>이동: 한 덩어리 몸체 쏠림</figcaption></figure>
+<figure><img src='renders/08_attack_mouth_supported_by_body_pose.png' alt='공격: 입과 몸체가 함께 전진'><figcaption>공격: 입과 몸체가 함께 전진</figcaption></figure>
+<figure><img src='renders/09_hit_recoil_single_mass_wave_pose.png' alt='피격: 단일 질량 파동'><figcaption>피격: 단일 질량 파동</figcaption></figure>
+<figure><img src='renders/10_death_single_slime_flatten_pose.png' alt='사망: 한 덩어리 점액 퍼짐'><figcaption>사망: 한 덩어리 점액 퍼짐</figcaption></figure>
+  </main>
+  <section class="detail">
+    <h2>사용 텍스처</h2>
+    <div class="texture-grid">
+      <figure><img src='textures/parvum_slime_albedo.png' alt='점액 몸통 알베도'><figcaption><strong>점액 몸통 알베도</strong><br>몸통 전체<br>짙은 초록 점액의 내부 마블링과 색 변화</figcaption></figure>
+<figure><img src='textures/parvum_slime_roughness.png' alt='점액 몸통 거칠기'><figcaption><strong>점액 몸통 거칠기</strong><br>몸통 전체<br>젖은 부분과 탁한 부분의 roughness 차이</figcaption></figure>
+<figure><img src='textures/parvum_slime_bump.png' alt='점액 몸통 범프'><figcaption><strong>점액 몸통 범프</strong><br>몸통 전체<br>흐르는 점액 주름과 미세 요철</figcaption></figure>
+<figure><img src='textures/parvum_white_fleck_mask.png' alt='흰 박락 마스크'><figcaption><strong>흰 박락 마스크</strong><br>몸통 표면<br>기준 이미지의 흰색 벗겨진 얼룩</figcaption></figure>
+<figure><img src='textures/parvum_muzzle_scale_albedo.png' alt='회녹색 주둥이 알베도'><figcaption><strong>회녹색 주둥이 알베도</strong><br>몸통 전면 주둥이 영역<br>파충류성 회녹색 비늘 색 변화</figcaption></figure>
+<figure><img src='textures/parvum_muzzle_scale_bump.png' alt='회녹색 주둥이 범프'><figcaption><strong>회녹색 주둥이 범프</strong><br>몸통 전면 주둥이 영역<br>비늘과 모공 요철</figcaption></figure>
+<figure><img src='textures/parvum_mouth_cavity_albedo.png' alt='입 안쪽 알베도'><figcaption><strong>입 안쪽 알베도</strong><br>입 내부<br>검은 선이 아닌 젖은 어두운 구강</figcaption></figure>
+<figure><img src='textures/parvum_tooth_albedo.png' alt='치아 알베도'><figcaption><strong>치아 알베도</strong><br>치아<br>누런 치아 얼룩과 색 변화</figcaption></figure>
+<figure><img src='textures/parvum_tongue_albedo.png' alt='혀 알베도'><figcaption><strong>혀 알베도</strong><br>혀<br>젖은 붉은 혀 색 변화</figcaption></figure>
+    </div>
+    <h2>사용 머티리얼</h2>
+    <table>
+      <thead><tr><th>머티리얼</th><th>적용 부위</th><th>연결/표현 내용</th></tr></thead>
+      <tbody>
+        <tr><td>M_Parvum_Wet_Marbled_Green_Slime_Texture</td><td>몸통 단일 메시 대부분</td><td>점액 알베도, 거칠기, 범프, 흰 박락 마스크, 컬러 속성 블렌딩</td></tr>
+<tr><td>M_Parvum_Embedded_Grey_Green_Muzzle_Texture</td><td>몸통 전면 주둥이 face 영역</td><td>회녹색 알베도, 비늘 범프, 거칠기 응답</td></tr>
+<tr><td>M_Parvum_Dark_Muzzle_Pores</td><td>콧구멍</td><td>작은 어두운 모공</td></tr>
+<tr><td>M_Parvum_Deep_Mouth_Cavity_No_Line_Objects</td><td>입 내부</td><td>검은 두 줄 오브젝트 없는 어두운 젖은 구강</td></tr>
+<tr><td>M_Parvum_Irregular_Embedded_Teeth</td><td>치아</td><td>누런 알베도와 미세 거칠기</td></tr>
+<tr><td>M_Parvum_Mouth_Tongue_Detail</td><td>혀</td><td>젖은 붉은 표면</td></tr>
+      </tbody>
+    </table>
+  </section>
+</body>
+</html>

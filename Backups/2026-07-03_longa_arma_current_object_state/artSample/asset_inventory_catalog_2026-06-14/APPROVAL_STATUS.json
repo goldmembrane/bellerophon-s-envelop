@@ -1,0 +1,9 @@
+{
+  "sampleName": "Asset inventory catalog",
+  "createdDate": "2026-06-14",
+  "approvalState": "selection-catalog-only",
+  "unityApplicationAllowed": false,
+  "runtimeSceneModified": false,
+  "reviewable": true,
+  "nextStep": "User selects candidate asset files, then a separate artSample placement proposal is generated for approval."
+}

@@ -1,0 +1,10 @@
+{
+  "sample": "cockpit_01",
+  "approvalState": "승인",
+  "unityApplicationAllowed": true,
+  "scope": "조종실 전체 구조 블록아웃. 조종대, 유리 디테일, 콘솔, 복도 연결 제외.",
+  "sourceBasis": [
+    "docs/GAME_DESIGN_SOURCE.txt: 화물선 6구역, 조종실 ㅜ자 구조, 좌/우/후방 방향",
+    "docs/MVP_IMPLEMENTATION_ORDER.md: 조종실 전면 및 연결 방향 식별 요구"
+  ]
+}

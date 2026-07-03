@@ -1,0 +1,7 @@
+{
+  "sample": "ck_map05",
+  "approvalState": "제외",
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": false,
+  "excludedReason": "CK-05 is moved out of cockpit modeling. It will be implemented as manual steering mode UI/HUD only."
+}

@@ -1,0 +1,55 @@
+{
+  "sample": "engine_room_health_screen",
+  "objectId": "ER-09",
+  "title": "동력기계 내구도 스크린과 장식용 보조 스크린 에셋 샘플",
+  "approvalState": "미승인",
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": true,
+  "assetBasis": {
+    "primaryPrefab": "Assets/Sci-Fi Styled Modular Pack/Prefabs/Decorative elements/big_screen.prefab",
+    "displayTexture": "Assets/Heavy Station Kit/BASE/Textures/Displays/B2_Eq41_E.png",
+    "secondaryPrefabs": [
+      "Assets/Sci-Fi Styled Modular Pack/Prefabs/Decorative elements/console_screen.prefab",
+      "Assets/Sci-Fi Styled Modular Pack/Prefabs/Decorative elements/computer_station.prefab",
+      "Assets/Sci-Fi Styled Modular Pack/Prefabs/Walls/decorative_wall_4_computer.prefab"
+    ],
+    "primaryPrefabUse": "벽면 부착 스크린 하우징 기준입니다.",
+    "displayTextureUse": "2열 x 4행으로 반복된 텍스처 중 좌상단 1개 화면만 디스플레이 전체에 꽉 차게 매핑합니다.",
+    "blenderSampleUse": "승인용 배치/비율/부품 경계 샘플입니다. 사용자 승인 전에는 Unity에 연결하지 않습니다."
+  },
+  "sourceBasis": [
+    "docs/GAME_DESIGN_SOURCE.txt:124 - 동력실 내부 옆면 스크린으로 동력기계 내구도를 확인합니다.",
+    "docs/ENGINE_ROOM_OBJECTS.md - ER-09 내구도 스크린과 ER-10 연결 여지를 분리해 관리합니다.",
+    "사용자 확인: B2_Eq41_E.png의 반복 화면 중 한 장만 디스플레이 전체에 꽉 차게 넣고, 세부 내구도 UI는 별도로 구현합니다.",
+    "사용자 확인: 스크린 하나만 있으면 허전하므로 별도 기능 없이 장식용 보조 스크린을 추가합니다."
+  ],
+  "generatedFiles": [
+    "blender/engine_room_health_screen.blend",
+    "exports/engine_room_health_screen.fbx",
+    "exports/engine_room_health_screen.glb",
+    "renders/01_front_all_states.png",
+    "renders/02_normal_green.png",
+    "renders/03_warning_orange.png",
+    "renders/04_side_mount.png",
+    "renders/05_detail_reserved_port.png",
+    "renders/06_auxiliary_screen_pair.png"
+  ],
+  "includedParts": [
+    "big_screen 프리팹 비율 기반 벽면 스크린 하우징",
+    "B2_Eq41_E.png의 좌상단 단일 화면 타일을 입힌 디스플레이 면",
+    "기능 없는 장식용 보조 스크린 2개",
+    "런타임 UI 정렬용 코너 탭",
+    "후면 서비스 플레이트, 진동 패드, 볼트, 힌지, 케이블 소켓",
+    "ER-10 오버클럭 장치 연결을 위한 하단 예비 커버",
+    "동력실 옆면 벽 배치 기준 프록시"
+  ],
+  "excludedParts": [
+    "내구도 색상 상태 UI",
+    "내구도 수치, 게이지, 경고 문구, 파형 표시",
+    "스크린 파괴 상태 ER-11",
+    "실제 오버클럭 상호작용 장치 ER-10",
+    "Unity 씬 배치와 충돌 설정",
+    "상호작용 로직",
+    "보조 스크린의 별도 기능 또는 런타임 UI 의미"
+  ]
+}

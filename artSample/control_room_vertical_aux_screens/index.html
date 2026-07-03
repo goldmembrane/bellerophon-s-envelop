@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CR-08 vertical auxiliary screens sample</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #111412;
+      --panel: #1d2320;
+      --line: #405047;
+      --text: #efe7d4;
+      --muted: #c9bfa9;
+      --accent: #6fc8bd;
+      --warn: #d58b3a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        linear-gradient(90deg, rgba(111,200,189,.08) 1px, transparent 1px) 0 0 / 44px 44px,
+        radial-gradient(circle at 20% 0%, rgba(213,139,58,.16), transparent 34%),
+        var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", "Malgun Gothic", sans-serif;
+    }
+    main { max-width: 1320px; margin: 0 auto; padding: 28px; }
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 16px;
+    }
+    h1 { margin: 0; font-size: clamp(24px, 3vw, 38px); font-weight: 720; letter-spacing: 0; }
+    p { margin: 8px 0 0; color: var(--muted); line-height: 1.6; max-width: 880px; }
+    .badge { border: 1px solid var(--warn); color: #f3c17f; padding: 8px 10px; font-size: 13px; white-space: nowrap; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    figure { margin: 0; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel), black 10%); padding: 10px; }
+    figure:first-child { grid-column: 1 / -1; }
+    img { width: 100%; display: block; background: #080a09; }
+    figcaption { margin-top: 9px; color: #e1d6c0; font-size: 14px; }
+    .notes { margin-top: 18px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .note { border-left: 3px solid var(--accent); background: rgba(29,35,32,.72); padding: 12px 14px; color: var(--muted); line-height: 1.5; }
+    @media (max-width: 860px) {
+      header, .grid, .notes { grid-template-columns: 1fr; }
+      figure:first-child { grid-column: auto; }
+      main { padding: 18px; }
+      .badge { white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>CR-08 세로형 보조 스크린 묶음</h1>
+      <p>CR-06 대형 메인 스크린 왼쪽 보조 베이에 폭을 대폭 줄이고 높이를 확실히 늘린 세로형 3패널 묶음을 배치한 승인용 샘플입니다. CR-07은 오른쪽 상단 위치 관계 확인용 컨텍스트로만 표시했습니다.</p>
+    </div>
+    <div class="badge">Unity 반영 전 승인용</div>
+  </header>
+  <section class="grid">
+    <figure><a href="renders/01_context_overview.png"><img src="renders/01_context_overview.png" alt="01 CR-06, CR-07, CR-08 전체 위치 관계"></a><figcaption>01 CR-06, CR-07, CR-08 전체 위치 관계</figcaption></figure>
+    <figure><a href="renders/02_front_alignment.png"><img src="renders/02_front_alignment.png" alt="02 전면 정렬과 메인 스크린 비가림 확인"></a><figcaption>02 전면 정렬과 메인 스크린 비가림 확인</figcaption></figure>
+    <figure><a href="renders/03_vertical_bank_closeup.png"><img src="renders/03_vertical_bank_closeup.png" alt="03 CR-08 폭을 대폭 줄인 긴 세로형 3패널 묶음 근접"></a><figcaption>03 CR-08 폭을 대폭 줄인 긴 세로형 3패널 묶음 근접</figcaption></figure>
+    <figure><a href="renders/04_side_mount_depth.png"><img src="renders/04_side_mount_depth.png" alt="04 장착 깊이와 케이블 레이스웨이"></a><figcaption>04 장착 깊이와 케이블 레이스웨이</figcaption></figure>
+    <figure><a href="renders/05_cr07_relation_clearance.png"><img src="renders/05_cr07_relation_clearance.png" alt="05 CR-07과 CR-08 간격 확인"></a><figcaption>05 CR-07과 CR-08 간격 확인</figcaption></figure>
+  </section>
+  <section class="notes">
+    <div class="note">세로 패널 개수는 원본에 확정되어 있지 않아 폭을 대폭 줄이고 높이를 확실히 늘린 3개 제안안으로 표시했습니다.</div>
+    <div class="note">패널 안의 표시는 실제 UI가 아니라 구역 상태, CCTV, 복도 폐쇄 표시 방향을 암시하는 더미입니다.</div>
+    <div class="note">CR-01, CR-07, 동력실, 조종실 오브젝트에는 반영하지 않았습니다.</div>
+  </section>
+</main>
+</body>
+</html>

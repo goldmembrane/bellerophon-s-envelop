@@ -1,0 +1,46 @@
+{
+  "sample": "control_room_vertical_aux_screens",
+  "objectId": "CR-08",
+  "title": "통제실 세로형 보조 스크린 묶음",
+  "approvalState": "미승인",
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": true,
+  "sourceBasis": [
+    "docs/CONTROL_ROOM_OBJECTS.md - CR-08 세로형 보조 스크린 묶음",
+    "docs/GAME_DESIGN_SOURCE.txt - 통제실에는 대형 스크린, 가로형 스크린, 세로형 스크린 여러 개가 필요함",
+    "사용자 승인 범위 - CR-06 대형 메인 스크린 및 CR-07 가로형 보조 스크린과의 위치 관계를 보여주는 샘플 제작"
+  ],
+  "designInference": [
+    "원본은 세로형 스크린의 정확한 개수를 명시하지 않으므로 샘플에서는 폭을 대폭 줄이고 높이를 확실히 늘린 3개 패널 묶음을 제안안으로 표시함",
+    "CR-07과 충돌하지 않도록 CR-06 왼쪽 보조 베이에 배치하는 안으로 구성함",
+    "화면 내용은 실제 UI가 아니라 구역 상태/CCTV/폐쇄 상태를 암시하는 더미 표시임"
+  ],
+  "generatedFiles": [
+    "blender/control_room_vertical_aux_screens.blend",
+    "exports/control_room_vertical_aux_screens.fbx",
+    "exports/control_room_vertical_aux_screens.glb",
+    "renders/01_context_overview.png",
+    "renders/02_front_alignment.png",
+    "renders/03_vertical_bank_closeup.png",
+    "renders/04_side_mount_depth.png",
+    "renders/05_cr07_relation_clearance.png",
+    "index.html",
+    "README.md",
+    "ASSET_MANIFEST.json",
+    "APPROVAL_STATUS.json"
+  ],
+  "includedParts": [
+    "CR-06 대형 메인 스크린 기준 패널",
+    "CR-07 가로형 보조 스크린 위치 관계용 컨텍스트 프레임",
+    "CR-08 폭을 대폭 줄이고 높이를 확실히 늘린 세로형 보조 스크린 3패널 묶음 제안안",
+    "ZONE/CCTV/LOCK 더미 표시 화면",
+    "좌측 보조 베이 장착 프레임, 공용 케이블 레이스웨이, 하단 서비스 트렁크"
+  ],
+  "excludedParts": [
+    "실제 구역 상태 UI",
+    "실제 CCTV 영상 피드",
+    "실제 복도 폐쇄 로직",
+    "상호작용 로직",
+    "Unity 씬 반영"
+  ]
+}

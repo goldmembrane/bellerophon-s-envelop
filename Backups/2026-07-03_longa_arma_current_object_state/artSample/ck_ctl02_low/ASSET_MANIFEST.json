@@ -1,0 +1,18 @@
+{
+  "sample": "ck_ctl02_low",
+  "objectId": "CK-02",
+  "scope": "조종실 메인 조종대 낮은 본체 수정안",
+  "sourceBasis": [
+    "docs/COCKPIT_OBJECTS.md: CK-02 메인 조종대",
+    "docs/GAME_DESIGN_SOURCE.txt:115 조종실 전면 유리와 수리 장치",
+    "docs/GAME_DESIGN_SOURCE.txt:116 유리창 앞 조종대와 F 상호작용",
+    "docs/MVP_IMPLEMENTATION_ORDER.md:98 전면 유리, 조종대, 연결 방향 표시",
+    "docs/MVP_IMPLEMENTATION_ORDER.md:138 조종대 F 상호작용으로 수동 운행 모드 진입"
+  ],
+  "usedAssetCandidates": {
+    "scale context seat": "D:\\Bellerophon2\\Bellerophon\\Assets\\Sci-Fi Styled Modular Pack\\Models\\pilot_seat.fbx"
+  },
+  "unityApplicationAllowed": true,
+  "approvalState": "승인",
+  "screenPolicy": "CK-01 front panoramic screen is the main cockpit screen. CK-02 does not include a central monitor."
+}

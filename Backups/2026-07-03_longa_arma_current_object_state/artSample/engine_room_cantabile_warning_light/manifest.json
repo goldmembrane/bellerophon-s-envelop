@@ -1,0 +1,26 @@
+{
+  "sampleId": "engine_room_cantabile_warning_light",
+  "title": "칸타빌레 공명 경고등",
+  "createdFor": "ER-20",
+  "status": "sample",
+  "unityImplementation": {
+    "targetScene": "CargoRunMvp",
+    "targetArea": "Engine Room ceiling",
+    "approvalRequiredBeforeUnity": true,
+    "runtimeBehavior": "Cantabile resonance warning light flashes or rotates while resonance is active"
+  },
+  "files": {
+    "preview": "index.html",
+    "source": "source/create_cantabile_warning_light_sample.py",
+    "glb": "model/cantabile_warning_light.glb",
+    "fbx": "model/cantabile_warning_light.fbx",
+    "renders": [
+      "renders/01_front_ceiling_mount.png",
+      "renders/02_red_lens_detail.png",
+      "renders/03_black_base_side.png",
+      "renders/04_ceiling_attachment.png",
+      "renders/05_resonance_active_glow.png",
+      "renders/06_scale_context.png"
+    ]
+  }
+}

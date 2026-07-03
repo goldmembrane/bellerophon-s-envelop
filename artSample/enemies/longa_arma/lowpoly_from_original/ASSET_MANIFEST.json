@@ -1,0 +1,42 @@
+{
+  "assetId": "longa_arma_lowpoly_from_original",
+  "createdAt": "2026-07-03",
+  "sourceBlend": "enemies model/longa arma.blend",
+  "purpose": "Static low-poly sample generated directly from the original Longa Arma mesh.",
+  "outputs": {
+    "blend": "artSample/enemies/longa_arma/lowpoly_from_original/blender/longa_arma_lowpoly_from_original.blend",
+    "fbx": "artSample/enemies/longa_arma/lowpoly_from_original/exports/longa_arma_lowpoly_from_original.fbx",
+    "glb": "artSample/enemies/longa_arma/lowpoly_from_original/exports/longa_arma_lowpoly_from_original.glb",
+    "renders": [
+      "renders/01_side_pos_x.png",
+      "renders/02_blade_side_neg_x.png",
+      "renders/03_front_neg_y.png",
+      "renders/04_rear_pos_y.png"
+    ],
+    "textures": [
+      "textures/longa_lowpoly_body_mottled_green.png",
+      "textures/longa_lowpoly_dark_scratched_blade.png",
+      "textures/longa_lowpoly_glossy_slime_drips.png"
+    ]
+  },
+  "geometry": {
+    "originalVertices": 144545,
+    "originalFaces": 289086,
+    "lowpolyVertices": 6002,
+    "lowpolyFaces": 12000,
+    "decimateRatio": 0.041510138851414455,
+    "dimensions": [
+      1.8986,
+      1.1733,
+      1.1032
+    ]
+  },
+  "materials": {
+    "bodyFaces": 10091,
+    "bladeFaces": 375,
+    "slimeFaces": 1534
+  },
+  "notRigged": true,
+  "notAnimated": true,
+  "notUnityApplied": true
+}

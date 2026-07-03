@@ -1,0 +1,8 @@
+{
+  "sample": "control_room_vertical_aux_screens",
+  "objectId": "CR-08",
+  "approvalState": "미승인",
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": true,
+  "note": "사용자 승인 전에는 CargoRunMvp 씬, 프리팹, 런타임 UI 흐름에 반영하지 않습니다."
+}

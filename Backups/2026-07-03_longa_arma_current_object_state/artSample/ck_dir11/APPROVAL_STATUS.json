@@ -1,0 +1,9 @@
+{
+  "sample": "ck_dir11",
+  "approvalState": "승인",
+  "approvalCondition": "Unity 적용 시 조종실 구조에 맞는 위치에 배치",
+  "unityApplicationAllowed": true,
+  "unityApplied": true,
+  "unityAppliedComparison": "artSample/ck_dir11/unity_applied_comparison/index.html",
+  "requiresUserApprovalBeforeUnity": false
+}

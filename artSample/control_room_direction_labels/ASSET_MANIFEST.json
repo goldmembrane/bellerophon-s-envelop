@@ -1,0 +1,23 @@
+{
+  "sample": "control_room_direction_labels",
+  "object_id": "CR-17",
+  "created_for": "통제실 복도 방향 표시 레이블",
+  "outputs": [
+    "index.html",
+    "renders/01_context_overview.png",
+    "renders/02_left_corridor_labels.png",
+    "renders/03_south_adjacent_labels.png",
+    "renders/04_panel_closeup.png",
+    "renders/05_topdown_layout.png",
+    "exports/control_room_direction_labels.glb",
+    "exports/control_room_direction_labels.fbx",
+    "blender/control_room_direction_labels.blend"
+  ],
+  "unity_application": "approval_required_before_unity",
+  "notes": [
+    "천장 없이 통제실 기준 벽, 복도 바닥, 레이블 패널만 표시한다.",
+    "방향 레이블은 영어를 메인 표기로 두고 한국어를 보조 표기로 둔다.",
+    "조종실/동력실은 좌측 분리 복도, 이송창고/무기실은 6시 방향 인접 복도 관계로 배치한다.",
+    "샘플 승인 전에는 Unity 씬, 프리팹, 런타임 자산에 연결하지 않는다."
+  ]
+}

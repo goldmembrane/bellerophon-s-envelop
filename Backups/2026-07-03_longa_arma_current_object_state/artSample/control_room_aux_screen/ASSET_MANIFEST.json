@@ -1,0 +1,42 @@
+{
+  "sample": "control_room_aux_screen",
+  "objectId": "CR-07",
+  "title": "통제실 가로형 보조 스크린",
+  "approvalState": "미승인",
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": true,
+  "sourceBasis": [
+    "docs/CONTROL_ROOM_OBJECTS.md - CR-07 가로형 보조 스크린.",
+    "사용자 확인 - CR-07은 대형 메인 스크린보다 조금 더 위에 두고, C2_ElC2Disp.png 에셋을 디스플레이에 꽉 차게 넣는다.",
+    "docs/GAME_DESIGN_SOURCE.txt - 통제실에는 대형 스크린, 가로형 스크린, 세로형 보조 스크린 여러 개가 필요하다."
+  ],
+  "generatedFiles": [
+    "blender/control_room_aux_screen.blend",
+    "exports/control_room_aux_screen.fbx",
+    "exports/control_room_aux_screen.glb",
+    "renders/01_context_overview.png",
+    "renders/02_front_alignment.png",
+    "renders/03_aux_screen_closeup.png",
+    "renders/04_side_mount_depth.png",
+    "renders/05_top_right_relation.png",
+    "index.html",
+    "README.md",
+    "ASSET_MANIFEST.json",
+    "APPROVAL_STATUS.json"
+  ],
+  "includedParts": [
+    "CR-06 대형 메인 스크린 기준 패널",
+    "CR-06 표시 면보다 조금 더 위쪽 오른쪽 바깥 영역의 CR-07 가로형 보조 스크린",
+    "보조 스크린 베젤, 유리 립, C2_ElC2Disp.png가 꽉 찬 표시 면",
+    "벽면 장착 패드, 방진 가스켓, 좌측 브래킷, 우측 케이블 소켓",
+    "상부 벽면 케이블 레이스웨이와 고정 볼트",
+    "Unity 반영 시 위치 기준을 확인하기 위한 CR-07 배치 라벨"
+  ],
+  "excludedParts": [
+    "실제 구역 상태 UI",
+    "CCTV 영상 피드",
+    "상호작용 로직",
+    "Unity 씬 배치",
+    "CR-08 세로형 보조 스크린 묶음"
+  ]
+}

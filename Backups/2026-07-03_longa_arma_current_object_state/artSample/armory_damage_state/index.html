@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>armory_damage_state review</title>
+  <style>
+    body { margin: 0; background: #111314; color: #e8e0d0; font-family: Arial, sans-serif; }
+    main { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    p { color: #c9bfad; line-height: 1.55; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    figure { margin: 0; border: 1px solid #3f4542; background: #1c2121; padding: 10px; }
+    img { width: 100%; display: block; background: #0b0e0e; }
+    figcaption { margin-top: 8px; color: #ded3bd; font-size: 14px; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>armory_damage_state</h1>
+  <p>AR-12 포탑 조종대 파손/폭파 상태 승인용 샘플입니다. 조종대 본체는 정상 배치이고 AR-05 U자형 핸들만 왼쪽으로 45도 꺾여 있습니다. 파손 화면은 조종대 소형 화면이 아니라 AR-06 커브형 대형 모니터이며, 꺼진 검은 화면 위에 중심 충격점, 방사형 균열, 짧은 잔금, 흰 유리 파편을 배치했습니다. Unity 씬 배치와 실제 파티클/피해 로직은 포함하지 않았습니다.</p>
+  <section class="grid">
+    <figure><a href="renders/01_overview.png"><img src="renders/01_overview.png" alt="01 AR-12 파손 상태 전체"></a><figcaption>01 AR-12 파손 상태 전체</figcaption></figure>
+    <figure><a href="renders/02_monitor_crack_detail.png"><img src="renders/02_monitor_crack_detail.png" alt="02 AR-06 커브형 대형 모니터 액정 균열 상세"></a><figcaption>02 AR-06 커브형 대형 모니터 액정 균열 상세</figcaption></figure>
+    <figure><a href="renders/03_left_tilt_profile.png"><img src="renders/03_left_tilt_profile.png" alt="03 AR-05 핸들만 왼쪽 45도 꺾인 상태"></a><figcaption>03 AR-05 핸들만 왼쪽 45도 꺾인 상태</figcaption></figure>
+    <figure><a href="renders/04_smoke_effect.png"><img src="renders/04_smoke_effect.png" alt="04 연기와 그을림 효과"></a><figcaption>04 연기와 그을림 효과</figcaption></figure>
+  </section>
+</main>
+</body>
+</html>

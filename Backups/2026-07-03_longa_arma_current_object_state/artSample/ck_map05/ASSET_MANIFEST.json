@@ -1,0 +1,28 @@
+{
+  "sample": "ck_map05",
+  "objectId": "CK-05",
+  "scope": "Excluded cockpit physical panel sample. CK-05 will be handled as manual steering mode UI/HUD.",
+  "sourceBasis": [
+    "docs/COCKPIT_OBJECTS.md: CK-05 화물선 전개도 / 내구도 표시 패널",
+    "docs/GAME_DESIGN_SOURCE.txt:117 수동 운행 화면 왼쪽 하단 전개도와 구역 내구도 색상",
+    "docs/GAME_DESIGN_SOURCE.txt:113-115 화물선 6구역과 조종실 연결 구조"
+  ],
+  "included": [
+    "조종대 왼쪽 하단에 붙는 물리 디스플레이 패널",
+    "6구역 전개도",
+    "구역 연결선",
+    "내구도 색상 범례",
+    "마운트 브래킷, 케이블, 나사 디테일"
+  ],
+  "excluded": [
+    "조종실 물리 오브젝트 모델링",
+    "수동 운행 UI 전체 화면",
+    "자동/수동 조종 상태 표시",
+    "복구/수리 장치",
+    "실제 내구도 로직",
+    "Unity 런타임 연결"
+  ],
+  "unityApplicationAllowed": false,
+  "approvalState": "제외",
+  "excludedReason": "사용자 확인에 따라 CK-05는 수동 조종 모드에서만 표시되는 UI로 처리한다."
+}

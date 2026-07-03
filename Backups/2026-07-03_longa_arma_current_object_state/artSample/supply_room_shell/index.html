@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>supply_room_shell review</title>
+  <style>
+    body { margin: 0; background: #111314; color: #e8e0d0; font-family: Arial, sans-serif; }
+    main { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    p { color: #c9bfad; line-height: 1.55; }
+    h2 { margin: 0 0 10px; font-size: 20px; color: #f0e6d2; }
+    h3 { margin: 0 0 8px; font-size: 15px; color: #f0e6d2; }
+    ul { margin: 0; padding-left: 18px; color: #c9bfad; line-height: 1.55; }
+    li { margin: 2px 0; }
+    .summary { margin: 18px 0 20px; border: 1px solid #4b514c; background: #1a1f1f; padding: 16px; }
+    .summary p { margin: 0 0 14px; }
+    .summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .summary-card { border: 1px solid #343b38; background: #151919; padding: 12px; }
+    .badge { display: inline-block; margin-bottom: 10px; padding: 4px 8px; border: 1px solid #a66728; color: #ffcf91; background: #291b12; font-size: 13px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    figure { margin: 0; border: 1px solid #3f4542; background: #1c2121; padding: 10px; }
+    img { width: 100%; display: block; background: #0b0e0e; }
+    figcaption { margin-top: 8px; color: #ded3bd; font-size: 14px; }
+    @media (max-width: 900px) { .summary-grid, .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>supply_room_shell</h1>
+  <p>SR-07 사출대 단말기 HSK Open/Close 화면 승인용 샘플입니다. 기존 비품실 구조, 사물함, 사출대, SR-08 바닥 철판, SR-11 복도 문구, SR-12 CCTV 샘플 구조는 유지하고, 사출대 오른쪽 단말기 화면 앞면에 `HSK_Open_Close.png` 텍스처만 새 샘플 대상으로 추가했습니다. Unity 씬 배치와 사출대 개폐/쿨타임/상호작용 로직은 포함하지 않았습니다.</p>
+  <section class="summary">
+    <span class="badge">승인 대기 샘플</span>
+    <h2>SR-07 HSK Open/Close 단말기 화면 요약</h2>
+    <p>이번 변경은 사출대 오른쪽 단말기 화면에 Heavy Station Kit의 `HSK_Open_Close.png` GUI 이미지를 실제 화면 텍스처처럼 보이도록 얹은 샘플입니다. 기존 단말기 외형은 유지하고 화면 앞면의 표시만 교체했습니다.</p>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <h3>포함</h3>
+        <ul>
+          <li>SR-07 사출대 단말기 화면 텍스처 평면</li>
+          <li>`HSK_Open_Close.png` 이미지 기반 Open/Close 표시</li>
+          <li>기존 단말기 프레임과 버튼 구조 유지</li>
+          <li>10번 근접 렌더 추가</li>
+        </ul>
+      </div>
+      <div class="summary-card">
+        <h3>제외</h3>
+        <ul>
+          <li>Unity 씬, 프리팹, 런타임 자산 반영</li>
+          <li>사출대 개폐 상호작용 로직</li>
+          <li>사출 판정과 쿨타임 로직</li>
+          <li>비품실 기존 오브젝트 수정</li>
+        </ul>
+      </div>
+      <div class="summary-card">
+        <h3>승인 후 적용 범위</h3>
+        <ul>
+          <li>`Approved Supply Room 01 Shell` 하위 SR-07 화면만 수정</li>
+          <li>사출대 단말기 위치와 각도는 유지</li>
+          <li>비품실 다른 오브젝트는 수정 제외</li>
+          <li>시각 기준은 10번 샘플 렌더와의 일치도</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="summary">
+    <span class="badge">승인 대기 샘플</span>
+    <h2>SR-12 비품실 CCTV 앵커 요약</h2>
+    <p>이번 변경은 비품실을 위에서 내려다볼 때 왼쪽 상단 모서리에 고정될 CCTV의 위치와 실루엣을 검사하기 위한 샘플입니다. 벽과 천장 코너에 붙은 브래킷에서 짧은 관절 암이 내려오고, 카메라 본체는 비품실 내부를 향하도록 기울였습니다.</p>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <h3>포함</h3>
+        <ul>
+          <li>SR-12 북서쪽 코너 벽/천장 브래킷</li>
+          <li>짧은 관절 암과 힌지 조인트</li>
+          <li>소형 CCTV 본체, 보호 후드, 검은 렌즈</li>
+          <li>검토용 감시 방향 표시 레이</li>
+        </ul>
+      </div>
+      <div class="summary-card">
+        <h3>제외</h3>
+        <ul>
+          <li>Unity 씬, 프리팹, 런타임 자산 반영</li>
+          <li>통제실 CCTV 화면 전환 로직</li>
+          <li>CCTV 구매/해금 상태 로직</li>
+          <li>실제 렌더 카메라와 RenderTexture</li>
+        </ul>
+      </div>
+      <div class="summary-card">
+        <h3>승인 후 적용 범위</h3>
+        <ul>
+          <li>`Approved Supply Room 01 Shell` 하위 SR-12만 추가</li>
+          <li>기존 비품실 오브젝트는 위치와 구조 유지</li>
+          <li>비품실 밖 모든 씬 오브젝트는 수정 제외</li>
+          <li>시각 기준은 09번 샘플 렌더와의 일치도</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="summary">
+    <span class="badge">승인 대기 샘플</span>
+    <h2>SR-11 복도 방향 표시 레이블 요약</h2>
+    <p>이번 변경은 비품실에서 무기실과 운송창고 방향을 즉시 확인할 수 있도록, 각 복도 입구 주변에 벽면 표지판과 바닥 화살표를 독립 오브젝트로 추가한 샘플입니다.</p>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <h3>포함</h3>
+        <ul>
+          <li>SR-11 벽면 방향 표지판 백플레이트</li>
+          <li>`ARMORY`, `CARGO HOLD` 영어 메인 표기</li>
+          <li>출입구 색상과 맞춘 파랑/초록 색상 스트립</li>
+          <li>각 복도 입구 앞 바닥 방향 화살표</li>
+        </ul>
+      </div>
+      <div class="summary-card">
+        <h3>제외</h3>
+        <ul>
+          <li>Unity 씬, 프리팹, 런타임 자산 반영</li>
+          <li>SR-09/SR-10 출입구 구조 변경</li>
+          <li>길찾기 로직 또는 UI</li>
+          <li>비품실 밖 오브젝트 수정</li>
+        </ul>
+      </div>
+      <div class="summary-card">
+        <h3>승인 후 적용 범위</h3>
+        <ul>
+          <li>`Approved Supply Room 01 Shell` 하위 SR-11만 추가</li>
+          <li>기존 SR-09/SR-10 출입구는 위치와 구조 유지</li>
+          <li>비품실의 다른 오브젝트는 수정 제외</li>
+          <li>시각 기준은 08번 샘플 렌더와의 일치도</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="summary">
+    <span class="badge">승인 대기 샘플</span>
+    <h2>SR-08 사출 위험 구역 요약</h2>
+    <p>이번 변경은 사출대 앞에 서 있으면 사출될 수 있는 영역을 바닥에서 바로 읽을 수 있도록, 기존 바닥 위에 별도 철판 구역을 까는 샘플입니다. SR-04 분류 표시부는 사용자 확인에 따라 물리 모델링이 아니라 UI 작업으로 분리했습니다.</p>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <h3>포함</h3>
+        <ul>
+          <li>사출대 앞 SR-08 철판형 바닥 패널</li>
+          <li>패널 이음선과 매립 볼트</li>
+          <li>가장자리 경고 트림과 검은 사선 무늬</li>
+          <li>사출대 방향을 가리키는 체브론</li>
+        </ul>
+      </div>
+      <div class="summary-card">
+        <h3>제외</h3>
+        <ul>
+          <li>Unity 씬, 프리팹, 런타임 자산 반영</li>
+          <li>사출 판정, 개폐, 쿨타임 로직</li>
+          <li>SR-04 분류 표시부 물리 모델링</li>
+          <li>보관 UI와 데이터 저장 로직</li>
+        </ul>
+      </div>
+      <div class="summary-card">
+        <h3>승인 후 적용 범위</h3>
+        <ul>
+          <li>`Approved Supply Room 01 Shell` 하위 SR-08만 추가</li>
+          <li>기존 비품실 비대상 오브젝트는 수정 제외</li>
+          <li>비품실 밖 모든 씬 오브젝트는 수정 제외</li>
+          <li>시각 기준은 이 샘플 렌더와의 일치도</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="grid">
+    <figure><a href="renders/01_overview.png"><img src="renders/01_overview.png" alt="01 비품실 룸 셸 전체"></a><figcaption>01 비품실 룸 셸 전체</figcaption></figure>
+    <figure><a href="renders/02_floor_plan.png"><img src="renders/02_floor_plan.png" alt="02 ㄷ자형 벽 구조와 두 출입구"></a><figcaption>02 ㄷ자형 벽 구조와 두 출입구</figcaption></figure>
+    <figure><a href="renders/03_supply_storage_wall.png"><img src="renders/03_supply_storage_wall.png" alt="03 참고 이미지형 닫힌 2문 금속 사물함"></a><figcaption>03 참고 이미지형 닫힌 2문 금속 사물함</figcaption></figure>
+    <figure><a href="renders/04_ejection_wall.png"><img src="renders/04_ejection_wall.png" alt="04 사출대 벽과 보이는 오른쪽 단말기"></a><figcaption>04 사출대 벽과 보이는 오른쪽 단말기</figcaption></figure>
+    <figure><a href="renders/05_corridor_entries.png"><img src="renders/05_corridor_entries.png" alt="05 무기실과 운송창고 방향 출입구"></a><figcaption>05 무기실과 운송창고 방향 출입구</figcaption></figure>
+    <figure><a href="renders/06_room_shell_markers.png"><img src="renders/06_room_shell_markers.png" alt="06 룸 셸 벽 역할 마커"></a><figcaption>06 룸 셸 벽 역할 마커</figcaption></figure>
+    <figure><a href="renders/07_ejection_hazard_floor.png"><img src="renders/07_ejection_hazard_floor.png" alt="07 SR-08 사출대 앞 철판형 위험 구역"></a><figcaption>07 SR-08 사출대 앞 철판형 위험 구역</figcaption></figure>
+    <figure><a href="renders/08_corridor_direction_labels.png"><img src="renders/08_corridor_direction_labels.png" alt="08 SR-11 복도 방향 표시 레이블"></a><figcaption>08 SR-11 복도 방향 표시 레이블</figcaption></figure>
+    <figure><a href="renders/09_cctv_corner.png"><img src="renders/09_cctv_corner.png" alt="09 SR-12 좌상단 코너 CCTV 오브젝트"></a><figcaption>09 SR-12 좌상단 코너 CCTV 오브젝트</figcaption></figure>
+    <figure><a href="renders/10_ejection_terminal_hsk_screen.png"><img src="renders/10_ejection_terminal_hsk_screen.png" alt="10 SR-07 HSK Open/Close 단말기 화면"></a><figcaption>10 SR-07 HSK Open/Close 단말기 화면</figcaption></figure>
+  </section>
+</main>
+</body>
+</html>

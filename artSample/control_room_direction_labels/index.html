@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CR-17 통제실 복도 방향 표시 레이블 샘플</title>
+  <style>
+    :root { color-scheme: dark; --bg:#111418; --panel:#1c2229; --line:#36414b; --text:#eef3f6; --muted:#a8b3bd; --accent:#f5b84f; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: "Malgun Gothic", "Noto Sans KR", Arial, sans-serif; background: var(--bg); color: var(--text); }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 18px 42px; }
+    h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: 0; }
+    p { margin: 0; line-height: 1.65; color: var(--muted); }
+    .summary { border-left: 4px solid var(--accent); padding: 8px 0 8px 14px; margin: 18px 0 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
+    figure { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+    img { width: 100%; display: block; background: #0b0e11; }
+    figcaption { padding: 12px 14px 14px; font-size: 14px; line-height: 1.55; color: var(--muted); }
+    b { color: var(--text); font-weight: 700; }
+    .links { margin-top: 22px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 6px; background: #151a20; }
+    .links a { color: #9bd1ff; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>CR-17 통제실 복도 방향 표시 레이블 샘플</h1>
+    <p class="summary">COCKPIT, ENGINE ROOM, CARGO HOLD, ARMORY를 메인 표기로 두고 한국어를 보조 표기로 넣은 승인용 샘플입니다. 천장은 제외했고, 기존 통제실 출입구 관계를 알아볼 수 있도록 기준 벽과 복도 바닥만 낮은 밀도로 표시했습니다.</p>
+    <section class="grid">
+      <figure><img src="renders/01_context_overview.png" alt="통제실 방향 표시 레이블 전체 샘플"><figcaption><b>전체 구성</b><br>좌측의 조종실/동력실 복도와 하단의 이송창고/무기실 복도에 물리 레이블을 배치했습니다.</figcaption></figure>
+      <figure><img src="renders/02_left_corridor_labels.png" alt="좌측 조종실 동력실 레이블"><figcaption><b>좌측 복도 레이블</b><br>조종실과 동력실은 서로 떨어진 구조가 드러나도록 별도 패널과 화살표를 배치했습니다.</figcaption></figure>
+      <figure><img src="renders/03_south_adjacent_labels.png" alt="하단 이송창고 무기실 레이블"><figcaption><b>하단 인접 복도 레이블</b><br>이송창고와 무기실은 6시 방향에서 바로 옆에 붙어 있는 관계를 색상과 위치로 구분했습니다.</figcaption></figure>
+      <figure><img src="renders/04_panel_closeup.png" alt="레이블 패널 클로즈업"><figcaption><b>패널 상세</b><br>금속 패널, 컬러 트림, 체결 볼트, 영어 메인 표기와 한국어 보조 표기를 포함했습니다.</figcaption></figure>
+      <figure><img src="renders/05_topdown_layout.png" alt="방향 레이블 탑다운 레이아웃"><figcaption><b>탑다운 확인</b><br>통제실을 위에서 내려다본 기준으로 각 레이블과 복도 관계를 확인하는 이미지입니다.</figcaption></figure>
+    </section>
+    <section class="links">
+      <p>내보낸 파일: <a href="exports/control_room_direction_labels.glb">GLB</a>, <a href="exports/control_room_direction_labels.fbx">FBX</a>, <a href="blender/control_room_direction_labels.blend">Blender</a></p>
+    </section>
+  </main>
+</body>
+</html>

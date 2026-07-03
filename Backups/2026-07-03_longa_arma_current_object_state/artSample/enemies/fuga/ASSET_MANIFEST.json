@@ -1,0 +1,97 @@
+{
+  "enemyId": "fuga",
+  "sampleRoot": "artSample/enemies/fuga",
+  "primaryReference": "fuga2",
+  "createdBy": "build_fuga_sample.py",
+  "modelFiles": [
+    "blender/fuga_sample.blend",
+    "exports/fuga_sample.fbx",
+    "exports/fuga_sample.glb"
+  ],
+  "renders": [
+    "01_front_fuga2_reference_match.png",
+    "02_side_fuga2_beside_reference_match.png",
+    "03_back_fuga2_back_reference_match.png",
+    "04_three_quarter_runtime_hover_visual.png",
+    "05_idle_hover_pose.png",
+    "06_move_forward_glide_pose.png",
+    "07_attack_wing_slap_pose.png",
+    "08_hit_recoil_altitude_drop_pose.png",
+    "09_death_fall_folded_wings_pose.png",
+    "10_death_01_hover_start.png",
+    "11_death_02_body_tilt_loss_of_lift.png",
+    "12_death_03_wings_limp_fold.png",
+    "13_death_04_rigidbody_drop.png",
+    "14_death_05_impact_settle.png",
+    "15_death_06_final_still_pose.png"
+  ],
+  "textures": [
+    "fuga2_body_wart_bump.png",
+    "fuga2_golden_eye_albedo.png",
+    "fuga2_inner_brown_olive_feather_albedo.png",
+    "fuga2_lower_shell_leaf_albedo.png",
+    "fuga2_olive_feather_albedo.png",
+    "fuga2_wet_green_bumpy_body_albedo.png"
+  ],
+  "runtimeScaleIntent": {
+    "heightMeters": 0.6,
+    "widthMeters": 0.4,
+    "depthMeters": 0.2,
+    "source": "docs/GAME_DESIGN_SOURCE.txt의 푸가 수치"
+  },
+  "wingVisibilityUpdate": {
+    "updatedOn": "2026-07-01",
+    "singleBroadWingBaseThickness": 0.14,
+    "reason": "특정 각도에서 단일 면 날개가 실루엣처럼 보이는 문제를 줄이기 위해 기반 날개를 양면과 측면을 가진 두께 있는 메쉬로 갱신했습니다."
+  },
+  "deathMotionPreview": {
+    "updatedOn": "2026-07-01",
+    "intendedRuntimeMovement": "Rigidbody + Collider 기준 낙하",
+    "steps": [
+      {
+        "pose": "Death_01_Hover_Start",
+        "render": "10_death_01_hover_start.png",
+        "label": "공중 부유 상태에서 시작"
+      },
+      {
+        "pose": "Death_02_Tilt_Loss_Of_Lift",
+        "render": "11_death_02_body_tilt_loss_of_lift.png",
+        "label": "몸체가 한쪽으로 기울어짐"
+      },
+      {
+        "pose": "Death_03_Wings_Limp_Fold",
+        "render": "12_death_03_wings_limp_fold.png",
+        "label": "날개가 접히거나 힘이 빠짐"
+      },
+      {
+        "pose": "Death_04_Rigidbody_Drop",
+        "render": "13_death_04_rigidbody_drop.png",
+        "label": "Rigidbody/Collider 기준 바닥 낙하"
+      },
+      {
+        "pose": "Death_05_Impact_Settle",
+        "render": "14_death_05_impact_settle.png",
+        "label": "바닥에 기울어진 자세로 충돌/정착"
+      },
+      {
+        "pose": "Death_06_Final_Still",
+        "render": "15_death_06_final_still_pose.png",
+        "label": "최종적으로 움직임이 줄어든 사망 포즈 유지"
+      }
+    ]
+  },
+  "approval": {
+    "enemyId": "fuga",
+    "approvalState": "검토 필요",
+    "primaryReferenceImages": [
+      "image/fuga2(푸가).png",
+      "image/fuga2-back.png",
+      "image/fuga2-beside.png"
+    ],
+    "unityApplicationAllowed": false,
+    "requiresUserApprovalBeforeUnity": true,
+    "notes": "2026-07-01 날개 두께와 사망 모션 검토 시퀀스를 갱신했습니다. 사용자 승인 전에는 Unity 런타임 씬, 프리팹, 에셋, AI, 피격 판정, UI 흐름에 연결하지 않습니다."
+  },
+  "unityApplicationAllowed": false,
+  "requiresUserApprovalBeforeUnity": true
+}

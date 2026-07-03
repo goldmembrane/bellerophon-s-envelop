@@ -1,0 +1,8 @@
+{
+  "enemyId": "longa_arma",
+  "status": "approved_for_unity_application",
+  "approved": true,
+  "createdAt": "2026-07-02 14:33:28",
+  "approvedAt": "2026-07-02",
+  "note": "사용자가 승인한 Longa Arma artSample입니다. Unity 적용 대상이며, 보이는 모델은 여러 오브젝트를 붙인 형태가 아니라 하나의 연속 mesh 오브젝트로 제작된 샘플을 기준으로 합니다."
+}

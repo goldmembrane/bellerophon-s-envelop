@@ -1,0 +1,22 @@
+{
+  "sample": "ck_ctl02_low",
+  "approvalState": "승인",
+  "unityApplicationAllowed": true,
+  "requiresUserApprovalBeforeUnity": false,
+  "included": [
+    "메인 조종대 본체",
+    "좌우 보조 콘솔",
+    "물리 스위치와 아날로그 게이지",
+    "타륜형 조작 핸들",
+    "오른쪽 전진 레버",
+    "F 상호작용 앵커 시각 표시",
+    "전면 창문 앞 배치 기준"
+  ],
+  "excluded": [
+    "중앙/전면 대형 화면",
+    "수동 운행 UI 런타임 로직",
+    "실제 F 상호작용 컴포넌트",
+    "조종실 복도 연결",
+    "조종대 파손 상태"
+  ]
+}

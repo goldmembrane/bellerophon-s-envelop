@@ -1,0 +1,51 @@
+# Approved Cockpit 01 Window current editor transforms
+# Generated from the currently open Unity editor scene.
+
+Root.position = new Vector3(0f, 0f, 14f)
+Root.rotation = new Quaternion(0f, 1f, 0f, 0f)
+Root.euler = new Vector3(0f, 180f, 0f)
+Root.scale = new Vector3(1f, 1f, 1f)
+
+GlassPane.path = ck_win01 - cockpit front window sample/front glass and frame module/single panoramic glass pane
+GlassPane.localPosition = new Vector3(0f, -0.00015f, 0.0162f)
+GlassPane.localRotation = new Quaternion(0f, 0f, 0f, 1f)
+GlassPane.localEuler = new Vector3(0f, 0f, 0f)
+GlassPane.localScale = new Vector3(1f, 1f, 1f)
+
+# Prefab child transform overrides
+Override[0].path = ck_win01 - cockpit front window sample/front glass and frame module/asset SMP panoramic internal screen/asset SMP panoramic internal screen mesh
+Override[0].path = ck_win01 - cockpit front window sample/front glass and frame module/asset SMP panoramic internal screen/asset SMP panoramic internal screen mesh
+Override[0].localPosition = new Vector3(-0.000466f, 0.00018f, -0.0012f)
+Override[0].localRotation = new Quaternion(0.707107f, 0f, 0f, 0.707107f)
+Override[0].localEuler = new Vector3(90f, 0f, 0f)
+Override[0].localScale = new Vector3(0.01f, 0.01f, 0.01f)
+Override[1].path = ck_win01 - cockpit front window sample/front glass and frame module/bottom crash sill
+Override[1].path = ck_win01 - cockpit front window sample/front glass and frame module/bottom crash sill
+Override[1].localPosition = new Vector3(0f, -0.0002f, 0.00223f)
+Override[1].localRotation = new Quaternion(0f, 0f, 0f, 1f)
+Override[1].localEuler = new Vector3(0f, 0f, 0f)
+Override[1].localScale = new Vector3(1f, 1f, 1f)
+Override[2].path = ck_win01 - cockpit front window sample/front glass and frame module/left amber inspection tag
+Override[2].path = ck_win01 - cockpit front window sample/front glass and frame module/left amber inspection tag
+Override[2].localPosition = new Vector3(0.0442f, -0.00185f, 0.00589f)
+Override[2].localRotation = new Quaternion(0f, 0f, 0f, 1f)
+Override[2].localEuler = new Vector3(0f, 0f, 0f)
+Override[2].localScale = new Vector3(1f, 1f, 1f)
+Override[3].path = ck_win01 - cockpit front window sample/front glass and frame module/outer lower clamp block +3.92
+Override[3].path = ck_win01 - cockpit front window sample/front glass and frame module/outer lower clamp block +3.92
+Override[3].localPosition = new Vector3(-0.0392f, -0.00069f, 0.00457f)
+Override[3].localRotation = new Quaternion(0f, 0f, 0f, 1f)
+Override[3].localEuler = new Vector3(0f, 0f, 0f)
+Override[3].localScale = new Vector3(1f, 1f, 1f)
+Override[4].path = ck_win01 - cockpit front window sample/front glass and frame module/outer lower clamp block -3.92
+Override[4].path = ck_win01 - cockpit front window sample/front glass and frame module/outer lower clamp block -3.92
+Override[4].localPosition = new Vector3(0.0392f, -0.00094f, 0.00444f)
+Override[4].localRotation = new Quaternion(0f, 0f, 0f, 1f)
+Override[4].localEuler = new Vector3(0f, 0f, 0f)
+Override[4].localScale = new Vector3(1f, 1f, 1f)
+Override[5].path = ck_win01 - cockpit front window sample/front glass and frame module/right amber inspection tag
+Override[5].path = ck_win01 - cockpit front window sample/front glass and frame module/right amber inspection tag
+Override[5].localPosition = new Vector3(-0.0442f, -0.001162f, 0.006106f)
+Override[5].localRotation = new Quaternion(0f, 0f, 0f, 1f)
+Override[5].localEuler = new Vector3(0f, 0f, 0f)
+Override[5].localScale = new Vector3(1f, 1f, 1f)

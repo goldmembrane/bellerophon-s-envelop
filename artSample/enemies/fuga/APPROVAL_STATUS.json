@@ -1,0 +1,13 @@
+{
+  "enemyId": "fuga",
+  "approvalState": "승인됨",
+  "primaryReferenceImages": [
+    "image/fuga2(푸가).png",
+    "image/fuga2-back.png",
+    "image/fuga2-beside.png"
+  ],
+  "unityApplicationAllowed": true,
+  "requiresUserApprovalBeforeUnity": false,
+  "approvedAt": "2026-07-01 13:41 KST",
+  "notes": "사용자가 2026-07-01에 날개 두께와 사망 모션 검토 시퀀스 샘플을 승인했습니다. 승인된 샘플은 Unity Fuga 모델/애니메이션 적용 기준입니다."
+}

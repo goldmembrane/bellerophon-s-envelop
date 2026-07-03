@@ -1,0 +1,116 @@
+{
+  "createdAt": "2026-07-03 13:29:00",
+  "sourceBlend": "blender/longa_arma_runtime_lowpoly.blend",
+  "savedBlend": "blender/longa_arma_runtime_lowpoly.blend",
+  "exports": [
+    "exports/longa_arma_runtime_lowpoly_rigged.fbx",
+    "exports/longa_arma_runtime_lowpoly_rigged.glb"
+  ],
+  "renders": [
+    "renders/animation_static_review.png",
+    "renders/animation_idle_body_morph.png",
+    "renders/animation_move_crawl.png",
+    "renders/animation_attack_slamdrag_contact.png",
+    "renders/animation_hit_recoil.png",
+    "renders/animation_consume_peck.png",
+    "renders/animation_death_meltpuddle.png",
+    "renders/rig_overview_quadruped_neutral.png",
+    "renders/rig_upper_body_lift_test.png",
+    "renders/rig_attack_slam_contact_test.png",
+    "renders/rig_death_puddle_morph_test.png"
+  ],
+  "finalAnimationActions": {
+    "LongaArma_Static_Review": 30,
+    "LongaArma_Idle": 48,
+    "LongaArma_Move_Crawl": 48,
+    "LongaArma_Attack_SlamDrag": 62,
+    "LongaArma_Hit_Recoil": 32,
+    "LongaArma_Consume_Peck": 46,
+    "LongaArma_Death_MeltPuddle": 66
+  },
+  "rigPoseActions": {
+    "LongaArma_RigPose_QuadrupedNeutral": 20,
+    "LongaArma_RigPose_UpperBodyLift": 24,
+    "LongaArma_RigPose_AttackSlamContact": 28,
+    "LongaArma_RigPose_DeathPuddleCheck": 20
+  },
+  "validation": {
+    "rigName": "LongaArma_ARP_Detailed_Rig",
+    "meshName": "LongaArma_Runtime_LowPoly",
+    "deformBoneCount": 29,
+    "controlBoneCount": 17,
+    "totalBoneCount": 46,
+    "ikConstraintCount": 5,
+    "ikConstraints": [
+      "DEF_blade_tip_l:IK CTRL_blade_ik_l",
+      "DEF_front_right_toe:IK CTRL_front_right_ik",
+      "DEF_front_left_toe:IK CTRL_front_left_ik",
+      "DEF_rear_right_toe:IK CTRL_rear_right_ik",
+      "DEF_rear_left_toe:IK CTRL_rear_left_ik"
+    ],
+    "copyConstraintCount": 4,
+    "shapeKeyDriverCount": 21,
+    "vertexGroupCount": 29,
+    "armatureModifier": [
+      "LongaArma_ARP_DetailedRig_Armature"
+    ],
+    "animationActions": {
+      "LongaArma_Static_Review": 30,
+      "LongaArma_Idle": 48,
+      "LongaArma_Move_Crawl": 48,
+      "LongaArma_Attack_SlamDrag": 62,
+      "LongaArma_Hit_Recoil": 32,
+      "LongaArma_Consume_Peck": 46,
+      "LongaArma_Death_MeltPuddle": 66,
+      "LongaArma_RigPose_QuadrupedNeutral": 20,
+      "LongaArma_RigPose_UpperBodyLift": 24,
+      "LongaArma_RigPose_AttackSlamContact": 28,
+      "LongaArma_RigPose_DeathPuddleCheck": 20
+    }
+  },
+  "autoRigPro": {
+    "addonEnabled": true,
+    "operatorNamespaceAvailable": true,
+    "backgroundMode": true,
+    "usedFor": [
+      "detected installed Auto-Rig Pro extension",
+      "registered final animation and rig-pose actions with arp_export flags",
+      "set Game Engine Export scene properties where available",
+      "recorded which ARP UI operators were unsafe in background mode"
+    ],
+    "operatorResults": [
+      {
+        "operation": "ui_dependent_arp_operators",
+        "ok": false,
+        "skipped": true,
+        "error": "Skipped in background mode after append_arp and UI/icon-dependent ARP operators proved unsafe without a 3D View context."
+      }
+    ],
+    "limitations": [
+      "Auto-Rig Pro Smart marker one-click rigging was not applied because Longa Arma is a non-humanoid asymmetric quadruped.",
+      "ARP append_arp presets require a 3D View UI context in this Blender install and fail in background mode with bpy.context.space_data.overlay access."
+    ],
+    "actionManagerListName": "LongaArmaDetailedRigPoseSet"
+  },
+  "possible": [
+    "Created a replacement detailed Blender armature for the current runtime_lowpoly model.",
+    "Separated deform bones and animator control bones with DEF_/CTRL_ naming.",
+    "Added four independent leg IK targets and pole targets for quadruped crawl posing.",
+    "Added left blade-arm IK target and pole target for lift, slam, and floor-drag posing.",
+    "Added chest, pelvis, head, mouth, spine-lift, and body-morph controls needed by the requested motion set.",
+    "Connected existing Shape Keys to CTRL_body_morph custom properties for body breathing, attack morph, consume peck, hit recoil, and death melt checks.",
+    "Generated final static, idle, move, attack, hit, consume, and death Blender Actions on the detailed rig.",
+    "Generated animation preview renders and rig-only review renders.",
+    "Registered final animation and rig-pose actions with Auto-Rig Pro export flags and Game Engine Export scene properties where available.",
+    "Exported rigged FBX and GLB review files.",
+    "Applied the rigged FBX and all seven final animation states to the Unity CargoRunMvp review placement through the approved refresh/bridge flow."
+  ],
+  "notPossible": [
+    "Auto-Rig Pro append_arp preset creation could not be executed in background mode because the add-on requires a 3D View UI overlay context.",
+    "Auto-Rig Pro UI-dependent layer/color/custom-shape/export operators were skipped in the final background run after a native Blender crash during direct operator use.",
+    "Auto-Rig Pro Smart marker automatic rigging was not used; this non-humanoid asymmetric quadruped needs a custom control layout.",
+    "Death puddle visual quality is still provisional and may require shape-key sculpt cleanup after Unity review.",
+    "Legacy generated .anim and controller files from the previous pass remain on disk, but the current scene placement uses the new final clip/controller names.",
+    "Harness, EditMode, PlayMode, Build, and Git commands were not run."
+  ]
+}

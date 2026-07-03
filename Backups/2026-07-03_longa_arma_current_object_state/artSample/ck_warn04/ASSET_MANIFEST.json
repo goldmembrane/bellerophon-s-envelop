@@ -1,0 +1,20 @@
+{
+  "sample": "ck_warn04",
+  "objectId": "CK-04",
+  "scope": "조종실 경고등 및 작은 물리 표시등 승인용 샘플",
+  "sourceBasis": [
+    "docs/COCKPIT_OBJECTS.md: CK-04 경고등 / 작은 물리 표시등",
+    "docs/GAME_DESIGN_SOURCE.txt:57 조종실 내구도 단계별 위험 상태",
+    "docs/GAME_DESIGN_SOURCE.txt:120 수동 운행 중 침입을 소리로 감지 가능",
+    "docs/GAME_DESIGN_SOURCE.txt:121 조종실 내구도 0% 시 조종대 폭파",
+    "사용자 확인: 자동/수동 상태, 진행도, 내구도 정보는 CK-01 메인 스크린에 표시하고 별도 모델링하지 않음"
+  ],
+  "inferenceNote": "경고등 자체는 원본의 상태/위험 표현을 보조하기 위한 시각 추론 항목입니다. 좌우 벽면 경고등과 빛줄기 모델은 사용자 피드백에 따라 제외했습니다.",
+  "usedAssetCandidates": {
+    "Sci-Fi Styled Modular Pack projector_warning texture": "Assets/Sci-Fi Styled Modular Pack/Textures/projector_warning.png"
+  },
+  "unityApplicationAllowed": true,
+  "approvalState": "승인",
+  "approvalCondition": "Unity로 옮길 때 천장 경고등은 조종실 천장 한가운데에 배치한다.",
+  "unityPlacementConstraint": "Approved Cockpit 01 Structure 기준 조종실 천장 중앙"
+}

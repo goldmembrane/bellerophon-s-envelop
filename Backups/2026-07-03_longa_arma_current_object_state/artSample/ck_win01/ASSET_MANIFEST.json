@@ -1,0 +1,17 @@
+{
+  "sample": "ck_win01",
+  "scope": "조종실 전면 단일 유리창과 내부 파노라마 화면 승인용 샘플",
+  "sourceBasis": [
+    "docs/GAME_DESIGN_SOURCE.txt: 조종실 앞은 유리로 되어 있어 밖을 볼 수 있는 형태",
+    "사용자 수정 지시: 5분할 창은 조종 시야를 방해하므로 제거",
+    "사용자 수정 지시: 창 안쪽을 내부 화면으로 꽉 차게 구성",
+    "approved artSample/cockpit_01: 전면 개구부 폭과 전체 조종실 구조"
+  ],
+  "usedAssetCandidates": {
+    "Sci-Fi Styled Modular Pack big_screen": "Assets/Sci-Fi Styled Modular Pack/Models/big_screen.fbx",
+    "Stage3 green CRT screen texture": "Assets/_Project/Art/Props/Stage3Rework/Textures/HD_Stage3_GreenCrtScreen_Albedo.png",
+    "Sci-Fi Styled Modular Pack light_celing_1": "Assets/Sci-Fi Styled Modular Pack/Models/light_celing_1.fbx",
+    "Heavy Station Kit Part_G2": "Assets/Heavy Station Kit/BASE/Meshes/Partitions/Part_G2.fbx"
+  },
+  "unityApplicationAllowed": false
+}

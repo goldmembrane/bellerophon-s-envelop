@@ -1,0 +1,84 @@
+# Approved Cockpit 04 Warning current editor objects
+# Generated from Unity scene recovery backup.
+
+Root = Approved Cockpit 04 Warning
+ExpectedApprovedRendererCount = 29
+CurrentApprovedRendererCount = 29
+MissingApprovedRendererCount = 0
+ChangedTransformCount = 0
+ChangedStatusCount = 0
+ChangedMaterialCount = 0
+
+[MissingApprovedRenderers]
+None
+
+[ChangedTransforms]
+None
+
+[ChangedStatuses]
+None
+
+[ChangedMaterials]
+None
+
+[CurrentApprovedRenderers]
+- central ceiling emergency rotary beacon alarm sounder grille slot 1
+- central ceiling emergency rotary beacon alarm sounder grille slot 2
+- central ceiling emergency rotary beacon alarm sounder grille slot 3
+- central ceiling emergency rotary beacon alarm sounder grille slot 4
+- central ceiling emergency rotary beacon alarm sounder grille slot 5
+- central ceiling emergency rotary beacon black ceiling rubber seal
+- central ceiling emergency rotary beacon cage rib 0.44
+- central ceiling emergency rotary beacon cage rib 2.01
+- central ceiling emergency rotary beacon cage rib 3.58
+- central ceiling emergency rotary beacon cage rib 5.15
+- central ceiling emergency rotary beacon ceiling power cable
+- central ceiling emergency rotary beacon circular swivel base
+- central ceiling emergency rotary beacon front alarm sounder grille plate
+- central ceiling emergency rotary beacon hanging red glass dome
+- central ceiling emergency rotary beacon inner lamp spindle for future animation
+- central ceiling emergency rotary beacon lower protective cage ring
+- central ceiling emergency rotary beacon rectangular ceiling mount plate
+- central ceiling emergency rotary beacon small warning decal under mount
+- central ceiling emergency rotary beacon upper protective cage ring
+- central ceiling emergency rotary beacon yellow hazard stripe on mount 1
+- central ceiling emergency rotary beacon yellow hazard stripe on mount 2
+- central ceiling emergency rotary beacon yellow hazard stripe on mount 3
+- central ceiling emergency rotary beacon yellow hazard stripe on mount 4
+- upper alarm bar internal dark baffle
+- upper alarm bar internal dark baffle.001
+- upper alarm bar internal dark baffle.002
+- upper alarm bar internal dark baffle.003
+- upper frame narrow red alarm bar housing
+- upper frame red alarm bar glass
+
+[ExpectedApprovedRenderers]
+- central ceiling emergency rotary beacon alarm sounder grille slot 1
+- central ceiling emergency rotary beacon alarm sounder grille slot 2
+- central ceiling emergency rotary beacon alarm sounder grille slot 3
+- central ceiling emergency rotary beacon alarm sounder grille slot 4
+- central ceiling emergency rotary beacon alarm sounder grille slot 5
+- central ceiling emergency rotary beacon black ceiling rubber seal
+- central ceiling emergency rotary beacon cage rib 0.44
+- central ceiling emergency rotary beacon cage rib 2.01
+- central ceiling emergency rotary beacon cage rib 3.58
+- central ceiling emergency rotary beacon cage rib 5.15
+- central ceiling emergency rotary beacon ceiling power cable
+- central ceiling emergency rotary beacon circular swivel base
+- central ceiling emergency rotary beacon front alarm sounder grille plate
+- central ceiling emergency rotary beacon hanging red glass dome
+- central ceiling emergency rotary beacon inner lamp spindle for future animation
+- central ceiling emergency rotary beacon lower protective cage ring
+- central ceiling emergency rotary beacon rectangular ceiling mount plate
+- central ceiling emergency rotary beacon small warning decal under mount
+- central ceiling emergency rotary beacon upper protective cage ring
+- central ceiling emergency rotary beacon yellow hazard stripe on mount 1
+- central ceiling emergency rotary beacon yellow hazard stripe on mount 2
+- central ceiling emergency rotary beacon yellow hazard stripe on mount 3
+- central ceiling emergency rotary beacon yellow hazard stripe on mount 4
+- upper alarm bar internal dark baffle
+- upper alarm bar internal dark baffle.001
+- upper alarm bar internal dark baffle.002
+- upper alarm bar internal dark baffle.003
+- upper frame narrow red alarm bar housing
+- upper frame red alarm bar glass

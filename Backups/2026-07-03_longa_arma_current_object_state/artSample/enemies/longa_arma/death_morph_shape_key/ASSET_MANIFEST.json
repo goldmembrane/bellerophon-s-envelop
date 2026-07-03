@@ -1,0 +1,30 @@
+{
+  "sample_id": "longa_arma_death_morph_shape_key",
+  "created_on": "2026-07-03",
+  "source_original_blend": "D:\\Bellerophon2\\Bellerophon\\enemies model\\longa arma.blend",
+  "source_dead_fbx": "D:\\Bellerophon2\\Bellerophon\\enemies model\\dead.fbx",
+  "outputs": {
+    "blend": "artSample\\enemies\\longa_arma\\death_morph_shape_key\\blender\\longa_arma_death_morph_shape_key.blend",
+    "fbx": "artSample\\enemies\\longa_arma\\death_morph_shape_key\\exports\\longa_arma_death_morph_shape_key.fbx",
+    "glb": "artSample\\enemies\\longa_arma\\death_morph_shape_key\\exports\\longa_arma_death_morph_shape_key.glb",
+    "renders": [
+      "renders/01_death_basis.png",
+      "renders/02_death_sag.png",
+      "renders/03_death_collapse.png",
+      "renders/04_death_puddle.png",
+      "renders/05_death_sequence_overview.png"
+    ]
+  },
+  "shape_keys": [
+    "Basis",
+    "DEATH_01_body_sag",
+    "DEATH_02_collapse_liquid_mass",
+    "DEATH_03_dead_fbx_puddle_match"
+  ],
+  "death_target_bounds": {
+    "x": 3.1640703678131104,
+    "y": 3.299999952316284,
+    "z": 0.1978573352098465
+  },
+  "unity_runtime_applied": false
+}

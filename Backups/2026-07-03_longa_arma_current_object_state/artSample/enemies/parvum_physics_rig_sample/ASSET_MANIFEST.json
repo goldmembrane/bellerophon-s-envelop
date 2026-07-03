@@ -1,0 +1,99 @@
+{
+  "sample": "parvum_physics_rig_sample",
+  "objectId": "ENEMY-SEED-PARVUM",
+  "title": "파르붐 물리 보조 모션용 모델링 보강 샘플",
+  "approvalState": "승인",
+  "unityApplicationAllowed": true,
+  "requiresUserApprovalBeforeUnity": false,
+  "generatedDate": "2026-06-29",
+  "sourceBasis": [
+    "image/parvum(파르붐).png",
+    "image/parvum-beside.png",
+    "image/parvum-back.png",
+    "artSample/enemies/parvum 승인 샘플",
+    "docs/GAME_DESIGN_SOURCE.txt: 파르붐은 액체 덩어리에 입이 달린 소형 씨앗체",
+    "Motion Path + Jiggle/IK/Joint 기반 물리 보조 모션 구조 계획"
+  ],
+  "modelingReinforcement": {
+    "shapeKeys": [
+      "Idle_Pulse_Surface_Jiggle",
+      "Move_Squash_Forward_Slosh",
+      "Attack_Bite_Core_Kick",
+      "Hit_Recoil_Side_Wave",
+      "Death_Flatten_Liquid_Spread"
+    ],
+    "controlBones": [
+      "Root_Body",
+      "Body_Core_Slosh",
+      "Left_Lobe_Jiggle",
+      "Right_Lobe_Jiggle",
+      "Rear_Mass_Lag",
+      "Mouth_Root_Drive",
+      "Upper_Jaw_Limited",
+      "Lower_Jaw_Limited",
+      "Tongue_Tip_Follow"
+    ],
+    "physicsProxies": [
+      "Proxy_Body_Core",
+      "Proxy_Left_Lobe",
+      "Proxy_Right_Lobe",
+      "Proxy_Rear_Mass",
+      "Proxy_Mouth_Root"
+    ]
+  },
+  "visualCorrections": [
+    "표면 물방울 오브젝트 제외",
+    "윗입술과 주둥이를 점액 브리지로 덮어 공중에 떠 보이지 않게 보강",
+    "측면에서 입이 공중에 떠 보이지 않도록 아래쪽 목 연결 점액과 측면 점액 덮개 추가",
+    "이빨 길이 증가, 잇몸 뿌리 매립 유지",
+    "혀는 유지하고 입 안의 붉은 위/아래 잇몸선 제거",
+    "몸체 내부 흰색 선 제거, 어두운 녹색 내부 흐름선만 사용",
+    "몸체를 기준 이미지처럼 더 낮고 넓은 점액 덩어리로 조정",
+    "흰색 박락은 몸체 표면에 붙은 평평한 잔여물로만 표현"
+  ],
+  "textureMaterialWork": {
+    "textureApplied": true,
+    "materialApplied": true,
+    "proceduralTexturesCreated": true,
+    "animationPreviewGifRequired": false,
+    "blenderAnimationDataIncluded": true
+  },
+  "unityImplementationConstraints": {
+    "chunkedStructureAllowed": true,
+    "visibleChunkBoundariesAllowed": false,
+    "requirements": [
+      "Unity 적용 시 여러 덩어리, 프록시, 보조체 구조는 사용할 수 있습니다.",
+      "최종 Unity 시각 결과에서는 덩어리끼리의 경계선, 겹침선, 틈, 재질 경계가 보이면 안 됩니다.",
+      "경계 비노출을 위해 공통 머티리얼/쉐이더, 투명도/깊이 정렬, 외피 오버레이, 겹침 배치, 메시 병합 또는 스킨/쉐이프키 보강을 사용합니다.",
+      "내부 검증만으로 완료 처리하지 않고 승인 샘플 렌더와 시각 비교해야 합니다."
+    ]
+  },
+  "generatedFiles": [
+    "blender/parvum_physics_rig_sample.blend",
+    "exports/parvum_physics_rig_sample.fbx",
+    "exports/parvum_physics_rig_sample.glb",
+    "textures/parvum_slime_albedo.png",
+    "textures/parvum_slime_roughness.png",
+    "textures/parvum_white_fleck_mask.png",
+    "textures/parvum_snout_scale_albedo.png",
+    "textures/parvum_snout_scale_bump.png",
+    "textures/parvum_tooth_albedo.png",
+    "textures/parvum_tongue_albedo.png",
+    "renders/01_front_reference_match.png",
+    "renders/02_side_reference_match.png",
+    "renders/03_back_reference_match.png",
+    "renders/04_top_anchor_map.png",
+    "renders/05_physics_proxy_overview.png",
+    "renders/06_idle_pulse_pose.png",
+    "renders/07_move_squash_pose.png",
+    "renders/08_attack_bite_pose.png",
+    "renders/09_hit_recoil_pose.png",
+    "renders/10_death_flatten_pose.png",
+    "README.md",
+    "ASSET_MANIFEST.json",
+    "APPROVAL_STATUS.json",
+    "TEXTURE_ANALYSIS.md",
+    "PHYSICS_RIG_NOTES.md",
+    "index.html"
+  ]
+}

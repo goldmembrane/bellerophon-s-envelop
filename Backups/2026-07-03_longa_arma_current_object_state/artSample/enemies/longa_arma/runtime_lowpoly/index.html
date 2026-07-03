@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>Longa Arma 런타임 저폴리 샘플</title>
+  <style>
+    body { margin: 0; font-family: Arial, "Malgun Gothic", sans-serif; background: #18201a; color: #edf2e6; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    section { margin: 30px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; background: #222b24; border: 1px solid #435041; padding: 14px; }
+    .comparison h3 { grid-column: 1 / -1; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 18px; }
+    .stat { background: #222b24; border: 1px solid #435041; padding: 14px; }
+    .stat strong { display: block; font-size: 24px; margin-bottom: 6px; color: #ffffff; }
+    figure { margin: 0; background: #111711; border: 1px solid #364236; padding: 10px; }
+    img { width: 100%; height: auto; display: block; object-fit: contain; }
+    figcaption { margin-top: 8px; font-size: 13px; color: #cdd7c5; word-break: break-all; }
+    p, li { line-height: 1.55; }
+    a { color: #d7e6c8; }
+    code { color: #d7e6c8; }
+    @media (max-width: 760px) { .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Longa Arma 런타임 저폴리 샘플</h1>
+  <p>
+    기존 Longa Arma 고밀도 모델의 말형 머리, 네 다리 짐승 실루엣, 왼팔 칼날, 젖은 녹청색 몸체와 어두운 칼날 인상을 유지하면서
+    화물선 내부 다수 배치를 고려해 메시 밀도를 낮춘 검토용 샘플입니다. Unity 씬이나 런타임 프리팹에는 아직 연결하지 않았습니다.
+  </p>
+
+  <section>
+    <h2>저폴리 요약</h2>
+    <div class="stats">
+      <div class="stat"><strong>144,545</strong>원본 vertices</div>
+      <div class="stat"><strong>289,086</strong>원본 polygons</div>
+      <div class="stat"><strong>6,002</strong>저폴리 vertices</div>
+      <div class="stat"><strong>12,000</strong>저폴리 triangles</div>
+      <div class="stat"><strong>95.85%</strong>삼각형 감소율</div>
+      <div class="stat"><strong>1</strong>visible mesh object</div>
+    </div>
+    <p>
+      Shape Key는 런타임 저비용 샘플 기준으로 제거했습니다. 실제 게임 적용 시에는 이 샘플을 기준으로 리그, LOD, 저비용 사망 연출을 별도 구성해야 합니다.
+    </p>
+  </section>
+
+  <section>
+    <h2>기존 승인 샘플과 저폴리 렌더 비교</h2>
+    <article class="comparison">
+      <h3>정면</h3>
+      <figure><img src="../renders/front.png" alt="기존 승인 샘플 정면"><figcaption>기존 승인 샘플: ../renders/front.png</figcaption></figure>
+      <figure><img src="renders/front.png" alt="저폴리 런타임 샘플 정면"><figcaption>저폴리 샘플: renders/front.png</figcaption></figure>
+    </article>
+    <article class="comparison">
+      <h3>측면</h3>
+      <figure><img src="../renders/side.png" alt="기존 승인 샘플 측면"><figcaption>기존 승인 샘플: ../renders/side.png</figcaption></figure>
+      <figure><img src="renders/side.png" alt="저폴리 런타임 샘플 측면"><figcaption>저폴리 샘플: renders/side.png</figcaption></figure>
+    </article>
+    <article class="comparison">
+      <h3>후면</h3>
+      <figure><img src="../renders/back.png" alt="기존 승인 샘플 후면"><figcaption>기존 승인 샘플: ../renders/back.png</figcaption></figure>
+      <figure><img src="renders/back.png" alt="저폴리 런타임 샘플 후면"><figcaption>저폴리 샘플: renders/back.png</figcaption></figure>
+    </article>
+  </section>
+
+  <section>
+    <h2>저폴리 생성 렌더</h2>
+    <div class="grid">
+      <figure><img src="renders/front.png" alt="front"><figcaption>front.png</figcaption></figure>
+      <figure><img src="renders/side.png" alt="side"><figcaption>side.png</figcaption></figure>
+      <figure><img src="renders/back.png" alt="back"><figcaption>back.png</figcaption></figure>
+      <figure><img src="renders/three_quarter.png" alt="three quarter"><figcaption>three_quarter.png</figcaption></figure>
+      <figure><img src="renders/wireframe_density.png" alt="wireframe density"><figcaption>wireframe_density.png</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>사용 텍스처</h2>
+    <div class="grid">
+      <figure><img src="textures/longa_arma_wet_green_albedo.png" alt="body albedo"><figcaption>longa_arma_wet_green_albedo.png</figcaption></figure>
+      <figure><img src="textures/longa_arma_wet_green_bump.png" alt="body bump"><figcaption>longa_arma_wet_green_bump.png</figcaption></figure>
+      <figure><img src="textures/longa_arma_wet_green_roughness.png" alt="body roughness"><figcaption>longa_arma_wet_green_roughness.png</figcaption></figure>
+      <figure><img src="textures/longa_arma_dark_blade_albedo.png" alt="blade albedo"><figcaption>longa_arma_dark_blade_albedo.png</figcaption></figure>
+      <figure><img src="textures/longa_arma_dark_blade_roughness.png" alt="blade roughness"><figcaption>longa_arma_dark_blade_roughness.png</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>검토 파일</h2>
+    <ul>
+      <li>Blender: <code>blender/longa_arma_runtime_lowpoly.blend</code></li>
+      <li>FBX: <code>exports/longa_arma_runtime_lowpoly.fbx</code></li>
+      <li>GLB: <code>exports/longa_arma_runtime_lowpoly.glb</code></li>
+      <li>폴리곤 통계: <code>polycount_stats.json</code></li>
+      <li>매니페스트: <code>asset_manifest.json</code></li>
+      <li>생성 스크립트: <code>build_runtime_lowpoly_sample.py</code></li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>

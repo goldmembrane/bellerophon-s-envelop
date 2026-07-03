@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>푸가 모델링 샘플</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #18201a; color: #edf2e6; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    section { margin: 30px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; background: #222b24; border: 1px solid #435041; padding: 14px; }
+    .comparison h3 { grid-column: 1 / -1; }
+    figure { margin: 0; background: #111711; border: 1px solid #364236; padding: 10px; }
+    img { width: 100%; height: auto; display: block; }
+    figcaption { margin-top: 8px; font-size: 13px; color: #cdd7c5; word-break: break-all; }
+    p, li { line-height: 1.55; }
+    code { color: #d7e6c8; }
+    @media (max-width: 760px) { .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>푸가 모델링 샘플</h1>
+  <p>1차 재현 기준은 <code>fuga2(푸가).png</code>, <code>fuga2-back.png</code>, <code>fuga2-beside.png</code>입니다. 사용자 승인 전에는 Unity에 연결하지 않습니다.</p>
+
+  <section>
+    <h2>기준 이미지와 생성 렌더 비교</h2>
+
+      <article class="comparison">
+        <h3>정면</h3>
+        <figure><img src="../../../image/fuga2(푸가).png" alt="정면 기준 이미지"><figcaption>기준 이미지: ../../../image/fuga2(푸가).png</figcaption></figure>
+        <figure><img src="renders/01_front_fuga2_reference_match.png" alt="정면 생성 렌더"><figcaption>생성 렌더: renders/01_front_fuga2_reference_match.png</figcaption></figure>
+      </article>
+
+      <article class="comparison">
+        <h3>측면</h3>
+        <figure><img src="../../../image/fuga2-beside.png" alt="측면 기준 이미지"><figcaption>기준 이미지: ../../../image/fuga2-beside.png</figcaption></figure>
+        <figure><img src="renders/02_side_fuga2_beside_reference_match.png" alt="측면 생성 렌더"><figcaption>생성 렌더: renders/02_side_fuga2_beside_reference_match.png</figcaption></figure>
+      </article>
+
+      <article class="comparison">
+        <h3>후면</h3>
+        <figure><img src="../../../image/fuga2-back.png" alt="후면 기준 이미지"><figcaption>기준 이미지: ../../../image/fuga2-back.png</figcaption></figure>
+        <figure><img src="renders/03_back_fuga2_back_reference_match.png" alt="후면 생성 렌더"><figcaption>생성 렌더: renders/03_back_fuga2_back_reference_match.png</figcaption></figure>
+      </article>
+  </section>
+
+  <section>
+    <h2>생성 렌더</h2>
+    <div class="grid"><figure><img src="renders/01_front_fuga2_reference_match.png" alt="01_front_fuga2_reference_match"><figcaption>01_front_fuga2_reference_match.png</figcaption></figure>
+<figure><img src="renders/02_side_fuga2_beside_reference_match.png" alt="02_side_fuga2_beside_reference_match"><figcaption>02_side_fuga2_beside_reference_match.png</figcaption></figure>
+<figure><img src="renders/03_back_fuga2_back_reference_match.png" alt="03_back_fuga2_back_reference_match"><figcaption>03_back_fuga2_back_reference_match.png</figcaption></figure>
+<figure><img src="renders/04_three_quarter_runtime_hover_visual.png" alt="04_three_quarter_runtime_hover_visual"><figcaption>04_three_quarter_runtime_hover_visual.png</figcaption></figure>
+<figure><img src="renders/05_idle_hover_pose.png" alt="05_idle_hover_pose"><figcaption>05_idle_hover_pose.png</figcaption></figure>
+<figure><img src="renders/06_move_forward_glide_pose.png" alt="06_move_forward_glide_pose"><figcaption>06_move_forward_glide_pose.png</figcaption></figure>
+<figure><img src="renders/07_attack_wing_slap_pose.png" alt="07_attack_wing_slap_pose"><figcaption>07_attack_wing_slap_pose.png</figcaption></figure>
+<figure><img src="renders/08_hit_recoil_altitude_drop_pose.png" alt="08_hit_recoil_altitude_drop_pose"><figcaption>08_hit_recoil_altitude_drop_pose.png</figcaption></figure>
+<figure><img src="renders/09_death_fall_folded_wings_pose.png" alt="09_death_fall_folded_wings_pose"><figcaption>09_death_fall_folded_wings_pose.png</figcaption></figure>
+<figure><img src="renders/10_death_01_hover_start.png" alt="10_death_01_hover_start"><figcaption>10_death_01_hover_start.png</figcaption></figure>
+<figure><img src="renders/11_death_02_body_tilt_loss_of_lift.png" alt="11_death_02_body_tilt_loss_of_lift"><figcaption>11_death_02_body_tilt_loss_of_lift.png</figcaption></figure>
+<figure><img src="renders/12_death_03_wings_limp_fold.png" alt="12_death_03_wings_limp_fold"><figcaption>12_death_03_wings_limp_fold.png</figcaption></figure>
+<figure><img src="renders/13_death_04_rigidbody_drop.png" alt="13_death_04_rigidbody_drop"><figcaption>13_death_04_rigidbody_drop.png</figcaption></figure>
+<figure><img src="renders/14_death_05_impact_settle.png" alt="14_death_05_impact_settle"><figcaption>14_death_05_impact_settle.png</figcaption></figure>
+<figure><img src="renders/15_death_06_final_still_pose.png" alt="15_death_06_final_still_pose"><figcaption>15_death_06_final_still_pose.png</figcaption></figure></div>
+  </section>
+
+  <section>
+    <h2>사망 모션 검토 시퀀스</h2>
+    <p>Unity 적용 단계에서는 낙하 이동을 <code>Rigidbody + Collider</code> 기준으로 처리하고, 이 렌더들은 자세와 시간 흐름 검토용으로 사용합니다.</p>
+    <div class="grid"><figure><img src="renders/10_death_01_hover_start.png" alt="공중 부유 상태에서 시작"><figcaption>공중 부유 상태에서 시작<br>10_death_01_hover_start.png</figcaption></figure>
+<figure><img src="renders/11_death_02_body_tilt_loss_of_lift.png" alt="몸체가 한쪽으로 기울어짐"><figcaption>몸체가 한쪽으로 기울어짐<br>11_death_02_body_tilt_loss_of_lift.png</figcaption></figure>
+<figure><img src="renders/12_death_03_wings_limp_fold.png" alt="날개가 접히거나 힘이 빠짐"><figcaption>날개가 접히거나 힘이 빠짐<br>12_death_03_wings_limp_fold.png</figcaption></figure>
+<figure><img src="renders/13_death_04_rigidbody_drop.png" alt="Rigidbody/Collider 기준 바닥 낙하"><figcaption>Rigidbody/Collider 기준 바닥 낙하<br>13_death_04_rigidbody_drop.png</figcaption></figure>
+<figure><img src="renders/14_death_05_impact_settle.png" alt="바닥에 기울어진 자세로 충돌/정착"><figcaption>바닥에 기울어진 자세로 충돌/정착<br>14_death_05_impact_settle.png</figcaption></figure>
+<figure><img src="renders/15_death_06_final_still_pose.png" alt="최종적으로 움직임이 줄어든 사망 포즈 유지"><figcaption>최종적으로 움직임이 줄어든 사망 포즈 유지<br>15_death_06_final_still_pose.png</figcaption></figure></div>
+  </section>
+
+  <section>
+    <h2>사용 텍스처</h2>
+    <div class="grid"><figure><img src="textures/fuga2_body_wart_bump.png" alt="fuga2_body_wart_bump"><figcaption>fuga2_body_wart_bump.png</figcaption></figure>
+<figure><img src="textures/fuga2_golden_eye_albedo.png" alt="fuga2_golden_eye_albedo"><figcaption>fuga2_golden_eye_albedo.png</figcaption></figure>
+<figure><img src="textures/fuga2_inner_brown_olive_feather_albedo.png" alt="fuga2_inner_brown_olive_feather_albedo"><figcaption>fuga2_inner_brown_olive_feather_albedo.png</figcaption></figure>
+<figure><img src="textures/fuga2_lower_shell_leaf_albedo.png" alt="fuga2_lower_shell_leaf_albedo"><figcaption>fuga2_lower_shell_leaf_albedo.png</figcaption></figure>
+<figure><img src="textures/fuga2_olive_feather_albedo.png" alt="fuga2_olive_feather_albedo"><figcaption>fuga2_olive_feather_albedo.png</figcaption></figure>
+<figure><img src="textures/fuga2_wet_green_bumpy_body_albedo.png" alt="fuga2_wet_green_bumpy_body_albedo"><figcaption>fuga2_wet_green_bumpy_body_albedo.png</figcaption></figure></div>
+  </section>
+</main>
+</body>
+</html>
