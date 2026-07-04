@@ -82,6 +82,8 @@
 
 - This section has highest priority within this file and overrides earlier art/asset approval rules when they conflict.
 - For art, modeling, and texturing work, first save inspectable samples under `artSample/` and receive explicit user approval before implementing them in Unity runtime scenes, prefabs, assets, or UI flows.
+- Animation work is exempt from required `artSample/` sample production. Do not require GIF, MP4, HTML, or separate animation sample files before Unity implementation. Animation work must instead receive a separate bundled approval for the exact Unity target, clip/state, object scope, commands, and validation range, then be implemented and reviewed in Unity using `AnimationClip`, `Animator`, rigging, BlendShape, physics, or the approved functional animation method.
+- This animation exception applies only to animation. New or changed modeling, texturing, materials, VFX, UI, sound, or other non-animation art outputs still require inspectable `artSample/` approval before Unity runtime implementation unless the user explicitly approves a narrower rule update.
 - Approved `artSample/` outputs are not mood references. When implementing them in Unity, the goal is to reproduce the approved `artSample/` sample as closely and exactly as possible.
 - During Unity implementation, repeatedly compare the Unity result against the approved `artSample/` sample and iterate until the visual sync rate is acceptable.
 - Do not replace visual sync with renderer-count, object-presence, or other internal validation checks. Internal validation may support the process, but user-approved `artSample/` visual matching is the quality gate.

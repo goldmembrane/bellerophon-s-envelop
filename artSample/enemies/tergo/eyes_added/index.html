@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tergo 눈 추가 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101413;
+      --panel: #18201c;
+      --panel-soft: #202a24;
+      --line: #3a493f;
+      --text: #eef4ee;
+      --muted: #b9c7bd;
+      --accent: #ffb33f;
+      --accent-soft: #ffe29a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    }
+
+    main {
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    h1, h2, h3 { margin: 0; letter-spacing: 0; }
+    h1 { font-size: 28px; line-height: 1.25; }
+    h2 { font-size: 20px; margin-bottom: 12px; }
+    h3 { font-size: 15px; margin-bottom: 8px; color: var(--accent-soft); }
+    p, li { color: var(--muted); line-height: 1.58; }
+    a { color: var(--accent-soft); }
+    code { color: #e8f3e7; }
+    section { margin-top: 32px; }
+
+    .summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .note, figure, .asset-list {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+    }
+
+    .note {
+      padding: 16px;
+    }
+
+    .note strong { color: var(--text); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 14px;
+    }
+
+    .large-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+      gap: 16px;
+    }
+
+    figure {
+      margin: 0;
+      padding: 10px;
+    }
+
+    figure img {
+      width: 100%;
+      display: block;
+      background: #0b0f0d;
+      border: 1px solid #26312a;
+      border-radius: 4px;
+    }
+
+    .large-grid figure img {
+      min-height: 420px;
+      object-fit: contain;
+    }
+
+    figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      word-break: break-all;
+    }
+
+    .asset-list {
+      padding: 14px 16px;
+    }
+
+    .asset-list ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      border: 1px solid #4a5c4f;
+      background: var(--panel-soft);
+      color: #d6e4d9;
+      padding: 6px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 780px) {
+      main { padding: 18px; }
+      .summary { grid-template-columns: 1fr; }
+      .large-grid { grid-template-columns: 1fr; }
+      .large-grid figure img { min-height: 0; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Tergo 눈 추가 샘플</h1>
+  <div class="summary">
+    <div>
+      <p>기존 Tergo 본체 모델을 유지한 상태에서 머리 전면에 작은 주황 발광 눈만 추가한 승인용 샘플입니다. Unity 씬, 프리팹, 런타임 에셋에는 아직 반영하지 않았습니다.</p>
+      <div class="pill-row">
+        <span class="pill">눈만 추가</span>
+        <span class="pill">본체 메시 유지</span>
+        <span class="pill">Unity 미적용</span>
+        <span class="pill">artSample 검토용</span>
+      </div>
+    </div>
+    <div class="note">
+      <strong>제한 범위</strong>
+      <p>몸체, 드릴 팔, Armature, 스케일, 방향, 애니메이션, AI, 충돌, 피격 판정은 수정하지 않았습니다.</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>기준 이미지와 확대 렌더 비교</h2>
+    <div class="large-grid">
+      <figure>
+        <img src="../../../../image/tergo(테르고).png" alt="테르고 정면 기준 이미지">
+        <figcaption>정면 기준: image/tergo(테르고).png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/tergo_eyes_front_large.png" alt="눈 추가 테르고 정면 확대 렌더">
+        <figcaption>생성 정면 확대: renders/tergo_eyes_front_large.png</figcaption>
+      </figure>
+      <figure>
+        <img src="../../../../image/tergo-beside.png" alt="테르고 측면 기준 이미지">
+        <figcaption>측면 기준: image/tergo-beside.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/tergo_eyes_side_large.png" alt="눈 추가 테르고 측면 확대 렌더">
+        <figcaption>생성 측면 확대: renders/tergo_eyes_side_large.png</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>생성 렌더</h2>
+    <div class="grid">
+      <figure>
+        <img src="renders/tergo_eyes_front.png" alt="눈 추가 테르고 정면 렌더">
+        <figcaption>renders/tergo_eyes_front.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/tergo_eyes_three_quarter.png" alt="눈 추가 테르고 3/4 렌더">
+        <figcaption>renders/tergo_eyes_three_quarter.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/tergo_eyes_side.png" alt="눈 추가 테르고 측면 렌더">
+        <figcaption>renders/tergo_eyes_side.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/tergo_eyes_closeup.png" alt="눈 추가 테르고 머리 클로즈업">
+        <figcaption>renders/tergo_eyes_closeup.png</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>산출물</h2>
+    <div class="asset-list">
+      <h3>검토 및 원본 파일</h3>
+      <ul>
+        <li><a href="blender/tergo_eyes_added.blend">blender/tergo_eyes_added.blend</a></li>
+        <li><a href="exports/tergo_eyes_added.fbx">exports/tergo_eyes_added.fbx</a></li>
+        <li><a href="exports/tergo_eyes_added.glb">exports/tergo_eyes_added.glb</a></li>
+        <li><a href="README.md">README.md</a></li>
+        <li><a href="ASSET_MANIFEST.json">ASSET_MANIFEST.json</a></li>
+        <li><a href="tools/build_tergo_eyes_added.py">tools/build_tergo_eyes_added.py</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>위치 기록</h2>
+    <div class="asset-list">
+      <ul>
+        <li>원본 bounds min: <code>[-0.3009, -0.1976, 0.0133]</code></li>
+        <li>원본 bounds max: <code>[0.3278, 0.4257, 1.6783]</code></li>
+        <li>원본 dimensions: <code>[0.6287, 0.6232, 1.665]</code></li>
+        <li>눈 중심 X: <code>-0.0</code></li>
+        <li>눈 중심 Z: <code>1.5584</code></li>
+        <li>머리 전면 기준 Y: <code>-0.1186</code></li>
+        <li>왼쪽 눈 surface/socket/lens Y: <code>-0.1186</code> / <code>-0.1486</code> / <code>-0.1735</code></li>
+        <li>오른쪽 눈 surface/socket/lens Y: <code>-0.1186</code> / <code>-0.1386</code> / <code>-0.1585</code></li>
+        <li>눈 간격: <code>0.0733</code></li>
+      </ul>
+    </div>
+  </section>
+</main>
+</body>
+</html>

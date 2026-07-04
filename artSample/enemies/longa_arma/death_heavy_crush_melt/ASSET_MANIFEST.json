@@ -1,0 +1,102 @@
+{
+  "enemyId": "longa_arma",
+  "sampleId": "death_heavy_crush_melt",
+  "createdAt": "2026-07-04 15:44:37 KST",
+  "status": "pending_user_review",
+  "sourceRuntimeBlend": "artSample/enemies/longa_arma/runtime_lowpoly/blender/longa_arma_runtime_lowpoly.blend",
+  "sourceWalkingFbx": "Assets/_Project/Art/Enemies/LongaArma/Models/longa_arma_walking.fbx",
+  "sourceOriginalBlend": "enemies model/longa arma.blend",
+  "deadFbxUsed": false,
+  "unityRuntimeApplied": false,
+  "goal": "Existing Longa Arma Unity walking mesh crushes downward under heavy weight, then spreads into a flat melt without swapping to dead.fbx.",
+  "unityModelingUnifiedWith": "Assets/_Project/Art/Enemies/LongaArma/Models/longa_arma_walking.fbx",
+  "sourceMeshObject": "char1",
+  "meshName": "char1",
+  "vertexCount": 8271,
+  "polygonCount": 16511,
+  "shapeKeys": [
+    "Basis",
+    "DEATH_HEAVY_01_weight_sag",
+    "DEATH_HEAVY_02_crush_collapse",
+    "DEATH_HEAVY_03_melt_spread"
+  ],
+  "frameRange": {
+    "start": 1,
+    "end": 96,
+    "fps": 24
+  },
+  "keySchedule": [
+    {
+      "frame": 1,
+      "weightSag": 0.0,
+      "crushCollapse": 0.0,
+      "meltSpread": 0.0
+    },
+    {
+      "frame": 16,
+      "weightSag": 0.82,
+      "crushCollapse": 0.0,
+      "meltSpread": 0.0
+    },
+    {
+      "frame": 28,
+      "weightSag": 1.0,
+      "crushCollapse": 0.16,
+      "meltSpread": 0.0
+    },
+    {
+      "frame": 42,
+      "weightSag": 0.18,
+      "crushCollapse": 1.0,
+      "meltSpread": 0.0
+    },
+    {
+      "frame": 58,
+      "weightSag": 0.0,
+      "crushCollapse": 0.45,
+      "meltSpread": 0.55
+    },
+    {
+      "frame": 76,
+      "weightSag": 0.0,
+      "crushCollapse": 0.0,
+      "meltSpread": 0.8
+    },
+    {
+      "frame": 96,
+      "weightSag": 0.0,
+      "crushCollapse": 0.0,
+      "meltSpread": 1.0
+    }
+  ],
+  "bounds": {
+    "x": 1.0917,
+    "y": 0.8932,
+    "z": 1.7004
+  },
+  "outputs": {
+    "blend": "artSample/enemies/longa_arma/death_heavy_crush_melt/blender/longa_arma_death_heavy_crush_melt.blend",
+    "fbx": "artSample/enemies/longa_arma/death_heavy_crush_melt/exports/longa_arma_death_heavy_crush_melt.fbx",
+    "glb": "artSample/enemies/longa_arma/death_heavy_crush_melt/exports/longa_arma_death_heavy_crush_melt.glb",
+    "renders": [
+      "renders/01_death_start_existing_pose.png",
+      "renders/02_heavy_sag.png",
+      "renders/03_crush_collapse.png",
+      "renders/04_melt_spread.png",
+      "frames/frame_001.png",
+      "frames/frame_008.png",
+      "frames/frame_016.png",
+      "frames/frame_024.png",
+      "frames/frame_032.png",
+      "frames/frame_042.png",
+      "frames/frame_050.png",
+      "frames/frame_058.png",
+      "frames/frame_066.png",
+      "frames/frame_076.png",
+      "frames/frame_086.png",
+      "frames/frame_096.png",
+      "renders/06_sequence_overview.png"
+    ],
+    "html": "artSample/enemies/longa_arma/death_heavy_crush_melt/index.html"
+  }
+}

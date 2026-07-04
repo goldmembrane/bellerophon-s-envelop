@@ -1,0 +1,122 @@
+{
+  "sample": "Tergo green body with amber eyes",
+  "createdForApproval": true,
+  "unityRuntimeApplied": false,
+  "sourceFbx": "enemies model/tergo.fbx",
+  "sourceBoundsMin": [
+    -0.3009,
+    -0.1976,
+    0.0133
+  ],
+  "sourceBoundsMax": [
+    0.3278,
+    0.4257,
+    1.6783
+  ],
+  "sourceDimensions": [
+    0.6287,
+    0.6232,
+    1.665
+  ],
+  "eyePlacement": {
+    "eyeZ": 1.5584,
+    "eyeCenterX": -0.0,
+    "headFrontY": -0.1186,
+    "leftSurfaceY": -0.1186,
+    "leftSocketY": -0.1486,
+    "leftFrontY": -0.1735,
+    "rightSurfaceY": -0.1186,
+    "rightSocketY": -0.1386,
+    "rightFrontY": -0.1585,
+    "eyeSpacing": 0.0733,
+    "objects": [
+      "Tergo_L_EyeSocket_Depression",
+      "Tergo_L_EyeSocket_Raised_Rim",
+      "Tergo_L_Glowing_Eye_Lens",
+      "Tergo_L_Eye_Hot_Core",
+      "Tergo_R_EyeSocket_Depression",
+      "Tergo_R_EyeSocket_Raised_Rim",
+      "Tergo_R_Glowing_Eye_Lens",
+      "Tergo_R_Eye_Hot_Core",
+      "Tergo_L_Eye_Amber_Point_Light",
+      "Tergo_R_Eye_Amber_Point_Light"
+    ]
+  },
+  "eyeColorPreserved": true,
+  "eyeLightAdjustment": {
+    "eyePointLightEnergy": 0.05,
+    "eyePointLightColor": [
+      1.0,
+      0.62,
+      0.24
+    ],
+    "adjustedLights": [
+      "Tergo_L_Eye_Amber_Point_Light",
+      "Tergo_R_Eye_Amber_Point_Light"
+    ]
+  },
+  "greenBodyMaterials": {
+    "materials": [
+      "Tergo_Green_Translucent_Body"
+    ],
+    "unifiedExceptEyeColor": true,
+    "bodyMaterialStyle": "translucent wet green",
+    "bodyAlpha": 0.58,
+    "bodyColorRevision": "darker translucent green v2",
+    "bodyDiffuseColor": [
+      0.04,
+      0.22,
+      0.12,
+      0.58
+    ],
+    "bodyEmissionStrength": 0.68,
+    "unifiedMaterial": "Tergo_Green_Translucent_Body",
+    "assignmentCounts": {
+      "char1": {
+        "translucentGreen": 6656
+      }
+    }
+  },
+  "nonEyeUnification": {
+    "unifiedMaterial": "Tergo_Green_Translucent_Body",
+    "changedNonEyeObjects": [
+      "Tergo_L_EyeSocket_Depression",
+      "Tergo_L_EyeSocket_Raised_Rim",
+      "Tergo_R_EyeSocket_Depression",
+      "Tergo_R_EyeSocket_Raised_Rim"
+    ],
+    "preservedEyeColorObjects": [
+      "Tergo_L_Glowing_Eye_Lens",
+      "Tergo_L_Eye_Hot_Core",
+      "Tergo_R_Glowing_Eye_Lens",
+      "Tergo_R_Eye_Hot_Core"
+    ]
+  },
+  "changed": [
+    "Translucent wet green material assigned to face, body, arms, legs, and non-lens eye support meshes",
+    "Amber eye lens and hot core color preserved from the approved eye sample",
+    "Source FBX changed to enemies model/tergo.fbx",
+    "Body green ramp and emission strength darkened while preserving alpha 0.58"
+  ],
+  "notChanged": [
+    "Tergo body mesh vertices",
+    "Tergo armature",
+    "Tergo body scale",
+    "Tergo drill arm geometry",
+    "Unity scene and prefabs",
+    "Animations and runtime logic"
+  ],
+  "outputs": {
+    "blend": "artSample/enemies/tergo/green_body_eyes_added/blender/tergo_green_body_eyes_added.blend",
+    "fbx": "artSample/enemies/tergo/green_body_eyes_added/exports/tergo_green_body_eyes_added.fbx",
+    "glb": "artSample/enemies/tergo/green_body_eyes_added/exports/tergo_green_body_eyes_added.glb",
+    "renders": [
+      "artSample/enemies/tergo/green_body_eyes_added/renders/tergo_green_eyes_front.png",
+      "artSample/enemies/tergo/green_body_eyes_added/renders/tergo_green_eyes_three_quarter.png",
+      "artSample/enemies/tergo/green_body_eyes_added/renders/tergo_green_eyes_side.png",
+      "artSample/enemies/tergo/green_body_eyes_added/renders/tergo_green_eyes_closeup.png",
+      "artSample/enemies/tergo/green_body_eyes_added/renders/tergo_green_eyes_front_large.png",
+      "artSample/enemies/tergo/green_body_eyes_added/renders/tergo_green_eyes_side_large.png"
+    ]
+  }
+}

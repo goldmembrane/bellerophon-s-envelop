@@ -21,8 +21,14 @@ namespace Bellerophon.Editor.LongaArmaCargoRunScene
             "Assets/_Project/Art/Enemies/LongaArma/Materials/M_LongaLowPoly_DarkCrescentBlade.mat";
         private const string SlimeMaterialPath =
             "Assets/_Project/Art/Enemies/LongaArma/Materials/M_LongaLowPoly_GlossySlimeDrips.mat";
-        private const string DeathPuddleFbxPath =
-            "Assets/_Project/Art/Enemies/LongaArma/Models/dead.fbx";
+        private const string DeathHeavyCrushMeltSourceFbxRelativePath =
+            "artSample/enemies/longa_arma/death_heavy_crush_melt/exports/longa_arma_death_heavy_crush_melt.fbx";
+        private const string DeathHeavyCrushMeltModelPath =
+            "Assets/_Project/Art/Enemies/LongaArma/Models/longa_arma_death_heavy_crush_melt.fbx";
+        private const string DeathHeavyCrushMeltInstanceName = "LongaArmaDeathHeavyCrushMelt_Model";
+        private const string DeathGroundPuddleVisualName = "LongaArmaDeathMelt_GroundPuddle";
+        private const float DeathHeavyCrushMeltFrameRate = 24f;
+        private const int DeathHeavyCrushMeltFinalFrame = 96;
         private const string IdleBodyMorphClipPath =
             "Assets/_Project/Art/Enemies/LongaArma/Animations/LongaArma_Idle_BodyMorph.anim";
         private const string IdleBodyMorphControllerPath =
@@ -874,6 +880,15 @@ namespace Bellerophon.Editor.LongaArmaCargoRunScene
 
         public static void ApplyDeathMeltPuddleToDeathState()
         {
+            EnsureDeathHeavyCrushMeltModelAsset();
+            var deathModelPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(DeathHeavyCrushMeltModelPath);
+            if (deathModelPrefab == null)
+            {
+                throw new FileNotFoundException(
+                    "Approved death heavy-crush-melt FBX prefab was not found.",
+                    DeathHeavyCrushMeltModelPath);
+            }
+
             var scene = OpenCargoRunScene();
             var placementRoot = FindRoot(scene, PlacementRootName);
             var deathRoot = FindChildRecursive(placementRoot.transform, DeathRootName);
@@ -894,48 +909,99 @@ namespace Bellerophon.Editor.LongaArmaCargoRunScene
                 throw new InvalidOperationException("Death walking model was not found.");
             }
 
+            var referenceWalking = FindReferenceWalkingModelForDeath(placementRoot.transform);
+            if (referenceWalking == null)
+            {
+                throw new InvalidOperationException("Reference LongaArmaWalkingFbx_Model was not found.");
+            }
+
             var beforeDeathPosition = deathRoot.localPosition;
             var beforeDeathRotation = deathRoot.localRotation;
             var beforeDeathScale = deathRoot.localScale;
-            var beforeWalkingPosition = deathWalking.localPosition;
-            var beforeWalkingRotation = deathWalking.localRotation;
-            var beforeWalkingScale = deathWalking.localScale;
+            var referenceWalkingPosition = referenceWalking.localPosition;
+            var referenceWalkingRotation = referenceWalking.localRotation;
+            var referenceWalkingScale = referenceWalking.localScale;
 
-            var skinnedRenderers = deathWalking.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+            var skinnedRenderers = referenceWalking.GetComponentsInChildren<SkinnedMeshRenderer>(true);
             var rigBoneCount = skinnedRenderers.Sum(renderer => renderer.bones != null ? renderer.bones.Length : 0);
             if (skinnedRenderers.Length == 0 || rigBoneCount == 0)
             {
-                throw new InvalidOperationException("Death walking model has no preserved rigged mesh.");
+                throw new InvalidOperationException("Reference walking model has no preserved rigged mesh.");
             }
 
-            var clip = EnsureDeathMeltPuddleClip(deathWalking.gameObject);
+            var sourceWalkingRenderer = skinnedRenderers
+                .FirstOrDefault(renderer => renderer.sharedMesh != null);
+            if (sourceWalkingRenderer == null || sourceWalkingRenderer.sharedMesh == null)
+            {
+                throw new InvalidOperationException("Death walking source mesh could not be resolved.");
+            }
+
+            var sourceWalkingMesh = sourceWalkingRenderer.sharedMesh;
+            var sourceWalkingMaterialCount = sourceWalkingRenderer.sharedMaterials.Length;
+            RemoveApprovedDeathHeavyCrushMeltVisuals(deathApprovedModel);
+            UnityEngine.Object.DestroyImmediate(deathWalking.gameObject);
+
+            var deathMotionInstance = (GameObject)PrefabUtility.InstantiatePrefab(deathModelPrefab, scene);
+            if (deathMotionInstance == null)
+            {
+                throw new InvalidOperationException("Approved death heavy-crush-melt prefab could not be instantiated.");
+            }
+
+            deathMotionInstance.name = WalkingInstanceName;
+            deathMotionInstance.transform.SetParent(deathApprovedModel, false);
+            deathMotionInstance.transform.localPosition = referenceWalkingPosition;
+            deathMotionInstance.transform.localRotation = referenceWalkingRotation;
+            deathMotionInstance.transform.localScale = referenceWalkingScale;
+            deathMotionInstance.SetActive(true);
+
+            ApplyApprovedDeathSampleMaterials(deathMotionInstance);
+            if (deathMotionInstance.transform.localPosition != referenceWalkingPosition ||
+                deathMotionInstance.transform.localRotation != referenceWalkingRotation ||
+                deathMotionInstance.transform.localScale != referenceWalkingScale)
+            {
+                throw new InvalidOperationException(
+                    "Death motion object transform changed unexpectedly; reference walking pose transform must be preserved.");
+            }
+
+            var deathRenderer = RequireDeathHeavyCrushMeltRenderer(deathMotionInstance);
+            var deathMesh = deathRenderer.sharedMesh;
+            if (deathMesh == null ||
+                deathMesh.subMeshCount != sourceWalkingMesh.subMeshCount ||
+                deathRenderer.sharedMaterials.Length != sourceWalkingMaterialCount)
+            {
+                throw new InvalidOperationException(
+                    "Death heavy-crush-melt model is not unified with the walking model. " +
+                    ", DeathSubMeshes=" + (deathMesh != null ? deathMesh.subMeshCount : 0) +
+                    ", WalkingSubMeshes=" + sourceWalkingMesh.subMeshCount +
+                    ", DeathMaterials=" + deathRenderer.sharedMaterials.Length +
+                    ", WalkingMaterials=" + sourceWalkingMaterialCount);
+            }
+
+            var clip = EnsureDeathMeltPuddleClip(deathMotionInstance);
             var controller = EnsureSingleClipController(
                 DeathMeltPuddleControllerPath,
                 "LongaArma_Death_MeltPuddle",
                 clip);
-            var walkingAvatar = AssetDatabase.LoadAllAssetsAtPath(WalkingFbxPath).OfType<Avatar>().FirstOrDefault();
 
-            var animator = deathWalking.GetComponent<Animator>();
+            var animator = deathMotionInstance.GetComponent<Animator>();
             if (animator == null)
             {
-                animator = deathWalking.gameObject.AddComponent<Animator>();
+                animator = deathMotionInstance.AddComponent<Animator>();
             }
 
             animator.runtimeAnimatorController = controller;
-            animator.avatar = walkingAvatar;
+            animator.avatar = null;
             animator.applyRootMotion = false;
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             animator.enabled = true;
             EditorUtility.SetDirty(animator);
+            ValidateDeathHeavyCrushMeltApplication(deathMotionInstance, clip, controller);
 
             if (deathRoot.localPosition != beforeDeathPosition ||
                 deathRoot.localRotation != beforeDeathRotation ||
-                deathRoot.localScale != beforeDeathScale ||
-                deathWalking.localPosition != beforeWalkingPosition ||
-                deathWalking.localRotation != beforeWalkingRotation ||
-                deathWalking.localScale != beforeWalkingScale)
+                deathRoot.localScale != beforeDeathScale)
             {
-                throw new InvalidOperationException("Death root or walking model transform changed unexpectedly.");
+                throw new InvalidOperationException("Death root transform changed unexpectedly.");
             }
 
             var idleAnimatorCount = CountWalkingAnimatorsForState(placementRoot.transform, IdleRootName);
@@ -990,18 +1056,46 @@ namespace Bellerophon.Editor.LongaArmaCargoRunScene
             }
 
             AssetDatabase.SaveAssets();
-            var deathPuddleFbxRoot = FindChildRecursive(deathWalking, "LongaArmaDeathMelt_FinalPuddle");
             Debug.Log(
-                "Applied Longa Arma death melt-puddle to death state only. " +
-                "Clip=" + DeathMeltPuddleClipPath +
+                "Applied approved Longa Arma death heavy-crush-melt sample to death state only. " +
+                "SampleModel=" + DeathHeavyCrushMeltModelPath +
+                ", Clip=" + DeathMeltPuddleClipPath +
                 ", Controller=" + DeathMeltPuddleControllerPath +
                 ", Target=" + PlacementRootName + "/" + DeathRootName + "/" + WalkingInstanceName +
-                ", DeathAnimators=" + deathWalking.GetComponentsInChildren<Animator>(true).Length +
+                ", DeathMotionObject=" + deathMotionInstance.name +
+                ", DeathMotionTransformMatchedReference=True" +
+                ", DeathMotionTransformReference=" + GetHierarchyPath(referenceWalking, placementRoot.transform) +
+                ", DeathMotionLocalPosition=" + deathMotionInstance.transform.localPosition +
+                ", DeathMotionReferenceLocalPosition=" + referenceWalkingPosition +
+                ", DeathMotionLocalEuler=" + deathMotionInstance.transform.localRotation.eulerAngles +
+                ", DeathMotionReferenceLocalEuler=" + referenceWalkingRotation.eulerAngles +
+                ", DeathMotionLocalScale=" + deathMotionInstance.transform.localScale +
+                ", DeathMotionReferenceLocalScale=" + referenceWalkingScale +
+                ", LegacySeparateDeathObjectRemoved=" +
+                    (FindChildRecursive(deathApprovedModel, DeathHeavyCrushMeltInstanceName) == null) +
+                ", DeathAnimators=" + deathMotionInstance.GetComponentsInChildren<Animator>(true).Length +
                 ", DeathBlendShapeCurves=" + CountCurveBindings(clip, "blendShape.") +
+                ", DeathModelUnifiedWithWalking=True" +
+                ", DeathUnityImportedVertices=" + (deathMesh != null ? deathMesh.vertexCount : 0) +
+                ", WalkingUnityImportedVertices=" + sourceWalkingMesh.vertexCount +
+                ", DeathUnityVertexSplitByBlendShapes=" +
+                    (deathMesh != null && deathMesh.vertexCount != sourceWalkingMesh.vertexCount) +
+                ", DeathModelSubMeshes=" + (deathMesh != null ? deathMesh.subMeshCount : 0) +
+                ", WalkingModelSubMeshes=" + sourceWalkingMesh.subMeshCount +
+                ", DeathModelMaterials=" + deathRenderer.sharedMaterials.Length +
+                ", WalkingModelMaterials=" + sourceWalkingMaterialCount +
+                ", DeathTransformPositionCurves=" + CountCurveBindings(clip, "m_LocalPosition.") +
+                ", DeathTransformScaleCurves=" + CountCurveBindings(clip, "m_LocalScale.") +
+                ", DeathTransformRotationCurves=" +
+                    (CountCurveBindings(clip, "m_LocalRotation.") +
+                        CountCurveBindings(clip, "localEulerAnglesRaw.")) +
                 ", DeathRendererEnabledCurves=" + CountCurveBindings(clip, "m_Enabled") +
                 ", DeathLoopTime=" + IsLoopingClip(clip) +
-                ", DeathPuddleFbxRenderers=" +
-                    (deathPuddleFbxRoot != null ? deathPuddleFbxRoot.GetComponentsInChildren<Renderer>(true).Length : 0) +
+                ", DeathFrameRate=" + clip.frameRate +
+                ", DeathFinalFrame=" + DeathHeavyCrushMeltFinalFrame +
+                ", DeathGroundPuddleVisual=" +
+                    (FindChildRecursive(deathMotionInstance.transform, DeathGroundPuddleVisualName) != null) +
+                ", DeadFbxUsed=False" +
                 ", IdleAnimatorsPreserved=" + idleAnimatorCount +
                 ", MoveStateAnimatorsPreserved=" + moveAnimatorCount +
                 ", AttackAnimatorsPreserved=" + attackAnimatorCount +
@@ -1332,26 +1426,7 @@ namespace Bellerophon.Editor.LongaArmaCargoRunScene
         private static AnimationClip EnsureDeathMeltPuddleClip(GameObject walkingInstance)
         {
             var root = walkingInstance.transform;
-            var hips = RequireChild(root, "Hips");
-            var chest = RequireChild(root, "chest");
-            var head = RequireChild(root, "head");
-            var frontLeg = RequireChild(root, "frontleg");
-            var frontLeg0 = RequireChild(root, "frontleg0");
-            var frontLeg1 = RequireChild(root, "frontleg1");
-            var frontLeg2 = RequireChild(root, "frontleg2");
-            var bladeArm = RequireChild(root, "R_frontleg");
-            var bladeArm0 = RequireChild(root, "R_frontleg0");
-            var bladeArm1 = RequireChild(root, "R_frontleg1");
-            var bladeArm2 = RequireChild(root, "R_frontleg2");
-            var backLeg = RequireChild(root, "backleg");
-            var backLeg0 = RequireChild(root, "backleg0");
-            var backLeg1 = RequireChild(root, "backleg1");
-            var backLeg2 = RequireChild(root, "backleg2");
-            var oppositeBackLeg = RequireChild(root, "R_backleg");
-            var oppositeBackLeg0 = RequireChild(root, "R_backleg0");
-            var oppositeBackLeg1 = RequireChild(root, "R_backleg1");
-            var oppositeBackLeg2 = RequireChild(root, "R_backleg2");
-            var bodyPuddleVisual = EnsureDeathBodyPuddleVisual(walkingInstance);
+            var renderer = RequireDeathHeavyCrushMeltRenderer(walkingInstance);
 
             Directory.CreateDirectory(Path.GetDirectoryName(DeathMeltPuddleClipPath) ?? string.Empty);
             var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(DeathMeltPuddleClipPath);
@@ -1360,86 +1435,301 @@ namespace Bellerophon.Editor.LongaArmaCargoRunScene
                 clip = new AnimationClip
                 {
                     name = "LongaArma_Death_MeltPuddle",
-                    frameRate = 30f
+                    frameRate = DeathHeavyCrushMeltFrameRate
                 };
                 AssetDatabase.CreateAsset(clip, DeathMeltPuddleClipPath);
             }
 
             clip.ClearCurves();
             clip.name = "LongaArma_Death_MeltPuddle";
-            clip.frameRate = 30f;
+            clip.frameRate = DeathHeavyCrushMeltFrameRate;
             clip.wrapMode = WrapMode.Loop;
 
-            var times = new[] { 0.00f, 0.25f, 0.55f, 0.85f, 1.20f, 1.65f };
+            var times = new[]
+            {
+                DeathFrameToSeconds(1),
+                DeathFrameToSeconds(16),
+                DeathFrameToSeconds(28),
+                DeathFrameToSeconds(42),
+                DeathFrameToSeconds(58),
+                DeathFrameToSeconds(76),
+                DeathFrameToSeconds(96)
+            };
 
-            AddLocalRotationOffsetCurves(
+            AddApprovedDeathSampleBlendShapeCurve(
                 clip,
                 root,
-                hips,
+                renderer,
+                "DEATH_HEAVY_01_weight_sag",
                 times,
-                new[]
-                {
-                    Vector3.zero,
-                    new Vector3(5f, 0f, -3f),
-                    new Vector3(14f, 0f, 5f),
-                    new Vector3(22f, 0f, 2f),
-                    new Vector3(30f, 0f, -3f),
-                    new Vector3(34f, 0f, -4f)
-                });
-            AddLocalRotationOffsetCurves(
+                new[] { 0f, 82f, 100f, 18f, 0f, 0f, 0f });
+            AddApprovedDeathSampleBlendShapeCurve(
                 clip,
                 root,
-                chest,
+                renderer,
+                "DEATH_HEAVY_02_crush_collapse",
                 times,
-                new[]
-                {
-                    Vector3.zero,
-                    new Vector3(10f, 0f, -4f),
-                    new Vector3(26f, 0f, 6f),
-                    new Vector3(42f, 0f, 2f),
-                    new Vector3(58f, 0f, 0f),
-                    new Vector3(62f, 0f, 0f)
-                });
-            AddLocalRotationOffsetCurves(
+                new[] { 0f, 0f, 16f, 100f, 45f, 0f, 0f });
+            AddApprovedDeathSampleBlendShapeCurve(
                 clip,
                 root,
-                head,
+                renderer,
+                "DEATH_HEAVY_03_melt_spread",
                 times,
-                new[]
-                {
-                    Vector3.zero,
-                    new Vector3(8f, -8f, 5f),
-                    new Vector3(28f, 6f, -6f),
-                    new Vector3(52f, 0f, 0f),
-                    new Vector3(70f, 0f, 0f),
-                    new Vector3(78f, 0f, 0f)
-                });
-
-            AddDeathLegCollapseCurves(clip, root, frontLeg, frontLeg0, frontLeg1, frontLeg2, times, 1f);
-            AddDeathBladeArmCollapseCurves(clip, root, bladeArm, bladeArm0, bladeArm1, bladeArm2, times);
-            AddDeathLegCollapseCurves(clip, root, backLeg, backLeg0, backLeg1, backLeg2, times, -1f);
-            AddDeathLegCollapseCurves(
-                clip,
-                root,
-                oppositeBackLeg,
-                oppositeBackLeg0,
-                oppositeBackLeg1,
-                oppositeBackLeg2,
-                times,
-                1f);
-            AddDeathRigMeltCollapseCurves(clip, root, walkingInstance, hips, chest, head, times);
-            AddDeathBodyRendererMeltCurves(clip, root, walkingInstance, times);
-            AddDeathBodyPuddleCurves(clip, root, bodyPuddleVisual, times);
-            AddDeathBlendShapeCurves(clip, root, walkingInstance, times);
+                new[] { 0f, 0f, 0f, 0f, 55f, 80f, 100f });
 
             var settings = AnimationUtility.GetAnimationClipSettings(clip);
             settings.loopTime = true;
-            settings.loopBlend = true;
+            settings.loopBlend = false;
             AnimationUtility.SetAnimationClipSettings(clip, settings);
 
             EditorUtility.SetDirty(clip);
             AssetDatabase.SaveAssets();
             return clip;
+        }
+
+        private static void EnsureDeathHeavyCrushMeltModelAsset()
+        {
+            var projectRoot = Directory.GetParent(Application.dataPath)?.FullName;
+            if (string.IsNullOrEmpty(projectRoot))
+            {
+                throw new InvalidOperationException("Project root could not be resolved from Application.dataPath.");
+            }
+
+            var sourcePath = Path.Combine(
+                projectRoot,
+                DeathHeavyCrushMeltSourceFbxRelativePath.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(sourcePath))
+            {
+                throw new FileNotFoundException("Approved artSample death FBX was not found.", sourcePath);
+            }
+
+            var targetPath = Path.Combine(
+                projectRoot,
+                DeathHeavyCrushMeltModelPath.Replace('/', Path.DirectorySeparatorChar));
+            Directory.CreateDirectory(Path.GetDirectoryName(targetPath) ?? string.Empty);
+            File.Copy(sourcePath, targetPath, overwrite: true);
+            AssetDatabase.ImportAsset(
+                DeathHeavyCrushMeltModelPath,
+                ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+
+            ConfigureDeathHeavyCrushMeltImporter();
+        }
+
+        private static void ConfigureDeathHeavyCrushMeltImporter()
+        {
+            var importer = AssetImporter.GetAtPath(DeathHeavyCrushMeltModelPath) as ModelImporter;
+            if (importer == null)
+            {
+                throw new FileNotFoundException(
+                    "Approved death heavy-crush-melt FBX importer was not found.",
+                    DeathHeavyCrushMeltModelPath);
+            }
+
+            importer.importBlendShapes = true;
+            importer.importAnimation = false;
+            importer.animationType = ModelImporterAnimationType.Generic;
+            importer.optimizeGameObjects = false;
+            importer.isReadable = true;
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.materialImportMode = ModelImporterMaterialImportMode.None;
+
+            importer.SaveAndReimport();
+            AssetDatabase.ImportAsset(
+                DeathHeavyCrushMeltModelPath,
+                ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+        }
+
+        private static void RemoveApprovedDeathHeavyCrushMeltVisuals(Transform deathApprovedModel)
+        {
+            var oldVisuals = deathApprovedModel.GetComponentsInChildren<Transform>(true)
+                .Where(child =>
+                    child != deathApprovedModel &&
+                    (child.name == DeathHeavyCrushMeltInstanceName ||
+                        child.name == "LongaArmaDeathPuddle_Visual" ||
+                        child.name.StartsWith("LongaArmaDeathMelt_", StringComparison.Ordinal)))
+                .OrderByDescending(GetTransformDepth)
+                .ToArray();
+            foreach (var oldVisual in oldVisuals)
+            {
+                if (oldVisual != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(oldVisual.gameObject);
+                }
+            }
+        }
+
+        private static int GetTransformDepth(Transform transform)
+        {
+            var depth = 0;
+            var current = transform;
+            while (current.parent != null)
+            {
+                depth++;
+                current = current.parent;
+            }
+
+            return depth;
+        }
+
+        private static void ApplyApprovedDeathSampleMaterials(GameObject sampleInstance)
+        {
+            var bodyMaterial = LoadMaterial(BodyMaterialPath);
+            var darkMaterial = LoadMaterial(DarkMaterialPath);
+            var slimeMaterial = LoadMaterial(SlimeMaterialPath);
+
+            foreach (var renderer in sampleInstance.GetComponentsInChildren<Renderer>(true))
+            {
+                var materials = renderer.sharedMaterials;
+                var materialCount = Mathf.Max(materials != null ? materials.Length : 0, 1);
+                var assignedMaterials = new Material[materialCount];
+                for (var index = 0; index < assignedMaterials.Length; index++)
+                {
+                    if (index == 0)
+                    {
+                        assignedMaterials[index] = bodyMaterial;
+                    }
+                    else if (index == 1)
+                    {
+                        assignedMaterials[index] = darkMaterial;
+                    }
+                    else
+                    {
+                        assignedMaterials[index] = slimeMaterial;
+                    }
+                }
+
+                renderer.sharedMaterials = assignedMaterials;
+                EditorUtility.SetDirty(renderer);
+            }
+        }
+
+        private static SkinnedMeshRenderer RequireDeathHeavyCrushMeltRenderer(GameObject sampleInstance)
+        {
+            var renderer = sampleInstance.GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                .FirstOrDefault(candidate => candidate.sharedMesh != null && candidate.sharedMesh.blendShapeCount > 0);
+            if (renderer == null)
+            {
+                throw new InvalidOperationException(
+                    "Approved death heavy-crush-melt model has no SkinnedMeshRenderer with BlendShapes.");
+            }
+
+            return renderer;
+        }
+
+        private static void AddApprovedDeathSampleBlendShapeCurve(
+            AnimationClip clip,
+            Transform root,
+            SkinnedMeshRenderer renderer,
+            string expectedBlendShapeName,
+            float[] times,
+            float[] values)
+        {
+            var mesh = renderer.sharedMesh;
+            if (mesh == null ||
+                !TryFindBlendShapeName(mesh, expectedBlendShapeName, out var blendShapeName))
+            {
+                throw new InvalidOperationException(
+                    "Approved death BlendShape was not found on Unity sample model: " + expectedBlendShapeName);
+            }
+
+            AddBlendShapeCurve(clip, root, renderer.transform, blendShapeName, times, values);
+        }
+
+        private static void ValidateDeathHeavyCrushMeltApplication(
+            GameObject sampleInstance,
+            AnimationClip clip,
+            AnimatorController controller)
+        {
+            if (!string.Equals(sampleInstance.name, WalkingInstanceName, StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "Death motion must be applied to " + WalkingInstanceName + ", not a separate death object.");
+            }
+
+            var renderer = RequireDeathHeavyCrushMeltRenderer(sampleInstance);
+            var mesh = renderer.sharedMesh;
+            var expectedBlendShapes = new[]
+            {
+                "DEATH_HEAVY_01_weight_sag",
+                "DEATH_HEAVY_02_crush_collapse",
+                "DEATH_HEAVY_03_melt_spread"
+            };
+
+            foreach (var expectedBlendShape in expectedBlendShapes)
+            {
+                if (mesh == null || !TryFindBlendShapeName(mesh, expectedBlendShape, out _))
+                {
+                    throw new InvalidOperationException(
+                        "Approved death model is missing required BlendShape: " + expectedBlendShape);
+                }
+
+                var hasCurve = AnimationUtility.GetCurveBindings(clip)
+                    .Any(binding =>
+                        binding.propertyName.IndexOf(expectedBlendShape, StringComparison.OrdinalIgnoreCase) >= 0);
+                if (!hasCurve)
+                {
+                    throw new InvalidOperationException(
+                        "Approved death clip is missing required BlendShape curve: " + expectedBlendShape);
+                }
+            }
+
+            if (CountCurveBindings(clip, "blendShape.") < expectedBlendShapes.Length)
+            {
+                throw new InvalidOperationException("Approved death clip has too few BlendShape curves.");
+            }
+
+            if (CountCurveBindings(clip, "m_LocalPosition.") != 0)
+            {
+                throw new InvalidOperationException(
+                    "Approved death clip must not move Transforms; approved sample BlendShapes must drive the melt.");
+            }
+
+            if (CountCurveBindings(clip, "m_LocalScale.") != 0)
+            {
+                throw new InvalidOperationException(
+                    "Approved death clip must not scale Transforms; approved sample BlendShapes must drive the melt.");
+            }
+
+            if (CountCurveBindings(clip, "m_LocalRotation.") != 0 ||
+                CountCurveBindings(clip, "localEulerAnglesRaw.") != 0)
+            {
+                throw new InvalidOperationException(
+                    "Approved death clip must not rotate Transforms; walking pose angle must be preserved.");
+            }
+
+            if (CountCurveBindings(clip, "m_Enabled") != 0)
+            {
+                throw new InvalidOperationException("Approved death clip must not hide renderers.");
+            }
+
+            var groundPuddle = FindChildRecursive(sampleInstance.transform, DeathGroundPuddleVisualName);
+            if (groundPuddle != null)
+            {
+                throw new InvalidOperationException(
+                    "Approved death implementation must not add a procedural ground puddle object.");
+            }
+
+            if (Mathf.Abs(clip.frameRate - DeathHeavyCrushMeltFrameRate) > 0.001f)
+            {
+                throw new InvalidOperationException("Approved death clip frame rate is not 24fps.");
+            }
+
+            if (!IsLoopingClip(clip))
+            {
+                throw new InvalidOperationException("Approved death clip must loop for repeated death-motion inspection.");
+            }
+
+            if (controller == null)
+            {
+                throw new InvalidOperationException("Approved death controller was not created.");
+            }
+        }
+
+        private static float DeathFrameToSeconds(int frame)
+        {
+            return (frame - 1) / DeathHeavyCrushMeltFrameRate;
         }
 
         private static AnimationClip EnsureIdleBodyMorphClip(GameObject walkingInstance)
@@ -1837,147 +2127,6 @@ namespace Bellerophon.Editor.LongaArmaCargoRunScene
                     new Vector3(108f, 0f, -44f),
                     new Vector3(118f, 0f, -48f)
                 });
-        }
-
-        private static Transform EnsureDeathBodyPuddleVisual(GameObject walkingInstance)
-        {
-            var root = walkingInstance.transform;
-            RemoveDeathMeltVisuals(root);
-
-            var puddlePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(DeathPuddleFbxPath);
-            if (puddlePrefab == null)
-            {
-                throw new FileNotFoundException("Death puddle FBX prefab was not found.", DeathPuddleFbxPath);
-            }
-
-            var rendererBounds = TryGetSkinnedRendererBounds(walkingInstance, out var bounds)
-                ? bounds
-                : new Bounds(root.position, Vector3.one);
-            var groundCenter = new Vector3(
-                rendererBounds.center.x,
-                rendererBounds.min.y + 0.018f,
-                rendererBounds.center.z);
-
-            var puddle = (GameObject)PrefabUtility.InstantiatePrefab(puddlePrefab, walkingInstance.scene);
-            puddle.name = "LongaArmaDeathMelt_FinalPuddle";
-            puddle.transform.SetParent(root, false);
-            puddle.transform.localRotation = Quaternion.Inverse(root.rotation);
-            puddle.transform.localScale = Vector3.one;
-            puddle.SetActive(true);
-
-            var renderers = puddle.GetComponentsInChildren<Renderer>(true);
-            if (renderers.Length == 0)
-            {
-                throw new InvalidOperationException("Death puddle FBX has no renderers: " + DeathPuddleFbxPath);
-            }
-
-            EnsureDeathPuddleRendererMaterials(renderers);
-            AlignDeathPuddleFbxToGround(root, puddle, rendererBounds, groundCenter);
-
-            foreach (var renderer in renderers)
-            {
-                renderer.enabled = false;
-                EditorUtility.SetDirty(renderer);
-            }
-
-            EditorUtility.SetDirty(puddle);
-            return puddle.transform;
-        }
-
-        private static void AlignDeathPuddleFbxToGround(
-            Transform root,
-            GameObject puddle,
-            Bounds referenceBounds,
-            Vector3 targetGroundCenter)
-        {
-            var worldRotationCandidates = new[]
-            {
-                Quaternion.identity,
-                Quaternion.Euler(90f, 0f, 0f),
-                Quaternion.Euler(-90f, 0f, 0f),
-                Quaternion.Euler(0f, 0f, 90f),
-                Quaternion.Euler(0f, 0f, -90f),
-                Quaternion.Euler(180f, 0f, 0f),
-                Quaternion.Euler(0f, 180f, 0f),
-                Quaternion.Euler(0f, 0f, 180f)
-            };
-            var bestLocalRotation = Quaternion.Inverse(root.rotation);
-            var bestScore = float.PositiveInfinity;
-            foreach (var worldRotation in worldRotationCandidates)
-            {
-                puddle.transform.localRotation = Quaternion.Inverse(root.rotation) * worldRotation;
-                puddle.transform.localScale = Vector3.one;
-                puddle.transform.localPosition = Vector3.zero;
-                if (!TryGetRendererBounds(puddle, out var candidateBounds, includeInactive: true))
-                {
-                    continue;
-                }
-
-                var footprint = Mathf.Max(candidateBounds.size.x, candidateBounds.size.z, 0.0001f);
-                var thinness = candidateBounds.size.y / footprint;
-                var score = candidateBounds.size.y + (thinness * 0.25f);
-                if (score < bestScore)
-                {
-                    bestScore = score;
-                    bestLocalRotation = puddle.transform.localRotation;
-                }
-            }
-
-            puddle.transform.localRotation = bestLocalRotation;
-            puddle.transform.localScale = Vector3.one;
-            puddle.transform.localPosition = Vector3.zero;
-
-            if (TryGetRendererBounds(puddle, out var puddleBounds, includeInactive: true))
-            {
-                var referenceFootprint = Mathf.Max(referenceBounds.size.x, referenceBounds.size.z, 0.0001f);
-                var puddleFootprint = Mathf.Max(puddleBounds.size.x, puddleBounds.size.z, 0.0001f);
-                var scaleFactor = Mathf.Clamp(referenceFootprint / puddleFootprint, 0.01f, 100f);
-                puddle.transform.localScale *= scaleFactor;
-
-                if (TryGetRendererBounds(puddle, out var scaledPuddleBounds, includeInactive: true))
-                {
-                    var currentGroundCenter = new Vector3(
-                        scaledPuddleBounds.center.x,
-                        scaledPuddleBounds.min.y,
-                        scaledPuddleBounds.center.z);
-                    puddle.transform.localPosition += root.InverseTransformVector(targetGroundCenter - currentGroundCenter);
-                }
-            }
-            else
-            {
-                puddle.transform.localPosition = root.InverseTransformPoint(targetGroundCenter);
-            }
-        }
-
-        private static void EnsureDeathPuddleRendererMaterials(Renderer[] renderers)
-        {
-            var fallbackMaterial = LoadMaterial(SlimeMaterialPath);
-            foreach (var renderer in renderers)
-            {
-                var materials = renderer.sharedMaterials;
-                if (materials == null || materials.Length == 0)
-                {
-                    renderer.sharedMaterial = fallbackMaterial;
-                    EditorUtility.SetDirty(renderer);
-                    continue;
-                }
-
-                var changed = false;
-                for (var index = 0; index < materials.Length; index++)
-                {
-                    if (materials[index] == null)
-                    {
-                        materials[index] = fallbackMaterial;
-                        changed = true;
-                    }
-                }
-
-                if (changed)
-                {
-                    renderer.sharedMaterials = materials;
-                    EditorUtility.SetDirty(renderer);
-                }
-            }
         }
 
         private static void RemoveDeathMeltVisuals(Transform walkingRoot)
@@ -2740,6 +2889,14 @@ namespace Bellerophon.Editor.LongaArmaCargoRunScene
                 .Count(binding => binding.propertyName.StartsWith(attributePrefix, StringComparison.Ordinal));
         }
 
+        private static int CountCurveBindings(AnimationClip clip, string attributePrefix, string path)
+        {
+            return AnimationUtility.GetCurveBindings(clip)
+                .Count(binding =>
+                    binding.propertyName.StartsWith(attributePrefix, StringComparison.Ordinal) &&
+                    string.Equals(binding.path, path, StringComparison.Ordinal));
+        }
+
         private static void AddLocalRotationOffsetCurves(
             AnimationClip clip,
             Transform root,
@@ -3014,6 +3171,63 @@ namespace Bellerophon.Editor.LongaArmaCargoRunScene
             }
 
             return walking.GetComponentsInChildren<Animator>(true).Length;
+        }
+
+        private static Transform FindReferenceWalkingModelForDeath(Transform placementRoot)
+        {
+            var referenceStateNames = new[]
+            {
+                MoveRootName,
+                IdleRootName,
+                AttackRootName,
+                HitRootName,
+                ConsumeRootName
+            };
+            foreach (var stateRootName in referenceStateNames)
+            {
+                var stateRoot = FindChildRecursive(placementRoot, stateRootName);
+                if (stateRoot == null)
+                {
+                    continue;
+                }
+
+                var approvedModel = FindChildRecursive(stateRoot, ApprovedModelName);
+                if (approvedModel == null)
+                {
+                    continue;
+                }
+
+                var walking = FindChildRecursive(approvedModel, WalkingInstanceName);
+                if (walking != null)
+                {
+                    return walking;
+                }
+            }
+
+            return null;
+        }
+
+        private static string GetHierarchyPath(Transform target, Transform root)
+        {
+            if (target == null)
+            {
+                return string.Empty;
+            }
+
+            var parts = new System.Collections.Generic.Stack<string>();
+            var current = target;
+            while (current != null && current != root)
+            {
+                parts.Push(current.name);
+                current = current.parent;
+            }
+
+            if (current == root)
+            {
+                parts.Push(root.name);
+            }
+
+            return string.Join("/", parts.ToArray());
         }
 
         private static void ConfigureWalkingFbxImporter()

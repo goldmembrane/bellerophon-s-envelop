@@ -331,6 +331,48 @@ namespace Bellerophon.Editor.Validation
                             .ApplyDeathMeltPuddleToDeathState,
                         "Longa Arma death melt-puddle applied.");
                     break;
+                case "ApplyTergoAnimationPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoAnimationPlacement.ApplyTergoAnimationPlacement,
+                        "Tergo animation placement applied.");
+                    break;
+                case "ApplyTergoApprovedVisualsToCurrentCargoRunScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoApprovedVisualApply.ApplyApprovedVisualsToCurrentCargoRunScene,
+                        "Approved Tergo visuals applied to current CargoRunMvp scene.");
+                    break;
+                case "CaptureTergoApprovedEyeShapeComparison":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoApprovedVisualApply.CaptureApprovedEyeShapeComparison,
+                        "Approved Tergo eye shape comparison captured.");
+                    break;
+                case "ApplyTergoIdleBreathingAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoIdleBreathingAnimation.ApplyTergoIdleBreathingAnimation,
+                        "Tergo idle breathing animation applied.");
+                    break;
+                case "ValidateTergoIdleBreathingAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoIdleBreathingAnimation.ValidateTergoIdleBreathingAnimation,
+                        "Tergo idle breathing animation validated.");
+                    break;
+                case "ApplyTergoWalkWanderImportedAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoWalkWanderImportedAnimation.ApplyTergoWalkWanderImportedAnimation,
+                        "Tergo walk wander imported animation applied.");
+                    break;
+                case "ValidateTergoWalkWanderImportedAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoWalkWanderImportedAnimation.ValidateTergoWalkWanderImportedAnimation,
+                        "Tergo walk wander imported animation validated.");
+                    break;
                 case "RestoreFugaAndLongaArmaPlacementsFromRecoveryScene":
                     RunSynchronous(
                         request,

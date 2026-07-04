@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tergo 녹색 반투명 몸통 + 주황색 눈 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101512;
+      --panel: #172019;
+      --line: #38513e;
+      --text: #edf4ed;
+      --muted: #b8c8ba;
+      --accent: #f4b647;
+      --green: #79a752;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    }
+    main {
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+    h1, h2, h3 { margin: 0; letter-spacing: 0; }
+    h1 { font-size: 28px; line-height: 1.25; }
+    h2 { font-size: 20px; margin-bottom: 12px; }
+    h3 { font-size: 15px; color: var(--green); margin-bottom: 8px; }
+    p, li { color: var(--muted); line-height: 1.58; }
+    a { color: var(--accent); }
+    code { color: #e9f4e8; }
+    section { margin-top: 32px; }
+    .summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .note, figure, .asset-list {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+    }
+    .note { padding: 16px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 14px;
+    }
+    .large-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+      gap: 16px;
+    }
+    figure { margin: 0; padding: 10px; }
+    figure img {
+      width: 100%;
+      display: block;
+      background: #0b0f0d;
+      border: 1px solid #26352b;
+      border-radius: 4px;
+    }
+    .large-grid figure img {
+      min-height: 420px;
+      object-fit: contain;
+    }
+    figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      word-break: break-all;
+    }
+    .asset-list { padding: 14px 16px; }
+    .asset-list ul { margin: 10px 0 0; padding-left: 18px; }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .pill {
+      border: 1px solid #4c664b;
+      background: #202b21;
+      color: #d8e8d7;
+      padding: 6px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+    }
+    @media (max-width: 780px) {
+      main { padding: 18px; }
+      .summary, .large-grid { grid-template-columns: 1fr; }
+      .large-grid figure img { min-height: 0; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Tergo 녹색 반투명 몸통 + 주황색 눈 샘플</h1>
+  <div class="summary">
+    <div>
+      <p><code>enemies model/tergo.fbx</code> 원본 모델에 주황색 발광 눈을 추가하고, 눈을 제외한 얼굴과 몸통 전체를 어두운 녹색 계열의 반투명 재질로 통일한 승인용 샘플입니다. Unity 씬, 프리팹, 런타임 에셋에는 아직 반영하지 않았습니다.</p>
+      <div class="pill-row">
+        <span class="pill">주황색 눈 유지</span>
+        <span class="pill">어두운 녹색 반투명 몸체</span>
+        <span class="pill">Unity 미적용</span>
+        <span class="pill">artSample 검토용</span>
+      </div>
+    </div>
+    <div class="note">
+      <strong>제한 범위</strong>
+      <p>몸체 메쉬, Armature, 스케일, 방향, 애니메이션, AI, 충돌, 공격 판정은 수정하지 않았습니다.</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>기준 이미지와 정밀 렌더 비교</h2>
+    <div class="large-grid">
+      <figure>
+        <img src="../../../../image/tergo(테르고).png" alt="테르고 정면 기준 이미지">
+        <figcaption>정면 기준: image/tergo(테르고).png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/tergo_green_eyes_front_large.png" alt="녹색 반투명 테르고 정면 정밀 렌더">
+        <figcaption>생성 정면 정밀: renders/tergo_green_eyes_front_large.png</figcaption>
+      </figure>
+      <figure>
+        <img src="../../../../image/tergo-beside.png" alt="테르고 측면 기준 이미지">
+        <figcaption>측면 기준: image/tergo-beside.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/tergo_green_eyes_side_large.png" alt="녹색 반투명 테르고 측면 정밀 렌더">
+        <figcaption>생성 측면 정밀: renders/tergo_green_eyes_side_large.png</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>생성 렌더</h2>
+    <div class="grid">
+      <figure>
+        <img src="renders/tergo_green_eyes_front.png" alt="녹색 반투명 테르고 정면 렌더">
+        <figcaption>renders/tergo_green_eyes_front.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/tergo_green_eyes_three_quarter.png" alt="녹색 반투명 테르고 3/4 렌더">
+        <figcaption>renders/tergo_green_eyes_three_quarter.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/tergo_green_eyes_side.png" alt="녹색 반투명 테르고 측면 렌더">
+        <figcaption>renders/tergo_green_eyes_side.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/tergo_green_eyes_closeup.png" alt="녹색 반투명 테르고 머리 클로즈업">
+        <figcaption>renders/tergo_green_eyes_closeup.png</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>산출물</h2>
+    <div class="asset-list">
+      <h3>검토 및 원본 파일</h3>
+      <ul>
+        <li><a href="blender/tergo_green_body_eyes_added.blend">blender/tergo_green_body_eyes_added.blend</a></li>
+        <li><a href="exports/tergo_green_body_eyes_added.fbx">exports/tergo_green_body_eyes_added.fbx</a></li>
+        <li><a href="exports/tergo_green_body_eyes_added.glb">exports/tergo_green_body_eyes_added.glb</a></li>
+        <li><a href="README.md">README.md</a></li>
+        <li><a href="ASSET_MANIFEST.json">ASSET_MANIFEST.json</a></li>
+        <li><a href="tools/build_tergo_green_body_eyes_added.py">tools/build_tergo_green_body_eyes_added.py</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>위치 및 재질 기록</h2>
+    <div class="asset-list">
+      <ul>
+        <li>눈 중심 Z: <code>1.5584</code></li>
+        <li>눈 간격: <code>0.0733</code></li>
+        <li>왼쪽 눈 lens Y: <code>-0.1735</code></li>
+        <li>오른쪽 눈 lens Y: <code>-0.1585</code></li>
+        <li>몸체 Alpha: <code>0.58</code></li>
+        <li>몸체 Diffuse RGBA: <code>[0.04, 0.22, 0.12, 0.58]</code></li>
+        <li>몸체 발광 강도: <code>0.68</code></li>
+      </ul>
+    </div>
+  </section>
+</main>
+</body>
+</html>
