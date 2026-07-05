@@ -18,6 +18,7 @@ namespace Bellerophon.Editor.Validation
         private const string RequestFileName = "UnityEditorBridge.request";
         private const string ActiveRequestFileName = "UnityEditorBridge.active";
         private const string DefaultTestResultsFileName = "TestResults.xml";
+        private const string TergoPierceAttackCurrentSceneVisualRunCommand = "RunTergoPierceAttackCurrentSceneVisualRun";
         private const double PollIntervalSeconds = 0.5d;
         private const double TestRunnerStaleTimeoutSeconds = 120d;
 
@@ -116,7 +117,8 @@ namespace Bellerophon.Editor.Validation
 
         private static void StartRequest(BridgeRequest request)
         {
-            if (request.Command != "PlayModeTests")
+            if (request.Command != "PlayModeTests" &&
+                request.Command != TergoPierceAttackCurrentSceneVisualRunCommand)
             {
                 TryDelete(ActiveRequestPath);
             }
@@ -372,6 +374,369 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.TergoCargoRunScene.TergoWalkWanderImportedAnimation.ValidateTergoWalkWanderImportedAnimation,
                         "Tergo walk wander imported animation validated.");
+                    break;
+                case "ApplyTergoRunChaseAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoRunChaseAnimation,
+                        "Tergo run chase animation applied.");
+                    break;
+                case "ValidateTergoRunChaseAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoRunChaseAnimation,
+                        "Tergo run chase animation validated.");
+                    break;
+                case "ReplaceTergoBackRushWithRunningModel":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ReplaceTergoBackRushWithRunningModel,
+                        "Tergo BackRush running model replaced.");
+                    break;
+                case "ValidateTergoBackRushRunningModel":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoBackRushRunningModel,
+                        "Tergo BackRush running model validated.");
+                    break;
+                case "SyncTergoBackRushVisualDetails":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.SyncTergoBackRushVisualDetails,
+                        "Tergo BackRush visual details synced.");
+                    break;
+                case "ValidateTergoBackRushVisualDetails":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoBackRushVisualDetails,
+                        "Tergo BackRush visual details validated.");
+                    break;
+                case "ApplyTergoPierceAttackAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoPierceAttackAnimation,
+                        "Tergo pierce attack animation applied.");
+                    break;
+                case "ValidateTergoPierceAttackAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoPierceAttackAnimation,
+                        "Tergo pierce attack animation validated.");
+                    break;
+                case "ReplaceTergoPierceAttackWithThrustFbx":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ReplaceTergoPierceAttackWithThrustFbx,
+                        "Tergo pierce attack thrust FBX replacement applied.");
+                    break;
+                case "ApplyTergoPierceAttackThrustFbxAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoPierceAttackThrustFbxAnimation,
+                        "Tergo pierce attack thrust FBX animation applied.");
+                    break;
+                case "SyncTergoPierceAttackVisualDetailsFromStaticReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.SyncTergoPierceAttackVisualDetailsFromStaticReview,
+                        "Tergo pierce attack visual details synced from static review.");
+                    break;
+                case "SyncTergoPierceAttackLightsFromStaticReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.SyncTergoPierceAttackLightsFromStaticReview,
+                        "Tergo pierce attack lights synced from static review.");
+                    break;
+                case "ReplaceTergoDownedPounceWithTakedownFbx":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ReplaceTergoDownedPounceWithTakedownFbx,
+                        "Tergo downed pounce takedown FBX replacement applied.");
+                    break;
+                case "ApplyTergoDownedPounceTakedownFbxLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoDownedPounceTakedownFbxLoop,
+                        "Tergo downed pounce takedown FBX loop applied.");
+                    break;
+                case "SyncTergoDownedPounceVisualDetailsFromStaticReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.SyncTergoDownedPounceVisualDetailsFromStaticReview,
+                        "Tergo downed pounce visual details synced from static review.");
+                    break;
+                case "ReplaceTergoInterruptStaggerWithFallOverFbx":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ReplaceTergoInterruptStaggerWithFallOverFbx,
+                        "Tergo interrupt stagger fall-over FBX replacement applied.");
+                    break;
+                case "ApplyTergoInterruptStaggerFallOverFbxLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoInterruptStaggerFallOverFbxLoop,
+                        "Tergo interrupt stagger fall-over FBX loop applied.");
+                    break;
+                case "SyncTergoInterruptStaggerVisualDetailsFromStaticReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.SyncTergoInterruptStaggerVisualDetailsFromStaticReview,
+                        "Tergo interrupt stagger visual details synced from static review.");
+                    break;
+                case "ApplyTergoInterruptStaggerBackwardFall":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoInterruptStaggerBackwardFall,
+                        "Tergo interrupt stagger backward fall applied.");
+                    break;
+                case "ValidateTergoInterruptStaggerBackwardFall":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoInterruptStaggerBackwardFall,
+                        "Tergo interrupt stagger backward fall validated.");
+                    break;
+                case "ApplyTergoCrouchTremble5s":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoCrouchTremble5s,
+                        "Tergo crouch tremble 5s applied.");
+                    break;
+                case "ValidateTergoCrouchTremble5s":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoCrouchTremble5s,
+                        "Tergo crouch tremble 5s validated.");
+                    break;
+                case "ReplaceTergoCrouchTrembleWithTerrifiedFbx":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ReplaceTergoCrouchTrembleWithTerrifiedFbx,
+                        "Tergo crouch tremble terrified FBX replacement applied.");
+                    break;
+                case "ApplyTergoCrouchTrembleTerrifiedFbxLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoCrouchTrembleTerrifiedFbxLoop,
+                        "Tergo crouch tremble terrified FBX loop applied.");
+                    break;
+                case "ValidateTergoCrouchTrembleTerrifiedFbxLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoCrouchTrembleTerrifiedFbxLoop,
+                        "Tergo crouch tremble terrified FBX loop validated.");
+                    break;
+                case "SyncTergoCrouchTrembleVisualDetailsFromStaticReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.SyncTergoCrouchTrembleVisualDetailsFromStaticReview,
+                        "Tergo crouch tremble visual details synced from static review.");
+                    break;
+                case "ApplyTergoHitNormal":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoHitNormal,
+                        "Tergo hit normal applied.");
+                    break;
+                case "ValidateTergoHitNormal":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoHitNormal,
+                        "Tergo hit normal validated.");
+                    break;
+                case "ApplyTergoHittedModelAsHitNormal":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoHittedModelAsHitNormal,
+                        "Tergo hit normal hitted FBX applied.");
+                    break;
+                case "ValidateTergoHittedModelAsHitNormal":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoHittedModelAsHitNormal,
+                        "Tergo hit normal hitted FBX validated.");
+                    break;
+                case "SyncTergoHitNormalVisualDetailsFromStaticReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.SyncTergoHitNormalVisualDetailsFromStaticReview,
+                        "Tergo hit normal visual details synced from static review.");
+                    break;
+                case "InspectTergoPierceAttackRuntimePlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.InspectTergoPierceAttackRuntimePlayback,
+                        "Tergo pierce attack runtime playback inspected.");
+                    break;
+                case "RepairTergoPierceAttackRuntimePlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.RepairTergoPierceAttackRuntimePlayback,
+                        "Tergo pierce attack runtime playback repaired.");
+                    break;
+                case "ValidateTergoPierceAttackRuntimePlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoPierceAttackRuntimePlayback,
+                        "Tergo pierce attack runtime playback validated.");
+                    break;
+                case TergoPierceAttackCurrentSceneVisualRunCommand:
+                    RunTergoPierceAttackCurrentSceneVisualRun(request);
+                    break;
+                case "InspectTergoBackRushAuthoredSprintRig":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.InspectTergoBackRushAuthoredSprintRig,
+                        "Tergo BackRush authored sprint rig inspected.");
+                    break;
+                case "ApplyTergoBackRushAuthoredSprint":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoBackRushAuthoredSprint,
+                        "Tergo BackRush authored sprint applied.");
+                    break;
+                case "ValidateTergoBackRushAuthoredSprint":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoBackRushAuthoredSprint,
+                        "Tergo BackRush authored sprint validated.");
+                    break;
+                case "InspectTergoBackRushSprintReferenceMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.InspectTergoBackRushSprintReferenceMotion,
+                        "Tergo BackRush sprint reference motion inspected.");
+                    break;
+                case "RewriteTergoBackRushAuthoredSprintFromReference":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.RewriteTergoBackRushAuthoredSprintFromReference,
+                        "Tergo BackRush authored sprint rewritten from reference.");
+                    break;
+                case "ValidateTergoBackRushAuthoredSprintRewrite":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoBackRushAuthoredSprintRewrite,
+                        "Tergo BackRush authored sprint rewrite validated.");
+                    break;
+                case "InspectTergoBackRushSprintVideoReference":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.InspectTergoBackRushSprintVideoReference,
+                        "Tergo BackRush sprint video reference inspected.");
+                    break;
+                case "RewriteTergoBackRushSprintToVideoReference":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.RewriteTergoBackRushSprintToVideoReference,
+                        "Tergo BackRush sprint rewritten to video reference.");
+                    break;
+                case "ValidateTergoBackRushSprintVideoReference":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoBackRushSprintVideoReference,
+                        "Tergo BackRush sprint video reference validated.");
+                    break;
+                case "RemoveTergoRunChaseAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.RemoveTergoRunChaseAnimation,
+                        "Tergo run chase animation removed.");
+                    break;
+                case "ValidateTergoRunChaseAnimationRemoved":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoRunChaseAnimationRemoved,
+                        "Tergo run chase animation removal validated.");
+                    break;
+                case "RestoreTergoBackRushVisualModel":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.RestoreTergoBackRushVisualModel,
+                        "Tergo BackRush visual model restored.");
+                    break;
+                case "ValidateTergoBackRushVisualModel":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoBackRushVisualModel,
+                        "Tergo BackRush visual model validated.");
+                    break;
+                case "ReplaceTergoBackRushRigOnly":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ReplaceTergoBackRushRigOnly,
+                        "Tergo BackRush rig-only replacement applied.");
+                    break;
+                case "ValidateTergoBackRushRigOnly":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoBackRushRigOnly,
+                        "Tergo BackRush rig-only replacement validated.");
+                    break;
+                case "ApplyTergoBackRushAnimationOnly":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoBackRushAnimationOnly,
+                        "Tergo BackRush animation-only application completed.");
+                    break;
+                case "ValidateTergoBackRushAnimationOnly":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoBackRushAnimationOnly,
+                        "Tergo BackRush animation-only application validated.");
+                    break;
+                case "InspectTergoBackRushWaistTwist":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.InspectTergoBackRushWaistTwist,
+                        "Tergo BackRush waist twist inspected.");
+                    break;
+                case "RepairTergoBackRushWaistTwist":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.RepairTergoBackRushWaistTwist,
+                        "Tergo BackRush waist twist repaired.");
+                    break;
+                case "ValidateTergoBackRushWaistTwistFixed":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoBackRushWaistTwistFixed,
+                        "Tergo BackRush waist twist fix validated.");
+                    break;
+                case "InspectTergoBackRushRunningPose":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.InspectTergoBackRushRunningPose,
+                        "Tergo BackRush running pose inspected.");
+                    break;
+                case "RepairTergoBackRushRunningPose":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.RepairTergoBackRushRunningPose,
+                        "Tergo BackRush running pose repaired.");
+                    break;
+                case "ValidateTergoBackRushRunningPose":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoBackRushRunningPose,
+                        "Tergo BackRush running pose validated.");
+                    break;
+                case "InspectTergoBackRushNormalRun":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.InspectTergoBackRushNormalRun,
+                        "Tergo BackRush normal run inspected.");
+                    break;
+                case "RepairTergoBackRushNormalRun":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.RepairTergoBackRushNormalRun,
+                        "Tergo BackRush normal run repaired.");
+                    break;
+                case "ValidateTergoBackRushNormalRun":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoBackRushNormalRun,
+                        "Tergo BackRush normal run validated.");
                     break;
                 case "RestoreFugaAndLongaArmaPlacementsFromRecoveryScene":
                     RunSynchronous(
@@ -1219,6 +1584,32 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
+        private static void RunTergoPierceAttackCurrentSceneVisualRun(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Bellerophon.Editor.TergoCargoRunScene.TergoPierceAttackCurrentSceneVisualRun.Start(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
         private static void RunTests(BridgeRequest request, TestMode testMode)
         {
             BeginRequest(request);
@@ -1415,7 +1806,18 @@ namespace Bellerophon.Editor.Validation
             }
 
             var request = BridgeRequest.Read(ActiveRequestPath);
-            if (!request.IsValid || request.Command != "PlayModeTests")
+            if (!request.IsValid)
+            {
+                TryDelete(ActiveRequestPath);
+                return false;
+            }
+
+            if (request.Command == TergoPierceAttackCurrentSceneVisualRunCommand)
+            {
+                return false;
+            }
+
+            if (request.Command != "PlayModeTests")
             {
                 TryDelete(ActiveRequestPath);
                 return false;
@@ -1466,7 +1868,31 @@ namespace Bellerophon.Editor.Validation
             }
 
             var request = BridgeRequest.Read(ActiveRequestPath);
-            if (!request.IsValid || request.Command != "PlayModeTests")
+            if (!request.IsValid)
+            {
+                TryDelete(ActiveRequestPath);
+                return false;
+            }
+
+            if (request.Command == TergoPierceAttackCurrentSceneVisualRunCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine("Resuming Tergo current scene visual run after Play Mode transition.");
+                Bellerophon.Editor.TergoCargoRunScene.TergoPierceAttackCurrentSceneVisualRun.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command != "PlayModeTests")
             {
                 TryDelete(ActiveRequestPath);
                 return false;
