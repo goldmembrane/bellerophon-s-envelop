@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tergo 사망 MeltPuddle BlendShape 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #121617;
+      color: #e7ece8;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px;
+      background: #121617;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 8px 0;
+      line-height: 1.6;
+      color: #cfd8d2;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    figure {
+      margin: 0;
+      padding: 0;
+      background: #1a2021;
+      border: 1px solid #2c3634;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    img {
+      width: 100%;
+      display: block;
+      background: #0d1112;
+    }
+
+    figcaption {
+      padding: 12px 14px;
+      color: #d7dfda;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    code {
+      color: #aee2b2;
+      background: #202927;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+
+    .files {
+      margin-top: 24px;
+      padding: 16px 18px;
+      background: #18201e;
+      border: 1px solid #30403a;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Tergo 사망 MeltPuddle BlendShape 샘플</h1>
+    <p>
+      `LongaArma_06_Death_MeltPuddle`와 같은 방식으로, 사망 전용 BlendShape를 구동해 쓰러진 뒤 몸체가 녹아 바닥 웅덩이가 되는 후보 샘플입니다.
+      이 버전은 `tergo_dying.fbx` 사망 애니메이션 마지막 누운 포즈를 Basis로 사용합니다.
+      Unity 씬에는 아직 연결하지 않았습니다.
+    </p>
+
+    <section class="grid">
+      <figure>
+        <img src="renders/tergo_death_melt_puddle_overview.png" alt="Tergo MeltPuddle 4단계 전체 비교">
+        <figcaption>사망 마지막 누운 포즈, 처짐, 압착, 최종 웅덩이 4단계 비교입니다.</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/tergo_death_melt_puddle_side_height.png" alt="Tergo MeltPuddle 측면 높이 확인">
+        <figcaption>최종 웅덩이가 바닥에 낮게 고이는지 확인하기 위한 측면 렌더입니다.</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/tergo_death_melt_puddle_final_puddle.png" alt="Tergo MeltPuddle 최종 웅덩이 형태">
+        <figcaption>최종 웅덩이 형태 집중 렌더입니다.</figcaption>
+      </figure>
+    </section>
+
+    <section class="files">
+      <p>BlendShape 이름: <code>DEATH_TERGO_01_weight_sag</code>, <code>DEATH_TERGO_02_crush_collapse</code>, <code>DEATH_TERGO_03_melt_spread</code></p>
+      <p>Basis 기준: <code>tergo_dying.fbx</code> 사망 애니메이션 마지막 누운 포즈</p>
+      <p>Unity 적용 후보 FBX: <code>exports/tergo_death_melt_puddle_blendshape.fbx</code></p>
+      <p>검토용 GLB: <code>exports/tergo_death_melt_puddle_preview.glb</code></p>
+      <p>Blender 원본: <code>blender/tergo_death_melt_puddle.blend</code></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,65 @@
+{
+  "sample": "tergo_death_melt_puddle",
+  "source": "Assets/_Project/Art/Enemies/Tergo/Models/tergo_dying.fbx",
+  "method": "Final death-pose based BlendShape melt puddle sample",
+  "status": "사용자 검토 대기",
+  "unityRuntimeConnected": false,
+  "blendShapes": [
+    "DEATH_TERGO_01_weight_sag",
+    "DEATH_TERGO_02_crush_collapse",
+    "DEATH_TERGO_03_melt_spread"
+  ],
+  "verticalAxisDetected": "z",
+  "basisPose": "tergo_dying.fbx animation final lying pose",
+  "sourceAnimationEndFrame": 264.0,
+  "vertexCount": 3330,
+  "polygonCount": 6656,
+  "files": [
+    {
+      "path": "blender/tergo_death_melt_puddle.blend",
+      "bytes": 1252949
+    },
+    {
+      "path": "blender/tergo_death_melt_puddle.blend1",
+      "bytes": 1252956
+    },
+    {
+      "path": "exports/tergo_death_melt_puddle_blendshape.fbx",
+      "bytes": 540508
+    },
+    {
+      "path": "exports/tergo_death_melt_puddle_preview.glb",
+      "bytes": 7716412
+    },
+    {
+      "path": "index.html",
+      "bytes": 3314
+    },
+    {
+      "path": "README.md",
+      "bytes": 3181
+    },
+    {
+      "path": "renders/tergo_death_melt_puddle_final_puddle.png",
+      "bytes": 1388565
+    },
+    {
+      "path": "renders/tergo_death_melt_puddle_overview.png",
+      "bytes": 1217954
+    },
+    {
+      "path": "renders/tergo_death_melt_puddle_side_height.png",
+      "bytes": 1226215
+    },
+    {
+      "path": "tools/build_tergo_death_melt_puddle.py",
+      "bytes": 15374
+    }
+  ],
+  "notes": [
+    "사망 애니메이션의 마지막 누운 포즈를 Basis로 사용한다.",
+    "최종 단계는 머리, 몸통, 팔, 다리를 남기지 않고 낮은 웅덩이 형태로 압착한다.",
+    "본/Transform 납작화 방식은 사용하지 않는다.",
+    "사용자 승인 전에는 Unity 씬, 프리팹, 런타임 에셋에 연결하지 않는다."
+  ]
+}

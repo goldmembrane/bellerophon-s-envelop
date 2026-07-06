@@ -555,6 +555,48 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoHittedModelAsHitNormal,
                         "Tergo hit normal hitted FBX validated.");
                     break;
+                case "ApplyTergoDyingModelAsDeath":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoDyingModelAsDeath,
+                        "Tergo death dying FBX applied.");
+                    break;
+                case "ValidateTergoDyingModelAsDeath":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoDyingModelAsDeath,
+                        "Tergo death dying FBX validated.");
+                    break;
+                case "SyncTergoDeathVisualDetailsFromStaticReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.SyncTergoDeathVisualDetailsFromStaticReview,
+                        "Tergo death visual details synced from static review.");
+                    break;
+                case "ApplyTergoApprovedDeathMeltPuddleModel":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoApprovedDeathMeltPuddleModel,
+                        "Tergo approved death melt puddle model applied.");
+                    break;
+                case "ValidateTergoApprovedDeathMeltPuddleModel":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoApprovedDeathMeltPuddleModel,
+                        "Tergo approved death melt puddle model validated.");
+                    break;
+                case "ApplyTergoDeathMeltPuddleAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoDeathMeltPuddleAnimation,
+                        "Tergo death melt puddle animation applied.");
+                    break;
+                case "ValidateTergoDeathMeltPuddleAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoDeathMeltPuddleAnimation,
+                        "Tergo death melt puddle animation validated.");
+                    break;
                 case "SyncTergoHitNormalVisualDetailsFromStaticReview":
                     RunSynchronous(
                         request,
