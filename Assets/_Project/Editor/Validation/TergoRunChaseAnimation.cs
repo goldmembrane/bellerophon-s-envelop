@@ -22,6 +22,8 @@ namespace Bellerophon.Editor.TergoCargoRunScene
         private const string RunRootName = "Tergo_04_BackRush";
         private const string PierceAttackRootName = "Tergo_05_Pierce_Attack";
         private const string DownedPounceRootName = "Tergo_07_Downed_Pounce";
+        private const string DownedDrillAttackLegacyRootName = "Tergo_08_Downed_Drill_Attack_Loop";
+        private const string StandUpAfterFallRootName = "Tergo_08_Stand_Up_After_Fall";
         private const string InterruptStaggerRootName = "Tergo_09_Interrupt_Stagger";
         private const string CrouchTrembleRootName = "Tergo_10_Crouch_Tremble_5s";
         private const string HitNormalRootName = "Tergo_11_Hit_Normal";
@@ -35,6 +37,8 @@ namespace Bellerophon.Editor.TergoCargoRunScene
         private const string TakedownModelAssetPath = "Assets/_Project/Art/Enemies/Tergo/Models/tergo_takedown.fbx";
         private const string FallOverModelSourceAbsolutePath = "D:/Bellerophon2/Bellerophon/enemies model/tergo fall over.fbx";
         private const string FallOverModelAssetPath = "Assets/_Project/Art/Enemies/Tergo/Models/tergo_fall_over.fbx";
+        private const string StandUpAfterFallModelSourceAbsolutePath = "D:/Bellerophon2/Bellerophon/enemies model/tergo stand up.fbx";
+        private const string StandUpAfterFallModelAssetPath = "Assets/_Project/Art/Enemies/Tergo/Models/tergo_stand_up.fbx";
         private const string TerrifiedModelSourceAbsolutePath = "D:/Bellerophon2/Bellerophon/enemies model/tergo terrified.fbx";
         private const string TerrifiedModelAssetPath = "Assets/_Project/Art/Enemies/Tergo/Models/tergo_terrified.fbx";
         private const string HittedModelSourceAbsolutePath = "D:/Bellerophon2/Bellerophon/enemies model/tergo hitted.fbx";
@@ -62,6 +66,9 @@ namespace Bellerophon.Editor.TergoCargoRunScene
         private const string FallOverFbxInterruptStaggerClipPath = AnimationFolderPath + "/Tergo_Interrupt_Stagger_FallOver_Fbx.anim";
         private const string FallOverFbxInterruptStaggerControllerPath = AnimationFolderPath + "/Tergo_Interrupt_Stagger_FallOver_Fbx.controller";
         private const string FallOverFbxInterruptStaggerClipName = "Tergo_Interrupt_Stagger_FallOver_Fbx";
+        private const string StandUpAfterFallFbxClipPath = AnimationFolderPath + "/Tergo_Stand_Up_After_Fall_Fbx.anim";
+        private const string StandUpAfterFallFbxControllerPath = AnimationFolderPath + "/Tergo_Stand_Up_After_Fall_Fbx.controller";
+        private const string StandUpAfterFallFbxClipName = "Tergo_Stand_Up_After_Fall_Fbx";
         private const string CrouchTrembleClipPath = AnimationFolderPath + "/Tergo_Crouch_Tremble_5s.anim";
         private const string CrouchTrembleControllerPath = AnimationFolderPath + "/Tergo_Crouch_Tremble_5s.controller";
         private const string CrouchTrembleClipName = "Tergo_Crouch_Tremble_5s";
@@ -89,12 +96,14 @@ namespace Bellerophon.Editor.TergoCargoRunScene
         private const string ApprovedDeathMeltCrushCollapseShape = "DEATH_TERGO_02_crush_collapse";
         private const string ApprovedDeathMeltSpreadShape = "DEATH_TERGO_03_melt_spread";
         private const float ApprovedDeathMeltStartDelay = 0.02f;
-        private const float ApprovedDeathMeltStartYOffset = 0.09f;
         private const float ApprovedDeathMeltSagDuration = 0.45f;
         private const float ApprovedDeathMeltCollapseDuration = 0.9f;
         private const float ApprovedDeathMeltSpreadDuration = 1.45f;
         private const float ApprovedDeathMeltHoldDuration = 0.35f;
         private const float ApprovedDeathMeltVisibilityLead = 0.001f;
+        private const float ApprovedDeathMeltHeightVisualYOffset = -0.035f;
+        // Keeps the pre-melt pose at the dying FBX final height while the final puddle keeps its floor offset.
+        private const float ApprovedDeathMeltStartPoseHeightYOffset = 0.035f;
         private const string HitNormalClipPath = AnimationFolderPath + "/Tergo_Hit_Normal.anim";
         private const string HitNormalControllerPath = AnimationFolderPath + "/Tergo_Hit_Normal.controller";
         private const string HitNormalClipName = "Tergo_Hit_Normal";
@@ -2314,7 +2323,7 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                     ", Target=" + eyeRenderers.Length.ToString(CultureInfo.InvariantCulture));
             }
 
-            var alignment = AlignApprovedPuddleToDyingFinalPose(deathRoot, puddleRoot, bodyRenderers, clip, baseFallEndTime);
+            var alignment = AlignApprovedPuddleToDyingFinalPose(deathRoot, puddleRoot, bodyRenderers, clip, baseFallEndTime, out var rootMotion);
             var timeline = BuildApprovedDeathMeltTimeline(baseFallEndTime);
             var rewrittenBindings = ApplyApprovedDeathMeltPuddleCurves(
                 clip,
@@ -2331,7 +2340,8 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 puddleRenderer,
                 bodyRenderers,
                 timeline);
-            rewrittenBindings += SetApprovedPuddleRootStartOffsetCurves(clip, deathRoot, puddleRoot, timeline);
+            rootMotion = rootMotion.WithFinalLocalPosition(puddleRoot.localPosition);
+            rewrittenBindings += SetApprovedPuddleRootMotionCurves(clip, deathRoot, puddleRoot, timeline, rootMotion);
             SetApprovedDeathMeltInitialVisibility(puddleRoot, puddleRenderer, bodyRenderers, eyeRenderers);
 
             var controllerAfter = EnsureDyingFbxDeathController(clip);
@@ -2386,7 +2396,11 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 "TergoApprovedDeathMeltPuddleFloorPreSave" +
                 ", Correction=" + FormatVector3(finalSampleCorrection) +
                 ", GroundDelta=" + floorMetrics.GroundDelta.ToString("0.######", CultureInfo.InvariantCulture) +
-                ", StartYOffset=" + floorMetrics.StartYOffset.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", StartGroundDelta=" + floorMetrics.StartGroundDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", StartCenterHorizontalDelta=" + floorMetrics.StartCenterHorizontalDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", StartHeightDelta=" + floorMetrics.StartHeightDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", StartHorizontalAngleDelta=" + floorMetrics.StartHorizontalAngleDelta.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", RootRotationDelta=" + floorMetrics.RootRotationDelta.ToString("0.###", CultureInfo.InvariantCulture) +
                 ", CenterHorizontalDelta=" + floorMetrics.CenterHorizontalDelta.ToString("0.######", CultureInfo.InvariantCulture) +
                 ", VerticalHeight=" + floorMetrics.VerticalHeight.ToString("0.######", CultureInfo.InvariantCulture) +
                 ", HorizontalExtent=" + floorMetrics.HorizontalExtent.ToString("0.######", CultureInfo.InvariantCulture) +
@@ -2434,9 +2448,13 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 ", PuddleScale=" + alignment.Scale.ToString("0.######", CultureInfo.InvariantCulture) +
                 ", PuddleCenterHorizontalDelta=" + alignment.CenterHorizontalDelta.ToString("0.######", CultureInfo.InvariantCulture) +
                 ", PuddleGroundDelta=" + alignment.GroundDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", PuddleStartCenterHorizontalDelta=" + alignment.StartCenterHorizontalDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", PuddleStartGroundDelta=" + alignment.StartGroundDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", PuddleStartHeightDelta=" + alignment.StartHeightDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", PuddleStartHorizontalAngleDelta=" + alignment.StartHorizontalAngleDelta.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", PuddleRootRotationDelta=" + floorMetrics.RootRotationDelta.ToString("0.###", CultureInfo.InvariantCulture) +
                 ", PuddleLocalRotationEuler=" + FormatVector3(alignment.LocalRotationEuler) +
                 ", PuddleFinalSampleCorrection=" + FormatVector3(finalSampleCorrection) +
-                ", PuddleStartYOffset=" + floorMetrics.StartYOffset.ToString("0.######", CultureInfo.InvariantCulture) +
                 ", PuddleVerticalHeight=" + floorMetrics.VerticalHeight.ToString("0.######", CultureInfo.InvariantCulture) +
                 ", PuddleHorizontalExtent=" + floorMetrics.HorizontalExtent.ToString("0.######", CultureInfo.InvariantCulture) +
                 ", PuddleVerticalRatio=" + floorMetrics.VerticalToHorizontalRatio.ToString("0.######", CultureInfo.InvariantCulture) +
@@ -2564,7 +2582,11 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 ", EyeHiddenAfterMelt=" + sampleMetrics.EyeHiddenAfterMelt +
                 ", FinalSpreadWeight=" + sampleMetrics.FinalSpreadWeight.ToString("0.###", CultureInfo.InvariantCulture) +
                 ", PuddleGroundDelta=" + floorMetrics.GroundDelta.ToString("0.######", CultureInfo.InvariantCulture) +
-                ", PuddleStartYOffset=" + floorMetrics.StartYOffset.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", PuddleStartGroundDelta=" + floorMetrics.StartGroundDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", PuddleStartCenterHorizontalDelta=" + floorMetrics.StartCenterHorizontalDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", PuddleStartHeightDelta=" + floorMetrics.StartHeightDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", PuddleStartHorizontalAngleDelta=" + floorMetrics.StartHorizontalAngleDelta.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", PuddleRootRotationDelta=" + floorMetrics.RootRotationDelta.ToString("0.###", CultureInfo.InvariantCulture) +
                 ", PuddleVerticalHeight=" + floorMetrics.VerticalHeight.ToString("0.######", CultureInfo.InvariantCulture) +
                 ", PuddleHorizontalExtent=" + floorMetrics.HorizontalExtent.ToString("0.######", CultureInfo.InvariantCulture) +
                 ", PuddleVerticalRatio=" + floorMetrics.VerticalToHorizontalRatio.ToString("0.######", CultureInfo.InvariantCulture) +
@@ -2574,6 +2596,65 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 ", BaseFallMaxRotationDelta=" + sourceMatch.MaxRotationDelta.ToString("0.######", CultureInfo.InvariantCulture) +
                 ", LoopTime=True" +
                 ", WrapMode=Loop");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Tergo/Capture Approved Death Melt Puddle Pose Frames")]
+        public static void CaptureTergoApprovedDeathMeltPuddlePoseFrames()
+        {
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = RequireSceneObject(PlacementRootName);
+            var deathRoot = RequireChild(placementRoot.transform, DeathRootName);
+            var clip = RequireAsset<AnimationClip>(DyingFbxDeathClipPath);
+            var sourceClip = SelectDyingSourceClip(LoadDyingAnimationClips());
+            var baseFallEndTime = Mathf.Max(sourceClip.length, 0.01f);
+            var timeline = BuildApprovedDeathMeltTimeline(baseFallEndTime);
+            var outputDirectory = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "docs",
+                "validation",
+                "tergo_death_melt_height_align_20260707",
+                "unity_samples");
+            Directory.CreateDirectory(outputDirectory);
+
+            var transformStates = CaptureTransformStates(deathRoot, null);
+            var rendererStates = CaptureRendererEnabledStates(deathRoot);
+            var sampleTimes = new[]
+            {
+                new KeyValuePair<string, float>("01_before_melt", Mathf.Max(0f, timeline.MeltStart - ApprovedDeathMeltStartDelay - 0.001f)),
+                new KeyValuePair<string, float>("02_melt_start", timeline.MeltStart),
+                new KeyValuePair<string, float>("03_mid_melt", Mathf.Lerp(timeline.MeltStart, timeline.SpreadTime, 0.5f)),
+                new KeyValuePair<string, float>("04_spread", timeline.SpreadTime),
+                new KeyValuePair<string, float>("05_hold", timeline.HoldTime)
+            };
+
+            try
+            {
+                var cameraBounds = CalculateTergoValidationSampleBounds(deathRoot, clip, sampleTimes);
+                foreach (var sample in sampleTimes)
+                {
+                    clip.SampleAnimation(deathRoot.gameObject, sample.Value);
+                    var fileName = sample.Key + "_" + sample.Value.ToString("0.000", CultureInfo.InvariantCulture).Replace('.', '_') + "s.png";
+                    var outputPath = Path.Combine(outputDirectory, fileName);
+                    CaptureTergoValidationFrame(deathRoot, outputPath, cameraBounds);
+                }
+            }
+            finally
+            {
+                RestoreTransformStates(transformStates);
+                RestoreRendererEnabledStates(rendererStates);
+            }
+
+            Debug.Log(
+                "TergoApprovedDeathMeltPuddlePoseFramesCaptured" +
+                ", Scene=" + scene.path +
+                ", Target=" + PlacementRootName + "/" + DeathRootName +
+                ", OutputDirectory=" + outputDirectory.Replace('\\', '/') +
+                ", FrameCount=" + sampleTimes.Length.ToString(CultureInfo.InvariantCulture) +
+                ", BeforeMelt=" + sampleTimes[0].Value.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", MeltStart=" + timeline.MeltStart.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", MidMelt=" + sampleTimes[2].Value.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", SpreadTime=" + timeline.SpreadTime.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", HoldTime=" + timeline.HoldTime.ToString("0.###", CultureInfo.InvariantCulture));
         }
 
         [MenuItem("Bellerophon/Enemies/Tergo/Apply Death Melt Puddle Animation")]
@@ -3133,6 +3214,467 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 ", LoopRotationDelta=" + playbackMetrics.LoopRotationDelta.ToString("0.###", CultureInfo.InvariantCulture) +
                 ", LoopPositionDelta=" + playbackMetrics.LoopPositionDelta.ToString("0.######", CultureInfo.InvariantCulture) +
                 ", DownedConfiguredAnimators=" + downedConfiguredAnimators.ToString(CultureInfo.InvariantCulture) +
+                ", NonTargetTergoRootTransformsUnchanged=True");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Tergo/Apply Stand Up After Fall FBX Loop")]
+        public static void ApplyTergoStandUpAfterFallFbxLoop()
+        {
+            var standUpPrefab = ImportStandUpAfterFallModelAsset();
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = RequireSceneObject(PlacementRootName);
+            var existingStandUpRoot =
+                FindDirectChild(placementRoot.transform, StandUpAfterFallRootName) ??
+                FindDirectChild(placementRoot.transform, DownedDrillAttackLegacyRootName);
+            if (existingStandUpRoot == null)
+            {
+                throw new InvalidOperationException(
+                    "Missing Tergo 8 root. Expected " + StandUpAfterFallRootName + " or " + DownedDrillAttackLegacyRootName + ".");
+            }
+
+            var replacedRootName = existingStandUpRoot.name;
+            var siblingNamesBefore = BuildDirectChildNameSnapshot(placementRoot.transform, replacedRootName);
+            var rootStatesBefore = CaptureDirectChildTransformStates(placementRoot.transform);
+            rootStatesBefore.Remove(replacedRootName);
+            var slotState = TransformState.Capture(existingStandUpRoot);
+            var siblingIndex = existingStandUpRoot.GetSiblingIndex();
+            var wasActive = existingStandUpRoot.gameObject.activeSelf;
+
+            UnityEngine.Object.DestroyImmediate(existingStandUpRoot.gameObject);
+
+            var instanceObject = PrefabUtility.InstantiatePrefab(standUpPrefab, placementRoot.transform) as GameObject;
+            if (instanceObject == null)
+            {
+                throw new InvalidOperationException("Failed to instantiate stand-up FBX prefab: " + StandUpAfterFallModelAssetPath);
+            }
+
+            instanceObject.name = StandUpAfterFallRootName;
+            var standUpRoot = instanceObject.transform;
+            slotState.ApplyTo(standUpRoot);
+            standUpRoot.SetSiblingIndex(Mathf.Clamp(siblingIndex, 0, placementRoot.transform.childCount - 1));
+            instanceObject.SetActive(wasActive);
+
+            var sourceObject = PrefabUtility.GetCorrespondingObjectFromSource(instanceObject);
+            var sourcePath = sourceObject == null ? string.Empty : AssetDatabase.GetAssetPath(sourceObject);
+            if (!string.Equals(sourcePath, StandUpAfterFallModelAssetPath, StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    StandUpAfterFallRootName + " is not linked to stand-up FBX asset. SourcePath=" + sourcePath);
+            }
+
+            var sourceClips = LoadStandUpAfterFallAnimationClips();
+            var sourceClip = SelectStandUpAfterFallSourceClip(sourceClips);
+            var clip = EnsureCopiedStandUpAfterFallFbxClip(sourceClip);
+            var controller = EnsureStandUpAfterFallFbxController(clip);
+            var avatar = LoadStandUpAfterFallAvatarOrNull();
+            var removedChildAnimators = RemovePierceAttackChildAnimators(standUpRoot);
+
+            if (!SampleClipChangesTransforms(clip, standUpRoot))
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " stand-up FBX clip did not change target transforms.");
+            }
+
+            var animator = standUpRoot.GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = standUpRoot.gameObject.AddComponent<Animator>();
+            }
+
+            animator.runtimeAnimatorController = controller;
+            if (avatar != null)
+            {
+                animator.avatar = avatar;
+            }
+
+            animator.applyRootMotion = false;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            animator.enabled = true;
+            animator.speed = 1f;
+            EditorUtility.SetDirty(animator);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(animator);
+
+            var playbackMetrics = EvaluateStandUpAfterFallAnimatorPlayback(animator, standUpRoot, clip);
+            if (!playbackMetrics.MovesAtFirstUpdate || !playbackMetrics.MovesAfterLoop)
+            {
+                throw new InvalidOperationException(
+                    StandUpAfterFallRootName + " stand-up FBX Animator did not visibly move. FirstRotationDelta=" +
+                    playbackMetrics.FirstRotationDelta.ToString("0.###", CultureInfo.InvariantCulture) +
+                    ", FirstPositionDelta=" + playbackMetrics.FirstPositionDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                    ", LoopRotationDelta=" + playbackMetrics.LoopRotationDelta.ToString("0.###", CultureInfo.InvariantCulture) +
+                    ", LoopPositionDelta=" + playbackMetrics.LoopPositionDelta.ToString("0.######", CultureInfo.InvariantCulture));
+            }
+
+            foreach (var rootState in rootStatesBefore)
+            {
+                var child = FindDirectChild(placementRoot.transform, rootState.Key);
+                if (child == null || !rootState.Value.Matches(child))
+                {
+                    throw new InvalidOperationException(
+                        "Non-target Tergo root transform changed while applying " + StandUpAfterFallRootName + ": " + rootState.Key);
+                }
+            }
+
+            if (!siblingNamesBefore.SequenceEqual(BuildDirectChildNameSnapshot(placementRoot.transform, StandUpAfterFallRootName)))
+            {
+                throw new InvalidOperationException("Non-target Tergo root list changed while applying " + StandUpAfterFallRootName + ".");
+            }
+
+            if (!slotState.Matches(standUpRoot))
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " slot transform was not preserved after stand-up FBX replacement.");
+            }
+
+            if (!ControllerDefaultStateUsesClip(controller, clip))
+            {
+                throw new InvalidOperationException("Stand-up FBX controller default state does not use the copied stand-up clip.");
+            }
+
+            var settings = AnimationUtility.GetAnimationClipSettings(clip);
+            if (!settings.loopTime || clip.wrapMode != WrapMode.Loop)
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " stand-up FBX clip must be configured for loop playback.");
+            }
+
+            var armature = RequireChild(standUpRoot, "Armature");
+            var rendererCount = standUpRoot.GetComponentsInChildren<Renderer>(true).Length;
+            var skinnedRendererCount = standUpRoot.GetComponentsInChildren<SkinnedMeshRenderer>(true).Length;
+            if (rendererCount == 0 || skinnedRendererCount == 0)
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " stand-up FBX model must include visible skinned renderers.");
+            }
+
+            var configuredAnimators = CountConfiguredAnimators(standUpRoot);
+            if (configuredAnimators != 1)
+            {
+                throw new InvalidOperationException(
+                    StandUpAfterFallRootName + " must keep exactly one configured Animator after stand-up loop apply. Count=" +
+                    configuredAnimators.ToString(CultureInfo.InvariantCulture));
+            }
+
+            var armatureBoneCount = CountRigBones(armature);
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene, CargoRunScenePath))
+            {
+                throw new InvalidOperationException("Failed to save CargoRunMvp scene after applying Tergo stand-up after fall FBX loop.");
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log(
+                "TergoStandUpAfterFallFbxLoopApplied" +
+                ", Target=" + PlacementRootName + "/" + StandUpAfterFallRootName +
+                ", ReplacedRoot=" + replacedRootName +
+                ", SourceFile=" + StandUpAfterFallModelSourceAbsolutePath +
+                ", SourceModel=" + StandUpAfterFallModelAssetPath +
+                ", SourceClip=" + sourceClip.name +
+                ", SourceClipLength=" + sourceClip.length.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", SourceClips=" + FormatClipNames(sourceClips) +
+                ", Clip=" + StandUpAfterFallFbxClipPath +
+                ", Controller=" + StandUpAfterFallFbxControllerPath +
+                ", LoopTime=True" +
+                ", WrapMode=Loop" +
+                ", AnimatorControllerAssigned=True" +
+                ", AvatarAssigned=" + (animator.avatar != null ? "True" : "False") +
+                ", ApplyRootMotion=False" +
+                ", RemovedChildAnimators=" + removedChildAnimators.ToString(CultureInfo.InvariantCulture) +
+                ", ClipChangesTransforms=True" +
+                ", AnimatorMovesAtFirstUpdate=True" +
+                ", AnimatorMovesAfterLoop=True" +
+                ", FirstRotationDelta=" + playbackMetrics.FirstRotationDelta.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", FirstPositionDelta=" + playbackMetrics.FirstPositionDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", LoopRotationDelta=" + playbackMetrics.LoopRotationDelta.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", LoopPositionDelta=" + playbackMetrics.LoopPositionDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", RendererCount=" + rendererCount.ToString(CultureInfo.InvariantCulture) +
+                ", SkinnedRendererCount=" + skinnedRendererCount.ToString(CultureInfo.InvariantCulture) +
+                ", ArmatureBoneCount=" + armatureBoneCount.ToString(CultureInfo.InvariantCulture) +
+                ", ConfiguredAnimators=" + configuredAnimators.ToString(CultureInfo.InvariantCulture) +
+                ", SlotTransformPreserved=True" +
+                ", NonTargetTergoRootTransformsUnchanged=True");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Tergo/Validate Stand Up After Fall FBX Loop")]
+        public static void ValidateTergoStandUpAfterFallFbxLoop()
+        {
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = RequireSceneObject(PlacementRootName);
+            var staticRoot = RequireChild(placementRoot.transform, StaticRootName);
+            var standUpRoot = RequireChild(placementRoot.transform, StandUpAfterFallRootName);
+            if (FindDirectChild(placementRoot.transform, DownedDrillAttackLegacyRootName) != null)
+            {
+                throw new InvalidOperationException("Legacy Tergo 8 root still exists: " + DownedDrillAttackLegacyRootName);
+            }
+
+            var sourceObject = PrefabUtility.GetCorrespondingObjectFromSource(standUpRoot.gameObject);
+            var sourcePath = sourceObject == null ? string.Empty : AssetDatabase.GetAssetPath(sourceObject);
+            if (!string.Equals(sourcePath, StandUpAfterFallModelAssetPath, StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    StandUpAfterFallRootName + " must stay linked to stand-up FBX asset. SourcePath=" + sourcePath);
+            }
+
+            var controller = RequireAsset<AnimatorController>(StandUpAfterFallFbxControllerPath);
+            var clip = RequireAsset<AnimationClip>(StandUpAfterFallFbxClipPath);
+            var animator = standUpRoot.GetComponent<Animator>();
+            if (animator == null || animator.runtimeAnimatorController != controller)
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " must have the stand-up FBX controller assigned.");
+            }
+
+            if (!ControllerDefaultStateUsesClip(controller, clip) || !SampleClipChangesTransforms(clip, standUpRoot))
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " stand-up FBX animation is not connected correctly.");
+            }
+
+            var settings = AnimationUtility.GetAnimationClipSettings(clip);
+            if (!settings.loopTime || clip.wrapMode != WrapMode.Loop)
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " stand-up FBX animation loop setting is not enabled.");
+            }
+
+            if (animator.applyRootMotion || !animator.enabled || animator.cullingMode != AnimatorCullingMode.AlwaysAnimate)
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " Animator is not configured for review loop playback.");
+            }
+
+            var sourceEyeContainer = RequireBackRushVisualFirstNamedDescendant(staticRoot, EyeContainerName);
+            var sourceEyeLocalState = TransformState.Capture(sourceEyeContainer);
+            var expectedEyeParent = FindBackRushVisualMatchingParent(staticRoot, standUpRoot, sourceEyeContainer);
+            var targetEyeContainer = RequireBackRushVisualFirstNamedDescendant(standUpRoot, EyeContainerName);
+            var sourceEyeRendererCount = sourceEyeContainer.GetComponentsInChildren<Renderer>(true).Length;
+            var targetEyeRendererCount = targetEyeContainer.GetComponentsInChildren<Renderer>(true).Length;
+            var sourceLightCount = CountBackRushVisualLights(staticRoot);
+            var targetLightCount = CountBackRushVisualLights(standUpRoot);
+            if (!BackRushVisualBodyMaterialsMatchReference(staticRoot, standUpRoot))
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " body materials do not match the reference Tergo.");
+            }
+
+            if (CountDescendantsByName(standUpRoot, EyeContainerName) != 1)
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " must have exactly one approved eye container.");
+            }
+
+            if (targetEyeContainer.parent != expectedEyeParent || !sourceEyeLocalState.Matches(targetEyeContainer))
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " eye container does not match the reference Tergo relative placement.");
+            }
+
+            if (targetEyeRendererCount != sourceEyeRendererCount || targetLightCount != sourceLightCount)
+            {
+                throw new InvalidOperationException(
+                    StandUpAfterFallRootName + " visual counts do not match the reference Tergo. SourceEyeRenderers=" +
+                    sourceEyeRendererCount.ToString(CultureInfo.InvariantCulture) +
+                    ", TargetEyeRenderers=" + targetEyeRendererCount.ToString(CultureInfo.InvariantCulture) +
+                    ", SourceLights=" + sourceLightCount.ToString(CultureInfo.InvariantCulture) +
+                    ", TargetLights=" + targetLightCount.ToString(CultureInfo.InvariantCulture));
+            }
+
+            var playbackMetrics = EvaluateStandUpAfterFallAnimatorPlayback(animator, standUpRoot, clip);
+            if (!playbackMetrics.MovesAtFirstUpdate || !playbackMetrics.MovesAfterLoop)
+            {
+                throw new InvalidOperationException(
+                    StandUpAfterFallRootName + " stand-up FBX Animator did not move during validation. FirstRotationDelta=" +
+                    playbackMetrics.FirstRotationDelta.ToString("0.###", CultureInfo.InvariantCulture) +
+                    ", FirstPositionDelta=" + playbackMetrics.FirstPositionDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                    ", LoopRotationDelta=" + playbackMetrics.LoopRotationDelta.ToString("0.###", CultureInfo.InvariantCulture) +
+                    ", LoopPositionDelta=" + playbackMetrics.LoopPositionDelta.ToString("0.######", CultureInfo.InvariantCulture));
+            }
+
+            var armature = RequireChild(standUpRoot, "Armature");
+            var rendererCount = standUpRoot.GetComponentsInChildren<Renderer>(true).Length;
+            var skinnedRendererCount = standUpRoot.GetComponentsInChildren<SkinnedMeshRenderer>(true).Length;
+            var armatureBoneCount = CountRigBones(armature);
+            var configuredAnimators = CountConfiguredAnimators(standUpRoot);
+            if (rendererCount == 0 || skinnedRendererCount == 0 || configuredAnimators != 1)
+            {
+                throw new InvalidOperationException(
+                    "Unexpected stand-up after fall validation counts. Renderer=" +
+                    rendererCount.ToString(CultureInfo.InvariantCulture) +
+                    ", Skinned=" + skinnedRendererCount.ToString(CultureInfo.InvariantCulture) +
+                    ", Animator=" + configuredAnimators.ToString(CultureInfo.InvariantCulture));
+            }
+
+            Debug.Log(
+                "TergoStandUpAfterFallFbxLoopValidated" +
+                ", Scene=" + scene.path +
+                ", Target=" + PlacementRootName + "/" + StandUpAfterFallRootName +
+                ", SourceModel=" + StandUpAfterFallModelAssetPath +
+                ", Clip=" + StandUpAfterFallFbxClipPath +
+                ", Controller=" + StandUpAfterFallFbxControllerPath +
+                ", ClipLength=" + clip.length.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", LoopTime=True" +
+                ", WrapMode=Loop" +
+                ", SourceModelLinked=True" +
+                ", BodyMaterialsMatchReference=True" +
+                ", EyeContainerMatched=True" +
+                ", SourceEyeRenderers=" + sourceEyeRendererCount.ToString(CultureInfo.InvariantCulture) +
+                ", TargetEyeRenderers=" + targetEyeRendererCount.ToString(CultureInfo.InvariantCulture) +
+                ", SourceLights=" + sourceLightCount.ToString(CultureInfo.InvariantCulture) +
+                ", TargetLights=" + targetLightCount.ToString(CultureInfo.InvariantCulture) +
+                ", AnimatorControllerAssigned=True" +
+                ", AvatarAssigned=" + (animator.avatar != null ? "True" : "False") +
+                ", ApplyRootMotion=False" +
+                ", ClipChangesTransforms=True" +
+                ", AnimatorMovesAtFirstUpdate=True" +
+                ", AnimatorMovesAfterLoop=True" +
+                ", FirstRotationDelta=" + playbackMetrics.FirstRotationDelta.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", FirstPositionDelta=" + playbackMetrics.FirstPositionDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", LoopRotationDelta=" + playbackMetrics.LoopRotationDelta.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", LoopPositionDelta=" + playbackMetrics.LoopPositionDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", RendererCount=" + rendererCount.ToString(CultureInfo.InvariantCulture) +
+                ", SkinnedRendererCount=" + skinnedRendererCount.ToString(CultureInfo.InvariantCulture) +
+                ", ArmatureBoneCount=" + armatureBoneCount.ToString(CultureInfo.InvariantCulture) +
+                ", ConfiguredAnimators=" + configuredAnimators.ToString(CultureInfo.InvariantCulture));
+        }
+
+        [MenuItem("Bellerophon/Enemies/Tergo/Sync Stand Up After Fall Visual Details From Static Review")]
+        public static void SyncTergoStandUpAfterFallVisualDetailsFromStaticReview()
+        {
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = RequireSceneObject(PlacementRootName);
+            var staticRoot = RequireChild(placementRoot.transform, StaticRootName);
+            var standUpRoot = RequireChild(placementRoot.transform, StandUpAfterFallRootName);
+            var controller = RequireAsset<AnimatorController>(StandUpAfterFallFbxControllerPath);
+            var clip = RequireAsset<AnimationClip>(StandUpAfterFallFbxClipPath);
+            var sourceObject = PrefabUtility.GetCorrespondingObjectFromSource(standUpRoot.gameObject);
+            var sourcePath = sourceObject == null ? string.Empty : AssetDatabase.GetAssetPath(sourceObject);
+            if (!string.Equals(sourcePath, StandUpAfterFallModelAssetPath, StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    StandUpAfterFallRootName + " must stay linked to stand-up FBX asset before visual sync. SourcePath=" + sourcePath);
+            }
+
+            var sourceEyeContainer = RequireBackRushVisualFirstNamedDescendant(staticRoot, EyeContainerName);
+            var sourceEyeLocalState = TransformState.Capture(sourceEyeContainer);
+            var sourceEyeRendererCount = sourceEyeContainer.GetComponentsInChildren<Renderer>(true).Length;
+            var sourceLightCount = CountBackRushVisualLights(staticRoot);
+            var siblingNamesBefore = BuildDirectChildNameSnapshot(placementRoot.transform, string.Empty);
+            var rootStatesBefore = CaptureDirectChildTransformStates(placementRoot.transform);
+            var animator = standUpRoot.GetComponent<Animator>();
+            if (animator == null || animator.runtimeAnimatorController != controller)
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " must keep the stand-up FBX controller before visual sync.");
+            }
+
+            var controllerBefore = animator.runtimeAnimatorController;
+            var avatarBefore = animator.avatar;
+            var applyRootMotionBefore = animator.applyRootMotion;
+            var animatorEnabledBefore = animator.enabled;
+            var animatorSpeedBefore = animator.speed;
+            var targetLightCountBefore = CountBackRushVisualLights(standUpRoot);
+
+            var syncedBodyRenderers = SyncBackRushVisualBodyMaterialsFromReference(staticRoot, standUpRoot);
+            DestroyBackRushVisualLightGameObjects(standUpRoot);
+            DestroyBackRushVisualNamedDescendants(standUpRoot, EyeContainerName);
+            var copiedEyeContainer = CopyBackRushVisualEyeContainerFromReference(staticRoot, standUpRoot, sourceEyeContainer);
+            var copiedEyeLightCount = CountBackRushVisualLights(copiedEyeContainer);
+            var copiedExternalLights = CopyBackRushVisualExternalLightObjectsFromReference(staticRoot, standUpRoot, sourceEyeContainer);
+            var removedCopiedEyeAnimators = RemoveAnimatorComponentsUnderRoot(copiedEyeContainer);
+            var targetLightCountAfter = CountBackRushVisualLights(standUpRoot);
+            var targetEyeRendererCount = copiedEyeContainer.GetComponentsInChildren<Renderer>(true).Length;
+            var expectedEyeParent = FindBackRushVisualMatchingParent(staticRoot, standUpRoot, sourceEyeContainer);
+
+            if (!siblingNamesBefore.SequenceEqual(BuildDirectChildNameSnapshot(placementRoot.transform, string.Empty)))
+            {
+                throw new InvalidOperationException("Tergo root list changed while syncing " + StandUpAfterFallRootName + " visual details.");
+            }
+
+            RequireDirectChildTransformStatesMatch(placementRoot.transform, rootStatesBefore);
+
+            if (animator.runtimeAnimatorController != controllerBefore ||
+                animator.avatar != avatarBefore ||
+                animator.applyRootMotion != applyRootMotionBefore ||
+                animator.enabled != animatorEnabledBefore ||
+                Mathf.Abs(animator.speed - animatorSpeedBefore) > 0.0001f)
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " Animator changed while syncing visual details.");
+            }
+
+            if (!BackRushVisualBodyMaterialsMatchReference(staticRoot, standUpRoot))
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " body materials do not match the reference Tergo after visual sync.");
+            }
+
+            if (CountDescendantsByName(standUpRoot, EyeContainerName) != 1)
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " must have exactly one approved eye container after visual sync.");
+            }
+
+            if (copiedEyeContainer.parent != expectedEyeParent || !sourceEyeLocalState.Matches(copiedEyeContainer))
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " eye container was not placed at the same relative head position as the reference Tergo.");
+            }
+
+            if (targetEyeRendererCount != sourceEyeRendererCount)
+            {
+                throw new InvalidOperationException(
+                    StandUpAfterFallRootName + " eye renderer count does not match the reference Tergo. Source=" +
+                    sourceEyeRendererCount.ToString(CultureInfo.InvariantCulture) +
+                    ", Target=" + targetEyeRendererCount.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (targetLightCountAfter != sourceLightCount ||
+                copiedEyeLightCount + copiedExternalLights != sourceLightCount)
+            {
+                throw new InvalidOperationException(
+                    StandUpAfterFallRootName + " light count does not match reference after visual sync. Source=" +
+                    sourceLightCount.ToString(CultureInfo.InvariantCulture) +
+                    ", CopiedEye=" + copiedEyeLightCount.ToString(CultureInfo.InvariantCulture) +
+                    ", CopiedExternal=" + copiedExternalLights.ToString(CultureInfo.InvariantCulture) +
+                    ", Target=" + targetLightCountAfter.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (!ControllerDefaultStateUsesClip(controller, clip) || !SampleClipChangesTransforms(clip, standUpRoot))
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " stand-up FBX animation was not preserved after visual sync.");
+            }
+
+            var settings = AnimationUtility.GetAnimationClipSettings(clip);
+            if (!settings.loopTime || clip.wrapMode != WrapMode.Loop)
+            {
+                throw new InvalidOperationException(StandUpAfterFallRootName + " stand-up FBX animation loop setting changed during visual sync.");
+            }
+
+            var configuredAnimators = CountConfiguredAnimators(standUpRoot);
+            if (configuredAnimators != 1)
+            {
+                throw new InvalidOperationException(
+                    StandUpAfterFallRootName + " must keep exactly one configured Animator after visual sync. Count=" +
+                    configuredAnimators.ToString(CultureInfo.InvariantCulture));
+            }
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene, CargoRunScenePath))
+            {
+                throw new InvalidOperationException("Failed to save CargoRunMvp scene after syncing Tergo stand-up after fall visual details.");
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log(
+                "TergoStandUpAfterFallVisualDetailsSynced" +
+                ", Target=" + PlacementRootName + "/" + StandUpAfterFallRootName +
+                ", Reference=" + StaticRootName +
+                ", SourceModel=" + StandUpAfterFallModelAssetPath +
+                ", BodyMaterialsSynced=True" +
+                ", SyncedBodyRenderers=" + syncedBodyRenderers.ToString(CultureInfo.InvariantCulture) +
+                ", EyeContainerSynced=True" +
+                ", SourceEyeRenderers=" + sourceEyeRendererCount.ToString(CultureInfo.InvariantCulture) +
+                ", TargetEyeRenderers=" + targetEyeRendererCount.ToString(CultureInfo.InvariantCulture) +
+                ", EyeRelativePositionMatched=True" +
+                ", SourceLights=" + sourceLightCount.ToString(CultureInfo.InvariantCulture) +
+                ", TargetLightsBefore=" + targetLightCountBefore.ToString(CultureInfo.InvariantCulture) +
+                ", CopiedEyeLights=" + copiedEyeLightCount.ToString(CultureInfo.InvariantCulture) +
+                ", CopiedExternalLights=" + copiedExternalLights.ToString(CultureInfo.InvariantCulture) +
+                ", TargetLightsAfter=" + targetLightCountAfter.ToString(CultureInfo.InvariantCulture) +
+                ", RemovedCopiedEyeAnimators=" + removedCopiedEyeAnimators.ToString(CultureInfo.InvariantCulture) +
+                ", AnimatorPreserved=True" +
+                ", LoopAnimationPreserved=True" +
+                ", MotionPreserved=True" +
+                ", RootTransformPreserved=True" +
+                ", ConfiguredAnimators=" + configuredAnimators.ToString(CultureInfo.InvariantCulture) +
                 ", NonTargetTergoRootTransformsUnchanged=True");
         }
 
@@ -4411,6 +4953,32 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             return RequireAsset<GameObject>(FallOverModelAssetPath);
         }
 
+        private static GameObject ImportStandUpAfterFallModelAsset()
+        {
+            var sourcePath = Path.GetFullPath(StandUpAfterFallModelSourceAbsolutePath);
+            if (!File.Exists(sourcePath))
+            {
+                throw new InvalidOperationException("Missing stand-up source FBX: " + sourcePath);
+            }
+
+            var targetPath = Path.GetFullPath(Path.Combine(
+                Application.dataPath,
+                "..",
+                StandUpAfterFallModelAssetPath.Replace('/', Path.DirectorySeparatorChar)));
+            var targetDirectory = Path.GetDirectoryName(targetPath);
+            if (string.IsNullOrEmpty(targetDirectory))
+            {
+                throw new InvalidOperationException("Invalid stand-up target FBX path: " + targetPath);
+            }
+
+            Directory.CreateDirectory(targetDirectory);
+            File.Copy(sourcePath, targetPath, true);
+            AssetDatabase.ImportAsset(StandUpAfterFallModelAssetPath, ImportAssetOptions.ForceUpdate);
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+            return RequireAsset<GameObject>(StandUpAfterFallModelAssetPath);
+        }
+
         private static GameObject ImportTerrifiedModelAsset()
         {
             var sourcePath = Path.GetFullPath(TerrifiedModelSourceAbsolutePath);
@@ -4592,6 +5160,25 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             return clips;
         }
 
+        private static AnimationClip[] LoadStandUpAfterFallAnimationClips()
+        {
+            var clips = AssetDatabase.LoadAllAssetsAtPath(StandUpAfterFallModelAssetPath)
+                .OfType<AnimationClip>()
+                .Where(clip =>
+                    clip != null &&
+                    !clip.empty &&
+                    clip.length > 0.01f &&
+                    !clip.name.StartsWith("__preview__", StringComparison.OrdinalIgnoreCase))
+                .ToArray();
+
+            if (clips.Length == 0)
+            {
+                throw new InvalidOperationException("No imported animation clips were found in " + StandUpAfterFallModelAssetPath);
+            }
+
+            return clips;
+        }
+
         private static AnimationClip[] LoadTerrifiedAnimationClips()
         {
             var clips = AssetDatabase.LoadAllAssetsAtPath(TerrifiedModelAssetPath)
@@ -4671,6 +5258,15 @@ namespace Bellerophon.Editor.TergoCargoRunScene
         {
             return importedClips
                 .OrderByDescending(clip => GetFallOverClipScore(clip.name))
+                .ThenByDescending(clip => clip.length)
+                .ThenBy(clip => clip.name, StringComparer.Ordinal)
+                .First();
+        }
+
+        private static AnimationClip SelectStandUpAfterFallSourceClip(AnimationClip[] importedClips)
+        {
+            return importedClips
+                .OrderByDescending(clip => GetStandUpAfterFallClipScore(clip.name))
                 .ThenByDescending(clip => clip.length)
                 .ThenBy(clip => clip.name, StringComparer.Ordinal)
                 .First();
@@ -4812,6 +5408,43 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             }
 
             if (lower.Contains("down"))
+            {
+                score += 60;
+            }
+
+            return score;
+        }
+
+        private static int GetStandUpAfterFallClipScore(string clipName)
+        {
+            var lower = (clipName ?? string.Empty).ToLowerInvariant();
+            var score = 0;
+            if (lower.Contains("stand"))
+            {
+                score += 150;
+            }
+
+            if (lower.Contains("up"))
+            {
+                score += 140;
+            }
+
+            if (lower.Contains("getup") || lower.Contains("get_up"))
+            {
+                score += 130;
+            }
+
+            if (lower.Contains("rise"))
+            {
+                score += 110;
+            }
+
+            if (lower.Contains("recover"))
+            {
+                score += 90;
+            }
+
+            if (lower.Contains("fall") || lower.Contains("down"))
             {
                 score += 60;
             }
@@ -5004,6 +5637,36 @@ namespace Bellerophon.Editor.TergoCargoRunScene
 
             EditorUtility.CopySerialized(sourceClip, clip);
             clip.name = FallOverFbxInterruptStaggerClipName;
+            clip.wrapMode = WrapMode.Loop;
+
+            var settings = AnimationUtility.GetAnimationClipSettings(clip);
+            settings.loopTime = true;
+            settings.loopBlend = false;
+            settings.startTime = 0f;
+            settings.stopTime = Mathf.Max(sourceClip.length, 0.01f);
+            AnimationUtility.SetAnimationClipSettings(clip, settings);
+            clip.EnsureQuaternionContinuity();
+
+            EditorUtility.SetDirty(clip);
+            AssetDatabase.SaveAssets();
+            return clip;
+        }
+
+        private static AnimationClip EnsureCopiedStandUpAfterFallFbxClip(AnimationClip sourceClip)
+        {
+            Directory.CreateDirectory(AnimationFolderPath);
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(StandUpAfterFallFbxClipPath);
+            if (clip == null)
+            {
+                clip = new AnimationClip
+                {
+                    name = StandUpAfterFallFbxClipName
+                };
+                AssetDatabase.CreateAsset(clip, StandUpAfterFallFbxClipPath);
+            }
+
+            EditorUtility.CopySerialized(sourceClip, clip);
+            clip.name = StandUpAfterFallFbxClipName;
             clip.wrapMode = WrapMode.Loop;
 
             var settings = AnimationUtility.GetAnimationClipSettings(clip);
@@ -5278,6 +5941,39 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             return controller;
         }
 
+        private static AnimatorController EnsureStandUpAfterFallFbxController(AnimationClip clip)
+        {
+            Directory.CreateDirectory(AnimationFolderPath);
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(StandUpAfterFallFbxControllerPath);
+            if (controller == null)
+            {
+                controller = AnimatorController.CreateAnimatorControllerAtPath(StandUpAfterFallFbxControllerPath);
+            }
+
+            if (controller.layers.Length == 0)
+            {
+                controller.AddLayer("Base Layer");
+            }
+
+            var stateMachine = controller.layers[0].stateMachine;
+            foreach (var childState in stateMachine.states.ToArray())
+            {
+                stateMachine.RemoveState(childState.state);
+            }
+
+            var state = stateMachine.AddState(StandUpAfterFallFbxClipName);
+            state.motion = clip;
+            state.speed = 1f;
+            state.writeDefaultValues = true;
+            stateMachine.defaultState = state;
+
+            EditorUtility.SetDirty(state);
+            EditorUtility.SetDirty(stateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
         private static AnimatorController EnsureTerrifiedFbxCrouchTrembleController(AnimationClip clip)
         {
             Directory.CreateDirectory(AnimationFolderPath);
@@ -5486,6 +6182,13 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 .FirstOrDefault();
         }
 
+        private static Avatar LoadStandUpAfterFallAvatarOrNull()
+        {
+            return AssetDatabase.LoadAllAssetsAtPath(StandUpAfterFallModelAssetPath)
+                .OfType<Avatar>()
+                .FirstOrDefault();
+        }
+
         private static Avatar LoadTerrifiedAvatarOrNull()
         {
             return AssetDatabase.LoadAllAssetsAtPath(TerrifiedModelAssetPath)
@@ -5635,6 +6338,56 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 var midStates = transforms.Select(LocalTransformSample.Capture).ToArray();
 
                 animator.Play(FallOverFbxInterruptStaggerClipName, 0, 0f);
+                animator.Update(0f);
+                animator.Update(clip.length + 0.08f);
+                var loopStates = transforms.Select(LocalTransformSample.Capture).ToArray();
+
+                return ThrustFbxPlaybackMetrics.FromSamples(startStates, midStates, loopStates);
+            }
+            finally
+            {
+                for (var index = 0; index < transforms.Length; index++)
+                {
+                    transforms[index].localPosition = originalStates[index].LocalPosition;
+                    transforms[index].localRotation = originalStates[index].LocalRotation;
+                    transforms[index].localScale = originalStates[index].LocalScale;
+                }
+
+                animator.enabled = previousEnabled;
+                animator.applyRootMotion = previousApplyRootMotion;
+                animator.cullingMode = previousCullingMode;
+                animator.speed = previousSpeed;
+            }
+        }
+
+        private static ThrustFbxPlaybackMetrics EvaluateStandUpAfterFallAnimatorPlayback(
+            Animator animator,
+            Transform root,
+            AnimationClip clip)
+        {
+            var transforms = root.GetComponentsInChildren<Transform>(true);
+            var originalStates = transforms.Select(LocalTransformSample.Capture).ToArray();
+            var previousEnabled = animator.enabled;
+            var previousApplyRootMotion = animator.applyRootMotion;
+            var previousCullingMode = animator.cullingMode;
+            var previousSpeed = animator.speed;
+
+            try
+            {
+                animator.enabled = true;
+                animator.applyRootMotion = false;
+                animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                animator.speed = 1f;
+                animator.Rebind();
+                animator.Update(0f);
+                animator.Play(StandUpAfterFallFbxClipName, 0, 0f);
+                animator.Update(0f);
+                var startStates = transforms.Select(LocalTransformSample.Capture).ToArray();
+
+                animator.Update(Mathf.Clamp(clip.length * 0.5f, 0.02f, Mathf.Max(clip.length - 0.001f, 0.02f)));
+                var midStates = transforms.Select(LocalTransformSample.Capture).ToArray();
+
+                animator.Play(StandUpAfterFallFbxClipName, 0, 0f);
                 animator.Update(0f);
                 animator.Update(clip.length + 0.08f);
                 var loopStates = transforms.Select(LocalTransformSample.Capture).ToArray();
@@ -9929,14 +10682,20 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             Transform puddleRoot,
             SkinnedMeshRenderer[] bodyRenderers,
             AnimationClip clip,
-            float baseFallEndTime)
+            float baseFallEndTime,
+            out ApprovedDeathMeltRootMotion rootMotion)
         {
+            rootMotion = ApprovedDeathMeltRootMotion.Identity;
             var originalStates = CaptureTransformStates(deathRoot, puddleRoot);
             Bounds finalBodyBounds;
+            Vector2 finalBodyAxis;
+            var hasFinalBodyAxis = false;
             try
             {
                 clip.SampleAnimation(deathRoot.gameObject, Mathf.Min(baseFallEndTime, Mathf.Max(clip.length - 0.001f, 0f)));
-                finalBodyBounds = CalculateCombinedBounds(bodyRenderers.Cast<Renderer>().ToArray());
+                var finalBodyRenderers = bodyRenderers.Cast<Renderer>().ToArray();
+                finalBodyBounds = CalculateCombinedBounds(finalBodyRenderers);
+                hasFinalBodyAxis = TryCalculateHorizontalMajorAxis(finalBodyRenderers, out finalBodyAxis);
             }
             finally
             {
@@ -9949,6 +10708,8 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             float scale;
             float centerDelta;
             float groundDelta;
+            Vector3 finalLocalRotationEuler;
+            ApprovedDeathMeltStartPoseMetrics startMetrics = default;
             try
             {
                 var puddleRenderer = RequireApprovedDeathMeltPuddleRenderer(puddleRoot);
@@ -9978,6 +10739,29 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                     new Vector2(finalBodyBounds.center.x, finalBodyBounds.center.z),
                     new Vector2(alignedBounds.center.x, alignedBounds.center.z));
                 groundDelta = Mathf.Abs(finalBodyBounds.min.y - alignedBounds.min.y);
+                var finalLocalPosition = puddleRoot.localPosition;
+
+                SetBlendShapeWeight(puddleRenderer, ApprovedDeathMeltWeightSagShape, 0f);
+                SetBlendShapeWeight(puddleRenderer, ApprovedDeathMeltCrushCollapseShape, 0f);
+                SetBlendShapeWeight(puddleRenderer, ApprovedDeathMeltSpreadShape, 0f);
+                startMetrics = AlignApprovedPuddleStartPoseToDyingFinalPose(
+                    puddleRoot,
+                    puddleRenderers,
+                    finalBodyBounds,
+                    hasFinalBodyAxis,
+                    finalBodyAxis);
+                rootMotion = new ApprovedDeathMeltRootMotion(
+                    puddleRoot.localPosition,
+                    puddleRoot.localRotation,
+                    puddleRoot.localScale,
+                    finalLocalPosition,
+                    puddleRoot.localRotation,
+                    puddleRoot.localScale);
+                finalLocalRotationEuler = rootMotion.FinalLocalRotation.eulerAngles;
+
+                puddleRoot.localPosition = finalLocalPosition;
+                puddleRoot.localRotation = rootMotion.FinalLocalRotation;
+                puddleRoot.localScale = rootMotion.FinalLocalScale;
             }
             finally
             {
@@ -9990,10 +10774,114 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 scale,
                 centerDelta,
                 groundDelta,
-                puddleRoot.localEulerAngles,
+                finalLocalRotationEuler,
                 alignedBounds.size.y,
                 horizontalExtent,
-                verticalRatio);
+                verticalRatio,
+                startMetrics.CenterHorizontalDelta,
+                startMetrics.GroundDelta,
+                startMetrics.HeightDelta,
+                startMetrics.HorizontalAngleDelta);
+        }
+
+        private static ApprovedDeathMeltStartPoseMetrics AlignApprovedPuddleStartPoseToDyingFinalPose(
+            Transform puddleRoot,
+            Renderer[] puddleRenderers,
+            Bounds finalBodyBounds,
+            bool hasFinalBodyAxis,
+            Vector2 finalBodyAxis)
+        {
+            var bestScore = float.PositiveInfinity;
+            var bestPosition = puddleRoot.localPosition;
+            var bestRotation = puddleRoot.localRotation;
+            var bestScale = puddleRoot.localScale;
+            var bestMetrics = new ApprovedDeathMeltStartPoseMetrics(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+            var bodyHorizontalExtent = Mathf.Max(finalBodyBounds.size.x, finalBodyBounds.size.z);
+            var bodyHeight = Mathf.Max(finalBodyBounds.size.y, 0.0001f);
+            var bodyAspect = CalculateHorizontalAspect(finalBodyBounds);
+            var baseLocalPosition = puddleRoot.localPosition;
+
+            foreach (var candidate in BuildRightAngleRotationCandidates())
+            {
+                puddleRoot.localPosition = baseLocalPosition;
+                puddleRoot.localRotation = candidate;
+                puddleRoot.localScale = Vector3.one;
+
+                if (hasFinalBodyAxis && TryCalculateHorizontalMajorAxis(puddleRenderers, out var sampleAxis))
+                {
+                    var signedAngle = SignedHorizontalAxisAngle(sampleAxis, finalBodyAxis);
+                    puddleRoot.rotation = Quaternion.AngleAxis(signedAngle, Vector3.up) * puddleRoot.rotation;
+                }
+
+                var sampleBounds = CalculateCombinedBounds(puddleRenderers);
+                var sampleHorizontalExtent = Mathf.Max(sampleBounds.size.x, sampleBounds.size.z);
+                var startScale = sampleHorizontalExtent > 0.0001f
+                    ? Mathf.Clamp(bodyHorizontalExtent / sampleHorizontalExtent, 0.001f, 250f)
+                    : 1f;
+                puddleRoot.localScale = Vector3.one * startScale;
+
+                var scaledBounds = CalculateCombinedBounds(puddleRenderers);
+                var offset = new Vector3(
+                    finalBodyBounds.center.x - scaledBounds.center.x,
+                    finalBodyBounds.min.y - scaledBounds.min.y,
+                    finalBodyBounds.center.z - scaledBounds.center.z);
+                puddleRoot.position += offset;
+
+                for (var iteration = 0; iteration < 2; iteration++)
+                {
+                    if (!hasFinalBodyAxis ||
+                        !TryCalculateHorizontalMajorAxis(puddleRenderers, out var residualAxis))
+                    {
+                        break;
+                    }
+
+                    var residualAngle = SignedHorizontalAxisAngle(residualAxis, finalBodyAxis);
+                    if (Mathf.Abs(residualAngle) <= 0.1f)
+                    {
+                        break;
+                    }
+
+                    puddleRoot.rotation = Quaternion.AngleAxis(residualAngle, Vector3.up) * puddleRoot.rotation;
+                    var residualBounds = CalculateCombinedBounds(puddleRenderers);
+                    var residualOffset = new Vector3(
+                        finalBodyBounds.center.x - residualBounds.center.x,
+                        finalBodyBounds.min.y - residualBounds.min.y,
+                        finalBodyBounds.center.z - residualBounds.center.z);
+                    puddleRoot.position += residualOffset;
+                }
+
+                var alignedBounds = CalculateCombinedBounds(puddleRenderers);
+                var centerDelta = Vector2.Distance(
+                    new Vector2(finalBodyBounds.center.x, finalBodyBounds.center.z),
+                    new Vector2(alignedBounds.center.x, alignedBounds.center.z));
+                var groundDelta = Mathf.Abs(finalBodyBounds.min.y - alignedBounds.min.y);
+                var heightDelta = Mathf.Abs(finalBodyBounds.size.y - alignedBounds.size.y);
+                var angleDelta = hasFinalBodyAxis && TryCalculateHorizontalMajorAxis(puddleRenderers, out var alignedAxis)
+                    ? HorizontalAxisAngleDelta(finalBodyAxis, alignedAxis)
+                    : 0f;
+                var aspectDelta = Mathf.Abs(Mathf.Log(CalculateHorizontalAspect(alignedBounds) / bodyAspect));
+                var heightRatioDelta = heightDelta / bodyHeight;
+                var score =
+                    centerDelta * 100f +
+                    groundDelta * 100f +
+                    angleDelta * 20f +
+                    aspectDelta * 10f +
+                    heightRatioDelta * 5f;
+
+                if (score < bestScore)
+                {
+                    bestScore = score;
+                    bestPosition = puddleRoot.localPosition;
+                    bestRotation = puddleRoot.localRotation;
+                    bestScale = puddleRoot.localScale;
+                    bestMetrics = new ApprovedDeathMeltStartPoseMetrics(centerDelta, groundDelta, heightDelta, angleDelta);
+                }
+            }
+
+            puddleRoot.localPosition = bestPosition;
+            puddleRoot.localRotation = bestRotation;
+            puddleRoot.localScale = bestScale;
+            return bestMetrics;
         }
 
         private static Quaternion SelectApprovedPuddleFloorRotation(
@@ -10053,6 +10941,125 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             return Mathf.Max(longer / shorter, 1f);
         }
 
+        private static bool TryCalculateHorizontalMajorAxis(Renderer[] renderers, out Vector2 axis)
+        {
+            var vertices = CollectCurrentWorldVertices(renderers);
+            if (vertices.Count < 3)
+            {
+                axis = Vector2.right;
+                return false;
+            }
+
+            var mean = Vector2.zero;
+            foreach (var vertex in vertices)
+            {
+                mean += new Vector2(vertex.x, vertex.z);
+            }
+
+            mean /= vertices.Count;
+
+            var xx = 0f;
+            var xz = 0f;
+            var zz = 0f;
+            foreach (var vertex in vertices)
+            {
+                var delta = new Vector2(vertex.x, vertex.z) - mean;
+                xx += delta.x * delta.x;
+                xz += delta.x * delta.y;
+                zz += delta.y * delta.y;
+            }
+
+            var trace = xx + zz;
+            if (trace <= 0.000001f)
+            {
+                axis = Vector2.right;
+                return false;
+            }
+
+            var theta = 0.5f * Mathf.Atan2(2f * xz, xx - zz);
+            axis = new Vector2(Mathf.Cos(theta), Mathf.Sin(theta)).normalized;
+
+            var skew = 0f;
+            foreach (var vertex in vertices)
+            {
+                var delta = new Vector2(vertex.x, vertex.z) - mean;
+                var projection = Vector2.Dot(delta, axis);
+                skew += projection * projection * projection;
+            }
+
+            if (Mathf.Abs(skew) > 0.000001f)
+            {
+                if (skew < 0f)
+                {
+                    axis = -axis;
+                }
+            }
+            else if (axis.x < 0f || (Mathf.Abs(axis.x) <= 0.0001f && axis.y < 0f))
+            {
+                axis = -axis;
+            }
+
+            var discriminant = Mathf.Sqrt((xx - zz) * (xx - zz) + 4f * xz * xz);
+            var major = (trace + discriminant) * 0.5f;
+            var minor = Mathf.Max((trace - discriminant) * 0.5f, 0.000001f);
+            return major / minor >= 1.08f;
+        }
+
+        private static List<Vector3> CollectCurrentWorldVertices(Renderer[] renderers)
+        {
+            var vertices = new List<Vector3>();
+            foreach (var renderer in renderers)
+            {
+                if (renderer == null)
+                {
+                    continue;
+                }
+
+                if (renderer is SkinnedMeshRenderer skinnedRenderer && skinnedRenderer.sharedMesh != null)
+                {
+                    var bakedMesh = new Mesh();
+                    try
+                    {
+                        skinnedRenderer.BakeMesh(bakedMesh);
+                        var bakedVertices = bakedMesh.vertices;
+                        for (var index = 0; index < bakedVertices.Length; index++)
+                        {
+                            vertices.Add(skinnedRenderer.transform.TransformPoint(bakedVertices[index]));
+                        }
+                    }
+                    finally
+                    {
+                        UnityEngine.Object.DestroyImmediate(bakedMesh);
+                    }
+                }
+                else if (renderer is MeshRenderer meshRenderer &&
+                         meshRenderer.TryGetComponent<MeshFilter>(out var meshFilter) &&
+                         meshFilter.sharedMesh != null)
+                {
+                    var meshVertices = meshFilter.sharedMesh.vertices;
+                    for (var index = 0; index < meshVertices.Length; index++)
+                    {
+                        vertices.Add(meshRenderer.transform.TransformPoint(meshVertices[index]));
+                    }
+                }
+            }
+
+            return vertices;
+        }
+
+        private static float SignedHorizontalAxisAngle(Vector2 from, Vector2 to)
+        {
+            var unsigned = HorizontalAxisAngleDelta(from, to);
+            var cross = from.x * to.y - from.y * to.x;
+            return cross < 0f ? unsigned : -unsigned;
+        }
+
+        private static float HorizontalAxisAngleDelta(Vector2 a, Vector2 b)
+        {
+            var dot = Mathf.Clamp(Vector2.Dot(a.normalized, b.normalized), -1f, 1f);
+            return Mathf.Acos(dot) * Mathf.Rad2Deg;
+        }
+
         private static Vector3 CorrectApprovedPuddleRootAgainstFinalAnimationSample(
             AnimationClip clip,
             Transform deathRoot,
@@ -10102,19 +11109,31 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             try
             {
                 clip.SampleAnimation(deathRoot.gameObject, Mathf.Max(0f, timeline.MeltStart - ApprovedDeathMeltStartDelay - 0.001f));
-                var bodyBounds = CalculateCombinedBounds(bodyRenderers.Cast<Renderer>().ToArray());
+                var bodyRendererArray = bodyRenderers.Cast<Renderer>().ToArray();
+                var bodyBounds = CalculateCombinedBounds(bodyRendererArray);
+                var hasBodyAxis = TryCalculateHorizontalMajorAxis(bodyRendererArray, out var bodyAxis);
+
+                clip.SampleAnimation(deathRoot.gameObject, timeline.MeltStart);
+                var startRootRotation = puddleRoot.localRotation;
+                var startPuddleBounds = CalculateCombinedBounds(puddleRenderer.GetComponentsInChildren<Renderer>(true));
+                var startCenterDelta = Vector2.Distance(
+                    new Vector2(bodyBounds.center.x, bodyBounds.center.z),
+                    new Vector2(startPuddleBounds.center.x, startPuddleBounds.center.z));
+                var startGroundDelta = Mathf.Abs(bodyBounds.min.y - startPuddleBounds.min.y);
+                var startHeightDelta = Mathf.Abs(bodyBounds.size.y - startPuddleBounds.size.y);
+                var startAngleDelta = hasBodyAxis &&
+                                      TryCalculateHorizontalMajorAxis(puddleRenderer.GetComponentsInChildren<Renderer>(true), out var startAxis)
+                    ? HorizontalAxisAngleDelta(bodyAxis, startAxis)
+                    : 0f;
 
                 clip.SampleAnimation(deathRoot.gameObject, timeline.SpreadTime);
+                var spreadRootRotation = puddleRoot.localRotation;
                 var puddleBounds = CalculateCombinedBounds(puddleRenderer.GetComponentsInChildren<Renderer>(true));
-                var finalPuddlePosition = puddleRoot.position;
                 var horizontalExtent = Mathf.Max(puddleBounds.size.x, puddleBounds.size.z);
                 var verticalRatio = horizontalExtent > 0.0001f ? puddleBounds.size.y / horizontalExtent : float.PositiveInfinity;
                 var centerDelta = Vector2.Distance(
                     new Vector2(bodyBounds.center.x, bodyBounds.center.z),
                     new Vector2(puddleBounds.center.x, puddleBounds.center.z));
-
-                clip.SampleAnimation(deathRoot.gameObject, timeline.MeltStart);
-                var startYOffset = puddleRoot.position.y - finalPuddlePosition.y;
 
                 return new ApprovedDeathMeltFloorMetrics(
                     Mathf.Abs(bodyBounds.min.y - puddleBounds.min.y),
@@ -10122,7 +11141,11 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                     horizontalExtent,
                     verticalRatio,
                     centerDelta,
-                    startYOffset);
+                    startGroundDelta,
+                    startCenterDelta,
+                    startHeightDelta,
+                    startAngleDelta,
+                    Quaternion.Angle(startRootRotation, spreadRootRotation));
             }
             finally
             {
@@ -10138,7 +11161,11 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 metrics.CenterHorizontalDelta <= 0.2f &&
                 metrics.HorizontalExtent > 0.0001f &&
                 metrics.VerticalToHorizontalRatio <= 0.35f &&
-                Mathf.Abs(metrics.StartYOffset - ApprovedDeathMeltStartYOffset) <= 0.005f)
+                metrics.StartGroundDelta <= 0.045f &&
+                metrics.StartCenterHorizontalDelta <= 0.08f &&
+                metrics.StartHeightDelta <= 0.16f &&
+                metrics.StartHorizontalAngleDelta <= 8f &&
+                metrics.RootRotationDelta <= 0.25f)
             {
                 return;
             }
@@ -10150,7 +11177,11 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 ", VerticalHeight=" + metrics.VerticalHeight.ToString("0.######", CultureInfo.InvariantCulture) +
                 ", HorizontalExtent=" + metrics.HorizontalExtent.ToString("0.######", CultureInfo.InvariantCulture) +
                 ", VerticalRatio=" + metrics.VerticalToHorizontalRatio.ToString("0.######", CultureInfo.InvariantCulture) +
-                ", StartYOffset=" + metrics.StartYOffset.ToString("0.######", CultureInfo.InvariantCulture));
+                ", StartGroundDelta=" + metrics.StartGroundDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", StartCenterHorizontalDelta=" + metrics.StartCenterHorizontalDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", StartHeightDelta=" + metrics.StartHeightDelta.ToString("0.######", CultureInfo.InvariantCulture) +
+                ", StartHorizontalAngleDelta=" + metrics.StartHorizontalAngleDelta.ToString("0.###", CultureInfo.InvariantCulture) +
+                ", RootRotationDelta=" + metrics.RootRotationDelta.ToString("0.###", CultureInfo.InvariantCulture));
         }
 
         private static Bounds CalculateCombinedBounds(Renderer[] renderers)
@@ -10211,6 +11242,98 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             }
 
             return renderer.bounds;
+        }
+
+        private static Bounds CalculateTergoValidationSampleBounds(
+            Transform root,
+            AnimationClip clip,
+            KeyValuePair<string, float>[] sampleTimes)
+        {
+            var hasBounds = false;
+            var combinedBounds = new Bounds(Vector3.zero, Vector3.zero);
+            foreach (var sample in sampleTimes)
+            {
+                clip.SampleAnimation(root.gameObject, sample.Value);
+                var visibleRenderers = root.GetComponentsInChildren<Renderer>(true)
+                    .Where(renderer => renderer.enabled && renderer.gameObject.activeInHierarchy)
+                    .ToArray();
+                if (visibleRenderers.Length == 0)
+                {
+                    continue;
+                }
+
+                var sampleBounds = CalculateCombinedBounds(visibleRenderers);
+                if (!hasBounds)
+                {
+                    combinedBounds = sampleBounds;
+                    hasBounds = true;
+                }
+                else
+                {
+                    combinedBounds.Encapsulate(sampleBounds);
+                }
+            }
+
+            if (!hasBounds)
+            {
+                throw new InvalidOperationException("Cannot calculate validation camera bounds because no sample has visible renderers.");
+            }
+
+            return combinedBounds;
+        }
+
+        private static void CaptureTergoValidationFrame(Transform root, string outputPath, Bounds cameraBounds)
+        {
+            var visibleRenderers = root.GetComponentsInChildren<Renderer>(true)
+                .Where(renderer => renderer.enabled && renderer.gameObject.activeInHierarchy)
+                .ToArray();
+            if (visibleRenderers.Length == 0)
+            {
+                throw new InvalidOperationException("Cannot capture " + root.name + " because no visible renderer is active.");
+            }
+
+            var bounds = CalculateCombinedBounds(visibleRenderers);
+            var cameraObject = new GameObject("Temp_TergoDeathMeltPoseCaptureCamera");
+            var camera = cameraObject.AddComponent<Camera>();
+            var renderTexture = new RenderTexture(1400, 900, 24, RenderTextureFormat.ARGB32);
+            var previousActive = RenderTexture.active;
+            try
+            {
+                var viewDirection = new Vector3(-0.75f, 0.55f, -1f).normalized;
+                var maxExtent = Mathf.Max(cameraBounds.size.x, Mathf.Max(cameraBounds.size.y, cameraBounds.size.z));
+                var distance = Mathf.Max(maxExtent * 2.8f, 2.5f);
+                camera.transform.position = cameraBounds.center - viewDirection * distance;
+                camera.transform.rotation = Quaternion.LookRotation(viewDirection, Vector3.up);
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = Color.black;
+                camera.orthographic = true;
+                camera.orthographicSize = Mathf.Max(maxExtent * 0.75f, 0.75f);
+                camera.nearClipPlane = 0.01f;
+                camera.farClipPlane = Mathf.Max(distance * 3f, 20f);
+                camera.targetTexture = renderTexture;
+                camera.Render();
+
+                RenderTexture.active = renderTexture;
+                var texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
+                try
+                {
+                    texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+                    texture.Apply();
+                    File.WriteAllBytes(outputPath, texture.EncodeToPNG());
+                }
+                finally
+                {
+                    UnityEngine.Object.DestroyImmediate(texture);
+                }
+            }
+            finally
+            {
+                RenderTexture.active = previousActive;
+                camera.targetTexture = null;
+                renderTexture.Release();
+                UnityEngine.Object.DestroyImmediate(renderTexture);
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+            }
         }
 
         private static int ApplyApprovedDeathMeltPuddleCurves(
@@ -10308,36 +11431,48 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             return 1;
         }
 
-        private static int SetApprovedPuddleRootStartOffsetCurves(
+        private static int SetApprovedPuddleRootMotionCurves(
             AnimationClip clip,
             Transform animationRoot,
             Transform puddleRoot,
-            ApprovedDeathMeltTimeline timeline)
+            ApprovedDeathMeltTimeline timeline,
+            ApprovedDeathMeltRootMotion rootMotion)
         {
             var path = AnimationUtility.CalculateTransformPath(puddleRoot, animationRoot);
-            var finalLocalPosition = puddleRoot.localPosition;
-            var startLocalPosition = finalLocalPosition + animationRoot.InverseTransformVector(Vector3.up * ApprovedDeathMeltStartYOffset);
             var holdBeforeMelt = Mathf.Max(0f, timeline.MeltStart - ApprovedDeathMeltVisibilityLead);
             var times = new[] { 0f, holdBeforeMelt, timeline.MeltStart, timeline.SpreadTime, timeline.HoldTime };
-            SetTransformFloatCurve(
+            var visualHeightOffset = animationRoot.InverseTransformVector(Vector3.up * ApprovedDeathMeltHeightVisualYOffset);
+            var startPoseHeightOffset = animationRoot.InverseTransformVector(Vector3.up * ApprovedDeathMeltStartPoseHeightYOffset);
+            var startLocalPosition = rootMotion.StartLocalPosition + visualHeightOffset + startPoseHeightOffset;
+            var finalLocalPosition = rootMotion.FinalLocalPosition + visualHeightOffset;
+            return SetTransformCurves(
                 clip,
                 path,
-                "m_LocalPosition.x",
                 times,
-                new[] { startLocalPosition.x, startLocalPosition.x, startLocalPosition.x, finalLocalPosition.x, finalLocalPosition.x });
-            SetTransformFloatCurve(
-                clip,
-                path,
-                "m_LocalPosition.y",
-                times,
-                new[] { startLocalPosition.y, startLocalPosition.y, startLocalPosition.y, finalLocalPosition.y, finalLocalPosition.y });
-            SetTransformFloatCurve(
-                clip,
-                path,
-                "m_LocalPosition.z",
-                times,
-                new[] { startLocalPosition.z, startLocalPosition.z, startLocalPosition.z, finalLocalPosition.z, finalLocalPosition.z });
-            return 3;
+                new[]
+                {
+                    startLocalPosition,
+                    startLocalPosition,
+                    startLocalPosition,
+                    finalLocalPosition,
+                    finalLocalPosition
+                },
+                new[]
+                {
+                    rootMotion.StartLocalRotation,
+                    rootMotion.StartLocalRotation,
+                    rootMotion.StartLocalRotation,
+                    rootMotion.FinalLocalRotation,
+                    rootMotion.FinalLocalRotation
+                },
+                new[]
+                {
+                    rootMotion.StartLocalScale,
+                    rootMotion.StartLocalScale,
+                    rootMotion.StartLocalScale,
+                    rootMotion.FinalLocalScale,
+                    rootMotion.FinalLocalScale
+                });
         }
 
         private static void SetTransformFloatCurve(
@@ -10377,8 +11512,8 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             RequireApprovedBlendShapeCurve(clip, deathRoot, puddleRenderer, ApprovedDeathMeltWeightSagShape);
             RequireApprovedBlendShapeCurve(clip, deathRoot, puddleRenderer, ApprovedDeathMeltCrushCollapseShape);
             RequireApprovedBlendShapeCurve(clip, deathRoot, puddleRenderer, ApprovedDeathMeltSpreadShape);
-            RequireApprovedPuddleRootStartOffsetCurves(clip, deathRoot, puddleRoot);
-            return count + 6;
+            RequireApprovedPuddleRootMotionCurves(clip, deathRoot, puddleRoot);
+            return count + 13;
         }
 
         private static AnimationCurve RequireRendererEnabledCurve(AnimationClip clip, Transform root, Renderer renderer)
@@ -10411,12 +11546,19 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             return curve;
         }
 
-        private static void RequireApprovedPuddleRootStartOffsetCurves(AnimationClip clip, Transform root, Transform puddleRoot)
+        private static void RequireApprovedPuddleRootMotionCurves(AnimationClip clip, Transform root, Transform puddleRoot)
         {
             var path = AnimationUtility.CalculateTransformPath(puddleRoot, root);
             RequireTransformCurve(clip, path, "m_LocalPosition.x");
             RequireTransformCurve(clip, path, "m_LocalPosition.y");
             RequireTransformCurve(clip, path, "m_LocalPosition.z");
+            RequireTransformCurve(clip, path, "m_LocalRotation.x");
+            RequireTransformCurve(clip, path, "m_LocalRotation.y");
+            RequireTransformCurve(clip, path, "m_LocalRotation.z");
+            RequireTransformCurve(clip, path, "m_LocalRotation.w");
+            RequireTransformCurve(clip, path, "m_LocalScale.x");
+            RequireTransformCurve(clip, path, "m_LocalScale.y");
+            RequireTransformCurve(clip, path, "m_LocalScale.z");
         }
 
         private static AnimationCurve RequireTransformCurve(AnimationClip clip, string path, string propertyName)
@@ -10475,7 +11617,7 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 var lateKey = curve.keys.FirstOrDefault(key => key.time > threshold);
                 if (lateKey.time > threshold)
                 {
-                    if (IsApprovedPuddleRootPositionBinding(binding))
+                    if (IsApprovedPuddleRootTransformBinding(binding))
                     {
                         continue;
                     }
@@ -10495,12 +11637,25 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             }
         }
 
-        private static bool IsApprovedPuddleRootPositionBinding(EditorCurveBinding binding)
+        private static bool IsApprovedPuddleRootTransformBinding(EditorCurveBinding binding)
         {
             return string.Equals(binding.path, ApprovedDeathMeltPuddleRootName, StringComparison.Ordinal) &&
                    (string.Equals(binding.propertyName, "m_LocalPosition.x", StringComparison.Ordinal) ||
                     string.Equals(binding.propertyName, "m_LocalPosition.y", StringComparison.Ordinal) ||
-                    string.Equals(binding.propertyName, "m_LocalPosition.z", StringComparison.Ordinal));
+                    string.Equals(binding.propertyName, "m_LocalPosition.z", StringComparison.Ordinal) ||
+                    string.Equals(binding.propertyName, "m_LocalRotation.x", StringComparison.Ordinal) ||
+                    string.Equals(binding.propertyName, "m_LocalRotation.y", StringComparison.Ordinal) ||
+                    string.Equals(binding.propertyName, "m_LocalRotation.z", StringComparison.Ordinal) ||
+                    string.Equals(binding.propertyName, "m_LocalRotation.w", StringComparison.Ordinal) ||
+                    string.Equals(binding.propertyName, "m_LocalScale.x", StringComparison.Ordinal) ||
+                    string.Equals(binding.propertyName, "m_LocalScale.y", StringComparison.Ordinal) ||
+                    string.Equals(binding.propertyName, "m_LocalScale.z", StringComparison.Ordinal));
+        }
+
+        private static bool IsApprovedDeathMeltPuddleTransformPath(string path)
+        {
+            return string.Equals(path, ApprovedDeathMeltPuddleRootName, StringComparison.Ordinal) ||
+                   path.StartsWith(ApprovedDeathMeltPuddleRootName + "/", StringComparison.Ordinal);
         }
 
         private static void SetApprovedDeathMeltInitialVisibility(
@@ -11321,6 +12476,7 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             try
             {
                 var paths = GetAnimatedTransformPaths(baseClip)
+                    .Where(path => !IsApprovedDeathMeltPuddleTransformPath(path))
                     .Where(path => targetRoot.Find(path) != null)
                     .ToArray();
                 var sampleTimes = BuildDyingSourcePreservationSampleTimes(baseFallEndTime);
@@ -17274,6 +18430,10 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             public readonly float VerticalHeight;
             public readonly float HorizontalExtent;
             public readonly float VerticalToHorizontalRatio;
+            public readonly float StartCenterHorizontalDelta;
+            public readonly float StartGroundDelta;
+            public readonly float StartHeightDelta;
+            public readonly float StartHorizontalAngleDelta;
 
             public ApprovedDeathMeltAlignmentMetrics(
                 float scale,
@@ -17282,7 +18442,11 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 Vector3 localRotationEuler,
                 float verticalHeight,
                 float horizontalExtent,
-                float verticalToHorizontalRatio)
+                float verticalToHorizontalRatio,
+                float startCenterHorizontalDelta,
+                float startGroundDelta,
+                float startHeightDelta,
+                float startHorizontalAngleDelta)
             {
                 Scale = scale;
                 CenterHorizontalDelta = centerHorizontalDelta;
@@ -17291,6 +18455,10 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 VerticalHeight = verticalHeight;
                 HorizontalExtent = horizontalExtent;
                 VerticalToHorizontalRatio = verticalToHorizontalRatio;
+                StartCenterHorizontalDelta = startCenterHorizontalDelta;
+                StartGroundDelta = startGroundDelta;
+                StartHeightDelta = startHeightDelta;
+                StartHorizontalAngleDelta = startHorizontalAngleDelta;
             }
         }
 
@@ -17301,7 +18469,11 @@ namespace Bellerophon.Editor.TergoCargoRunScene
             public readonly float HorizontalExtent;
             public readonly float VerticalToHorizontalRatio;
             public readonly float CenterHorizontalDelta;
-            public readonly float StartYOffset;
+            public readonly float StartGroundDelta;
+            public readonly float StartCenterHorizontalDelta;
+            public readonly float StartHeightDelta;
+            public readonly float StartHorizontalAngleDelta;
+            public readonly float RootRotationDelta;
 
             public ApprovedDeathMeltFloorMetrics(
                 float groundDelta,
@@ -17309,14 +18481,87 @@ namespace Bellerophon.Editor.TergoCargoRunScene
                 float horizontalExtent,
                 float verticalToHorizontalRatio,
                 float centerHorizontalDelta,
-                float startYOffset)
+                float startGroundDelta,
+                float startCenterHorizontalDelta,
+                float startHeightDelta,
+                float startHorizontalAngleDelta,
+                float rootRotationDelta)
             {
                 GroundDelta = groundDelta;
                 VerticalHeight = verticalHeight;
                 HorizontalExtent = horizontalExtent;
                 VerticalToHorizontalRatio = verticalToHorizontalRatio;
                 CenterHorizontalDelta = centerHorizontalDelta;
-                StartYOffset = startYOffset;
+                StartGroundDelta = startGroundDelta;
+                StartCenterHorizontalDelta = startCenterHorizontalDelta;
+                StartHeightDelta = startHeightDelta;
+                StartHorizontalAngleDelta = startHorizontalAngleDelta;
+                RootRotationDelta = rootRotationDelta;
+            }
+        }
+
+        private readonly struct ApprovedDeathMeltRootMotion
+        {
+            public static readonly ApprovedDeathMeltRootMotion Identity = new ApprovedDeathMeltRootMotion(
+                Vector3.zero,
+                Quaternion.identity,
+                Vector3.one,
+                Vector3.zero,
+                Quaternion.identity,
+                Vector3.one);
+
+            public readonly Vector3 StartLocalPosition;
+            public readonly Quaternion StartLocalRotation;
+            public readonly Vector3 StartLocalScale;
+            public readonly Vector3 FinalLocalPosition;
+            public readonly Quaternion FinalLocalRotation;
+            public readonly Vector3 FinalLocalScale;
+
+            public ApprovedDeathMeltRootMotion(
+                Vector3 startLocalPosition,
+                Quaternion startLocalRotation,
+                Vector3 startLocalScale,
+                Vector3 finalLocalPosition,
+                Quaternion finalLocalRotation,
+                Vector3 finalLocalScale)
+            {
+                StartLocalPosition = startLocalPosition;
+                StartLocalRotation = startLocalRotation;
+                StartLocalScale = startLocalScale;
+                FinalLocalPosition = finalLocalPosition;
+                FinalLocalRotation = finalLocalRotation;
+                FinalLocalScale = finalLocalScale;
+            }
+
+            public ApprovedDeathMeltRootMotion WithFinalLocalPosition(Vector3 finalLocalPosition)
+            {
+                return new ApprovedDeathMeltRootMotion(
+                    StartLocalPosition,
+                    StartLocalRotation,
+                    StartLocalScale,
+                    finalLocalPosition,
+                    FinalLocalRotation,
+                    FinalLocalScale);
+            }
+        }
+
+        private readonly struct ApprovedDeathMeltStartPoseMetrics
+        {
+            public readonly float CenterHorizontalDelta;
+            public readonly float GroundDelta;
+            public readonly float HeightDelta;
+            public readonly float HorizontalAngleDelta;
+
+            public ApprovedDeathMeltStartPoseMetrics(
+                float centerHorizontalDelta,
+                float groundDelta,
+                float heightDelta,
+                float horizontalAngleDelta)
+            {
+                CenterHorizontalDelta = centerHorizontalDelta;
+                GroundDelta = groundDelta;
+                HeightDelta = heightDelta;
+                HorizontalAngleDelta = horizontalAngleDelta;
             }
         }
 

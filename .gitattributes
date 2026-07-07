@@ -77,3 +77,4 @@
 *.gz filter=lfs diff=lfs merge=lfs -text
 *.unitypackage filter=lfs diff=lfs merge=lfs -text
 Assets/Heavy[[:space:]]Station[[:space:]]Kit/BASE/Scenes/Base/LightingData.asset filter=lfs diff=lfs merge=lfs -text
+Assets/_Project/Scenes/CargoRunMvp.unity filter=lfs diff=lfs merge=lfs -text

@@ -254,6 +254,174 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.LongaArmaCargoRunScene.LongaArmaCargoRunSceneApplyAndReview.InspectAppliedSceneState,
                         "Approved Longa Arma CargoRunMvp scene state inspected.");
                     break;
+                case "ApplyPreparedUrzereToCurrentCargoRunScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.ApplyPreparedModelToCurrentCargoRunScene,
+                        "Prepared Urzere model applied to current CargoRunMvp scene.");
+                    break;
+                case "InspectPreparedUrzereCargoRunSceneState":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.InspectAppliedSceneState,
+                        "Prepared Urzere CargoRunMvp scene state inspected.");
+                    break;
+                case "ApplyPreparedSocietasToCurrentCargoRunScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ApplyPreparedModelToCurrentCargoRunScene,
+                        "Prepared Societas model applied to current CargoRunMvp scene.");
+                    break;
+                case "InspectPreparedSocietasCargoRunSceneState":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.InspectAppliedSceneState,
+                        "Prepared Societas CargoRunMvp scene state inspected.");
+                    break;
+                case "CapturePreparedSocietasReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.CaptureReview,
+                        "Prepared Societas static review captured.");
+                    break;
+                case "MovePreparedSocietasPlayerStartToOppositeSide":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.MovePlayerStartToOppositeSide,
+                        "Prepared Societas player start moved to the opposite side.");
+                    break;
+                case "MovePreparedUrzerePlayerStartToOppositeSide":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.MovePlayerStartToOppositeSide,
+                        "Prepared Urzere player start moved to the opposite side.");
+                    break;
+                case "AddPreparedUrzereMotionSlotObjects":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.AddMotionSlotObjectsOnCurrentZAxis,
+                        "Prepared Urzere motion slot objects added.");
+                    break;
+                case "InspectPreparedUrzereMotionSlotObjects":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.InspectMotionSlotObjectsInScene,
+                        "Prepared Urzere motion slot objects inspected.");
+                    break;
+                case "ApplyPreparedUrzereIdleBreathingAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.ApplyIdleBreathingAnimation,
+                        "Prepared Urzere idle breathing animation applied.");
+                    break;
+                case "ValidatePreparedUrzereIdleBreathingAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.ValidateIdleBreathingAnimation,
+                        "Prepared Urzere idle breathing animation validated.");
+                    break;
+                case "ApplyPreparedUrzereMoveBodyLiftWheelRollAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.ApplyMoveBodyLiftWheelRollAnimation,
+                        "Prepared Urzere move body-lift wheel-roll animation applied.");
+                    break;
+                case "ValidatePreparedUrzereMoveBodyLiftWheelRollAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.ValidateMoveBodyLiftWheelRollAnimation,
+                        "Prepared Urzere move body-lift wheel-roll animation validated.");
+                    break;
+                case "ApplyPreparedUrzereMoveWheelOnlyAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.ApplyMoveWheelOnlyAnimation,
+                        "Prepared Urzere move wheel-only animation applied.");
+                    break;
+                case "ValidatePreparedUrzereMoveWheelOnlyAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.ValidateMoveWheelOnlyAnimation,
+                        "Prepared Urzere move wheel-only animation validated.");
+                    break;
+                case "CapturePreparedUrzereMoveWheelOnlyReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.CaptureMoveWheelOnlyReview,
+                        "Prepared Urzere move wheel-only review captured.");
+                    break;
+                case "RemovePreparedUrzereMoveAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.RemoveMoveAnimationFromScene,
+                        "Prepared Urzere move animation removed.");
+                    break;
+                case "ApplyPreparedUrzereSeedEmitBuffPulseAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.ApplySeedEmitBuffPulseAnimation,
+                        "Prepared Urzere seed emit buff pulse animation applied.");
+                    break;
+                case "ValidatePreparedUrzereSeedEmitBuffPulseAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.ValidateSeedEmitBuffPulseAnimation,
+                        "Prepared Urzere seed emit buff pulse animation validated.");
+                    break;
+                case "CapturePreparedUrzereSeedEmitBuffPulseReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.CaptureSeedEmitBuffPulseReview,
+                        "Prepared Urzere seed emit buff pulse review captured.");
+                    break;
+                case "ApplyPreparedUrzereDeathAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.ApplyDeathAnimation,
+                        "Prepared Urzere death animation applied.");
+                    break;
+                case "ValidatePreparedUrzereDeathAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.ValidateDeathAnimation,
+                        "Prepared Urzere death animation validated.");
+                    break;
+                case "CapturePreparedUrzereDeathReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.CaptureDeathReview,
+                        "Prepared Urzere death review captured.");
+                    break;
+                case "InspectPreparedUrzereRendererStructure":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.InspectRendererStructure,
+                        "Prepared Urzere renderer structure inspected.");
+                    break;
+                case "RemovePreparedUrzereGroundPuddle":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.RemoveGroundPuddleFromAllUrzereObjects,
+                        "Prepared Urzere ground puddle removed.");
+                    break;
+                case "ValidatePreparedUrzereGroundPuddleRemoved":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.ValidateGroundPuddleRemoval,
+                        "Prepared Urzere ground puddle removal validated.");
+                    break;
+                case "RemovePreparedUrzereOuterFootPlatforms":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.RemoveOuterFootPlatformsFromAllUrzereObjects,
+                        "Prepared Urzere outer foot platforms removed.");
+                    break;
+                case "ValidatePreparedUrzereOuterFootPlatformsRemoved":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.ValidateOuterFootPlatformRemoval,
+                        "Prepared Urzere outer foot platform removal validated.");
+                    break;
                 case "CaptureLongaArmaUnityVisualComparison":
                     RunSynchronous(
                         request,
@@ -465,6 +633,24 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.SyncTergoDownedPounceVisualDetailsFromStaticReview,
                         "Tergo downed pounce visual details synced from static review.");
                     break;
+                case "ApplyTergoStandUpAfterFallFbxLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ApplyTergoStandUpAfterFallFbxLoop,
+                        "Tergo stand up after fall FBX loop applied.");
+                    break;
+                case "ValidateTergoStandUpAfterFallFbxLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoStandUpAfterFallFbxLoop,
+                        "Tergo stand up after fall FBX loop validated.");
+                    break;
+                case "SyncTergoStandUpAfterFallVisualDetailsFromStaticReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.SyncTergoStandUpAfterFallVisualDetailsFromStaticReview,
+                        "Tergo stand up after fall visual details synced from static review.");
+                    break;
                 case "ReplaceTergoInterruptStaggerWithFallOverFbx":
                     RunSynchronous(
                         request,
@@ -584,6 +770,12 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoApprovedDeathMeltPuddleModel,
                         "Tergo approved death melt puddle model validated.");
+                    break;
+                case "CaptureTergoApprovedDeathMeltPuddlePoseFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.CaptureTergoApprovedDeathMeltPuddlePoseFrames,
+                        "Tergo approved death melt puddle pose frames captured.");
                     break;
                 case "ApplyTergoDeathMeltPuddleAnimation":
                     RunSynchronous(
