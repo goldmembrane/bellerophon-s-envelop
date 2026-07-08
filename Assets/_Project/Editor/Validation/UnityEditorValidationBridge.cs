@@ -290,6 +290,132 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.MovePlayerStartToOppositeSide,
                         "Prepared Societas player start moved to the opposite side.");
                     break;
+                case "ApplyPreparedSocietasAnimationReviewSlots":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ApplyAnimationReviewSlots,
+                        "Prepared Societas animation review slots applied.");
+                    break;
+                case "ValidatePreparedSocietasAnimationReviewSlots":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ValidateAnimationReviewSlots,
+                        "Prepared Societas animation review slots validated.");
+                    break;
+                case "CapturePreparedSocietasAnimationReviewSlots":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.CaptureAnimationReviewSlots,
+                        "Prepared Societas animation review slots captured.");
+                    break;
+                case "ApplyPreparedSocietasIdleBreathTentacleAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ApplyIdleBreathTentacleAnimation,
+                        "Prepared Societas 01 idle breath tentacle animation applied.");
+                    break;
+                case "ValidatePreparedSocietasIdleBreathTentacleAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ValidateIdleBreathTentacleAnimation,
+                        "Prepared Societas 01 idle breath tentacle animation validated.");
+                    break;
+                case "CapturePreparedSocietasIdleBreathTentacleAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.CaptureIdleBreathTentacleAnimation,
+                        "Prepared Societas 01 idle breath tentacle animation captured.");
+                    break;
+                case "InspectPreparedSocietasIdleRigStructure":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.InspectIdleRigStructure,
+                        "Prepared Societas 01 idle rig structure inspected.");
+                    break;
+                case "ApplyPreparedSocietasMoveCaterpillarAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ApplyMoveCaterpillarAnimation,
+                        "Prepared Societas 02 move caterpillar animation applied.");
+                    break;
+                case "ValidatePreparedSocietasMoveCaterpillarAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ValidateMoveCaterpillarAnimation,
+                        "Prepared Societas 02 move caterpillar animation validated.");
+                    break;
+                case "CapturePreparedSocietasMoveCaterpillarAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.CaptureMoveCaterpillarAnimation,
+                        "Prepared Societas 02 move caterpillar animation captured.");
+                    break;
+                case "InspectPreparedSocietasAttackConsumeRigStructure":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.InspectAttackConsumeRigStructure,
+                        "Prepared Societas 03 attack consume rig structure inspected.");
+                    break;
+                case "ApplyPreparedSocietasAttackConsumeBiteChewAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ApplyAttackConsumeBiteChewAnimation,
+                        "Prepared Societas 03 attack consume bite chew animation applied.");
+                    break;
+                case "ApplyPreparedSocietasAttackConsumeBiteChewAnimationVisualOnly":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ApplyAttackConsumeBiteChewAnimationVisualOnly,
+                        "Prepared Societas 03 attack consume bite chew animation applied for visual review.");
+                    break;
+                case "RemovePreparedSocietasAttackConsumeAnimationVisualOnly":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.RemovePreparedSocietasAttackConsumeAnimationVisualOnly,
+                        "Prepared Societas 03 attack consume animation removed for visual review.");
+                    break;
+                case "ValidatePreparedSocietasAttackConsumeBiteChewAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ValidateAttackConsumeBiteChewAnimation,
+                        "Prepared Societas 03 attack consume bite chew animation validated.");
+                    break;
+                case "CapturePreparedSocietasAttackConsumeBiteChewAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.CaptureAttackConsumeBiteChewAnimation,
+                        "Prepared Societas 03 attack consume bite chew animation captured.");
+                    break;
+                case "CapturePreparedSocietasAttackConsumeBiteChewAnimationVisualOnly":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.CaptureAttackConsumeBiteChewAnimationVisualOnly,
+                        "Prepared Societas 03 attack consume bite chew animation captured for visual review.");
+                    break;
+                case "InspectPreparedSocietasAttackConsumeBoneWeightsVisualOnly":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.InspectAttackConsumeBoneWeightsVisualOnly,
+                        "Prepared Societas 03 attack consume bone weights inspected for visual retune.");
+                    break;
+                case "ApplyPreparedSocietasDeathMeltPuddleAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ApplyDeathMeltPuddleAnimation,
+                        "Prepared Societas 04 death melt puddle animation applied.");
+                    break;
+                case "ValidatePreparedSocietasDeathMeltPuddleAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ValidateDeathMeltPuddleAnimation,
+                        "Prepared Societas 04 death melt puddle animation validated.");
+                    break;
+                case "CapturePreparedSocietasDeathMeltPuddleAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.CaptureDeathMeltPuddleAnimation,
+                        "Prepared Societas 04 death melt puddle animation captured.");
+                    break;
                 case "MovePreparedUrzerePlayerStartToOppositeSide":
                     RunSynchronous(
                         request,
