@@ -1,0 +1,38 @@
+﻿{
+  "enemyId": "monstrum",
+  "createdAt": "2026-07-09",
+  "status": "pending_user_approval",
+  "runtimeSceneModified": false,
+  "sourceReferences": [
+    "docs/GAME_DESIGN_SOURCE.txt",
+    "image/monstrum(몬스트룸).png",
+    "Assets/_Project/Scenes/CargoRunMvp.unity::Monstrum_00_Static_Review"
+  ],
+  "basedOnCleanedMesh": "Assets/_Project/Art/Enemies/Monstrum/Meshes/Monstrum_LooseGrainRemoved_char1.asset",
+  "revisionNotes": [
+    "Longa Arma style review HTML with direct reference/render comparisons.",
+    "Uses the current Unity Monstrum mesh instead of rebuilding the model from scratch.",
+    "Eyes are placed on the visual front side, not the back side.",
+    "Reference seed/fluff objects are intentionally excluded per user instruction."
+  ],
+  "modelScaleMeters": { "height": 2.5, "width": 2.0, "depth": 3.0 },
+  "files": [
+    "README.md",
+    "TEXTURE_ANALYSIS.md",
+    "APPROVAL_STATUS.json",
+    "ASSET_MANIFEST.json",
+    "index.html",
+    "VISUAL_ANALYSIS.md",
+    "UNITY_APPLICATION_PLAN.md",
+    "RULE_COMPLIANCE_CHECKLIST.md",
+    "MATERIAL_SETTINGS.txt",
+    "exports/monstrum_visual_recolor_eye_sample.obj",
+    "exports/monstrum_visual_recolor_eye_sample.mtl",
+    "textures/monstrum_dark_moss_body_albedo.png",
+    "renders/front.png",
+    "renders/side.png",
+    "renders/back.png",
+    "renders/head_close.png",
+    "renders/reference_comparison.png"
+  ]
+}

@@ -284,6 +284,108 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.CaptureReview,
                         "Prepared Societas static review captured.");
                     break;
+                case "ApplyPreparedMonstrumToCurrentCargoRunScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ApplyPreparedModelToCurrentCargoRunScene,
+                        "Prepared Monstrum model applied to current CargoRunMvp scene.");
+                    break;
+                case "InspectPreparedMonstrumCargoRunSceneState":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.InspectAppliedSceneState,
+                        "Prepared Monstrum CargoRunMvp scene state inspected.");
+                    break;
+                case "CapturePreparedMonstrumReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.CaptureReview,
+                        "Prepared Monstrum static review captured.");
+                    break;
+                case "CapturePreparedMonstrumEyeCloseupReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.CaptureEyeCloseupReview,
+                        "Prepared Monstrum eye closeup review captured.");
+                    break;
+                case "MovePreparedMonstrumPlayerStartToOppositeSide":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.MovePlayerStartToOppositeSide,
+                        "Prepared Monstrum player start moved to the opposite side.");
+                    break;
+                case "InspectPreparedMonstrumPlayerStart":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.InspectPlayerStartInScene,
+                        "Prepared Monstrum player start inspected.");
+                    break;
+                case "ApplyPreparedMonstrumAnimationReviewSlots":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ApplyAnimationReviewSlots,
+                        "Prepared Monstrum animation review slots applied.");
+                    break;
+                case "ValidatePreparedMonstrumAnimationReviewSlots":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ValidateAnimationReviewSlots,
+                        "Prepared Monstrum animation review slots validated.");
+                    break;
+                case "ApplyPreparedMonstrumIdleBreathingAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ApplyIdleBreathingAnimation,
+                        "Prepared Monstrum idle breathing animation applied.");
+                    break;
+                case "ValidatePreparedMonstrumIdleBreathingAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ValidateIdleBreathingAnimation,
+                        "Prepared Monstrum idle breathing animation validated.");
+                    break;
+                case "ApplyPreparedMonstrumMoveSourceAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ApplyMoveSourceAnimation,
+                        "Prepared Monstrum move source animation applied.");
+                    break;
+                case "ValidatePreparedMonstrumMoveSourceAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ValidateMoveSourceAnimation,
+                        "Prepared Monstrum move source animation validated.");
+                    break;
+                case "ApplyPreparedMonstrumLooseGrainRemoval":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ApplyLooseGrainRemoval,
+                        "Prepared Monstrum loose grain removal applied.");
+                    break;
+                case "ValidatePreparedMonstrumLooseGrainRemoval":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ValidateLooseGrainRemoval,
+                        "Prepared Monstrum loose grain removal validated.");
+                    break;
+                case "CreatePreparedMonstrumVisualRecolorEyeArtSample":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.CreateVisualRecolorEyeArtSample,
+                        "Prepared Monstrum visual recolor eye art sample created.");
+                    break;
+                case "ApplyPreparedMonstrumVisualRecolorEyeToScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ApplyVisualRecolorEyeToScene,
+                        "Prepared Monstrum visual recolor eye scene visuals applied.");
+                    break;
+                case "ValidatePreparedMonstrumVisualRecolorEyeScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ValidateVisualRecolorEyeScene,
+                        "Prepared Monstrum visual recolor eye scene visuals validated.");
+                    break;
                 case "MovePreparedSocietasPlayerStartToOppositeSide":
                     RunSynchronous(
                         request,

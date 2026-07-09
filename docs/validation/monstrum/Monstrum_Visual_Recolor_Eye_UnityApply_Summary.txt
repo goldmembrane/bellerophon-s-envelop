@@ -1,0 +1,17 @@
+﻿Monstrum Visual Recolor Eye Unity Apply Summary
+Date: 2026-07-09
+ApprovedSample: artSample/enemies/monstrum/visual_recolor_eye_sample
+Scene: Assets/_Project/Scenes/CargoRunMvp.unity
+PlacementRoot: Approved Monstrum Enemy Placement
+TargetCount: 9
+BodyRendererCount: 9
+EyeRendererCount: 18
+EyeLightCount: 18
+BodyMaterial: Assets/_Project/Art/Enemies/Monstrum/Materials/Monstrum_Approved_DarkMossBody.mat
+BodyTexture: Assets/_Project/Art/Enemies/Monstrum/Materials/Textures/Monstrum_Approved_DarkMossBody_Albedo.png
+EyeMaterial: Assets/_Project/Art/Enemies/Monstrum/Materials/Monstrum_Approved_YellowEye.mat
+EyeRootName: Monstrum_ApprovedVisualEyes
+EyeFollowParentApplied: true
+RuntimeSceneApplied: true
+SourceFbxModified: false
+AnimationApplied: false

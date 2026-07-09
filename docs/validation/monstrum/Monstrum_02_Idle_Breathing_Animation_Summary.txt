@@ -1,0 +1,25 @@
+﻿Monstrum Idle Breathing Animation Summary
+Date: 2026-07-09
+Scene: Assets/_Project/Scenes/CargoRunMvp.unity
+PlacementRoot: Approved Monstrum Enemy Placement
+TargetSlot: Monstrum_02_Idle
+AnimationMethod: SkinnedMeshRenderer blendShape body morph
+BlendShapeName: IdleBreathIn
+BodyRendererCount: 1
+SkinnedRendererCount: 1
+BreathingMeshAssetCount: 1
+BreathingMeshAssets: Assets/_Project/Art/Enemies/Monstrum/Meshes/Monstrum_02_Idle_Breathing_MonstrumPrepared_Model_char1_Monstrum_LooseGrainRemoved_char1.asset
+AnimationClip: Assets/_Project/Art/Enemies/Monstrum/Animations/Monstrum_02_Idle_Breathing.anim
+AnimatorController: Assets/_Project/Art/Enemies/Monstrum/Animations/Monstrum_02_Idle.controller
+BlendShapeCurveCount: 1
+EyeFollowPositionCurveCount: 3
+TotalCurveBindingCount: 4
+LoopDurationSeconds: 1.8
+RootTransformCurveCreated: false
+EyesModified: true
+EyeFollowApplied: true
+OtherSlotsModified: false
+HarnessValidationRun: false
+EditModeTestsRun: false
+PlayModeTestsRun: false
+BuildRun: false

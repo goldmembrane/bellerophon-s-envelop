@@ -1,0 +1,17 @@
+﻿# Monstrum visual recolor eye art sample materials
+newmtl Monstrum_Dark_Moss_Body
+Ka 0.02 0.04 0.02
+Kd 0.055 0.145 0.065
+Ks 0.04 0.04 0.035
+Ns 18
+d 1
+illum 2
+map_Kd ../textures/monstrum_dark_moss_body_albedo.png
+
+newmtl Monstrum_Eye_Glow
+Ka 0.25 0.20 0.03
+Kd 0.94 0.78 0.16
+Ks 0.16 0.14 0.04
+Ns 40
+d 1
+illum 2

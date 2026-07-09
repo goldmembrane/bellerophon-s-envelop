@@ -1,0 +1,55 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>몬스트룸 모델링 샘플</title>
+  <style>
+    body { margin: 0; font-family: Arial, "Malgun Gothic", sans-serif; background: #18201a; color: #edf2e6; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    section { margin: 30px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; background: #222b24; border: 1px solid #435041; padding: 14px; }
+    .comparison h3 { grid-column: 1 / -1; }
+    figure { margin: 0; background: #111711; border: 1px solid #364236; padding: 10px; }
+    img { width: 100%; height: auto; display: block; object-fit: contain; }
+    figcaption { margin-top: 8px; font-size: 13px; color: #cdd7c5; word-break: break-all; }
+    p, li { line-height: 1.55; }
+    code { color: #d7e6c8; }
+    @media (max-width: 760px) { .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>몬스트룸 모델링 샘플</h1>
+  <p>현재 Unity에 배치된 몬스트룸 정리 메시를 기반으로 한 승인 전 샘플입니다. 기준 이미지에서 씨앗/솜털/떠 있는 알갱이는 제외하고, 어두운 녹색 몸통과 얼굴 전면의 노란 눈 인상만 반영했습니다.</p>
+
+  <section>
+    <h2>기준 이미지와 생성 렌더 비교</h2>
+    <article class="comparison">
+      <h3>정면</h3>
+      <figure><img src="../../../../image/monstrum(몬스트룸).png" alt="몬스트룸 기준 이미지"><figcaption>기준 이미지: ../../../../image/monstrum(몬스트룸).png</figcaption></figure>
+      <figure><img src="renders/front.png" alt="정면 생성 렌더"><figcaption>생성 렌더: renders/front.png</figcaption></figure>
+    </article>
+  </section>
+
+  <section>
+    <h2>생성 렌더</h2>
+    <div class="grid">
+      <figure><img src="renders/front.png" alt="front"><figcaption>front.png</figcaption></figure>
+      <figure><img src="renders/side.png" alt="side"><figcaption>side.png</figcaption></figure>
+      <figure><img src="renders/back.png" alt="back"><figcaption>back.png</figcaption></figure>
+      <figure><img src="renders/head_close.png" alt="head close"><figcaption>head_close.png</figcaption></figure>
+      <figure><img src="renders/reference_comparison.png" alt="reference comparison"><figcaption>reference_comparison.png</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>사용 텍스처</h2>
+    <div class="grid">
+      <figure><img src="textures/monstrum_dark_moss_body_albedo.png" alt="body albedo"><figcaption>monstrum_dark_moss_body_albedo.png</figcaption></figure>
+    </div>
+  </section>
+</main>
+</body>
+</html>

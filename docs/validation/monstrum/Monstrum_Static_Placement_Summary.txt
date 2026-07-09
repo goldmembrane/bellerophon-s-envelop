@@ -1,0 +1,19 @@
+﻿Monstrum Static Placement Summary
+Date: 2026-07-09
+SourceModel: D:/Bellerophon2/Bellerophon/enemies model/monstrum.fbx
+UnityModelAsset: Assets/_Project/Art/Enemies/Monstrum/Models/monstrum.fbx
+Scene: Assets/_Project/Scenes/CargoRunMvp.unity
+PlacementRoot: Approved Monstrum Enemy Placement
+PlacementObject: Monstrum_00_Static_Review
+ModelChild: MonstrumPrepared_Model
+MonstrumPosition: (57.865, 0, -67.482)
+SocietasPosition: (57.865, 0, -60.105)
+TergoPosition: (57.865, 0, -45.351)
+UrzerePosition: (57.865, 0, -52.728)
+TergoUrzereSpacing: 7.377
+SocietasMonstrumSpacing: 7.377
+RendererCount: 3
+BoundsCenter: (57.826, 1.25, -67.482)
+BoundsSize: (2.35, 2.5, 2.584)
+AuthoredNewMaterial: false
+AnimationApplied: false

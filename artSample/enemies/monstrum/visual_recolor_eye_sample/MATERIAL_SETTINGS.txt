@@ -1,0 +1,12 @@
+﻿Monstrum Visual Recolor Eye Material Settings
+BodyMaterialName: ArtSample_Monstrum_DarkMossBody
+BodyColor: (0.055, 0.145, 0.065, 1)
+BodyShadowReference: (0.035, 0.085, 0.035, 1)
+BodyTexture: textures/monstrum_dark_moss_body_albedo.png
+Metallic: 0
+Smoothness: 0.24
+RoughnessReference: 0.86
+EyeMaterialName: ArtSample_Monstrum_YellowEye
+EyeGlowColor: (0.94, 0.78, 0.16, 1)
+EyeCenter: (0.002, 1.63, -0.471)
+EyeSeparation: 0.047

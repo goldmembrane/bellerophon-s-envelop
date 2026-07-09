@@ -1,0 +1,17 @@
+﻿Monstrum Player Start Summary
+Date: 2026-07-09
+Scene: Assets/_Project/Scenes/CargoRunMvp.unity
+PlacementRoot: Approved Monstrum Enemy Placement
+PlacementObject: Monstrum_00_Static_Review
+PlayerRoot: Player
+PreviousPosition: (57.826, 0, -73.424)
+PlayerPosition: (57.826, 0, -73.424)
+PlayerEulerAngles: (0, 0, 0)
+LookAt: (57.826, 1.35, -67.482)
+TargetDistance: 5.942
+HorizontalDistance: 5.942
+FacingDot: 1
+FrontSideDot: 1
+CameraModified: false
+LightModified: false
+AnimationApplied: false

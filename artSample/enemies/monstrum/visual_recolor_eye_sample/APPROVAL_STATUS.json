@@ -1,0 +1,7 @@
+﻿{
+  "enemyId": "monstrum",
+  "status": "pending_user_approval",
+  "approved": false,
+  "createdAt": "2026-07-09",
+  "note": "현재 Unity CargoRunMvp의 Monstrum_00_Static_Review 정리 메시 기반 샘플입니다. 사용자 승인 전에는 Unity 런타임 씬, 프리팹, 런타임 에셋, AI, 피격 판정, UI 흐름에 연결하지 않습니다. 기준 이미지의 씨앗 오브젝트는 사용자 지시에 따라 제외했습니다."
+}
