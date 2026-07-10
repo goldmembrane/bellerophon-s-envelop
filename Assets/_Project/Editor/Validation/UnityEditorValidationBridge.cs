@@ -356,6 +356,42 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ValidateMoveSourceAnimation,
                         "Prepared Monstrum move source animation validated.");
                     break;
+                case "ApplyPreparedMonstrumAttackModelToAttackSlots":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ApplyAttackModelToAttackSlots,
+                        "Prepared Monstrum attack model applied to attack slots.");
+                    break;
+                case "RebuildPreparedMonstrumAttackSlot04FromStaticVisual":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.RebuildAttackSlot04FromStaticVisual,
+                        "Prepared Monstrum attack slot 04 rebuilt from static visual.");
+                    break;
+                case "ApplyPreparedMonstrumAttackSlot04ModelWithStaticAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ApplyAttackSlot04ModelWithStaticAppearance,
+                        "Prepared Monstrum attack slot 04 model synced with static appearance.");
+                    break;
+                case "ApplyPreparedMonstrumDeathSlot05ModelWithStaticAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ApplyDeathSlot05ModelWithStaticAppearance,
+                        "Prepared Monstrum death slot 05 model synced with static appearance.");
+                    break;
+                case "ApplyPreparedMonstrumDeathMeltPuddleAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ApplyDeathMeltPuddleAnimation,
+                        "Prepared Monstrum death slot 05 melt puddle animation applied.");
+                    break;
+                case "ApplyPreparedMonstrumRemoveNonAnimatedReviewObjects":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ApplyPreparedMonstrumRemoveNonAnimatedReviewObjects,
+                        "Prepared Monstrum non-animated review objects removed.");
+                    break;
                 case "ApplyPreparedMonstrumLooseGrainRemoval":
                     RunSynchronous(
                         request,
@@ -385,6 +421,24 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.MonstrumCargoRunScene.MonstrumCargoRunSceneApplyAndReview.ValidateVisualRecolorEyeScene,
                         "Prepared Monstrum visual recolor eye scene visuals validated.");
+                    break;
+                case "ApplyPreparedCantabileToCurrentCargoRunScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.CantabileCargoRunScene.CantabileCargoRunSceneApplyAndReview.ApplyPreparedModelToCurrentCargoRunScene,
+                        "Prepared Cantabile model applied to current CargoRunMvp scene.");
+                    break;
+                case "InspectPreparedCantabileCargoRunSceneState":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.CantabileCargoRunScene.CantabileCargoRunSceneApplyAndReview.InspectAppliedSceneState,
+                        "Prepared Cantabile CargoRunMvp scene state inspected.");
+                    break;
+                case "ApplyPreparedCantabileAnimationReviewObjects":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.CantabileCargoRunScene.CantabileCargoRunSceneApplyAndReview.ApplyAnimationReviewObjects,
+                        "Prepared Cantabile animation review objects applied.");
                     break;
                 case "MovePreparedSocietasPlayerStartToOppositeSide":
                     RunSynchronous(

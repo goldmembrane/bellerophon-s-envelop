@@ -23,6 +23,8 @@ namespace Bellerophon.Editor.MonstrumCargoRunScene
         private const string PlayerRootName = "Player";
 
         private const string SourceModelAbsolutePath = "D:/Bellerophon2/Bellerophon/enemies model/monstrum.fbx";
+        private const string SourceAttackModelAbsolutePath = "D:/Bellerophon2/Bellerophon/enemies model/monstrum attack.fbx";
+        private const string SourceDeathModelAbsolutePath = "D:/Bellerophon2/Bellerophon/enemies model/monstrum death.fbx";
         private const string MonstrumArtRoot = "Assets/_Project/Art/Enemies/Monstrum";
         private const string UnityModelFolder = MonstrumArtRoot + "/Models";
         private const string UnityMeshFolder = MonstrumArtRoot + "/Meshes";
@@ -31,16 +33,26 @@ namespace Bellerophon.Editor.MonstrumCargoRunScene
         private const string UnityAnimationFolder = MonstrumArtRoot + "/Animations";
         private const string UnityAnimationSourceFolder = UnityAnimationFolder + "/Source";
         private const string UnityModelAssetPath = UnityModelFolder + "/monstrum.fbx";
+        private const string UnityAttackModelAssetPath = UnityModelFolder + "/monstrum_attack.fbx";
+        private const string UnityDeathModelAssetPath = UnityModelFolder + "/monstrum_death.fbx";
         private const string SourceAnimationAssetPath = UnityAnimationSourceFolder + "/monstrum_source_animation.fbx";
         private const string ApprovedBodyTextureAssetPath = UnityMaterialTextureFolder + "/Monstrum_Approved_DarkMossBody_Albedo.png";
         private const string ApprovedBodyMaterialAssetPath = UnityMaterialFolder + "/Monstrum_Approved_DarkMossBody.mat";
         private const string ApprovedEyeMaterialAssetPath = UnityMaterialFolder + "/Monstrum_Approved_YellowEye.mat";
         private const string IdleSlotObjectName = "Monstrum_02_Idle";
         private const string MoveSlotObjectName = "Monstrum_03_Move_HeavyStomp";
+        private const string AttackDoubleHammerSlotObjectName = "Monstrum_04_Attack_DoubleHammerSlam";
+        private const string AttackImpactShakeSlotObjectName = "Monstrum_05_Attack_ImpactShake";
+        private const string DeathMeltSpreadSlotObjectName = "Monstrum_05_Death_MeltSpread";
         private const string IdleBreathingBlendShapeName = "IdleBreathIn";
         private const string IdleBreathingClipAssetPath = UnityAnimationFolder + "/Monstrum_02_Idle_Breathing.anim";
         private const string IdleBreathingControllerAssetPath = UnityAnimationFolder + "/Monstrum_02_Idle.controller";
         private const string MoveSourceAnimationControllerAssetPath = UnityAnimationFolder + "/Monstrum_03_Move_HeavyStomp.controller";
+        private const string AttackLoopControllerAssetPath = UnityAnimationFolder + "/Monstrum_04_Attack_DoubleHammerSlam.controller";
+        private const string DeathLoopControllerAssetPath = UnityAnimationFolder + "/Monstrum_05_Death_MeltSpread.controller";
+        private const string DeathMeltPuddleClipName = "Monstrum_05_Death_MeltPuddle";
+        private const string DeathMeltPuddleClipAssetPath = UnityAnimationFolder + "/" + DeathMeltPuddleClipName + ".anim";
+        private const string DeathMeltProxyPrefix = "MonstrumDeathMelt_";
         private const string IdleBreathingMeshAssetPrefix = "Monstrum_02_Idle_Breathing_";
         private const string ValidationFolder = "docs/validation/monstrum";
         private const string VisualRecolorEyeArtSampleFolder = "artSample/enemies/monstrum/visual_recolor_eye_sample";
@@ -58,6 +70,9 @@ namespace Bellerophon.Editor.MonstrumCargoRunScene
         private const float ReviewPlayerMaximumFrontDistance = 8.00f;
         private const float AnimationSlotMinimumSpacing = 3.35f;
         private const float IdleBreathingDurationSeconds = 1.80f;
+        private const float DeathMeltPuddleDurationSeconds = 3.00f;
+        private const float DeathToMeltTransitionExitTime = 0.86f;
+        private const float DeathMeltPuddleWorldLiftFactor = 0.014f;
         private const float LooseGrainPositionWeldTolerance = 0.0001f;
         private const float LooseGrainMinimumGapFromBodyMeters = 0.12f;
         private const float LooseGrainMaximumWorldExtentMeters = 0.70f;
@@ -68,14 +83,19 @@ namespace Bellerophon.Editor.MonstrumCargoRunScene
 
         private static readonly MotionSlotSpec[] AnimationSlotSpecs =
         {
-            new MotionSlotSpec("Monstrum_02_Idle"),
-            new MotionSlotSpec("Monstrum_03_Move_HeavyStomp"),
-            new MotionSlotSpec("Monstrum_04_Attack_DoubleHammerSlam"),
-            new MotionSlotSpec("Monstrum_05_Attack_ImpactShake"),
-            new MotionSlotSpec("Monstrum_06_MetalConsume_FacilityBreak"),
-            new MotionSlotSpec("Monstrum_07_Retarget_ToPlayer"),
-            new MotionSlotSpec("Monstrum_08_Hit_Recoil"),
-            new MotionSlotSpec("Monstrum_09_Death")
+            new MotionSlotSpec("Monstrum_02_Idle", 1),
+            new MotionSlotSpec("Monstrum_03_Move_HeavyStomp", 2),
+            new MotionSlotSpec(AttackDoubleHammerSlotObjectName, 3),
+            new MotionSlotSpec(DeathMeltSpreadSlotObjectName, 4),
+            new MotionSlotSpec("Monstrum_06_MetalConsume_FacilityBreak", 5),
+            new MotionSlotSpec("Monstrum_07_Retarget_ToPlayer", 6),
+            new MotionSlotSpec("Monstrum_08_Hit_Recoil", 7),
+            new MotionSlotSpec("Monstrum_09_Death", 8)
+        };
+
+        private static readonly string[] AttackSlotObjectNames =
+        {
+            AttackDoubleHammerSlotObjectName
         };
 
         [MenuItem("Bellerophon/Enemies/Monstrum/Apply Prepared Model To CargoRunMvp")]
@@ -359,6 +379,136 @@ namespace Bellerophon.Editor.MonstrumCargoRunScene
             var result = ValidateMoveSourceAnimationOnPlacementRoot(placementRoot.transform);
             WriteMoveSourceAnimationSummary(result);
             Debug.Log("Prepared Monstrum move source animation validated.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Monstrum/Apply Attack Model To Attack Slots")]
+        public static void ApplyAttackModelToAttackSlots()
+        {
+            RequireAttackModelFiles();
+            EnsureUnityFolder(UnityModelFolder);
+            ConfigureAttackModelAsset();
+            var attackModelAsset = LoadAttackModelAsset();
+
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            var result = ReplaceAttackSlotModels(placementRoot.transform, attackModelAsset);
+            ValidateAttackSlotModelReplacement(placementRoot.transform, result);
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+            Debug.Log(
+                $"Prepared Monstrum attack model applied. Source={SourceAttackModelAbsolutePath}, " +
+                $"UnityAsset={UnityAttackModelAssetPath}, Targets={result.TargetSlotNames}, RendererCount={result.RendererCount}.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Monstrum/Rebuild Attack Slot 04 From Static Visual")]
+        public static void RebuildAttackSlot04FromStaticVisual()
+        {
+            ApplyAttackSlot04ModelWithStaticAppearance();
+        }
+
+        [MenuItem("Bellerophon/Enemies/Monstrum/Apply Attack Slot 04 Model With Static Appearance")]
+        public static void ApplyAttackSlot04ModelWithStaticAppearance()
+        {
+            RequireAttackModelFiles();
+            EnsureUnityFolder(UnityAnimationFolder);
+            EnsureUnityFolder(UnityMeshFolder);
+            ConfigureAttackAnimationImporter();
+            var attackModelAsset = LoadAttackModelAsset();
+            var attackClip = LoadAttackAnimationClip();
+            var controller = CreateOrUpdateAttackLoopController(attackClip);
+
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            var result = ApplyAttackModelToSlot04WithStaticAppearance(placementRoot.transform, attackModelAsset, controller, attackClip);
+            ValidateAttackSlot04WithStaticAppearance(placementRoot.transform, controller, attackClip, result);
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+            Debug.Log(
+                $"Prepared Monstrum attack slot 04 model synced with static appearance. " +
+                $"RemovedSlot={result.RemovedSlotName}, Model={result.ModelInstancePath}, AnimatorRoot={result.AnimatorRootPath}, " +
+                $"Clip={result.SourceClipName}, RemovedAttackVisuals={result.RemovedAttackVisualCount}.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Monstrum/Apply Death Slot 05 Model With Static Appearance")]
+        public static void ApplyDeathSlot05ModelWithStaticAppearance()
+        {
+            RequireDeathModelFiles();
+            EnsureUnityFolder(UnityAnimationFolder);
+            EnsureUnityFolder(UnityMeshFolder);
+            ConfigureDeathAnimationImporter();
+            var deathModelAsset = LoadDeathModelAsset();
+            var deathClip = LoadDeathAnimationClip();
+            var controller = CreateOrUpdateDeathLoopController(deathClip);
+
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            var result = ApplyDeathModelToSlot05WithStaticAppearance(placementRoot.transform, deathModelAsset, controller, deathClip);
+            var deathSlot = RequireAnimationReviewSlot(placementRoot.transform, DeathMeltSpreadSlotObjectName);
+            ValidateDeathSlot05WithStaticAppearance(placementRoot.transform, controller, deathClip, result);
+            ValidateNoDeathMeltProxyVisuals(deathSlot);
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+            Debug.Log(
+                $"Prepared Monstrum death slot 05 model synced with static appearance. " +
+                $"RemovedSlot={result.RemovedSlotName}, Model={result.ModelInstancePath}, AnimatorRoot={result.AnimatorRootPath}, " +
+                $"Clip={result.SourceClipName}, RemovedDeathVisuals={result.RemovedDeathVisualCount}.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Monstrum/Apply Death Slot 05 Death Animation Only")]
+        public static void ApplyDeathMeltPuddleAnimation()
+        {
+            ApplyDeathSlot05ModelWithStaticAppearance();
+        }
+
+        [MenuItem("Bellerophon/Enemies/Monstrum/Remove Non Animated Review Objects")]
+        public static void ApplyPreparedMonstrumRemoveNonAnimatedReviewObjects()
+        {
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            var result = RemoveNonAnimatedMonstrumReviewObjects(placementRoot.transform);
+            ValidateOnlyAnimatedMonstrumReviewObjectsRemain(placementRoot.transform);
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+            Debug.Log(
+                "Prepared Monstrum non-animated review objects removed. " +
+                $"KeptCount={result.KeptCount}, RemovedCount={result.RemovedCount}, " +
+                $"Kept={result.KeptObjects}, Removed={result.RemovedObjects}, Inspected={result.InspectedObjects}.");
         }
 
         public static void ApplyLooseGrainRemoval()
@@ -736,6 +886,3299 @@ namespace Bellerophon.Editor.MonstrumCargoRunScene
             return modelAsset;
         }
 
+        private static void RequireAttackModelFiles()
+        {
+            if (!File.Exists(SourceAttackModelAbsolutePath))
+            {
+                throw new FileNotFoundException("Monstrum attack FBX source file is missing.", SourceAttackModelAbsolutePath);
+            }
+
+            var projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+            var destinationPath = Path.GetFullPath(Path.Combine(projectRoot, UnityAttackModelAssetPath));
+            if (!File.Exists(destinationPath))
+            {
+                throw new FileNotFoundException("Monstrum attack FBX asset copy is missing.", destinationPath);
+            }
+        }
+
+        private static void RequireDeathModelFiles()
+        {
+            if (!File.Exists(SourceDeathModelAbsolutePath))
+            {
+                throw new FileNotFoundException("Monstrum death FBX source file is missing.", SourceDeathModelAbsolutePath);
+            }
+
+            var projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+            var destinationPath = Path.GetFullPath(Path.Combine(projectRoot, UnityDeathModelAssetPath));
+            if (!File.Exists(destinationPath))
+            {
+                throw new FileNotFoundException("Monstrum death FBX asset copy is missing.", destinationPath);
+            }
+        }
+
+        private static void ConfigureAttackModelAsset()
+        {
+            AssetDatabase.ImportAsset(UnityAttackModelAssetPath, ImportAssetOptions.ForceUpdate);
+
+            var importer = AssetImporter.GetAtPath(UnityAttackModelAssetPath) as ModelImporter;
+            if (importer == null)
+            {
+                return;
+            }
+
+            if (importer.importAnimation)
+            {
+                importer.importAnimation = false;
+                importer.SaveAndReimport();
+            }
+        }
+
+        private static GameObject LoadAttackModelAsset()
+        {
+            var modelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(UnityAttackModelAssetPath);
+            if (modelAsset == null)
+            {
+                throw new InvalidOperationException($"Could not load Monstrum attack model asset at {UnityAttackModelAssetPath}.");
+            }
+
+            return modelAsset;
+        }
+
+        private static void ConfigureAttackAnimationImporter()
+        {
+            AssetDatabase.ImportAsset(UnityAttackModelAssetPath, ImportAssetOptions.ForceUpdate);
+            var importer = RequireAttackModelImporter();
+
+            importer.importAnimation = true;
+            importer.animationType = ModelImporterAnimationType.Generic;
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.SaveAndReimport();
+
+            importer = RequireAttackModelImporter();
+            EnsureAttackAnimationClipLooping(importer);
+            importer.SaveAndReimport();
+        }
+
+        private static ModelImporter RequireAttackModelImporter()
+        {
+            var importer = AssetImporter.GetAtPath(UnityAttackModelAssetPath) as ModelImporter;
+            if (importer == null)
+            {
+                throw new InvalidOperationException($"Could not load ModelImporter for {UnityAttackModelAssetPath}.");
+            }
+
+            return importer;
+        }
+
+        private static void EnsureAttackAnimationClipLooping(ModelImporter importer)
+        {
+            var clips = importer.clipAnimations;
+            if (clips == null || clips.Length == 0)
+            {
+                clips = importer.defaultClipAnimations;
+            }
+
+            if (clips == null || clips.Length == 0)
+            {
+                throw new InvalidOperationException($"{UnityAttackModelAssetPath} contains no ModelImporter animation clips to loop.");
+            }
+
+            for (var i = 0; i < clips.Length; i++)
+            {
+                clips[i].loopTime = true;
+            }
+
+            importer.clipAnimations = clips;
+        }
+
+        private static AnimationClip LoadAttackAnimationClip()
+        {
+            var clips = new List<AnimationClip>();
+            foreach (var asset in AssetDatabase.LoadAllAssetRepresentationsAtPath(UnityAttackModelAssetPath))
+            {
+                if (asset is AnimationClip clip && !clip.name.StartsWith("__preview__", StringComparison.OrdinalIgnoreCase))
+                {
+                    clips.Add(clip);
+                }
+            }
+
+            if (clips.Count == 0)
+            {
+                throw new InvalidOperationException($"{UnityAttackModelAssetPath} contains no imported AnimationClip.");
+            }
+
+            var hasNonMovementNamedClip = false;
+            AnimationClip bestClip = null;
+            var bestScore = int.MinValue;
+            foreach (var clip in clips)
+            {
+                if (!IsMovementClipName(clip.name))
+                {
+                    hasNonMovementNamedClip = true;
+                }
+
+                var score = ScoreAttackAnimationClip(clip);
+                if (bestClip == null || score > bestScore ||
+                    (score == bestScore && string.Compare(clip.name, bestClip.name, StringComparison.Ordinal) < 0))
+                {
+                    bestClip = clip;
+                    bestScore = score;
+                }
+            }
+
+            if (!hasNonMovementNamedClip)
+            {
+                throw new InvalidOperationException(
+                    $"{UnityAttackModelAssetPath} contains only movement-named clips; refusing to use a walking/movement clip for {AttackDoubleHammerSlotObjectName}.");
+            }
+
+            return bestClip;
+        }
+
+        private static int ScoreAttackAnimationClip(AnimationClip clip)
+        {
+            var clipName = clip.name.ToLowerInvariant();
+            var score = Mathf.RoundToInt(clip.length * 100f);
+            if (clipName.Contains("attack") ||
+                clipName.Contains("slam") ||
+                clipName.Contains("strike") ||
+                clipName.Contains("punch") ||
+                clipName.Contains("hit") ||
+                clipName.Contains("smash") ||
+                clipName.Contains("bite"))
+            {
+                score += 10000;
+            }
+
+            if (IsMovementClipName(clip.name))
+            {
+                score -= 10000;
+            }
+
+            return score;
+        }
+
+        private static bool IsMovementClipName(string clipName)
+        {
+            var lowerName = clipName.ToLowerInvariant();
+            return lowerName.Contains("walk") ||
+                   lowerName.Contains("walking") ||
+                   lowerName.Contains("run") ||
+                   lowerName.Contains("locomotion") ||
+                   lowerName.Contains("move");
+        }
+
+        private static AnimatorController CreateOrUpdateAttackLoopController(AnimationClip clip)
+        {
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(AttackLoopControllerAssetPath);
+            if (controller == null)
+            {
+                controller = AnimatorController.CreateAnimatorControllerAtPath(AttackLoopControllerAssetPath);
+            }
+
+            EnsureSingleClipController(controller, "Attack_DoubleHammerSlam_Loop", clip);
+            AssetDatabase.ImportAsset(AttackLoopControllerAssetPath, ImportAssetOptions.ForceUpdate);
+            return controller;
+        }
+
+        private static GameObject LoadDeathModelAsset()
+        {
+            var modelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(UnityDeathModelAssetPath);
+            if (modelAsset == null)
+            {
+                throw new InvalidOperationException($"Could not load Monstrum death model asset at {UnityDeathModelAssetPath}.");
+            }
+
+            return modelAsset;
+        }
+
+        private static void ConfigureDeathAnimationImporter()
+        {
+            AssetDatabase.ImportAsset(UnityDeathModelAssetPath, ImportAssetOptions.ForceUpdate);
+            var importer = RequireDeathModelImporter();
+
+            importer.importAnimation = true;
+            importer.animationType = ModelImporterAnimationType.Generic;
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.SaveAndReimport();
+
+            importer = RequireDeathModelImporter();
+            EnsureDeathAnimationClipLooping(importer);
+            importer.SaveAndReimport();
+        }
+
+        private static ModelImporter RequireDeathModelImporter()
+        {
+            var importer = AssetImporter.GetAtPath(UnityDeathModelAssetPath) as ModelImporter;
+            if (importer == null)
+            {
+                throw new InvalidOperationException($"Could not load ModelImporter for {UnityDeathModelAssetPath}.");
+            }
+
+            return importer;
+        }
+
+        private static void EnsureDeathAnimationClipLooping(ModelImporter importer)
+        {
+            var clips = importer.clipAnimations;
+            if (clips == null || clips.Length == 0)
+            {
+                clips = importer.defaultClipAnimations;
+            }
+
+            if (clips == null || clips.Length == 0)
+            {
+                throw new InvalidOperationException($"{UnityDeathModelAssetPath} contains no ModelImporter animation clips to loop.");
+            }
+
+            for (var i = 0; i < clips.Length; i++)
+            {
+                clips[i].loopTime = true;
+            }
+
+            importer.clipAnimations = clips;
+        }
+
+        private static AnimationClip LoadDeathAnimationClip()
+        {
+            var clips = new List<AnimationClip>();
+            foreach (var asset in AssetDatabase.LoadAllAssetRepresentationsAtPath(UnityDeathModelAssetPath))
+            {
+                if (asset is AnimationClip clip && !clip.name.StartsWith("__preview__", StringComparison.OrdinalIgnoreCase))
+                {
+                    clips.Add(clip);
+                }
+            }
+
+            if (clips.Count == 0)
+            {
+                throw new InvalidOperationException($"{UnityDeathModelAssetPath} contains no imported AnimationClip.");
+            }
+
+            var hasNonMovementNamedClip = false;
+            AnimationClip bestClip = null;
+            var bestScore = int.MinValue;
+            foreach (var clip in clips)
+            {
+                if (!IsMovementClipName(clip.name))
+                {
+                    hasNonMovementNamedClip = true;
+                }
+
+                var score = ScoreDeathAnimationClip(clip);
+                if (bestClip == null || score > bestScore ||
+                    (score == bestScore && string.Compare(clip.name, bestClip.name, StringComparison.Ordinal) < 0))
+                {
+                    bestClip = clip;
+                    bestScore = score;
+                }
+            }
+
+            if (!hasNonMovementNamedClip)
+            {
+                throw new InvalidOperationException(
+                    $"{UnityDeathModelAssetPath} contains only movement-named clips; refusing to use a walking/movement clip for {DeathMeltSpreadSlotObjectName}.");
+            }
+
+            return bestClip;
+        }
+
+        private static int ScoreDeathAnimationClip(AnimationClip clip)
+        {
+            var clipName = clip.name.ToLowerInvariant();
+            var score = Mathf.RoundToInt(clip.length * 100f);
+            if (clipName.Contains("death") ||
+                clipName.Contains("dead") ||
+                clipName.Contains("die") ||
+                clipName.Contains("dying") ||
+                clipName.Contains("melt") ||
+                clipName.Contains("collapse") ||
+                clipName.Contains("fall"))
+            {
+                score += 10000;
+            }
+
+            if (IsMovementClipName(clip.name))
+            {
+                score -= 10000;
+            }
+
+            return score;
+        }
+
+        private static AnimatorController CreateOrUpdateDeathLoopController(AnimationClip clip)
+        {
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(DeathLoopControllerAssetPath);
+            if (controller == null)
+            {
+                controller = AnimatorController.CreateAnimatorControllerAtPath(DeathLoopControllerAssetPath);
+            }
+
+            EnsureSingleClipController(controller, "Death_MeltSpread_Loop", clip);
+            AssetDatabase.ImportAsset(DeathLoopControllerAssetPath, ImportAssetOptions.ForceUpdate);
+            return controller;
+        }
+
+        private static AnimatorController CreateOrUpdateDeathMeltSequenceController(AnimationClip deathClip, AnimationClip meltClip)
+        {
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(DeathLoopControllerAssetPath);
+            if (controller == null)
+            {
+                controller = AnimatorController.CreateAnimatorControllerAtPath(DeathLoopControllerAssetPath);
+            }
+
+            if (controller.layers.Length == 0)
+            {
+                var stateMachine = new AnimatorStateMachine { name = "Base Layer" };
+                AssetDatabase.AddObjectToAsset(stateMachine, controller);
+                controller.layers = new[]
+                {
+                    new AnimatorControllerLayer
+                    {
+                        name = "Base Layer",
+                        defaultWeight = 1.00f,
+                        stateMachine = stateMachine
+                    }
+                };
+            }
+
+            var rootStateMachine = controller.layers[0].stateMachine;
+            foreach (var transition in rootStateMachine.anyStateTransitions)
+            {
+                rootStateMachine.RemoveAnyStateTransition(transition);
+            }
+
+            foreach (var childState in rootStateMachine.states)
+            {
+                rootStateMachine.RemoveState(childState.state);
+            }
+
+            foreach (var childStateMachine in rootStateMachine.stateMachines)
+            {
+                rootStateMachine.RemoveStateMachine(childStateMachine.stateMachine);
+            }
+
+            var deathState = rootStateMachine.AddState("Death_Fbx_Fall");
+            deathState.motion = deathClip;
+            deathState.writeDefaultValues = true;
+            var meltState = rootStateMachine.AddState(DeathMeltPuddleClipName);
+            meltState.motion = meltClip;
+            meltState.writeDefaultValues = false;
+            rootStateMachine.defaultState = deathState;
+
+            var transitionToMelt = deathState.AddTransition(meltState);
+            transitionToMelt.hasExitTime = true;
+            transitionToMelt.exitTime = DeathToMeltTransitionExitTime;
+            transitionToMelt.hasFixedDuration = true;
+            transitionToMelt.duration = 0.00f;
+            transitionToMelt.offset = 0f;
+            transitionToMelt.interruptionSource = TransitionInterruptionSource.None;
+
+            var transitionToDeath = meltState.AddTransition(deathState);
+            transitionToDeath.hasExitTime = true;
+            transitionToDeath.exitTime = 1.00f;
+            transitionToDeath.hasFixedDuration = true;
+            transitionToDeath.duration = 0.00f;
+            transitionToDeath.offset = 0f;
+            transitionToDeath.interruptionSource = TransitionInterruptionSource.None;
+
+            EditorUtility.SetDirty(deathState);
+            EditorUtility.SetDirty(meltState);
+            EditorUtility.SetDirty(rootStateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.ImportAsset(DeathLoopControllerAssetPath, ImportAssetOptions.ForceUpdate);
+            return AssetDatabase.LoadAssetAtPath<AnimatorController>(DeathLoopControllerAssetPath);
+        }
+
+        private static AttackSlot04VisualLoopResult ApplyAttackModelToSlot04WithStaticAppearance(
+            Transform placementRoot,
+            GameObject attackModelAsset,
+            AnimatorController controller,
+            AnimationClip clip)
+        {
+            var staticObject = RequireStaticReviewObject(placementRoot);
+            var existingAttackSlot = RequireAnimationReviewSlot(placementRoot, AttackDoubleHammerSlotObjectName);
+            var preservedPosition = existingAttackSlot.position;
+            var preservedRotation = existingAttackSlot.rotation;
+            var preservedLocalScale = existingAttackSlot.localScale;
+            var removedSlot = RemoveOptionalAnimationReviewSlot(placementRoot, AttackImpactShakeSlotObjectName);
+
+            UnityEngine.Object.DestroyImmediate(existingAttackSlot.gameObject);
+
+            var rebuiltSlotObject = new GameObject(AttackDoubleHammerSlotObjectName);
+            var rebuiltSlot = rebuiltSlotObject.transform;
+            rebuiltSlot.SetParent(placementRoot, false);
+            rebuiltSlot.SetPositionAndRotation(preservedPosition, preservedRotation);
+            rebuiltSlot.localScale = preservedLocalScale;
+
+            var modelInstance = InstantiateAttackModelAsset(attackModelAsset);
+            modelInstance.name = ModelChildName;
+            modelInstance.transform.SetParent(rebuiltSlot, false);
+            modelInstance.transform.localPosition = Vector3.zero;
+            modelInstance.transform.localRotation = Quaternion.identity;
+            modelInstance.transform.localScale = Vector3.one;
+            DisableImportedAnimationPlayback(modelInstance.transform);
+            ScaleToTargetHeightAndAlignToGround(modelInstance.transform, placementRoot.position.y);
+
+            var removedAttackVisualCount = RemoveAttackModelNonBodyVisuals(modelInstance.transform);
+            var meshCleanup = ApplyAttackMainBodyOnlyMeshCleanup(modelInstance.transform);
+            var bodyMaterial = ResolvePrimaryBodyMaterial(staticObject);
+            var copiedEyeRoot = RebuildAttackEyesOnModelSurface(staticObject, rebuiltSlot, modelInstance.transform);
+            var bodyRendererCount = ApplyApprovedBodyMaterial(rebuiltSlot, bodyMaterial);
+            var animator = ApplyLoopingAttackAnimationToSlot(rebuiltSlot, controller, clip);
+            var modelInstancePath = BuildTransformPath(rebuiltSlot, modelInstance.transform);
+            EditorUtility.SetDirty(rebuiltSlotObject);
+            EditorUtility.SetDirty(modelInstance);
+            EditorUtility.SetDirty(copiedEyeRoot.gameObject);
+
+            return new AttackSlot04VisualLoopResult(
+                AttackDoubleHammerSlotObjectName,
+                removedSlot,
+                modelInstancePath,
+                BuildTransformPath(rebuiltSlot, animator.transform),
+                SourceAttackModelAbsolutePath,
+                AssetDatabase.GetAssetPath(clip),
+                clip.name,
+                AttackLoopControllerAssetPath,
+                AnimationUtility.GetCurveBindings(clip).Length,
+                AnimationUtility.GetObjectReferenceCurveBindings(clip).Length,
+                AnimationUtility.GetAnimationClipSettings(clip).loopTime,
+                clip.isLooping,
+                bodyRendererCount,
+                removedAttackVisualCount + meshCleanup.RemovedComponentCount);
+        }
+
+        private static DeathSlot05VisualLoopResult ApplyDeathModelToSlot05WithStaticAppearance(
+            Transform placementRoot,
+            GameObject deathModelAsset,
+            AnimatorController controller,
+            AnimationClip clip)
+        {
+            var staticObject = RequireStaticReviewObject(placementRoot);
+            var existingDeathSlot = placementRoot.Find(DeathMeltSpreadSlotObjectName);
+            var staticBounds = CalculateAnimationReviewBounds(staticObject, new Bounds(staticObject.position, Vector3.one));
+            var spacing = CalculateAnimationSlotSpacing(staticBounds);
+            var preservedPosition = existingDeathSlot != null
+                ? existingDeathSlot.position
+                : new Vector3(
+                    staticObject.position.x + spacing * 4f,
+                    staticObject.position.y,
+                    staticObject.position.z);
+            var preservedRotation = existingDeathSlot != null ? existingDeathSlot.rotation : staticObject.rotation;
+            var preservedLocalScale = existingDeathSlot != null ? existingDeathSlot.localScale : staticObject.localScale;
+            var removedSlot = RemoveOptionalAnimationReviewSlot(placementRoot, AttackImpactShakeSlotObjectName);
+
+            if (existingDeathSlot != null)
+            {
+                UnityEngine.Object.DestroyImmediate(existingDeathSlot.gameObject);
+            }
+
+            var rebuiltSlotObject = new GameObject(DeathMeltSpreadSlotObjectName);
+            var rebuiltSlot = rebuiltSlotObject.transform;
+            rebuiltSlot.SetParent(placementRoot, false);
+            rebuiltSlot.SetPositionAndRotation(preservedPosition, preservedRotation);
+            rebuiltSlot.localScale = preservedLocalScale;
+
+            var modelInstance = InstantiateAttackModelAsset(deathModelAsset);
+            modelInstance.name = ModelChildName;
+            modelInstance.transform.SetParent(rebuiltSlot, false);
+            modelInstance.transform.localPosition = Vector3.zero;
+            modelInstance.transform.localRotation = Quaternion.identity;
+            modelInstance.transform.localScale = Vector3.one;
+            DisableImportedAnimationPlayback(modelInstance.transform);
+            ScaleToTargetHeightAndAlignToGround(modelInstance.transform, placementRoot.position.y);
+
+            var removedDeathVisualCount = RemoveAttackModelNonBodyVisuals(modelInstance.transform);
+            var meshCleanup = ApplyDeathMainBodyOnlyMeshCleanup(modelInstance.transform);
+            var bodyMaterial = ResolvePrimaryBodyMaterial(staticObject);
+            var copiedEyeRoot = RebuildAttackEyesOnModelSurface(staticObject, rebuiltSlot, modelInstance.transform);
+            var bodyRendererCount = ApplyApprovedBodyMaterial(rebuiltSlot, bodyMaterial);
+            var animator = ApplyLoopingAttackAnimationToSlot(rebuiltSlot, controller, clip);
+            var modelInstancePath = BuildTransformPath(rebuiltSlot, modelInstance.transform);
+            EditorUtility.SetDirty(rebuiltSlotObject);
+            EditorUtility.SetDirty(modelInstance);
+            EditorUtility.SetDirty(copiedEyeRoot.gameObject);
+
+            return new DeathSlot05VisualLoopResult(
+                DeathMeltSpreadSlotObjectName,
+                removedSlot,
+                modelInstancePath,
+                BuildTransformPath(rebuiltSlot, animator.transform),
+                SourceDeathModelAbsolutePath,
+                AssetDatabase.GetAssetPath(clip),
+                clip.name,
+                DeathLoopControllerAssetPath,
+                AnimationUtility.GetCurveBindings(clip).Length,
+                AnimationUtility.GetObjectReferenceCurveBindings(clip).Length,
+                AnimationUtility.GetAnimationClipSettings(clip).loopTime,
+                clip.isLooping,
+                bodyRendererCount,
+                removedDeathVisualCount + meshCleanup.RemovedComponentCount);
+        }
+
+        private static DeathMeltProxyVisuals EnsureDeathMeltProxyVisuals(
+            Transform deathSlot,
+            Transform animatorRoot,
+            Material material)
+        {
+            RemoveDeathMeltProxyVisuals(deathSlot);
+
+            var rendererBounds = CalculateRendererBoundsExcludingDeathMeltProxies(
+                animatorRoot,
+                new Bounds(deathSlot.position, Vector3.one * MonstrumTargetHeightMeters));
+            var localReferenceSize = WorldSizeToRootLocal(animatorRoot, rendererBounds.size);
+            var center = rendererBounds.center;
+            var groundY = rendererBounds.min.y + Mathf.Max(rendererBounds.size.y * 0.018f, 0.004f);
+            var height = Mathf.Max(rendererBounds.size.y, MonstrumTargetHeightMeters);
+            var width = Mathf.Max(rendererBounds.size.x, MonstrumTargetHeightMeters * 0.70f);
+            var depth = Mathf.Max(rendererBounds.size.z, MonstrumTargetHeightMeters * 0.70f);
+            var front = deathSlot.forward;
+            if (front.sqrMagnitude < 0.001f)
+            {
+                front = animatorRoot.forward;
+            }
+
+            front.Normalize();
+            var right = Vector3.Cross(Vector3.up, front).normalized;
+            if (right.sqrMagnitude < 0.001f)
+            {
+                right = deathSlot.right;
+            }
+
+            var localRotation = Quaternion.Inverse(animatorRoot.rotation) * deathSlot.rotation;
+            var groundCenter = new Vector3(center.x, groundY, center.z);
+            var meltBase = groundCenter + (Vector3.up * height * DeathMeltPuddleWorldLiftFactor);
+            var proxyBase = meltBase;
+            var puddleBase = meltBase;
+
+            var bodyMass = EnsureDeathMeltProxyVisual(
+                animatorRoot,
+                DeathMeltProxyPrefix + "BodyMass",
+                proxyBase,
+                localRotation,
+                CreateDeathMeltDomeMesh(
+                    DeathMeltProxyPrefix + "BodyMassMesh",
+                    localReferenceSize,
+                    radiusXMultiplier: 0.48f,
+                    radiusZMultiplier: 0.40f,
+                    heightMultiplier: 0.20f,
+                    wobblePhase: 0.35f),
+                material);
+            var frontFlow = EnsureDeathMeltProxyVisual(
+                animatorRoot,
+                DeathMeltProxyPrefix + "FrontFlow",
+                proxyBase + (front * depth * 0.12f),
+                localRotation,
+                CreateDeathMeltDomeMesh(
+                    DeathMeltProxyPrefix + "FrontFlowMesh",
+                    localReferenceSize,
+                    radiusXMultiplier: 0.26f,
+                    radiusZMultiplier: 0.36f,
+                    heightMultiplier: 0.11f,
+                    wobblePhase: 1.20f),
+                material);
+            var leftFlow = EnsureDeathMeltProxyVisual(
+                animatorRoot,
+                DeathMeltProxyPrefix + "LeftFlow",
+                proxyBase - (right * width * 0.13f) + (front * depth * 0.02f),
+                localRotation,
+                CreateDeathMeltDomeMesh(
+                    DeathMeltProxyPrefix + "LeftFlowMesh",
+                    localReferenceSize,
+                    radiusXMultiplier: 0.20f,
+                    radiusZMultiplier: 0.33f,
+                    heightMultiplier: 0.09f,
+                    wobblePhase: 2.05f),
+                material);
+            var rightFlow = EnsureDeathMeltProxyVisual(
+                animatorRoot,
+                DeathMeltProxyPrefix + "RightFlow",
+                proxyBase + (right * width * 0.13f) + (front * depth * 0.02f),
+                localRotation,
+                CreateDeathMeltDomeMesh(
+                    DeathMeltProxyPrefix + "RightFlowMesh",
+                    localReferenceSize,
+                    radiusXMultiplier: 0.20f,
+                    radiusZMultiplier: 0.33f,
+                    heightMultiplier: 0.09f,
+                    wobblePhase: 2.90f),
+                material);
+            var finalPuddle = EnsureDeathMeltProxyVisual(
+                animatorRoot,
+                DeathMeltProxyPrefix + "FinalPuddle",
+                puddleBase,
+                localRotation,
+                CreateDeathMeltPuddleMesh(DeathMeltProxyPrefix + "FinalPuddleMesh", localReferenceSize),
+                material);
+
+            return new DeathMeltProxyVisuals(bodyMass, frontFlow, leftFlow, rightFlow, finalPuddle);
+        }
+
+        private static AnimationClip CreateOrUpdateDeathMeltPuddleClip(
+            Transform animatorRoot,
+            DeathMeltProxyVisuals visuals)
+        {
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(DeathMeltPuddleClipAssetPath);
+            if (clip == null)
+            {
+                clip = new AnimationClip
+                {
+                    name = DeathMeltPuddleClipName,
+                    frameRate = 30f,
+                    wrapMode = WrapMode.Loop
+                };
+                AssetDatabase.CreateAsset(clip, DeathMeltPuddleClipAssetPath);
+            }
+
+            clip.ClearCurves();
+            clip.frameRate = 30f;
+            clip.wrapMode = WrapMode.Loop;
+
+            var settings = AnimationUtility.GetAnimationClipSettings(clip);
+            settings.loopTime = true;
+            settings.loopBlend = false;
+            AnimationUtility.SetAnimationClipSettings(clip, settings);
+
+            var times = new[] { 0.00f, 0.26f, 0.52f, 0.88f, 1.24f, 1.62f, 2.25f, DeathMeltPuddleDurationSeconds };
+
+            var eyeRoot = FindApprovedEyeRoot(animatorRoot);
+            var visibleThenHidden = new[] { 1f, 1f, 1f, 0f, 0f, 0f, 0f, 0f };
+            var hiddenFromMeltStart = new[] { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
+            foreach (var renderer in animatorRoot.GetComponentsInChildren<Renderer>(true))
+            {
+                if (IsDeathMeltProxyTransform(renderer.transform))
+                {
+                    continue;
+                }
+
+                var values = eyeRoot != null && renderer.transform.IsChildOf(eyeRoot)
+                    ? hiddenFromMeltStart
+                    : visibleThenHidden;
+                AddRendererEnabledCurve(clip, animatorRoot, renderer.transform, times, values);
+            }
+
+            foreach (var light in animatorRoot.GetComponentsInChildren<Light>(true))
+            {
+                if (IsDeathMeltProxyTransform(light.transform))
+                {
+                    continue;
+                }
+
+                var values = eyeRoot != null && light.transform.IsChildOf(eyeRoot)
+                    ? hiddenFromMeltStart
+                    : visibleThenHidden;
+                AddLightEnabledCurve(clip, animatorRoot, light.transform, times, values);
+            }
+
+            AddDeathMeltProxyCurves(clip, animatorRoot, visuals, times);
+
+            clip.EnsureQuaternionContinuity();
+            EditorUtility.SetDirty(clip);
+            AssetDatabase.ImportAsset(DeathMeltPuddleClipAssetPath, ImportAssetOptions.ForceUpdate);
+            return AssetDatabase.LoadAssetAtPath<AnimationClip>(DeathMeltPuddleClipAssetPath);
+        }
+
+        private static void RemoveDeathMeltProxyVisuals(Transform root)
+        {
+            var targets = new List<GameObject>();
+            foreach (var child in root.GetComponentsInChildren<Transform>(true))
+            {
+                if (child != root && child.name.StartsWith(DeathMeltProxyPrefix, StringComparison.Ordinal))
+                {
+                    targets.Add(child.gameObject);
+                }
+            }
+
+            foreach (var target in targets)
+            {
+                UnityEngine.Object.DestroyImmediate(target);
+            }
+        }
+
+        private static Transform EnsureDeathMeltProxyVisual(
+            Transform root,
+            string name,
+            Vector3 worldPosition,
+            Quaternion localRotation,
+            Mesh mesh,
+            Material material)
+        {
+            var proxy = new GameObject(name);
+            proxy.transform.SetParent(root, false);
+            proxy.transform.localPosition = root.InverseTransformPoint(worldPosition);
+            proxy.transform.localRotation = localRotation;
+            proxy.transform.localScale = Vector3.one;
+
+            var meshFilter = proxy.AddComponent<MeshFilter>();
+            meshFilter.sharedMesh = mesh;
+
+            var meshRenderer = proxy.AddComponent<MeshRenderer>();
+            meshRenderer.sharedMaterial = material;
+            meshRenderer.enabled = false;
+            proxy.SetActive(true);
+
+            EditorUtility.SetDirty(meshFilter);
+            EditorUtility.SetDirty(meshRenderer);
+            EditorUtility.SetDirty(proxy);
+            return proxy.transform;
+        }
+
+        private static Mesh CreateDeathMeltDomeMesh(
+            string meshName,
+            Vector3 localReferenceSize,
+            float radiusXMultiplier,
+            float radiusZMultiplier,
+            float heightMultiplier,
+            float wobblePhase)
+        {
+            const int segmentCount = 30;
+            const int ringCount = 4;
+            var radiusX = Mathf.Max(localReferenceSize.x * radiusXMultiplier, localReferenceSize.y * 0.12f);
+            var radiusZ = Mathf.Max(localReferenceSize.z * radiusZMultiplier, localReferenceSize.y * 0.12f);
+            var height = Mathf.Max(localReferenceSize.y * heightMultiplier, localReferenceSize.y * 0.045f);
+            var vertices = new Vector3[1 + (ringCount * segmentCount) + 1];
+            var triangles = new int[(segmentCount * 3) + ((ringCount - 1) * segmentCount * 6) + (segmentCount * 3)];
+
+            vertices[0] = new Vector3(0f, height, 0f);
+            for (var ring = 0; ring < ringCount; ring++)
+            {
+                var dome01 = (ring + 1f) / ringCount;
+                var ringRadius = Mathf.Sin(dome01 * Mathf.PI * 0.5f);
+                var ringHeight = Mathf.Cos(dome01 * Mathf.PI * 0.5f) * height;
+                for (var index = 0; index < segmentCount; index++)
+                {
+                    var angle = (Mathf.PI * 2f * index) / segmentCount;
+                    var wobble =
+                        1f +
+                        (Mathf.Sin((angle * 2.4f) + wobblePhase) * 0.13f) +
+                        (Mathf.Cos((angle * 5.1f) - wobblePhase) * 0.07f);
+                    vertices[1 + (ring * segmentCount) + index] = new Vector3(
+                        Mathf.Cos(angle) * radiusX * ringRadius * wobble,
+                        ringHeight,
+                        Mathf.Sin(angle) * radiusZ * ringRadius * wobble);
+                }
+            }
+
+            var bottomCenterIndex = vertices.Length - 1;
+            vertices[bottomCenterIndex] = Vector3.zero;
+            var triangleCursor = 0;
+            for (var index = 0; index < segmentCount; index++)
+            {
+                var next = index == segmentCount - 1 ? 1 : index + 2;
+                triangles[triangleCursor++] = 0;
+                triangles[triangleCursor++] = index + 1;
+                triangles[triangleCursor++] = next;
+            }
+
+            for (var ring = 0; ring < ringCount - 1; ring++)
+            {
+                var currentStart = 1 + (ring * segmentCount);
+                var nextStart = currentStart + segmentCount;
+                for (var index = 0; index < segmentCount; index++)
+                {
+                    var next = index == segmentCount - 1 ? 0 : index + 1;
+                    var current = currentStart + index;
+                    var currentNext = currentStart + next;
+                    var lower = nextStart + index;
+                    var lowerNext = nextStart + next;
+                    triangles[triangleCursor++] = current;
+                    triangles[triangleCursor++] = lower;
+                    triangles[triangleCursor++] = currentNext;
+                    triangles[triangleCursor++] = currentNext;
+                    triangles[triangleCursor++] = lower;
+                    triangles[triangleCursor++] = lowerNext;
+                }
+            }
+
+            var bottomRingStart = 1 + ((ringCount - 1) * segmentCount);
+            for (var index = 0; index < segmentCount; index++)
+            {
+                var next = index == segmentCount - 1 ? 0 : index + 1;
+                triangles[triangleCursor++] = bottomCenterIndex;
+                triangles[triangleCursor++] = bottomRingStart + next;
+                triangles[triangleCursor++] = bottomRingStart + index;
+            }
+
+            var mesh = new Mesh
+            {
+                name = meshName,
+                vertices = vertices,
+                triangles = triangles
+            };
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
+        private static Mesh CreateDeathMeltPuddleMesh(string meshName, Vector3 localReferenceSize)
+        {
+            const int segmentCount = 44;
+            var radiusX = Mathf.Max(localReferenceSize.x * 0.28f, 0.02f);
+            var radiusZ = Mathf.Max(localReferenceSize.z * 0.28f, 0.02f);
+            var vertices = new Vector3[segmentCount + 1];
+            var triangles = new int[segmentCount * 3];
+            vertices[0] = Vector3.zero;
+
+            for (var index = 0; index < segmentCount; index++)
+            {
+                var angle = (Mathf.PI * 2f * index) / segmentCount;
+                var frontLobe = Mathf.Max(0f, Mathf.Cos(angle - 0.22f)) * 0.25f;
+                var sideLobe = Mathf.Abs(Mathf.Sin((angle * 1.08f) + 0.50f)) * 0.16f;
+                var wobble =
+                    1f +
+                    frontLobe +
+                    sideLobe +
+                    (Mathf.Sin(angle * 3.2f) * 0.09f) +
+                    (Mathf.Cos(angle * 6.3f) * 0.06f);
+                vertices[index + 1] = new Vector3(
+                    Mathf.Cos(angle) * radiusX * wobble,
+                    0f,
+                    Mathf.Sin(angle) * radiusZ * wobble);
+            }
+
+            for (var index = 0; index < segmentCount; index++)
+            {
+                var triangleIndex = index * 3;
+                triangles[triangleIndex] = 0;
+                triangles[triangleIndex + 1] = index == segmentCount - 1 ? 1 : index + 2;
+                triangles[triangleIndex + 2] = index + 1;
+            }
+
+            var mesh = new Mesh
+            {
+                name = meshName,
+                vertices = vertices,
+                triangles = triangles
+            };
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
+        private static void AddDeathMeltProxyCurves(
+            AnimationClip clip,
+            Transform root,
+            DeathMeltProxyVisuals visuals,
+            float[] times)
+        {
+            var rendererBounds = CalculateRendererBoundsExcludingDeathMeltProxies(
+                root,
+                new Bounds(root.position, Vector3.one * MonstrumTargetHeightMeters));
+            var center = rendererBounds.center;
+            var groundY = rendererBounds.min.y + Mathf.Max(rendererBounds.size.y * 0.018f, 0.004f);
+            var height = Mathf.Max(rendererBounds.size.y, MonstrumTargetHeightMeters);
+            var width = Mathf.Max(rendererBounds.size.x, MonstrumTargetHeightMeters * 0.70f);
+            var depth = Mathf.Max(rendererBounds.size.z, MonstrumTargetHeightMeters * 0.70f);
+            var groundCenter = new Vector3(center.x, groundY, center.z);
+            var meltBase = groundCenter + (Vector3.up * height * DeathMeltPuddleWorldLiftFactor);
+            var proxyBase = meltBase;
+            var puddleBase = meltBase;
+            var front = root.parent != null ? root.parent.forward : root.forward;
+            if (front.sqrMagnitude < 0.001f)
+            {
+                front = root.forward;
+            }
+
+            front.Normalize();
+            var right = Vector3.Cross(Vector3.up, front).normalized;
+            if (right.sqrMagnitude < 0.001f)
+            {
+                right = root.right;
+            }
+
+            AddDeathMeltProxyMotion(
+                clip,
+                root,
+                visuals.BodyMass,
+                times,
+                CreateRepeatedWorldPositions(proxyBase, times.Length),
+                new[]
+                {
+                    new Vector3(0.76f, 0.46f, 0.72f),
+                    new Vector3(0.86f, 0.40f, 0.82f),
+                    new Vector3(0.98f, 0.32f, 0.94f),
+                    new Vector3(1.04f, 0.23f, 0.98f),
+                    new Vector3(0.92f, 0.14f, 0.88f),
+                    new Vector3(0.68f, 0.08f, 0.66f),
+                    new Vector3(0.32f, 0.04f, 0.34f),
+                    new Vector3(0.08f, 0.01f, 0.08f)
+                },
+                new[] { 1f, 1f, 1f, 1f, 1f, 1f, 1f, 0f });
+            AddDeathMeltProxyMotion(
+                clip,
+                root,
+                visuals.FrontFlow,
+                times,
+                new[]
+                {
+                    proxyBase + (front * depth * 0.04f),
+                    proxyBase + (front * depth * 0.05f),
+                    proxyBase + (front * depth * 0.06f),
+                    proxyBase + (front * depth * 0.08f),
+                    proxyBase + (front * depth * 0.10f),
+                    proxyBase + (front * depth * 0.13f),
+                    proxyBase + (front * depth * 0.13f),
+                    proxyBase + (front * depth * 0.13f)
+                },
+                new[]
+                {
+                    new Vector3(0.26f, 0.14f, 0.32f),
+                    new Vector3(0.34f, 0.12f, 0.42f),
+                    new Vector3(0.46f, 0.10f, 0.56f),
+                    new Vector3(0.52f, 0.075f, 0.64f),
+                    new Vector3(0.48f, 0.052f, 0.62f),
+                    new Vector3(0.34f, 0.032f, 0.48f),
+                    new Vector3(0.16f, 0.018f, 0.26f),
+                    new Vector3(0.04f, 0.01f, 0.06f)
+                },
+                new[] { 1f, 1f, 1f, 1f, 1f, 1f, 1f, 0f });
+            AddDeathMeltProxyMotion(
+                clip,
+                root,
+                visuals.LeftFlow,
+                times,
+                new[]
+                {
+                    proxyBase - (right * width * 0.04f),
+                    proxyBase - (right * width * 0.05f),
+                    proxyBase - (right * width * 0.06f),
+                    proxyBase - (right * width * 0.08f) + (front * depth * 0.01f),
+                    proxyBase - (right * width * 0.11f) + (front * depth * 0.02f),
+                    proxyBase - (right * width * 0.13f) + (front * depth * 0.02f),
+                    proxyBase - (right * width * 0.13f) + (front * depth * 0.02f),
+                    proxyBase - (right * width * 0.13f) + (front * depth * 0.02f)
+                },
+                new[]
+                {
+                    new Vector3(0.24f, 0.12f, 0.28f),
+                    new Vector3(0.32f, 0.10f, 0.36f),
+                    new Vector3(0.42f, 0.085f, 0.48f),
+                    new Vector3(0.46f, 0.062f, 0.54f),
+                    new Vector3(0.40f, 0.042f, 0.48f),
+                    new Vector3(0.28f, 0.028f, 0.36f),
+                    new Vector3(0.14f, 0.016f, 0.20f),
+                    new Vector3(0.04f, 0.01f, 0.06f)
+                },
+                new[] { 1f, 1f, 1f, 1f, 1f, 1f, 1f, 0f });
+            AddDeathMeltProxyMotion(
+                clip,
+                root,
+                visuals.RightFlow,
+                times,
+                new[]
+                {
+                    proxyBase + (right * width * 0.04f),
+                    proxyBase + (right * width * 0.05f),
+                    proxyBase + (right * width * 0.06f),
+                    proxyBase + (right * width * 0.08f) + (front * depth * 0.01f),
+                    proxyBase + (right * width * 0.11f) + (front * depth * 0.02f),
+                    proxyBase + (right * width * 0.13f) + (front * depth * 0.02f),
+                    proxyBase + (right * width * 0.13f) + (front * depth * 0.02f),
+                    proxyBase + (right * width * 0.13f) + (front * depth * 0.02f)
+                },
+                new[]
+                {
+                    new Vector3(0.24f, 0.12f, 0.28f),
+                    new Vector3(0.32f, 0.10f, 0.36f),
+                    new Vector3(0.42f, 0.085f, 0.48f),
+                    new Vector3(0.46f, 0.062f, 0.54f),
+                    new Vector3(0.40f, 0.042f, 0.48f),
+                    new Vector3(0.28f, 0.028f, 0.36f),
+                    new Vector3(0.14f, 0.016f, 0.20f),
+                    new Vector3(0.04f, 0.01f, 0.06f)
+                },
+                new[] { 1f, 1f, 1f, 1f, 1f, 1f, 1f, 0f });
+            AddDeathMeltProxyMotion(
+                clip,
+                root,
+                visuals.FinalPuddle,
+                times,
+                CreateRepeatedWorldPositions(puddleBase, times.Length),
+                new[]
+                {
+                    new Vector3(0.01f, 0.01f, 0.01f),
+                    new Vector3(0.01f, 0.01f, 0.01f),
+                    new Vector3(0.01f, 0.01f, 0.01f),
+                    new Vector3(0.02f, 0.01f, 0.02f),
+                    new Vector3(0.12f, 0.01f, 0.11f),
+                    new Vector3(0.26f, 0.01f, 0.24f),
+                    new Vector3(0.50f, 0.01f, 0.46f),
+                    new Vector3(0.66f, 0.01f, 0.62f)
+                },
+                new[] { 0f, 0f, 0f, 0f, 1f, 1f, 1f, 1f });
+        }
+
+        private static void AddDeathMeltProxyMotion(
+            AnimationClip clip,
+            Transform root,
+            Transform proxy,
+            float[] times,
+            Vector3[] worldPositions,
+            Vector3[] scaleFactors,
+            float[] enabledValues)
+        {
+            ValidateVectorCurveArrays(times, worldPositions, "proxy position");
+            ValidateVectorCurveArrays(times, scaleFactors, "proxy scale");
+            if (times.Length != enabledValues.Length)
+            {
+                throw new ArgumentException("Monstrum death proxy enabled curve times and values must have the same length.");
+            }
+
+            var localPositions = new Vector3[times.Length];
+            for (var i = 0; i < times.Length; i++)
+            {
+                localPositions[i] = root.InverseTransformPoint(worldPositions[i]);
+            }
+
+            AddLocalPositionAbsoluteCurves(clip, root, proxy, times, localPositions);
+            AddLocalScaleFactorCurves(clip, root, proxy, times, scaleFactors);
+            AddRendererEnabledCurve(clip, root, proxy, times, enabledValues);
+        }
+
+        private static Vector3[] CreateRepeatedWorldPositions(Vector3 position, int count)
+        {
+            var values = new Vector3[count];
+            for (var i = 0; i < count; i++)
+            {
+                values[i] = position;
+            }
+
+            return values;
+        }
+
+        private static Vector3 WorldSizeToRootLocal(Transform root, Vector3 worldSize)
+        {
+            var scale = root.lossyScale;
+            return new Vector3(
+                worldSize.x / Mathf.Max(Mathf.Abs(scale.x), 0.0001f),
+                worldSize.y / Mathf.Max(Mathf.Abs(scale.y), 0.0001f),
+                worldSize.z / Mathf.Max(Mathf.Abs(scale.z), 0.0001f));
+        }
+
+        private static void AddLocalPositionOffsetCurves(
+            AnimationClip clip,
+            Transform root,
+            Transform target,
+            float[] times,
+            Vector3[] localOffsets)
+        {
+            ValidateVectorCurveArrays(times, localOffsets, "local position offset");
+            var positions = new Vector3[times.Length];
+            var basePosition = target.localPosition;
+            for (var i = 0; i < times.Length; i++)
+            {
+                positions[i] = basePosition + localOffsets[i];
+            }
+
+            AddLocalPositionAbsoluteCurves(clip, root, target, times, positions);
+        }
+
+        private static void AddLocalPositionAbsoluteCurves(
+            AnimationClip clip,
+            Transform root,
+            Transform target,
+            float[] times,
+            Vector3[] localPositions)
+        {
+            ValidateVectorCurveArrays(times, localPositions, "local position");
+            var path = AnimationUtility.CalculateTransformPath(target, root);
+            SetTransformCurve(clip, path, "m_LocalPosition.x", CreateFloatCurve(times, localPositions, 0));
+            SetTransformCurve(clip, path, "m_LocalPosition.y", CreateFloatCurve(times, localPositions, 1));
+            SetTransformCurve(clip, path, "m_LocalPosition.z", CreateFloatCurve(times, localPositions, 2));
+        }
+
+        private static void AddLocalScaleFactorCurves(
+            AnimationClip clip,
+            Transform root,
+            Transform target,
+            float[] times,
+            Vector3[] scaleFactors)
+        {
+            ValidateVectorCurveArrays(times, scaleFactors, "local scale factor");
+            var scales = new Vector3[times.Length];
+            var baseScale = target.localScale;
+            for (var i = 0; i < times.Length; i++)
+            {
+                scales[i] = Vector3.Scale(baseScale, scaleFactors[i]);
+            }
+
+            AddLocalScaleAbsoluteCurves(clip, root, target, times, scales);
+        }
+
+        private static void AddLocalScaleAbsoluteCurves(
+            AnimationClip clip,
+            Transform root,
+            Transform target,
+            float[] times,
+            Vector3[] localScales)
+        {
+            ValidateVectorCurveArrays(times, localScales, "local scale");
+            var path = AnimationUtility.CalculateTransformPath(target, root);
+            SetTransformCurve(clip, path, "m_LocalScale.x", CreateFloatCurve(times, localScales, 0));
+            SetTransformCurve(clip, path, "m_LocalScale.y", CreateFloatCurve(times, localScales, 1));
+            SetTransformCurve(clip, path, "m_LocalScale.z", CreateFloatCurve(times, localScales, 2));
+        }
+
+        private static Vector3[] CreateDeathBodyGroundLockedOffsets(
+            Transform target,
+            Bounds modelBounds,
+            float groundY,
+            Vector3[] scaleFactors)
+        {
+            var parent = target.parent;
+            var centerInParent = parent != null ? parent.InverseTransformPoint(modelBounds.center) : modelBounds.center;
+            var groundInParent = parent != null
+                ? parent.InverseTransformPoint(new Vector3(modelBounds.center.x, groundY, modelBounds.center.z))
+                : new Vector3(modelBounds.center.x, groundY, modelBounds.center.z);
+            var pivotToCenter = centerInParent - target.localPosition;
+            var pivotToGround = groundInParent - target.localPosition;
+            var collapseSink = parent != null
+                ? parent.InverseTransformVector(Vector3.down * modelBounds.size.y * 0.04f)
+                : Vector3.down * modelBounds.size.y * 0.04f;
+
+            var offsets = new Vector3[scaleFactors.Length];
+            for (var i = 0; i < scaleFactors.Length; i++)
+            {
+                offsets[i].y = pivotToGround.y * (1f - scaleFactors[i].y);
+                offsets[i].x += pivotToCenter.x * (1f - scaleFactors[i].x);
+                offsets[i].z += pivotToCenter.z * (1f - scaleFactors[i].z);
+                offsets[i] += collapseSink * Mathf.Clamp01((1f - scaleFactors[i].y) / 0.95f);
+            }
+
+            return offsets;
+        }
+
+        private static void AddRendererEnabledCurve(
+            AnimationClip clip,
+            Transform root,
+            Transform target,
+            float[] times,
+            float[] values)
+        {
+            if (times.Length != values.Length)
+            {
+                throw new ArgumentException("Renderer enabled curve times and values must have the same length.");
+            }
+
+            var path = AnimationUtility.CalculateTransformPath(target, root);
+            AnimationUtility.SetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Renderer), "m_Enabled"),
+                CreateStepCurve(times, values));
+        }
+
+        private static void AddLightEnabledCurve(
+            AnimationClip clip,
+            Transform root,
+            Transform target,
+            float[] times,
+            float[] values)
+        {
+            if (times.Length != values.Length)
+            {
+                throw new ArgumentException("Light enabled curve times and values must have the same length.");
+            }
+
+            var path = AnimationUtility.CalculateTransformPath(target, root);
+            AnimationUtility.SetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Light), "m_Enabled"),
+                CreateStepCurve(times, values));
+        }
+
+        private static AnimationCurve CreateFloatCurve(float[] times, Vector3[] values, int componentIndex)
+        {
+            var keys = new Keyframe[times.Length];
+            for (var i = 0; i < times.Length; i++)
+            {
+                var value = componentIndex switch
+                {
+                    0 => values[i].x,
+                    2 => values[i].z,
+                    _ => values[i].y
+                };
+                keys[i] = new Keyframe(times[i], value);
+            }
+
+            var curve = new AnimationCurve(keys);
+            SetLinearTangents(curve);
+            return curve;
+        }
+
+        private static AnimationCurve CreateStepCurve(float[] times, float[] values)
+        {
+            var keys = new Keyframe[times.Length];
+            for (var i = 0; i < times.Length; i++)
+            {
+                keys[i] = new Keyframe(times[i], values[i]);
+            }
+
+            var curve = new AnimationCurve(keys);
+            for (var i = 0; i < curve.length; i++)
+            {
+                AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.Constant);
+                AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.Constant);
+            }
+
+            return curve;
+        }
+
+        private static void ValidateVectorCurveArrays(float[] times, Vector3[] values, string label)
+        {
+            if (times.Length != values.Length)
+            {
+                throw new ArgumentException($"Monstrum death {label} curve times and values must have the same length.");
+            }
+        }
+
+        private static void SetAutoTangents(AnimationCurve curve)
+        {
+            for (var i = 0; i < curve.length; i++)
+            {
+                AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.Auto);
+                AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.Auto);
+            }
+        }
+
+        private static void SetLinearTangents(AnimationCurve curve)
+        {
+            for (var i = 0; i < curve.length; i++)
+            {
+                AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.Linear);
+                AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.Linear);
+            }
+        }
+
+        private static bool IsDeathMeltProxyTransform(Transform target)
+        {
+            var current = target;
+            while (current != null)
+            {
+                if (current.name.StartsWith(DeathMeltProxyPrefix, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+
+                current = current.parent;
+            }
+
+            return false;
+        }
+
+        private static Bounds CalculateRendererBoundsExcludingDeathMeltProxies(Transform root, Bounds fallback)
+        {
+            var renderers = root.GetComponentsInChildren<Renderer>(true);
+            var hasBounds = false;
+            var bounds = fallback;
+            foreach (var renderer in renderers)
+            {
+                if (IsDeathMeltProxyTransform(renderer.transform))
+                {
+                    continue;
+                }
+
+                if (!hasBounds)
+                {
+                    bounds = renderer.bounds;
+                    hasBounds = true;
+                }
+                else
+                {
+                    bounds.Encapsulate(renderer.bounds);
+                }
+            }
+
+            return hasBounds ? bounds : fallback;
+        }
+
+        private static string RemoveOptionalAnimationReviewSlot(Transform placementRoot, string slotObjectName)
+        {
+            var slot = placementRoot.Find(slotObjectName);
+            if (slot == null)
+            {
+                return string.Empty;
+            }
+
+            UnityEngine.Object.DestroyImmediate(slot.gameObject);
+            EditorUtility.SetDirty(placementRoot.gameObject);
+            return slotObjectName;
+        }
+
+        private static NonAnimatedMonstrumRemovalResult RemoveNonAnimatedMonstrumReviewObjects(Transform placementRoot)
+        {
+            var candidates = CollectDirectMonstrumReviewObjects(placementRoot);
+            if (candidates.Count == 0)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} contains no Monstrum review objects to inspect.");
+            }
+
+            var keptObjects = new List<string>();
+            var removedObjects = new List<string>();
+            var inspectedObjects = new List<string>();
+
+            foreach (var candidate in candidates)
+            {
+                var hasActiveAnimation = TryGetActiveAnimationInfo(
+                    candidate,
+                    out var animatorPath,
+                    out var controllerPath,
+                    out var clipCount);
+                inspectedObjects.Add(
+                    candidate.name +
+                    $"[Animated={hasActiveAnimation}, Animator={animatorPath}, Controller={controllerPath}, Clips={clipCount}]");
+
+                if (IsRequiredAnimatedMonstrumSlotName(candidate.name))
+                {
+                    if (!hasActiveAnimation)
+                    {
+                        throw new InvalidOperationException($"{candidate.name} must keep an active Animator before non-animated Monstrum cleanup.");
+                    }
+
+                    keptObjects.Add(candidate.name + "(" + controllerPath + ", Clips=" + clipCount.ToString(CultureInfo.InvariantCulture) + ")");
+                    continue;
+                }
+
+                removedObjects.Add(
+                    candidate.name +
+                    $"(Animated={hasActiveAnimation}, Controller={controllerPath}, Clips={clipCount})");
+                UnityEngine.Object.DestroyImmediate(candidate.gameObject);
+            }
+
+            if (keptObjects.Count != 4)
+            {
+                throw new InvalidOperationException(
+                    "Monstrum animated review cleanup must keep exactly Idle, Move, Attack, and Death slots. " +
+                    $"Kept={string.Join(", ", keptObjects)}.");
+            }
+
+            EditorUtility.SetDirty(placementRoot.gameObject);
+            return new NonAnimatedMonstrumRemovalResult(
+                keptObjects.Count,
+                removedObjects.Count,
+                string.Join("; ", keptObjects),
+                string.Join("; ", removedObjects),
+                string.Join("; ", inspectedObjects));
+        }
+
+        private static void ValidateOnlyAnimatedMonstrumReviewObjectsRemain(Transform placementRoot)
+        {
+            foreach (var requiredName in new[]
+                     {
+                         IdleSlotObjectName,
+                         MoveSlotObjectName,
+                         AttackDoubleHammerSlotObjectName,
+                         DeathMeltSpreadSlotObjectName
+                     })
+            {
+                var slot = RequireAnimationReviewSlot(placementRoot, requiredName);
+                if (!TryGetActiveAnimationInfo(slot, out _, out var controllerPath, out var clipCount))
+                {
+                    throw new InvalidOperationException($"{requiredName} must remain with an active Animator after non-animated Monstrum cleanup.");
+                }
+
+                if (clipCount <= 0 || string.IsNullOrEmpty(controllerPath))
+                {
+                    throw new InvalidOperationException($"{requiredName} has invalid animation metadata after non-animated Monstrum cleanup.");
+                }
+            }
+
+            foreach (var candidate in CollectDirectMonstrumReviewObjects(placementRoot))
+            {
+                if (!IsRequiredAnimatedMonstrumSlotName(candidate.name))
+                {
+                    throw new InvalidOperationException($"{candidate.name} should have been removed by non-animated Monstrum cleanup.");
+                }
+            }
+
+            Debug.Log("MonstrumNonAnimatedRemovalValidation Kept=Monstrum_02_Idle,Monstrum_03_Move_HeavyStomp,Monstrum_04_Attack_DoubleHammerSlam,Monstrum_05_Death_MeltSpread.");
+        }
+
+        private static List<Transform> CollectDirectMonstrumReviewObjects(Transform placementRoot)
+        {
+            var candidates = new List<Transform>();
+            for (var i = 0; i < placementRoot.childCount; i++)
+            {
+                var child = placementRoot.GetChild(i);
+                if (IsMonstrumReviewObjectName(child.name))
+                {
+                    candidates.Add(child);
+                }
+            }
+
+            return candidates;
+        }
+
+        private static bool IsMonstrumReviewObjectName(string objectName)
+        {
+            if (string.Equals(objectName, PlacementObjectName, StringComparison.Ordinal) ||
+                string.Equals(objectName, AttackImpactShakeSlotObjectName, StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            foreach (var spec in AnimationSlotSpecs)
+            {
+                if (string.Equals(objectName, spec.ObjectName, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsRequiredAnimatedMonstrumSlotName(string objectName)
+        {
+            return string.Equals(objectName, IdleSlotObjectName, StringComparison.Ordinal) ||
+                   string.Equals(objectName, MoveSlotObjectName, StringComparison.Ordinal) ||
+                   string.Equals(objectName, AttackDoubleHammerSlotObjectName, StringComparison.Ordinal) ||
+                   string.Equals(objectName, DeathMeltSpreadSlotObjectName, StringComparison.Ordinal);
+        }
+
+        private static bool TryGetActiveAnimationInfo(
+            Transform target,
+            out string animatorPath,
+            out string controllerPath,
+            out int clipCount)
+        {
+            foreach (var animator in target.GetComponentsInChildren<Animator>(true))
+            {
+                if (!animator.enabled || animator.runtimeAnimatorController == null)
+                {
+                    continue;
+                }
+
+                var clips = animator.runtimeAnimatorController.animationClips;
+                if (clips == null || clips.Length == 0)
+                {
+                    continue;
+                }
+
+                var relativeAnimatorPath = BuildTransformPath(target, animator.transform);
+                animatorPath = string.IsNullOrEmpty(relativeAnimatorPath)
+                    ? target.name
+                    : target.name + "/" + relativeAnimatorPath;
+                controllerPath = AssetDatabase.GetAssetPath(animator.runtimeAnimatorController);
+                if (string.IsNullOrEmpty(controllerPath))
+                {
+                    controllerPath = animator.runtimeAnimatorController.name;
+                }
+
+                clipCount = clips.Length;
+                return true;
+            }
+
+            animatorPath = string.Empty;
+            controllerPath = string.Empty;
+            clipCount = 0;
+            return false;
+        }
+
+        private static int RemoveAttackModelNonBodyVisuals(Transform attackModel)
+        {
+            var renderers = new List<Renderer>(attackModel.GetComponentsInChildren<Renderer>(true));
+            if (renderers.Count == 0)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{ModelChildName} contains no renderers.");
+            }
+
+            var bodyRenderers = SelectAttackBodyRenderers(renderers);
+            var bodyRendererTransforms = new HashSet<Transform>(bodyRenderers.ConvertAll(renderer => renderer.transform));
+
+            var removedCount = 0;
+            foreach (var renderer in renderers)
+            {
+                if (renderer == null)
+                {
+                    continue;
+                }
+
+                if (bodyRenderers.Contains(renderer))
+                {
+                    continue;
+                }
+
+                if (CanDestroyAttackNonBodyObject(attackModel, renderer.transform, bodyRendererTransforms))
+                {
+                    UnityEngine.Object.DestroyImmediate(renderer.gameObject);
+                }
+                else
+                {
+                    renderer.enabled = false;
+                    EditorUtility.SetDirty(renderer);
+                }
+
+                removedCount++;
+            }
+
+            if (GetEnabledRendererCount(attackModel) == 0)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{ModelChildName} lost every renderer while removing non-body visuals.");
+            }
+
+            return removedCount;
+        }
+
+        private static List<Renderer> SelectAttackBodyRenderers(List<Renderer> renderers)
+        {
+            var skinnedRenderers = new List<Renderer>();
+            foreach (var renderer in renderers)
+            {
+                if (renderer != null &&
+                    renderer.enabled &&
+                    renderer is SkinnedMeshRenderer &&
+                    !IsAttackNonBodyVisualPath(renderer.name.ToLowerInvariant()))
+                {
+                    skinnedRenderers.Add(renderer);
+                }
+            }
+
+            var candidates = skinnedRenderers.Count > 0 ? skinnedRenderers : renderers;
+            var largestVolume = 0f;
+            Renderer largestRenderer = null;
+            foreach (var renderer in candidates)
+            {
+                if (renderer == null || !renderer.enabled)
+                {
+                    continue;
+                }
+
+                if (IsAttackNonBodyVisualPath(renderer.name.ToLowerInvariant()))
+                {
+                    continue;
+                }
+
+                var volume = CalculateRendererVolume(renderer);
+                if (largestRenderer == null || volume > largestVolume)
+                {
+                    largestVolume = volume;
+                    largestRenderer = renderer;
+                }
+            }
+
+            if (largestRenderer == null || largestVolume <= 0.0001f)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{ModelChildName} could not resolve a main body renderer.");
+            }
+
+            return new List<Renderer> { largestRenderer };
+        }
+
+        private static bool CanDestroyAttackNonBodyObject(
+            Transform attackModel,
+            Transform target,
+            HashSet<Transform> bodyRendererTransforms)
+        {
+            if (target == attackModel)
+            {
+                return false;
+            }
+
+            foreach (var bodyRendererTransform in bodyRendererTransforms)
+            {
+                if (bodyRendererTransform != null && bodyRendererTransform.IsChildOf(target))
+                {
+                    return false;
+                }
+            }
+
+            return target.GetComponent<Animator>() == null;
+        }
+
+        private static int GetEnabledRendererCount(Transform root)
+        {
+            var count = 0;
+            foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
+            {
+                if (renderer.enabled)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private static MeshCleanupResult ApplyAttackMainBodyOnlyMeshCleanup(Transform attackModel)
+        {
+            var bodyRenderer = SelectAttackBodyRenderers(new List<Renderer>(attackModel.GetComponentsInChildren<Renderer>(true)))[0];
+            var sourceMesh = ResolveAssignedRendererMesh(bodyRenderer);
+            if (sourceMesh == null)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{ModelChildName}/{bodyRenderer.name} has no mesh to clean.");
+            }
+
+            var cleanup = BuildMainBodyOnlyMesh(
+                sourceMesh,
+                bodyRenderer.transform,
+                BuildAttackSlot04BodyOnlyMeshAssetPath(sourceMesh));
+            SaveCleanedMeshAsset(cleanup.CleanedMesh, cleanup.CleanedMeshAssetPath);
+            AssignMeshToRenderer(bodyRenderer, cleanup.CleanedMesh);
+            return cleanup;
+        }
+
+        private static MeshCleanupResult ApplyDeathMainBodyOnlyMeshCleanup(Transform deathModel)
+        {
+            var bodyRenderer = SelectAttackBodyRenderers(new List<Renderer>(deathModel.GetComponentsInChildren<Renderer>(true)))[0];
+            var sourceMesh = ResolveAssignedRendererMesh(bodyRenderer);
+            if (sourceMesh == null)
+            {
+                throw new InvalidOperationException($"{DeathMeltSpreadSlotObjectName}/{ModelChildName}/{bodyRenderer.name} has no mesh to clean.");
+            }
+
+            var cleanup = BuildMainBodyOnlyMesh(
+                sourceMesh,
+                bodyRenderer.transform,
+                BuildDeathSlot05BodyOnlyMeshAssetPath(sourceMesh));
+            SaveCleanedMeshAsset(cleanup.CleanedMesh, cleanup.CleanedMeshAssetPath);
+            AssignMeshToRenderer(bodyRenderer, cleanup.CleanedMesh);
+            return cleanup;
+        }
+
+        private static MeshCleanupResult BuildMainBodyOnlyMesh(Mesh sourceMesh, Transform sourceTransform, string meshAssetPath)
+        {
+            if (sourceMesh.vertexCount == 0)
+            {
+                throw new InvalidOperationException($"{sourceMesh.name} contains no vertices.");
+            }
+
+            var vertices = sourceMesh.vertices;
+            var worldVertices = new Vector3[vertices.Length];
+            for (var i = 0; i < vertices.Length; i++)
+            {
+                worldVertices[i] = sourceTransform.TransformPoint(vertices[i]);
+            }
+
+            var triangles = BuildMeshTriangles(sourceMesh, vertices, worldVertices);
+            if (triangles.Count == 0)
+            {
+                throw new InvalidOperationException($"{sourceMesh.name} contains no triangle submeshes.");
+            }
+
+            var components = BuildConnectedTriangleComponents(vertices, worldVertices, triangles);
+            var mainComponent = FindMainBodyComponent(components);
+            var keptTriangles = new HashSet<int>(mainComponent.TriangleIndices);
+            var removedTriangleCount = triangles.Count - keptTriangles.Count;
+            var cleanedMesh = CreateRemappedMesh(sourceMesh, triangles, keptTriangles);
+            cleanedMesh.name = Path.GetFileNameWithoutExtension(meshAssetPath);
+
+            return new MeshCleanupResult(
+                sourceMesh.name,
+                meshAssetPath,
+                cleanedMesh,
+                components.Count,
+                Math.Max(0, components.Count - 1),
+                removedTriangleCount,
+                keptTriangles.Count,
+                triangles.Count);
+        }
+
+        private static string BuildAttackSlot04BodyOnlyMeshAssetPath(Mesh sourceMesh)
+        {
+            var sourceName = sourceMesh.name;
+            const string prefix = "Monstrum_AttackSlot04_BodyOnly_";
+            while (sourceName.StartsWith(prefix, StringComparison.Ordinal))
+            {
+                sourceName = sourceName.Substring(prefix.Length);
+            }
+
+            return UnityMeshFolder + "/" + prefix + SanitizeAssetName(sourceName) + ".asset";
+        }
+
+        private static string BuildDeathSlot05BodyOnlyMeshAssetPath(Mesh sourceMesh)
+        {
+            var sourceName = sourceMesh.name;
+            const string prefix = "Monstrum_DeathSlot05_BodyOnly_";
+            while (sourceName.StartsWith(prefix, StringComparison.Ordinal))
+            {
+                sourceName = sourceName.Substring(prefix.Length);
+            }
+
+            return UnityMeshFolder + "/" + prefix + SanitizeAssetName(sourceName) + ".asset";
+        }
+
+        private static void AssignMeshToRenderer(Renderer renderer, Mesh mesh)
+        {
+            if (renderer is SkinnedMeshRenderer skinnedMeshRenderer)
+            {
+                skinnedMeshRenderer.sharedMesh = mesh;
+                EditorUtility.SetDirty(skinnedMeshRenderer);
+                return;
+            }
+
+            var meshFilter = renderer.GetComponent<MeshFilter>();
+            if (meshFilter == null)
+            {
+                throw new InvalidOperationException($"{renderer.name} cannot receive a cleaned mesh because it has no MeshFilter.");
+            }
+
+            meshFilter.sharedMesh = mesh;
+            EditorUtility.SetDirty(meshFilter);
+        }
+
+        private static void ValidateAttackModelBodyRendererOnly(Transform attackModel)
+        {
+            var eyeRoot = FindApprovedEyeRoot(attackModel);
+            var enabledRenderers = new List<Renderer>();
+            foreach (var renderer in attackModel.GetComponentsInChildren<Renderer>(true))
+            {
+                if (eyeRoot != null && renderer.transform.IsChildOf(eyeRoot))
+                {
+                    continue;
+                }
+
+                if (renderer.enabled)
+                {
+                    enabledRenderers.Add(renderer);
+                }
+            }
+
+            var bodyRenderers = SelectAttackBodyRenderers(enabledRenderers);
+            if (enabledRenderers.Count != bodyRenderers.Count)
+            {
+                throw new InvalidOperationException(
+                    $"{AttackDoubleHammerSlotObjectName}/{ModelChildName} must keep only the main body renderer. " +
+                    $"EnabledRenderers={enabledRenderers.Count}, BodyRenderers={bodyRenderers.Count}.");
+            }
+        }
+
+        private static void ValidateAttackBodyMeshSingleComponent(Transform attackModel)
+        {
+            var bodyRenderer = SelectAttackBodyRenderers(new List<Renderer>(attackModel.GetComponentsInChildren<Renderer>(true)))[0];
+            var mesh = ResolveAssignedRendererMesh(bodyRenderer);
+            if (mesh == null)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{ModelChildName}/{bodyRenderer.name} has no assigned body mesh.");
+            }
+
+            var vertices = mesh.vertices;
+            var worldVertices = new Vector3[vertices.Length];
+            for (var i = 0; i < vertices.Length; i++)
+            {
+                worldVertices[i] = bodyRenderer.transform.TransformPoint(vertices[i]);
+            }
+
+            var triangles = BuildMeshTriangles(mesh, vertices, worldVertices);
+            var components = BuildConnectedTriangleComponents(vertices, worldVertices, triangles);
+            if (components.Count != 1)
+            {
+                throw new InvalidOperationException(
+                    $"{AttackDoubleHammerSlotObjectName}/{ModelChildName} body mesh must contain only the main connected component. Components={components.Count}.");
+            }
+        }
+
+        private static bool IsAttackNonBodyVisualPath(string lowerPath)
+        {
+            return lowerPath.Contains("eye") ||
+                   lowerPath.Contains("grain") ||
+                   lowerPath.Contains("debris") ||
+                   lowerPath.Contains("fragment") ||
+                   lowerPath.Contains("piece") ||
+                   lowerPath.Contains("chunk") ||
+                   lowerPath.Contains("dust") ||
+                   lowerPath.Contains("rock") ||
+                   lowerPath.Contains("loose");
+        }
+
+        private static float CalculateRendererVolume(Renderer renderer)
+        {
+            var size = renderer.bounds.size;
+            return Mathf.Max(0f, size.x) * Mathf.Max(0f, size.y) * Mathf.Max(0f, size.z);
+        }
+
+        private static Material ResolvePrimaryBodyMaterial(Transform staticObject)
+        {
+            var staticEyeRoot = FindApprovedEyeRoot(staticObject);
+            foreach (var renderer in GetBodyRenderers(staticObject, staticEyeRoot))
+            {
+                foreach (var material in renderer.sharedMaterials)
+                {
+                    if (material != null)
+                    {
+                        return material;
+                    }
+                }
+            }
+
+            throw new InvalidOperationException($"{PlacementObjectName} has no body material to synchronize to {AttackDoubleHammerSlotObjectName}.");
+        }
+
+        private static Transform RebuildAttackEyesOnModelSurface(Transform staticObject, Transform attackSlot, Transform attackModel)
+        {
+            var staticEyeRoot = FindApprovedEyeRoot(staticObject);
+            if (staticEyeRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementObjectName} is missing {ApprovedEyeRootName}.");
+            }
+
+            var attackEyeParent = FindAttackEyeParentMatchingStaticReference(staticEyeRoot, attackModel);
+            RemoveExistingApprovedEyes(attackSlot);
+            var copiedEyeRootObject = UnityEngine.Object.Instantiate(staticEyeRoot.gameObject);
+            copiedEyeRootObject.name = ApprovedEyeRootName;
+            var copiedEyeRoot = copiedEyeRootObject.transform;
+            copiedEyeRoot.SetParent(attackEyeParent, false);
+            CopyLocalTransform(staticEyeRoot, copiedEyeRoot);
+
+            SynchronizeAttackEyeLightSettings(staticEyeRoot, copiedEyeRoot);
+
+            EditorUtility.SetDirty(copiedEyeRootObject);
+            return copiedEyeRoot;
+        }
+
+        private static Transform FindAttackEyeParentMatchingStaticReference(Transform staticEyeRoot, Transform attackModel)
+        {
+            if (staticEyeRoot.parent == null)
+            {
+                throw new InvalidOperationException($"{PlacementObjectName}/{ApprovedEyeRootName} has no reference parent.");
+            }
+
+            var referenceParentName = staticEyeRoot.parent.name;
+            foreach (var candidate in attackModel.GetComponentsInChildren<Transform>(true))
+            {
+                if (candidate == attackModel)
+                {
+                    continue;
+                }
+
+                if (IsMatchingEyeReferenceParentName(referenceParentName, candidate.name))
+                {
+                    return candidate;
+                }
+            }
+
+            throw new InvalidOperationException(
+                $"{AttackDoubleHammerSlotObjectName}/{ModelChildName} is missing the reference eye parent '{referenceParentName}' used by {PlacementObjectName}.");
+        }
+
+        private static bool IsMatchingEyeReferenceParentName(string referenceName, string candidateName)
+        {
+            return string.Equals(referenceName, candidateName, StringComparison.Ordinal) ||
+                   string.Equals(referenceName, candidateName, StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(NormalizeTransformName(referenceName), NormalizeTransformName(candidateName), StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string NormalizeTransformName(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return string.Empty;
+            }
+
+            var colonIndex = value.LastIndexOf(':');
+            return colonIndex >= 0 && colonIndex + 1 < value.Length ? value.Substring(colonIndex + 1) : value;
+        }
+
+        private static void CopyLocalTransform(Transform source, Transform target)
+        {
+            target.localPosition = source.localPosition;
+            target.localRotation = source.localRotation;
+            target.localScale = source.localScale;
+            EditorUtility.SetDirty(target);
+        }
+
+        private static Material ResolveApprovedEyeMaterialFromStatic(Transform staticEyeRoot)
+        {
+            foreach (var renderer in staticEyeRoot.GetComponentsInChildren<MeshRenderer>(true))
+            {
+                if (renderer.sharedMaterial != null)
+                {
+                    return renderer.sharedMaterial;
+                }
+            }
+
+            var eyeMaterial = AssetDatabase.LoadAssetAtPath<Material>(ApprovedEyeMaterialAssetPath);
+            if (eyeMaterial != null)
+            {
+                return eyeMaterial;
+            }
+
+            throw new InvalidOperationException($"{PlacementObjectName}/{ApprovedEyeRootName} has no approved eye material.");
+        }
+
+        private static void SynchronizeAttackEyeLightSettings(Transform staticEyeRoot, Transform attackEyeRoot)
+        {
+            var staticLights = BuildLightPathMap(staticEyeRoot);
+            var attackLights = BuildLightPathMap(attackEyeRoot);
+            foreach (var pair in staticLights)
+            {
+                if (!attackLights.TryGetValue(pair.Key, out var attackLight))
+                {
+                    continue;
+                }
+
+                var staticLight = pair.Value;
+                attackLight.type = staticLight.type;
+                attackLight.color = staticLight.color;
+                attackLight.intensity = staticLight.intensity;
+                attackLight.range = staticLight.range;
+                attackLight.spotAngle = staticLight.spotAngle;
+                attackLight.bounceIntensity = staticLight.bounceIntensity;
+                attackLight.shadows = staticLight.shadows;
+                EditorUtility.SetDirty(attackLight);
+            }
+        }
+
+        private static void AttachCopiedEyesToAttackModelMotion(Transform attackModel, Transform copiedEyeRoot)
+        {
+            var eyeCenter = CalculateRendererBounds(copiedEyeRoot, new Bounds(copiedEyeRoot.position, Vector3.one * 0.01f)).center;
+            var followParent = FindBestEyeFollowParent(attackModel, copiedEyeRoot, eyeCenter);
+            if (followParent == null || followParent == attackModel || !followParent.IsChildOf(attackModel))
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} could not resolve an animated attack model bone for {ApprovedEyeRootName}.");
+            }
+
+            var parentConstraint = copiedEyeRoot.GetComponent<UnityEngine.Animations.ParentConstraint>();
+            if (parentConstraint == null)
+            {
+                parentConstraint = copiedEyeRoot.gameObject.AddComponent<UnityEngine.Animations.ParentConstraint>();
+            }
+
+            while (parentConstraint.sourceCount > 0)
+            {
+                parentConstraint.RemoveSource(0);
+            }
+
+            var source = new UnityEngine.Animations.ConstraintSource
+            {
+                sourceTransform = followParent,
+                weight = 1f
+            };
+            parentConstraint.AddSource(source);
+            parentConstraint.SetTranslationOffset(0, followParent.InverseTransformPoint(copiedEyeRoot.position));
+            parentConstraint.SetRotationOffset(0, (Quaternion.Inverse(followParent.rotation) * copiedEyeRoot.rotation).eulerAngles);
+            parentConstraint.translationAxis = UnityEngine.Animations.Axis.X | UnityEngine.Animations.Axis.Y | UnityEngine.Animations.Axis.Z;
+            parentConstraint.rotationAxis = UnityEngine.Animations.Axis.X | UnityEngine.Animations.Axis.Y | UnityEngine.Animations.Axis.Z;
+            parentConstraint.weight = 1f;
+            parentConstraint.locked = true;
+            parentConstraint.constraintActive = true;
+            EditorUtility.SetDirty(copiedEyeRoot);
+            EditorUtility.SetDirty(parentConstraint);
+            EditorUtility.SetDirty(followParent);
+        }
+
+        private static void CopyTransformRelativeToRoot(
+            Transform sourceRoot,
+            Transform source,
+            Transform targetRoot,
+            Transform target)
+        {
+            target.localPosition = sourceRoot.InverseTransformPoint(source.position);
+            target.localRotation = Quaternion.Inverse(sourceRoot.rotation) * source.rotation;
+            target.localScale = DivideVectorComponents(source.lossyScale, sourceRoot.lossyScale);
+        }
+
+        private static Vector3 DivideVectorComponents(Vector3 value, Vector3 divisor)
+        {
+            return new Vector3(
+                Mathf.Abs(divisor.x) > 0.0001f ? value.x / divisor.x : value.x,
+                Mathf.Abs(divisor.y) > 0.0001f ? value.y / divisor.y : value.y,
+                Mathf.Abs(divisor.z) > 0.0001f ? value.z / divisor.z : value.z);
+        }
+
+        private static void EnsureClipCanBindToTarget(Transform target, AnimationClip clip, string targetName)
+        {
+            SelectBestClipAnimatorRoot(target, clip, targetName);
+        }
+
+        private static Animator ApplyLoopingAttackAnimationToSlot(
+            Transform slot,
+            AnimatorController controller,
+            AnimationClip clip)
+        {
+            var animatorRoot = SelectBestClipAnimatorRoot(slot, clip, AttackDoubleHammerSlotObjectName);
+            var animator = animatorRoot.GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = animatorRoot.gameObject.AddComponent<Animator>();
+            }
+
+            animator.enabled = true;
+            animator.applyRootMotion = false;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            animator.runtimeAnimatorController = controller;
+            EditorUtility.SetDirty(animator);
+            EditorUtility.SetDirty(animatorRoot.gameObject);
+            return animator;
+        }
+
+        private static void ValidateAttackSlot04WithStaticAppearance(
+            Transform placementRoot,
+            AnimatorController controller,
+            AnimationClip clip,
+            AttackSlot04VisualLoopResult result)
+        {
+            if (placementRoot.Find(AttackImpactShakeSlotObjectName) != null)
+            {
+                throw new InvalidOperationException($"{AttackImpactShakeSlotObjectName} must be deleted from {PlacementRootName}.");
+            }
+
+            var staticObject = RequireStaticReviewObject(placementRoot);
+            var attackSlot = RequireAnimationReviewSlot(placementRoot, AttackDoubleHammerSlotObjectName);
+            var attackModel = ValidateAttackSourceModelPrefabInstance(attackSlot);
+            ValidateAttackModelBodyRendererOnly(attackModel);
+            ValidateAttackBodyMeshSingleComponent(attackModel);
+            ValidateAttackBodyMaterialMatchesStatic(staticObject, attackSlot);
+            ValidateAttackApprovedEyesMatchStatic(staticObject, attackSlot, attackModel);
+            ValidateAttackEyesFollowAnimatedModel(attackSlot, attackModel);
+            EnsureClipCanBindToTarget(attackModel, clip, AttackDoubleHammerSlotObjectName + "/" + ModelChildName);
+
+            var animator = FindAnimatorUsingController(attackSlot, controller);
+            if (animator == null)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} does not have an enabled Animator using {AttackLoopControllerAssetPath}.");
+            }
+
+            if (!ControllerUsesClip(controller, clip))
+            {
+                throw new InvalidOperationException($"{AttackLoopControllerAssetPath} does not use attack clip {clip.name}.");
+            }
+
+            var clipSettings = AnimationUtility.GetAnimationClipSettings(clip);
+            if (!clipSettings.loopTime)
+            {
+                throw new InvalidOperationException($"{UnityAttackModelAssetPath}/{clip.name} is not configured for loop playback.");
+            }
+
+            if (result.CurveBindingCount <= 0)
+            {
+                throw new InvalidOperationException($"{UnityAttackModelAssetPath}/{clip.name} has no animation curve bindings.");
+            }
+
+            if (IsMovementClipName(clip.name))
+            {
+                throw new InvalidOperationException($"{UnityAttackModelAssetPath}/{clip.name} is movement-named and cannot be used as the attack slot 04 clip.");
+            }
+
+            Debug.Log(
+                $"MonstrumAttackSlot04Validation Target={result.TargetSlotName}, RemovedSlot={result.RemovedSlotName}, " +
+                $"Model={result.ModelInstancePath}, AnimatorRoot={result.AnimatorRootPath}, Clip={result.SourceClipName}, " +
+                $"LoopTime={result.ClipLoopTime}, CurveBindings={result.CurveBindingCount}, " +
+                $"BodyRenderers={result.BodyRendererCount}, RemovedAttackVisuals={result.RemovedAttackVisualCount}.");
+        }
+
+        private static void ValidateDeathSlot05WithStaticAppearance(
+            Transform placementRoot,
+            AnimatorController controller,
+            AnimationClip clip,
+            DeathSlot05VisualLoopResult result)
+        {
+            if (placementRoot.Find(AttackImpactShakeSlotObjectName) != null)
+            {
+                throw new InvalidOperationException($"{AttackImpactShakeSlotObjectName} must be deleted from {PlacementRootName}.");
+            }
+
+            var staticObject = RequireStaticReviewObject(placementRoot);
+            var deathSlot = RequireAnimationReviewSlot(placementRoot, DeathMeltSpreadSlotObjectName);
+            var deathModel = ValidateDeathSourceModelPrefabInstance(deathSlot);
+            ValidateAttackModelBodyRendererOnly(deathModel);
+            ValidateAttackBodyMeshSingleComponent(deathModel);
+            ValidateAttackBodyMaterialMatchesStatic(staticObject, deathSlot);
+            ValidateDeathApprovedEyesMatchStatic(staticObject, deathSlot, deathModel);
+            ValidateAttackEyesFollowAnimatedModel(deathSlot, deathModel);
+            EnsureClipCanBindToTarget(deathModel, clip, DeathMeltSpreadSlotObjectName + "/" + ModelChildName);
+
+            var animator = FindAnimatorUsingController(deathSlot, controller);
+            if (animator == null)
+            {
+                throw new InvalidOperationException($"{DeathMeltSpreadSlotObjectName} does not have an enabled Animator using {DeathLoopControllerAssetPath}.");
+            }
+
+            if (!ControllerUsesClip(controller, clip))
+            {
+                throw new InvalidOperationException($"{DeathLoopControllerAssetPath} does not use death clip {clip.name}.");
+            }
+
+            ValidateDeathControllerUsesOnlySourceClip(controller, clip);
+
+            var clipSettings = AnimationUtility.GetAnimationClipSettings(clip);
+            if (!clipSettings.loopTime)
+            {
+                throw new InvalidOperationException($"{UnityDeathModelAssetPath}/{clip.name} is not configured for loop playback.");
+            }
+
+            if (result.CurveBindingCount <= 0)
+            {
+                throw new InvalidOperationException($"{UnityDeathModelAssetPath}/{clip.name} has no animation curve bindings.");
+            }
+
+            if (IsMovementClipName(clip.name))
+            {
+                throw new InvalidOperationException($"{UnityDeathModelAssetPath}/{clip.name} is movement-named and cannot be used as the death slot 05 clip.");
+            }
+
+            Debug.Log(
+                $"MonstrumDeathSlot05Validation Target={result.TargetSlotName}, RemovedSlot={result.RemovedSlotName}, " +
+                $"Model={result.ModelInstancePath}, AnimatorRoot={result.AnimatorRootPath}, Clip={result.SourceClipName}, " +
+                $"LoopTime={result.ClipLoopTime}, CurveBindings={result.CurveBindingCount}, " +
+                $"BodyRenderers={result.BodyRendererCount}, RemovedDeathVisuals={result.RemovedDeathVisualCount}.");
+        }
+
+        private static void ValidateDeathControllerUsesOnlySourceClip(AnimatorController controller, AnimationClip deathClip)
+        {
+            if (controller.layers.Length == 0 || controller.layers[0].stateMachine == null)
+            {
+                throw new InvalidOperationException($"{DeathLoopControllerAssetPath} must contain a base layer state machine.");
+            }
+
+            var stateMachine = controller.layers[0].stateMachine;
+            if (stateMachine.states.Length != 1)
+            {
+                throw new InvalidOperationException($"{DeathLoopControllerAssetPath} must contain only the source death FBX loop state.");
+            }
+
+            var state = stateMachine.states[0].state;
+            if (state == null || state.motion != deathClip)
+            {
+                throw new InvalidOperationException($"{DeathLoopControllerAssetPath} must play only death clip {deathClip.name}.");
+            }
+
+            if (state.transitions.Length != 0 || stateMachine.anyStateTransitions.Length != 0)
+            {
+                throw new InvalidOperationException($"{DeathLoopControllerAssetPath} must not contain melt follow-up transitions.");
+            }
+        }
+
+        private static void ValidateNoDeathMeltProxyVisuals(Transform deathSlot)
+        {
+            var proxyCount = CountDeathMeltProxyVisuals(deathSlot);
+            if (proxyCount > 0)
+            {
+                throw new InvalidOperationException($"{DeathMeltSpreadSlotObjectName} must not contain death melt proxy visuals after melt animation removal. Count={proxyCount}.");
+            }
+        }
+
+        private static void ValidateDeathMeltPuddleFollowUp(
+            Transform placementRoot,
+            AnimatorController controller,
+            AnimationClip deathClip,
+            AnimationClip meltClip)
+        {
+            var deathSlot = RequireAnimationReviewSlot(placementRoot, DeathMeltSpreadSlotObjectName);
+            var deathModel = ValidateDeathSourceModelPrefabInstance(deathSlot);
+            var animator = FindAnimatorUsingController(deathSlot, controller);
+            if (animator == null || animator.transform != deathModel)
+            {
+                throw new InvalidOperationException($"{DeathMeltSpreadSlotObjectName} must play the death-to-puddle sequence from {ModelChildName}.");
+            }
+
+            if (!ControllerUsesClip(controller, deathClip) || !ControllerUsesClip(controller, meltClip))
+            {
+                throw new InvalidOperationException($"{DeathLoopControllerAssetPath} must contain both the source death clip and {DeathMeltPuddleClipName}.");
+            }
+
+            ValidateDeathMeltControllerFullSequenceLoop(controller, deathClip, meltClip);
+
+            var meltSettings = AnimationUtility.GetAnimationClipSettings(meltClip);
+            if (!meltSettings.loopTime || meltClip.wrapMode != WrapMode.Loop)
+            {
+                throw new InvalidOperationException($"{DeathMeltPuddleClipAssetPath} must loop for review playback.");
+            }
+
+            RequireNoTransformCurve(meltClip, string.Empty, "m_LocalPosition.x", "Monstrum death root horizontal offset");
+            RequireNoTransformCurve(meltClip, string.Empty, "m_LocalPosition.y", "Monstrum death root height offset");
+            RequireNoTransformCurve(meltClip, string.Empty, "m_LocalPosition.z", "Monstrum death root depth offset");
+            RequireNoTransformCurve(meltClip, string.Empty, "m_LocalScale.x", "Monstrum death root horizontal scale");
+            RequireNoTransformCurve(meltClip, string.Empty, "m_LocalScale.y", "Monstrum death root vertical scale");
+            RequireNoTransformCurve(meltClip, string.Empty, "m_LocalScale.z", "Monstrum death root depth scale");
+
+            var eyeRoot = FindApprovedEyeRoot(deathModel);
+            if (eyeRoot == null)
+            {
+                throw new InvalidOperationException($"{DeathMeltSpreadSlotObjectName} is missing {ApprovedEyeRootName} for death melt eye removal.");
+            }
+
+            var modelRendererCurves = 0;
+            foreach (var renderer in deathModel.GetComponentsInChildren<Renderer>(true))
+            {
+                if (IsDeathMeltProxyTransform(renderer.transform))
+                {
+                    continue;
+                }
+
+                if (renderer.transform.IsChildOf(eyeRoot))
+                {
+                    continue;
+                }
+
+                if (HasRendererEnabledCurve(meltClip, deathModel, renderer.transform))
+                {
+                    RequireRendererEnabledStartsOnThenNonIncreasing(meltClip, deathModel, renderer.transform, "Monstrum death original renderer visibility");
+                    modelRendererCurves++;
+                }
+            }
+
+            if (modelRendererCurves == 0)
+            {
+                throw new InvalidOperationException($"{DeathMeltPuddleClipName} must hide the melted original body renderers at the final puddle frame.");
+            }
+
+            var eyeRendererCurves = 0;
+            var eyeRenderers = eyeRoot.GetComponentsInChildren<Renderer>(true);
+            foreach (var renderer in eyeRenderers)
+            {
+                if (HasRendererEnabledCurve(meltClip, deathModel, renderer.transform))
+                {
+                    RequireRendererEnabledAlwaysOff(meltClip, deathModel, renderer.transform, "Monstrum death eye renderer visibility");
+                    eyeRendererCurves++;
+                }
+            }
+
+            if (eyeRenderers.Length == 0 || eyeRendererCurves != eyeRenderers.Length)
+            {
+                throw new InvalidOperationException($"{DeathMeltPuddleClipName} must hide every approved eye renderer during the final puddle frame.");
+            }
+
+            var eyeLightCurves = 0;
+            var eyeLights = eyeRoot.GetComponentsInChildren<Light>(true);
+            foreach (var light in eyeLights)
+            {
+                if (HasLightEnabledCurve(meltClip, deathModel, light.transform))
+                {
+                    RequireLightEnabledAlwaysOff(meltClip, deathModel, light.transform, "Monstrum death eye light visibility");
+                    eyeLightCurves++;
+                }
+            }
+
+            if (eyeLights.Length == 0 || eyeLightCurves != eyeLights.Length)
+            {
+                throw new InvalidOperationException($"{DeathMeltPuddleClipName} must disable every approved eye light during the final puddle frame.");
+            }
+
+            var bodyMass = deathModel.Find(DeathMeltProxyPrefix + "BodyMass");
+            if (bodyMass == null)
+            {
+                throw new InvalidOperationException($"{DeathMeltSpreadSlotObjectName} is missing the melt body proxy visual.");
+            }
+
+            var bodyMassPath = AnimationUtility.CalculateTransformPath(bodyMass, deathModel);
+            RequireCurveDelta(meltClip, bodyMassPath, "m_LocalScale.y", 0.10f, "Monstrum death melt body vertical collapse");
+            RequireCurveDelta(meltClip, bodyMassPath, "m_LocalScale.x", 0.50f, "Monstrum death melt body horizontal change");
+
+            var finalPuddle = deathModel.Find(DeathMeltProxyPrefix + "FinalPuddle");
+            if (finalPuddle == null)
+            {
+                throw new InvalidOperationException($"{DeathMeltSpreadSlotObjectName} is missing the final puddle proxy visual.");
+            }
+
+            var finalPuddlePath = AnimationUtility.CalculateTransformPath(finalPuddle, deathModel);
+            RequireCurveDelta(meltClip, finalPuddlePath, "m_LocalScale.x", 0.30f, "Monstrum death final puddle horizontal spread");
+            RequireCurveDelta(meltClip, finalPuddlePath, "m_LocalScale.z", 0.30f, "Monstrum death final puddle depth spread");
+            RequireCurveNonDecreasing(meltClip, finalPuddlePath, "m_LocalScale.x", "Monstrum death final puddle horizontal spread");
+            RequireCurveNonDecreasing(meltClip, finalPuddlePath, "m_LocalScale.z", "Monstrum death final puddle depth spread");
+            RequireScaledChildCurveNonDecreasing(meltClip, finalPuddlePath, "m_LocalScale.x", "Monstrum death final puddle effective horizontal spread");
+            RequireScaledChildCurveNonDecreasing(meltClip, finalPuddlePath, "m_LocalScale.z", "Monstrum death final puddle effective depth spread");
+            RequireCurveMaximumDelta(meltClip, finalPuddlePath, "m_LocalScale.y", 0.001f, "Monstrum death final puddle thickness");
+            RequireRendererEnabledStartsOffThenNonDecreasing(meltClip, deathModel, finalPuddle, "Monstrum death final puddle visibility");
+            if (!HasRendererEnabledCurve(meltClip, deathModel, finalPuddle))
+            {
+                throw new InvalidOperationException($"{DeathMeltProxyPrefix}FinalPuddle must have a renderer enabled curve.");
+            }
+
+            foreach (var proxyName in new[]
+            {
+                DeathMeltProxyPrefix + "BodyMass",
+                DeathMeltProxyPrefix + "FrontFlow",
+                DeathMeltProxyPrefix + "LeftFlow",
+                DeathMeltProxyPrefix + "RightFlow"
+            })
+            {
+                var proxy = deathModel.Find(proxyName);
+                if (proxy == null)
+                {
+                    throw new InvalidOperationException($"{DeathMeltSpreadSlotObjectName} is missing {proxyName}.");
+                }
+
+                RequireRendererEnabledStartsOnThenNonIncreasing(meltClip, deathModel, proxy, $"{proxyName} visibility");
+            }
+
+            var proxyVisualCount = CountDeathMeltProxyVisuals(deathModel);
+            if (proxyVisualCount < 5)
+            {
+                throw new InvalidOperationException($"{DeathMeltSpreadSlotObjectName} must contain the melt body, flow, and final puddle proxy visuals.");
+            }
+
+            Debug.Log(
+                $"MonstrumDeathMeltPuddleValidation Target={DeathMeltSpreadSlotObjectName}, " +
+                $"DeathClip={deathClip.name}, MeltClip={meltClip.name}, ProxyVisuals={proxyVisualCount}, " +
+                $"BodyRendererEnabledCurves={modelRendererCurves}, EyeRendererCurves={eyeRendererCurves}, " +
+                $"EyeLightCurves={eyeLightCurves}, CurveBindings={AnimationUtility.GetCurveBindings(meltClip).Length}.");
+        }
+
+        private static void ValidateDeathMeltControllerFullSequenceLoop(
+            AnimatorController controller,
+            AnimationClip deathClip,
+            AnimationClip meltClip)
+        {
+            if (controller.layers.Length == 0 || controller.layers[0].stateMachine == null)
+            {
+                throw new InvalidOperationException($"{DeathLoopControllerAssetPath} must contain a base layer state machine.");
+            }
+
+            var stateMachine = controller.layers[0].stateMachine;
+            var deathState = FindAnimatorStateUsingMotion(stateMachine, deathClip);
+            var meltState = FindAnimatorStateUsingMotion(stateMachine, meltClip);
+            if (deathState == null || meltState == null)
+            {
+                throw new InvalidOperationException($"{DeathLoopControllerAssetPath} must contain separate death and melt states.");
+            }
+
+            if (stateMachine.defaultState != deathState)
+            {
+                throw new InvalidOperationException($"{DeathLoopControllerAssetPath} must start from the source death FBX state.");
+            }
+
+            if (!HasExitTransitionTo(deathState, meltState, DeathToMeltTransitionExitTime))
+            {
+                throw new InvalidOperationException($"{DeathLoopControllerAssetPath} must transition from the source death FBX state to {DeathMeltPuddleClipName}.");
+            }
+
+            if (!HasExitTransitionTo(meltState, deathState, 1.00f))
+            {
+                throw new InvalidOperationException($"{DeathLoopControllerAssetPath} must transition from {DeathMeltPuddleClipName} back to the source death FBX state for full sequence looping.");
+            }
+        }
+
+        private static AnimatorState FindAnimatorStateUsingMotion(AnimatorStateMachine stateMachine, Motion motion)
+        {
+            foreach (var childState in stateMachine.states)
+            {
+                if (childState.state != null && childState.state.motion == motion)
+                {
+                    return childState.state;
+                }
+            }
+
+            return null;
+        }
+
+        private static bool HasExitTransitionTo(AnimatorState source, AnimatorState destination, float expectedExitTime)
+        {
+            foreach (var transition in source.transitions)
+            {
+                if (transition != null &&
+                    transition.destinationState == destination &&
+                    transition.hasExitTime &&
+                    Mathf.Abs(transition.exitTime - expectedExitTime) <= 0.01f &&
+                    transition.hasFixedDuration &&
+                    transition.duration <= 0.001f)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static void RequireCurveDelta(AnimationClip clip, string path, string propertyName, float minimumDelta, string label)
+        {
+            if (HasCurveDelta(clip, path, propertyName, minimumDelta))
+            {
+                return;
+            }
+
+            throw new InvalidOperationException($"{label} curve must change by at least {minimumDelta:0.###}: {path}/{propertyName}.");
+        }
+
+        private static void RequireCurveMaximumDelta(AnimationClip clip, string path, string propertyName, float maximumDelta, string label)
+        {
+            var curve = AnimationUtility.GetEditorCurve(clip, EditorCurveBinding.FloatCurve(path, typeof(Transform), propertyName));
+            if (curve == null || curve.length == 0)
+            {
+                throw new InvalidOperationException($"{label} curve is missing: {path}/{propertyName}.");
+            }
+
+            var min = curve.keys[0].value;
+            var max = curve.keys[0].value;
+            foreach (var key in curve.keys)
+            {
+                min = Mathf.Min(min, key.value);
+                max = Mathf.Max(max, key.value);
+            }
+
+            if (max - min > maximumDelta)
+            {
+                throw new InvalidOperationException($"{label} curve must not change by more than {maximumDelta:0.###}: {path}/{propertyName}.");
+            }
+        }
+
+        private static void RequireNoTransformCurve(AnimationClip clip, string path, string propertyName, string label)
+        {
+            var curve = AnimationUtility.GetEditorCurve(clip, EditorCurveBinding.FloatCurve(path, typeof(Transform), propertyName));
+            if (curve != null && curve.length > 0)
+            {
+                throw new InvalidOperationException($"{label} curve must not be authored: {path}/{propertyName}.");
+            }
+        }
+
+        private static void RequireCurveNonDecreasing(AnimationClip clip, string path, string propertyName, string label)
+        {
+            var curve = AnimationUtility.GetEditorCurve(clip, EditorCurveBinding.FloatCurve(path, typeof(Transform), propertyName));
+            if (curve == null || curve.length == 0)
+            {
+                throw new InvalidOperationException($"{label} curve is missing: {path}/{propertyName}.");
+            }
+
+            RequireSampledCurveNonDecreasing(curve, label, $"{path}/{propertyName}");
+        }
+
+        private static void RequireScaledChildCurveNonDecreasing(AnimationClip clip, string childPath, string propertyName, string label)
+        {
+            var rootCurve = AnimationUtility.GetEditorCurve(clip, EditorCurveBinding.FloatCurve(string.Empty, typeof(Transform), propertyName));
+            var childCurve = AnimationUtility.GetEditorCurve(clip, EditorCurveBinding.FloatCurve(childPath, typeof(Transform), propertyName));
+            if (childCurve == null || childCurve.length == 0)
+            {
+                throw new InvalidOperationException($"{label} curves are missing: {childPath}/{propertyName}.");
+            }
+
+            if (rootCurve == null || rootCurve.length == 0)
+            {
+                RequireSampledCurveNonDecreasing(childCurve, label, $"{childPath}/{propertyName}");
+                return;
+            }
+
+            const int sampleCount = 120;
+            var previous = rootCurve.Evaluate(0f) * childCurve.Evaluate(0f);
+            for (var i = 1; i <= sampleCount; i++)
+            {
+                var time = DeathMeltPuddleDurationSeconds * i / sampleCount;
+                var current = rootCurve.Evaluate(time) * childCurve.Evaluate(time);
+                if (current + 0.0001f < previous)
+                {
+                    throw new InvalidOperationException($"{label} curve must not shrink after parent scaling: {childPath}/{propertyName}.");
+                }
+
+                previous = current;
+            }
+        }
+
+        private static void RequireSampledCurveNonDecreasing(AnimationCurve curve, string label, string pathAndProperty)
+        {
+            const int sampleCount = 120;
+            var previous = curve.Evaluate(0f);
+            for (var i = 1; i <= sampleCount; i++)
+            {
+                var time = DeathMeltPuddleDurationSeconds * i / sampleCount;
+                var current = curve.Evaluate(time);
+                if (current + 0.0001f < previous)
+                {
+                    throw new InvalidOperationException($"{label} curve must only spread outward: {pathAndProperty}.");
+                }
+
+                previous = current;
+            }
+        }
+
+        private static bool HasCurveDelta(AnimationClip clip, string path, string propertyName, float minimumDelta)
+        {
+            var curve = AnimationUtility.GetEditorCurve(clip, EditorCurveBinding.FloatCurve(path, typeof(Transform), propertyName));
+            if (curve == null || curve.length == 0)
+            {
+                return false;
+            }
+
+            var min = curve.keys[0].value;
+            var max = curve.keys[0].value;
+            foreach (var key in curve.keys)
+            {
+                min = Mathf.Min(min, key.value);
+                max = Mathf.Max(max, key.value);
+            }
+
+            return max - min >= minimumDelta;
+        }
+
+        private static bool HasRendererEnabledCurve(AnimationClip clip, Transform root, Transform target)
+        {
+            var path = AnimationUtility.CalculateTransformPath(target, root);
+            var curve = AnimationUtility.GetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Renderer), "m_Enabled"));
+            return curve != null && curve.length > 0;
+        }
+
+        private static bool HasLightEnabledCurve(AnimationClip clip, Transform root, Transform target)
+        {
+            var path = AnimationUtility.CalculateTransformPath(target, root);
+            var curve = AnimationUtility.GetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Light), "m_Enabled"));
+            return curve != null && curve.length > 0;
+        }
+
+        private static void RequireRendererEnabledStartsOnThenNonIncreasing(
+            AnimationClip clip,
+            Transform root,
+            Transform target,
+            string label)
+        {
+            var path = AnimationUtility.CalculateTransformPath(target, root);
+            var curve = AnimationUtility.GetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Renderer), "m_Enabled"));
+            RequireEnabledStartsOnThenNonIncreasing(curve, label, path);
+        }
+
+        private static void RequireLightEnabledStartsOnThenNonIncreasing(
+            AnimationClip clip,
+            Transform root,
+            Transform target,
+            string label)
+        {
+            var path = AnimationUtility.CalculateTransformPath(target, root);
+            var curve = AnimationUtility.GetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Light), "m_Enabled"));
+            RequireEnabledStartsOnThenNonIncreasing(curve, label, path);
+        }
+
+        private static void RequireRendererEnabledAlwaysOff(
+            AnimationClip clip,
+            Transform root,
+            Transform target,
+            string label)
+        {
+            var path = AnimationUtility.CalculateTransformPath(target, root);
+            var curve = AnimationUtility.GetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Renderer), "m_Enabled"));
+            RequireEnabledAlwaysOff(curve, label, path);
+        }
+
+        private static void RequireLightEnabledAlwaysOff(
+            AnimationClip clip,
+            Transform root,
+            Transform target,
+            string label)
+        {
+            var path = AnimationUtility.CalculateTransformPath(target, root);
+            var curve = AnimationUtility.GetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Light), "m_Enabled"));
+            RequireEnabledAlwaysOff(curve, label, path);
+        }
+
+        private static void RequireRendererEnabledAlways(
+            AnimationClip clip,
+            Transform root,
+            Transform target,
+            string label)
+        {
+            var path = AnimationUtility.CalculateTransformPath(target, root);
+            var curve = AnimationUtility.GetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Renderer), "m_Enabled"));
+            if (curve == null || curve.length == 0)
+            {
+                throw new InvalidOperationException($"{label} curve is missing: {path}/m_Enabled.");
+            }
+
+            foreach (var key in curve.keys)
+            {
+                if (key.value < 0.5f)
+                {
+                    throw new InvalidOperationException($"{label} must remain enabled and separate from melt proxy visibility: {path}/m_Enabled.");
+                }
+            }
+        }
+
+        private static void RequireRendererEnabledStartsOffThenNonDecreasing(
+            AnimationClip clip,
+            Transform root,
+            Transform target,
+            string label)
+        {
+            var path = AnimationUtility.CalculateTransformPath(target, root);
+            var curve = AnimationUtility.GetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Renderer), "m_Enabled"));
+            RequireEnabledStartsOffThenNonDecreasing(curve, label, path);
+        }
+
+        private static void RequireEnabledAlwaysOff(AnimationCurve curve, string label, string path)
+        {
+            if (curve == null || curve.length == 0)
+            {
+                throw new InvalidOperationException($"{label} curve is missing: {path}/m_Enabled.");
+            }
+
+            foreach (var key in curve.keys)
+            {
+                if (key.value > 0.5f)
+                {
+                    throw new InvalidOperationException($"{label} must stay hidden during melt playback: {path}/m_Enabled.");
+                }
+            }
+        }
+
+        private static void RequireEnabledStartsOffThenNonDecreasing(AnimationCurve curve, string label, string path)
+        {
+            if (curve == null || curve.length == 0)
+            {
+                throw new InvalidOperationException($"{label} curve is missing: {path}/m_Enabled.");
+            }
+
+            var previous = curve.keys[0].value;
+            if (previous > 0.5f)
+            {
+                throw new InvalidOperationException($"{label} must start hidden before the late puddle spread: {path}/m_Enabled.");
+            }
+
+            var becameVisible = false;
+            for (var i = 1; i < curve.length; i++)
+            {
+                var current = curve.keys[i].value;
+                if (current + 0.01f < previous)
+                {
+                    throw new InvalidOperationException($"{label} must not turn off after becoming visible: {path}/m_Enabled.");
+                }
+
+                becameVisible |= current > 0.5f;
+                previous = current;
+            }
+
+            if (!becameVisible)
+            {
+                throw new InvalidOperationException($"{label} must become visible for the late puddle spread: {path}/m_Enabled.");
+            }
+        }
+
+        private static void RequireEnabledStartsOnThenNonIncreasing(AnimationCurve curve, string label, string path)
+        {
+            if (curve == null || curve.length == 0)
+            {
+                throw new InvalidOperationException($"{label} curve is missing: {path}/m_Enabled.");
+            }
+
+            var previous = curve.keys[0].value;
+            if (previous < 0.5f)
+            {
+                throw new InvalidOperationException($"{label} must start visible before it disappears: {path}/m_Enabled.");
+            }
+
+            for (var i = 1; i < curve.length; i++)
+            {
+                var current = curve.keys[i].value;
+                if (current > previous + 0.01f)
+                {
+                    throw new InvalidOperationException($"{label} must not re-enable after disappearing: {path}/m_Enabled.");
+                }
+
+                previous = current;
+            }
+        }
+
+        private static int CountDeathMeltProxyVisuals(Transform root)
+        {
+            var count = 0;
+            foreach (var child in root.GetComponentsInChildren<Transform>(true))
+            {
+                if (child != root && child.name.StartsWith(DeathMeltProxyPrefix, StringComparison.Ordinal))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private static void ValidateDeathApprovedEyesMatchStatic(Transform staticObject, Transform deathSlot, Transform deathModel)
+        {
+            var staticEyeRoot = FindApprovedEyeRoot(staticObject);
+            var deathEyeRoot = FindApprovedEyeRoot(deathSlot);
+            if (staticEyeRoot == null || deathEyeRoot == null)
+            {
+                throw new InvalidOperationException($"{DeathMeltSpreadSlotObjectName} and {PlacementObjectName} must both contain {ApprovedEyeRootName}.");
+            }
+
+            var eyeMaterial = ResolveApprovedEyeMaterialFromStatic(staticEyeRoot);
+            ValidateAttackEyeParentAndLocalPlacementMatchesStatic(staticEyeRoot, deathEyeRoot, deathModel);
+            ValidateAttackEyeRenderersUseStaticLook(staticEyeRoot, deathEyeRoot, eyeMaterial);
+            ValidateEyeLightsMatchStatic(staticEyeRoot, deathEyeRoot);
+        }
+
+        private static void ValidateTransformHierarchyMatches(Transform staticObject, Transform attackSlot)
+        {
+            var staticPaths = BuildTransformPathMap(staticObject);
+            var attackPaths = BuildTransformPathMap(attackSlot);
+            foreach (var pair in staticPaths)
+            {
+                if (!attackPaths.ContainsKey(pair.Key))
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} is missing visual transform path copied from static slot: {pair.Key}.");
+                }
+            }
+
+            foreach (var pair in attackPaths)
+            {
+                if (!staticPaths.ContainsKey(pair.Key))
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} contains extra visual transform path not present in static slot: {pair.Key}.");
+                }
+            }
+        }
+
+        private static Dictionary<string, Transform> BuildTransformPathMap(Transform root)
+        {
+            var result = new Dictionary<string, Transform>(StringComparer.Ordinal);
+            foreach (var child in root.GetComponentsInChildren<Transform>(true))
+            {
+                if (child == root)
+                {
+                    continue;
+                }
+
+                result.Add(BuildTransformPath(root, child), child);
+            }
+
+            return result;
+        }
+
+        private static void ValidateBodyMaterialsMatchStatic(Transform staticObject, Transform attackSlot)
+        {
+            var staticEyeRoot = FindApprovedEyeRoot(staticObject);
+            var attackEyeRoot = FindApprovedEyeRoot(attackSlot);
+            var staticRenderers = BuildRendererPathMap(staticObject, staticEyeRoot);
+            var attackRenderers = BuildRendererPathMap(attackSlot, attackEyeRoot);
+            if (staticRenderers.Count != attackRenderers.Count)
+            {
+                throw new InvalidOperationException(
+                    $"{AttackDoubleHammerSlotObjectName} body renderer count must match {PlacementObjectName}. Static={staticRenderers.Count}, Attack={attackRenderers.Count}.");
+            }
+
+            foreach (var pair in staticRenderers)
+            {
+                if (!attackRenderers.TryGetValue(pair.Key, out var attackRenderer))
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} is missing body renderer path {pair.Key}.");
+                }
+
+                var staticMaterials = pair.Value.sharedMaterials;
+                var attackMaterials = attackRenderer.sharedMaterials;
+                if (staticMaterials.Length != attackMaterials.Length)
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{pair.Key} material slot count does not match static slot.");
+                }
+
+                for (var i = 0; i < staticMaterials.Length; i++)
+                {
+                    if (staticMaterials[i] != attackMaterials[i])
+                    {
+                        throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{pair.Key} body material does not match static slot.");
+                    }
+                }
+            }
+        }
+
+        private static Dictionary<string, Renderer> BuildRendererPathMap(Transform root, Transform ignoredRoot)
+        {
+            var result = new Dictionary<string, Renderer>(StringComparer.Ordinal);
+            foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
+            {
+                if (ignoredRoot != null && renderer.transform.IsChildOf(ignoredRoot))
+                {
+                    continue;
+                }
+
+                result.Add(BuildTransformPath(root, renderer.transform), renderer);
+            }
+
+            return result;
+        }
+
+        private static void ValidateApprovedEyesMatchStatic(Transform staticObject, Transform attackSlot)
+        {
+            var staticEyeRoot = FindApprovedEyeRoot(staticObject);
+            var attackEyeRoot = FindApprovedEyeRoot(attackSlot);
+            if (staticEyeRoot == null || attackEyeRoot == null)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} and {PlacementObjectName} must both contain {ApprovedEyeRootName}.");
+            }
+
+            ValidateEyeTransformPath(staticObject, attackSlot, staticEyeRoot, attackEyeRoot);
+            ValidateEyeRenderersMatchStatic(staticEyeRoot, attackEyeRoot);
+            ValidateEyeLightsMatchStatic(staticEyeRoot, attackEyeRoot);
+        }
+
+        private static void ValidateEyeTransformPath(
+            Transform staticObject,
+            Transform attackSlot,
+            Transform staticEyeRoot,
+            Transform attackEyeRoot)
+        {
+            var staticEyePath = BuildTransformPath(staticObject, staticEyeRoot);
+            var attackEyePath = BuildTransformPath(attackSlot, attackEyeRoot);
+            if (!string.Equals(staticEyePath, attackEyePath, StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    $"{AttackDoubleHammerSlotObjectName} eye root path must match static slot. Static={staticEyePath}, Attack={attackEyePath}.");
+            }
+        }
+
+        private static void ValidateEyeRenderersMatchStatic(Transform staticEyeRoot, Transform attackEyeRoot)
+        {
+            var staticRenderers = BuildRendererPathMap(staticEyeRoot, null);
+            var attackRenderers = BuildRendererPathMap(attackEyeRoot, null);
+            if (staticRenderers.Count != attackRenderers.Count)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} eye renderer count must match static slot.");
+            }
+
+            foreach (var pair in staticRenderers)
+            {
+                if (!attackRenderers.TryGetValue(pair.Key, out var attackRenderer))
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} is missing eye renderer path {pair.Key}.");
+                }
+
+                var staticMesh = ResolveAssignedRendererMesh(pair.Value);
+                var attackMesh = ResolveAssignedRendererMesh(attackRenderer);
+                if (staticMesh != attackMesh)
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{pair.Key} eye mesh does not match static slot.");
+                }
+
+                if (pair.Value.sharedMaterial != attackRenderer.sharedMaterial)
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{pair.Key} eye material does not match static slot.");
+                }
+            }
+        }
+
+        private static void ValidateEyeLightsMatchStatic(Transform staticEyeRoot, Transform attackEyeRoot)
+        {
+            var staticLights = BuildLightPathMap(staticEyeRoot);
+            var attackLights = BuildLightPathMap(attackEyeRoot);
+            if (staticLights.Count != attackLights.Count)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} eye light count must match static slot.");
+            }
+
+            foreach (var pair in staticLights)
+            {
+                if (!attackLights.TryGetValue(pair.Key, out var attackLight))
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} is missing eye light path {pair.Key}.");
+                }
+
+                var staticLight = pair.Value;
+                if (staticLight.type != attackLight.type ||
+                    staticLight.color != attackLight.color ||
+                    Mathf.Abs(staticLight.intensity - attackLight.intensity) > 0.001f ||
+                    Mathf.Abs(staticLight.range - attackLight.range) > 0.001f ||
+                    Mathf.Abs(staticLight.spotAngle - attackLight.spotAngle) > 0.001f)
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{pair.Key} eye light settings do not match static slot.");
+                }
+            }
+        }
+
+        private static Dictionary<string, Light> BuildLightPathMap(Transform root)
+        {
+            var result = new Dictionary<string, Light>(StringComparer.Ordinal);
+            foreach (var light in root.GetComponentsInChildren<Light>(true))
+            {
+                result.Add(BuildTransformPath(root, light.transform), light);
+            }
+
+            return result;
+        }
+
+        private static Transform ValidateAttackSourceModelPrefabInstance(Transform attackSlot)
+        {
+            foreach (var child in attackSlot.GetComponentsInChildren<Transform>(true))
+            {
+                var prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(child.gameObject);
+                if (string.Equals(prefabPath, UnityAttackModelAssetPath, StringComparison.Ordinal))
+                {
+                    var model = attackSlot.Find(ModelChildName);
+                    if (model == null || !child.IsChildOf(model))
+                    {
+                        throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} contains attack FBX instance outside {ModelChildName}: {BuildTransformPath(attackSlot, child)}.");
+                    }
+
+                    return model;
+                }
+            }
+
+            throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} must contain an instance of {UnityAttackModelAssetPath} under {ModelChildName}.");
+        }
+
+        private static Transform ValidateDeathSourceModelPrefabInstance(Transform deathSlot)
+        {
+            foreach (var child in deathSlot.GetComponentsInChildren<Transform>(true))
+            {
+                var prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(child.gameObject);
+                if (string.Equals(prefabPath, UnityDeathModelAssetPath, StringComparison.Ordinal))
+                {
+                    var model = deathSlot.Find(ModelChildName);
+                    if (model == null || !child.IsChildOf(model))
+                    {
+                        throw new InvalidOperationException($"{DeathMeltSpreadSlotObjectName} contains death FBX instance outside {ModelChildName}: {BuildTransformPath(deathSlot, child)}.");
+                    }
+
+                    return model;
+                }
+            }
+
+            throw new InvalidOperationException($"{DeathMeltSpreadSlotObjectName} must contain an instance of {UnityDeathModelAssetPath} under {ModelChildName}.");
+        }
+
+        private static void ValidateAttackBodyMaterialMatchesStatic(Transform staticObject, Transform attackSlot)
+        {
+            var staticBodyMaterial = ResolvePrimaryBodyMaterial(staticObject);
+            var attackEyeRoot = FindApprovedEyeRoot(attackSlot);
+            var attackBodyRenderers = GetBodyRenderers(attackSlot, attackEyeRoot);
+            if (attackBodyRenderers.Count == 0)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} has no attack body renderers after visual synchronization.");
+            }
+
+            foreach (var renderer in attackBodyRenderers)
+            {
+                foreach (var material in renderer.sharedMaterials)
+                {
+                    if (material != staticBodyMaterial)
+                    {
+                        throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{renderer.name} body material does not match {PlacementObjectName}.");
+                    }
+                }
+            }
+        }
+
+        private static void ValidateAttackApprovedEyesMatchStatic(Transform staticObject, Transform attackSlot, Transform attackModel)
+        {
+            var staticEyeRoot = FindApprovedEyeRoot(staticObject);
+            var attackEyeRoot = FindApprovedEyeRoot(attackSlot);
+            if (staticEyeRoot == null || attackEyeRoot == null)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} and {PlacementObjectName} must both contain {ApprovedEyeRootName}.");
+            }
+
+            var eyeMaterial = ResolveApprovedEyeMaterialFromStatic(staticEyeRoot);
+            ValidateAttackEyeParentAndLocalPlacementMatchesStatic(staticEyeRoot, attackEyeRoot, attackModel);
+            ValidateAttackEyeRenderersUseStaticLook(staticEyeRoot, attackEyeRoot, eyeMaterial);
+            ValidateEyeLightsMatchStatic(staticEyeRoot, attackEyeRoot);
+            ValidateAttackEyesAttachedToModelSurface(attackModel, attackEyeRoot, eyeMaterial);
+        }
+
+        private static void ValidateAttackEyeParentAndLocalPlacementMatchesStatic(Transform staticEyeRoot, Transform attackEyeRoot, Transform attackModel)
+        {
+            if (attackEyeRoot.parent == null || !attackEyeRoot.parent.IsChildOf(attackModel))
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{ApprovedEyeRootName} must be parented under the attack FBX model.");
+            }
+
+            if (staticEyeRoot.parent == null ||
+                !IsMatchingEyeReferenceParentName(staticEyeRoot.parent.name, attackEyeRoot.parent.name))
+            {
+                var staticParentName = staticEyeRoot.parent != null ? staticEyeRoot.parent.name : "<none>";
+                var attackParentName = attackEyeRoot.parent != null ? attackEyeRoot.parent.name : "<none>";
+                throw new InvalidOperationException(
+                    $"{AttackDoubleHammerSlotObjectName}/{ApprovedEyeRootName} must use the same eye parent as {PlacementObjectName}. " +
+                    $"StaticParent={staticParentName}, AttackParent={attackParentName}.");
+            }
+
+            if (Vector3.Distance(staticEyeRoot.localPosition, attackEyeRoot.localPosition) > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    $"{AttackDoubleHammerSlotObjectName}/{ApprovedEyeRootName} local position must match the reference Monstrum eye placement. " +
+                    $"Static={FormatVector(staticEyeRoot.localPosition)}, Attack={FormatVector(attackEyeRoot.localPosition)}.");
+            }
+
+            if (Quaternion.Angle(staticEyeRoot.localRotation, attackEyeRoot.localRotation) > 0.1f)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{ApprovedEyeRootName} local rotation must match the reference Monstrum eye placement.");
+            }
+
+            if (Vector3.Distance(staticEyeRoot.localScale, attackEyeRoot.localScale) > 0.001f)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{ApprovedEyeRootName} local scale must match the reference Monstrum eye placement.");
+            }
+        }
+
+        private static void ValidateAttackEyeRenderersUseStaticLook(Transform staticEyeRoot, Transform attackEyeRoot, Material eyeMaterial)
+        {
+            var staticRenderers = BuildRendererPathMap(staticEyeRoot, null);
+            var attackRenderers = BuildRendererPathMap(attackEyeRoot, null);
+            if (staticRenderers.Count != attackRenderers.Count)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} eye renderer count must match static slot.");
+            }
+
+            foreach (var pair in staticRenderers)
+            {
+                if (!attackRenderers.TryGetValue(pair.Key, out var attackRenderer))
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} is missing eye renderer path {pair.Key}.");
+                }
+
+                var attackMesh = ResolveAssignedRendererMesh(attackRenderer);
+                if (attackMesh == null || attackMesh.vertexCount == 0)
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{pair.Key} eye mesh is missing.");
+                }
+
+                if (pair.Value.sharedMaterial != eyeMaterial || attackRenderer.sharedMaterial != eyeMaterial)
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{pair.Key} eye material does not match static slot.");
+                }
+            }
+        }
+
+        private static void ValidateAttackEyesAttachedToModelSurface(Transform attackModel, Transform attackEyeRoot, Material eyeMaterial)
+        {
+            var leftEye = attackEyeRoot.Find("Monstrum_ApprovedScene_LeftEyeGlow");
+            var rightEye = attackEyeRoot.Find("Monstrum_ApprovedScene_RightEyeGlow");
+            if (leftEye == null || rightEye == null)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} is missing approved left/right eye meshes.");
+            }
+
+            var frontDirection = CalculateMonstrumVisualFrontDirection(attackModel);
+            var targetBounds = CalculateRendererBounds(attackModel, new Bounds(attackModel.position, Vector3.one));
+            foreach (var eye in new[] { leftEye, rightEye })
+            {
+                var renderer = eye.GetComponent<MeshRenderer>();
+                var meshFilter = eye.GetComponent<MeshFilter>();
+                if (renderer == null || meshFilter == null || meshFilter.sharedMesh == null)
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{eye.name} is missing its mesh renderer or mesh.");
+                }
+
+                if (renderer.sharedMaterial != eyeMaterial)
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{eye.name} does not use the approved Monstrum eye material.");
+                }
+
+                var mesh = meshFilter.sharedMesh;
+                var minimumVertexSurfaceOffset = float.PositiveInfinity;
+                var maximumVertexSurfaceOffset = float.NegativeInfinity;
+                foreach (var localVertex in mesh.vertices)
+                {
+                    var worldVertex = eye.TransformPoint(localVertex);
+                    if (!TryFindFrontSurfacePoint(attackModel, attackEyeRoot, worldVertex, frontDirection, targetBounds, out var vertexSurfacePoint) &&
+                        !TryFindClosestSurfacePoint(attackModel, attackEyeRoot, worldVertex, out vertexSurfacePoint))
+                    {
+                        throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{eye.name} could not resolve the face surface under an eye vertex.");
+                    }
+
+                    var vertexSurfaceOffset = Vector3.Dot(worldVertex - vertexSurfacePoint, frontDirection.normalized);
+                    minimumVertexSurfaceOffset = Mathf.Min(minimumVertexSurfaceOffset, vertexSurfaceOffset);
+                    maximumVertexSurfaceOffset = Mathf.Max(maximumVertexSurfaceOffset, vertexSurfaceOffset);
+                }
+
+                if (minimumVertexSurfaceOffset < -0.006f || maximumVertexSurfaceOffset > 0.155f)
+                {
+                    throw new InvalidOperationException(
+                        $"{AttackDoubleHammerSlotObjectName}/{eye.name} is not surface-attached. " +
+                        $"VertexSurfaceOffsetRange={minimumVertexSurfaceOffset:0.###}..{maximumVertexSurfaceOffset:0.###}.");
+                }
+
+                var eyeCenter = renderer.bounds.center;
+                if (!TryFindFrontSurfacePoint(attackModel, attackEyeRoot, eyeCenter, frontDirection, targetBounds, out var surfacePoint) &&
+                    !TryFindClosestSurfacePoint(attackModel, attackEyeRoot, eyeCenter, out surfacePoint))
+                {
+                    throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName}/{eye.name} could not resolve the face surface under the eye mesh.");
+                }
+
+                var surfaceOffset = Vector3.Dot(eyeCenter - surfacePoint, frontDirection.normalized);
+                if (surfaceOffset < -0.006f || surfaceOffset > 0.155f)
+                {
+                    throw new InvalidOperationException(
+                        $"{AttackDoubleHammerSlotObjectName}/{eye.name} is not visibly attached to the face surface. SurfaceOffset={surfaceOffset:0.###}.");
+                }
+            }
+        }
+
+        private static void ValidateAttackEyesFollowAnimatedModel(Transform attackSlot, Transform attackModel)
+        {
+            var attackEyeRoot = FindApprovedEyeRoot(attackSlot);
+            if (attackEyeRoot == null)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} is missing {ApprovedEyeRootName}.");
+            }
+
+            if (attackEyeRoot.parent != null &&
+                attackEyeRoot.parent != attackSlot &&
+                attackEyeRoot.parent.IsChildOf(attackModel))
+            {
+                return;
+            }
+
+            var parentConstraint = attackEyeRoot.GetComponent<UnityEngine.Animations.ParentConstraint>();
+            if (parentConstraint == null ||
+                !parentConstraint.enabled ||
+                !parentConstraint.constraintActive ||
+                parentConstraint.sourceCount == 0)
+            {
+                throw new InvalidOperationException(
+                    $"{AttackDoubleHammerSlotObjectName}/{ApprovedEyeRootName} must follow an animated attack model bone.");
+            }
+
+            var followsAttackModel = false;
+            for (var i = 0; i < parentConstraint.sourceCount; i++)
+            {
+                var source = parentConstraint.GetSource(i);
+                if (source.sourceTransform != null &&
+                    source.weight > 0.99f &&
+                    source.sourceTransform.IsChildOf(attackModel))
+                {
+                    followsAttackModel = true;
+                    break;
+                }
+            }
+
+            if (!followsAttackModel)
+            {
+                throw new InvalidOperationException(
+                    $"{AttackDoubleHammerSlamSlotLabel()} eye constraint must target an animated attack model transform.");
+            }
+        }
+
+        private static string AttackDoubleHammerSlamSlotLabel()
+        {
+            return AttackDoubleHammerSlotObjectName + "/" + ApprovedEyeRootName;
+        }
+
+        private static void ValidateEyeRelativePlacementMatchesStatic(
+            Transform staticObject,
+            Transform attackSlot,
+            Transform staticEyeRoot,
+            Transform attackEyeRoot)
+        {
+            var staticRelativePosition = staticObject.InverseTransformPoint(staticEyeRoot.position);
+            var attackRelativePosition = attackSlot.InverseTransformPoint(attackEyeRoot.position);
+            if (Vector3.Distance(staticRelativePosition, attackRelativePosition) > 0.01f)
+            {
+                throw new InvalidOperationException(
+                    $"{AttackDoubleHammerSlotObjectName} eye relative position must match {PlacementObjectName}. " +
+                    $"Static={FormatVector(staticRelativePosition)}, Attack={FormatVector(attackRelativePosition)}.");
+            }
+
+            var staticRelativeRotation = Quaternion.Inverse(staticObject.rotation) * staticEyeRoot.rotation;
+            var attackRelativeRotation = Quaternion.Inverse(attackSlot.rotation) * attackEyeRoot.rotation;
+            if (Quaternion.Angle(staticRelativeRotation, attackRelativeRotation) > 0.1f)
+            {
+                throw new InvalidOperationException($"{AttackDoubleHammerSlotObjectName} eye relative rotation must match {PlacementObjectName}.");
+            }
+        }
+
+        private static Animator FindAnimatorUsingController(Transform target, RuntimeAnimatorController controller)
+        {
+            foreach (var animator in target.GetComponentsInChildren<Animator>(true))
+            {
+                if (animator.enabled && animator.runtimeAnimatorController == controller)
+                {
+                    return animator;
+                }
+            }
+
+            return null;
+        }
+
+        private static AttackModelReplacementResult ReplaceAttackSlotModels(Transform placementRoot, GameObject attackModelAsset)
+        {
+            var targetSlotNames = new List<string>();
+            var modelInstancePaths = new List<string>();
+            var rendererCount = 0;
+
+            foreach (var slotObjectName in AttackSlotObjectNames)
+            {
+                var slot = RequireAnimationReviewSlot(placementRoot, slotObjectName);
+                var existingModel = slot.Find(ModelChildName);
+                if (existingModel == null)
+                {
+                    throw new InvalidOperationException($"{slotObjectName} is missing child {ModelChildName}.");
+                }
+
+                UnityEngine.Object.DestroyImmediate(existingModel.gameObject);
+
+                var modelInstance = InstantiateAttackModelAsset(attackModelAsset);
+                modelInstance.name = ModelChildName;
+                modelInstance.transform.SetParent(slot, false);
+                modelInstance.transform.localPosition = Vector3.zero;
+                modelInstance.transform.localRotation = Quaternion.identity;
+                modelInstance.transform.localScale = Vector3.one;
+
+                DisableImportedAnimationPlayback(modelInstance.transform);
+                rendererCount += RequireRenderers(modelInstance.transform);
+                ScaleToTargetHeightAndAlignToGround(modelInstance.transform, placementRoot.position.y);
+
+                targetSlotNames.Add(slotObjectName);
+                modelInstancePaths.Add(slotObjectName + "/" + BuildTransformPath(slot, modelInstance.transform));
+                EditorUtility.SetDirty(slot.gameObject);
+                EditorUtility.SetDirty(modelInstance);
+            }
+
+            return new AttackModelReplacementResult(
+                string.Join(", ", targetSlotNames),
+                string.Join(", ", modelInstancePaths),
+                rendererCount);
+        }
+
+        private static GameObject InstantiateAttackModelAsset(GameObject attackModelAsset)
+        {
+            var modelInstance = PrefabUtility.InstantiatePrefab(attackModelAsset) as GameObject;
+            if (modelInstance == null)
+            {
+                modelInstance = UnityEngine.Object.Instantiate(attackModelAsset);
+            }
+
+            return modelInstance;
+        }
+
+        private static void ValidateAttackSlotModelReplacement(
+            Transform placementRoot,
+            AttackModelReplacementResult result)
+        {
+            var validatedRendererCount = 0;
+            foreach (var slotObjectName in AttackSlotObjectNames)
+            {
+                var slot = RequireAnimationReviewSlot(placementRoot, slotObjectName);
+                var model = slot.Find(ModelChildName);
+                if (model == null)
+                {
+                    throw new InvalidOperationException($"{slotObjectName} is missing replacement child {ModelChildName}.");
+                }
+
+                var prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(model.gameObject);
+                if (!string.Equals(prefabPath, UnityAttackModelAssetPath, StringComparison.Ordinal))
+                {
+                    throw new InvalidOperationException(
+                        $"{slotObjectName}/{ModelChildName} must be an instance of {UnityAttackModelAssetPath}. Actual={prefabPath}.");
+                }
+
+                var renderers = model.GetComponentsInChildren<Renderer>(true);
+                if (renderers.Length == 0)
+                {
+                    throw new InvalidOperationException($"{slotObjectName}/{ModelChildName} contains no renderers after replacement.");
+                }
+
+                var bounds = CalculateAnimationReviewBounds(model, new Bounds(model.position, Vector3.one));
+                if (Mathf.Abs(bounds.size.y - MonstrumTargetHeightMeters) > HeightToleranceMeters)
+                {
+                    throw new InvalidOperationException(
+                        $"{slotObjectName}/{ModelChildName} height must stay near {MonstrumTargetHeightMeters:0.###}m. Height={bounds.size.y:0.###}.");
+                }
+
+                if (Mathf.Abs(bounds.min.y - placementRoot.position.y) > HeightToleranceMeters)
+                {
+                    throw new InvalidOperationException(
+                        $"{slotObjectName}/{ModelChildName} must remain aligned to the Monstrum placement floor. BottomY={bounds.min.y:0.###}, FloorY={placementRoot.position.y:0.###}.");
+                }
+
+                validatedRendererCount += renderers.Length;
+            }
+
+            if (validatedRendererCount != result.RendererCount)
+            {
+                throw new InvalidOperationException(
+                    $"Monstrum attack model renderer count changed during validation. Applied={result.RendererCount}, Validated={validatedRendererCount}.");
+            }
+        }
+
         private static void DisableImportedAnimationPlayback(Transform root)
         {
             foreach (var animator in root.GetComponentsInChildren<Animator>(true))
@@ -793,7 +4236,7 @@ namespace Bellerophon.Editor.MonstrumCargoRunScene
                 instance.name = spec.ObjectName;
                 instance.transform.SetPositionAndRotation(
                     new Vector3(
-                        staticObject.position.x + spacing * (i + 1),
+                        staticObject.position.x + spacing * spec.ReviewIndex,
                         staticObject.position.y,
                         staticObject.position.z),
                     staticObject.rotation);
@@ -824,7 +4267,7 @@ namespace Bellerophon.Editor.MonstrumCargoRunScene
                 }
 
                 var expectedPosition = new Vector3(
-                    staticObject.position.x + spacing * (i + 1),
+                    staticObject.position.x + spacing * spec.ReviewIndex,
                     staticObject.position.y,
                     staticObject.position.z);
                 var distance = Vector3.Distance(slot.position, expectedPosition);
@@ -1936,6 +5379,11 @@ namespace Bellerophon.Editor.MonstrumCargoRunScene
 
         private static Transform SelectBestMoveSourceAnimatorRoot(Transform slot, AnimationClip clip)
         {
+            return SelectBestClipAnimatorRoot(slot, clip, MoveSlotObjectName);
+        }
+
+        private static Transform SelectBestClipAnimatorRoot(Transform slot, AnimationClip clip, string targetName)
+        {
             var candidates = new List<Transform> { slot };
             var model = slot.Find(ModelChildName);
             if (model != null)
@@ -1965,7 +5413,7 @@ namespace Bellerophon.Editor.MonstrumCargoRunScene
 
             if (best == null || bestScore <= 0)
             {
-                throw new InvalidOperationException($"{MoveSlotObjectName} could not resolve source animation clip bindings.");
+                throw new InvalidOperationException($"{targetName} could not resolve source animation clip bindings.");
             }
 
             return best;
@@ -5016,6 +8464,29 @@ namespace Bellerophon.Editor.MonstrumCargoRunScene
             public int SlotCount { get; }
         }
 
+        private readonly struct NonAnimatedMonstrumRemovalResult
+        {
+            public NonAnimatedMonstrumRemovalResult(
+                int keptCount,
+                int removedCount,
+                string keptObjects,
+                string removedObjects,
+                string inspectedObjects)
+            {
+                KeptCount = keptCount;
+                RemovedCount = removedCount;
+                KeptObjects = keptObjects;
+                RemovedObjects = removedObjects;
+                InspectedObjects = inspectedObjects;
+            }
+
+            public int KeptCount { get; }
+            public int RemovedCount { get; }
+            public string KeptObjects { get; }
+            public string RemovedObjects { get; }
+            public string InspectedObjects { get; }
+        }
+
         private readonly struct IdleBreathingAnimationResult
         {
             public IdleBreathingAnimationResult(
@@ -5095,6 +8566,143 @@ namespace Bellerophon.Editor.MonstrumCargoRunScene
             public bool AnimationClipIsLooping { get; }
         }
 
+        private readonly struct AttackModelReplacementResult
+        {
+            public AttackModelReplacementResult(string targetSlotNames, string modelInstancePaths, int rendererCount)
+            {
+                TargetSlotNames = targetSlotNames;
+                ModelInstancePaths = modelInstancePaths;
+                RendererCount = rendererCount;
+            }
+
+            public string TargetSlotNames { get; }
+            public string ModelInstancePaths { get; }
+            public int RendererCount { get; }
+        }
+
+        private readonly struct AttackSlot04VisualLoopResult
+        {
+            public AttackSlot04VisualLoopResult(
+                string targetSlotName,
+                string removedSlotName,
+                string modelInstancePath,
+                string animatorRootPath,
+                string externalSourceFbx,
+                string sourceClipAssetPath,
+                string sourceClipName,
+                string animatorControllerAssetPath,
+                int curveBindingCount,
+                int objectReferenceBindingCount,
+                bool clipLoopTime,
+                bool animationClipIsLooping,
+                int bodyRendererCount,
+                int removedAttackVisualCount)
+            {
+                TargetSlotName = targetSlotName;
+                RemovedSlotName = removedSlotName;
+                ModelInstancePath = modelInstancePath;
+                AnimatorRootPath = animatorRootPath;
+                ExternalSourceFbx = externalSourceFbx;
+                SourceClipAssetPath = sourceClipAssetPath;
+                SourceClipName = sourceClipName;
+                AnimatorControllerAssetPath = animatorControllerAssetPath;
+                CurveBindingCount = curveBindingCount;
+                ObjectReferenceBindingCount = objectReferenceBindingCount;
+                ClipLoopTime = clipLoopTime;
+                AnimationClipIsLooping = animationClipIsLooping;
+                BodyRendererCount = bodyRendererCount;
+                RemovedAttackVisualCount = removedAttackVisualCount;
+            }
+
+            public string TargetSlotName { get; }
+            public string RemovedSlotName { get; }
+            public string ModelInstancePath { get; }
+            public string AnimatorRootPath { get; }
+            public string ExternalSourceFbx { get; }
+            public string SourceClipAssetPath { get; }
+            public string SourceClipName { get; }
+            public string AnimatorControllerAssetPath { get; }
+            public int CurveBindingCount { get; }
+            public int ObjectReferenceBindingCount { get; }
+            public bool ClipLoopTime { get; }
+            public bool AnimationClipIsLooping { get; }
+            public int BodyRendererCount { get; }
+            public int RemovedAttackVisualCount { get; }
+        }
+
+        private readonly struct DeathSlot05VisualLoopResult
+        {
+            public DeathSlot05VisualLoopResult(
+                string targetSlotName,
+                string removedSlotName,
+                string modelInstancePath,
+                string animatorRootPath,
+                string externalSourceFbx,
+                string sourceClipAssetPath,
+                string sourceClipName,
+                string animatorControllerAssetPath,
+                int curveBindingCount,
+                int objectReferenceBindingCount,
+                bool clipLoopTime,
+                bool animationClipIsLooping,
+                int bodyRendererCount,
+                int removedDeathVisualCount)
+            {
+                TargetSlotName = targetSlotName;
+                RemovedSlotName = removedSlotName;
+                ModelInstancePath = modelInstancePath;
+                AnimatorRootPath = animatorRootPath;
+                ExternalSourceFbx = externalSourceFbx;
+                SourceClipAssetPath = sourceClipAssetPath;
+                SourceClipName = sourceClipName;
+                AnimatorControllerAssetPath = animatorControllerAssetPath;
+                CurveBindingCount = curveBindingCount;
+                ObjectReferenceBindingCount = objectReferenceBindingCount;
+                ClipLoopTime = clipLoopTime;
+                AnimationClipIsLooping = animationClipIsLooping;
+                BodyRendererCount = bodyRendererCount;
+                RemovedDeathVisualCount = removedDeathVisualCount;
+            }
+
+            public string TargetSlotName { get; }
+            public string RemovedSlotName { get; }
+            public string ModelInstancePath { get; }
+            public string AnimatorRootPath { get; }
+            public string ExternalSourceFbx { get; }
+            public string SourceClipAssetPath { get; }
+            public string SourceClipName { get; }
+            public string AnimatorControllerAssetPath { get; }
+            public int CurveBindingCount { get; }
+            public int ObjectReferenceBindingCount { get; }
+            public bool ClipLoopTime { get; }
+            public bool AnimationClipIsLooping { get; }
+            public int BodyRendererCount { get; }
+            public int RemovedDeathVisualCount { get; }
+        }
+
+        private readonly struct DeathMeltProxyVisuals
+        {
+            public DeathMeltProxyVisuals(
+                Transform bodyMass,
+                Transform frontFlow,
+                Transform leftFlow,
+                Transform rightFlow,
+                Transform finalPuddle)
+            {
+                BodyMass = bodyMass;
+                FrontFlow = frontFlow;
+                LeftFlow = leftFlow;
+                RightFlow = rightFlow;
+                FinalPuddle = finalPuddle;
+            }
+
+            public Transform BodyMass { get; }
+            public Transform FrontFlow { get; }
+            public Transform LeftFlow { get; }
+            public Transform RightFlow { get; }
+            public Transform FinalPuddle { get; }
+        }
+
         private readonly struct EyeSampleInfo
         {
             public EyeSampleInfo(
@@ -5136,12 +8744,14 @@ namespace Bellerophon.Editor.MonstrumCargoRunScene
 
         private readonly struct MotionSlotSpec
         {
-            public MotionSlotSpec(string objectName)
+            public MotionSlotSpec(string objectName, int reviewIndex)
             {
                 ObjectName = objectName;
+                ReviewIndex = reviewIndex;
             }
 
             public string ObjectName { get; }
+            public int ReviewIndex { get; }
         }
 
         private readonly struct MeshTriangle
