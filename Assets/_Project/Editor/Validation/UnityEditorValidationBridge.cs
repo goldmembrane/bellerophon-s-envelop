@@ -266,6 +266,54 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.UrzereCargoRunScene.UrzereCargoRunSceneApplyAndReview.InspectAppliedSceneState,
                         "Prepared Urzere CargoRunMvp scene state inspected.");
                     break;
+                case "ApplyPreparedAccelerandoToCurrentCargoRunScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ApplyPreparedModelToCurrentCargoRunScene,
+                        "Prepared Accelerando model applied to current CargoRunMvp scene.");
+                    break;
+                case "InspectPreparedAccelerandoCargoRunSceneState":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.InspectAppliedSceneState,
+                        "Prepared Accelerando CargoRunMvp scene state inspected.");
+                    break;
+                case "CapturePreparedAccelerandoReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.CaptureReview,
+                        "Prepared Accelerando static review captured.");
+                    break;
+                case "CapturePreparedAccelerandoAnimationSlots":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.CaptureAnimationSlotsReview,
+                        "Prepared Accelerando animation slots review captured.");
+                    break;
+                case "ApplyPreparedAccelerandoIdleBreathingAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ApplyIdleBreathingAnimationToCurrentScene,
+                        "Prepared Accelerando idle breathing animation applied.");
+                    break;
+                case "InspectPreparedAccelerandoIdleBreathingAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.InspectIdleBreathingAnimationInScene,
+                        "Prepared Accelerando idle breathing animation inspected.");
+                    break;
+                case "CapturePreparedAccelerandoIdleBreathingAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.CaptureIdleBreathingAnimationReview,
+                        "Prepared Accelerando idle breathing animation captured.");
+                    break;
+                case "InspectPreparedAccelerandoModelStructure":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.InspectPreparedModelStructure,
+                        "Prepared Accelerando model structure inspected.");
+                    break;
                 case "ApplyPreparedSocietasToCurrentCargoRunScene":
                     RunSynchronous(
                         request,

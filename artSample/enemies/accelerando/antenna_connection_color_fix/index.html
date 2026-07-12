@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>아첼레란도 더듬이 연결 및 채색 샘플</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #181916; color: #f0eee7; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    section { margin: 30px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; background: #24231f; border: 1px solid #514a3f; padding: 14px; }
+    .comparison h3 { grid-column: 1 / -1; }
+    figure { margin: 0; background: #10100e; border: 1px solid #403a31; padding: 10px; }
+    img { width: 100%; height: auto; display: block; }
+    figcaption { margin-top: 8px; font-size: 13px; color: #d7d1c3; word-break: break-all; }
+    p, li { line-height: 1.55; }
+    code { color: #e8d7ad; }
+    a { color: #f0c46c; }
+    @media (max-width: 760px) { .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>아첼레란도 더듬이 연결 및 채색 샘플</h1>
+  <p>
+    기준 이미지는 <code>accelerando(아첼레란도).png</code>, <code>accelerando-beside.png</code>입니다.
+    현재 샘플은 원본 <code>enemies model/accelerando.glb</code>를 직접 덮어쓰지 않고,
+    막대형 연결부를 사슬로 치환해 더듬이 끝과 철퇴가 이어지도록 만든 검토용 GLB/BLEND와 렌더입니다.
+    사용자 승인 전까지 Unity 씬과 런타임 에셋에는 연결하지 않습니다.
+  </p>
+
+  <section>
+    <h2>기준 이미지와 생성 렌더 비교</h2>
+
+    <article class="comparison">
+      <h3>정면</h3>
+      <figure>
+        <img src="../../../../image/accelerando(아첼레란도).png" alt="아첼레란도 정면 기준 이미지">
+        <figcaption>기준 이미지: ../../../../image/accelerando(아첼레란도).png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/accelerando_connected_colored_front.png" alt="아첼레란도 정면 생성 렌더">
+        <figcaption>생성 렌더: renders/accelerando_connected_colored_front.png</figcaption>
+      </figure>
+    </article>
+
+    <article class="comparison">
+      <h3>측면</h3>
+      <figure>
+        <img src="../../../../image/accelerando-beside.png" alt="아첼레란도 측면 기준 이미지">
+        <figcaption>기준 이미지: ../../../../image/accelerando-beside.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/accelerando_connected_colored_side.png" alt="아첼레란도 측면 생성 렌더">
+        <figcaption>생성 렌더: renders/accelerando_connected_colored_side.png</figcaption>
+      </figure>
+    </article>
+  </section>
+
+  <section>
+    <h2>생성 렌더</h2>
+    <div class="grid">
+      <figure>
+        <img src="renders/accelerando_connected_colored_contact_sheet.png" alt="아첼레란도 기준 이미지와 샘플 비교 시트">
+        <figcaption>accelerando_connected_colored_contact_sheet.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/accelerando_connected_colored_front.png" alt="아첼레란도 정면 샘플">
+        <figcaption>accelerando_connected_colored_front.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/accelerando_connected_colored_side.png" alt="아첼레란도 측면 샘플">
+        <figcaption>accelerando_connected_colored_side.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/accelerando_connected_colored_oblique.png" alt="아첼레란도 사선 샘플">
+        <figcaption>accelerando_connected_colored_oblique.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/accelerando_original_front.png" alt="아첼레란도 원본 정면 렌더">
+        <figcaption>원본 비교: accelerando_original_front.png</figcaption>
+      </figure>
+      <figure>
+        <img src="renders/accelerando_original_side.png" alt="아첼레란도 원본 측면 렌더">
+        <figcaption>원본 비교: accelerando_original_side.png</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>현재 모델 적용 기준</h2>
+    <p>
+      샘플은 원본 저폴리 메시의 형태를 유지하면서, 보이는 단절을 보강하는 별도 연결 메시와 머티리얼을 추가한 상태입니다.
+      Unity 적용 단계에서는 이 샘플을 승인 기준으로 삼고, 원본 모델 교체 또는 런타임 에셋 반영은 별도 승인 후 진행해야 합니다.
+    </p>
+    <ul>
+      <li>검토용 3D 파일: <code>exports/accelerando_connected_colored_sample.glb</code></li>
+      <li>검토용 Blender 파일: <code>exports/accelerando_connected_colored_sample.blend</code></li>
+      <li>막대 치환: 원본 메시의 막대형 연결부를 제거하고 사슬 링크로 대체했습니다.</li>
+      <li>사슬 시작점: 기존 더듬이 끝 캡 위치에서 첫 링크가 시작되도록 배치했습니다.</li>
+      <li>사슬 끝점: 철퇴 상단에 마지막 링크와 연결 링이 닿도록 배치했습니다.</li>
+      <li>형태 기준: 기준 이미지처럼 금속 막대가 아니라 녹슨 체인이 철퇴를 매다는 구조로 정리했습니다.</li>
+      <li>색상: 젖은 회갈색 몸통, 어두운 낡은 껍질, 녹슨 어두운 금속으로 구분했습니다.</li>
+      <li>전시용 바닥판: 원본 GLB에 있던 판 형태 하단부는 샘플에서 제거했습니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>적용하지 않은 항목</h2>
+    <ul>
+      <li><code>enemies model/accelerando.glb</code> 원본은 덮어쓰지 않았습니다.</li>
+      <li>Unity <code>Assets/</code>, 씬, 프리팹, 런타임 배치에는 연결하지 않았습니다.</li>
+      <li>애니메이션, 충돌, 리깅, 게임플레이 설정은 변경하지 않았습니다.</li>
+      <li>표면 질감은 현재 절차적 머티리얼 수준이며, 기준 이미지의 고해상도 점액/마모 디테일과 완전히 동일하지는 않습니다.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
