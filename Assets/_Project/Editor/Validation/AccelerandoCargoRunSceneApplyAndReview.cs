@@ -20,16 +20,20 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         private const string ModelChildName = "Accelerando_Model";
         private const string AnimationSlotsFrontCaptureName = "Accelerando_AnimationSlots_Front.png";
         private const string AnimationSlotsObliqueCaptureName = "Accelerando_AnimationSlots_Oblique.png";
+        private const string AntennaTipConnectionLeftSideCloseupName = "Accelerando_AntennaTipConnection_LeftSideCloseup.png";
+        private const string AntennaTipConnectionRightSideCloseupName = "Accelerando_AntennaTipConnection_RightSideCloseup.png";
+        private const string MaceChainLeftCloseupName = "Accelerando_MaceChain_NoPierce_LeftCloseup.png";
+        private const string MaceChainRightCloseupName = "Accelerando_MaceChain_NoPierce_RightCloseup.png";
         private const string ReviewCameraName = "Model Cam";
         private const string PlayerRootName = "Player";
 
-        private const string SourceModelAbsolutePath = "D:/Bellerophon2/Bellerophon/artSample/enemies/accelerando/antenna_connection_color_fix/exports/accelerando_connected_colored_sample.glb";
+        private const string SourceModelAbsolutePath = "D:/Bellerophon2/Bellerophon/artSample/enemies/accelerando/antenna_tip_ring_embedded_connection_fix/exports/accelerando_antenna_tip_ring_embedded_connection_sample.glb";
         private const string AccelerandoArtRoot = "Assets/_Project/Art/Enemies/Accelerando";
         private const string UnityModelFolder = AccelerandoArtRoot + "/Models";
         private const string UnityMaterialFolder = AccelerandoArtRoot + "/Materials";
         private const string UnityAnimationFolder = AccelerandoArtRoot + "/Animations";
         private const string UnityControllerFolder = AccelerandoArtRoot + "/Controllers";
-        private const string UnityModelAssetPath = UnityModelFolder + "/accelerando_connected_colored_sample.glb";
+        private const string UnityModelAssetPath = UnityModelFolder + "/accelerando_antenna_tip_ring_embedded_connection_sample.glb";
         private const string UnityFallbackMaterialAssetPath = UnityMaterialFolder + "/M_Accelerando_Fallback_URP.mat";
         private const string UnityApprovedFleshMaterialAssetPath = UnityMaterialFolder + "/M_Accelerando_Approved_WetTaupeFlesh_URP.mat";
         private const string UnityApprovedShellMaterialAssetPath = UnityMaterialFolder + "/M_Accelerando_Approved_DarkShell_URP.mat";
@@ -37,10 +41,19 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         private const string UnityIdleBreathMorphMeshAssetPath = UnityModelFolder + "/accelerando_idle_breath_morph_Mesh1.asset";
         private const string UnityIdleBreathClipAssetPath = UnityAnimationFolder + "/Accelerando_Idle_Breath_Morph.anim";
         private const string UnityIdleBreathControllerAssetPath = UnityControllerFolder + "/Accelerando_Idle_Breath_Morph.controller";
+        private const string UnityCrawlForwardClipAssetPath = UnityAnimationFolder + "/Accelerando_Crawl_Forward_Loop.anim";
+        private const string UnityCrawlForwardControllerAssetPath = UnityControllerFolder + "/Accelerando_Crawl_Forward_Loop.controller";
+        private const string UnityAntennaStrikeClipAssetPath = UnityAnimationFolder + "/Accelerando_Antenna_Strike_Attack.anim";
+        private const string UnityAntennaStrikeControllerAssetPath = UnityControllerFolder + "/Accelerando_Antenna_Strike_Attack.controller";
         private const string ValidationFolder = "docs/validation/accelerando";
         private const string IdleBreathBlendShapeName = "Accelerando_IdleBreathMorph";
         private const string IdleSlotObjectName = "Accelerando_01_Idle_Detect";
+        private const string CrawlSlotObjectName = "Accelerando_02_Crawl_Accelerating";
+        private const string AntennaStrikeSlotObjectName = "Accelerando_03_Antenna_Strike";
+        private const string ChainPhysicsRootObjectName = "Accelerando_ChainPhysicsRoot";
         private const string IdleBreathStateName = "IdleBreathMorph";
+        private const string CrawlForwardStateName = "CrawlForwardLoop";
+        private const string AntennaStrikeStateName = "AntennaStrikeAttack";
         private const string IdleBreathRootBoneName = "Accelerando_IdleBreath_RootBone";
         private const string IdleBreathBodyObjectName = "Accelerando_IdleBreath_Body";
         private const string IdleBreathAntennaObjectName = "Accelerando_IdleBreath_StaticMaceAntennae";
@@ -63,6 +76,25 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         private const float IdleBreathTransformScaleXz = 0.000f;
         private const float IdleBreathTransformScaleY = 0.000f;
         private const float IdleBreathTransformLiftY = 0.000f;
+        private const float CrawlForwardLoopSeconds = 1.20f;
+        private const float CrawlForwardBodyForeAftMinimumRange = 0.035f;
+        private const float CrawlForwardBodyScaleMinimumRange = 0.040f;
+        private const float CrawlForwardChainMinimumRange = 0.040f;
+        private const float CrawlForwardMaceMinimumRange = 30.000f;
+        private const float CrawlForwardPhysicsDrivenCurveMaximumRange = 0.001f;
+        private const float AntennaStrikeLoopSeconds = 1.20f;
+        private const float AntennaStrikeInputMinimumRange = 0.100f;
+        private const float AntennaStrikeMinimumMaceForwardRange = 0.120f;
+        private const float AntennaStrikeMinimumMaceAmplification = 1.12f;
+        private const float CrawlChainPhysicsMaximumMaceDrop = 0.220f;
+        private const float CrawlChainPhysicsMinimumMaceHorizontalRange = 0.018f;
+        private const float CrawlChainPhysicsMinimumGravitySag = 0.012f;
+        private const float CrawlChainPhysicsMinimumLastLinkMaceVerticalOffset = 0.070f;
+        private const float CrawlChainPhysicsMinimumMaceBoundsClearance = 0.010f;
+        private const float CrawlChainPhysicsMinimumMaceTopClearance = 0.040f;
+        private const float ConnectedChainMinimumMaceBoundsClearance = 0.015f;
+        private const float ConnectedChainMinimumMaceTopClearance = 0.040f;
+        private const float ConnectedChainMaximumMaceTopClearance = 0.450f;
         private const float IdleBreathAntennaHorizontalThreshold = 0.48f;
         private const float IdleBreathAntennaRaisedHorizontalThreshold = 0.31f;
         private const float IdleBreathAntennaRaisedVerticalThreshold = 0.42f;
@@ -71,8 +103,14 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         private const float IdleBreathBodyFadeStartVertical = 0.34f;
         private const float IdleBreathStaticShellVerticalThreshold = 0.40f;
         private const int ConnectedChainLinkCount = 12;
+        private const int ConnectedChainVisibleLinkCount = 8;
+        private const float ConnectedChainMaceSideCutbackDistance = 0.420f;
+        private const float ConnectedChainMaceSideCutbackAnchorFactor = 0.70f;
         private const float ConnectedChainMinimumAnchorDistance = 0.03f;
         private const float ConnectedChainEndpointTolerance = 0.015f;
+        private const float ConnectedChainMaceSideCutbackTolerance = 0.030f;
+        private const float AntennaTipEmbeddedHoopCenterTolerance = 0.012f;
+        private const float AntennaTipEmbeddedPartTolerance = 0.090f;
         private static readonly Color AccelerandoFallbackColor = new(0.26f, 0.31f, 0.34f, 1f);
         private static readonly Color AccelerandoApprovedFleshColor = new(0.39f, 0.32f, 0.27f, 1f);
         private static readonly Color AccelerandoApprovedShellColor = new(0.14f, 0.12f, 0.10f, 1f);
@@ -125,13 +163,31 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             {
                 var sourceName = sourceMaterial != null ? sourceMaterial.name : string.Empty;
                 var combinedName = (rendererName + " " + sourceName).ToLowerInvariant();
+                if (combinedName.Contains("embeddedfleshpressure", StringComparison.Ordinal))
+                {
+                    return Flesh;
+                }
+
+                if (combinedName.Contains("embeddedsocket", StringComparison.Ordinal) ||
+                    combinedName.Contains("embeddedsurface", StringComparison.Ordinal) ||
+                    combinedName.Contains("embeddedupperocclusion", StringComparison.Ordinal))
+                {
+                    return Shell;
+                }
+
                 if (combinedName.Contains("rusty", StringComparison.Ordinal) ||
                     combinedName.Contains("metal", StringComparison.Ordinal) ||
                     combinedName.Contains("iron", StringComparison.Ordinal) ||
                     combinedName.Contains("chain", StringComparison.Ordinal) ||
                     combinedName.Contains("mace", StringComparison.Ordinal) ||
                     combinedName.Contains("torus", StringComparison.Ordinal) ||
-                    combinedName.Contains("ring", StringComparison.Ordinal))
+                    combinedName.Contains("ring", StringComparison.Ordinal) ||
+                    combinedName.Contains("anchor", StringComparison.Ordinal) ||
+                    combinedName.Contains("collar", StringComparison.Ordinal) ||
+                    combinedName.Contains("pin", StringComparison.Ordinal) ||
+                    combinedName.Contains("saddle", StringComparison.Ordinal) ||
+                    combinedName.Contains("yoke", StringComparison.Ordinal) ||
+                    combinedName.Contains("rivet", StringComparison.Ordinal))
                 {
                     return Metal;
                 }
@@ -240,6 +296,30 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             CaptureReviewImages(placementRoot.transform);
         }
 
+        public static void CaptureAntennaTipConnectionCloseups()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            CaptureAntennaTipConnectionCloseupImages(placementRoot.transform);
+        }
+
+        public static void CaptureMaceChainCloseups()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            CaptureMaceChainCloseupImages(placementRoot.transform);
+        }
+
         public static void CaptureAnimationSlotsReview()
         {
             EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
@@ -284,6 +364,126 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
 
             InspectIdleBreathingAnimation(placementRoot.transform);
             Debug.Log("Prepared Accelerando idle breathing animation inspected.");
+        }
+
+        public static void ApplyCrawlForwardMotionToCurrentScene()
+        {
+            EnsureUnityFolders();
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            ApplyCrawlForwardMotion(placementRoot.transform);
+            InspectCrawlForwardMotion(placementRoot.transform);
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+            Debug.Log("Prepared Accelerando crawl forward motion applied.");
+        }
+
+        public static void InspectCrawlForwardMotionInScene()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            InspectCrawlForwardMotion(placementRoot.transform);
+            Debug.Log("Prepared Accelerando crawl forward motion inspected.");
+        }
+
+        public static void ValidateCrawlForwardChainPhysicsResponseInScene()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            var crawlSlot = placementRoot.transform.Find(CrawlSlotObjectName);
+            if (crawlSlot == null)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} is missing under {PlacementRootName}.");
+            }
+
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityCrawlForwardClipAssetPath);
+            if (clip == null)
+            {
+                throw new InvalidOperationException($"Crawl forward clip is missing at {UnityCrawlForwardClipAssetPath}.");
+            }
+
+            ConfigureCrawlChainPhysicsRig(crawlSlot);
+            ValidateCrawlForwardChainPhysicsResponse(crawlSlot, clip);
+            Debug.Log("Prepared Accelerando crawl forward chain physics response validated.");
+        }
+
+        public static void ApplyPhysicsAntennaStrikeMotionToCurrentScene()
+        {
+            EnsureUnityFolders();
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            ApplyPhysicsAntennaStrikeMotion(placementRoot.transform);
+            InspectPhysicsAntennaStrikeMotion(placementRoot.transform);
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+            Debug.Log("Prepared Accelerando physics antenna strike motion applied.");
+        }
+
+        public static void InspectPhysicsAntennaStrikeMotionInScene()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            InspectPhysicsAntennaStrikeMotion(placementRoot.transform);
+            Debug.Log("Prepared Accelerando physics antenna strike motion inspected.");
+        }
+
+        public static void ValidatePhysicsAntennaStrikeResponseInScene()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            var strikeSlot = placementRoot.transform.Find(AntennaStrikeSlotObjectName);
+            if (strikeSlot == null)
+            {
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} is missing under {PlacementRootName}.");
+            }
+
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityAntennaStrikeClipAssetPath);
+            if (clip == null)
+            {
+                throw new InvalidOperationException($"Antenna strike clip is missing at {UnityAntennaStrikeClipAssetPath}.");
+            }
+
+            ConfigureAttackChainPhysicsRig(strikeSlot);
+            ValidatePhysicsAntennaStrikeResponse(strikeSlot, clip);
+            Debug.Log("Prepared Accelerando physics antenna strike response validated.");
         }
 
         public static void CaptureIdleBreathingAnimationReview()
@@ -525,6 +725,8 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             CreateAnimationReviewSlots(modelAsset, materialSet, placementRoot.transform);
             ArrangeAlignedReviewRow(placementRoot.transform);
             ApplyIdleBreathingAnimation(placementRoot.transform);
+            ApplyCrawlForwardMotion(placementRoot.transform);
+            ApplyPhysicsAntennaStrikeMotion(placementRoot.transform);
 
             EditorUtility.SetDirty(placementRoot);
             EditorUtility.SetDirty(reviewRoot);
@@ -561,6 +763,7 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             EnsureRenderableHierarchy(reviewRoot.transform);
             ReconnectMaceChains(reviewRoot.transform);
             AssignApprovedMaterials(reviewRoot.transform, materialSet);
+            HideMaceSocketRingRenderers(reviewRoot.transform);
             AlignToGround(reviewRoot.transform, placementRoot.position.y);
 
             EditorUtility.SetDirty(reviewRoot);
@@ -675,6 +878,141 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 "AccelerandoIdleBreathApply " +
                 $"Slot={IdleSlotObjectName}, Renderer={bodyRenderer.name}, Mesh={AssetDatabase.GetAssetPath(morphMesh)}, Clip={UnityIdleBreathClipAssetPath}, " +
                 $"Controller={UnityIdleBreathControllerAssetPath}, BlendShape={IdleBreathBlendShapeName}.");
+        }
+
+        private static void ApplyCrawlForwardMotion(Transform placementRoot)
+        {
+            var crawlSlot = placementRoot.Find(CrawlSlotObjectName);
+            if (crawlSlot == null)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} is missing under {PlacementRootName}.");
+            }
+
+            var modelObject = crawlSlot.Find(ModelChildName);
+            if (modelObject == null)
+            {
+                throw new InvalidOperationException($"{ModelChildName} is missing under {CrawlSlotObjectName}.");
+            }
+
+            var clip = EnsureCrawlForwardClip(crawlSlot, modelObject);
+            var controller = EnsureCrawlForwardController(clip);
+            var animator = crawlSlot.GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = crawlSlot.gameObject.AddComponent<Animator>();
+            }
+
+            animator.enabled = true;
+            animator.runtimeAnimatorController = controller;
+            animator.applyRootMotion = false;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            animator.speed = 1f;
+
+            var physicsSummary = ConfigureCrawlChainPhysicsRig(crawlSlot);
+            EditorUtility.SetDirty(animator);
+            EditorUtility.SetDirty(crawlSlot);
+            Debug.Log(
+                "AccelerandoCrawlForwardApply " +
+                $"Slot={CrawlSlotObjectName}, Clip={UnityCrawlForwardClipAssetPath}, Controller={UnityCrawlForwardControllerAssetPath}, " +
+                $"LoopSeconds={CrawlForwardLoopSeconds:0.###}, RootMotion=False, ChainPhysics={physicsSummary}.");
+        }
+
+        private static void ApplyPhysicsAntennaStrikeMotion(Transform placementRoot)
+        {
+            var strikeSlot = placementRoot.Find(AntennaStrikeSlotObjectName);
+            if (strikeSlot == null)
+            {
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} is missing under {PlacementRootName}.");
+            }
+
+            var modelObject = strikeSlot.Find(ModelChildName);
+            if (modelObject == null)
+            {
+                throw new InvalidOperationException($"{ModelChildName} is missing under {AntennaStrikeSlotObjectName}.");
+            }
+
+            var clip = EnsurePhysicsAntennaStrikeClip(strikeSlot, modelObject);
+            var controller = EnsurePhysicsAntennaStrikeController(clip);
+            var animator = strikeSlot.GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = strikeSlot.gameObject.AddComponent<Animator>();
+            }
+
+            animator.enabled = true;
+            animator.runtimeAnimatorController = controller;
+            animator.applyRootMotion = false;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            animator.speed = 1f;
+
+            var physicsSummary = ConfigureAttackChainPhysicsRig(strikeSlot);
+            EditorUtility.SetDirty(animator);
+            EditorUtility.SetDirty(strikeSlot);
+            Debug.Log(
+                "AccelerandoPhysicsAntennaStrikeApply " +
+                $"Slot={AntennaStrikeSlotObjectName}, Clip={UnityAntennaStrikeClipAssetPath}, Controller={UnityAntennaStrikeControllerAssetPath}, " +
+                $"LoopSeconds={AntennaStrikeLoopSeconds:0.###}, RootMotion=False, ChainPhysics={physicsSummary}.");
+        }
+
+        private static string ConfigureCrawlChainPhysicsRig(Transform crawlSlot)
+        {
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = crawlSlot.GetComponent(rigType) as MonoBehaviour;
+            if (rig == null)
+            {
+                rig = crawlSlot.gameObject.AddComponent(rigType) as MonoBehaviour;
+            }
+
+            var configureMethod = rigType.GetMethod("Configure", new[] { typeof(int) });
+            if (configureMethod == null)
+            {
+                throw new InvalidOperationException($"{rigType.FullName} is missing Configure(int).");
+            }
+
+            configureMethod.Invoke(rig, new object[] { ConnectedChainVisibleLinkCount });
+            EditorUtility.SetDirty(rig);
+            return InspectCrawlChainPhysicsRig(crawlSlot);
+        }
+
+        private static string ConfigureAttackChainPhysicsRig(Transform strikeSlot)
+        {
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = strikeSlot.GetComponent(rigType) as MonoBehaviour;
+            if (rig == null)
+            {
+                rig = strikeSlot.gameObject.AddComponent(rigType) as MonoBehaviour;
+            }
+
+            var configureMethod = rigType.GetMethod("ConfigureAttackStrike", new[] { typeof(int) });
+            if (configureMethod == null)
+            {
+                throw new InvalidOperationException($"{rigType.FullName} is missing ConfigureAttackStrike(int).");
+            }
+
+            configureMethod.Invoke(rig, new object[] { ConnectedChainVisibleLinkCount });
+            EditorUtility.SetDirty(rig);
+            return InspectCrawlChainPhysicsRig(strikeSlot, 0.065f);
+        }
+
+        private static Type FindAccelerandoChainPhysicsRigType()
+        {
+            const string typeName = "Bellerophon.Enemies.Accelerando.AccelerandoChainPhysicsRig";
+            var type = Type.GetType(typeName + ", Assembly-CSharp");
+            if (type != null)
+            {
+                return type;
+            }
+
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                type = assembly.GetType(typeName);
+                if (type != null)
+                {
+                    return type;
+                }
+            }
+
+            throw new InvalidOperationException($"{typeName} runtime script is not compiled.");
         }
 
         private static Mesh FindPrimaryMesh(Transform root, out Transform meshTransform)
@@ -1543,6 +1881,613 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             return AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityIdleBreathClipAssetPath) ?? clip;
         }
 
+        private static AnimationClip EnsureCrawlForwardClip(Transform crawlSlot, Transform modelObject)
+        {
+            if (AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityCrawlForwardClipAssetPath) != null)
+            {
+                AssetDatabase.DeleteAsset(UnityCrawlForwardClipAssetPath);
+            }
+
+            var clip = new AnimationClip
+            {
+                name = "Accelerando_Crawl_Forward_Loop",
+                frameRate = 30f
+            };
+
+            var modelPath = GetRelativePath(crawlSlot, modelObject);
+            var basePosition = modelObject.localPosition;
+            var baseScale = modelObject.localScale;
+            var baseEuler = modelObject.localEulerAngles;
+
+            SetTransformCurve(
+                clip,
+                modelPath,
+                "m_LocalPosition.y",
+                CreateCrawlLoopCurve(basePosition.y, basePosition.y + 0.014f, basePosition.y + 0.004f, basePosition.y + 0.010f));
+            SetTransformCurve(
+                clip,
+                modelPath,
+                "m_LocalPosition.z",
+                CreateCrawlBodyForeAftCurve(basePosition.z));
+            SetTransformCurve(
+                clip,
+                modelPath,
+                "m_LocalScale.x",
+                CreateCrawlLoopCurve(baseScale.x, baseScale.x * 0.972f, baseScale.x * 1.026f, baseScale.x * 0.982f));
+            SetTransformCurve(
+                clip,
+                modelPath,
+                "m_LocalScale.y",
+                CreateCrawlLoopCurve(baseScale.y, baseScale.y * 1.018f, baseScale.y * 0.988f, baseScale.y * 1.012f));
+            SetTransformCurve(
+                clip,
+                modelPath,
+                "m_LocalScale.z",
+                CreateCrawlLoopCurve(baseScale.z, baseScale.z * 1.046f, baseScale.z * 0.976f, baseScale.z * 1.034f));
+            SetTransformCurve(
+                clip,
+                modelPath,
+                "localEulerAnglesRaw.x",
+                CreateCrawlLoopCurve(NormalizeEulerAngle(baseEuler.x), NormalizeEulerAngle(baseEuler.x) - 2.2f, NormalizeEulerAngle(baseEuler.x) + 1.2f, NormalizeEulerAngle(baseEuler.x) - 1.4f));
+
+            ConfigureLoopSetting(clip, true);
+            AssetDatabase.CreateAsset(clip, UnityCrawlForwardClipAssetPath);
+            EditorUtility.SetDirty(clip);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.ImportAsset(UnityCrawlForwardClipAssetPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+            return AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityCrawlForwardClipAssetPath) ?? clip;
+        }
+
+        private static AnimationClip EnsurePhysicsAntennaStrikeClip(Transform strikeSlot, Transform modelObject)
+        {
+            if (AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityAntennaStrikeClipAssetPath) != null)
+            {
+                AssetDatabase.DeleteAsset(UnityAntennaStrikeClipAssetPath);
+            }
+
+            var clip = new AnimationClip
+            {
+                name = "Accelerando_Antenna_Strike_Attack",
+                frameRate = 30f
+            };
+
+            var modelPath = GetRelativePath(strikeSlot, modelObject);
+            var basePosition = modelObject.localPosition;
+            var baseScale = modelObject.localScale;
+            var baseEuler = modelObject.localEulerAngles;
+
+            SetTransformCurve(
+                clip,
+                modelPath,
+                "m_LocalPosition.y",
+                CreateCrawlLoopCurve(basePosition.y, basePosition.y + 0.014f, basePosition.y + 0.004f, basePosition.y + 0.010f));
+            SetTransformCurve(
+                clip,
+                modelPath,
+                "m_LocalPosition.z",
+                CreateCrawlBodyForeAftCurve(basePosition.z));
+            SetTransformCurve(
+                clip,
+                modelPath,
+                "m_LocalScale.x",
+                CreateCrawlLoopCurve(baseScale.x, baseScale.x * 0.972f, baseScale.x * 1.026f, baseScale.x * 0.982f));
+            SetTransformCurve(
+                clip,
+                modelPath,
+                "m_LocalScale.y",
+                CreateCrawlLoopCurve(baseScale.y, baseScale.y * 1.018f, baseScale.y * 0.988f, baseScale.y * 1.012f));
+            SetTransformCurve(
+                clip,
+                modelPath,
+                "m_LocalScale.z",
+                CreateCrawlLoopCurve(baseScale.z, baseScale.z * 1.046f, baseScale.z * 0.976f, baseScale.z * 1.034f));
+            SetTransformCurve(
+                clip,
+                modelPath,
+                "localEulerAnglesRaw.x",
+                CreateCrawlLoopCurve(NormalizeEulerAngle(baseEuler.x), NormalizeEulerAngle(baseEuler.x) - 2.2f, NormalizeEulerAngle(baseEuler.x) + 1.2f, NormalizeEulerAngle(baseEuler.x) - 1.4f));
+
+            SetAntennaStrikeInputCurves(clip, strikeSlot, "Left");
+            SetAntennaStrikeInputCurves(clip, strikeSlot, "Right");
+
+            ConfigureLoopSetting(clip, true);
+            AssetDatabase.CreateAsset(clip, UnityAntennaStrikeClipAssetPath);
+            EditorUtility.SetDirty(clip);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.ImportAsset(UnityAntennaStrikeClipAssetPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+            return AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityAntennaStrikeClipAssetPath) ?? clip;
+        }
+
+        private static void SetAntennaStrikeInputCurves(AnimationClip clip, Transform strikeSlot, string sideName)
+        {
+            var sideSign = string.Equals(sideName, "Left", StringComparison.Ordinal) ? -1f : 1f;
+            var drivenTransforms = FindAntennaStrikeDrivenTransforms(strikeSlot, sideName);
+            for (var i = 0; i < drivenTransforms.Count; i++)
+            {
+                var target = drivenTransforms[i];
+                var path = GetRelativePath(strikeSlot, target);
+                var basePosition = target.localPosition;
+                var baseEuler = target.localEulerAngles;
+                var influence = target.name.Contains("AntennaTip_Ring", StringComparison.Ordinal) ? 1f : 0.92f;
+
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "m_LocalPosition.z",
+                    CreateAntennaStrikeForeAftCurve(basePosition.z, 0.118f * influence));
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "m_LocalPosition.y",
+                    CreateAntennaStrikeLiftCurve(basePosition.y, 0.020f * influence));
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "m_LocalPosition.x",
+                    CreateAntennaStrikeSideCurve(basePosition.x, sideSign * 0.010f * influence));
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "localEulerAnglesRaw.x",
+                    CreateAntennaStrikePitchCurve(NormalizeEulerAngle(baseEuler.x), 18.0f * influence));
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "localEulerAnglesRaw.z",
+                    CreateAntennaStrikePitchCurve(NormalizeEulerAngle(baseEuler.z), sideSign * 10.0f * influence));
+            }
+        }
+
+        private static List<Transform> FindAntennaStrikeDrivenTransforms(Transform strikeSlot, string sideName)
+        {
+            var transforms = new List<Transform>
+            {
+                RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaTip_Ring"),
+                RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaTip_EmbeddedVisibleChainEndHoop"),
+                RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaTip_EmbeddedSocketLip"),
+                RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaTip_EmbeddedSurfaceSaddle"),
+                RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaTip_EmbeddedRetainingPin"),
+                RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaTip_EmbeddedStem"),
+                RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaTip_EmbeddedFrontYoke"),
+                RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaTip_EmbeddedBackYoke"),
+                RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaTip_EmbeddedUpperOcclusionBulge"),
+                RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaTip_EmbeddedFleshPressurePad")
+            };
+
+            return transforms;
+        }
+
+        private static void SetCrawlChainFollowerCurves(AnimationClip clip, Transform crawlSlot, string sideName)
+        {
+            var sideSign = string.Equals(sideName, "Left", StringComparison.Ordinal) ? -1f : 1f;
+            for (var i = 2; i <= ConnectedChainVisibleLinkCount; i++)
+            {
+                var link = RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_ConnectedChain_Link_{i:00}");
+                var path = GetRelativePath(crawlSlot, link);
+                var basePosition = link.localPosition;
+                var baseEuler = link.localEulerAngles;
+                var t = (i - 1f) / (ConnectedChainVisibleLinkCount - 1f);
+                var inertia = Mathf.SmoothStep(0f, 1f, t);
+                var phaseDelay = Mathf.Lerp(0.035f, 0.160f, inertia);
+                var followScale = Mathf.Lerp(0.24f, 1.18f, inertia);
+                var lateralSway = Mathf.Lerp(0.004f, 0.026f, inertia);
+                var lift = Mathf.Lerp(0.002f, 0.014f, inertia);
+                var pitchLag = Mathf.Lerp(2.0f, 12.0f, inertia);
+                var twistLag = Mathf.Lerp(2.0f, 9.0f, inertia);
+                var lagSign = i % 2 == 0 ? 1f : -1f;
+
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "m_LocalPosition.x",
+                    CreateCrawlBodyDrivenVelocityCurve(basePosition.x, sideSign * lagSign * lateralSway, phaseDelay + 0.018f));
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "m_LocalPosition.y",
+                    CreateCrawlBodyDrivenLiftCurve(basePosition.y, lift, phaseDelay));
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "m_LocalPosition.z",
+                    CreateCrawlBodyDrivenForeAftCurve(basePosition.z, followScale, phaseDelay));
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "localEulerAnglesRaw.z",
+                    CreateCrawlBodyDrivenVelocityCurve(NormalizeEulerAngle(baseEuler.z), sideSign * lagSign * twistLag, phaseDelay));
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "localEulerAnglesRaw.x",
+                    CreateCrawlBodyDrivenPitchCurve(NormalizeEulerAngle(baseEuler.x), lagSign * pitchLag, phaseDelay));
+            }
+        }
+
+        private static void SetCrawlMacePhysicsCurves(AnimationClip clip, Transform crawlSlot, string sideName)
+        {
+            var sideSign = string.Equals(sideName, "Left", StringComparison.Ordinal) ? -1f : 1f;
+            var maceSocket = RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_MaceSocket_Ring");
+            var maceTransforms = FindCrawlMaceTransforms(crawlSlot, sideName);
+            Debug.Log(
+                "AccelerandoCrawlForwardMaceTargets " +
+                $"Side={sideName}, Count={maceTransforms.Count}, Targets={FormatTransformNames(maceTransforms)}, " +
+                $"Details={FormatCrawlMaceTargetDetails(maceSocket, maceTransforms)}.");
+            for (var i = 0; i < maceTransforms.Count; i++)
+            {
+                var maceTransform = maceTransforms[i];
+                var path = GetRelativePath(crawlSlot, maceTransform);
+                var basePosition = maceTransform.localPosition;
+                var baseEuler = maceTransform.localEulerAngles;
+                var isSocket = maceTransform.name.Contains("MaceSocket", StringComparison.Ordinal);
+                var massFactor = isSocket ? 0.72f : 1.00f;
+                var localIndexSign = i % 2 == 0 ? 1f : -1f;
+                var phaseDelay = 0.188f + i * 0.012f;
+                var followScale = 1.38f * massFactor;
+                var lateralSway = 0.038f * massFactor;
+                var liftDrop = 0.024f * massFactor;
+                var spinLag = 22.0f * massFactor;
+                var rollLag = 20.0f * massFactor;
+
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "m_LocalPosition.x",
+                    CreateCrawlBodyDrivenVelocityCurve(basePosition.x, sideSign * localIndexSign * lateralSway, phaseDelay + 0.020f));
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "m_LocalPosition.y",
+                    CreateCrawlBodyDrivenLiftCurve(basePosition.y, liftDrop, phaseDelay));
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "m_LocalPosition.z",
+                    CreateCrawlBodyDrivenForeAftCurve(basePosition.z, followScale, phaseDelay));
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "localEulerAnglesRaw.x",
+                    CreateCrawlBodyDrivenPitchCurve(NormalizeEulerAngle(baseEuler.x), -rollLag, phaseDelay));
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "localEulerAnglesRaw.y",
+                    CreateCrawlBodyDrivenVelocityCurve(NormalizeEulerAngle(baseEuler.y), sideSign * localIndexSign * rollLag, phaseDelay));
+                SetTransformCurve(
+                    clip,
+                    path,
+                    "localEulerAnglesRaw.z",
+                    CreateCrawlBodyDrivenVelocityCurve(NormalizeEulerAngle(baseEuler.z), sideSign * spinLag, phaseDelay + 0.032f));
+            }
+        }
+
+        private static List<Transform> FindCrawlMaceTransforms(Transform crawlSlot, string sideName)
+        {
+            var transforms = new List<Transform>();
+            var prefix = $"Accelerando_{sideName}_";
+            var maceSocket = RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_MaceSocket_Ring");
+            AddUniqueTransform(transforms, maceSocket);
+            foreach (var child in crawlSlot.GetComponentsInChildren<Transform>(true))
+            {
+                var nameMatchesSide = child.name.StartsWith(prefix, StringComparison.Ordinal) &&
+                    IsCrawlMaceTransformName(child.name);
+                if (!nameMatchesSide &&
+                    !IsCrawlMaceSpatialTransform(child, maceSocket))
+                {
+                    continue;
+                }
+
+                AddUniqueTransform(transforms, child);
+            }
+
+            return transforms;
+        }
+
+        private static string FormatTransformNames(List<Transform> transforms)
+        {
+            var builder = new System.Text.StringBuilder();
+            for (var i = 0; i < transforms.Count; i++)
+            {
+                if (i > 0)
+                {
+                    builder.Append('|');
+                }
+
+                builder.Append(transforms[i] != null ? transforms[i].name : "<null>");
+            }
+
+            return builder.ToString();
+        }
+
+        private static string FormatCrawlMaceTargetDetails(Transform maceSocket, List<Transform> transforms)
+        {
+            var builder = new System.Text.StringBuilder();
+            for (var i = 0; i < transforms.Count; i++)
+            {
+                if (i > 0)
+                {
+                    builder.Append('|');
+                }
+
+                var transform = transforms[i];
+                var rendererCount = transform.GetComponentsInChildren<Renderer>(true).Length;
+                var hasMeshFilter = transform.GetComponent<MeshFilter>() != null;
+                builder.Append(transform.name);
+                builder.Append("{Renderers=");
+                builder.Append(rendererCount);
+                builder.Append(",MeshFilter=");
+                builder.Append(hasMeshFilter ? "true" : "false");
+                builder.Append(",SocketDistance=");
+                builder.Append(Vector3.Distance(transform.position, maceSocket.position).ToString("0.###", System.Globalization.CultureInfo.InvariantCulture));
+                builder.Append('}');
+            }
+
+            return builder.ToString();
+        }
+
+        private static void AddUniqueTransform(List<Transform> transforms, Transform candidate)
+        {
+            if (candidate == null || transforms.Contains(candidate))
+            {
+                return;
+            }
+
+            transforms.Add(candidate);
+        }
+
+        private static bool IsCrawlMaceTransformName(string transformName)
+        {
+            return !transformName.Contains("ConnectedChain", StringComparison.Ordinal) &&
+                !transformName.Contains("AntennaTip", StringComparison.Ordinal) &&
+                (transformName.Contains("Mace", StringComparison.Ordinal) ||
+                 transformName.Contains("Spiked", StringComparison.Ordinal) ||
+                 transformName.Contains("Spike", StringComparison.Ordinal));
+        }
+
+        private static bool IsCrawlMaceSpatialTransform(Transform transform, Transform maceSocket)
+        {
+            if (transform == maceSocket ||
+                transform.name.Contains("ConnectedChain", StringComparison.Ordinal) ||
+                transform.name.Contains("Antenna", StringComparison.Ordinal) ||
+                transform.name.Contains("Body", StringComparison.Ordinal) ||
+                transform.name.Contains("Eye", StringComparison.Ordinal) ||
+                transform.name.Contains("Mouth", StringComparison.Ordinal) ||
+                transform.name.Contains("Embedded", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            if (!TryGetCrawlVisibleCenter(transform, out var visibleCenter))
+            {
+                return false;
+            }
+
+            var offset = visibleCenter - maceSocket.position;
+            return offset.magnitude <= 1.45f &&
+                visibleCenter.y <= maceSocket.position.y + 0.75f;
+        }
+
+        private static bool TryGetCrawlVisibleCenter(Transform transform, out Vector3 visibleCenter)
+        {
+            var renderer = transform.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                visibleCenter = renderer.bounds.center;
+                return true;
+            }
+
+            var meshFilter = transform.GetComponent<MeshFilter>();
+            if (meshFilter != null && meshFilter.sharedMesh != null)
+            {
+                visibleCenter = transform.TransformPoint(meshFilter.sharedMesh.bounds.center);
+                return true;
+            }
+
+            visibleCenter = transform.position;
+            return false;
+        }
+
+        private static AnimationCurve CreateCrawlBodyForeAftCurve(float baseValue)
+        {
+            return CreateCrawlLoopCurve(baseValue, baseValue + 0.026f, baseValue - 0.017f, baseValue + 0.018f);
+        }
+
+        private static AnimationCurve CreateAntennaStrikeForeAftCurve(float baseValue, float amplitude)
+        {
+            var curve = new AnimationCurve(
+                new Keyframe(0f, baseValue),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.12f, baseValue + amplitude * 0.24f),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.26f, baseValue + amplitude * 0.64f),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.42f, baseValue - amplitude),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.56f, baseValue - amplitude * 0.32f),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.72f, baseValue + amplitude * 0.28f),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.90f, baseValue - amplitude * 0.10f),
+                new Keyframe(AntennaStrikeLoopSeconds, baseValue));
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static AnimationCurve CreateAntennaStrikeLiftCurve(float baseValue, float amplitude)
+        {
+            var curve = new AnimationCurve(
+                new Keyframe(0f, baseValue),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.26f, baseValue + amplitude * 0.24f),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.42f, baseValue + amplitude),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.62f, baseValue - amplitude * 0.32f),
+                new Keyframe(AntennaStrikeLoopSeconds, baseValue));
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static AnimationCurve CreateAntennaStrikeSideCurve(float baseValue, float signedAmplitude)
+        {
+            var curve = new AnimationCurve(
+                new Keyframe(0f, baseValue),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.26f, baseValue - signedAmplitude * 0.55f),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.42f, baseValue + signedAmplitude),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.70f, baseValue - signedAmplitude * 0.34f),
+                new Keyframe(AntennaStrikeLoopSeconds, baseValue));
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static AnimationCurve CreateAntennaStrikePitchCurve(float baseValue, float signedAmplitude)
+        {
+            var curve = new AnimationCurve(
+                new Keyframe(0f, baseValue),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.18f, baseValue - signedAmplitude * 0.25f),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.34f, baseValue - signedAmplitude * 0.65f),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.46f, baseValue + signedAmplitude),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.66f, baseValue - signedAmplitude * 0.42f),
+                new Keyframe(AntennaStrikeLoopSeconds * 0.86f, baseValue + signedAmplitude * 0.16f),
+                new Keyframe(AntennaStrikeLoopSeconds, baseValue));
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static AnimationCurve CreateCrawlBodyDrivenForeAftCurve(float baseValue, float followScale, float phaseDelay)
+        {
+            var samplePhases = GetCrawlBodyDrivenSamplePhases();
+            var keys = new Keyframe[samplePhases.Length];
+            for (var i = 0; i < samplePhases.Length; i++)
+            {
+                var phase = samplePhases[i];
+                var bodyOffset = EvaluateCrawlBodyForeAftOffset01(phase - phaseDelay);
+                keys[i] = new Keyframe(phase * CrawlForwardLoopSeconds, baseValue - bodyOffset * followScale);
+            }
+
+            var curve = new AnimationCurve(keys);
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static AnimationCurve CreateCrawlBodyDrivenVelocityCurve(float baseValue, float signedAmplitude, float phaseDelay)
+        {
+            var samplePhases = GetCrawlBodyDrivenSamplePhases();
+            var keys = new Keyframe[samplePhases.Length];
+            for (var i = 0; i < samplePhases.Length; i++)
+            {
+                var phase = samplePhases[i];
+                var velocitySignal = EvaluateCrawlBodyVelocitySignal01(phase - phaseDelay);
+                keys[i] = new Keyframe(phase * CrawlForwardLoopSeconds, baseValue + signedAmplitude * velocitySignal);
+            }
+
+            var curve = new AnimationCurve(keys);
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static AnimationCurve CreateCrawlBodyDrivenLiftCurve(float baseValue, float amplitude, float phaseDelay)
+        {
+            var samplePhases = GetCrawlBodyDrivenSamplePhases();
+            var keys = new Keyframe[samplePhases.Length];
+            for (var i = 0; i < samplePhases.Length; i++)
+            {
+                var phase = samplePhases[i];
+                var velocityLoad = Mathf.Abs(EvaluateCrawlBodyVelocitySignal01(phase - phaseDelay));
+                var sagLoad = Mathf.Abs(EvaluateCrawlBodyForeAftOffset01(phase - phaseDelay)) / 0.026f;
+                var liftOffset = amplitude * (velocityLoad * 0.78f - Mathf.Clamp01(sagLoad) * 0.34f);
+                keys[i] = new Keyframe(phase * CrawlForwardLoopSeconds, baseValue + liftOffset);
+            }
+
+            var curve = new AnimationCurve(keys);
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static AnimationCurve CreateCrawlBodyDrivenPitchCurve(float baseValue, float signedAmplitude, float phaseDelay)
+        {
+            var samplePhases = GetCrawlBodyDrivenSamplePhases();
+            var keys = new Keyframe[samplePhases.Length];
+            for (var i = 0; i < samplePhases.Length; i++)
+            {
+                var phase = samplePhases[i];
+                var offsetSignal = -EvaluateCrawlBodyForeAftOffset01(phase - phaseDelay) / 0.026f;
+                keys[i] = new Keyframe(phase * CrawlForwardLoopSeconds, baseValue + signedAmplitude * offsetSignal);
+            }
+
+            var curve = new AnimationCurve(keys);
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static float[] GetCrawlBodyDrivenSamplePhases()
+        {
+            return new[] { 0f, 0.10f, 0.20f, 0.30f, 0.40f, 0.50f, 0.60f, 0.70f, 0.80f, 0.90f, 1f };
+        }
+
+        private static float EvaluateCrawlBodyForeAftOffset01(float normalizedPhase)
+        {
+            var phase = Mathf.Repeat(normalizedPhase, 1f);
+            if (phase <= 0.25f)
+            {
+                return Mathf.Lerp(0f, 0.026f, Mathf.SmoothStep(0f, 1f, phase / 0.25f));
+            }
+
+            if (phase <= 0.50f)
+            {
+                return Mathf.Lerp(0.026f, -0.017f, Mathf.SmoothStep(0f, 1f, (phase - 0.25f) / 0.25f));
+            }
+
+            if (phase <= 0.75f)
+            {
+                return Mathf.Lerp(-0.017f, 0.018f, Mathf.SmoothStep(0f, 1f, (phase - 0.50f) / 0.25f));
+            }
+
+            return Mathf.Lerp(0.018f, 0f, Mathf.SmoothStep(0f, 1f, (phase - 0.75f) / 0.25f));
+        }
+
+        private static float EvaluateCrawlBodyVelocitySignal01(float normalizedPhase)
+        {
+            var previous = EvaluateCrawlBodyForeAftOffset01(normalizedPhase - 0.035f);
+            var next = EvaluateCrawlBodyForeAftOffset01(normalizedPhase + 0.035f);
+            return Mathf.Clamp((next - previous) / 0.018f, -1f, 1f);
+        }
+
+        private static AnimationCurve CreateCrawlPhysicsLagCurve(float baseValue, float signedAmplitude)
+        {
+            var curve = new AnimationCurve(
+                new Keyframe(0f, baseValue),
+                new Keyframe(CrawlForwardLoopSeconds * 0.18f, baseValue - signedAmplitude * 0.52f),
+                new Keyframe(CrawlForwardLoopSeconds * 0.36f, baseValue - signedAmplitude),
+                new Keyframe(CrawlForwardLoopSeconds * 0.58f, baseValue + signedAmplitude * 0.72f),
+                new Keyframe(CrawlForwardLoopSeconds * 0.82f, baseValue + signedAmplitude * 0.28f),
+                new Keyframe(CrawlForwardLoopSeconds, baseValue));
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static AnimationCurve CreateCrawlPhysicsLiftCurve(float baseValue, float amplitude)
+        {
+            var curve = new AnimationCurve(
+                new Keyframe(0f, baseValue),
+                new Keyframe(CrawlForwardLoopSeconds * 0.18f, baseValue + amplitude * 0.28f),
+                new Keyframe(CrawlForwardLoopSeconds * 0.36f, baseValue + amplitude),
+                new Keyframe(CrawlForwardLoopSeconds * 0.58f, baseValue - amplitude * 0.42f),
+                new Keyframe(CrawlForwardLoopSeconds * 0.82f, baseValue + amplitude * 0.18f),
+                new Keyframe(CrawlForwardLoopSeconds, baseValue));
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static AnimationCurve CreateCrawlLoopCurve(float startValue, float quarterValue, float halfValue, float threeQuarterValue)
+        {
+            var curve = new AnimationCurve(
+                new Keyframe(0f, startValue),
+                new Keyframe(CrawlForwardLoopSeconds * 0.25f, quarterValue),
+                new Keyframe(CrawlForwardLoopSeconds * 0.50f, halfValue),
+                new Keyframe(CrawlForwardLoopSeconds * 0.75f, threeQuarterValue),
+                new Keyframe(CrawlForwardLoopSeconds, startValue));
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static float NormalizeEulerAngle(float value)
+        {
+            return value > 180f ? value - 360f : value;
+        }
+
         private static void SetBlendShapeCurve(AnimationClip clip, string path, AnimationCurve curve)
         {
             AnimationUtility.SetEditorCurve(
@@ -1570,13 +2515,17 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 new Keyframe(IdleBreathLoopSeconds * 0.50f, fullValue),
                 new Keyframe(IdleBreathLoopSeconds * 0.75f, Mathf.Lerp(neutralValue, fullValue, 0.68f)),
                 new Keyframe(IdleBreathLoopSeconds, endValue));
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static void SmoothCurveTangents(AnimationCurve curve)
+        {
             for (var i = 0; i < curve.keys.Length; i++)
             {
                 AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.ClampedAuto);
                 AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.ClampedAuto);
             }
-
-            return curve;
         }
 
         private static AnimatorController EnsureIdleBreathController(AnimationClip clip)
@@ -1589,6 +2538,42 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             var controller = AnimatorController.CreateAnimatorControllerAtPath(UnityIdleBreathControllerAssetPath);
             var stateMachine = controller.layers[0].stateMachine;
             var state = stateMachine.AddState(IdleBreathStateName);
+            state.motion = clip;
+            state.speed = 1f;
+            stateMachine.defaultState = state;
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static AnimatorController EnsureCrawlForwardController(AnimationClip clip)
+        {
+            if (AssetDatabase.LoadAssetAtPath<AnimatorController>(UnityCrawlForwardControllerAssetPath) != null)
+            {
+                AssetDatabase.DeleteAsset(UnityCrawlForwardControllerAssetPath);
+            }
+
+            var controller = AnimatorController.CreateAnimatorControllerAtPath(UnityCrawlForwardControllerAssetPath);
+            var stateMachine = controller.layers[0].stateMachine;
+            var state = stateMachine.AddState(CrawlForwardStateName);
+            state.motion = clip;
+            state.speed = 1f;
+            stateMachine.defaultState = state;
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static AnimatorController EnsurePhysicsAntennaStrikeController(AnimationClip clip)
+        {
+            if (AssetDatabase.LoadAssetAtPath<AnimatorController>(UnityAntennaStrikeControllerAssetPath) != null)
+            {
+                AssetDatabase.DeleteAsset(UnityAntennaStrikeControllerAssetPath);
+            }
+
+            var controller = AnimatorController.CreateAnimatorControllerAtPath(UnityAntennaStrikeControllerAssetPath);
+            var stateMachine = controller.layers[0].stateMachine;
+            var state = stateMachine.AddState(AntennaStrikeStateName);
             state.motion = clip;
             state.speed = 1f;
             stateMachine.defaultState = state;
@@ -1649,6 +2634,44 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             }
         }
 
+        private static void HideMaceSocketRingRenderers(Transform root)
+        {
+            HideMaceSocketRingRenderer(root, "Left");
+            HideMaceSocketRingRenderer(root, "Right");
+        }
+
+        private static void HideMaceSocketRingRenderer(Transform root, string sideName)
+        {
+            var maceSocket = RequireNamedChild(root, $"Accelerando_{sideName}_MaceSocket_Ring");
+            foreach (var renderer in maceSocket.GetComponentsInChildren<Renderer>(true))
+            {
+                renderer.enabled = false;
+                renderer.forceRenderingOff = true;
+                EditorUtility.SetDirty(renderer);
+            }
+
+            EditorUtility.SetDirty(maceSocket.gameObject);
+            EditorUtility.SetDirty(maceSocket);
+        }
+
+        private static void RequireMaceSocketRingRenderersHidden(Transform root)
+        {
+            RequireMaceSocketRingRendererHidden(root, "Left");
+            RequireMaceSocketRingRendererHidden(root, "Right");
+        }
+
+        private static void RequireMaceSocketRingRendererHidden(Transform root, string sideName)
+        {
+            var maceSocket = RequireNamedChild(root, $"Accelerando_{sideName}_MaceSocket_Ring");
+            foreach (var renderer in maceSocket.GetComponentsInChildren<Renderer>(true))
+            {
+                if (renderer.enabled)
+                {
+                    throw new InvalidOperationException($"{maceSocket.name} renderer must stay hidden to prevent lower mace protrusion.");
+                }
+            }
+        }
+
         private static void EnsureRenderableHierarchy(Transform root)
         {
             foreach (var child in root.GetComponentsInChildren<Transform>(true))
@@ -1694,6 +2717,7 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             }
 
             var direction = (end - start).normalized;
+            var visibleEnd = end - direction * GetConnectedChainMaceSideCutbackDistance(anchorDistance);
             var up = root.up;
             if (Vector3.Cross(direction, up).sqrMagnitude < 0.0001f)
             {
@@ -1703,20 +2727,46 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             var chainRotation = Quaternion.LookRotation(direction, up);
             for (var i = 0; i < links.Count; i++)
             {
-                var t = links.Count == 1 ? 0.5f : i / (float)(links.Count - 1);
                 var link = links[i];
-                link.position = Vector3.Lerp(start, end, t);
+                var isVisible = i < ConnectedChainVisibleLinkCount;
+                link.gameObject.SetActive(isVisible);
+                var t = ConnectedChainVisibleLinkCount == 1 ? 0.5f : Mathf.Min(i, ConnectedChainVisibleLinkCount - 1) / (float)(ConnectedChainVisibleLinkCount - 1);
+                link.position = Vector3.Lerp(start, visibleEnd, t);
                 link.rotation = chainRotation * Quaternion.Euler(0f, 0f, i % 2 == 0 ? 0f : 90f);
+                EditorUtility.SetDirty(link.gameObject);
                 EditorUtility.SetDirty(link);
             }
+
+            LogAntennaTipEmbeddedConnectionPlacement(root, sideName, antennaTip, links[0]);
 
             EditorUtility.SetDirty(antennaTip);
             EditorUtility.SetDirty(maceSocket);
             Debug.Log(
                 "AccelerandoChainConnectionFix " +
-                $"Root={root.name}, Side={sideName}, Links={links.Count}, Start={FormatVector(start)}, End={FormatVector(end)}, " +
+                $"Root={root.name}, Side={sideName}, Links={links.Count}, VisibleLinks={ConnectedChainVisibleLinkCount}, " +
+                $"Start={FormatVector(start)}, End={FormatVector(end)}, VisibleEnd={FormatVector(visibleEnd)}, " +
                 $"AnchorDistance={anchorDistance:0.###}, FirstLinkDistance={Vector3.Distance(links[0].position, start):0.###}, " +
-                $"LastLinkDistance={Vector3.Distance(links[links.Count - 1].position, end):0.###}.");
+                $"VisibleLastToMace={Vector3.Distance(links[ConnectedChainVisibleLinkCount - 1].position, end):0.###}, " +
+                $"HiddenMaceSideLinks={links.Count - ConnectedChainVisibleLinkCount}.");
+        }
+
+        private static float GetConnectedChainMaceSideCutbackDistance(float anchorDistance)
+        {
+            return Mathf.Min(ConnectedChainMaceSideCutbackDistance, anchorDistance * ConnectedChainMaceSideCutbackAnchorFactor);
+        }
+
+        private static void LogAntennaTipEmbeddedConnectionPlacement(Transform root, string sideName, Transform antennaTip, Transform firstLink)
+        {
+            var tip = antennaTip.position;
+            var visibleHoop = RequireNamedChild(root, $"Accelerando_{sideName}_AntennaTip_EmbeddedVisibleChainEndHoop");
+            var socketLip = RequireNamedChild(root, $"Accelerando_{sideName}_AntennaTip_EmbeddedSocketLip");
+
+            Debug.Log(
+                "AccelerandoAntennaTipEmbeddedConnectionPlacement " +
+                $"Root={root.name}, Side={sideName}, Tip={FormatVector(tip)}, " +
+                $"FirstLinkDistance={Vector3.Distance(firstLink.position, tip):0.###}, " +
+                $"VisibleHoopDistance={Vector3.Distance(visibleHoop.position, tip):0.###}, " +
+                $"SocketLipDistance={Vector3.Distance(socketLip.position, tip):0.###}.");
         }
 
         private static Transform RequireNamedChild(Transform root, string childName)
@@ -2406,7 +3456,10 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             InspectAnimationReviewSlots(placementRoot);
             InspectAlignedReviewRow(placementRoot);
             InspectIdleBreathingAnimation(placementRoot);
+            InspectCrawlForwardMotion(placementRoot);
+            InspectPhysicsAntennaStrikeMotion(placementRoot);
             InspectMaceChainConnections(placementRoot);
+            InspectAntennaTipEmbeddedConnections(placementRoot);
             InspectConSpiritoRelativeZPlacement(placementRoot);
             InspectPlayerStart(placementRoot);
             InspectReviewCamera(placementRoot);
@@ -2502,15 +3555,29 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             var antennaTip = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_Ring");
             var maceSocket = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_MaceSocket_Ring");
             var firstLink = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_ConnectedChain_Link_01");
-            var lastLink = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_ConnectedChain_Link_{ConnectedChainLinkCount:00}");
+            var visibleLastLink = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_ConnectedChain_Link_{ConnectedChainVisibleLinkCount:00}");
+            var hiddenMaceSideLink = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_ConnectedChain_Link_{ConnectedChainLinkCount:00}");
 
             var firstDistance = Vector3.Distance(firstLink.position, antennaTip.position);
-            var lastDistance = Vector3.Distance(lastLink.position, maceSocket.position);
-            if (firstDistance > ConnectedChainEndpointTolerance || lastDistance > ConnectedChainEndpointTolerance)
+            var visibleLastToMace = Vector3.Distance(visibleLastLink.position, maceSocket.position);
+            var anchorDistance = Vector3.Distance(antennaTip.position, maceSocket.position);
+            var expectedCutback = GetConnectedChainMaceSideCutbackDistance(anchorDistance);
+            var maceBoundsClearance = GetMinimumVisibleChainMaceBoundsClearance(reviewObject, sideName);
+            var maceTopClearance = GetMinimumVisibleChainMaceTopClearance(reviewObject, sideName);
+            if (firstDistance > ConnectedChainEndpointTolerance ||
+                Mathf.Abs(visibleLastToMace - expectedCutback) > ConnectedChainMaceSideCutbackTolerance ||
+                maceBoundsClearance < ConnectedChainMinimumMaceBoundsClearance ||
+                maceTopClearance < ConnectedChainMinimumMaceTopClearance ||
+                maceTopClearance > ConnectedChainMaximumMaceTopClearance ||
+                hiddenMaceSideLink.gameObject.activeSelf)
             {
                 throw new InvalidOperationException(
-                    $"{objectName} {sideName} chain endpoints are detached. " +
-                    $"First={firstDistance:0.###}, Last={lastDistance:0.###}, Tolerance={ConnectedChainEndpointTolerance:0.###}.");
+                    $"{objectName} {sideName} chain mace-side trim is invalid. " +
+                    $"First={firstDistance:0.###}, VisibleLastToMace={visibleLastToMace:0.###}, " +
+                    $"ExpectedCutback={expectedCutback:0.###}, MaceBoundsClearance={maceBoundsClearance:0.###}, " +
+                    $"MaceTopClearance={maceTopClearance:0.###}, " +
+                    $"AllowedMaceTopClearance={ConnectedChainMinimumMaceTopClearance:0.###}-{ConnectedChainMaximumMaceTopClearance:0.###}, " +
+                    $"HiddenMaceSideActive={hiddenMaceSideLink.gameObject.activeSelf}.");
             }
 
             if (summary.Length > 0)
@@ -2521,7 +3588,127 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             summary.Append(objectName);
             summary.Append('/');
             summary.Append(sideName);
-            summary.Append($"=first:{firstDistance:0.###},last:{lastDistance:0.###}");
+            summary.Append($"=first:{firstDistance:0.###},visibleLastToMace:{visibleLastToMace:0.###},maceBoundsClearance:{maceBoundsClearance:0.###},maceTopClearance:{maceTopClearance:0.###},maceTopClearanceLimit:{ConnectedChainMaximumMaceTopClearance:0.###},hidden:{!hiddenMaceSideLink.gameObject.activeSelf}");
+        }
+
+        private static float GetMinimumVisibleChainMaceBoundsClearance(Transform root, string sideName)
+        {
+            var maceBounds = CalculateActiveRendererBounds(
+                FindCrawlMaceTransforms(root, sideName),
+                new Bounds(RequireNamedChild(root, $"Accelerando_{sideName}_MaceSocket_Ring").position, Vector3.one * 0.05f));
+            var minClearance = float.PositiveInfinity;
+            for (var i = 1; i <= ConnectedChainVisibleLinkCount; i++)
+            {
+                var link = RequireNamedChild(root, $"Accelerando_{sideName}_ConnectedChain_Link_{i:00}");
+                if (!link.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+
+                var linkBounds = CalculateActiveRendererBounds(new[] { link }, new Bounds(link.position, Vector3.one * 0.02f));
+                minClearance = Mathf.Min(minClearance, GetBoundsClearance(linkBounds, maceBounds));
+            }
+
+            return float.IsPositiveInfinity(minClearance) ? 0f : minClearance;
+        }
+
+        private static float GetMinimumVisibleChainMaceTopClearance(Transform root, string sideName)
+        {
+            var maceBounds = CalculateActiveRendererBounds(
+                FindCrawlMaceTransforms(root, sideName),
+                new Bounds(RequireNamedChild(root, $"Accelerando_{sideName}_MaceSocket_Ring").position, Vector3.one * 0.05f));
+            var minClearance = float.PositiveInfinity;
+            for (var i = 1; i <= ConnectedChainVisibleLinkCount; i++)
+            {
+                var link = RequireNamedChild(root, $"Accelerando_{sideName}_ConnectedChain_Link_{i:00}");
+                if (!link.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+
+                var linkBounds = CalculateActiveRendererBounds(new[] { link }, new Bounds(link.position, Vector3.one * 0.02f));
+                minClearance = Mathf.Min(minClearance, linkBounds.min.y - maceBounds.max.y);
+            }
+
+            return float.IsPositiveInfinity(minClearance) ? 0f : minClearance;
+        }
+
+        private static void InspectAntennaTipEmbeddedConnections(Transform placementRoot)
+        {
+            var summary = new System.Text.StringBuilder();
+            InspectAntennaTipEmbeddedConnectionsForObject(placementRoot, PlacementObjectName, summary);
+            for (var i = 0; i < AnimationReviewSlots.Length; i++)
+            {
+                InspectAntennaTipEmbeddedConnectionsForObject(placementRoot, AnimationReviewSlots[i].ObjectName, summary);
+            }
+
+            Debug.Log(
+                "AccelerandoAntennaTipEmbeddedConnectionInspection " +
+                $"Objects={AnimationReviewSlots.Length + 1}, Connections={summary}.");
+        }
+
+        private static void InspectAntennaTipEmbeddedConnectionsForObject(Transform placementRoot, string objectName, System.Text.StringBuilder summary)
+        {
+            var reviewObject = placementRoot.Find(objectName);
+            if (reviewObject == null)
+            {
+                throw new InvalidOperationException($"{objectName} is missing under {PlacementRootName}.");
+            }
+
+            InspectAntennaTipEmbeddedConnectionForSide(reviewObject, objectName, "Left", summary);
+            InspectAntennaTipEmbeddedConnectionForSide(reviewObject, objectName, "Right", summary);
+        }
+
+        private static void InspectAntennaTipEmbeddedConnectionForSide(Transform reviewObject, string objectName, string sideName, System.Text.StringBuilder summary)
+        {
+            var antennaTip = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_Ring");
+            var firstLink = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_ConnectedChain_Link_01");
+            var visibleHoop = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedVisibleChainEndHoop");
+            var socketLip = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedSocketLip");
+            var retainingPin = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedRetainingPin");
+            var stem = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedStem");
+            var surfaceSaddle = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedSurfaceSaddle");
+            var upperOcclusion = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedUpperOcclusionBulge");
+            var pressurePad = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedFleshPressurePad");
+
+            var hoopToTip = Vector3.Distance(visibleHoop.position, antennaTip.position);
+            var hoopToFirst = Vector3.Distance(visibleHoop.position, firstLink.position);
+            var socketToTip = Vector3.Distance(socketLip.position, antennaTip.position);
+            var pinToTip = Vector3.Distance(retainingPin.position, antennaTip.position);
+            var stemToTip = Vector3.Distance(stem.position, antennaTip.position);
+            var saddleToTip = Vector3.Distance(surfaceSaddle.position, antennaTip.position);
+            var occlusionToTip = Vector3.Distance(upperOcclusion.position, antennaTip.position);
+            var pressureToTip = Vector3.Distance(pressurePad.position, antennaTip.position);
+
+            if (hoopToTip > AntennaTipEmbeddedHoopCenterTolerance || hoopToFirst > AntennaTipEmbeddedHoopCenterTolerance)
+            {
+                throw new InvalidOperationException(
+                    $"{objectName} {sideName} embedded chain-end hoop is detached from antenna tip chain start. " +
+                    $"HoopToTip={hoopToTip:0.###}, HoopToFirst={hoopToFirst:0.###}, Tolerance={AntennaTipEmbeddedHoopCenterTolerance:0.###}.");
+            }
+
+            if (socketToTip > AntennaTipEmbeddedPartTolerance ||
+                pinToTip > AntennaTipEmbeddedPartTolerance ||
+                stemToTip > AntennaTipEmbeddedPartTolerance ||
+                saddleToTip > AntennaTipEmbeddedPartTolerance ||
+                occlusionToTip > AntennaTipEmbeddedPartTolerance ||
+                pressureToTip > AntennaTipEmbeddedPartTolerance)
+            {
+                throw new InvalidOperationException(
+                    $"{objectName} {sideName} embedded connection parts are detached from antenna tip. " +
+                    $"Socket={socketToTip:0.###}, Pin={pinToTip:0.###}, Stem={stemToTip:0.###}, Saddle={saddleToTip:0.###}, " +
+                    $"Occlusion={occlusionToTip:0.###}, Pressure={pressureToTip:0.###}, Tolerance={AntennaTipEmbeddedPartTolerance:0.###}.");
+            }
+
+            if (summary.Length > 0)
+            {
+                summary.Append("; ");
+            }
+
+            summary.Append(objectName);
+            summary.Append('/');
+            summary.Append(sideName);
+            summary.Append($"=hoopTip:{hoopToTip:0.###},hoopFirst:{hoopToFirst:0.###},socket:{socketToTip:0.###},occlusion:{occlusionToTip:0.###}");
         }
 
         private static void InspectAlignedReviewRow(Transform placementRoot)
@@ -2648,6 +3835,1110 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 $"BlendShapeCurveRange={blendShapeCurveRange:0.###}, StaticAccessoryCurveRange={staticAccessoryCurveRange:0.###}, " +
                 $"Clip={UnityIdleBreathClipAssetPath}, ClipLength={clip.length:0.###}, Loop={AnimationUtility.GetAnimationClipSettings(clip).loopTime}, " +
                 $"Controller={AssetDatabase.GetAssetPath(animator.runtimeAnimatorController)}.");
+        }
+
+        private static void InspectCrawlForwardMotion(Transform placementRoot)
+        {
+            var crawlSlot = placementRoot.Find(CrawlSlotObjectName);
+            if (crawlSlot == null)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} is missing under {PlacementRootName}.");
+            }
+
+            var modelObject = crawlSlot.Find(ModelChildName);
+            if (modelObject == null)
+            {
+                throw new InvalidOperationException($"{ModelChildName} is missing under {CrawlSlotObjectName}.");
+            }
+
+            var animator = crawlSlot.GetComponent<Animator>();
+            if (animator == null || animator.runtimeAnimatorController == null)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} does not have an Animator with a controller.");
+            }
+
+            if (animator.applyRootMotion)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} crawl motion must not use root motion.");
+            }
+
+            var controllerPath = AssetDatabase.GetAssetPath(animator.runtimeAnimatorController);
+            if (!string.Equals(controllerPath, UnityCrawlForwardControllerAssetPath, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    $"{CrawlSlotObjectName} uses the wrong crawl controller. Expected={UnityCrawlForwardControllerAssetPath}, Actual={controllerPath}.");
+            }
+
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityCrawlForwardClipAssetPath);
+            if (clip == null)
+            {
+                throw new InvalidOperationException($"Crawl forward clip is missing at {UnityCrawlForwardClipAssetPath}.");
+            }
+
+            var loopSettings = AnimationUtility.GetAnimationClipSettings(clip);
+            if (!loopSettings.loopTime)
+            {
+                throw new InvalidOperationException($"{UnityCrawlForwardClipAssetPath} must be a loop clip.");
+            }
+
+            var rootPositionCurveRange =
+                GetCurveRange(clip, string.Empty, typeof(Transform), "m_LocalPosition.x") +
+                GetCurveRange(clip, string.Empty, typeof(Transform), "m_LocalPosition.y") +
+                GetCurveRange(clip, string.Empty, typeof(Transform), "m_LocalPosition.z");
+            if (rootPositionCurveRange > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    $"{CrawlSlotObjectName} crawl motion must not keyframe the review root position. Range={rootPositionCurveRange:0.###}.");
+            }
+
+            var modelPath = GetRelativePath(crawlSlot, modelObject);
+            var bodyForeAftRange = GetCurveRange(clip, modelPath, typeof(Transform), "m_LocalPosition.z");
+            var bodyScaleRange = GetCurveRange(clip, modelPath, typeof(Transform), "m_LocalScale.z");
+            var chainFollowerRange = GetCrawlChainFollowerCurveRange(clip, crawlSlot);
+            var maceFollowerRange = GetCrawlMaceFollowerCurveRange(clip, crawlSlot);
+            var chainPhysicsSummary = InspectCrawlChainPhysicsRig(crawlSlot);
+
+            if (bodyForeAftRange < CrawlForwardBodyForeAftMinimumRange)
+            {
+                throw new InvalidOperationException(
+                    $"{CrawlSlotObjectName} crawl body fore-aft motion is too small. Range={bodyForeAftRange:0.###}.");
+            }
+
+            if (bodyScaleRange < CrawlForwardBodyScaleMinimumRange)
+            {
+                throw new InvalidOperationException(
+                    $"{CrawlSlotObjectName} crawl body scale motion is too small. Range={bodyScaleRange:0.###}.");
+            }
+
+            if (chainFollowerRange > CrawlForwardPhysicsDrivenCurveMaximumRange)
+            {
+                throw new InvalidOperationException(
+                    $"{CrawlSlotObjectName} chain links must be physics-driven, not Animator-driven. CurveRange={chainFollowerRange:0.###}.");
+            }
+
+            if (maceFollowerRange > CrawlForwardPhysicsDrivenCurveMaximumRange)
+            {
+                throw new InvalidOperationException(
+                    $"{CrawlSlotObjectName} mace must be physics-driven, not Animator-driven. CurveRange={maceFollowerRange:0.###}.");
+            }
+
+            Debug.Log(
+                "AccelerandoCrawlForwardInspection " +
+                $"Slot={CrawlSlotObjectName}, Clip={UnityCrawlForwardClipAssetPath}, ClipLength={clip.length:0.###}, " +
+                $"Loop={loopSettings.loopTime}, Controller={controllerPath}, AnimatorSpeed={animator.speed:0.###}, ApplyRootMotion={animator.applyRootMotion}, " +
+                $"RootPositionCurveRange={rootPositionCurveRange:0.###}, BodyForeAftRange={bodyForeAftRange:0.###}, " +
+                $"BodyScaleRange={bodyScaleRange:0.###}, ChainFollowerRange={chainFollowerRange:0.###}, " +
+                $"MaceFollowerRange={maceFollowerRange:0.###}, ChainPhysics={chainPhysicsSummary}.");
+        }
+
+        private static void InspectPhysicsAntennaStrikeMotion(Transform placementRoot)
+        {
+            var strikeSlot = placementRoot.Find(AntennaStrikeSlotObjectName);
+            if (strikeSlot == null)
+            {
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} is missing under {PlacementRootName}.");
+            }
+
+            var modelObject = strikeSlot.Find(ModelChildName);
+            if (modelObject == null)
+            {
+                throw new InvalidOperationException($"{ModelChildName} is missing under {AntennaStrikeSlotObjectName}.");
+            }
+
+            var animator = strikeSlot.GetComponent<Animator>();
+            if (animator == null || animator.runtimeAnimatorController == null)
+            {
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} does not have an Animator with a controller.");
+            }
+
+            if (animator.applyRootMotion)
+            {
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} attack motion must not use root motion.");
+            }
+
+            var controllerPath = AssetDatabase.GetAssetPath(animator.runtimeAnimatorController);
+            if (!string.Equals(controllerPath, UnityAntennaStrikeControllerAssetPath, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    $"{AntennaStrikeSlotObjectName} uses the wrong antenna strike controller. Expected={UnityAntennaStrikeControllerAssetPath}, Actual={controllerPath}.");
+            }
+
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityAntennaStrikeClipAssetPath);
+            if (clip == null)
+            {
+                throw new InvalidOperationException($"Antenna strike clip is missing at {UnityAntennaStrikeClipAssetPath}.");
+            }
+
+            var loopSettings = AnimationUtility.GetAnimationClipSettings(clip);
+            if (!loopSettings.loopTime)
+            {
+                throw new InvalidOperationException($"{UnityAntennaStrikeClipAssetPath} must be a loop clip for review.");
+            }
+
+            var rootPositionCurveRange =
+                GetCurveRange(clip, string.Empty, typeof(Transform), "m_LocalPosition.x") +
+                GetCurveRange(clip, string.Empty, typeof(Transform), "m_LocalPosition.y") +
+                GetCurveRange(clip, string.Empty, typeof(Transform), "m_LocalPosition.z");
+            if (rootPositionCurveRange > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    $"{AntennaStrikeSlotObjectName} attack motion must not keyframe the review root position. Range={rootPositionCurveRange:0.###}.");
+            }
+
+            var modelPath = GetRelativePath(strikeSlot, modelObject);
+            var bodyForeAftRange = GetCurveRange(clip, modelPath, typeof(Transform), "m_LocalPosition.z");
+            var bodyScaleRange = GetCurveRange(clip, modelPath, typeof(Transform), "m_LocalScale.z");
+            var antennaInputRange = GetAntennaStrikeInputCurveRange(clip, strikeSlot);
+            var chainFollowerRange = GetCrawlChainFollowerCurveRange(clip, strikeSlot);
+            var maceFollowerRange = GetCrawlMaceFollowerCurveRange(clip, strikeSlot);
+            var chainPhysicsSummary = InspectCrawlChainPhysicsRig(strikeSlot, 0.065f);
+            RequireMaceSocketRingRenderersHidden(strikeSlot);
+
+            if (bodyForeAftRange < CrawlForwardBodyForeAftMinimumRange)
+            {
+                throw new InvalidOperationException(
+                    $"{AntennaStrikeSlotObjectName} attack must include crawl body fore-aft motion. Range={bodyForeAftRange:0.###}.");
+            }
+
+            if (bodyScaleRange < CrawlForwardBodyScaleMinimumRange)
+            {
+                throw new InvalidOperationException(
+                    $"{AntennaStrikeSlotObjectName} attack must include crawl body scale motion. Range={bodyScaleRange:0.###}.");
+            }
+
+            if (antennaInputRange < AntennaStrikeInputMinimumRange)
+            {
+                throw new InvalidOperationException(
+                    $"{AntennaStrikeSlotObjectName} antenna strike input is too small. Range={antennaInputRange:0.###}, Minimum={AntennaStrikeInputMinimumRange:0.###}.");
+            }
+
+            if (chainFollowerRange > CrawlForwardPhysicsDrivenCurveMaximumRange)
+            {
+                throw new InvalidOperationException(
+                    $"{AntennaStrikeSlotObjectName} chain links must be physics-driven, not Animator-driven. CurveRange={chainFollowerRange:0.###}.");
+            }
+
+            if (maceFollowerRange > CrawlForwardPhysicsDrivenCurveMaximumRange)
+            {
+                throw new InvalidOperationException(
+                    $"{AntennaStrikeSlotObjectName} mace must be physics-driven, not Animator-driven. CurveRange={maceFollowerRange:0.###}.");
+            }
+
+            Debug.Log(
+                "AccelerandoPhysicsAntennaStrikeInspection " +
+                $"Slot={AntennaStrikeSlotObjectName}, Clip={UnityAntennaStrikeClipAssetPath}, ClipLength={clip.length:0.###}, " +
+                $"Loop={loopSettings.loopTime}, Controller={controllerPath}, AnimatorSpeed={animator.speed:0.###}, ApplyRootMotion={animator.applyRootMotion}, " +
+                $"RootPositionCurveRange={rootPositionCurveRange:0.###}, BodyForeAftRange={bodyForeAftRange:0.###}, " +
+                $"BodyScaleRange={bodyScaleRange:0.###}, AntennaInputRange={antennaInputRange:0.###}, " +
+                $"ChainFollowerRange={chainFollowerRange:0.###}, MaceFollowerRange={maceFollowerRange:0.###}, ChainPhysics={chainPhysicsSummary}.");
+        }
+
+        private static float GetAntennaStrikeInputCurveRange(AnimationClip clip, Transform strikeSlot)
+        {
+            var range = 0f;
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                var antennaTip = RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaTip_Ring");
+                var path = GetRelativePath(strikeSlot, antennaTip);
+                range = Mathf.Max(range, GetCurveRange(clip, path, typeof(Transform), "m_LocalPosition.z"));
+            }
+
+            return range;
+        }
+
+        private static float GetCrawlChainFollowerCurveRange(AnimationClip clip, Transform crawlSlot)
+        {
+            var curveRange = 0f;
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                for (var i = 2; i <= ConnectedChainVisibleLinkCount; i++)
+                {
+                    var link = RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_ConnectedChain_Link_{i:00}");
+                    var path = GetRelativePath(crawlSlot, link);
+                    curveRange += GetCurveRange(clip, path, typeof(Transform), "m_LocalPosition.x");
+                    curveRange += GetCurveRange(clip, path, typeof(Transform), "m_LocalPosition.y");
+                    curveRange += GetCurveRange(clip, path, typeof(Transform), "m_LocalPosition.z");
+                    curveRange += GetCurveRange(clip, path, typeof(Transform), "localEulerAnglesRaw.x");
+                    curveRange += GetCurveRange(clip, path, typeof(Transform), "localEulerAnglesRaw.z");
+                }
+            }
+
+            return curveRange;
+        }
+
+        private static float GetCrawlMaceFollowerCurveRange(AnimationClip clip, Transform crawlSlot)
+        {
+            var curveRange = 0f;
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                var maceTransforms = FindCrawlMaceTransforms(crawlSlot, sideName);
+                for (var i = 0; i < maceTransforms.Count; i++)
+                {
+                    var path = GetRelativePath(crawlSlot, maceTransforms[i]);
+                    curveRange += GetCurveRange(clip, path, typeof(Transform), "m_LocalPosition.x");
+                    curveRange += GetCurveRange(clip, path, typeof(Transform), "m_LocalPosition.y");
+                    curveRange += GetCurveRange(clip, path, typeof(Transform), "m_LocalPosition.z");
+                    curveRange += GetCurveRange(clip, path, typeof(Transform), "localEulerAnglesRaw.x");
+                    curveRange += GetCurveRange(clip, path, typeof(Transform), "localEulerAnglesRaw.y");
+                    curveRange += GetCurveRange(clip, path, typeof(Transform), "localEulerAnglesRaw.z");
+                }
+            }
+
+            return curveRange;
+        }
+
+        private static void ValidateCrawlForwardChainPhysicsResponse(Transform crawlSlot, AnimationClip clip)
+        {
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = crawlSlot.GetComponent(rigType);
+            if (rig == null)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} is missing AccelerandoChainPhysicsRig.");
+            }
+
+            var simulateMethod = rigType.GetMethod("SimulatePhysicsTick", new[] { typeof(float) });
+            var syncMethod = rigType.GetMethod("SyncVisualsToPhysics", Type.EmptyTypes);
+            if (simulateMethod == null || syncMethod == null)
+            {
+                throw new InvalidOperationException($"{rigType.FullName} is missing physics validation methods.");
+            }
+
+            var physicsRoot = crawlSlot.Find(ChainPhysicsRootObjectName);
+            if (physicsRoot == null)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} is missing {ChainPhysicsRootObjectName}.");
+            }
+
+            var leftMetrics = new CrawlChainPhysicsResponseMetrics(
+                "Left",
+                RequireNamedChild(crawlSlot, "Accelerando_Left_AntennaTip_Ring"),
+                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Left")),
+                RequireNamedChild(physicsRoot, ChainPhysicsLinkProxyName("Left", ConnectedChainVisibleLinkCount)),
+                FindCrawlMaceTransforms(crawlSlot, "Left").ToArray(),
+                GetVisibleChainLinkTransforms(crawlSlot, "Left"));
+            var rightMetrics = new CrawlChainPhysicsResponseMetrics(
+                "Right",
+                RequireNamedChild(crawlSlot, "Accelerando_Right_AntennaTip_Ring"),
+                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Right")),
+                RequireNamedChild(physicsRoot, ChainPhysicsLinkProxyName("Right", ConnectedChainVisibleLinkCount)),
+                FindCrawlMaceTransforms(crawlSlot, "Right").ToArray(),
+                GetVisibleChainLinkTransforms(crawlSlot, "Right"));
+
+            var visualSnapshots = CaptureCrawlChainMaceVisualSnapshots(crawlSlot);
+            var previousMode = Physics.simulationMode;
+            var previousAutoSync = Physics.autoSyncTransforms;
+            const float deltaTime = 1f / 60f;
+            const int steps = 144;
+            try
+            {
+                try
+                {
+                    Physics.simulationMode = SimulationMode.Script;
+                    Physics.autoSyncTransforms = false;
+                    for (var step = 0; step < steps; step++)
+                    {
+                        var sampleTime = (step * deltaTime) % clip.length;
+                        clip.SampleAnimation(crawlSlot.gameObject, sampleTime);
+                        simulateMethod.Invoke(rig, new object[] { deltaTime });
+                        Physics.SyncTransforms();
+                        Physics.Simulate(deltaTime);
+                        syncMethod.Invoke(rig, Array.Empty<object>());
+
+                        leftMetrics.Sample();
+                        rightMetrics.Sample();
+                    }
+                }
+                finally
+                {
+                    Physics.simulationMode = previousMode;
+                    Physics.autoSyncTransforms = previousAutoSync;
+                }
+
+                leftMetrics.Validate();
+                rightMetrics.Validate();
+                Debug.Log($"AccelerandoCrawlChainPhysicsResponse {leftMetrics}");
+                Debug.Log($"AccelerandoCrawlChainPhysicsResponse {rightMetrics}");
+            }
+            finally
+            {
+                RestoreTransformSnapshots(visualSnapshots);
+                clip.SampleAnimation(crawlSlot.gameObject, 0f);
+                ConfigureCrawlChainPhysicsRig(crawlSlot);
+            }
+        }
+
+        private static void ValidatePhysicsAntennaStrikeResponse(Transform strikeSlot, AnimationClip clip)
+        {
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = strikeSlot.GetComponent(rigType);
+            if (rig == null)
+            {
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} is missing AccelerandoChainPhysicsRig.");
+            }
+
+            var simulateMethod = rigType.GetMethod("SimulatePhysicsTick", new[] { typeof(float) });
+            var syncMethod = rigType.GetMethod("SyncVisualsToPhysics", Type.EmptyTypes);
+            if (simulateMethod == null || syncMethod == null)
+            {
+                throw new InvalidOperationException($"{rigType.FullName} is missing physics validation methods.");
+            }
+
+            var physicsRoot = strikeSlot.Find(ChainPhysicsRootObjectName);
+            if (physicsRoot == null)
+            {
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} is missing {ChainPhysicsRootObjectName}.");
+            }
+
+            var leftMetrics = new AntennaStrikePhysicsResponseMetrics(
+                "Left",
+                strikeSlot,
+                RequireNamedChild(strikeSlot, "Accelerando_Left_AntennaTip_Ring"),
+                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Left")));
+            var rightMetrics = new AntennaStrikePhysicsResponseMetrics(
+                "Right",
+                strikeSlot,
+                RequireNamedChild(strikeSlot, "Accelerando_Right_AntennaTip_Ring"),
+                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Right")));
+
+            var visualSnapshots = CaptureAntennaStrikeVisualSnapshots(strikeSlot);
+            var previousMode = Physics.simulationMode;
+            var previousAutoSync = Physics.autoSyncTransforms;
+            const float deltaTime = 1f / 90f;
+            const int steps = 180;
+            try
+            {
+                try
+                {
+                    Physics.simulationMode = SimulationMode.Script;
+                    Physics.autoSyncTransforms = false;
+                    for (var step = 0; step < steps; step++)
+                    {
+                        var sampleTime = (step * deltaTime) % clip.length;
+                        clip.SampleAnimation(strikeSlot.gameObject, sampleTime);
+                        simulateMethod.Invoke(rig, new object[] { deltaTime });
+                        Physics.SyncTransforms();
+                        Physics.Simulate(deltaTime);
+                        syncMethod.Invoke(rig, Array.Empty<object>());
+
+                        leftMetrics.Sample();
+                        rightMetrics.Sample();
+                    }
+                }
+                finally
+                {
+                    Physics.simulationMode = previousMode;
+                    Physics.autoSyncTransforms = previousAutoSync;
+                }
+
+                leftMetrics.Validate();
+                rightMetrics.Validate();
+                Debug.Log($"AccelerandoPhysicsAntennaStrikeResponse {leftMetrics}");
+                Debug.Log($"AccelerandoPhysicsAntennaStrikeResponse {rightMetrics}");
+            }
+            finally
+            {
+                RestoreTransformSnapshots(visualSnapshots);
+                clip.SampleAnimation(strikeSlot.gameObject, 0f);
+                ConfigureAttackChainPhysicsRig(strikeSlot);
+            }
+        }
+
+        private static List<TransformSnapshot> CaptureCrawlChainMaceVisualSnapshots(Transform crawlSlot)
+        {
+            var snapshots = new List<TransformSnapshot>();
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                for (var i = 1; i <= ConnectedChainLinkCount; i++)
+                {
+                    snapshots.Add(new TransformSnapshot(
+                        RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_ConnectedChain_Link_{i:00}")));
+                }
+
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_MaceSocket_Ring")));
+            }
+
+            return snapshots;
+        }
+
+        private static List<TransformSnapshot> CaptureAntennaStrikeVisualSnapshots(Transform strikeSlot)
+        {
+            var snapshots = CaptureCrawlChainMaceVisualSnapshots(strikeSlot);
+            var modelObject = strikeSlot.Find(ModelChildName);
+            if (modelObject != null)
+            {
+                snapshots.Add(new TransformSnapshot(modelObject));
+            }
+
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                var drivenTransforms = FindAntennaStrikeDrivenTransforms(strikeSlot, sideName);
+                for (var i = 0; i < drivenTransforms.Count; i++)
+                {
+                    snapshots.Add(new TransformSnapshot(drivenTransforms[i]));
+                }
+            }
+
+            return snapshots;
+        }
+
+        private static Transform[] GetVisibleChainLinkTransforms(Transform crawlSlot, string sideName)
+        {
+            var links = new Transform[ConnectedChainVisibleLinkCount];
+            for (var i = 1; i <= ConnectedChainVisibleLinkCount; i++)
+            {
+                links[i - 1] = RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_ConnectedChain_Link_{i:00}");
+            }
+
+            return links;
+        }
+
+        private static void RestoreTransformSnapshots(List<TransformSnapshot> snapshots)
+        {
+            for (var i = 0; i < snapshots.Count; i++)
+            {
+                snapshots[i].Restore();
+            }
+        }
+
+        private readonly struct TransformSnapshot
+        {
+            private readonly Transform transform;
+            private readonly Vector3 localPosition;
+            private readonly Quaternion localRotation;
+            private readonly Vector3 localScale;
+            private readonly bool activeSelf;
+
+            public TransformSnapshot(Transform transform)
+            {
+                this.transform = transform;
+                localPosition = transform.localPosition;
+                localRotation = transform.localRotation;
+                localScale = transform.localScale;
+                activeSelf = transform.gameObject.activeSelf;
+            }
+
+            public void Restore()
+            {
+                if (transform == null)
+                {
+                    return;
+                }
+
+                transform.localPosition = localPosition;
+                transform.localRotation = localRotation;
+                transform.localScale = localScale;
+                transform.gameObject.SetActive(activeSelf);
+            }
+        }
+
+        private sealed class AntennaStrikePhysicsResponseMetrics
+        {
+            private readonly string sideName;
+            private readonly Transform strikeSlot;
+            private readonly Transform antennaTip;
+            private readonly Transform maceProxy;
+            private readonly float restAntennaForward;
+            private readonly float restMaceForward;
+
+            private float minAntennaForward;
+            private float maxAntennaForward;
+            private float minMaceForward;
+            private float maxMaceForward;
+            private int sampleCount;
+
+            public AntennaStrikePhysicsResponseMetrics(
+                string sideName,
+                Transform strikeSlot,
+                Transform antennaTip,
+                Transform maceProxy)
+            {
+                this.sideName = sideName;
+                this.strikeSlot = strikeSlot;
+                this.antennaTip = antennaTip;
+                this.maceProxy = maceProxy;
+                var forward = strikeSlot.forward;
+                restAntennaForward = Vector3.Dot(antennaTip.position, forward);
+                restMaceForward = Vector3.Dot(maceProxy.position, forward);
+                minAntennaForward = maxAntennaForward = restAntennaForward;
+                minMaceForward = maxMaceForward = restMaceForward;
+            }
+
+            public void Sample()
+            {
+                sampleCount++;
+                var forward = strikeSlot.forward;
+                var antennaForward = Vector3.Dot(antennaTip.position, forward);
+                var maceForward = Vector3.Dot(maceProxy.position, forward);
+                minAntennaForward = Mathf.Min(minAntennaForward, antennaForward);
+                maxAntennaForward = Mathf.Max(maxAntennaForward, antennaForward);
+                minMaceForward = Mathf.Min(minMaceForward, maceForward);
+                maxMaceForward = Mathf.Max(maxMaceForward, maceForward);
+            }
+
+            public void Validate()
+            {
+                if (sampleCount <= 0)
+                {
+                    throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} {sideName} antenna strike physics did not produce samples.");
+                }
+
+                if (AntennaForwardRange < AntennaStrikeInputMinimumRange)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} antenna strike input range is too small. " +
+                        $"AntennaForwardRange={AntennaForwardRange:0.###}, Minimum={AntennaStrikeInputMinimumRange:0.###}.");
+                }
+
+                if (MaceForwardRange < AntennaStrikeMinimumMaceForwardRange)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace forward physics swing is too small. " +
+                        $"MaceForwardRange={MaceForwardRange:0.###}, Minimum={AntennaStrikeMinimumMaceForwardRange:0.###}.");
+                }
+
+                if (MaceForwardRange < AntennaForwardRange * AntennaStrikeMinimumMaceAmplification)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace swing must amplify the antenna input. " +
+                        $"AntennaForwardRange={AntennaForwardRange:0.###}, MaceForwardRange={MaceForwardRange:0.###}, " +
+                        $"MinimumAmplification={AntennaStrikeMinimumMaceAmplification:0.###}.");
+                }
+
+                if (MaxMaceForwardOffset <= MaxAntennaForwardOffset)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace must overshoot forward beyond the antenna input. " +
+                        $"AntennaForwardOffset={MaxAntennaForwardOffset:0.###}, MaceForwardOffset={MaxMaceForwardOffset:0.###}.");
+                }
+            }
+
+            private float AntennaForwardRange => maxAntennaForward - minAntennaForward;
+
+            private float MaceForwardRange => maxMaceForward - minMaceForward;
+
+            private float MaxAntennaForwardOffset => maxAntennaForward - restAntennaForward;
+
+            private float MaxMaceForwardOffset => maxMaceForward - restMaceForward;
+
+            public override string ToString()
+            {
+                return
+                    $"Side={sideName}, Samples={sampleCount}, " +
+                    $"AntennaForwardRange={AntennaForwardRange:0.###}, MaceForwardRange={MaceForwardRange:0.###}, " +
+                    $"MaxAntennaForwardOffset={MaxAntennaForwardOffset:0.###}, MaxMaceForwardOffset={MaxMaceForwardOffset:0.###}, " +
+                    $"Amplification={(AntennaForwardRange > 0.0001f ? MaceForwardRange / AntennaForwardRange : 0f):0.###}.";
+            }
+        }
+
+        private sealed class CrawlChainPhysicsResponseMetrics
+        {
+            private readonly string sideName;
+            private readonly Transform antennaTip;
+            private readonly Transform maceProxy;
+            private readonly Transform lastLinkProxy;
+            private readonly Transform[] maceVisuals;
+            private readonly Transform[] visibleChainLinks;
+            private readonly float restMaceY;
+            private readonly float restMaceX;
+            private readonly float restMaceZ;
+            private readonly float restLastLinkY;
+
+            private float minMaceX;
+            private float maxMaceX;
+            private float minMaceZ;
+            private float maxMaceZ;
+            private float minMaceY;
+            private float maxMaceDrop;
+            private float dropSum;
+            private float maxLastLinkDrop;
+            private float minLastLinkMaceVerticalOffset = float.PositiveInfinity;
+            private float minMaceBoundsClearance = float.PositiveInfinity;
+            private float minMaceTopClearance = float.PositiveInfinity;
+            private int sampleCount;
+
+            public CrawlChainPhysicsResponseMetrics(
+                string sideName,
+                Transform antennaTip,
+                Transform maceProxy,
+                Transform lastLinkProxy,
+                Transform[] maceVisuals,
+                Transform[] visibleChainLinks)
+            {
+                this.sideName = sideName;
+                this.antennaTip = antennaTip;
+                this.maceProxy = maceProxy;
+                this.lastLinkProxy = lastLinkProxy;
+                this.maceVisuals = maceVisuals;
+                this.visibleChainLinks = visibleChainLinks;
+                restMaceY = maceProxy.position.y;
+                restMaceX = maceProxy.position.x;
+                restMaceZ = maceProxy.position.z;
+                restLastLinkY = lastLinkProxy.position.y;
+                minMaceX = maxMaceX = restMaceX;
+                minMaceZ = maxMaceZ = restMaceZ;
+                minMaceY = restMaceY;
+            }
+
+            public void Sample()
+            {
+                sampleCount++;
+                var macePosition = maceProxy.position;
+                minMaceX = Mathf.Min(minMaceX, macePosition.x);
+                maxMaceX = Mathf.Max(maxMaceX, macePosition.x);
+                minMaceZ = Mathf.Min(minMaceZ, macePosition.z);
+                maxMaceZ = Mathf.Max(maxMaceZ, macePosition.z);
+                minMaceY = Mathf.Min(minMaceY, macePosition.y);
+
+                var maceDrop = Mathf.Max(0f, restMaceY - macePosition.y);
+                maxMaceDrop = Mathf.Max(maxMaceDrop, maceDrop);
+                dropSum += maceDrop;
+
+                var lastLinkDrop = Mathf.Max(0f, restLastLinkY - lastLinkProxy.position.y);
+                maxLastLinkDrop = Mathf.Max(maxLastLinkDrop, lastLinkDrop);
+                minLastLinkMaceVerticalOffset = Mathf.Min(
+                    minLastLinkMaceVerticalOffset,
+                    lastLinkProxy.position.y - macePosition.y);
+                minMaceBoundsClearance = Mathf.Min(minMaceBoundsClearance, CalculateCurrentMaceBoundsClearance());
+                minMaceTopClearance = Mathf.Min(minMaceTopClearance, CalculateCurrentMaceTopClearance());
+            }
+
+            public void Validate()
+            {
+                if (sampleCount <= 0)
+                {
+                    throw new InvalidOperationException($"{CrawlSlotObjectName} {sideName} chain physics did not produce samples.");
+                }
+
+                if (MaxMaceDrop > CrawlChainPhysicsMaximumMaceDrop)
+                {
+                    throw new InvalidOperationException(
+                        $"{CrawlSlotObjectName} {sideName} mace drops too far during crawl physics. " +
+                        $"Drop={MaxMaceDrop:0.###}, Limit={CrawlChainPhysicsMaximumMaceDrop:0.###}.");
+                }
+
+                if (AverageMaceDrop < CrawlChainPhysicsMinimumGravitySag)
+                {
+                    throw new InvalidOperationException(
+                        $"{CrawlSlotObjectName} {sideName} mace does not show enough gravity sag. " +
+                        $"AverageDrop={AverageMaceDrop:0.###}, Minimum={CrawlChainPhysicsMinimumGravitySag:0.###}.");
+                }
+
+                if (MaceHorizontalRange < CrawlChainPhysicsMinimumMaceHorizontalRange)
+                {
+                    throw new InvalidOperationException(
+                        $"{CrawlSlotObjectName} {sideName} mace does not respond enough to crawl motion. " +
+                        $"HorizontalRange={MaceHorizontalRange:0.###}, Minimum={CrawlChainPhysicsMinimumMaceHorizontalRange:0.###}.");
+                }
+
+                if (minLastLinkMaceVerticalOffset < CrawlChainPhysicsMinimumLastLinkMaceVerticalOffset)
+                {
+                    throw new InvalidOperationException(
+                        $"{CrawlSlotObjectName} {sideName} chain last link gets too low relative to the mace. " +
+                        $"VerticalOffset={minLastLinkMaceVerticalOffset:0.###}, Minimum={CrawlChainPhysicsMinimumLastLinkMaceVerticalOffset:0.###}.");
+                }
+
+                if (minMaceBoundsClearance < CrawlChainPhysicsMinimumMaceBoundsClearance)
+                {
+                    throw new InvalidOperationException(
+                        $"{CrawlSlotObjectName} {sideName} visible chain renderer bounds pierce the mace renderer bounds. " +
+                        $"Clearance={minMaceBoundsClearance:0.###}, Minimum={CrawlChainPhysicsMinimumMaceBoundsClearance:0.###}.");
+                }
+
+                if (minMaceTopClearance < CrawlChainPhysicsMinimumMaceTopClearance)
+                {
+                    throw new InvalidOperationException(
+                        $"{CrawlSlotObjectName} {sideName} visible chain renderer drops into the mace top area. " +
+                        $"TopClearance={minMaceTopClearance:0.###}, Minimum={CrawlChainPhysicsMinimumMaceTopClearance:0.###}.");
+                }
+
+                if (Vector3.Distance(antennaTip.position, lastLinkProxy.position) <= 0.001f)
+                {
+                    throw new InvalidOperationException($"{CrawlSlotObjectName} {sideName} chain collapsed into the antenna tip.");
+                }
+            }
+
+            private float CalculateCurrentMaceBoundsClearance()
+            {
+                var maceBounds = CalculateActiveRendererBounds(
+                    maceVisuals,
+                    new Bounds(maceProxy.position, Vector3.one * 0.05f));
+                var minClearance = float.PositiveInfinity;
+                for (var i = 0; i < visibleChainLinks.Length; i++)
+                {
+                    var chainLink = visibleChainLinks[i];
+                    if (chainLink == null || !chainLink.gameObject.activeInHierarchy)
+                    {
+                        continue;
+                    }
+
+                    var chainBounds = CalculateActiveRendererBounds(new[] { chainLink }, new Bounds(chainLink.position, Vector3.one * 0.02f));
+                    minClearance = Mathf.Min(minClearance, GetBoundsClearance(chainBounds, maceBounds));
+                }
+
+                return float.IsPositiveInfinity(minClearance) ? 0f : minClearance;
+            }
+
+            private float CalculateCurrentMaceTopClearance()
+            {
+                var maceBounds = CalculateActiveRendererBounds(
+                    maceVisuals,
+                    new Bounds(maceProxy.position, Vector3.one * 0.05f));
+                var minClearance = float.PositiveInfinity;
+                for (var i = 0; i < visibleChainLinks.Length; i++)
+                {
+                    var chainLink = visibleChainLinks[i];
+                    if (chainLink == null || !chainLink.gameObject.activeInHierarchy)
+                    {
+                        continue;
+                    }
+
+                    var chainBounds = CalculateActiveRendererBounds(new[] { chainLink }, new Bounds(chainLink.position, Vector3.one * 0.02f));
+                    minClearance = Mathf.Min(minClearance, chainBounds.min.y - maceBounds.max.y);
+                }
+
+                return float.IsPositiveInfinity(minClearance) ? 0f : minClearance;
+            }
+
+            private float MaceHorizontalRange =>
+                Mathf.Max(maxMaceX - minMaceX, maxMaceZ - minMaceZ);
+
+            private float MaxMaceDrop => maxMaceDrop;
+
+            private float AverageMaceDrop => dropSum / Mathf.Max(1, sampleCount);
+
+            public override string ToString()
+            {
+                return
+                    $"Side={sideName}, Samples={sampleCount}, " +
+                    $"MaceHorizontalRange={MaceHorizontalRange:0.###}, " +
+                    $"MaxMaceDrop={MaxMaceDrop:0.###}, AverageMaceDrop={AverageMaceDrop:0.###}, " +
+                    $"MinMaceY={minMaceY:0.###}, MaxLastLinkDrop={maxLastLinkDrop:0.###}, " +
+                    $"MinLastLinkMaceVerticalOffset={minLastLinkMaceVerticalOffset:0.###}, " +
+                    $"MinMaceBoundsClearance={minMaceBoundsClearance:0.###}, " +
+                    $"MinMaceTopClearance={minMaceTopClearance:0.###}.";
+            }
+        }
+
+        private static string InspectCrawlChainPhysicsRig(Transform crawlSlot, float maximumJointLimit = 0.030f)
+        {
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = crawlSlot.GetComponent(rigType);
+            if (rig == null)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} is missing AccelerandoChainPhysicsRig.");
+            }
+
+            var visibleLinkCountProperty = rigType.GetProperty("VisibleLinkCount");
+            if (visibleLinkCountProperty == null)
+            {
+                throw new InvalidOperationException($"{rigType.FullName} is missing VisibleLinkCount.");
+            }
+
+            var actualVisibleLinkCount = (int)visibleLinkCountProperty.GetValue(rig);
+            if (actualVisibleLinkCount != ConnectedChainVisibleLinkCount)
+            {
+                throw new InvalidOperationException(
+                    $"AccelerandoChainPhysicsRig visible link count mismatch. " +
+                    $"Expected={ConnectedChainVisibleLinkCount}, Actual={actualVisibleLinkCount}.");
+            }
+
+            var summary = new System.Text.StringBuilder();
+            InspectCrawlChainPhysicsRigForSide(crawlSlot, "Left", summary, maximumJointLimit);
+            InspectCrawlChainPhysicsRigForSide(crawlSlot, "Right", summary, maximumJointLimit);
+            return summary.ToString();
+        }
+
+        private static void InspectCrawlChainPhysicsRigForSide(Transform crawlSlot, string sideName, System.Text.StringBuilder summary, float maximumJointLimit)
+        {
+            var physicsRoot = crawlSlot.Find(ChainPhysicsRootObjectName);
+            if (physicsRoot == null)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} is missing {ChainPhysicsRootObjectName}.");
+            }
+
+            var antennaTip = RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_AntennaTip_Ring");
+            var firstLink = RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_ConnectedChain_Link_01");
+            var firstProxy = RequireNamedChild(physicsRoot, ChainPhysicsLinkProxyName(sideName, 1));
+            var hiddenMaceSideLink = RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_ConnectedChain_Link_{ConnectedChainLinkCount:00}");
+            var firstBody = RequireRigidbody(firstProxy, $"{sideName} chain first link physics proxy");
+            RequireCollider(firstProxy, $"{sideName} chain first link physics proxy");
+            RequireChildOf(firstProxy, physicsRoot, $"{sideName} chain first link physics proxy");
+            RequireVisualHasNoPhysics(firstLink, $"{sideName} chain first link visual");
+            RequireVisualFollowsPhysicsProxy(firstLink, firstProxy, $"{sideName} chain first link");
+
+            if (!firstBody.isKinematic)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} {sideName} first chain physics proxy must be kinematic.");
+            }
+
+            if (firstProxy.GetComponent<ConfigurableJoint>() != null)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} {sideName} first chain physics proxy must not have a joint.");
+            }
+
+            if (Vector3.Distance(firstProxy.position, antennaTip.position) > ConnectedChainEndpointTolerance)
+            {
+                throw new InvalidOperationException(
+                    $"{CrawlSlotObjectName} {sideName} first chain physics proxy detached from antenna tip. " +
+                    $"Distance={Vector3.Distance(firstProxy.position, antennaTip.position):0.###}.");
+            }
+
+            if (hiddenMaceSideLink.gameObject.activeSelf)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} {sideName} hidden mace-side chain link is active.");
+            }
+
+            var previousBody = firstBody;
+            var dynamicBodyCount = 0;
+            var jointCount = 0;
+            for (var i = 2; i <= ConnectedChainVisibleLinkCount; i++)
+            {
+                var link = RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_ConnectedChain_Link_{i:00}");
+                var proxy = RequireNamedChild(physicsRoot, ChainPhysicsLinkProxyName(sideName, i));
+                if (!link.gameObject.activeInHierarchy)
+                {
+                    throw new InvalidOperationException($"{CrawlSlotObjectName} {sideName} visible chain link {i:00} is inactive.");
+                }
+
+                var body = RequireRigidbody(proxy, $"{sideName} chain link {i:00} physics proxy");
+                RequireCollider(proxy, $"{sideName} chain link {i:00} physics proxy");
+                RequireChildOf(proxy, physicsRoot, $"{sideName} chain link {i:00} physics proxy");
+                RequireVisualHasNoPhysics(link, $"{sideName} chain link {i:00} visual");
+                RequireVisualFollowsPhysicsProxy(link, proxy, $"{sideName} chain link {i:00}");
+                if (body.isKinematic)
+                {
+                    throw new InvalidOperationException($"{CrawlSlotObjectName} {sideName} chain link {i:00} physics proxy must be dynamic.");
+                }
+
+                var joint = RequireConfigurableJoint(proxy, $"{sideName} chain link {i:00} physics proxy");
+                InspectPhysicsJointConnection(joint, previousBody, $"{sideName} chain link {i:00}", maximumJointLimit);
+                previousBody = body;
+                dynamicBodyCount++;
+                jointCount++;
+            }
+
+            var mace = RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_MaceSocket_Ring");
+            var maceProxy = RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName(sideName));
+            var maceBody = RequireRigidbody(maceProxy, $"{sideName} mace physics proxy");
+            RequireCollider(maceProxy, $"{sideName} mace physics proxy");
+            RequireChildOf(maceProxy, physicsRoot, $"{sideName} mace physics proxy");
+            RequireVisualHasNoPhysics(mace, $"{sideName} mace visual");
+            RequireVisualFollowsPhysicsProxy(mace, maceProxy, $"{sideName} mace");
+            if (maceBody.isKinematic)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} {sideName} mace physics proxy must be dynamic.");
+            }
+
+            var maceJoint = RequireConfigurableJoint(maceProxy, $"{sideName} mace physics proxy");
+            InspectPhysicsJointConnection(maceJoint, previousBody, $"{sideName} mace", maximumJointLimit);
+            dynamicBodyCount++;
+            jointCount++;
+
+            if (summary.Length > 0)
+            {
+                summary.Append("; ");
+            }
+
+            summary.Append(sideName);
+            summary.Append($"=physicsRoot:True,visibleLinks:{ConnectedChainVisibleLinkCount},dynamicBodies:{dynamicBodyCount},joints:{jointCount},hiddenMaceSide:True");
+        }
+
+        private static string ChainPhysicsLinkProxyName(string sideName, int linkIndex)
+        {
+            return $"Accelerando_{sideName}_ChainPhysics_Link_{linkIndex:00}";
+        }
+
+        private static string ChainPhysicsMaceProxyName(string sideName)
+        {
+            return $"Accelerando_{sideName}_ChainPhysics_MaceSocket";
+        }
+
+        private static void RequireChildOf(Transform transform, Transform parent, string label)
+        {
+            if (!transform.IsChildOf(parent))
+            {
+                throw new InvalidOperationException(
+                    $"{CrawlSlotObjectName} {label} must be under {parent.name} for physics-driven motion.");
+            }
+        }
+
+        private static void RequireVisualHasNoPhysics(Transform visual, string label)
+        {
+            if (visual.GetComponent<Rigidbody>() != null ||
+                visual.GetComponent<ConfigurableJoint>() != null ||
+                visual.GetComponent<Collider>() != null)
+            {
+                throw new InvalidOperationException(
+                    $"{CrawlSlotObjectName} {label} must not keep direct physics components; physics must live on the proxy.");
+            }
+        }
+
+        private static void RequireVisualFollowsPhysicsProxy(Transform visual, Transform proxy, string label)
+        {
+            var distance = Vector3.Distance(visual.position, proxy.position);
+            if (distance > ConnectedChainEndpointTolerance)
+            {
+                throw new InvalidOperationException(
+                    $"{CrawlSlotObjectName} {label} visual does not match its physics proxy. Distance={distance:0.###}.");
+            }
+        }
+
+        private static Rigidbody RequireRigidbody(Transform transform, string label)
+        {
+            var body = transform.GetComponent<Rigidbody>();
+            if (body == null)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} {label} is missing Rigidbody.");
+            }
+
+            return body;
+        }
+
+        private static Collider RequireCollider(Transform transform, string label)
+        {
+            var collider = transform.GetComponent<Collider>();
+            if (collider == null)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} {label} is missing Collider.");
+            }
+
+            return collider;
+        }
+
+        private static ConfigurableJoint RequireConfigurableJoint(Transform transform, string label)
+        {
+            var joint = transform.GetComponent<ConfigurableJoint>();
+            if (joint == null)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} {label} is missing ConfigurableJoint.");
+            }
+
+            return joint;
+        }
+
+        private static void InspectPhysicsJointConnection(ConfigurableJoint joint, Rigidbody expectedConnectedBody, string label, float maximumJointLimit)
+        {
+            if (joint.connectedBody != expectedConnectedBody)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} {label} joint is connected to the wrong body.");
+            }
+
+            if (joint.xMotion != ConfigurableJointMotion.Limited ||
+                joint.yMotion != ConfigurableJointMotion.Limited ||
+                joint.zMotion != ConfigurableJointMotion.Limited)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} {label} joint must use limited linear motion.");
+            }
+
+            if (joint.linearLimit.limit > maximumJointLimit)
+            {
+                throw new InvalidOperationException(
+                    $"{CrawlSlotObjectName} {label} joint limit is too loose. Limit={joint.linearLimit.limit:0.###}, Maximum={maximumJointLimit:0.###}.");
+            }
+        }
+
+        private static string GetCrawlBodyDrivenPhysicsSampleReport(
+            AnimationClip clip,
+            Transform crawlSlot,
+            Transform modelObject,
+            string modelPath,
+            out float lagScore)
+        {
+            var forwardTime = CrawlForwardLoopSeconds * 0.25f;
+            var pullbackTime = CrawlForwardLoopSeconds * 0.50f;
+            var recoveryTime = CrawlForwardLoopSeconds * 0.75f;
+
+            var forwardBody = GetCurveValueOffset(clip, modelPath, typeof(Transform), "m_LocalPosition.z", modelObject.localPosition.z, forwardTime);
+            var pullbackBody = GetCurveValueOffset(clip, modelPath, typeof(Transform), "m_LocalPosition.z", modelObject.localPosition.z, pullbackTime);
+            var recoveryBody = GetCurveValueOffset(clip, modelPath, typeof(Transform), "m_LocalPosition.z", modelObject.localPosition.z, recoveryTime);
+
+            var forwardChain = GetAverageCrawlChainEndForeAftOffset(clip, crawlSlot, forwardTime);
+            var pullbackChain = GetAverageCrawlChainEndForeAftOffset(clip, crawlSlot, pullbackTime);
+            var recoveryChain = GetAverageCrawlChainEndForeAftOffset(clip, crawlSlot, recoveryTime);
+
+            var forwardMace = GetAverageCrawlMaceForeAftOffset(clip, crawlSlot, forwardTime);
+            var pullbackMace = GetAverageCrawlMaceForeAftOffset(clip, crawlSlot, pullbackTime);
+            var recoveryMace = GetAverageCrawlMaceForeAftOffset(clip, crawlSlot, recoveryTime);
+
+            if (forwardBody <= 0.020f ||
+                forwardChain >= -0.004f ||
+                forwardMace >= -0.004f ||
+                pullbackBody >= -0.012f ||
+                pullbackChain >= -0.004f ||
+                pullbackMace >= -0.004f ||
+                recoveryBody <= 0.012f ||
+                recoveryChain <= 0.002f ||
+                recoveryMace <= 0.003f)
+            {
+                lagScore = 0f;
+            }
+            else
+            {
+                lagScore =
+                    -forwardChain +
+                    -forwardMace +
+                    -pullbackChain +
+                    -pullbackMace +
+                    recoveryChain +
+                    recoveryMace;
+            }
+
+            return
+                $"Forward(body={forwardBody:0.###},chain={forwardChain:0.###},mace={forwardMace:0.###});" +
+                $"Pullback(body={pullbackBody:0.###},chain={pullbackChain:0.###},mace={pullbackMace:0.###});" +
+                $"Recovery(body={recoveryBody:0.###},chain={recoveryChain:0.###},mace={recoveryMace:0.###})";
+        }
+
+        private static float GetAverageCrawlChainEndForeAftOffset(AnimationClip clip, Transform crawlSlot, float time)
+        {
+            var sum = 0f;
+            var count = 0;
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                var chainEnd = RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_ConnectedChain_Link_{ConnectedChainVisibleLinkCount:00}");
+                var path = GetRelativePath(crawlSlot, chainEnd);
+                sum += GetCurveValueOffset(clip, path, typeof(Transform), "m_LocalPosition.z", chainEnd.localPosition.z, time);
+                count++;
+            }
+
+            return count > 0 ? sum / count : 0f;
+        }
+
+        private static float GetAverageCrawlMaceForeAftOffset(AnimationClip clip, Transform crawlSlot, float time)
+        {
+            var sum = 0f;
+            var count = 0;
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                var maceTransforms = FindCrawlMaceTransforms(crawlSlot, sideName);
+                for (var i = 0; i < maceTransforms.Count; i++)
+                {
+                    var maceTransform = maceTransforms[i];
+                    var path = GetRelativePath(crawlSlot, maceTransform);
+                    sum += GetCurveValueOffset(clip, path, typeof(Transform), "m_LocalPosition.z", maceTransform.localPosition.z, time);
+                    count++;
+                }
+            }
+
+            return count > 0 ? sum / count : 0f;
+        }
+
+        private static float GetCurveValueOffset(
+            AnimationClip clip,
+            string path,
+            Type type,
+            string propertyName,
+            float baseValue,
+            float time)
+        {
+            var curve = AnimationUtility.GetEditorCurve(clip, EditorCurveBinding.FloatCurve(path, type, propertyName));
+            if (curve == null || curve.length == 0)
+            {
+                throw new InvalidOperationException(
+                    $"{UnityCrawlForwardClipAssetPath} is missing a required curve. Path={path}, Property={propertyName}.");
+            }
+
+            return curve.Evaluate(time) - baseValue;
         }
 
         private static SkinnedMeshRenderer FindIdleBreathBodyRenderer(Transform idleSlot)
@@ -2887,6 +5178,204 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 AnimationSlotsFrontCaptureName,
                 AnimationSlotsObliqueCaptureName,
                 "AccelerandoAnimationSlotsCapture");
+        }
+
+        private static void CaptureAntennaTipConnectionCloseupImages(Transform placementRoot)
+        {
+            var reviewObject = placementRoot.Find(PlacementObjectName);
+            if (reviewObject == null)
+            {
+                throw new InvalidOperationException($"{PlacementObjectName} is missing under {PlacementRootName}.");
+            }
+
+            CaptureAntennaTipConnectionCloseupForSide(reviewObject, "Left", AntennaTipConnectionLeftSideCloseupName);
+            CaptureAntennaTipConnectionCloseupForSide(reviewObject, "Right", AntennaTipConnectionRightSideCloseupName);
+        }
+
+        private static void CaptureMaceChainCloseupImages(Transform placementRoot)
+        {
+            var crawlSlot = placementRoot.Find(CrawlSlotObjectName);
+            if (crawlSlot == null)
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} is missing under {PlacementRootName}.");
+            }
+
+            CaptureMaceChainCloseupForSide(crawlSlot, "Left", MaceChainLeftCloseupName);
+            CaptureMaceChainCloseupForSide(crawlSlot, "Right", MaceChainRightCloseupName);
+        }
+
+        private static void CaptureMaceChainCloseupForSide(Transform crawlSlot, string sideName, string fileName)
+        {
+            var targets = FindMaceChainCloseupTransforms(crawlSlot, sideName);
+            var bounds = CalculateActiveRendererBounds(targets, new Bounds(RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_MaceSocket_Ring").position, Vector3.one * 0.35f));
+            var outputDirectory = GetAbsoluteProjectPath(ValidationFolder);
+            Directory.CreateDirectory(outputDirectory);
+
+            var cameraObject = new GameObject($"Accelerando_{sideName}_MaceChainCloseupCamera");
+            var lightObject = new GameObject($"Accelerando_{sideName}_MaceChainCloseupLight");
+            var captureLayerTransforms = CollectChildTransforms(new[] { crawlSlot });
+            var originalLayers = new int[captureLayerTransforms.Length];
+            var previousAmbientMode = RenderSettings.ambientMode;
+            var previousAmbientLight = RenderSettings.ambientLight;
+            var previousAmbientIntensity = RenderSettings.ambientIntensity;
+            try
+            {
+                for (var i = 0; i < captureLayerTransforms.Length; i++)
+                {
+                    originalLayers[i] = captureLayerTransforms[i].gameObject.layer;
+                    captureLayerTransforms[i].gameObject.layer = ReviewCaptureLayer;
+                }
+
+                RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
+                RenderSettings.ambientLight = new Color(0.47f, 0.50f, 0.50f, 1f);
+                RenderSettings.ambientIntensity = 1.25f;
+
+                var camera = cameraObject.AddComponent<Camera>();
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0.07f, 0.075f, 0.072f, 1f);
+                camera.orthographic = true;
+                camera.nearClipPlane = 0.03f;
+                camera.farClipPlane = 5.00f;
+                camera.cullingMask = 1 << ReviewCaptureLayer;
+
+                var light = lightObject.AddComponent<Light>();
+                light.type = LightType.Directional;
+                light.intensity = 3.00f;
+
+                var frontDirection = CalculateAccelerandoVisualFrontDirection(crawlSlot);
+                frontDirection.y = 0f;
+                frontDirection = frontDirection.sqrMagnitude > 0.001f ? frontDirection.normalized : Vector3.forward;
+                var lookAt = bounds.center + Vector3.up * 0.05f;
+                var position = lookAt + frontDirection * 1.35f + Vector3.up * 0.03f;
+                camera.transform.SetPositionAndRotation(position, Quaternion.LookRotation((lookAt - position).normalized, Vector3.up));
+                camera.orthographicSize = Mathf.Clamp(Mathf.Max(bounds.extents.y * 1.65f, bounds.extents.x * 1.45f, 0.36f), 0.36f, 0.78f);
+                light.transform.rotation = Quaternion.LookRotation((lookAt - (position + Vector3.up * 0.5f)).normalized, Vector3.up);
+
+                var outputPath = Path.Combine(outputDirectory, fileName);
+                SaveCameraCapture(camera, outputPath);
+                Debug.Log(
+                    "AccelerandoMaceChainCloseup " +
+                    $"Side={sideName}, Path={outputPath}, BoundsCenter={FormatVector(bounds.center)}, BoundsSize={FormatVector(bounds.size)}, OrthographicSize={camera.orthographicSize:0.###}.");
+            }
+            finally
+            {
+                for (var i = 0; i < captureLayerTransforms.Length; i++)
+                {
+                    if (captureLayerTransforms[i] != null)
+                    {
+                        captureLayerTransforms[i].gameObject.layer = originalLayers[i];
+                    }
+                }
+
+                RenderSettings.ambientMode = previousAmbientMode;
+                RenderSettings.ambientLight = previousAmbientLight;
+                RenderSettings.ambientIntensity = previousAmbientIntensity;
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+                UnityEngine.Object.DestroyImmediate(lightObject);
+            }
+        }
+
+        private static Transform[] FindMaceChainCloseupTransforms(Transform crawlSlot, string sideName)
+        {
+            var transforms = new List<Transform>();
+            transforms.AddRange(FindCrawlMaceTransforms(crawlSlot, sideName));
+            for (var i = 1; i <= ConnectedChainVisibleLinkCount; i++)
+            {
+                AddUniqueTransform(transforms, RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_ConnectedChain_Link_{i:00}"));
+            }
+
+            return transforms.ToArray();
+        }
+
+        private static void CaptureAntennaTipConnectionCloseupForSide(Transform reviewObject, string sideName, string fileName)
+        {
+            var antennaTip = RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_Ring");
+            var connectionTransforms = FindAntennaTipConnectionTransforms(reviewObject, sideName);
+            var bounds = CalculateRendererBounds(connectionTransforms, new Bounds(antennaTip.position, Vector3.one * 0.25f));
+            var outputDirectory = GetAbsoluteProjectPath(ValidationFolder);
+            Directory.CreateDirectory(outputDirectory);
+
+            var cameraObject = new GameObject($"Accelerando_{sideName}_AntennaTipSideCloseupCamera");
+            var lightObject = new GameObject($"Accelerando_{sideName}_AntennaTipSideCloseupLight");
+            var captureLayerTransforms = CollectChildTransforms(new[] { reviewObject });
+            var originalLayers = new int[captureLayerTransforms.Length];
+            var previousAmbientMode = RenderSettings.ambientMode;
+            var previousAmbientLight = RenderSettings.ambientLight;
+            var previousAmbientIntensity = RenderSettings.ambientIntensity;
+            try
+            {
+                for (var i = 0; i < captureLayerTransforms.Length; i++)
+                {
+                    originalLayers[i] = captureLayerTransforms[i].gameObject.layer;
+                    captureLayerTransforms[i].gameObject.layer = ReviewCaptureLayer;
+                }
+
+                RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
+                RenderSettings.ambientLight = new Color(0.46f, 0.48f, 0.48f, 1f);
+                RenderSettings.ambientIntensity = 1.25f;
+
+                var camera = cameraObject.AddComponent<Camera>();
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0.10f, 0.11f, 0.105f, 1f);
+                camera.orthographic = true;
+                camera.nearClipPlane = 0.02f;
+                camera.farClipPlane = 4.00f;
+                camera.cullingMask = 1 << ReviewCaptureLayer;
+
+                var light = lightObject.AddComponent<Light>();
+                light.type = LightType.Directional;
+                light.intensity = 3.20f;
+
+                var sideDirection = string.Equals(sideName, "Left", StringComparison.Ordinal) ? -reviewObject.right : reviewObject.right;
+                sideDirection.y = 0f;
+                sideDirection = sideDirection.sqrMagnitude > 0.001f ? sideDirection.normalized : Vector3.right;
+                var lookAt = bounds.center;
+                var position = lookAt + sideDirection * 0.95f + Vector3.up * 0.02f;
+                camera.transform.SetPositionAndRotation(position, Quaternion.LookRotation((lookAt - position).normalized, Vector3.up));
+                camera.orthographicSize = Mathf.Clamp(Mathf.Max(bounds.extents.y * 2.15f, bounds.extents.z * 2.10f, 0.25f), 0.25f, 0.52f);
+                light.transform.rotation = Quaternion.LookRotation((lookAt - (position + Vector3.up * 0.35f)).normalized, Vector3.up);
+
+                var outputPath = Path.Combine(outputDirectory, fileName);
+                SaveCameraCapture(camera, outputPath);
+                Debug.Log(
+                    "AccelerandoAntennaTipConnectionSideCloseup " +
+                    $"Side={sideName}, Path={outputPath}, LookAt={FormatVector(lookAt)}, BoundsCenter={FormatVector(bounds.center)}, BoundsSize={FormatVector(bounds.size)}, OrthographicSize={camera.orthographicSize:0.###}.");
+            }
+            finally
+            {
+                for (var i = 0; i < captureLayerTransforms.Length; i++)
+                {
+                    if (captureLayerTransforms[i] != null)
+                    {
+                        captureLayerTransforms[i].gameObject.layer = originalLayers[i];
+                    }
+                }
+
+                RenderSettings.ambientMode = previousAmbientMode;
+                RenderSettings.ambientLight = previousAmbientLight;
+                RenderSettings.ambientIntensity = previousAmbientIntensity;
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+                UnityEngine.Object.DestroyImmediate(lightObject);
+            }
+        }
+
+        private static Transform[] FindAntennaTipConnectionTransforms(Transform reviewObject, string sideName)
+        {
+            return new[]
+            {
+                RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_Ring"),
+                RequireNamedChild(reviewObject, $"Accelerando_{sideName}_ConnectedChain_Link_01"),
+                RequireNamedChild(reviewObject, $"Accelerando_{sideName}_ConnectedChain_Link_02"),
+                RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedVisibleChainEndHoop"),
+                RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedSocketLip"),
+                RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedSurfaceSaddle"),
+                RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedRetainingPin"),
+                RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedStem"),
+                RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedFrontYoke"),
+                RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedBackYoke"),
+                RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedUpperOcclusionBulge"),
+                RequireNamedChild(reviewObject, $"Accelerando_{sideName}_AntennaTip_EmbeddedFleshPressurePad")
+            };
         }
 
         private static void CaptureIdleBreathingReviewImages(Transform placementRoot)
@@ -3322,6 +5811,54 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             }
 
             return hasBounds ? bounds : fallback;
+        }
+
+        private static Bounds CalculateActiveRendererBounds(IReadOnlyList<Transform> roots, Bounds fallback)
+        {
+            var hasBounds = false;
+            var bounds = fallback;
+            for (var i = 0; i < roots.Count; i++)
+            {
+                var root = roots[i];
+                if (root == null)
+                {
+                    continue;
+                }
+
+                var renderers = root.GetComponentsInChildren<Renderer>(true);
+                foreach (var renderer in renderers)
+                {
+                    if (!renderer.enabled || !renderer.gameObject.activeInHierarchy)
+                    {
+                        continue;
+                    }
+
+                    if (!hasBounds)
+                    {
+                        bounds = renderer.bounds;
+                        hasBounds = true;
+                    }
+                    else
+                    {
+                        bounds.Encapsulate(renderer.bounds);
+                    }
+                }
+            }
+
+            return hasBounds ? bounds : fallback;
+        }
+
+        private static float GetBoundsClearance(Bounds a, Bounds b)
+        {
+            if (a.Intersects(b))
+            {
+                return 0f;
+            }
+
+            var dx = Mathf.Max(0f, Mathf.Max(a.min.x - b.max.x, b.min.x - a.max.x));
+            var dy = Mathf.Max(0f, Mathf.Max(a.min.y - b.max.y, b.min.y - a.max.y));
+            var dz = Mathf.Max(0f, Mathf.Max(a.min.z - b.max.z, b.min.z - a.max.z));
+            return Mathf.Sqrt(dx * dx + dy * dy + dz * dz);
         }
 
         private static string GetAbsoluteProjectPath(string projectRelativePath)
