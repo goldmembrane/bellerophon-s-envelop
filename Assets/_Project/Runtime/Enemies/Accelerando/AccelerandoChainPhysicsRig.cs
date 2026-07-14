@@ -8,7 +8,21 @@ namespace Bellerophon.Enemies.Accelerando
     public sealed class AccelerandoChainPhysicsRig : MonoBehaviour
     {
         private const string PhysicsRootName = "Accelerando_ChainPhysicsRoot";
-        private const int DefaultVisibleLinkCount = 8;
+        private const int DefaultVisibleLinkCount = 12;
+
+        // Attack damping stays loose while the antenna is driving the chain, then rises only
+        // during low-input holds so residual mace inertia settles instead of self-oscillating.
+        private const float AttackAntennaMovingSpeedThreshold = 1.00f;
+        private const float AttackMovingLinkLinearDamping = 0.55f;
+        private const float AttackMovingLinkAngularDamping = 1.00f;
+        private const float AttackMovingMaceLinearDamping = 0.30f;
+        private const float AttackMovingMaceAngularDamping = 0.62f;
+        private const float AttackStationaryDampingDelay = 0.18f;
+        private const float AttackSettledLinkLinearDamping = 2.30f;
+        private const float AttackSettledLinkAngularDamping = 1.70f;
+        private const float AttackSettledMaceLinearDamping = 2.80f;
+        private const float AttackSettledMaceAngularDamping = 1.70f;
+        private const float AttackSettleDampingResponsePerSecond = 4.00f;
 
         [SerializeField]
         private int visibleLinkCount = DefaultVisibleLinkCount;
@@ -43,9 +57,14 @@ namespace Bellerophon.Enemies.Accelerando
         [SerializeField]
         private float crawlInertiaScale = 2.25f;
 
+        // Attack-only hinge mode keeps every link segment at its authored length while rotations remain physical.
+        [SerializeField]
+        private bool lockLinearChainConnections;
+
         private readonly List<KinematicFollower> kinematicFollowers = new();
         private readonly List<DynamicFollower> dynamicFollowers = new();
         private readonly List<VisualFollower> visualFollowers = new();
+        private readonly List<LockedChainSegment> lockedChainSegments = new();
 
         public int VisibleLinkCount => visibleLinkCount;
         public int DynamicFollowerCount => dynamicFollowers.Count;
@@ -61,21 +80,23 @@ namespace Bellerophon.Enemies.Accelerando
                 configuredChainRestDamper: 7.2f,
                 configuredMaceRestSpring: 82f,
                 configuredMaceRestDamper: 5.4f,
-                configuredInertiaScale: 2.25f);
+                configuredInertiaScale: 2.25f,
+                configuredLockLinearChainConnections: false);
         }
 
         public void ConfigureAttackStrike(int configuredVisibleLinkCount)
         {
             ConfigureInternal(
                 configuredVisibleLinkCount,
-                configuredLinkMass: 0.055f,
-                configuredMaceMass: 0.68f,
+                configuredLinkMass: 0.050f,
+                configuredMaceMass: 0.78f,
                 configuredJointLimit: 0.058f,
-                configuredChainRestSpring: 72f,
-                configuredChainRestDamper: 4.1f,
-                configuredMaceRestSpring: 30f,
-                configuredMaceRestDamper: 2.6f,
-                configuredInertiaScale: 7.2f);
+                configuredChainRestSpring: 0f,
+                configuredChainRestDamper: 0f,
+                configuredMaceRestSpring: 0f,
+                configuredMaceRestDamper: 0f,
+                configuredInertiaScale: 0f,
+                configuredLockLinearChainConnections: true);
         }
 
         private void ConfigureInternal(
@@ -87,7 +108,8 @@ namespace Bellerophon.Enemies.Accelerando
             float configuredChainRestDamper,
             float configuredMaceRestSpring,
             float configuredMaceRestDamper,
-            float configuredInertiaScale)
+            float configuredInertiaScale,
+            bool configuredLockLinearChainConnections)
         {
             visibleLinkCount = Mathf.Max(2, configuredVisibleLinkCount);
             linkMass = configuredLinkMass;
@@ -98,6 +120,7 @@ namespace Bellerophon.Enemies.Accelerando
             maceRestSpring = configuredMaceRestSpring;
             maceRestDamper = configuredMaceRestDamper;
             crawlInertiaScale = configuredInertiaScale;
+            lockLinearChainConnections = configuredLockLinearChainConnections;
             Rebuild();
         }
 
@@ -106,6 +129,7 @@ namespace Bellerophon.Enemies.Accelerando
             kinematicFollowers.Clear();
             dynamicFollowers.Clear();
             visualFollowers.Clear();
+            lockedChainSegments.Clear();
 
             var physicsRoot = GetOrCreatePhysicsRoot();
             ClearGeneratedProxyChildren(physicsRoot);
@@ -122,11 +146,13 @@ namespace Bellerophon.Enemies.Accelerando
             }
 
             UpdateKinematicFollowers(deltaTime);
+            ApplyAttackStationaryDamping(deltaTime);
             ApplyRestForces(deltaTime);
         }
 
         public void SyncVisualsToPhysics()
         {
+            ProjectLockedChainSegments();
             ApplyVisualFollowers();
         }
 
@@ -147,12 +173,14 @@ namespace Bellerophon.Enemies.Accelerando
 
         private void LateUpdate()
         {
+            ProjectLockedChainSegments();
             ApplyVisualFollowers();
         }
 
         private void ConfigureSide(string sideName, Transform physicsRoot)
         {
-            var antennaTip = FindRequiredChild($"Accelerando_{sideName}_AntennaTip_Ring");
+            var antennaTip = FindOptionalChild($"Accelerando_{sideName}_AntennaPhysicsAnchor") ??
+                FindRequiredChild($"Accelerando_{sideName}_AntennaTip_Ring");
             var previousBody = ConfigureKinematicProxy(
                 physicsRoot,
                 ChainProxyName(sideName, 1),
@@ -170,22 +198,89 @@ namespace Bellerophon.Enemies.Accelerando
                     linkMass,
                     linkColliderRadius,
                     chainRestSpring,
-                    chainRestDamper);
+                    chainRestDamper,
+                    isMace: false);
                 ConfigureJoint(linkBody, previousBody);
+                RegisterLockedChainSegment(previousBody, linkBody);
                 previousBody = linkBody;
             }
 
-            var mace = FindRequiredChild($"Accelerando_{sideName}_MaceSocket_Ring");
+            var maceSocket = FindOptionalChild($"Accelerando_{sideName}_MaceSocket_Ring");
+            var maceAnchor = FindOptionalChild($"Accelerando_{sideName}_MacePhysicsAnchor");
+            var maceHead = FindOptionalChild($"Accelerando_{sideName}_MaceHead");
+            var maceVisual = maceHead != null ? maceHead : maceSocket != null ? maceSocket : maceAnchor;
+            if (maceVisual == null)
+            {
+                throw new InvalidOperationException($"Accelerando_{sideName}_MaceHead or hidden mace physics anchor is missing under {name}.");
+            }
+
             var maceBody = ConfigureDynamicProxy(
                 physicsRoot,
                 MaceProxyName(sideName),
                 antennaTip,
-                mace,
+                maceVisual,
                 maceMass,
                 maceColliderRadius,
                 maceRestSpring,
-                maceRestDamper);
+                maceRestDamper,
+                isMace: true);
+            if (maceHead != null && maceSocket != null)
+            {
+                var socketRotationOffset = Quaternion.Inverse(maceBody.rotation) * maceSocket.rotation;
+                visualFollowers.Add(new VisualFollower(maceSocket, maceBody, socketRotationOffset));
+            }
+
+            if (maceAnchor != null && maceAnchor != maceVisual)
+            {
+                var anchorRotationOffset = Quaternion.Inverse(maceBody.rotation) * maceAnchor.rotation;
+                visualFollowers.Add(new VisualFollower(maceAnchor, maceBody, anchorRotationOffset));
+            }
+
             ConfigureJoint(maceBody, previousBody);
+            RegisterLockedChainSegment(previousBody, maceBody);
+        }
+
+        private void RegisterLockedChainSegment(Rigidbody connectedBody, Rigidbody body)
+        {
+            if (!lockLinearChainConnections)
+            {
+                return;
+            }
+
+            lockedChainSegments.Add(new LockedChainSegment(
+                connectedBody,
+                body,
+                Vector3.Distance(connectedBody.position, body.position),
+                (body.position - connectedBody.position).normalized));
+        }
+
+        // Unity's joint solver may briefly stretch a fast kinematic chain. This attack-only
+        // post-solver projection removes radial separation while preserving tangential swing.
+        private void ProjectLockedChainSegments()
+        {
+            if (!lockLinearChainConnections)
+            {
+                return;
+            }
+
+            for (var i = 0; i < lockedChainSegments.Count; i++)
+            {
+                var segment = lockedChainSegments[i];
+                if (segment.ConnectedBody == null || segment.Body == null)
+                {
+                    continue;
+                }
+
+                var offset = segment.Body.position - segment.ConnectedBody.position;
+                var direction = offset.sqrMagnitude > 0.0000001f
+                    ? offset.normalized
+                    : segment.FallbackDirection;
+                segment.Body.position =
+                    segment.ConnectedBody.position + direction * segment.RestDistance;
+                var relativeVelocity = segment.Body.linearVelocity - segment.ConnectedBody.linearVelocity;
+                segment.Body.linearVelocity =
+                    segment.ConnectedBody.linearVelocity + Vector3.ProjectOnPlane(relativeVelocity, direction);
+            }
         }
 
         private Rigidbody ConfigureKinematicProxy(Transform physicsRoot, string proxyName, Transform target, Transform visual)
@@ -200,7 +295,7 @@ namespace Bellerophon.Enemies.Accelerando
             body.rotation = target.rotation * rotationOffset;
 
             kinematicFollowers.Add(new KinematicFollower(target, body, rotationOffset));
-            visualFollowers.Add(new VisualFollower(visual, body.transform));
+            visualFollowers.Add(new VisualFollower(visual, body));
             return body;
         }
 
@@ -212,20 +307,41 @@ namespace Bellerophon.Enemies.Accelerando
             float mass,
             float colliderRadius,
             float restSpring,
-            float restDamper)
+            float restDamper,
+            bool isMace)
         {
             var body = CreateProxyBody(physicsRoot, proxyName, visual, mass, colliderRadius, isKinematic: false);
             body.useGravity = true;
-            body.linearDamping = 0.65f;
-            body.angularDamping = 1.2f;
+            body.linearDamping = lockLinearChainConnections
+                ? isMace ? AttackMovingMaceLinearDamping : AttackMovingLinkLinearDamping
+                : 0.65f;
+            body.angularDamping = lockLinearChainConnections
+                ? isMace ? AttackMovingMaceAngularDamping : AttackMovingLinkAngularDamping
+                : 1.2f;
             body.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            body.maxAngularVelocity = 18f;
-            body.constraints = RigidbodyConstraints.FreezeRotation;
+            body.maxAngularVelocity = lockLinearChainConnections
+                ? isMace ? 18f : 24f
+                : 18f;
+            body.constraints = lockLinearChainConnections
+                ? RigidbodyConstraints.None
+                : RigidbodyConstraints.FreezeRotation;
+            if (lockLinearChainConnections)
+            {
+                body.solverIterations = 24;
+                body.solverVelocityIterations = 12;
+            }
 
             var anchorLocalOffset = Quaternion.Inverse(anchor.rotation) * (visual.position - anchor.position);
             var visualRotationOffset = Quaternion.Inverse(body.rotation) * visual.rotation;
-            dynamicFollowers.Add(new DynamicFollower(anchor, body, anchorLocalOffset, restSpring, restDamper));
-            visualFollowers.Add(new VisualFollower(visual, body.transform, visualRotationOffset));
+            dynamicFollowers.Add(new DynamicFollower(
+                anchor,
+                body,
+                anchorLocalOffset,
+                transform.InverseTransformPoint(anchor.position),
+                restSpring,
+                restDamper,
+                isMace));
+            visualFollowers.Add(new VisualFollower(visual, body, visualRotationOffset));
             return body;
         }
 
@@ -266,19 +382,23 @@ namespace Bellerophon.Enemies.Accelerando
             joint.autoConfigureConnectedAnchor = false;
             joint.anchor = Vector3.zero;
             joint.connectedAnchor = connectedBody.transform.InverseTransformPoint(body.position);
-            joint.xMotion = ConfigurableJointMotion.Limited;
-            joint.yMotion = ConfigurableJointMotion.Limited;
-            joint.zMotion = ConfigurableJointMotion.Limited;
-            joint.angularXMotion = ConfigurableJointMotion.Locked;
-            joint.angularYMotion = ConfigurableJointMotion.Locked;
-            joint.angularZMotion = ConfigurableJointMotion.Locked;
+            joint.xMotion = lockLinearChainConnections
+                ? ConfigurableJointMotion.Locked
+                : ConfigurableJointMotion.Limited;
+            joint.yMotion = joint.xMotion;
+            joint.zMotion = joint.xMotion;
+            joint.angularXMotion = lockLinearChainConnections
+                ? ConfigurableJointMotion.Free
+                : ConfigurableJointMotion.Locked;
+            joint.angularYMotion = joint.angularXMotion;
+            joint.angularZMotion = joint.angularXMotion;
             joint.linearLimit = new SoftJointLimit
             {
                 limit = jointLimit,
                 contactDistance = jointLimit * 0.5f
             };
             joint.projectionMode = JointProjectionMode.PositionAndRotation;
-            joint.projectionDistance = jointLimit * 1.5f;
+            joint.projectionDistance = lockLinearChainConnections ? 0.002f : jointLimit * 1.5f;
             joint.projectionAngle = 6f;
             joint.enableCollision = false;
             joint.enablePreprocessing = true;
@@ -298,13 +418,73 @@ namespace Bellerophon.Enemies.Accelerando
                 var nextPosition = follower.Target.position;
                 follower.Body.MovePosition(nextPosition);
                 follower.Body.MoveRotation(follower.Target.rotation * follower.RotationOffset);
-                kinematicFollowers[i] = follower.WithVelocity((nextPosition - currentPosition) / deltaTime);
+                kinematicFollowers[i] = follower.WithVelocity(
+                    (nextPosition - currentPosition) / deltaTime,
+                    deltaTime);
+            }
+        }
+
+        private void ApplyAttackStationaryDamping(float deltaTime)
+        {
+            if (!lockLinearChainConnections)
+            {
+                return;
+            }
+
+            for (var i = 0; i < dynamicFollowers.Count; i++)
+            {
+                var follower = dynamicFollowers[i];
+                if (follower.Body == null)
+                {
+                    continue;
+                }
+
+                // Every follower stores its own left/right antenna tip as Anchor, so one side's
+                // small residual input cannot release the other side's stationary damping.
+                var antennaIsMoving = GetAnchorStationaryDuration(follower.Anchor) <
+                    AttackStationaryDampingDelay;
+                var movingLinearDamping = follower.IsMace
+                    ? AttackMovingMaceLinearDamping
+                    : AttackMovingLinkLinearDamping;
+                var movingAngularDamping = follower.IsMace
+                    ? AttackMovingMaceAngularDamping
+                    : AttackMovingLinkAngularDamping;
+                if (antennaIsMoving)
+                {
+                    // Release the settling resistance immediately when the next antenna drive begins.
+                    follower.Body.linearDamping = movingLinearDamping;
+                    follower.Body.angularDamping = movingAngularDamping;
+                    continue;
+                }
+
+                var settledLinearDamping = follower.IsMace
+                    ? AttackSettledMaceLinearDamping
+                    : AttackSettledLinkLinearDamping;
+                var settledAngularDamping = follower.IsMace
+                    ? AttackSettledMaceAngularDamping
+                    : AttackSettledLinkAngularDamping;
+                var dampingStep = AttackSettleDampingResponsePerSecond * deltaTime;
+                follower.Body.linearDamping = Mathf.MoveTowards(
+                    follower.Body.linearDamping,
+                    settledLinearDamping,
+                    dampingStep);
+                follower.Body.angularDamping = Mathf.MoveTowards(
+                    follower.Body.angularDamping,
+                    settledAngularDamping,
+                    dampingStep);
             }
         }
 
         private void ApplyRestForces(float deltaTime)
         {
-            var anchorVelocity = GetAverageAnchorVelocity();
+            // During the attack, the animated antenna may only pull the first kinematic link.
+            // The connected joints, link inertia, and mace mass must transmit the motion down
+            // the chain; applying forces to every follower would make the mace self-propelled.
+            if (lockLinearChainConnections)
+            {
+                return;
+            }
+
             for (var i = 0; i < dynamicFollowers.Count; i++)
             {
                 var follower = dynamicFollowers[i];
@@ -316,25 +496,39 @@ namespace Bellerophon.Enemies.Accelerando
                 var restPosition = follower.Anchor.position + follower.Anchor.rotation * follower.AnchorLocalOffset;
                 var springAcceleration = (restPosition - follower.Body.position) * follower.RestSpring;
                 var dampingAcceleration = -follower.Body.linearVelocity * follower.RestDamper;
+                var anchorVelocity = GetAnchorVelocity(follower.Anchor);
                 var inertiaAcceleration = -anchorVelocity * crawlInertiaScale;
-                follower.Body.AddForce(springAcceleration + dampingAcceleration + inertiaAcceleration, ForceMode.Acceleration);
+
+                follower.Body.AddForce(
+                    springAcceleration + dampingAcceleration + inertiaAcceleration,
+                    ForceMode.Acceleration);
             }
         }
 
-        private Vector3 GetAverageAnchorVelocity()
+        private Vector3 GetAnchorVelocity(Transform anchor)
         {
-            if (kinematicFollowers.Count == 0)
-            {
-                return Vector3.zero;
-            }
-
-            var velocity = Vector3.zero;
             for (var i = 0; i < kinematicFollowers.Count; i++)
             {
-                velocity += kinematicFollowers[i].Velocity;
+                if (kinematicFollowers[i].Target == anchor)
+                {
+                    return kinematicFollowers[i].Velocity;
+                }
             }
 
-            return velocity / kinematicFollowers.Count;
+            return Vector3.zero;
+        }
+
+        private float GetAnchorStationaryDuration(Transform anchor)
+        {
+            for (var i = 0; i < kinematicFollowers.Count; i++)
+            {
+                if (kinematicFollowers[i].Target == anchor)
+                {
+                    return kinematicFollowers[i].StationaryDuration;
+                }
+            }
+
+            return 0f;
         }
 
         private Transform GetOrCreatePhysicsRoot()
@@ -372,8 +566,14 @@ namespace Bellerophon.Enemies.Accelerando
                     continue;
                 }
 
-                follower.Visual.position = follower.Driver.position;
-                follower.Visual.rotation = follower.Driver.rotation * follower.RotationOffset;
+                var driverPosition = follower.DriverBody != null
+                    ? follower.DriverBody.position
+                    : follower.Driver.position;
+                var driverRotation = follower.DriverBody != null
+                    ? follower.DriverBody.rotation
+                    : follower.Driver.rotation;
+                follower.Visual.position = driverPosition;
+                follower.Visual.rotation = driverRotation * follower.RotationOffset;
             }
         }
 
@@ -432,6 +632,17 @@ namespace Bellerophon.Enemies.Accelerando
 
         private Transform FindRequiredChild(string childName)
         {
+            var child = FindOptionalChild(childName);
+            if (child != null)
+            {
+                return child;
+            }
+
+            throw new InvalidOperationException($"{childName} is missing under {name}.");
+        }
+
+        private Transform FindOptionalChild(string childName)
+        {
             foreach (var child in GetComponentsInChildren<Transform>(true))
             {
                 if (string.Equals(child.name, childName, StringComparison.Ordinal))
@@ -440,7 +651,7 @@ namespace Bellerophon.Enemies.Accelerando
                 }
             }
 
-            throw new InvalidOperationException($"{childName} is missing under {name}.");
+            return null;
         }
 
         private static string ChainProxyName(string sideName, int linkIndex)
@@ -456,26 +667,41 @@ namespace Bellerophon.Enemies.Accelerando
         private readonly struct KinematicFollower
         {
             public KinematicFollower(Transform target, Rigidbody body, Quaternion rotationOffset)
-                : this(target, body, rotationOffset, Vector3.zero)
+                : this(target, body, rotationOffset, Vector3.zero, 0f)
             {
             }
 
-            private KinematicFollower(Transform target, Rigidbody body, Quaternion rotationOffset, Vector3 velocity)
+            private KinematicFollower(
+                Transform target,
+                Rigidbody body,
+                Quaternion rotationOffset,
+                Vector3 velocity,
+                float stationaryDuration)
             {
                 Target = target;
                 Body = body;
                 RotationOffset = rotationOffset;
                 Velocity = velocity;
+                StationaryDuration = stationaryDuration;
             }
 
             public Transform Target { get; }
             public Rigidbody Body { get; }
             public Quaternion RotationOffset { get; }
             public Vector3 Velocity { get; }
+            public float StationaryDuration { get; }
 
-            public KinematicFollower WithVelocity(Vector3 velocity)
+            public KinematicFollower WithVelocity(Vector3 velocity, float deltaTime)
             {
-                return new KinematicFollower(Target, Body, RotationOffset, velocity);
+                var nextStationaryDuration = velocity.magnitude <= AttackAntennaMovingSpeedThreshold
+                    ? StationaryDuration + deltaTime
+                    : 0f;
+                return new KinematicFollower(
+                    Target,
+                    Body,
+                    RotationOffset,
+                    velocity,
+                    nextStationaryDuration);
             }
         }
 
@@ -485,40 +711,68 @@ namespace Bellerophon.Enemies.Accelerando
                 Transform anchor,
                 Rigidbody body,
                 Vector3 anchorLocalOffset,
+                Vector3 initialAnchorLocalPosition,
                 float restSpring,
-                float restDamper)
+                float restDamper,
+                bool isMace)
             {
                 Anchor = anchor;
                 Body = body;
                 AnchorLocalOffset = anchorLocalOffset;
+                InitialAnchorLocalPosition = initialAnchorLocalPosition;
                 RestSpring = restSpring;
                 RestDamper = restDamper;
+                IsMace = isMace;
             }
 
             public Transform Anchor { get; }
             public Rigidbody Body { get; }
             public Vector3 AnchorLocalOffset { get; }
+            public Vector3 InitialAnchorLocalPosition { get; }
             public float RestSpring { get; }
             public float RestDamper { get; }
+            public bool IsMace { get; }
         }
 
         private readonly struct VisualFollower
         {
-            public VisualFollower(Transform visual, Transform driver)
-                : this(visual, driver, Quaternion.identity)
+            public VisualFollower(Transform visual, Rigidbody driverBody)
+                : this(visual, driverBody, Quaternion.identity)
             {
             }
 
-            public VisualFollower(Transform visual, Transform driver, Quaternion rotationOffset)
+            public VisualFollower(Transform visual, Rigidbody driverBody, Quaternion rotationOffset)
             {
                 Visual = visual;
-                Driver = driver;
+                DriverBody = driverBody;
+                Driver = driverBody != null ? driverBody.transform : null;
                 RotationOffset = rotationOffset;
             }
 
             public Transform Visual { get; }
+            public Rigidbody DriverBody { get; }
             public Transform Driver { get; }
             public Quaternion RotationOffset { get; }
+        }
+
+        private readonly struct LockedChainSegment
+        {
+            public LockedChainSegment(
+                Rigidbody connectedBody,
+                Rigidbody body,
+                float restDistance,
+                Vector3 fallbackDirection)
+            {
+                ConnectedBody = connectedBody;
+                Body = body;
+                RestDistance = restDistance;
+                FallbackDirection = fallbackDirection;
+            }
+
+            public Rigidbody ConnectedBody { get; }
+            public Rigidbody Body { get; }
+            public float RestDistance { get; }
+            public Vector3 FallbackDirection { get; }
         }
     }
 }

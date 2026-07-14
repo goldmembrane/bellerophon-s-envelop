@@ -1,0 +1,15 @@
+﻿Accelerando approved rigged model validation
+Scene=Assets/_Project/Scenes/CargoRunMvp.unity
+Root=Approved Accelerando Enemy Placement
+ModelAsset=Assets/_Project/Art/Enemies/Accelerando/Models/accelerando_rigged_attack_model_match.glb
+Placements=7
+Slot=Accelerando_00_Static_Review, Model=ApprovedRigged, Bones=18, ChainLinks=12+12, MaceHeads=2, VisibleMaceSocketRing=0
+Slot=Accelerando_01_Idle_Detect, Model=ApprovedRigged, Bones=18, ChainLinks=12+12, MaceHeads=2, VisibleMaceSocketRing=0
+Slot=Accelerando_02_Crawl_Accelerating, Model=ApprovedRigged, Bones=18, ChainLinks=12+12, MaceHeads=2, VisibleMaceSocketRing=0
+Slot=Accelerando_03_Antenna_Strike, Model=ApprovedRigged, Bones=18, ChainLinks=12+12, MaceHeads=2, VisibleMaceSocketRing=0
+Slot=Accelerando_04_Disabled_Reset, Model=ApprovedRigged, Bones=18, ChainLinks=12+12, MaceHeads=2, VisibleMaceSocketRing=0
+Slot=Accelerando_05_Hit_Recoil, Model=ApprovedRigged, Bones=18, ChainLinks=12+12, MaceHeads=2, VisibleMaceSocketRing=0
+Slot=Accelerando_06_Death, Model=ApprovedRigged, Bones=18, ChainLinks=12+12, MaceHeads=2, VisibleMaceSocketRing=0
+AttackBindings=Bone_008,007,006,011,010,009 only
+Physics=CrawlAndAttack, DynamicRigidbodies=24PerSlot, KinematicRigidbodies=2PerSlot, ConfigurableJoints=24PerSlot
+Result=PASS

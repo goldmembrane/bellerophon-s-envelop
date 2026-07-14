@@ -1,0 +1,80 @@
+{
+  "status": "USER_APPROVAL_REQUIRED",
+  "source": {
+    "path": "enemies model/accelerando.glb",
+    "sha256": "F5F5B605C66C582C0B9B0CB29433FE812EC952D8DFF7D5BE39055489E0367B69",
+    "expected_sha256": "F5F5B605C66C582C0B9B0CB29433FE812EC952D8DFF7D5BE39055489E0367B69"
+  },
+  "reference": {
+    "path": "artSample/enemies/accelerando/antenna_tip_ring_embedded_connection_fix/exports/accelerando_antenna_tip_ring_embedded_connection_sample.blend",
+    "sha256": "8A29ECD994777929F3C628AE4354186793F7D55A18134944B15CBBD1C32FFAC9"
+  },
+  "rig": {
+    "armature": "UniRigArmature",
+    "bone_count": 18,
+    "skin_vertex_group_count": 18,
+    "attack_control_bones": [
+      "Bone_006",
+      "Bone_007",
+      "Bone_008",
+      "Bone_009",
+      "Bone_010",
+      "Bone_011"
+    ],
+    "excluded_bones_directly_posed": [],
+    "attack_weight_adjusted_vertex_count": 863
+  },
+  "model": {
+    "body_object": "Accelerando_RiggedAttack_Body",
+    "body_vertices": 7214,
+    "body_polygons": 2471,
+    "left_mace_vertices": 2645,
+    "right_mace_vertices": 2650,
+    "chain_links_per_side": 12,
+    "visible_mace_socket_ring_count": 0,
+    "removed_obsolete_mace_support_faces": 220
+  },
+  "unity_material_match": {
+    "flesh_base_color": [
+      0.39,
+      0.32,
+      0.27
+    ],
+    "flesh_smoothness": 0.72,
+    "shell_base_color": [
+      0.14,
+      0.12,
+      0.1
+    ],
+    "shell_smoothness": 0.32,
+    "metal_base_color": [
+      0.3,
+      0.15,
+      0.08
+    ],
+    "metal_metallic": 0.72,
+    "metal_smoothness": 0.46
+  },
+  "pose_validation": {
+    "moved_vertex_count": 1777,
+    "maximum_vertex_displacement": 0.536074,
+    "rest_extent": [
+      2.281122,
+      3.278572,
+      1.578572
+    ],
+    "pose_extent": [
+      2.203061,
+      3.571141,
+      1.509946
+    ]
+  },
+  "exports": {
+    "blend": "artSample/enemies/accelerando/rigged_attack_model_match/exports/accelerando_rigged_attack_model_match.blend",
+    "blend_sha256": "56CF2188CEA073FB8057C5ED6FDC1A5DD0CEE2052D2558D5CF81B604E6D6DC62",
+    "glb": "artSample/enemies/accelerando/rigged_attack_model_match/exports/accelerando_rigged_attack_model_match.glb",
+    "glb_sha256": "F419BABC5BD29813C688D5AF5D3B9879BC1D1EBF99C9D530B39045A61D5E710A",
+    "contact_sheet_created": false
+  },
+  "unity_runtime_applied": false
+}

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Accelerando 리깅 공격 모델 일치 샘플</title>
+  <style>
+    :root { color-scheme: dark; font-family: "Malgun Gothic", system-ui, sans-serif; }
+    body { margin: 0; background: #11151b; color: #ece8df; }
+    main { width: min(1480px, calc(100% - 40px)); margin: 0 auto; padding: 36px 0 64px; }
+    h1 { margin: 0 0 10px; font-size: clamp(26px, 4vw, 44px); }
+    .status { color: #ffb35c; margin: 0 0 28px; }
+    .summary { max-width: 980px; color: #c9c7c1; line-height: 1.75; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 18px; margin-top: 30px; }
+    figure { margin: 0; padding: 12px; border: 1px solid #303743; border-radius: 12px; background: #191e26; }
+    img { display: block; width: 100%; height: auto; border-radius: 8px; background: #252b34; }
+    figcaption { padding: 10px 4px 2px; color: #d9d4c9; }
+    code { color: #f0b46e; }
+    .note { margin-top: 28px; padding: 18px; border-left: 4px solid #d97932; background: #191e26; line-height: 1.7; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Accelerando 리깅 공격 모델 일치 샘플</h1>
+    <p class="status">사용자 승인 대기 · Unity 런타임 미적용</p>
+    <p class="summary">
+      원본 <code>accelerando.glb</code>의 18본 리그를 유지하면서 현재 Unity의 몸체·갑각·녹슨 금속 색과
+      좌우 12링 사슬·분리 철퇴 구성을 맞췄습니다. 철퇴 아래의 옛 막대 지지물과 보이는 하단 소켓 링은 제거했습니다.
+      리그 이미지에서 주황색은 공격 시 직접 제어할 더듬이 본, 파란색은 직접 제어에서 제외한 본입니다.
+    </p>
+
+    <section class="grid">
+      <figure><img src="renders/accelerando_rigged_attack_front.png" alt="정면 중립 렌더"><figcaption>정면 · 현재 Unity 색과 사슬·철퇴 외형</figcaption></figure>
+      <figure><img src="renders/accelerando_rigged_attack_side.png" alt="측면 중립 렌더"><figcaption>측면 · 체인 연결과 분리 철퇴</figcaption></figure>
+      <figure><img src="renders/accelerando_rigged_attack_oblique.png" alt="사선 중립 렌더"><figcaption>사선 · 하단 지지물과 소켓 링 제거 확인</figcaption></figure>
+      <figure><img src="renders/accelerando_rigged_attack_rig_overlay.png" alt="중립 리그 표시"><figcaption>리그 · 주황색 공격 더듬이 본 / 파란색 제외 본</figcaption></figure>
+      <figure><img src="renders/accelerando_rigged_attack_pose_front.png" alt="더듬이 포즈 정면"><figcaption>포즈 정면 · 더듬이 본만 직접 제어</figcaption></figure>
+      <figure><img src="renders/accelerando_rigged_attack_pose_oblique.png" alt="더듬이 포즈 사선"><figcaption>포즈 사선 · 사슬과 철퇴의 전방 흔들림 연결 계획</figcaption></figure>
+      <figure><img src="renders/accelerando_rigged_attack_pose_rig_overlay.png" alt="포즈 리그 표시"><figcaption>포즈 리그 · 제어 본 범위 확인</figcaption></figure>
+    </section>
+
+    <div class="note">
+      포즈 렌더는 기능 미리보기이며 AnimationClip과 가속 제어는 포함하지 않았습니다.
+      승인 후 별도 Unity 적용 승인을 받아 <code>Accelerando_03_Antenna_Strike/Accelerando_Model</code>만 교체할 예정입니다.
+    </div>
+  </main>
+</body>
+</html>
+

@@ -34,6 +34,10 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         private const string UnityAnimationFolder = AccelerandoArtRoot + "/Animations";
         private const string UnityControllerFolder = AccelerandoArtRoot + "/Controllers";
         private const string UnityModelAssetPath = UnityModelFolder + "/accelerando_antenna_tip_ring_embedded_connection_sample.glb";
+        private const string ApprovedRiggedSourceAbsolutePath = "D:/Bellerophon2/Bellerophon/artSample/enemies/accelerando/rigged_attack_model_match/exports/accelerando_rigged_attack_model_match.glb";
+        private const string ApprovedRiggedUnityModelAssetPath = UnityModelFolder + "/accelerando_rigged_attack_model_match.glb";
+        private const string UnityForwardStrikeDeformationFixedMeshAssetPath = UnityModelFolder + "/accelerando_forward_strike_deformation_fixed_body.asset";
+        private const string UnityAntennaStrikeMaceSplitMeshAssetPath = UnityModelFolder + "/accelerando_antenna_strike_mace_split.asset";
         private const string UnityFallbackMaterialAssetPath = UnityMaterialFolder + "/M_Accelerando_Fallback_URP.mat";
         private const string UnityApprovedFleshMaterialAssetPath = UnityMaterialFolder + "/M_Accelerando_Approved_WetTaupeFlesh_URP.mat";
         private const string UnityApprovedShellMaterialAssetPath = UnityMaterialFolder + "/M_Accelerando_Approved_DarkShell_URP.mat";
@@ -46,6 +50,11 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         private const string UnityAntennaStrikeClipAssetPath = UnityAnimationFolder + "/Accelerando_Antenna_Strike_Attack.anim";
         private const string UnityAntennaStrikeControllerAssetPath = UnityControllerFolder + "/Accelerando_Antenna_Strike_Attack.controller";
         private const string ValidationFolder = "docs/validation/accelerando";
+        private const string AntennaStrikeValidationFolder = "docs/validation/accelerando_attack_motion_2026-07-14";
+        private const string ApprovedRiggedValidationFolder = "docs/validation/accelerando_rigged_model_apply_2026-07-14";
+        private const string ForwardMaceStrikeValidationFolder = "docs/validation/accelerando_forward_mace_strike_2026-07-14";
+        private const string ForwardMaceStrikeBalanceValidationFolder = "docs/validation/accelerando_forward_mace_strike_balance_2026-07-14";
+        private const string ForwardMaceStrikeAggressiveValidationFolder = "docs/validation/accelerando_antenna_stationary_settle_2026-07-15";
         private const string IdleBreathBlendShapeName = "Accelerando_IdleBreathMorph";
         private const string IdleSlotObjectName = "Accelerando_01_Idle_Detect";
         private const string CrawlSlotObjectName = "Accelerando_02_Crawl_Accelerating";
@@ -57,8 +66,10 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         private const string IdleBreathRootBoneName = "Accelerando_IdleBreath_RootBone";
         private const string IdleBreathBodyObjectName = "Accelerando_IdleBreath_Body";
         private const string IdleBreathAntennaObjectName = "Accelerando_IdleBreath_StaticMaceAntennae";
+        private const string ConnectedColoredBodyObjectName = "Accelerando_ConnectedColored_Body";
 
         private const float AccelerandoFacingYawDegrees = 180f;
+        private const float ApprovedRiggedModelFacingYawDegrees = 0f;
         private const float FallbackLongaTergoSpacing = 4.00f;
         private const float ReviewCameraMinimumFrontDistance = 3.25f;
         private const float ReviewCameraMaximumFrontDistance = 8.00f;
@@ -82,7 +93,34 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         private const float CrawlForwardChainMinimumRange = 0.040f;
         private const float CrawlForwardMaceMinimumRange = 30.000f;
         private const float CrawlForwardPhysicsDrivenCurveMaximumRange = 0.001f;
-        private const float AntennaStrikeLoopSeconds = 1.20f;
+        private const float AntennaStrikeLoopSeconds = 2.40f;
+        private const float ForwardMaceStrikeWindupTime = 0.32f;
+        private const float ForwardMaceStrikeReleaseTime = 0.44f;
+        private const float ForwardMaceStrikePeakTime = 0.50f;
+        private const float ForwardMaceStrikeRecoilTime = 0.62f;
+        private const float ForwardMaceStrikeSecondaryDriveTime = 0.78f;
+        private const float ForwardMaceStrikeAftershockTime = 0.96f;
+        private const float ForwardMaceStrikeFollowThroughTime = 1.20f;
+        private const float ForwardMaceStrikeRecoveryTime = 2.00f;
+        private const float ForwardMaceStrikeProbeAngle = 6f;
+        private const float ForwardMaceStrikeMinimumPositiveOffset = 0.12f;
+        private const float ForwardMaceStrikeMinimumVelocityRatio = 1.20f;
+        private const float AntennaDrivenMaceMinimumReleaseResponseDelay = 0.03f;
+        private const float AntennaDrivenMaceMaximumReleaseResponseDelay = 0.88f;
+        private const float AntennaDrivenMaceMinimumSettledAntennaSpeed = 0.50f;
+        private const float AntennaReactionMinimumDirectionalSpeed = 0.25f;
+        private const int AntennaReactionMinimumOpposedMotionSamples = 2;
+        private const float AttackStationaryAntennaSpeedThreshold = 1.00f;
+        private const float AttackStationaryEarlyRecoveryStartTime = 1.20f;
+        private const float AttackStationaryEarlyRecoveryEndTime = 1.50f;
+        private const float AttackStationaryLateRecoveryStartTime = 2.05f;
+        private const float AttackStationaryLateRecoveryEndTime = 2.30f;
+        private const float AttackStationaryMaximumLateToEarlySpeedRatio = 0.85f;
+        private const float AttackMovingMaximumMaceLinearDamping = 0.31f;
+        private const float AttackSettledMinimumMaceLinearDamping = 2.00f;
+        private const float ForwardMaceStrikeMaximumMirroredPositionDelta = 0.065f;
+        private const float ForwardMaceStrikeMaximumMirroredSegmentAngle = 6f;
+        private const float AttackChainMaximumSegmentExtension = 0.008f;
         private const float AntennaStrikeInputMinimumRange = 0.100f;
         private const float AntennaStrikeMinimumMaceForwardRange = 0.120f;
         private const float AntennaStrikeMinimumMaceAmplification = 1.12f;
@@ -104,6 +142,11 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         private const float IdleBreathStaticShellVerticalThreshold = 0.40f;
         private const int ConnectedChainLinkCount = 12;
         private const int ConnectedChainVisibleLinkCount = 8;
+        private const int ApprovedRiggedChainLinkCount = 12;
+        private const int AttackConnectedChainLinkCount = ApprovedRiggedChainLinkCount;
+        // Attack chain slack is stored as a connected downward arc so it can straighten without visual gaps.
+        private const float AttackConnectedChainSagDepth = 0.65f;
+        private const int ApprovedRiggedBoneCount = 18;
         private const float ConnectedChainMaceSideCutbackDistance = 0.420f;
         private const float ConnectedChainMaceSideCutbackAnchorFactor = 0.70f;
         private const float ConnectedChainMinimumAnchorDistance = 0.03f;
@@ -125,6 +168,24 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             new("Accelerando_05_Hit_Recoil", "HitRecoil", "피격 반응"),
             new("Accelerando_06_Death", "Death", "사망")
         };
+        private static readonly string[] ApprovedRiggedPlacementSlots =
+        {
+            PlacementObjectName,
+            IdleSlotObjectName,
+            CrawlSlotObjectName,
+            AntennaStrikeSlotObjectName,
+            "Accelerando_04_Disabled_Reset",
+            "Accelerando_05_Hit_Recoil",
+            "Accelerando_06_Death"
+        };
+        private static readonly string[] ApprovedRiggedAttackBoneNames =
+        {
+            "Bone_008", "Bone_007", "Bone_006", "Bone_011", "Bone_010", "Bone_009"
+        };
+        private static readonly float[] ApprovedRiggedAttackBoneWindupAngles =
+        {
+            40f, 28f, 14f, 40f, 28f, 14f
+        };
 
         private readonly struct AnimationReviewSlot
         {
@@ -144,6 +205,16 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         {
             public Mesh Mesh { get; set; }
             public int RemovedTriangles { get; set; }
+        }
+
+        private sealed class AntennaStrikeMaceMeshSplit
+        {
+            public Mesh BodyMesh { get; set; }
+            public Mesh LeftMaceMesh { get; set; }
+            public Mesh RightMaceMesh { get; set; }
+            public int BodyTriangleCount { get; set; }
+            public int LeftMaceTriangleCount { get; set; }
+            public int RightMaceTriangleCount { get; set; }
         }
 
         private sealed class ApprovedMaterialSet
@@ -429,7 +500,7 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         public static void ApplyPhysicsAntennaStrikeMotionToCurrentScene()
         {
             EnsureUnityFolders();
-            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var scene = RequireActiveCargoRunScene();
             var placementRoot = GameObject.Find(PlacementRootName);
             if (placementRoot == null)
             {
@@ -449,7 +520,7 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
 
         public static void InspectPhysicsAntennaStrikeMotionInScene()
         {
-            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            RequireActiveCargoRunScene();
             var placementRoot = GameObject.Find(PlacementRootName);
             if (placementRoot == null)
             {
@@ -460,9 +531,115 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             Debug.Log("Prepared Accelerando physics antenna strike motion inspected.");
         }
 
+        public static void InspectForwardMaceSwingAntennaRigInScene()
+        {
+            RequireActiveCargoRunScene();
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            var strikeSlot = placementRoot.transform.Find(AntennaStrikeSlotObjectName);
+            if (strikeSlot == null)
+            {
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} is missing under {PlacementRootName}.");
+            }
+
+            var modelObject = strikeSlot.Find(ModelChildName);
+            if (modelObject == null)
+            {
+                throw new InvalidOperationException($"{ModelChildName} is missing under {AntennaStrikeSlotObjectName}.");
+            }
+
+            var builder = new System.Text.StringBuilder();
+            builder.AppendLine("AccelerandoForwardMaceSwingAntennaRigInspection");
+            AppendTransformHierarchyInspection(builder, strikeSlot, modelObject);
+            AppendModelAssetHierarchyInspection(builder, UnityModelAssetPath);
+            AppendModelAssetHierarchyInspection(builder, UnityModelFolder + "/accelerando.glb");
+
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityAntennaStrikeClipAssetPath);
+            if (clip == null)
+            {
+                throw new InvalidOperationException($"Antenna strike clip is missing at {UnityAntennaStrikeClipAssetPath}.");
+            }
+
+            var bindings = AnimationUtility.GetCurveBindings(clip);
+            builder.AppendLine($"Clip={UnityAntennaStrikeClipAssetPath}, Length={clip.length:0.###}, Bindings={bindings.Length}");
+            foreach (var binding in bindings)
+            {
+                builder.AppendLine($"Binding Path={binding.path}, Type={binding.type.Name}, Property={binding.propertyName}");
+            }
+
+            Debug.Log(builder.ToString());
+            Debug.Log("Prepared Accelerando forward mace swing antenna rig inspected.");
+        }
+
+        private static void AppendTransformHierarchyInspection(
+            System.Text.StringBuilder builder,
+            Transform relativeRoot,
+            Transform hierarchyRoot)
+        {
+            builder.AppendLine($"SceneHierarchy Root={GetRelativePath(relativeRoot, hierarchyRoot)}");
+            foreach (var target in hierarchyRoot.GetComponentsInChildren<Transform>(true))
+            {
+                var components = target.GetComponents<Component>();
+                var componentNames = new string[components.Length];
+                for (var i = 0; i < components.Length; i++)
+                {
+                    componentNames[i] = components[i] != null ? components[i].GetType().Name : "MissingComponent";
+                }
+
+                builder.AppendLine(
+                    $"Transform Path={GetRelativePath(relativeRoot, target)}, Parent={(target.parent != null ? target.parent.name : "none")}, " +
+                    $"Children={target.childCount}, Components={string.Join(",", componentNames)}, " +
+                    $"LocalPosition={target.localPosition}, LocalEuler={target.localEulerAngles}");
+            }
+        }
+
+        private static void AppendModelAssetHierarchyInspection(System.Text.StringBuilder builder, string assetPath)
+        {
+            var modelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+            if (modelAsset == null)
+            {
+                builder.AppendLine($"ModelAsset Missing={assetPath}");
+                return;
+            }
+
+            builder.AppendLine($"ModelAsset Path={assetPath}");
+            foreach (var target in modelAsset.GetComponentsInChildren<Transform>(true))
+            {
+                var components = target.GetComponents<Component>();
+                var componentNames = new string[components.Length];
+                for (var i = 0; i < components.Length; i++)
+                {
+                    componentNames[i] = components[i] != null ? components[i].GetType().Name : "MissingComponent";
+                }
+
+                builder.AppendLine(
+                    $"ModelTransform Name={target.name}, Parent={(target.parent != null ? target.parent.name : "none")}, " +
+                    $"Children={target.childCount}, Components={string.Join(",", componentNames)}, " +
+                    $"LocalPosition={target.localPosition}, LocalEuler={target.localEulerAngles}");
+
+                var skinnedRenderer = target.GetComponent<SkinnedMeshRenderer>();
+                if (skinnedRenderer != null)
+                {
+                    var boneNames = new string[skinnedRenderer.bones.Length];
+                    for (var i = 0; i < skinnedRenderer.bones.Length; i++)
+                    {
+                        boneNames[i] = skinnedRenderer.bones[i] != null ? skinnedRenderer.bones[i].name : "MissingBone";
+                    }
+
+                    builder.AppendLine(
+                        $"SkinnedMesh Renderer={target.name}, RootBone={(skinnedRenderer.rootBone != null ? skinnedRenderer.rootBone.name : "none")}, " +
+                        $"Bones={string.Join(",", boneNames)}");
+                }
+            }
+        }
+
         public static void ValidatePhysicsAntennaStrikeResponseInScene()
         {
-            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            RequireActiveCargoRunScene();
             var placementRoot = GameObject.Find(PlacementRootName);
             if (placementRoot == null)
             {
@@ -484,6 +661,109 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             ConfigureAttackChainPhysicsRig(strikeSlot);
             ValidatePhysicsAntennaStrikeResponse(strikeSlot, clip);
             Debug.Log("Prepared Accelerando physics antenna strike response validated.");
+        }
+
+        public static void CapturePhysicsAntennaStrikeMotionReview()
+        {
+            RequireActiveCargoRunScene();
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            var strikeSlot = placementRoot.transform.Find(AntennaStrikeSlotObjectName);
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityAntennaStrikeClipAssetPath);
+            if (strikeSlot == null || clip == null)
+            {
+                throw new InvalidOperationException(
+                    $"{AntennaStrikeSlotObjectName} and {UnityAntennaStrikeClipAssetPath} are required for capture.");
+            }
+
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = strikeSlot.GetComponent(rigType);
+            var simulateMethod = rigType.GetMethod("SimulatePhysicsTick", new[] { typeof(float) });
+            var syncMethod = rigType.GetMethod("SyncVisualsToPhysics", Type.EmptyTypes);
+            if (rig == null || simulateMethod == null || syncMethod == null)
+            {
+                throw new InvalidOperationException(
+                    $"{AntennaStrikeSlotObjectName} is missing its compiled physics capture rig.");
+            }
+
+            var snapshots = CaptureAntennaStrikeVisualSnapshots(strikeSlot);
+            var animator = strikeSlot.GetComponent<Animator>();
+            var animatorWasEnabled = animator != null && animator.enabled;
+            var previousMode = Physics.simulationMode;
+            var previousAutoSync = Physics.autoSyncTransforms;
+            var fixedBounds = CalculateRendererBounds(
+                new[] { strikeSlot },
+                new Bounds(strikeSlot.position, Vector3.one));
+            fixedBounds.Expand(new Vector3(1.20f, 0.45f, 1.20f));
+            const float deltaTime = 1f / 90f;
+            var steps = Mathf.RoundToInt(AntennaStrikeLoopSeconds / deltaTime) + 1;
+            var captureSteps = new HashSet<int> { 0, 54, 108, 162, 216 };
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                Physics.simulationMode = SimulationMode.Script;
+                Physics.autoSyncTransforms = false;
+                for (var step = 0; step < steps; step++)
+                {
+                    var sampleTime = step * deltaTime;
+                    clip.SampleAnimation(strikeSlot.gameObject, sampleTime);
+                    simulateMethod.Invoke(rig, new object[] { deltaTime });
+                    Physics.SyncTransforms();
+                    Physics.Simulate(deltaTime);
+                    syncMethod.Invoke(rig, Array.Empty<object>());
+
+                    if (!captureSteps.Contains(step))
+                    {
+                        continue;
+                    }
+
+                    var suffix = step.ToString("000", System.Globalization.CultureInfo.InvariantCulture);
+                    CaptureReviewImagesForFocus(
+                        placementRoot.transform,
+                        new[] { strikeSlot },
+                        strikeSlot,
+                        $"Accelerando_AntennaStrike_Physics_{suffix}.png",
+                        $"Accelerando_AntennaStrike_Physics_Oblique_{suffix}.png",
+                        $"AccelerandoAntennaStrikePhysicsCapture_{suffix}",
+                        fixedBounds,
+                        AntennaStrikeValidationFolder);
+                }
+
+                Debug.Log("AccelerandoAntennaStrikePhysicsCapture Frames=000;044;089;134;179.");
+            }
+            finally
+            {
+                Physics.simulationMode = previousMode;
+                Physics.autoSyncTransforms = previousAutoSync;
+                RestoreTransformSnapshots(snapshots);
+                clip.SampleAnimation(strikeSlot.gameObject, 0f);
+                ConfigureAttackChainPhysicsRig(strikeSlot);
+                if (animator != null)
+                {
+                    animator.enabled = animatorWasEnabled;
+                }
+            }
+        }
+
+        private static Scene RequireActiveCargoRunScene()
+        {
+            var scene = SceneManager.GetActiveScene();
+            if (!scene.IsValid() || !scene.isLoaded ||
+                !string.Equals(scene.path, CargoRunScenePath, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    $"The active scene must be {CargoRunScenePath}. Active={scene.path}.");
+            }
+
+            return scene;
         }
 
         public static void CaptureIdleBreathingAnimationReview()
@@ -520,6 +800,2541 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             finally
             {
                 UnityEngine.Object.DestroyImmediate(instance);
+            }
+        }
+
+        [MenuItem("Bellerophon/Enemies/Accelerando/Apply Approved Rigged Model To All Placements")]
+        public static void ApplyApprovedRiggedModelToAllPlacements()
+        {
+            if (!File.Exists(ApprovedRiggedSourceAbsolutePath))
+            {
+                throw new FileNotFoundException("Approved rigged Accelerando GLB is missing.", ApprovedRiggedSourceAbsolutePath);
+            }
+
+            EnsureUnityFolders();
+            CopyApprovedRiggedModelAsset();
+            ConfigureApprovedRiggedModelAsset();
+            var modelAsset = LoadApprovedRiggedModelAsset();
+            var materialSet = EnsureApprovedMaterialSet();
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            var rootState = new ApprovedRiggedTransformState(placementRoot.transform);
+            var slotStates = new Dictionary<string, ApprovedRiggedTransformState>();
+            var preservedDirectChildren = new Dictionary<string, string[]>();
+            foreach (var slotName in ApprovedRiggedPlacementSlots)
+            {
+                var slot = placementRoot.transform.Find(slotName);
+                if (slot == null)
+                {
+                    throw new InvalidOperationException($"{slotName} is missing under {PlacementRootName}.");
+                }
+
+                slotStates.Add(slotName, new ApprovedRiggedTransformState(slot));
+                preservedDirectChildren.Add(slotName, CollectPreservedDirectChildNames(slot));
+                ReplaceApprovedRiggedModel(slot, modelAsset, materialSet);
+            }
+
+            ConfigureApprovedRiggedAnimationSlots(placementRoot.transform);
+            ConfigureApprovedRiggedChainPhysics(placementRoot.transform.Find(CrawlSlotObjectName), false);
+            ConfigureApprovedRiggedChainPhysics(placementRoot.transform.Find(AntennaStrikeSlotObjectName), true);
+
+            rootState.AssertUnchanged(placementRoot.transform, PlacementRootName);
+            foreach (var slotName in ApprovedRiggedPlacementSlots)
+            {
+                var slot = placementRoot.transform.Find(slotName);
+                slotStates[slotName].AssertUnchanged(slot, slotName);
+                AssertPreservedDirectChildren(slot, preservedDirectChildren[slotName]);
+            }
+
+            ValidateApprovedRiggedPlacement(placementRoot.transform, writeReport: false);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+            Debug.Log("Approved Accelerando rigged model applied to all seven existing placements without recreating the placement root or slots.");
+        }
+
+        public static void ValidateApprovedRiggedModelAllPlacements()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            ValidateApprovedRiggedPlacement(placementRoot.transform, writeReport: true);
+            Debug.Log("Approved Accelerando rigged model validation passed for all seven placements.");
+        }
+
+        public static void CaptureApprovedRiggedModelAllPlacements()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            var slots = new Transform[ApprovedRiggedPlacementSlots.Length];
+            for (var i = 0; i < ApprovedRiggedPlacementSlots.Length; i++)
+            {
+                slots[i] = placementRoot.transform.Find(ApprovedRiggedPlacementSlots[i]) ??
+                    throw new InvalidOperationException($"{ApprovedRiggedPlacementSlots[i]} is missing.");
+            }
+
+            CaptureReviewImagesForFocus(
+                placementRoot.transform,
+                slots,
+                slots[0],
+                "Unity_Accelerando_AllPlacements_Front.png",
+                "Unity_Accelerando_AllPlacements_Oblique.png",
+                "ApprovedAccelerandoRiggedAllPlacementsCapture",
+                null,
+                ApprovedRiggedValidationFolder);
+
+            CaptureReviewImagesForFocus(
+                placementRoot.transform,
+                new[] { slots[0] },
+                slots[0],
+                "Unity_Accelerando_Static_Front.png",
+                "Unity_Accelerando_Static_Oblique.png",
+                "ApprovedAccelerandoRiggedStaticCapture",
+                null,
+                ApprovedRiggedValidationFolder);
+
+            var strikeSlot = placementRoot.transform.Find(AntennaStrikeSlotObjectName);
+            var animator = strikeSlot.GetComponent<Animator>();
+            if (animator == null || animator.runtimeAnimatorController == null)
+            {
+                throw new InvalidOperationException("Accelerando antenna strike Animator is missing.");
+            }
+
+            animator.enabled = true;
+            animator.Play(AntennaStrikeStateName, 0, 0.45f);
+            animator.Update(0f);
+            CaptureReviewImagesForFocus(
+                placementRoot.transform,
+                new[] { strikeSlot },
+                strikeSlot,
+                "Unity_Accelerando_AttackInputPose_Front.png",
+                "Unity_Accelerando_AttackInputPose_Oblique.png",
+                "ApprovedAccelerandoRiggedAttackInputCapture",
+                null,
+                ApprovedRiggedValidationFolder);
+            animator.Play(AntennaStrikeStateName, 0, 0f);
+            animator.Update(0f);
+
+            var outputDirectory = GetAbsoluteProjectPath(ApprovedRiggedValidationFolder);
+            Directory.CreateDirectory(outputDirectory);
+            File.Copy(
+                "D:/Bellerophon2/Bellerophon/artSample/enemies/accelerando/rigged_attack_model_match/renders/accelerando_rigged_attack_front.png",
+                Path.Combine(outputDirectory, "Target_Accelerando_RiggedAttack_Front.png"),
+                true);
+            File.Copy(
+                "D:/Bellerophon2/Bellerophon/artSample/enemies/accelerando/rigged_attack_model_match/renders/accelerando_rigged_attack_oblique.png",
+                Path.Combine(outputDirectory, "Target_Accelerando_RiggedAttack_Oblique.png"),
+                true);
+            Debug.Log($"Approved Accelerando rigged model comparison captures written to {outputDirectory}.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Accelerando/Rotate Approved Rigged Models To Back Facing")]
+        public static void RotateApprovedRiggedModelsToBackFacing()
+        {
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            var rootState = new ApprovedRiggedTransformState(placementRoot.transform);
+            var slotStates = new Dictionary<string, ApprovedRiggedTransformState>();
+            var preservedDirectChildren = new Dictionary<string, string[]>();
+            foreach (var slotName in ApprovedRiggedPlacementSlots)
+            {
+                var slot = placementRoot.transform.Find(slotName) ??
+                    throw new InvalidOperationException($"{slotName} is missing under {PlacementRootName}.");
+                var model = FindDirectChild(slot, ModelChildName) ??
+                    throw new InvalidOperationException($"{slotName}/{ModelChildName} is missing.");
+                slotStates.Add(slotName, new ApprovedRiggedTransformState(slot));
+                preservedDirectChildren.Add(slotName, CollectPreservedDirectChildNames(slot));
+                var localPosition = model.localPosition;
+                var localScale = model.localScale;
+                model.localRotation = Quaternion.Euler(0f, ApprovedRiggedModelFacingYawDegrees, 0f);
+                if (model.localPosition != localPosition || model.localScale != localScale)
+                {
+                    throw new InvalidOperationException($"{slotName}/{ModelChildName} position or scale changed while rotating.");
+                }
+
+                EditorUtility.SetDirty(model);
+            }
+
+            ConfigureApprovedRiggedChainPhysics(placementRoot.transform.Find(CrawlSlotObjectName), false);
+            ConfigureApprovedRiggedChainPhysics(placementRoot.transform.Find(AntennaStrikeSlotObjectName), true);
+            rootState.AssertUnchanged(placementRoot.transform, PlacementRootName);
+            foreach (var slotName in ApprovedRiggedPlacementSlots)
+            {
+                var slot = placementRoot.transform.Find(slotName);
+                slotStates[slotName].AssertUnchanged(slot, slotName);
+                AssertPreservedDirectChildren(slot, preservedDirectChildren[slotName]);
+            }
+
+            ValidateApprovedRiggedBackFacing(placementRoot.transform);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            Debug.Log("All seven approved Accelerando models rotated from front-facing to the opposite back-facing direction.");
+        }
+
+        public static void ValidateApprovedRiggedModelsBackFacing()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            ValidateApprovedRiggedPlacement(placementRoot.transform, writeReport: false);
+            ValidateApprovedRiggedBackFacing(placementRoot.transform);
+            Debug.Log("All seven approved Accelerando models are back-facing with their placement and physics structure intact.");
+        }
+
+        public static void CaptureApprovedRiggedModelsBackFacing()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            ValidateApprovedRiggedBackFacing(placementRoot.transform);
+            var staticSlot = placementRoot.transform.Find(PlacementObjectName) ??
+                throw new InvalidOperationException($"{PlacementObjectName} is missing.");
+            CaptureReviewImagesForFocus(
+                placementRoot.transform,
+                new[] { staticSlot },
+                staticSlot,
+                "Unity_Accelerando_BackFacing_Static_Front.png",
+                "Unity_Accelerando_BackFacing_Static_Oblique.png",
+                "ApprovedAccelerandoBackFacingCapture",
+                null,
+                ApprovedRiggedValidationFolder);
+        }
+
+        [MenuItem("Bellerophon/Enemies/Accelerando/Apply Forward Mace Strike Motion")]
+        public static void ApplyApprovedAccelerandoForwardMaceStrikeMotion()
+        {
+            EnsureUnityFolders();
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            var strikeSlot = placementRoot.transform.Find(AntennaStrikeSlotObjectName) ??
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} is missing.");
+            var model = FindDirectChild(strikeSlot, ModelChildName) ??
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName}/{ModelChildName} is missing.");
+            var rootState = new ApprovedRiggedTransformState(placementRoot.transform);
+            var slotState = new ApprovedRiggedTransformState(strikeSlot);
+            var modelState = new ApprovedRiggedTransformState(model);
+            var preservedDirectChildren = CollectPreservedDirectChildNames(strikeSlot);
+            var animator = strikeSlot.GetComponent<Animator>() ??
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} Animator is missing.");
+            var preservedAnimatorSpeed = animator.speed;
+
+            var skinningReport = EnsureForwardStrikeDeformationFixedMesh(strikeSlot);
+            var clip = EnsureApprovedRiggedAttackClip(strikeSlot);
+            var controller = EnsurePhysicsAntennaStrikeController(clip);
+            animator.runtimeAnimatorController = controller;
+            animator.applyRootMotion = false;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            animator.speed = preservedAnimatorSpeed;
+            animator.enabled = true;
+            EditorUtility.SetDirty(animator);
+            PrepareConnectedAttackChainLinks(strikeSlot);
+            ConfigureApprovedRiggedChainPhysics(strikeSlot, true);
+            ValidateApprovedRiggedAttackBindings();
+            ValidateApprovedForwardMaceStrikeSlotStructure(strikeSlot);
+
+            rootState.AssertUnchanged(placementRoot.transform, PlacementRootName);
+            slotState.AssertUnchanged(strikeSlot, AntennaStrikeSlotObjectName);
+            modelState.AssertUnchanged(model, $"{AntennaStrikeSlotObjectName}/{ModelChildName}");
+            AssertPreservedDirectChildren(strikeSlot, preservedDirectChildren);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+            Debug.Log(
+                "Approved Accelerando forward mace strike motion applied. " +
+                "AnimatedBones=Bone_008,007,006,011,010,009; ChainAndMaceCurves=0; AnimatorSpeedPreserved=True.\n" +
+                skinningReport);
+        }
+
+        public static void InspectApprovedAccelerandoAttackAntennaSkinConstraints()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            var strikeSlot = placementRoot != null ? placementRoot.transform.Find(AntennaStrikeSlotObjectName) : null;
+            if (strikeSlot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName}/{AntennaStrikeSlotObjectName} is missing.");
+            }
+
+            var model = FindDirectChild(strikeSlot, ModelChildName) ??
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName}/{ModelChildName} is missing.");
+            var body = FindChildByName(model, "Accelerando_RiggedAttack_Body") ??
+                throw new InvalidOperationException("Accelerando attack body is missing.");
+            var renderer = body.GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException("Accelerando attack body is not skinned.");
+            var mesh = renderer.sharedMesh ??
+                throw new InvalidOperationException("Accelerando attack body mesh is missing.");
+            var sourceModel = LoadApprovedRiggedModelAsset();
+            var sourceBody = FindChildByName(sourceModel.transform, "Accelerando_RiggedAttack_Body") ??
+                throw new InvalidOperationException("Approved Accelerando source body is missing.");
+            var sourceRenderer = sourceBody.GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException("Approved Accelerando source body is not skinned.");
+            var sourceMesh = sourceRenderer.sharedMesh ??
+                throw new InvalidOperationException("Approved Accelerando source mesh is missing.");
+            ValidateMatchingBoneOrder(sourceRenderer, renderer);
+
+            var rightBoneIndices = GetBoneIndices(renderer, "Bone_008", "Bone_007", "Bone_006");
+            var sourceWeights = sourceMesh.boneWeights;
+            var correctedWeights = mesh.boneWeights;
+            var sourceVertices = sourceMesh.vertices;
+            var candidateVertices = new List<int>();
+            for (var i = 0; i < sourceWeights.Length; i++)
+            {
+                if (SumBoneInfluence(sourceWeights[i], rightBoneIndices) > 0.0001f)
+                {
+                    candidateVertices.Add(i);
+                }
+            }
+
+            var nonAttackInfluenceByBone = new Dictionary<int, float>();
+            var verticesWithNonAttackInfluence = 0;
+            var verticesWithStrongNonAttackInfluence = 0;
+            var maximumNonAttackInfluence = 0f;
+            var maximumNonAttackVertex = -1;
+            foreach (var vertexIndex in candidateVertices)
+            {
+                var attackInfluence = SumBoneInfluence(correctedWeights[vertexIndex], rightBoneIndices);
+                var nonAttackInfluence = Mathf.Max(0f, 1f - attackInfluence);
+                if (nonAttackInfluence > 0.001f)
+                {
+                    verticesWithNonAttackInfluence++;
+                }
+
+                if (nonAttackInfluence > 0.10f)
+                {
+                    verticesWithStrongNonAttackInfluence++;
+                }
+
+                if (nonAttackInfluence > maximumNonAttackInfluence)
+                {
+                    maximumNonAttackInfluence = nonAttackInfluence;
+                    maximumNonAttackVertex = vertexIndex;
+                }
+
+                AccumulateNonAttackBoneInfluence(nonAttackInfluenceByBone, correctedWeights[vertexIndex], rightBoneIndices);
+            }
+
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityAntennaStrikeClipAssetPath) ??
+                throw new InvalidOperationException($"{UnityAntennaStrikeClipAssetPath} is missing.");
+            var snapshots = new List<TransformSnapshot>();
+            foreach (var boneName in ApprovedRiggedAttackBoneNames)
+            {
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(strikeSlot, boneName)));
+            }
+
+            var animator = strikeSlot.GetComponent<Animator>();
+            var animatorWasEnabled = animator != null && animator.enabled;
+            var neutralBake = new Mesh();
+            var releaseBake = new Mesh();
+            var nearlyFixedVertices = new List<int>();
+            var minimumDisplacement = float.PositiveInfinity;
+            var minimumDisplacementVertex = -1;
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                clip.SampleAnimation(strikeSlot.gameObject, 0f);
+                renderer.BakeMesh(neutralBake);
+                clip.SampleAnimation(strikeSlot.gameObject, ForwardMaceStrikeReleaseTime);
+                renderer.BakeMesh(releaseBake);
+                var neutralVertices = neutralBake.vertices;
+                var releaseVertices = releaseBake.vertices;
+                foreach (var vertexIndex in candidateVertices)
+                {
+                    var displacement = Vector3.Distance(neutralVertices[vertexIndex], releaseVertices[vertexIndex]);
+                    if (displacement < minimumDisplacement)
+                    {
+                        minimumDisplacement = displacement;
+                        minimumDisplacementVertex = vertexIndex;
+                    }
+
+                    if (displacement < 0.005f &&
+                        SumBoneInfluence(correctedWeights[vertexIndex], rightBoneIndices) > 0.25f)
+                    {
+                        nearlyFixedVertices.Add(vertexIndex);
+                    }
+                }
+            }
+            finally
+            {
+                RestoreTransformSnapshots(snapshots);
+                clip.SampleAnimation(strikeSlot.gameObject, 0f);
+                if (animator != null)
+                {
+                    animator.enabled = animatorWasEnabled;
+                }
+
+                UnityEngine.Object.DestroyImmediate(neutralBake);
+                UnityEngine.Object.DestroyImmediate(releaseBake);
+            }
+
+            var report = new System.Text.StringBuilder();
+            report.AppendLine("Accelerando right antenna skin constraint inspection");
+            report.AppendLine($"Mesh={AssetDatabase.GetAssetPath(mesh)}");
+            report.AppendLine($"RootBone={(renderer.rootBone != null ? renderer.rootBone.name : "None")}");
+            report.AppendLine($"CandidateVertices={candidateVertices.Count}");
+            report.AppendLine($"VerticesWithNonAttackInfluence={verticesWithNonAttackInfluence}");
+            report.AppendLine($"VerticesWithStrongNonAttackInfluence={verticesWithStrongNonAttackInfluence}");
+            report.AppendLine($"MaximumNonAttackInfluence={maximumNonAttackInfluence:0.######}, Vertex={maximumNonAttackVertex}, Position={(maximumNonAttackVertex >= 0 ? FormatVector(sourceVertices[maximumNonAttackVertex]) : "None")}");
+            report.AppendLine($"NearlyFixedVerticesAtRelease={nearlyFixedVertices.Count}");
+            report.AppendLine($"MinimumReleaseDisplacement={minimumDisplacement:0.######}, Vertex={minimumDisplacementVertex}");
+            report.AppendLine("NonAttackBoneInfluenceTotals:");
+            foreach (var pair in nonAttackInfluenceByBone)
+            {
+                var boneName = pair.Key >= 0 && pair.Key < renderer.bones.Length && renderer.bones[pair.Key] != null
+                    ? renderer.bones[pair.Key].name
+                    : $"BoneIndex_{pair.Key}";
+                report.AppendLine($"  {boneName}={pair.Value:0.######}");
+            }
+
+            report.AppendLine("BoneOrder:");
+            for (var i = 0; i < renderer.bones.Length; i++)
+            {
+                var bone = renderer.bones[i];
+                report.AppendLine(
+                    $"  {i}: {(bone != null ? bone.name : "None")}, " +
+                    $"Parent={(bone != null && bone.parent != null ? bone.parent.name : "None")}, " +
+                    $"RendererLocalPosition={(bone != null ? FormatVector(renderer.transform.InverseTransformPoint(bone.position)) : "None")}");
+            }
+
+            var outputDirectory = GetAbsoluteProjectPath(ForwardMaceStrikeAggressiveValidationFolder);
+            Directory.CreateDirectory(outputDirectory);
+            File.WriteAllText(
+                Path.Combine(outputDirectory, "skinning_inspection.txt"),
+                report.ToString(),
+                System.Text.Encoding.UTF8);
+            Debug.Log(report.ToString());
+        }
+
+        public static void ValidateApprovedAccelerandoForwardMaceStrikeMotion()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            var strikeSlot = placementRoot != null ? placementRoot.transform.Find(AntennaStrikeSlotObjectName) : null;
+            if (strikeSlot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName}/{AntennaStrikeSlotObjectName} is missing.");
+            }
+
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityAntennaStrikeClipAssetPath) ??
+                throw new InvalidOperationException($"{UnityAntennaStrikeClipAssetPath} is missing.");
+            ValidateApprovedRiggedAttackBindings();
+            ValidateApprovedForwardMaceStrikeSlotStructure(strikeSlot);
+            ConfigureApprovedRiggedChainPhysics(strikeSlot, true);
+            var meshReport = ValidateForwardStrikeDeformationFixedMesh(strikeSlot, clip);
+            var symmetryReport = ValidateMirroredAntennaStrikePose(strikeSlot, clip);
+            var report = ValidateApprovedForwardMaceStrikePhysics(strikeSlot, clip) + symmetryReport + meshReport;
+            var outputDirectory = GetAbsoluteProjectPath(ForwardMaceStrikeAggressiveValidationFolder);
+            Directory.CreateDirectory(outputDirectory);
+            File.WriteAllText(
+                Path.Combine(outputDirectory, "physics_validation.txt"),
+                report,
+                System.Text.Encoding.UTF8);
+            Debug.Log("Approved Accelerando forward mace strike physics validation passed.\n" + report);
+        }
+
+        public static void CaptureApprovedAccelerandoForwardMaceStrikeMotion()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            var strikeSlot = placementRoot != null ? placementRoot.transform.Find(AntennaStrikeSlotObjectName) : null;
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityAntennaStrikeClipAssetPath);
+            if (placementRoot == null || strikeSlot == null || clip == null)
+            {
+                throw new InvalidOperationException("Approved Accelerando forward mace strike capture targets are missing.");
+            }
+
+            ConfigureApprovedRiggedChainPhysics(strikeSlot, true);
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = strikeSlot.GetComponent(rigType);
+            var simulateMethod = rigType.GetMethod("SimulatePhysicsTick", new[] { typeof(float) });
+            var syncMethod = rigType.GetMethod("SyncVisualsToPhysics", Type.EmptyTypes);
+            if (rig == null || simulateMethod == null || syncMethod == null)
+            {
+                throw new InvalidOperationException("Accelerando forward mace strike physics capture rig is incomplete.");
+            }
+
+            var snapshots = CaptureApprovedForwardMaceStrikeSnapshots(strikeSlot);
+            var animator = strikeSlot.GetComponent<Animator>();
+            var animatorWasEnabled = animator != null && animator.enabled;
+            var previousMode = Physics.simulationMode;
+            var previousAutoSync = Physics.autoSyncTransforms;
+            var fixedBounds = CalculateRendererBounds(new[] { strikeSlot }, new Bounds(strikeSlot.position, Vector3.one));
+            fixedBounds.Expand(new Vector3(1.35f, 0.55f, 1.80f));
+            const float deltaTime = 1f / 90f;
+            var steps = Mathf.RoundToInt(AntennaStrikeLoopSeconds / deltaTime) + 1;
+            var captureFrames = new Dictionary<int, string>
+            {
+                { 0, "00_Neutral" },
+                { 29, "01_Windup" },
+                { 40, "02_Release" },
+                { 45, "03_ForwardPeak" },
+                { 56, "04_AntennaRecoilMaceFollowThrough" },
+                { 70, "05_SecondaryDrive" },
+                { 86, "06_Aftershock" },
+                { 108, "07_ReactionSettle" },
+                { 180, "08_LooseRecovery" },
+                { 216, "09_Return" }
+            };
+
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                Physics.simulationMode = SimulationMode.Script;
+                Physics.autoSyncTransforms = false;
+                for (var step = 0; step < steps; step++)
+                {
+                    var sampleTime = step * deltaTime;
+                    clip.SampleAnimation(strikeSlot.gameObject, sampleTime);
+                    simulateMethod.Invoke(rig, new object[] { deltaTime });
+                    Physics.SyncTransforms();
+                    Physics.Simulate(deltaTime);
+                    syncMethod.Invoke(rig, Array.Empty<object>());
+                    if (!captureFrames.TryGetValue(step, out var suffix))
+                    {
+                        continue;
+                    }
+
+                    CaptureReviewImagesForFocus(
+                        placementRoot.transform,
+                        new[] { strikeSlot },
+                        strikeSlot,
+                        $"Accelerando_ForwardMaceStrike_{suffix}_Front.png",
+                        $"Accelerando_ForwardMaceStrike_{suffix}_Oblique.png",
+                        $"AccelerandoForwardMaceStrikeCapture_{suffix}",
+                        fixedBounds,
+                        ForwardMaceStrikeAggressiveValidationFolder,
+                        strikeSlot.forward);
+
+                    if (step == 29 || step == 45 || step == 56 || step == 70 || step == 86 || step == 108 || step == 180)
+                    {
+                        CaptureAntennaCloseup(
+                            placementRoot.transform,
+                            strikeSlot,
+                            suffix,
+                            "Right",
+                            "Bone_008",
+                            "Bone_007",
+                            "Bone_006",
+                            "Accelerando_Right_AntennaPhysicsAnchor");
+                        CaptureAntennaCloseup(
+                            placementRoot.transform,
+                            strikeSlot,
+                            suffix,
+                            "Left",
+                            "Bone_011",
+                            "Bone_010",
+                            "Bone_009",
+                            "Accelerando_Left_AntennaPhysicsAnchor");
+                        CaptureChainContinuityCloseup(placementRoot.transform, strikeSlot, suffix, "Left");
+                        CaptureChainContinuityCloseup(placementRoot.transform, strikeSlot, suffix, "Right");
+                    }
+                }
+
+                Debug.Log("Accelerando aggressive forward mace strike and bilateral antenna closeup captures completed.");
+            }
+            finally
+            {
+                Physics.simulationMode = previousMode;
+                Physics.autoSyncTransforms = previousAutoSync;
+                RestoreTransformSnapshots(snapshots);
+                clip.SampleAnimation(strikeSlot.gameObject, 0f);
+                ConfigureApprovedRiggedChainPhysics(strikeSlot, true);
+                if (animator != null)
+                {
+                    animator.enabled = animatorWasEnabled;
+                }
+            }
+        }
+
+        private static void CaptureAntennaCloseup(
+            Transform placementRoot,
+            Transform strikeSlot,
+            string suffix,
+            string sideName,
+            string rootBoneName,
+            string middleBoneName,
+            string tipBoneName,
+            string anchorName)
+        {
+            var rootBone = RequireNamedChild(strikeSlot, rootBoneName);
+            var middleBone = RequireNamedChild(strikeSlot, middleBoneName);
+            var tipBone = RequireNamedChild(strikeSlot, tipBoneName);
+            var antennaAnchor = RequireNamedChild(strikeSlot, anchorName);
+            var antennaBounds = new Bounds(rootBone.position, Vector3.zero);
+            antennaBounds.Encapsulate(middleBone.position);
+            antennaBounds.Encapsulate(tipBone.position);
+            antennaBounds.Encapsulate(antennaAnchor.position);
+            antennaBounds.Expand(new Vector3(1.40f, 1.10f, 1.40f));
+            CaptureReviewImagesForFocus(
+                placementRoot,
+                new[] { strikeSlot },
+                strikeSlot,
+                $"Accelerando_{sideName}Antenna_{suffix}_Front.png",
+                $"Accelerando_{sideName}Antenna_{suffix}_Oblique.png",
+                $"Accelerando{sideName}AntennaCloseup_{suffix}",
+                antennaBounds,
+                ForwardMaceStrikeAggressiveValidationFolder,
+                strikeSlot.forward);
+        }
+
+        private static void CaptureChainContinuityCloseup(
+            Transform placementRoot,
+            Transform strikeSlot,
+            string suffix,
+            string sideName)
+        {
+            var focusTransforms = new List<Transform>
+            {
+                RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaPhysicsAnchor")
+            };
+            for (var linkIndex = 1; linkIndex <= ApprovedRiggedChainLinkCount; linkIndex++)
+            {
+                focusTransforms.Add(RequireNamedChild(
+                    strikeSlot,
+                    $"Accelerando_{sideName}_ConnectedChain_Link_{linkIndex:00}"));
+            }
+
+            focusTransforms.Add(RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_MaceHead"));
+            var focusBounds = CalculateRendererBounds(
+                focusTransforms.ToArray(),
+                new Bounds(focusTransforms[0].position, Vector3.one * 0.10f));
+            focusBounds.Expand(new Vector3(0.30f, 0.30f, 0.30f));
+            CaptureReviewImagesForFocus(
+                placementRoot,
+                new[] { strikeSlot },
+                strikeSlot,
+                $"Accelerando_{sideName}ChainContinuity_{suffix}_Front.png",
+                $"Accelerando_{sideName}ChainContinuity_{suffix}_Oblique.png",
+                $"Accelerando{sideName}ChainContinuity_{suffix}",
+                focusBounds,
+                ForwardMaceStrikeAggressiveValidationFolder,
+                strikeSlot.forward);
+        }
+
+        private static void ValidateApprovedForwardMaceStrikeSlotStructure(Transform strikeSlot)
+        {
+            var animator = strikeSlot.GetComponent<Animator>() ??
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} Animator is missing.");
+            if (animator.applyRootMotion)
+            {
+                throw new InvalidOperationException("Accelerando forward mace strike must not use root motion.");
+            }
+
+            if (!string.Equals(
+                    AssetDatabase.GetAssetPath(animator.runtimeAnimatorController),
+                    UnityAntennaStrikeControllerAssetPath,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("Accelerando forward mace strike controller is not assigned.");
+            }
+
+            var model = FindDirectChild(strikeSlot, ModelChildName) ??
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName}/{ModelChildName} is missing.");
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                RequireNamedChild(model, $"Accelerando_{sideName}_AntennaPhysicsAnchor");
+                RequireNamedChild(model, $"Accelerando_{sideName}_MaceHead");
+                for (var link = 1; link <= ApprovedRiggedChainLinkCount; link++)
+                {
+                    RequireNamedChild(model, $"Accelerando_{sideName}_ConnectedChain_Link_{link:00}");
+                }
+            }
+
+            ValidateApprovedRiggedPhysicsSlot(strikeSlot, "ForwardMaceStrike");
+        }
+
+        private static string ValidateMirroredAntennaStrikePose(Transform strikeSlot, AnimationClip clip)
+        {
+            var leftTransforms = new[]
+            {
+                RequireNamedChild(strikeSlot, "Bone_011"),
+                RequireNamedChild(strikeSlot, "Bone_010"),
+                RequireNamedChild(strikeSlot, "Bone_009")
+            };
+            var rightTransforms = new[]
+            {
+                RequireNamedChild(strikeSlot, "Bone_008"),
+                RequireNamedChild(strikeSlot, "Bone_007"),
+                RequireNamedChild(strikeSlot, "Bone_006")
+            };
+            var snapshots = new List<TransformSnapshot>();
+            foreach (var boneName in ApprovedRiggedAttackBoneNames)
+            {
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(strikeSlot, boneName)));
+            }
+
+            var animator = strikeSlot.GetComponent<Animator>();
+            var animatorWasEnabled = animator != null && animator.enabled;
+            var maximumPositionDelta = 0f;
+            var maximumSegmentAngle = 0f;
+            var maximumPositionDeltaTime = 0f;
+            var maximumSegmentAngleTime = 0f;
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                foreach (var sampleTime in new[]
+                         {
+                             ForwardMaceStrikeWindupTime,
+                             ForwardMaceStrikeReleaseTime,
+                             ForwardMaceStrikePeakTime,
+                             ForwardMaceStrikeRecoilTime,
+                             ForwardMaceStrikeSecondaryDriveTime,
+                             ForwardMaceStrikeAftershockTime,
+                             ForwardMaceStrikeFollowThroughTime
+                         })
+                {
+                    clip.SampleAnimation(strikeSlot.gameObject, sampleTime);
+                    var leftPositions = new Vector3[leftTransforms.Length];
+                    var rightPositions = new Vector3[rightTransforms.Length];
+                    for (var i = 0; i < leftTransforms.Length; i++)
+                    {
+                        leftPositions[i] = strikeSlot.InverseTransformPoint(leftTransforms[i].position);
+                        rightPositions[i] = strikeSlot.InverseTransformPoint(rightTransforms[i].position);
+                        var mirroredLeftPosition = new Vector3(
+                            -leftPositions[i].x,
+                            leftPositions[i].y,
+                            leftPositions[i].z);
+                        var positionDelta = Vector3.Distance(mirroredLeftPosition, rightPositions[i]);
+                        if (positionDelta > maximumPositionDelta)
+                        {
+                            maximumPositionDelta = positionDelta;
+                            maximumPositionDeltaTime = sampleTime;
+                        }
+                    }
+
+                    for (var segmentIndex = 0; segmentIndex < leftPositions.Length - 1; segmentIndex++)
+                    {
+                        var leftDirection = (leftPositions[segmentIndex + 1] - leftPositions[segmentIndex]).normalized;
+                        var mirroredLeftDirection = new Vector3(-leftDirection.x, leftDirection.y, leftDirection.z);
+                        var rightDirection = (rightPositions[segmentIndex + 1] - rightPositions[segmentIndex]).normalized;
+                        var segmentAngle = Vector3.Angle(mirroredLeftDirection, rightDirection);
+                        if (segmentAngle > maximumSegmentAngle)
+                        {
+                            maximumSegmentAngle = segmentAngle;
+                            maximumSegmentAngleTime = sampleTime;
+                        }
+                    }
+
+                    var leftTipForward = strikeSlot.InverseTransformDirection(leftTransforms[2].forward).normalized;
+                    var mirroredLeftTipForward = new Vector3(-leftTipForward.x, leftTipForward.y, leftTipForward.z);
+                    var rightTipForward = strikeSlot.InverseTransformDirection(rightTransforms[2].forward).normalized;
+                    var tipForwardAngle = Vector3.Angle(mirroredLeftTipForward, rightTipForward);
+                    if (tipForwardAngle > maximumSegmentAngle)
+                    {
+                        maximumSegmentAngle = tipForwardAngle;
+                        maximumSegmentAngleTime = sampleTime;
+                    }
+                }
+            }
+            finally
+            {
+                RestoreTransformSnapshots(snapshots);
+                if (animator != null)
+                {
+                    animator.enabled = animatorWasEnabled;
+                }
+            }
+
+            if (maximumPositionDelta > ForwardMaceStrikeMaximumMirroredPositionDelta ||
+                maximumSegmentAngle > ForwardMaceStrikeMaximumMirroredSegmentAngle)
+            {
+                throw new InvalidOperationException(
+                    "Accelerando right antenna does not mirror the approved left antenna strike pose. " +
+                    $"MaximumPositionDelta={maximumPositionDelta:0.######}/{ForwardMaceStrikeMaximumMirroredPositionDelta:0.######} at {maximumPositionDeltaTime:0.###}s, " +
+                    $"MaximumSegmentAngle={maximumSegmentAngle:0.###}/{ForwardMaceStrikeMaximumMirroredSegmentAngle:0.###} at {maximumSegmentAngleTime:0.###}s.");
+            }
+
+            return
+                "Accelerando mirrored antenna strike pose validation\n" +
+                "ReferenceSide=Left\n" +
+                $"MaximumMirroredPositionDelta={maximumPositionDelta:0.######}\n" +
+                $"MaximumMirroredPositionDeltaTime={maximumPositionDeltaTime:0.###}\n" +
+                $"MaximumMirroredSegmentAngle={maximumSegmentAngle:0.######}\n" +
+                $"MaximumMirroredSegmentAngleTime={maximumSegmentAngleTime:0.###}\n" +
+                "MirroredPoseResult=PASS\n";
+        }
+
+        private static string ValidateApprovedForwardMaceStrikePhysics(Transform strikeSlot, AnimationClip clip)
+        {
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = strikeSlot.GetComponent(rigType) ??
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} physics rig is missing.");
+            var simulateMethod = rigType.GetMethod("SimulatePhysicsTick", new[] { typeof(float) });
+            var syncMethod = rigType.GetMethod("SyncVisualsToPhysics", Type.EmptyTypes);
+            var physicsRoot = strikeSlot.Find(ChainPhysicsRootObjectName);
+            if (simulateMethod == null || syncMethod == null || physicsRoot == null)
+            {
+                throw new InvalidOperationException("Accelerando forward mace strike physics validation methods or root are missing.");
+            }
+
+            var leftMetrics = new AntennaStrikePhysicsResponseMetrics(
+                "Left",
+                strikeSlot,
+                RequireNamedChild(strikeSlot, "Accelerando_Left_AntennaPhysicsAnchor"),
+                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Left")),
+                RequireNamedChild(strikeSlot, "Accelerando_Left_MaceHead"));
+            var rightMetrics = new AntennaStrikePhysicsResponseMetrics(
+                "Right",
+                strikeSlot,
+                RequireNamedChild(strikeSlot, "Accelerando_Right_AntennaPhysicsAnchor"),
+                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Right")),
+                RequireNamedChild(strikeSlot, "Accelerando_Right_MaceHead"));
+            var leftContinuityMetrics = new AttackChainContinuityMetrics("Left", strikeSlot, physicsRoot);
+            var rightContinuityMetrics = new AttackChainContinuityMetrics("Right", strikeSlot, physicsRoot);
+            var transmissionReport = ValidateAntennaDrivenAttackRigConfiguration(rig);
+            var snapshots = CaptureApprovedForwardMaceStrikeSnapshots(strikeSlot);
+            var animator = strikeSlot.GetComponent<Animator>();
+            var animatorWasEnabled = animator != null && animator.enabled;
+            var previousMode = Physics.simulationMode;
+            var previousAutoSync = Physics.autoSyncTransforms;
+            const float deltaTime = 1f / 90f;
+            var steps = Mathf.RoundToInt(AntennaStrikeLoopSeconds / deltaTime) + 1;
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                Physics.simulationMode = SimulationMode.Script;
+                Physics.autoSyncTransforms = false;
+                for (var step = 0; step < steps; step++)
+                {
+                    var sampleTime = (step * deltaTime) % clip.length;
+                    clip.SampleAnimation(strikeSlot.gameObject, sampleTime);
+                    simulateMethod.Invoke(rig, new object[] { deltaTime });
+                    Physics.SyncTransforms();
+                    Physics.Simulate(deltaTime);
+                    syncMethod.Invoke(rig, Array.Empty<object>());
+                    leftMetrics.Sample(sampleTime, deltaTime);
+                    rightMetrics.Sample(sampleTime, deltaTime);
+                    leftContinuityMetrics.Sample(sampleTime);
+                    rightContinuityMetrics.Sample(sampleTime);
+                }
+
+                Debug.Log("AccelerandoForwardMaceStrikeMeasured " + leftMetrics + "\n" + rightMetrics);
+                leftMetrics.Validate();
+                rightMetrics.Validate();
+                leftContinuityMetrics.Validate();
+                rightContinuityMetrics.Validate();
+                return
+                    "Accelerando forward mace strike physics validation\n" +
+                    $"Clip={UnityAntennaStrikeClipAssetPath}\n" +
+                    "DirectAnimationBindings=Bone_008,007,006,011,010,009 only\n" +
+                    "ChainAndMaceTransformCurves=0\n" +
+                    transmissionReport +
+                    leftMetrics + "\n" +
+                    rightMetrics + "\n" +
+                    leftContinuityMetrics + "\n" +
+                    rightContinuityMetrics + "\n" +
+                    "Result=PASS\n";
+            }
+            finally
+            {
+                Physics.simulationMode = previousMode;
+                Physics.autoSyncTransforms = previousAutoSync;
+                RestoreTransformSnapshots(snapshots);
+                clip.SampleAnimation(strikeSlot.gameObject, 0f);
+                ConfigureApprovedRiggedChainPhysics(strikeSlot, true);
+                if (animator != null)
+                {
+                    animator.enabled = animatorWasEnabled;
+                }
+            }
+        }
+
+        private static string ValidateAntennaDrivenAttackRigConfiguration(Component rig)
+        {
+            var serializedRig = new SerializedObject(rig);
+            var lockConnections = serializedRig.FindProperty("lockLinearChainConnections");
+            if (lockConnections == null || !lockConnections.boolValue)
+            {
+                throw new InvalidOperationException(
+                    "Accelerando attack chain must use locked linear joint connections.");
+            }
+
+            foreach (var propertyName in new[]
+                     {
+                         "chainRestSpring",
+                         "chainRestDamper",
+                         "maceRestSpring",
+                         "maceRestDamper",
+                         "crawlInertiaScale"
+                     })
+            {
+                var property = serializedRig.FindProperty(propertyName);
+                if (property == null || Mathf.Abs(property.floatValue) > 0.000001f)
+                {
+                    throw new InvalidOperationException(
+                        $"Accelerando attack chain {propertyName} must be zero so the mace is driven only through the antenna-connected joints.");
+                }
+            }
+
+            return
+                "AttackForceTransmission=AntennaKinematicAnchorToConnectedJointsOnly\n" +
+                "DirectFollowerSpringDamperInertia=0\n";
+        }
+
+        private static List<TransformSnapshot> CaptureApprovedForwardMaceStrikeSnapshots(Transform strikeSlot)
+        {
+            var snapshots = new List<TransformSnapshot>();
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaPhysicsAnchor")));
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_MacePhysicsAnchor")));
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_MaceHead")));
+                for (var link = 1; link <= ApprovedRiggedChainLinkCount; link++)
+                {
+                    snapshots.Add(new TransformSnapshot(
+                        RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_ConnectedChain_Link_{link:00}")));
+                }
+            }
+
+            foreach (var boneName in ApprovedRiggedAttackBoneNames)
+            {
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(strikeSlot, boneName)));
+            }
+
+            return snapshots;
+        }
+
+        private static void ValidateApprovedRiggedBackFacing(Transform placementRoot)
+        {
+            foreach (var slotName in ApprovedRiggedPlacementSlots)
+            {
+                var slot = placementRoot.Find(slotName) ??
+                    throw new InvalidOperationException($"{slotName} is missing.");
+                var model = FindDirectChild(slot, ModelChildName) ??
+                    throw new InvalidOperationException($"{slotName}/{ModelChildName} is missing.");
+                var yaw = Mathf.Repeat(model.localEulerAngles.y, 360f);
+                if (Mathf.Abs(Mathf.DeltaAngle(yaw, ApprovedRiggedModelFacingYawDegrees)) > 0.01f)
+                {
+                    throw new InvalidOperationException(
+                        $"{slotName}/{ModelChildName} is not back-facing. ExpectedYaw={ApprovedRiggedModelFacingYawDegrees:0.###}, ActualYaw={yaw:0.###}.");
+                }
+            }
+        }
+
+        private static void CopyApprovedRiggedModelAsset()
+        {
+            var absoluteAssetPath = GetAbsoluteProjectPath(ApprovedRiggedUnityModelAssetPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(absoluteAssetPath) ??
+                throw new InvalidOperationException("Approved Accelerando model asset directory is invalid."));
+            File.Copy(ApprovedRiggedSourceAbsolutePath, absoluteAssetPath, true);
+            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+            AssetDatabase.ImportAsset(ApprovedRiggedUnityModelAssetPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+        }
+
+        private static void ConfigureApprovedRiggedModelAsset()
+        {
+            var assetImporter = AssetImporter.GetAtPath(ApprovedRiggedUnityModelAssetPath);
+            if (assetImporter == null)
+            {
+                throw new InvalidOperationException($"AssetImporter is missing for {ApprovedRiggedUnityModelAssetPath}.");
+            }
+
+            if (assetImporter is not ModelImporter importer)
+            {
+                assetImporter.SaveAndReimport();
+                Debug.Log($"Approved Accelerando GLB uses {assetImporter.GetType().FullName}; preserved its project GLB importer settings.");
+                return;
+            }
+
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.importBlendShapes = true;
+            importer.importAnimation = false;
+            importer.importVisibility = false;
+            importer.animationType = ModelImporterAnimationType.Generic;
+            importer.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
+            importer.importNormals = ModelImporterNormals.Import;
+            importer.importTangents = ModelImporterTangents.CalculateMikk;
+            importer.globalScale = 1f;
+            importer.isReadable = true;
+            importer.optimizeGameObjects = false;
+            importer.SaveAndReimport();
+        }
+
+        private static GameObject LoadApprovedRiggedModelAsset()
+        {
+            return AssetDatabase.LoadAssetAtPath<GameObject>(ApprovedRiggedUnityModelAssetPath) ??
+                throw new InvalidOperationException($"Could not load approved Accelerando GLB at {ApprovedRiggedUnityModelAssetPath}.");
+        }
+
+        private static void ReplaceApprovedRiggedModel(Transform slot, GameObject modelAsset, ApprovedMaterialSet materialSet)
+        {
+            var oldModel = FindDirectChild(slot, ModelChildName) ??
+                throw new InvalidOperationException($"{slot.name}/{ModelChildName} is missing.");
+            var modelState = new ApprovedRiggedTransformState(oldModel);
+            UnityEngine.Object.DestroyImmediate(oldModel.gameObject);
+
+            var instance = PrefabUtility.InstantiatePrefab(modelAsset) as GameObject;
+            if (instance == null)
+            {
+                instance = UnityEngine.Object.Instantiate(modelAsset);
+            }
+
+            instance.name = ModelChildName;
+            instance.transform.SetParent(slot, false);
+            modelState.Apply(instance.transform);
+            instance.transform.localRotation = Quaternion.Euler(0f, ApprovedRiggedModelFacingYawDegrees, 0f);
+            RemoveImportedAnimationComponents(instance.transform);
+            EnsureRenderableHierarchy(instance.transform);
+            AssignApprovedMaterials(instance.transform, materialSet);
+            EditorUtility.SetDirty(instance);
+        }
+
+        private static void RemoveImportedAnimationComponents(Transform model)
+        {
+            foreach (var animator in model.GetComponentsInChildren<Animator>(true))
+            {
+                UnityEngine.Object.DestroyImmediate(animator);
+            }
+
+            foreach (var animation in model.GetComponentsInChildren<Animation>(true))
+            {
+                UnityEngine.Object.DestroyImmediate(animation);
+            }
+        }
+
+        private static Transform FindDirectChild(Transform parent, string childName)
+        {
+            for (var i = 0; i < parent.childCount; i++)
+            {
+                var child = parent.GetChild(i);
+                if (string.Equals(child.name, childName, StringComparison.Ordinal))
+                {
+                    return child;
+                }
+            }
+
+            return null;
+        }
+
+        private static string[] CollectPreservedDirectChildNames(Transform slot)
+        {
+            var names = new List<string>();
+            for (var i = 0; i < slot.childCount; i++)
+            {
+                var child = slot.GetChild(i);
+                if (!string.Equals(child.name, ModelChildName, StringComparison.Ordinal) &&
+                    !string.Equals(child.name, ChainPhysicsRootObjectName, StringComparison.Ordinal))
+                {
+                    names.Add(child.name);
+                }
+            }
+
+            names.Sort(StringComparer.Ordinal);
+            return names.ToArray();
+        }
+
+        private static void AssertPreservedDirectChildren(Transform slot, string[] expectedNames)
+        {
+            var actualNames = CollectPreservedDirectChildNames(slot);
+            if (actualNames.Length != expectedNames.Length)
+            {
+                throw new InvalidOperationException($"{slot.name} non-model direct child count changed.");
+            }
+
+            for (var i = 0; i < actualNames.Length; i++)
+            {
+                if (!string.Equals(actualNames[i], expectedNames[i], StringComparison.Ordinal))
+                {
+                    throw new InvalidOperationException($"{slot.name} non-model direct children changed.");
+                }
+            }
+        }
+
+        private static void ConfigureApprovedRiggedAnimationSlots(Transform placementRoot)
+        {
+            var idleSlot = placementRoot.Find(IdleSlotObjectName);
+            var crawlSlot = placementRoot.Find(CrawlSlotObjectName);
+            var strikeSlot = placementRoot.Find(AntennaStrikeSlotObjectName);
+            ConfigureApprovedRiggedAnimator(idleSlot, EnsureIdleBreathController(EnsureApprovedRiggedIdleClip(idleSlot)));
+            ConfigureApprovedRiggedAnimator(crawlSlot, EnsureCrawlForwardController(EnsureApprovedRiggedCrawlClip(crawlSlot)));
+            ConfigureApprovedRiggedAnimator(strikeSlot, EnsurePhysicsAntennaStrikeController(EnsureApprovedRiggedAttackClip(strikeSlot)));
+        }
+
+        private static void ConfigureApprovedRiggedAnimator(Transform slot, RuntimeAnimatorController controller)
+        {
+            var animator = slot.GetComponent<Animator>() ?? slot.gameObject.AddComponent<Animator>();
+            animator.enabled = true;
+            animator.runtimeAnimatorController = controller;
+            animator.applyRootMotion = false;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            animator.speed = 1f;
+            EditorUtility.SetDirty(animator);
+        }
+
+        private static AnimationClip EnsureApprovedRiggedIdleClip(Transform slot)
+        {
+            DeleteAnimationAssetIfPresent(UnityIdleBreathClipAssetPath);
+            var bone = RequireNamedChild(slot, "Bone_000");
+            var path = GetRelativePath(slot, bone);
+            var scale = bone.localScale;
+            var clip = new AnimationClip { name = "Accelerando_Idle_Breath_Rigged", frameRate = 30f };
+            SetTransformCurve(clip, path, "m_LocalScale.x", CreateRiggedLoopCurve(scale.x, scale.x * 1.025f, scale.x));
+            SetTransformCurve(clip, path, "m_LocalScale.y", CreateRiggedLoopCurve(scale.y, scale.y * 1.018f, scale.y));
+            SetTransformCurve(clip, path, "m_LocalScale.z", CreateRiggedLoopCurve(scale.z, scale.z * 1.025f, scale.z));
+            ConfigureLoopSetting(clip, true);
+            AssetDatabase.CreateAsset(clip, UnityIdleBreathClipAssetPath);
+            return clip;
+        }
+
+        private static AnimationClip EnsureApprovedRiggedCrawlClip(Transform slot)
+        {
+            DeleteAnimationAssetIfPresent(UnityCrawlForwardClipAssetPath);
+            var bone = RequireNamedChild(slot, "Bone_000");
+            var path = GetRelativePath(slot, bone);
+            var position = bone.localPosition;
+            var euler = bone.localEulerAngles;
+            var clip = new AnimationClip { name = "Accelerando_Crawl_Forward_Rigged", frameRate = 30f };
+            SetTransformCurve(clip, path, "m_LocalPosition.y", CreateRiggedLoopCurve(position.y, position.y + 0.018f, position.y));
+            SetTransformCurve(clip, path, "localEulerAnglesRaw.x", CreateRiggedLoopCurve(NormalizeEulerAngle(euler.x), NormalizeEulerAngle(euler.x) - 2.5f, NormalizeEulerAngle(euler.x)));
+            ConfigureLoopSetting(clip, true);
+            AssetDatabase.CreateAsset(clip, UnityCrawlForwardClipAssetPath);
+            return clip;
+        }
+
+        private static AnimationClip EnsureApprovedRiggedAttackClip(Transform slot)
+        {
+            DeleteAnimationAssetIfPresent(UnityAntennaStrikeClipAssetPath);
+            var forwardDeltas = CalculateApprovedRiggedForwardStrikeDeltas(slot);
+            var clip = new AnimationClip { name = "Accelerando_Antenna_Strike_ForwardMacePhysicsInput", frameRate = 30f };
+            for (var i = 3; i < ApprovedRiggedAttackBoneNames.Length; i++)
+            {
+                var bone = RequireNamedChild(slot, ApprovedRiggedAttackBoneNames[i]);
+                var path = GetRelativePath(slot, bone);
+                var baseEuler = bone.localEulerAngles;
+                var release = forwardDeltas[i];
+                var windup = -release * 0.55f;
+                SetTransformCurve(clip, path, "localEulerAnglesRaw.x", CreateForwardMaceStrikeCurve(NormalizeEulerAngle(baseEuler.x), windup.x, release.x));
+                SetTransformCurve(clip, path, "localEulerAnglesRaw.y", CreateForwardMaceStrikeCurve(NormalizeEulerAngle(baseEuler.y), windup.y, release.y));
+                SetTransformCurve(clip, path, "localEulerAnglesRaw.z", CreateForwardMaceStrikeCurve(NormalizeEulerAngle(baseEuler.z), windup.z, release.z));
+            }
+
+            AddMirroredRightAntennaStrikeCurves(slot, clip);
+            ConfigureLoopSetting(clip, true);
+            AssetDatabase.CreateAsset(clip, UnityAntennaStrikeClipAssetPath);
+            return clip;
+        }
+
+        private static string EnsureForwardStrikeDeformationFixedMesh(Transform strikeSlot)
+        {
+            var model = FindDirectChild(strikeSlot, ModelChildName) ??
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName}/{ModelChildName} is missing.");
+            var bodyTransform = FindChildByName(model, "Accelerando_RiggedAttack_Body") ??
+                throw new InvalidOperationException("Accelerando attack body is missing.");
+            var bodyRenderer = bodyTransform.GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException("Accelerando attack body is not skinned.");
+            var sourceModel = LoadApprovedRiggedModelAsset();
+            var sourceBodyTransform = FindChildByName(sourceModel.transform, "Accelerando_RiggedAttack_Body") ??
+                throw new InvalidOperationException("Approved Accelerando source body is missing.");
+            var sourceRenderer = sourceBodyTransform.GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException("Approved Accelerando source body is not skinned.");
+            var sourceMesh = sourceRenderer.sharedMesh ??
+                throw new InvalidOperationException("Approved Accelerando source body mesh is missing.");
+
+            ValidateMatchingBoneOrder(sourceRenderer, bodyRenderer);
+            var vertices = sourceMesh.vertices;
+            var sourceWeights = sourceMesh.boneWeights;
+            if (vertices.Length == 0 || sourceWeights.Length != vertices.Length)
+            {
+                throw new InvalidOperationException(
+                    $"Approved Accelerando source skin data is invalid. Vertices={vertices.Length}, BoneWeights={sourceWeights.Length}.");
+            }
+
+            var leftBoneIndices = GetBoneIndices(bodyRenderer, "Bone_011", "Bone_010", "Bone_009");
+            var rightBoneIndices = GetBoneIndices(bodyRenderer, "Bone_008", "Bone_007", "Bone_006");
+            var leftSourceSideBoneIndices = GetBoneIndices(
+                bodyRenderer,
+                "Bone_011", "Bone_010", "Bone_009", "Bone_017", "Bone_016", "Bone_015");
+            var leftCorrectedSideBoneIndices = GetBoneIndices(
+                bodyRenderer,
+                "Bone_011", "Bone_010", "Bone_009", "Bone_011", "Bone_010", "Bone_009");
+            var leftStationaryBoneIndices = GetBoneIndices(
+                bodyRenderer,
+                "Bone_017", "Bone_016", "Bone_015");
+            var rightSourceSideBoneIndices = GetBoneIndices(
+                bodyRenderer,
+                "Bone_008", "Bone_007", "Bone_006", "Bone_014", "Bone_013", "Bone_012");
+            var rightCorrectedSideBoneIndices = GetBoneIndices(
+                bodyRenderer,
+                "Bone_008", "Bone_007", "Bone_006", "Bone_008", "Bone_007", "Bone_006");
+            var leftRoot = bodyRenderer.transform.InverseTransformPoint(bodyRenderer.bones[leftBoneIndices[0]].position);
+            var rightRoot = bodyRenderer.transform.InverseTransformPoint(bodyRenderer.bones[rightBoneIndices[0]].position);
+            var center = (leftRoot + rightRoot) * 0.5f;
+            var lateralAxis = (rightRoot - leftRoot).normalized;
+            if (lateralAxis.sqrMagnitude < 0.99f)
+            {
+                throw new InvalidOperationException("Accelerando antenna lateral axis could not be resolved.");
+            }
+
+            var leftCandidates = new List<int>();
+            var rightCandidates = new List<int>();
+            for (var vertexIndex = 0; vertexIndex < vertices.Length; vertexIndex++)
+            {
+                var side = Vector3.Dot(vertices[vertexIndex] - center, lateralAxis);
+                if (side < 0f && SumBoneInfluence(sourceWeights[vertexIndex], leftSourceSideBoneIndices) > 0.0001f)
+                {
+                    leftCandidates.Add(vertexIndex);
+                }
+                else if (side > 0f && SumBoneInfluence(sourceWeights[vertexIndex], rightSourceSideBoneIndices) > 0.0001f)
+                {
+                    rightCandidates.Add(vertexIndex);
+                }
+            }
+
+            if (leftCandidates.Count == 0 || rightCandidates.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    $"Accelerando antenna skin candidates are missing. Left={leftCandidates.Count}, Right={rightCandidates.Count}.");
+            }
+
+            var correctedWeights = (BoneWeight[])sourceWeights.Clone();
+            var leftCorrectedVertexCount = 0;
+            for (var vertexIndex = 0; vertexIndex < sourceWeights.Length; vertexIndex++)
+            {
+                if (SumBoneInfluence(sourceWeights[vertexIndex], leftStationaryBoneIndices) <= 0.0001f)
+                {
+                    continue;
+                }
+
+                correctedWeights[vertexIndex] = CreateMergedRemappedBoneWeight(
+                    sourceWeights[vertexIndex],
+                    leftSourceSideBoneIndices,
+                    leftCorrectedSideBoneIndices);
+                leftCorrectedVertexCount++;
+            }
+
+            var maximumMirrorDistance = 0f;
+            var mirrorDistanceSum = 0f;
+            foreach (var rightVertexIndex in rightCandidates)
+            {
+                var rightVertex = vertices[rightVertexIndex];
+                var mirrored = rightVertex - 2f * Vector3.Dot(rightVertex - center, lateralAxis) * lateralAxis;
+                var nearestLeftIndices = new[] { -1, -1, -1, -1 };
+                var nearestSquaredDistances = new[]
+                {
+                    float.PositiveInfinity,
+                    float.PositiveInfinity,
+                    float.PositiveInfinity,
+                    float.PositiveInfinity
+                };
+                foreach (var leftVertexIndex in leftCandidates)
+                {
+                    var squaredDistance = (vertices[leftVertexIndex] - mirrored).sqrMagnitude;
+                    for (var nearestIndex = 0; nearestIndex < nearestSquaredDistances.Length; nearestIndex++)
+                    {
+                        if (squaredDistance >= nearestSquaredDistances[nearestIndex])
+                        {
+                            continue;
+                        }
+
+                        for (var shift = nearestSquaredDistances.Length - 1; shift > nearestIndex; shift--)
+                        {
+                            nearestSquaredDistances[shift] = nearestSquaredDistances[shift - 1];
+                            nearestLeftIndices[shift] = nearestLeftIndices[shift - 1];
+                        }
+
+                        nearestSquaredDistances[nearestIndex] = squaredDistance;
+                        nearestLeftIndices[nearestIndex] = leftVertexIndex;
+                        break;
+                    }
+                }
+
+                if (nearestLeftIndices[0] < 0)
+                {
+                    throw new InvalidOperationException($"Right antenna vertex {rightVertexIndex} has no mirrored left match.");
+                }
+
+                var mirrorDistance = Mathf.Sqrt(nearestSquaredDistances[0]);
+                maximumMirrorDistance = Mathf.Max(maximumMirrorDistance, mirrorDistance);
+                mirrorDistanceSum += mirrorDistance;
+                correctedWeights[rightVertexIndex] = CreateSmoothedMirroredBoneWeight(
+                    sourceWeights,
+                    nearestLeftIndices,
+                    nearestSquaredDistances,
+                    leftSourceSideBoneIndices,
+                    rightCorrectedSideBoneIndices);
+            }
+
+            bodyRenderer.sharedMesh = sourceMesh;
+            if (AssetDatabase.LoadMainAssetAtPath(UnityForwardStrikeDeformationFixedMeshAssetPath) != null)
+            {
+                AssetDatabase.DeleteAsset(UnityForwardStrikeDeformationFixedMeshAssetPath);
+            }
+
+            var correctedMesh = UnityEngine.Object.Instantiate(sourceMesh);
+            correctedMesh.name = "accelerando_forward_strike_deformation_fixed_body";
+            correctedMesh.boneWeights = correctedWeights;
+            correctedMesh.bounds = sourceMesh.bounds;
+            AssetDatabase.CreateAsset(correctedMesh, UnityForwardStrikeDeformationFixedMeshAssetPath);
+            bodyRenderer.sharedMesh = correctedMesh;
+            EditorUtility.SetDirty(bodyRenderer);
+
+            return
+                "BilateralAntennaSkinning=CorrectedFromApprovedSource, " +
+                $"LeftCorrectedVertices={leftCorrectedVertexCount}, LeftReferenceVertices={leftCandidates.Count}, RightCorrectedVertices={rightCandidates.Count}, " +
+                $"AverageMirrorDistance={mirrorDistanceSum / rightCandidates.Count:0.######}, " +
+                $"MaximumMirrorDistance={maximumMirrorDistance:0.######}, " +
+                "LeftBoneRemap=017/016/015->011/010/009, " +
+                "RightMirrorBoneRemap=011/010/009/017/016/015->008/007/006/008/007/006, " +
+                "StationaryParallelChainsMergedIntoAttackChains=True, " +
+                "OriginalRightWeightBlend=0, NeutralGeometryChanged=False.";
+        }
+
+        private static string ValidateForwardStrikeDeformationFixedMesh(Transform strikeSlot, AnimationClip clip)
+        {
+            var model = FindDirectChild(strikeSlot, ModelChildName) ??
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName}/{ModelChildName} is missing.");
+            var bodyTransform = FindChildByName(model, "Accelerando_RiggedAttack_Body") ??
+                throw new InvalidOperationException("Accelerando attack body is missing.");
+            var bodyRenderer = bodyTransform.GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException("Accelerando attack body is not skinned.");
+            var correctedMesh = bodyRenderer.sharedMesh ??
+                throw new InvalidOperationException("Accelerando corrected attack body mesh is missing.");
+            if (!string.Equals(
+                    AssetDatabase.GetAssetPath(correctedMesh),
+                    UnityForwardStrikeDeformationFixedMeshAssetPath,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("Accelerando attack slot does not use the forward-strike deformation-fixed mesh.");
+            }
+
+            var sourceModel = LoadApprovedRiggedModelAsset();
+            var sourceBody = FindChildByName(sourceModel.transform, "Accelerando_RiggedAttack_Body") ??
+                throw new InvalidOperationException("Approved Accelerando source body is missing.");
+            var sourceRenderer = sourceBody.GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException("Approved Accelerando source body is not skinned.");
+            var sourceMesh = sourceRenderer.sharedMesh ??
+                throw new InvalidOperationException("Approved Accelerando source mesh is missing.");
+            var sourceVertices = sourceMesh.vertices;
+            var correctedVertices = correctedMesh.vertices;
+            if (sourceVertices.Length != correctedVertices.Length)
+            {
+                throw new InvalidOperationException("Corrected Accelerando attack mesh changed the approved vertex count.");
+            }
+
+            var maximumNeutralVertexDelta = 0f;
+            for (var i = 0; i < sourceVertices.Length; i++)
+            {
+                maximumNeutralVertexDelta = Mathf.Max(
+                    maximumNeutralVertexDelta,
+                    Vector3.Distance(sourceVertices[i], correctedVertices[i]));
+            }
+
+            if (maximumNeutralVertexDelta > 0.000001f)
+            {
+                throw new InvalidOperationException(
+                    $"Corrected Accelerando attack mesh changed neutral geometry. MaxVertexDelta={maximumNeutralVertexDelta:0.########}.");
+            }
+
+            var weights = correctedMesh.boneWeights;
+            var maximumWeightSumError = 0f;
+            for (var i = 0; i < weights.Length; i++)
+            {
+                maximumWeightSumError = Mathf.Max(maximumWeightSumError, Mathf.Abs(1f - BoneWeightSum(weights[i])));
+            }
+
+            if (maximumWeightSumError > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    $"Corrected Accelerando attack mesh has non-normalized weights. MaxError={maximumWeightSumError:0.######}.");
+            }
+
+            var deformationReport = ValidateForwardStrikeAntennaDeformation(bodyRenderer, correctedMesh, clip, strikeSlot);
+            return
+                "Accelerando forward strike deformation validation\n" +
+                $"Mesh={UnityForwardStrikeDeformationFixedMeshAssetPath}\n" +
+                $"VertexCount={correctedVertices.Length}\n" +
+                $"MaximumNeutralVertexDelta={maximumNeutralVertexDelta:0.########}\n" +
+                $"MaximumWeightSumError={maximumWeightSumError:0.########}\n" +
+                deformationReport +
+                "DeformationResult=PASS\n";
+        }
+
+        private static string ValidateForwardStrikeAntennaDeformation(
+            SkinnedMeshRenderer bodyRenderer,
+            Mesh correctedMesh,
+            AnimationClip clip,
+            Transform strikeSlot)
+        {
+            var rightBoneIndices = GetBoneIndices(bodyRenderer, "Bone_008", "Bone_007", "Bone_006");
+            var leftBoneIndices = GetBoneIndices(bodyRenderer, "Bone_011", "Bone_010", "Bone_009");
+            var rightStationaryBoneIndices = GetBoneIndices(bodyRenderer, "Bone_014", "Bone_013", "Bone_012");
+            var leftStationaryBoneIndices = GetBoneIndices(bodyRenderer, "Bone_017", "Bone_016", "Bone_015");
+            var rootBoneIndex = GetBoneIndices(bodyRenderer, "Bone_000")[0];
+            if (bodyRenderer.rootBone != bodyRenderer.bones[rootBoneIndex])
+            {
+                throw new InvalidOperationException("Accelerando attack body rootBone is not Bone_000.");
+            }
+
+            if (correctedMesh.bindposes == null || correctedMesh.bindposes.Length != bodyRenderer.bones.Length)
+            {
+                throw new InvalidOperationException(
+                    $"Accelerando attack body bind pose count does not match its bones. BindPoses={correctedMesh.bindposes?.Length ?? 0}, Bones={bodyRenderer.bones.Length}.");
+            }
+
+            var weights = correctedMesh.boneWeights;
+            var rightVertices = new HashSet<int>();
+            var leftVertices = new HashSet<int>();
+            var rightVerticesWithForbiddenInfluence = 0;
+            var leftVerticesWithForbiddenInfluence = 0;
+            var rightMaximumForbiddenInfluence = 0f;
+            var leftMaximumForbiddenInfluence = 0f;
+            for (var i = 0; i < weights.Length; i++)
+            {
+                var rightAttackInfluence = SumBoneInfluence(weights[i], rightBoneIndices);
+                var leftAttackInfluence = SumBoneInfluence(weights[i], leftBoneIndices);
+                var rightStationaryInfluence = SumBoneInfluence(weights[i], rightStationaryBoneIndices);
+                var leftStationaryInfluence = SumBoneInfluence(weights[i], leftStationaryBoneIndices);
+                if (rightAttackInfluence + rightStationaryInfluence > 0.0001f)
+                {
+                    rightVertices.Add(i);
+                    var forbiddenInfluence = rightStationaryInfluence;
+                    if (forbiddenInfluence > 0.0001f)
+                    {
+                        rightVerticesWithForbiddenInfluence++;
+                        rightMaximumForbiddenInfluence = Mathf.Max(rightMaximumForbiddenInfluence, forbiddenInfluence);
+                    }
+                }
+
+                if (leftAttackInfluence + leftStationaryInfluence > 0.0001f)
+                {
+                    leftVertices.Add(i);
+                    var forbiddenInfluence = leftStationaryInfluence;
+                    if (forbiddenInfluence > 0.0001f)
+                    {
+                        leftVerticesWithForbiddenInfluence++;
+                        leftMaximumForbiddenInfluence = Mathf.Max(leftMaximumForbiddenInfluence, forbiddenInfluence);
+                    }
+                }
+            }
+
+            if (rightVertices.Count == 0 || leftVertices.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    $"Corrected Accelerando antenna weighted vertices are missing. Right={rightVertices.Count}, Left={leftVertices.Count}.");
+            }
+
+            if (rightVerticesWithForbiddenInfluence > 0 || leftVerticesWithForbiddenInfluence > 0)
+            {
+                throw new InvalidOperationException(
+                    $"Accelerando antenna remains pinned to a stationary parallel antenna chain. " +
+                    $"RightVertices={rightVerticesWithForbiddenInfluence}, RightMaximumInfluence={rightMaximumForbiddenInfluence:0.######}, " +
+                    $"LeftVertices={leftVerticesWithForbiddenInfluence}, LeftMaximumInfluence={leftMaximumForbiddenInfluence:0.######}.");
+            }
+
+            var snapshots = new List<TransformSnapshot>();
+            foreach (var boneName in ApprovedRiggedAttackBoneNames)
+            {
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(strikeSlot, boneName)));
+            }
+
+            var animator = strikeSlot.GetComponent<Animator>();
+            var animatorWasEnabled = animator != null && animator.enabled;
+            var neutralBake = new Mesh();
+            var posedBake = new Mesh();
+            var rightMinimumAreaRatio = float.PositiveInfinity;
+            var rightMaximumAreaRatio = 0f;
+            var rightMeasuredTriangleCount = 0;
+            var rightCollapsedTriangleCount = 0;
+            var rightOverstretchedTriangleCount = 0;
+            var rightNearlyFixedReleaseVertexCount = 0;
+            var rightMinimumReleaseDisplacement = float.PositiveInfinity;
+            var leftMinimumAreaRatio = float.PositiveInfinity;
+            var leftMaximumAreaRatio = 0f;
+            var leftMeasuredTriangleCount = 0;
+            var leftCollapsedTriangleCount = 0;
+            var leftOverstretchedTriangleCount = 0;
+            var leftNearlyFixedReleaseVertexCount = 0;
+            var leftMinimumReleaseDisplacement = float.PositiveInfinity;
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                clip.SampleAnimation(strikeSlot.gameObject, 0f);
+                bodyRenderer.BakeMesh(neutralBake);
+                var neutralVertices = neutralBake.vertices;
+                var triangles = correctedMesh.triangles;
+                foreach (var sampleTime in new[]
+                         {
+                             ForwardMaceStrikeWindupTime,
+                             ForwardMaceStrikeReleaseTime,
+                             ForwardMaceStrikePeakTime,
+                             ForwardMaceStrikeRecoilTime,
+                             ForwardMaceStrikeSecondaryDriveTime,
+                             ForwardMaceStrikeAftershockTime,
+                             ForwardMaceStrikeFollowThroughTime,
+                             ForwardMaceStrikeRecoveryTime
+                         })
+                {
+                    clip.SampleAnimation(strikeSlot.gameObject, sampleTime);
+                    bodyRenderer.BakeMesh(posedBake);
+                    var posedVertices = posedBake.vertices;
+                    if (Mathf.Abs(sampleTime - ForwardMaceStrikeReleaseTime) < 0.0001f)
+                    {
+                        foreach (var vertexIndex in rightVertices)
+                        {
+                            var displacement = Vector3.Distance(neutralVertices[vertexIndex], posedVertices[vertexIndex]);
+                            rightMinimumReleaseDisplacement = Mathf.Min(rightMinimumReleaseDisplacement, displacement);
+                            if (displacement < 0.005f &&
+                                SumBoneInfluence(weights[vertexIndex], rightBoneIndices) > 0.25f)
+                            {
+                                rightNearlyFixedReleaseVertexCount++;
+                            }
+                        }
+
+                        foreach (var vertexIndex in leftVertices)
+                        {
+                            var displacement = Vector3.Distance(neutralVertices[vertexIndex], posedVertices[vertexIndex]);
+                            leftMinimumReleaseDisplacement = Mathf.Min(leftMinimumReleaseDisplacement, displacement);
+                            if (displacement < 0.005f &&
+                                SumBoneInfluence(weights[vertexIndex], leftBoneIndices) > 0.25f)
+                            {
+                                leftNearlyFixedReleaseVertexCount++;
+                            }
+                        }
+                    }
+
+                    for (var triangleIndex = 0; triangleIndex < triangles.Length; triangleIndex += 3)
+                    {
+                        var a = triangles[triangleIndex];
+                        var b = triangles[triangleIndex + 1];
+                        var c = triangles[triangleIndex + 2];
+                        var rightVertexCount = (rightVertices.Contains(a) ? 1 : 0) +
+                                               (rightVertices.Contains(b) ? 1 : 0) +
+                                               (rightVertices.Contains(c) ? 1 : 0);
+                        var leftVertexCount = (leftVertices.Contains(a) ? 1 : 0) +
+                                              (leftVertices.Contains(b) ? 1 : 0) +
+                                              (leftVertices.Contains(c) ? 1 : 0);
+                        if (rightVertexCount < 2 && leftVertexCount < 2)
+                        {
+                            continue;
+                        }
+
+                        var neutralArea = Vector3.Cross(
+                            neutralVertices[b] - neutralVertices[a],
+                            neutralVertices[c] - neutralVertices[a]).magnitude * 0.5f;
+                        if (neutralArea < 0.0000001f)
+                        {
+                            continue;
+                        }
+
+                        var posedArea = Vector3.Cross(
+                            posedVertices[b] - posedVertices[a],
+                            posedVertices[c] - posedVertices[a]).magnitude * 0.5f;
+                        var areaRatio = posedArea / neutralArea;
+                        if (rightVertexCount >= 2)
+                        {
+                            rightMinimumAreaRatio = Mathf.Min(rightMinimumAreaRatio, areaRatio);
+                            rightMaximumAreaRatio = Mathf.Max(rightMaximumAreaRatio, areaRatio);
+                            if (areaRatio < 0.05f)
+                            {
+                                rightCollapsedTriangleCount++;
+                            }
+
+                            if (areaRatio > 12f)
+                            {
+                                rightOverstretchedTriangleCount++;
+                            }
+
+                            rightMeasuredTriangleCount++;
+                        }
+
+                        if (leftVertexCount >= 2)
+                        {
+                            leftMinimumAreaRatio = Mathf.Min(leftMinimumAreaRatio, areaRatio);
+                            leftMaximumAreaRatio = Mathf.Max(leftMaximumAreaRatio, areaRatio);
+                            if (areaRatio < 0.05f)
+                            {
+                                leftCollapsedTriangleCount++;
+                            }
+
+                            if (areaRatio > 12f)
+                            {
+                                leftOverstretchedTriangleCount++;
+                            }
+
+                            leftMeasuredTriangleCount++;
+                        }
+                    }
+                }
+
+                if (rightMeasuredTriangleCount == 0 ||
+                    rightCollapsedTriangleCount > 0 ||
+                    rightOverstretchedTriangleCount > 0 ||
+                    rightNearlyFixedReleaseVertexCount > 0)
+                {
+                    throw new InvalidOperationException(
+                        $"Accelerando right antenna deformation is collapsed or overstretched. " +
+                        $"Triangles={rightMeasuredTriangleCount}, Collapsed={rightCollapsedTriangleCount}, " +
+                        $"Overstretched={rightOverstretchedTriangleCount}, " +
+                        $"NearlyFixedReleaseVertices={rightNearlyFixedReleaseVertexCount}, " +
+                        $"MinAreaRatio={rightMinimumAreaRatio:0.###}, MaxAreaRatio={rightMaximumAreaRatio:0.###}.");
+                }
+
+                if (leftMeasuredTriangleCount == 0 ||
+                    leftCollapsedTriangleCount > 0 ||
+                    leftOverstretchedTriangleCount > 0 ||
+                    leftNearlyFixedReleaseVertexCount > 0)
+                {
+                    throw new InvalidOperationException(
+                        $"Accelerando left antenna deformation is collapsed or overstretched. " +
+                        $"Triangles={leftMeasuredTriangleCount}, Collapsed={leftCollapsedTriangleCount}, " +
+                        $"Overstretched={leftOverstretchedTriangleCount}, " +
+                        $"NearlyFixedReleaseVertices={leftNearlyFixedReleaseVertexCount}, " +
+                        $"MinAreaRatio={leftMinimumAreaRatio:0.###}, MaxAreaRatio={leftMaximumAreaRatio:0.###}.");
+                }
+
+                return
+                    $"RightAntennaWeightedVertices={rightVertices.Count}\n" +
+                    $"RightAntennaMeasuredTriangles={rightMeasuredTriangleCount}\n" +
+                    $"RightAntennaForbiddenBoneVertices={rightVerticesWithForbiddenInfluence}\n" +
+                    $"RightAntennaMaximumForbiddenBoneInfluence={rightMaximumForbiddenInfluence:0.######}\n" +
+                    $"RightAntennaNearlyFixedReleaseVertices={rightNearlyFixedReleaseVertexCount}\n" +
+                    $"RightAntennaMinimumReleaseDisplacement={rightMinimumReleaseDisplacement:0.######}\n" +
+                    $"RightAntennaCollapsedTriangles={rightCollapsedTriangleCount}\n" +
+                    $"RightAntennaOverstretchedTriangles={rightOverstretchedTriangleCount}\n" +
+                    $"RightAntennaMinimumAreaRatio={rightMinimumAreaRatio:0.######}\n" +
+                    $"RightAntennaMaximumAreaRatio={rightMaximumAreaRatio:0.######}\n" +
+                    $"LeftAntennaWeightedVertices={leftVertices.Count}\n" +
+                    $"LeftAntennaMeasuredTriangles={leftMeasuredTriangleCount}\n" +
+                    $"LeftAntennaForbiddenBoneVertices={leftVerticesWithForbiddenInfluence}\n" +
+                    $"LeftAntennaMaximumForbiddenBoneInfluence={leftMaximumForbiddenInfluence:0.######}\n" +
+                    $"LeftAntennaNearlyFixedReleaseVertices={leftNearlyFixedReleaseVertexCount}\n" +
+                    $"LeftAntennaMinimumReleaseDisplacement={leftMinimumReleaseDisplacement:0.######}\n" +
+                    $"LeftAntennaCollapsedTriangles={leftCollapsedTriangleCount}\n" +
+                    $"LeftAntennaOverstretchedTriangles={leftOverstretchedTriangleCount}\n" +
+                    $"LeftAntennaMinimumAreaRatio={leftMinimumAreaRatio:0.######}\n" +
+                    $"LeftAntennaMaximumAreaRatio={leftMaximumAreaRatio:0.######}\n";
+            }
+            finally
+            {
+                RestoreTransformSnapshots(snapshots);
+                clip.SampleAnimation(strikeSlot.gameObject, 0f);
+                if (animator != null)
+                {
+                    animator.enabled = animatorWasEnabled;
+                }
+
+                UnityEngine.Object.DestroyImmediate(neutralBake);
+                UnityEngine.Object.DestroyImmediate(posedBake);
+            }
+        }
+
+        private static void ValidateMatchingBoneOrder(SkinnedMeshRenderer source, SkinnedMeshRenderer target)
+        {
+            if (source.bones == null || target.bones == null || source.bones.Length != target.bones.Length)
+            {
+                throw new InvalidOperationException("Accelerando source and attack body bone counts do not match.");
+            }
+
+            for (var i = 0; i < source.bones.Length; i++)
+            {
+                if (source.bones[i] == null || target.bones[i] == null ||
+                    !string.Equals(source.bones[i].name, target.bones[i].name, StringComparison.Ordinal))
+                {
+                    throw new InvalidOperationException($"Accelerando source and attack body bone order differs at index {i}.");
+                }
+            }
+        }
+
+        private static int[] GetBoneIndices(SkinnedMeshRenderer renderer, params string[] boneNames)
+        {
+            var indices = new int[boneNames.Length];
+            for (var nameIndex = 0; nameIndex < boneNames.Length; nameIndex++)
+            {
+                indices[nameIndex] = -1;
+                for (var boneIndex = 0; boneIndex < renderer.bones.Length; boneIndex++)
+                {
+                    if (renderer.bones[boneIndex] != null && renderer.bones[boneIndex].name == boneNames[nameIndex])
+                    {
+                        indices[nameIndex] = boneIndex;
+                        break;
+                    }
+                }
+
+                if (indices[nameIndex] < 0)
+                {
+                    throw new InvalidOperationException($"Accelerando skinned renderer is missing {boneNames[nameIndex]}.");
+                }
+            }
+
+            return indices;
+        }
+
+        private static float SumBoneInfluence(BoneWeight weight, IReadOnlyList<int> boneIndices)
+        {
+            var sum = 0f;
+            for (var i = 0; i < boneIndices.Count; i++)
+            {
+                sum += GetBoneInfluence(weight, boneIndices[i]);
+            }
+
+            return sum;
+        }
+
+        private static float GetBoneInfluence(BoneWeight weight, int boneIndex)
+        {
+            var result = 0f;
+            if (weight.boneIndex0 == boneIndex) result += weight.weight0;
+            if (weight.boneIndex1 == boneIndex) result += weight.weight1;
+            if (weight.boneIndex2 == boneIndex) result += weight.weight2;
+            if (weight.boneIndex3 == boneIndex) result += weight.weight3;
+            return result;
+        }
+
+        private static void AccumulateNonAttackBoneInfluence(
+            Dictionary<int, float> accumulated,
+            BoneWeight weight,
+            IReadOnlyList<int> attackBoneIndices)
+        {
+            AccumulateNonAttackBoneInfluence(accumulated, weight.boneIndex0, weight.weight0, attackBoneIndices);
+            AccumulateNonAttackBoneInfluence(accumulated, weight.boneIndex1, weight.weight1, attackBoneIndices);
+            AccumulateNonAttackBoneInfluence(accumulated, weight.boneIndex2, weight.weight2, attackBoneIndices);
+            AccumulateNonAttackBoneInfluence(accumulated, weight.boneIndex3, weight.weight3, attackBoneIndices);
+        }
+
+        private static void AccumulateNonAttackBoneInfluence(
+            Dictionary<int, float> accumulated,
+            int boneIndex,
+            float weight,
+            IReadOnlyList<int> attackBoneIndices)
+        {
+            if (weight <= 0f)
+            {
+                return;
+            }
+
+            for (var i = 0; i < attackBoneIndices.Count; i++)
+            {
+                if (boneIndex == attackBoneIndices[i])
+                {
+                    return;
+                }
+            }
+
+            accumulated.TryGetValue(boneIndex, out var existing);
+            accumulated[boneIndex] = existing + weight;
+        }
+
+        private static BoneWeight RemapBoneWeight(BoneWeight source, IReadOnlyList<int> from, IReadOnlyList<int> to)
+        {
+            source.boneIndex0 = RemapBoneIndex(source.boneIndex0, from, to);
+            source.boneIndex1 = RemapBoneIndex(source.boneIndex1, from, to);
+            source.boneIndex2 = RemapBoneIndex(source.boneIndex2, from, to);
+            source.boneIndex3 = RemapBoneIndex(source.boneIndex3, from, to);
+            return source;
+        }
+
+        private static int RemapBoneIndex(int sourceIndex, IReadOnlyList<int> from, IReadOnlyList<int> to)
+        {
+            for (var i = 0; i < from.Count; i++)
+            {
+                if (sourceIndex == from[i])
+                {
+                    return to[i];
+                }
+            }
+
+            return sourceIndex;
+        }
+
+        private static BoneWeight NormalizeBoneWeight(BoneWeight weight)
+        {
+            var sum = BoneWeightSum(weight);
+            if (sum <= 0.000001f)
+            {
+                throw new InvalidOperationException("Accelerando antenna vertex has zero total skin weight.");
+            }
+
+            weight.weight0 /= sum;
+            weight.weight1 /= sum;
+            weight.weight2 /= sum;
+            weight.weight3 /= sum;
+            return weight;
+        }
+
+        private static BoneWeight CreateMergedRemappedBoneWeight(
+            BoneWeight source,
+            IReadOnlyList<int> fromBoneIndices,
+            IReadOnlyList<int> toBoneIndices)
+        {
+            var remapped = RemapBoneWeight(source, fromBoneIndices, toBoneIndices);
+            var accumulated = new Dictionary<int, float>();
+            AccumulateBoneWeight(accumulated, remapped, 1f);
+
+            var result = new BoneWeight();
+            var selectedBones = new HashSet<int>();
+            for (var slot = 0; slot < 4; slot++)
+            {
+                var bestBoneIndex = -1;
+                var bestWeight = 0f;
+                foreach (var pair in accumulated)
+                {
+                    if (!selectedBones.Contains(pair.Key) && pair.Value > bestWeight)
+                    {
+                        bestBoneIndex = pair.Key;
+                        bestWeight = pair.Value;
+                    }
+                }
+
+                if (bestBoneIndex < 0)
+                {
+                    break;
+                }
+
+                selectedBones.Add(bestBoneIndex);
+                SetBoneWeightSlot(ref result, slot, bestBoneIndex, bestWeight);
+            }
+
+            return NormalizeBoneWeight(result);
+        }
+
+        private static BoneWeight CreateSmoothedMirroredBoneWeight(
+            IReadOnlyList<BoneWeight> sourceWeights,
+            IReadOnlyList<int> nearestLeftIndices,
+            IReadOnlyList<float> nearestSquaredDistances,
+            IReadOnlyList<int> leftBoneIndices,
+            IReadOnlyList<int> rightBoneIndices)
+        {
+            var accumulated = new Dictionary<int, float>();
+            var distanceWeightSum = 0f;
+            for (var i = 0; i < nearestLeftIndices.Count; i++)
+            {
+                if (nearestLeftIndices[i] < 0)
+                {
+                    continue;
+                }
+
+                var distanceWeight = 1f / (Mathf.Sqrt(nearestSquaredDistances[i]) + 0.004f);
+                distanceWeightSum += distanceWeight;
+                var mirroredWeight = RemapBoneWeight(
+                    sourceWeights[nearestLeftIndices[i]],
+                    leftBoneIndices,
+                    rightBoneIndices);
+                AccumulateBoneWeight(accumulated, mirroredWeight, distanceWeight);
+            }
+
+            if (distanceWeightSum <= 0.000001f)
+            {
+                throw new InvalidOperationException("Accelerando mirrored antenna skin smoothing has no distance weight.");
+            }
+
+            var mirroredScale = 1f / distanceWeightSum;
+            var boneKeys = new List<int>(accumulated.Keys);
+            foreach (var boneIndex in boneKeys)
+            {
+                accumulated[boneIndex] *= mirroredScale;
+            }
+
+            var result = new BoneWeight();
+            var selectedBones = new HashSet<int>();
+            for (var slot = 0; slot < 4; slot++)
+            {
+                var bestBoneIndex = -1;
+                var bestWeight = 0f;
+                foreach (var pair in accumulated)
+                {
+                    if (!selectedBones.Contains(pair.Key) && pair.Value > bestWeight)
+                    {
+                        bestBoneIndex = pair.Key;
+                        bestWeight = pair.Value;
+                    }
+                }
+
+                if (bestBoneIndex < 0)
+                {
+                    break;
+                }
+
+                selectedBones.Add(bestBoneIndex);
+                SetBoneWeightSlot(ref result, slot, bestBoneIndex, bestWeight);
+            }
+
+            return NormalizeBoneWeight(result);
+        }
+
+        private static void AccumulateBoneWeight(Dictionary<int, float> accumulated, BoneWeight weight, float scale)
+        {
+            AccumulateBoneInfluence(accumulated, weight.boneIndex0, weight.weight0 * scale);
+            AccumulateBoneInfluence(accumulated, weight.boneIndex1, weight.weight1 * scale);
+            AccumulateBoneInfluence(accumulated, weight.boneIndex2, weight.weight2 * scale);
+            AccumulateBoneInfluence(accumulated, weight.boneIndex3, weight.weight3 * scale);
+        }
+
+        private static void AccumulateBoneInfluence(Dictionary<int, float> accumulated, int boneIndex, float weight)
+        {
+            if (weight <= 0f)
+            {
+                return;
+            }
+
+            accumulated.TryGetValue(boneIndex, out var existing);
+            accumulated[boneIndex] = existing + weight;
+        }
+
+        private static void SetBoneWeightSlot(ref BoneWeight weight, int slot, int boneIndex, float value)
+        {
+            switch (slot)
+            {
+                case 0:
+                    weight.boneIndex0 = boneIndex;
+                    weight.weight0 = value;
+                    break;
+                case 1:
+                    weight.boneIndex1 = boneIndex;
+                    weight.weight1 = value;
+                    break;
+                case 2:
+                    weight.boneIndex2 = boneIndex;
+                    weight.weight2 = value;
+                    break;
+                case 3:
+                    weight.boneIndex3 = boneIndex;
+                    weight.weight3 = value;
+                    break;
+            }
+        }
+
+        private static float BoneWeightSum(BoneWeight weight)
+        {
+            return weight.weight0 + weight.weight1 + weight.weight2 + weight.weight3;
+        }
+
+        private static Vector3[] CalculateApprovedRiggedForwardStrikeDeltas(Transform slot)
+        {
+            var deltas = new Vector3[ApprovedRiggedAttackBoneNames.Length];
+            var bones = new Transform[ApprovedRiggedAttackBoneNames.Length];
+            var baseRotations = new Quaternion[ApprovedRiggedAttackBoneNames.Length];
+            for (var i = 0; i < bones.Length; i++)
+            {
+                bones[i] = RequireNamedChild(slot, ApprovedRiggedAttackBoneNames[i]);
+                baseRotations[i] = bones[i].localRotation;
+            }
+
+            try
+            {
+                for (var i = 3; i < bones.Length; i++)
+                {
+                    deltas[i] = CalculateForwardStrikeDeltaForBone(
+                        slot,
+                        bones[i],
+                        "Left",
+                        ApprovedRiggedAttackBoneWindupAngles[i]);
+                }
+            }
+            finally
+            {
+                for (var i = 0; i < bones.Length; i++)
+                {
+                    bones[i].localRotation = baseRotations[i];
+                }
+            }
+
+            return deltas;
+        }
+
+        private static void AddMirroredRightAntennaStrikeCurves(Transform slot, AnimationClip clip)
+        {
+            var rightBones = new[]
+            {
+                RequireNamedChild(slot, "Bone_008"),
+                RequireNamedChild(slot, "Bone_007"),
+                RequireNamedChild(slot, "Bone_006")
+            };
+            var rightSegmentEnds = new[]
+            {
+                rightBones[1],
+                rightBones[2],
+                RequireNamedChild(slot, "Accelerando_Right_AntennaPhysicsAnchor")
+            };
+            var leftBones = new[]
+            {
+                RequireNamedChild(slot, "Bone_011"),
+                RequireNamedChild(slot, "Bone_010"),
+                RequireNamedChild(slot, "Bone_009")
+            };
+            var leftSegmentEnds = new[]
+            {
+                leftBones[1],
+                leftBones[2],
+                RequireNamedChild(slot, "Accelerando_Left_AntennaPhysicsAnchor")
+            };
+            var sampleTimes = new[]
+            {
+                0f,
+                0.18f,
+                ForwardMaceStrikeWindupTime,
+                0.37f,
+                ForwardMaceStrikeReleaseTime,
+                ForwardMaceStrikePeakTime,
+                ForwardMaceStrikeRecoilTime,
+                ForwardMaceStrikeSecondaryDriveTime,
+                ForwardMaceStrikeAftershockTime,
+                ForwardMaceStrikeFollowThroughTime,
+                ForwardMaceStrikeRecoveryTime,
+                AntennaStrikeLoopSeconds
+            };
+            var baseRotations = new Quaternion[rightBones.Length];
+            for (var boneIndex = 0; boneIndex < rightBones.Length; boneIndex++)
+            {
+                baseRotations[boneIndex] = rightBones[boneIndex].localRotation;
+            }
+
+            var snapshots = new List<TransformSnapshot>();
+            foreach (var boneName in ApprovedRiggedAttackBoneNames)
+            {
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(slot, boneName)));
+            }
+            var keyedRotations = new Quaternion[rightBones.Length, sampleTimes.Length];
+            try
+            {
+                for (var sampleIndex = 0; sampleIndex < sampleTimes.Length; sampleIndex++)
+                {
+                    RestoreTransformSnapshots(snapshots);
+                    clip.SampleAnimation(slot.gameObject, sampleTimes[sampleIndex]);
+                    if (sampleIndex == 0 || sampleIndex == sampleTimes.Length - 1)
+                    {
+                        for (var boneIndex = 0; boneIndex < rightBones.Length; boneIndex++)
+                        {
+                            keyedRotations[boneIndex, sampleIndex] = baseRotations[boneIndex];
+                        }
+
+                        continue;
+                    }
+
+                    for (var boneIndex = 0; boneIndex < rightBones.Length; boneIndex++)
+                    {
+                        rightBones[boneIndex].localRotation = baseRotations[boneIndex];
+                    }
+
+                    for (var boneIndex = 0; boneIndex < rightBones.Length; boneIndex++)
+                    {
+                        Quaternion targetWorldRotation;
+                        if (boneIndex < rightBones.Length - 1)
+                        {
+                            var leftDirectionSlot = slot.InverseTransformDirection(
+                                leftSegmentEnds[boneIndex].position - leftBones[boneIndex].position).normalized;
+                            var mirroredDirectionWorld = slot.TransformDirection(
+                                new Vector3(-leftDirectionSlot.x, leftDirectionSlot.y, leftDirectionSlot.z)).normalized;
+                            var currentDirectionWorld =
+                                (rightSegmentEnds[boneIndex].position - rightBones[boneIndex].position).normalized;
+                            targetWorldRotation =
+                                Quaternion.FromToRotation(currentDirectionWorld, mirroredDirectionWorld) *
+                                rightBones[boneIndex].rotation;
+                        }
+                        else
+                        {
+                            var leftSlotRotation = Quaternion.Inverse(slot.rotation) * leftBones[boneIndex].rotation;
+                            targetWorldRotation = slot.rotation * MirrorRotationAcrossLocalX(leftSlotRotation);
+                        }
+
+                        var targetLocalRotation =
+                            Quaternion.Inverse(rightBones[boneIndex].parent.rotation) * targetWorldRotation;
+                        rightBones[boneIndex].localRotation = targetLocalRotation;
+                        keyedRotations[boneIndex, sampleIndex] = rightBones[boneIndex].localRotation;
+                    }
+                }
+
+                for (var boneIndex = 0; boneIndex < rightBones.Length; boneIndex++)
+                {
+                    for (var sampleIndex = 1; sampleIndex < sampleTimes.Length; sampleIndex++)
+                    {
+                        if (Quaternion.Dot(
+                                keyedRotations[boneIndex, sampleIndex - 1],
+                                keyedRotations[boneIndex, sampleIndex]) < 0f)
+                        {
+                            var rotation = keyedRotations[boneIndex, sampleIndex];
+                            keyedRotations[boneIndex, sampleIndex] =
+                                new Quaternion(-rotation.x, -rotation.y, -rotation.z, -rotation.w);
+                        }
+                    }
+
+                    var xKeys = new Keyframe[sampleTimes.Length];
+                    var yKeys = new Keyframe[sampleTimes.Length];
+                    var zKeys = new Keyframe[sampleTimes.Length];
+                    var wKeys = new Keyframe[sampleTimes.Length];
+                    for (var sampleIndex = 0; sampleIndex < sampleTimes.Length; sampleIndex++)
+                    {
+                        var rotation = keyedRotations[boneIndex, sampleIndex];
+                        xKeys[sampleIndex] = new Keyframe(sampleTimes[sampleIndex], rotation.x);
+                        yKeys[sampleIndex] = new Keyframe(sampleTimes[sampleIndex], rotation.y);
+                        zKeys[sampleIndex] = new Keyframe(sampleTimes[sampleIndex], rotation.z);
+                        wKeys[sampleIndex] = new Keyframe(sampleTimes[sampleIndex], rotation.w);
+                    }
+
+                    var xCurve = new AnimationCurve(xKeys);
+                    var yCurve = new AnimationCurve(yKeys);
+                    var zCurve = new AnimationCurve(zKeys);
+                    var wCurve = new AnimationCurve(wKeys);
+                    SmoothCurveTangents(xCurve);
+                    SmoothCurveTangents(yCurve);
+                    SmoothCurveTangents(zCurve);
+                    SmoothCurveTangents(wCurve);
+                    var path = GetRelativePath(slot, rightBones[boneIndex]);
+                    SetTransformCurve(clip, path, "m_LocalRotation.x", xCurve);
+                    SetTransformCurve(clip, path, "m_LocalRotation.y", yCurve);
+                    SetTransformCurve(clip, path, "m_LocalRotation.z", zCurve);
+                    SetTransformCurve(clip, path, "m_LocalRotation.w", wCurve);
+                    Debug.Log(
+                        "AccelerandoForwardMaceStrikeMirroredPath " +
+                        $"Bone={rightBones[boneIndex].name}, ReferenceBone={leftBones[boneIndex].name}, " +
+                        $"WindupEuler={FormatVector(keyedRotations[boneIndex, 2].eulerAngles)}, " +
+                        $"ReleaseEuler={FormatVector(keyedRotations[boneIndex, 4].eulerAngles)}.");
+                }
+            }
+            finally
+            {
+                RestoreTransformSnapshots(snapshots);
+            }
+        }
+
+        private static Quaternion MirrorRotationAcrossLocalX(Quaternion rotation)
+        {
+            var mirroredForward = Vector3.Scale(rotation * Vector3.forward, new Vector3(-1f, 1f, 1f));
+            var mirroredUp = Vector3.Scale(rotation * Vector3.up, new Vector3(-1f, 1f, 1f));
+            return Quaternion.LookRotation(mirroredForward, mirroredUp);
+        }
+
+        private static Vector3 CalculateForwardStrikeDeltaForBone(
+            Transform slot,
+            Transform bone,
+            string sideName,
+            float angle)
+        {
+            var anchor = RequireNamedChild(slot, $"Accelerando_{sideName}_AntennaPhysicsAnchor");
+            var baseEuler = bone.localEulerAngles;
+            var baseRotation = bone.localRotation;
+            var forward = slot.forward;
+            var gradient = Vector3.zero;
+            for (var axis = 0; axis < 3; axis++)
+            {
+                var offset = Vector3.zero;
+                offset[axis] = ForwardMaceStrikeProbeAngle;
+                bone.localEulerAngles = baseEuler + offset;
+                var positive = Vector3.Dot(anchor.position, forward);
+                bone.localEulerAngles = baseEuler - offset;
+                var negative = Vector3.Dot(anchor.position, forward);
+                gradient[axis] = (positive - negative) / (ForwardMaceStrikeProbeAngle * 2f);
+                bone.localRotation = baseRotation;
+            }
+
+            var delta = gradient.sqrMagnitude > 0.0000001f
+                ? gradient.normalized * angle
+                : new Vector3(6f, 0f, 7f).normalized * angle;
+            bone.localRotation = baseRotation;
+            Debug.Log(
+                "AccelerandoForwardMaceStrikeAxis " +
+                $"Bone={bone.name}, Side={sideName}, Gradient={FormatVector(gradient)}, ReleaseDelta={FormatVector(delta)}.");
+            return delta;
+        }
+
+        private static void DeleteAnimationAssetIfPresent(string assetPath)
+        {
+            if (AssetDatabase.LoadMainAssetAtPath(assetPath) != null)
+            {
+                AssetDatabase.DeleteAsset(assetPath);
+            }
+        }
+
+        private static AnimationCurve CreateRiggedLoopCurve(float start, float peak, float end)
+        {
+            var curve = new AnimationCurve(
+                new Keyframe(0f, start),
+                new Keyframe(0.40f, peak),
+                new Keyframe(0.80f, end),
+                new Keyframe(1.20f, start));
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static AnimationCurve CreateForwardMaceStrikeCurve(float baseValue, float windupDelta, float releaseDelta)
+        {
+            var curve = new AnimationCurve(
+                new Keyframe(0f, baseValue),
+                new Keyframe(0.18f, baseValue + windupDelta * 0.32f),
+                new Keyframe(ForwardMaceStrikeWindupTime, baseValue + windupDelta),
+                new Keyframe(0.37f, baseValue + windupDelta * 1.02f),
+                new Keyframe(ForwardMaceStrikeReleaseTime, baseValue + releaseDelta),
+                new Keyframe(ForwardMaceStrikePeakTime, baseValue + releaseDelta * 1.10f),
+                new Keyframe(ForwardMaceStrikeRecoilTime, baseValue + releaseDelta * 0.18f),
+                new Keyframe(ForwardMaceStrikeSecondaryDriveTime, baseValue + releaseDelta * 0.86f),
+                new Keyframe(ForwardMaceStrikeAftershockTime, baseValue + releaseDelta * 0.42f),
+                new Keyframe(ForwardMaceStrikeFollowThroughTime, baseValue + releaseDelta * 0.58f),
+                new Keyframe(ForwardMaceStrikeRecoveryTime, baseValue + releaseDelta * 0.34f),
+                new Keyframe(AntennaStrikeLoopSeconds, baseValue));
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static void ConfigureApprovedRiggedChainPhysics(Transform slot, bool attack)
+        {
+            if (slot == null)
+            {
+                throw new InvalidOperationException("Approved Accelerando physics slot is missing.");
+            }
+
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = slot.GetComponent(rigType) as MonoBehaviour ?? slot.gameObject.AddComponent(rigType) as MonoBehaviour;
+            var methodName = attack ? "ConfigureAttackStrike" : "Configure";
+            var method = rigType.GetMethod(methodName, new[] { typeof(int) }) ??
+                throw new InvalidOperationException($"{rigType.FullName} is missing {methodName}(int).");
+            var configuredLinkCount = attack ? AttackConnectedChainLinkCount : ApprovedRiggedChainLinkCount;
+            method.Invoke(rig, new object[] { configuredLinkCount });
+            EditorUtility.SetDirty(rig);
+        }
+
+        private static void PrepareConnectedAttackChainLinks(Transform strikeSlot)
+        {
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                var antennaAnchor = RequireNamedChild(
+                    strikeSlot,
+                    $"Accelerando_{sideName}_AntennaPhysicsAnchor");
+                var maceHead = RequireNamedChild(
+                    strikeSlot,
+                    $"Accelerando_{sideName}_MaceHead");
+                var anchorDistance = Vector3.Distance(antennaAnchor.position, maceHead.position);
+                var direction = (maceHead.position - antennaAnchor.position).normalized;
+                var chainEnd = maceHead.position -
+                    direction * GetConnectedChainMaceSideCutbackDistance(anchorDistance);
+                var up = strikeSlot.up;
+                if (Vector3.Cross(direction, up).sqrMagnitude < 0.0001f)
+                {
+                    up = strikeSlot.forward;
+                }
+
+                const int arcSampleCount = 96;
+                var arcPoints = new Vector3[arcSampleCount + 1];
+                var cumulativeLengths = new float[arcSampleCount + 1];
+                for (var sampleIndex = 0; sampleIndex <= arcSampleCount; sampleIndex++)
+                {
+                    var sampleT = sampleIndex / (float)arcSampleCount;
+                    arcPoints[sampleIndex] = EvaluateConnectedAttackChainArc(
+                        antennaAnchor.position,
+                        chainEnd,
+                        -strikeSlot.up,
+                        sampleT);
+                    if (sampleIndex > 0)
+                    {
+                        cumulativeLengths[sampleIndex] = cumulativeLengths[sampleIndex - 1] +
+                            Vector3.Distance(arcPoints[sampleIndex - 1], arcPoints[sampleIndex]);
+                    }
+                }
+
+                var linkPositions = new Vector3[AttackConnectedChainLinkCount];
+                for (var linkIndex = 1; linkIndex <= AttackConnectedChainLinkCount; linkIndex++)
+                {
+                    var link = RequireNamedChild(
+                        strikeSlot,
+                        $"Accelerando_{sideName}_ConnectedChain_Link_{linkIndex:00}");
+                    var t = AttackConnectedChainLinkCount == 1
+                        ? 0.5f
+                        : (linkIndex - 1f) / (AttackConnectedChainLinkCount - 1f);
+                    var targetLength = cumulativeLengths[arcSampleCount] * t;
+                    var upperSampleIndex = 1;
+                    while (upperSampleIndex < cumulativeLengths.Length - 1 &&
+                           cumulativeLengths[upperSampleIndex] < targetLength)
+                    {
+                        upperSampleIndex++;
+                    }
+
+                    var lowerSampleIndex = Mathf.Max(0, upperSampleIndex - 1);
+                    var sampleLength = cumulativeLengths[upperSampleIndex] - cumulativeLengths[lowerSampleIndex];
+                    var sampleBlend = sampleLength > 0.000001f
+                        ? (targetLength - cumulativeLengths[lowerSampleIndex]) / sampleLength
+                        : 0f;
+                    linkPositions[linkIndex - 1] = Vector3.Lerp(
+                        arcPoints[lowerSampleIndex],
+                        arcPoints[upperSampleIndex],
+                        sampleBlend);
+                    link.gameObject.SetActive(true);
+                    link.position = linkPositions[linkIndex - 1];
+                    EditorUtility.SetDirty(link.gameObject);
+                    EditorUtility.SetDirty(link);
+                }
+
+                for (var linkIndex = 0; linkIndex < linkPositions.Length; linkIndex++)
+                {
+                    var previousPosition = linkPositions[Mathf.Max(0, linkIndex - 1)];
+                    var nextPosition = linkPositions[Mathf.Min(linkPositions.Length - 1, linkIndex + 1)];
+                    var tangent = (nextPosition - previousPosition).normalized;
+                    var link = RequireNamedChild(
+                        strikeSlot,
+                        $"Accelerando_{sideName}_ConnectedChain_Link_{linkIndex + 1:00}");
+                    link.rotation = Quaternion.LookRotation(tangent, up) * Quaternion.Euler(
+                        0f,
+                        0f,
+                        linkIndex % 2 == 0 ? 0f : 90f);
+                    EditorUtility.SetDirty(link);
+                }
+
+                Debug.Log(
+                    "AccelerandoAttackConnectedChainPrepared " +
+                    $"Side={sideName}, Links={AttackConnectedChainLinkCount}, " +
+                    $"ArcLength={cumulativeLengths[arcSampleCount]:0.######}, " +
+                    $"CenterSpacing={cumulativeLengths[arcSampleCount] / (AttackConnectedChainLinkCount - 1f):0.######}.");
+            }
+        }
+
+        private static Vector3 EvaluateConnectedAttackChainArc(
+            Vector3 start,
+            Vector3 end,
+            Vector3 down,
+            float t)
+        {
+            return Vector3.Lerp(start, end, t) +
+                   down * (Mathf.Sin(Mathf.PI * t) * AttackConnectedChainSagDepth);
+        }
+
+        private static void ValidateApprovedRiggedPlacement(Transform placementRoot, bool writeReport)
+        {
+            var report = new System.Text.StringBuilder();
+            report.AppendLine("Accelerando approved rigged model validation");
+            report.AppendLine($"Scene={CargoRunScenePath}");
+            report.AppendLine($"Root={PlacementRootName}");
+            report.AppendLine($"ModelAsset={ApprovedRiggedUnityModelAssetPath}");
+            report.AppendLine($"Placements={ApprovedRiggedPlacementSlots.Length}");
+            var materialSet = EnsureApprovedMaterialSet();
+
+            foreach (var slotName in ApprovedRiggedPlacementSlots)
+            {
+                var slot = placementRoot.Find(slotName) ??
+                    throw new InvalidOperationException($"{slotName} is missing.");
+                var model = FindDirectChild(slot, ModelChildName) ??
+                    throw new InvalidOperationException($"{slotName}/{ModelChildName} is missing.");
+                ValidateApprovedRiggedModelInstance(slotName, model, materialSet);
+                report.AppendLine($"Slot={slotName}, Model=ApprovedRigged, Bones=18, ChainLinks=12+12, MaceHeads=2, VisibleMaceSocketRing=0");
+            }
+
+            ValidateApprovedRiggedAttackBindings();
+            ValidateApprovedRiggedPhysicsSlot(placementRoot.Find(CrawlSlotObjectName), "Crawl");
+            ValidateApprovedRiggedPhysicsSlot(placementRoot.Find(AntennaStrikeSlotObjectName), "Attack");
+            report.AppendLine("AttackBindings=Bone_008,007,006,011,010,009 only");
+            report.AppendLine("Physics=Crawl:24Dynamic/2Kinematic/24Joints, Attack:24Dynamic/2Kinematic/24Joints");
+            report.AppendLine("Result=PASS");
+
+            if (writeReport)
+            {
+                var outputDirectory = GetAbsoluteProjectPath(ApprovedRiggedValidationFolder);
+                Directory.CreateDirectory(outputDirectory);
+                File.WriteAllText(Path.Combine(outputDirectory, "validation_report.txt"), report.ToString(), System.Text.Encoding.UTF8);
+            }
+
+            Debug.Log(report.ToString());
+        }
+
+        private static void ValidateApprovedRiggedModelInstance(string slotName, Transform model, ApprovedMaterialSet materialSet)
+        {
+            var body = RequireNamedChild(model, "Accelerando_RiggedAttack_Body");
+            var bodyRenderer = body.GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException($"{slotName} approved rigged body is not skinned.");
+            if (bodyRenderer.bones == null || bodyRenderer.bones.Length != ApprovedRiggedBoneCount)
+            {
+                throw new InvalidOperationException($"{slotName} body bone count is not {ApprovedRiggedBoneCount}.");
+            }
+
+            var armature = RequireNamedChild(model, "UniRigArmature");
+            for (var i = 0; i < ApprovedRiggedBoneCount; i++)
+            {
+                RequireNamedChild(armature, $"Bone_{i:000}");
+            }
+
+            foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
+            {
+                var mesh = renderer is SkinnedMeshRenderer skinned ? skinned.sharedMesh : renderer.GetComponent<MeshFilter>()?.sharedMesh;
+                var meshPath = mesh != null ? AssetDatabase.GetAssetPath(mesh) : string.Empty;
+                var usesApprovedSourceMesh = string.Equals(meshPath, ApprovedRiggedUnityModelAssetPath, StringComparison.Ordinal);
+                var usesAttackOnlyDeformationFixedBody =
+                    string.Equals(slotName, AntennaStrikeSlotObjectName, StringComparison.Ordinal) &&
+                    string.Equals(renderer.name, "Accelerando_RiggedAttack_Body", StringComparison.Ordinal) &&
+                    string.Equals(meshPath, UnityForwardStrikeDeformationFixedMeshAssetPath, StringComparison.Ordinal);
+                if (mesh == null || (!usesApprovedSourceMesh && !usesAttackOnlyDeformationFixedBody))
+                {
+                    throw new InvalidOperationException($"{slotName}/{renderer.name} does not use the approved rigged GLB mesh.");
+                }
+
+                foreach (var material in renderer.sharedMaterials)
+                {
+                    if (!materialSet.Contains(material))
+                    {
+                        throw new InvalidOperationException($"{slotName}/{renderer.name} does not use an approved Accelerando material.");
+                    }
+                }
+
+                if (renderer.name.Contains("MaceSocket_Ring", StringComparison.Ordinal))
+                {
+                    throw new InvalidOperationException($"{slotName} contains a rendered MaceSocket_Ring.");
+                }
+            }
+
+            foreach (var side in new[] { "Left", "Right" })
+            {
+                RequireNamedChild(model, $"Accelerando_{side}_AntennaPhysicsAnchor");
+                RequireNamedChild(model, $"Accelerando_{side}_MacePhysicsAnchor");
+                RequireNamedChild(model, $"Accelerando_{side}_MaceHead");
+                for (var link = 1; link <= ApprovedRiggedChainLinkCount; link++)
+                {
+                    RequireNamedChild(model, $"Accelerando_{side}_ConnectedChain_Link_{link:00}");
+                }
+            }
+        }
+
+        private static void ValidateApprovedRiggedAttackBindings()
+        {
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityAntennaStrikeClipAssetPath) ??
+                throw new InvalidOperationException("Approved rigged Accelerando attack clip is missing.");
+            var allowed = new HashSet<string>(ApprovedRiggedAttackBoneNames, StringComparer.Ordinal);
+            var found = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var binding in AnimationUtility.GetCurveBindings(clip))
+            {
+                var boneName = Path.GetFileName(binding.path);
+                if (!boneName.StartsWith("Bone_", StringComparison.Ordinal))
+                {
+                    throw new InvalidOperationException($"Attack clip contains a non-bone Transform binding: {binding.path}.");
+                }
+
+                if (!allowed.Contains(boneName))
+                {
+                    throw new InvalidOperationException($"Attack clip directly controls excluded bone {boneName}.");
+                }
+
+                found.Add(boneName);
+            }
+
+            if (found.Count != allowed.Count)
+            {
+                throw new InvalidOperationException("Attack clip does not bind all six approved antenna control bones.");
+            }
+        }
+
+        private static void ValidateApprovedRiggedPhysicsSlot(Transform slot, string label)
+        {
+            if (slot == null)
+            {
+                throw new InvalidOperationException($"{label} physics slot is missing.");
+            }
+
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = slot.GetComponent(rigType) ??
+                throw new InvalidOperationException($"{slot.name} physics rig is missing.");
+            var isAttackSlot = !string.Equals(label, "Crawl", StringComparison.OrdinalIgnoreCase);
+            var expectedLinkCount = isAttackSlot ? AttackConnectedChainLinkCount : ApprovedRiggedChainLinkCount;
+            var visibleCount = (int)(rigType.GetProperty("VisibleLinkCount")?.GetValue(rig) ?? -1);
+            if (visibleCount != expectedLinkCount)
+            {
+                throw new InvalidOperationException(
+                    $"{slot.name} physics rig link count mismatch: links={visibleCount}, expected={expectedLinkCount}.");
+            }
+
+            var physicsRoot = slot.Find(ChainPhysicsRootObjectName) ??
+                throw new InvalidOperationException($"{slot.name}/{ChainPhysicsRootObjectName} is missing.");
+            var rigidbodies = physicsRoot.GetComponentsInChildren<Rigidbody>(true);
+            var dynamicBodyCount = 0;
+            var kinematicBodyCount = 0;
+            foreach (var body in rigidbodies)
+            {
+                if (body.isKinematic)
+                {
+                    kinematicBodyCount++;
+                }
+                else
+                {
+                    dynamicBodyCount++;
+                }
+            }
+
+            var jointCount = physicsRoot.GetComponentsInChildren<ConfigurableJoint>(true).Length;
+            var expectedDynamicBodyCount = expectedLinkCount * 2;
+            var expectedJointCount = expectedLinkCount * 2;
+            if (dynamicBodyCount != expectedDynamicBodyCount ||
+                kinematicBodyCount != 2 ||
+                jointCount != expectedJointCount)
+            {
+                throw new InvalidOperationException(
+                    $"{slot.name} serialized physics proxy mismatch: " +
+                    $"dynamic={dynamicBodyCount}/{expectedDynamicBodyCount}, " +
+                    $"kinematic={kinematicBodyCount}/2, joints={jointCount}/{expectedJointCount}.");
+            }
+        }
+
+        private readonly struct ApprovedRiggedTransformState
+        {
+            public ApprovedRiggedTransformState(Transform transform)
+            {
+                LocalPosition = transform.localPosition;
+                LocalRotation = transform.localRotation;
+                LocalScale = transform.localScale;
+            }
+
+            public Vector3 LocalPosition { get; }
+            public Quaternion LocalRotation { get; }
+            public Vector3 LocalScale { get; }
+
+            public void Apply(Transform transform)
+            {
+                transform.localPosition = LocalPosition;
+                transform.localRotation = LocalRotation;
+                transform.localScale = LocalScale;
+            }
+
+            public void AssertUnchanged(Transform transform, string label)
+            {
+                if (transform.localPosition != LocalPosition || transform.localRotation != LocalRotation || transform.localScale != LocalScale)
+                {
+                    throw new InvalidOperationException($"{label} Transform changed outside the approved model replacement scope.");
+                }
             }
         }
 
@@ -931,6 +3746,11 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 throw new InvalidOperationException($"{ModelChildName} is missing under {AntennaStrikeSlotObjectName}.");
             }
 
+            ReconnectMaceChains(strikeSlot);
+            var maceMeshSplit = EnsureAntennaStrikeMaceMeshSplit(placementRoot, modelObject);
+            ApplyAntennaStrikeMaceMeshSplit(strikeSlot, modelObject, maceMeshSplit);
+            RemoveAntennaStrikeMaceSocketRingGeometry(strikeSlot);
+
             var clip = EnsurePhysicsAntennaStrikeClip(strikeSlot, modelObject);
             var controller = EnsurePhysicsAntennaStrikeController(clip);
             var animator = strikeSlot.GetComponent<Animator>();
@@ -991,7 +3811,7 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
 
             configureMethod.Invoke(rig, new object[] { ConnectedChainVisibleLinkCount });
             EditorUtility.SetDirty(rig);
-            return InspectCrawlChainPhysicsRig(strikeSlot, 0.065f);
+            return InspectCrawlChainPhysicsRig(strikeSlot, 0.065f, requireLockedLinearMotion: true);
         }
 
         private static Type FindAccelerandoChainPhysicsRigType()
@@ -2634,6 +5454,277 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             }
         }
 
+        private static AntennaStrikeMaceMeshSplit EnsureAntennaStrikeMaceMeshSplit(
+            Transform placementRoot,
+            Transform strikeModel)
+        {
+            var staticReview = placementRoot.Find(PlacementObjectName);
+            var sourceModel = staticReview != null ? staticReview.Find(ModelChildName) : null;
+            if (sourceModel == null)
+            {
+                throw new InvalidOperationException(
+                    $"{PlacementObjectName}/{ModelChildName} is required as the approved Accelerando mesh source.");
+            }
+
+            var sourceBody = FindChildByName(sourceModel, ConnectedColoredBodyObjectName);
+            var strikeBody = FindChildByName(strikeModel, ConnectedColoredBodyObjectName);
+            if (sourceBody == null || strikeBody == null)
+            {
+                throw new InvalidOperationException(
+                    $"{ConnectedColoredBodyObjectName} is required in both static and antenna strike models.");
+            }
+
+            var sourceFilter = sourceBody.GetComponent<MeshFilter>();
+            var sourceRenderer = sourceBody.GetComponent<MeshRenderer>();
+            if (sourceFilter == null || sourceFilter.sharedMesh == null || sourceRenderer == null)
+            {
+                throw new InvalidOperationException(
+                    $"{PlacementObjectName}/{ConnectedColoredBodyObjectName} must have a readable MeshFilter and MeshRenderer.");
+            }
+
+            var sourceMesh = sourceFilter.sharedMesh;
+            if (!sourceMesh.isReadable || sourceMesh.subMeshCount < 3)
+            {
+                throw new InvalidOperationException(
+                    $"{sourceMesh.name} must be readable and preserve the flesh, shell, and metal submeshes.");
+            }
+
+            var metalSubmesh = FindAntennaStrikeMetalSubmesh(sourceRenderer, sourceMesh.subMeshCount);
+            var sourceLeftSocket = RequireNamedChild(staticReview, "Accelerando_Left_MaceSocket_Ring");
+            var sourceRightSocket = RequireNamedChild(staticReview, "Accelerando_Right_MaceSocket_Ring");
+            var leftPivot = sourceBody.InverseTransformPoint(sourceLeftSocket.position);
+            var rightPivot = sourceBody.InverseTransformPoint(sourceRightSocket.position);
+            var vertices = sourceMesh.vertices;
+            var bodyTriangles = CreateTriangleListArray(sourceMesh.subMeshCount);
+            var leftMaceTriangles = CreateTriangleListArray(sourceMesh.subMeshCount);
+            var rightMaceTriangles = CreateTriangleListArray(sourceMesh.subMeshCount);
+            var bodyTriangleCount = 0;
+            var leftMaceTriangleCount = 0;
+            var rightMaceTriangleCount = 0;
+
+            for (var submesh = 0; submesh < sourceMesh.subMeshCount; submesh++)
+            {
+                var triangles = sourceMesh.GetTriangles(submesh);
+                for (var i = 0; i + 2 < triangles.Length; i += 3)
+                {
+                    var a = triangles[i];
+                    var b = triangles[i + 1];
+                    var c = triangles[i + 2];
+                    if (submesh != metalSubmesh)
+                    {
+                        AddTriangle(bodyTriangles[submesh], a, b, c);
+                        bodyTriangleCount++;
+                        continue;
+                    }
+
+                    var center = (vertices[a] + vertices[b] + vertices[c]) / 3f;
+                    if ((center - leftPivot).sqrMagnitude <= (center - rightPivot).sqrMagnitude)
+                    {
+                        AddTriangle(leftMaceTriangles[submesh], a, b, c);
+                        leftMaceTriangleCount++;
+                    }
+                    else
+                    {
+                        AddTriangle(rightMaceTriangles[submesh], a, b, c);
+                        rightMaceTriangleCount++;
+                    }
+                }
+            }
+
+            if (bodyTriangleCount <= 0 || leftMaceTriangleCount <= 0 || rightMaceTriangleCount <= 0)
+            {
+                throw new InvalidOperationException(
+                    $"Accelerando antenna strike mace split failed. Body={bodyTriangleCount}, " +
+                    $"LeftMace={leftMaceTriangleCount}, RightMace={rightMaceTriangleCount}.");
+            }
+
+            var bodyMesh = CreateIdleBreathSubsetMesh(
+                sourceMesh,
+                bodyTriangles,
+                "Accelerando_AntennaStrike_Body_Mesh",
+                false);
+            var leftMaceMesh = CreateIdleBreathSubsetMesh(
+                sourceMesh,
+                leftMaceTriangles,
+                "Accelerando_Left_MaceHead_Mesh",
+                false);
+            var rightMaceMesh = CreateIdleBreathSubsetMesh(
+                sourceMesh,
+                rightMaceTriangles,
+                "Accelerando_Right_MaceHead_Mesh",
+                false);
+            OffsetMeshVertices(leftMaceMesh, -leftPivot);
+            OffsetMeshVertices(rightMaceMesh, -rightPivot);
+
+            if (AssetDatabase.LoadAssetAtPath<Mesh>(UnityAntennaStrikeMaceSplitMeshAssetPath) != null)
+            {
+                AssetDatabase.DeleteAsset(UnityAntennaStrikeMaceSplitMeshAssetPath);
+            }
+
+            AssetDatabase.CreateAsset(bodyMesh, UnityAntennaStrikeMaceSplitMeshAssetPath);
+            AssetDatabase.AddObjectToAsset(leftMaceMesh, UnityAntennaStrikeMaceSplitMeshAssetPath);
+            AssetDatabase.AddObjectToAsset(rightMaceMesh, UnityAntennaStrikeMaceSplitMeshAssetPath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.ImportAsset(
+                UnityAntennaStrikeMaceSplitMeshAssetPath,
+                ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+
+            Debug.Log(
+                "AccelerandoAntennaStrikeMaceMeshSplit " +
+                $"Source={AssetDatabase.GetAssetPath(sourceMesh)}, MetalSubmesh={metalSubmesh}, " +
+                $"BodyTriangles={bodyTriangleCount}, LeftMaceTriangles={leftMaceTriangleCount}, " +
+                $"RightMaceTriangles={rightMaceTriangleCount}, Asset={UnityAntennaStrikeMaceSplitMeshAssetPath}.");
+
+            return new AntennaStrikeMaceMeshSplit
+            {
+                BodyMesh = bodyMesh,
+                LeftMaceMesh = leftMaceMesh,
+                RightMaceMesh = rightMaceMesh,
+                BodyTriangleCount = bodyTriangleCount,
+                LeftMaceTriangleCount = leftMaceTriangleCount,
+                RightMaceTriangleCount = rightMaceTriangleCount
+            };
+        }
+
+        private static int FindAntennaStrikeMetalSubmesh(MeshRenderer renderer, int submeshCount)
+        {
+            var materials = renderer.sharedMaterials;
+            for (var i = 0; i < materials.Length && i < submeshCount; i++)
+            {
+                var material = materials[i];
+                var materialPath = material != null ? AssetDatabase.GetAssetPath(material) : string.Empty;
+                if (string.Equals(materialPath, UnityApprovedMetalMaterialAssetPath, StringComparison.OrdinalIgnoreCase) ||
+                    (material != null && material.name.Contains("RustyMetal", StringComparison.OrdinalIgnoreCase)))
+                {
+                    return i;
+                }
+            }
+
+            throw new InvalidOperationException(
+                $"{ConnectedColoredBodyObjectName} is missing the approved rusty metal material submesh.");
+        }
+
+        private static void AddTriangle(List<int> triangles, int a, int b, int c)
+        {
+            triangles.Add(a);
+            triangles.Add(b);
+            triangles.Add(c);
+        }
+
+        private static void OffsetMeshVertices(Mesh mesh, Vector3 offset)
+        {
+            var vertices = mesh.vertices;
+            for (var i = 0; i < vertices.Length; i++)
+            {
+                vertices[i] += offset;
+            }
+
+            mesh.vertices = vertices;
+            mesh.RecalculateBounds();
+            mesh.UploadMeshData(false);
+        }
+
+        private static void ApplyAntennaStrikeMaceMeshSplit(
+            Transform strikeSlot,
+            Transform strikeModel,
+            AntennaStrikeMaceMeshSplit split)
+        {
+            var body = FindChildByName(strikeModel, ConnectedColoredBodyObjectName);
+            var bodyFilter = body != null ? body.GetComponent<MeshFilter>() : null;
+            var bodyRenderer = body != null ? body.GetComponent<MeshRenderer>() : null;
+            if (body == null || bodyFilter == null || bodyRenderer == null)
+            {
+                throw new InvalidOperationException(
+                    $"{AntennaStrikeSlotObjectName}/{ConnectedColoredBodyObjectName} is missing its mesh components.");
+            }
+
+            bodyFilter.sharedMesh = split.BodyMesh;
+            EditorUtility.SetDirty(bodyFilter);
+            ConfigureAntennaStrikeMaceHead(
+                strikeSlot,
+                body,
+                bodyRenderer,
+                "Left",
+                split.LeftMaceMesh);
+            ConfigureAntennaStrikeMaceHead(
+                strikeSlot,
+                body,
+                bodyRenderer,
+                "Right",
+                split.RightMaceMesh);
+        }
+
+        private static void ConfigureAntennaStrikeMaceHead(
+            Transform strikeSlot,
+            Transform body,
+            MeshRenderer bodyRenderer,
+            string sideName,
+            Mesh maceMesh)
+        {
+            var objectName = $"Accelerando_{sideName}_MaceHead";
+            var maceHead = FindChildByName(strikeSlot, objectName);
+            if (maceHead == null)
+            {
+                maceHead = new GameObject(objectName).transform;
+            }
+
+            maceHead.SetParent(body.parent, false);
+            var socket = RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_MaceSocket_Ring");
+            maceHead.position = socket.position;
+            maceHead.rotation = body.rotation;
+            maceHead.localScale = body.localScale;
+            maceHead.gameObject.layer = body.gameObject.layer;
+            maceHead.gameObject.SetActive(true);
+
+            var meshFilter = maceHead.GetComponent<MeshFilter>();
+            if (meshFilter == null)
+            {
+                meshFilter = maceHead.gameObject.AddComponent<MeshFilter>();
+            }
+
+            var meshRenderer = maceHead.GetComponent<MeshRenderer>();
+            if (meshRenderer == null)
+            {
+                meshRenderer = maceHead.gameObject.AddComponent<MeshRenderer>();
+            }
+
+            meshFilter.sharedMesh = maceMesh;
+            meshRenderer.sharedMaterials = bodyRenderer.sharedMaterials;
+            meshRenderer.enabled = true;
+            meshRenderer.forceRenderingOff = false;
+            meshRenderer.shadowCastingMode = bodyRenderer.shadowCastingMode;
+            meshRenderer.receiveShadows = bodyRenderer.receiveShadows;
+            meshRenderer.lightProbeUsage = bodyRenderer.lightProbeUsage;
+            meshRenderer.reflectionProbeUsage = bodyRenderer.reflectionProbeUsage;
+            meshRenderer.motionVectorGenerationMode = bodyRenderer.motionVectorGenerationMode;
+            meshRenderer.renderingLayerMask = bodyRenderer.renderingLayerMask;
+
+            EditorUtility.SetDirty(maceHead.gameObject);
+            EditorUtility.SetDirty(maceHead);
+            EditorUtility.SetDirty(meshFilter);
+            EditorUtility.SetDirty(meshRenderer);
+        }
+
+        private static void RemoveAntennaStrikeMaceSocketRingGeometry(Transform strikeSlot)
+        {
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                var socket = RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_MaceSocket_Ring");
+                foreach (var renderer in socket.GetComponents<Renderer>())
+                {
+                    UnityEngine.Object.DestroyImmediate(renderer);
+                }
+
+                foreach (var meshFilter in socket.GetComponents<MeshFilter>())
+                {
+                    UnityEngine.Object.DestroyImmediate(meshFilter);
+                }
+
+                EditorUtility.SetDirty(socket.gameObject);
+                EditorUtility.SetDirty(socket);
+            }
+        }
+
         private static void HideMaceSocketRingRenderers(Transform root)
         {
             HideMaceSocketRingRenderer(root, "Left");
@@ -2668,6 +5759,41 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 if (renderer.enabled)
                 {
                     throw new InvalidOperationException($"{maceSocket.name} renderer must stay hidden to prevent lower mace protrusion.");
+                }
+            }
+        }
+
+        private static void RequireAntennaStrikeMaceVisuals(Transform strikeSlot, Transform modelObject)
+        {
+            var body = FindChildByName(modelObject, ConnectedColoredBodyObjectName);
+            var bodyFilter = body != null ? body.GetComponent<MeshFilter>() : null;
+            if (bodyFilter == null || bodyFilter.sharedMesh == null ||
+                !string.Equals(
+                    AssetDatabase.GetAssetPath(bodyFilter.sharedMesh),
+                    UnityAntennaStrikeMaceSplitMeshAssetPath,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    $"{AntennaStrikeSlotObjectName} must use the attack-only body mesh with separated mace heads.");
+            }
+
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                var maceHead = RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_MaceHead");
+                var meshFilter = maceHead.GetComponent<MeshFilter>();
+                var renderer = maceHead.GetComponent<MeshRenderer>();
+                if (meshFilter == null || meshFilter.sharedMesh == null ||
+                    renderer == null || !renderer.enabled || renderer.forceRenderingOff)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace head must have visible separated mesh geometry.");
+                }
+
+                var socket = RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_MaceSocket_Ring");
+                if (Vector3.Distance(maceHead.position, socket.position) > ConnectedChainEndpointTolerance)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace head pivot is detached from its physics socket.");
                 }
             }
         }
@@ -3991,7 +7117,8 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             var antennaInputRange = GetAntennaStrikeInputCurveRange(clip, strikeSlot);
             var chainFollowerRange = GetCrawlChainFollowerCurveRange(clip, strikeSlot);
             var maceFollowerRange = GetCrawlMaceFollowerCurveRange(clip, strikeSlot);
-            var chainPhysicsSummary = InspectCrawlChainPhysicsRig(strikeSlot, 0.065f);
+            var chainPhysicsSummary = InspectCrawlChainPhysicsRig(strikeSlot, 0.065f, requireLockedLinearMotion: true);
+            RequireAntennaStrikeMaceVisuals(strikeSlot, modelObject);
             RequireMaceSocketRingRenderersHidden(strikeSlot);
 
             if (bodyForeAftRange < CrawlForwardBodyForeAftMinimumRange)
@@ -4137,7 +7264,7 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                     Physics.autoSyncTransforms = false;
                     for (var step = 0; step < steps; step++)
                     {
-                        var sampleTime = (step * deltaTime) % clip.length;
+                        var sampleTime = step * deltaTime;
                         clip.SampleAnimation(crawlSlot.gameObject, sampleTime);
                         simulateMethod.Invoke(rig, new object[] { deltaTime });
                         Physics.SyncTransforms();
@@ -4193,18 +7320,20 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 "Left",
                 strikeSlot,
                 RequireNamedChild(strikeSlot, "Accelerando_Left_AntennaTip_Ring"),
-                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Left")));
+                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Left")),
+                RequireNamedChild(strikeSlot, "Accelerando_Left_MaceHead"));
             var rightMetrics = new AntennaStrikePhysicsResponseMetrics(
                 "Right",
                 strikeSlot,
                 RequireNamedChild(strikeSlot, "Accelerando_Right_AntennaTip_Ring"),
-                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Right")));
+                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Right")),
+                RequireNamedChild(strikeSlot, "Accelerando_Right_MaceHead"));
 
             var visualSnapshots = CaptureAntennaStrikeVisualSnapshots(strikeSlot);
             var previousMode = Physics.simulationMode;
             var previousAutoSync = Physics.autoSyncTransforms;
             const float deltaTime = 1f / 90f;
-            const int steps = 180;
+            var steps = Mathf.RoundToInt(AntennaStrikeLoopSeconds / deltaTime) + 1;
             try
             {
                 try
@@ -4213,15 +7342,15 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                     Physics.autoSyncTransforms = false;
                     for (var step = 0; step < steps; step++)
                     {
-                        var sampleTime = (step * deltaTime) % clip.length;
+                        var sampleTime = step * deltaTime;
                         clip.SampleAnimation(strikeSlot.gameObject, sampleTime);
                         simulateMethod.Invoke(rig, new object[] { deltaTime });
                         Physics.SyncTransforms();
                         Physics.Simulate(deltaTime);
                         syncMethod.Invoke(rig, Array.Empty<object>());
 
-                        leftMetrics.Sample();
-                        rightMetrics.Sample();
+                        leftMetrics.Sample(sampleTime, deltaTime);
+                        rightMetrics.Sample(sampleTime, deltaTime);
                     }
                 }
                 finally
@@ -4255,6 +7384,11 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 }
 
                 snapshots.Add(new TransformSnapshot(RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_MaceSocket_Ring")));
+                var maceHead = FindChildByName(crawlSlot, $"Accelerando_{sideName}_MaceHead");
+                if (maceHead != null)
+                {
+                    snapshots.Add(new TransformSnapshot(maceHead));
+                }
             }
 
             return snapshots;
@@ -4331,12 +7465,102 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             }
         }
 
+        private sealed class AttackChainContinuityMetrics
+        {
+            private readonly string sideName;
+            private readonly Transform[] nodes;
+            private readonly float[] authoredSegmentLengths;
+
+            private float maximumSegmentExtension;
+            private float maximumSegmentExtensionTime;
+            private int maximumSegmentExtensionIndex;
+            private float maximumCurrentSegmentLength;
+            private int sampleCount;
+
+            public AttackChainContinuityMetrics(string sideName, Transform strikeSlot, Transform physicsRoot)
+            {
+                this.sideName = sideName;
+                nodes = new Transform[AttackConnectedChainLinkCount + 2];
+                nodes[0] = RequireNamedChild(strikeSlot, $"Accelerando_{sideName}_AntennaPhysicsAnchor");
+                for (var linkIndex = 1; linkIndex <= AttackConnectedChainLinkCount; linkIndex++)
+                {
+                    nodes[linkIndex] = RequireNamedChild(
+                        physicsRoot,
+                        ChainPhysicsLinkProxyName(sideName, linkIndex));
+                }
+
+                nodes[nodes.Length - 1] = RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName(sideName));
+                authoredSegmentLengths = new float[nodes.Length - 1];
+                for (var segmentIndex = 0; segmentIndex < authoredSegmentLengths.Length; segmentIndex++)
+                {
+                    authoredSegmentLengths[segmentIndex] = Vector3.Distance(
+                        NodePosition(segmentIndex),
+                        NodePosition(segmentIndex + 1));
+                }
+            }
+
+            public void Sample(float sampleTime)
+            {
+                sampleCount++;
+                for (var segmentIndex = 0; segmentIndex < authoredSegmentLengths.Length; segmentIndex++)
+                {
+                    var currentLength = Vector3.Distance(
+                        NodePosition(segmentIndex),
+                        NodePosition(segmentIndex + 1));
+                    maximumCurrentSegmentLength = Mathf.Max(maximumCurrentSegmentLength, currentLength);
+                    var extension = Mathf.Max(0f, currentLength - authoredSegmentLengths[segmentIndex]);
+                    if (extension > maximumSegmentExtension)
+                    {
+                        maximumSegmentExtension = extension;
+                        maximumSegmentExtensionTime = sampleTime;
+                        maximumSegmentExtensionIndex = segmentIndex;
+                    }
+                }
+            }
+
+            private Vector3 NodePosition(int nodeIndex)
+            {
+                var body = nodes[nodeIndex].GetComponent<Rigidbody>();
+                return body != null ? body.position : nodes[nodeIndex].position;
+            }
+
+            public void Validate()
+            {
+                if (sampleCount <= 0)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} chain continuity did not produce samples.");
+                }
+
+                if (maximumSegmentExtension > AttackChainMaximumSegmentExtension)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} chain visually separates under recoil. " +
+                        $"MaximumSegmentExtension={maximumSegmentExtension:0.######}/{AttackChainMaximumSegmentExtension:0.######}, " +
+                        $"Segment={maximumSegmentExtensionIndex:00}-{maximumSegmentExtensionIndex + 1:00}, " +
+                        $"Time={maximumSegmentExtensionTime:0.###}.");
+                }
+            }
+
+            public override string ToString()
+            {
+                return
+                    $"ChainContinuitySide={sideName}, Samples={sampleCount}, " +
+                    $"MaximumSegmentExtension={maximumSegmentExtension:0.######}, " +
+                    $"MaximumSegmentExtensionTime={maximumSegmentExtensionTime:0.###}, " +
+                    $"MaximumSegmentExtensionIndex={maximumSegmentExtensionIndex:00}, " +
+                    $"MaximumCurrentSegmentLength={maximumCurrentSegmentLength:0.######}, " +
+                    "Result=PASS";
+            }
+        }
+
         private sealed class AntennaStrikePhysicsResponseMetrics
         {
             private readonly string sideName;
             private readonly Transform strikeSlot;
             private readonly Transform antennaTip;
-            private readonly Transform maceProxy;
+            private readonly Rigidbody maceProxyBody;
+            private readonly Transform maceVisual;
             private readonly float restAntennaForward;
             private readonly float restMaceForward;
 
@@ -4344,35 +7568,153 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             private float maxAntennaForward;
             private float minMaceForward;
             private float maxMaceForward;
+            private float maxVisualProxySeparation;
+            private float previousAntennaForward;
+            private float previousMaceForward;
+            private Vector3 previousAntennaPosition;
+            private float maximumStrikeAntennaForwardSpeed;
+            private float maximumStrikeAntennaForwardSpeedTime;
+            private float maximumReturnAntennaBackwardSpeed;
+            private float maximumStrikeMaceForwardSpeed;
+            private float maximumStrikeMaceForwardSpeedTime;
+            private float maximumReturnMaceBackwardSpeed;
+            private float minimumReturnMaceForward;
+            private float maximumMaceSpeedWhileAntennaSettled;
+            private float maximumMaceSpeedWhileAntennaSettledTime;
+            private float maximumAntennaBackwardRecoilSpeed;
+            private float maximumMaceForwardSpeedDuringAntennaRecoil;
+            private int opposedMotionSamplesDuringAntennaRecoil;
+            private float earlyStationaryRecoveryMaceSpeedSum;
+            private int earlyStationaryRecoverySampleCount;
+            private float lateStationaryRecoveryMaceSpeedSum;
+            private int lateStationaryRecoverySampleCount;
+            private float maximumMovingInputMaceLinearDamping;
+            private int movingInputDampingSampleCount;
+            private float maximumSettledMaceLinearDamping;
+            private bool hasPreviousSample;
             private int sampleCount;
 
             public AntennaStrikePhysicsResponseMetrics(
                 string sideName,
                 Transform strikeSlot,
                 Transform antennaTip,
-                Transform maceProxy)
+                Transform maceProxy,
+                Transform maceVisual)
             {
                 this.sideName = sideName;
                 this.strikeSlot = strikeSlot;
                 this.antennaTip = antennaTip;
-                this.maceProxy = maceProxy;
+                maceProxyBody = maceProxy.GetComponent<Rigidbody>() ??
+                    throw new InvalidOperationException($"{maceProxy.name} Rigidbody is missing.");
+                this.maceVisual = maceVisual;
                 var forward = strikeSlot.forward;
                 restAntennaForward = Vector3.Dot(antennaTip.position, forward);
-                restMaceForward = Vector3.Dot(maceProxy.position, forward);
+                restMaceForward = Vector3.Dot(maceVisual.position, forward);
                 minAntennaForward = maxAntennaForward = restAntennaForward;
                 minMaceForward = maxMaceForward = restMaceForward;
+                minimumReturnMaceForward = restMaceForward;
+                previousAntennaPosition = antennaTip.position;
             }
 
-            public void Sample()
+            public void Sample(float sampleTime, float deltaTime)
             {
                 sampleCount++;
                 var forward = strikeSlot.forward;
                 var antennaForward = Vector3.Dot(antennaTip.position, forward);
-                var maceForward = Vector3.Dot(maceProxy.position, forward);
+                var maceForward = Vector3.Dot(maceVisual.position, forward);
                 minAntennaForward = Mathf.Min(minAntennaForward, antennaForward);
                 maxAntennaForward = Mathf.Max(maxAntennaForward, antennaForward);
                 minMaceForward = Mathf.Min(minMaceForward, maceForward);
                 maxMaceForward = Mathf.Max(maxMaceForward, maceForward);
+                maxVisualProxySeparation = Mathf.Max(
+                    maxVisualProxySeparation,
+                    Vector3.Distance(maceVisual.position, maceProxyBody.position));
+
+                if (hasPreviousSample && deltaTime > 0.000001f)
+                {
+                    var antennaSpeed = (antennaForward - previousAntennaForward) / deltaTime;
+                    var maceSpeed = (maceForward - previousMaceForward) / deltaTime;
+                    var antennaWorldSpeed = Vector3.Distance(antennaTip.position, previousAntennaPosition) / deltaTime;
+                    var maceWorldSpeed = maceProxyBody.linearVelocity.magnitude;
+                    if (sampleTime >= ForwardMaceStrikeWindupTime &&
+                        sampleTime <= ForwardMaceStrikeFollowThroughTime &&
+                        antennaWorldSpeed > AttackStationaryAntennaSpeedThreshold)
+                    {
+                        movingInputDampingSampleCount++;
+                        maximumMovingInputMaceLinearDamping = Mathf.Max(
+                            maximumMovingInputMaceLinearDamping,
+                            maceProxyBody.linearDamping);
+                    }
+
+                    if (antennaWorldSpeed <= AttackStationaryAntennaSpeedThreshold &&
+                        sampleTime >= AttackStationaryEarlyRecoveryStartTime)
+                    {
+                        maximumSettledMaceLinearDamping = Mathf.Max(
+                            maximumSettledMaceLinearDamping,
+                            maceProxyBody.linearDamping);
+
+                        if (sampleTime <= AttackStationaryEarlyRecoveryEndTime)
+                        {
+                            earlyStationaryRecoveryMaceSpeedSum += maceWorldSpeed;
+                            earlyStationaryRecoverySampleCount++;
+                        }
+                        else if (sampleTime >= AttackStationaryLateRecoveryStartTime &&
+                                 sampleTime <= AttackStationaryLateRecoveryEndTime)
+                        {
+                            lateStationaryRecoveryMaceSpeedSum += maceWorldSpeed;
+                            lateStationaryRecoverySampleCount++;
+                        }
+                    }
+
+                    if (sampleTime >= ForwardMaceStrikeWindupTime && sampleTime <= ForwardMaceStrikeFollowThroughTime)
+                    {
+                        if (antennaSpeed > maximumStrikeAntennaForwardSpeed)
+                        {
+                            maximumStrikeAntennaForwardSpeed = antennaSpeed;
+                            maximumStrikeAntennaForwardSpeedTime = sampleTime;
+                        }
+
+                        if (maceSpeed > maximumStrikeMaceForwardSpeed)
+                        {
+                            maximumStrikeMaceForwardSpeed = maceSpeed;
+                            maximumStrikeMaceForwardSpeedTime = sampleTime;
+                        }
+
+                        if (sampleTime >= 0.56f && Mathf.Abs(antennaSpeed) <= 0.75f &&
+                            Mathf.Abs(maceSpeed) > maximumMaceSpeedWhileAntennaSettled)
+                        {
+                            maximumMaceSpeedWhileAntennaSettled = Mathf.Abs(maceSpeed);
+                            maximumMaceSpeedWhileAntennaSettledTime = sampleTime;
+                        }
+
+                        if (sampleTime >= ForwardMaceStrikePeakTime &&
+                            sampleTime <= ForwardMaceStrikeSecondaryDriveTime)
+                        {
+                            maximumAntennaBackwardRecoilSpeed = Mathf.Max(
+                                maximumAntennaBackwardRecoilSpeed,
+                                -antennaSpeed);
+                            if (antennaSpeed <= -AntennaReactionMinimumDirectionalSpeed &&
+                                maceSpeed >= AntennaReactionMinimumDirectionalSpeed)
+                            {
+                                opposedMotionSamplesDuringAntennaRecoil++;
+                                maximumMaceForwardSpeedDuringAntennaRecoil = Mathf.Max(
+                                    maximumMaceForwardSpeedDuringAntennaRecoil,
+                                    maceSpeed);
+                            }
+                        }
+                    }
+                    else if (sampleTime > ForwardMaceStrikeFollowThroughTime)
+                    {
+                        maximumReturnAntennaBackwardSpeed = Mathf.Max(maximumReturnAntennaBackwardSpeed, -antennaSpeed);
+                        maximumReturnMaceBackwardSpeed = Mathf.Max(maximumReturnMaceBackwardSpeed, -maceSpeed);
+                        minimumReturnMaceForward = Mathf.Min(minimumReturnMaceForward, maceForward);
+                    }
+                }
+
+                previousAntennaForward = antennaForward;
+                previousMaceForward = maceForward;
+                previousAntennaPosition = antennaTip.position;
+                hasPreviousSample = true;
             }
 
             public void Validate()
@@ -4410,6 +7752,100 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                         $"{AntennaStrikeSlotObjectName} {sideName} mace must overshoot forward beyond the antenna input. " +
                         $"AntennaForwardOffset={MaxAntennaForwardOffset:0.###}, MaceForwardOffset={MaxMaceForwardOffset:0.###}.");
                 }
+
+                if (MaxMaceForwardOffset < ForwardMaceStrikeMinimumPositiveOffset)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace does not swing far enough toward the current facing direction. " +
+                        $"MaceForwardOffset={MaxMaceForwardOffset:0.###}, Minimum={ForwardMaceStrikeMinimumPositiveOffset:0.###}.");
+                }
+
+                if (maxVisualProxySeparation > ConnectedChainEndpointTolerance)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} visible mace detached from its physics proxy. " +
+                        $"MaximumSeparation={maxVisualProxySeparation:0.###}.");
+                }
+
+                if (maximumStrikeAntennaForwardSpeed < maximumReturnAntennaBackwardSpeed * ForwardMaceStrikeMinimumVelocityRatio)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} forward antenna strike input is not stronger than its loose return. " +
+                        $"ForwardSpeed={maximumStrikeAntennaForwardSpeed:0.###}, ReturnSpeed={maximumReturnAntennaBackwardSpeed:0.###}, " +
+                        $"MinimumRatio={ForwardMaceStrikeMinimumVelocityRatio:0.###}.");
+                }
+
+                if (ReturnMaceBackwardOvershoot > MaxMaceForwardOffset)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} return mace overshoot is stronger than its forward swing. " +
+                        $"ForwardOffset={MaxMaceForwardOffset:0.###}, ReturnBackwardOvershoot={ReturnMaceBackwardOvershoot:0.###}.");
+                }
+
+                var maceReleaseResponseDelay = maximumStrikeMaceForwardSpeedTime - ForwardMaceStrikeWindupTime;
+                if (maceReleaseResponseDelay < AntennaDrivenMaceMinimumReleaseResponseDelay ||
+                    maceReleaseResponseDelay > AntennaDrivenMaceMaximumReleaseResponseDelay)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace response must occur after the antenna release begins. " +
+                        $"ReleaseResponseDelay={maceReleaseResponseDelay:0.###}, " +
+                        $"Range={AntennaDrivenMaceMinimumReleaseResponseDelay:0.###}-{AntennaDrivenMaceMaximumReleaseResponseDelay:0.###}.");
+                }
+
+                if (maximumMaceSpeedWhileAntennaSettled < AntennaDrivenMaceMinimumSettledAntennaSpeed)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace loses all inertia as soon as the antenna settles. " +
+                        $"SettledAntennaMaceSpeed={maximumMaceSpeedWhileAntennaSettled:0.###}, " +
+                        $"Minimum={AntennaDrivenMaceMinimumSettledAntennaSpeed:0.###}.");
+                }
+
+                if (maximumAntennaBackwardRecoilSpeed < AntennaReactionMinimumDirectionalSpeed ||
+                    opposedMotionSamplesDuringAntennaRecoil < AntennaReactionMinimumOpposedMotionSamples)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace does not preserve forward inertia while the antenna recoils backward. " +
+                        $"AntennaBackwardRecoilSpeed={maximumAntennaBackwardRecoilSpeed:0.###}, " +
+                        $"OpposedMotionSamples={opposedMotionSamplesDuringAntennaRecoil}/{AntennaReactionMinimumOpposedMotionSamples}, " +
+                        $"MaceForwardSpeedDuringRecoil={maximumMaceForwardSpeedDuringAntennaRecoil:0.###}.");
+                }
+
+                if (movingInputDampingSampleCount <= 0 ||
+                    maximumMovingInputMaceLinearDamping > AttackMovingMaximumMaceLinearDamping)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace damping does not release while the antenna drives the chain. " +
+                        $"MovingSamples={movingInputDampingSampleCount}, " +
+                        $"MaximumMovingDamping={maximumMovingInputMaceLinearDamping:0.###}, " +
+                        $"Maximum={AttackMovingMaximumMaceLinearDamping:0.###}.");
+                }
+
+                if (earlyStationaryRecoverySampleCount <= 0 || lateStationaryRecoverySampleCount <= 0)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} stationary recovery windows were not sampled. " +
+                        $"EarlySamples={earlyStationaryRecoverySampleCount}, " +
+                        $"LateSamples={lateStationaryRecoverySampleCount}.");
+                }
+
+                if (maximumSettledMaceLinearDamping < AttackSettledMinimumMaceLinearDamping)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace damping does not rise while the antenna is stationary. " +
+                        $"MaximumSettledDamping={maximumSettledMaceLinearDamping:0.###}, " +
+                        $"Minimum={AttackSettledMinimumMaceLinearDamping:0.###}.");
+                }
+
+                if (LateStationaryRecoveryAverageMaceSpeed >
+                    EarlyStationaryRecoveryAverageMaceSpeed * AttackStationaryMaximumLateToEarlySpeedRatio)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace keeps oscillating after the antenna settles. " +
+                        $"EarlyRecoverySpeed={EarlyStationaryRecoveryAverageMaceSpeed:0.###}, " +
+                        $"LateRecoverySpeed={LateStationaryRecoveryAverageMaceSpeed:0.###}, " +
+                        $"Ratio={LateToEarlyStationaryRecoverySpeedRatio:0.###}, " +
+                        $"MaximumRatio={AttackStationaryMaximumLateToEarlySpeedRatio:0.###}.");
+                }
             }
 
             private float AntennaForwardRange => maxAntennaForward - minAntennaForward;
@@ -4420,13 +7856,51 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
 
             private float MaxMaceForwardOffset => maxMaceForward - restMaceForward;
 
+            public float MaximumMaceForwardOffset => MaxMaceForwardOffset;
+
+            public float MaximumStrikeAntennaForwardSpeed => maximumStrikeAntennaForwardSpeed;
+
+            private float ReturnMaceBackwardOvershoot => Mathf.Max(0f, restMaceForward - minimumReturnMaceForward);
+
+            private float EarlyStationaryRecoveryAverageMaceSpeed =>
+                earlyStationaryRecoveryMaceSpeedSum / Mathf.Max(1, earlyStationaryRecoverySampleCount);
+
+            private float LateStationaryRecoveryAverageMaceSpeed =>
+                lateStationaryRecoveryMaceSpeedSum / Mathf.Max(1, lateStationaryRecoverySampleCount);
+
+            private float LateToEarlyStationaryRecoverySpeedRatio =>
+                EarlyStationaryRecoveryAverageMaceSpeed > 0.0001f
+                    ? LateStationaryRecoveryAverageMaceSpeed / EarlyStationaryRecoveryAverageMaceSpeed
+                    : 999f;
+
             public override string ToString()
             {
                 return
                     $"Side={sideName}, Samples={sampleCount}, " +
                     $"AntennaForwardRange={AntennaForwardRange:0.###}, MaceForwardRange={MaceForwardRange:0.###}, " +
                     $"MaxAntennaForwardOffset={MaxAntennaForwardOffset:0.###}, MaxMaceForwardOffset={MaxMaceForwardOffset:0.###}, " +
-                    $"Amplification={(AntennaForwardRange > 0.0001f ? MaceForwardRange / AntennaForwardRange : 0f):0.###}.";
+                    $"Amplification={(AntennaForwardRange > 0.0001f ? MaceForwardRange / AntennaForwardRange : 0f):0.###}, " +
+                    $"StrikeAntennaForwardSpeed={maximumStrikeAntennaForwardSpeed:0.###}, ReturnAntennaBackwardSpeed={maximumReturnAntennaBackwardSpeed:0.###}, " +
+                    $"AntennaVelocityRatio={(maximumReturnAntennaBackwardSpeed > 0.0001f ? maximumStrikeAntennaForwardSpeed / maximumReturnAntennaBackwardSpeed : 999f):0.###}, " +
+                    $"StrikeAntennaPeakTime={maximumStrikeAntennaForwardSpeedTime:0.###}, " +
+                    $"StrikeMaceForwardSpeed={maximumStrikeMaceForwardSpeed:0.###}, StrikeMacePeakTime={maximumStrikeMaceForwardSpeedTime:0.###}, " +
+                    $"MacePeakDelay={maximumStrikeMaceForwardSpeedTime - maximumStrikeAntennaForwardSpeedTime:0.###}, " +
+                    $"MaceReleaseResponseDelay={maximumStrikeMaceForwardSpeedTime - ForwardMaceStrikeWindupTime:0.###}, " +
+                    $"SettledAntennaMaceSpeed={maximumMaceSpeedWhileAntennaSettled:0.###}, " +
+                    $"SettledAntennaMaceSpeedTime={maximumMaceSpeedWhileAntennaSettledTime:0.###}, " +
+                    $"AntennaBackwardRecoilSpeed={maximumAntennaBackwardRecoilSpeed:0.###}, " +
+                    $"OpposedMotionSamples={opposedMotionSamplesDuringAntennaRecoil}, " +
+                    $"MaceForwardSpeedDuringRecoil={maximumMaceForwardSpeedDuringAntennaRecoil:0.###}, " +
+                    $"EarlyStationaryRecoverySpeed={EarlyStationaryRecoveryAverageMaceSpeed:0.###}, " +
+                    $"EarlyStationarySamples={earlyStationaryRecoverySampleCount}, " +
+                    $"LateStationaryRecoverySpeed={LateStationaryRecoveryAverageMaceSpeed:0.###}, " +
+                    $"LateStationarySamples={lateStationaryRecoverySampleCount}, " +
+                    $"LateToEarlyStationarySpeedRatio={LateToEarlyStationaryRecoverySpeedRatio:0.###}, " +
+                    $"MaximumMovingMaceLinearDamping={maximumMovingInputMaceLinearDamping:0.###}, " +
+                    $"MaximumSettledMaceLinearDamping={maximumSettledMaceLinearDamping:0.###}, " +
+                    $"ReturnMaceBackwardSpeed={maximumReturnMaceBackwardSpeed:0.###}, " +
+                    $"ReturnMaceBackwardOvershoot={ReturnMaceBackwardOvershoot:0.###}, " +
+                    $"MaxVisualProxySeparation={maxVisualProxySeparation:0.###}.";
             }
         }
 
@@ -4619,7 +8093,10 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             }
         }
 
-        private static string InspectCrawlChainPhysicsRig(Transform crawlSlot, float maximumJointLimit = 0.030f)
+        private static string InspectCrawlChainPhysicsRig(
+            Transform crawlSlot,
+            float maximumJointLimit = 0.030f,
+            bool requireLockedLinearMotion = false)
         {
             var rigType = FindAccelerandoChainPhysicsRigType();
             var rig = crawlSlot.GetComponent(rigType);
@@ -4643,12 +8120,17 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             }
 
             var summary = new System.Text.StringBuilder();
-            InspectCrawlChainPhysicsRigForSide(crawlSlot, "Left", summary, maximumJointLimit);
-            InspectCrawlChainPhysicsRigForSide(crawlSlot, "Right", summary, maximumJointLimit);
+            InspectCrawlChainPhysicsRigForSide(crawlSlot, "Left", summary, maximumJointLimit, requireLockedLinearMotion);
+            InspectCrawlChainPhysicsRigForSide(crawlSlot, "Right", summary, maximumJointLimit, requireLockedLinearMotion);
             return summary.ToString();
         }
 
-        private static void InspectCrawlChainPhysicsRigForSide(Transform crawlSlot, string sideName, System.Text.StringBuilder summary, float maximumJointLimit)
+        private static void InspectCrawlChainPhysicsRigForSide(
+            Transform crawlSlot,
+            string sideName,
+            System.Text.StringBuilder summary,
+            float maximumJointLimit,
+            bool requireLockedLinearMotion)
         {
             var physicsRoot = crawlSlot.Find(ChainPhysicsRootObjectName);
             if (physicsRoot == null)
@@ -4711,26 +8193,43 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 }
 
                 var joint = RequireConfigurableJoint(proxy, $"{sideName} chain link {i:00} physics proxy");
-                InspectPhysicsJointConnection(joint, previousBody, $"{sideName} chain link {i:00}", maximumJointLimit);
+                InspectPhysicsJointConnection(
+                    joint,
+                    previousBody,
+                    $"{sideName} chain link {i:00}",
+                    maximumJointLimit,
+                    requireLockedLinearMotion);
                 previousBody = body;
                 dynamicBodyCount++;
                 jointCount++;
             }
 
-            var mace = RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_MaceSocket_Ring");
+            var maceSocket = RequireNamedChild(crawlSlot, $"Accelerando_{sideName}_MaceSocket_Ring");
+            var maceHead = FindChildByName(crawlSlot, $"Accelerando_{sideName}_MaceHead");
             var maceProxy = RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName(sideName));
             var maceBody = RequireRigidbody(maceProxy, $"{sideName} mace physics proxy");
             RequireCollider(maceProxy, $"{sideName} mace physics proxy");
             RequireChildOf(maceProxy, physicsRoot, $"{sideName} mace physics proxy");
-            RequireVisualHasNoPhysics(mace, $"{sideName} mace visual");
-            RequireVisualFollowsPhysicsProxy(mace, maceProxy, $"{sideName} mace");
+            RequireVisualHasNoPhysics(maceSocket, $"{sideName} mace socket visual");
+            RequireVisualFollowsPhysicsProxy(maceSocket, maceProxy, $"{sideName} mace socket");
+            if (maceHead != null)
+            {
+                RequireVisualHasNoPhysics(maceHead, $"{sideName} mace head visual");
+                RequireVisualFollowsPhysicsProxy(maceHead, maceProxy, $"{sideName} mace head");
+            }
+
             if (maceBody.isKinematic)
             {
                 throw new InvalidOperationException($"{CrawlSlotObjectName} {sideName} mace physics proxy must be dynamic.");
             }
 
             var maceJoint = RequireConfigurableJoint(maceProxy, $"{sideName} mace physics proxy");
-            InspectPhysicsJointConnection(maceJoint, previousBody, $"{sideName} mace", maximumJointLimit);
+            InspectPhysicsJointConnection(
+                maceJoint,
+                previousBody,
+                $"{sideName} mace",
+                maximumJointLimit,
+                requireLockedLinearMotion);
             dynamicBodyCount++;
             jointCount++;
 
@@ -4816,21 +8315,39 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             return joint;
         }
 
-        private static void InspectPhysicsJointConnection(ConfigurableJoint joint, Rigidbody expectedConnectedBody, string label, float maximumJointLimit)
+        private static void InspectPhysicsJointConnection(
+            ConfigurableJoint joint,
+            Rigidbody expectedConnectedBody,
+            string label,
+            float maximumJointLimit,
+            bool requireLockedLinearMotion)
         {
             if (joint.connectedBody != expectedConnectedBody)
             {
                 throw new InvalidOperationException($"{CrawlSlotObjectName} {label} joint is connected to the wrong body.");
             }
 
-            if (joint.xMotion != ConfigurableJointMotion.Limited ||
-                joint.yMotion != ConfigurableJointMotion.Limited ||
-                joint.zMotion != ConfigurableJointMotion.Limited)
+            var expectedLinearMotion = requireLockedLinearMotion
+                ? ConfigurableJointMotion.Locked
+                : ConfigurableJointMotion.Limited;
+            if (joint.xMotion != expectedLinearMotion ||
+                joint.yMotion != expectedLinearMotion ||
+                joint.zMotion != expectedLinearMotion)
             {
-                throw new InvalidOperationException($"{CrawlSlotObjectName} {label} joint must use limited linear motion.");
+                throw new InvalidOperationException(
+                    $"{CrawlSlotObjectName} {label} joint linear motion mismatch. " +
+                    $"Expected={expectedLinearMotion}, Actual={joint.xMotion}/{joint.yMotion}/{joint.zMotion}.");
             }
 
-            if (joint.linearLimit.limit > maximumJointLimit)
+            if (requireLockedLinearMotion &&
+                (joint.angularXMotion != ConfigurableJointMotion.Free ||
+                 joint.angularYMotion != ConfigurableJointMotion.Free ||
+                 joint.angularZMotion != ConfigurableJointMotion.Free))
+            {
+                throw new InvalidOperationException($"{CrawlSlotObjectName} {label} attack hinge must keep angular motion free.");
+            }
+
+            if (!requireLockedLinearMotion && joint.linearLimit.limit > maximumJointLimit)
             {
                 throw new InvalidOperationException(
                     $"{CrawlSlotObjectName} {label} joint limit is too loose. Limit={joint.linearLimit.limit:0.###}, Maximum={maximumJointLimit:0.###}.");
@@ -5539,10 +9056,12 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             string frontFileName,
             string obliqueFileName,
             string logName,
-            Bounds? fixedBounds = null)
+            Bounds? fixedBounds = null,
+            string outputFolder = ValidationFolder,
+            Vector3? frontDirectionOverride = null)
         {
             var bounds = fixedBounds ?? CalculateRendererBounds(captureRoots, new Bounds(focus.position, Vector3.one));
-            var outputDirectory = GetAbsoluteProjectPath(ValidationFolder);
+            var outputDirectory = GetAbsoluteProjectPath(outputFolder);
             Directory.CreateDirectory(outputDirectory);
 
             var cameraObject = new GameObject("Accelerando_CaptureCamera");
@@ -5577,11 +9096,11 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 light.transform.rotation = Quaternion.Euler(48f, placementRoot.eulerAngles.y + 30f, 0f);
 
                 var frontPath = Path.Combine(outputDirectory, frontFileName);
-                ConfigureCaptureCamera(camera, focus, bounds, 0f);
+                ConfigureCaptureCamera(camera, focus, bounds, 0f, frontDirectionOverride);
                 SaveCameraCapture(camera, frontPath);
 
                 var obliquePath = Path.Combine(outputDirectory, obliqueFileName);
-                ConfigureCaptureCamera(camera, focus, bounds, 35f);
+                ConfigureCaptureCamera(camera, focus, bounds, 35f, frontDirectionOverride);
                 SaveCameraCapture(camera, obliquePath);
 
                 Debug.Log($"{logName} Paths={frontPath};{obliquePath}");
@@ -5604,9 +9123,15 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             }
         }
 
-        private static void ConfigureCaptureCamera(Camera camera, Transform focus, Bounds bounds, float yawOffsetDegrees)
+        private static void ConfigureCaptureCamera(
+            Camera camera,
+            Transform focus,
+            Bounds bounds,
+            float yawOffsetDegrees,
+            Vector3? frontDirectionOverride = null)
         {
-            var frontDirection = Quaternion.AngleAxis(yawOffsetDegrees, Vector3.up) * CalculateAccelerandoVisualFrontDirection(focus);
+            var baseFrontDirection = frontDirectionOverride ?? CalculateAccelerandoVisualFrontDirection(focus);
+            var frontDirection = Quaternion.AngleAxis(yawOffsetDegrees, Vector3.up) * baseFrontDirection;
             frontDirection.y = 0f;
             frontDirection = frontDirection.sqrMagnitude > 0.001f ? frontDirection.normalized : Vector3.forward;
             var lookAt = CalculateLookAt(bounds);

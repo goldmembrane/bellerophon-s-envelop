@@ -1,0 +1,44 @@
+﻿Accelerando forward mace strike physics validation
+Clip=Assets/_Project/Art/Enemies/Accelerando/Animations/Accelerando_Antenna_Strike_Attack.anim
+DirectAnimationBindings=Bone_008,007,006,011,010,009 only
+ChainAndMaceTransformCurves=0
+AttackForceTransmission=AntennaKinematicAnchorToConnectedJointsOnly
+DirectFollowerSpringDamperInertia=0
+Side=Left, Samples=217, AntennaForwardRange=0.724, MaceForwardRange=2.134, MaxAntennaForwardOffset=0.363, MaxMaceForwardOffset=1.147, Amplification=2.95, StrikeAntennaForwardSpeed=18.871, ReturnAntennaBackwardSpeed=0.613, AntennaVelocityRatio=30.776, StrikeAntennaPeakTime=0.4, StrikeMaceForwardSpeed=23.496, StrikeMacePeakTime=0.544, MacePeakDelay=0.144, MaceReleaseResponseDelay=0.224, SettledAntennaMaceSpeed=28.685, SettledAntennaMaceSpeedTime=0.7, ReturnMaceBackwardSpeed=40.901, ReturnMaceBackwardOvershoot=0.73, MaxVisualProxySeparation=0.
+Side=Right, Samples=217, AntennaForwardRange=0.671, MaceForwardRange=2.24, MaxAntennaForwardOffset=0.406, MaxMaceForwardOffset=1.275, Amplification=3.34, StrikeAntennaForwardSpeed=16.241, ReturnAntennaBackwardSpeed=0.505, AntennaVelocityRatio=32.18, StrikeAntennaPeakTime=0.411, StrikeMaceForwardSpeed=30.908, StrikeMacePeakTime=1.1, MacePeakDelay=0.689, MaceReleaseResponseDelay=0.78, SettledAntennaMaceSpeed=45.056, SettledAntennaMaceSpeedTime=0.978, ReturnMaceBackwardSpeed=47.51, ReturnMaceBackwardOvershoot=0.965, MaxVisualProxySeparation=0.
+ChainContinuitySide=Left, Samples=217, MaximumSegmentExtension=0.000004, MaximumSegmentExtensionTime=0.6, MaximumSegmentExtensionIndex=03, MaximumCurrentSegmentLength=0.420003, Result=PASS
+ChainContinuitySide=Right, Samples=217, MaximumSegmentExtension=0.000004, MaximumSegmentExtensionTime=1.578, MaximumSegmentExtensionIndex=03, MaximumCurrentSegmentLength=0.420004, Result=PASS
+Result=PASS
+Accelerando mirrored antenna strike pose validation
+ReferenceSide=Left
+MaximumMirroredPositionDelta=0.035242
+MaximumMirroredPositionDeltaTime=0.68
+MaximumMirroredSegmentAngle=0
+MaximumMirroredSegmentAngleTime=0
+MirroredPoseResult=PASS
+Accelerando forward strike deformation validation
+Mesh=Assets/_Project/Art/Enemies/Accelerando/Models/accelerando_forward_strike_deformation_fixed_body.asset
+VertexCount=7216
+MaximumNeutralVertexDelta=0
+MaximumWeightSumError=0.00000012
+RightAntennaWeightedVertices=1141
+RightAntennaMeasuredTriangles=1560
+RightAntennaForbiddenBoneVertices=0
+RightAntennaMaximumForbiddenBoneInfluence=0
+RightAntennaNearlyFixedReleaseVertices=0
+RightAntennaMinimumReleaseDisplacement=0.00229
+RightAntennaCollapsedTriangles=0
+RightAntennaOverstretchedTriangles=0
+RightAntennaMinimumAreaRatio=0.479304
+RightAntennaMaximumAreaRatio=2.870286
+LeftAntennaWeightedVertices=1631
+LeftAntennaMeasuredTriangles=2216
+LeftAntennaForbiddenBoneVertices=0
+LeftAntennaMaximumForbiddenBoneInfluence=0
+LeftAntennaNearlyFixedReleaseVertices=0
+LeftAntennaMinimumReleaseDisplacement=0.001946
+LeftAntennaCollapsedTriangles=0
+LeftAntennaOverstretchedTriangles=0
+LeftAntennaMinimumAreaRatio=0.431048
+LeftAntennaMaximumAreaRatio=2.077638
+DeformationResult=PASS
