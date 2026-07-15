@@ -1,0 +1,694 @@
+{
+  "source_fbx": "D:\\Bellerophon2\\Bellerophon\\enemies model\\con spirito.fbx",
+  "output_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\ConSpirito\\Models\\con_spirito_rerigged.fbx",
+  "operation": "rig_only_leg_chain_collapse",
+  "model_form_changed": false,
+  "geometry_unchanged_before_export": true,
+  "geometry_mismatches": {},
+  "leg_interpretation": "Each original leg chain keeps one representative bone; mesh vertices/faces/UV/materials stay unchanged.",
+  "vertex_group_changes": {
+    "char1": {
+      "frontleg": {
+        "merged_from": [
+          "frontleg",
+          "frontleg0",
+          "frontleg1",
+          "frontleg2"
+        ],
+        "assigned_vertices": 1059,
+        "removed_child_groups": [
+          "frontleg0",
+          "frontleg1",
+          "frontleg2"
+        ]
+      },
+      "R_frontleg": {
+        "merged_from": [
+          "R_frontleg",
+          "R_frontleg0",
+          "R_frontleg1",
+          "R_frontleg2"
+        ],
+        "assigned_vertices": 1103,
+        "removed_child_groups": [
+          "R_frontleg0",
+          "R_frontleg1",
+          "R_frontleg2"
+        ]
+      },
+      "backleg": {
+        "merged_from": [
+          "backleg",
+          "backleg0",
+          "backleg1",
+          "backleg2"
+        ],
+        "assigned_vertices": 860,
+        "removed_child_groups": [
+          "backleg0",
+          "backleg1",
+          "backleg2"
+        ]
+      },
+      "R_backleg": {
+        "merged_from": [
+          "R_backleg",
+          "R_backleg0",
+          "R_backleg1",
+          "R_backleg2"
+        ],
+        "assigned_vertices": 919,
+        "removed_child_groups": [
+          "R_backleg0",
+          "R_backleg1",
+          "R_backleg2"
+        ]
+      }
+    }
+  },
+  "rig_changes": {
+    "removed_child_bones": [
+      "frontleg2",
+      "frontleg1",
+      "frontleg0",
+      "R_frontleg2",
+      "R_frontleg1",
+      "R_frontleg0",
+      "backleg2",
+      "backleg1",
+      "backleg0",
+      "R_backleg2",
+      "R_backleg1",
+      "R_backleg0"
+    ],
+    "remaining_leg_bones": [
+      "backleg",
+      "R_backleg",
+      "frontleg",
+      "R_frontleg"
+    ],
+    "leg_tail_targets": {
+      "frontleg": [
+        0.124982074,
+        -0.194988072,
+        0.37266773
+      ],
+      "R_frontleg": [
+        -0.040715527,
+        -0.189031526,
+        0.419176638
+      ],
+      "backleg": [
+        0.09426225,
+        -0.110658571,
+        -0.199845195
+      ],
+      "R_backleg": [
+        -0.11555627,
+        -0.038708508,
+        -0.109406799
+      ]
+    }
+  },
+  "pruned_animation_curves": {
+    "Armature|Armature|Armature|Armature|Armature|Unreal Take|baselayer": [
+      "pose.bones[\"backleg1\"].location[0]",
+      "pose.bones[\"backleg1\"].location[1]",
+      "pose.bones[\"backleg1\"].location[2]",
+      "pose.bones[\"backleg1\"].rotation_quaternion[0]",
+      "pose.bones[\"backleg1\"].rotation_quaternion[1]",
+      "pose.bones[\"backleg1\"].rotation_quaternion[2]",
+      "pose.bones[\"backleg1\"].rotation_quaternion[3]",
+      "pose.bones[\"backleg1\"].scale[0]",
+      "pose.bones[\"backleg1\"].scale[1]",
+      "pose.bones[\"backleg1\"].scale[2]",
+      "pose.bones[\"R_backleg2\"].location[0]",
+      "pose.bones[\"R_backleg2\"].location[1]",
+      "pose.bones[\"R_backleg2\"].location[2]",
+      "pose.bones[\"R_backleg2\"].rotation_quaternion[0]",
+      "pose.bones[\"R_backleg2\"].rotation_quaternion[1]",
+      "pose.bones[\"R_backleg2\"].rotation_quaternion[2]",
+      "pose.bones[\"R_backleg2\"].rotation_quaternion[3]",
+      "pose.bones[\"R_backleg2\"].scale[0]",
+      "pose.bones[\"R_backleg2\"].scale[1]",
+      "pose.bones[\"R_backleg2\"].scale[2]",
+      "pose.bones[\"frontleg1\"].location[0]",
+      "pose.bones[\"frontleg1\"].location[1]",
+      "pose.bones[\"frontleg1\"].location[2]",
+      "pose.bones[\"frontleg1\"].rotation_quaternion[0]",
+      "pose.bones[\"frontleg1\"].rotation_quaternion[1]",
+      "pose.bones[\"frontleg1\"].rotation_quaternion[2]",
+      "pose.bones[\"frontleg1\"].rotation_quaternion[3]",
+      "pose.bones[\"frontleg1\"].scale[0]",
+      "pose.bones[\"frontleg1\"].scale[1]",
+      "pose.bones[\"frontleg1\"].scale[2]",
+      "pose.bones[\"frontleg0\"].location[0]",
+      "pose.bones[\"frontleg0\"].location[1]",
+      "pose.bones[\"frontleg0\"].location[2]",
+      "pose.bones[\"frontleg0\"].rotation_quaternion[0]",
+      "pose.bones[\"frontleg0\"].rotation_quaternion[1]",
+      "pose.bones[\"frontleg0\"].rotation_quaternion[2]",
+      "pose.bones[\"frontleg0\"].rotation_quaternion[3]",
+      "pose.bones[\"frontleg0\"].scale[0]",
+      "pose.bones[\"frontleg0\"].scale[1]",
+      "pose.bones[\"frontleg0\"].scale[2]",
+      "pose.bones[\"frontleg2\"].location[0]",
+      "pose.bones[\"frontleg2\"].location[1]",
+      "pose.bones[\"frontleg2\"].location[2]",
+      "pose.bones[\"frontleg2\"].rotation_quaternion[0]",
+      "pose.bones[\"frontleg2\"].rotation_quaternion[1]",
+      "pose.bones[\"frontleg2\"].rotation_quaternion[2]",
+      "pose.bones[\"frontleg2\"].rotation_quaternion[3]",
+      "pose.bones[\"frontleg2\"].scale[0]",
+      "pose.bones[\"frontleg2\"].scale[1]",
+      "pose.bones[\"frontleg2\"].scale[2]",
+      "pose.bones[\"R_frontleg1\"].location[0]",
+      "pose.bones[\"R_frontleg1\"].location[1]",
+      "pose.bones[\"R_frontleg1\"].location[2]",
+      "pose.bones[\"R_frontleg1\"].rotation_quaternion[0]",
+      "pose.bones[\"R_frontleg1\"].rotation_quaternion[1]",
+      "pose.bones[\"R_frontleg1\"].rotation_quaternion[2]",
+      "pose.bones[\"R_frontleg1\"].rotation_quaternion[3]",
+      "pose.bones[\"R_frontleg1\"].scale[0]",
+      "pose.bones[\"R_frontleg1\"].scale[1]",
+      "pose.bones[\"R_frontleg1\"].scale[2]",
+      "pose.bones[\"backleg2\"].location[0]",
+      "pose.bones[\"backleg2\"].location[1]",
+      "pose.bones[\"backleg2\"].location[2]",
+      "pose.bones[\"backleg2\"].rotation_quaternion[0]",
+      "pose.bones[\"backleg2\"].rotation_quaternion[1]",
+      "pose.bones[\"backleg2\"].rotation_quaternion[2]",
+      "pose.bones[\"backleg2\"].rotation_quaternion[3]",
+      "pose.bones[\"backleg2\"].scale[0]",
+      "pose.bones[\"backleg2\"].scale[1]",
+      "pose.bones[\"backleg2\"].scale[2]",
+      "pose.bones[\"backleg0\"].location[0]",
+      "pose.bones[\"backleg0\"].location[1]",
+      "pose.bones[\"backleg0\"].location[2]",
+      "pose.bones[\"backleg0\"].rotation_quaternion[0]",
+      "pose.bones[\"backleg0\"].rotation_quaternion[1]",
+      "pose.bones[\"backleg0\"].rotation_quaternion[2]",
+      "pose.bones[\"backleg0\"].rotation_quaternion[3]",
+      "pose.bones[\"backleg0\"].scale[0]",
+      "pose.bones[\"backleg0\"].scale[1]",
+      "pose.bones[\"backleg0\"].scale[2]",
+      "pose.bones[\"R_frontleg0\"].location[0]",
+      "pose.bones[\"R_frontleg0\"].location[1]",
+      "pose.bones[\"R_frontleg0\"].location[2]",
+      "pose.bones[\"R_frontleg0\"].rotation_quaternion[0]",
+      "pose.bones[\"R_frontleg0\"].rotation_quaternion[1]",
+      "pose.bones[\"R_frontleg0\"].rotation_quaternion[2]",
+      "pose.bones[\"R_frontleg0\"].rotation_quaternion[3]",
+      "pose.bones[\"R_frontleg0\"].scale[0]",
+      "pose.bones[\"R_frontleg0\"].scale[1]",
+      "pose.bones[\"R_frontleg0\"].scale[2]",
+      "pose.bones[\"R_backleg1\"].location[0]",
+      "pose.bones[\"R_backleg1\"].location[1]",
+      "pose.bones[\"R_backleg1\"].location[2]",
+      "pose.bones[\"R_backleg1\"].rotation_quaternion[0]",
+      "pose.bones[\"R_backleg1\"].rotation_quaternion[1]",
+      "pose.bones[\"R_backleg1\"].rotation_quaternion[2]",
+      "pose.bones[\"R_backleg1\"].rotation_quaternion[3]",
+      "pose.bones[\"R_backleg1\"].scale[0]",
+      "pose.bones[\"R_backleg1\"].scale[1]",
+      "pose.bones[\"R_backleg1\"].scale[2]",
+      "pose.bones[\"R_backleg0\"].location[0]",
+      "pose.bones[\"R_backleg0\"].location[1]",
+      "pose.bones[\"R_backleg0\"].location[2]",
+      "pose.bones[\"R_backleg0\"].rotation_quaternion[0]",
+      "pose.bones[\"R_backleg0\"].rotation_quaternion[1]",
+      "pose.bones[\"R_backleg0\"].rotation_quaternion[2]",
+      "pose.bones[\"R_backleg0\"].rotation_quaternion[3]",
+      "pose.bones[\"R_backleg0\"].scale[0]",
+      "pose.bones[\"R_backleg0\"].scale[1]",
+      "pose.bones[\"R_backleg0\"].scale[2]",
+      "pose.bones[\"R_frontleg2\"].location[0]",
+      "pose.bones[\"R_frontleg2\"].location[1]",
+      "pose.bones[\"R_frontleg2\"].location[2]",
+      "pose.bones[\"R_frontleg2\"].rotation_quaternion[0]",
+      "pose.bones[\"R_frontleg2\"].rotation_quaternion[1]",
+      "pose.bones[\"R_frontleg2\"].rotation_quaternion[2]",
+      "pose.bones[\"R_frontleg2\"].rotation_quaternion[3]",
+      "pose.bones[\"R_frontleg2\"].scale[0]",
+      "pose.bones[\"R_frontleg2\"].scale[1]",
+      "pose.bones[\"R_frontleg2\"].scale[2]"
+    ]
+  },
+  "animation_export_range": {
+    "action": "Armature|Armature|Armature|Armature|Armature|Unreal Take|baselayer",
+    "frame_start": 1,
+    "frame_end": 61
+  },
+  "before": {
+    "meshes": [
+      {
+        "name": "char1",
+        "vertex_count": 3725,
+        "polygon_count": 7446,
+        "uv_layers": [],
+        "material_slots": [
+          "Material_1"
+        ],
+        "vertex_groups": [
+          "Hips",
+          "tail",
+          "tailstart",
+          "tail1",
+          "tail2",
+          "tail3",
+          "backleg",
+          "backleg0",
+          "backleg1",
+          "backleg2",
+          "R_backleg",
+          "R_backleg0",
+          "R_backleg1",
+          "R_backleg2",
+          "chest",
+          "head",
+          "headend",
+          "R_earend",
+          "frontleg",
+          "frontleg0",
+          "frontleg1",
+          "frontleg2",
+          "R_frontleg",
+          "R_frontleg0",
+          "R_frontleg1",
+          "R_frontleg2"
+        ],
+        "data_bounds": [
+          [
+            -0.168609604,
+            0.021545446,
+            -0.654750049
+          ],
+          [
+            0.217610762,
+            0.835978508,
+            0.655327022
+          ]
+        ],
+        "object_bound_box": [
+          [
+            -0.161306694,
+            -0.018124577,
+            -0.549400628
+          ],
+          [
+            -0.161306694,
+            -0.018124577,
+            0.753503144
+          ],
+          [
+            -0.161306694,
+            0.762618005,
+            0.753503144
+          ],
+          [
+            -0.161306694,
+            0.762618005,
+            -0.549400628
+          ],
+          [
+            0.245885909,
+            -0.018124577,
+            -0.549400628
+          ],
+          [
+            0.245885909,
+            -0.018124577,
+            0.753503144
+          ],
+          [
+            0.245885909,
+            0.762618005,
+            0.753503144
+          ],
+          [
+            0.245885909,
+            0.762618005,
+            -0.549400628
+          ]
+        ],
+        "coordinate_hash": "5a6490f0d759c34c7c78c853deadd1a64b4117018185a3989e6b410d51bd64ba"
+      }
+    ],
+    "armatures": [
+      {
+        "name": "Armature",
+        "bones": [
+          "Hips",
+          "tail",
+          "tailstart",
+          "tail1",
+          "tail2",
+          "tail3",
+          "backleg",
+          "backleg0",
+          "backleg1",
+          "backleg2",
+          "R_backleg",
+          "R_backleg0",
+          "R_backleg1",
+          "R_backleg2",
+          "chest",
+          "head",
+          "headend",
+          "earend",
+          "R_earend",
+          "frontleg",
+          "frontleg0",
+          "frontleg1",
+          "frontleg2",
+          "R_frontleg",
+          "R_frontleg0",
+          "R_frontleg1",
+          "R_frontleg2"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "Armature|Armature|Armature|Armature|Armature|Unreal Take|baselayer",
+        "frame_start": 1,
+        "frame_end": 61,
+        "curve_count": 279,
+        "animated_bones": [
+          "backleg1",
+          "chest",
+          "R_backleg2",
+          "headend",
+          "frontleg",
+          "frontleg1",
+          "frontleg0",
+          "R_frontleg",
+          "R_backleg",
+          "tailstart",
+          "tail1",
+          "tail3",
+          "tail2",
+          "R_earend",
+          "backleg",
+          "frontleg2",
+          "R_frontleg1",
+          "earend",
+          "backleg2",
+          "backleg0",
+          "R_frontleg0",
+          "Hips",
+          "R_backleg1",
+          "R_backleg0",
+          "tail",
+          "R_frontleg2",
+          "head"
+        ]
+      }
+    ]
+  },
+  "after_rig_edit": {
+    "meshes": [
+      {
+        "name": "char1",
+        "vertex_count": 3725,
+        "polygon_count": 7446,
+        "uv_layers": [],
+        "material_slots": [
+          "Material_1"
+        ],
+        "vertex_groups": [
+          "Hips",
+          "tail",
+          "tailstart",
+          "tail1",
+          "tail2",
+          "tail3",
+          "backleg",
+          "R_backleg",
+          "chest",
+          "head",
+          "headend",
+          "R_earend",
+          "frontleg",
+          "R_frontleg"
+        ],
+        "data_bounds": [
+          [
+            -0.168609604,
+            0.021545446,
+            -0.654750049
+          ],
+          [
+            0.217610762,
+            0.835978508,
+            0.655327022
+          ]
+        ],
+        "object_bound_box": [
+          [
+            -0.297942013,
+            0.012981407,
+            -0.549400628
+          ],
+          [
+            -0.297942013,
+            0.012981407,
+            0.753503144
+          ],
+          [
+            -0.297942013,
+            0.762618005,
+            0.753503144
+          ],
+          [
+            -0.297942013,
+            0.762618005,
+            -0.549400628
+          ],
+          [
+            0.35871765,
+            0.012981407,
+            -0.549400628
+          ],
+          [
+            0.35871765,
+            0.012981407,
+            0.753503144
+          ],
+          [
+            0.35871765,
+            0.762618005,
+            0.753503144
+          ],
+          [
+            0.35871765,
+            0.762618005,
+            -0.549400628
+          ]
+        ],
+        "coordinate_hash": "5a6490f0d759c34c7c78c853deadd1a64b4117018185a3989e6b410d51bd64ba"
+      }
+    ],
+    "armatures": [
+      {
+        "name": "Armature",
+        "bones": [
+          "Hips",
+          "tail",
+          "tailstart",
+          "tail1",
+          "tail2",
+          "tail3",
+          "backleg",
+          "R_backleg",
+          "chest",
+          "head",
+          "headend",
+          "earend",
+          "R_earend",
+          "frontleg",
+          "R_frontleg"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "Armature|Armature|Armature|Armature|Armature|Unreal Take|baselayer",
+        "frame_start": 1,
+        "frame_end": 61,
+        "curve_count": 159,
+        "animated_bones": [
+          "chest",
+          "headend",
+          "frontleg",
+          "R_frontleg",
+          "R_backleg",
+          "tailstart",
+          "tail1",
+          "tail3",
+          "tail2",
+          "R_earend",
+          "backleg",
+          "earend",
+          "Hips",
+          "tail",
+          "head"
+        ]
+      }
+    ]
+  },
+  "after_export_import": {
+    "meshes": [
+      {
+        "name": "char1",
+        "vertex_count": 3725,
+        "polygon_count": 7446,
+        "uv_layers": [],
+        "material_slots": [
+          "Material_1.001"
+        ],
+        "vertex_groups": [
+          "Hips",
+          "tail",
+          "tailstart",
+          "tail1",
+          "tail2",
+          "tail3",
+          "backleg",
+          "R_backleg",
+          "chest",
+          "head",
+          "headend",
+          "R_earend",
+          "frontleg",
+          "R_frontleg"
+        ],
+        "data_bounds": [
+          [
+            -0.168609604,
+            0.021545446,
+            -0.654750049
+          ],
+          [
+            0.217610762,
+            0.835978508,
+            0.655327022
+          ]
+        ],
+        "object_bound_box": [
+          [
+            -0.297942013,
+            0.012981413,
+            -0.549400628
+          ],
+          [
+            -0.297942013,
+            0.012981413,
+            0.753503203
+          ],
+          [
+            -0.297942013,
+            0.762618065,
+            0.753503203
+          ],
+          [
+            -0.297942013,
+            0.762618065,
+            -0.549400628
+          ],
+          [
+            0.358717501,
+            0.012981413,
+            -0.549400628
+          ],
+          [
+            0.358717501,
+            0.012981413,
+            0.753503203
+          ],
+          [
+            0.358717501,
+            0.762618065,
+            0.753503203
+          ],
+          [
+            0.358717501,
+            0.762618065,
+            -0.549400628
+          ]
+        ],
+        "coordinate_hash": "5a6490f0d759c34c7c78c853deadd1a64b4117018185a3989e6b410d51bd64ba"
+      }
+    ],
+    "armatures": [
+      {
+        "name": "Armature",
+        "bones": [
+          "Hips",
+          "tail",
+          "tailstart",
+          "tail1",
+          "tail2",
+          "tail3",
+          "backleg",
+          "R_backleg",
+          "chest",
+          "head",
+          "headend",
+          "earend",
+          "R_earend",
+          "frontleg",
+          "R_frontleg"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "Armature|Armature|Armature|Armature|Armature|Unreal Take|baselayer",
+        "frame_start": 1,
+        "frame_end": 61,
+        "curve_count": 159,
+        "animated_bones": [
+          "chest",
+          "headend",
+          "frontleg",
+          "R_frontleg",
+          "R_backleg",
+          "tailstart",
+          "tail1",
+          "tail3",
+          "tail2",
+          "R_earend",
+          "backleg",
+          "earend",
+          "Hips",
+          "tail",
+          "head"
+        ]
+      },
+      {
+        "name": "Armature|Scene",
+        "frame_start": 2,
+        "frame_end": 62,
+        "curve_count": 159,
+        "animated_bones": [
+          "Hips",
+          "tail",
+          "tailstart",
+          "tail1",
+          "tail2",
+          "tail3",
+          "backleg",
+          "R_backleg",
+          "chest",
+          "head",
+          "headend",
+          "earend",
+          "R_earend",
+          "frontleg",
+          "R_frontleg"
+        ]
+      }
+    ]
+  }
+}

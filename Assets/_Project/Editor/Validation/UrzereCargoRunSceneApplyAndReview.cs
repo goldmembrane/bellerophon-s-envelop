@@ -57,6 +57,7 @@ namespace Bellerophon.Editor.UrzereCargoRunScene
         private const string SeedEmitVisualRootName = "Urzere_05_SeedEmitVisuals";
         private const string SeedEmitSeedPrefix = "WindySeed_";
         private const string SeedEmitSeedModelChildName = "WindySeed_Model";
+        private const string SeedEmitSharedStaticMeshPath = UnityMeshFolder + "/Urzere_05_SeedEmit_WindySeed_StaticShared.asset";
         private const string SeedEmitValidationFolder = "docs/validation/urzere_seed_emit_buff_pulse";
         private const string DeathClipName = "Urzere_07_Death";
         private const string DeathClipPath = UnityAnimationFolder + "/" + DeathClipName + ".anim";
@@ -1874,6 +1875,7 @@ namespace Bellerophon.Editor.UrzereCargoRunScene
             }
 
             var seedModelAsset = LoadSeedModelAsset();
+            var seedStaticMesh = EnsureSeedEmitSharedStaticMesh(seedModelAsset);
             var slotBounds = CalculateRendererBounds(seedSlot, new Bounds(seedSlot.position, Vector3.one));
             var emitterLocalPosition = CalculateSeedEmitterLocalPosition(seedSlot, slotBounds);
             var targetSeedHeight = Mathf.Clamp(slotBounds.size.y * 0.09f, 0.055f, 0.12f);
@@ -1890,6 +1892,7 @@ namespace Bellerophon.Editor.UrzereCargoRunScene
                 seeds[i] = CreateSeedEmitSeedVisual(
                     visualRootObject.transform,
                     seedModelAsset,
+                    seedStaticMesh,
                     emitterLocalPosition,
                     targetSeedHeight,
                     i);
@@ -1920,6 +1923,7 @@ namespace Bellerophon.Editor.UrzereCargoRunScene
         private static Transform CreateSeedEmitSeedVisual(
             Transform parent,
             GameObject seedModelAsset,
+            Mesh seedStaticMesh,
             Vector3 emitterLocalPosition,
             float targetSeedHeight,
             int seedIndex)
@@ -1947,7 +1951,7 @@ namespace Bellerophon.Editor.UrzereCargoRunScene
                 AssignMaterial(seedModel.transform, seedMaterial);
             }
 
-            BakeSeedSkinnedRenderersToStatic(seedModel.transform);
+            BakeSeedSkinnedRenderersToStatic(seedModel.transform, seedStaticMesh);
             EnableSeedModelRenderers(seedModel.transform);
             ScaleSeedModelToTargetHeight(seedModel.transform, targetSeedHeight);
             CenterSeedModelOnParent(seedModel.transform);
@@ -1958,7 +1962,46 @@ namespace Bellerophon.Editor.UrzereCargoRunScene
             return seedObject.transform;
         }
 
-        private static void BakeSeedSkinnedRenderersToStatic(Transform seedModel)
+        private static Mesh EnsureSeedEmitSharedStaticMesh(GameObject seedModelAsset)
+        {
+            EnsureUnityFolder(UnityMeshFolder);
+
+            var sourceRenderer = seedModelAsset.GetComponentInChildren<SkinnedMeshRenderer>(true);
+            if (sourceRenderer == null || sourceRenderer.sharedMesh == null)
+            {
+                throw new InvalidOperationException("Windy seed model needs a SkinnedMeshRenderer source mesh for shared static seed visuals.");
+            }
+
+            var sourceMesh = sourceRenderer.sharedMesh;
+            var existing = AssetDatabase.LoadAssetAtPath<Mesh>(SeedEmitSharedStaticMeshPath);
+            if (IsCompatibleSeedEmitStaticMesh(existing, sourceMesh))
+            {
+                return existing;
+            }
+
+            var staticMesh = UnityEngine.Object.Instantiate(sourceMesh);
+            staticMesh.name = "Urzere_05_SeedEmit_WindySeed_StaticShared";
+            staticMesh.RecalculateBounds();
+            SaveMeshAsset(staticMesh, SeedEmitSharedStaticMeshPath);
+
+            var savedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(SeedEmitSharedStaticMeshPath);
+            if (savedMesh == null)
+            {
+                throw new InvalidOperationException($"Failed to save Urzere seed emit shared static mesh at {SeedEmitSharedStaticMeshPath}.");
+            }
+
+            return savedMesh;
+        }
+
+        private static bool IsCompatibleSeedEmitStaticMesh(Mesh existing, Mesh source)
+        {
+            return existing != null &&
+                   source != null &&
+                   existing.vertexCount == source.vertexCount &&
+                   existing.subMeshCount == source.subMeshCount;
+        }
+
+        private static void BakeSeedSkinnedRenderersToStatic(Transform seedModel, Mesh seedStaticMesh)
         {
             var skinnedRenderers = seedModel.GetComponentsInChildren<SkinnedMeshRenderer>(true);
             foreach (var skinnedRenderer in skinnedRenderers)
@@ -1968,10 +2011,6 @@ namespace Bellerophon.Editor.UrzereCargoRunScene
                     continue;
                 }
 
-                var bakedMesh = UnityEngine.Object.Instantiate(skinnedRenderer.sharedMesh);
-                bakedMesh.name = skinnedRenderer.sharedMesh.name + "_SeedEmitStaticCopy";
-                bakedMesh.RecalculateBounds();
-
                 var staticObject = new GameObject(skinnedRenderer.gameObject.name + "_SeedEmitStatic");
                 staticObject.transform.SetParent(skinnedRenderer.transform.parent, false);
                 staticObject.transform.localPosition = skinnedRenderer.transform.localPosition;
@@ -1979,7 +2018,7 @@ namespace Bellerophon.Editor.UrzereCargoRunScene
                 staticObject.transform.localScale = skinnedRenderer.transform.localScale;
 
                 var meshFilter = staticObject.AddComponent<MeshFilter>();
-                meshFilter.sharedMesh = bakedMesh;
+                meshFilter.sharedMesh = seedStaticMesh;
 
                 var meshRenderer = staticObject.AddComponent<MeshRenderer>();
                 meshRenderer.sharedMaterials = skinnedRenderer.sharedMaterials;
@@ -2090,16 +2129,33 @@ namespace Bellerophon.Editor.UrzereCargoRunScene
 
         private static RuntimeAnimatorController EnsureSeedEmitBuffPulseController(AnimationClip clip)
         {
-            if (AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(SeedEmitControllerPath) != null)
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(SeedEmitControllerPath);
+            if (controller == null)
             {
-                AssetDatabase.DeleteAsset(SeedEmitControllerPath);
+                controller = AnimatorController.CreateAnimatorControllerAtPath(SeedEmitControllerPath);
             }
 
-            var controller = AnimatorController.CreateAnimatorControllerAtPath(SeedEmitControllerPath);
-            var state = controller.layers[0].stateMachine.AddState(SeedEmitClipName);
+            if (controller.layers.Length == 0)
+            {
+                AssetDatabase.DeleteAsset(SeedEmitControllerPath);
+                controller = AnimatorController.CreateAnimatorControllerAtPath(SeedEmitControllerPath);
+            }
+
+            var stateMachine = controller.layers[0].stateMachine;
+            AnimatorState state = null;
+            foreach (var childState in stateMachine.states)
+            {
+                if (childState.state != null && string.Equals(childState.state.name, SeedEmitClipName, StringComparison.Ordinal))
+                {
+                    state = childState.state;
+                    break;
+                }
+            }
+
+            state ??= stateMachine.AddState(SeedEmitClipName);
             state.motion = clip;
             state.writeDefaultValues = true;
-            controller.layers[0].stateMachine.defaultState = state;
+            stateMachine.defaultState = state;
 
             EditorUtility.SetDirty(controller);
             AssetDatabase.ImportAsset(SeedEmitControllerPath, ImportAssetOptions.ForceUpdate);
@@ -3677,6 +3733,7 @@ namespace Bellerophon.Editor.UrzereCargoRunScene
             }
 
             var visuals = RequireSeedEmitVisuals(seedSlot);
+            RequireSeedEmitSharedStaticMesh(visuals);
             var modelPath = AnimationUtility.CalculateTransformPath(visuals.Model, seedSlot);
             RequireCurveBelow(
                 clip,
@@ -3713,6 +3770,49 @@ namespace Bellerophon.Editor.UrzereCargoRunScene
 
             Debug.Log(
                 $"UrzereSeedEmitValidation Seeds={visuals.Seeds.Length}, EmitterLocal={visuals.EmitterLocalPosition}, Clip={SeedEmitClipName}.");
+        }
+
+        private static void RequireSeedEmitSharedStaticMesh(SeedEmitVisuals visuals)
+        {
+            var sharedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(SeedEmitSharedStaticMeshPath);
+            if (sharedMesh == null)
+            {
+                throw new InvalidOperationException($"Urzere seed emit shared static mesh is missing at {SeedEmitSharedStaticMeshPath}.");
+            }
+
+            var meshFilterCount = 0;
+            for (var i = 0; i < visuals.Seeds.Length; i++)
+            {
+                var filters = visuals.Seeds[i].GetComponentsInChildren<MeshFilter>(true);
+                if (filters.Length == 0)
+                {
+                    throw new InvalidOperationException($"{visuals.Seeds[i].name} must contain a static MeshFilter using the shared windy seed mesh.");
+                }
+
+                for (var filterIndex = 0; filterIndex < filters.Length; filterIndex++)
+                {
+                    var mesh = filters[filterIndex].sharedMesh;
+                    if (mesh == null)
+                    {
+                        throw new InvalidOperationException($"{visuals.Seeds[i].name} contains a seed MeshFilter without a shared mesh.");
+                    }
+
+                    if (mesh != sharedMesh)
+                    {
+                        throw new InvalidOperationException(
+                            $"{visuals.Seeds[i].name} must reference {SeedEmitSharedStaticMeshPath}, not per-seed mesh {mesh.name}.");
+                    }
+
+                    meshFilterCount++;
+                }
+            }
+
+            if (meshFilterCount < SeedEmitSeedCount)
+            {
+                throw new InvalidOperationException($"Urzere seed emit expected at least {SeedEmitSeedCount} shared MeshFilters, found {meshFilterCount}.");
+            }
+
+            Debug.Log($"UrzereSeedEmitSharedMesh Path={SeedEmitSharedStaticMeshPath}, MeshFilters={meshFilterCount}.");
         }
 
         private static void InspectDeathAnimation(Transform placementRoot)

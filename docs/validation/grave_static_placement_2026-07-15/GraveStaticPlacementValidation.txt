@@ -1,0 +1,1 @@
+LongaZ=-37.974, TergoZ=-45.351, Spacing=7.377, AccelerandoZ=-89.613, GravePosition=(57.865,0,-96.99), PlacementError=0, BoundsSize=(0.573,1.699,0.619), GroundError=0, PlayerPosition=(58.03,0,-101.226), FrontDot=-1, FacingDot=1, HorizontalDistance=4.199999, DistanceError=0, Sha256=D6B44E97909B8B3D40A87E008A9E1916B4656BAC54A6DD55B438E890406750A6

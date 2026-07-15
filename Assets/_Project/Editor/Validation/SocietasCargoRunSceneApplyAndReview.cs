@@ -927,16 +927,17 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
             AnimationUtility.SetAnimationClipSettings(clip, settings);
 
             var modelBounds = CalculateRendererBounds(model, new Bounds(deathSlot.position, Vector3.one * SocietasTargetHeightMeters));
-            var sinkDistance = Mathf.Max(modelBounds.size.y * 0.86f, 0.22f);
-            var localSink = deathSlot.InverseTransformVector(Vector3.down * sinkDistance);
-            var times = new[] { 0.00f, 0.32f, 0.70f, 1.10f, 1.55f, DeathMeltPuddleDurationSeconds };
+            var groundY = modelBounds.min.y + Mathf.Max(modelBounds.size.y * 0.018f, 0.004f);
+            var times = new[] { 0.00f, 0.26f, 0.52f, 0.78f, 1.04f, 1.30f, 1.70f, DeathMeltPuddleDurationSeconds };
             var bodyScaleFactors = new[]
             {
                 Vector3.one,
-                new Vector3(1.12f, 0.72f, 1.10f),
-                new Vector3(1.36f, 0.32f, 1.28f),
-                new Vector3(1.62f, 0.055f, 1.54f),
-                new Vector3(1.92f, 0.010f, 1.84f),
+                new Vector3(1.10f, 0.78f, 1.08f),
+                new Vector3(1.32f, 0.46f, 1.26f),
+                new Vector3(1.58f, 0.22f, 1.50f),
+                new Vector3(1.82f, 0.090f, 1.74f),
+                new Vector3(2.02f, 0.026f, 1.94f),
+                new Vector3(2.10f, 0.006f, 2.04f),
                 new Vector3(0.01f, 0.004f, 0.01f)
             };
 
@@ -945,7 +946,7 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
                 deathSlot,
                 model,
                 times,
-                CreateDeathBodyCenterLockedOffsets(deathSlot, model, modelBounds, localSink, bodyScaleFactors));
+                CreateDeathBodyGroundLockedOffsets(deathSlot, model, modelBounds, groundY, bodyScaleFactors));
             AddLocalScaleFactorCurves(
                 clip,
                 deathSlot,
@@ -955,7 +956,7 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
 
             foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
             {
-                AddRendererEnabledCurve(clip, deathSlot, renderer.transform, times, new[] { 1f, 1f, 1f, 0f, 0f, 0f });
+                AddRendererEnabledCurve(clip, deathSlot, renderer.transform, times, new[] { 1f, 1f, 1f, 1f, 1f, 0f, 0f, 0f });
             }
 
             AddDeathMeltProxyCurves(clip, deathSlot, visuals, times);
@@ -1543,27 +1544,26 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
             SetTransformCurve(clip, path, "m_LocalScale.z", CreateFloatCurve(times, localScales, 2));
         }
 
-        private static Vector3[] CreateDeathBodyCenterLockedOffsets(
+        private static Vector3[] CreateDeathBodyGroundLockedOffsets(
             Transform root,
             Transform model,
             Bounds modelBounds,
-            Vector3 localSink,
+            float groundY,
             Vector3[] scaleFactors)
         {
             var centerLocal = root.InverseTransformPoint(modelBounds.center);
+            var groundLocal = root.InverseTransformPoint(new Vector3(modelBounds.center.x, groundY, modelBounds.center.z));
             var pivotToCenter = centerLocal - model.localPosition;
-            var sinkFactors = new[] { 0.00f, 0.09f, 0.38f, 0.80f, 0.96f, 1.02f };
-            if (scaleFactors.Length != sinkFactors.Length)
-            {
-                throw new ArgumentException("Societas death body scale factors and sink factors must have the same length.");
-            }
+            var pivotToGround = groundLocal - model.localPosition;
+            var collapseSink = root.InverseTransformVector(Vector3.down * modelBounds.size.y * 0.04f);
 
             var offsets = new Vector3[scaleFactors.Length];
             for (var i = 0; i < scaleFactors.Length; i++)
             {
-                offsets[i] = localSink * sinkFactors[i];
+                offsets[i].y = pivotToGround.y * (1f - scaleFactors[i].y);
                 offsets[i].x += pivotToCenter.x * (1f - scaleFactors[i].x);
                 offsets[i].z += pivotToCenter.z * (1f - scaleFactors[i].z);
+                offsets[i] += collapseSink * Mathf.Clamp01((1f - scaleFactors[i].y) / 0.95f);
             }
 
             return offsets;
@@ -1658,10 +1658,13 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
             }
 
             var localRotation = Quaternion.Inverse(deathSlot.rotation);
+            var groundCenter = new Vector3(center.x, groundY, center.z);
+            var proxyBase = groundCenter + (Vector3.up * height * 0.002f);
+            var puddleBase = groundCenter + (Vector3.up * height * 0.001f);
             var bodyMass = EnsureDeathMeltProxyVisual(
                 deathSlot,
                 DeathMeltProxyPrefix + "BodyMass",
-                new Vector3(center.x, groundY + (height * 0.16f), center.z),
+                proxyBase,
                 localRotation,
                 CreateDeathMeltDomeMesh(
                     DeathMeltProxyPrefix + "BodyMassMesh",
@@ -1674,7 +1677,7 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
             var frontFlow = EnsureDeathMeltProxyVisual(
                 deathSlot,
                 DeathMeltProxyPrefix + "FrontFlow",
-                center + (front * depth * 0.32f) + (Vector3.up * height * 0.34f),
+                proxyBase + (front * depth * 0.12f),
                 localRotation,
                 CreateDeathMeltDomeMesh(
                     DeathMeltProxyPrefix + "FrontFlowMesh",
@@ -1687,7 +1690,7 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
             var leftFlow = EnsureDeathMeltProxyVisual(
                 deathSlot,
                 DeathMeltProxyPrefix + "LeftFlow",
-                center - (right * width * 0.34f) + (front * depth * 0.05f) + (Vector3.up * height * 0.24f),
+                proxyBase - (right * width * 0.12f) + (front * depth * 0.02f),
                 localRotation,
                 CreateDeathMeltDomeMesh(
                     DeathMeltProxyPrefix + "LeftFlowMesh",
@@ -1700,7 +1703,7 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
             var rightFlow = EnsureDeathMeltProxyVisual(
                 deathSlot,
                 DeathMeltProxyPrefix + "RightFlow",
-                center + (right * width * 0.34f) + (front * depth * 0.03f) + (Vector3.up * height * 0.24f),
+                proxyBase + (right * width * 0.12f) + (front * depth * 0.02f),
                 localRotation,
                 CreateDeathMeltDomeMesh(
                     DeathMeltProxyPrefix + "RightFlowMesh",
@@ -1713,7 +1716,7 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
             var finalPuddle = EnsureDeathMeltProxyVisual(
                 deathSlot,
                 DeathMeltProxyPrefix + "FinalPuddle",
-                new Vector3(center.x, groundY, center.z),
+                puddleBase,
                 localRotation,
                 CreateDeathMeltPuddleMesh(DeathMeltProxyPrefix + "FinalPuddleMesh", localReferenceSize),
                 material);
@@ -1851,8 +1854,8 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
         private static Mesh CreateDeathMeltPuddleMesh(string meshName, Vector3 localReferenceSize)
         {
             const int segmentCount = 44;
-            var radiusX = Mathf.Max(localReferenceSize.x * 0.78f, localReferenceSize.y * 0.42f);
-            var radiusZ = Mathf.Max(localReferenceSize.z * 0.62f, localReferenceSize.y * 0.36f);
+            var radiusX = Mathf.Max(localReferenceSize.x * 0.96f, localReferenceSize.y * 0.54f);
+            var radiusZ = Mathf.Max(localReferenceSize.z * 0.82f, localReferenceSize.y * 0.46f);
             var vertices = new Vector3[segmentCount + 1];
             var triangles = new int[segmentCount * 3];
             vertices[0] = Vector3.zero;
@@ -1860,8 +1863,8 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
             for (var index = 0; index < segmentCount; index++)
             {
                 var angle = (Mathf.PI * 2f * index) / segmentCount;
-                var frontLobe = Mathf.Max(0f, Mathf.Cos(angle - 0.22f)) * 0.20f;
-                var sideLobe = Mathf.Abs(Mathf.Sin(angle * 1.08f + 0.50f)) * 0.12f;
+                var frontLobe = Mathf.Max(0f, Mathf.Cos(angle - 0.22f)) * 0.25f;
+                var sideLobe = Mathf.Abs(Mathf.Sin(angle * 1.08f + 0.50f)) * 0.16f;
                 var wobble =
                     1f +
                     frontLobe +
@@ -1909,6 +1912,8 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
             var width = Mathf.Max(rendererBounds.size.x, SocietasTargetHeightMeters * 0.70f);
             var depth = Mathf.Max(rendererBounds.size.z, SocietasTargetHeightMeters * 0.70f);
             var groundCenter = new Vector3(center.x, groundY, center.z);
+            var proxyBase = groundCenter + (Vector3.up * height * 0.002f);
+            var puddleBase = groundCenter + (Vector3.up * height * 0.001f);
             var front = CalculateSocietasVisualFrontDirection(root);
             var right = Vector3.Cross(Vector3.up, front).normalized;
             if (right.sqrMagnitude < 0.001f)
@@ -1923,23 +1928,27 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
                 times,
                 new[]
                 {
-                    center + (Vector3.up * height * 0.16f),
-                    center + (Vector3.up * height * 0.04f),
-                    groundCenter + (Vector3.up * height * 0.060f),
-                    groundCenter + (Vector3.up * height * 0.020f),
-                    groundCenter + (Vector3.up * height * 0.006f),
-                    groundCenter + (Vector3.up * height * 0.008f)
+                    proxyBase,
+                    proxyBase,
+                    proxyBase,
+                    proxyBase,
+                    proxyBase,
+                    proxyBase,
+                    proxyBase,
+                    proxyBase
                 },
                 new[]
                 {
                     new Vector3(0.01f, 0.01f, 0.01f),
-                    new Vector3(0.48f, 0.62f, 0.48f),
-                    new Vector3(1.05f, 0.82f, 0.96f),
-                    new Vector3(0.86f, 0.22f, 1.08f),
-                    new Vector3(0.30f, 0.04f, 0.46f),
+                    new Vector3(0.20f, 0.24f, 0.20f),
+                    new Vector3(0.70f, 0.48f, 0.66f),
+                    new Vector3(1.05f, 0.28f, 0.98f),
+                    new Vector3(1.10f, 0.12f, 1.08f),
+                    new Vector3(0.72f, 0.035f, 0.82f),
+                    new Vector3(0.01f, 0.01f, 0.01f),
                     new Vector3(0.01f, 0.01f, 0.01f)
                 },
-                new[] { 0f, 0f, 1f, 0f, 0f, 0f });
+                new[] { 0f, 0f, 1f, 1f, 1f, 1f, 0f, 0f });
             AddDeathMeltProxyMotion(
                 clip,
                 root,
@@ -1947,23 +1956,27 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
                 times,
                 new[]
                 {
-                    groundCenter + (front * depth * 0.10f) + (Vector3.up * height * 0.018f),
-                    groundCenter + (front * depth * 0.12f) + (Vector3.up * height * 0.016f),
-                    groundCenter + (front * depth * 0.14f) + (Vector3.up * height * 0.014f),
-                    groundCenter + (front * depth * 0.16f) + (Vector3.up * height * 0.010f),
-                    groundCenter + (front * depth * 0.18f) + (Vector3.up * height * 0.004f),
-                    groundCenter + (front * depth * 0.18f) + (Vector3.up * height * 0.004f)
+                    proxyBase + (front * depth * 0.04f),
+                    proxyBase + (front * depth * 0.05f),
+                    proxyBase + (front * depth * 0.06f),
+                    proxyBase + (front * depth * 0.08f),
+                    proxyBase + (front * depth * 0.10f),
+                    proxyBase + (front * depth * 0.12f),
+                    proxyBase + (front * depth * 0.12f),
+                    proxyBase + (front * depth * 0.12f)
                 },
                 new[]
                 {
                     new Vector3(0.01f, 0.01f, 0.01f),
-                    new Vector3(0.12f, 0.18f, 0.14f),
-                    new Vector3(0.52f, 0.72f, 0.62f),
-                    new Vector3(0.74f, 0.10f, 0.88f),
-                    new Vector3(0.36f, 0.025f, 0.62f),
+                    new Vector3(0.01f, 0.01f, 0.01f),
+                    new Vector3(0.18f, 0.20f, 0.22f),
+                    new Vector3(0.42f, 0.18f, 0.52f),
+                    new Vector3(0.56f, 0.075f, 0.66f),
+                    new Vector3(0.38f, 0.025f, 0.54f),
+                    new Vector3(0.01f, 0.01f, 0.01f),
                     new Vector3(0.01f, 0.01f, 0.01f)
                 },
-                new[] { 0f, 0f, 0f, 1f, 0f, 0f });
+                new[] { 0f, 0f, 0f, 1f, 1f, 1f, 0f, 0f });
             AddDeathMeltProxyMotion(
                 clip,
                 root,
@@ -1971,23 +1984,27 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
                 times,
                 new[]
                 {
-                    groundCenter - (right * width * 0.12f) + (Vector3.up * height * 0.016f),
-                    groundCenter - (right * width * 0.14f) + (Vector3.up * height * 0.014f),
-                    groundCenter - (right * width * 0.16f) + (Vector3.up * height * 0.012f),
-                    groundCenter - (right * width * 0.18f) + (front * depth * 0.02f) + (Vector3.up * height * 0.008f),
-                    groundCenter - (right * width * 0.20f) + (front * depth * 0.03f) + (Vector3.up * height * 0.004f),
-                    groundCenter - (right * width * 0.20f) + (front * depth * 0.03f) + (Vector3.up * height * 0.004f)
+                    proxyBase - (right * width * 0.04f),
+                    proxyBase - (right * width * 0.05f),
+                    proxyBase - (right * width * 0.06f),
+                    proxyBase - (right * width * 0.08f) + (front * depth * 0.01f),
+                    proxyBase - (right * width * 0.10f) + (front * depth * 0.02f),
+                    proxyBase - (right * width * 0.12f) + (front * depth * 0.02f),
+                    proxyBase - (right * width * 0.12f) + (front * depth * 0.02f),
+                    proxyBase - (right * width * 0.12f) + (front * depth * 0.02f)
                 },
                 new[]
                 {
                     new Vector3(0.01f, 0.01f, 0.01f),
-                    new Vector3(0.10f, 0.14f, 0.14f),
-                    new Vector3(0.48f, 0.58f, 0.62f),
-                    new Vector3(0.64f, 0.09f, 0.76f),
-                    new Vector3(0.28f, 0.020f, 0.48f),
+                    new Vector3(0.01f, 0.01f, 0.01f),
+                    new Vector3(0.16f, 0.18f, 0.20f),
+                    new Vector3(0.38f, 0.14f, 0.46f),
+                    new Vector3(0.50f, 0.065f, 0.58f),
+                    new Vector3(0.30f, 0.020f, 0.42f),
+                    new Vector3(0.01f, 0.01f, 0.01f),
                     new Vector3(0.01f, 0.01f, 0.01f)
                 },
-                new[] { 0f, 0f, 0f, 1f, 0f, 0f });
+                new[] { 0f, 0f, 0f, 1f, 1f, 1f, 0f, 0f });
             AddDeathMeltProxyMotion(
                 clip,
                 root,
@@ -1995,39 +2012,45 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
                 times,
                 new[]
                 {
-                    groundCenter + (right * width * 0.12f) + (Vector3.up * height * 0.016f),
-                    groundCenter + (right * width * 0.14f) + (Vector3.up * height * 0.014f),
-                    groundCenter + (right * width * 0.16f) + (Vector3.up * height * 0.012f),
-                    groundCenter + (right * width * 0.18f) + (front * depth * 0.02f) + (Vector3.up * height * 0.008f),
-                    groundCenter + (right * width * 0.20f) + (front * depth * 0.03f) + (Vector3.up * height * 0.004f),
-                    groundCenter + (right * width * 0.20f) + (front * depth * 0.03f) + (Vector3.up * height * 0.004f)
+                    proxyBase + (right * width * 0.04f),
+                    proxyBase + (right * width * 0.05f),
+                    proxyBase + (right * width * 0.06f),
+                    proxyBase + (right * width * 0.08f) + (front * depth * 0.01f),
+                    proxyBase + (right * width * 0.10f) + (front * depth * 0.02f),
+                    proxyBase + (right * width * 0.12f) + (front * depth * 0.02f),
+                    proxyBase + (right * width * 0.12f) + (front * depth * 0.02f),
+                    proxyBase + (right * width * 0.12f) + (front * depth * 0.02f)
                 },
                 new[]
                 {
                     new Vector3(0.01f, 0.01f, 0.01f),
-                    new Vector3(0.10f, 0.14f, 0.14f),
-                    new Vector3(0.48f, 0.58f, 0.62f),
-                    new Vector3(0.64f, 0.09f, 0.76f),
-                    new Vector3(0.28f, 0.020f, 0.48f),
+                    new Vector3(0.01f, 0.01f, 0.01f),
+                    new Vector3(0.16f, 0.18f, 0.20f),
+                    new Vector3(0.38f, 0.14f, 0.46f),
+                    new Vector3(0.50f, 0.065f, 0.58f),
+                    new Vector3(0.30f, 0.020f, 0.42f),
+                    new Vector3(0.01f, 0.01f, 0.01f),
                     new Vector3(0.01f, 0.01f, 0.01f)
                 },
-                new[] { 0f, 0f, 0f, 1f, 0f, 0f });
+                new[] { 0f, 0f, 0f, 1f, 1f, 1f, 0f, 0f });
             AddDeathMeltProxyMotion(
                 clip,
                 root,
                 visuals.FinalPuddle,
                 times,
-                CreateRepeatedWorldPositions(groundCenter, times.Length),
+                CreateRepeatedWorldPositions(puddleBase, times.Length),
                 new[]
                 {
                     new Vector3(0.01f, 0.01f, 0.01f),
                     new Vector3(0.01f, 0.01f, 0.01f),
-                    new Vector3(0.22f, 0.03f, 0.18f),
-                    new Vector3(0.56f, 0.04f, 0.50f),
-                    new Vector3(0.88f, 0.05f, 0.84f),
-                    new Vector3(1.00f, 0.05f, 1.00f)
+                    new Vector3(0.18f, 0.035f, 0.16f),
+                    new Vector3(0.42f, 0.040f, 0.38f),
+                    new Vector3(0.76f, 0.045f, 0.70f),
+                    new Vector3(1.04f, 0.050f, 0.98f),
+                    new Vector3(1.28f, 0.050f, 1.20f),
+                    new Vector3(1.34f, 0.05f, 1.26f)
                 },
-                new[] { 0f, 0f, 1f, 1f, 1f, 1f });
+                new[] { 0f, 0f, 1f, 1f, 1f, 1f, 1f, 1f });
         }
 
         private static void AddDeathMeltProxyMotion(
@@ -4204,7 +4227,7 @@ namespace Bellerophon.Editor.SocietasCargoRunScene
                 light.intensity = 1.34f;
                 light.transform.rotation = Quaternion.Euler(48f, deathSlot.eulerAngles.y - 32f, 0f);
 
-                var sampleTimes = new[] { 0.00f, 0.32f, 0.70f, 1.10f, 1.55f, DeathMeltPuddleDurationSeconds };
+                var sampleTimes = new[] { 0.00f, 0.26f, 0.52f, 0.78f, 1.04f, 1.30f, 1.70f, DeathMeltPuddleDurationSeconds };
                 for (var i = 0; i < sampleTimes.Length; i++)
                 {
                     RestoreTransformSnapshots(savedTransforms);

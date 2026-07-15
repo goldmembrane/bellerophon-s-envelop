@@ -1,0 +1,44 @@
+﻿Accelerando forward mace strike physics validation
+Clip=Assets/_Project/Art/Enemies/Accelerando/Animations/Accelerando_Antenna_Strike_Attack.anim
+DirectAnimationBindings=Bone_008,007,006,011,010,009 only
+ChainAndMaceTransformCurves=0
+AttackForceTransmission=AntennaKinematicAnchorToConnectedJointsOnly
+DirectFollowerSpringDamperInertia=0
+Side=Left, Samples=217, AntennaForwardRange=0.724, MaceForwardRange=0.437, MaxAntennaForwardOffset=0.363, MaxMaceForwardOffset=0.433, Amplification=0.604, StrikeAntennaForwardSpeed=18.557, ReturnAntennaBackwardSpeed=0.644, AntennaVelocityRatio=28.812, StrikeAntennaPeakTime=0.4, StrikeMaceForwardSpeed=8.215, StrikeMacePeakTime=0.422, MacePeakDelay=0.022, MaceReleaseResponseDelay=0.102, SettledAntennaMaceSpeed=0.736, SettledAntennaMaceSpeedTime=0.622, AntennaBackwardRecoilSpeed=4.261, OpposedMotionSamples=9, MaceForwardSpeedDuringRecoil=1.868, EarlyStationaryRecoverySpeed=1.078, EarlyStationarySamples=28, LateStationaryRecoverySpeed=0.715, LateStationarySamples=23, LateToEarlyStationarySpeedRatio=0.663, MaximumMovingMaceLinearDamping=0.3, MaximumSettledMaceLinearDamping=2.8, MaximumMaceLateralExcursion=1.388, EarlyStationaryMechanicalEnergy=-1.32, LateStationaryMechanicalEnergy=-1.609, StationaryMechanicalEnergyGrowth=-0.29, ReturnMaceBackwardSpeed=0.365, ReturnMaceBackwardOvershoot=0, MaxVisualProxySeparation=0.
+Side=Right, Samples=217, AntennaForwardRange=0.671, MaceForwardRange=0.731, MaxAntennaForwardOffset=0.406, MaxMaceForwardOffset=0.685, Amplification=1.09, StrikeAntennaForwardSpeed=16.071, ReturnAntennaBackwardSpeed=0.533, AntennaVelocityRatio=30.161, StrikeAntennaPeakTime=0.411, StrikeMaceForwardSpeed=3.473, StrikeMacePeakTime=0.567, MacePeakDelay=0.156, MaceReleaseResponseDelay=0.247, SettledAntennaMaceSpeed=2.197, SettledAntennaMaceSpeedTime=0.622, AntennaBackwardRecoilSpeed=4.715, OpposedMotionSamples=11, MaceForwardSpeedDuringRecoil=3.473, EarlyStationaryRecoverySpeed=1.778, EarlyStationarySamples=28, LateStationaryRecoverySpeed=0.721, LateStationarySamples=23, LateToEarlyStationarySpeedRatio=0.405, MaximumMovingMaceLinearDamping=0.3, MaximumSettledMaceLinearDamping=2.8, MaximumMaceLateralExcursion=1.503, EarlyStationaryMechanicalEnergy=3.829, LateStationaryMechanicalEnergy=-1.42, StationaryMechanicalEnergyGrowth=-5.249, ReturnMaceBackwardSpeed=0.846, ReturnMaceBackwardOvershoot=0, MaxVisualProxySeparation=0.
+ChainContinuitySide=Left, Samples=217, MaximumSegmentExtension=0.007996, MaximumSegmentExtensionTime=0.556, MaximumSegmentExtensionIndex=08, MaximumCurrentSegmentLength=0.427977, Result=PASS
+ChainContinuitySide=Right, Samples=217, MaximumSegmentExtension=0.007997, MaximumSegmentExtensionTime=0.4, MaximumSegmentExtensionIndex=03, MaximumCurrentSegmentLength=0.427991, Result=PASS
+Result=PASS
+Accelerando mirrored antenna strike pose validation
+ReferenceSide=Left
+MaximumMirroredPositionDelta=0.035242
+MaximumMirroredPositionDeltaTime=0.5
+MaximumMirroredSegmentAngle=0
+MaximumMirroredSegmentAngleTime=0
+MirroredPoseResult=PASS
+Accelerando forward strike deformation validation
+Mesh=Assets/_Project/Art/Enemies/Accelerando/Models/accelerando_forward_strike_deformation_fixed_body.asset
+VertexCount=7216
+MaximumNeutralVertexDelta=0
+MaximumWeightSumError=0.00000012
+RightAntennaWeightedVertices=1141
+RightAntennaMeasuredTriangles=3120
+RightAntennaForbiddenBoneVertices=0
+RightAntennaMaximumForbiddenBoneInfluence=0
+RightAntennaNearlyFixedReleaseVertices=0
+RightAntennaMinimumReleaseDisplacement=0.00229
+RightAntennaCollapsedTriangles=0
+RightAntennaOverstretchedTriangles=0
+RightAntennaMinimumAreaRatio=0.441885
+RightAntennaMaximumAreaRatio=2.95961
+LeftAntennaWeightedVertices=1631
+LeftAntennaMeasuredTriangles=4432
+LeftAntennaForbiddenBoneVertices=0
+LeftAntennaMaximumForbiddenBoneInfluence=0
+LeftAntennaNearlyFixedReleaseVertices=0
+LeftAntennaMinimumReleaseDisplacement=0.001946
+LeftAntennaCollapsedTriangles=0
+LeftAntennaOverstretchedTriangles=0
+LeftAntennaMinimumAreaRatio=0.431048
+LeftAntennaMaximumAreaRatio=2.131964
+DeformationResult=PASS

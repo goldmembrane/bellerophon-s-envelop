@@ -29,8 +29,13 @@ namespace Bellerophon.Editor.CantabileCargoRunScene
         private const string UnityModelFolder = CantabileArtRoot + "/Models";
         private const string UnityModelAssetPath = UnityModelFolder + "/cantabille.glb";
         private const string UnityMaterialFolder = CantabileArtRoot + "/Materials";
+        private const string UnityTextureFolder = CantabileArtRoot + "/Textures";
         private const string DefaultMaterialAssetPath = UnityMaterialFolder + "/M_Cantabile_GLB_Default_URP.mat";
+        private const string ApprovedColorMaterialAssetPath = UnityMaterialFolder + "/M_Cantabile_Approved_ColorSample_URP.mat";
+        private const string ApprovedColorAtlasAssetPath = UnityTextureFolder + "/cantabile_current_model_material_atlas_albedo.png";
         private const string UnityAnimationFolder = CantabileArtRoot + "/Animations";
+        private const string CantabileColorValidationFolder = "docs/validation/cantabile_color";
+        private const string ApprovedColorVertexShaderName = "Bellerophon/Enemies/Cantabile/VertexColorUnlit";
 
         private const float CantabileTargetHeightMeters = 0.50f;
         private const float CantabileFacingYawDegrees = 180f;
@@ -65,6 +70,7 @@ namespace Bellerophon.Editor.CantabileCargoRunScene
         private const float DeathCorpseRollDegrees = -30.00f;
         private const float CantabileDefaultMetallic = 0.00f;
         private const float CantabileDefaultSmoothness = 0.35f;
+        private const float CantabileApprovedColorSampleSmoothness = 0.28f;
         private static readonly Color CantabileDefaultBaseColor = Color.white;
 
         private static readonly AnimationReviewSpec[] AnimationReviewSpecs =
@@ -157,6 +163,62 @@ namespace Bellerophon.Editor.CantabileCargoRunScene
                 "Objects=" + string.Join(", ", Array.ConvertAll(AnimationReviewSpecs, spec => spec.ObjectName)) + ".");
         }
 
+        [MenuItem("Bellerophon/Enemies/Cantabile/Apply Approved Color Sample To Current Scene")]
+        public static void ApplyApprovedColorSampleToCurrentCargoRunScene()
+        {
+            EnsureUnityFolders();
+            AssetDatabase.ImportAsset(UnityModelAssetPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+            AssetDatabase.ImportAsset(ApprovedColorAtlasAssetPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            RequireApprovedColorSampleTexture();
+            RequireCantabileReviewObjects(placementRoot.transform);
+            ApplyCantabileUrpMaterials(placementRoot.transform);
+            InspectSceneState(placementRoot.transform);
+            InspectApprovedColorSampleMaterials(placementRoot.transform);
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+            Debug.Log("Approved Cantabile color sample applied to current CargoRunMvp scene.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Cantabile/Capture Approved Color Sample Review")]
+        public static void CaptureApprovedColorSampleReview()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            if (placementRoot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            }
+
+            RequireApprovedColorSampleTexture();
+            var staticReview = RequirePlacementObject(placementRoot.transform);
+            InspectApprovedColorSampleMaterials(placementRoot.transform);
+
+            var projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+            var validationFolder = Path.Combine(projectRoot, CantabileColorValidationFolder);
+            Directory.CreateDirectory(validationFolder);
+
+            var staticPath = Path.Combine(validationFolder, "Cantabile_Color_Fix_StaticReview_UnityCapture.png");
+            var lineupPath = Path.Combine(validationFolder, "Cantabile_Color_Fix_AllReviewObjects_UnityCapture.png");
+            CaptureTransformToPng(staticReview, staticPath, 1600, 900, 1.15f);
+            CaptureTransformToPng(placementRoot.transform, lineupPath, 1800, 900, 1.08f);
+
+            Debug.Log(
+                "CantabileApprovedColorSampleCapture " +
+                $"Static={ToProjectRelativePath(staticPath)}, Lineup={ToProjectRelativePath(lineupPath)}.");
+        }
+
         private static void RequirePreparedModelFile()
         {
             if (!File.Exists(SourceModelAbsolutePath))
@@ -170,6 +232,7 @@ namespace Bellerophon.Editor.CantabileCargoRunScene
             EnsureUnityFolder(CantabileArtRoot);
             EnsureUnityFolder(UnityModelFolder);
             EnsureUnityFolder(UnityMaterialFolder);
+            EnsureUnityFolder(UnityTextureFolder);
             EnsureUnityFolder(UnityAnimationFolder);
         }
 
@@ -365,7 +428,9 @@ namespace Bellerophon.Editor.CantabileCargoRunScene
                 AssetDatabase.CreateAsset(material, materialPath);
             }
 
-            material.shader = FindLitShader();
+            material.shader = LoadApprovedColorSampleTexture() != null
+                ? FindApprovedColorShader()
+                : FindLitShader();
             ApplySourceMaterialProperties(material, sourceMaterial);
             EditorUtility.SetDirty(material);
             return material;
@@ -373,13 +438,16 @@ namespace Bellerophon.Editor.CantabileCargoRunScene
 
         private static void ApplySourceMaterialProperties(Material targetMaterial, Material sourceMaterial)
         {
-            var baseColor = TryGetSourceColor(sourceMaterial, out var sourceColor)
+            var approvedTexture = LoadApprovedColorSampleTexture();
+            var baseColor = approvedTexture != null
+                ? CantabileDefaultBaseColor
+                : TryGetSourceColor(sourceMaterial, out var sourceColor)
                 ? sourceColor
                 : CantabileDefaultBaseColor;
             SetMaterialColor(targetMaterial, "_BaseColor", baseColor);
             SetMaterialColor(targetMaterial, "_Color", baseColor);
 
-            var baseTexture = TryGetSourceTexture(sourceMaterial);
+            var baseTexture = approvedTexture != null ? approvedTexture : TryGetSourceTexture(sourceMaterial);
             SetMaterialTexture(targetMaterial, "_BaseMap", baseTexture);
             SetMaterialTexture(targetMaterial, "_MainTex", baseTexture);
 
@@ -387,13 +455,16 @@ namespace Bellerophon.Editor.CantabileCargoRunScene
             SetMaterialFloat(
                 targetMaterial,
                 "_Smoothness",
-                TryGetSourceFloat(sourceMaterial, CantabileDefaultSmoothness, "_Smoothness", "_Glossiness"));
+                approvedTexture != null
+                    ? CantabileApprovedColorSampleSmoothness
+                    : TryGetSourceFloat(sourceMaterial, CantabileDefaultSmoothness, "_Smoothness", "_Glossiness"));
             SetMaterialFloat(targetMaterial, "_Surface", 0f);
             SetMaterialFloat(targetMaterial, "_Blend", 0f);
             SetMaterialFloat(targetMaterial, "_AlphaClip", 0f);
             SetMaterialFloat(targetMaterial, "_ZWrite", 1f);
             SetMaterialFloat(targetMaterial, "_SrcBlend", 1f);
             SetMaterialFloat(targetMaterial, "_DstBlend", 0f);
+            SetMaterialFloat(targetMaterial, "_TextureWeight", approvedTexture != null ? 0f : 1f);
             targetMaterial.SetOverrideTag("RenderType", "Opaque");
             targetMaterial.renderQueue = -1;
             targetMaterial.DisableKeyword("_SURFACE_TYPE_TRANSPARENT");
@@ -418,6 +489,11 @@ namespace Bellerophon.Editor.CantabileCargoRunScene
 
         private static string BuildMaterialAssetPath(Material sourceMaterial, int slotIndex)
         {
+            if (LoadApprovedColorSampleTexture() != null)
+            {
+                return ApprovedColorMaterialAssetPath;
+            }
+
             if (sourceMaterial == null)
             {
                 return DefaultMaterialAssetPath;
@@ -485,6 +561,22 @@ namespace Bellerophon.Editor.CantabileCargoRunScene
             return TryGetTexture(sourceMaterial, "_MainTex");
         }
 
+        private static Texture LoadApprovedColorSampleTexture()
+        {
+            return AssetDatabase.LoadAssetAtPath<Texture>(ApprovedColorAtlasAssetPath);
+        }
+
+        private static Texture RequireApprovedColorSampleTexture()
+        {
+            var texture = LoadApprovedColorSampleTexture();
+            if (texture == null)
+            {
+                throw new InvalidOperationException($"Approved Cantabile color sample texture is missing. Path={ApprovedColorAtlasAssetPath}.");
+            }
+
+            return texture;
+        }
+
         private static Texture TryGetTexture(Material material, string propertyName)
         {
             return material != null && material.HasProperty(propertyName) ? material.GetTexture(propertyName) : null;
@@ -543,6 +635,17 @@ namespace Bellerophon.Editor.CantabileCargoRunScene
             return shader;
         }
 
+        private static Shader FindApprovedColorShader()
+        {
+            var shader = Shader.Find(ApprovedColorVertexShaderName);
+            if (shader == null)
+            {
+                throw new InvalidOperationException($"Could not find Cantabile approved color vertex shader. Shader={ApprovedColorVertexShaderName}.");
+            }
+
+            return shader;
+        }
+
         private static void InspectCantabileMaterials(Transform root)
         {
             var renderers = root.GetComponentsInChildren<Renderer>(true);
@@ -576,6 +679,168 @@ namespace Bellerophon.Editor.CantabileCargoRunScene
             Debug.Log(
                 $"CantabileMaterialInspection Renderers={renderers.Length}, Slots={materialSlots}, " +
                 $"Invalid={invalidMaterials}, Shader={FindLitShader().name}.");
+        }
+
+        private static void InspectApprovedColorSampleMaterials(Transform placementRoot)
+        {
+            var approvedTexture = RequireApprovedColorSampleTexture();
+            var approvedShader = FindApprovedColorShader();
+            var reviewObjects = GetReviewObjectsInOrder(placementRoot);
+            var rendererCount = 0;
+            var materialSlots = 0;
+            var approvedTextureSlots = 0;
+            var approvedShaderSlots = 0;
+            var vertexColorRenderers = 0;
+
+            foreach (var reviewObject in reviewObjects)
+            {
+                var renderers = reviewObject.GetComponentsInChildren<Renderer>(true);
+                rendererCount += renderers.Length;
+                foreach (var renderer in renderers)
+                {
+                    if (RendererHasVertexColors(renderer))
+                    {
+                        vertexColorRenderers++;
+                    }
+
+                    foreach (var material in renderer.sharedMaterials)
+                    {
+                        materialSlots++;
+                        if (material == null)
+                        {
+                            continue;
+                        }
+
+                        if (ReferenceEquals(material.shader, approvedShader))
+                        {
+                            approvedShaderSlots++;
+                        }
+
+                        if (ReferenceEquals(TryGetTexture(material, "_BaseMap"), approvedTexture) ||
+                            ReferenceEquals(TryGetTexture(material, "_MainTex"), approvedTexture))
+                        {
+                            approvedTextureSlots++;
+                        }
+                    }
+                }
+            }
+
+            if (materialSlots == 0 ||
+                approvedTextureSlots != materialSlots ||
+                approvedShaderSlots != materialSlots ||
+                vertexColorRenderers != rendererCount)
+            {
+                throw new InvalidOperationException(
+                    $"Cantabile approved color sample material mismatch. Objects={reviewObjects.Count}, Renderers={rendererCount}, Slots={materialSlots}, ApprovedTextureSlots={approvedTextureSlots}, ApprovedShaderSlots={approvedShaderSlots}, VertexColorRenderers={vertexColorRenderers}.");
+            }
+
+            Debug.Log(
+                "CantabileApprovedColorSampleInspection " +
+                $"Objects={reviewObjects.Count}, Renderers={rendererCount}, Slots={materialSlots}, " +
+                $"ApprovedTextureSlots={approvedTextureSlots}, ApprovedShaderSlots={approvedShaderSlots}, VertexColorRenderers={vertexColorRenderers}, " +
+                $"Texture={ApprovedColorAtlasAssetPath}, Material={ApprovedColorMaterialAssetPath}, Shader={ApprovedColorVertexShaderName}.");
+        }
+
+        private static bool RendererHasVertexColors(Renderer renderer)
+        {
+            Mesh mesh = null;
+            if (renderer is SkinnedMeshRenderer skinnedMeshRenderer)
+            {
+                mesh = skinnedMeshRenderer.sharedMesh;
+            }
+            else
+            {
+                var meshFilter = renderer.GetComponent<MeshFilter>();
+                if (meshFilter != null)
+                {
+                    mesh = meshFilter.sharedMesh;
+                }
+            }
+
+            if (mesh == null)
+            {
+                return false;
+            }
+
+            var colors32 = mesh.colors32;
+            return colors32 != null && colors32.Length == mesh.vertexCount;
+        }
+
+        private static void RequireCantabileReviewObjects(Transform placementRoot)
+        {
+            GetReviewObjectsInOrder(placementRoot);
+        }
+
+        private static void CaptureTransformToPng(Transform target, string outputPath, int width, int height, float zoom)
+        {
+            var bounds = CalculateRendererBounds(target, new Bounds(target.position, Vector3.one));
+            var focus = bounds.center;
+            var frontDirection = CalculateCantabileVisualFrontDirection(target);
+            if (target.name == PlacementRootName)
+            {
+                frontDirection = CalculateCantabileVisualFrontDirection(RequirePlacementObject(target));
+            }
+
+            var distance = Mathf.Max(bounds.extents.magnitude * 2.6f, 2.0f);
+            var cameraPosition = focus + (frontDirection * distance) + (Vector3.up * bounds.extents.y * 0.12f);
+            var cameraObject = new GameObject("CantabileColorValidationCamera");
+            var lightObject = new GameObject("CantabileColorValidationLight");
+            var renderTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32);
+            var previousActive = RenderTexture.active;
+
+            try
+            {
+                var camera = cameraObject.AddComponent<Camera>();
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0.97f, 0.97f, 0.95f, 1f);
+                camera.orthographic = true;
+                var aspect = (float)width / height;
+                var framedHalfHeight = Mathf.Max(bounds.extents.y, bounds.extents.x / aspect);
+                camera.orthographicSize = Mathf.Max(framedHalfHeight * zoom, 0.20f);
+                camera.nearClipPlane = 0.01f;
+                camera.farClipPlane = distance + bounds.extents.magnitude + 5f;
+                camera.aspect = aspect;
+                camera.transform.position = cameraPosition;
+                camera.transform.rotation = Quaternion.LookRotation((focus - cameraPosition).normalized, Vector3.up);
+                camera.targetTexture = renderTexture;
+
+                var light = lightObject.AddComponent<Light>();
+                light.type = LightType.Directional;
+                light.intensity = 1.25f;
+                light.color = Color.white;
+                light.transform.rotation = Quaternion.LookRotation((focus - cameraPosition).normalized, Vector3.up);
+
+                camera.Render();
+                RenderTexture.active = renderTexture;
+                var capture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+                capture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+                capture.Apply();
+                File.WriteAllBytes(outputPath, ImageConversion.EncodeToPNG(capture));
+                UnityEngine.Object.DestroyImmediate(capture);
+            }
+            finally
+            {
+                RenderTexture.active = previousActive;
+                var camera = cameraObject.GetComponent<Camera>();
+                if (camera != null)
+                {
+                    camera.targetTexture = null;
+                }
+
+                renderTexture.Release();
+                UnityEngine.Object.DestroyImmediate(renderTexture);
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+                UnityEngine.Object.DestroyImmediate(lightObject);
+            }
+        }
+
+        private static string ToProjectRelativePath(string absolutePath)
+        {
+            var projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+            var fullPath = Path.GetFullPath(absolutePath);
+            return fullPath.StartsWith(projectRoot, StringComparison.OrdinalIgnoreCase)
+                ? fullPath.Substring(projectRoot.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Replace('\\', '/')
+                : fullPath.Replace('\\', '/');
         }
 
         private static bool IsUsableMaterial(Material material)

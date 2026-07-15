@@ -272,6 +272,258 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ApplyPreparedModelToCurrentCargoRunScene,
                         "Prepared Accelerando model applied to current CargoRunMvp scene.");
                     break;
+                case "ApplyApprovedAccelerandoRiggedModelToAllPlacements":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ApplyApprovedRiggedModelToAllPlacements,
+                        "Approved Accelerando rigged model applied to all placements.");
+                    break;
+                case "ValidateApprovedAccelerandoRiggedModelAllPlacements":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ValidateApprovedRiggedModelAllPlacements,
+                        "Approved Accelerando rigged model validated for all placements.");
+                    break;
+                case "CaptureApprovedAccelerandoRiggedModelAllPlacements":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.CaptureApprovedRiggedModelAllPlacements,
+                        "Approved Accelerando rigged model comparison captures completed.");
+                    break;
+                case "RotateApprovedAccelerandoRiggedModelsToBackFacing":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.RotateApprovedRiggedModelsToBackFacing,
+                        "Approved Accelerando rigged models rotated to back-facing.");
+                    break;
+                case "ValidateApprovedAccelerandoRiggedModelsBackFacing":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ValidateApprovedRiggedModelsBackFacing,
+                        "Approved Accelerando rigged models back-facing direction validated.");
+                    break;
+                case "CaptureApprovedAccelerandoRiggedModelsBackFacing":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.CaptureApprovedRiggedModelsBackFacing,
+                        "Approved Accelerando rigged models back-facing review captured.");
+                    break;
+                case "ApplyApprovedAccelerandoForwardMaceStrikeMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ApplyApprovedAccelerandoForwardMaceStrikeMotion,
+                        "Approved Accelerando forward mace strike motion applied.");
+                    break;
+                case "InspectApprovedAccelerandoAttackAntennaSkinConstraints":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.InspectApprovedAccelerandoAttackAntennaSkinConstraints,
+                        "Approved Accelerando attack antenna skin constraints inspected.");
+                    break;
+                case "ValidateApprovedAccelerandoForwardMaceStrikeMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ValidateApprovedAccelerandoForwardMaceStrikeMotion,
+                        "Approved Accelerando forward mace strike motion validated.");
+                    break;
+                case "CaptureApprovedAccelerandoForwardMaceStrikeMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.CaptureApprovedAccelerandoForwardMaceStrikeMotion,
+                        "Approved Accelerando forward mace strike motion captured.");
+                    break;
+                case "ApplyApprovedAccelerandoHitRecoilMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ApplyApprovedAccelerandoHitRecoilMotion,
+                        "Approved Accelerando hit recoil motion applied.");
+                    break;
+                case "ValidateApprovedAccelerandoHitRecoilMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ValidateApprovedAccelerandoHitRecoilMotion,
+                        "Approved Accelerando hit recoil motion validated.");
+                    break;
+                case "CaptureApprovedAccelerandoHitRecoilMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.CaptureApprovedAccelerandoHitRecoilMotion,
+                        "Approved Accelerando hit recoil motion captured.");
+                    break;
+                case "ApplyApprovedAccelerandoDeathCollapseMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ApplyApprovedAccelerandoDeathCollapseMotion,
+                        "Approved Accelerando death collapse motion applied.");
+                    break;
+                case "ValidateApprovedAccelerandoDeathCollapseMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ValidateApprovedAccelerandoDeathCollapseMotion,
+                        "Approved Accelerando death collapse motion validated.");
+                    break;
+                case "CaptureApprovedAccelerandoDeathCollapseMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.CaptureApprovedAccelerandoDeathCollapseMotion,
+                        "Approved Accelerando death collapse motion captured.");
+                    break;
+                case "ApplyApprovedGravePlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ApplyApprovedGravePlacement,
+                        "Approved Grave static placement applied.");
+                    break;
+                case "MoveApprovedGravePlayerStartToOppositeSide":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.MoveApprovedGravePlayerStartToOppositeSide,
+                        "Approved Grave Player start moved to the opposite side.");
+                    break;
+                case "ValidateApprovedGravePlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ValidateApprovedGravePlacement,
+                        "Approved Grave static placement validated.");
+                    break;
+                case "CaptureApprovedGravePlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureApprovedGravePlacement,
+                        "Approved Grave static placement captured.");
+                    break;
+                case "ArrangeApprovedGraveAnimationSlots":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ArrangeApprovedGraveAnimationSlots,
+                        "Approved Grave animation slots arranged.");
+                    break;
+                case "ValidateApprovedGraveAnimationSlots":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ValidateApprovedGraveAnimationSlots,
+                        "Approved Grave animation slots validated.");
+                    break;
+                case "CaptureApprovedGraveAnimationSlotLayout":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureApprovedGraveAnimationSlotLayout,
+                        "Approved Grave animation slot layout captured.");
+                    break;
+                case "ApplyApprovedGraveReproduction":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ApplyApprovedGraveReproduction,
+                        "Approved Grave reproduction applied to all slots.");
+                    break;
+                case "ValidateApprovedGraveReproduction":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ValidateApprovedGraveReproduction,
+                        "Approved Grave reproduction validated for all slots.");
+                    break;
+                case "CaptureApprovedGraveReproduction":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureApprovedGraveReproduction,
+                        "Approved Grave reproduction review captured.");
+                    break;
+                case "ApplyApprovedGraveBackFacingRotation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ApplyApprovedGraveBackFacingRotation,
+                        "Approved Grave models rotated 180 degrees to the back-facing direction.");
+                    break;
+                case "InspectApprovedGraveIdleRig":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.InspectApprovedGraveIdleRig,
+                        "Approved Grave idle rig inspected.");
+                    break;
+                case "ApplyApprovedGraveIdleBreathing":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ApplyApprovedGraveIdleBreathing,
+                        "Approved Grave idle breathing applied.");
+                    break;
+                case "ValidateApprovedGraveIdleBreathing":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ValidateApprovedGraveIdleBreathing,
+                        "Approved Grave idle breathing validated.");
+                    break;
+                case "CaptureApprovedGraveIdleBreathing":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureApprovedGraveIdleBreathing,
+                        "Approved Grave idle breathing review captured.");
+                    break;
+                case "ApplyApprovedGraveSlowWalk":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ApplyApprovedGraveSlowWalk,
+                        "Approved Grave slow walk applied.");
+                    break;
+                case "ValidateApprovedGraveSlowWalk":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ValidateApprovedGraveSlowWalk,
+                        "Approved Grave slow walk validated.");
+                    break;
+                case "CaptureApprovedGraveSlowWalk":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureApprovedGraveSlowWalk,
+                        "Approved Grave slow-walk review captured.");
+                    break;
+                case "InspectApprovedGraveAttackRig":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.InspectApprovedGraveAttackRig,
+                        "Approved Grave attack rig inspected.");
+                    break;
+                case "ApplyApprovedGraveCurtainCallAttack":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ApplyApprovedGraveCurtainCallAttack,
+                        "Approved Grave curtain-call attack applied.");
+                    break;
+                case "ValidateApprovedGraveCurtainCallAttack":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ValidateApprovedGraveCurtainCallAttack,
+                        "Approved Grave curtain-call attack validated.");
+                    break;
+                case "CaptureApprovedGraveCurtainCallAttack":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureApprovedGraveCurtainCallAttack,
+                        "Approved Grave curtain-call attack review captured.");
+                    break;
+                case "ApplyGraveWalkFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ApplyGraveWalkFbxReplacement,
+                        "Grave walk FBX replacement applied.");
+                    break;
+                case "ValidateGraveWalkFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ValidateGraveWalkFbxReplacement,
+                        "Grave walk FBX replacement validated.");
+                    break;
+                case "CaptureGraveWalkFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureGraveWalkFbxReplacement,
+                        "Grave walk FBX replacement comparison captured.");
+                    break;
+                case "CaptureApprovedGraveBackFacingRotation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureApprovedGraveBackFacingRotation,
+                        "Approved Grave back-facing 180-degree review captured.");
+                    break;
                 case "InspectPreparedAccelerandoCargoRunSceneState":
                     RunSynchronous(
                         request,
@@ -284,11 +536,71 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.CaptureReview,
                         "Prepared Accelerando static review captured.");
                     break;
+                case "CapturePreparedAccelerandoAntennaTipConnectionCloseups":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.CaptureAntennaTipConnectionCloseups,
+                        "Prepared Accelerando antenna tip connection closeups captured.");
+                    break;
+                case "CapturePreparedAccelerandoMaceChainCloseups":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.CaptureMaceChainCloseups,
+                        "Prepared Accelerando mace chain closeups captured.");
+                    break;
                 case "CapturePreparedAccelerandoAnimationSlots":
                     RunSynchronous(
                         request,
                         Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.CaptureAnimationSlotsReview,
                         "Prepared Accelerando animation slots review captured.");
+                    break;
+                case "ApplyPreparedAccelerandoCrawlForwardMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ApplyCrawlForwardMotionToCurrentScene,
+                        "Prepared Accelerando crawl forward motion applied.");
+                    break;
+                case "InspectPreparedAccelerandoCrawlForwardMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.InspectCrawlForwardMotionInScene,
+                        "Prepared Accelerando crawl forward motion inspected.");
+                    break;
+                case "ValidatePreparedAccelerandoCrawlChainPhysicsResponse":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ValidateCrawlForwardChainPhysicsResponseInScene,
+                        "Prepared Accelerando crawl chain physics response validated.");
+                    break;
+                case "ApplyPreparedAccelerandoPhysicsAntennaStrikeMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ApplyPhysicsAntennaStrikeMotionToCurrentScene,
+                        "Prepared Accelerando physics antenna strike motion applied.");
+                    break;
+                case "InspectPreparedAccelerandoPhysicsAntennaStrikeMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.InspectPhysicsAntennaStrikeMotionInScene,
+                        "Prepared Accelerando physics antenna strike motion inspected.");
+                    break;
+                case "InspectPreparedAccelerandoForwardMaceSwingAntennaRig":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.InspectForwardMaceSwingAntennaRigInScene,
+                        "Prepared Accelerando forward mace swing antenna rig inspected.");
+                    break;
+                case "ValidatePreparedAccelerandoPhysicsAntennaStrikeResponse":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.ValidatePhysicsAntennaStrikeResponseInScene,
+                        "Prepared Accelerando physics antenna strike response validated.");
+                    break;
+                case "CapturePreparedAccelerandoPhysicsAntennaStrikeMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.AccelerandoCargoRunScene.AccelerandoCargoRunSceneApplyAndReview.CapturePhysicsAntennaStrikeMotionReview,
+                        "Prepared Accelerando physics antenna strike motion captured.");
                     break;
                 case "ApplyPreparedAccelerandoIdleBreathingAnimation":
                     RunSynchronous(
@@ -487,6 +799,171 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.CantabileCargoRunScene.CantabileCargoRunSceneApplyAndReview.ApplyAnimationReviewObjects,
                         "Prepared Cantabile animation review objects applied.");
+                    break;
+                case "ApplyApprovedCantabileColorSampleToCurrentCargoRunScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.CantabileCargoRunScene.CantabileCargoRunSceneApplyAndReview.ApplyApprovedColorSampleToCurrentCargoRunScene,
+                        "Approved Cantabile color sample applied to current CargoRunMvp scene.");
+                    break;
+                case "CaptureApprovedCantabileColorSampleReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.CantabileCargoRunScene.CantabileCargoRunSceneApplyAndReview.CaptureApprovedColorSampleReview,
+                        "Approved Cantabile color sample review capture saved.");
+                    break;
+                case "ApplyConSpiritoToCurrentCargoRunScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.ApplyReriggedModelToCurrentCargoRunScene,
+                        "Rerigged Con Spirito model applied to current CargoRunMvp scene.");
+                    break;
+                case "InspectConSpiritoCargoRunSceneState":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.InspectAppliedSceneState,
+                        "Rerigged Con Spirito CargoRunMvp scene state inspected.");
+                    break;
+                case "CaptureConSpiritoCargoRunSceneState":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.CaptureReview,
+                        "Rerigged Con Spirito CargoRunMvp scene capture saved.");
+                    break;
+                case "ApplyConSpiritoDefaultAnimationLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.ApplyDefaultAnimationLoopToCurrentCargoRunScene,
+                        "Con Spirito default FBX animation loop applied to current CargoRunMvp scene.");
+                    break;
+                case "InspectConSpiritoDefaultAnimationLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.InspectDefaultAnimationLoopInScene,
+                        "Con Spirito default FBX animation loop scene state inspected.");
+                    break;
+                case "ApplyConSpiritoDogWalkLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.ApplyDogWalkLoopToCurrentCargoRunScene,
+                        "Con Spirito dog walk loop applied to current CargoRunMvp scene.");
+                    break;
+                case "InspectConSpiritoDogWalkLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.InspectDogWalkLoopInScene,
+                        "Con Spirito dog walk loop scene state inspected.");
+                    break;
+                case "CaptureConSpiritoDogWalkLoopReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.CaptureDogWalkLoopReview,
+                        "Con Spirito dog walk loop review captures saved.");
+                    break;
+                case "ApplyOriginalConSpiritoAnimationLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.ApplyOriginalAnimationLoopToCurrentCargoRunScene,
+                        "Original Con Spirito FBX animation loop applied to current CargoRunMvp scene.");
+                    break;
+                case "InspectOriginalConSpiritoAnimationLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.InspectOriginalAnimationLoopInScene,
+                        "Original Con Spirito FBX animation loop scene state inspected.");
+                    break;
+                case "CaptureOriginalConSpiritoAnimationLoopReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.CaptureOriginalAnimationLoopReview,
+                        "Original Con Spirito FBX animation loop review captures saved.");
+                    break;
+                case "ApplyConSpiritoAnimationReviewSlots":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.ApplyAnimationReviewSlots,
+                        "Con Spirito animation review slots applied.");
+                    break;
+                case "InspectConSpiritoAnimationReviewSlots":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.InspectAnimationReviewSlotsInScene,
+                        "Con Spirito animation review slots inspected.");
+                    break;
+                case "CaptureConSpiritoAnimationReviewSlots":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.CaptureAnimationReviewSlots,
+                        "Con Spirito animation review slots captured.");
+                    break;
+                case "InspectConSpiritoMaterialState":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.InspectMaterialStateInScene,
+                        "Con Spirito material state inspected.");
+                    break;
+                case "CaptureConSpiritoMaterialInspection":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.CaptureMaterialInspection,
+                        "Con Spirito material inspection captures saved.");
+                    break;
+                case "ApplyConSpiritoApprovedMaterialSample":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.ApplyApprovedMaterialSampleToCurrentScene,
+                        "Con Spirito approved material sample applied.");
+                    break;
+                case "InspectConSpiritoApprovedMaterialSample":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.InspectApprovedMaterialSampleInScene,
+                        "Con Spirito approved material sample inspected.");
+                    break;
+                case "CaptureConSpiritoApprovedMaterialSample":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.CaptureApprovedMaterialSampleReview,
+                        "Con Spirito approved material sample captures saved.");
+                    break;
+                case "ApplyConSpiritoIdleBreathLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.ApplyIdleBreathLoopToCurrentScene,
+                        "Con Spirito idle breath loop applied.");
+                    break;
+                case "InspectConSpiritoIdleBreathLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.InspectIdleBreathLoopInScene,
+                        "Con Spirito idle breath loop inspected.");
+                    break;
+                case "CaptureConSpiritoIdleBreathLoopReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.CaptureIdleBreathLoopReview,
+                        "Con Spirito idle breath loop review captures saved.");
+                    break;
+                case "ApplyConSpiritoChargeLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.ApplyChargeLoopToCurrentScene,
+                        "Con Spirito charge loop applied.");
+                    break;
+                case "InspectConSpiritoChargeLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.InspectChargeLoopInScene,
+                        "Con Spirito charge loop inspected.");
+                    break;
+                case "CaptureConSpiritoChargeLoopReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.CaptureChargeLoopReview,
+                        "Con Spirito charge loop review captures saved.");
+                    break;
+                case "CaptureConSpiritoReferenceRunVideos":
+                    RunConSpiritoReferenceRunVideoCapture(request);
                     break;
                 case "MovePreparedSocietasPlayerStartToOppositeSide":
                     RunSynchronous(
@@ -2170,6 +2647,22 @@ namespace Bellerophon.Editor.Validation
             catch (Exception exception)
             {
                 TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunConSpiritoReferenceRunVideoCapture(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                Bellerophon.Editor.ConSpiritoCargoRunScene.ConSpiritoCargoRunSceneApplyAndReview.StartReferenceRunVideoCapture(
+                    successMarker => CompleteRequest(request, successMarker),
+                    exception => FailRequest(request, exception));
+            }
+            catch (Exception exception)
+            {
                 FailRequest(request, exception);
             }
         }

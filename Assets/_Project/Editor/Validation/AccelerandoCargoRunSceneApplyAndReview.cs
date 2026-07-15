@@ -49,20 +49,31 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         private const string UnityCrawlForwardControllerAssetPath = UnityControllerFolder + "/Accelerando_Crawl_Forward_Loop.controller";
         private const string UnityAntennaStrikeClipAssetPath = UnityAnimationFolder + "/Accelerando_Antenna_Strike_Attack.anim";
         private const string UnityAntennaStrikeControllerAssetPath = UnityControllerFolder + "/Accelerando_Antenna_Strike_Attack.controller";
+        private const string UnityHitRecoilClipAssetPath = UnityAnimationFolder + "/Accelerando_Hit_Recoil.anim";
+        private const string UnityHitRecoilControllerAssetPath = UnityControllerFolder + "/Accelerando_Hit_Recoil.controller";
+        private const string UnityDeathCollapseClipAssetPath = UnityAnimationFolder + "/Accelerando_Death_Collapse.anim";
+        private const string UnityDeathCollapseControllerAssetPath = UnityControllerFolder + "/Accelerando_Death_Collapse.controller";
         private const string ValidationFolder = "docs/validation/accelerando";
         private const string AntennaStrikeValidationFolder = "docs/validation/accelerando_attack_motion_2026-07-14";
         private const string ApprovedRiggedValidationFolder = "docs/validation/accelerando_rigged_model_apply_2026-07-14";
         private const string ForwardMaceStrikeValidationFolder = "docs/validation/accelerando_forward_mace_strike_2026-07-14";
         private const string ForwardMaceStrikeBalanceValidationFolder = "docs/validation/accelerando_forward_mace_strike_balance_2026-07-14";
-        private const string ForwardMaceStrikeAggressiveValidationFolder = "docs/validation/accelerando_antenna_stationary_settle_2026-07-15";
+        private const string ForwardMaceStrikeAggressiveValidationFolder = "docs/validation/accelerando_period_shortening_full_circle_flail_2026-07-15";
+        private const string HitRecoilValidationFolder = "docs/validation/accelerando_hit_recoil_loop_2026-07-15";
+        private const string DeathCollapseValidationFolder = "docs/validation/accelerando_death_collapse_final_loop_2026-07-15";
         private const string IdleBreathBlendShapeName = "Accelerando_IdleBreathMorph";
         private const string IdleSlotObjectName = "Accelerando_01_Idle_Detect";
         private const string CrawlSlotObjectName = "Accelerando_02_Crawl_Accelerating";
         private const string AntennaStrikeSlotObjectName = "Accelerando_03_Antenna_Strike";
+        private const string HitRecoilSlotObjectName = "Accelerando_05_Hit_Recoil";
+        private const string DeathCollapseSlotObjectName = "Accelerando_06_Death";
         private const string ChainPhysicsRootObjectName = "Accelerando_ChainPhysicsRoot";
+        private const string AttackTorsoCollisionProxyObjectName = "Accelerando_AttackTorsoCollisionProxy";
         private const string IdleBreathStateName = "IdleBreathMorph";
         private const string CrawlForwardStateName = "CrawlForwardLoop";
         private const string AntennaStrikeStateName = "AntennaStrikeAttack";
+        private const string HitRecoilStateName = "HitRecoil";
+        private const string DeathCollapseStateName = "DeathCollapse";
         private const string IdleBreathRootBoneName = "Accelerando_IdleBreath_RootBone";
         private const string IdleBreathBodyObjectName = "Accelerando_IdleBreath_Body";
         private const string IdleBreathAntennaObjectName = "Accelerando_IdleBreath_StaticMaceAntennae";
@@ -93,37 +104,115 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         private const float CrawlForwardChainMinimumRange = 0.040f;
         private const float CrawlForwardMaceMinimumRange = 30.000f;
         private const float CrawlForwardPhysicsDrivenCurveMaximumRange = 0.001f;
-        private const float AntennaStrikeLoopSeconds = 2.40f;
+        private const float AntennaStrikeLoopSeconds = 4.00f;
+        private const float HitRecoilImpactStartTime = 0.10f;
+        private const float HitRecoilPeakTime = 0.18f;
+        private const float HitRecoilReboundTime = 0.32f;
+        private const float HitRecoilSettleTime = 0.50f;
+        private const float HitRecoilDuration = 0.70f;
+        private const float HitRecoilPhysicsReviewDuration = 1.60f;
+        private const float HitRecoilBackwardDistance = 0.32f;
+        private const float HitRecoilMinimumBackwardDistance = 0.26f;
+        private const float HitRecoilMaximumBackwardDistance = 0.38f;
+        private const float HitRecoilMinimumMaceLag = 0.07f;
+        private const float HitRecoilMinimumResidualSwing = 0.025f;
+        private const float HitRecoilMaximumChainExtension = 0.080f;
+        private const float HitRecoilMaximumVisualProxySeparation = 0.002f;
+        private const float HitRecoilMinimumMaceTorsoDistance = 0.38f;
+        private const float DeathCollapseReleaseTime = 0.18f;
+        private const float DeathCollapseDropTime = 0.65f;
+        private const float DeathCollapseSettleTime = 1.15f;
+        private const float DeathCollapseDuration = 1.80f;
+        private const int DeathCollapseVerifiedLoopCount = 2;
+        private const float DeathCollapseLoopEntryReviewTime = 0.40f;
+        private const float DeathCollapsePhysicsReviewDuration =
+            DeathCollapseDuration * DeathCollapseVerifiedLoopCount + DeathCollapseLoopEntryReviewTime;
+        private const float DeathCollapseMaximumLoopBoundaryPositionError = 0.002f;
+        private const float DeathCollapseMaximumLoopBoundaryScaleError = 0.002f;
+        private const float DeathCollapseMinimumBodyDrop = 0.32f;
+        private const float DeathCollapseMaximumBodyHeightScale = 0.65f;
+        private const float DeathCollapseMinimumAntennaDrop = 0.52f;
+        private const float DeathCollapseMaximumFinalAntennaRise = 0.05f;
+        private const float DeathCollapseMinimumMaceDrop = 0.22f;
+        private const float DeathCollapseMinimumMaceLag = 0.05f;
+        // A loop restarts immediately at 1.80s, so the physical mace keeps residual motion instead of settling to rest.
+        private const float DeathCollapseMaximumFinalMaceSpeed = 1.50f;
+        private const float DeathCollapseMaximumChainExtension = 0.004f;
+        private const float DeathCollapseMaximumVisualProxySeparation = 0.002f;
+        private const float DeathCollapseMaximumAntennaChainConnectionGap = 0.015f;
+        private const float DeathCollapseMinimumMaceTorsoDistance = 0.38f;
+        private const float VerticalCircularFlailStartTime = 0.20f;
+        // Acceleration is authored as four successively shorter complete revolution periods.
+        // Monotone Hermite phase interpolation keeps their boundaries smooth and exact.
+        private const float VerticalCircularFlailEndTime = 3.40f;
+        private const float VerticalCircularFlailRadius = 0.24f;
+        private const int VerticalCircularFlailCycleCount = 4;
+        private const float VerticalCircularFlailRevolutions = VerticalCircularFlailCycleCount;
+        private const float VerticalCircularFlailMinimumAntennaAngularTravel = 1410f;
+        private const float VerticalCircularFlailMinimumMaceAngularTravel = 1280f;
+        private const float VerticalCircularFlailMinimumMaceDirectionalTravel = 1280f;
+        private const float VerticalCircularFlailMinimumMaceVerticalRange = 0.60f;
+        private const float VerticalCircularFlailMaximumLateralExcursion = 0.025f;
+        private const float VerticalCircularFlailMaximumTorsoPenetration = 0.020f;
+        private const float VerticalCircularFlailFrontSectorMinimumForwardOffset = 0.15f;
+        private const float VerticalCircularFlailMinimumFrontDownwardSpeed = 0.50f;
+        private const int VerticalCircularFlailMinimumFrontDescendingSamples = 3;
+        private const float VerticalCircularFlailCyclePeriodTolerance = 0.035f;
+        private const float VerticalCircularFlailMinimumMaceCycleTravel = 300f;
+        private const float VerticalCircularFlailMinimumCycleDirectionConsistency = 0.92f;
+        private const float VerticalCircularFlailMinimumMaceOrbitRadius = 0.85f;
+        private const float VerticalCircularFlailMaximumMaceOrbitRadiusRatio = 1.35f;
+        private static readonly float[] VerticalCircularFlailCyclePeriods =
+        {
+            1.10f, 0.90f, 0.70f, 0.50f
+        };
         private const float ForwardMaceStrikeWindupTime = 0.32f;
         private const float ForwardMaceStrikeReleaseTime = 0.44f;
-        private const float ForwardMaceStrikePeakTime = 0.50f;
-        private const float ForwardMaceStrikeRecoilTime = 0.62f;
-        private const float ForwardMaceStrikeSecondaryDriveTime = 0.78f;
-        private const float ForwardMaceStrikeAftershockTime = 0.96f;
-        private const float ForwardMaceStrikeFollowThroughTime = 1.20f;
-        private const float ForwardMaceStrikeRecoveryTime = 2.00f;
+        private const float ForwardMaceStrikePeakTime = 0.58f;
+        private const float ForwardMaceStrikeRecoilTime = 0.82f;
+        private const float ForwardMaceStrikeSecondaryDriveTime = 0.98f;
+        private const float ForwardMaceStrikeAftershockTime = 1.16f;
+        private const float ForwardMaceStrikeFollowThroughTime = 1.42f;
+        private const float ForwardMaceStrikeRecoveryTime = 2.15f;
         private const float ForwardMaceStrikeProbeAngle = 6f;
-        private const float ForwardMaceStrikeMinimumPositiveOffset = 0.12f;
+        private const float ForwardMaceStrikeMinimumPositiveOffset = 0.45f;
         private const float ForwardMaceStrikeMinimumVelocityRatio = 1.20f;
         private const float AntennaDrivenMaceMinimumReleaseResponseDelay = 0.03f;
         private const float AntennaDrivenMaceMaximumReleaseResponseDelay = 0.88f;
         private const float AntennaDrivenMaceMinimumSettledAntennaSpeed = 0.50f;
         private const float AntennaReactionMinimumDirectionalSpeed = 0.25f;
         private const int AntennaReactionMinimumOpposedMotionSamples = 2;
+        private const int AntennaDrivenMinimumInertialLagSamples = 20;
+        private const float AntennaDrivenMinimumInertialLagFraction = 0.20f;
+        private const float AntennaDrivenMaximumInertialLagCosine = -0.50f;
+        private const float PhysicalRecoveryMinimumDirectionalSpeed = 0.25f;
+        private const float PhysicalRecoveryMinimumBehindOffset = 0.05f;
+        private const float PhysicalRecoveryMinimumTensionFraction = 0.50f;
+        private const float PhysicalRecoveryMaximumOpposedDriveDuration = 0.18f;
         private const float AttackStationaryAntennaSpeedThreshold = 1.00f;
         private const float AttackStationaryEarlyRecoveryStartTime = 1.20f;
         private const float AttackStationaryEarlyRecoveryEndTime = 1.50f;
         private const float AttackStationaryLateRecoveryStartTime = 2.05f;
         private const float AttackStationaryLateRecoveryEndTime = 2.30f;
-        private const float AttackStationaryMaximumLateToEarlySpeedRatio = 0.85f;
-        private const float AttackMovingMaximumMaceLinearDamping = 0.31f;
-        private const float AttackSettledMinimumMaceLinearDamping = 2.00f;
+        private const float AttackStationaryMaximumLateToEarlySpeedRatio = 3.00f;
+        private const float AttackStationaryMaximumLateMaceWorldSpeed = 6.00f;
+        private const float AttackStationaryMaximumMechanicalEnergyGrowth = 2.00f;
+        private const float AttackMaximumLateralExcursion = 1.60f;
+        private const float AttackMaximumReturnMaceBackwardOvershoot = 0.35f;
+        private const float AttackMaximumMaceLinearDamping = 0.11f;
         private const float ForwardMaceStrikeMaximumMirroredPositionDelta = 0.065f;
-        private const float ForwardMaceStrikeMaximumMirroredSegmentAngle = 6f;
-        private const float AttackChainMaximumSegmentExtension = 0.008f;
+        // The authored left/right antenna bone axes are asymmetric. For the circular attack,
+        // endpoint path symmetry is authoritative; this bound only rejects a visibly divergent bend.
+        private const float ForwardMaceStrikeMaximumMirroredSegmentAngle = 16f;
+        // Circular-drive centre extension remains below one 0.035 m proxy radius, so adjacent
+        // authored rings still overlap and no visible gap opens under peak tension.
+        private const float AttackChainMaximumSegmentExtension = 0.025f;
         private const float AntennaStrikeInputMinimumRange = 0.100f;
-        private const float AntennaStrikeMinimumMaceForwardRange = 0.120f;
-        private const float AntennaStrikeMinimumMaceAmplification = 1.12f;
+        private const float AntennaStrikeMinimumMaceForwardRange = 0.65f;
+        private const float ApprovedAttackMaceMass = 0.16f;
+        private const float ApprovedAttackMaceJointMassScale = 4.00f;
+        private const float ApprovedAttackMovingMaceLinearDamping = 0.06f;
+        private const float ApprovedAttackMovingMaceAngularDamping = 0.18f;
         private const float CrawlChainPhysicsMaximumMaceDrop = 0.220f;
         private const float CrawlChainPhysicsMinimumMaceHorizontalRange = 0.018f;
         private const float CrawlChainPhysicsMinimumGravitySag = 0.012f;
@@ -184,7 +273,7 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         };
         private static readonly float[] ApprovedRiggedAttackBoneWindupAngles =
         {
-            40f, 28f, 14f, 40f, 28f, 14f
+            54f, 37.8f, 18.9f, 54f, 37.8f, 18.9f
         };
 
         private readonly struct AnimationReviewSlot
@@ -1296,21 +1385,25 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             var previousMode = Physics.simulationMode;
             var previousAutoSync = Physics.autoSyncTransforms;
             var fixedBounds = CalculateRendererBounds(new[] { strikeSlot }, new Bounds(strikeSlot.position, Vector3.one));
-            fixedBounds.Expand(new Vector3(1.35f, 0.55f, 1.80f));
+            fixedBounds.Expand(new Vector3(1.35f, 2.80f, 2.80f));
             const float deltaTime = 1f / 90f;
             var steps = Mathf.RoundToInt(AntennaStrikeLoopSeconds / deltaTime) + 1;
             var captureFrames = new Dictionary<int, string>
             {
                 { 0, "00_Neutral" },
-                { 29, "01_Windup" },
-                { 40, "02_Release" },
-                { 45, "03_ForwardPeak" },
-                { 56, "04_AntennaRecoilMaceFollowThrough" },
-                { 70, "05_SecondaryDrive" },
-                { 86, "06_Aftershock" },
-                { 108, "07_ReactionSettle" },
-                { 180, "08_LooseRecovery" },
-                { 216, "09_Return" }
+                { 18, "01_Cycle01Start_Period1100ms" },
+                { 68, "02_Cycle01Bottom" },
+                { 117, "03_Cycle01Complete" },
+                { 158, "04_Cycle02Bottom" },
+                { 198, "05_Cycle02Complete_Period900ms" },
+                { 230, "06_Cycle03Bottom" },
+                { 261, "07_Cycle03Complete_Period700ms" },
+                { 272, "08_Cycle04FrontDownstrike" },
+                { 284, "09_Cycle04Bottom" },
+                { 295, "10_Cycle04Back" },
+                { 306, "11_Cycle04Complete_Period500ms" },
+                { 324, "12_InertialFollowThrough" },
+                { 351, "13_Return" }
             };
 
             try
@@ -1339,14 +1432,15 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                         placementRoot.transform,
                         new[] { strikeSlot },
                         strikeSlot,
-                        $"Accelerando_ForwardMaceStrike_{suffix}_Front.png",
-                        $"Accelerando_ForwardMaceStrike_{suffix}_Oblique.png",
-                        $"AccelerandoForwardMaceStrikeCapture_{suffix}",
+                        $"Accelerando_PeriodShorteningFullCircleFlail_{suffix}_Front.png",
+                        $"Accelerando_PeriodShorteningFullCircleFlail_{suffix}_Oblique.png",
+                        $"AccelerandoPeriodShorteningFullCircleFlailCapture_{suffix}",
                         fixedBounds,
                         ForwardMaceStrikeAggressiveValidationFolder,
                         strikeSlot.forward);
 
-                    if (step == 29 || step == 45 || step == 56 || step == 70 || step == 86 || step == 108 || step == 180)
+                    if (step == 68 || step == 158 || step == 230 || step == 272 ||
+                        step == 284 || step == 295 || step == 324)
                     {
                         CaptureAntennaCloseup(
                             placementRoot.transform,
@@ -1371,7 +1465,7 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                     }
                 }
 
-                Debug.Log("Accelerando aggressive forward mace strike and bilateral antenna closeup captures completed.");
+                Debug.Log("Accelerando vertical circular flail and bilateral antenna closeup captures completed.");
             }
             finally
             {
@@ -1385,6 +1479,1495 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                     animator.enabled = animatorWasEnabled;
                 }
             }
+        }
+
+        [MenuItem("Bellerophon/Enemies/Accelerando/Apply Hit Recoil Motion")]
+        public static void ApplyApprovedAccelerandoHitRecoilMotion()
+        {
+            EnsureUnityFolders();
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName) ??
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            var hitSlot = placementRoot.transform.Find(HitRecoilSlotObjectName) ??
+                throw new InvalidOperationException($"{HitRecoilSlotObjectName} is missing.");
+            var model = FindDirectChild(hitSlot, ModelChildName) ??
+                throw new InvalidOperationException($"{HitRecoilSlotObjectName}/{ModelChildName} is missing.");
+            var rootState = new ApprovedRiggedTransformState(placementRoot.transform);
+            var slotState = new ApprovedRiggedTransformState(hitSlot);
+            var modelState = new ApprovedRiggedTransformState(model);
+
+            var clip = EnsureApprovedRiggedHitRecoilClip(hitSlot);
+            ConfigureApprovedRiggedAnimator(hitSlot, EnsureHitRecoilController(clip));
+            ConfigureApprovedRiggedHitChainPhysics(hitSlot);
+            ValidateApprovedHitRecoilSlotStructure(hitSlot, clip);
+
+            rootState.AssertUnchanged(placementRoot.transform, PlacementRootName);
+            slotState.AssertUnchanged(hitSlot, HitRecoilSlotObjectName);
+            modelState.AssertUnchanged(model, $"{HitRecoilSlotObjectName}/{ModelChildName}");
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+            Debug.Log(
+                "Approved Accelerando hit recoil motion applied. " +
+                "AnimatedTransform=Bone_000; ChainAndMaceCurves=0; SlotRootMotion=0; Physics=Rigidbody+ConfigurableJoint.");
+        }
+
+        public static void ValidateApprovedAccelerandoHitRecoilMotion()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            var hitSlot = placementRoot != null ? placementRoot.transform.Find(HitRecoilSlotObjectName) : null;
+            if (hitSlot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName}/{HitRecoilSlotObjectName} is missing.");
+            }
+
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityHitRecoilClipAssetPath) ??
+                throw new InvalidOperationException($"{UnityHitRecoilClipAssetPath} is missing.");
+            ConfigureApprovedRiggedHitChainPhysics(hitSlot);
+            ValidateApprovedHitRecoilSlotStructure(hitSlot, clip);
+            var report = ValidateApprovedHitRecoilPhysics(hitSlot, clip);
+            var outputDirectory = GetAbsoluteProjectPath(HitRecoilValidationFolder);
+            Directory.CreateDirectory(outputDirectory);
+            File.WriteAllText(
+                Path.Combine(outputDirectory, "physics_validation.txt"),
+                report,
+                System.Text.Encoding.UTF8);
+            Debug.Log("Approved Accelerando hit recoil validation passed.\n" + report);
+        }
+
+        public static void CaptureApprovedAccelerandoHitRecoilMotion()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            var hitSlot = placementRoot != null ? placementRoot.transform.Find(HitRecoilSlotObjectName) : null;
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityHitRecoilClipAssetPath);
+            if (placementRoot == null || hitSlot == null || clip == null)
+            {
+                throw new InvalidOperationException("Approved Accelerando hit recoil capture targets are missing.");
+            }
+
+            ConfigureApprovedRiggedHitChainPhysics(hitSlot);
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = hitSlot.GetComponent(rigType);
+            var simulateMethod = rigType.GetMethod("SimulatePhysicsTick", new[] { typeof(float) });
+            var syncMethod = rigType.GetMethod("SyncVisualsToPhysics", Type.EmptyTypes);
+            if (rig == null || simulateMethod == null || syncMethod == null)
+            {
+                throw new InvalidOperationException("Accelerando hit recoil physics capture rig is incomplete.");
+            }
+
+            var snapshots = CaptureApprovedHitRecoilSnapshots(hitSlot);
+            var animator = hitSlot.GetComponent<Animator>();
+            var animatorWasEnabled = animator != null && animator.enabled;
+            var previousMode = Physics.simulationMode;
+            var previousAutoSync = Physics.autoSyncTransforms;
+            var fixedBounds = CalculateRendererBounds(new[] { hitSlot }, new Bounds(hitSlot.position, Vector3.one));
+            fixedBounds.Expand(new Vector3(1.20f, 1.40f, 1.80f));
+            const float deltaTime = 1f / 90f;
+            var steps = Mathf.RoundToInt(HitRecoilPhysicsReviewDuration / deltaTime) + 1;
+            var captureFrames = new Dictionary<int, string>
+            {
+                { 0, "00_Neutral" },
+                { 16, "01_Cycle01_MaximumRecoil_180ms" },
+                { 29, "02_Cycle01_Rebound_320ms" },
+                { 63, "03_Cycle01_LoopBoundary_700ms" },
+                { 79, "04_Cycle02_MaximumRecoil_878ms" },
+                { 92, "05_Cycle02_Rebound_1022ms" },
+                { 126, "06_Cycle02_LoopBoundary_1400ms" },
+                { 140, "07_Cycle03_ImpactBuild_1556ms" }
+            };
+
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                Physics.simulationMode = SimulationMode.Script;
+                Physics.autoSyncTransforms = false;
+                for (var step = 0; step < steps; step++)
+                {
+                    var sampleTime = Mathf.Repeat(step * deltaTime, HitRecoilDuration);
+                    clip.SampleAnimation(hitSlot.gameObject, sampleTime);
+                    simulateMethod.Invoke(rig, new object[] { deltaTime });
+                    Physics.SyncTransforms();
+                    Physics.Simulate(deltaTime);
+                    syncMethod.Invoke(rig, Array.Empty<object>());
+                    if (!captureFrames.TryGetValue(step, out var suffix))
+                    {
+                        continue;
+                    }
+
+                    CaptureReviewImagesForFocus(
+                        placementRoot.transform,
+                        new[] { hitSlot },
+                        hitSlot,
+                        $"Accelerando_HitRecoil_{suffix}_Front.png",
+                        $"Accelerando_HitRecoil_{suffix}_Oblique.png",
+                        $"AccelerandoHitRecoilCapture_{suffix}",
+                        fixedBounds,
+                        HitRecoilValidationFolder,
+                        hitSlot.forward);
+                }
+
+                Debug.Log("Accelerando hit recoil body and physical chain/mace captures completed.");
+            }
+            finally
+            {
+                Physics.simulationMode = previousMode;
+                Physics.autoSyncTransforms = previousAutoSync;
+                RestoreTransformSnapshots(snapshots);
+                clip.SampleAnimation(hitSlot.gameObject, 0f);
+                ConfigureApprovedRiggedHitChainPhysics(hitSlot);
+                if (animator != null)
+                {
+                    animator.enabled = animatorWasEnabled;
+                }
+            }
+        }
+
+        [MenuItem("Bellerophon/Enemies/Accelerando/Apply Death Collapse Motion")]
+        public static void ApplyApprovedAccelerandoDeathCollapseMotion()
+        {
+            EnsureUnityFolders();
+            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName) ??
+                throw new InvalidOperationException($"{PlacementRootName} root is missing.");
+            var deathSlot = placementRoot.transform.Find(DeathCollapseSlotObjectName) ??
+                throw new InvalidOperationException($"{DeathCollapseSlotObjectName} is missing.");
+            var model = FindDirectChild(deathSlot, ModelChildName) ??
+                throw new InvalidOperationException($"{DeathCollapseSlotObjectName}/{ModelChildName} is missing.");
+            var rootState = new ApprovedRiggedTransformState(placementRoot.transform);
+            var slotState = new ApprovedRiggedTransformState(deathSlot);
+            var modelState = new ApprovedRiggedTransformState(model);
+
+            ConfigureApprovedDeathAntennaSkin(deathSlot);
+            var clip = EnsureApprovedRiggedDeathCollapseClip(deathSlot);
+            ConfigureApprovedRiggedAnimator(deathSlot, EnsureDeathCollapseController(clip));
+            ConfigureApprovedRiggedDeathChainPhysics(deathSlot);
+            ValidateApprovedDeathCollapseSlotStructure(deathSlot, clip);
+
+            rootState.AssertUnchanged(placementRoot.transform, PlacementRootName);
+            slotState.AssertUnchanged(deathSlot, DeathCollapseSlotObjectName);
+            modelState.AssertUnchanged(model, $"{DeathCollapseSlotObjectName}/{ModelChildName}");
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+            Debug.Log(
+                "Approved Accelerando death collapse motion applied. " +
+                "AnimatedBody=Bone_000; AnimatedAntennae=6 bones; CorrectedAntennaSkin=True; " +
+                "AntennaChainDrivers=TipBoneOffsets; ChainAndMaceCurves=0; Loop=True; LoopBlend=False.");
+        }
+
+        public static void ValidateApprovedAccelerandoDeathCollapseMotion()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            var deathSlot = placementRoot != null ? placementRoot.transform.Find(DeathCollapseSlotObjectName) : null;
+            if (deathSlot == null)
+            {
+                throw new InvalidOperationException($"{PlacementRootName}/{DeathCollapseSlotObjectName} is missing.");
+            }
+
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityDeathCollapseClipAssetPath) ??
+                throw new InvalidOperationException($"{UnityDeathCollapseClipAssetPath} is missing.");
+            ConfigureApprovedRiggedDeathChainPhysics(deathSlot);
+            ValidateApprovedDeathCollapseSlotStructure(deathSlot, clip);
+            var report = ValidateApprovedDeathCollapseAntennaDeformation(deathSlot, clip) +
+                ValidateApprovedDeathCollapsePhysics(deathSlot, clip);
+            var outputDirectory = GetAbsoluteProjectPath(DeathCollapseValidationFolder);
+            Directory.CreateDirectory(outputDirectory);
+            File.WriteAllText(
+                Path.Combine(outputDirectory, "physics_validation.txt"),
+                report,
+                System.Text.Encoding.UTF8);
+            Debug.Log("Approved Accelerando death collapse validation passed.\n" + report);
+        }
+
+        public static void CaptureApprovedAccelerandoDeathCollapseMotion()
+        {
+            EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var placementRoot = GameObject.Find(PlacementRootName);
+            var deathSlot = placementRoot != null ? placementRoot.transform.Find(DeathCollapseSlotObjectName) : null;
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityDeathCollapseClipAssetPath);
+            if (placementRoot == null || deathSlot == null || clip == null)
+            {
+                throw new InvalidOperationException("Approved Accelerando death collapse capture targets are missing.");
+            }
+
+            ConfigureApprovedRiggedDeathChainPhysics(deathSlot);
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = deathSlot.GetComponent(rigType);
+            var simulateMethod = rigType.GetMethod("SimulatePhysicsTick", new[] { typeof(float) });
+            var syncMethod = rigType.GetMethod("SyncVisualsToPhysics", Type.EmptyTypes);
+            if (rig == null || simulateMethod == null || syncMethod == null)
+            {
+                throw new InvalidOperationException("Accelerando death collapse physics capture rig is incomplete.");
+            }
+
+            var snapshots = CaptureApprovedDeathCollapseSnapshots(deathSlot);
+            var animator = deathSlot.GetComponent<Animator>();
+            var animatorWasEnabled = animator != null && animator.enabled;
+            var previousMode = Physics.simulationMode;
+            var previousAutoSync = Physics.autoSyncTransforms;
+            var fixedBounds = CalculateRendererBounds(new[] { deathSlot }, new Bounds(deathSlot.position, Vector3.one));
+            fixedBounds.Expand(new Vector3(1.20f, 1.20f, 1.60f));
+            const float deltaTime = 1f / 90f;
+            var steps = Mathf.RoundToInt(DeathCollapsePhysicsReviewDuration / deltaTime) + 1;
+            var captureFrames = new Dictionary<int, string>
+            {
+                { 0, "00_Cycle1_AliveNeutral" },
+                { 16, "01_Cycle1_StrengthRelease_178ms" },
+                { 59, "02_Cycle1_BodyDrop_656ms" },
+                { 104, "03_Cycle1_CollapseSettle_1156ms" },
+                { 161, "04_Cycle1_FinalDeathPose_1789ms" },
+                { 162, "05_Cycle2_AliveReset_1800ms" },
+                { 178, "06_Cycle2_StrengthRelease_1978ms" },
+                { 221, "07_Cycle2_BodyDrop_2456ms" },
+                { 266, "08_Cycle2_CollapseSettle_2956ms" },
+                { 323, "09_Cycle2_FinalDeathPose_3589ms" },
+                { 324, "10_Cycle3_AliveReset_3600ms" },
+                { 340, "11_Cycle3_StrengthRelease_3778ms" }
+            };
+
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                Physics.simulationMode = SimulationMode.Script;
+                Physics.autoSyncTransforms = false;
+                for (var step = 0; step < steps; step++)
+                {
+                    var cycleSteps = Mathf.RoundToInt(DeathCollapseDuration / deltaTime);
+                    var sampleTime = (step % cycleSteps) * deltaTime;
+                    clip.SampleAnimation(deathSlot.gameObject, sampleTime);
+                    simulateMethod.Invoke(rig, new object[] { deltaTime });
+                    Physics.SyncTransforms();
+                    Physics.Simulate(deltaTime);
+                    syncMethod.Invoke(rig, Array.Empty<object>());
+                    if (!captureFrames.TryGetValue(step, out var suffix))
+                    {
+                        continue;
+                    }
+
+                    CaptureReviewImagesForFocus(
+                        placementRoot.transform,
+                        new[] { deathSlot },
+                        deathSlot,
+                        $"Accelerando_DeathCollapse_{suffix}_Front.png",
+                        $"Accelerando_DeathCollapse_{suffix}_Oblique.png",
+                        $"AccelerandoDeathCollapseCapture_{suffix}",
+                        fixedBounds,
+                        DeathCollapseValidationFolder,
+                        deathSlot.forward);
+                }
+
+                Debug.Log("Accelerando looping death collapse body, limp antenna, and physical chain/mace captures completed.");
+            }
+            finally
+            {
+                Physics.simulationMode = previousMode;
+                Physics.autoSyncTransforms = previousAutoSync;
+                RestoreTransformSnapshots(snapshots);
+                clip.SampleAnimation(deathSlot.gameObject, 0f);
+                ConfigureApprovedRiggedDeathChainPhysics(deathSlot);
+                if (animator != null)
+                {
+                    animator.enabled = animatorWasEnabled;
+                }
+            }
+        }
+
+        private static void ValidateApprovedDeathCollapseSlotStructure(Transform deathSlot, AnimationClip clip)
+        {
+            var animator = deathSlot.GetComponent<Animator>() ??
+                throw new InvalidOperationException($"{DeathCollapseSlotObjectName} Animator is missing.");
+            if (animator.applyRootMotion)
+            {
+                throw new InvalidOperationException("Accelerando death collapse must keep the slot root locked.");
+            }
+
+            if (!string.Equals(
+                    AssetDatabase.GetAssetPath(animator.runtimeAnimatorController),
+                    UnityDeathCollapseControllerAssetPath,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("Accelerando death collapse controller is not assigned.");
+            }
+
+            var clipSettings = AnimationUtility.GetAnimationClipSettings(clip);
+            if (!clipSettings.loopTime || clipSettings.loopBlend ||
+                Mathf.Abs(clip.length - DeathCollapseDuration) > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    $"Accelerando death collapse must be a {DeathCollapseDuration:0.00}s looping clip without return blending. " +
+                    $"Loop={clipSettings.loopTime}, LoopBlend={clipSettings.loopBlend}, Length={clip.length:0.###}.");
+            }
+
+            var model = FindDirectChild(deathSlot, ModelChildName) ??
+                throw new InvalidOperationException($"{DeathCollapseSlotObjectName}/{ModelChildName} is missing.");
+            var bodyTransform = FindChildByName(model, "Accelerando_RiggedAttack_Body") ??
+                throw new InvalidOperationException("Accelerando death body is missing.");
+            var bodyRenderer = bodyTransform.GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException("Accelerando death body is not skinned.");
+            if (!string.Equals(
+                    AssetDatabase.GetAssetPath(bodyRenderer.sharedMesh),
+                    UnityForwardStrikeDeformationFixedMeshAssetPath,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("Accelerando death body does not use the bilateral antenna deformation-fixed mesh.");
+            }
+
+            var rootBone = RequireNamedChild(deathSlot, "Bone_000");
+            var rootPath = GetRelativePath(deathSlot, rootBone);
+            var antennaPaths = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var boneName in ApprovedRiggedAttackBoneNames)
+            {
+                antennaPaths.Add(GetRelativePath(deathSlot, RequireNamedChild(deathSlot, boneName)));
+            }
+
+            var rootBindingCount = 0;
+            var antennaBindingCount = 0;
+            var bindings = AnimationUtility.GetCurveBindings(clip);
+            foreach (var binding in bindings)
+            {
+                if (binding.type != typeof(Transform))
+                {
+                    throw new InvalidOperationException($"Accelerando death collapse has a non-Transform binding: {binding.path}.");
+                }
+
+                if (string.Equals(binding.path, rootPath, StringComparison.Ordinal) &&
+                    (binding.propertyName.StartsWith("m_LocalPosition.", StringComparison.Ordinal) ||
+                     binding.propertyName.StartsWith("m_LocalScale.", StringComparison.Ordinal)))
+                {
+                    rootBindingCount++;
+                }
+                else if (antennaPaths.Contains(binding.path) &&
+                         binding.propertyName.StartsWith("m_LocalRotation.", StringComparison.Ordinal))
+                {
+                    antennaBindingCount++;
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        $"Accelerando death collapse contains an unsupported binding. " +
+                        $"Path={binding.path}, Property={binding.propertyName}.");
+                }
+
+                foreach (var prohibitedName in new[] { "Chain", "Mace", "PhysicsAnchor" })
+                {
+                    if (binding.path.IndexOf(prohibitedName, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        throw new InvalidOperationException(
+                            $"Accelerando death collapse directly animates a physics-driven object: {binding.path}.");
+                    }
+                }
+            }
+
+            if (bindings.Length != 30 || rootBindingCount != 6 || antennaBindingCount != 24)
+            {
+                throw new InvalidOperationException(
+                    "Accelerando death collapse animation binding structure is incomplete. " +
+                    $"Total={bindings.Length}/30, Root={rootBindingCount}/6, Antenna={antennaBindingCount}/24.");
+            }
+
+            var physicsRoot = deathSlot.Find(ChainPhysicsRootObjectName) ??
+                throw new InvalidOperationException("Accelerando death collapse physics root is missing.");
+            var bodies = physicsRoot.GetComponentsInChildren<Rigidbody>(true);
+            var joints = physicsRoot.GetComponentsInChildren<ConfigurableJoint>(true);
+            var kinematicCount = 0;
+            foreach (var body in bodies)
+            {
+                if (body.isKinematic)
+                {
+                    kinematicCount++;
+                }
+            }
+
+            if (bodies.Length != 27 || kinematicCount != 3 || joints.Length != 24)
+            {
+                throw new InvalidOperationException(
+                    "Accelerando death collapse physics structure is incomplete. " +
+                    $"Rigidbodies={bodies.Length}/27, Kinematic={kinematicCount}/3, Joints={joints.Length}/24.");
+            }
+
+            var bodyIsSkinned = false;
+            foreach (var renderer in deathSlot.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                foreach (var bone in renderer.bones)
+                {
+                    if (bone == rootBone)
+                    {
+                        bodyIsSkinned = true;
+                        break;
+                    }
+                }
+
+                if (bodyIsSkinned)
+                {
+                    break;
+                }
+            }
+
+            if (!bodyIsSkinned)
+            {
+                throw new InvalidOperationException("Accelerando death collapse Bone_000 does not deform the skinned body mesh.");
+            }
+        }
+
+        private static string ValidateApprovedDeathCollapseAntennaDeformation(
+            Transform deathSlot,
+            AnimationClip clip)
+        {
+            var model = FindDirectChild(deathSlot, ModelChildName) ??
+                throw new InvalidOperationException($"{DeathCollapseSlotObjectName}/{ModelChildName} is missing.");
+            var bodyTransform = FindChildByName(model, "Accelerando_RiggedAttack_Body") ??
+                throw new InvalidOperationException("Accelerando death body is missing.");
+            var bodyRenderer = bodyTransform.GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException("Accelerando death body is not skinned.");
+            var mesh = bodyRenderer.sharedMesh ??
+                throw new InvalidOperationException("Accelerando death corrected body mesh is missing.");
+            var sideBoneNames = new[]
+            {
+                new[] { "Bone_011", "Bone_010", "Bone_009" },
+                new[] { "Bone_008", "Bone_007", "Bone_006" }
+            };
+            var sideStationaryBoneNames = new[]
+            {
+                new[] { "Bone_017", "Bone_016", "Bone_015" },
+                new[] { "Bone_014", "Bone_013", "Bone_012" }
+            };
+            var sideBoneIndices = new[]
+            {
+                GetBoneIndices(bodyRenderer, sideBoneNames[0]),
+                GetBoneIndices(bodyRenderer, sideBoneNames[1])
+            };
+            var sideStationaryBoneIndices = new[]
+            {
+                GetBoneIndices(bodyRenderer, sideStationaryBoneNames[0]),
+                GetBoneIndices(bodyRenderer, sideStationaryBoneNames[1])
+            };
+            var weights = mesh.boneWeights;
+            var sideVertices = new[] { new HashSet<int>(), new HashSet<int>() };
+            var forbiddenStationaryInfluenceCount = new int[2];
+            for (var vertexIndex = 0; vertexIndex < weights.Length; vertexIndex++)
+            {
+                for (var sideIndex = 0; sideIndex < 2; sideIndex++)
+                {
+                    var movingInfluence = SumBoneInfluence(weights[vertexIndex], sideBoneIndices[sideIndex]);
+                    if (movingInfluence <= 0.0001f)
+                    {
+                        continue;
+                    }
+
+                    sideVertices[sideIndex].Add(vertexIndex);
+                    if (SumBoneInfluence(weights[vertexIndex], sideStationaryBoneIndices[sideIndex]) > 0.0001f)
+                    {
+                        forbiddenStationaryInfluenceCount[sideIndex]++;
+                    }
+                }
+            }
+
+            if (sideVertices[0].Count == 0 || sideVertices[1].Count == 0 ||
+                forbiddenStationaryInfluenceCount[0] > 0 || forbiddenStationaryInfluenceCount[1] > 0)
+            {
+                throw new InvalidOperationException(
+                    "Accelerando death antenna skin weights remain split across moving and stationary bone chains. " +
+                    $"Vertices={sideVertices[0].Count}/{sideVertices[1].Count}, " +
+                    $"Forbidden={forbiddenStationaryInfluenceCount[0]}/{forbiddenStationaryInfluenceCount[1]}.");
+            }
+
+            var rootBone = RequireNamedChild(deathSlot, "Bone_000");
+            var sideBones = new Transform[2][];
+            var anchors = new Transform[2];
+            var snapshots = new List<TransformSnapshot> { new(rootBone) };
+            for (var sideIndex = 0; sideIndex < 2; sideIndex++)
+            {
+                sideBones[sideIndex] = new Transform[3];
+                for (var boneIndex = 0; boneIndex < 3; boneIndex++)
+                {
+                    sideBones[sideIndex][boneIndex] = RequireNamedChild(deathSlot, sideBoneNames[sideIndex][boneIndex]);
+                    snapshots.Add(new TransformSnapshot(sideBones[sideIndex][boneIndex]));
+                }
+
+                var sideName = sideIndex == 0 ? "Left" : "Right";
+                anchors[sideIndex] = RequireNamedChild(deathSlot, $"Accelerando_{sideName}_AntennaPhysicsAnchor");
+            }
+
+            var animator = deathSlot.GetComponent<Animator>();
+            var animatorWasEnabled = animator != null && animator.enabled;
+            var neutralBake = new Mesh();
+            var posedBake = new Mesh();
+            var maximumBoneAngles = new float[2, 3];
+            var minimumTriangleAreaRatio = new[] { float.PositiveInfinity, float.PositiveInfinity };
+            var maximumTriangleAreaRatio = new float[2];
+            var collapsedTriangleCount = new int[2];
+            var overstretchedTriangleCount = new int[2];
+            var maximumBodyRiseDuringCollapse = 0f;
+            var maximumBodyReturnAfterSettle = 0f;
+            var maximumTipRiseDuringCollapse = new float[2];
+            var maximumTipReturnAfterSettle = new float[2];
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                clip.SampleAnimation(deathSlot.gameObject, 0f);
+                bodyRenderer.BakeMesh(neutralBake);
+                var neutralVertices = neutralBake.vertices;
+                var triangles = mesh.triangles;
+                var restRootPosition = rootBone.position;
+                var restRotations = new Quaternion[2, 3];
+                var terminalTipLocalOffsets = new Vector3[2];
+                var restTipPositions = new Vector3[2];
+                for (var sideIndex = 0; sideIndex < 2; sideIndex++)
+                {
+                    for (var boneIndex = 0; boneIndex < 3; boneIndex++)
+                    {
+                        restRotations[sideIndex, boneIndex] = sideBones[sideIndex][boneIndex].localRotation;
+                    }
+
+                    terminalTipLocalOffsets[sideIndex] =
+                        sideBones[sideIndex][2].InverseTransformPoint(anchors[sideIndex].position);
+                    restTipPositions[sideIndex] =
+                        sideBones[sideIndex][2].TransformPoint(terminalTipLocalOffsets[sideIndex]);
+                }
+
+                var previousBodyDrop = 0f;
+                var previousTipDrop = new float[2];
+                const int sampleCount = 54;
+                for (var sampleIndex = 1; sampleIndex <= sampleCount; sampleIndex++)
+                {
+                    var sampleTime = DeathCollapseDuration * sampleIndex / sampleCount;
+                    clip.SampleAnimation(deathSlot.gameObject, sampleTime);
+                    var bodyDrop = Vector3.Dot(restRootPosition - rootBone.position, deathSlot.up);
+                    var bodyRise = previousBodyDrop - bodyDrop;
+                    maximumBodyRiseDuringCollapse = Mathf.Max(maximumBodyRiseDuringCollapse, bodyRise);
+                    if (sampleTime > DeathCollapseSettleTime)
+                    {
+                        maximumBodyReturnAfterSettle = Mathf.Max(maximumBodyReturnAfterSettle, bodyRise);
+                    }
+                    previousBodyDrop = bodyDrop;
+                    for (var sideIndex = 0; sideIndex < 2; sideIndex++)
+                    {
+                        var currentTipPosition =
+                            sideBones[sideIndex][2].TransformPoint(terminalTipLocalOffsets[sideIndex]);
+                        var tipDrop = Vector3.Dot(restTipPositions[sideIndex] - currentTipPosition, deathSlot.up);
+                        var tipRise = previousTipDrop[sideIndex] - tipDrop;
+                        maximumTipRiseDuringCollapse[sideIndex] = Mathf.Max(
+                            maximumTipRiseDuringCollapse[sideIndex], tipRise);
+                        if (sampleTime > DeathCollapseSettleTime)
+                        {
+                            maximumTipReturnAfterSettle[sideIndex] = Mathf.Max(
+                                maximumTipReturnAfterSettle[sideIndex], tipRise);
+                        }
+                        previousTipDrop[sideIndex] = tipDrop;
+                        for (var boneIndex = 0; boneIndex < 3; boneIndex++)
+                        {
+                            maximumBoneAngles[sideIndex, boneIndex] = Mathf.Max(
+                                maximumBoneAngles[sideIndex, boneIndex],
+                                Quaternion.Angle(
+                                    restRotations[sideIndex, boneIndex],
+                                    sideBones[sideIndex][boneIndex].localRotation));
+                        }
+                    }
+
+                    bodyRenderer.BakeMesh(posedBake);
+                    var posedVertices = posedBake.vertices;
+                    for (var triangleIndex = 0; triangleIndex < triangles.Length; triangleIndex += 3)
+                    {
+                        var a = triangles[triangleIndex];
+                        var b = triangles[triangleIndex + 1];
+                        var c = triangles[triangleIndex + 2];
+                        var neutralArea = Vector3.Cross(
+                            neutralVertices[b] - neutralVertices[a],
+                            neutralVertices[c] - neutralVertices[a]).magnitude * 0.5f;
+                        if (neutralArea < 0.0000001f)
+                        {
+                            continue;
+                        }
+
+                        var posedArea = Vector3.Cross(
+                            posedVertices[b] - posedVertices[a],
+                            posedVertices[c] - posedVertices[a]).magnitude * 0.5f;
+                        var areaRatio = posedArea / neutralArea;
+                        for (var sideIndex = 0; sideIndex < 2; sideIndex++)
+                        {
+                            var sideVertexCount = (sideVertices[sideIndex].Contains(a) ? 1 : 0) +
+                                                  (sideVertices[sideIndex].Contains(b) ? 1 : 0) +
+                                                  (sideVertices[sideIndex].Contains(c) ? 1 : 0);
+                            if (sideVertexCount < 2)
+                            {
+                                continue;
+                            }
+
+                            minimumTriangleAreaRatio[sideIndex] = Mathf.Min(
+                                minimumTriangleAreaRatio[sideIndex], areaRatio);
+                            maximumTriangleAreaRatio[sideIndex] = Mathf.Max(
+                                maximumTriangleAreaRatio[sideIndex], areaRatio);
+                            if (areaRatio < 0.05f)
+                            {
+                                collapsedTriangleCount[sideIndex]++;
+                            }
+
+                            if (areaRatio > 12f)
+                            {
+                                overstretchedTriangleCount[sideIndex]++;
+                            }
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(neutralBake);
+                UnityEngine.Object.DestroyImmediate(posedBake);
+                RestoreTransformSnapshots(snapshots);
+                clip.SampleAnimation(deathSlot.gameObject, 0f);
+                if (animator != null)
+                {
+                    animator.enabled = animatorWasEnabled;
+                }
+            }
+
+            var boneAngleLimits = new[] { 45f, 55f, 65f };
+            for (var sideIndex = 0; sideIndex < 2; sideIndex++)
+            {
+                for (var boneIndex = 0; boneIndex < 3; boneIndex++)
+                {
+                    if (maximumBoneAngles[sideIndex, boneIndex] > boneAngleLimits[boneIndex])
+                    {
+                        throw new InvalidOperationException(
+                            $"Accelerando death antenna bone rotation exceeds the safe deformation range. " +
+                            $"Side={sideIndex}, Bone={sideBoneNames[sideIndex][boneIndex]}, " +
+                            $"Angle={maximumBoneAngles[sideIndex, boneIndex]:0.######}/{boneAngleLimits[boneIndex]:0.######}.");
+                    }
+                }
+
+                if (collapsedTriangleCount[sideIndex] > 0 || overstretchedTriangleCount[sideIndex] > 0 ||
+                    maximumTipReturnAfterSettle[sideIndex] > 0.01f)
+                {
+                    throw new InvalidOperationException(
+                        $"Accelerando death antenna deformation is broken or contains a return motion. " +
+                        $"Side={sideIndex}, CollapsedTriangles={collapsedTriangleCount[sideIndex]}, " +
+                        $"OverstretchedTriangles={overstretchedTriangleCount[sideIndex]}, " +
+                        $"TipReturnAfterSettle={maximumTipReturnAfterSettle[sideIndex]:0.######}.");
+                }
+            }
+
+            if (maximumBodyReturnAfterSettle > 0.01f)
+            {
+                throw new InvalidOperationException(
+                    $"Accelerando death body contains an authored return motion after settling. " +
+                    $"MaximumReturn={maximumBodyReturnAfterSettle:0.######}.");
+            }
+
+            return
+                "Accelerando death antenna deformation validation\n" +
+                $"LeftWeightedVertices={sideVertices[0].Count}\n" +
+                $"RightWeightedVertices={sideVertices[1].Count}\n" +
+                $"LeftMaximumBoneAngles={maximumBoneAngles[0, 0]:0.######}/{maximumBoneAngles[0, 1]:0.######}/{maximumBoneAngles[0, 2]:0.######}\n" +
+                $"RightMaximumBoneAngles={maximumBoneAngles[1, 0]:0.######}/{maximumBoneAngles[1, 1]:0.######}/{maximumBoneAngles[1, 2]:0.######}\n" +
+                $"LeftTriangleAreaRatio={minimumTriangleAreaRatio[0]:0.######}/{maximumTriangleAreaRatio[0]:0.######}\n" +
+                $"RightTriangleAreaRatio={minimumTriangleAreaRatio[1]:0.######}/{maximumTriangleAreaRatio[1]:0.######}\n" +
+                $"MaximumBodyRiseDuringCollapse={maximumBodyRiseDuringCollapse:0.######}\n" +
+                $"MaximumBodyReturnAfterSettle={maximumBodyReturnAfterSettle:0.######}\n" +
+                $"LeftMaximumTipRiseDuringCollapse={maximumTipRiseDuringCollapse[0]:0.######}\n" +
+                $"RightMaximumTipRiseDuringCollapse={maximumTipRiseDuringCollapse[1]:0.######}\n" +
+                $"LeftMaximumTipReturnAfterSettle={maximumTipReturnAfterSettle[0]:0.######}\n" +
+                $"RightMaximumTipReturnAfterSettle={maximumTipReturnAfterSettle[1]:0.######}\n" +
+                "CollapsedTriangles=0\n" +
+                "OverstretchedTriangles=0\n" +
+                "AntennaDeformationResult=PASS\n";
+        }
+
+        private static string ValidateApprovedDeathCollapsePhysics(Transform deathSlot, AnimationClip clip)
+        {
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = deathSlot.GetComponent(rigType) ??
+                throw new InvalidOperationException($"{DeathCollapseSlotObjectName} physics rig is missing.");
+            var simulateMethod = rigType.GetMethod("SimulatePhysicsTick", new[] { typeof(float) });
+            var syncMethod = rigType.GetMethod("SyncVisualsToPhysics", Type.EmptyTypes);
+            if (simulateMethod == null || syncMethod == null)
+            {
+                throw new InvalidOperationException("Accelerando death collapse physics simulation methods are missing.");
+            }
+
+            // The physical chain driver is configured from the neutral tip-bone offset. Sample
+            // that same authored pose before deriving validation endpoints so the measured tip
+            // and the runtime kinematic target are exactly the same point.
+            clip.SampleAnimation(deathSlot.gameObject, 0f);
+
+            var rootBone = RequireNamedChild(deathSlot, "Bone_000");
+            var anchors = new[]
+            {
+                RequireNamedChild(deathSlot, "Accelerando_Left_AntennaPhysicsAnchor"),
+                RequireNamedChild(deathSlot, "Accelerando_Right_AntennaPhysicsAnchor")
+            };
+            var terminalBones = new[]
+            {
+                RequireNamedChild(deathSlot, "Bone_009"),
+                RequireNamedChild(deathSlot, "Bone_006")
+            };
+            var terminalTipLocalOffsets = new[]
+            {
+                terminalBones[0].InverseTransformPoint(anchors[0].position),
+                terminalBones[1].InverseTransformPoint(anchors[1].position)
+            };
+            var maceHeads = new[]
+            {
+                RequireNamedChild(deathSlot, "Accelerando_Left_MaceHead"),
+                RequireNamedChild(deathSlot, "Accelerando_Right_MaceHead")
+            };
+            var physicsRoot = deathSlot.Find(ChainPhysicsRootObjectName) ??
+                throw new InvalidOperationException("Accelerando death collapse physics root is missing.");
+            var maceProxies = new[]
+            {
+                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Left")),
+                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Right"))
+            };
+            var maceBodies = new[]
+            {
+                maceProxies[0].GetComponent<Rigidbody>(),
+                maceProxies[1].GetComponent<Rigidbody>()
+            };
+            var chainNodes = new Transform[2][];
+            var initialSegmentLengths = new float[2][];
+            for (var sideIndex = 0; sideIndex < 2; sideIndex++)
+            {
+                var sideName = sideIndex == 0 ? "Left" : "Right";
+                chainNodes[sideIndex] = new Transform[ApprovedRiggedChainLinkCount + 1];
+                for (var linkIndex = 1; linkIndex <= ApprovedRiggedChainLinkCount; linkIndex++)
+                {
+                    chainNodes[sideIndex][linkIndex - 1] = RequireNamedChild(
+                        physicsRoot,
+                        ChainPhysicsLinkProxyName(sideName, linkIndex));
+                }
+
+                chainNodes[sideIndex][ApprovedRiggedChainLinkCount] = maceProxies[sideIndex];
+                initialSegmentLengths[sideIndex] = new float[ApprovedRiggedChainLinkCount];
+                for (var segmentIndex = 0; segmentIndex < ApprovedRiggedChainLinkCount; segmentIndex++)
+                {
+                    initialSegmentLengths[sideIndex][segmentIndex] = Vector3.Distance(
+                        chainNodes[sideIndex][segmentIndex].position,
+                        chainNodes[sideIndex][segmentIndex + 1].position);
+                }
+            }
+
+            var snapshots = CaptureApprovedDeathCollapseSnapshots(deathSlot);
+            var slotState = new ApprovedRiggedTransformState(deathSlot);
+            var animator = deathSlot.GetComponent<Animator>();
+            var animatorWasEnabled = animator != null && animator.enabled;
+            var previousMode = Physics.simulationMode;
+            var previousAutoSync = Physics.autoSyncTransforms;
+            var rootInitialPosition = rootBone.position;
+            var rootInitialScale = rootBone.localScale;
+            var anchorInitialPositions = new[]
+            {
+                terminalBones[0].TransformPoint(terminalTipLocalOffsets[0]),
+                terminalBones[1].TransformPoint(terminalTipLocalOffsets[1])
+            };
+            var maceInitialPositions = new[] { maceHeads[0].position, maceHeads[1].position };
+            var settleAnchorPositions = new Vector3[DeathCollapseVerifiedLoopCount, 2];
+            var finalAnchorPositions = new Vector3[DeathCollapseVerifiedLoopCount, 2];
+            var finalRootPositions = new[] { rootInitialPosition, rootInitialPosition };
+            var finalRootScales = new[] { rootInitialScale, rootInitialScale };
+            var maximumMaceLag = new float[DeathCollapseVerifiedLoopCount, 2];
+            var maximumChainExtension = new float[2];
+            var maximumVisualProxySeparation = new float[2];
+            var maximumAntennaChainConnectionGap = new float[2];
+            var minimumMaceTorsoDistance = new[] { float.PositiveInfinity, float.PositiveInfinity };
+            var finalMaceSpeed = new float[DeathCollapseVerifiedLoopCount, 2];
+            var finalMaceDrop = new float[DeathCollapseVerifiedLoopCount, 2];
+            var loopBoundaryPositionError = new float[DeathCollapseVerifiedLoopCount];
+            var loopBoundaryScaleError = new float[DeathCollapseVerifiedLoopCount];
+            const float deltaTime = 1f / 90f;
+            var steps = Mathf.RoundToInt(DeathCollapsePhysicsReviewDuration / deltaTime) + 1;
+            var cycleSteps = Mathf.RoundToInt(DeathCollapseDuration / deltaTime);
+            var settleStep = Mathf.RoundToInt(DeathCollapseSettleTime / deltaTime);
+            var finalPoseStep = cycleSteps - 1;
+
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                Physics.simulationMode = SimulationMode.Script;
+                Physics.autoSyncTransforms = false;
+                for (var step = 0; step < steps; step++)
+                {
+                    var cycleIndex = step / cycleSteps;
+                    var cycleStep = step % cycleSteps;
+                    var cycleTime = cycleStep * deltaTime;
+                    clip.SampleAnimation(deathSlot.gameObject, cycleTime);
+
+                    if (cycleStep == 0 && cycleIndex > 0 && cycleIndex <= DeathCollapseVerifiedLoopCount)
+                    {
+                        var boundaryIndex = cycleIndex - 1;
+                        loopBoundaryPositionError[boundaryIndex] = Vector3.Distance(rootBone.position, rootInitialPosition);
+                        loopBoundaryScaleError[boundaryIndex] = Vector3.Distance(rootBone.localScale, rootInitialScale);
+                    }
+
+                    simulateMethod.Invoke(rig, new object[] { deltaTime });
+                    Physics.SyncTransforms();
+                    Physics.Simulate(deltaTime);
+                    syncMethod.Invoke(rig, Array.Empty<object>());
+
+                    if (cycleIndex < DeathCollapseVerifiedLoopCount && cycleStep == settleStep)
+                    {
+                        settleAnchorPositions[cycleIndex, 0] =
+                            terminalBones[0].TransformPoint(terminalTipLocalOffsets[0]);
+                        settleAnchorPositions[cycleIndex, 1] =
+                            terminalBones[1].TransformPoint(terminalTipLocalOffsets[1]);
+                    }
+
+                    if (cycleIndex < DeathCollapseVerifiedLoopCount && cycleStep == finalPoseStep)
+                    {
+                        finalRootPositions[cycleIndex] = rootBone.position;
+                        finalRootScales[cycleIndex] = rootBone.localScale;
+                        finalAnchorPositions[cycleIndex, 0] =
+                            terminalBones[0].TransformPoint(terminalTipLocalOffsets[0]);
+                        finalAnchorPositions[cycleIndex, 1] =
+                            terminalBones[1].TransformPoint(terminalTipLocalOffsets[1]);
+                    }
+
+                    for (var sideIndex = 0; sideIndex < 2; sideIndex++)
+                    {
+                        var currentAntennaTipPosition =
+                            terminalBones[sideIndex].TransformPoint(terminalTipLocalOffsets[sideIndex]);
+                        var anchorDisplacement = currentAntennaTipPosition - anchorInitialPositions[sideIndex];
+                        var maceDisplacement = maceHeads[sideIndex].position - maceInitialPositions[sideIndex];
+                        if (cycleIndex < DeathCollapseVerifiedLoopCount &&
+                            cycleTime >= DeathCollapseReleaseTime && cycleTime <= DeathCollapseSettleTime)
+                        {
+                            maximumMaceLag[cycleIndex, sideIndex] = Mathf.Max(
+                                maximumMaceLag[cycleIndex, sideIndex],
+                                (maceDisplacement - anchorDisplacement).magnitude);
+                        }
+
+                        minimumMaceTorsoDistance[sideIndex] = Mathf.Min(
+                            minimumMaceTorsoDistance[sideIndex],
+                            Vector3.Distance(maceHeads[sideIndex].position, rootBone.position));
+                        maximumVisualProxySeparation[sideIndex] = Mathf.Max(
+                            maximumVisualProxySeparation[sideIndex],
+                            Vector3.Distance(maceHeads[sideIndex].position, maceProxies[sideIndex].position));
+                        maximumAntennaChainConnectionGap[sideIndex] = Mathf.Max(
+                            maximumAntennaChainConnectionGap[sideIndex],
+                            Vector3.Distance(currentAntennaTipPosition, chainNodes[sideIndex][0].position));
+                        for (var segmentIndex = 0; segmentIndex < ApprovedRiggedChainLinkCount; segmentIndex++)
+                        {
+                            var extension = Vector3.Distance(
+                                    chainNodes[sideIndex][segmentIndex].position,
+                                    chainNodes[sideIndex][segmentIndex + 1].position) -
+                                initialSegmentLengths[sideIndex][segmentIndex];
+                            maximumChainExtension[sideIndex] = Mathf.Max(maximumChainExtension[sideIndex], extension);
+                        }
+
+                        if (cycleIndex < DeathCollapseVerifiedLoopCount && cycleStep == finalPoseStep)
+                        {
+                            finalMaceSpeed[cycleIndex, sideIndex] = maceBodies[sideIndex].linearVelocity.magnitude;
+                            finalMaceDrop[cycleIndex, sideIndex] = Vector3.Dot(
+                                maceInitialPositions[sideIndex] - maceHeads[sideIndex].position,
+                                deathSlot.up);
+                        }
+                    }
+                }
+
+                slotState.AssertUnchanged(deathSlot, DeathCollapseSlotObjectName);
+            }
+            finally
+            {
+                Physics.simulationMode = previousMode;
+                Physics.autoSyncTransforms = previousAutoSync;
+                RestoreTransformSnapshots(snapshots);
+                clip.SampleAnimation(deathSlot.gameObject, 0f);
+                ConfigureApprovedRiggedDeathChainPhysics(deathSlot);
+                if (animator != null)
+                {
+                    animator.enabled = animatorWasEnabled;
+                }
+            }
+
+            var bodyDrop = new float[DeathCollapseVerifiedLoopCount];
+            var bodyHeightScale = new float[DeathCollapseVerifiedLoopCount];
+            var antennaDrop = new float[DeathCollapseVerifiedLoopCount, 2];
+            var finalAntennaRise = new float[DeathCollapseVerifiedLoopCount, 2];
+            for (var cycleIndex = 0; cycleIndex < DeathCollapseVerifiedLoopCount; cycleIndex++)
+            {
+                bodyDrop[cycleIndex] = Vector3.Dot(rootInitialPosition - finalRootPositions[cycleIndex], deathSlot.up);
+                bodyHeightScale[cycleIndex] = finalRootScales[cycleIndex].y / rootInitialScale.y;
+                if (bodyDrop[cycleIndex] < DeathCollapseMinimumBodyDrop ||
+                    bodyHeightScale[cycleIndex] > DeathCollapseMaximumBodyHeightScale ||
+                    loopBoundaryPositionError[cycleIndex] > DeathCollapseMaximumLoopBoundaryPositionError ||
+                    loopBoundaryScaleError[cycleIndex] > DeathCollapseMaximumLoopBoundaryScaleError)
+                {
+                    throw new InvalidOperationException(
+                        $"Accelerando death loop cycle {cycleIndex + 1} body response is invalid. " +
+                        $"BodyDrop={bodyDrop[cycleIndex]:0.######}/{DeathCollapseMinimumBodyDrop:0.######}, " +
+                        $"HeightScale={bodyHeightScale[cycleIndex]:0.######}/{DeathCollapseMaximumBodyHeightScale:0.######}, " +
+                        $"BoundaryPositionError={loopBoundaryPositionError[cycleIndex]:0.######}/{DeathCollapseMaximumLoopBoundaryPositionError:0.######}, " +
+                        $"BoundaryScaleError={loopBoundaryScaleError[cycleIndex]:0.######}/{DeathCollapseMaximumLoopBoundaryScaleError:0.######}.");
+                }
+
+                for (var sideIndex = 0; sideIndex < 2; sideIndex++)
+                {
+                    var sideName = sideIndex == 0 ? "Left" : "Right";
+                    antennaDrop[cycleIndex, sideIndex] = Vector3.Dot(
+                        anchorInitialPositions[sideIndex] - finalAnchorPositions[cycleIndex, sideIndex],
+                        deathSlot.up);
+                    finalAntennaRise[cycleIndex, sideIndex] = Vector3.Dot(
+                        finalAnchorPositions[cycleIndex, sideIndex] - settleAnchorPositions[cycleIndex, sideIndex],
+                        deathSlot.up);
+                    if (antennaDrop[cycleIndex, sideIndex] < DeathCollapseMinimumAntennaDrop ||
+                        finalAntennaRise[cycleIndex, sideIndex] > DeathCollapseMaximumFinalAntennaRise ||
+                        finalMaceDrop[cycleIndex, sideIndex] < DeathCollapseMinimumMaceDrop ||
+                        maximumMaceLag[cycleIndex, sideIndex] < DeathCollapseMinimumMaceLag ||
+                        finalMaceSpeed[cycleIndex, sideIndex] > DeathCollapseMaximumFinalMaceSpeed ||
+                        maximumChainExtension[sideIndex] > DeathCollapseMaximumChainExtension ||
+                        maximumVisualProxySeparation[sideIndex] > DeathCollapseMaximumVisualProxySeparation ||
+                        maximumAntennaChainConnectionGap[sideIndex] > DeathCollapseMaximumAntennaChainConnectionGap ||
+                        minimumMaceTorsoDistance[sideIndex] < DeathCollapseMinimumMaceTorsoDistance)
+                    {
+                        throw new InvalidOperationException(
+                            $"Accelerando cycle {cycleIndex + 1} {sideName} death collapse response is invalid. " +
+                            $"AntennaDrop={antennaDrop[cycleIndex, sideIndex]:0.######}, " +
+                            $"FinalAntennaRise={finalAntennaRise[cycleIndex, sideIndex]:0.######}, " +
+                            $"MaceDrop={finalMaceDrop[cycleIndex, sideIndex]:0.######}, " +
+                            $"MaceLag={maximumMaceLag[cycleIndex, sideIndex]:0.######}, " +
+                            $"FinalMaceSpeed={finalMaceSpeed[cycleIndex, sideIndex]:0.######}, " +
+                            $"ChainExtension={maximumChainExtension[sideIndex]:0.######}, " +
+                            $"VisualProxySeparation={maximumVisualProxySeparation[sideIndex]:0.######}, " +
+                            $"AntennaChainGap={maximumAntennaChainConnectionGap[sideIndex]:0.######}, " +
+                            $"MaceTorsoDistance={minimumMaceTorsoDistance[sideIndex]:0.######}.");
+                    }
+                }
+
+                if (Mathf.Abs(antennaDrop[cycleIndex, 0] - antennaDrop[cycleIndex, 1]) > 0.15f ||
+                    Mathf.Abs(finalMaceDrop[cycleIndex, 0] - finalMaceDrop[cycleIndex, 1]) > 0.18f)
+                {
+                    throw new InvalidOperationException(
+                        $"Accelerando death collapse loop cycle {cycleIndex + 1} is not bilateral. " +
+                        $"AntennaDrop={antennaDrop[cycleIndex, 0]:0.######}/{antennaDrop[cycleIndex, 1]:0.######}, " +
+                        $"MaceDrop={finalMaceDrop[cycleIndex, 0]:0.######}/{finalMaceDrop[cycleIndex, 1]:0.######}.");
+                }
+            }
+
+            return
+                "Accelerando looping death collapse physics validation\n" +
+                $"VerifiedLoopCycles={DeathCollapseVerifiedLoopCount}\n" +
+                $"Cycle1BodyDrop={bodyDrop[0]:0.######}\n" +
+                $"Cycle2BodyDrop={bodyDrop[1]:0.######}\n" +
+                $"Cycle1BodyHeightScale={bodyHeightScale[0]:0.######}\n" +
+                $"Cycle2BodyHeightScale={bodyHeightScale[1]:0.######}\n" +
+                $"Cycle1BoundaryPositionError={loopBoundaryPositionError[0]:0.######}\n" +
+                $"Cycle2BoundaryPositionError={loopBoundaryPositionError[1]:0.######}\n" +
+                $"Cycle1BoundaryScaleError={loopBoundaryScaleError[0]:0.######}\n" +
+                $"Cycle2BoundaryScaleError={loopBoundaryScaleError[1]:0.######}\n" +
+                $"Cycle1LeftAntennaDrop={antennaDrop[0, 0]:0.######}\n" +
+                $"Cycle1RightAntennaDrop={antennaDrop[0, 1]:0.######}\n" +
+                $"Cycle2LeftAntennaDrop={antennaDrop[1, 0]:0.######}\n" +
+                $"Cycle2RightAntennaDrop={antennaDrop[1, 1]:0.######}\n" +
+                $"Cycle1LeftMaceDrop={finalMaceDrop[0, 0]:0.######}\n" +
+                $"Cycle1RightMaceDrop={finalMaceDrop[0, 1]:0.######}\n" +
+                $"Cycle2LeftMaceDrop={finalMaceDrop[1, 0]:0.######}\n" +
+                $"Cycle2RightMaceDrop={finalMaceDrop[1, 1]:0.######}\n" +
+                $"Cycle1LeftMaceLag={maximumMaceLag[0, 0]:0.######}\n" +
+                $"Cycle1RightMaceLag={maximumMaceLag[0, 1]:0.######}\n" +
+                $"Cycle2LeftMaceLag={maximumMaceLag[1, 0]:0.######}\n" +
+                $"Cycle2RightMaceLag={maximumMaceLag[1, 1]:0.######}\n" +
+                $"Cycle1LeftFinalMaceSpeed={finalMaceSpeed[0, 0]:0.######}\n" +
+                $"Cycle1RightFinalMaceSpeed={finalMaceSpeed[0, 1]:0.######}\n" +
+                $"Cycle2LeftFinalMaceSpeed={finalMaceSpeed[1, 0]:0.######}\n" +
+                $"Cycle2RightFinalMaceSpeed={finalMaceSpeed[1, 1]:0.######}\n" +
+                $"LeftMaximumChainExtension={maximumChainExtension[0]:0.######}\n" +
+                $"RightMaximumChainExtension={maximumChainExtension[1]:0.######}\n" +
+                $"LeftMaximumAntennaChainConnectionGap={maximumAntennaChainConnectionGap[0]:0.######}\n" +
+                $"RightMaximumAntennaChainConnectionGap={maximumAntennaChainConnectionGap[1]:0.######}\n" +
+                $"LeftMinimumMaceTorsoDistance={minimumMaceTorsoDistance[0]:0.######}\n" +
+                $"RightMinimumMaceTorsoDistance={minimumMaceTorsoDistance[1]:0.######}\n" +
+                "DirectChainAndMaceCurves=0\n" +
+                "SlotRootMotion=0\n" +
+                "ClipLoop=True\n" +
+                "LoopBlend=False\n" +
+                "AuthoredReturnMotion=False\n" +
+                "PhysicsStateResetAtLoopBoundary=False\n" +
+                "Result=PASS\n";
+        }
+
+        private static List<TransformSnapshot> CaptureApprovedDeathCollapseSnapshots(Transform deathSlot)
+        {
+            var snapshots = new List<TransformSnapshot>
+            {
+                new(RequireNamedChild(deathSlot, "Bone_000"))
+            };
+            foreach (var boneName in ApprovedRiggedAttackBoneNames)
+            {
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(deathSlot, boneName)));
+            }
+
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(deathSlot, $"Accelerando_{sideName}_AntennaPhysicsAnchor")));
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(deathSlot, $"Accelerando_{sideName}_MacePhysicsAnchor")));
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(deathSlot, $"Accelerando_{sideName}_MaceHead")));
+                var socket = FindChildByName(deathSlot, $"Accelerando_{sideName}_MaceSocket_Ring");
+                if (socket != null)
+                {
+                    snapshots.Add(new TransformSnapshot(socket));
+                }
+
+                for (var link = 1; link <= ApprovedRiggedChainLinkCount; link++)
+                {
+                    snapshots.Add(new TransformSnapshot(
+                        RequireNamedChild(deathSlot, $"Accelerando_{sideName}_ConnectedChain_Link_{link:00}")));
+                }
+            }
+
+            return snapshots;
+        }
+
+        private static void ValidateApprovedHitRecoilSlotStructure(Transform hitSlot, AnimationClip clip)
+        {
+            var animator = hitSlot.GetComponent<Animator>() ??
+                throw new InvalidOperationException($"{HitRecoilSlotObjectName} Animator is missing.");
+            if (animator.applyRootMotion)
+            {
+                throw new InvalidOperationException("Accelerando hit recoil must keep the slot root locked.");
+            }
+
+            if (!string.Equals(
+                    AssetDatabase.GetAssetPath(animator.runtimeAnimatorController),
+                    UnityHitRecoilControllerAssetPath,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("Accelerando hit recoil controller is not assigned.");
+            }
+
+            var clipSettings = AnimationUtility.GetAnimationClipSettings(clip);
+            if (!clipSettings.loopTime || Mathf.Abs(clip.length - HitRecoilDuration) > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    $"Accelerando hit recoil must be a {HitRecoilDuration:0.00}s looping clip. " +
+                    $"Loop={clipSettings.loopTime}, Length={clip.length:0.###}.");
+            }
+
+            var rootBone = RequireNamedChild(hitSlot, "Bone_000");
+            var rootPath = GetRelativePath(hitSlot, rootBone);
+            var bindings = AnimationUtility.GetCurveBindings(clip);
+            if (bindings.Length != 6)
+            {
+                throw new InvalidOperationException($"Accelerando hit recoil must have exactly 6 body-root curves; found {bindings.Length}.");
+            }
+
+            foreach (var binding in bindings)
+            {
+                if (!string.Equals(binding.path, rootPath, StringComparison.Ordinal) || binding.type != typeof(Transform))
+                {
+                    throw new InvalidOperationException(
+                        $"Accelerando hit recoil contains a non-body binding. Path={binding.path}, Property={binding.propertyName}.");
+                }
+
+                var property = binding.propertyName;
+                if (!property.StartsWith("m_LocalPosition.", StringComparison.Ordinal) &&
+                    !property.StartsWith("m_LocalScale.", StringComparison.Ordinal))
+                {
+                    throw new InvalidOperationException($"Accelerando hit recoil has an unsupported curve: {property}.");
+                }
+            }
+
+            foreach (var prohibitedName in new[] { "Chain", "Mace", "PhysicsAnchor", "Antenna" })
+            {
+                foreach (var binding in bindings)
+                {
+                    if (binding.path.IndexOf(prohibitedName, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        throw new InvalidOperationException(
+                            $"Accelerando hit recoil directly animates a physics-driven object: {binding.path}.");
+                    }
+                }
+            }
+
+            var physicsRoot = hitSlot.Find(ChainPhysicsRootObjectName) ??
+                throw new InvalidOperationException("Accelerando hit recoil physics root is missing.");
+            var bodies = physicsRoot.GetComponentsInChildren<Rigidbody>(true);
+            var joints = physicsRoot.GetComponentsInChildren<ConfigurableJoint>(true);
+            var kinematicCount = 0;
+            foreach (var body in bodies)
+            {
+                if (body.isKinematic)
+                {
+                    kinematicCount++;
+                }
+            }
+
+            if (bodies.Length != 27 || kinematicCount != 3 || joints.Length != 24)
+            {
+                throw new InvalidOperationException(
+                    "Accelerando hit recoil physics structure is incomplete. " +
+                    $"Rigidbodies={bodies.Length}/27, Kinematic={kinematicCount}/3, Joints={joints.Length}/24.");
+            }
+
+            var bodyIsSkinned = false;
+            foreach (var renderer in hitSlot.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                foreach (var bone in renderer.bones)
+                {
+                    if (bone == rootBone)
+                    {
+                        bodyIsSkinned = true;
+                        break;
+                    }
+                }
+
+                if (bodyIsSkinned)
+                {
+                    break;
+                }
+            }
+
+            if (!bodyIsSkinned)
+            {
+                throw new InvalidOperationException("Accelerando hit recoil Bone_000 does not deform the skinned body mesh.");
+            }
+        }
+
+        private static string ValidateApprovedHitRecoilPhysics(Transform hitSlot, AnimationClip clip)
+        {
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = hitSlot.GetComponent(rigType) ??
+                throw new InvalidOperationException($"{HitRecoilSlotObjectName} physics rig is missing.");
+            var simulateMethod = rigType.GetMethod("SimulatePhysicsTick", new[] { typeof(float) });
+            var syncMethod = rigType.GetMethod("SyncVisualsToPhysics", Type.EmptyTypes);
+            if (simulateMethod == null || syncMethod == null)
+            {
+                throw new InvalidOperationException("Accelerando hit recoil physics simulation methods are missing.");
+            }
+
+            var rootBone = RequireNamedChild(hitSlot, "Bone_000");
+            var physicsRoot = hitSlot.Find(ChainPhysicsRootObjectName) ??
+                throw new InvalidOperationException("Accelerando hit recoil physics root is missing.");
+            var maceHeads = new[]
+            {
+                RequireNamedChild(hitSlot, "Accelerando_Left_MaceHead"),
+                RequireNamedChild(hitSlot, "Accelerando_Right_MaceHead")
+            };
+            var maceProxies = new[]
+            {
+                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Left")),
+                RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Right"))
+            };
+            var chainNodes = new Transform[2][];
+            var initialSegmentLengths = new float[2][];
+            for (var sideIndex = 0; sideIndex < 2; sideIndex++)
+            {
+                var sideName = sideIndex == 0 ? "Left" : "Right";
+                chainNodes[sideIndex] = new Transform[ApprovedRiggedChainLinkCount + 1];
+                for (var linkIndex = 1; linkIndex <= ApprovedRiggedChainLinkCount; linkIndex++)
+                {
+                    chainNodes[sideIndex][linkIndex - 1] = RequireNamedChild(
+                        physicsRoot,
+                        ChainPhysicsLinkProxyName(sideName, linkIndex));
+                }
+
+                chainNodes[sideIndex][ApprovedRiggedChainLinkCount] = maceProxies[sideIndex];
+                initialSegmentLengths[sideIndex] = new float[ApprovedRiggedChainLinkCount];
+                for (var segmentIndex = 0; segmentIndex < ApprovedRiggedChainLinkCount; segmentIndex++)
+                {
+                    initialSegmentLengths[sideIndex][segmentIndex] = Vector3.Distance(
+                        chainNodes[sideIndex][segmentIndex].position,
+                        chainNodes[sideIndex][segmentIndex + 1].position);
+                }
+            }
+
+            var snapshots = CaptureApprovedHitRecoilSnapshots(hitSlot);
+            var slotState = new ApprovedRiggedTransformState(hitSlot);
+            var animator = hitSlot.GetComponent<Animator>();
+            var animatorWasEnabled = animator != null && animator.enabled;
+            var previousMode = Physics.simulationMode;
+            var previousAutoSync = Physics.autoSyncTransforms;
+            var bodyInitial = rootBone.position;
+            var bodyInitialScale = rootBone.localScale;
+            var maceInitial = new[] { maceHeads[0].position, maceHeads[1].position };
+            var backward = -hitSlot.forward.normalized;
+            var maximumBodyBackward = 0f;
+            var maximumBodyBackwardTime = 0f;
+            var cycleMaximumBodyBackward = new float[2];
+            var cycleMaximumBodyBackwardTime = new float[2];
+            var loopBoundaryBodyDisplacement = new float[2];
+            var loopBoundaryScaleDelta = new float[2];
+            var maximumMaceLag = new float[2];
+            var maximumMaceDisplacement = new float[2];
+            var maximumResidualSwing = new float[2];
+            var cycleMaximumMaceLag = new float[2, 2];
+            var cycleMaximumMaceMotion = new float[2, 2];
+            var cycleMaceStartPosition = new Vector3[2, 2];
+            var maximumChainExtension = new float[2];
+            var maximumChainExtensionSegment = new int[2];
+            var maximumChainExtensionTime = new float[2];
+            var maximumChainExtensionInitialLength = new float[2];
+            var maximumChainExtensionCurrentLength = new float[2];
+            var maximumVisualProxySeparation = new float[2];
+            var minimumMaceTorsoDistance = new[] { float.PositiveInfinity, float.PositiveInfinity };
+            var finalBodyDisplacement = 0f;
+            const float deltaTime = 1f / 90f;
+            var steps = Mathf.RoundToInt(HitRecoilPhysicsReviewDuration / deltaTime) + 1;
+            var cycleStepCount = Mathf.RoundToInt(HitRecoilDuration / deltaTime);
+            cycleMaceStartPosition[0, 0] = maceInitial[0];
+            cycleMaceStartPosition[0, 1] = maceInitial[1];
+
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                Physics.simulationMode = SimulationMode.Script;
+                Physics.autoSyncTransforms = false;
+                for (var step = 0; step < steps; step++)
+                {
+                    var elapsed = step * deltaTime;
+                    var sampleTime = Mathf.Repeat(elapsed, HitRecoilDuration);
+                    clip.SampleAnimation(hitSlot.gameObject, sampleTime);
+                    simulateMethod.Invoke(rig, new object[] { deltaTime });
+                    Physics.SyncTransforms();
+                    Physics.Simulate(deltaTime);
+                    syncMethod.Invoke(rig, Array.Empty<object>());
+
+                    var bodyDisplacement = rootBone.position - bodyInitial;
+                    var bodyBackward = Vector3.Dot(bodyDisplacement, backward);
+                    var cycleIndex = step / cycleStepCount;
+                    var cycleTime = elapsed - cycleIndex * HitRecoilDuration;
+                    if (bodyBackward > maximumBodyBackward)
+                    {
+                        maximumBodyBackward = bodyBackward;
+                        maximumBodyBackwardTime = elapsed;
+                    }
+
+                    if (cycleIndex < 2 && bodyBackward > cycleMaximumBodyBackward[cycleIndex])
+                    {
+                        cycleMaximumBodyBackward[cycleIndex] = bodyBackward;
+                        cycleMaximumBodyBackwardTime[cycleIndex] = cycleTime;
+                    }
+
+                    if (step == cycleStepCount || step == cycleStepCount * 2)
+                    {
+                        var completedCycleIndex = step / cycleStepCount - 1;
+                        loopBoundaryBodyDisplacement[completedCycleIndex] = bodyDisplacement.magnitude;
+                        loopBoundaryScaleDelta[completedCycleIndex] =
+                            (rootBone.localScale - bodyInitialScale).magnitude;
+                        finalBodyDisplacement = Mathf.Max(finalBodyDisplacement, bodyDisplacement.magnitude);
+                        if (completedCycleIndex == 0)
+                        {
+                            cycleMaceStartPosition[1, 0] = maceHeads[0].position;
+                            cycleMaceStartPosition[1, 1] = maceHeads[1].position;
+                        }
+                    }
+
+                    for (var sideIndex = 0; sideIndex < 2; sideIndex++)
+                    {
+                        var maceDisplacement = maceHeads[sideIndex].position - maceInitial[sideIndex];
+                        maximumMaceDisplacement[sideIndex] = Mathf.Max(
+                            maximumMaceDisplacement[sideIndex],
+                            maceDisplacement.magnitude);
+                        if (cycleIndex < 2)
+                        {
+                            var cycleMaceMotion =
+                                (maceHeads[sideIndex].position - cycleMaceStartPosition[cycleIndex, sideIndex]).magnitude;
+                            cycleMaximumMaceMotion[cycleIndex, sideIndex] = Mathf.Max(
+                                cycleMaximumMaceMotion[cycleIndex, sideIndex],
+                                cycleMaceMotion);
+                        }
+
+                        if (cycleIndex < 2 &&
+                            cycleTime >= HitRecoilImpactStartTime &&
+                            cycleTime <= HitRecoilReboundTime + 0.05f)
+                        {
+                            var cycleMaceDisplacement =
+                                maceHeads[sideIndex].position - cycleMaceStartPosition[cycleIndex, sideIndex];
+                            var cycleLag = (cycleMaceDisplacement - bodyDisplacement).magnitude;
+                            cycleMaximumMaceLag[cycleIndex, sideIndex] = Mathf.Max(
+                                cycleMaximumMaceLag[cycleIndex, sideIndex],
+                                cycleLag);
+                            maximumMaceLag[sideIndex] = Mathf.Max(maximumMaceLag[sideIndex], cycleLag);
+                        }
+
+                        if (elapsed >= HitRecoilDuration)
+                        {
+                            maximumResidualSwing[sideIndex] = Mathf.Max(
+                                maximumResidualSwing[sideIndex],
+                                (maceDisplacement - bodyDisplacement).magnitude);
+                        }
+
+                        minimumMaceTorsoDistance[sideIndex] = Mathf.Min(
+                            minimumMaceTorsoDistance[sideIndex],
+                            Vector3.Distance(maceHeads[sideIndex].position, rootBone.position));
+                        maximumVisualProxySeparation[sideIndex] = Mathf.Max(
+                            maximumVisualProxySeparation[sideIndex],
+                            Vector3.Distance(maceHeads[sideIndex].position, maceProxies[sideIndex].position));
+                        for (var segmentIndex = 0; segmentIndex < ApprovedRiggedChainLinkCount; segmentIndex++)
+                        {
+                            var currentLength = Vector3.Distance(
+                                chainNodes[sideIndex][segmentIndex].position,
+                                chainNodes[sideIndex][segmentIndex + 1].position);
+                            var extension = currentLength -
+                                initialSegmentLengths[sideIndex][segmentIndex];
+                            if (extension > maximumChainExtension[sideIndex])
+                            {
+                                maximumChainExtension[sideIndex] = extension;
+                                maximumChainExtensionSegment[sideIndex] = segmentIndex + 1;
+                                maximumChainExtensionTime[sideIndex] = elapsed;
+                                maximumChainExtensionInitialLength[sideIndex] = initialSegmentLengths[sideIndex][segmentIndex];
+                                maximumChainExtensionCurrentLength[sideIndex] = currentLength;
+                            }
+                        }
+                    }
+
+                }
+
+                slotState.AssertUnchanged(hitSlot, HitRecoilSlotObjectName);
+            }
+            finally
+            {
+                Physics.simulationMode = previousMode;
+                Physics.autoSyncTransforms = previousAutoSync;
+                RestoreTransformSnapshots(snapshots);
+                clip.SampleAnimation(hitSlot.gameObject, 0f);
+                ConfigureApprovedRiggedHitChainPhysics(hitSlot);
+                if (animator != null)
+                {
+                    animator.enabled = animatorWasEnabled;
+                }
+            }
+
+            for (var cycleIndex = 0; cycleIndex < 2; cycleIndex++)
+            {
+                if (cycleMaximumBodyBackward[cycleIndex] < HitRecoilMinimumBackwardDistance ||
+                    cycleMaximumBodyBackward[cycleIndex] > HitRecoilMaximumBackwardDistance ||
+                    cycleMaximumBodyBackwardTime[cycleIndex] < HitRecoilImpactStartTime ||
+                    cycleMaximumBodyBackwardTime[cycleIndex] > HitRecoilReboundTime ||
+                    loopBoundaryBodyDisplacement[cycleIndex] > 0.010f ||
+                    loopBoundaryScaleDelta[cycleIndex] > 0.005f)
+                {
+                    throw new InvalidOperationException(
+                        $"Accelerando hit recoil loop cycle {cycleIndex + 1} direction, peak, or boundary is invalid. " +
+                        $"Backward={cycleMaximumBodyBackward[cycleIndex]:0.######}, " +
+                        $"PeakTime={cycleMaximumBodyBackwardTime[cycleIndex]:0.###}, " +
+                        $"BoundaryPosition={loopBoundaryBodyDisplacement[cycleIndex]:0.######}, " +
+                        $"BoundaryScale={loopBoundaryScaleDelta[cycleIndex]:0.######}.");
+                }
+            }
+
+            for (var sideIndex = 0; sideIndex < 2; sideIndex++)
+            {
+                var sideName = sideIndex == 0 ? "Left" : "Right";
+                if (cycleMaximumMaceLag[0, sideIndex] < HitRecoilMinimumMaceLag ||
+                    cycleMaximumMaceLag[1, sideIndex] < HitRecoilMinimumMaceLag ||
+                    cycleMaximumMaceMotion[0, sideIndex] < HitRecoilMinimumMaceLag ||
+                    cycleMaximumMaceMotion[1, sideIndex] < HitRecoilMinimumMaceLag ||
+                    maximumMaceDisplacement[sideIndex] < HitRecoilMinimumMaceLag ||
+                    maximumResidualSwing[sideIndex] < HitRecoilMinimumResidualSwing ||
+                    maximumChainExtension[sideIndex] > HitRecoilMaximumChainExtension ||
+                    maximumVisualProxySeparation[sideIndex] > HitRecoilMaximumVisualProxySeparation ||
+                    minimumMaceTorsoDistance[sideIndex] < HitRecoilMinimumMaceTorsoDistance)
+                {
+                    throw new InvalidOperationException(
+                        $"Accelerando {sideName} hit chain response is invalid. " +
+                        $"MaceLag={maximumMaceLag[sideIndex]:0.######}, " +
+                        $"CycleLag={cycleMaximumMaceLag[0, sideIndex]:0.######}/{cycleMaximumMaceLag[1, sideIndex]:0.######}, " +
+                        $"CycleMotion={cycleMaximumMaceMotion[0, sideIndex]:0.######}/{cycleMaximumMaceMotion[1, sideIndex]:0.######}, " +
+                        $"MaceDisplacement={maximumMaceDisplacement[sideIndex]:0.######}, " +
+                        $"ResidualSwing={maximumResidualSwing[sideIndex]:0.######}, " +
+                        $"ChainExtension={maximumChainExtension[sideIndex]:0.######} " +
+                        $"(Segment={maximumChainExtensionSegment[sideIndex]}, Time={maximumChainExtensionTime[sideIndex]:0.###}, " +
+                        $"Initial={maximumChainExtensionInitialLength[sideIndex]:0.######}, " +
+                        $"Current={maximumChainExtensionCurrentLength[sideIndex]:0.######}), " +
+                        $"VisualProxySeparation={maximumVisualProxySeparation[sideIndex]:0.######}, " +
+                        $"MaceTorsoDistance={minimumMaceTorsoDistance[sideIndex]:0.######}.");
+                }
+            }
+
+            if (Mathf.Abs(maximumMaceLag[0] - maximumMaceLag[1]) > 0.12f)
+            {
+                throw new InvalidOperationException(
+                    "Accelerando hit recoil mace reactions are not bilateral. " +
+                    $"LeftLag={maximumMaceLag[0]:0.######}, RightLag={maximumMaceLag[1]:0.######}.");
+            }
+
+            return
+                "Accelerando hit recoil physics validation\n" +
+                $"BodyMaximumBackward={maximumBodyBackward:0.######}\n" +
+                $"BodyMaximumBackwardTime={maximumBodyBackwardTime:0.###}\n" +
+                $"BodyFinalDisplacement={finalBodyDisplacement:0.######}\n" +
+                $"Cycle01BodyMaximumBackward={cycleMaximumBodyBackward[0]:0.######} at {cycleMaximumBodyBackwardTime[0]:0.###}s\n" +
+                $"Cycle02BodyMaximumBackward={cycleMaximumBodyBackward[1]:0.######} at {cycleMaximumBodyBackwardTime[1]:0.###}s\n" +
+                $"Cycle01LoopBoundaryPosition={loopBoundaryBodyDisplacement[0]:0.######}\n" +
+                $"Cycle02LoopBoundaryPosition={loopBoundaryBodyDisplacement[1]:0.######}\n" +
+                $"Cycle01LoopBoundaryScale={loopBoundaryScaleDelta[0]:0.######}\n" +
+                $"Cycle02LoopBoundaryScale={loopBoundaryScaleDelta[1]:0.######}\n" +
+                $"LeftMaceLag={maximumMaceLag[0]:0.######}\n" +
+                $"RightMaceLag={maximumMaceLag[1]:0.######}\n" +
+                $"Cycle01LeftMaceLag={cycleMaximumMaceLag[0, 0]:0.######}\n" +
+                $"Cycle01RightMaceLag={cycleMaximumMaceLag[0, 1]:0.######}\n" +
+                $"Cycle02LeftMaceLag={cycleMaximumMaceLag[1, 0]:0.######}\n" +
+                $"Cycle02RightMaceLag={cycleMaximumMaceLag[1, 1]:0.######}\n" +
+                $"Cycle01LeftMaceMotion={cycleMaximumMaceMotion[0, 0]:0.######}\n" +
+                $"Cycle01RightMaceMotion={cycleMaximumMaceMotion[0, 1]:0.######}\n" +
+                $"Cycle02LeftMaceMotion={cycleMaximumMaceMotion[1, 0]:0.######}\n" +
+                $"Cycle02RightMaceMotion={cycleMaximumMaceMotion[1, 1]:0.######}\n" +
+                $"LeftMaceDisplacement={maximumMaceDisplacement[0]:0.######}\n" +
+                $"RightMaceDisplacement={maximumMaceDisplacement[1]:0.######}\n" +
+                $"LeftResidualSwing={maximumResidualSwing[0]:0.######}\n" +
+                $"RightResidualSwing={maximumResidualSwing[1]:0.######}\n" +
+                $"LeftMaximumChainExtension={maximumChainExtension[0]:0.######}\n" +
+                $"RightMaximumChainExtension={maximumChainExtension[1]:0.######}\n" +
+                $"LeftMaximumChainExtensionSegment={maximumChainExtensionSegment[0]} at {maximumChainExtensionTime[0]:0.###}s\n" +
+                $"RightMaximumChainExtensionSegment={maximumChainExtensionSegment[1]} at {maximumChainExtensionTime[1]:0.###}s\n" +
+                $"LeftMinimumMaceTorsoDistance={minimumMaceTorsoDistance[0]:0.######}\n" +
+                $"RightMinimumMaceTorsoDistance={minimumMaceTorsoDistance[1]:0.######}\n" +
+                "DirectChainAndMaceCurves=0\n" +
+                "SlotRootMotion=0\n" +
+                "ClipLoop=True\n" +
+                "ValidatedLoopCycles=2\n" +
+                "Result=PASS\n";
+        }
+
+        private static List<TransformSnapshot> CaptureApprovedHitRecoilSnapshots(Transform hitSlot)
+        {
+            var snapshots = new List<TransformSnapshot>
+            {
+                new(RequireNamedChild(hitSlot, "Bone_000"))
+            };
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(hitSlot, $"Accelerando_{sideName}_AntennaPhysicsAnchor")));
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(hitSlot, $"Accelerando_{sideName}_MacePhysicsAnchor")));
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(hitSlot, $"Accelerando_{sideName}_MaceHead")));
+                var socket = FindChildByName(hitSlot, $"Accelerando_{sideName}_MaceSocket_Ring");
+                if (socket != null)
+                {
+                    snapshots.Add(new TransformSnapshot(socket));
+                }
+
+                for (var link = 1; link <= ApprovedRiggedChainLinkCount; link++)
+                {
+                    snapshots.Add(new TransformSnapshot(
+                        RequireNamedChild(hitSlot, $"Accelerando_{sideName}_ConnectedChain_Link_{link:00}")));
+                }
+            }
+
+            return snapshots;
         }
 
         private static void CaptureAntennaCloseup(
@@ -1612,17 +3195,19 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 throw new InvalidOperationException("Accelerando forward mace strike physics validation methods or root are missing.");
             }
 
-            var leftMetrics = new AntennaStrikePhysicsResponseMetrics(
+            var leftMetrics = new VerticalCircularFlailPhysicsMetrics(
                 "Left",
                 strikeSlot,
                 RequireNamedChild(strikeSlot, "Accelerando_Left_AntennaPhysicsAnchor"),
                 RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Left")),
+                RequireNamedChild(physicsRoot, ChainPhysicsLinkProxyName("Left", AttackConnectedChainLinkCount)),
                 RequireNamedChild(strikeSlot, "Accelerando_Left_MaceHead"));
-            var rightMetrics = new AntennaStrikePhysicsResponseMetrics(
+            var rightMetrics = new VerticalCircularFlailPhysicsMetrics(
                 "Right",
                 strikeSlot,
                 RequireNamedChild(strikeSlot, "Accelerando_Right_AntennaPhysicsAnchor"),
                 RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Right")),
+                RequireNamedChild(physicsRoot, ChainPhysicsLinkProxyName("Right", AttackConnectedChainLinkCount)),
                 RequireNamedChild(strikeSlot, "Accelerando_Right_MaceHead"));
             var leftContinuityMetrics = new AttackChainContinuityMetrics("Left", strikeSlot, physicsRoot);
             var rightContinuityMetrics = new AttackChainContinuityMetrics("Right", strikeSlot, physicsRoot);
@@ -1698,6 +3283,61 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                     "Accelerando attack chain must use locked linear joint connections.");
             }
 
+            var serializedMaceMass = serializedRig.FindProperty("maceMass");
+            if (serializedMaceMass == null ||
+                Mathf.Abs(serializedMaceMass.floatValue - ApprovedAttackMaceMass) > 0.000001f)
+            {
+                throw new InvalidOperationException(
+                    $"Accelerando attack mace mass must be {ApprovedAttackMaceMass:0.###}. " +
+                    $"Actual={(serializedMaceMass != null ? serializedMaceMass.floatValue : -1f):0.###}.");
+            }
+
+            var physicsRoot = rig.transform.Find(ChainPhysicsRootObjectName) ??
+                throw new InvalidOperationException($"{AntennaStrikeSlotObjectName} physics root is missing.");
+            var torsoProxy = RequireNamedChild(physicsRoot, AttackTorsoCollisionProxyObjectName);
+            var torsoBody = torsoProxy.GetComponent<Rigidbody>() ??
+                throw new InvalidOperationException("Accelerando attack torso collision Rigidbody is missing.");
+            var torsoColliders = torsoProxy.GetComponentsInChildren<CapsuleCollider>(true);
+            if (!torsoBody.isKinematic ||
+                torsoBody.collisionDetectionMode != CollisionDetectionMode.ContinuousSpeculative ||
+                torsoColliders.Length < 2)
+            {
+                throw new InvalidOperationException(
+                    "Accelerando attack torso must use a kinematic continuous compound PhysX collision proxy. " +
+                    $"IsKinematic={torsoBody.isKinematic}, CollisionMode={torsoBody.collisionDetectionMode}, " +
+                    $"CapsuleColliders={torsoColliders.Length}.");
+            }
+
+            foreach (var sideName in new[] { "Left", "Right" })
+            {
+                var maceProxy = RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName(sideName));
+                var maceJoint = maceProxy.GetComponent<ConfigurableJoint>() ??
+                    throw new InvalidOperationException($"{sideName} attack mace joint is missing.");
+                if (Mathf.Abs(maceJoint.massScale - ApprovedAttackMaceJointMassScale) > 0.000001f)
+                {
+                    throw new InvalidOperationException(
+                        $"{sideName} attack mace joint mass scale must be {ApprovedAttackMaceJointMassScale:0.###}. " +
+                        $"Actual={maceJoint.massScale:0.###}.");
+                }
+
+                var maceBody = maceProxy.GetComponent<Rigidbody>() ??
+                    throw new InvalidOperationException($"{sideName} attack mace Rigidbody is missing.");
+                if ((maceBody.constraints & RigidbodyConstraints.FreezePositionX) == 0)
+                {
+                    throw new InvalidOperationException(
+                        $"{sideName} attack mace must remain in its authored vertical forward plane through a PhysX position constraint.");
+                }
+
+                if (Mathf.Abs(maceBody.linearDamping - ApprovedAttackMovingMaceLinearDamping) > 0.000001f ||
+                    Mathf.Abs(maceBody.angularDamping - ApprovedAttackMovingMaceAngularDamping) > 0.000001f)
+                {
+                    throw new InvalidOperationException(
+                        $"{sideName} attack mace moving damping is incorrect. " +
+                        $"Linear={maceBody.linearDamping:0.###}/{ApprovedAttackMovingMaceLinearDamping:0.###}, " +
+                        $"Angular={maceBody.angularDamping:0.###}/{ApprovedAttackMovingMaceAngularDamping:0.###}.");
+                }
+            }
+
             foreach (var propertyName in new[]
                      {
                          "chainRestSpring",
@@ -1717,6 +3357,12 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
 
             return
                 "AttackForceTransmission=AntennaKinematicAnchorToConnectedJointsOnly\n" +
+                "AttackDampingModel=ConstantPhysXDampingAndRigidbodySleep\n" +
+                $"AttackMaceMass={ApprovedAttackMaceMass:0.###}\n" +
+                $"AttackMaceJointMassScale={ApprovedAttackMaceJointMassScale:0.###}\n" +
+                $"AttackMovingMaceDamping={ApprovedAttackMovingMaceLinearDamping:0.###}/{ApprovedAttackMovingMaceAngularDamping:0.###}\n" +
+                $"AttackTorsoCollisionCapsules={torsoColliders.Length}\n" +
+                "AttackPlaneConstraint=FreezePositionX\n" +
                 "DirectFollowerSpringDamperInertia=0\n";
         }
 
@@ -1902,7 +3548,12 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
 
         private static void ConfigureApprovedRiggedAnimator(Transform slot, RuntimeAnimatorController controller)
         {
-            var animator = slot.GetComponent<Animator>() ?? slot.gameObject.AddComponent<Animator>();
+            var animator = slot.GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = slot.gameObject.AddComponent<Animator>();
+            }
+
             animator.enabled = true;
             animator.runtimeAnimatorController = controller;
             animator.applyRootMotion = false;
@@ -1921,7 +3572,7 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             SetTransformCurve(clip, path, "m_LocalScale.x", CreateRiggedLoopCurve(scale.x, scale.x * 1.025f, scale.x));
             SetTransformCurve(clip, path, "m_LocalScale.y", CreateRiggedLoopCurve(scale.y, scale.y * 1.018f, scale.y));
             SetTransformCurve(clip, path, "m_LocalScale.z", CreateRiggedLoopCurve(scale.z, scale.z * 1.025f, scale.z));
-            ConfigureLoopSetting(clip, true);
+            ConfigureLoopSetting(clip, true, loopBlend: false);
             AssetDatabase.CreateAsset(clip, UnityIdleBreathClipAssetPath);
             return clip;
         }
@@ -1944,24 +3595,580 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
         private static AnimationClip EnsureApprovedRiggedAttackClip(Transform slot)
         {
             DeleteAnimationAssetIfPresent(UnityAntennaStrikeClipAssetPath);
-            var forwardDeltas = CalculateApprovedRiggedForwardStrikeDeltas(slot);
-            var clip = new AnimationClip { name = "Accelerando_Antenna_Strike_ForwardMacePhysicsInput", frameRate = 30f };
-            for (var i = 3; i < ApprovedRiggedAttackBoneNames.Length; i++)
+            var clip = new AnimationClip
             {
-                var bone = RequireNamedChild(slot, ApprovedRiggedAttackBoneNames[i]);
-                var path = GetRelativePath(slot, bone);
-                var baseEuler = bone.localEulerAngles;
-                var release = forwardDeltas[i];
-                var windup = -release * 0.55f;
-                SetTransformCurve(clip, path, "localEulerAnglesRaw.x", CreateForwardMaceStrikeCurve(NormalizeEulerAngle(baseEuler.x), windup.x, release.x));
-                SetTransformCurve(clip, path, "localEulerAnglesRaw.y", CreateForwardMaceStrikeCurve(NormalizeEulerAngle(baseEuler.y), windup.y, release.y));
-                SetTransformCurve(clip, path, "localEulerAnglesRaw.z", CreateForwardMaceStrikeCurve(NormalizeEulerAngle(baseEuler.z), windup.z, release.z));
-            }
-
-            AddMirroredRightAntennaStrikeCurves(slot, clip);
+                name = "Accelerando_Antenna_Strike_PeriodShorteningFullCirclePhysicsInput",
+                frameRate = 30f
+            };
+            AddVerticalCircularFlailAntennaCurves(slot, clip);
             ConfigureLoopSetting(clip, true);
             AssetDatabase.CreateAsset(clip, UnityAntennaStrikeClipAssetPath);
             return clip;
+        }
+
+        private static AnimationClip EnsureApprovedRiggedHitRecoilClip(Transform slot)
+        {
+            DeleteAnimationAssetIfPresent(UnityHitRecoilClipAssetPath);
+            var rootBone = RequireNamedChild(slot, "Bone_000");
+            var path = GetRelativePath(slot, rootBone);
+            var basePosition = rootBone.localPosition;
+            var baseScale = rootBone.localScale;
+            var backwardLocal = rootBone.parent.InverseTransformVector(-slot.forward).normalized;
+            var downLocal = rootBone.parent.InverseTransformVector(-slot.up).normalized;
+            var peakPosition = basePosition +
+                backwardLocal * HitRecoilBackwardDistance +
+                downLocal * 0.075f;
+            var clip = new AnimationClip
+            {
+                name = "Accelerando_Hit_Recoil_PhysicalChainResponse",
+                frameRate = 30f
+            };
+
+            for (var axis = 0; axis < 3; axis++)
+            {
+                var baseValue = basePosition[axis];
+                var peakValue = peakPosition[axis];
+                var curve = new AnimationCurve(
+                    new Keyframe(0f, baseValue),
+                    new Keyframe(
+                        HitRecoilImpactStartTime,
+                        baseValue + backwardLocal[axis] * 0.035f + downLocal[axis] * 0.008f),
+                    new Keyframe(HitRecoilPeakTime, peakValue),
+                    new Keyframe(
+                        HitRecoilReboundTime,
+                        baseValue - backwardLocal[axis] * 0.035f + downLocal[axis] * 0.006f),
+                    new Keyframe(
+                        HitRecoilSettleTime,
+                        baseValue + backwardLocal[axis] * 0.025f),
+                    new Keyframe(HitRecoilDuration, baseValue));
+                SetLinearCurveTangents(curve);
+                SetTransformCurve(clip, path, $"m_LocalPosition.{"xyz"[axis]}", curve);
+            }
+
+            SetTransformCurve(
+                clip,
+                path,
+                "m_LocalScale.x",
+                CreateHitRecoilScaleCurve(baseScale.x, 1.035f, 0.990f));
+            SetTransformCurve(
+                clip,
+                path,
+                "m_LocalScale.y",
+                CreateHitRecoilScaleCurve(baseScale.y, 0.920f, 1.020f));
+            SetTransformCurve(
+                clip,
+                path,
+                "m_LocalScale.z",
+                CreateHitRecoilScaleCurve(baseScale.z, 1.035f, 0.990f));
+            ConfigureLoopSetting(clip, true);
+            AssetDatabase.CreateAsset(clip, UnityHitRecoilClipAssetPath);
+            return clip;
+        }
+
+        private static AnimationCurve CreateHitRecoilScaleCurve(float baseValue, float peakMultiplier, float reboundMultiplier)
+        {
+            var curve = new AnimationCurve(
+                new Keyframe(0f, baseValue),
+                new Keyframe(HitRecoilImpactStartTime, baseValue * 0.992f),
+                new Keyframe(HitRecoilPeakTime, baseValue * peakMultiplier),
+                new Keyframe(HitRecoilReboundTime, baseValue * reboundMultiplier),
+                new Keyframe(HitRecoilSettleTime, baseValue * 1.004f),
+                new Keyframe(HitRecoilDuration, baseValue));
+            SetLinearCurveTangents(curve);
+            return curve;
+        }
+
+        private static AnimationClip EnsureApprovedRiggedDeathCollapseClip(Transform slot)
+        {
+            DeleteAnimationAssetIfPresent(UnityDeathCollapseClipAssetPath);
+            var rootBone = RequireNamedChild(slot, "Bone_000");
+            var rootPath = GetRelativePath(slot, rootBone);
+            var basePosition = rootBone.localPosition;
+            var baseScale = rootBone.localScale;
+            var downLocal = rootBone.parent.InverseTransformVector(-slot.up).normalized;
+            var keyTimes = new[]
+            {
+                0f,
+                DeathCollapseReleaseTime,
+                DeathCollapseDropTime,
+                DeathCollapseSettleTime,
+                DeathCollapseDuration
+            };
+            var bodyDrop = new[] { 0f, 0.025f, 0.28f, 0.42f, 0.42f };
+            var clip = new AnimationClip
+            {
+                name = "Accelerando_Death_Collapse_LimpAntennae_PhysicalChain",
+                frameRate = 30f
+            };
+
+            for (var axis = 0; axis < 3; axis++)
+            {
+                var values = new float[keyTimes.Length];
+                for (var keyIndex = 0; keyIndex < keyTimes.Length; keyIndex++)
+                {
+                    values[keyIndex] = basePosition[axis] + downLocal[axis] * bodyDrop[keyIndex];
+                }
+
+                SetTransformCurve(
+                    clip,
+                    rootPath,
+                    $"m_LocalPosition.{"xyz"[axis]}",
+                    CreateDeathCollapseCurve(keyTimes, values));
+            }
+
+            SetTransformCurve(
+                clip,
+                rootPath,
+                "m_LocalScale.x",
+                CreateDeathCollapseCurve(
+                    keyTimes,
+                    new[] { baseScale.x, baseScale.x * 1.01f, baseScale.x * 1.10f, baseScale.x * 1.18f, baseScale.x * 1.18f }));
+            SetTransformCurve(
+                clip,
+                rootPath,
+                "m_LocalScale.y",
+                CreateDeathCollapseCurve(
+                    keyTimes,
+                    new[] { baseScale.y, baseScale.y * 0.98f, baseScale.y * 0.72f, baseScale.y * 0.58f, baseScale.y * 0.58f }));
+            SetTransformCurve(
+                clip,
+                rootPath,
+                "m_LocalScale.z",
+                CreateDeathCollapseCurve(
+                    keyTimes,
+                    new[] { baseScale.z, baseScale.z * 1.01f, baseScale.z * 1.08f, baseScale.z * 1.12f, baseScale.z * 1.12f }));
+
+            AddDeathCollapseAntennaCurves(slot, clip);
+            AssetDatabase.CreateAsset(clip, UnityDeathCollapseClipAssetPath);
+            ConfigureLoopSetting(clip, true, loopBlend: false);
+            EditorUtility.SetDirty(clip);
+            AssetDatabase.SaveAssets();
+            return clip;
+        }
+
+        private static AnimationCurve CreateDeathCollapseCurve(float[] times, float[] values)
+        {
+            if (times.Length != values.Length)
+            {
+                throw new InvalidOperationException("Accelerando death collapse curve times and values do not match.");
+            }
+
+            var keys = new Keyframe[times.Length];
+            for (var i = 0; i < times.Length; i++)
+            {
+                keys[i] = new Keyframe(times[i], values[i]);
+            }
+
+            var curve = new AnimationCurve(keys);
+            SmoothCurveTangents(curve);
+            return curve;
+        }
+
+        private static void AddDeathCollapseAntennaCurves(Transform slot, AnimationClip clip)
+        {
+            var sideNames = new[] { "Right", "Left" };
+            var boneNames = new[]
+            {
+                new[] { "Bone_008", "Bone_007", "Bone_006" },
+                new[] { "Bone_011", "Bone_010", "Bone_009" }
+            };
+            var rotationKeyCount = Mathf.RoundToInt(DeathCollapseDuration * clip.frameRate) + 1;
+            var rotationKeyTimes = new float[rotationKeyCount];
+            var bones = new Transform[2][];
+            var anchors = new Transform[2];
+            var restAnchorLocalPositions = new Vector3[2];
+            var terminalTipLocalOffsets = new Vector3[2];
+            var restLocalRotations = new Quaternion[2, 3];
+            var keyedRotations = new Quaternion[2, 3, rotationKeyCount];
+            var snapshots = new List<TransformSnapshot>
+            {
+                new(RequireNamedChild(slot, "Bone_000"))
+            };
+            foreach (var boneName in ApprovedRiggedAttackBoneNames)
+            {
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(slot, boneName)));
+            }
+
+            for (var sideIndex = 0; sideIndex < sideNames.Length; sideIndex++)
+            {
+                bones[sideIndex] = new Transform[3];
+                for (var boneIndex = 0; boneIndex < 3; boneIndex++)
+                {
+                    bones[sideIndex][boneIndex] = RequireNamedChild(slot, boneNames[sideIndex][boneIndex]);
+                    restLocalRotations[sideIndex, boneIndex] = bones[sideIndex][boneIndex].localRotation;
+                }
+
+                anchors[sideIndex] = RequireNamedChild(
+                    slot,
+                    $"Accelerando_{sideNames[sideIndex]}_AntennaPhysicsAnchor");
+                restAnchorLocalPositions[sideIndex] = slot.InverseTransformPoint(anchors[sideIndex].position);
+                terminalTipLocalOffsets[sideIndex] =
+                    bones[sideIndex][2].InverseTransformPoint(anchors[sideIndex].position);
+            }
+
+            try
+            {
+                for (var keyIndex = 0; keyIndex < rotationKeyCount; keyIndex++)
+                {
+                    var sampleTime = Mathf.Min(DeathCollapseDuration, keyIndex / clip.frameRate);
+                    rotationKeyTimes[keyIndex] = sampleTime;
+                    RestoreTransformSnapshots(snapshots);
+                    clip.SampleAnimation(slot.gameObject, sampleTime);
+                    var droopWeight = EvaluateDeathCollapseDroopWeight(sampleTime);
+                    for (var sideIndex = 0; sideIndex < sideNames.Length; sideIndex++)
+                    {
+                        var sideSign = sideIndex == 0 ? 1f : -1f;
+                        var targetLocalPosition = restAnchorLocalPositions[sideIndex] +
+                            new Vector3(sideSign * 0.06f, -0.92f, 0.03f) * droopWeight;
+                        SolveAntennaTipOffsetToTarget(
+                            bones[sideIndex],
+                            bones[sideIndex][2],
+                            terminalTipLocalOffsets[sideIndex],
+                            slot.TransformPoint(targetLocalPosition));
+                        for (var boneIndex = 0; boneIndex < 3; boneIndex++)
+                        {
+                            var rotation = bones[sideIndex][boneIndex].localRotation;
+                            var maximumBoneAngle = new[] { 44f, 54f, 64f }[boneIndex] * droopWeight;
+                            var solvedAngle = Quaternion.Angle(restLocalRotations[sideIndex, boneIndex], rotation);
+                            if (solvedAngle > maximumBoneAngle && solvedAngle > 0.0001f)
+                            {
+                                rotation = Quaternion.Slerp(
+                                    restLocalRotations[sideIndex, boneIndex],
+                                    rotation,
+                                    maximumBoneAngle / solvedAngle);
+                                bones[sideIndex][boneIndex].localRotation = rotation;
+                            }
+                            if (keyIndex > 0 && Quaternion.Dot(
+                                    keyedRotations[sideIndex, boneIndex, keyIndex - 1],
+                                    rotation) < 0f)
+                            {
+                                rotation = new Quaternion(-rotation.x, -rotation.y, -rotation.z, -rotation.w);
+                            }
+
+                            keyedRotations[sideIndex, boneIndex, keyIndex] = rotation;
+                        }
+                    }
+                }
+
+                for (var sideIndex = 0; sideIndex < sideNames.Length; sideIndex++)
+                {
+                    for (var boneIndex = 0; boneIndex < 3; boneIndex++)
+                    {
+                        var xKeys = new Keyframe[rotationKeyCount];
+                        var yKeys = new Keyframe[rotationKeyCount];
+                        var zKeys = new Keyframe[rotationKeyCount];
+                        var wKeys = new Keyframe[rotationKeyCount];
+                        for (var keyIndex = 0; keyIndex < rotationKeyCount; keyIndex++)
+                        {
+                            var rotation = keyedRotations[sideIndex, boneIndex, keyIndex];
+                            xKeys[keyIndex] = new Keyframe(rotationKeyTimes[keyIndex], rotation.x);
+                            yKeys[keyIndex] = new Keyframe(rotationKeyTimes[keyIndex], rotation.y);
+                            zKeys[keyIndex] = new Keyframe(rotationKeyTimes[keyIndex], rotation.z);
+                            wKeys[keyIndex] = new Keyframe(rotationKeyTimes[keyIndex], rotation.w);
+                        }
+
+                        var xCurve = new AnimationCurve(xKeys);
+                        var yCurve = new AnimationCurve(yKeys);
+                        var zCurve = new AnimationCurve(zKeys);
+                        var wCurve = new AnimationCurve(wKeys);
+                        SetLinearCurveTangents(xCurve);
+                        SetLinearCurveTangents(yCurve);
+                        SetLinearCurveTangents(zCurve);
+                        SetLinearCurveTangents(wCurve);
+                        var path = GetRelativePath(slot, bones[sideIndex][boneIndex]);
+                        SetTransformCurve(clip, path, "m_LocalRotation.x", xCurve);
+                        SetTransformCurve(clip, path, "m_LocalRotation.y", yCurve);
+                        SetTransformCurve(clip, path, "m_LocalRotation.z", zCurve);
+                        SetTransformCurve(clip, path, "m_LocalRotation.w", wCurve);
+                    }
+                }
+            }
+            finally
+            {
+                RestoreTransformSnapshots(snapshots);
+            }
+        }
+
+        private static float EvaluateDeathCollapseDroopWeight(float sampleTime)
+        {
+            if (sampleTime <= DeathCollapseReleaseTime)
+            {
+                return Mathf.SmoothStep(0f, 0.08f, sampleTime / DeathCollapseReleaseTime);
+            }
+
+            if (sampleTime <= DeathCollapseDropTime)
+            {
+                return Mathf.SmoothStep(
+                    0.08f,
+                    0.72f,
+                    Mathf.InverseLerp(DeathCollapseReleaseTime, DeathCollapseDropTime, sampleTime));
+            }
+
+            if (sampleTime <= DeathCollapseSettleTime)
+            {
+                return Mathf.SmoothStep(
+                    0.72f,
+                    1f,
+                    Mathf.InverseLerp(DeathCollapseDropTime, DeathCollapseSettleTime, sampleTime));
+            }
+
+            return 1f;
+        }
+
+        private static void AddVerticalCircularFlailAntennaCurves(Transform slot, AnimationClip clip)
+        {
+            var sides = new[] { "Right", "Left" };
+            var sideBoneNames = new[]
+            {
+                new[] { "Bone_008", "Bone_007", "Bone_006" },
+                new[] { "Bone_011", "Bone_010", "Bone_009" }
+            };
+            var sampleCount = Mathf.RoundToInt(AntennaStrikeLoopSeconds * clip.frameRate) + 1;
+            var sampleTimes = new float[sampleCount];
+            var keyedRotations = new Quaternion[sides.Length, 3, sampleCount];
+            var sideBones = new Transform[sides.Length][];
+            var sideAnchors = new Transform[sides.Length];
+            var restAnchorPositions = new Vector3[sides.Length];
+            var snapshots = new List<TransformSnapshot>();
+            foreach (var boneName in ApprovedRiggedAttackBoneNames)
+            {
+                snapshots.Add(new TransformSnapshot(RequireNamedChild(slot, boneName)));
+            }
+
+            for (var sideIndex = 0; sideIndex < sides.Length; sideIndex++)
+            {
+                sideBones[sideIndex] = new Transform[3];
+                for (var boneIndex = 0; boneIndex < 3; boneIndex++)
+                {
+                    sideBones[sideIndex][boneIndex] =
+                        RequireNamedChild(slot, sideBoneNames[sideIndex][boneIndex]);
+                }
+
+                sideAnchors[sideIndex] = RequireNamedChild(
+                    slot,
+                    $"Accelerando_{sides[sideIndex]}_AntennaPhysicsAnchor");
+                restAnchorPositions[sideIndex] = slot.InverseTransformPoint(sideAnchors[sideIndex].position);
+            }
+
+            try
+            {
+                for (var sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
+                {
+                    var sampleTime = Mathf.Min(AntennaStrikeLoopSeconds, sampleIndex / clip.frameRate);
+                    sampleTimes[sampleIndex] = sampleTime;
+                    RestoreTransformSnapshots(snapshots);
+                    var circleAngle = CalculateVerticalCircularFlailRevolutions(sampleTime) * Mathf.PI * 2f;
+                    var circleOffset = sampleTime < VerticalCircularFlailStartTime ||
+                        sampleTime > VerticalCircularFlailEndTime
+                        ? Vector3.zero
+                        : new Vector3(
+                            0f,
+                            (Mathf.Cos(circleAngle) - 1f) * VerticalCircularFlailRadius,
+                            Mathf.Sin(circleAngle) * VerticalCircularFlailRadius);
+                    for (var sideIndex = 0; sideIndex < sides.Length; sideIndex++)
+                    {
+                        var targetWorldPosition = slot.TransformPoint(
+                            restAnchorPositions[sideIndex] + circleOffset);
+                        SolveAntennaTipToTarget(
+                            sideBones[sideIndex],
+                            sideAnchors[sideIndex],
+                            targetWorldPosition);
+                        for (var boneIndex = 0; boneIndex < 3; boneIndex++)
+                        {
+                            keyedRotations[sideIndex, boneIndex, sampleIndex] =
+                                sideBones[sideIndex][boneIndex].localRotation;
+                        }
+                    }
+                }
+
+                for (var sideIndex = 0; sideIndex < sides.Length; sideIndex++)
+                {
+                    for (var boneIndex = 0; boneIndex < 3; boneIndex++)
+                    {
+                        for (var sampleIndex = 1; sampleIndex < sampleCount; sampleIndex++)
+                        {
+                            if (Quaternion.Dot(
+                                    keyedRotations[sideIndex, boneIndex, sampleIndex - 1],
+                                    keyedRotations[sideIndex, boneIndex, sampleIndex]) < 0f)
+                            {
+                                var rotation = keyedRotations[sideIndex, boneIndex, sampleIndex];
+                                keyedRotations[sideIndex, boneIndex, sampleIndex] =
+                                    new Quaternion(-rotation.x, -rotation.y, -rotation.z, -rotation.w);
+                            }
+                        }
+
+                        var xKeys = new Keyframe[sampleCount];
+                        var yKeys = new Keyframe[sampleCount];
+                        var zKeys = new Keyframe[sampleCount];
+                        var wKeys = new Keyframe[sampleCount];
+                        for (var sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
+                        {
+                            var rotation = keyedRotations[sideIndex, boneIndex, sampleIndex];
+                            xKeys[sampleIndex] = new Keyframe(sampleTimes[sampleIndex], rotation.x);
+                            yKeys[sampleIndex] = new Keyframe(sampleTimes[sampleIndex], rotation.y);
+                            zKeys[sampleIndex] = new Keyframe(sampleTimes[sampleIndex], rotation.z);
+                            wKeys[sampleIndex] = new Keyframe(sampleTimes[sampleIndex], rotation.w);
+                        }
+
+                        var xCurve = new AnimationCurve(xKeys);
+                        var yCurve = new AnimationCurve(yKeys);
+                        var zCurve = new AnimationCurve(zKeys);
+                        var wCurve = new AnimationCurve(wKeys);
+                        SetLinearCurveTangents(xCurve);
+                        SetLinearCurveTangents(yCurve);
+                        SetLinearCurveTangents(zCurve);
+                        SetLinearCurveTangents(wCurve);
+                        var path = GetRelativePath(slot, sideBones[sideIndex][boneIndex]);
+                        SetTransformCurve(clip, path, "m_LocalRotation.x", xCurve);
+                        SetTransformCurve(clip, path, "m_LocalRotation.y", yCurve);
+                        SetTransformCurve(clip, path, "m_LocalRotation.z", zCurve);
+                        SetTransformCurve(clip, path, "m_LocalRotation.w", wCurve);
+                    }
+                }
+            }
+            finally
+            {
+                RestoreTransformSnapshots(snapshots);
+            }
+        }
+
+        private static float CalculateVerticalCircularFlailRevolutions(float sampleTime)
+        {
+            var elapsedTime = Mathf.Clamp(
+                sampleTime - VerticalCircularFlailStartTime,
+                0f,
+                VerticalCircularFlailEndTime - VerticalCircularFlailStartTime);
+            var cycleStartTime = 0f;
+            for (var cycleIndex = 0; cycleIndex < VerticalCircularFlailCycleCount; cycleIndex++)
+            {
+                var cycleDuration = VerticalCircularFlailCyclePeriods[cycleIndex];
+                var cycleEndTime = cycleStartTime + cycleDuration;
+                if (elapsedTime <= cycleEndTime)
+                {
+                    var normalizedTime = Mathf.Clamp01(
+                        (elapsedTime - cycleStartTime) / cycleDuration);
+                    var normalizedTime2 = normalizedTime * normalizedTime;
+                    var normalizedTime3 = normalizedTime2 * normalizedTime;
+                    var startPhase = cycleIndex;
+                    var endPhase = cycleIndex + 1f;
+                    var startSpeed = CalculateVerticalCircularFlailBoundarySpeed(cycleIndex);
+                    var endSpeed = CalculateVerticalCircularFlailBoundarySpeed(cycleIndex + 1);
+                    return
+                        (2f * normalizedTime3 - 3f * normalizedTime2 + 1f) * startPhase +
+                        (normalizedTime3 - 2f * normalizedTime2 + normalizedTime) *
+                        cycleDuration * startSpeed +
+                        (-2f * normalizedTime3 + 3f * normalizedTime2) * endPhase +
+                        (normalizedTime3 - normalizedTime2) * cycleDuration * endSpeed;
+                }
+
+                cycleStartTime = cycleEndTime;
+            }
+
+            return VerticalCircularFlailCycleCount;
+        }
+
+        private static float CalculateVerticalCircularFlailBoundarySpeed(int boundaryIndex)
+        {
+            if (boundaryIndex <= 0)
+            {
+                return 1f / VerticalCircularFlailCyclePeriods[0];
+            }
+
+            if (boundaryIndex >= VerticalCircularFlailCycleCount)
+            {
+                return 1f / VerticalCircularFlailCyclePeriods[VerticalCircularFlailCycleCount - 1];
+            }
+
+            var previousSpeed = 1f / VerticalCircularFlailCyclePeriods[boundaryIndex - 1];
+            var nextSpeed = 1f / VerticalCircularFlailCyclePeriods[boundaryIndex];
+            return 2f * previousSpeed * nextSpeed / (previousSpeed + nextSpeed);
+        }
+
+        private static float GetVerticalCircularFlailCycleStartTime(int cycleIndex)
+        {
+            var cycleStartTime = VerticalCircularFlailStartTime;
+            for (var index = 0; index < cycleIndex; index++)
+            {
+                cycleStartTime += VerticalCircularFlailCyclePeriods[index];
+            }
+
+            return cycleStartTime;
+        }
+
+        private static int GetVerticalCircularFlailCycleIndex(float sampleTime)
+        {
+            for (var cycleIndex = 0; cycleIndex < VerticalCircularFlailCycleCount; cycleIndex++)
+            {
+                var cycleStartTime = GetVerticalCircularFlailCycleStartTime(cycleIndex);
+                var cycleEndTime = cycleStartTime + VerticalCircularFlailCyclePeriods[cycleIndex];
+                if (sampleTime >= cycleStartTime && sampleTime <= cycleEndTime + 0.0001f)
+                {
+                    return cycleIndex;
+                }
+            }
+
+            return -1;
+        }
+
+        private static void SolveAntennaTipToTarget(
+            Transform[] antennaBones,
+            Transform antennaAnchor,
+            Vector3 targetWorldPosition)
+        {
+            const int solverIterations = 18;
+            for (var iteration = 0; iteration < solverIterations; iteration++)
+            {
+                for (var boneIndex = antennaBones.Length - 1; boneIndex >= 0; boneIndex--)
+                {
+                    var bone = antennaBones[boneIndex];
+                    var currentDirection = antennaAnchor.position - bone.position;
+                    var targetDirection = targetWorldPosition - bone.position;
+                    if (currentDirection.sqrMagnitude < 0.000001f ||
+                        targetDirection.sqrMagnitude < 0.000001f)
+                    {
+                        continue;
+                    }
+
+                    bone.rotation = Quaternion.FromToRotation(currentDirection, targetDirection) * bone.rotation;
+                }
+
+                if ((antennaAnchor.position - targetWorldPosition).sqrMagnitude < 0.000001f)
+                {
+                    break;
+                }
+            }
+        }
+
+        private static void SolveAntennaTipOffsetToTarget(
+            Transform[] antennaBones,
+            Transform terminalBone,
+            Vector3 terminalTipLocalOffset,
+            Vector3 targetWorldPosition)
+        {
+            const int solverIterations = 18;
+            for (var iteration = 0; iteration < solverIterations; iteration++)
+            {
+                for (var boneIndex = antennaBones.Length - 1; boneIndex >= 0; boneIndex--)
+                {
+                    var bone = antennaBones[boneIndex];
+                    var currentTipPosition = terminalBone.TransformPoint(terminalTipLocalOffset);
+                    var currentDirection = currentTipPosition - bone.position;
+                    var targetDirection = targetWorldPosition - bone.position;
+                    if (currentDirection.sqrMagnitude < 0.000001f ||
+                        targetDirection.sqrMagnitude < 0.000001f)
+                    {
+                        continue;
+                    }
+
+                    bone.rotation = Quaternion.FromToRotation(currentDirection, targetDirection) * bone.rotation;
+                }
+
+                var solvedTipPosition = terminalBone.TransformPoint(terminalTipLocalOffset);
+                if ((solvedTipPosition - targetWorldPosition).sqrMagnitude < 0.000001f)
+                {
+                    break;
+                }
+            }
         }
 
         private static string EnsureForwardStrikeDeformationFixedMesh(Transform strikeSlot)
@@ -2306,10 +4513,13 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 bodyRenderer.BakeMesh(neutralBake);
                 var neutralVertices = neutralBake.vertices;
                 var triangles = correctedMesh.triangles;
+                var deformationReferenceTime = GetVerticalCircularFlailCycleStartTime(
+                    VerticalCircularFlailCycleCount - 1) +
+                    VerticalCircularFlailCyclePeriods[VerticalCircularFlailCycleCount - 1] * 0.25f;
                 foreach (var sampleTime in new[]
                          {
                              ForwardMaceStrikeWindupTime,
-                             ForwardMaceStrikeReleaseTime,
+                             deformationReferenceTime,
                              ForwardMaceStrikePeakTime,
                              ForwardMaceStrikeRecoilTime,
                              ForwardMaceStrikeSecondaryDriveTime,
@@ -2321,7 +4531,7 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                     clip.SampleAnimation(strikeSlot.gameObject, sampleTime);
                     bodyRenderer.BakeMesh(posedBake);
                     var posedVertices = posedBake.vertices;
-                    if (Mathf.Abs(sampleTime - ForwardMaceStrikeReleaseTime) < 0.0001f)
+                    if (Mathf.Abs(sampleTime - deformationReferenceTime) < 0.0001f)
                     {
                         foreach (var vertexIndex in rightVertices)
                         {
@@ -3007,7 +5217,7 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 new Keyframe(ForwardMaceStrikeWindupTime, baseValue + windupDelta),
                 new Keyframe(0.37f, baseValue + windupDelta * 1.02f),
                 new Keyframe(ForwardMaceStrikeReleaseTime, baseValue + releaseDelta),
-                new Keyframe(ForwardMaceStrikePeakTime, baseValue + releaseDelta * 1.10f),
+                new Keyframe(ForwardMaceStrikePeakTime, baseValue + releaseDelta * 1.14f),
                 new Keyframe(ForwardMaceStrikeRecoilTime, baseValue + releaseDelta * 0.18f),
                 new Keyframe(ForwardMaceStrikeSecondaryDriveTime, baseValue + releaseDelta * 0.86f),
                 new Keyframe(ForwardMaceStrikeAftershockTime, baseValue + releaseDelta * 0.42f),
@@ -3032,6 +5242,90 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 throw new InvalidOperationException($"{rigType.FullName} is missing {methodName}(int).");
             var configuredLinkCount = attack ? AttackConnectedChainLinkCount : ApprovedRiggedChainLinkCount;
             method.Invoke(rig, new object[] { configuredLinkCount });
+            EditorUtility.SetDirty(rig);
+        }
+
+        private static void ConfigureApprovedRiggedHitChainPhysics(Transform hitSlot)
+        {
+            if (hitSlot == null)
+            {
+                throw new InvalidOperationException("Approved Accelerando hit recoil physics slot is missing.");
+            }
+
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = hitSlot.GetComponent(rigType) as MonoBehaviour;
+            if (rig == null)
+            {
+                rig = hitSlot.gameObject.AddComponent(rigType) as MonoBehaviour;
+            }
+
+            var method = rigType.GetMethod("ConfigureHitRecoil", new[] { typeof(int) }) ??
+                throw new InvalidOperationException($"{rigType.FullName} is missing ConfigureHitRecoil(int).");
+            method.Invoke(rig, new object[] { ApprovedRiggedChainLinkCount });
+            EditorUtility.SetDirty(rig);
+        }
+
+        private static void ConfigureApprovedDeathAntennaSkin(Transform deathSlot)
+        {
+            var model = FindDirectChild(deathSlot, ModelChildName) ??
+                throw new InvalidOperationException($"{DeathCollapseSlotObjectName}/{ModelChildName} is missing.");
+            var bodyTransform = FindChildByName(model, "Accelerando_RiggedAttack_Body") ??
+                throw new InvalidOperationException("Accelerando death body is missing.");
+            var bodyRenderer = bodyTransform.GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException("Accelerando death body is not skinned.");
+            var correctedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(UnityForwardStrikeDeformationFixedMeshAssetPath) ??
+                throw new InvalidOperationException(
+                    $"Approved bilateral antenna deformation-fixed mesh is missing at {UnityForwardStrikeDeformationFixedMeshAssetPath}.");
+            bodyRenderer.sharedMesh = correctedMesh;
+            EditorUtility.SetDirty(bodyRenderer);
+        }
+
+        private static void ConfigureApprovedRiggedDeathChainPhysics(Transform deathSlot)
+        {
+            if (deathSlot == null)
+            {
+                throw new InvalidOperationException("Approved Accelerando death collapse physics slot is missing.");
+            }
+
+            var rigType = FindAccelerandoChainPhysicsRigType();
+            var rig = deathSlot.GetComponent(rigType) as MonoBehaviour;
+            if (rig == null)
+            {
+                rig = deathSlot.gameObject.AddComponent(rigType) as MonoBehaviour;
+            }
+
+            var method = rigType.GetMethod("ConfigureDeathCollapse", new[] { typeof(int) }) ??
+                throw new InvalidOperationException($"{rigType.FullName} is missing ConfigureDeathCollapse(int).");
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(UnityDeathCollapseClipAssetPath);
+            var animator = deathSlot.GetComponent<Animator>();
+            var animatorWasEnabled = animator != null && animator.enabled;
+            var animatedBoneSnapshots = new List<TransformSnapshot>
+            {
+                new(RequireNamedChild(deathSlot, "Bone_000"))
+            };
+            foreach (var boneName in ApprovedRiggedAttackBoneNames)
+            {
+                animatedBoneSnapshots.Add(new TransformSnapshot(RequireNamedChild(deathSlot, boneName)));
+            }
+
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                clip?.SampleAnimation(deathSlot.gameObject, 0f);
+                method.Invoke(rig, new object[] { ApprovedRiggedChainLinkCount });
+            }
+            finally
+            {
+                RestoreTransformSnapshots(animatedBoneSnapshots);
+                if (animator != null)
+                {
+                    animator.enabled = animatorWasEnabled;
+                }
+            }
             EditorUtility.SetDirty(rig);
         }
 
@@ -3297,15 +5591,17 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
 
             var jointCount = physicsRoot.GetComponentsInChildren<ConfigurableJoint>(true).Length;
             var expectedDynamicBodyCount = expectedLinkCount * 2;
+            var expectedKinematicBodyCount = isAttackSlot ? 3 : 2;
             var expectedJointCount = expectedLinkCount * 2;
             if (dynamicBodyCount != expectedDynamicBodyCount ||
-                kinematicBodyCount != 2 ||
+                kinematicBodyCount != expectedKinematicBodyCount ||
                 jointCount != expectedJointCount)
             {
                 throw new InvalidOperationException(
                     $"{slot.name} serialized physics proxy mismatch: " +
                     $"dynamic={dynamicBodyCount}/{expectedDynamicBodyCount}, " +
-                    $"kinematic={kinematicBodyCount}/2, joints={jointCount}/{expectedJointCount}.");
+                    $"kinematic={kinematicBodyCount}/{expectedKinematicBodyCount}, " +
+                    $"joints={jointCount}/{expectedJointCount}.");
             }
         }
 
@@ -5348,6 +7644,15 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             }
         }
 
+        private static void SetLinearCurveTangents(AnimationCurve curve)
+        {
+            for (var i = 0; i < curve.keys.Length; i++)
+            {
+                AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.Linear);
+                AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.Linear);
+            }
+        }
+
         private static AnimatorController EnsureIdleBreathController(AnimationClip clip)
         {
             if (AssetDatabase.LoadAssetAtPath<AnimatorController>(UnityIdleBreathControllerAssetPath) != null)
@@ -5402,11 +7707,47 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             return controller;
         }
 
-        private static void ConfigureLoopSetting(AnimationClip clip, bool loop)
+        private static AnimatorController EnsureHitRecoilController(AnimationClip clip)
+        {
+            if (AssetDatabase.LoadAssetAtPath<AnimatorController>(UnityHitRecoilControllerAssetPath) != null)
+            {
+                AssetDatabase.DeleteAsset(UnityHitRecoilControllerAssetPath);
+            }
+
+            var controller = AnimatorController.CreateAnimatorControllerAtPath(UnityHitRecoilControllerAssetPath);
+            var stateMachine = controller.layers[0].stateMachine;
+            var state = stateMachine.AddState(HitRecoilStateName);
+            state.motion = clip;
+            state.speed = 1f;
+            stateMachine.defaultState = state;
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static AnimatorController EnsureDeathCollapseController(AnimationClip clip)
+        {
+            if (AssetDatabase.LoadAssetAtPath<AnimatorController>(UnityDeathCollapseControllerAssetPath) != null)
+            {
+                AssetDatabase.DeleteAsset(UnityDeathCollapseControllerAssetPath);
+            }
+
+            var controller = AnimatorController.CreateAnimatorControllerAtPath(UnityDeathCollapseControllerAssetPath);
+            var stateMachine = controller.layers[0].stateMachine;
+            var state = stateMachine.AddState(DeathCollapseStateName);
+            state.motion = clip;
+            state.speed = 1f;
+            stateMachine.defaultState = state;
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static void ConfigureLoopSetting(AnimationClip clip, bool loop, bool loopBlend = true)
         {
             var settings = AnimationUtility.GetAnimationClipSettings(clip);
             settings.loopTime = loop;
-            settings.loopBlend = loop;
+            settings.loopBlend = loop && loopBlend;
             AnimationUtility.SetAnimationClipSettings(clip, settings);
         }
 
@@ -7321,12 +9662,14 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 strikeSlot,
                 RequireNamedChild(strikeSlot, "Accelerando_Left_AntennaTip_Ring"),
                 RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Left")),
+                RequireNamedChild(physicsRoot, ChainPhysicsLinkProxyName("Left", AttackConnectedChainLinkCount)),
                 RequireNamedChild(strikeSlot, "Accelerando_Left_MaceHead"));
             var rightMetrics = new AntennaStrikePhysicsResponseMetrics(
                 "Right",
                 strikeSlot,
                 RequireNamedChild(strikeSlot, "Accelerando_Right_AntennaTip_Ring"),
                 RequireNamedChild(physicsRoot, ChainPhysicsMaceProxyName("Right")),
+                RequireNamedChild(physicsRoot, ChainPhysicsLinkProxyName("Right", AttackConnectedChainLinkCount)),
                 RequireNamedChild(strikeSlot, "Accelerando_Right_MaceHead"));
 
             var visualSnapshots = CaptureAntennaStrikeVisualSnapshots(strikeSlot);
@@ -7554,24 +9897,453 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             }
         }
 
+        private sealed class VerticalCircularFlailPhysicsMetrics
+        {
+            private readonly string sideName;
+            private readonly Transform strikeSlot;
+            private readonly Transform antennaTip;
+            private readonly Rigidbody maceBody;
+            private readonly Rigidbody lastLinkBody;
+            private readonly Collider maceCollider;
+            private readonly Collider[] torsoColliders;
+            private readonly Transform maceVisual;
+            private readonly Vector3 restAntennaLocal;
+            private readonly float restMaceLateral;
+            private readonly float restMaceForward;
+
+            private Vector3 minimumAntennaOffset;
+            private Vector3 maximumAntennaOffset;
+            private Vector3 minimumMaceLocal;
+            private Vector3 maximumMaceLocal;
+            private float maximumMaceForwardOffset;
+            private float maximumMaceLateralExcursion;
+            private float maximumVisualProxySeparation;
+            private float antennaSignedAngularTravel;
+            private float antennaAbsoluteAngularTravel;
+            private float maceSignedAngularTravel;
+            private float maceAbsoluteAngularTravel;
+            private readonly float[] antennaCycleCompletionTimes =
+                new float[VerticalCircularFlailCycleCount];
+            private readonly float[] maceCycleSignedAngularTravel =
+                new float[VerticalCircularFlailCycleCount];
+            private readonly float[] maceCycleAbsoluteAngularTravel =
+                new float[VerticalCircularFlailCycleCount];
+            private readonly float[] minimumMaceOrbitRadius =
+                new float[VerticalCircularFlailCycleCount];
+            private readonly float[] maximumMaceOrbitRadius =
+                new float[VerticalCircularFlailCycleCount];
+            private int nextAntennaCycleCompletionIndex;
+            private float maximumFrontDownwardSpeed;
+            private int frontDescendingSamples;
+            private int frontSectorSamples;
+            private float previousAntennaAngle;
+            private float previousMaceAngle;
+            private bool hasCircularAngleSample;
+            private Vector3 previousMaceVelocity;
+            private bool hasPreviousMaceVelocity;
+            private int tensionProbeSamples;
+            private int positiveTensionSamples;
+            private float maximumTensionAcceleration;
+            private int torsoPenetrationSamples;
+            private int maceCenterInsideTorsoSamples;
+            private float maximumTorsoPenetration;
+            private int sampleCount;
+
+            public VerticalCircularFlailPhysicsMetrics(
+                string sideName,
+                Transform strikeSlot,
+                Transform antennaTip,
+                Transform maceProxy,
+                Transform lastLinkProxy,
+                Transform maceVisual)
+            {
+                this.sideName = sideName;
+                this.strikeSlot = strikeSlot;
+                this.antennaTip = antennaTip;
+                this.maceVisual = maceVisual;
+                maceBody = maceProxy.GetComponent<Rigidbody>() ??
+                    throw new InvalidOperationException($"{maceProxy.name} Rigidbody is missing.");
+                lastLinkBody = lastLinkProxy.GetComponent<Rigidbody>() ??
+                    throw new InvalidOperationException($"{lastLinkProxy.name} Rigidbody is missing.");
+                maceCollider = maceProxy.GetComponent<Collider>() ??
+                    throw new InvalidOperationException($"{maceProxy.name} Collider is missing.");
+                var torsoProxy = RequireNamedChild(maceProxy.parent, AttackTorsoCollisionProxyObjectName);
+                torsoColliders = torsoProxy.GetComponentsInChildren<Collider>(true);
+                if (torsoColliders.Length < 2)
+                {
+                    throw new InvalidOperationException("Accelerando attack torso compound colliders are missing.");
+                }
+
+                restAntennaLocal = strikeSlot.InverseTransformPoint(antennaTip.position);
+                var initialMaceLocal = strikeSlot.InverseTransformPoint(maceBody.position);
+                minimumMaceLocal = maximumMaceLocal = initialMaceLocal;
+                restMaceLateral = Vector3.Dot(maceBody.position, strikeSlot.right);
+                restMaceForward = Vector3.Dot(maceBody.position, strikeSlot.forward);
+                for (var cycleIndex = 0; cycleIndex < VerticalCircularFlailCycleCount; cycleIndex++)
+                {
+                    minimumMaceOrbitRadius[cycleIndex] = float.PositiveInfinity;
+                }
+            }
+
+            public void Sample(float sampleTime, float deltaTime)
+            {
+                sampleCount++;
+                var antennaOffset = strikeSlot.InverseTransformPoint(antennaTip.position) - restAntennaLocal;
+                var maceLocal = strikeSlot.InverseTransformPoint(maceBody.position);
+                minimumAntennaOffset = Vector3.Min(minimumAntennaOffset, antennaOffset);
+                maximumAntennaOffset = Vector3.Max(maximumAntennaOffset, antennaOffset);
+                minimumMaceLocal = Vector3.Min(minimumMaceLocal, maceLocal);
+                maximumMaceLocal = Vector3.Max(maximumMaceLocal, maceLocal);
+                maximumMaceForwardOffset = Mathf.Max(
+                    maximumMaceForwardOffset,
+                    Vector3.Dot(maceBody.position, strikeSlot.forward) - restMaceForward);
+                maximumMaceLateralExcursion = Mathf.Max(
+                    maximumMaceLateralExcursion,
+                    Mathf.Abs(Vector3.Dot(maceBody.position, strikeSlot.right) - restMaceLateral));
+                maximumVisualProxySeparation = Mathf.Max(
+                    maximumVisualProxySeparation,
+                    Vector3.Distance(maceVisual.position, maceBody.position));
+
+                if (sampleTime >= VerticalCircularFlailStartTime &&
+                    sampleTime <= VerticalCircularFlailEndTime)
+                {
+                    var antennaRadiusVector = antennaOffset + Vector3.up * VerticalCircularFlailRadius;
+                    var maceRadiusVector = strikeSlot.InverseTransformDirection(
+                        maceBody.position - antennaTip.position);
+                    var antennaAngle = Mathf.Atan2(-antennaRadiusVector.z, antennaRadiusVector.y) * Mathf.Rad2Deg;
+                    var maceAngle = Mathf.Atan2(-maceRadiusVector.z, maceRadiusVector.y) * Mathf.Rad2Deg;
+                    var cycleIndex = GetVerticalCircularFlailCycleIndex(sampleTime);
+                    if (cycleIndex >= 0)
+                    {
+                        var maceOrbitRadius = maceRadiusVector.magnitude;
+                        minimumMaceOrbitRadius[cycleIndex] = Mathf.Min(
+                            minimumMaceOrbitRadius[cycleIndex],
+                            maceOrbitRadius);
+                        maximumMaceOrbitRadius[cycleIndex] = Mathf.Max(
+                            maximumMaceOrbitRadius[cycleIndex],
+                            maceOrbitRadius);
+                    }
+
+                    if (maceRadiusVector.z >= VerticalCircularFlailFrontSectorMinimumForwardOffset)
+                    {
+                        var downwardSpeed = -Vector3.Dot(maceBody.linearVelocity, strikeSlot.up);
+                        frontSectorSamples++;
+                        maximumFrontDownwardSpeed = Mathf.Max(maximumFrontDownwardSpeed, downwardSpeed);
+                        if (downwardSpeed >= VerticalCircularFlailMinimumFrontDownwardSpeed)
+                        {
+                            frontDescendingSamples++;
+                        }
+                    }
+
+                    if (hasCircularAngleSample)
+                    {
+                        var antennaDelta = Mathf.DeltaAngle(previousAntennaAngle, antennaAngle);
+                        var maceDelta = Mathf.DeltaAngle(previousMaceAngle, maceAngle);
+                        var previousAntennaProgress = -antennaSignedAngularTravel;
+                        antennaSignedAngularTravel += antennaDelta;
+                        antennaAbsoluteAngularTravel += Mathf.Abs(antennaDelta);
+                        maceSignedAngularTravel += maceDelta;
+                        maceAbsoluteAngularTravel += Mathf.Abs(maceDelta);
+                        if (cycleIndex >= 0)
+                        {
+                            maceCycleSignedAngularTravel[cycleIndex] += maceDelta;
+                            maceCycleAbsoluteAngularTravel[cycleIndex] += Mathf.Abs(maceDelta);
+                        }
+
+                        var currentAntennaProgress = -antennaSignedAngularTravel;
+                        while (nextAntennaCycleCompletionIndex < VerticalCircularFlailCycleCount)
+                        {
+                            var targetProgress =
+                                (nextAntennaCycleCompletionIndex + 1) * 360f;
+                            if (currentAntennaProgress + 0.25f < targetProgress)
+                            {
+                                break;
+                            }
+
+                            var progressDelta = currentAntennaProgress - previousAntennaProgress;
+                            var completionBlend = progressDelta > 0.0001f
+                                ? (targetProgress - previousAntennaProgress) / progressDelta
+                                : 1f;
+                            antennaCycleCompletionTimes[nextAntennaCycleCompletionIndex] =
+                                sampleTime - deltaTime + deltaTime * Mathf.Clamp01(completionBlend);
+                            nextAntennaCycleCompletionIndex++;
+                        }
+                    }
+
+                    previousAntennaAngle = antennaAngle;
+                    previousMaceAngle = maceAngle;
+                    hasCircularAngleSample = true;
+                }
+
+                if (hasPreviousMaceVelocity && deltaTime > 0.000001f)
+                {
+                    var acceleration = (maceBody.linearVelocity - previousMaceVelocity) / deltaTime;
+                    var linkDirection = lastLinkBody.position - maceBody.position;
+                    if (linkDirection.sqrMagnitude > 0.000001f)
+                    {
+                        var tensionAcceleration = Vector3.Dot(
+                            acceleration - Physics.gravity,
+                            linkDirection.normalized);
+                        tensionProbeSamples++;
+                        maximumTensionAcceleration = Mathf.Max(maximumTensionAcceleration, tensionAcceleration);
+                        if (tensionAcceleration > 0f)
+                        {
+                            positiveTensionSamples++;
+                        }
+                    }
+                }
+
+                previousMaceVelocity = maceBody.linearVelocity;
+                hasPreviousMaceVelocity = true;
+
+                for (var colliderIndex = 0; colliderIndex < torsoColliders.Length; colliderIndex++)
+                {
+                    var torsoCollider = torsoColliders[colliderIndex];
+                    if (Physics.ComputePenetration(
+                            maceCollider,
+                            maceCollider.transform.position,
+                            maceCollider.transform.rotation,
+                            torsoCollider,
+                            torsoCollider.transform.position,
+                            torsoCollider.transform.rotation,
+                            out _,
+                            out var penetrationDistance))
+                    {
+                        torsoPenetrationSamples++;
+                        maximumTorsoPenetration = Mathf.Max(maximumTorsoPenetration, penetrationDistance);
+                    }
+
+                    if ((torsoCollider.ClosestPoint(maceBody.worldCenterOfMass) -
+                         maceBody.worldCenterOfMass).sqrMagnitude < 0.0000001f)
+                    {
+                        maceCenterInsideTorsoSamples++;
+                    }
+                }
+            }
+
+            public void Validate()
+            {
+                var antennaRange = maximumAntennaOffset - minimumAntennaOffset;
+                var maceRange = maximumMaceLocal - minimumMaceLocal;
+                var tensionFraction = tensionProbeSamples > 0
+                    ? positiveTensionSamples / (float)tensionProbeSamples
+                    : 0f;
+                var maceDirectionConsistency = maceAbsoluteAngularTravel > 0.001f
+                    ? Mathf.Abs(maceSignedAngularTravel) / maceAbsoluteAngularTravel
+                    : 0f;
+                var previousCycleCompletionTime = VerticalCircularFlailStartTime;
+                var previousMeasuredCyclePeriod = float.PositiveInfinity;
+                for (var cycleIndex = 0; cycleIndex < VerticalCircularFlailCycleCount; cycleIndex++)
+                {
+                    var completionTime = antennaCycleCompletionTimes[cycleIndex];
+                    var measuredCyclePeriod = completionTime - previousCycleCompletionTime;
+                    var expectedCyclePeriod = VerticalCircularFlailCyclePeriods[cycleIndex];
+                    if (completionTime <= 0f ||
+                        Mathf.Abs(measuredCyclePeriod - expectedCyclePeriod) >
+                            VerticalCircularFlailCyclePeriodTolerance ||
+                        measuredCyclePeriod >= previousMeasuredCyclePeriod - 0.001f)
+                    {
+                        throw new InvalidOperationException(
+                            $"{sideName} antenna revolution periods do not shorten as authored. " +
+                            $"Cycle={cycleIndex + 1}, MeasuredPeriod={measuredCyclePeriod:0.###}, " +
+                            $"ExpectedPeriod={expectedCyclePeriod:0.###}, " +
+                            $"PreviousPeriod={previousMeasuredCyclePeriod:0.###}.");
+                    }
+
+                    previousCycleCompletionTime = completionTime;
+                    previousMeasuredCyclePeriod = measuredCyclePeriod;
+
+                    var cycleAbsoluteTravel = maceCycleAbsoluteAngularTravel[cycleIndex];
+                    var cycleSignedTravel = maceCycleSignedAngularTravel[cycleIndex];
+                    var cycleDirectionConsistency = cycleAbsoluteTravel > 0.001f
+                        ? Mathf.Abs(cycleSignedTravel) / cycleAbsoluteTravel
+                        : 0f;
+                    var minimumRadius = minimumMaceOrbitRadius[cycleIndex];
+                    var maximumRadius = maximumMaceOrbitRadius[cycleIndex];
+                    var radiusRatio = minimumRadius > 0.001f
+                        ? maximumRadius / minimumRadius
+                        : float.PositiveInfinity;
+                    if (cycleSignedTravel > -VerticalCircularFlailMinimumMaceCycleTravel ||
+                        cycleAbsoluteTravel < VerticalCircularFlailMinimumMaceCycleTravel ||
+                        cycleDirectionConsistency < VerticalCircularFlailMinimumCycleDirectionConsistency ||
+                        minimumRadius < VerticalCircularFlailMinimumMaceOrbitRadius ||
+                        radiusRatio > VerticalCircularFlailMaximumMaceOrbitRadiusRatio)
+                    {
+                        throw new InvalidOperationException(
+                            $"{sideName} mace does not preserve a complete one-way orbit during cycle {cycleIndex + 1}. " +
+                            $"SignedTravel={cycleSignedTravel:0.###}, " +
+                            $"AbsoluteTravel={cycleAbsoluteTravel:0.###}/" +
+                            $"{VerticalCircularFlailMinimumMaceCycleTravel:0.###}, " +
+                            $"DirectionConsistency={cycleDirectionConsistency:0.###}/" +
+                            $"{VerticalCircularFlailMinimumCycleDirectionConsistency:0.###}, " +
+                            $"Radius={minimumRadius:0.###}-{maximumRadius:0.###}, " +
+                            $"RadiusRatio={radiusRatio:0.###}/" +
+                            $"{VerticalCircularFlailMaximumMaceOrbitRadiusRatio:0.###}.");
+                    }
+                }
+
+                if (sampleCount <= 0 ||
+                    antennaRange.y < AntennaStrikeInputMinimumRange ||
+                    antennaRange.z < AntennaStrikeInputMinimumRange ||
+                    antennaSignedAngularTravel > -VerticalCircularFlailMinimumAntennaAngularTravel)
+                {
+                    throw new InvalidOperationException(
+                        $"{sideName} antenna does not complete the authored vertical circular drive. " +
+                        $"RangeY={antennaRange.y:0.###}, RangeZ={antennaRange.z:0.###}, " +
+                        $"SignedTravel={antennaSignedAngularTravel:0.###}/{VerticalCircularFlailMinimumAntennaAngularTravel:0.###}.");
+                }
+
+                if (maceRange.y < VerticalCircularFlailMinimumMaceVerticalRange ||
+                    maceRange.z < AntennaStrikeMinimumMaceForwardRange ||
+                    maximumMaceForwardOffset < ForwardMaceStrikeMinimumPositiveOffset ||
+                    maceAbsoluteAngularTravel < VerticalCircularFlailMinimumMaceAngularTravel ||
+                    maceSignedAngularTravel > -VerticalCircularFlailMinimumMaceDirectionalTravel ||
+                    maceDirectionConsistency < VerticalCircularFlailMinimumCycleDirectionConsistency)
+                {
+                    throw new InvalidOperationException(
+                        $"{sideName} mace does not form a decisive forward-facing vertical circle. " +
+                        $"RangeY={maceRange.y:0.###}/{VerticalCircularFlailMinimumMaceVerticalRange:0.###}, " +
+                        $"RangeZ={maceRange.z:0.###}/{AntennaStrikeMinimumMaceForwardRange:0.###}, " +
+                        $"ForwardOffset={maximumMaceForwardOffset:0.###}/{ForwardMaceStrikeMinimumPositiveOffset:0.###}, " +
+                        $"SignedTravel={maceSignedAngularTravel:0.###}/{VerticalCircularFlailMinimumMaceDirectionalTravel:0.###}, " +
+                        $"AbsoluteTravel={maceAbsoluteAngularTravel:0.###}/{VerticalCircularFlailMinimumMaceAngularTravel:0.###}, " +
+                        $"DirectionConsistency={maceDirectionConsistency:0.###}/" +
+                        $"{VerticalCircularFlailMinimumCycleDirectionConsistency:0.###}.");
+                }
+
+                if (frontDescendingSamples < VerticalCircularFlailMinimumFrontDescendingSamples ||
+                    maximumFrontDownwardSpeed < VerticalCircularFlailMinimumFrontDownwardSpeed)
+                {
+                    throw new InvalidOperationException(
+                        $"{sideName} mace does not descend through the forward strike sector. " +
+                        $"FrontDescendingSamples={frontDescendingSamples}/{frontSectorSamples} " +
+                        $"(minimum {VerticalCircularFlailMinimumFrontDescendingSamples}), " +
+                        $"MaximumFrontDownwardSpeed={maximumFrontDownwardSpeed:0.###}/" +
+                        $"{VerticalCircularFlailMinimumFrontDownwardSpeed:0.###}.");
+                }
+
+                if (maximumMaceLateralExcursion > VerticalCircularFlailMaximumLateralExcursion)
+                {
+                    throw new InvalidOperationException(
+                        $"{sideName} mace leaves the vertical forward attack plane. " +
+                        $"LateralExcursion={maximumMaceLateralExcursion:0.###}/{VerticalCircularFlailMaximumLateralExcursion:0.###}.");
+                }
+
+                if (maceCenterInsideTorsoSamples > 0 ||
+                    maximumTorsoPenetration > VerticalCircularFlailMaximumTorsoPenetration)
+                {
+                    throw new InvalidOperationException(
+                        $"{sideName} mace passes through the Accelerando torso. " +
+                        $"CenterInsideSamples={maceCenterInsideTorsoSamples}, " +
+                        $"PenetrationSamples={torsoPenetrationSamples}, " +
+                        $"MaximumPenetration={maximumTorsoPenetration:0.###}/{VerticalCircularFlailMaximumTorsoPenetration:0.###}.");
+                }
+
+                if (maximumVisualProxySeparation > ConnectedChainEndpointTolerance ||
+                    tensionProbeSamples <= 0 ||
+                    tensionFraction < PhysicalRecoveryMinimumTensionFraction)
+                {
+                    throw new InvalidOperationException(
+                        $"{sideName} mace is not connected and accelerated through the physical chain. " +
+                        $"VisualSeparation={maximumVisualProxySeparation:0.###}/{ConnectedChainEndpointTolerance:0.###}, " +
+                        $"TensionSamples={positiveTensionSamples}/{tensionProbeSamples}, " +
+                        $"TensionFraction={tensionFraction:0.###}/{PhysicalRecoveryMinimumTensionFraction:0.###}.");
+                }
+            }
+
+            public override string ToString()
+            {
+                var antennaRange = maximumAntennaOffset - minimumAntennaOffset;
+                var maceRange = maximumMaceLocal - minimumMaceLocal;
+                var cycleReport = new System.Text.StringBuilder();
+                var previousCompletionTime = VerticalCircularFlailStartTime;
+                for (var cycleIndex = 0; cycleIndex < VerticalCircularFlailCycleCount; cycleIndex++)
+                {
+                    if (cycleIndex > 0)
+                    {
+                        cycleReport.Append(";");
+                    }
+
+                    var completionTime = antennaCycleCompletionTimes[cycleIndex];
+                    var measuredPeriod = completionTime - previousCompletionTime;
+                    var cycleAbsoluteTravel = maceCycleAbsoluteAngularTravel[cycleIndex];
+                    var cycleDirectionConsistency = cycleAbsoluteTravel > 0.001f
+                        ? Mathf.Abs(maceCycleSignedAngularTravel[cycleIndex]) / cycleAbsoluteTravel
+                        : 0f;
+                    var radiusRatio = minimumMaceOrbitRadius[cycleIndex] > 0.001f
+                        ? maximumMaceOrbitRadius[cycleIndex] / minimumMaceOrbitRadius[cycleIndex]
+                        : 0f;
+                    cycleReport.Append(
+                        $"C{cycleIndex + 1}[Period={measuredPeriod:0.###}/" +
+                        $"{VerticalCircularFlailCyclePeriods[cycleIndex]:0.###}," +
+                        $"MaceTravel={maceCycleSignedAngularTravel[cycleIndex]:0.###}/" +
+                        $"{cycleAbsoluteTravel:0.###},Consistency={cycleDirectionConsistency:0.###}," +
+                        $"Radius={minimumMaceOrbitRadius[cycleIndex]:0.###}-" +
+                        $"{maximumMaceOrbitRadius[cycleIndex]:0.###},Ratio={radiusRatio:0.###}]");
+                    previousCompletionTime = completionTime;
+                }
+
+                return
+                    $"VerticalCircleSide={sideName}, Samples={sampleCount}, " +
+                    $"AntennaRange=({antennaRange.x:0.###},{antennaRange.y:0.###},{antennaRange.z:0.###}), " +
+                    $"AntennaSignedTravel={antennaSignedAngularTravel:0.###}, AntennaAbsoluteTravel={antennaAbsoluteAngularTravel:0.###}, " +
+                    $"MaceRange=({maceRange.x:0.###},{maceRange.y:0.###},{maceRange.z:0.###}), " +
+                    $"MaceForwardOffset={maximumMaceForwardOffset:0.###}, " +
+                    $"MaceSignedTravel={maceSignedAngularTravel:0.###}, MaceAbsoluteTravel={maceAbsoluteAngularTravel:0.###}, " +
+                    $"MaceDirectionConsistency={(maceAbsoluteAngularTravel > 0.001f ? Mathf.Abs(maceSignedAngularTravel) / maceAbsoluteAngularTravel : 0f):0.###}, " +
+                    $"CycleMetrics={cycleReport}, " +
+                    $"FrontDescendingSamples={frontDescendingSamples}/{frontSectorSamples}, MaximumFrontDownwardSpeed={maximumFrontDownwardSpeed:0.###}, " +
+                    $"MaximumLateralExcursion={maximumMaceLateralExcursion:0.###}, " +
+                    $"TensionSamples={positiveTensionSamples}/{tensionProbeSamples}, MaximumTensionAcceleration={maximumTensionAcceleration:0.###}, " +
+                    $"TorsoPenetrationSamples={torsoPenetrationSamples}, MaceCenterInsideTorsoSamples={maceCenterInsideTorsoSamples}, " +
+                    $"MaximumTorsoPenetration={maximumTorsoPenetration:0.###}, " +
+                    $"MaximumVisualProxySeparation={maximumVisualProxySeparation:0.###}.";
+            }
+        }
+
         private sealed class AntennaStrikePhysicsResponseMetrics
         {
             private readonly string sideName;
             private readonly Transform strikeSlot;
             private readonly Transform antennaTip;
             private readonly Rigidbody maceProxyBody;
+            private readonly Rigidbody lastLinkProxyBody;
+            private readonly Rigidbody[] sideDynamicBodies;
             private readonly Transform maceVisual;
             private readonly float restAntennaForward;
             private readonly float restMaceForward;
+            private readonly float restMaceLateral;
+            private readonly Vector3 restAntennaLocalPosition;
+            private readonly Vector3 restMaceRelativeLocalOffset;
 
             private float minAntennaForward;
             private float maxAntennaForward;
             private float minMaceForward;
             private float maxMaceForward;
+            private Vector3 minimumAntennaLocalOffset;
+            private Vector3 maximumAntennaLocalOffset;
+            private Vector3 minimumMaceRelativeSwingLocal;
+            private Vector3 maximumMaceRelativeSwingLocal;
             private float maxVisualProxySeparation;
             private float previousAntennaForward;
             private float previousMaceForward;
             private Vector3 previousAntennaPosition;
+            private Vector3 previousAntennaVelocity;
+            private Vector3 previousMacePosition;
+            private Vector3 previousMaceBodyVelocity;
+            private float maximumAntennaAcceleration;
+            private float strongestInertialLagCosine = 1f;
+            private int drivenAccelerationSamples;
+            private int inertialLagSamples;
+            private int forwardDrivenBehindSamples;
+            private int forwardTensionRecoverySamples;
+            private float currentOpposedForwardDriveDuration;
+            private float maximumOpposedForwardDriveDuration;
+            private float maximumOpposedForwardDriveDurationTime;
+            private float maximumBackwardMaceSpeedDuringForwardDrive;
+            private int linkTensionProbeSamples;
+            private int linkTensionAccelerationSamples;
+            private float maximumLinkTensionAcceleration;
             private float maximumStrikeAntennaForwardSpeed;
             private float maximumStrikeAntennaForwardSpeedTime;
             private float maximumReturnAntennaBackwardSpeed;
@@ -7591,7 +10363,11 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
             private float maximumMovingInputMaceLinearDamping;
             private int movingInputDampingSampleCount;
             private float maximumSettledMaceLinearDamping;
+            private float maximumMaceLateralExcursion;
+            private float maximumEarlyStationaryMechanicalEnergy = float.NegativeInfinity;
+            private float maximumLateStationaryMechanicalEnergy = float.NegativeInfinity;
             private bool hasPreviousSample;
+            private bool hasPreviousVelocity;
             private int sampleCount;
 
             public AntennaStrikePhysicsResponseMetrics(
@@ -7599,6 +10375,7 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 Transform strikeSlot,
                 Transform antennaTip,
                 Transform maceProxy,
+                Transform lastLinkProxy,
                 Transform maceVisual)
             {
                 this.sideName = sideName;
@@ -7606,14 +10383,36 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 this.antennaTip = antennaTip;
                 maceProxyBody = maceProxy.GetComponent<Rigidbody>() ??
                     throw new InvalidOperationException($"{maceProxy.name} Rigidbody is missing.");
+                lastLinkProxyBody = lastLinkProxy.GetComponent<Rigidbody>() ??
+                    throw new InvalidOperationException($"{lastLinkProxy.name} Rigidbody is missing.");
+                var sideBodies = new List<Rigidbody>();
+                foreach (var body in maceProxy.parent.GetComponentsInChildren<Rigidbody>(true))
+                {
+                    if (!body.isKinematic && body.name.IndexOf($"_{sideName}_", StringComparison.Ordinal) >= 0)
+                    {
+                        sideBodies.Add(body);
+                    }
+                }
+
+                sideDynamicBodies = sideBodies.ToArray();
+                if (sideDynamicBodies.Length <= 0)
+                {
+                    throw new InvalidOperationException($"{sideName} dynamic chain bodies are missing.");
+                }
+
                 this.maceVisual = maceVisual;
                 var forward = strikeSlot.forward;
                 restAntennaForward = Vector3.Dot(antennaTip.position, forward);
                 restMaceForward = Vector3.Dot(maceVisual.position, forward);
+                restMaceLateral = Vector3.Dot(maceProxyBody.position, strikeSlot.right);
+                restAntennaLocalPosition = strikeSlot.InverseTransformPoint(antennaTip.position);
+                restMaceRelativeLocalOffset = strikeSlot.InverseTransformVector(
+                    maceProxyBody.position - antennaTip.position);
                 minAntennaForward = maxAntennaForward = restAntennaForward;
                 minMaceForward = maxMaceForward = restMaceForward;
                 minimumReturnMaceForward = restMaceForward;
                 previousAntennaPosition = antennaTip.position;
+                previousMacePosition = maceProxyBody.position;
             }
 
             public void Sample(float sampleTime, float deltaTime)
@@ -7622,6 +10421,21 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 var forward = strikeSlot.forward;
                 var antennaForward = Vector3.Dot(antennaTip.position, forward);
                 var maceForward = Vector3.Dot(maceVisual.position, forward);
+                var antennaLocalOffset =
+                    strikeSlot.InverseTransformPoint(antennaTip.position) - restAntennaLocalPosition;
+                var maceRelativeSwingLocal = strikeSlot.InverseTransformVector(
+                    maceProxyBody.position - antennaTip.position) - restMaceRelativeLocalOffset;
+                minimumAntennaLocalOffset = Vector3.Min(minimumAntennaLocalOffset, antennaLocalOffset);
+                maximumAntennaLocalOffset = Vector3.Max(maximumAntennaLocalOffset, antennaLocalOffset);
+                minimumMaceRelativeSwingLocal = Vector3.Min(
+                    minimumMaceRelativeSwingLocal,
+                    maceRelativeSwingLocal);
+                maximumMaceRelativeSwingLocal = Vector3.Max(
+                    maximumMaceRelativeSwingLocal,
+                    maceRelativeSwingLocal);
+                maximumMaceLateralExcursion = Mathf.Max(
+                    maximumMaceLateralExcursion,
+                    Mathf.Abs(Vector3.Dot(maceProxyBody.position, strikeSlot.right) - restMaceLateral));
                 minAntennaForward = Mathf.Min(minAntennaForward, antennaForward);
                 maxAntennaForward = Mathf.Max(maxAntennaForward, antennaForward);
                 minMaceForward = Mathf.Min(minMaceForward, maceForward);
@@ -7634,8 +10448,89 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                 {
                     var antennaSpeed = (antennaForward - previousAntennaForward) / deltaTime;
                     var maceSpeed = (maceForward - previousMaceForward) / deltaTime;
-                    var antennaWorldSpeed = Vector3.Distance(antennaTip.position, previousAntennaPosition) / deltaTime;
+                    var antennaVelocity = (antennaTip.position - previousAntennaPosition) / deltaTime;
+                    var maceVelocity = (maceProxyBody.position - previousMacePosition) / deltaTime;
+                    var antennaWorldSpeed = antennaVelocity.magnitude;
                     var maceWorldSpeed = maceProxyBody.linearVelocity.magnitude;
+                    if (hasPreviousVelocity &&
+                        sampleTime >= ForwardMaceStrikeWindupTime &&
+                        sampleTime <= ForwardMaceStrikeFollowThroughTime)
+                    {
+                        var antennaAcceleration = (antennaVelocity - previousAntennaVelocity) / deltaTime;
+                        maximumAntennaAcceleration = Mathf.Max(
+                            maximumAntennaAcceleration,
+                            antennaAcceleration.magnitude);
+                        if (antennaAcceleration.magnitude >= 2f && maceRelativeSwingLocal.magnitude >= 0.01f)
+                        {
+                            drivenAccelerationSamples++;
+                            var accelerationLocal = strikeSlot.InverseTransformDirection(
+                                antennaAcceleration.normalized);
+                            var inertialLagCosine = Vector3.Dot(
+                                accelerationLocal,
+                                maceRelativeSwingLocal.normalized);
+                            strongestInertialLagCosine = Mathf.Min(
+                                strongestInertialLagCosine,
+                                inertialLagCosine);
+                            if (inertialLagCosine <= -0.10f)
+                            {
+                                inertialLagSamples++;
+                            }
+                        }
+                    }
+
+                    if (hasPreviousVelocity)
+                    {
+                        var maceAcceleration =
+                            (maceProxyBody.linearVelocity - previousMaceBodyVelocity) / deltaTime;
+                        var previousLinkDirection = lastLinkProxyBody.position - maceProxyBody.position;
+                        if (previousLinkDirection.sqrMagnitude > 0.000001f)
+                        {
+                            var linkTensionAcceleration = Vector3.Dot(
+                                maceAcceleration - Physics.gravity,
+                                previousLinkDirection.normalized);
+                            linkTensionProbeSamples++;
+                            maximumLinkTensionAcceleration = Mathf.Max(
+                                maximumLinkTensionAcceleration,
+                                linkTensionAcceleration);
+                            if (linkTensionAcceleration > 0f)
+                            {
+                                linkTensionAccelerationSamples++;
+                            }
+                        }
+
+                        var isForwardDriveWindow =
+                            sampleTime >= ForwardMaceStrikeRecoilTime &&
+                            sampleTime <= ForwardMaceStrikeFollowThroughTime;
+                        if (isForwardDriveWindow &&
+                            antennaSpeed >= PhysicalRecoveryMinimumDirectionalSpeed &&
+                            maceRelativeSwingLocal.z <= -PhysicalRecoveryMinimumBehindOffset)
+                        {
+                            forwardDrivenBehindSamples++;
+                            if (Vector3.Dot(maceAcceleration, forward) > 0f)
+                            {
+                                forwardTensionRecoverySamples++;
+                            }
+                        }
+
+                        if (isForwardDriveWindow &&
+                            antennaSpeed >= PhysicalRecoveryMinimumDirectionalSpeed &&
+                            maceSpeed <= -PhysicalRecoveryMinimumDirectionalSpeed)
+                        {
+                            currentOpposedForwardDriveDuration += deltaTime;
+                            maximumBackwardMaceSpeedDuringForwardDrive = Mathf.Max(
+                                maximumBackwardMaceSpeedDuringForwardDrive,
+                                -maceSpeed);
+                            if (currentOpposedForwardDriveDuration > maximumOpposedForwardDriveDuration)
+                            {
+                                maximumOpposedForwardDriveDuration = currentOpposedForwardDriveDuration;
+                                maximumOpposedForwardDriveDurationTime = sampleTime;
+                            }
+                        }
+                        else
+                        {
+                            currentOpposedForwardDriveDuration = 0f;
+                        }
+                    }
                     if (sampleTime >= ForwardMaceStrikeWindupTime &&
                         sampleTime <= ForwardMaceStrikeFollowThroughTime &&
                         antennaWorldSpeed > AttackStationaryAntennaSpeedThreshold)
@@ -7649,6 +10544,7 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                     if (antennaWorldSpeed <= AttackStationaryAntennaSpeedThreshold &&
                         sampleTime >= AttackStationaryEarlyRecoveryStartTime)
                     {
+                        var mechanicalEnergy = CalculateSideMechanicalEnergy();
                         maximumSettledMaceLinearDamping = Mathf.Max(
                             maximumSettledMaceLinearDamping,
                             maceProxyBody.linearDamping);
@@ -7657,12 +10553,18 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                         {
                             earlyStationaryRecoveryMaceSpeedSum += maceWorldSpeed;
                             earlyStationaryRecoverySampleCount++;
+                            maximumEarlyStationaryMechanicalEnergy = Mathf.Max(
+                                maximumEarlyStationaryMechanicalEnergy,
+                                mechanicalEnergy);
                         }
                         else if (sampleTime >= AttackStationaryLateRecoveryStartTime &&
                                  sampleTime <= AttackStationaryLateRecoveryEndTime)
                         {
                             lateStationaryRecoveryMaceSpeedSum += maceWorldSpeed;
                             lateStationaryRecoverySampleCount++;
+                            maximumLateStationaryMechanicalEnergy = Mathf.Max(
+                                maximumLateStationaryMechanicalEnergy,
+                                mechanicalEnergy);
                         }
                     }
 
@@ -7694,7 +10596,9 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                                 maximumAntennaBackwardRecoilSpeed,
                                 -antennaSpeed);
                             if (antennaSpeed <= -AntennaReactionMinimumDirectionalSpeed &&
-                                maceSpeed >= AntennaReactionMinimumDirectionalSpeed)
+                                antennaVelocity.magnitude >= AntennaReactionMinimumDirectionalSpeed &&
+                                maceVelocity.magnitude >= AntennaReactionMinimumDirectionalSpeed &&
+                                Vector3.Dot(antennaVelocity.normalized, maceVelocity.normalized) < -0.10f)
                             {
                                 opposedMotionSamplesDuringAntennaRecoil++;
                                 maximumMaceForwardSpeedDuringAntennaRecoil = Mathf.Max(
@@ -7709,11 +10613,16 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                         maximumReturnMaceBackwardSpeed = Mathf.Max(maximumReturnMaceBackwardSpeed, -maceSpeed);
                         minimumReturnMaceForward = Mathf.Min(minimumReturnMaceForward, maceForward);
                     }
+
+                    previousAntennaVelocity = antennaVelocity;
+                    previousMaceBodyVelocity = maceProxyBody.linearVelocity;
+                    hasPreviousVelocity = true;
                 }
 
                 previousAntennaForward = antennaForward;
                 previousMaceForward = maceForward;
                 previousAntennaPosition = antennaTip.position;
+                previousMacePosition = maceProxyBody.position;
                 hasPreviousSample = true;
             }
 
@@ -7738,21 +10647,6 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                         $"MaceForwardRange={MaceForwardRange:0.###}, Minimum={AntennaStrikeMinimumMaceForwardRange:0.###}.");
                 }
 
-                if (MaceForwardRange < AntennaForwardRange * AntennaStrikeMinimumMaceAmplification)
-                {
-                    throw new InvalidOperationException(
-                        $"{AntennaStrikeSlotObjectName} {sideName} mace swing must amplify the antenna input. " +
-                        $"AntennaForwardRange={AntennaForwardRange:0.###}, MaceForwardRange={MaceForwardRange:0.###}, " +
-                        $"MinimumAmplification={AntennaStrikeMinimumMaceAmplification:0.###}.");
-                }
-
-                if (MaxMaceForwardOffset <= MaxAntennaForwardOffset)
-                {
-                    throw new InvalidOperationException(
-                        $"{AntennaStrikeSlotObjectName} {sideName} mace must overshoot forward beyond the antenna input. " +
-                        $"AntennaForwardOffset={MaxAntennaForwardOffset:0.###}, MaceForwardOffset={MaxMaceForwardOffset:0.###}.");
-                }
-
                 if (MaxMaceForwardOffset < ForwardMaceStrikeMinimumPositiveOffset)
                 {
                     throw new InvalidOperationException(
@@ -7775,11 +10669,12 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                         $"MinimumRatio={ForwardMaceStrikeMinimumVelocityRatio:0.###}.");
                 }
 
-                if (ReturnMaceBackwardOvershoot > MaxMaceForwardOffset)
+                if (ReturnMaceBackwardOvershoot > AttackMaximumReturnMaceBackwardOvershoot)
                 {
                     throw new InvalidOperationException(
-                        $"{AntennaStrikeSlotObjectName} {sideName} return mace overshoot is stronger than its forward swing. " +
-                        $"ForwardOffset={MaxMaceForwardOffset:0.###}, ReturnBackwardOvershoot={ReturnMaceBackwardOvershoot:0.###}.");
+                        $"{AntennaStrikeSlotObjectName} {sideName} return mace overshoot is too large after antenna input settles. " +
+                        $"ReturnBackwardOvershoot={ReturnMaceBackwardOvershoot:0.###}, " +
+                        $"Maximum={AttackMaximumReturnMaceBackwardOvershoot:0.###}.");
                 }
 
                 var maceReleaseResponseDelay = maximumStrikeMaceForwardSpeedTime - ForwardMaceStrikeWindupTime;
@@ -7810,15 +10705,62 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                         $"MaceForwardSpeedDuringRecoil={maximumMaceForwardSpeedDuringAntennaRecoil:0.###}.");
                 }
 
+                if (drivenAccelerationSamples <= 0 ||
+                    inertialLagSamples < AntennaDrivenMinimumInertialLagSamples ||
+                    InertialLagFraction < AntennaDrivenMinimumInertialLagFraction ||
+                    strongestInertialLagCosine > AntennaDrivenMaximumInertialLagCosine)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace does not lag the antenna pivot acceleration in 3D. " +
+                        $"LagSamples={inertialLagSamples}/{AntennaDrivenMinimumInertialLagSamples}, " +
+                        $"DrivenSamples={drivenAccelerationSamples}, LagFraction={InertialLagFraction:0.###}/" +
+                        $"{AntennaDrivenMinimumInertialLagFraction:0.###}, " +
+                        $"StrongestLagCosine={strongestInertialLagCosine:0.###}/" +
+                        $"{AntennaDrivenMaximumInertialLagCosine:0.###}.");
+                }
+
                 if (movingInputDampingSampleCount <= 0 ||
-                    maximumMovingInputMaceLinearDamping > AttackMovingMaximumMaceLinearDamping)
+                      maximumMovingInputMaceLinearDamping > AttackMaximumMaceLinearDamping)
                 {
                     throw new InvalidOperationException(
                         $"{AntennaStrikeSlotObjectName} {sideName} mace damping does not release while the antenna drives the chain. " +
                         $"MovingSamples={movingInputDampingSampleCount}, " +
                         $"MaximumMovingDamping={maximumMovingInputMaceLinearDamping:0.###}, " +
-                        $"Maximum={AttackMovingMaximumMaceLinearDamping:0.###}.");
-                }
+                          $"Maximum={AttackMaximumMaceLinearDamping:0.###}.");
+                  }
+
+                  var linkTensionFraction = linkTensionProbeSamples > 0
+                      ? linkTensionAccelerationSamples / (float)linkTensionProbeSamples
+                      : 0f;
+                  if (linkTensionProbeSamples <= 0 ||
+                      linkTensionFraction < PhysicalRecoveryMinimumTensionFraction)
+                  {
+                      throw new InvalidOperationException(
+                          $"{AntennaStrikeSlotObjectName} {sideName} mace is not predominantly accelerated through its final physical joint. " +
+                          $"TensionSamples={linkTensionAccelerationSamples}/{linkTensionProbeSamples}, " +
+                          $"Fraction={linkTensionFraction:0.###}/{PhysicalRecoveryMinimumTensionFraction:0.###}.");
+                  }
+
+                  var forwardTensionRecoveryFraction = forwardDrivenBehindSamples > 0
+                      ? forwardTensionRecoverySamples / (float)forwardDrivenBehindSamples
+                      : 1f;
+                  if (forwardTensionRecoveryFraction < PhysicalRecoveryMinimumTensionFraction)
+                  {
+                      throw new InvalidOperationException(
+                          $"{AntennaStrikeSlotObjectName} {sideName} joint tension does not recover a mace trailing a forward-moving antenna. " +
+                          $"RecoverySamples={forwardTensionRecoverySamples}/{forwardDrivenBehindSamples}, " +
+                          $"Fraction={forwardTensionRecoveryFraction:0.###}/{PhysicalRecoveryMinimumTensionFraction:0.###}.");
+                  }
+
+                  if (maximumOpposedForwardDriveDuration > PhysicalRecoveryMaximumOpposedDriveDuration)
+                  {
+                      throw new InvalidOperationException(
+                          $"{AntennaStrikeSlotObjectName} {sideName} mace keeps moving backward too long while the antenna drives forward. " +
+                          $"Duration={maximumOpposedForwardDriveDuration:0.###}/" +
+                          $"{PhysicalRecoveryMaximumOpposedDriveDuration:0.###}, " +
+                          $"EndTime={maximumOpposedForwardDriveDurationTime:0.###}, " +
+                          $"BackwardSpeed={maximumBackwardMaceSpeedDuringForwardDrive:0.###}.");
+                  }
 
                 if (earlyStationaryRecoverySampleCount <= 0 || lateStationaryRecoverySampleCount <= 0)
                 {
@@ -7828,13 +10770,13 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                         $"LateSamples={lateStationaryRecoverySampleCount}.");
                 }
 
-                if (maximumSettledMaceLinearDamping < AttackSettledMinimumMaceLinearDamping)
-                {
-                    throw new InvalidOperationException(
-                        $"{AntennaStrikeSlotObjectName} {sideName} mace damping does not rise while the antenna is stationary. " +
-                        $"MaximumSettledDamping={maximumSettledMaceLinearDamping:0.###}, " +
-                        $"Minimum={AttackSettledMinimumMaceLinearDamping:0.###}.");
-                }
+                  if (maximumSettledMaceLinearDamping > AttackMaximumMaceLinearDamping)
+                  {
+                      throw new InvalidOperationException(
+                          $"{AntennaStrikeSlotObjectName} {sideName} mace damping changes with animation-derived antenna state. " +
+                          $"MaximumSettledDamping={maximumSettledMaceLinearDamping:0.###}, " +
+                          $"Maximum={AttackMaximumMaceLinearDamping:0.###}.");
+                  }
 
                 if (LateStationaryRecoveryAverageMaceSpeed >
                     EarlyStationaryRecoveryAverageMaceSpeed * AttackStationaryMaximumLateToEarlySpeedRatio)
@@ -7846,7 +10788,79 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                         $"Ratio={LateToEarlyStationaryRecoverySpeedRatio:0.###}, " +
                         $"MaximumRatio={AttackStationaryMaximumLateToEarlySpeedRatio:0.###}.");
                 }
+
+                if (LateStationaryRecoveryAverageMaceSpeed > AttackStationaryMaximumLateMaceWorldSpeed)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace remains too fast after antenna input settles. " +
+                        $"LateRecoverySpeed={LateStationaryRecoveryAverageMaceSpeed:0.###}, " +
+                        $"Maximum={AttackStationaryMaximumLateMaceWorldSpeed:0.###}.");
+                }
+
+                if (maximumMaceLateralExcursion > AttackMaximumLateralExcursion)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} mace leaves the antenna-driven strike plane. " +
+                        $"MaximumLateralExcursion={maximumMaceLateralExcursion:0.###}, " +
+                        $"Maximum={AttackMaximumLateralExcursion:0.###}.");
+                }
+
+                if (float.IsNegativeInfinity(maximumEarlyStationaryMechanicalEnergy) ||
+                    float.IsNegativeInfinity(maximumLateStationaryMechanicalEnergy))
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} stationary mechanical energy windows were not sampled.");
+                }
+
+                var stationaryMechanicalEnergyGrowth =
+                    maximumLateStationaryMechanicalEnergy - maximumEarlyStationaryMechanicalEnergy;
+                if (stationaryMechanicalEnergyGrowth > AttackStationaryMaximumMechanicalEnergyGrowth)
+                {
+                    throw new InvalidOperationException(
+                        $"{AntennaStrikeSlotObjectName} {sideName} chain gains mechanical energy without antenna drive. " +
+                        $"EarlyMaximum={maximumEarlyStationaryMechanicalEnergy:0.###}, " +
+                        $"LateMaximum={maximumLateStationaryMechanicalEnergy:0.###}, " +
+                        $"Growth={stationaryMechanicalEnergyGrowth:0.###}, " +
+                        $"MaximumGrowth={AttackStationaryMaximumMechanicalEnergyGrowth:0.###}.");
+                }
             }
+
+            private float CalculateSideMechanicalEnergy()
+            {
+                var energy = 0f;
+                for (var i = 0; i < sideDynamicBodies.Length; i++)
+                {
+                    var body = sideDynamicBodies[i];
+                    if (body == null)
+                    {
+                        continue;
+                    }
+
+                    var linearEnergy = 0.5f * body.mass * body.linearVelocity.sqrMagnitude;
+                    var inertiaRotation = body.rotation * body.inertiaTensorRotation;
+                    var localAngularVelocity = Quaternion.Inverse(inertiaRotation) * body.angularVelocity;
+                    var angularEnergy = 0.5f * Vector3.Dot(
+                        body.inertiaTensor,
+                        new Vector3(
+                            localAngularVelocity.x * localAngularVelocity.x,
+                            localAngularVelocity.y * localAngularVelocity.y,
+                            localAngularVelocity.z * localAngularVelocity.z));
+                    var gravitationalEnergy = -body.mass * Vector3.Dot(Physics.gravity, body.worldCenterOfMass);
+                    energy += linearEnergy + angularEnergy + gravitationalEnergy;
+                }
+
+                return energy;
+            }
+
+            private Vector3 AntennaLocalRange => maximumAntennaLocalOffset - minimumAntennaLocalOffset;
+
+            private Vector3 MaceRelativeSwingRange =>
+                maximumMaceRelativeSwingLocal - minimumMaceRelativeSwingLocal;
+
+            private float InertialLagFraction =>
+                drivenAccelerationSamples > 0
+                    ? inertialLagSamples / (float)drivenAccelerationSamples
+                    : 0f;
 
             private float AntennaForwardRange => maxAntennaForward - minAntennaForward;
 
@@ -7898,6 +10912,24 @@ namespace Bellerophon.Editor.AccelerandoCargoRunScene
                     $"LateToEarlyStationarySpeedRatio={LateToEarlyStationaryRecoverySpeedRatio:0.###}, " +
                     $"MaximumMovingMaceLinearDamping={maximumMovingInputMaceLinearDamping:0.###}, " +
                     $"MaximumSettledMaceLinearDamping={maximumSettledMaceLinearDamping:0.###}, " +
+                    $"MaximumMaceLateralExcursion={maximumMaceLateralExcursion:0.###}, " +
+                    $"AntennaLocalRange=({AntennaLocalRange.x:0.###},{AntennaLocalRange.y:0.###},{AntennaLocalRange.z:0.###}), " +
+                    $"MaceRelativeSwingRange=({MaceRelativeSwingRange.x:0.###},{MaceRelativeSwingRange.y:0.###},{MaceRelativeSwingRange.z:0.###}), " +
+                    $"MaximumAntennaAcceleration={maximumAntennaAcceleration:0.###}, " +
+                    $"DrivenAccelerationSamples={drivenAccelerationSamples}, InertialLagSamples={inertialLagSamples}, " +
+                    $"InertialLagFraction={InertialLagFraction:0.###}, " +
+                    $"StrongestInertialLagCosine={strongestInertialLagCosine:0.###}, " +
+                    $"ForwardDrivenBehindSamples={forwardDrivenBehindSamples}, " +
+                    $"ForwardTensionRecoverySamples={forwardTensionRecoverySamples}, " +
+                    $"ForwardTensionRecoveryFraction={(forwardDrivenBehindSamples > 0 ? forwardTensionRecoverySamples / (float)forwardDrivenBehindSamples : 0f):0.###}, " +
+                    $"MaximumOpposedForwardDriveDuration={maximumOpposedForwardDriveDuration:0.###}, " +
+                    $"MaximumOpposedForwardDriveDurationTime={maximumOpposedForwardDriveDurationTime:0.###}, " +
+                    $"MaximumBackwardMaceSpeedDuringForwardDrive={maximumBackwardMaceSpeedDuringForwardDrive:0.###}, " +
+                    $"LinkTensionAccelerationSamples={linkTensionAccelerationSamples}/{linkTensionProbeSamples}, " +
+                    $"MaximumLinkTensionAcceleration={maximumLinkTensionAcceleration:0.###}, " +
+                    $"EarlyStationaryMechanicalEnergy={maximumEarlyStationaryMechanicalEnergy:0.###}, " +
+                    $"LateStationaryMechanicalEnergy={maximumLateStationaryMechanicalEnergy:0.###}, " +
+                    $"StationaryMechanicalEnergyGrowth={maximumLateStationaryMechanicalEnergy - maximumEarlyStationaryMechanicalEnergy:0.###}, " +
                     $"ReturnMaceBackwardSpeed={maximumReturnMaceBackwardSpeed:0.###}, " +
                     $"ReturnMaceBackwardOvershoot={ReturnMaceBackwardOvershoot:0.###}, " +
                     $"MaxVisualProxySeparation={maxVisualProxySeparation:0.###}.";

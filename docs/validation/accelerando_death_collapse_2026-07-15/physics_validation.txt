@@ -1,0 +1,22 @@
+﻿Accelerando death collapse physics validation
+BodyDrop=0.42
+BodyHeightScale=0.58
+LeftAntennaDrop=0.69502
+RightAntennaDrop=0.690202
+LeftFinalAntennaRise=0.000001
+RightFinalAntennaRise=0.000005
+LeftMaceDrop=0.748703
+RightMaceDrop=0.745398
+LeftMaceLag=0.588899
+RightMaceLag=0.586874
+LeftFinalMaceSpeed=0.553506
+RightFinalMaceSpeed=0.582568
+LeftMaximumChainExtension=0.001594
+RightMaximumChainExtension=0.001637
+LeftMinimumMaceTorsoDistance=1.215788
+RightMinimumMaceTorsoDistance=1.203389
+DirectChainAndMaceCurves=0
+SlotRootMotion=0
+ClipLoop=False
+FinalPoseHeld=True
+Result=PASS

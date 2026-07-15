@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Longa Arma Death Heavy Crush Melt</title>
+  <style>
+    body {
+      margin: 0;
+      background: #101312;
+      color: #e8eee9;
+      font-family: Arial, sans-serif;
+    }
+    main {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 22px;
+    }
+    h1 { font-size: 24px; margin: 0 0 10px; }
+    p { color: #bcc7bf; line-height: 1.55; }
+    .viewer {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 18px 0 26px;
+    }
+    .viewer img {
+      width: 100%;
+      background: #080a09;
+      border: 1px solid #2f3832;
+      display: block;
+    }
+    .frames {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    button {
+      background: #27332b;
+      color: #e8eee9;
+      border: 1px solid #465448;
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+    button:hover { background: #344238; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    figure {
+      margin: 0;
+      background: #171d1a;
+      border: 1px solid #2d352f;
+      padding: 8px;
+    }
+    figure img { width: 100%; display: block; }
+    figcaption { margin-top: 7px; color: #c7d1c9; font-size: 13px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Longa Arma Death Heavy Crush Melt</h1>
+  <p>기존 Longa Arma 메시가 무거워져 처지고, 압착되고, 바닥으로 퍼지는 사망 모션 샘플입니다. `dead.fbx`는 사용하지 않았고 Unity에는 아직 적용하지 않았습니다.</p>
+  <section class="viewer">
+    <img id="frameView" src="frames/frame_001.png" alt="Longa Arma death frame preview">
+    <div class="frames">
+      <button type="button" data-src="frames/frame_001.png">F1</button>
+      <button type="button" data-src="frames/frame_008.png">F8</button>
+      <button type="button" data-src="frames/frame_016.png">F16</button>
+      <button type="button" data-src="frames/frame_024.png">F24</button>
+      <button type="button" data-src="frames/frame_032.png">F32</button>
+      <button type="button" data-src="frames/frame_042.png">F42</button>
+      <button type="button" data-src="frames/frame_050.png">F50</button>
+      <button type="button" data-src="frames/frame_058.png">F58</button>
+      <button type="button" data-src="frames/frame_066.png">F66</button>
+      <button type="button" data-src="frames/frame_076.png">F76</button>
+      <button type="button" data-src="frames/frame_086.png">F86</button>
+      <button type="button" data-src="frames/frame_096.png">F96</button>
+    </div>
+  </section>
+  <section class="grid">
+      <figure><img src="renders/01_death_start_existing_pose.png" alt="01_death_start_existing_pose.png"><figcaption>01_death_start_existing_pose.png</figcaption></figure>
+      <figure><img src="renders/02_heavy_sag.png" alt="02_heavy_sag.png"><figcaption>02_heavy_sag.png</figcaption></figure>
+      <figure><img src="renders/03_crush_collapse.png" alt="03_crush_collapse.png"><figcaption>03_crush_collapse.png</figcaption></figure>
+      <figure><img src="renders/04_melt_spread.png" alt="04_melt_spread.png"><figcaption>04_melt_spread.png</figcaption></figure>
+    <figure><img src="renders/06_sequence_overview.png" alt="sequence overview"><figcaption>06_sequence_overview.png</figcaption></figure>
+  </section>
+</main>
+<script>
+  const image = document.getElementById('frameView');
+  document.querySelectorAll('button[data-src]').forEach((button) => {
+    button.addEventListener('click', () => {
+      image.src = button.dataset.src;
+    });
+  });
+</script>
+</body>
+</html>

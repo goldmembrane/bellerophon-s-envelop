@@ -1,0 +1,9 @@
+All scene objects state backup
+CreatedAt=2026-07-04 15:53:15 +09:00
+SourceRoot=D:\Bellerophon2\Bellerophon
+Scope=CargoRunMvp scene file representing the current full scene object state.
+FileCount=1
+TotalBytes=12332547
+
+Files:
+Assets\_Project\Scenes\CargoRunMvp.unity	12332547	BF87F5D89521AFEE2ABB86901803518BCAA9E288050AF40D48DCDD42636E840A

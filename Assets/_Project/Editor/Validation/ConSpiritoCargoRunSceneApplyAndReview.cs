@@ -23,6 +23,7 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
 
         private const string UnityModelAssetPath = "Assets/_Project/Art/Enemies/ConSpirito/Models/con_spirito_rerigged.fbx";
         private const string OriginalUnityModelAssetPath = "Assets/_Project/Art/Enemies/ConSpirito/Models/con_spirito_original.fbx";
+        private const string ChargeSourceUnityModelAssetPath = "Assets/_Project/Art/Enemies/ConSpirito/Models/con_spirito_charge_source.fbx";
         private const string ConSpiritoArtRoot = "Assets/_Project/Art/Enemies/ConSpirito";
         private const string UnityAnimationFolder = ConSpiritoArtRoot + "/Animations";
         private const string UnityControllerFolder = ConSpiritoArtRoot + "/Controllers";
@@ -39,11 +40,19 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
         private const string ChargeClipName = "ConSpirito_Charge_Loop";
         private const string ChargeClipAssetPath = UnityAnimationFolder + "/" + ChargeClipName + ".anim";
         private const string ChargeControllerAssetPath = UnityControllerFolder + "/ConSpirito_Charge_Loop.controller";
+        private const string PlaySlowWalkControllerAssetPath = UnityControllerFolder + "/ConSpirito_Play_SlowWalk.controller";
+        private const string DeathBackFallClipName = "ConSpirito_Death_BackFall";
+        private const string DeathBackFallClipAssetPath = UnityAnimationFolder + "/" + DeathBackFallClipName + ".anim";
+        private const string DeathBackFallControllerAssetPath = UnityControllerFolder + "/ConSpirito_Death_BackFall.controller";
         private const string ValidationFolder = "docs/validation/con_spirito";
         private const string ReferenceRunAnalysisFolder = ValidationFolder + "/reference_run_analysis";
         private const string CurrentConSpiritoRunVideoPath = "C:/Users/gus68/Videos/Captures/Bellerophon - CargoRunMvp - Windows, Mac, Linux - Unity 6.3 LTS (6000.3.16f1) _DX12_ 2026-07-11 21-12-51.mp4";
         private const string DogRunReferenceVideoPath = "C:/Users/gus68/Downloads/video.mp4";
         private const string OriginalModelChildName = "ConSpiritoOriginal_Model";
+        private const string ChargeModelChildName = "ConSpiritoCharge_Model";
+        private const string ChargeSourceLoopStateName = "ConSpirito_Charge_SourceFastLoop";
+        private const string PlaySlowWalkStateName = "ConSpirito_Play_SlowWalk";
+        private const string DeathBackFallStateName = "ConSpirito_Death_BackFall";
         private const string ApprovedSampleAlbedoSourcePath = "artSample/enemies/con_spirito/textures/con_spirito_blood_red_fur_albedo.png";
         private const string ApprovedSampleBumpSourcePath = "artSample/enemies/con_spirito/textures/con_spirito_fur_direction_bump.png";
         private const string ApprovedUnityAlbedoAssetPath = UnityTextureFolder + "/con_spirito_blood_red_fur_albedo.png";
@@ -72,24 +81,38 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
         private const float IdleBreathExhaleCompression = 0.006f;
         private const float IdleBreathBodyLiftMeters = 0.012f;
         private const int IdleBreathTargetLimit = 2;
-        private const float ChargeRunLoopDurationSeconds = 0.56f;
-        private const float ChargeRunLegSwingDegrees = 64f;
-        private const float ChargeRunLegLiftDegrees = 18f;
+        private const float ChargeRunLoopDurationSeconds = DogWalkLoopDurationSeconds;
+        private const float ChargeRunLegSwingDegrees = 46f;
+        private const float ChargeRunLegLiftDegrees = 14f;
         private const float ChargeRunLegSplayDegrees = 3f;
-        private const float ChargeRunLegLiftMeters = 0.300f;
-        private const float ChargeRunLegStrideMeters = 0.250f;
-        private const float ChargeRunLegLateralMeters = 0.035f;
+        private const float ChargeRunLegLiftMeters = 0.060f;
+        private const float ChargeRunLegStrideMeters = 0.085f;
+        private const float ChargeRunLegLateralMeters = 0.012f;
         private const float ChargeRunBodyBobMeters = 0.050f;
         private const float ChargeRunBodyForwardPitchDegrees = 5f;
-        private const float ChargeRunBodyRollDegrees = 3.5f;
+        private const float ChargeRunBodyRollDegrees = 2.4f;
         private const float ChargeForwardLeanDegrees = 23.0f;
         private const float ChargeHeadForwardMeters = 0.032f;
         private const float ChargeChestForwardMeters = 0.025f;
         private const float ChargeHeadDownMeters = 0.010f;
+        private const float ChargeSourceAnimationSpeedMultiplier = 2.75f;
+        private const float ChargeFrontLegReachExtraMeters = 0.045f;
+        private const float ChargeFrontLegReachHalfWidth = 0.115f;
+        private const int ChargeFrontLegReachSampleCount = 48;
+        private const float PlaySlowWalkSpeedMultiplier = 0.5f;
+        private const float DeathBackFallDurationSeconds = 1.35f;
+        private const float DeathBackFallPitchDegrees = -180f;
+        private const float DeathBackFallSettleRollDegrees = -7f;
+        private const float DeathBackFallGroundClearanceMeters = 0f;
+        private const float DeathBackFallGroundContactToleranceMeters = 0.003f;
+        private const float DeathBackFallBackContactBandRatio = 0.12f;
+        private const float DeathBackFallBackDownDotMinimum = 0.999f;
         private const float AnimationReviewSlotSpacingMeters = 1.35f;
         private const int AnimationReviewIdleSlotIndex = 1;
         private const int AnimationReviewWalkingSlotIndex = 2;
         private const int AnimationReviewChargeSlotIndex = 3;
+        private const int AnimationReviewPlaySlotIndex = 5;
+        private const int AnimationReviewDeathSlotIndex = 6;
 
         private static readonly string[] AnimationReviewSlotNames =
         {
@@ -666,6 +689,15 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
         [MenuItem("Bellerophon/Enemies/Con Spirito/Apply Charge Loop")]
         public static void ApplyChargeLoopToCurrentScene()
         {
+            RequireChargeSourceModelAssetFile();
+            AssetDatabase.ImportAsset(ChargeSourceUnityModelAssetPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+            ConfigureImportedModelAsset(ChargeSourceUnityModelAssetPath);
+
+            var chargeSourceClip = LoadImportedAnimationClip(ChargeSourceUnityModelAssetPath, preferWalkClip: true);
+            ConfigureImportedAnimationClipLoop(chargeSourceClip, ChargeSourceUnityModelAssetPath);
+            chargeSourceClip = LoadImportedAnimationClip(ChargeSourceUnityModelAssetPath, preferWalkClip: true);
+            var chargeModelAsset = LoadChargeSourceModelAsset();
+
             var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
             var placementRoot = GameObject.Find(PlacementRootName);
             if (placementRoot == null)
@@ -674,17 +706,53 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             }
 
             var chargeSlot = RequireAnimationReviewSlot(placementRoot.transform, AnimationReviewChargeSlotIndex);
-            var chargeModelObject = RequireModelObject(chargeSlot, OriginalModelChildName);
-            var sourceWalkClip = LoadImportedAnimationClip(OriginalUnityModelAssetPath, preferWalkClip: true);
-            var chargeClip = EnsureChargeClip(sourceWalkClip, chargeModelObject);
-            var chargeController = EnsureLoopController(ChargeControllerAssetPath, ChargeClipName, chargeClip);
-            var modelAsset = LoadOriginalModelAsset();
-            ConfigureAnimatorOnModel(chargeModelObject, modelAsset, chargeController);
+            var chargeModelObject = ReplaceChargeSlotModel(chargeSlot, chargeModelAsset);
+            var chargeClip = EnsureChargeClip(chargeSourceClip, chargeModelObject);
+            var chargeController = EnsureLoopController(
+                ChargeControllerAssetPath,
+                ChargeSourceLoopStateName,
+                chargeClip,
+                ChargeSourceAnimationSpeedMultiplier);
+            ConfigureAnimatorOnModel(chargeModelObject, chargeModelAsset, chargeController);
+            ApplyApprovedMaterialToModel(chargeModelObject, LoadApprovedMaterialSampleAsset(), out _, out _);
+
+            var playClip = LoadImportedAnimationClip(OriginalUnityModelAssetPath, preferWalkClip: true);
+            var playController = EnsureLoopController(
+                PlaySlowWalkControllerAssetPath,
+                PlaySlowWalkStateName,
+                playClip,
+                PlaySlowWalkSpeedMultiplier);
+            var playSlot = RequireAnimationReviewSlot(placementRoot.transform, AnimationReviewPlaySlotIndex);
+            var playModelObject = RequireModelObject(playSlot, OriginalModelChildName);
+            ConfigureAnimatorOnModel(playModelObject, LoadOriginalModelAsset(), playController);
+
+            var deathSlot = RequireAnimationReviewSlot(placementRoot.transform, AnimationReviewDeathSlotIndex);
+            var deathModelObject = RequireModelObject(deathSlot, OriginalModelChildName);
+            var deathClip = EnsureDeathBackFallClip(deathModelObject);
+            var deathController = EnsureLoopController(
+                DeathBackFallControllerAssetPath,
+                DeathBackFallStateName,
+                deathClip);
+            ConfigureAnimatorOnModel(deathModelObject, LoadOriginalModelAsset(), deathController);
 
             var idleClip = LoadRequiredAnimationClip(IdleBreathClipAssetPath);
             var idleController = LoadRequiredAnimatorController(IdleBreathControllerAssetPath);
+            var walkClip = LoadImportedAnimationClip(OriginalUnityModelAssetPath, preferWalkClip: true);
             var walkController = LoadRequiredAnimatorController(OriginalLoopControllerAssetPath);
-            InspectChargeLoop(placementRoot.transform, chargeClip, chargeController, idleClip, idleController, sourceWalkClip, walkController);
+            InspectChargeLoop(
+                placementRoot.transform,
+                chargeClip,
+                chargeController,
+                chargeSourceClip,
+                ChargeSourceAnimationSpeedMultiplier,
+                idleClip,
+                idleController,
+                walkClip,
+                walkController,
+                playClip,
+                playController,
+                deathClip,
+                deathController);
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
@@ -704,12 +772,30 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             }
 
             var chargeClip = LoadRequiredAnimationClip(ChargeClipAssetPath);
+            var chargeSourceClip = LoadImportedAnimationClip(ChargeSourceUnityModelAssetPath, preferWalkClip: true);
             var chargeController = LoadRequiredAnimatorController(ChargeControllerAssetPath);
             var idleClip = LoadRequiredAnimationClip(IdleBreathClipAssetPath);
             var idleController = LoadRequiredAnimatorController(IdleBreathControllerAssetPath);
             var walkClip = LoadImportedAnimationClip(OriginalUnityModelAssetPath, preferWalkClip: true);
             var walkController = LoadRequiredAnimatorController(OriginalLoopControllerAssetPath);
-            InspectChargeLoop(placementRoot.transform, chargeClip, chargeController, idleClip, idleController, walkClip, walkController);
+            var playClip = LoadImportedAnimationClip(OriginalUnityModelAssetPath, preferWalkClip: true);
+            var playController = LoadRequiredAnimatorController(PlaySlowWalkControllerAssetPath);
+            var deathClip = LoadRequiredAnimationClip(DeathBackFallClipAssetPath);
+            var deathController = LoadRequiredAnimatorController(DeathBackFallControllerAssetPath);
+            InspectChargeLoop(
+                placementRoot.transform,
+                chargeClip,
+                chargeController,
+                chargeSourceClip,
+                ChargeSourceAnimationSpeedMultiplier,
+                idleClip,
+                idleController,
+                walkClip,
+                walkController,
+                playClip,
+                playController,
+                deathClip,
+                deathController);
 
             Debug.Log("Con Spirito charge loop inspected.");
         }
@@ -725,7 +811,7 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             }
 
             var chargeSlot = RequireAnimationReviewSlot(placementRoot.transform, AnimationReviewChargeSlotIndex);
-            var chargeModelObject = RequireModelObject(chargeSlot, OriginalModelChildName);
+            var chargeModelObject = RequireModelObject(chargeSlot, ChargeModelChildName);
             var chargeClip = LoadRequiredAnimationClip(ChargeClipAssetPath);
             var snapshots = CaptureTransformSnapshots(chargeModelObject);
             var outputDirectory = Path.GetFullPath(Path.Combine(Application.dataPath, "..", ValidationFolder));
@@ -770,7 +856,72 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                 RestoreTransformSnapshots(snapshots);
             }
 
-            Debug.Log("Con Spirito charge loop review captures saved.");
+            var playSlot = RequireAnimationReviewSlot(placementRoot.transform, AnimationReviewPlaySlotIndex);
+            var playModelObject = RequireModelObject(playSlot, OriginalModelChildName);
+            var playClip = LoadImportedAnimationClip(OriginalUnityModelAssetPath, preferWalkClip: true);
+            var playSnapshots = CaptureTransformSnapshots(playModelObject);
+            try
+            {
+                var sampleFractions = new[] { 0f, 0.25f, 0.50f, 0.75f, 1.00f };
+                foreach (var fraction in sampleFractions)
+                {
+                    RestoreTransformSnapshots(playSnapshots);
+                    playClip.SampleAnimation(
+                        playModelObject.gameObject,
+                        Mathf.Clamp(playClip.length * fraction, 0f, playClip.length));
+                    CaptureTransformToPng(
+                        playSlot,
+                        Path.Combine(outputDirectory, $"ConSpirito_PlaySlowWalk_{Mathf.RoundToInt(fraction * 100f):000}.png"),
+                        1600,
+                        900);
+                    CaptureTransformToPng(
+                        playSlot,
+                        Path.Combine(outputDirectory, $"ConSpirito_PlaySlowWalk_Oblique_{Mathf.RoundToInt(fraction * 100f):000}.png"),
+                        1600,
+                        900,
+                        35f);
+                }
+            }
+            finally
+            {
+                RestoreTransformSnapshots(playSnapshots);
+            }
+
+            var deathSlot = RequireAnimationReviewSlot(placementRoot.transform, AnimationReviewDeathSlotIndex);
+            var deathModelObject = RequireModelObject(deathSlot, OriginalModelChildName);
+            var deathClip = LoadRequiredAnimationClip(DeathBackFallClipAssetPath);
+            var deathSnapshots = CaptureTransformSnapshots(deathModelObject);
+            try
+            {
+                var sampleFractions = new[] { 0f, 0.20f, 0.40f, 0.60f, 0.80f, 1.00f };
+                foreach (var fraction in sampleFractions)
+                {
+                    RestoreTransformSnapshots(deathSnapshots);
+                    var sampleTime = fraction >= 0.999f
+                        ? GetDeathBackFallLyingSampleTime(deathClip)
+                        : Mathf.Clamp(deathClip.length * fraction, 0f, deathClip.length);
+                    deathClip.SampleAnimation(
+                        deathModelObject.gameObject,
+                        sampleTime);
+                    CaptureTransformToPng(
+                        deathSlot,
+                        Path.Combine(outputDirectory, $"ConSpirito_DeathBackFall_{Mathf.RoundToInt(fraction * 100f):000}.png"),
+                        1600,
+                        900);
+                    CaptureTransformToPng(
+                        deathSlot,
+                        Path.Combine(outputDirectory, $"ConSpirito_DeathBackFall_Oblique_{Mathf.RoundToInt(fraction * 100f):000}.png"),
+                        1600,
+                        900,
+                        35f);
+                }
+            }
+            finally
+            {
+                RestoreTransformSnapshots(deathSnapshots);
+            }
+
+            Debug.Log("Con Spirito charge loop, play slow-walk, and death back-fall review captures saved.");
         }
 
         public static void CaptureReferenceRunVideos()
@@ -974,6 +1125,16 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             }
         }
 
+        private static void RequireChargeSourceModelAssetFile()
+        {
+            var projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+            var assetFilePath = Path.GetFullPath(Path.Combine(projectRoot, ChargeSourceUnityModelAssetPath));
+            if (!File.Exists(assetFilePath))
+            {
+                throw new FileNotFoundException("Charge source Con Spirito FBX Unity asset is missing.", assetFilePath);
+            }
+        }
+
         private static GameObject LoadReriggedModelAsset()
         {
             return LoadModelAsset(UnityModelAssetPath, "rerigged Con Spirito");
@@ -982,6 +1143,11 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
         private static GameObject LoadOriginalModelAsset()
         {
             return LoadModelAsset(OriginalUnityModelAssetPath, "original Con Spirito");
+        }
+
+        private static GameObject LoadChargeSourceModelAsset()
+        {
+            return LoadModelAsset(ChargeSourceUnityModelAssetPath, "charge source Con Spirito");
         }
 
         private static GameObject LoadModelAsset(string modelAssetPath, string label)
@@ -1121,7 +1287,11 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             return EnsureLoopController(DefaultLoopControllerAssetPath, "ConSpirito_DefaultFBXLoop", defaultClip);
         }
 
-        private static AnimatorController EnsureLoopController(string controllerAssetPath, string stateName, AnimationClip clip)
+        private static AnimatorController EnsureLoopController(
+            string controllerAssetPath,
+            string stateName,
+            AnimationClip clip,
+            float stateSpeed = 1f)
         {
             EnsureUnityFolder(ConSpiritoArtRoot);
             EnsureUnityFolder(UnityControllerFolder);
@@ -1141,7 +1311,7 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             var state = stateMachine.AddState(stateName);
             state.motion = clip;
             state.writeDefaultValues = true;
-            state.speed = 1f;
+            state.speed = stateSpeed;
             stateMachine.defaultState = state;
 
             EditorUtility.SetDirty(controller);
@@ -1282,12 +1452,12 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             return savedClip;
         }
 
-        private static AnimationClip EnsureChargeClip(AnimationClip sourceWalkClip, Transform modelObject)
+        private static AnimationClip EnsureChargeClip(AnimationClip sourceClip, Transform modelObject)
         {
             EnsureUnityFolder(ConSpiritoArtRoot);
             EnsureUnityFolder(UnityAnimationFolder);
 
-            var clip = CreateChargeClip(sourceWalkClip, modelObject);
+            var clip = CreateChargeClip(sourceClip, modelObject);
             clip.name = ChargeClipName;
             clip.frameRate = 60f;
             ConfigureLoopSetting(clip, true);
@@ -1310,22 +1480,396 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             return savedClip;
         }
 
-        private static AnimationClip CreateChargeClip(AnimationClip sourceWalkClip, Transform modelObject)
+        private static AnimationClip EnsureDeathBackFallClip(Transform modelObject)
         {
-            if (sourceWalkClip == null)
+            EnsureUnityFolder(ConSpiritoArtRoot);
+            EnsureUnityFolder(UnityAnimationFolder);
+
+            var clip = CreateDeathBackFallClip(modelObject);
+            clip.name = DeathBackFallClipName;
+            clip.frameRate = 60f;
+            ConfigureLoopSetting(clip, true);
+
+            if (AssetDatabase.LoadAssetAtPath<AnimationClip>(DeathBackFallClipAssetPath) != null)
             {
-                throw new InvalidOperationException("Con Spirito source walk clip is missing for charge clip generation.");
+                AssetDatabase.DeleteAsset(DeathBackFallClipAssetPath);
+            }
+
+            AssetDatabase.CreateAsset(clip, DeathBackFallClipAssetPath);
+            var savedClip = AssetDatabase.LoadAssetAtPath<AnimationClip>(DeathBackFallClipAssetPath);
+            if (savedClip == null)
+            {
+                throw new InvalidOperationException($"Could not create Con Spirito death back-fall clip at {DeathBackFallClipAssetPath}.");
+            }
+
+            ConfigureLoopSetting(savedClip, true);
+            EditorUtility.SetDirty(savedClip);
+            AssetDatabase.SaveAssets();
+            return savedClip;
+        }
+
+        private static AnimationClip CreateChargeClip(AnimationClip sourceClip, Transform modelObject)
+        {
+            if (sourceClip == null)
+            {
+                throw new InvalidOperationException("Con Spirito source FBX clip is missing for charge clip generation.");
             }
 
             var clip = new AnimationClip();
-            AddScaledSourceWalkCurves(clip, sourceWalkClip);
-            AddChargeRunRootCurves(clip, modelObject);
-            AddChargeRunLegChainCurves(clip, modelObject, ChargeRunLegChains[2], 0.00f, 1f, false);
-            AddChargeRunLegChainCurves(clip, modelObject, ChargeRunLegChains[3], 0.12f, -1f, false);
-            AddChargeRunLegChainCurves(clip, modelObject, ChargeRunLegChains[0], 0.54f, 1f, true);
-            AddChargeRunLegChainCurves(clip, modelObject, ChargeRunLegChains[1], 0.68f, -1f, true);
-            AddChargeForwardPoseCurves(clip, modelObject, ChargeRunLoopDurationSeconds);
+            AddSourceAnimationCurves(clip, sourceClip);
+            AddChargeSourceFrontLegReachCurves(clip, sourceClip, modelObject);
             return clip;
+        }
+
+        private static AnimationClip CreateDeathBackFallClip(Transform modelObject)
+        {
+            var clip = new AnimationClip();
+            var baseY = modelObject.localPosition.y;
+            var baseZ = modelObject.localPosition.z;
+            var bounds = CalculateMeshDataWorldBounds(modelObject, new Bounds(modelObject.position, Vector3.one));
+            var fallDrop = Mathf.Clamp(bounds.extents.y * 0.34f, 0.08f, 0.28f);
+            var fallBack = Mathf.Clamp(bounds.extents.z * 0.24f, 0.08f, 0.24f);
+            var floorLift = CalculateDeathBackFallFloorLift(modelObject, baseY, baseZ, fallDrop, fallBack);
+
+            AddDeathBackFallRootCurves(clip, baseY, baseZ, fallDrop, fallBack, floorLift);
+            return clip;
+        }
+
+        private static void AddDeathBackFallRootCurves(
+            AnimationClip clip,
+            float baseY,
+            float baseZ,
+            float fallDrop,
+            float fallBack,
+            float floorLift)
+        {
+            SetTransformCurve(
+                clip,
+                string.Empty,
+                "localPosition.y",
+                Key(0.00f, baseY),
+                Key(DeathBackFallDurationSeconds * 0.16f, baseY + fallDrop * 0.18f),
+                Key(DeathBackFallDurationSeconds * 0.38f, baseY + fallDrop * 0.06f + floorLift * 0.20f),
+                Key(DeathBackFallDurationSeconds * 0.62f, baseY - fallDrop * 0.48f + floorLift * 0.62f),
+                Key(DeathBackFallDurationSeconds * 0.84f, baseY - fallDrop + floorLift),
+                Key(DeathBackFallDurationSeconds, baseY - fallDrop * 0.96f + floorLift));
+            SetTransformCurve(
+                clip,
+                string.Empty,
+                "localPosition.z",
+                Key(0.00f, baseZ),
+                Key(DeathBackFallDurationSeconds * 0.16f, baseZ - fallBack * 0.10f),
+                Key(DeathBackFallDurationSeconds * 0.38f, baseZ - fallBack * 0.34f),
+                Key(DeathBackFallDurationSeconds * 0.62f, baseZ - fallBack * 0.76f),
+                Key(DeathBackFallDurationSeconds * 0.84f, baseZ - fallBack),
+                Key(DeathBackFallDurationSeconds, baseZ - fallBack));
+            SetTransformCurve(
+                clip,
+                string.Empty,
+                "localEulerAnglesRaw.x",
+                Key(0.00f, 0f),
+                Key(DeathBackFallDurationSeconds * 0.16f, -14f),
+                Key(DeathBackFallDurationSeconds * 0.38f, -58f),
+                Key(DeathBackFallDurationSeconds * 0.62f, -126f),
+                Key(DeathBackFallDurationSeconds * 0.84f, DeathBackFallPitchDegrees),
+                Key(DeathBackFallDurationSeconds, DeathBackFallPitchDegrees));
+            SetTransformCurve(
+                clip,
+                string.Empty,
+                "localEulerAnglesRaw.z",
+                Key(0.00f, 0f),
+                Key(DeathBackFallDurationSeconds * 0.16f, DeathBackFallSettleRollDegrees * 0.22f),
+                Key(DeathBackFallDurationSeconds * 0.38f, DeathBackFallSettleRollDegrees * 0.62f),
+                Key(DeathBackFallDurationSeconds * 0.62f, DeathBackFallSettleRollDegrees),
+                Key(DeathBackFallDurationSeconds * 0.84f, DeathBackFallSettleRollDegrees * 0.20f),
+                Key(DeathBackFallDurationSeconds, 0f));
+        }
+
+        private static float CalculateDeathBackFallFloorLift(
+            Transform modelObject,
+            float baseY,
+            float baseZ,
+            float fallDrop,
+            float fallBack)
+        {
+            var probeClip = new AnimationClip();
+            AddDeathBackFallRootCurves(probeClip, baseY, baseZ, fallDrop, fallBack, 0f);
+
+            var snapshots = CaptureTransformSnapshots(modelObject);
+            try
+            {
+                probeClip.SampleAnimation(modelObject.gameObject, GetDeathBackFallLyingSampleTime(probeClip));
+                var backClearance = CalculateDeathBackFallBackClearance(modelObject);
+                return DeathBackFallGroundClearanceMeters - backClearance;
+            }
+            finally
+            {
+                RestoreTransformSnapshots(snapshots);
+            }
+        }
+
+        private static float CalculateDeathBackFallFloorClearance(Transform modelObject)
+        {
+            var floorY = GetDeathBackFallFloorY(modelObject);
+            var bounds = CalculateMeshDataWorldBounds(modelObject, new Bounds(modelObject.position, Vector3.one));
+            return bounds.min.y - floorY;
+        }
+
+        private static float CalculateDeathBackFallBackClearance(Transform modelObject)
+        {
+            var floorY = GetDeathBackFallFloorY(modelObject);
+            if (!TryCalculateDeathBackContactWorldY(modelObject, out var backWorldY))
+            {
+                return CalculateDeathBackFallFloorClearance(modelObject);
+            }
+
+            return backWorldY - floorY;
+        }
+
+        private static bool TryCalculateDeathBackContactWorldY(Transform root, out float backWorldY)
+        {
+            backWorldY = float.PositiveInfinity;
+            if (!TryCalculateModelLocalMeshBounds(root, out var modelLocalBounds))
+            {
+                return false;
+            }
+
+            var modelHeight = Mathf.Max(modelLocalBounds.size.y, 0.001f);
+            var backThreshold = modelLocalBounds.max.y - modelHeight * DeathBackFallBackContactBandRatio;
+            var rootWorldToLocal = root.worldToLocalMatrix;
+            var hasContactPoint = false;
+
+            foreach (var skinnedRenderer in root.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                if (skinnedRenderer.sharedMesh == null)
+                {
+                    continue;
+                }
+
+                EncapsulateDeathBackContactWorldY(
+                    rootWorldToLocal,
+                    skinnedRenderer.transform.localToWorldMatrix,
+                    skinnedRenderer.sharedMesh.bounds,
+                    backThreshold,
+                    ref backWorldY,
+                    ref hasContactPoint);
+            }
+
+            foreach (var meshFilter in root.GetComponentsInChildren<MeshFilter>(true))
+            {
+                if (meshFilter.sharedMesh == null)
+                {
+                    continue;
+                }
+
+                EncapsulateDeathBackContactWorldY(
+                    rootWorldToLocal,
+                    meshFilter.transform.localToWorldMatrix,
+                    meshFilter.sharedMesh.bounds,
+                    backThreshold,
+                    ref backWorldY,
+                    ref hasContactPoint);
+            }
+
+            return hasContactPoint;
+        }
+
+        private static bool TryCalculateModelLocalMeshBounds(Transform root, out Bounds bounds)
+        {
+            var hasBounds = false;
+            bounds = new Bounds(root.position, Vector3.zero);
+            var rootWorldToLocal = root.worldToLocalMatrix;
+
+            foreach (var skinnedRenderer in root.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                if (skinnedRenderer.sharedMesh == null)
+                {
+                    continue;
+                }
+
+                EncapsulateModelLocalMeshBounds(
+                    rootWorldToLocal,
+                    skinnedRenderer.transform.localToWorldMatrix,
+                    skinnedRenderer.sharedMesh.bounds,
+                    ref bounds,
+                    ref hasBounds);
+            }
+
+            foreach (var meshFilter in root.GetComponentsInChildren<MeshFilter>(true))
+            {
+                if (meshFilter.sharedMesh == null)
+                {
+                    continue;
+                }
+
+                EncapsulateModelLocalMeshBounds(
+                    rootWorldToLocal,
+                    meshFilter.transform.localToWorldMatrix,
+                    meshFilter.sharedMesh.bounds,
+                    ref bounds,
+                    ref hasBounds);
+            }
+
+            return hasBounds;
+        }
+
+        private static void EncapsulateModelLocalMeshBounds(
+            Matrix4x4 rootWorldToLocal,
+            Matrix4x4 localToWorld,
+            Bounds localBounds,
+            ref Bounds bounds,
+            ref bool hasBounds)
+        {
+            foreach (var corner in GetBoundsCorners(localBounds))
+            {
+                var modelLocalPoint = rootWorldToLocal.MultiplyPoint3x4(localToWorld.MultiplyPoint3x4(corner));
+                if (!hasBounds)
+                {
+                    bounds = new Bounds(modelLocalPoint, Vector3.zero);
+                    hasBounds = true;
+                }
+                else
+                {
+                    bounds.Encapsulate(modelLocalPoint);
+                }
+            }
+        }
+
+        private static void EncapsulateDeathBackContactWorldY(
+            Matrix4x4 rootWorldToLocal,
+            Matrix4x4 localToWorld,
+            Bounds localBounds,
+            float backThreshold,
+            ref float backWorldY,
+            ref bool hasContactPoint)
+        {
+            foreach (var corner in GetBoundsCorners(localBounds))
+            {
+                var worldPoint = localToWorld.MultiplyPoint3x4(corner);
+                var modelLocalPoint = rootWorldToLocal.MultiplyPoint3x4(worldPoint);
+                if (modelLocalPoint.y < backThreshold)
+                {
+                    continue;
+                }
+
+                backWorldY = Mathf.Min(backWorldY, worldPoint.y);
+                hasContactPoint = true;
+            }
+        }
+
+        private static float GetDeathBackFallFloorY(Transform modelObject)
+        {
+            return modelObject.parent != null ? modelObject.parent.position.y : modelObject.position.y;
+        }
+
+        private static float GetDeathBackFallLyingSampleTime(AnimationClip clip)
+        {
+            return Mathf.Max(0f, clip.length - 0.001f);
+        }
+
+        private static void AddSourceAnimationCurves(AnimationClip targetClip, AnimationClip sourceClip)
+        {
+            if (sourceClip.length <= 0f)
+            {
+                throw new InvalidOperationException("Con Spirito source FBX clip length must be positive.");
+            }
+
+            foreach (var binding in AnimationUtility.GetCurveBindings(sourceClip))
+            {
+                var sourceCurve = AnimationUtility.GetEditorCurve(sourceClip, binding);
+                if (sourceCurve == null || sourceCurve.length == 0)
+                {
+                    continue;
+                }
+
+                AnimationUtility.SetEditorCurve(targetClip, binding, ScaleAnimationCurveTime(sourceCurve, 1f));
+            }
+        }
+
+        private static void AddChargeSourceFrontLegReachCurves(
+            AnimationClip targetClip,
+            AnimationClip sourceClip,
+            Transform modelObject)
+        {
+            AddChargeSourceFrontLegReachCurve(targetClip, sourceClip, modelObject, "frontleg", 0.90f);
+            AddChargeSourceFrontLegReachCurve(targetClip, sourceClip, modelObject, "R_frontleg", 0.40f);
+        }
+
+        private static void AddChargeSourceFrontLegReachCurve(
+            AnimationClip targetClip,
+            AnimationClip sourceClip,
+            Transform modelObject,
+            string boneName,
+            float fallbackReachCenter)
+        {
+            var bone = FindChildByName(modelObject, boneName);
+            if (bone == null)
+            {
+                throw new InvalidOperationException($"Con Spirito charge front reach target bone is missing: {boneName}.");
+            }
+
+            var path = AnimationUtility.CalculateTransformPath(bone, modelObject);
+            var sourcePositionZ = FindSourceTransformCurve(sourceClip, path, "localPosition.z", "m_LocalPosition.z");
+            var reachCenter = FindForwardReachCenterFraction(sourcePositionZ, sourceClip.length, fallbackReachCenter);
+            var keys = new Keyframe[ChargeFrontLegReachSampleCount + 1];
+            for (var index = 0; index <= ChargeFrontLegReachSampleCount; index++)
+            {
+                var fraction = index / (float)ChargeFrontLegReachSampleCount;
+                var time = sourceClip.length * fraction;
+                var baseValue = sourcePositionZ != null ? sourcePositionZ.Evaluate(time) : bone.localPosition.z;
+                var reach = SmoothChargeRunPulse(fraction, reachCenter, ChargeFrontLegReachHalfWidth);
+                keys[index] = Key(time, baseValue - (ChargeFrontLegReachExtraMeters * reach));
+            }
+
+            ClearTransformCurve(targetClip, path, "localPosition.z");
+            ClearTransformCurve(targetClip, path, "m_LocalPosition.z");
+            SetTransformCurve(targetClip, path, "localPosition.z", keys);
+        }
+
+        private static AnimationCurve FindSourceTransformCurve(AnimationClip sourceClip, string path, params string[] propertyNames)
+        {
+            foreach (var propertyName in propertyNames)
+            {
+                var binding = EditorCurveBinding.FloatCurve(path, typeof(Transform), propertyName);
+                var curve = AnimationUtility.GetEditorCurve(sourceClip, binding);
+                if (curve != null && curve.length > 0)
+                {
+                    return curve;
+                }
+            }
+
+            return null;
+        }
+
+        private static float FindForwardReachCenterFraction(AnimationCurve positionZCurve, float duration, float fallbackReachCenter)
+        {
+            if (positionZCurve == null || positionZCurve.length == 0 || duration <= 0f)
+            {
+                return Mathf.Repeat(fallbackReachCenter, 1f);
+            }
+
+            var minimumValue = float.PositiveInfinity;
+            var minimumTime = 0f;
+            for (var index = 0; index <= ChargeFrontLegReachSampleCount; index++)
+            {
+                var time = duration * (index / (float)ChargeFrontLegReachSampleCount);
+                var value = positionZCurve.Evaluate(time);
+                if (value < minimumValue)
+                {
+                    minimumValue = value;
+                    minimumTime = time;
+                }
+            }
+
+            return Mathf.Repeat(minimumTime / duration, 1f);
+        }
+
+        private static void ClearTransformCurve(AnimationClip clip, string path, string propertyName)
+        {
+            AnimationUtility.SetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Transform), propertyName),
+                null);
         }
 
         private static void AddScaledSourceWalkCurves(AnimationClip targetClip, AnimationClip sourceWalkClip)
@@ -1338,11 +1882,6 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             var speedMultiplier = sourceWalkClip.length / ChargeRunLoopDurationSeconds;
             foreach (var binding in AnimationUtility.GetCurveBindings(sourceWalkClip))
             {
-                if (ShouldSkipChargeSourceBinding(binding.path))
-                {
-                    continue;
-                }
-
                 var sourceCurve = AnimationUtility.GetEditorCurve(sourceWalkClip, binding);
                 if (sourceCurve == null || sourceCurve.length == 0)
                 {
@@ -1394,38 +1933,44 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                 clip,
                 string.Empty,
                 "localPosition.y",
-                Key(0.00f, baseY),
-                Key(ChargeRunLoopDurationSeconds * 0.10f, baseY + ChargeRunBodyBobMeters * 0.72f),
-                Key(ChargeRunLoopDurationSeconds * 0.22f, baseY + ChargeRunBodyBobMeters * 0.20f),
-                Key(ChargeRunLoopDurationSeconds * 0.34f, baseY - ChargeRunBodyBobMeters * 0.34f),
-                Key(ChargeRunLoopDurationSeconds * 0.50f, baseY + ChargeRunBodyBobMeters * 0.82f),
-                Key(ChargeRunLoopDurationSeconds * 0.62f, baseY + ChargeRunBodyBobMeters * 0.24f),
-                Key(ChargeRunLoopDurationSeconds * 0.78f, baseY - ChargeRunBodyBobMeters * 0.30f),
-                Key(ChargeRunLoopDurationSeconds * 0.90f, baseY + ChargeRunBodyBobMeters * 0.10f),
-                Key(ChargeRunLoopDurationSeconds, baseY));
+                Key(0.00f, baseY + ChargeRunBodyBobMeters * 0.18f),
+                Key(ChargeRunLoopDurationSeconds * 0.10f, baseY - ChargeRunBodyBobMeters * 0.55f),
+                Key(ChargeRunLoopDurationSeconds * 0.22f, baseY - ChargeRunBodyBobMeters * 0.28f),
+                Key(ChargeRunLoopDurationSeconds * 0.36f, baseY + ChargeRunBodyBobMeters * 0.55f),
+                Key(ChargeRunLoopDurationSeconds * 0.50f, baseY + ChargeRunBodyBobMeters * 0.15f),
+                Key(ChargeRunLoopDurationSeconds * 0.60f, baseY - ChargeRunBodyBobMeters * 0.55f),
+                Key(ChargeRunLoopDurationSeconds * 0.72f, baseY - ChargeRunBodyBobMeters * 0.25f),
+                Key(ChargeRunLoopDurationSeconds * 0.86f, baseY + ChargeRunBodyBobMeters * 0.55f),
+                Key(ChargeRunLoopDurationSeconds * 0.96f, baseY + ChargeRunBodyBobMeters * 0.20f),
+                Key(ChargeRunLoopDurationSeconds, baseY + ChargeRunBodyBobMeters * 0.18f));
             SetTransformCurve(
                 clip,
                 string.Empty,
                 "localEulerAnglesRaw.x",
-                Key(0.00f, ChargeRunBodyForwardPitchDegrees),
-                Key(ChargeRunLoopDurationSeconds * 0.12f, ChargeRunBodyForwardPitchDegrees - 2.0f),
-                Key(ChargeRunLoopDurationSeconds * 0.28f, ChargeRunBodyForwardPitchDegrees + 3.6f),
-                Key(ChargeRunLoopDurationSeconds * 0.42f, ChargeRunBodyForwardPitchDegrees + 1.2f),
-                Key(ChargeRunLoopDurationSeconds * 0.58f, ChargeRunBodyForwardPitchDegrees - 1.8f),
-                Key(ChargeRunLoopDurationSeconds * 0.74f, ChargeRunBodyForwardPitchDegrees + 3.8f),
-                Key(ChargeRunLoopDurationSeconds * 0.88f, ChargeRunBodyForwardPitchDegrees + 0.8f),
-                Key(ChargeRunLoopDurationSeconds, ChargeRunBodyForwardPitchDegrees));
+                Key(0.00f, ChargeRunBodyForwardPitchDegrees + 0.2f),
+                Key(ChargeRunLoopDurationSeconds * 0.10f, ChargeRunBodyForwardPitchDegrees + 1.5f),
+                Key(ChargeRunLoopDurationSeconds * 0.22f, ChargeRunBodyForwardPitchDegrees + 0.5f),
+                Key(ChargeRunLoopDurationSeconds * 0.36f, ChargeRunBodyForwardPitchDegrees - 0.9f),
+                Key(ChargeRunLoopDurationSeconds * 0.50f, ChargeRunBodyForwardPitchDegrees + 0.1f),
+                Key(ChargeRunLoopDurationSeconds * 0.60f, ChargeRunBodyForwardPitchDegrees + 1.5f),
+                Key(ChargeRunLoopDurationSeconds * 0.72f, ChargeRunBodyForwardPitchDegrees + 0.5f),
+                Key(ChargeRunLoopDurationSeconds * 0.86f, ChargeRunBodyForwardPitchDegrees - 0.9f),
+                Key(ChargeRunLoopDurationSeconds * 0.96f, ChargeRunBodyForwardPitchDegrees + 0.2f),
+                Key(ChargeRunLoopDurationSeconds, ChargeRunBodyForwardPitchDegrees + 0.2f));
             SetTransformCurve(
                 clip,
                 string.Empty,
                 "localEulerAnglesRaw.z",
-                Key(0.00f, ChargeRunBodyRollDegrees),
-                Key(ChargeRunLoopDurationSeconds * 0.16f, -ChargeRunBodyRollDegrees * 0.40f),
-                Key(ChargeRunLoopDurationSeconds * 0.34f, -ChargeRunBodyRollDegrees),
-                Key(ChargeRunLoopDurationSeconds * 0.52f, ChargeRunBodyRollDegrees * 0.55f),
-                Key(ChargeRunLoopDurationSeconds * 0.72f, ChargeRunBodyRollDegrees),
-                Key(ChargeRunLoopDurationSeconds * 0.88f, -ChargeRunBodyRollDegrees * 0.35f),
-                Key(ChargeRunLoopDurationSeconds, ChargeRunBodyRollDegrees));
+                Key(0.00f, 0f),
+                Key(ChargeRunLoopDurationSeconds * 0.10f, -ChargeRunBodyRollDegrees * 0.65f),
+                Key(ChargeRunLoopDurationSeconds * 0.22f, -ChargeRunBodyRollDegrees * 0.25f),
+                Key(ChargeRunLoopDurationSeconds * 0.36f, ChargeRunBodyRollDegrees * 0.20f),
+                Key(ChargeRunLoopDurationSeconds * 0.50f, 0f),
+                Key(ChargeRunLoopDurationSeconds * 0.60f, ChargeRunBodyRollDegrees * 0.65f),
+                Key(ChargeRunLoopDurationSeconds * 0.72f, ChargeRunBodyRollDegrees * 0.25f),
+                Key(ChargeRunLoopDurationSeconds * 0.86f, -ChargeRunBodyRollDegrees * 0.20f),
+                Key(ChargeRunLoopDurationSeconds * 0.96f, 0f),
+                Key(ChargeRunLoopDurationSeconds, 0f));
         }
 
         private static void AddChargeRunLegChainCurves(
@@ -1447,56 +1992,77 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                 throw new InvalidOperationException($"Con Spirito charge run target bone is missing: {boneNames[0]}.");
             }
 
-            var sampleCount = 32;
+            var sampleCount = 48;
             var times = new float[sampleCount + 1];
             var rootOffsets = new Vector3[sampleCount + 1];
             var upperOffsets = new Vector3[sampleCount + 1];
             var lowerOffsets = new Vector3[sampleCount + 1];
             var toeOffsets = new Vector3[sampleCount + 1];
+            var rootLiftOffsets = new float[sampleCount + 1];
+            var rootStrideOffsets = new float[sampleCount + 1];
             for (var index = 0; index <= sampleCount; index++)
             {
                 var fraction = index / (float)sampleCount;
                 var phase = Mathf.Repeat(fraction + phaseOffset, 1f);
-                var contact = SmoothChargeRunPulse(phase, 0.06f, 0.12f);
-                var push = SmoothChargeRunPulse(phase, 0.20f, 0.18f);
-                var tuck = SmoothChargeRunPulse(phase, 0.42f, 0.18f);
-                var reach = SmoothChargeRunPulse(phase, 0.66f, 0.20f);
-                var suspension = SmoothChargeRunPulse(phase, 0.54f, 0.15f);
-                var lift = Mathf.Clamp01(tuck * 0.78f + reach * 0.38f + suspension * 0.24f);
+                var contact = frontLeg
+                    ? SmoothChargeRunPulse(phase, 0.12f, 0.075f)
+                    : SmoothChargeRunPulse(phase, 0.08f, 0.070f);
+                var push = frontLeg
+                    ? SmoothChargeRunPulse(phase, 0.34f, 0.140f)
+                    : SmoothChargeRunPulse(phase, 0.32f, 0.150f);
+                var tuck = frontLeg
+                    ? SmoothChargeRunPulse(phase, 0.60f, 0.105f)
+                    : SmoothChargeRunPulse(phase, 0.62f, 0.110f);
+                var reach = frontLeg
+                    ? SmoothChargeRunPulse(phase, 0.90f, 0.120f)
+                    : SmoothChargeRunPulse(phase, 0.88f, 0.105f);
+                var suspension = frontLeg
+                    ? SmoothChargeRunPulse(phase, 0.74f, 0.090f)
+                    : SmoothChargeRunPulse(phase, 0.76f, 0.090f);
+                var stance = Mathf.Clamp01((contact * 0.58f) + (push * 0.82f));
+                var lift = Mathf.Clamp01((tuck * 0.70f) + (reach * 0.42f) + (suspension * 0.34f) - (contact * 0.48f) - (push * 0.24f));
                 var rootSwing = frontLeg
-                    ? ((-reach * 0.52f) + (push * 0.34f) + (tuck * 0.12f) - (contact * 0.04f)) * ChargeRunLegSwingDegrees
-                    : ((reach * 0.34f) - (push * 0.52f) + (tuck * 0.14f) + (contact * 0.04f)) * ChargeRunLegSwingDegrees;
-                var rootLift = sideSign * ((lift * ChargeRunLegLiftDegrees * 0.14f) - (contact * ChargeRunLegLiftDegrees * 0.04f));
+                    ? ((-reach * 0.92f) + (push * 0.70f) + (tuck * 0.08f) - (contact * 0.10f)) * ChargeRunLegSwingDegrees
+                    : ((reach * 0.56f) - (push * 1.12f) + (tuck * 0.10f) + (contact * 0.04f)) * ChargeRunLegSwingDegrees;
+                var rootLift = sideSign * ((lift * ChargeRunLegLiftDegrees * 0.12f) - (stance * ChargeRunLegLiftDegrees * 0.08f));
                 var upperFold = frontLeg
-                    ? ((-reach * 0.10f) + (push * 0.10f) + (tuck * 0.30f) - (contact * 0.04f)) * ChargeRunLegSwingDegrees
-                    : ((reach * 0.16f) - (push * 0.20f) - (tuck * 0.26f) + (contact * 0.04f)) * ChargeRunLegSwingDegrees;
+                    ? ((-reach * 0.10f) + (push * 0.12f) + (tuck * 0.30f) - (contact * 0.06f)) * ChargeRunLegSwingDegrees
+                    : ((reach * 0.08f) - (push * 0.04f) - (tuck * 0.22f) + (contact * 0.04f)) * ChargeRunLegSwingDegrees;
                 var lowerFold = frontLeg
-                    ? ((reach * 0.08f) - (push * 0.08f) + (tuck * 0.38f) - (contact * 0.04f)) * ChargeRunLegSwingDegrees
-                    : ((-reach * 0.10f) + (push * 0.12f) - (tuck * 0.44f) + (contact * 0.05f)) * ChargeRunLegSwingDegrees;
+                    ? ((reach * 0.02f) - (push * 0.02f) + (tuck * 0.34f) - (contact * 0.05f)) * ChargeRunLegSwingDegrees
+                    : ((-reach * 0.05f) + (push * 0.02f) - (tuck * 0.26f) + (contact * 0.02f)) * ChargeRunLegSwingDegrees;
                 var toeFlick = frontLeg
-                    ? ((lift * 0.18f) - (contact * 0.08f) + (push * 0.04f)) * ChargeRunLegSwingDegrees
-                    : ((-lift * 0.18f) + (contact * 0.08f) - (push * 0.04f)) * ChargeRunLegSwingDegrees;
+                    ? ((tuck * 0.10f) + (reach * 0.08f) - (contact * 0.09f) + (push * 0.04f)) * ChargeRunLegSwingDegrees
+                    : ((-tuck * 0.10f) - (reach * 0.05f) + (contact * 0.06f) - (push * 0.04f)) * ChargeRunLegSwingDegrees;
+                var strideOffset = frontLeg
+                    ? ((-reach * 0.78f) - (contact * 0.24f) + (push * 0.62f) + (tuck * 0.18f)) * ChargeRunLegStrideMeters
+                    : ((reach * 0.56f) + (contact * 0.12f) - (push * 0.96f) + (tuck * 0.18f)) * ChargeRunLegStrideMeters;
+                var liftOffset = (lift * ChargeRunLegLiftMeters * (frontLeg ? 0.42f : 0.38f)) - (stance * ChargeRunLegLiftMeters * 0.10f);
 
                 times[index] = ChargeRunLoopDurationSeconds * fraction;
                 rootOffsets[index] = new Vector3(
                     rootSwing,
-                    sideSign * lift * ChargeRunLegSplayDegrees * 0.12f,
+                    sideSign * ((lift * 0.08f) - (contact * 0.04f)) * ChargeRunLegSplayDegrees,
                     rootLift);
                 upperOffsets[index] = new Vector3(
                     upperFold,
-                    sideSign * lift * ChargeRunLegSplayDegrees * 0.08f,
-                    sideSign * upperFold * 0.03f);
+                    sideSign * ((lift * 0.04f) + (push * 0.03f)) * ChargeRunLegSplayDegrees,
+                    sideSign * upperFold * 0.015f);
                 lowerOffsets[index] = new Vector3(
                     lowerFold,
                     0f,
-                    sideSign * lowerFold * 0.02f);
+                    sideSign * lowerFold * 0.010f);
                 toeOffsets[index] = new Vector3(
                     toeFlick,
                     0f,
-                    sideSign * toeFlick * 0.02f);
+                    sideSign * toeFlick * 0.012f);
+                rootLiftOffsets[index] = liftOffset;
+                rootStrideOffsets[index] = strideOffset;
             }
 
             SetLocalRotationOffsetCurves(clip, modelRoot, rootBone, times, rootOffsets);
+            SetLocalPositionOffsetCurve(clip, modelRoot, rootBone, "localPosition.y", rootBone.localPosition.y, times, rootLiftOffsets);
+            SetLocalPositionOffsetCurve(clip, modelRoot, rootBone, "localPosition.z", rootBone.localPosition.z, times, rootStrideOffsets);
             AddOptionalChargeRunLegJointCurves(clip, modelRoot, boneNames, 1, times, upperOffsets);
             AddOptionalChargeRunLegJointCurves(clip, modelRoot, boneNames, 2, times, lowerOffsets);
             AddOptionalChargeRunLegJointCurves(clip, modelRoot, boneNames, 3, times, toeOffsets);
@@ -1571,30 +2137,32 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                     times,
                     new[]
                     {
+                        ChargeHeadForwardMeters * 1.04f,
+                        ChargeHeadForwardMeters * 1.10f,
+                        ChargeHeadForwardMeters * 1.16f,
+                        ChargeHeadForwardMeters * 1.08f,
                         ChargeHeadForwardMeters * 1.00f,
                         ChargeHeadForwardMeters * 1.12f,
-                        ChargeHeadForwardMeters * 1.06f,
-                        ChargeHeadForwardMeters * 0.96f,
-                        ChargeHeadForwardMeters * 1.04f,
-                        ChargeHeadForwardMeters * 1.13f,
-                        ChargeHeadForwardMeters * 1.05f,
-                        ChargeHeadForwardMeters * 0.97f,
-                        ChargeHeadForwardMeters * 1.00f
+                        ChargeHeadForwardMeters * 1.17f,
+                        ChargeHeadForwardMeters * 1.08f,
+                        ChargeHeadForwardMeters * 1.02f,
+                        ChargeHeadForwardMeters * 1.04f
                     },
                     new[]
                     {
-                        -ChargeHeadDownMeters * 0.65f,
-                        -ChargeHeadDownMeters * 0.95f,
-                        -ChargeHeadDownMeters * 0.72f,
-                        -ChargeHeadDownMeters * 0.25f,
-                        -ChargeHeadDownMeters * 0.70f,
+                        -ChargeHeadDownMeters * 0.55f,
                         -ChargeHeadDownMeters * 1.00f,
-                        -ChargeHeadDownMeters * 0.68f,
-                        -ChargeHeadDownMeters * 0.22f,
-                        -ChargeHeadDownMeters * 0.65f
+                        -ChargeHeadDownMeters * 0.62f,
+                        -ChargeHeadDownMeters * 0.20f,
+                        -ChargeHeadDownMeters * 0.72f,
+                        -ChargeHeadDownMeters * 1.05f,
+                        -ChargeHeadDownMeters * 0.25f,
+                        -ChargeHeadDownMeters * 0.35f,
+                        -ChargeHeadDownMeters * 0.78f,
+                        -ChargeHeadDownMeters * 0.55f
                     },
-                    new[] { 14.0f, 19.0f, 16.0f, 11.0f, 15.5f, 20.0f, 15.0f, 10.5f, 14.0f },
-                    new[] { -1.2f, 1.4f, -1.0f, 0.6f, 1.0f, -1.5f, 1.2f, -0.6f, -1.2f });
+                    new[] { 15.0f, 18.0f, 16.0f, 12.0f, 17.0f, 19.0f, 14.0f, 11.5f, 17.5f, 15.0f },
+                    new[] { -0.8f, 1.0f, 0.4f, -0.5f, 0.9f, -1.0f, -0.4f, 0.6f, -0.8f, -0.8f });
             }
 
             if (neck != null)
@@ -1604,10 +2172,10 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                     modelObject,
                     neck,
                     times,
-                    new[] { 0.006f, 0.010f, 0.008f, 0.004f, 0.008f, 0.012f, 0.007f, 0.003f, 0.006f },
-                    new[] { -0.002f, -0.006f, -0.004f, 0.000f, -0.004f, -0.007f, -0.003f, 0.000f, -0.002f },
-                    new[] { 7.0f, 12.0f, 8.5f, 3.0f, 8.5f, 12.5f, 8.0f, 2.5f, 7.0f },
-                    new[] { -0.8f, 1.0f, -0.6f, 0.5f, 0.8f, -1.0f, 0.6f, -0.5f, -0.8f });
+                    new[] { 0.006f, 0.010f, 0.011f, 0.006f, 0.004f, 0.011f, 0.012f, 0.006f, 0.004f, 0.006f },
+                    new[] { -0.002f, -0.006f, -0.003f, 0.001f, -0.004f, -0.007f, 0.000f, -0.001f, -0.004f, -0.002f },
+                    new[] { 7.0f, 11.0f, 9.5f, 4.0f, 9.0f, 12.0f, 6.0f, 3.5f, 9.5f, 7.0f },
+                    new[] { -0.6f, 0.8f, 0.3f, -0.4f, 0.7f, -0.8f, -0.3f, 0.4f, -0.6f, -0.6f });
             }
         }
 
@@ -1618,11 +2186,12 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                 0f,
                 duration * 0.10f,
                 duration * 0.22f,
-                duration * 0.34f,
+                duration * 0.36f,
                 duration * 0.50f,
-                duration * 0.62f,
-                duration * 0.75f,
-                duration * 0.88f,
+                duration * 0.60f,
+                duration * 0.72f,
+                duration * 0.86f,
+                duration * 0.96f,
                 duration
             };
         }
@@ -2371,6 +2940,29 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             return slotRoot;
         }
 
+        private static Transform ReplaceChargeSlotModel(Transform chargeSlot, GameObject modelAsset)
+        {
+            ClearChildren(chargeSlot);
+
+            var modelInstance = PrefabUtility.InstantiatePrefab(modelAsset) as GameObject;
+            if (modelInstance == null)
+            {
+                modelInstance = UnityEngine.Object.Instantiate(modelAsset);
+            }
+
+            modelInstance.name = ChargeModelChildName;
+            modelInstance.transform.SetParent(chargeSlot, false);
+            modelInstance.transform.localPosition = Vector3.zero;
+            modelInstance.transform.localRotation = Quaternion.identity;
+            modelInstance.transform.localScale = Vector3.one;
+
+            DisableImportedAnimationPlayback(chargeSlot);
+            RequireRenderers(chargeSlot);
+            EditorUtility.SetDirty(chargeSlot);
+            EditorUtility.SetDirty(modelInstance);
+            return modelInstance.transform;
+        }
+
         private static Vector3 CalculateAnimationReviewSlotLocalPosition(int slotIndex)
         {
             var centeredIndex = slotIndex - (AnimationReviewSlotNames.Length - 1) * 0.5f;
@@ -2592,10 +3184,16 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             Transform placementRoot,
             AnimationClip chargeClip,
             AnimatorController chargeController,
+            AnimationClip chargeSourceClip,
+            float chargeStateSpeed,
             AnimationClip idleClip,
             AnimatorController idleController,
             AnimationClip walkClip,
-            AnimatorController walkController)
+            AnimatorController walkController,
+            AnimationClip playClip,
+            AnimatorController playController,
+            AnimationClip deathClip,
+            AnimatorController deathController)
         {
             var longaRoot = RequireSceneRoot(LongaArmaPlacementRootName);
             var tergoRoot = RequireSceneRoot(TergoPlacementRootName);
@@ -2619,22 +3217,40 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                 throw new InvalidOperationException($"Con Spirito charge clip must loop: {chargeClip.name}.");
             }
 
+            if (chargeSourceClip == null)
+            {
+                throw new InvalidOperationException("Con Spirito charge source FBX animation clip is missing.");
+            }
+
             var walkClipSettings = AnimationUtility.GetAnimationClipSettings(walkClip);
             if (!walkClipSettings.loopTime)
             {
                 throw new InvalidOperationException($"Con Spirito walk review clip must loop: {walkClip.name}.");
             }
 
-            if (Mathf.Abs(chargeClip.length - ChargeRunLoopDurationSeconds) > 0.05f)
+            var deathClipSettings = AnimationUtility.GetAnimationClipSettings(deathClip);
+            if (!deathClipSettings.loopTime)
+            {
+                throw new InvalidOperationException($"Con Spirito death back-fall clip must loop: {deathClip.name}.");
+            }
+
+            if (chargeStateSpeed <= 1f)
             {
                 throw new InvalidOperationException(
-                    $"Con Spirito charge run clip length mismatch. Expected={ChargeRunLoopDurationSeconds:0.###}, Actual={chargeClip.length:0.###}.");
+                    $"Con Spirito charge controller state speed must be faster than normal playback. Actual={chargeStateSpeed:0.###}.");
             }
 
             var curveBindings = AnimationUtility.GetCurveBindings(chargeClip);
             if (curveBindings.Length == 0)
             {
                 throw new InvalidOperationException("Con Spirito charge clip has no curve bindings.");
+            }
+
+            var frontLegReachCurveCount = CountChargeFrontLegReachCurves(curveBindings);
+            if (frontLegReachCurveCount < 2)
+            {
+                throw new InvalidOperationException(
+                    $"Con Spirito charge clip is missing front-leg reach correction curves. Found={frontLegReachCurveCount}, Required=2.");
             }
 
             var animatedLegBones = 0;
@@ -2655,11 +3271,13 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             var chargePoseTargets = ExtractChargePoseTargets(curveBindings);
             if (chargePoseTargets.Count == 0)
             {
-                throw new InvalidOperationException("Con Spirito charge clip is missing forward head/body pose bindings.");
+                AddUniquePath(chargePoseTargets, "SourceFbxClip");
             }
 
             var totalRenderers = 0;
             var disabledSlots = 0;
+            var slowPlaySlots = 0;
+            var deathSlots = 0;
             for (var index = 0; index < AnimationReviewSlotNames.Length; index++)
             {
                 var slotRoot = RequireAnimationReviewSlot(placementRoot, index);
@@ -2670,7 +3288,7 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                         $"Con Spirito animation review slot position mismatch: {slotRoot.name}, Expected={FormatVector(expectedPosition)}, Actual={FormatVector(slotRoot.localPosition)}.");
                 }
 
-                var modelObject = RequireModelObject(slotRoot, OriginalModelChildName);
+                var modelObject = RequireAnimationReviewSlotModel(slotRoot, index);
                 totalRenderers += RequireRenderers(slotRoot);
                 if (index == AnimationReviewIdleSlotIndex)
                 {
@@ -2682,7 +3300,18 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                 }
                 else if (index == AnimationReviewChargeSlotIndex)
                 {
-                    InspectChargeReviewSlot(modelObject, chargeClip, chargeController);
+                    InspectChargeReviewSlot(modelObject, chargeClip, chargeController, chargeStateSpeed);
+                    InspectApprovedMaterialOnModel(modelObject, LoadApprovedMaterialSampleAsset(), slotRoot.name);
+                }
+                else if (index == AnimationReviewPlaySlotIndex)
+                {
+                    InspectPlaySlowWalkReviewSlot(modelObject, playClip, playController);
+                    slowPlaySlots++;
+                }
+                else if (index == AnimationReviewDeathSlotIndex)
+                {
+                    InspectDeathBackFallReviewSlot(modelObject, deathClip, deathController);
+                    deathSlots++;
                 }
                 else
                 {
@@ -2694,10 +3323,39 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             Debug.Log(
                 "ConSpiritoChargeLoopInspection " +
                 $"Slots={AnimationReviewSlotNames.Length}, ChargeSlot={AnimationReviewSlotNames[AnimationReviewChargeSlotIndex]}, " +
-                $"ChargeClip={chargeClip.name}, ChargeLength={chargeClip.length:0.###}, SourceWalkLength={walkClip.length:0.###}, " +
-                $"RunCycleSeconds={ChargeRunLoopDurationSeconds:0.###}, ChargeLoopTime={chargeClipSettings.loopTime}, " +
-                $"CurveBindings={curveBindings.Length}, ChargePoseTargets={string.Join("|", chargePoseTargets)}, " +
+                $"ChargeModel={ChargeModelChildName}, ChargeClip={chargeClip.name}, ChargeLength={chargeClip.length:0.###}, ChargeSourceLength={chargeSourceClip.length:0.###}, " +
+                $"WalkReviewLength={walkClip.length:0.###}, " +
+                $"StateSpeed={chargeStateSpeed:0.###}, EffectiveRunCycleSeconds={chargeClip.length / chargeStateSpeed:0.###}, ChargeLoopTime={chargeClipSettings.loopTime}, " +
+                $"CurveBindings={curveBindings.Length}, ChargePoseTargets={string.Join("|", chargePoseTargets)}, FrontLegReachCurves={frontLegReachCurveCount}, " +
+                $"FrontLegReachExtra={ChargeFrontLegReachExtraMeters:0.###}, " +
+                $"PlaySlot={AnimationReviewSlotNames[AnimationReviewPlaySlotIndex]}, PlayClip={playClip.name}, PlayStateSpeed={PlaySlowWalkSpeedMultiplier:0.###}, " +
+                $"PlayEffectiveCycleSeconds={playClip.length / PlaySlowWalkSpeedMultiplier:0.###}, SlowPlaySlots={slowPlaySlots}, " +
+                $"DeathSlot={AnimationReviewSlotNames[AnimationReviewDeathSlotIndex]}, DeathClip={deathClip.name}, DeathLength={deathClip.length:0.###}, " +
+                $"DeathLoopTime={deathClipSettings.loopTime}, DeathSlots={deathSlots}, " +
                 $"AnimatedRepresentativeLegBones={animatedLegBones}/{RequiredLegBoneNames.Length}, DisabledSlots={disabledSlots}, TotalRenderers={totalRenderers}.");
+        }
+
+        private static int CountChargeFrontLegReachCurves(EditorCurveBinding[] curveBindings)
+        {
+            var count = 0;
+            foreach (var binding in curveBindings)
+            {
+                if (binding.type != typeof(Transform) ||
+                    (binding.propertyName != "localPosition.z" && binding.propertyName != "m_LocalPosition.z"))
+                {
+                    continue;
+                }
+
+                if (binding.path.EndsWith("/frontleg", StringComparison.Ordinal) ||
+                    binding.path.EndsWith("/R_frontleg", StringComparison.Ordinal) ||
+                    string.Equals(binding.path, "frontleg", StringComparison.Ordinal) ||
+                    string.Equals(binding.path, "R_frontleg", StringComparison.Ordinal))
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         private static void InspectIdleBreathCurveBindings(
@@ -3037,7 +3695,8 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
         private static void InspectChargeReviewSlot(
             Transform modelObject,
             AnimationClip chargeClip,
-            AnimatorController chargeController)
+            AnimatorController chargeController,
+            float expectedStateSpeed)
         {
             var animator = modelObject.GetComponent<Animator>();
             if (animator == null || !animator.enabled)
@@ -3060,10 +3719,199 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                 throw new InvalidOperationException("Con Spirito charge review controller has no default state.");
             }
 
-            if (chargeController.layers[0].stateMachine.defaultState.motion != chargeClip)
+            var defaultState = chargeController.layers[0].stateMachine.defaultState;
+            if (defaultState.motion != chargeClip)
             {
                 throw new InvalidOperationException("Con Spirito charge review controller default state does not use the charge clip.");
             }
+
+            if (Mathf.Abs(defaultState.speed - expectedStateSpeed) > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    $"Con Spirito charge review controller state speed mismatch. Expected={expectedStateSpeed:0.###}, Actual={defaultState.speed:0.###}.");
+            }
+        }
+
+        private static void InspectPlaySlowWalkReviewSlot(
+            Transform modelObject,
+            AnimationClip playClip,
+            AnimatorController playController)
+        {
+            var animator = modelObject.GetComponent<Animator>();
+            if (animator == null || !animator.enabled)
+            {
+                throw new InvalidOperationException("Con Spirito play review slot Animator is missing or disabled.");
+            }
+
+            if (animator.runtimeAnimatorController != playController)
+            {
+                throw new InvalidOperationException("Con Spirito play review slot does not use the slow-walk controller.");
+            }
+
+            if (animator.applyRootMotion)
+            {
+                throw new InvalidOperationException("Con Spirito play review slot must keep root motion disabled.");
+            }
+
+            if (playController.layers.Length == 0 || playController.layers[0].stateMachine.defaultState == null)
+            {
+                throw new InvalidOperationException("Con Spirito play slow-walk controller has no default state.");
+            }
+
+            var defaultState = playController.layers[0].stateMachine.defaultState;
+            if (defaultState.motion != playClip)
+            {
+                throw new InvalidOperationException("Con Spirito play slow-walk controller default state does not use the original FBX walk clip.");
+            }
+
+            if (Mathf.Abs(defaultState.speed - PlaySlowWalkSpeedMultiplier) > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    $"Con Spirito play slow-walk state speed mismatch. Expected={PlaySlowWalkSpeedMultiplier:0.###}, Actual={defaultState.speed:0.###}.");
+            }
+        }
+
+        private static void InspectDeathBackFallReviewSlot(
+            Transform modelObject,
+            AnimationClip deathClip,
+            AnimatorController deathController)
+        {
+            var animator = modelObject.GetComponent<Animator>();
+            if (animator == null || !animator.enabled)
+            {
+                throw new InvalidOperationException("Con Spirito death review slot Animator is missing or disabled.");
+            }
+
+            if (animator.runtimeAnimatorController != deathController)
+            {
+                throw new InvalidOperationException("Con Spirito death review slot does not use the back-fall controller.");
+            }
+
+            if (animator.applyRootMotion)
+            {
+                throw new InvalidOperationException("Con Spirito death review slot must keep root motion disabled.");
+            }
+
+            if (deathController.layers.Length == 0 || deathController.layers[0].stateMachine.defaultState == null)
+            {
+                throw new InvalidOperationException("Con Spirito death back-fall controller has no default state.");
+            }
+
+            var defaultState = deathController.layers[0].stateMachine.defaultState;
+            if (defaultState.motion != deathClip)
+            {
+                throw new InvalidOperationException("Con Spirito death back-fall controller default state does not use the death clip.");
+            }
+
+            if (Mathf.Abs(defaultState.speed - 1f) > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    $"Con Spirito death back-fall state speed mismatch. Expected=1, Actual={defaultState.speed:0.###}.");
+            }
+
+            var settings = AnimationUtility.GetAnimationClipSettings(deathClip);
+            if (!settings.loopTime)
+            {
+                throw new InvalidOperationException("Con Spirito death back-fall clip must loop.");
+            }
+
+            var bindings = AnimationUtility.GetCurveBindings(deathClip);
+            if (bindings.Length == 0)
+            {
+                throw new InvalidOperationException("Con Spirito death back-fall clip has no root transform curves.");
+            }
+
+            foreach (var binding in bindings)
+            {
+                if (binding.type != typeof(Transform) ||
+                    !string.IsNullOrEmpty(binding.path) ||
+                    !IsDeathBackFallRootProperty(binding.propertyName))
+                {
+                    throw new InvalidOperationException(
+                        $"Con Spirito death back-fall clip must only animate model root transform. Path={binding.path}, Property={binding.propertyName}.");
+                }
+            }
+
+            var pitchCurve = RequireRootTransformCurve(deathClip, "localEulerAnglesRaw.x");
+            RequireRootTransformCurve(deathClip, "localPosition.y");
+            var backCurve = RequireRootTransformCurve(deathClip, "localPosition.z");
+            if (pitchCurve.Evaluate(deathClip.length) > -170f)
+            {
+                throw new InvalidOperationException(
+                    $"Con Spirito death back-fall final pitch must expose the belly upward. FinalPitch={pitchCurve.Evaluate(deathClip.length):0.###}.");
+            }
+
+            if (backCurve.Evaluate(deathClip.length) >= backCurve.Evaluate(0f))
+            {
+                throw new InvalidOperationException("Con Spirito death back-fall final root position must move backward from the start pose.");
+            }
+
+            var snapshots = CaptureTransformSnapshots(modelObject);
+            try
+            {
+                deathClip.SampleAnimation(modelObject.gameObject, GetDeathBackFallLyingSampleTime(deathClip));
+                var floorClearance = CalculateDeathBackFallFloorClearance(modelObject);
+                var backClearance = CalculateDeathBackFallBackClearance(modelObject);
+                var backDownDot = Vector3.Dot(modelObject.TransformDirection(Vector3.up).normalized, Vector3.down);
+                if (floorClearance < -0.001f)
+                {
+                    throw new InvalidOperationException(
+                        $"Con Spirito death back-fall lying pose is below the floor. Clearance={floorClearance:0.###}.");
+                }
+
+                if (floorClearance > DeathBackFallGroundContactToleranceMeters)
+                {
+                    throw new InvalidOperationException(
+                        "Con Spirito death back-fall lying pose must touch the floor. " +
+                        $"Clearance={floorClearance:0.###}, Tolerance={DeathBackFallGroundContactToleranceMeters:0.###}.");
+                }
+
+                if (backDownDot < DeathBackFallBackDownDotMinimum)
+                {
+                    throw new InvalidOperationException(
+                        "Con Spirito death back-fall lying pose must settle on its back. " +
+                        $"BackDownDot={backDownDot:0.###}, Required={DeathBackFallBackDownDotMinimum:0.###}.");
+                }
+
+                if (backClearance < -0.001f ||
+                    backClearance > DeathBackFallGroundContactToleranceMeters)
+                {
+                    throw new InvalidOperationException(
+                        "Con Spirito death back-fall back contact must touch the floor. " +
+                        $"BackClearance={backClearance:0.###}, Tolerance={DeathBackFallGroundContactToleranceMeters:0.###}.");
+                }
+
+                Debug.Log(
+                    "ConSpiritoDeathBackFallFloorClearance " +
+                    $"Clearance={floorClearance:0.###}, BackClearance={backClearance:0.###}, " +
+                    $"BackDownDot={backDownDot:0.###}, Target={DeathBackFallGroundClearanceMeters:0.###}, " +
+                    $"Tolerance={DeathBackFallGroundContactToleranceMeters:0.###}.");
+            }
+            finally
+            {
+                RestoreTransformSnapshots(snapshots);
+            }
+        }
+
+        private static bool IsDeathBackFallRootProperty(string propertyName)
+        {
+            return propertyName == "localPosition.y" ||
+                   propertyName == "localPosition.z" ||
+                   propertyName == "localEulerAnglesRaw.x" ||
+                   propertyName == "localEulerAnglesRaw.z";
+        }
+
+        private static AnimationCurve RequireRootTransformCurve(AnimationClip clip, string propertyName)
+        {
+            var curve = AnimationUtility.GetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(string.Empty, typeof(Transform), propertyName));
+            if (curve == null)
+            {
+                throw new InvalidOperationException($"Con Spirito clip is missing root transform curve: {propertyName}.");
+            }
+
+            return curve;
         }
 
         private static void InspectDisabledReviewSlot(Transform slotRoot)
@@ -3433,7 +4281,7 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                     continue;
                 }
 
-                AddUniquePath(paths, binding.path);
+                AddUniquePath(paths, string.IsNullOrEmpty(binding.path) ? "ModelRoot" : binding.path);
             }
 
             return paths;
@@ -3447,6 +4295,12 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                  binding.propertyName != "localEulerAnglesRaw.x"))
             {
                 return false;
+            }
+
+            if (string.IsNullOrEmpty(binding.path))
+            {
+                return binding.propertyName == "localPosition.y" ||
+                       binding.propertyName == "localEulerAnglesRaw.x";
             }
 
             var lowerPath = binding.path.ToLowerInvariant();
@@ -3518,6 +4372,20 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             }
 
             return modelObject;
+        }
+
+        private static Transform RequireAnimationReviewSlotModel(Transform slotRoot, int slotIndex)
+        {
+            if (slotIndex == AnimationReviewChargeSlotIndex)
+            {
+                var chargeModel = slotRoot.Find(ChargeModelChildName);
+                if (chargeModel != null)
+                {
+                    return chargeModel;
+                }
+            }
+
+            return RequireModelObject(slotRoot, OriginalModelChildName);
         }
 
         private static Transform FindChildByName(Transform root, string targetName)
@@ -4363,6 +5231,85 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
             }
         }
 
+        private static void ApplyApprovedMaterialToModel(
+            Transform modelObject,
+            Material approvedMaterial,
+            out int rendererCount,
+            out int materialSlotCount)
+        {
+            if (approvedMaterial == null)
+            {
+                throw new InvalidOperationException("Con Spirito approved material is missing.");
+            }
+
+            rendererCount = 0;
+            materialSlotCount = 0;
+            var renderers = modelObject.GetComponentsInChildren<Renderer>(true);
+            if (renderers.Length == 0)
+            {
+                throw new InvalidOperationException($"{modelObject.name} contains no Con Spirito renderers.");
+            }
+
+            foreach (var renderer in renderers)
+            {
+                rendererCount++;
+                var materials = renderer.sharedMaterials;
+                if (materials == null || materials.Length == 0)
+                {
+                    materials = new[] { approvedMaterial };
+                }
+                else
+                {
+                    for (var materialIndex = 0; materialIndex < materials.Length; materialIndex++)
+                    {
+                        materials[materialIndex] = approvedMaterial;
+                    }
+                }
+
+                materialSlotCount += materials.Length;
+                renderer.sharedMaterials = materials;
+                EditorUtility.SetDirty(renderer);
+            }
+        }
+
+        private static void InspectApprovedMaterialOnModel(
+            Transform modelObject,
+            Material approvedMaterial,
+            string label)
+        {
+            var renderers = modelObject.GetComponentsInChildren<Renderer>(true);
+            if (renderers.Length == 0)
+            {
+                throw new InvalidOperationException($"{label} contains no Con Spirito renderers.");
+            }
+
+            var materialSlotCount = 0;
+            var approvedMaterialSlotCount = 0;
+            foreach (var renderer in renderers)
+            {
+                var materials = renderer.sharedMaterials;
+                if (materials == null || materials.Length == 0)
+                {
+                    throw new InvalidOperationException($"{renderer.name} has no material slots after Con Spirito material application.");
+                }
+
+                for (var materialIndex = 0; materialIndex < materials.Length; materialIndex++)
+                {
+                    materialSlotCount++;
+                    if (IsApprovedMaterial(materials[materialIndex], approvedMaterial))
+                    {
+                        approvedMaterialSlotCount++;
+                    }
+                }
+            }
+
+            if (approvedMaterialSlotCount != materialSlotCount)
+            {
+                throw new InvalidOperationException(
+                    $"Con Spirito approved material mismatch on {label}. Approved={approvedMaterialSlotCount}, Total={materialSlotCount}.");
+            }
+        }
+
         private static void ApplyApprovedMaterialSample(Transform placementRoot, Material approvedMaterial)
         {
             var rendererCount = 0;
@@ -4375,27 +5322,10 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                     throw new InvalidOperationException($"Con Spirito animation review slot is missing: {AnimationReviewSlotNames[index]}.");
                 }
 
-                var modelObject = RequireModelObject(slotRoot, OriginalModelChildName);
-                foreach (var renderer in modelObject.GetComponentsInChildren<Renderer>(true))
-                {
-                    rendererCount++;
-                    var materials = renderer.sharedMaterials;
-                    if (materials == null || materials.Length == 0)
-                    {
-                        materials = new[] { approvedMaterial };
-                    }
-                    else
-                    {
-                        for (var materialIndex = 0; materialIndex < materials.Length; materialIndex++)
-                        {
-                            materials[materialIndex] = approvedMaterial;
-                        }
-                    }
-
-                    materialSlotCount += materials.Length;
-                    renderer.sharedMaterials = materials;
-                    EditorUtility.SetDirty(renderer);
-                }
+                var modelObject = RequireAnimationReviewSlotModel(slotRoot, index);
+                ApplyApprovedMaterialToModel(modelObject, approvedMaterial, out var slotRendererCount, out var slotMaterialCount);
+                rendererCount += slotRendererCount;
+                materialSlotCount += slotMaterialCount;
             }
 
             Debug.Log(
@@ -4429,7 +5359,7 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                     throw new InvalidOperationException($"Con Spirito animation review slot is missing: {AnimationReviewSlotNames[index]}.");
                 }
 
-                var modelObject = RequireModelObject(slotRoot, OriginalModelChildName);
+                var modelObject = RequireAnimationReviewSlotModel(slotRoot, index);
                 var renderers = modelObject.GetComponentsInChildren<Renderer>(true);
                 if (renderers.Length == 0)
                 {
@@ -4773,9 +5703,21 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
 
         private static Bounds TransformBounds(Matrix4x4 matrix, Bounds localBounds)
         {
-            var min = localBounds.min;
-            var max = localBounds.max;
-            var corners = new[]
+            var corners = GetBoundsCorners(localBounds);
+            var worldBounds = new Bounds(matrix.MultiplyPoint3x4(corners[0]), Vector3.zero);
+            for (var i = 1; i < corners.Length; i++)
+            {
+                worldBounds.Encapsulate(matrix.MultiplyPoint3x4(corners[i]));
+            }
+
+            return worldBounds;
+        }
+
+        private static Vector3[] GetBoundsCorners(Bounds bounds)
+        {
+            var min = bounds.min;
+            var max = bounds.max;
+            return new[]
             {
                 new Vector3(min.x, min.y, min.z),
                 new Vector3(min.x, min.y, max.z),
@@ -4786,14 +5728,6 @@ namespace Bellerophon.Editor.ConSpiritoCargoRunScene
                 new Vector3(max.x, max.y, min.z),
                 new Vector3(max.x, max.y, max.z)
             };
-
-            var worldBounds = new Bounds(matrix.MultiplyPoint3x4(corners[0]), Vector3.zero);
-            for (var i = 1; i < corners.Length; i++)
-            {
-                worldBounds.Encapsulate(matrix.MultiplyPoint3x4(corners[i]));
-            }
-
-            return worldBounds;
         }
 
         private static Vector3 CalculateVisualFrontDirection(Transform focus)
