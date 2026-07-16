@@ -78,14 +78,54 @@ namespace Bellerophon.Editor.GraveCargoRunScene
         private const string GraveWalkImportedControllerAssetPath = "Assets/_Project/Art/Enemies/Grave/Controllers/Grave_Walk_Imported.controller";
         private const string GraveWalkImportedClipName = "Grave_Walk_Imported";
         private const string GraveWalkFbxValidationRelativeFolder = "docs/validation/grave_walk_fbx_replacement_2026-07-15";
-        // Grave attack review animates the existing rig only. Arm scale and visible model geometry remain unchanged.
+        // Grave attack keeps the approved rig motion and adds one right-arm-only scythe-blade BlendShape.
         private const string GraveAttackSlotName = "Grave_03_Attack_RightArm_GiantSweep";
         private const string GraveAttackClipAssetPath = "Assets/_Project/Art/Enemies/Grave/Animations/Grave_Attack_CurtainCall_Sweep.anim";
         private const string GraveAttackControllerAssetPath = "Assets/_Project/Art/Enemies/Grave/Controllers/Grave_Attack_CurtainCall_Sweep.controller";
-        private const string GraveAttackValidationRelativeFolder = "docs/validation/grave_curtain_call_attack_2026-07-15";
+        private const string GraveAttackBladeMeshAssetPath = "Assets/_Project/Art/Enemies/Grave/Models/Grave_Attack_ScytheBlade_Body.asset";
+        private const string GraveAttackBladeBlendShapeName = "GraveRightArmScytheBlade";
+        private const string GraveAttackValidationRelativeFolder = "docs/validation/grave_scythe_blade_accelerated_attack_2026-07-16";
         private const float GraveAttackDuration = 3f;
+        // The preserved motion reaches its full side extension at 1.2 seconds; the blade must be complete there.
+        private const float GraveAttackBladeFullTime = 1.2f;
+        // Rebuild the arm as the reference scythe blade: narrow heel, convex lower edge, curved pointed tip.
+        private const float GraveAttackBladeDepth = 0.24f;
+        private const float GraveAttackUpperThickness = 0.02f;
+        private const float GraveAttackBladeStartProgress = 0.12f;
+        private const float GraveAttackBladeFullProgress = 0.24f;
+        // The blade centerline bends downward; it does not lift into the former leaf-shaped silhouette.
+        private const float GraveAttackScytheExtension = 0.14f;
+        private const float GraveAttackScytheTipDrop = 0.10f;
+        private const float GraveAttackScytheBellyDrop = 0.06f;
+        private const float GraveAttackScytheFrontThicknessScale = 0.06f;
+        // Preserve the accepted pre-restart curtain-call arc through its original lowering guide.
+        private const float GraveAttackSlashHoldTime = 1.28f;
+        private const float GraveAttackSlashEndTime = 1.58f;
+        private const float GraveAttackCurtainCallHoldTime = 2.35f;
+        private const int GraveAttackPreviewCycles = 4;
         private static readonly float[] GraveAttackKeyTimes =
             { 0f, 0.35f, 0.85f, 1.2f, 1.65f, 2f, 2.35f, 2.65f, 3f };
+        // Review the actual slash interval instead of skipping from side extension directly to the held pose.
+        private static readonly float[] GraveAttackCaptureTimes =
+            { 0f, 0.85f, 1.2f, 1.28f, 1.38f, 1.48f, 1.58f, 2f, 2.35f, 2.65f, 3f };
+        private static LocalPoseState[] graveAttackPreviewNormalPoses;
+        private static Transform graveAttackPreviewModel;
+        private static Animator graveAttackPreviewAnimator;
+        private static AnimationClip graveAttackPreviewClip;
+        private static SkinnedMeshRenderer graveAttackPreviewRenderer;
+        private static double graveAttackPreviewStartedAt;
+        private static bool graveAttackPreviewAnimatorWasEnabled;
+        private static bool graveAttackPreviewSceneWasDirty;
+        private static Scene graveAttackPreviewScene;
+        // Grave hit reaction loops for scene review; hips, legs, model, and slot remain fixed at every boundary.
+        private const string GraveHitSlotName = "Grave_04_Hit_Recoil";
+        private const string GraveHitClipAssetPath = "Assets/_Project/Art/Enemies/Grave/Animations/Grave_Hit_Recoil.anim";
+        private const string GraveHitControllerAssetPath = "Assets/_Project/Art/Enemies/Grave/Controllers/Grave_Hit_Recoil.controller";
+        private const string GraveHitValidationRelativeFolder = "docs/validation/grave_hit_recoil_2026-07-16";
+        private const float GraveHitDuration = 1.1f;
+        private static readonly float[] GraveHitKeyTimes = { 0f, 0.07f, 0.18f, 0.34f, 0.5f, 0.78f, 1.1f };
+        private static readonly float[] GraveHitBodyFactors = { 0f, 0.42f, 1f, -0.18f, 0.14f, 0.025f, 0f };
+        private static readonly float[] GraveHitHeadLagFactors = { 0f, 0.08f, 0.72f, 1f, -0.15f, 0.05f, 0f };
 
         private static readonly string[] AnimationSlotNames =
         {
@@ -568,6 +608,7 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             animator.updateMode = AnimatorUpdateMode.Normal;
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             animator.enabled = true;
+            RebindApprovedGraveCurtainCallAnimator(animator, controller, clip);
             PrefabUtility.RecordPrefabInstancePropertyModifications(animator);
             EditorUtility.SetDirty(animator);
 
@@ -1063,15 +1104,50 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             }
         }
 
-        [MenuItem("Bellerophon/Enemies/Grave/Inspect Approved Attack Rig")]
+        [MenuItem("Bellerophon/Enemies/Grave/Preview and Inspect Approved Attack Rig")]
         public static void InspectApprovedGraveAttackRig()
         {
-            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
-            var graveRoot = RequireSceneObject(scene, GraveRootName).transform;
+            var scene = RequireOpenCargoRunScene();
+            var sceneWasDirty = scene.isDirty;
+            var graveRoot = RequireRootSceneObject(scene, GraveRootName).transform;
             var attackSlot = graveRoot.Find(GraveAttackSlotName) ??
                 throw new InvalidOperationException(GraveAttackSlotName + " is missing.");
             var attackModel = attackSlot.Find(GraveModelName) ??
                 throw new InvalidOperationException(GraveAttackSlotName + "/" + GraveModelName + " is missing.");
+            var renderer = RequireGraveAttackBodyRenderer(attackModel);
+            var animator = attackModel.GetComponent<Animator>();
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveAttackClipAssetPath);
+            if (animator == null || clip == null)
+            {
+                throw new InvalidOperationException("Grave attack preview requires the approved Animator and clip.");
+            }
+
+            var blendShapeIndex = renderer.sharedMesh.GetBlendShapeIndex(GraveAttackBladeBlendShapeName);
+            if (blendShapeIndex < 0)
+            {
+                throw new InvalidOperationException("Grave attack preview BlendShape is missing.");
+            }
+
+            StartGraveAttackEditModePreview(scene, attackModel, animator, clip, renderer, blendShapeIndex);
+            var controllerClips = animator?.runtimeAnimatorController == null
+                ? "None"
+                : string.Join("|", animator.runtimeAnimatorController.animationClips.Select(item => item.name));
+            var blendShapeBindings = clip == null
+                ? "None"
+                : string.Join(
+                    "|",
+                    AnimationUtility.GetCurveBindings(clip)
+                        .Where(binding => binding.propertyName.StartsWith("blendShape.", StringComparison.Ordinal))
+                        .Select(binding => $"{binding.path}:{binding.propertyName}"));
+            var runtimeState = "EditMode";
+            if (EditorApplication.isPlaying && animator != null && animator.isActiveAndEnabled)
+            {
+                var clipInfo = animator.GetCurrentAnimatorClipInfo(0);
+                var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                runtimeState =
+                    $"PlayMode:Normalized={stateInfo.normalizedTime:0.###}," +
+                    $"Clips={string.Join("|", clipInfo.Select(item => item.clip.name))}";
+            }
             var names = new[]
             {
                 "Hips", "Spine02", "Spine01", "Spine", "neck", "Head",
@@ -1089,29 +1165,131 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                 }));
             Debug.Log(
                 $"GraveAttackRigInspection Front={FormatVector(CalculateVisualFront(attackModel))}, " +
-                $"Right={FormatVector(attackModel.right)}, Up={FormatVector(attackModel.up)}, Hierarchy={hierarchy}");
+                $"Right={FormatVector(attackModel.right)}, Up={FormatVector(attackModel.up)}, " +
+                $"Mesh={renderer.sharedMesh.name}, Vertices={renderer.sharedMesh.vertexCount}, " +
+                $"BlendShapes={renderer.sharedMesh.blendShapeCount}, BladeIndex={blendShapeIndex}, " +
+                $"BladeWeight={(blendShapeIndex >= 0 ? renderer.GetBlendShapeWeight(blendShapeIndex) : -1f):0.###}, " +
+                $"AnimatorEnabled={animator != null && animator.enabled}, " +
+                $"Controller={animator?.runtimeAnimatorController?.name ?? "None"}, ControllerClips={controllerClips}, " +
+                $"BlendShapeBindings={blendShapeBindings}, RuntimeState={runtimeState}, " +
+                $"PreviewCycles={GraveAttackPreviewCycles}, PreviewSaved=False, " +
+                $"SceneDirtyPreserved={scene.isDirty == sceneWasDirty}, Hierarchy={hierarchy}");
+        }
+
+        private static void StartGraveAttackEditModePreview(
+            Scene scene,
+            Transform attackModel,
+            Animator animator,
+            AnimationClip clip,
+            SkinnedMeshRenderer renderer,
+            int blendShapeIndex)
+        {
+            StopGraveAttackEditModePreview();
+            graveAttackPreviewAnimatorWasEnabled = animator.enabled;
+            animator.enabled = false;
+            clip.SampleAnimation(attackModel.gameObject, 0f);
+            renderer.SetBlendShapeWeight(blendShapeIndex, 0f);
+            graveAttackPreviewNormalPoses = CaptureLocalPoses(attackModel);
+            graveAttackPreviewModel = attackModel;
+            graveAttackPreviewAnimator = animator;
+            graveAttackPreviewClip = clip;
+            graveAttackPreviewRenderer = renderer;
+            graveAttackPreviewStartedAt = EditorApplication.timeSinceStartup;
+            graveAttackPreviewSceneWasDirty = scene.isDirty;
+            graveAttackPreviewScene = scene;
+            Selection.activeGameObject = attackModel.gameObject;
+            if (SceneView.lastActiveSceneView != null)
+            {
+                SceneView.lastActiveSceneView.FrameSelected();
+            }
+
+            EditorApplication.update -= UpdateGraveAttackEditModePreview;
+            EditorApplication.update += UpdateGraveAttackEditModePreview;
+            SceneView.RepaintAll();
+        }
+
+        private static void UpdateGraveAttackEditModePreview()
+        {
+            if (graveAttackPreviewModel == null || graveAttackPreviewClip == null ||
+                graveAttackPreviewAnimator == null || graveAttackPreviewRenderer == null)
+            {
+                StopGraveAttackEditModePreview();
+                return;
+            }
+
+            var elapsed = EditorApplication.timeSinceStartup - graveAttackPreviewStartedAt;
+            var previewDuration = GraveAttackDuration * GraveAttackPreviewCycles;
+            if (elapsed >= previewDuration)
+            {
+                var sceneDirtyPreserved =
+                    graveAttackPreviewScene.IsValid() &&
+                    graveAttackPreviewScene.isDirty == graveAttackPreviewSceneWasDirty;
+                StopGraveAttackEditModePreview();
+                Debug.Log(
+                    $"GraveAttackEditModePreviewFinished Cycles={GraveAttackPreviewCycles}, " +
+                    $"RestoredNormalArm=True, PreviewSaved=False, SceneDirtyPreserved={sceneDirtyPreserved}");
+                return;
+            }
+
+            RestoreLocalPoses(graveAttackPreviewNormalPoses);
+            var sampleTime = (float)(elapsed % GraveAttackDuration);
+            graveAttackPreviewClip.SampleAnimation(graveAttackPreviewModel.gameObject, sampleTime);
+            SceneView.RepaintAll();
+        }
+
+        private static void StopGraveAttackEditModePreview()
+        {
+            EditorApplication.update -= UpdateGraveAttackEditModePreview;
+            if (graveAttackPreviewNormalPoses != null)
+            {
+                RestoreLocalPoses(graveAttackPreviewNormalPoses);
+            }
+
+            if (graveAttackPreviewRenderer != null && graveAttackPreviewRenderer.sharedMesh != null)
+            {
+                var blendShapeIndex =
+                    graveAttackPreviewRenderer.sharedMesh.GetBlendShapeIndex(GraveAttackBladeBlendShapeName);
+                if (blendShapeIndex >= 0)
+                {
+                    graveAttackPreviewRenderer.SetBlendShapeWeight(blendShapeIndex, 0f);
+                }
+            }
+
+            if (graveAttackPreviewAnimator != null)
+            {
+                graveAttackPreviewAnimator.enabled = graveAttackPreviewAnimatorWasEnabled;
+            }
+
+            graveAttackPreviewNormalPoses = null;
+            graveAttackPreviewModel = null;
+            graveAttackPreviewAnimator = null;
+            graveAttackPreviewClip = null;
+            graveAttackPreviewRenderer = null;
+            SceneView.RepaintAll();
         }
 
         [MenuItem("Bellerophon/Enemies/Grave/Apply Approved Curtain Call Attack")]
         public static void ApplyApprovedGraveCurtainCallAttack()
         {
-            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
-            ValidateApprovedReproductionScene(scene, writeReport: false);
-            var graveRoot = RequireSceneObject(scene, GraveRootName).transform;
-            var preservedRoots = scene.GetRootGameObjects()
-                .Where(root => root != graveRoot.gameObject)
-                .Select(root => new RootState(root))
-                .ToList();
-            var graveRootState = new RootState(graveRoot.gameObject);
-            var slotStates = AnimationSlotNames
-                .Select(name => graveRoot.Find(name) ?? throw new InvalidOperationException(name + " is missing."))
-                .Select(slot => new RootState(slot.gameObject))
-                .ToList();
+            var scene = RequireOpenCargoRunScene();
+            var graveRoot = RequireRootSceneObject(scene, GraveRootName).transform;
             var attackSlot = graveRoot.Find(GraveAttackSlotName) ??
                 throw new InvalidOperationException(GraveAttackSlotName + " is missing.");
             var attackModel = attackSlot.Find(GraveModelName) ??
                 throw new InvalidOperationException(GraveAttackSlotName + "/" + GraveModelName + " is missing.");
+            var slotState = new RootState(attackSlot.gameObject);
+            var modelState = new RootState(attackModel.gameObject);
+            var existingClip = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveAttackClipAssetPath) ??
+                throw new InvalidOperationException("Existing Grave curtain-call attack clip is missing.");
+            RestoreGraveAttackApprovedRestPose(attackModel);
+            var attackRenderer = RequireGraveAttackBodyRenderer(attackModel);
+            var existingBladeIndex = attackRenderer.sharedMesh.GetBlendShapeIndex(GraveAttackBladeBlendShapeName);
+            if (existingBladeIndex >= 0)
+            {
+                attackRenderer.SetBlendShapeWeight(existingBladeIndex, 0f);
+            }
 
+            EnsureApprovedGraveScytheBladeMesh(attackModel, existingClip);
             var clip = EnsureApprovedGraveCurtainCallAttackClip(attackModel);
             var controller = EnsureApprovedGraveCurtainCallAttackController(clip);
             var animator = attackModel.GetComponent<Animator>();
@@ -1128,13 +1306,8 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             PrefabUtility.RecordPrefabInstancePropertyModifications(animator);
             EditorUtility.SetDirty(animator);
 
-            graveRootState.AssertUnchanged();
-            foreach (var slotState in slotStates)
-            {
-                slotState.AssertUnchanged();
-            }
-
-            AssertPreservedRoots(preservedRoots);
+            slotState.AssertUnchanged();
+            modelState.AssertUnchanged();
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
@@ -1145,7 +1318,7 @@ namespace Bellerophon.Editor.GraveCargoRunScene
         [MenuItem("Bellerophon/Enemies/Grave/Validate Approved Curtain Call Attack")]
         public static void ValidateApprovedGraveCurtainCallAttack()
         {
-            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var scene = RequireOpenCargoRunScene();
             var metrics = ValidateApprovedGraveCurtainCallAttackScene(scene, writeReport: true);
             Debug.Log("GraveApprovedCurtainCallAttackValidationPassed " + metrics);
         }
@@ -1153,9 +1326,9 @@ namespace Bellerophon.Editor.GraveCargoRunScene
         [MenuItem("Bellerophon/Enemies/Grave/Capture Approved Curtain Call Attack")]
         public static void CaptureApprovedGraveCurtainCallAttack()
         {
-            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
+            var scene = RequireOpenCargoRunScene();
             ValidateApprovedGraveCurtainCallAttackScene(scene, writeReport: false);
-            var graveRoot = RequireSceneObject(scene, GraveRootName).transform;
+            var graveRoot = RequireRootSceneObject(scene, GraveRootName).transform;
             var attackSlot = graveRoot.Find(GraveAttackSlotName) ??
                 throw new InvalidOperationException(GraveAttackSlotName + " is missing.");
             var attackModel = attackSlot.Find(GraveModelName) ??
@@ -1164,71 +1337,37 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                 throw new InvalidOperationException("Grave curtain-call attack Animator is missing.");
             var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveAttackClipAssetPath) ??
                 throw new InvalidOperationException("Grave curtain-call attack clip is missing.");
+            var attackRenderer = RequireGraveAttackBodyRenderer(attackModel);
             var originalAnimatorEnabled = animator.enabled;
             var poses = CaptureLocalPoses(attackModel);
-            var transforms = attackSlot.GetComponentsInChildren<Transform>(true);
-            var originalLayers = transforms.Select(target => target.gameObject.layer).ToArray();
+            var player = RequireSceneObject(scene, PlayerName);
+            // The user's reference recording uses the enabled Model Cam Game View framing.
+            var gameViewCamera = scene.GetRootGameObjects()
+                .SelectMany(root => root.GetComponentsInChildren<Camera>(true))
+                .FirstOrDefault(candidate => candidate.enabled && candidate.gameObject.name == "Model Cam") ??
+                player.GetComponentsInChildren<Camera>(true)
+                .FirstOrDefault(candidate => candidate.enabled) ??
+                throw new InvalidOperationException("CargoRunMvp enabled Game View camera is missing.");
+            var gameViewCameraObject = gameViewCamera.gameObject;
             var cameraObject = new GameObject("Grave_CurtainCallAttack_CaptureCamera");
-            var lightObject = new GameObject("Grave_CurtainCallAttack_CaptureLight");
-            var frames = new Texture2D[GraveAttackKeyTimes.Length];
+            var frames = new Texture2D[GraveAttackCaptureTimes.Length];
             Texture2D sheet = null;
             try
             {
                 animator.enabled = false;
-                foreach (var target in transforms)
-                {
-                    target.gameObject.layer = CaptureLayer;
-                }
-
-                var reviewBounds = new Bounds();
-                var hasReviewBounds = false;
-                foreach (var time in GraveAttackKeyTimes)
-                {
-                    RestoreLocalPoses(poses);
-                    clip.SampleAnimation(attackModel.gameObject, time);
-                    var sampledBounds = CalculateVisibleBounds(attackSlot);
-                    if (!hasReviewBounds)
-                    {
-                        reviewBounds = sampledBounds;
-                        hasReviewBounds = true;
-                    }
-                    else
-                    {
-                        reviewBounds.Encapsulate(sampledBounds);
-                    }
-                }
-
-                var front = CalculateVisualFront(attackModel);
-                var cameraPosition = reviewBounds.center + front * 5f;
                 var camera = cameraObject.AddComponent<Camera>();
-                camera.cullingMask = 1 << CaptureLayer;
-                camera.clearFlags = CameraClearFlags.SolidColor;
-                camera.backgroundColor = new Color(0.96f, 0.965f, 0.97f, 1f);
-                camera.orthographic = true;
-                camera.nearClipPlane = 0.03f;
-                camera.farClipPlane = 80f;
-                var light = lightObject.AddComponent<Light>();
-                light.type = LightType.Directional;
-                light.intensity = 2.2f;
-                light.cullingMask = 1 << CaptureLayer;
-                var frameWidth = 480;
-                var frameHeight = 720;
-                var aspect = frameWidth / (float)frameHeight;
-                var orthographicSize = Mathf.Max(
-                    reviewBounds.extents.y * 1.18f,
-                    reviewBounds.extents.x / aspect * 1.12f);
-                for (var i = 0; i < GraveAttackKeyTimes.Length; i++)
+                camera.CopyFrom(gameViewCamera);
+                camera.enabled = false;
+                camera.transform.SetPositionAndRotation(
+                    gameViewCamera.transform.position,
+                    gameViewCamera.transform.rotation);
+                var frameWidth = 640;
+                var frameHeight = 360;
+                for (var i = 0; i < GraveAttackCaptureTimes.Length; i++)
                 {
                     RestoreLocalPoses(poses);
-                    clip.SampleAnimation(attackModel.gameObject, GraveAttackKeyTimes[i]);
-                    frames[i] = RenderReviewView(
-                        camera,
-                        light,
-                        reviewBounds,
-                        cameraPosition,
-                        orthographicSize,
-                        frameWidth,
-                        frameHeight);
+                    clip.SampleAnimation(attackModel.gameObject, GraveAttackCaptureTimes[i]);
+                    frames[i] = RenderCameraFrame(camera, frameWidth, frameHeight);
                 }
 
                 var sheetWidth = frameWidth * frames.Length;
@@ -1246,19 +1385,162 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                 File.WriteAllBytes(outputPath, sheet.EncodeToPNG());
                 Debug.Log(
                     $"GraveApprovedCurtainCallAttackCapturePassed Path={outputPath}, " +
-                    $"Times={string.Join("|", GraveAttackKeyTimes.Select(time => time.ToString("0.##")))}, " +
-                    $"Duration={GraveAttackDuration:0.###}, ArmScaleChanged=False");
+                    $"Times={string.Join("|", GraveAttackCaptureTimes.Select(time => time.ToString("0.##")))}, " +
+                    $"Duration={GraveAttackDuration:0.###}, Camera={gameViewCameraObject.name}, " +
+                    $"Projection={(gameViewCamera.orthographic ? "Orthographic" : "Perspective")}, ArmScaleChanged=False");
             }
             finally
             {
                 RestoreLocalPoses(poses);
+                var bladeIndex = attackRenderer.sharedMesh.GetBlendShapeIndex(GraveAttackBladeBlendShapeName);
+                if (bladeIndex >= 0)
+                {
+                    attackRenderer.SetBlendShapeWeight(bladeIndex, 0f);
+                }
+
                 animator.enabled = originalAnimatorEnabled;
+                foreach (var frame in frames)
+                {
+                    UnityEngine.Object.DestroyImmediate(frame);
+                }
+
+                UnityEngine.Object.DestroyImmediate(sheet);
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+            }
+        }
+
+        [MenuItem("Bellerophon/Enemies/Grave/Apply Approved Hit Recoil")]
+        public static void ApplyApprovedGraveHitRecoil()
+        {
+            var scene = RequireOpenCargoRunScene();
+            var graveRoot = RequireRootSceneObject(scene, GraveRootName).transform;
+            var hitSlot = graveRoot.Find(GraveHitSlotName) ??
+                throw new InvalidOperationException(GraveHitSlotName + " is missing.");
+            var hitModel = hitSlot.Find(GraveModelName) ??
+                throw new InvalidOperationException(GraveHitSlotName + "/" + GraveModelName + " is missing.");
+            var slotState = new RootState(hitSlot.gameObject);
+            var modelState = new RootState(hitModel.gameObject);
+
+            var clip = EnsureApprovedGraveHitRecoilClip(hitModel);
+            var controller = EnsureApprovedGraveHitRecoilController(clip);
+            var animator = hitModel.GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = hitModel.gameObject.AddComponent<Animator>();
+            }
+
+            animator.runtimeAnimatorController = controller;
+            animator.applyRootMotion = false;
+            animator.updateMode = AnimatorUpdateMode.Normal;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            animator.enabled = true;
+            PrefabUtility.RecordPrefabInstancePropertyModifications(animator);
+            EditorUtility.SetDirty(animator);
+
+            slotState.AssertUnchanged();
+            modelState.AssertUnchanged();
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            var metrics = ValidateApprovedGraveHitRecoilScene(scene, writeReport: true);
+            Debug.Log("GraveApprovedHitRecoilApplied " + metrics);
+        }
+
+        [MenuItem("Bellerophon/Enemies/Grave/Validate Approved Hit Recoil")]
+        public static void ValidateApprovedGraveHitRecoil()
+        {
+            var scene = RequireOpenCargoRunScene();
+            var metrics = ValidateApprovedGraveHitRecoilScene(scene, writeReport: true);
+            Debug.Log("GraveApprovedHitRecoilValidationPassed " + metrics);
+        }
+
+        [MenuItem("Bellerophon/Enemies/Grave/Capture Approved Hit Recoil")]
+        public static void CaptureApprovedGraveHitRecoil()
+        {
+            var scene = RequireOpenCargoRunScene();
+            ValidateApprovedGraveHitRecoilScene(scene, writeReport: false);
+            var graveRoot = RequireRootSceneObject(scene, GraveRootName).transform;
+            var hitSlot = graveRoot.Find(GraveHitSlotName) ??
+                throw new InvalidOperationException(GraveHitSlotName + " is missing.");
+            var hitModel = hitSlot.Find(GraveModelName) ??
+                throw new InvalidOperationException(GraveHitSlotName + "/" + GraveModelName + " is missing.");
+            var animator = hitModel.GetComponent<Animator>() ??
+                throw new InvalidOperationException("Grave hit-recoil Animator is missing.");
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveHitClipAssetPath) ??
+                throw new InvalidOperationException("Grave hit-recoil clip is missing.");
+            var animatorWasEnabled = animator.enabled;
+            var poses = CaptureLocalPoses(hitModel);
+            var transforms = hitSlot.GetComponentsInChildren<Transform>(true);
+            var originalLayers = transforms.Select(target => target.gameObject.layer).ToArray();
+            var cameraObject = new GameObject("Grave_HitRecoil_CaptureCamera");
+            var lightObject = new GameObject("Grave_HitRecoil_CaptureLight");
+            var frames = new Texture2D[GraveHitKeyTimes.Length];
+            Texture2D sheet = null;
+            try
+            {
+                animator.enabled = false;
+                foreach (var target in transforms)
+                {
+                    target.gameObject.layer = CaptureLayer;
+                }
+
+                RestoreLocalPoses(poses);
+                var baseBounds = CalculateVisibleBounds(hitSlot);
+                var front = CalculateVisualFront(hitModel);
+                var cameraPosition = baseBounds.center + front * 5f;
+                var camera = cameraObject.AddComponent<Camera>();
+                camera.cullingMask = 1 << CaptureLayer;
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0.96f, 0.965f, 0.97f, 1f);
+                camera.orthographic = true;
+                camera.nearClipPlane = 0.03f;
+                camera.farClipPlane = 80f;
+                var light = lightObject.AddComponent<Light>();
+                light.type = LightType.Directional;
+                light.intensity = 2.2f;
+                light.cullingMask = 1 << CaptureLayer;
+                light.transform.rotation = Quaternion.Euler(42f, 28f, 0f);
+                const int frameWidth = 420;
+                const int frameHeight = 720;
+                for (var i = 0; i < GraveHitKeyTimes.Length; i++)
+                {
+                    RestoreLocalPoses(poses);
+                    clip.SampleAnimation(hitModel.gameObject, GraveHitKeyTimes[i]);
+                    frames[i] = RenderReviewView(
+                        camera,
+                        light,
+                        baseBounds,
+                        cameraPosition,
+                        Mathf.Max(baseBounds.extents.y * 1.22f, 1.05f),
+                        frameWidth,
+                        frameHeight);
+                }
+
+                var sheetWidth = frameWidth * frames.Length;
+                sheet = new Texture2D(sheetWidth, frameHeight, TextureFormat.RGB24, false);
+                sheet.SetPixels(Enumerable.Repeat(new Color(0.08f, 0.09f, 0.10f, 1f), sheetWidth * frameHeight).ToArray());
+                for (var i = 0; i < frames.Length; i++)
+                {
+                    sheet.SetPixels(i * frameWidth, 0, frameWidth, frameHeight, frames[i].GetPixels());
+                }
+
+                sheet.Apply();
+                var folder = ProjectAbsolutePath(GraveHitValidationRelativeFolder);
+                Directory.CreateDirectory(folder);
+                var outputPath = Path.Combine(folder, "Grave_Hit_Recoil_Review.png");
+                File.WriteAllBytes(outputPath, sheet.EncodeToPNG());
+                Debug.Log(
+                    $"GraveApprovedHitRecoilCapturePassed Path={outputPath}, " +
+                    $"Times={string.Join("|", GraveHitKeyTimes.Select(time => time.ToString("0.##")))}, " +
+                    $"Duration={GraveHitDuration:0.###}, Projection=Orthographic");
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+                animator.enabled = animatorWasEnabled;
                 for (var i = 0; i < transforms.Length; i++)
                 {
-                    if (transforms[i] != null)
-                    {
-                        transforms[i].gameObject.layer = originalLayers[i];
-                    }
+                    transforms[i].gameObject.layer = originalLayers[i];
                 }
 
                 foreach (var frame in frames)
@@ -2204,58 +2486,59 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                 Vector3.zero, new Vector3(-1f, 3f, -1f), new Vector3(-2f, 7f, -2f),
                 new Vector3(-2f, 9f, -2f), new Vector3(1f, 2f, 1f),
                 new Vector3(3f, -2f, 1f), new Vector3(4f, -3f, 1.5f),
-                new Vector3(2f, -1f, 0.5f), Vector3.zero
+                new Vector3(4f, -3f, 1.5f), new Vector3(4f, -3f, 1.5f)
             });
             SetGraveAttackRotationCurves(clip, spine02, attackModel, new[]
             {
                 Vector3.zero, new Vector3(-2f, 4f, -2f), new Vector3(-3f, 10f, -4f),
                 new Vector3(-3f, 12f, -5f), new Vector3(3f, 2f, 1.5f),
                 new Vector3(6f, -3f, 2f), new Vector3(7f, -4f, 2.5f),
-                new Vector3(3f, -1f, 1f), Vector3.zero
+                new Vector3(7f, -4f, 2.5f), new Vector3(7f, -4f, 2.5f)
             });
             SetGraveAttackRotationCurves(clip, spine01, attackModel, new[]
             {
                 Vector3.zero, new Vector3(-1f, 3f, -1f), new Vector3(-2f, 7f, -3f),
                 new Vector3(-2f, 9f, -4f), new Vector3(2f, 1f, 1f),
                 new Vector3(4f, -2f, 1.5f), new Vector3(5f, -3f, 2f),
-                new Vector3(2f, -1f, 0.8f), Vector3.zero
+                new Vector3(5f, -3f, 2f), new Vector3(5f, -3f, 2f)
             });
             SetGraveAttackRotationCurves(clip, spine, attackModel, new[]
             {
                 Vector3.zero, new Vector3(0f, 2f, -1f), new Vector3(-1f, 5f, -2f),
                 new Vector3(-1f, 7f, -3f), new Vector3(1f, 1f, 0.5f),
                 new Vector3(3f, -1f, 1f), new Vector3(4f, -2f, 1.2f),
-                new Vector3(1.5f, -0.5f, 0.5f), Vector3.zero
+                new Vector3(4f, -2f, 1.2f), new Vector3(4f, -2f, 1.2f)
             });
             SetGraveAttackRotationCurves(clip, neck, attackModel, new[]
             {
                 Vector3.zero, new Vector3(1f, -1f, 1f), new Vector3(2f, -3f, 2f),
                 new Vector3(2f, -4f, 2f), new Vector3(-1f, -1f, -0.5f),
                 new Vector3(-2f, 1f, -1f), new Vector3(-3f, 2f, -1f),
-                new Vector3(-1f, 0.5f, -0.5f), Vector3.zero
+                new Vector3(-3f, 2f, -1f), new Vector3(-3f, 2f, -1f)
             });
             SetGraveAttackRotationCurves(clip, head, attackModel, new[]
             {
                 Vector3.zero, new Vector3(1f, -1f, 0f), new Vector3(2f, -2f, 1f),
-                new Vector3(2f, -3f, 1f), new Vector3(0f, 0f, 0f),
+                new Vector3(2f, -3f, 1f), Vector3.zero,
                 new Vector3(-1f, 1f, 0f), new Vector3(-1f, 1f, -0.5f),
-                new Vector3(0f, 0f, 0f), Vector3.zero
+                new Vector3(-1f, 1f, -0.5f), new Vector3(-1f, 1f, -0.5f)
             });
             SetGraveAttackRotationCurves(clip, rightShoulder, attackModel, new[]
             {
                 Vector3.zero, new Vector3(-2f, 1f, 6f), new Vector3(-5f, 3f, 12f),
                 new Vector3(-6f, 4f, 14f), new Vector3(15f, -2f, 10f),
                 new Vector3(32f, -6f, 5f), new Vector3(22f, -8f, 2f),
-                new Vector3(8f, -2f, 1f), Vector3.zero
+                new Vector3(22f, -8f, 2f), new Vector3(22f, -8f, 2f)
             });
             var baseUpperDirection = GraveAttackModelDirection(attackModel, rightForeArm.position - rightArm.position);
             var baseForeArmDirection = GraveAttackModelDirection(attackModel, rightHand.position - rightForeArm.position);
             var presentedUpperDirection = new Vector3(1f, 0.08f, 0.04f).normalized;
             var presentedForeArmDirection = new Vector3(1f, 0.03f, 0.08f).normalized;
-            var loweringUpperDirection = new Vector3(0.72f, -0.69f, 0.06f).normalized;
-            var loweringForeArmDirection = new Vector3(0.68f, -0.72f, 0.12f).normalized;
-            var sweepingUpperDirection = new Vector3(0.28f, -0.96f, -0.08f).normalized;
-            var sweepingForeArmDirection = new Vector3(0.22f, -0.97f, -0.10f).normalized;
+            var loweringUpperDirection = new Vector3(0.72f, -0.69f, 0f).normalized;
+            var loweringForeArmDirection = new Vector3(0.68f, -0.72f, 0f).normalized;
+            var sweepingUpperDirection = new Vector3(0.28f, -0.96f, 0f).normalized;
+            var sweepingForeArmDirection = new Vector3(0.22f, -0.97f, 0f).normalized;
+            // Preserve the original bent curtain-call silhouette; front clearance is handled without straightening the elbow.
             var pullingUpperDirection = new Vector3(-0.45f, -0.86f, 0.24f).normalized;
             var pullingForeArmDirection = new Vector3(-0.82f, 0.18f, 0.54f).normalized;
             SetGraveAttackAimRotationCurves(clip, rightArm, rightForeArm, attackModel, new[]
@@ -2267,8 +2550,8 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                 loweringUpperDirection,
                 sweepingUpperDirection,
                 pullingUpperDirection,
-                Vector3.Lerp(pullingUpperDirection, baseUpperDirection, 0.6f).normalized,
-                baseUpperDirection
+                pullingUpperDirection,
+                pullingUpperDirection
             });
             SetGraveAttackAimRotationCurves(clip, rightForeArm, rightHand, attackModel, new[]
             {
@@ -2279,30 +2562,36 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                 loweringForeArmDirection,
                 sweepingForeArmDirection,
                 pullingForeArmDirection,
-                Vector3.Lerp(pullingForeArmDirection, baseForeArmDirection, 0.62f).normalized,
-                baseForeArmDirection
+                pullingForeArmDirection,
+                pullingForeArmDirection
             });
             SetGraveAttackRotationCurves(clip, rightHand, attackModel, new[]
             {
                 Vector3.zero, new Vector3(0f, 0f, 2f), new Vector3(2f, 0f, 5f),
                 new Vector3(3f, 0f, 7f), new Vector3(-8f, 2f, 4f),
                 new Vector3(-18f, 4f, 1f), new Vector3(-26f, 5f, -2f),
-                new Vector3(-10f, 2f, 0f), Vector3.zero
+                new Vector3(-26f, 5f, -2f), new Vector3(-26f, 5f, -2f)
             });
             SetGraveAttackRotationCurves(clip, leftShoulder, attackModel, new[]
             {
                 Vector3.zero, new Vector3(-2f, -1f, -2f), new Vector3(-4f, -2f, -5f),
                 new Vector3(-5f, -3f, -7f), new Vector3(-8f, 1f, -8f),
                 new Vector3(-12f, 3f, -10f), new Vector3(-10f, 4f, -8f),
-                new Vector3(-4f, 1f, -3f), Vector3.zero
+                new Vector3(-10f, 4f, -8f), new Vector3(-10f, 4f, -8f)
             });
             SetGraveAttackRotationCurves(clip, leftArm, attackModel, new[]
             {
                 Vector3.zero, new Vector3(-3f, -1f, -3f), new Vector3(-7f, -2f, -7f),
                 new Vector3(-8f, -3f, -10f), new Vector3(-12f, 1f, -12f),
                 new Vector3(-18f, 4f, -16f), new Vector3(-14f, 5f, -12f),
-                new Vector3(-6f, 2f, -5f), Vector3.zero
+                new Vector3(-14f, 5f, -12f), new Vector3(-14f, 5f, -12f)
             });
+            var preservedTransformCurves = CaptureGraveAttackTransformCurves(clip);
+            AddGraveAttackContinuousCurtainCallSlashKeys(
+                clip, attackModel, rightShoulder, rightArm, rightForeArm, rightHand);
+            AssertGraveAttackUnaffectedTransformCurvesUnchanged(
+                preservedTransformCurves, clip, attackModel);
+            SetGraveAttackScytheBladeCurve(clip, attackModel);
             var settings = AnimationUtility.GetAnimationClipSettings(clip);
             settings.loopTime = true;
             settings.loopBlend = true;
@@ -2353,6 +2642,674 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             EditorUtility.SetDirty(controller);
             AssetDatabase.SaveAssets();
             return controller;
+        }
+
+        private static void RebindApprovedGraveCurtainCallAnimator(
+            Animator animator,
+            AnimatorController controller,
+            AnimationClip clip,
+            bool forceControllerReload = true)
+        {
+            if (controller.layers.Length == 0)
+            {
+                throw new InvalidOperationException("Grave curtain-call attack controller has no layers.");
+            }
+
+            if (forceControllerReload)
+            {
+                // Reassign through null so the live Animator cannot retain the previously generated clip curves.
+                animator.enabled = false;
+                animator.runtimeAnimatorController = null;
+                animator.runtimeAnimatorController = controller;
+            }
+
+            animator.enabled = true;
+            animator.Rebind();
+            var statePath = controller.layers[0].name + ".CurtainCallAttack";
+            animator.Play(Animator.StringToHash(statePath), 0, 0f);
+            animator.Update(0f);
+            var liveClipMatches = animator.GetCurrentAnimatorClipInfo(0)
+                .Any(info => info.clip == clip);
+            if (!animator.GetCurrentAnimatorStateInfo(0).IsName(statePath) || !liveClipMatches)
+            {
+                throw new InvalidOperationException(
+                    "Grave curtain-call attack Animator did not bind the regenerated clip.");
+            }
+        }
+
+        private static SkinnedMeshRenderer RequireGraveAttackBodyRenderer(Transform attackModel)
+        {
+            var body = FindDescendant(attackModel, "Grave_Body") ??
+                throw new InvalidOperationException("Grave curtain-call attack is missing Grave_Body.");
+            var renderer = body.GetComponent<SkinnedMeshRenderer>();
+            if (renderer == null || renderer.sharedMesh == null)
+            {
+                throw new InvalidOperationException("Grave curtain-call attack body renderer or mesh is missing.");
+            }
+
+            return renderer;
+        }
+
+        private static void RestoreGraveAttackApprovedRestPose(Transform attackModel)
+        {
+            var approvedModel = AssetDatabase.LoadAssetAtPath<GameObject>(ApprovedReproductionModelAssetPath) ??
+                throw new InvalidOperationException("Approved Grave reproduction FBX is missing.");
+            var boneNames = new[]
+            {
+                "Hips", "Spine02", "Spine01", "Spine", "neck", "Head",
+                "RightShoulder", "RightArm", "RightForeArm", "RightHand",
+                "LeftShoulder", "LeftArm"
+            };
+            foreach (var boneName in boneNames)
+            {
+                var target = RequireGraveAttackBone(attackModel, boneName);
+                var source = FindDescendant(approvedModel.transform, boneName) ??
+                    throw new InvalidOperationException("Approved Grave reproduction rig is missing " + boneName + ".");
+                target.localRotation = source.localRotation;
+            }
+        }
+
+        private static void EnsureApprovedGraveScytheBladeMesh(Transform attackModel, AnimationClip clip)
+        {
+            var renderer = RequireGraveAttackBodyRenderer(attackModel);
+            var approvedModel = AssetDatabase.LoadAssetAtPath<GameObject>(ApprovedReproductionModelAssetPath) ??
+                throw new InvalidOperationException("Approved Grave reproduction FBX is missing.");
+            var approvedRenderer = FindDescendant(approvedModel.transform, "Grave_Body")?.GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException("Approved Grave reproduction body renderer is missing.");
+            var sourceMesh = approvedRenderer.sharedMesh ??
+                throw new InvalidOperationException("Approved Grave reproduction body mesh is missing.");
+            if (renderer.bones.Length != sourceMesh.bindposes.Length || sourceMesh.vertexCount == 0)
+            {
+                throw new InvalidOperationException("Grave attack renderer bones do not match the approved body mesh.");
+            }
+
+            var rightArmIndex = Array.FindIndex(renderer.bones, bone => bone != null && bone.name == "RightArm");
+            var rightForeArmIndex = Array.FindIndex(renderer.bones, bone => bone != null && bone.name == "RightForeArm");
+            var rightHandIndex = Array.FindIndex(renderer.bones, bone => bone != null && bone.name == "RightHand");
+            if (rightArmIndex < 0 || rightForeArmIndex < 0 || rightHandIndex < 0)
+            {
+                throw new InvalidOperationException("Grave attack body mesh is missing right-arm skin bones.");
+            }
+
+            var originalMesh = renderer.sharedMesh;
+            var animator = attackModel.GetComponent<Animator>();
+            var animatorWasEnabled = animator != null && animator.enabled;
+            var poses = CaptureLocalPoses(attackModel);
+            var generated = UnityEngine.Object.Instantiate(sourceMesh);
+            generated.name = "Grave_Attack_ScytheBlade_Body";
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                renderer.sharedMesh = sourceMesh;
+                RestoreLocalPoses(poses);
+                clip.SampleAnimation(attackModel.gameObject, GraveAttackBladeFullTime);
+                var baked = new Mesh();
+                renderer.BakeMesh(baked, false);
+                var posedVertices = baked.vertices;
+                var posedNormals = baked.normals;
+                UnityEngine.Object.DestroyImmediate(baked);
+
+                var sourceVertices = sourceMesh.vertices;
+                var boneWeights = sourceMesh.boneWeights;
+                var bindPoses = sourceMesh.bindposes;
+                var deltaVertices = new Vector3[sourceVertices.Length];
+                var deltaNormals = new Vector3[sourceVertices.Length];
+                var deltaTangents = new Vector3[sourceVertices.Length];
+                var up = renderer.transform.InverseTransformDirection(attackModel.up).normalized;
+                var down = -up;
+                var armOrigin = renderer.transform.InverseTransformPoint(renderer.bones[rightArmIndex].position);
+                var elbowOrigin = renderer.transform.InverseTransformPoint(renderer.bones[rightForeArmIndex].position);
+                var handOrigin = renderer.transform.InverseTransformPoint(renderer.bones[rightHandIndex].position);
+                var handDirection = (handOrigin - elbowOrigin).normalized;
+                var visualFront = renderer.transform.InverseTransformDirection(
+                    CalculateGraveAttackStableFront(attackModel)).normalized;
+                var bladeAxis = Vector3.ProjectOnPlane(handDirection, visualFront).normalized;
+                if (bladeAxis.sqrMagnitude < 0.5f)
+                {
+                    bladeAxis = handDirection;
+                }
+                var tipOrigin = handOrigin + handDirection * 0.16f;
+                var changedVertices = 0;
+                var maxRequestedDepth = 0f;
+                var maxRequestedUpperThickness = 0f;
+                var maxRequestedScytheExtension = 0f;
+                var maxRequestedScytheTipDrop = 0f;
+                var targetBounds = sourceMesh.bounds;
+                var lowestArmSurface = float.MaxValue;
+                var highestArmSurface = float.MinValue;
+                for (var i = 0; i < sourceVertices.Length; i++)
+                {
+                    var weight = boneWeights[i];
+                    var armInfluence =
+                        WeightForBone(weight, rightArmIndex) +
+                        WeightForBone(weight, rightForeArmIndex) +
+                        WeightForBone(weight, rightHandIndex);
+                    if (armInfluence < 0.45f)
+                    {
+                        continue;
+                    }
+
+                    CalculatePolylineProgress(
+                        posedVertices[i], armOrigin, elbowOrigin, handOrigin, tipOrigin, out var centerLinePoint);
+                    var signedHeight = Vector3.Dot(posedVertices[i] - centerLinePoint, up);
+                    lowestArmSurface = Mathf.Min(lowestArmSurface, signedHeight);
+                    highestArmSurface = Mathf.Max(highestArmSurface, signedHeight);
+                }
+
+                var armSurfaceRange = Mathf.Max(highestArmSurface - lowestArmSurface, 0.0001f);
+                for (var i = 0; i < sourceVertices.Length; i++)
+                {
+                    var weight = boneWeights[i];
+                    var armInfluence =
+                        WeightForBone(weight, rightArmIndex) +
+                        WeightForBone(weight, rightForeArmIndex) +
+                        WeightForBone(weight, rightHandIndex);
+                    if (armInfluence < 0.45f)
+                    {
+                        targetBounds.Encapsulate(sourceVertices[i]);
+                        continue;
+                    }
+
+                    var progress = CalculatePolylineProgress(
+                        posedVertices[i], armOrigin, elbowOrigin, handOrigin, tipOrigin, out var centerLinePoint);
+                    var signedHeight = Vector3.Dot(posedVertices[i] - centerLinePoint, up);
+                    var signedFront = Vector3.Dot(posedVertices[i] - centerLinePoint, visualFront);
+                    var normalizedHeight = Mathf.Clamp01(
+                        (signedHeight - lowestArmSurface) / armSurfaceRange);
+                    var bladeForm = Mathf.SmoothStep(
+                        0f,
+                        1f,
+                        Mathf.InverseLerp(GraveAttackBladeStartProgress, GraveAttackBladeFullProgress, progress));
+                    var bladeProgress = Mathf.Clamp01(
+                        Mathf.InverseLerp(GraveAttackBladeStartProgress, 0.99f, progress));
+                    var heelTaper = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0f, 0.18f, bladeProgress));
+                    var scytheTaperProgress =
+                        Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.78f, 0.995f, progress));
+                    var bladeBelly = Mathf.Sin(Mathf.PI * bladeProgress);
+                    var widthCurve =
+                        bladeForm *
+                        heelTaper *
+                        Mathf.Lerp(0.78f, 1f, Mathf.Max(bladeBelly, 0f)) *
+                        (1f - scytheTaperProgress);
+                    var requestedDepth =
+                        GraveAttackBladeDepth * widthCurve * Mathf.Clamp01(armInfluence);
+                    var requestedUpperThickness =
+                        GraveAttackUpperThickness * widthCurve * Mathf.Clamp01(armInfluence);
+                    var scytheExtensionProgress =
+                        Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.48f, 0.99f, progress));
+                    var requestedScytheExtension =
+                        GraveAttackScytheExtension * scytheExtensionProgress * scytheExtensionProgress *
+                        Mathf.Clamp01(armInfluence);
+                    var requestedScytheTipDrop =
+                        GraveAttackScytheTipDrop * Mathf.Pow(bladeProgress, 1.65f) * bladeForm *
+                        Mathf.Clamp01(armInfluence);
+                    var requestedBellyDrop =
+                        GraveAttackScytheBellyDrop * Mathf.Max(bladeBelly, 0f) * widthCurve *
+                        Mathf.Clamp01(armInfluence);
+                    var spineHeight = -requestedScytheTipDrop + requestedUpperThickness;
+                    var cuttingEdgeHeight =
+                        -requestedScytheTipDrop - requestedBellyDrop - requestedDepth;
+                    var targetHeight = Mathf.Lerp(
+                        cuttingEdgeHeight,
+                        spineHeight,
+                        Mathf.Pow(normalizedHeight, 0.55f));
+                    var verticalDelta =
+                        (targetHeight - signedHeight) * bladeForm * Mathf.Clamp01(armInfluence);
+                    var frontThicknessScale = Mathf.Lerp(
+                        1f,
+                        GraveAttackScytheFrontThicknessScale,
+                        bladeForm);
+                    var frontDelta =
+                        -signedFront * (1f - frontThicknessScale) * Mathf.Clamp01(armInfluence);
+                    if (Mathf.Abs(verticalDelta) <= 0.0001f && requestedScytheExtension <= 0.0001f &&
+                        Mathf.Abs(frontDelta) <= 0.0001f)
+                    {
+                        targetBounds.Encapsulate(sourceVertices[i]);
+                        continue;
+                    }
+
+                    var skinMatrix = CalculateBlendedSkinMatrix(renderer, bindPoses, weight);
+                    var posedDelta =
+                        up * verticalDelta +
+                        bladeAxis * requestedScytheExtension +
+                        visualFront * frontDelta;
+                    deltaVertices[i] = skinMatrix.inverse.MultiplyVector(posedDelta);
+                    var posedNormal = posedNormals[i].sqrMagnitude > 0.000001f
+                        ? posedNormals[i].normalized
+                        : visualFront;
+                    var normalFrontDot = Vector3.Dot(posedNormal, visualFront);
+                    var normalFlatten =
+                        Mathf.SmoothStep(0.15f, 0.7f, Mathf.Abs(normalFrontDot)) *
+                        bladeForm * Mathf.Clamp01(armInfluence);
+                    var flatNormal = normalFrontDot >= 0f ? visualFront : -visualFront;
+                    var targetNormal = Vector3.Slerp(posedNormal, flatNormal, normalFlatten).normalized;
+                    deltaNormals[i] = skinMatrix.inverse.MultiplyVector(targetNormal - posedNormal);
+                    targetBounds.Encapsulate(sourceVertices[i] + deltaVertices[i]);
+                    changedVertices++;
+                    maxRequestedDepth = Mathf.Max(maxRequestedDepth, requestedDepth);
+                    maxRequestedUpperThickness = Mathf.Max(maxRequestedUpperThickness, requestedUpperThickness);
+                    maxRequestedScytheExtension = Mathf.Max(
+                        maxRequestedScytheExtension, requestedScytheExtension);
+                    maxRequestedScytheTipDrop = Mathf.Max(
+                        maxRequestedScytheTipDrop, requestedScytheTipDrop);
+                }
+
+                if (changedVertices < 80 || maxRequestedDepth < 0.18f ||
+                    maxRequestedUpperThickness < 0.015f || maxRequestedScytheExtension < 0.04f ||
+                    maxRequestedScytheTipDrop < 0.04f)
+                {
+                    throw new InvalidOperationException(
+                        $"Grave right-arm scythe-blade deformation is too small. Vertices={changedVertices}, " +
+                        $"Depth={maxRequestedDepth:0.######}, UpperThickness={maxRequestedUpperThickness:0.######}, " +
+                        $"ScytheExtension={maxRequestedScytheExtension:0.######}, " +
+                        $"ScytheTipDrop={maxRequestedScytheTipDrop:0.######}");
+                }
+
+                generated.AddBlendShapeFrame(
+                    GraveAttackBladeBlendShapeName,
+                    100f,
+                    deltaVertices,
+                    deltaNormals,
+                    deltaTangents);
+                generated.bounds = targetBounds;
+                EnsureAssetDirectory(GraveAttackBladeMeshAssetPath);
+                var existing = AssetDatabase.LoadAssetAtPath<Mesh>(GraveAttackBladeMeshAssetPath);
+                Mesh savedMesh;
+                if (existing == null)
+                {
+                    AssetDatabase.CreateAsset(generated, GraveAttackBladeMeshAssetPath);
+                    savedMesh = generated;
+                    generated = null;
+                }
+                else
+                {
+                    EditorUtility.CopySerialized(generated, existing);
+                    EditorUtility.SetDirty(existing);
+                    savedMesh = existing;
+                }
+
+                renderer.sharedMesh = savedMesh;
+                renderer.localBounds = savedMesh.bounds;
+                PrefabUtility.RecordPrefabInstancePropertyModifications(renderer);
+                EditorUtility.SetDirty(renderer);
+                AssetDatabase.SaveAssets();
+            }
+            catch
+            {
+                renderer.sharedMesh = originalMesh;
+                throw;
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+                if (animator != null)
+                {
+                    animator.enabled = animatorWasEnabled;
+                }
+
+                if (generated != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(generated);
+                }
+            }
+        }
+
+        private static void AddGraveAttackContinuousCurtainCallSlashKeys(
+            AnimationClip clip,
+            Transform attackModel,
+            params Transform[] rightLimbBones)
+        {
+            var poses = CaptureLocalPoses(attackModel);
+            var sideRotations = new Quaternion[rightLimbBones.Length];
+            var loweringRotations = new Quaternion[rightLimbBones.Length];
+            var curtainCallRotations = new Quaternion[rightLimbBones.Length];
+            try
+            {
+                clip.SampleAnimation(attackModel.gameObject, GraveAttackBladeFullTime);
+                for (var i = 0; i < rightLimbBones.Length; i++)
+                {
+                    sideRotations[i] = rightLimbBones[i].localRotation;
+                }
+
+                RestoreLocalPoses(poses);
+                clip.SampleAnimation(attackModel.gameObject, GraveAttackKeyTimes[4]);
+                for (var i = 0; i < rightLimbBones.Length; i++)
+                {
+                    loweringRotations[i] = rightLimbBones[i].localRotation;
+                }
+
+                RestoreLocalPoses(poses);
+                clip.SampleAnimation(attackModel.gameObject, GraveAttackCurtainCallHoldTime);
+                for (var i = 0; i < rightLimbBones.Length; i++)
+                {
+                    curtainCallRotations[i] = rightLimbBones[i].localRotation;
+                }
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+            }
+
+            var slashTimes = new[]
+            {
+                GraveAttackBladeFullTime,
+                GraveAttackSlashHoldTime,
+                Mathf.Lerp(GraveAttackSlashHoldTime, GraveAttackSlashEndTime, 0.25f),
+                Mathf.Lerp(GraveAttackSlashHoldTime, GraveAttackSlashEndTime, 0.5f),
+                Mathf.Lerp(GraveAttackSlashHoldTime, GraveAttackSlashEndTime, 0.75f),
+                GraveAttackSlashEndTime,
+                GraveAttackCurtainCallHoldTime
+            };
+            var slashRotations = slashTimes
+                .Select(_ => new Quaternion[rightLimbBones.Length])
+                .ToArray();
+            for (var poseIndex = 0; poseIndex < slashTimes.Length - 1; poseIndex++)
+            {
+                var progress = Mathf.InverseLerp(
+                    GraveAttackSlashHoldTime,
+                    GraveAttackSlashEndTime,
+                    slashTimes[poseIndex]);
+                for (var boneIndex = 0; boneIndex < rightLimbBones.Length; boneIndex++)
+                {
+                    slashRotations[poseIndex][boneIndex] = progress <= 0.5f
+                        ? Quaternion.Slerp(
+                            sideRotations[boneIndex],
+                            loweringRotations[boneIndex],
+                            progress * 2f)
+                        : Quaternion.Slerp(
+                            loweringRotations[boneIndex],
+                            curtainCallRotations[boneIndex],
+                            (progress - 0.5f) * 2f);
+                }
+
+            }
+
+            for (var boneIndex = 0; boneIndex < rightLimbBones.Length; boneIndex++)
+            {
+                slashRotations[slashTimes.Length - 1][boneIndex] =
+                    slashRotations[slashTimes.Length - 2][boneIndex];
+                for (var poseIndex = 1; poseIndex < slashTimes.Length; poseIndex++)
+                {
+                    if (Quaternion.Dot(
+                            slashRotations[poseIndex - 1][boneIndex],
+                            slashRotations[poseIndex][boneIndex]) < 0f)
+                    {
+                        var rotation = slashRotations[poseIndex][boneIndex];
+                        slashRotations[poseIndex][boneIndex] = new Quaternion(
+                            -rotation.x, -rotation.y, -rotation.z, -rotation.w);
+                    }
+                }
+
+                AddGraveAttackContinuousSlashQuaternionKeys(
+                    clip,
+                    rightLimbBones[boneIndex],
+                    attackModel,
+                    slashTimes,
+                    slashRotations.Select(rotations => rotations[boneIndex]).ToArray());
+            }
+        }
+
+        private static void AddGraveAttackContinuousSlashQuaternionKeys(
+            AnimationClip clip,
+            Transform target,
+            Transform attackModel,
+            IReadOnlyList<float> times,
+            IReadOnlyList<Quaternion> rotations)
+        {
+            var path = AnimationUtility.CalculateTransformPath(target, attackModel);
+            var properties = new[]
+            {
+                "m_LocalRotation.x", "m_LocalRotation.y", "m_LocalRotation.z", "m_LocalRotation.w"
+            };
+            for (var component = 0; component < properties.Length; component++)
+            {
+                var binding = EditorCurveBinding.FloatCurve(path, typeof(Transform), properties[component]);
+                var curve = AnimationUtility.GetEditorCurve(clip, binding) ??
+                    throw new InvalidOperationException("Grave right-limb rotation curve is missing: " + properties[component]);
+                for (var keyIndex = curve.length - 1; keyIndex >= 0; keyIndex--)
+                {
+                    var time = curve.keys[keyIndex].time;
+                    if (time >= GraveAttackBladeFullTime - 0.0001f &&
+                        time <= GraveAttackCurtainCallHoldTime + 0.0001f)
+                    {
+                        curve.RemoveKey(keyIndex);
+                    }
+                }
+
+                for (var poseIndex = 0; poseIndex < times.Count; poseIndex++)
+                {
+                    var rotation = rotations[poseIndex];
+                    var value = component == 0 ? rotation.x :
+                        component == 1 ? rotation.y :
+                        component == 2 ? rotation.z : rotation.w;
+                    curve.AddKey(new Keyframe(times[poseIndex], value));
+                }
+                for (var keyIndex = 0; keyIndex < curve.length; keyIndex++)
+                {
+                    var time = curve.keys[keyIndex].time;
+                    if (time < GraveAttackBladeFullTime - 0.0001f ||
+                        time > GraveAttackCurtainCallHoldTime + 0.0001f)
+                    {
+                        continue;
+                    }
+
+                    AnimationUtility.SetKeyLeftTangentMode(curve, keyIndex, AnimationUtility.TangentMode.Linear);
+                    AnimationUtility.SetKeyRightTangentMode(curve, keyIndex, AnimationUtility.TangentMode.Linear);
+                }
+
+                AnimationUtility.SetEditorCurve(clip, binding, curve);
+            }
+        }
+
+        private static void SetGraveAttackScytheBladeCurve(AnimationClip clip, Transform attackModel)
+        {
+            var renderer = RequireGraveAttackBodyRenderer(attackModel);
+            if (renderer.sharedMesh.GetBlendShapeIndex(GraveAttackBladeBlendShapeName) < 0)
+            {
+                throw new InvalidOperationException("Grave right-arm scythe-blade BlendShape is missing.");
+            }
+
+            var curve = new AnimationCurve(
+                new Keyframe(0f, 0f),
+                new Keyframe(0.35f, 0f),
+                new Keyframe(0.85f, 55f),
+                new Keyframe(GraveAttackBladeFullTime, 100f),
+                new Keyframe(GraveAttackDuration, 100f));
+            for (var i = 0; i < curve.length; i++)
+            {
+                AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.Linear);
+                AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.Linear);
+            }
+
+            var path = AnimationUtility.CalculateTransformPath(renderer.transform, attackModel);
+            AnimationUtility.SetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(
+                    path,
+                    typeof(SkinnedMeshRenderer),
+                    "blendShape." + GraveAttackBladeBlendShapeName),
+                curve);
+        }
+
+        private static Dictionary<string, AnimationCurve> CaptureGraveAttackTransformCurves(AnimationClip clip)
+        {
+            return AnimationUtility.GetCurveBindings(clip)
+                .Where(binding => binding.type == typeof(Transform))
+                .ToDictionary(
+                    binding => binding.path + "\n" + binding.propertyName,
+                    binding => CloneCurve(AnimationUtility.GetEditorCurve(clip, binding)));
+        }
+
+        private static void AssertGraveAttackUnaffectedTransformCurvesUnchanged(
+            IReadOnlyDictionary<string, AnimationCurve> expected,
+            AnimationClip clip,
+            Transform attackModel)
+        {
+            var actual = CaptureGraveAttackTransformCurves(clip);
+            if (expected.Count != actual.Count || expected.Keys.Any(key => !actual.ContainsKey(key)))
+            {
+                throw new InvalidOperationException(
+                    $"Grave attack Transform curve bindings changed. Before={expected.Count}, After={actual.Count}");
+            }
+
+            var allowedPaths = new HashSet<string>
+            {
+                AnimationUtility.CalculateTransformPath(RequireGraveAttackBone(attackModel, "RightShoulder"), attackModel),
+                AnimationUtility.CalculateTransformPath(RequireGraveAttackBone(attackModel, "RightArm"), attackModel),
+                AnimationUtility.CalculateTransformPath(RequireGraveAttackBone(attackModel, "RightForeArm"), attackModel),
+                AnimationUtility.CalculateTransformPath(RequireGraveAttackBone(attackModel, "RightHand"), attackModel)
+            };
+            foreach (var pair in expected)
+            {
+                var path = pair.Key.Substring(0, pair.Key.IndexOf('\n'));
+                if (allowedPaths.Contains(path))
+                {
+                    continue;
+                }
+
+                if (!CurvesEqual(pair.Value, actual[pair.Key]))
+                {
+                    throw new InvalidOperationException("Grave attack Transform curve changed: " + pair.Key.Replace('\n', '/'));
+                }
+            }
+        }
+
+        private static AnimationCurve CloneCurve(AnimationCurve source)
+        {
+            return new AnimationCurve(source.keys)
+            {
+                preWrapMode = source.preWrapMode,
+                postWrapMode = source.postWrapMode
+            };
+        }
+
+        private static bool CurvesEqual(AnimationCurve left, AnimationCurve right)
+        {
+            if (left.length != right.length || left.preWrapMode != right.preWrapMode ||
+                left.postWrapMode != right.postWrapMode)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < left.length; i++)
+            {
+                var a = left.keys[i];
+                var b = right.keys[i];
+                if (Mathf.Abs(a.time - b.time) > 0.000001f ||
+                    Mathf.Abs(a.value - b.value) > 0.000001f ||
+                    Mathf.Abs(a.inTangent - b.inTangent) > 0.00001f ||
+                    Mathf.Abs(a.outTangent - b.outTangent) > 0.00001f ||
+                    Mathf.Abs(a.inWeight - b.inWeight) > 0.00001f ||
+                    Mathf.Abs(a.outWeight - b.outWeight) > 0.00001f ||
+                    a.weightedMode != b.weightedMode)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static float WeightForBone(BoneWeight weight, int boneIndex)
+        {
+            var result = 0f;
+            if (weight.boneIndex0 == boneIndex) result += weight.weight0;
+            if (weight.boneIndex1 == boneIndex) result += weight.weight1;
+            if (weight.boneIndex2 == boneIndex) result += weight.weight2;
+            if (weight.boneIndex3 == boneIndex) result += weight.weight3;
+            return result;
+        }
+
+        private static int DominantBoneIndex(BoneWeight weight)
+        {
+            var index = weight.boneIndex0;
+            var value = weight.weight0;
+            if (weight.weight1 > value) { index = weight.boneIndex1; value = weight.weight1; }
+            if (weight.weight2 > value) { index = weight.boneIndex2; value = weight.weight2; }
+            if (weight.weight3 > value) { index = weight.boneIndex3; }
+            return index;
+        }
+
+        private static Matrix4x4 CalculateBlendedSkinMatrix(
+            SkinnedMeshRenderer renderer,
+            Matrix4x4[] bindPoses,
+            BoneWeight weight)
+        {
+            var blended = new Matrix4x4();
+            AddWeightedSkinMatrix(ref blended, renderer, bindPoses, weight.boneIndex0, weight.weight0);
+            AddWeightedSkinMatrix(ref blended, renderer, bindPoses, weight.boneIndex1, weight.weight1);
+            AddWeightedSkinMatrix(ref blended, renderer, bindPoses, weight.boneIndex2, weight.weight2);
+            AddWeightedSkinMatrix(ref blended, renderer, bindPoses, weight.boneIndex3, weight.weight3);
+            return blended;
+        }
+
+        private static void AddWeightedSkinMatrix(
+            ref Matrix4x4 blended,
+            SkinnedMeshRenderer renderer,
+            Matrix4x4[] bindPoses,
+            int boneIndex,
+            float weight)
+        {
+            if (weight <= 0f)
+            {
+                return;
+            }
+
+            var matrix =
+                renderer.transform.worldToLocalMatrix *
+                renderer.bones[boneIndex].localToWorldMatrix *
+                bindPoses[boneIndex];
+            for (var row = 0; row < 4; row++)
+            {
+                for (var column = 0; column < 4; column++)
+                {
+                    blended[row, column] += matrix[row, column] * weight;
+                }
+            }
+        }
+
+        private static float CalculatePolylineProgress(
+            Vector3 point,
+            Vector3 first,
+            Vector3 second,
+            Vector3 third,
+            Vector3 fourth,
+            out Vector3 closest)
+        {
+            var segments = new[] { first, second, third, fourth };
+            var lengths = new[]
+            {
+                Vector3.Distance(first, second),
+                Vector3.Distance(second, third),
+                Vector3.Distance(third, fourth)
+            };
+            var totalLength = lengths.Sum();
+            var bestDistance = float.MaxValue;
+            var bestProgress = 0f;
+            closest = first;
+            var accumulated = 0f;
+            for (var i = 0; i < 3; i++)
+            {
+                var direction = segments[i + 1] - segments[i];
+                var denominator = Mathf.Max(direction.sqrMagnitude, 0.000001f);
+                var segmentTime = Mathf.Clamp01(Vector3.Dot(point - segments[i], direction) / denominator);
+                var candidate = Vector3.Lerp(segments[i], segments[i + 1], segmentTime);
+                var distance = (point - candidate).sqrMagnitude;
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    closest = candidate;
+                    bestProgress = (accumulated + lengths[i] * segmentTime) / Mathf.Max(totalLength, 0.0001f);
+                }
+
+                accumulated += lengths[i];
+            }
+
+            return bestProgress;
         }
 
         private static void SetGraveAttackRotationCurves(
@@ -2478,14 +3435,339 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                 throw new InvalidOperationException("Grave curtain-call attack rig is missing " + name + ".");
         }
 
+        private static Vector4 MeasureGraveAttackDropSpeed(
+            AnimationClip clip,
+            Transform attackModel,
+            Transform rightHand,
+            Animator animator)
+        {
+            const float startTime = GraveAttackBladeFullTime;
+            const float endTime = 1.65f;
+            const float sampleStep = 1f / 240f;
+            var poses = CaptureLocalPoses(attackModel);
+            var animatorWasEnabled = animator.enabled;
+            var burstPeakSpeed = 0f;
+            var preBurstDrop = 0f;
+            var postBurstDrop = 0f;
+            Vector3 startPosition;
+            Vector3 previousPosition;
+            var previousTime = startTime;
+            try
+            {
+                animator.enabled = false;
+                RestoreLocalPoses(poses);
+                clip.SampleAnimation(attackModel.gameObject, startTime);
+                startPosition = rightHand.position;
+                previousPosition = startPosition;
+                for (var time = startTime + sampleStep; time <= endTime + 0.0001f; time += sampleStep)
+                {
+                    RestoreLocalPoses(poses);
+                    clip.SampleAnimation(attackModel.gameObject, Mathf.Min(time, endTime));
+                    var currentPosition = rightHand.position;
+                    var interval = Mathf.Min(time, endTime) - previousTime;
+                    var downwardDistance = Mathf.Max(
+                        0f,
+                        Vector3.Dot(previousPosition - currentPosition, attackModel.up));
+                    var downwardSpeed = downwardDistance / Mathf.Max(interval, 0.0001f);
+                    var midpoint = previousTime + interval * 0.5f;
+                    if (midpoint < GraveAttackSlashHoldTime)
+                    {
+                        preBurstDrop += downwardDistance;
+                    }
+                    else if (midpoint <= GraveAttackSlashEndTime)
+                    {
+                        burstPeakSpeed = Mathf.Max(burstPeakSpeed, downwardSpeed);
+                    }
+                    else
+                    {
+                        postBurstDrop += downwardDistance;
+                    }
+
+                    previousPosition = currentPosition;
+                    previousTime = Mathf.Min(time, endTime);
+                }
+
+                var totalDrop = Mathf.Max(0f, Vector3.Dot(startPosition - previousPosition, attackModel.up));
+                var preBurstAverage =
+                    preBurstDrop / (GraveAttackSlashHoldTime - startTime);
+                var postBurstAverage =
+                    postBurstDrop / (endTime - GraveAttackSlashEndTime);
+                var overallAverage = totalDrop / (endTime - startTime);
+                return new Vector4(burstPeakSpeed, preBurstAverage, postBurstAverage, overallAverage);
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+                animator.enabled = animatorWasEnabled;
+            }
+        }
+
+        private static Vector4 MeasureGraveAttackSlashContinuity(
+            AnimationClip clip,
+            Transform attackModel,
+            Transform rightHand,
+            Animator animator)
+        {
+            const float sampleStep = 1f / 240f;
+            var poses = CaptureLocalPoses(attackModel);
+            var animatorWasEnabled = animator.enabled;
+            var pathLength = 0f;
+            var minimumSpeed = float.PositiveInfinity;
+            var peakSpeed = 0f;
+            try
+            {
+                animator.enabled = false;
+                RestoreLocalPoses(poses);
+                clip.SampleAnimation(attackModel.gameObject, GraveAttackSlashHoldTime);
+                var startPosition = rightHand.position;
+                var previousPosition = startPosition;
+                var previousTime = GraveAttackSlashHoldTime;
+                for (var time = GraveAttackSlashHoldTime + sampleStep;
+                     time <= GraveAttackSlashEndTime + 0.0001f;
+                     time += sampleStep)
+                {
+                    var sampleTime = Mathf.Min(time, GraveAttackSlashEndTime);
+                    RestoreLocalPoses(poses);
+                    clip.SampleAnimation(attackModel.gameObject, sampleTime);
+                    var currentPosition = rightHand.position;
+                    var interval = sampleTime - previousTime;
+                    var distance = Vector3.Distance(previousPosition, currentPosition);
+                    var speed = distance / Mathf.Max(interval, 0.0001f);
+                    pathLength += distance;
+                    minimumSpeed = Mathf.Min(minimumSpeed, speed);
+                    peakSpeed = Mathf.Max(peakSpeed, speed);
+                    previousPosition = currentPosition;
+                    previousTime = sampleTime;
+                }
+
+                var duration = GraveAttackSlashEndTime - GraveAttackSlashHoldTime;
+                var averageSpeed = pathLength / duration;
+                var directDistance = Vector3.Distance(startPosition, previousPosition);
+                var pathEfficiency = directDistance / Mathf.Max(pathLength, 0.0001f);
+                return new Vector4(peakSpeed, minimumSpeed, averageSpeed, pathEfficiency);
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+                animator.enabled = animatorWasEnabled;
+            }
+        }
+
+        private static Vector2 MeasureGraveAttackArmIntegrity(
+            AnimationClip clip,
+            Transform attackModel,
+            Transform rightArm,
+            Transform rightForeArm,
+            Transform rightHand,
+            SkinnedMeshRenderer renderer,
+            Animator animator,
+            int bladeIndex)
+        {
+            const int sampleCount = 24;
+            var poses = CaptureLocalPoses(attackModel);
+            var animatorWasEnabled = animator.enabled;
+            var originalBladeWeight = renderer.GetBlendShapeWeight(bladeIndex);
+            var weights = renderer.sharedMesh.boneWeights;
+            var rightForeArmIndex = Array.FindIndex(renderer.bones, bone => bone != null && bone.name == "RightForeArm");
+            var rightHandIndex = Array.FindIndex(renderer.bones, bone => bone != null && bone.name == "RightHand");
+            var torsoNames = new HashSet<string> { "Hips", "Spine02", "Spine01", "Spine", "neck" };
+            var torsoIndices = renderer.bones
+                .Select((bone, index) => new { bone, index })
+                .Where(item => item.bone != null && torsoNames.Contains(item.bone.name))
+                .Select(item => item.index)
+                .ToArray();
+            var front = renderer.transform.InverseTransformDirection(
+                CalculateGraveAttackStableFront(attackModel)).normalized;
+            var right = renderer.transform.InverseTransformDirection(attackModel.right).normalized;
+            var up = renderer.transform.InverseTransformDirection(attackModel.up).normalized;
+            var maxElbowBend = 0f;
+            var minimumTorsoFrontClearance = float.PositiveInfinity;
+            var baked = new Mesh();
+            try
+            {
+                animator.enabled = false;
+                renderer.SetBlendShapeWeight(bladeIndex, 100f);
+                for (var sampleIndex = 0; sampleIndex <= sampleCount; sampleIndex++)
+                {
+                    var sampleTime = Mathf.Lerp(
+                        GraveAttackBladeFullTime,
+                        GraveAttackCurtainCallHoldTime,
+                        sampleIndex / (float)sampleCount);
+                    RestoreLocalPoses(poses);
+                    clip.SampleAnimation(attackModel.gameObject, sampleTime);
+                    var upperDirection = (rightForeArm.position - rightArm.position).normalized;
+                    var foreArmDirection = (rightHand.position - rightForeArm.position).normalized;
+                    maxElbowBend = Mathf.Max(
+                        maxElbowBend,
+                        Vector3.Angle(upperDirection, foreArmDirection));
+
+                    renderer.BakeMesh(baked, false);
+                    var vertices = baked.vertices;
+                    var torsoRightMin = float.PositiveInfinity;
+                    var torsoRightMax = float.NegativeInfinity;
+                    var torsoUpMin = float.PositiveInfinity;
+                    var torsoUpMax = float.NegativeInfinity;
+                    var torsoFrontMax = float.NegativeInfinity;
+                    for (var vertexIndex = 0; vertexIndex < vertices.Length; vertexIndex++)
+                    {
+                        var torsoInfluence = 0f;
+                        foreach (var torsoIndex in torsoIndices)
+                        {
+                            torsoInfluence += WeightForBone(weights[vertexIndex], torsoIndex);
+                        }
+
+                        if (torsoInfluence < 0.65f)
+                        {
+                            continue;
+                        }
+
+                        var vertex = vertices[vertexIndex];
+                        var lateral = Vector3.Dot(vertex, right);
+                        var vertical = Vector3.Dot(vertex, up);
+                        torsoRightMin = Mathf.Min(torsoRightMin, lateral);
+                        torsoRightMax = Mathf.Max(torsoRightMax, lateral);
+                        torsoUpMin = Mathf.Min(torsoUpMin, vertical);
+                        torsoUpMax = Mathf.Max(torsoUpMax, vertical);
+                        torsoFrontMax = Mathf.Max(torsoFrontMax, Vector3.Dot(vertex, front));
+                    }
+
+                    for (var vertexIndex = 0; vertexIndex < vertices.Length; vertexIndex++)
+                    {
+                        var distalInfluence =
+                            WeightForBone(weights[vertexIndex], rightForeArmIndex) +
+                            WeightForBone(weights[vertexIndex], rightHandIndex);
+                        if (distalInfluence < 0.55f)
+                        {
+                            continue;
+                        }
+
+                        var vertex = vertices[vertexIndex];
+                        var lateral = Vector3.Dot(vertex, right);
+                        var vertical = Vector3.Dot(vertex, up);
+                        if (lateral < torsoRightMin || lateral > torsoRightMax ||
+                            vertical < torsoUpMin || vertical > torsoUpMax)
+                        {
+                            continue;
+                        }
+
+                        minimumTorsoFrontClearance = Mathf.Min(
+                            minimumTorsoFrontClearance,
+                            Vector3.Dot(vertex, front) - torsoFrontMax);
+                    }
+                }
+
+                if (float.IsPositiveInfinity(minimumTorsoFrontClearance))
+                {
+                    minimumTorsoFrontClearance = 1f;
+                }
+
+                return new Vector2(maxElbowBend, minimumTorsoFrontClearance);
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+                renderer.SetBlendShapeWeight(bladeIndex, originalBladeWeight);
+                animator.enabled = animatorWasEnabled;
+                UnityEngine.Object.DestroyImmediate(baked);
+            }
+        }
+
+        private static Vector4 MeasureGraveAttackBladeFrontFacing(
+            AnimationClip clip,
+            Transform attackModel,
+            SkinnedMeshRenderer renderer,
+            Animator animator,
+            int bladeIndex)
+        {
+            var sampleTimes = new[]
+            {
+                GraveAttackSlashHoldTime,
+                (GraveAttackSlashHoldTime + GraveAttackSlashEndTime) * 0.5f,
+                GraveAttackSlashEndTime,
+                GraveAttackCurtainCallHoldTime
+            };
+            var poses = CaptureLocalPoses(attackModel);
+            var animatorWasEnabled = animator.enabled;
+            var originalBladeWeight = renderer.GetBlendShapeWeight(bladeIndex);
+            var weights = renderer.sharedMesh.boneWeights;
+            var rightArmIndex = Array.FindIndex(renderer.bones, bone => bone != null && bone.name == "RightArm");
+            var rightForeArmIndex = Array.FindIndex(renderer.bones, bone => bone != null && bone.name == "RightForeArm");
+            var rightHandIndex = Array.FindIndex(renderer.bones, bone => bone != null && bone.name == "RightHand");
+            var front = renderer.transform.InverseTransformDirection(
+                CalculateGraveAttackStableFront(attackModel)).normalized;
+            var sampleFacings = new float[sampleTimes.Length];
+            try
+            {
+                animator.enabled = false;
+                for (var sampleIndex = 0; sampleIndex < sampleTimes.Length; sampleIndex++)
+                {
+                    var sampleTime = sampleTimes[sampleIndex];
+                    RestoreLocalPoses(poses);
+                    clip.SampleAnimation(attackModel.gameObject, sampleTime);
+                    renderer.SetBlendShapeWeight(bladeIndex, 100f);
+                    var baked = new Mesh();
+                    renderer.BakeMesh(baked, false);
+                    var normals = baked.normals;
+                    var sampleFacingSum = 0f;
+                    var sampleCount = 0;
+                    for (var vertexIndex = 0; vertexIndex < normals.Length; vertexIndex++)
+                    {
+                        var armInfluence =
+                            WeightForBone(weights[vertexIndex], rightArmIndex) +
+                            WeightForBone(weights[vertexIndex], rightForeArmIndex) +
+                            WeightForBone(weights[vertexIndex], rightHandIndex);
+                        if (armInfluence < 0.45f)
+                        {
+                            continue;
+                        }
+
+                        sampleFacingSum += Mathf.Abs(Vector3.Dot(normals[vertexIndex].normalized, front));
+                        sampleCount++;
+                    }
+
+                    UnityEngine.Object.DestroyImmediate(baked);
+                    if (sampleCount == 0)
+                    {
+                        throw new InvalidOperationException("Grave scythe front-facing sample has no right-arm vertices.");
+                    }
+
+                    var sampleFacing = sampleFacingSum / sampleCount;
+                    sampleFacings[sampleIndex] = sampleFacing;
+                }
+
+                return new Vector4(
+                    sampleFacings[0], sampleFacings[1], sampleFacings[2], sampleFacings[3]);
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+                renderer.SetBlendShapeWeight(bladeIndex, originalBladeWeight);
+                animator.enabled = animatorWasEnabled;
+            }
+        }
+
         private static string ValidateApprovedGraveCurtainCallAttackScene(Scene scene, bool writeReport)
         {
-            ValidateApprovedReproductionScene(scene, writeReport: false);
-            var graveRoot = RequireSceneObject(scene, GraveRootName).transform;
+            var graveRoot = RequireRootSceneObject(scene, GraveRootName).transform;
             var attackSlot = graveRoot.Find(GraveAttackSlotName) ??
                 throw new InvalidOperationException(GraveAttackSlotName + " is missing.");
             var attackModel = attackSlot.Find(GraveModelName) ??
                 throw new InvalidOperationException(GraveAttackSlotName + "/" + GraveModelName + " is missing.");
+            var renderer = RequireGraveAttackBodyRenderer(attackModel);
+            var bladeMesh = AssetDatabase.LoadAssetAtPath<Mesh>(GraveAttackBladeMeshAssetPath) ??
+                throw new InvalidOperationException("Grave right-arm scythe-blade mesh asset is missing.");
+            if (renderer.sharedMesh != bladeMesh || bladeMesh.subMeshCount != 2)
+            {
+                throw new InvalidOperationException("Grave attack slot does not use the approved scythe-blade body mesh.");
+            }
+
+            var bladeIndex = bladeMesh.GetBlendShapeIndex(GraveAttackBladeBlendShapeName);
+            if (bladeIndex < 0 || bladeMesh.blendShapeCount != 1)
+            {
+                throw new InvalidOperationException(
+                    $"Grave attack mesh BlendShape mismatch. Count={bladeMesh.blendShapeCount}, Index={bladeIndex}");
+            }
+
             var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveAttackClipAssetPath) ??
                 throw new InvalidOperationException("Grave curtain-call attack clip is missing.");
             var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(GraveAttackControllerAssetPath) ??
@@ -2503,6 +3785,16 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                 Mathf.Abs(defaultState.speed - 1f) > 0.0001f)
             {
                 throw new InvalidOperationException("Grave curtain-call attack controller default state mismatch.");
+            }
+
+            RebindApprovedGraveCurtainCallAnimator(animator, controller, clip, forceControllerReload: false);
+            var liveStatePath = controller.layers[0].name + ".CurtainCallAttack";
+            var liveClipMatches = animator.GetCurrentAnimatorClipInfo(0)
+                .Any(info => info.clip == clip);
+            if (!animator.GetCurrentAnimatorStateInfo(0).IsName(liveStatePath) || !liveClipMatches)
+            {
+                throw new InvalidOperationException(
+                    "Grave curtain-call attack live Animator is not playing the saved attack clip.");
             }
 
             var settings = AnimationUtility.GetAnimationClipSettings(clip);
@@ -2529,19 +3821,39 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                 RequireGraveAttackBone(attackModel, "LeftArm")
             };
             var bindings = AnimationUtility.GetCurveBindings(clip);
-            if (bindings.Length != animatedBones.Length * 4 ||
-                bindings.Any(binding => binding.type != typeof(Transform) ||
+            var transformBindings = bindings.Where(binding => binding.type == typeof(Transform)).ToArray();
+            var bladePath = AnimationUtility.CalculateTransformPath(renderer.transform, attackModel);
+            var bladeBindings = bindings.Where(binding =>
+                binding.type == typeof(SkinnedMeshRenderer) &&
+                binding.path == bladePath &&
+                binding.propertyName == "blendShape." + GraveAttackBladeBlendShapeName).ToArray();
+            if (bindings.Length != animatedBones.Length * 4 + 1 ||
+                transformBindings.Length != animatedBones.Length * 4 || bladeBindings.Length != 1 ||
+                transformBindings.Any(binding =>
                     !binding.propertyName.StartsWith("m_LocalRotation.", StringComparison.Ordinal)))
             {
                 throw new InvalidOperationException(
-                    $"Grave curtain-call attack must contain rotation-only rig curves. CurveCount={bindings.Length}");
+                    $"Grave curtain-call attack must contain the preserved rig curves and one blade curve. " +
+                    $"CurveCount={bindings.Length}, Transform={transformBindings.Length}, Blade={bladeBindings.Length}");
             }
 
             var expectedPaths = new HashSet<string>(animatedBones.Select(bone =>
                 AnimationUtility.CalculateTransformPath(bone, attackModel)));
-            if (bindings.Any(binding => !expectedPaths.Contains(binding.path)))
+            if (transformBindings.Any(binding => !expectedPaths.Contains(binding.path)))
             {
                 throw new InvalidOperationException("Grave curtain-call attack contains a curve outside the approved rig bones.");
+            }
+
+            var bladeCurve = AnimationUtility.GetEditorCurve(clip, bladeBindings[0]);
+            if (bladeCurve == null || Mathf.Abs(bladeCurve.Evaluate(0f)) > 0.001f ||
+                Mathf.Abs(bladeCurve.Evaluate(0.35f)) > 0.001f ||
+                bladeCurve.Evaluate(0.85f) < 50f || bladeCurve.Evaluate(GraveAttackBladeFullTime) < 99.9f ||
+                bladeCurve.Evaluate(GraveAttackSlashEndTime) < 99.9f ||
+                bladeCurve.Evaluate(1.65f) < 99.9f || bladeCurve.Evaluate(2.35f) < 99.9f ||
+                bladeCurve.Evaluate(GraveAttackDuration) < 99.9f)
+            {
+                throw new InvalidOperationException(
+                    "Grave right-arm blade must form during side extension and stay fully formed through the final frame.");
             }
 
             var rightArm = animatedBones[7];
@@ -2558,16 +3870,38 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             var modelScale = attackModel.localScale;
             var baseScales = animatedBones.Select(bone => bone.localScale).ToArray();
             var startRotations = new Quaternion[animatedBones.Length];
+            // The final frame must preserve the authored 2.35-second curtain-call pose instead of returning upward.
+            var curtainCallRotations = new Quaternion[animatedBones.Length];
             var elbowPositions = new Vector3[GraveAttackKeyTimes.Length];
             var handPositions = new Vector3[GraveAttackKeyTimes.Length];
             var chestPositions = new Vector3[GraveAttackKeyTimes.Length];
+            var elbowChestLocalPositions = new Vector3[GraveAttackKeyTimes.Length];
+            var handChestLocalPositions = new Vector3[GraveAttackKeyTimes.Length];
             var minBounds = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             var maxBounds = Vector3.zero;
             var maxGroundPenetration = 0f;
             var maxArmScaleError = 0f;
             var maxRightArmAngle = 0f;
             var maxBodyAngle = 0f;
-            var loopPoseError = 0f;
+            var finalCurtainCallPoseError = 0f;
+            var maxBladeDownward = 0f;
+            var maxUpperThicknessRise = 0f;
+            var maxBladeBelowAxis = 0f;
+            var maxSpineAboveAxis = 0f;
+            var maxScytheTipDrop = 0f;
+            var maxScytheExtension = 0f;
+            var scytheAxialSpan = float.MinValue;
+            var scytheExtensionDistance = 0f;
+            var scytheTipAverageDrop = 0f;
+            var scytheTipThicknessRatio = float.MaxValue;
+            var scytheFrontThicknessRatio = float.MaxValue;
+            var scytheFrontCenterShift = float.MaxValue;
+            var scytheBladePlaneAspect = 0f;
+            var maxFrontBackDelta = 0f;
+            var maxProximalArmDelta = 0f;
+            var maxNonArmDelta = 0f;
+            var bladeChangedVertices = 0;
+            var visualFront = CalculateGraveAttackStableFront(attackModel);
             try
             {
                 animator.enabled = false;
@@ -2582,13 +3916,18 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                         throw new InvalidOperationException("Grave curtain-call attack changes the slot or model root Transform.");
                     }
 
-                    var bounds = CalculateVisibleBounds(attackSlot);
+                    var sampledMesh = new Mesh();
+                    renderer.BakeMesh(sampledMesh, false);
+                    var bounds = CalculateBakedWorldBounds(renderer, sampledMesh);
+                    UnityEngine.Object.DestroyImmediate(sampledMesh);
                     minBounds = Vector3.Min(minBounds, bounds.size);
                     maxBounds = Vector3.Max(maxBounds, bounds.size);
                     maxGroundPenetration = Mathf.Max(maxGroundPenetration, graveRoot.position.y - bounds.min.y);
                     elbowPositions[i] = rightForeArm.position;
                     handPositions[i] = rightHand.position;
                     chestPositions[i] = chest.position;
+                    elbowChestLocalPositions[i] = chest.InverseTransformPoint(rightForeArm.position);
+                    handChestLocalPositions[i] = chest.InverseTransformPoint(rightHand.position);
                     for (var boneIndex = 0; boneIndex < animatedBones.Length; boneIndex++)
                     {
                         maxArmScaleError = Mathf.Max(
@@ -2613,24 +3952,258 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                             Quaternion.Angle(startRotations[1], animatedBones[1].localRotation));
                     }
 
+                    if (i == 6)
+                    {
+                        for (var boneIndex = 0; boneIndex < animatedBones.Length; boneIndex++)
+                        {
+                            curtainCallRotations[boneIndex] = animatedBones[boneIndex].localRotation;
+                        }
+                    }
+
                     if (i == GraveAttackKeyTimes.Length - 1)
                     {
                         for (var boneIndex = 0; boneIndex < animatedBones.Length; boneIndex++)
                         {
-                            loopPoseError = Mathf.Max(
-                                loopPoseError,
-                                Quaternion.Angle(startRotations[boneIndex], animatedBones[boneIndex].localRotation));
+                            finalCurtainCallPoseError = Mathf.Max(
+                                finalCurtainCallPoseError,
+                                Quaternion.Angle(curtainCallRotations[boneIndex], animatedBones[boneIndex].localRotation));
                         }
+                    }
+
+                    if (Mathf.Abs(GraveAttackKeyTimes[i] - GraveAttackBladeFullTime) < 0.0001f)
+                    {
+                        renderer.SetBlendShapeWeight(bladeIndex, 0f);
+                        var baseBaked = new Mesh();
+                        renderer.BakeMesh(baseBaked, false);
+                        renderer.SetBlendShapeWeight(bladeIndex, 100f);
+                        var bladeBaked = new Mesh();
+                        renderer.BakeMesh(bladeBaked, false);
+                        var baseVertices = baseBaked.vertices;
+                        var bladeVertices = bladeBaked.vertices;
+                        var weights = bladeMesh.boneWeights;
+                        var rightArmIndex = Array.FindIndex(renderer.bones, bone => bone != null && bone.name == "RightArm");
+                        var rightForeArmIndex = Array.FindIndex(renderer.bones, bone => bone != null && bone.name == "RightForeArm");
+                        var rightHandIndex = Array.FindIndex(renderer.bones, bone => bone != null && bone.name == "RightHand");
+                        var up = renderer.transform.InverseTransformDirection(attackModel.up).normalized;
+                        var front = renderer.transform.InverseTransformDirection(visualFront).normalized;
+                        var armOrigin = renderer.transform.InverseTransformPoint(renderer.bones[rightArmIndex].position);
+                        var elbowOrigin = renderer.transform.InverseTransformPoint(renderer.bones[rightForeArmIndex].position);
+                        var handOrigin = renderer.transform.InverseTransformPoint(renderer.bones[rightHandIndex].position);
+                        var handDirection = (handOrigin - elbowOrigin).normalized;
+                        var bladeAxis = Vector3.ProjectOnPlane(handDirection, front).normalized;
+                        if (bladeAxis.sqrMagnitude < 0.5f)
+                        {
+                            bladeAxis = handDirection;
+                        }
+
+                        var tipOrigin = handOrigin + handDirection * 0.16f;
+                        var bladeNeckBaseSum = Vector3.zero;
+                        var bladeNeckDeformedSum = Vector3.zero;
+                        var bladeTipBaseSum = Vector3.zero;
+                        var bladeTipDeformedSum = Vector3.zero;
+                        var bladeNeckCount = 0;
+                        var bladeTipCount = 0;
+                        var bladeTipBaseMin = float.MaxValue;
+                        var bladeTipBaseMax = float.MinValue;
+                        var bladeTipDeformedMin = float.MaxValue;
+                        var bladeTipDeformedMax = float.MinValue;
+                        var bladePlaneBaseFrontMin = float.MaxValue;
+                        var bladePlaneBaseFrontMax = float.MinValue;
+                        var bladePlaneDeformedFrontMin = float.MaxValue;
+                        var bladePlaneDeformedFrontMax = float.MinValue;
+                        var bladePlaneFrontCount = 0;
+                        for (var vertexIndex = 0; vertexIndex < baseVertices.Length; vertexIndex++)
+                        {
+                            var delta = bladeVertices[vertexIndex] - baseVertices[vertexIndex];
+                            var armInfluence =
+                                WeightForBone(weights[vertexIndex], rightArmIndex) +
+                                WeightForBone(weights[vertexIndex], rightForeArmIndex) +
+                                WeightForBone(weights[vertexIndex], rightHandIndex);
+                            if (armInfluence >= 0.45f)
+                            {
+                                var progress = CalculatePolylineProgress(
+                                    baseVertices[vertexIndex],
+                                    armOrigin,
+                                    elbowOrigin,
+                                    handOrigin,
+                                    tipOrigin,
+                                    out var centerLinePoint);
+                                var signedHeight = Vector3.Dot(baseVertices[vertexIndex] - centerLinePoint, up);
+                                var verticalDelta = Vector3.Dot(delta, up);
+                                var deformedSignedHeight = Vector3.Dot(
+                                    bladeVertices[vertexIndex] - centerLinePoint,
+                                    up);
+                                if (delta.sqrMagnitude > 0.000001f)
+                                {
+                                    bladeChangedVertices++;
+                                }
+
+                                if (progress <= GraveAttackBladeStartProgress - 0.02f)
+                                {
+                                    maxProximalArmDelta = Mathf.Max(maxProximalArmDelta, delta.magnitude);
+                                }
+
+                                if (signedHeight < 0f && progress > GraveAttackBladeFullProgress && progress < 0.86f)
+                                {
+                                    maxBladeDownward = Mathf.Max(maxBladeDownward, -verticalDelta);
+                                }
+
+                                if (progress > GraveAttackBladeFullProgress && progress < 0.86f)
+                                {
+                                    maxBladeBelowAxis = Mathf.Max(maxBladeBelowAxis, -deformedSignedHeight);
+                                    maxSpineAboveAxis = Mathf.Max(maxSpineAboveAxis, deformedSignedHeight);
+                                }
+
+                                if (signedHeight > 0f && progress > GraveAttackBladeFullProgress && progress < 0.74f)
+                                {
+                                    maxUpperThicknessRise = Mathf.Max(maxUpperThicknessRise, verticalDelta);
+                                }
+
+                                if (progress >= 0.78f)
+                                {
+                                    maxScytheTipDrop = Mathf.Max(maxScytheTipDrop, -verticalDelta);
+                                    maxScytheExtension = Mathf.Max(
+                                        maxScytheExtension,
+                                        Vector3.Dot(delta, bladeAxis));
+                                }
+
+                                if (progress >= 0.58f && progress <= 0.68f)
+                                {
+                                    bladeNeckBaseSum += baseVertices[vertexIndex];
+                                    bladeNeckDeformedSum += bladeVertices[vertexIndex];
+                                    bladeNeckCount++;
+                                }
+
+                                if (progress >= GraveAttackBladeFullProgress && progress <= 0.78f)
+                                {
+                                    var baseFrontDepth = Vector3.Dot(
+                                        baseVertices[vertexIndex] - centerLinePoint,
+                                        front);
+                                    var bladeFrontDepth = Vector3.Dot(
+                                        bladeVertices[vertexIndex] - centerLinePoint,
+                                        front);
+                                    bladePlaneBaseFrontMin = Mathf.Min(
+                                        bladePlaneBaseFrontMin, baseFrontDepth);
+                                    bladePlaneBaseFrontMax = Mathf.Max(
+                                        bladePlaneBaseFrontMax, baseFrontDepth);
+                                    bladePlaneDeformedFrontMin = Mathf.Min(
+                                        bladePlaneDeformedFrontMin, bladeFrontDepth);
+                                    bladePlaneDeformedFrontMax = Mathf.Max(
+                                        bladePlaneDeformedFrontMax, bladeFrontDepth);
+                                    bladePlaneFrontCount++;
+                                }
+
+                                if (progress >= 0.92f)
+                                {
+                                    bladeTipBaseSum += baseVertices[vertexIndex];
+                                    bladeTipDeformedSum += bladeVertices[vertexIndex];
+                                    bladeTipCount++;
+                                    var baseHeight = Vector3.Dot(baseVertices[vertexIndex], up);
+                                    var bladeHeight = Vector3.Dot(bladeVertices[vertexIndex], up);
+                                    bladeTipBaseMin = Mathf.Min(bladeTipBaseMin, baseHeight);
+                                    bladeTipBaseMax = Mathf.Max(bladeTipBaseMax, baseHeight);
+                                    bladeTipDeformedMin = Mathf.Min(bladeTipDeformedMin, bladeHeight);
+                                    bladeTipDeformedMax = Mathf.Max(bladeTipDeformedMax, bladeHeight);
+                                }
+
+                                maxFrontBackDelta = Mathf.Max(
+                                    maxFrontBackDelta,
+                                    Mathf.Abs(Vector3.Dot(delta, front)));
+                            }
+                            else
+                            {
+                                maxNonArmDelta = Mathf.Max(maxNonArmDelta, delta.magnitude);
+                            }
+                        }
+
+                        if (bladeNeckCount > 0 && bladeTipCount > 0)
+                        {
+                            var baseNeckCenter = bladeNeckBaseSum / bladeNeckCount;
+                            var deformedNeckCenter = bladeNeckDeformedSum / bladeNeckCount;
+                            var baseTipCenter = bladeTipBaseSum / bladeTipCount;
+                            var deformedTipCenter = bladeTipDeformedSum / bladeTipCount;
+                            var baseAxialSpan = Vector3.Dot(baseTipCenter - baseNeckCenter, bladeAxis);
+                            scytheAxialSpan = Vector3.Dot(
+                                deformedTipCenter - deformedNeckCenter,
+                                bladeAxis);
+                            scytheExtensionDistance = scytheAxialSpan - baseAxialSpan;
+                            scytheTipAverageDrop = -Vector3.Dot(deformedTipCenter - baseTipCenter, up);
+                            var baseTipThickness = bladeTipBaseMax - bladeTipBaseMin;
+                            var deformedTipThickness = bladeTipDeformedMax - bladeTipDeformedMin;
+                            scytheTipThicknessRatio =
+                                deformedTipThickness / Mathf.Max(baseTipThickness, 0.0001f);
+                        }
+
+                        if (bladePlaneFrontCount > 0)
+                        {
+                            var baseFrontThickness =
+                                bladePlaneBaseFrontMax - bladePlaneBaseFrontMin;
+                            var deformedFrontThickness =
+                                bladePlaneDeformedFrontMax - bladePlaneDeformedFrontMin;
+                            scytheFrontThicknessRatio =
+                                deformedFrontThickness / Mathf.Max(baseFrontThickness, 0.0001f);
+                            var baseFrontCenter =
+                                (bladePlaneBaseFrontMax + bladePlaneBaseFrontMin) * 0.5f;
+                            var deformedFrontCenter =
+                                (bladePlaneDeformedFrontMax + bladePlaneDeformedFrontMin) * 0.5f;
+                            scytheFrontCenterShift = Mathf.Abs(deformedFrontCenter - baseFrontCenter);
+                            scytheBladePlaneAspect =
+                                (maxBladeBelowAxis + maxSpineAboveAxis) /
+                                Mathf.Max(deformedFrontThickness, 0.0001f);
+                        }
+
+                        renderer.SetBlendShapeWeight(bladeIndex, bladeCurve.Evaluate(GraveAttackKeyTimes[i]));
+                        UnityEngine.Object.DestroyImmediate(baseBaked);
+                        UnityEngine.Object.DestroyImmediate(bladeBaked);
                     }
                 }
             }
             finally
             {
                 RestoreLocalPoses(poses);
+                renderer.SetBlendShapeWeight(bladeIndex, 0f);
                 animator.enabled = animatorWasEnabled;
             }
 
-            var visualFront = CalculateVisualFront(attackModel);
+            var postAttackResetWeight = renderer.GetBlendShapeWeight(bladeIndex);
+            if (Mathf.Abs(postAttackResetWeight) > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    $"Grave right arm did not restore after the attack. BladeWeight={postAttackResetWeight:0.###}");
+            }
+
+            var dropSpeedMetrics = MeasureGraveAttackDropSpeed(clip, attackModel, rightHand, animator);
+            var peakDropSpeed = dropSpeedMetrics.x;
+            var preBurstDropSpeed = dropSpeedMetrics.y;
+            var postBurstDropSpeed = dropSpeedMetrics.z;
+            var averageDropSpeed = dropSpeedMetrics.w;
+            var dropImpulseRatio = peakDropSpeed /
+                Mathf.Max(Mathf.Max(preBurstDropSpeed, postBurstDropSpeed), 0.001f);
+            var acceleratedDropFrames =
+                (GraveAttackSlashEndTime - GraveAttackSlashHoldTime) * clip.frameRate;
+            var slashContinuityMetrics = MeasureGraveAttackSlashContinuity(
+                clip, attackModel, rightHand, animator);
+            var peakSlashSpeed = slashContinuityMetrics.x;
+            var minimumSlashSpeed = slashContinuityMetrics.y;
+            var averageSlashSpeed = slashContinuityMetrics.z;
+            var slashPathEfficiency = slashContinuityMetrics.w;
+            var slashSpeedUniformity = minimumSlashSpeed / Mathf.Max(averageSlashSpeed, 0.001f);
+            var armIntegrityMetrics = MeasureGraveAttackArmIntegrity(
+                clip, attackModel, rightArm, rightForeArm, rightHand, renderer, animator, bladeIndex);
+            var maxElbowBend = armIntegrityMetrics.x;
+            var minimumTorsoFrontClearance = armIntegrityMetrics.y;
+            var bladeFrontFacingMetrics = MeasureGraveAttackBladeFrontFacing(
+                clip, attackModel, renderer, animator, bladeIndex);
+            var minimumBladeFrontFacing = Mathf.Min(
+                Mathf.Min(bladeFrontFacingMetrics.x, bladeFrontFacingMetrics.y),
+                Mathf.Min(bladeFrontFacingMetrics.z, bladeFrontFacingMetrics.w));
+            var averageBladeFrontFacing =
+                (bladeFrontFacingMetrics.x + bladeFrontFacingMetrics.y +
+                 bladeFrontFacingMetrics.z + bladeFrontFacingMetrics.w) * 0.25f;
+            var lowerBladeDominance = maxBladeBelowAxis / Mathf.Max(maxSpineAboveAxis, 0.001f);
+            // Reference scythe blades are long arcs, so judge cutting depth relative to axial length.
+            var scytheArcDepthRatio = maxBladeBelowAxis / Mathf.Max(scytheAxialSpan, 0.001f);
+
             var extendSide = Vector3.Dot(handPositions[3] - handPositions[0], attackModel.right);
             var extendRise = Vector3.Dot(handPositions[3] - handPositions[0], attackModel.up);
             var midSweepDrop = Vector3.Dot(handPositions[3] - handPositions[4], attackModel.up);
@@ -2652,15 +4225,34 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             var pullDistanceReduction =
                 Vector3.Distance(handPositions[5], chestPositions[5]) -
                 Vector3.Distance(handPositions[6], chestPositions[6]);
-            if (extendSide < 0.22f || extendRise < 0.18f || midSweepDrop < 0.2f || sweepDrop < 0.45f ||
-                sweepInward < 0.3f || sweepForwardFromExtension > 0.28f || descentDominance < 1.8f ||
+            var curtainCallHoldDrift = Mathf.Max(
+                Vector3.Distance(handChestLocalPositions[4], handChestLocalPositions[5]),
+                Mathf.Max(
+                    Vector3.Distance(handChestLocalPositions[5], handChestLocalPositions[6]),
+                    Vector3.Distance(elbowChestLocalPositions[4], elbowChestLocalPositions[6])));
+            if (extendSide < 0.22f || extendRise < 0.18f || midSweepDrop < 0.1f || sweepDrop < 0.18f ||
+                sweepInward < 0.8f || sweepForwardFromExtension < 0.35f || sweepForwardFromExtension > 0.7f ||
                 finalElbowLateral > 0.12f || finalElbowForward < 0.03f || finalElbowForward > 0.4f ||
                 finalLateral > -0.1f || finalLateral < -0.35f || finalForward < 0.08f || finalForward > 0.55f ||
                 finalForeArmLeftReach < 0.18f || finalForeArmForward < 0.03f || finalForeArmForward > 0.32f ||
                 finalLeftwardDominance < 1.1f ||
-                Mathf.Abs(finalVertical) > 0.45f || pullDistanceReduction < 0.06f ||
+                Mathf.Abs(finalVertical) > 0.45f || curtainCallHoldDrift > 0.03f ||
                 maxRightArmAngle < 70f || maxBodyAngle < 4f ||
-                maxArmScaleError > 0.00001f || maxGroundPenetration > 0.02f || loopPoseError > 0.01f)
+                maxArmScaleError > 0.00001f || maxGroundPenetration > 0.08f || finalCurtainCallPoseError > 0.01f ||
+                maxBladeBelowAxis < 0.11f || lowerBladeDominance < 2.5f ||
+                scytheArcDepthRatio < 0.22f || scytheArcDepthRatio > 0.45f ||
+                maxScytheTipDrop < 0.035f || maxScytheTipDrop > 0.22f || maxScytheExtension < 0.04f ||
+                scytheAxialSpan < 0.28f || scytheExtensionDistance < 0.035f ||
+                scytheTipAverageDrop < 0.025f || scytheTipAverageDrop > 0.2f ||
+                scytheTipThicknessRatio > 0.65f ||
+                scytheFrontThicknessRatio > 0.35f || scytheFrontCenterShift > 0.03f ||
+                scytheBladePlaneAspect < 6f ||
+                maxProximalArmDelta > 0.015f || maxNonArmDelta > 0.00001f || bladeChangedVertices < 80 ||
+                acceleratedDropFrames < 14f || acceleratedDropFrames > 20f ||
+                peakSlashSpeed < 6f || averageSlashSpeed < 2f || dropImpulseRatio < 6f ||
+                slashSpeedUniformity < 0.6f || slashPathEfficiency < 0.55f ||
+                maxElbowBend < 55f || maxElbowBend > 90f || minimumTorsoFrontClearance < 0.015f ||
+                minimumBladeFrontFacing < 0.22f || averageBladeFrontFacing < 0.35f)
             {
                 throw new InvalidOperationException(
                     $"Grave curtain-call attack sampled motion mismatch. ExtendSide={extendSide:0.######}, " +
@@ -2675,14 +4267,51 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                     $"FinalForeArmForward={finalForeArmForward:0.######}, " +
                     $"FinalLeftwardDominance={finalLeftwardDominance:0.######}, " +
                     $"PullReduction={pullDistanceReduction:0.######}, " +
+                    $"CurtainCallHoldDrift={curtainCallHoldDrift:0.######}, " +
                     $"RightArmAngle={maxRightArmAngle:0.######}, BodyAngle={maxBodyAngle:0.######}, " +
                     $"ArmScaleError={maxArmScaleError:0.######}, GroundPenetration={maxGroundPenetration:0.######}, " +
-                    $"LoopPoseError={loopPoseError:0.######}");
+                    $"FinalCurtainCallPoseError={finalCurtainCallPoseError:0.######}, BladeDown={maxBladeDownward:0.######}, " +
+                    $"UpperThickness={maxUpperThicknessRise:0.######}, " +
+                    $"BladeBelowAxis={maxBladeBelowAxis:0.######}, " +
+                    $"SpineAboveAxis={maxSpineAboveAxis:0.######}, " +
+                    $"LowerBladeDominance={lowerBladeDominance:0.######}, " +
+                    $"ScytheArcDepthRatio={scytheArcDepthRatio:0.######}, " +
+                    $"ScytheTipDrop={maxScytheTipDrop:0.######}, " +
+                    $"ScytheExtension={maxScytheExtension:0.######}, " +
+                    $"ScytheAxialSpan={scytheAxialSpan:0.######}, " +
+                    $"ScytheExtensionDistance={scytheExtensionDistance:0.######}, " +
+                    $"ScytheTipAverageDrop={scytheTipAverageDrop:0.######}, " +
+                    $"ScytheTipThicknessRatio={scytheTipThicknessRatio:0.######}, " +
+                    $"ScytheFrontThicknessRatio={scytheFrontThicknessRatio:0.######}, " +
+                    $"ScytheFrontCenterShift={scytheFrontCenterShift:0.######}, " +
+                    $"ScytheBladePlaneAspect={scytheBladePlaneAspect:0.######}, " +
+                    $"FrontBackCompressionDelta={maxFrontBackDelta:0.######}, " +
+                    $"ProximalArmDelta={maxProximalArmDelta:0.######}, " +
+                    $"NonArmDelta={maxNonArmDelta:0.######}, " +
+                    $"BladeVertices={bladeChangedVertices}, PeakDropSpeed={peakDropSpeed:0.######}, " +
+                    $"PreBurstDropSpeed={preBurstDropSpeed:0.######}, " +
+                    $"PostBurstDropSpeed={postBurstDropSpeed:0.######}, " +
+                    $"AverageDropSpeed={averageDropSpeed:0.######}, DropImpulseRatio={dropImpulseRatio:0.######}, " +
+                    $"AcceleratedDropFrames={acceleratedDropFrames:0.###}, " +
+                    $"PeakSlashSpeed={peakSlashSpeed:0.######}, MinimumSlashSpeed={minimumSlashSpeed:0.######}, " +
+                    $"AverageSlashSpeed={averageSlashSpeed:0.######}, " +
+                    $"SlashSpeedUniformity={slashSpeedUniformity:0.######}, " +
+                    $"SlashPathEfficiency={slashPathEfficiency:0.######}, " +
+                    $"MaxElbowBend={maxElbowBend:0.######}, " +
+                    $"TorsoFrontClearance={minimumTorsoFrontClearance:0.######}, " +
+                    $"BladeFrontFacingMin={minimumBladeFrontFacing:0.######}, " +
+                    $"BladeFrontFacingAverage={averageBladeFrontFacing:0.######}, " +
+                    $"BladeFrontFacingSamples={bladeFrontFacingMetrics.x:0.######}|" +
+                    $"{bladeFrontFacingMetrics.y:0.######}|{bladeFrontFacingMetrics.z:0.######}|" +
+                    $"{bladeFrontFacingMetrics.w:0.######}");
             }
 
+            // Measurement helpers temporarily disable the Animator, so leave the actual review slot rebound too.
+            RebindApprovedGraveCurtainCallAnimator(animator, controller, clip, forceControllerReload: false);
             var metrics =
                 $"Target={GraveAttackSlotName}/{GraveModelName}, Duration={clip.length:0.###}, " +
                 $"LoopTime={settings.loopTime}, LoopBlend={settings.loopBlend}, CurveCount={bindings.Length}, " +
+                $"LiveAnimatorBound=True, " +
                 $"ExtendSide={extendSide:0.######}, ExtendRise={extendRise:0.######}, " +
                 $"MidSweepDrop={midSweepDrop:0.######}, SweepDrop={sweepDrop:0.######}, " +
                 $"SweepInward={sweepInward:0.######}, " +
@@ -2694,10 +4323,53 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                 $"FinalForeArmLeftReach={finalForeArmLeftReach:0.######}, " +
                 $"FinalForeArmForward={finalForeArmForward:0.######}, " +
                 $"FinalLeftwardDominance={finalLeftwardDominance:0.######}, " +
-                $"PullReduction={pullDistanceReduction:0.######}, RightArmAngle={maxRightArmAngle:0.######}, " +
+                $"PullReduction={pullDistanceReduction:0.######}, " +
+                $"CurtainCallHoldDrift={curtainCallHoldDrift:0.######}, " +
+                $"RightArmAngle={maxRightArmAngle:0.######}, " +
                 $"BodyAngle={maxBodyAngle:0.######}, ArmScaleError={maxArmScaleError:0.######}, " +
                 $"BoundsMin={FormatVector(minBounds)}, BoundsMax={FormatVector(maxBounds)}, " +
-                $"GroundPenetration={maxGroundPenetration:0.######}, LoopPoseError={loopPoseError:0.######}, " +
+                $"GroundPenetration={maxGroundPenetration:0.######}, " +
+                $"FinalCurtainCallPoseError={finalCurtainCallPoseError:0.######}, " +
+                $"Blade={GraveAttackBladeBlendShapeName}, BladeStart={bladeCurve.Evaluate(0f):0.###}, " +
+                $"BladeExtend={bladeCurve.Evaluate(GraveAttackBladeFullTime):0.###}, " +
+                $"BladeFastDrop={bladeCurve.Evaluate(GraveAttackSlashEndTime):0.###}, " +
+                $"BladeLowered={bladeCurve.Evaluate(1.65f):0.###}, " +
+                $"BladeLateAttack={bladeCurve.Evaluate(2.35f):0.###}, " +
+                $"BladeFinal={bladeCurve.Evaluate(GraveAttackDuration):0.###}, " +
+                $"BladeAfterAttack={postAttackResetWeight:0.###}, " +
+                $"BladeDown={maxBladeDownward:0.######}, UpperThickness={maxUpperThicknessRise:0.######}, " +
+                $"BladeBelowAxis={maxBladeBelowAxis:0.######}, " +
+                $"SpineAboveAxis={maxSpineAboveAxis:0.######}, " +
+                $"LowerBladeDominance={lowerBladeDominance:0.######}, " +
+                $"ScytheArcDepthRatio={scytheArcDepthRatio:0.######}, " +
+                $"ScytheTipDrop={maxScytheTipDrop:0.######}, " +
+                $"ScytheExtension={maxScytheExtension:0.######}, " +
+                $"ScytheAxialSpan={scytheAxialSpan:0.######}, " +
+                $"ScytheExtensionDistance={scytheExtensionDistance:0.######}, " +
+                $"ScytheTipAverageDrop={scytheTipAverageDrop:0.######}, " +
+                $"ScytheTipThicknessRatio={scytheTipThicknessRatio:0.######}, " +
+                $"ScytheFrontThicknessRatio={scytheFrontThicknessRatio:0.######}, " +
+                $"ScytheFrontCenterShift={scytheFrontCenterShift:0.######}, " +
+                $"ScytheBladePlaneAspect={scytheBladePlaneAspect:0.######}, " +
+                $"FrontBackCompressionDelta={maxFrontBackDelta:0.######}, " +
+                $"ProximalArmDelta={maxProximalArmDelta:0.######}, " +
+                $"NonArmDelta={maxNonArmDelta:0.######}, BladeVertices={bladeChangedVertices}, " +
+                $"PeakDropSpeed={peakDropSpeed:0.######}, PreBurstDropSpeed={preBurstDropSpeed:0.######}, " +
+                $"PostBurstDropSpeed={postBurstDropSpeed:0.######}, " +
+                $"AverageDropSpeed={averageDropSpeed:0.######}, " +
+                $"DropImpulseRatio={dropImpulseRatio:0.######}, " +
+                $"AcceleratedDropFrames={acceleratedDropFrames:0.###}, " +
+                $"PeakSlashSpeed={peakSlashSpeed:0.######}, MinimumSlashSpeed={minimumSlashSpeed:0.######}, " +
+                $"AverageSlashSpeed={averageSlashSpeed:0.######}, " +
+                $"SlashSpeedUniformity={slashSpeedUniformity:0.######}, " +
+                $"SlashPathEfficiency={slashPathEfficiency:0.######}, " +
+                $"MaxElbowBend={maxElbowBend:0.######}, " +
+                $"TorsoFrontClearance={minimumTorsoFrontClearance:0.######}, " +
+                $"BladeFrontFacingMin={minimumBladeFrontFacing:0.######}, " +
+                $"BladeFrontFacingAverage={averageBladeFrontFacing:0.######}, " +
+                $"BladeFrontFacingSamples={bladeFrontFacingMetrics.x:0.######}|" +
+                $"{bladeFrontFacingMetrics.y:0.######}|{bladeFrontFacingMetrics.z:0.######}|" +
+                $"{bladeFrontFacingMetrics.w:0.######}, " +
                 $"ModelRootMotion=0, SlotRootMotion=0";
             if (writeReport)
             {
@@ -3215,6 +4887,354 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                 var folder = ProjectAbsolutePath(GraveWalkValidationRelativeFolder);
                 Directory.CreateDirectory(folder);
                 File.WriteAllText(Path.Combine(folder, "GraveSlowWalkValidation.txt"), metrics + Environment.NewLine);
+            }
+
+            return metrics;
+        }
+
+        private static AnimationClip EnsureApprovedGraveHitRecoilClip(Transform hitModel)
+        {
+            var spine02 = RequireGraveHitBone(hitModel, "Spine02");
+            var spine01 = RequireGraveHitBone(hitModel, "Spine01");
+            var spine = RequireGraveHitBone(hitModel, "Spine");
+            var neck = RequireGraveHitBone(hitModel, "neck");
+            var head = RequireGraveHitBone(hitModel, "Head");
+            EnsureAssetDirectory(GraveHitClipAssetPath);
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveHitClipAssetPath);
+            if (clip == null)
+            {
+                clip = new AnimationClip { name = "Grave_Hit_Recoil", frameRate = 60f };
+                AssetDatabase.CreateAsset(clip, GraveHitClipAssetPath);
+            }
+
+            clip.ClearCurves();
+            clip.legacy = false;
+            clip.wrapMode = WrapMode.Loop;
+            clip.frameRate = 60f;
+            SetGraveHitRotationCurves(clip, spine02, hitModel, 14f, GraveHitBodyFactors);
+            SetGraveHitRotationCurves(clip, spine01, hitModel, 10f, GraveHitBodyFactors);
+            SetGraveHitRotationCurves(clip, spine, hitModel, 7f, GraveHitBodyFactors);
+            SetGraveHitRotationCurves(clip, neck, hitModel, 5f, GraveHitHeadLagFactors);
+            SetGraveHitRotationCurves(clip, head, hitModel, 3f, GraveHitHeadLagFactors);
+            var settings = AnimationUtility.GetAnimationClipSettings(clip);
+            settings.loopTime = true;
+            settings.loopBlend = true;
+            settings.cycleOffset = 0f;
+            AnimationUtility.SetAnimationClipSettings(clip, settings);
+            clip.EnsureQuaternionContinuity();
+            EditorUtility.SetDirty(clip);
+            AssetDatabase.SaveAssets();
+            return clip;
+        }
+
+        private static AnimatorController EnsureApprovedGraveHitRecoilController(AnimationClip clip)
+        {
+            EnsureAssetDirectory(GraveHitControllerAssetPath);
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(GraveHitControllerAssetPath);
+            if (controller == null)
+            {
+                controller = AnimatorController.CreateAnimatorControllerAtPath(GraveHitControllerAssetPath);
+            }
+
+            var stateMachine = controller.layers[0].stateMachine;
+            var state = stateMachine.states.Select(child => child.state)
+                .FirstOrDefault(candidate => candidate.name == "HitRecoil");
+            if (state == null)
+            {
+                state = stateMachine.AddState("HitRecoil");
+            }
+
+            foreach (var child in stateMachine.states.ToArray())
+            {
+                if (child.state != state)
+                {
+                    stateMachine.RemoveState(child.state);
+                }
+            }
+
+            foreach (var transition in state.transitions.ToArray())
+            {
+                state.RemoveTransition(transition);
+            }
+
+            state.motion = clip;
+            state.speed = 1f;
+            state.writeDefaultValues = true;
+            stateMachine.defaultState = state;
+            EditorUtility.SetDirty(state);
+            EditorUtility.SetDirty(stateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static void SetGraveHitRotationCurves(
+            AnimationClip clip,
+            Transform target,
+            Transform model,
+            float backwardAngle,
+            IReadOnlyList<float> factors)
+        {
+            if (factors.Count != GraveHitKeyTimes.Length)
+            {
+                throw new ArgumentException("Grave hit-recoil factor count must match hit key times.", nameof(factors));
+            }
+
+            var visualFront = CalculateVisualFront(model);
+            var recoilAxis = Vector3.Cross(model.up, visualFront).normalized;
+            var quaternions = new Quaternion[GraveHitKeyTimes.Length];
+            for (var i = 0; i < quaternions.Length; i++)
+            {
+                var worldDelta = Quaternion.AngleAxis(-backwardAngle * factors[i], recoilAxis);
+                var value = Quaternion.Inverse(target.parent.rotation) * worldDelta * target.rotation;
+                if (i > 0 && Quaternion.Dot(quaternions[i - 1], value) < 0f)
+                {
+                    value = new Quaternion(-value.x, -value.y, -value.z, -value.w);
+                }
+
+                quaternions[i] = value;
+            }
+
+            var path = AnimationUtility.CalculateTransformPath(target, model);
+            SetGraveHitFloatCurve(clip, path, "m_LocalRotation.x", quaternions.Select(value => value.x).ToArray());
+            SetGraveHitFloatCurve(clip, path, "m_LocalRotation.y", quaternions.Select(value => value.y).ToArray());
+            SetGraveHitFloatCurve(clip, path, "m_LocalRotation.z", quaternions.Select(value => value.z).ToArray());
+            SetGraveHitFloatCurve(clip, path, "m_LocalRotation.w", quaternions.Select(value => value.w).ToArray());
+        }
+
+        private static void SetGraveHitFloatCurve(
+            AnimationClip clip,
+            string path,
+            string propertyName,
+            IReadOnlyList<float> values)
+        {
+            var keys = new Keyframe[GraveHitKeyTimes.Length];
+            for (var i = 0; i < keys.Length; i++)
+            {
+                keys[i] = new Keyframe(GraveHitKeyTimes[i], values[i]);
+            }
+
+            var curve = new AnimationCurve(keys);
+            for (var i = 0; i < curve.length; i++)
+            {
+                AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.ClampedAuto);
+                AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.ClampedAuto);
+            }
+
+            AnimationUtility.SetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Transform), propertyName),
+                curve);
+        }
+
+        private static Transform RequireGraveHitBone(Transform model, string name)
+        {
+            return FindDescendant(model, name) ??
+                throw new InvalidOperationException("Grave hit-recoil rig is missing " + name + ".");
+        }
+
+        private static string ValidateApprovedGraveHitRecoilScene(Scene scene, bool writeReport)
+        {
+            var graveRoot = RequireRootSceneObject(scene, GraveRootName).transform;
+            var hitSlot = graveRoot.Find(GraveHitSlotName) ??
+                throw new InvalidOperationException(GraveHitSlotName + " is missing.");
+            var hitModel = hitSlot.Find(GraveModelName) ??
+                throw new InvalidOperationException(GraveHitSlotName + "/" + GraveModelName + " is missing.");
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveHitClipAssetPath) ??
+                throw new InvalidOperationException("Grave hit-recoil clip is missing.");
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(GraveHitControllerAssetPath) ??
+                throw new InvalidOperationException("Grave hit-recoil controller is missing.");
+            var animator = hitModel.GetComponent<Animator>() ??
+                throw new InvalidOperationException("Grave hit-recoil Animator is missing.");
+            if (animator.runtimeAnimatorController != controller || animator.applyRootMotion || !animator.enabled ||
+                animator.cullingMode != AnimatorCullingMode.AlwaysAnimate)
+            {
+                throw new InvalidOperationException("Grave hit-recoil Animator configuration mismatch.");
+            }
+
+            var defaultState = controller.layers.Length > 0 ? controller.layers[0].stateMachine.defaultState : null;
+            if (defaultState == null || defaultState.name != "HitRecoil" || defaultState.motion != clip ||
+                Mathf.Abs(defaultState.speed - 1f) > 0.0001f)
+            {
+                throw new InvalidOperationException("Grave hit-recoil controller default state mismatch.");
+            }
+
+            var settings = AnimationUtility.GetAnimationClipSettings(clip);
+            if (!settings.loopTime || !settings.loopBlend || Mathf.Abs(clip.length - GraveHitDuration) > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    $"Grave hit-recoil clip configuration mismatch. Length={clip.length:0.######}, " +
+                    $"LoopTime={settings.loopTime}, LoopBlend={settings.loopBlend}");
+            }
+
+            var animatedBones = new[]
+            {
+                RequireGraveHitBone(hitModel, "Spine02"),
+                RequireGraveHitBone(hitModel, "Spine01"),
+                RequireGraveHitBone(hitModel, "Spine"),
+                RequireGraveHitBone(hitModel, "neck"),
+                RequireGraveHitBone(hitModel, "Head")
+            };
+            var expectedBindings = new HashSet<string>();
+            foreach (var bone in animatedBones)
+            {
+                var path = AnimationUtility.CalculateTransformPath(bone, hitModel);
+                foreach (var component in new[] { "x", "y", "z", "w" })
+                {
+                    expectedBindings.Add(path + "|m_LocalRotation." + component);
+                }
+            }
+
+            var bindings = AnimationUtility.GetCurveBindings(clip);
+            var actualBindings = bindings.Select(binding => binding.path + "|" + binding.propertyName).ToHashSet();
+            if (bindings.Length != expectedBindings.Count || !actualBindings.SetEquals(expectedBindings) ||
+                bindings.Any(binding => string.IsNullOrEmpty(binding.path)) ||
+                AnimationUtility.GetObjectReferenceCurveBindings(clip).Length != 0)
+            {
+                throw new InvalidOperationException(
+                    "Grave hit-recoil clip must contain only upper-body rotation curves.");
+            }
+
+            var hips = RequireGraveHitBone(hitModel, "Hips");
+            var lowerBodyBones = new[]
+            {
+                hips,
+                RequireGraveHitBone(hitModel, "LeftUpLeg"), RequireGraveHitBone(hitModel, "LeftLeg"),
+                RequireGraveHitBone(hitModel, "LeftFoot"), RequireGraveHitBone(hitModel, "LeftToeBase"),
+                RequireGraveHitBone(hitModel, "RightUpLeg"), RequireGraveHitBone(hitModel, "RightLeg"),
+                RequireGraveHitBone(hitModel, "RightFoot"), RequireGraveHitBone(hitModel, "RightToeBase")
+            };
+            var allTransforms = hitModel.GetComponentsInChildren<Transform>(true);
+            var baseScales = allTransforms.Select(target => target.localScale).ToArray();
+            var poses = CaptureLocalPoses(hitModel);
+            var animatorWasEnabled = animator.enabled;
+            var slotPosition = hitSlot.localPosition;
+            var slotRotation = hitSlot.localRotation;
+            var slotScale = hitSlot.localScale;
+            var modelPosition = hitModel.localPosition;
+            var modelRotation = hitModel.localRotation;
+            var modelScale = hitModel.localScale;
+            var visualFront = CalculateVisualFront(hitModel);
+            var startAnimatedRotations = new Quaternion[animatedBones.Length];
+            var startLowerBodyRotations = new Quaternion[lowerBodyBones.Length];
+            var startNeckPosition = Vector3.zero;
+            var startHeadPosition = Vector3.zero;
+            var startTorsoDirection = Vector3.up;
+            var maxBodyBackward = 0f;
+            var maxHeadBackward = 0f;
+            var maxTorsoLeanAngle = 0f;
+            var maxBackwardTime = 0f;
+            var maxLowerBodyRotationError = 0f;
+            var maxScaleError = 0f;
+            var maxGroundPenetration = 0f;
+            var returnPoseError = 0f;
+            var returnPositionError = 0f;
+            try
+            {
+                animator.enabled = false;
+                for (var sampleIndex = 0; sampleIndex < GraveHitKeyTimes.Length; sampleIndex++)
+                {
+                    RestoreLocalPoses(poses);
+                    clip.SampleAnimation(hitModel.gameObject, GraveHitKeyTimes[sampleIndex]);
+                    if (hitSlot.localPosition != slotPosition || hitSlot.localRotation != slotRotation || hitSlot.localScale != slotScale ||
+                        hitModel.localPosition != modelPosition || hitModel.localRotation != modelRotation || hitModel.localScale != modelScale)
+                    {
+                        throw new InvalidOperationException("Grave hit-recoil clip contains slot or model root motion.");
+                    }
+
+                    var bounds = CalculateVisibleBounds(hitSlot);
+                    maxGroundPenetration = Mathf.Max(maxGroundPenetration, graveRoot.position.y - bounds.min.y);
+                    for (var transformIndex = 0; transformIndex < allTransforms.Length; transformIndex++)
+                    {
+                        maxScaleError = Mathf.Max(
+                            maxScaleError,
+                            Vector3.Distance(baseScales[transformIndex], allTransforms[transformIndex].localScale));
+                    }
+
+                    if (sampleIndex == 0)
+                    {
+                        for (var boneIndex = 0; boneIndex < animatedBones.Length; boneIndex++)
+                        {
+                            startAnimatedRotations[boneIndex] = animatedBones[boneIndex].localRotation;
+                        }
+
+                        for (var boneIndex = 0; boneIndex < lowerBodyBones.Length; boneIndex++)
+                        {
+                            startLowerBodyRotations[boneIndex] = lowerBodyBones[boneIndex].localRotation;
+                        }
+
+                        startNeckPosition = animatedBones[3].position;
+                        startHeadPosition = animatedBones[4].position;
+                        startTorsoDirection = (animatedBones[3].position - animatedBones[0].position).normalized;
+                        continue;
+                    }
+
+                    for (var boneIndex = 0; boneIndex < lowerBodyBones.Length; boneIndex++)
+                    {
+                        maxLowerBodyRotationError = Mathf.Max(
+                            maxLowerBodyRotationError,
+                            Quaternion.Angle(startLowerBodyRotations[boneIndex], lowerBodyBones[boneIndex].localRotation));
+                    }
+
+                    var bodyBackward = Vector3.Dot(startNeckPosition - animatedBones[3].position, visualFront);
+                    var headBackward = Vector3.Dot(startHeadPosition - animatedBones[4].position, visualFront);
+                    var torsoDirection = (animatedBones[3].position - animatedBones[0].position).normalized;
+                    var torsoLeanAngle = Vector3.Angle(startTorsoDirection, torsoDirection);
+                    if (bodyBackward > maxBodyBackward)
+                    {
+                        maxBodyBackward = bodyBackward;
+                        maxBackwardTime = GraveHitKeyTimes[sampleIndex];
+                    }
+
+                    maxHeadBackward = Mathf.Max(maxHeadBackward, headBackward);
+                    maxTorsoLeanAngle = Mathf.Max(maxTorsoLeanAngle, torsoLeanAngle);
+                    if (sampleIndex == GraveHitKeyTimes.Length - 1)
+                    {
+                        for (var boneIndex = 0; boneIndex < animatedBones.Length; boneIndex++)
+                        {
+                            returnPoseError = Mathf.Max(
+                                returnPoseError,
+                                Quaternion.Angle(startAnimatedRotations[boneIndex], animatedBones[boneIndex].localRotation));
+                        }
+
+                        returnPositionError = Mathf.Max(
+                            Vector3.Distance(startNeckPosition, animatedBones[3].position),
+                            Vector3.Distance(startHeadPosition, animatedBones[4].position));
+                    }
+                }
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+                animator.enabled = animatorWasEnabled;
+            }
+
+            if (maxBodyBackward < 0.08f || maxHeadBackward < 0.12f || maxTorsoLeanAngle < 22f ||
+                maxBackwardTime < 0.12f || maxBackwardTime > 0.24f ||
+                maxLowerBodyRotationError > 0.001f || maxScaleError > 0.00001f ||
+                maxGroundPenetration > 0.012f || returnPoseError > 0.01f || returnPositionError > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    $"Grave hit-recoil sampled motion mismatch. BodyBack={maxBodyBackward:0.######}, " +
+                    $"HeadBack={maxHeadBackward:0.######}, TorsoLean={maxTorsoLeanAngle:0.######}, " +
+                    $"PeakTime={maxBackwardTime:0.###}, LowerBodyRotationError={maxLowerBodyRotationError:0.######}, " +
+                    $"ScaleError={maxScaleError:0.######}, GroundPenetration={maxGroundPenetration:0.######}, " +
+                    $"ReturnPoseError={returnPoseError:0.######}, ReturnPositionError={returnPositionError:0.######}");
+            }
+
+            var metrics =
+                $"Target={GraveHitSlotName}/{GraveModelName}, Duration={clip.length:0.###}, " +
+                $"LoopTime={settings.loopTime}, LoopBlend={settings.loopBlend}, CurveCount={bindings.Length}, " +
+                $"BodyBack={maxBodyBackward:0.######}, HeadBack={maxHeadBackward:0.######}, " +
+                $"TorsoLean={maxTorsoLeanAngle:0.######}, PeakTime={maxBackwardTime:0.###}, " +
+                $"LowerBodyRotationError={maxLowerBodyRotationError:0.######}, ScaleError={maxScaleError:0.######}, " +
+                $"GroundPenetration={maxGroundPenetration:0.######}, ReturnPoseError={returnPoseError:0.######}, " +
+                $"ReturnPositionError={returnPositionError:0.######}, ModelRootMotion=0, SlotRootMotion=0";
+            if (writeReport)
+            {
+                var folder = ProjectAbsolutePath(GraveHitValidationRelativeFolder);
+                Directory.CreateDirectory(folder);
+                File.WriteAllText(Path.Combine(folder, "GraveHitRecoilValidation.txt"), metrics + Environment.NewLine);
             }
 
             return metrics;
@@ -3882,6 +5902,12 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             return front.sqrMagnitude > 0.0001f ? front.normalized : model.forward;
         }
 
+        private static Vector3 CalculateGraveAttackStableFront(Transform attackModel)
+        {
+            var front = Vector3.ProjectOnPlane(attackModel.forward, attackModel.up);
+            return front.sqrMagnitude > 0.0001f ? front.normalized : attackModel.forward;
+        }
+
         private static Bounds CalculateVisibleBounds(Transform root)
         {
             var renderers = root.GetComponentsInChildren<Renderer>(false).Where(r => r.enabled).ToArray();
@@ -3976,6 +6002,25 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             return FindSceneObject(scene, name) ?? throw new InvalidOperationException($"{name} is missing in CargoRunMvp scene.");
         }
 
+        private static Scene RequireOpenCargoRunScene()
+        {
+            var scene = SceneManager.GetActiveScene();
+            if (!scene.IsValid() || !scene.isLoaded ||
+                !string.Equals(scene.path, CargoRunScenePath, StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must already be the active scene. The attack workflow does not open or replace scenes.");
+            }
+
+            return scene;
+        }
+
+        private static GameObject RequireRootSceneObject(Scene scene, string name)
+        {
+            return scene.GetRootGameObjects().FirstOrDefault(root => root.name == name) ??
+                throw new InvalidOperationException($"Root {name} is missing in CargoRunMvp scene.");
+        }
+
         private static GameObject FindSceneObject(Scene scene, string name)
         {
             foreach (var root in scene.GetRootGameObjects())
@@ -4061,6 +6106,34 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             }
         }
 
+        private static Texture2D RenderCameraFrame(Camera camera, int width, int height)
+        {
+            var renderTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32);
+            var texture = new Texture2D(width, height, TextureFormat.RGB24, false);
+            var previousTarget = camera.targetTexture;
+            var previousActive = RenderTexture.active;
+            try
+            {
+                camera.targetTexture = renderTexture;
+                RenderTexture.active = renderTexture;
+                camera.Render();
+                texture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+                texture.Apply();
+                return texture;
+            }
+            catch
+            {
+                UnityEngine.Object.DestroyImmediate(texture);
+                throw;
+            }
+            finally
+            {
+                camera.targetTexture = previousTarget;
+                RenderTexture.active = previousActive;
+                UnityEngine.Object.DestroyImmediate(renderTexture);
+            }
+        }
+
         private static string FormatVector(Vector3 value)
         {
             return $"({value.x:0.###},{value.y:0.###},{value.z:0.###})";
@@ -4078,6 +6151,77 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             foreach (var pose in poses)
             {
                 pose.Restore();
+            }
+        }
+
+        private static void ForceSkinnedMeshRefresh(Transform root)
+        {
+            foreach (var renderer in root.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                var previousUpdateWhenOffscreen = renderer.updateWhenOffscreen;
+                renderer.updateWhenOffscreen = true;
+                var baked = new Mesh();
+                renderer.BakeMesh(baked, false);
+                UnityEngine.Object.DestroyImmediate(baked);
+                renderer.updateWhenOffscreen = previousUpdateWhenOffscreen;
+            }
+        }
+
+        private static Bounds CalculateBakedWorldBounds(SkinnedMeshRenderer renderer, Mesh baked)
+        {
+            var vertices = baked.vertices;
+            if (vertices.Length == 0)
+            {
+                return new Bounds(renderer.transform.position, Vector3.zero);
+            }
+
+            var bounds = new Bounds(renderer.transform.TransformPoint(vertices[0]), Vector3.zero);
+            for (var i = 1; i < vertices.Length; i++)
+            {
+                bounds.Encapsulate(renderer.transform.TransformPoint(vertices[i]));
+            }
+
+            return bounds;
+        }
+
+        private static Texture2D RenderGraveAttackBakedFrame(
+            Camera camera,
+            Light light,
+            SkinnedMeshRenderer sourceRenderer,
+            Bounds reviewBounds,
+            Vector3 cameraPosition,
+            float orthographicSize,
+            int width,
+            int height)
+        {
+            var baked = new Mesh();
+            sourceRenderer.BakeMesh(baked, false);
+            var proxy = new GameObject("Grave_Attack_BakedCaptureProxy");
+            var sourceWasEnabled = sourceRenderer.enabled;
+            try
+            {
+                proxy.transform.SetParent(sourceRenderer.transform.parent, false);
+                proxy.transform.localPosition = sourceRenderer.transform.localPosition;
+                proxy.transform.localRotation = sourceRenderer.transform.localRotation;
+                proxy.transform.localScale = sourceRenderer.transform.localScale;
+                proxy.layer = CaptureLayer;
+                proxy.AddComponent<MeshFilter>().sharedMesh = baked;
+                proxy.AddComponent<MeshRenderer>().sharedMaterials = sourceRenderer.sharedMaterials;
+                sourceRenderer.enabled = false;
+                return RenderReviewView(
+                    camera,
+                    light,
+                    reviewBounds,
+                    cameraPosition,
+                    orthographicSize,
+                    width,
+                    height);
+            }
+            finally
+            {
+                sourceRenderer.enabled = sourceWasEnabled;
+                UnityEngine.Object.DestroyImmediate(proxy);
+                UnityEngine.Object.DestroyImmediate(baked);
             }
         }
 

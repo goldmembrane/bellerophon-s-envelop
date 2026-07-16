@@ -500,6 +500,24 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureApprovedGraveCurtainCallAttack,
                         "Approved Grave curtain-call attack review captured.");
                     break;
+                case "ApplyApprovedGraveHitRecoil":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ApplyApprovedGraveHitRecoil,
+                        "Approved Grave hit-recoil motion applied.");
+                    break;
+                case "ValidateApprovedGraveHitRecoil":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ValidateApprovedGraveHitRecoil,
+                        "Approved Grave hit-recoil motion validated.");
+                    break;
+                case "CaptureApprovedGraveHitRecoil":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureApprovedGraveHitRecoil,
+                        "Approved Grave hit-recoil motion captured.");
+                    break;
                 case "ApplyGraveWalkFbxReplacement":
                     RunSynchronous(
                         request,
