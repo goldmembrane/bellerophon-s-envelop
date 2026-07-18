@@ -1,0 +1,20 @@
+{
+  "enemy_id": "ostinato",
+  "sample_type": "current_model_direct_reference_pixel_transfer",
+  "status": "approved",
+  "geometry_changed": false,
+  "unity_runtime_applied": true,
+  "unity_surface_sync": "approved_front_side_back_sample_render_projection_unlit",
+  "validated_views": [
+    "front",
+    "side",
+    "back"
+  ],
+  "source_model": "Assets/_Project/Art/Enemies/Ostinato/Models/Ostinato.fbx",
+  "reference_images": [
+    "image/ostinato(오스티나토).png",
+    "image/ostinato-beside.png",
+    "image/ostinato-back.png"
+  ],
+  "review_entry": "artSample/enemies/ostinato/index.html"
+}

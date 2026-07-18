@@ -1,0 +1,3 @@
+.browser-temp/
+__pycache__/
+*.pyc

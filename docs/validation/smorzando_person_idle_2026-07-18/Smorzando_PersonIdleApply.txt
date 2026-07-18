@@ -1,0 +1,14 @@
+Target=Approved Smorzando Enemy Placement/Smorzando_Person_02/Smorzando_Person_Model
+ReferenceStatic=Smorzando_Person_01
+Renderer=char1
+VertexCount=14193
+CycleDurationSeconds=3.4
+HorizontalBreathScale=0.014
+VerticalBreathScale=0.007
+SecondarySurfaceScale=0.003
+FootLockHeight01=0.18
+RuntimeMeshCopy=True
+OriginalFbxModified=False
+OtherPersonIdleMotionCount=0
+OtherTransformsChanged=False
+SelectionCleared=True

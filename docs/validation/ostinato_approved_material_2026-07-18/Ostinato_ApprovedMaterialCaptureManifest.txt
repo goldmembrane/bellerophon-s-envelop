@@ -1,0 +1,13 @@
+Capture=Ostinato_ApprovedMaterial_FinalComparison.png
+Rows=ApprovedFront|UnityFront;ApprovedSide|UnitySide;ApprovedBack|UnityBack
+ApprovedFront=Foreground=150844,GreenRatio=0.232492,RustRatio=0.683474,SteelRatio=0.193001,MeanLuminance=0.266778
+ApprovedSide=Foreground=137781,GreenRatio=0.317925,RustRatio=0.625972,SteelRatio=0.179314,MeanLuminance=0.267521
+ApprovedBack=Foreground=133136,GreenRatio=0.420713,RustRatio=0.550903,SteelRatio=0.174746,MeanLuminance=0.293656
+Front=Foreground=27604,GreenRatio=0.210115,RustRatio=0.746848,SteelRatio=0.1035,MeanLuminance=0.305563
+Side=Foreground=28186,GreenRatio=0.264209,RustRatio=0.754204,SteelRatio=0.053715,MeanLuminance=0.293165
+Back=Foreground=27580,GreenRatio=0.324837,RustRatio=0.691914,SteelRatio=0.078245,MeanLuminance=0.329173
+PlacementCount=9
+Material=Assets/_Project/Art/Enemies/Ostinato/ApprovedSample/Materials/Ostinato_ApprovedReference.mat
+SceneViewFocused=False
+SceneSaved=False
+SelectionCleared=True

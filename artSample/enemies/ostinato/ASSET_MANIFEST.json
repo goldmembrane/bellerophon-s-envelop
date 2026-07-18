@@ -1,0 +1,33 @@
+{
+  "enemy_id": "ostinato",
+  "sample_root": "artSample/enemies/ostinato",
+  "review_entry": "index.html",
+  "source_model": "Assets/_Project/Art/Enemies/Ostinato/Models/Ostinato.fbx",
+  "source_model_sha256": "35F85E29015DE71416F5A8DD76A86424451CCF89B1C1130AC7B690E6D8B1E533",
+  "geometry_changed": false,
+  "exports": [
+    "exports/ostinato_current_model_material_spec.json"
+  ],
+  "renders": [
+    "renders/01_front_current_model_reference_material.png",
+    "renders/02_side_current_model_reference_material.png",
+    "renders/03_back_current_model_reference_material.png",
+    "renders/04_reference_side_by_side_overview.png",
+    "renders/05_three_quarter_current_model_reference_material.png",
+    "renders/06_texture_material_breakdown.png",
+    "renders/07_index_page_preview.png"
+  ],
+  "textures": [
+    "textures/ostinato_olive_rust_chitin_albedo.png",
+    "textures/ostinato_red_brown_soft_tissue_albedo.png",
+    "textures/ostinato_worn_hook_blade_albedo.png",
+    "textures/ostinato_red_compound_eye_albedo.png",
+    "textures/ostinato_shell_tissue_normal.png",
+    "textures/ostinato_material_roughness.png",
+    "textures/ostinato_material_region_mask_guide.png"
+  ],
+  "tools": [
+    "tools/build_ostinato_material_sample.py"
+  ],
+  "unity_runtime_applied": false
+}

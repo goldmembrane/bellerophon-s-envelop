@@ -1,0 +1,4 @@
+Root=Approved Smorzando Enemy Placement, InstalledCount=3, PersonCount=5, TotalCount=8, Anchor=(57.86535,0,-104.367), LongaTergoZSpacing=7.376999, GraveToSmorzandoZSpacing=7.376999, MinimumXBoundsGap=0.5, RendererCount=8, MissingMaterialCount=0, SlotBounds=Smorzando_Installed_01:(1.847359,0.536204,1.902153)|Smorzando_Installed_02:(1.847359,0.536204,1.902153)|Smorzando_Installed_03:(1.847359,0.536204,1.902153)|Smorzando_Person_01:(1.944767,2.495209,2.57404)|Smorzando_Person_02:(1.944767,2.495209,2.57404)|Smorzando_Person_03:(1.944767,2.495209,2.57404)|Smorzando_Person_04:(1.944767,2.495209,2.57404)|Smorzando_Person_05:(1.944767,2.495209,2.57404)
+Views=Front|ThreeQuarter|Top
+SceneViewFocused=False
+SelectionCleared=True

@@ -1,0 +1,16 @@
+Clip=Smorzando_Person_Walk
+CycleDurationSeconds=4.1
+CycleFrameCount=41
+CycleFramesPerSecond=10
+KeyFrames=000|010|020|030|040
+TargetSlot=Smorzando_Person_03
+StaticReferenceSlot=Smorzando_Person_01
+MaterialReferenceMatched=True
+GeometryMatchedStatic=True
+ApplyRootMotion=False
+ModelRootTransformAnimated=False
+Views=FrontCycle|ObliqueCycle|StaticVsWalk|KeyframeSheet|LoopVideo
+VideoEncoded=True
+SceneViewFocused=False
+SceneSaved=False
+SelectionCleared=True

@@ -1,0 +1,12 @@
+Asset=Assets/_Project/Art/Enemies/Smorzando/Models/Smorzando_Person_Death.fbx
+SourceSha256=79C2C8FCBF7B498FDA20FF300E2BC6A95CE18E6C7292C9334CFCAB63DED42D05
+ImportedSha256=79C2C8FCBF7B498FDA20FF300E2BC6A95CE18E6C7292C9334CFCAB63DED42D05
+StaticSha256=CDE712400B52965CF0BE0E3D32FB5B59D9349C8C24F777CE7EEFA97233C75BF9
+AnimationType=Generic
+ImportAnimation=True
+DeathRendererCount=1
+StaticRendererCount=1
+ClipCount=1
+DeathRenderer[0]=char1,Mesh=char1,Vertices=14193,SubMeshes=1,Bones=24,BoundsCenter=(0.018249,-0.0771,0.140299),BoundsSize=(1.353651,1.200091,2.027553),Materials=Lit
+StaticRenderer[0]=char1,Mesh=char1,Vertices=14193,SubMeshes=1,Bones=24,BoundsCenter=(0.039549,-0.013084,0.037065),BoundsSize=(1.23753,1.410698,1.856607),Materials=Lit
+Clip[0]=Armature|Armature|Armature|Armature|Strangled_and_Fall_Forward|baselayer,Length=9.333334,FrameRate=60,Loop=False,Curves=250,ObjectCurves=0,RootMotionBindings=0

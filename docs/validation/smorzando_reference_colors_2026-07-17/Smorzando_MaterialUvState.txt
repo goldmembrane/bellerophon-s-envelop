@@ -1,0 +1,14 @@
+Model=Installed
+Asset=Assets/_Project/Art/Enemies/Smorzando/Models/Smorzando_Installed.fbx
+RendererCount=1
+Renderer=Smorzando_Installed,Type=MeshRenderer,Mesh=Mesh1.0,Vertices=23666,SubMeshes=1,Materials=1
+UV0Count=0,UV0Min=(0,0),UV0Max=(0,0)
+Material[0]=Lit,Shader=Universal Render Pipeline/Lit,Color=(0.5,0.5,0.5,1),MainTexture=None
+
+Model=Person
+Asset=Assets/_Project/Art/Enemies/Smorzando/Models/Smorzando_Person.fbx
+RendererCount=1
+Renderer=char1,Type=SkinnedMeshRenderer,Mesh=char1,Vertices=14193,SubMeshes=1,Materials=1
+UV0Count=14193,UV0Min=(0,0),UV0Max=(1,1)
+Material[0]=Lit,Shader=Universal Render Pipeline/Lit,Color=(0.5,0.5,0.5,1),MainTexture=None
+

@@ -500,6 +500,252 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureApprovedGraveCurtainCallAttack,
                         "Approved Grave curtain-call attack review captured.");
                     break;
+                case "ApplySmorzandoScenePlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoCargoRunSceneApplyAndReview.ApplySmorzandoScenePlacement,
+                        "Smorzando installed and person review models placed in the CargoRunMvp scene.");
+                    break;
+                case "InspectSmorzandoMaterialUvState":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoCargoRunSceneApplyAndReview.InspectSmorzandoMaterialUvState,
+                        "Smorzando FBX material slots and UV state inspected without changing the scene.");
+                    break;
+                case "InspectSmorzandoInstalledIdleGeometry":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoCargoRunSceneApplyAndReview.InspectSmorzandoInstalledIdleGeometry,
+                        "Smorzando installed idle geometry inspected without changing the scene.");
+                    break;
+                case "ApplySmorzandoInstalledIdle":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoInstalledIdleApplyAndReview.ApplySmorzandoInstalledIdle,
+                        "Smorzando installed idle motion and lit flame applied to the three review models.");
+                    break;
+                case "CaptureSmorzandoInstalledIdleFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoInstalledIdleApplyAndReview.CaptureSmorzandoInstalledIdleFrames,
+                        "Smorzando installed idle frames captured without Scene View focus.");
+                    break;
+                case "InspectSmorzandoModeledFlameGeometry":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoInstalledIdleApplyAndReview.InspectSmorzandoModeledFlameGeometry,
+                        "Smorzando modeled flame geometry inspected without changing the scene.");
+                    break;
+                case "ApplySmorzandoHybridFlame":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoInstalledIdleApplyAndReview.ApplySmorzandoHybridFlame,
+                        "Smorzando modeled flame core, black wick, and attached envelope effect applied.");
+                    break;
+                case "CaptureSmorzandoHybridFlameFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoInstalledIdleApplyAndReview.CaptureSmorzandoHybridFlameFrames,
+                        "Smorzando hybrid flame frames captured without Scene View focus.");
+                    break;
+                case "ApplySmorzandoInstalledTransform":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoInstalledTransformApplyAndReview.ApplySmorzandoInstalledTransform,
+                        "Smorzando third installed model transform motion applied.");
+                    break;
+                case "ExportSmorzandoTransformBakeMesh":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoInstalledTransformApplyAndReview.ExportSmorzandoTransformBakeMesh,
+                        "Smorzando transform person Bake Mesh exported from the open scene.");
+                    break;
+                case "CaptureSmorzandoInstalledTransformFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoInstalledTransformApplyAndReview.CaptureSmorzandoInstalledTransformFrames,
+                        "Smorzando installed-to-person transform frames captured without Scene View focus.");
+                    break;
+                case "ApplySmorzandoPersonIdle":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonIdleApplyAndReview.ApplySmorzandoPersonIdle,
+                        "Smorzando person whole-body idle morph applied to the second person review model.");
+                    break;
+                case "CaptureSmorzandoPersonIdleFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonIdleApplyAndReview.CaptureSmorzandoPersonIdleFrames,
+                        "Smorzando person idle morph frames captured without Scene View focus.");
+                    break;
+                case "InspectSmorzandoPersonWalkingSource":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonWalkApplyAndReview.InspectSmorzandoPersonWalkingSource,
+                        "Smorzando person walking FBX structure and animation clips inspected.");
+                    break;
+                case "ApplySmorzandoPersonWalk":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonWalkApplyAndReview.ApplySmorzandoPersonWalk,
+                        "Smorzando walking FBX and synchronized static-person materials applied to the third person review model.");
+                    break;
+                case "CaptureSmorzandoPersonWalkFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonWalkApplyAndReview.CaptureSmorzandoPersonWalkFrames,
+                        "Smorzando person walking frames captured without Scene View focus.");
+                    break;
+                case "InspectSmorzandoPersonRunningSource":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonRunApplyAndReview.InspectSmorzandoPersonRunningSource,
+                        "Smorzando person running FBX structure and animation clips inspected.");
+                    break;
+                case "ApplySmorzandoPersonRun":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonRunApplyAndReview.ApplySmorzandoPersonRun,
+                        "Smorzando running FBX and synchronized static-person materials applied to the fourth person review model.");
+                    break;
+                case "CaptureSmorzandoPersonRunFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonRunApplyAndReview.CaptureSmorzandoPersonRunFrames,
+                        "Smorzando person running frames captured without Scene View focus.");
+                    break;
+                case "InspectSmorzandoPersonHitTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonHitApplyAndReview.InspectSmorzandoPersonHitTarget,
+                        "Smorzando fifth-person hit target rig and current state inspected.");
+                    break;
+                case "ApplySmorzandoPersonHit":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonHitApplyAndReview.ApplySmorzandoPersonHit,
+                        "Smorzando looping recoil-and-return hit motion applied to the fifth person review model.");
+                    break;
+                case "CaptureSmorzandoPersonHitFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonHitApplyAndReview.CaptureSmorzandoPersonHitFrames,
+                        "Smorzando person hit frames captured without Scene View focus.");
+                    break;
+                case "InspectSmorzandoPersonDeathTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonDeathApplyAndReview.InspectSmorzandoPersonDeathTarget,
+                        "Smorzando static-person copy source and sixth death-slot placement inspected.");
+                    break;
+                case "ApplySmorzandoPersonDeath":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonDeathApplyAndReview.ApplySmorzandoPersonDeath,
+                        "Smorzando copied sixth-person looping backward-fall death motion applied.");
+                    break;
+                case "CaptureSmorzandoPersonDeathFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonDeathApplyAndReview.CaptureSmorzandoPersonDeathFrames,
+                        "Smorzando person death frames captured without Scene View focus.");
+                    break;
+                case "InspectSmorzandoPersonDeathFbxSource":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonDeathFbxApplyAndReview.InspectSmorzandoPersonDeathFbxSource,
+                        "Smorzando person death FBX structure and animation clips inspected.");
+                    break;
+                case "ApplySmorzandoPersonDeathFbx":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonDeathApplyAndReview.ApplySmorzandoPersonDeath,
+                        "Smorzando death FBX and synchronized static-person materials applied to the sixth person review model.");
+                    break;
+                case "CaptureSmorzandoPersonDeathFbxFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoPersonDeathApplyAndReview.CaptureSmorzandoPersonDeathFrames,
+                        "Smorzando person death FBX frames captured without Scene View focus.");
+                    break;
+                case "ApplySmorzandoReferenceColors":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoCargoRunSceneApplyAndReview.ApplySmorzandoReferenceColors,
+                        "Smorzando reference-image wax colors applied to all eight review models.");
+                    break;
+                case "CaptureSmorzandoReferenceColorFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoCargoRunSceneApplyAndReview.CaptureSmorzandoReferenceColorFrames,
+                        "Smorzando reference-color frames captured without Scene View focus.");
+                    break;
+                case "CaptureSmorzandoScenePlacementFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoCargoRunSceneApplyAndReview.CaptureSmorzandoScenePlacementFrames,
+                        "Smorzando scene placement frames captured without Scene View focus.");
+                    break;
+                case "MoveSmorzandoPlayerStartToFront":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoCargoRunSceneApplyAndReview.MoveSmorzandoPlayerStartToFront,
+                        "Player start moved to the front of the complete Smorzando review row.");
+                    break;
+                case "CaptureSmorzandoPlayerStartView":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.SmorzandoCargoRunScene.SmorzandoCargoRunSceneApplyAndReview.CaptureSmorzandoPlayerStartView,
+                        "Smorzando player-start Main Camera view captured without Scene View focus.");
+                    break;
+                case "InspectOstinatoPlacementTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoCargoRunScene.OstinatoCargoRunSceneApplyAndReview.InspectOstinatoPlacementTarget,
+                        "Ostinato source model, placement anchors, spacing, and player start inspected.");
+                    break;
+                case "ApplyOstinatoPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoCargoRunScene.OstinatoCargoRunSceneApplyAndReview.ApplyOstinatoPlacement,
+                        "Nine Ostinato models and centered player start applied to CargoRunMvp.");
+                    break;
+                case "InspectOstinatoAppliedGrounding":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoCargoRunScene.OstinatoCargoRunSceneApplyAndReview.InspectOstinatoAppliedGrounding,
+                        "Applied Ostinato renderer grounding inspected without scene changes.");
+                    break;
+                case "CaptureOstinatoPlacementFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoCargoRunScene.OstinatoCargoRunSceneApplyAndReview.CaptureOstinatoPlacementFrames,
+                        "Ostinato row and player-start views captured without Scene View focus.");
+                    break;
+                case "InspectApprovedOstinatoMaterialTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoApprovedMaterial.OstinatoApprovedMaterialApplyAndReview.InspectApprovedOstinatoMaterialTarget,
+                        "Approved Ostinato material target, UV layout, and nine scene slots inspected without scene changes.");
+                    break;
+                case "ApplyApprovedOstinatoMaterialSample":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoApprovedMaterial.OstinatoApprovedMaterialApplyAndReview.ApplyApprovedOstinatoMaterialSample,
+                        "Approved Ostinato front, side, and back sample images projected directly and applied to nine scene slots.");
+                    break;
+                case "CaptureApprovedOstinatoMaterialReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoApprovedMaterial.OstinatoApprovedMaterialApplyAndReview.CaptureApprovedOstinatoMaterialReview,
+                        "Approved sample and Unity Ostinato front, side, and back views captured in one comparison image.");
+                    break;
+                case "InspectApprovedOstinatoMaterialRender":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoApprovedMaterial.OstinatoApprovedMaterialApplyAndReview.InspectApprovedOstinatoMaterialRender,
+                        "Unity Ostinato front, side, and back material distribution inspected in memory without image capture.");
+                    break;
                 case "ApplyApprovedGraveHitRecoil":
                     RunSynchronous(
                         request,

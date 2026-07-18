@@ -1,0 +1,28 @@
+Scene=Assets/_Project/Scenes/CargoRunMvp.unity
+PlacementRoot=Approved Ostinato Enemy Placement
+PlacementCount=9
+ModelAsset=Assets/_Project/Art/Enemies/Ostinato/Models/Ostinato.fbx
+RendererCount=1
+Mesh=char1
+VertexCount=3728
+SubMeshCount=1
+TriangleIndexCount=15837
+UvCount=3728
+UvMin=(0,0)
+UvMax=(1,1)
+MeshBoundsCenter=(0,0.698382,0)
+MeshBoundsSize=(1.93,1.396763,0.89934)
+BoneCount=24
+Bones=Hips|LeftUpLeg|LeftLeg|LeftFoot|LeftToeBase|RightUpLeg|RightLeg|RightFoot|RightToeBase|Spine02|Spine01|Spine|LeftShoulder|LeftArm|LeftForeArm|LeftHand|RightShoulder|RightArm|RightForeArm|RightHand|neck|Head|head_end|headfront
+AssetMaterials=Lit:Universal Render Pipeline/Lit
+Slot[0]=Ostinato_01_Static_Review,Model=Ostinato_Model,Material=Ostinato_ApprovedReference,Animator=False,LocalPosition=(0,0.288056,0),LocalEuler=(0,0,0),LocalScale=(1,1,1)
+Slot[1]=Ostinato_02_Static_Review,Model=Ostinato_Model,Material=Ostinato_ApprovedReference,Animator=False,LocalPosition=(0,0.288056,0),LocalEuler=(0,0,0),LocalScale=(1,1,1)
+Slot[2]=Ostinato_03_Static_Review,Model=Ostinato_Model,Material=Ostinato_ApprovedReference,Animator=False,LocalPosition=(0,0.288056,0),LocalEuler=(0,0,0),LocalScale=(1,1,1)
+Slot[3]=Ostinato_04_Static_Review,Model=Ostinato_Model,Material=Ostinato_ApprovedReference,Animator=False,LocalPosition=(0,0.288056,0),LocalEuler=(0,0,0),LocalScale=(1,1,1)
+Slot[4]=Ostinato_05_Static_Review,Model=Ostinato_Model,Material=Ostinato_ApprovedReference,Animator=False,LocalPosition=(0,0.288056,0),LocalEuler=(0,0,0),LocalScale=(1,1,1)
+Slot[5]=Ostinato_06_Static_Review,Model=Ostinato_Model,Material=Ostinato_ApprovedReference,Animator=False,LocalPosition=(0,0.288056,0),LocalEuler=(0,0,0),LocalScale=(1,1,1)
+Slot[6]=Ostinato_07_Static_Review,Model=Ostinato_Model,Material=Ostinato_ApprovedReference,Animator=False,LocalPosition=(0,0.288056,0),LocalEuler=(0,0,0),LocalScale=(1,1,1)
+Slot[7]=Ostinato_08_Static_Review,Model=Ostinato_Model,Material=Ostinato_ApprovedReference,Animator=False,LocalPosition=(0,0.288056,0),LocalEuler=(0,0,0),LocalScale=(1,1,1)
+Slot[8]=Ostinato_09_Static_Review,Model=Ostinato_Model,Material=Ostinato_ApprovedReference,Animator=False,LocalPosition=(0,0.288056,0),LocalEuler=(0,0,0),LocalScale=(1,1,1)
+SceneChanged=False
+SelectionCleared=True

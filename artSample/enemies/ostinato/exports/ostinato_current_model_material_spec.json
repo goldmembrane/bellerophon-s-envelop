@@ -1,0 +1,155 @@
+{
+  "sample": "ostinato_current_model_material_sample",
+  "source_model": "Assets/_Project/Art/Enemies/Ostinato/Models/Ostinato.fbx",
+  "source_sha256": "35F85E29015DE71416F5A8DD76A86424451CCF89B1C1130AC7B690E6D8B1E533",
+  "geometry_changed": false,
+  "renderer_structure": {
+    "renderer_count": 1,
+    "mesh": "char1",
+    "vertex_count": 3728,
+    "submesh_count": 1
+  },
+  "reference_reproduction": {
+    "target": "direct_reference_pixel_transfer",
+    "references": [
+      "image/ostinato(오스티나토).png",
+      "image/ostinato-beside.png",
+      "image/ostinato-back.png"
+    ],
+    "palette_rgb_quantiles": {
+      "chitin": {
+        "dark": [
+          36,
+          37,
+          16
+        ],
+        "base": [
+          69,
+          71,
+          39
+        ],
+        "light": [
+          121,
+          125,
+          81
+        ]
+      },
+      "soft_tissue": {
+        "dark": [
+          34,
+          16,
+          5
+        ],
+        "base": [
+          65,
+          40,
+          23
+        ],
+        "light": [
+          117,
+          81,
+          56
+        ]
+      },
+      "hook_blade": {
+        "dark": [
+          53,
+          58,
+          51
+        ],
+        "base": [
+          83,
+          88,
+          80
+        ],
+        "light": [
+          131,
+          136,
+          128
+        ]
+      },
+      "compound_eye": {
+        "dark": [
+          39,
+          28,
+          13
+        ],
+        "base": [
+          78,
+          68,
+          47
+        ],
+        "light": [
+          145,
+          127,
+          106
+        ]
+      }
+    },
+    "foreground_area_ratio_by_view": {
+      "front": {
+        "chitin": 0.1842,
+        "soft_tissue": 0.6816,
+        "hook_blade": 0.077,
+        "compound_eye": 0.0313
+      },
+      "side": {
+        "chitin": 0.2044,
+        "soft_tissue": 0.6732,
+        "hook_blade": 0.0939,
+        "compound_eye": 0.0049
+      },
+      "back": {
+        "chitin": 0.3094,
+        "soft_tissue": 0.5746,
+        "hook_blade": 0.0928,
+        "compound_eye": 0.0
+      }
+    },
+    "invented_procedural_pigment": false,
+    "invented_decorative_seams": false
+  },
+  "material_intent": {
+    "chitin": {
+      "base": "#454727",
+      "metallic": 0.0,
+      "roughness": 0.48,
+      "specular": 0.46
+    },
+    "soft_tissue": {
+      "base": "#412817",
+      "metallic": 0.0,
+      "roughness": 0.72
+    },
+    "hook_blade": {
+      "base": "#535850",
+      "metallic": 0.88,
+      "roughness": 0.26
+    },
+    "compound_eye": {
+      "base": "#4E442F",
+      "metallic": 0.05,
+      "roughness": 0.16,
+      "specular": 0.88
+    }
+  },
+  "preview_projection": {
+    "method": "direct_reference_pixel_transfer_by_view",
+    "front": "front_reference_normalized_to_unchanged_front_silhouette",
+    "side": "side_reference_normalized_to_unchanged_side_silhouette",
+    "back": "back_reference_normalized_to_unchanged_back_silhouette",
+    "three_quarter": "side_reference_normalized_to_unchanged_three_quarter_silhouette",
+    "geometry_or_uv_changed": false
+  },
+  "textures": [
+    "textures/ostinato_olive_rust_chitin_albedo.png",
+    "textures/ostinato_red_brown_soft_tissue_albedo.png",
+    "textures/ostinato_worn_hook_blade_albedo.png",
+    "textures/ostinato_red_compound_eye_albedo.png",
+    "textures/ostinato_shell_tissue_normal.png",
+    "textures/ostinato_material_roughness.png",
+    "textures/ostinato_material_region_mask_guide.png"
+  ],
+  "unity_runtime_applied": false,
+  "note": "Direct reference-pixel screen projection for visual approval; final Unity textures must transfer the same reference-derived distribution to the unchanged FBX UV/vertex layout after user approval."
+}

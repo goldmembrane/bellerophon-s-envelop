@@ -1,0 +1,13 @@
+InstalledPalette=Shadow=(0.401749,0.163838,0.088013,1),Mid=(0.560551,0.355148,0.278949,1),Highlight=(0.701258,0.505114,0.425196,1),Pixels=379310
+PersonPalette=Shadow=(0.280487,0.070735,0.036783,1),Mid=(0.456686,0.192496,0.127717,1),Highlight=(0.688538,0.422469,0.332957,1),Pixels=111176
+InstalledMaterial=Assets/_Project/Art/Enemies/Smorzando/Materials/Smorzando_Installed_Reference.mat
+PersonMaterial=Assets/_Project/Art/Enemies/Smorzando/Materials/Smorzando_Person_Reference.mat
+PersonAlbedo=Assets/_Project/Art/Enemies/Smorzando/Textures/Smorzando_Person_Wax_Albedo.png
+InstalledUV0=0
+InstalledTextureMapApplied=False
+PersonTextureMapApplied=True
+InstalledRendererCount=3
+PersonRendererCount=5
+PlayerPosition=(66.77488,0,-117.163)
+TransformsChanged=False
+SelectionCleared=True

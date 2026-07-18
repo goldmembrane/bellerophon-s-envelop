@@ -1,0 +1,7 @@
+InstalledReference=image/smorzando(스모르찬도).png
+PersonReference=image/smorzando-person.png
+Views=InstalledThreeQuarter|PersonFront|RowFront|PlayerMainCamera
+InstalledUV0=0
+PersonTextureMapApplied=True
+SceneViewFocused=False
+SelectionCleared=True

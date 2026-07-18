@@ -1,0 +1,13 @@
+Scene=Assets/_Project/Scenes/CargoRunMvp.unity
+Target=Smorzando_Installed_03/Smorzando_Transform_PersonTarget
+Renderer=char1
+Output=Assets/_Project/Art/Enemies/Smorzando/Models/Derived/Smorzando_TransformBakePose.meshdata
+VertexCount=14193
+TriangleIndexCount=60684
+CalculatedBoundsCenter=(-0.00731,0.828441,0.035087)
+CalculatedBoundsSize=(0.863392,1.655261,0.851977)
+RendererLocalPosition=(0,0,0)
+RendererLocalRotation=(0,0,0,1)
+RendererLocalScale=(1,1,1)
+SubMesh0=Indices:60684,Material:Smorzando_Person_Reference,Shader:Universal Render Pipeline/Lit,Color:(0.42,0.36,0.32,1),RenderQueue:2000
+SelectionCleared=True
