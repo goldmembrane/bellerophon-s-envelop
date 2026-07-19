@@ -746,6 +746,30 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.OstinatoApprovedMaterial.OstinatoApprovedMaterialApplyAndReview.InspectApprovedOstinatoMaterialRender,
                         "Unity Ostinato front, side, and back material distribution inspected in memory without image capture.");
                     break;
+                case "InspectOstinatoScissorAttackTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.InspectOstinatoScissorAttackTarget,
+                        "Ostinato slot 04 target, approved appearance, and four-second scissor attack source inspected.");
+                    break;
+                case "ApplyOstinatoScissorAttackAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.ApplyOstinatoScissorAttackAnimation,
+                        "Ostinato slot 04 looping root-locked whole-arm hook attack applied with approved appearance.");
+                    break;
+                case "ReviewOstinatoScissorAttackAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.ReviewOstinatoScissorAttackAnimation,
+                        "Ostinato slot 04 forceful spread, whole-arm blade impact, hook-pull, neutral wrists, loop return, and fixed root reviewed.");
+                    break;
+                case "CaptureOstinatoScissorAttackRuntimePlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.CaptureOstinatoScissorAttackRuntimePlayback,
+                        "Ostinato slot 04 whole-arm hook attack runtime keyframe capture started in the open Unity editor.");
+                    break;
                 case "ApplyApprovedGraveHitRecoil":
                     RunSynchronous(
                         request,

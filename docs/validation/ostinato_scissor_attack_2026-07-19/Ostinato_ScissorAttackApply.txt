@@ -1,0 +1,13 @@
+Scene=Assets/_Project/Scenes/CargoRunMvp.unity
+Target=Approved Ostinato Enemy Placement/Ostinato_04_Scissor_Attack/Ostinato_ScissorAttack_Model
+Clip=Ostinato_04_Scissor_Attack
+ClipLength=4
+LoopTime=True
+Controller=Assets/_Project/Art/Enemies/Ostinato/Animations/Ostinato_04_Scissor_Attack.controller
+AnimatorState=Ostinato_04_Scissor_Attack_Loop
+ApplyRootMotion=False
+Mesh=Assets/_Project/Art/Enemies/Ostinato/Models/Ostinato_ApprovedUnity.fbx
+AppearanceFingerprint=BD8D446D63E2479B647BC23470F85B350630718AF753B1C21859EE34DA7330F0
+ApprovedAppearanceFingerprint=BD8D446D63E2479B647BC23470F85B350630718AF753B1C21859EE34DA7330F0
+Materials=Assets/_Project/Art/Enemies/Ostinato/ApprovedSample/Materials/Ostinato_Approved_Chitin.mat|Assets/_Project/Art/Enemies/Ostinato/ApprovedSample/Materials/Ostinato_Approved_SoftTissue.mat|Assets/_Project/Art/Enemies/Ostinato/ApprovedSample/Materials/Ostinato_Approved_HookBlade.mat|Assets/_Project/Art/Enemies/Ostinato/ApprovedSample/Materials/Ostinato_Approved_CompoundEye.mat
+OtherSlotsUnchanged=True
