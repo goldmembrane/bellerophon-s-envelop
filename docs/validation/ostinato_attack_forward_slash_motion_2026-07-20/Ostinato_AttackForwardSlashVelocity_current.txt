@@ -1,0 +1,16 @@
+Result=PASS
+ImporterMarker=Bellerophon.OstinatoForwardSlashMotion.v1
+Frames=53..93
+SampleIntervals=40
+CommonProgressForBothArms=True
+ControllerStateSpeed=2
+EffectivePlaybackSpeed=6.001544..9.982167
+MinimumAverageHandVelocity=6.642162
+MaximumAverageHandVelocity=10.93379
+AverageHandVelocityAt54=7.677326
+AverageHandVelocityAt93=10.93379
+LargestThreeIntervalRollingVelocityDropRatio=0.040416
+LargestThreeIntervalRollingVelocityDropFrame=68
+HandSeparationAt53=1.284039
+HandSeparationAt93=0.073065
+Csv=docs/validation/ostinato_attack_forward_slash_motion_2026-07-20/Ostinato_AttackForwardSlashVelocity_current.csv
