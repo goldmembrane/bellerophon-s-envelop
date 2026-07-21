@@ -1,0 +1,142 @@
+{
+  "result": "PASS",
+  "source_fbx_sha256": "0A8DF2A16B881B24A5FC856E2E3534A05D506049CE4C49975BB8433E71A2204E",
+  "geometry_policy": "source_mesh_only_no_shape_changes",
+  "source": {
+    "geometry": {
+      "vertices": 2223,
+      "edges": 6353,
+      "polygons": 4139,
+      "vertex_position_sha256": "6481749BF97CE0AE570E41FB07604232FDC41CD6072DA2ED94D5E595EF1268C1",
+      "polygon_topology_sha256": "D68776656C4534ACCB8FBA2041C71066A0CC0FA7270E390B2F42384CB5A124C7"
+    },
+    "transform": {
+      "location": [
+        3e-09,
+        -8e-09,
+        1.08e-07
+      ],
+      "rotation_euler": [
+        0.0,
+        -0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "bones": 27,
+    "size_m": [
+      0.00789,
+      0.01321,
+      0.011595
+    ]
+  },
+  "blend": {
+    "label": "blend",
+    "mesh_objects": 1,
+    "mesh_names": [
+      "Dolore_CurrentModel"
+    ],
+    "armatures": 1,
+    "bones": 27,
+    "materials": [
+      "Dolore_Faded_Portrait",
+      "Dolore_Oxidized_Brass_Frame",
+      "Dolore_Wet_Deep_Teal_Tissue"
+    ],
+    "uv_mesh_count": 1,
+    "size_m": [
+      0.00789,
+      0.01321,
+      0.011595
+    ],
+    "geometry": {
+      "vertices": 2223,
+      "edges": 6353,
+      "polygons": 4139,
+      "vertex_position_sha256": "6481749BF97CE0AE570E41FB07604232FDC41CD6072DA2ED94D5E595EF1268C1",
+      "polygon_topology_sha256": "D68776656C4534ACCB8FBA2041C71066A0CC0FA7270E390B2F42384CB5A124C7"
+    },
+    "transform": {
+      "location": [
+        3e-09,
+        -8e-09,
+        1.08e-07
+      ],
+      "rotation_euler": [
+        0.0,
+        -0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "uv_layers": 1,
+    "model_modifier_types": [
+      "ARMATURE"
+    ]
+  },
+  "fbx": {
+    "label": "fbx",
+    "mesh_objects": 1,
+    "mesh_names": [
+      "Dolore_CurrentModel"
+    ],
+    "armatures": 1,
+    "bones": 27,
+    "materials": [
+      "Dolore_Faded_Portrait",
+      "Dolore_Oxidized_Brass_Frame",
+      "Dolore_Wet_Deep_Teal_Tissue"
+    ],
+    "uv_mesh_count": 1,
+    "size_m": [
+      0.00789,
+      0.01321,
+      0.011595
+    ]
+  },
+  "glb": {
+    "label": "glb",
+    "mesh_objects": 1,
+    "mesh_names": [
+      "Dolore_CurrentModel"
+    ],
+    "armatures": 0,
+    "bones": 0,
+    "materials": [
+      "Dolore_Faded_Portrait",
+      "Dolore_Oxidized_Brass_Frame",
+      "Dolore_Wet_Deep_Teal_Tissue"
+    ],
+    "uv_mesh_count": 1,
+    "size_m": [
+      0.01112,
+      0.01731,
+      0.013992
+    ]
+  },
+  "missing": [],
+  "checks": {
+    "required_files_present": true,
+    "blend_geometry_exactly_preserved": true,
+    "blend_transform_exactly_preserved": true,
+    "blend_single_source_mesh": true,
+    "blend_only_source_armature_modifier": true,
+    "blend_rig_preserved": true,
+    "blend_has_uv_for_materials": true,
+    "blend_has_three_reference_materials": true,
+    "blend_size_unchanged": true,
+    "fbx_single_model_mesh": true,
+    "fbx_rig_preserved": true,
+    "fbx_has_materials": true,
+    "glb_single_model_mesh": true,
+    "glb_has_materials": true
+  }
+}

@@ -1,0 +1,16 @@
+Result=PASS
+SourceFbxSha256=0A8DF2A16B881B24A5FC856E2E3534A05D506049CE4C49975BB8433E71A2204E
+Check.required_files_present=True
+Check.blend_geometry_exactly_preserved=True
+Check.blend_transform_exactly_preserved=True
+Check.blend_single_source_mesh=True
+Check.blend_only_source_armature_modifier=True
+Check.blend_rig_preserved=True
+Check.blend_has_uv_for_materials=True
+Check.blend_has_three_reference_materials=True
+Check.blend_size_unchanged=True
+Check.fbx_single_model_mesh=True
+Check.fbx_rig_preserved=True
+Check.fbx_has_materials=True
+Check.glb_single_model_mesh=True
+Check.glb_has_materials=True

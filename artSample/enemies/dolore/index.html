@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>돌로레 현재 모델 외형 동기화 아트 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #e8ede4;
+      --muted: #9ba99f;
+      --night: #07100f;
+      --panel: #0d1917;
+      --panel-high: #14231f;
+      --line: rgba(123, 170, 149, 0.25);
+      --verdigris: #57b99c;
+      --verdigris-bright: #91e0c3;
+      --brass: #b79756;
+      --blood: #b9332d;
+      --warning: #e3bd6c;
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.44);
+      --serif: "Noto Serif KR", "Nanum Myeongjo", "Batang", serif;
+      --sans: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--night);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at 14% 7%, rgba(49, 122, 101, 0.17), transparent 28rem),
+        radial-gradient(circle at 86% 22%, rgba(111, 84, 42, 0.13), transparent 26rem),
+        linear-gradient(145deg, #07100f 0%, #0b1513 46%, #06100e 100%);
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      content: "";
+      pointer-events: none;
+      opacity: 0.42;
+      background-image:
+        repeating-linear-gradient(115deg, transparent 0 48px, rgba(129, 187, 162, 0.018) 49px 50px),
+        repeating-linear-gradient(25deg, transparent 0 76px, rgba(186, 149, 81, 0.012) 77px 78px);
+    }
+
+    a { color: inherit; }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .shell {
+      width: min(1460px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .masthead {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(6, 14, 13, 0.88);
+      backdrop-filter: blur(18px);
+    }
+
+    .masthead__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 66px;
+      gap: 20px;
+    }
+
+    .wordmark {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .wordmark strong {
+      font-family: var(--serif);
+      font-size: 18px;
+      letter-spacing: 0.12em;
+    }
+
+    .wordmark span,
+    .eyebrow {
+      color: var(--verdigris-bright);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 7px 20px;
+    }
+
+    nav a {
+      color: var(--muted);
+      font-size: 12px;
+      text-decoration: none;
+      transition: color 160ms ease;
+    }
+
+    nav a:hover,
+    nav a:focus-visible { color: var(--verdigris-bright); }
+
+    main { overflow: hidden; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.8fr) minmax(540px, 1.45fr);
+      gap: clamp(34px, 5vw, 84px);
+      align-items: center;
+      min-height: calc(100vh - 66px);
+      padding: 72px 0 64px;
+    }
+
+    .hero__copy { position: relative; z-index: 2; }
+
+    .hero h1 {
+      max-width: 720px;
+      margin: 18px 0 24px;
+      font-family: var(--serif);
+      font-size: clamp(44px, 6.8vw, 104px);
+      font-weight: 700;
+      line-height: 0.93;
+      letter-spacing: -0.055em;
+    }
+
+    .hero h1 span {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(145, 224, 195, 0.74);
+    }
+
+    .lede {
+      max-width: 610px;
+      margin: 0;
+      color: #b9c5bd;
+      font-size: clamp(15px, 1.35vw, 19px);
+      line-height: 1.75;
+    }
+
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 30px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: #cbd5ce;
+      background: rgba(16, 34, 29, 0.82);
+      font-size: 12px;
+    }
+
+    .status::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      content: "";
+      background: var(--verdigris);
+      box-shadow: 0 0 14px rgba(87, 185, 156, 0.8);
+    }
+
+    .status--pending::before { background: var(--warning); box-shadow: 0 0 14px rgba(227, 189, 108, 0.72); }
+    .status--blood::before { background: var(--blood); box-shadow: 0 0 14px rgba(185, 51, 45, 0.72); }
+
+    .hero__visual {
+      position: relative;
+      transform: rotate(1deg);
+    }
+
+    .hero__visual::before {
+      position: absolute;
+      inset: -24px 9% -28px -20px;
+      z-index: -1;
+      content: "";
+      border: 1px solid rgba(126, 173, 152, 0.2);
+      background: linear-gradient(135deg, rgba(65, 125, 104, 0.13), rgba(8, 18, 16, 0));
+      transform: rotate(-3deg);
+    }
+
+    .hero__visual a {
+      display: block;
+      overflow: hidden;
+      border: 1px solid rgba(153, 203, 179, 0.28);
+      background: #0a1110;
+      box-shadow: var(--shadow);
+    }
+
+    .hero__visual img { transition: transform 700ms cubic-bezier(.2,.7,.2,1); }
+    .hero__visual a:hover img { transform: scale(1.015); }
+
+    .hero__caption {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 2px 0;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .metric {
+      min-height: 132px;
+      padding: 28px clamp(18px, 3vw, 40px);
+      border-right: 1px solid var(--line);
+    }
+
+    .metric:last-child { border-right: 0; }
+
+    .metric strong {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--verdigris-bright);
+      font-family: var(--serif);
+      font-size: clamp(27px, 3vw, 44px);
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+
+    .section {
+      padding: clamp(72px, 9vw, 138px) 0;
+      border-bottom: 1px solid rgba(123, 170, 149, 0.13);
+    }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.55fr) minmax(300px, 1fr);
+      gap: 34px;
+      align-items: end;
+      margin-bottom: 42px;
+    }
+
+    .section-heading h2 {
+      margin: 10px 0 0;
+      font-family: var(--serif);
+      font-size: clamp(34px, 5vw, 68px);
+      font-weight: 600;
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+
+    .section-heading p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .comparison-stack { display: grid; gap: 28px; }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: rgba(10, 21, 18, 0.88);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25);
+    }
+
+    .comparison__title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      grid-column: 1 / -1;
+      padding: 15px 19px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .comparison__title h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 20px;
+    }
+
+    .comparison__title span {
+      color: var(--muted);
+      font-family: ui-monospace, "Cascadia Code", monospace;
+      font-size: 11px;
+    }
+
+    figure { margin: 0; }
+
+    .comparison figure {
+      position: relative;
+      min-width: 0;
+      background: #0a1110;
+    }
+
+    .comparison figure + figure { border-left: 1px solid var(--line); }
+
+    .comparison figure img {
+      aspect-ratio: 2 / 1;
+      object-fit: contain;
+      background: #0c1312;
+    }
+
+    figcaption {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 11px 14px;
+      color: var(--muted);
+      font-size: 11px;
+      word-break: break-all;
+    }
+
+    figcaption strong {
+      flex: 0 0 auto;
+      color: var(--brass);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .gallery figure {
+      grid-column: span 4;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .gallery figure:nth-child(1),
+    .gallery figure:nth-child(5) { grid-column: span 7; }
+
+    .gallery figure:nth-child(2),
+    .gallery figure:nth-child(4) { grid-column: span 5; }
+
+    .gallery img {
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      filter: saturate(0.96) contrast(1.03);
+      transition: filter 180ms ease, transform 450ms cubic-bezier(.2,.7,.2,1);
+    }
+
+    .gallery a:hover img {
+      filter: saturate(1.1) contrast(1.05);
+      transform: scale(1.018);
+    }
+
+    .material-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .material {
+      position: relative;
+      overflow: hidden;
+      min-height: 330px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .material img {
+      aspect-ratio: 1;
+      object-fit: cover;
+      transition: transform 520ms cubic-bezier(.2,.7,.2,1);
+    }
+
+    .material:hover img { transform: scale(1.035); }
+
+    .material__copy { padding: 16px; }
+
+    .material h3 {
+      margin: 0 0 7px;
+      font-family: var(--serif);
+      font-size: 18px;
+    }
+
+    .material p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .technical {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.8fr) minmax(420px, 1.2fr);
+      gap: 24px;
+    }
+
+    .notice,
+    .deliverables {
+      padding: clamp(24px, 3vw, 38px);
+      border: 1px solid var(--line);
+      background: linear-gradient(145deg, rgba(19, 39, 33, 0.92), rgba(9, 20, 17, 0.92));
+    }
+
+    .notice {
+      border-color: rgba(227, 189, 108, 0.35);
+      background:
+        linear-gradient(145deg, rgba(68, 51, 25, 0.24), rgba(11, 21, 18, 0.92));
+    }
+
+    .notice h3,
+    .deliverables h3 {
+      margin: 0 0 16px;
+      font-family: var(--serif);
+      font-size: 25px;
+    }
+
+    .notice p,
+    .deliverables p {
+      margin: 0;
+      color: #b9c4bd;
+      line-height: 1.72;
+    }
+
+    .file-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 22px;
+    }
+
+    .file-link {
+      display: grid;
+      grid-template-columns: 66px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 13px 14px;
+      border: 1px solid rgba(123, 170, 149, 0.18);
+      color: #d9e2dc;
+      text-decoration: none;
+      background: rgba(4, 13, 11, 0.48);
+      transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+    }
+
+    .file-link:hover,
+    .file-link:focus-visible {
+      border-color: var(--verdigris);
+      background: rgba(25, 54, 45, 0.55);
+      transform: translateX(3px);
+    }
+
+    .file-link b {
+      color: var(--brass);
+      font-family: ui-monospace, "Cascadia Code", monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+
+    .file-link span {
+      min-width: 0;
+      overflow: hidden;
+      font-family: ui-monospace, "Cascadia Code", monospace;
+      font-size: 11px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-link i {
+      color: var(--verdigris-bright);
+      font-size: 15px;
+      font-style: normal;
+    }
+
+    .checks {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .check {
+      padding: 17px;
+      background: #0b1714;
+    }
+
+    .check b {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--verdigris-bright);
+      font-size: 12px;
+    }
+
+    .check span { color: var(--muted); font-size: 11px; }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 34px 0 54px;
+      color: #718078;
+      font-size: 11px;
+    }
+
+    .reveal {
+      animation: rise 700ms both cubic-bezier(.2,.7,.2,1);
+    }
+
+    .hero__visual { animation-delay: 100ms; }
+    .status-row { animation-delay: 180ms; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
+
+    @media (max-width: 1040px) {
+      .hero { grid-template-columns: 1fr; min-height: 0; }
+      .hero__visual { transform: none; }
+      .material-grid { grid-template-columns: repeat(2, 1fr); }
+      .technical { grid-template-columns: 1fr; }
+      .gallery figure,
+      .gallery figure:nth-child(n) { grid-column: span 6; }
+    }
+
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 24px, 1460px); }
+      .masthead__inner { align-items: flex-start; flex-direction: column; padding: 14px 0; }
+      nav { justify-content: flex-start; }
+      .hero { padding-top: 50px; }
+      .hero h1 { font-size: clamp(42px, 17vw, 72px); }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .metric:nth-child(2) { border-right: 0; }
+      .metric:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
+      .section-heading { grid-template-columns: 1fr; }
+      .comparison { grid-template-columns: 1fr; }
+      .comparison figure + figure { border-top: 1px solid var(--line); border-left: 0; }
+      .gallery figure,
+      .gallery figure:nth-child(n) { grid-column: 1 / -1; }
+      .material-grid { grid-template-columns: 1fr; }
+      .checks { grid-template-columns: 1fr; }
+      .file-link { grid-template-columns: 54px minmax(0, 1fr) auto; }
+      footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="shell masthead__inner">
+      <a class="wordmark" href="#top" aria-label="돌로레 아트 샘플 처음으로">
+        <strong>돌로레</strong>
+        <span>Dolore / Art specimen</span>
+      </a>
+      <nav aria-label="샘플 섹션">
+        <a href="#comparison">기준 비교</a>
+        <a href="#renders">생성 렌더</a>
+        <a href="#materials">재질</a>
+        <a href="#delivery">파일·상태</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="shell hero">
+      <div class="hero__copy reveal">
+        <div class="eyebrow">Current FBX · Reference synchronization</div>
+        <h1>가슴 아픈 듯이<span>Dolore</span></h1>
+        <p class="lede">
+          현재 Unity 배치에 사용된 <strong>dolore.fbx</strong>의 27본 리그와 스킨 메시를 원형으로 삼아,
+          정점·토폴로지·비율·리그는 그대로 고정하고, 흐릿한 남성 초상·녹청 액자·청록색 생체 조직의 재질만 기준 이미지에 맞춘 검토용 아트 샘플입니다.
+        </p>
+        <div class="status-row reveal" aria-label="현재 상태">
+          <span class="status status--pending">사용자 검토 대기</span>
+          <span class="status">독립 점검 PASS</span>
+          <span class="status status--pending">Unity 미적용</span>
+          <span class="status">추가 모델 메시 0</span>
+        </div>
+      </div>
+
+      <figure class="hero__visual reveal">
+        <a href="renders/06_reference_comparison_static.png" aria-label="정적 기준 비교 원본 이미지 열기">
+          <img src="renders/06_reference_comparison_static.png" alt="돌로레 기준 이미지와 현재 FBX 기반 아트 샘플의 정적 외형 비교">
+        </a>
+        <figcaption class="hero__caption">
+          <span>STATIC REFERENCE / SAMPLE</span>
+          <span>클릭하여 원본 크기로 보기</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="metrics" aria-label="핵심 사양">
+      <div class="metric"><strong>1</strong><span>원본 모델 메시</span></div>
+      <div class="metric"><strong>27</strong><span>보존된 원본 리그 본</span></div>
+      <div class="metric"><strong>2,223</strong><span>위치가 보존된 정점</span></div>
+      <div class="metric"><strong>PASS</strong><span>Blender · FBX · GLB 점검</span></div>
+    </section>
+
+    <section id="comparison" class="shell section">
+      <header class="section-heading">
+        <div>
+          <div class="eyebrow">01 / Visual comparison</div>
+          <h2>기준 이미지와<br>생성 렌더 비교</h2>
+        </div>
+        <p>
+          칸타빌레 요약 HTML과 같은 방식으로 기준 이미지와 생성 결과를 나란히 확인할 수 있습니다.
+          실루엣 차이는 원본 모델의 한계로 그대로 두고, 몸통 청록·액자 황동과 녹청·초상 색 분포만 비교합니다.
+        </p>
+      </header>
+
+      <div class="comparison-stack">
+        <article class="comparison">
+          <header class="comparison__title"><h3>정적 외형</h3><span>STATIC / THREE-QUARTER</span></header>
+          <figure>
+            <a href="../../../image/dolore(돌로레).png"><img src="../../../image/dolore(돌로레).png" alt="돌로레 정적 외형 기준 이미지"></a>
+            <figcaption><strong>REFERENCE</strong><span>../../../image/dolore(돌로레).png</span></figcaption>
+          </figure>
+          <figure>
+            <a href="renders/01_reference_matched_three_quarter.png"><img src="renders/01_reference_matched_three_quarter.png" alt="돌로레 기준 시점 생성 렌더"></a>
+            <figcaption><strong>SAMPLE</strong><span>renders/01_reference_matched_three_quarter.png</span></figcaption>
+          </figure>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="renders" class="shell section">
+      <header class="section-heading">
+        <div>
+          <div class="eyebrow">02 / Review renders</div>
+          <h2>생성 렌더</h2>
+        </div>
+        <p>정면에서 초상과 액자 재질을, 측면·후면에서 원본 사족 메시 위에 적용된 청록 생체 조직의 색과 반사를 확인합니다.</p>
+      </header>
+
+      <div class="gallery">
+        <figure><a href="renders/01_reference_matched_three_quarter.png"><img loading="lazy" src="renders/01_reference_matched_three_quarter.png" alt="돌로레 기준 일치 3/4 렌더"></a><figcaption><strong>01</strong><span>기준 시점 3/4</span></figcaption></figure>
+        <figure><a href="renders/02_front.png"><img loading="lazy" src="renders/02_front.png" alt="돌로레 정면 렌더"></a><figcaption><strong>02</strong><span>정면 액자·초상</span></figcaption></figure>
+        <figure><a href="renders/03_side.png"><img loading="lazy" src="renders/03_side.png" alt="돌로레 측면 렌더"></a><figcaption><strong>03</strong><span>측면 원본 실루엣</span></figcaption></figure>
+        <figure><a href="renders/04_back.png"><img loading="lazy" src="renders/04_back.png" alt="돌로레 후면 렌더"></a><figcaption><strong>04</strong><span>후면 사족 몸체</span></figcaption></figure>
+        <figure><a href="renders/05_material_closeup.png"><img loading="lazy" src="renders/05_material_closeup.png" alt="돌로레 재질 확대 렌더"></a><figcaption><strong>05</strong><span>몸통·액자 재질 확대</span></figcaption></figure>
+      </div>
+    </section>
+
+    <section id="materials" class="shell section">
+      <header class="section-heading">
+        <div>
+          <div class="eyebrow">03 / Surface study</div>
+          <h2>재질과 텍스처</h2>
+        </div>
+        <p>원본 FBX에는 UV가 없고 0×0 누락 이미지만 남아 있어, 기준 이미지의 색 분포와 표면 성질을 분석해 새 UV와 절차 생성 텍스처를 구성했습니다.</p>
+      </header>
+
+      <div class="material-grid">
+        <article class="material"><a href="textures/dolore_body_albedo.png"><img loading="lazy" src="textures/dolore_body_albedo.png" alt="돌로레 청록 생체 조직 알베도 텍스처"></a><div class="material__copy"><h3>젖은 청록 조직</h3><p>힘줄 방향의 색 변화와 어두운 골, 밝은 비취색 돌출부를 표현합니다.</p></div></article>
+        <article class="material"><a href="textures/dolore_frame_albedo.png"><img loading="lazy" src="textures/dolore_frame_albedo.png" alt="돌로레 녹청 황동 액자 알베도 텍스처"></a><div class="material__copy"><h3>녹청 장식 액자</h3><p>검게 산화된 황동, 녹청 침식과 돌출 마모를 한 표면에 결합합니다.</p></div></article>
+        <article class="material"><a href="textures/dolore_portrait.png"><img loading="lazy" src="textures/dolore_portrait.png" alt="돌로레 흐릿한 남성 초상 텍스처"></a><div class="material__copy"><h3>흐릿한 남성 초상</h3><p>얼굴·복장의 큰 색 덩어리만 남기고 세부를 의도적으로 흐립니다.</p></div></article>
+        <article class="material"><a href="textures/dolore_body_height.png"><img loading="lazy" src="textures/dolore_body_height.png" alt="돌로레 생체 조직 높이 텍스처"></a><div class="material__copy"><h3>메시 없는 표면 요철</h3><p>별도 융기 모델링 없이 Height와 Bump만으로 섬유성 표면을 표현합니다.</p></div></article>
+      </div>
+    </section>
+
+    <section id="delivery" class="shell section">
+      <header class="section-heading">
+        <div>
+          <div class="eyebrow">04 / Delivery boundary</div>
+          <h2>파일과 적용 상태</h2>
+        </div>
+        <p>현재 결과는 검토 가능한 아트 샘플입니다. 사용자 승인 전에는 Unity의 돌로레 7개 슬롯이나 런타임 에셋에 연결하지 않습니다.</p>
+      </header>
+
+      <div class="technical">
+        <aside class="notice">
+          <h3>적용 전 확인 사항</h3>
+          <p>
+            활성 샘플은 원본 메시 1개만 사용합니다. 원본에 없는 액자 보강물·표면 융기·공격 촉수는 추가하지 않았으며,
+            정점 위치·폴리곤 토폴로지·오브젝트 변환과 27본 리그가 원본과 동일한지 독립 점검했습니다.
+          </p>
+          <div class="checks" aria-label="보존 및 적용 상태">
+            <div class="check"><b>원본 FBX</b><span>수정하지 않음</span></div>
+            <div class="check"><b>Unity</b><span>미적용</span></div>
+            <div class="check"><b>추가 모델 메시</b><span>0개</span></div>
+          </div>
+        </aside>
+
+        <div class="deliverables">
+          <h3>검토·원본 파일</h3>
+          <p>브라우저에서 지원되지 않는 형식은 링크를 통해 내려받아 Blender 또는 3D 뷰어에서 확인할 수 있습니다.</p>
+          <div class="file-list">
+            <a class="file-link" href="blender/Dolore_CurrentModel_ReferenceSync.blend"><b>BLEND</b><span>blender/Dolore_CurrentModel_ReferenceSync.blend</span><i>↗</i></a>
+            <a class="file-link" href="exports/Dolore_CurrentModel_ReferenceSync.fbx"><b>FBX</b><span>exports/Dolore_CurrentModel_ReferenceSync.fbx</span><i>↗</i></a>
+            <a class="file-link" href="exports/Dolore_CurrentModel_ReferenceSync.glb"><b>GLB</b><span>exports/Dolore_CurrentModel_ReferenceSync.glb</span><i>↗</i></a>
+            <a class="file-link" href="README.md"><b>README</b><span>README.md</span><i>↗</i></a>
+            <a class="file-link" href="TEXTURE_ANALYSIS.md"><b>TEXTURE</b><span>TEXTURE_ANALYSIS.md</span><i>↗</i></a>
+            <a class="file-link" href="SAMPLE_INSPECTION.txt"><b>CHECK</b><span>SAMPLE_INSPECTION.txt</span><i>↗</i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell">
+    <span>DOLORE CURRENT-MODEL REFERENCE SYNC · 2026-07-21</span>
+    <span>상태: 사용자 검토 대기 / Unity 미적용</span>
+  </footer>
+</body>
+</html>

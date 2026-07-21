@@ -1258,12 +1258,8 @@ namespace Bellerophon.Editor
     [InitializeOnLoad]
     internal static class OstinatoScissorAttackRuntimeCapture
     {
-        private const string RuntimeImagePath = OstinatoScissorAttackAnimation.ValidationFolderPath + "/Ostinato_AttackAppearanceComparison.png";
-        private const string RuntimeFramesPath = OstinatoScissorAttackAnimation.ValidationFolderPath + "/runtime_frames";
-        private const string RuntimeReportPath = OstinatoScissorAttackAnimation.ValidationFolderPath + "/Ostinato_AttackRuntimePlayback.txt";
-        private const string CompletionPath = OstinatoScissorAttackAnimation.ValidationFolderPath + "/Ostinato_AttackRuntimePlayback.completed";
-        private const string FailurePath = OstinatoScissorAttackAnimation.ValidationFolderPath + "/Ostinato_AttackRuntimePlayback.failed.txt";
         private const string SessionKey = "Bellerophon.OstinatoScissorAttackRuntimeCapture.State";
+        private const string OutputFolderSessionKey = "Bellerophon.OstinatoScissorAttackRuntimeCapture.OutputFolder";
         private const int WaitingForPlayMode = 1;
         private const int Capturing = 2;
         private const int WaitingForEditMode = 3;
@@ -1291,6 +1287,14 @@ namespace Bellerophon.Editor
         private static int nextCaptureIndex;
         private static float maximumRootDistance;
         private static float maximumRootRotation;
+        private static string OutputFolderPath => SessionState.GetString(
+            OutputFolderSessionKey,
+            OstinatoScissorAttackAnimation.ValidationFolderPath);
+        private static string RuntimeImagePath => OutputFolderPath + "/Ostinato_AttackAppearanceComparison.png";
+        private static string RuntimeFramesPath => OutputFolderPath + "/runtime_frames";
+        private static string RuntimeReportPath => OutputFolderPath + "/Ostinato_AttackRuntimePlayback.txt";
+        private static string CompletionPath => OutputFolderPath + "/Ostinato_AttackRuntimePlayback.completed";
+        private static string FailurePath => OutputFolderPath + "/Ostinato_AttackRuntimePlayback.failed.txt";
 
         static OstinatoScissorAttackRuntimeCapture()
         {
@@ -1299,6 +1303,11 @@ namespace Bellerophon.Editor
         }
 
         public static void Begin()
+        {
+            Begin(OstinatoScissorAttackAnimation.ValidationFolderPath);
+        }
+
+        internal static void Begin(string outputFolderPath)
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
             {
@@ -1309,6 +1318,12 @@ namespace Bellerophon.Editor
             {
                 throw new InvalidOperationException("CargoRunMvp must be the active scene before attack capture.");
             }
+            if (string.IsNullOrWhiteSpace(outputFolderPath) ||
+                !outputFolderPath.StartsWith("docs/validation/", StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException("Ostinato attack capture output must stay under docs/validation/.");
+            }
+            SessionState.SetString(OutputFolderSessionKey, outputFolderPath.TrimEnd('/'));
             TryDelete(CompletionPath);
             TryDelete(FailurePath);
             TryDeleteDirectory(RuntimeFramesPath);
@@ -1340,6 +1355,7 @@ namespace Bellerophon.Editor
                     OstinatoScissorAttackAnimation.WriteText(CompletionPath, "Ostinato supplied-FBX unmodified attack capture completed in Play Mode.");
                     Debug.Log("OstinatoAttackFbxUnmodifiedComparisonCaptured, ContinuousFrames=" + ContinuousFrameCount +
                         ", Views=Front|ThreeQuarter, MovementOverride=False, Image=" + RuntimeImagePath);
+                    SessionState.EraseString(OutputFolderSessionKey);
                 }
             }
             catch (Exception exception)
@@ -1547,6 +1563,7 @@ namespace Bellerophon.Editor
             Cleanup();
             OstinatoScissorAttackAnimation.WriteText(FailurePath, exception.ToString());
             SessionState.EraseInt(SessionKey);
+            SessionState.EraseString(OutputFolderSessionKey);
             if (EditorApplication.isPlayingOrWillChangePlaymode) EditorApplication.ExitPlaymode();
             Debug.LogException(exception);
         }

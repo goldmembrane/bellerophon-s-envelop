@@ -15,11 +15,11 @@ namespace Bellerophon.Editor
 {
     internal sealed class OstinatoAttackForwardSlashPostprocessor : AssetPostprocessor
     {
-        internal const string EnabledMarker = "Bellerophon.OstinatoForwardSlashMotion.v4";
+        internal const string EnabledMarker = "Bellerophon.OstinatoForwardSlashMotion.v5";
 
         public override uint GetVersion()
         {
-            return 4u;
+            return 5u;
         }
 
         private void OnPostprocessAnimation(GameObject root, AnimationClip clip)
@@ -41,6 +41,10 @@ namespace Bellerophon.Editor
 
         private const float StartFrame = 53f;
         private const float EndFrame = 93f;
+        // The reference outward cut occupies fourteen source frames. At uniform 2x playback,
+        // matching that span makes the inward strike read in the same 0.116667-second window.
+        private const float MainStrikeEndFrame = 67f;
+        private const float MainStrikeCompletion = 0.9f;
         // Frames 101..115 are the supplied clip's rapid bilateral outward cut. Its untouched
         // hand and arm angular-velocity profile is the timing reference for the inward cut.
         private const float OutwardSlashStartFrame = 101f;
@@ -53,7 +57,8 @@ namespace Bellerophon.Editor
         private const string PreviousV1CurveFingerprint = "2484FA02F1B3C798D529C7E7C2EAC8347E8A53FA88F895F11A965B20ED91FB88";
         private const string PreviousV2CurveFingerprint = "7718569E22C44275CCF240957B01BBC291C121F1944BDB2E314D4CC55EAFD4BD";
         private const string PreviousV3CurveFingerprint = "8AE54082F7FACDC70189233CEBEABFC0047CD6D25974430060DE00BF58FDFC81";
-        private const string ValidationFolder = "docs/validation/ostinato_attack_forward_slash_motion_2026-07-20";
+        private const string PreviousV4CurveFingerprint = "B463F3A2CB5A022CBC2A0034D19BCF0A5CAEDB5C2BE3C0587B56F7D88BAB78FC";
+        internal const string ValidationFolder = "docs/validation/ostinato_attack_forward_slash_motion_2026-07-21";
         private const string ApplyReportPath = ValidationFolder + "/Ostinato_AttackForwardSlashMotionApply.txt";
         private const string InspectionReportPath = ValidationFolder + "/Ostinato_AttackForwardSlashMotionInspection.txt";
         private const string BindingReportPath = ValidationFolder + "/Ostinato_AttackForwardSlashBindingInspection.txt";
@@ -97,7 +102,8 @@ namespace Bellerophon.Editor
                 fullFingerprintBefore != OriginalCurveFingerprint &&
                 fullFingerprintBefore != PreviousV1CurveFingerprint &&
                 fullFingerprintBefore != PreviousV2CurveFingerprint &&
-                fullFingerprintBefore != PreviousV3CurveFingerprint)
+                fullFingerprintBefore != PreviousV3CurveFingerprint &&
+                fullFingerprintBefore != PreviousV4CurveFingerprint)
             {
                 throw new InvalidOperationException("The Ostinato attack clip fingerprint is not an approved source or prior correction fingerprint.");
             }
@@ -143,14 +149,20 @@ namespace Bellerophon.Editor
             report.AppendLine("CorrectionFrames=53..93");
             report.AppendLine("CorrectionBones=" + string.Join("|", TargetBoneNames));
             report.AppendLine("CorrectionProperties=localEulerAnglesRaw.x|y|z");
-            report.AppendLine("MotionMethod=OutwardSlashReferencedAngularVelocityProfileOnShortestPerAxisEulerArc");
-            report.AppendLine("ActiveSlashFrames=53..93");
+            report.AppendLine("MotionMethod=PerBoneReverseSpatialTrajectoryWithForwardOutwardSlashTiming");
+            report.AppendLine("MainStrikeFrames=53..67");
+            report.AppendLine("MainStrikeDurationSeconds=" + Format((MainStrikeEndFrame - StartFrame) / (ExpectedFrameRate * 2f)));
+            report.AppendLine("MainStrikeCompletion=" + Format(MainStrikeCompletion));
+            report.AppendLine("DeceleratingFollowThroughFrames=67..93");
             report.AppendLine("OutwardReferenceFrames=101..115");
             report.AppendLine("TargetRotationBindingCount=" + correction.TargetBindingCount);
-            report.AppendLine("MaximumCorrectedQuaternionErrorDegrees=" + Format(correction.MaximumQuaternionError));
-            report.AppendLine("MaximumCommonProgressMismatch=" + Format(correction.MaximumCommonProgressMismatch));
-            report.AppendLine("MaximumTargetTimingProgressError=" + Format(correction.MaximumTargetTimingProgressError));
+            report.AppendLine("MaximumExpectedTrajectoryErrorDegrees=" + Format(correction.MaximumExpectedTrajectoryError));
+            report.AppendLine("MaximumReferenceCurveDeviationDegrees=" + Format(correction.MaximumReferenceCurveDeviation));
+            report.AppendLine("MaximumPerBoneProgressSpread=" + Format(correction.MaximumPerBoneProgressSpread));
             report.AppendLine("MaximumCorrectedPerFrameRotationDegrees=" + Format(correction.MaximumPerFrameRotation));
+            report.AppendLine("MaximumReferencePerFrameRotationDegrees=" + Format(correction.MaximumReferencePerFrameRotation));
+            report.AppendLine("MinimumFollowThroughAverageRotationDegrees=" + Format(correction.MinimumFollowThroughAverageRotation));
+            report.AppendLine("MaximumJointRangeExcessDegrees=" + Format(correction.MaximumJointRangeExcess));
             report.AppendLine("Boundary52To53MaximumRotationDegrees=" + Format(correction.Boundary52To53MaximumRotation));
             report.AppendLine("Boundary93To94MaximumRotationDegrees=" + Format(correction.Boundary93To94MaximumRotation));
             report.AppendLine("FullCurveFingerprintBefore=" + fullFingerprintBefore);
@@ -206,14 +218,20 @@ namespace Bellerophon.Editor
             report.AppendLine("ClipCurveBindings=" + AnimationUtility.GetCurveBindings(clip).Length);
             report.AppendLine("CorrectedCurveFingerprint=" + BuildFullCurveFingerprint(clip));
             report.AppendLine("CorrectionFrames=53..93");
-            report.AppendLine("ActiveSlashFrames=53..93");
+            report.AppendLine("MainStrikeFrames=53..67");
+            report.AppendLine("MainStrikeDurationSeconds=" + Format((MainStrikeEndFrame - StartFrame) / (ExpectedFrameRate * 2f)));
+            report.AppendLine("MainStrikeCompletion=" + Format(MainStrikeCompletion));
+            report.AppendLine("DeceleratingFollowThroughFrames=67..93");
             report.AppendLine("OutwardReferenceFrames=101..115");
             report.AppendLine("CorrectionBones=" + string.Join("|", TargetBoneNames));
             report.AppendLine("TargetRotationBindingCount=" + correction.TargetBindingCount);
-            report.AppendLine("MaximumCorrectedQuaternionErrorDegrees=" + Format(correction.MaximumQuaternionError));
-            report.AppendLine("MaximumCommonProgressMismatch=" + Format(correction.MaximumCommonProgressMismatch));
-            report.AppendLine("MaximumTargetTimingProgressError=" + Format(correction.MaximumTargetTimingProgressError));
+            report.AppendLine("MaximumExpectedTrajectoryErrorDegrees=" + Format(correction.MaximumExpectedTrajectoryError));
+            report.AppendLine("MaximumReferenceCurveDeviationDegrees=" + Format(correction.MaximumReferenceCurveDeviation));
+            report.AppendLine("MaximumPerBoneProgressSpread=" + Format(correction.MaximumPerBoneProgressSpread));
             report.AppendLine("MaximumCorrectedPerFrameRotationDegrees=" + Format(correction.MaximumPerFrameRotation));
+            report.AppendLine("MaximumReferencePerFrameRotationDegrees=" + Format(correction.MaximumReferencePerFrameRotation));
+            report.AppendLine("MinimumFollowThroughAverageRotationDegrees=" + Format(correction.MinimumFollowThroughAverageRotation));
+            report.AppendLine("MaximumJointRangeExcessDegrees=" + Format(correction.MaximumJointRangeExcess));
             report.AppendLine("Boundary52To53MaximumRotationDegrees=" + Format(correction.Boundary52To53MaximumRotation));
             report.AppendLine("Boundary93To94MaximumRotationDegrees=" + Format(correction.Boundary93To94MaximumRotation));
             report.AppendLine("ControllerStateSpeed=2");
@@ -293,7 +311,7 @@ namespace Bellerophon.Editor
                     var closureStep = frame == (int)StartFrame ? 0f : previousSeparation - separation;
                     samples.Add(new HandVelocitySample(
                         frame,
-                        EvaluateCommonMotionProgress(clip, frame),
+                        EvaluateMeanPerBoneMotionProgress(clip, frame),
                         effectiveSpeed,
                         leftStep,
                         rightStep,
@@ -310,6 +328,8 @@ namespace Bellerophon.Editor
 
                 var intervalSamples = samples.Skip(1).ToArray();
                 var activeSamples = intervalSamples;
+                var mainStrikeSamples = intervalSamples.Where(item => item.Frame <= (int)MainStrikeEndFrame).ToArray();
+                var followThroughSamples = intervalSamples.Where(item => item.Frame > (int)MainStrikeEndFrame).ToArray();
                 var outwardSamples = new List<HandVelocitySample>();
                 Vector3 previousOutwardLeft = default;
                 Vector3 previousOutwardRight = default;
@@ -390,16 +410,17 @@ namespace Bellerophon.Editor
                     }
                 }
 
-                var currentV4 = string.Equals(importer.userData, OstinatoAttackForwardSlashPostprocessor.EnabledMarker, StringComparison.Ordinal);
-                var versionName = currentV4
-                    ? "v4"
-                    : importer.userData.EndsWith(".v3", StringComparison.Ordinal) ? "v3" :
+                var currentV5 = string.Equals(importer.userData, OstinatoAttackForwardSlashPostprocessor.EnabledMarker, StringComparison.Ordinal);
+                var versionName = currentV5
+                    ? "v5"
+                    : importer.userData.EndsWith(".v4", StringComparison.Ordinal) ? "v4" :
+                      importer.userData.EndsWith(".v3", StringComparison.Ordinal) ? "v3" :
                       importer.userData.EndsWith(".v2", StringComparison.Ordinal) ? "v2" :
                       importer.userData.EndsWith(".v1", StringComparison.Ordinal) ? "v1" : "uncorrected";
                 var csvPath = ValidationFolder + "/Ostinato_AttackForwardSlashVelocity_" + versionName + ".csv";
                 var reportPath = ValidationFolder + "/Ostinato_AttackForwardSlashVelocity_" + versionName + ".txt";
                 var csv = new StringBuilder();
-                csv.AppendLine("Frame,CommonProgress,EffectivePlaybackSpeed,LeftStepDistance,RightStepDistance,HandSeparation,ClosureStep,LeftVelocity,RightVelocity,AverageHandVelocity,ClosureVelocity");
+                csv.AppendLine("Frame,MeanPerBoneProgress,EffectivePlaybackSpeed,LeftStepDistance,RightStepDistance,HandSeparation,ClosureStep,LeftVelocity,RightVelocity,AverageHandVelocity,ClosureVelocity");
                 foreach (var sample in samples)
                 {
                     csv.AppendLine(string.Join(",", new[]
@@ -443,13 +464,24 @@ namespace Bellerophon.Editor
                 report.AppendLine("ImporterMarker=" + importer.userData);
                 report.AppendLine("Frames=53..93");
                 report.AppendLine("SampleIntervals=40");
-                report.AppendLine("ActiveSlashFrames=53..93");
+                report.AppendLine("MainStrikeFrames=53..67");
+                report.AppendLine("MainStrikeDurationSeconds=" + Format((MainStrikeEndFrame - StartFrame) / (clip.frameRate * state.speed)));
+                report.AppendLine("MainStrikeCompletion=" + Format(MainStrikeCompletion));
+                report.AppendLine("DeceleratingFollowThroughFrames=67..93");
                 report.AppendLine("MotionTimingReferenceFrames=101..115");
-                report.AppendLine("CommonProgressForBothArms=True");
+                report.AppendLine("CommonProgressForBothArms=False");
+                report.AppendLine("PerBoneReferenceTiming=True");
+                report.AppendLine("ReverseReferenceSpatialTrajectory=True");
                 report.AppendLine("ControllerStateSpeed=" + Format(state.speed));
                 report.AppendLine("EffectivePlaybackSpeed=" + Format(intervalSamples.Min(item => item.EffectivePlaybackSpeed)) + ".." + Format(intervalSamples.Max(item => item.EffectivePlaybackSpeed)));
                 report.AppendLine("AccelerationBehaviourCount=" + state.behaviours.OfType<OstinatoAttackAccelerationBehaviour>().Count());
                 report.AppendLine("ActiveSlashDurationSeconds=" + Format((EndFrame - StartFrame) / (clip.frameRate * state.speed)));
+                report.AppendLine("MainStrikeMeanAverageHandVelocity=" + Format(mainStrikeSamples.Average(item => item.AverageHandVelocity)));
+                report.AppendLine("MainStrikeMaximumClosureVelocity=" + Format(mainStrikeSamples.Max(item => item.ClosureVelocity)));
+                report.AppendLine("MainStrikeMaximumClosureVelocityFrame=" + mainStrikeSamples.OrderByDescending(item => item.ClosureVelocity).First().Frame);
+                report.AppendLine("HandSeparationAt67=" + Format(samples.Single(item => item.Frame == (int)MainStrikeEndFrame).HandSeparation));
+                report.AppendLine("FollowThroughMeanAverageHandVelocity=" + Format(followThroughSamples.Average(item => item.AverageHandVelocity)));
+                report.AppendLine("FollowThroughMinimumAverageHandVelocity=" + Format(followThroughSamples.Min(item => item.AverageHandVelocity)));
                 report.AppendLine("ActiveMinimumAverageHandVelocity=" + Format(activeSamples.Min(item => item.AverageHandVelocity)));
                 report.AppendLine("ActiveMaximumAverageHandVelocity=" + Format(activeSamples.Max(item => item.AverageHandVelocity)));
                 report.AppendLine("ActiveMeanAverageHandVelocity=" + Format(activeSamples.Average(item => item.AverageHandVelocity)));
@@ -481,10 +513,10 @@ namespace Bellerophon.Editor
                 report.AppendLine("OutwardReferenceMaximumAverageAngularVelocityDegreesPerSecond=" + Format(outwardAngularVelocities.Max()));
                 report.AppendLine("OutwardReferenceMeanAverageAngularVelocityDegreesPerSecond=" + Format(outwardAngularVelocities.Average()));
                 report.AppendLine("OutwardReferenceCsv=" + outwardCsvPath);
-                if (currentV4 && !intervalSamples.All(item => Mathf.Approximately(item.EffectivePlaybackSpeed, 2f)))
+                if (currentV5 && !intervalSamples.All(item => Mathf.Approximately(item.EffectivePlaybackSpeed, 2f)))
                 {
                     throw new InvalidOperationException(
-                        "Ostinato v4 does not preserve uniform 2x Controller playback.");
+                        "Ostinato v5 does not preserve uniform 2x Controller playback.");
                 }
                 OstinatoScissorAttackAnimation.WriteText(reportPath, report.ToString());
                 Debug.Log("Ostinato forward-slash frame-by-frame hand velocity analysis completed: " + versionName + ".");
@@ -498,46 +530,237 @@ namespace Bellerophon.Editor
         public static void CaptureOstinatoAttackForwardSlashMotion()
         {
             InspectOstinatoAttackForwardSlashMotion();
-            OstinatoScissorAttackAnimation.CaptureOstinatoScissorAttackRuntimePlayback();
+            OstinatoScissorAttackRuntimeCapture.Begin(ValidationFolder);
         }
 
         internal static void RewriteTargetRotationCurves(AnimationClip clip)
         {
             RequireClipTimeline(clip);
-            var outwardReferenceProgress = BuildOutwardReferenceProgress(clip);
             foreach (var boneName in TargetBoneNames)
             {
                 var rotation = RequireBoneRotationCurves(clip, boneName);
-                var startTime = StartFrame / clip.frameRate;
-                var endTime = EndFrame / clip.frameRate;
-                var start = EvaluateRawEuler(rotation.Curves, startTime);
-                var end = EvaluateRawEuler(rotation.Curves, endTime);
-                var delta = new Vector3(
-                    Mathf.DeltaAngle(start.x, end.x),
-                    Mathf.DeltaAngle(start.y, end.y),
-                    Mathf.DeltaAngle(start.z, end.z));
-                if (Mathf.Abs(start.x + delta.x - end.x) > 0.01f ||
-                    Mathf.Abs(start.y + delta.y - end.y) > 0.01f ||
-                    Mathf.Abs(start.z + delta.z - end.z) > 0.01f)
-                {
-                    throw new InvalidOperationException("Ostinato target Euler curve crosses a wrap boundary: " + boneName);
-                }
-
+                var trajectory = BuildBoneTrajectory(rotation, clip.frameRate, boneName);
                 var samples = new Vector3[(int)(EndFrame - StartFrame) + 1];
                 for (var frame = (int)StartFrame; frame <= (int)EndFrame; frame++)
                 {
-                    var progress = EvaluateTargetSlashProgress(frame, outwardReferenceProgress);
-                    samples[frame - (int)StartFrame] = start + delta * progress;
+                    samples[frame - (int)StartFrame] = EvaluateTargetEuler(trajectory, frame);
                 }
 
-                samples[0] = start;
-                samples[samples.Length - 1] = end;
+                samples[0] = trajectory.TargetStart;
+                samples[samples.Length - 1] = trajectory.TargetEnd;
                 for (var component = 0; component < 3; component++)
                 {
                     var rewritten = RewriteComponentCurve(rotation.Curves[component], component, samples, clip.frameRate);
                     AnimationUtility.SetEditorCurve(clip, rotation.Bindings[component], rewritten);
                 }
             }
+        }
+
+        private static BoneTrajectory BuildBoneTrajectory(BoneRotationCurves rotation, float frameRate, string boneName)
+        {
+            var targetStart = EvaluateRawEuler(rotation.Curves, StartFrame / frameRate);
+            var targetEnd = EvaluateRawEuler(rotation.Curves, EndFrame / frameRate);
+            var targetDelta = DeltaEuler(targetStart, targetEnd);
+            if (Vector3.Distance(targetStart + targetDelta, targetEnd) > 0.01f)
+            {
+                throw new InvalidOperationException("Ostinato target Euler curve crosses a wrap boundary: " + boneName);
+            }
+
+            var referenceForward = SampleUnwrappedEuler(
+                rotation.Curves,
+                (int)OutwardSlashStartFrame,
+                (int)OutwardSlashEndFrame,
+                1,
+                frameRate);
+            var referenceReverse = SampleUnwrappedEuler(
+                rotation.Curves,
+                (int)OutwardSlashEndFrame,
+                (int)OutwardSlashStartFrame,
+                -1,
+                frameRate);
+            var forwardProgress = BuildCumulativeRotationProgress(
+                rotation.Curves,
+                (int)OutwardSlashStartFrame,
+                (int)OutwardSlashEndFrame,
+                1,
+                frameRate,
+                boneName);
+            var reverseProgress = BuildCumulativeRotationProgress(
+                rotation.Curves,
+                (int)OutwardSlashEndFrame,
+                (int)OutwardSlashStartFrame,
+                -1,
+                frameRate,
+                boneName);
+
+            var minimum = Vector3.Min(targetStart, targetEnd);
+            var maximum = Vector3.Max(targetStart, targetEnd);
+            foreach (var reference in referenceForward)
+            {
+                var aligned = targetStart + DeltaEuler(targetStart, reference);
+                minimum = Vector3.Min(minimum, aligned);
+                maximum = Vector3.Max(maximum, aligned);
+            }
+
+            return new BoneTrajectory(
+                boneName,
+                targetStart,
+                targetEnd,
+                targetDelta,
+                referenceReverse,
+                forwardProgress,
+                reverseProgress,
+                minimum,
+                maximum);
+        }
+
+        private static Vector3 EvaluateTargetEuler(BoneTrajectory trajectory, float frame)
+        {
+            if (frame <= StartFrame + 0.0001f)
+            {
+                return trajectory.TargetStart;
+            }
+            if (frame >= EndFrame - 0.0001f)
+            {
+                return trajectory.TargetEnd;
+            }
+
+            var progress = EvaluateBoneTargetProgress(trajectory, frame);
+            var reference = SampleByProgress(
+                trajectory.ReferenceReverseEuler,
+                trajectory.ReferenceReverseProgress,
+                progress);
+            var referenceBaseline = Vector3.LerpUnclamped(
+                trajectory.ReferenceReverseEuler[0],
+                trajectory.ReferenceReverseEuler[trajectory.ReferenceReverseEuler.Length - 1],
+                progress);
+            var targetBaseline = trajectory.TargetStart + trajectory.TargetDelta * progress;
+            var candidate = targetBaseline + (reference - referenceBaseline);
+            return new Vector3(
+                Mathf.Clamp(candidate.x, trajectory.MinimumEuler.x, trajectory.MaximumEuler.x),
+                Mathf.Clamp(candidate.y, trajectory.MinimumEuler.y, trajectory.MaximumEuler.y),
+                Mathf.Clamp(candidate.z, trajectory.MinimumEuler.z, trajectory.MaximumEuler.z));
+        }
+
+        private static Vector3 EvaluateKeyedTargetEuler(BoneTrajectory trajectory, float frame)
+        {
+            var clamped = Mathf.Clamp(frame, StartFrame, EndFrame);
+            var lowerFrame = Mathf.Floor(clamped);
+            var upperFrame = Mathf.Ceil(clamped);
+            if (Mathf.Approximately(lowerFrame, upperFrame))
+            {
+                return EvaluateTargetEuler(trajectory, lowerFrame);
+            }
+            return Vector3.LerpUnclamped(
+                EvaluateTargetEuler(trajectory, lowerFrame),
+                EvaluateTargetEuler(trajectory, upperFrame),
+                clamped - lowerFrame);
+        }
+
+        private static float EvaluateBoneTargetProgress(BoneTrajectory trajectory, float frame)
+        {
+            if (frame <= MainStrikeEndFrame)
+            {
+                var normalized = Mathf.Clamp01(Mathf.InverseLerp(StartFrame, MainStrikeEndFrame, frame));
+                return MainStrikeCompletion * SampleProgressAtNormalizedTime(trajectory.ReferenceForwardProgress, normalized);
+            }
+
+            var followThrough = Mathf.Clamp01(Mathf.InverseLerp(MainStrikeEndFrame, EndFrame, frame));
+            var quadraticEaseOut = 1f - (1f - followThrough) * (1f - followThrough);
+            // Retain a small linear component so FBX curve compression cannot quantize the
+            // final follow-through interval into a visible stop before frame 93.
+            var deceleratingProgress = 0.65f * quadraticEaseOut + 0.35f * followThrough;
+            return Mathf.Lerp(MainStrikeCompletion, 1f, deceleratingProgress);
+        }
+
+        private static float SampleProgressAtNormalizedTime(IReadOnlyList<float> progress, float normalized)
+        {
+            var position = Mathf.Clamp01(normalized) * (progress.Count - 1);
+            var lower = Mathf.FloorToInt(position);
+            var upper = Mathf.Min(lower + 1, progress.Count - 1);
+            return Mathf.Lerp(progress[lower], progress[upper], position - lower);
+        }
+
+        private static Vector3 SampleByProgress(
+            IReadOnlyList<Vector3> samples,
+            IReadOnlyList<float> cumulativeProgress,
+            float progress)
+        {
+            var target = Mathf.Clamp01(progress);
+            if (target <= 0f)
+            {
+                return samples[0];
+            }
+            for (var upper = 1; upper < cumulativeProgress.Count; upper++)
+            {
+                if (target > cumulativeProgress[upper] + 0.000001f)
+                {
+                    continue;
+                }
+                var lower = upper - 1;
+                var span = cumulativeProgress[upper] - cumulativeProgress[lower];
+                var local = span <= 0.000001f ? 1f : (target - cumulativeProgress[lower]) / span;
+                return Vector3.LerpUnclamped(samples[lower], samples[upper], local);
+            }
+            return samples[samples.Count - 1];
+        }
+
+        private static Vector3[] SampleUnwrappedEuler(
+            IReadOnlyList<AnimationCurve> curves,
+            int startFrame,
+            int endFrame,
+            int step,
+            float frameRate)
+        {
+            var count = Mathf.Abs(endFrame - startFrame) + 1;
+            var samples = new Vector3[count];
+            for (var index = 0; index < count; index++)
+            {
+                var frame = startFrame + index * step;
+                var raw = EvaluateRawEuler(curves, frame / frameRate);
+                samples[index] = index == 0 ? raw : samples[index - 1] + DeltaEuler(samples[index - 1], raw);
+            }
+            return samples;
+        }
+
+        private static float[] BuildCumulativeRotationProgress(
+            IReadOnlyList<AnimationCurve> curves,
+            int startFrame,
+            int endFrame,
+            int step,
+            float frameRate,
+            string boneName)
+        {
+            var count = Mathf.Abs(endFrame - startFrame) + 1;
+            var progress = new float[count];
+            var total = 0f;
+            var previous = EvaluateQuaternion(curves, startFrame / frameRate);
+            for (var index = 1; index < count; index++)
+            {
+                var frame = startFrame + index * step;
+                var current = EvaluateQuaternion(curves, frame / frameRate);
+                total += Quaternion.Angle(previous, current);
+                progress[index] = total;
+                previous = current;
+            }
+            if (total <= 0.0001f)
+            {
+                throw new InvalidOperationException("Ostinato outward-slash reference bone has no angular movement: " + boneName);
+            }
+            for (var index = 1; index < progress.Length; index++)
+            {
+                progress[index] /= total;
+            }
+            progress[progress.Length - 1] = 1f;
+            return progress;
+        }
+
+        private static Vector3 DeltaEuler(Vector3 from, Vector3 to)
+        {
+            return new Vector3(
+                Mathf.DeltaAngle(from.x, to.x),
+                Mathf.DeltaAngle(from.y, to.y),
+                Mathf.DeltaAngle(from.z, to.z));
         }
 
         private static AnimationCurve RewriteComponentCurve(
@@ -603,10 +826,13 @@ namespace Bellerophon.Editor
 
         private static CorrectionInspection RequireCorrectionContract(AnimationClip clip)
         {
-            var maximumError = 0f;
-            var maximumCommonProgressMismatch = 0f;
-            var maximumTargetTimingProgressError = 0f;
+            var maximumExpectedTrajectoryError = 0f;
+            var maximumReferenceCurveDeviation = 0f;
+            var maximumPerBoneProgressSpread = 0f;
             var maximumPerFrame = 0f;
+            var maximumReferencePerFrame = 0f;
+            var minimumFollowThroughAverageRotation = float.PositiveInfinity;
+            var maximumJointRangeExcess = 0f;
             var boundary52To53 = 0f;
             var boundary93To94 = 0f;
             var targetBindingCount = 0;
@@ -614,56 +840,47 @@ namespace Bellerophon.Editor
                 boneName => boneName,
                 boneName => RequireBoneRotationCurves(clip, boneName),
                 StringComparer.Ordinal);
-            var outwardReferenceProgress = BuildOutwardReferenceProgress(clip);
-            float previousCommonProgress = -0.0001f;
+            var trajectories = rotations.ToDictionary(
+                pair => pair.Key,
+                pair => BuildBoneTrajectory(pair.Value, clip.frameRate, pair.Key),
+                StringComparer.Ordinal);
             for (var frame = StartFrame; frame <= EndFrame + 0.0001f; frame += 0.25f)
             {
-                var progresses = new List<float>();
-                foreach (var rotation in rotations.Values)
+                var progresses = trajectories.Values
+                    .Select(trajectory => EvaluateBoneTargetProgress(trajectory, frame))
+                    .ToArray();
+                maximumPerBoneProgressSpread = Mathf.Max(
+                    maximumPerBoneProgressSpread,
+                    progresses.Max() - progresses.Min());
+                foreach (var pair in rotations)
                 {
-                    var startEuler = EvaluateRawEuler(rotation.Curves, StartFrame / clip.frameRate);
-                    var endEuler = EvaluateRawEuler(rotation.Curves, EndFrame / clip.frameRate);
-                    var delta = new Vector3(
-                        Mathf.DeltaAngle(startEuler.x, endEuler.x),
-                        Mathf.DeltaAngle(startEuler.y, endEuler.y),
-                        Mathf.DeltaAngle(startEuler.z, endEuler.z));
+                    var rotation = pair.Value;
+                    var trajectory = trajectories[pair.Key];
                     var actualEuler = EvaluateRawEuler(rotation.Curves, frame / clip.frameRate);
+                    var expectedEuler = EvaluateKeyedTargetEuler(trajectory, frame);
+                    maximumExpectedTrajectoryError = Mathf.Max(
+                        maximumExpectedTrajectoryError,
+                        Quaternion.Angle(Quaternion.Euler(actualEuler), Quaternion.Euler(expectedEuler)));
+
+                    var progress = EvaluateBoneTargetProgress(trajectory, frame);
+                    var targetBaseline = trajectory.TargetStart + trajectory.TargetDelta * progress;
+                    maximumReferenceCurveDeviation = Mathf.Max(
+                        maximumReferenceCurveDeviation,
+                        Quaternion.Angle(Quaternion.Euler(expectedEuler), Quaternion.Euler(targetBaseline)));
                     for (var component = 0; component < 3; component++)
                     {
-                        var componentDelta = Component(delta, component);
-                        if (Mathf.Abs(componentDelta) > 0.001f)
-                        {
-                            progresses.Add((Component(actualEuler, component) - Component(startEuler, component)) / componentDelta);
-                        }
+                        var value = Component(actualEuler, component);
+                        var minimum = Component(trajectory.MinimumEuler, component);
+                        var maximum = Component(trajectory.MaximumEuler, component);
+                        maximumJointRangeExcess = Mathf.Max(
+                            maximumJointRangeExcess,
+                            Mathf.Max(minimum - value, value - maximum, 0f));
                     }
                 }
-                var commonProgress = progresses.Average();
-                maximumCommonProgressMismatch = Mathf.Max(
-                    maximumCommonProgressMismatch,
-                    progresses.Max(progress => Mathf.Abs(progress - commonProgress)));
-                maximumTargetTimingProgressError = Mathf.Max(
-                    maximumTargetTimingProgressError,
-                    Mathf.Abs(commonProgress - EvaluateTargetSlashProgress(frame, outwardReferenceProgress)));
-                if (commonProgress + 0.0001f < previousCommonProgress || commonProgress < -0.0001f || commonProgress > 1.0001f)
-                {
-                    throw new InvalidOperationException("Ostinato corrected arm motion does not use one monotonic common progress curve.");
-                }
-                previousCommonProgress = commonProgress;
-                foreach (var rotation in rotations.Values)
-                {
-                    var startEuler = EvaluateRawEuler(rotation.Curves, StartFrame / clip.frameRate);
-                    var endEuler = EvaluateRawEuler(rotation.Curves, EndFrame / clip.frameRate);
-                    var delta = new Vector3(
-                        Mathf.DeltaAngle(startEuler.x, endEuler.x),
-                        Mathf.DeltaAngle(startEuler.y, endEuler.y),
-                        Mathf.DeltaAngle(startEuler.z, endEuler.z));
-                    var actual = EvaluateQuaternion(rotation.Curves, frame / clip.frameRate);
-                    var expected = Quaternion.Euler(startEuler + delta * commonProgress);
-                    maximumError = Mathf.Max(maximumError, Quaternion.Angle(actual, expected));
-                }
             }
-            foreach (var rotation in rotations.Values)
+            foreach (var pair in rotations)
             {
+                var rotation = pair.Value;
                 targetBindingCount += rotation.Bindings.Length;
                 var startEuler = EvaluateRawEuler(rotation.Curves, StartFrame / clip.frameRate);
                 var endEuler = EvaluateRawEuler(rotation.Curves, EndFrame / clip.frameRate);
@@ -679,37 +896,74 @@ namespace Bellerophon.Editor
                     Quaternion.Angle(EvaluateQuaternion(rotation.Curves, 52f / clip.frameRate), start));
                 boundary93To94 = Mathf.Max(boundary93To94,
                     Quaternion.Angle(end, EvaluateQuaternion(rotation.Curves, 94f / clip.frameRate)));
+
+                for (var frame = (int)OutwardSlashStartFrame + 1; frame <= (int)OutwardSlashEndFrame; frame++)
+                {
+                    maximumReferencePerFrame = Mathf.Max(
+                        maximumReferencePerFrame,
+                        Quaternion.Angle(
+                            EvaluateQuaternion(rotation.Curves, (frame - 1f) / clip.frameRate),
+                            EvaluateQuaternion(rotation.Curves, frame / clip.frameRate)));
+                }
+            }
+            for (var frame = (int)MainStrikeEndFrame + 1; frame <= (int)EndFrame; frame++)
+            {
+                var averageRotation = rotations.Values.Average(rotation =>
+                    Quaternion.Angle(
+                        EvaluateQuaternion(rotation.Curves, (frame - 1f) / clip.frameRate),
+                        EvaluateQuaternion(rotation.Curves, frame / clip.frameRate)));
+                minimumFollowThroughAverageRotation = Mathf.Min(minimumFollowThroughAverageRotation, averageRotation);
             }
 
             if (targetBindingCount != TargetBoneNames.Length * RotationPropertyNames.Length)
             {
                 throw new InvalidOperationException("Ostinato forward-slash correction does not target exactly twelve rotation bindings.");
             }
-            if (maximumError > 0.5f)
-            {
-                throw new InvalidOperationException("Ostinato corrected arm motion deviates from the approved shortest rotation arc.");
-            }
-            if (maximumCommonProgressMismatch > 0.0005f)
-            {
-                throw new InvalidOperationException("Ostinato left and right arm curves do not share one common progress value.");
-            }
-            if (maximumTargetTimingProgressError > 0.002f)
+            if (maximumExpectedTrajectoryError > 0.1f)
             {
                 throw new InvalidOperationException(
-                    "Ostinato arm curves do not match the approved outward-reference timing. MaximumTimingProgressError=" +
-                    Format(maximumTargetTimingProgressError) +
-                    ", MaximumCommonProgressMismatch=" + Format(maximumCommonProgressMismatch));
+                    "Ostinato corrected arm motion deviates from the v5 per-bone trajectory. MaximumErrorDegrees=" +
+                    Format(maximumExpectedTrajectoryError));
             }
-            if (maximumPerFrame > 5f)
+            if (maximumReferenceCurveDeviation < 0.25f)
             {
-                throw new InvalidOperationException("Ostinato corrected arm motion exceeds the approved per-frame anatomical rotation limit.");
+                throw new InvalidOperationException(
+                    "Ostinato v5 did not preserve a curved outward-slash spatial trajectory. MaximumDeviationDegrees=" +
+                    Format(maximumReferenceCurveDeviation));
+            }
+            if (maximumPerBoneProgressSpread < 0.002f)
+            {
+                throw new InvalidOperationException(
+                    "Ostinato v5 collapsed the four joints back to one common timing progression. MaximumSpread=" +
+                    Format(maximumPerBoneProgressSpread));
+            }
+            if (maximumPerFrame > maximumReferencePerFrame + 0.1f)
+            {
+                throw new InvalidOperationException(
+                    "Ostinato v5 exceeds the supplied outward-slash per-frame joint rotation. Corrected=" +
+                    Format(maximumPerFrame) + ", Reference=" + Format(maximumReferencePerFrame));
+            }
+            if (minimumFollowThroughAverageRotation <= 0.0001f)
+            {
+                throw new InvalidOperationException(
+                    "Ostinato v5 follow-through stops before frame 93. MinimumAverageRotationDegrees=" +
+                    Format(minimumFollowThroughAverageRotation));
+            }
+            if (maximumJointRangeExcess > 0.001f)
+            {
+                throw new InvalidOperationException(
+                    "Ostinato v5 exceeds the approved target/reference joint Euler range. MaximumExcessDegrees=" +
+                    Format(maximumJointRangeExcess));
             }
             return new CorrectionInspection(
                 targetBindingCount,
-                maximumError,
-                maximumCommonProgressMismatch,
-                maximumTargetTimingProgressError,
+                maximumExpectedTrajectoryError,
+                maximumReferenceCurveDeviation,
+                maximumPerBoneProgressSpread,
                 maximumPerFrame,
+                maximumReferencePerFrame,
+                minimumFollowThroughAverageRotation,
+                maximumJointRangeExcess,
                 boundary52To53,
                 boundary93To94);
         }
@@ -844,74 +1098,14 @@ namespace Bellerophon.Editor
             };
         }
 
-        private static float EvaluateCommonMotionProgress(AnimationClip clip, float frame)
+        private static float EvaluateMeanPerBoneMotionProgress(AnimationClip clip, float frame)
         {
-            var progresses = new List<float>();
-            foreach (var boneName in TargetBoneNames)
+            return TargetBoneNames.Average(boneName =>
             {
                 var rotation = RequireBoneRotationCurves(clip, boneName);
-                var start = EvaluateRawEuler(rotation.Curves, StartFrame / clip.frameRate);
-                var end = EvaluateRawEuler(rotation.Curves, EndFrame / clip.frameRate);
-                var actual = EvaluateRawEuler(rotation.Curves, frame / clip.frameRate);
-                var delta = new Vector3(
-                    Mathf.DeltaAngle(start.x, end.x),
-                    Mathf.DeltaAngle(start.y, end.y),
-                    Mathf.DeltaAngle(start.z, end.z));
-                for (var component = 0; component < 3; component++)
-                {
-                    var componentDelta = Component(delta, component);
-                    if (Mathf.Abs(componentDelta) > 0.001f)
-                    {
-                        progresses.Add((Component(actual, component) - Component(start, component)) / componentDelta);
-                    }
-                }
-            }
-            return progresses.Average();
-        }
-
-        private static float[] BuildOutwardReferenceProgress(AnimationClip clip)
-        {
-            var intervalCount = (int)(OutwardSlashEndFrame - OutwardSlashStartFrame);
-            var intervalSteps = new float[intervalCount];
-            for (var index = 0; index < intervalCount; index++)
-            {
-                var previousFrame = OutwardSlashStartFrame + index;
-                var currentFrame = previousFrame + 1f;
-                intervalSteps[index] = TargetBoneNames.Average(boneName =>
-                {
-                    var rotation = RequireBoneRotationCurves(clip, boneName);
-                    var previous = EvaluateQuaternion(rotation.Curves, previousFrame / clip.frameRate);
-                    var current = EvaluateQuaternion(rotation.Curves, currentFrame / clip.frameRate);
-                    return Quaternion.Angle(previous, current);
-                });
-            }
-            var total = intervalSteps.Sum();
-            if (total <= 0.0001f)
-            {
-                throw new InvalidOperationException("Ostinato outward-slash timing reference has no angular movement.");
-            }
-            var progress = new float[intervalCount + 1];
-            var cumulative = 0f;
-            for (var index = 0; index < intervalCount; index++)
-            {
-                cumulative += intervalSteps[index];
-                progress[index + 1] = cumulative / total;
-            }
-            progress[0] = 0f;
-            progress[progress.Length - 1] = 1f;
-            return progress;
-        }
-
-        private static float EvaluateTargetSlashProgress(float frame, IReadOnlyList<float> outwardReferenceProgress)
-        {
-            var normalized = Mathf.Clamp01(Mathf.InverseLerp(StartFrame, EndFrame, frame));
-            var referencePosition = normalized * (outwardReferenceProgress.Count - 1);
-            var lower = Mathf.FloorToInt(referencePosition);
-            var upper = Mathf.Min(lower + 1, outwardReferenceProgress.Count - 1);
-            return Mathf.Lerp(
-                outwardReferenceProgress[lower],
-                outwardReferenceProgress[upper],
-                referencePosition - lower);
+                var trajectory = BuildBoneTrajectory(rotation, clip.frameRate, boneName);
+                return EvaluateBoneTargetProgress(trajectory, frame);
+            });
         }
 
         private static Transform RequireDescendant(Transform root, string boneName)
@@ -1113,31 +1307,75 @@ namespace Bellerophon.Editor
             internal AnimationCurve[] Curves { get; }
         }
 
+        private sealed class BoneTrajectory
+        {
+            internal BoneTrajectory(
+                string boneName,
+                Vector3 targetStart,
+                Vector3 targetEnd,
+                Vector3 targetDelta,
+                Vector3[] referenceReverseEuler,
+                float[] referenceForwardProgress,
+                float[] referenceReverseProgress,
+                Vector3 minimumEuler,
+                Vector3 maximumEuler)
+            {
+                BoneName = boneName;
+                TargetStart = targetStart;
+                TargetEnd = targetEnd;
+                TargetDelta = targetDelta;
+                ReferenceReverseEuler = referenceReverseEuler;
+                ReferenceForwardProgress = referenceForwardProgress;
+                ReferenceReverseProgress = referenceReverseProgress;
+                MinimumEuler = minimumEuler;
+                MaximumEuler = maximumEuler;
+            }
+
+            internal string BoneName { get; }
+            internal Vector3 TargetStart { get; }
+            internal Vector3 TargetEnd { get; }
+            internal Vector3 TargetDelta { get; }
+            internal Vector3[] ReferenceReverseEuler { get; }
+            internal float[] ReferenceForwardProgress { get; }
+            internal float[] ReferenceReverseProgress { get; }
+            internal Vector3 MinimumEuler { get; }
+            internal Vector3 MaximumEuler { get; }
+        }
+
         private readonly struct CorrectionInspection
         {
             internal CorrectionInspection(
                 int targetBindingCount,
-                float maximumQuaternionError,
-                float maximumCommonProgressMismatch,
-                float maximumTargetTimingProgressError,
+                float maximumExpectedTrajectoryError,
+                float maximumReferenceCurveDeviation,
+                float maximumPerBoneProgressSpread,
                 float maximumPerFrameRotation,
+                float maximumReferencePerFrameRotation,
+                float minimumFollowThroughAverageRotation,
+                float maximumJointRangeExcess,
                 float boundary52To53MaximumRotation,
                 float boundary93To94MaximumRotation)
             {
                 TargetBindingCount = targetBindingCount;
-                MaximumQuaternionError = maximumQuaternionError;
-                MaximumCommonProgressMismatch = maximumCommonProgressMismatch;
-                MaximumTargetTimingProgressError = maximumTargetTimingProgressError;
+                MaximumExpectedTrajectoryError = maximumExpectedTrajectoryError;
+                MaximumReferenceCurveDeviation = maximumReferenceCurveDeviation;
+                MaximumPerBoneProgressSpread = maximumPerBoneProgressSpread;
                 MaximumPerFrameRotation = maximumPerFrameRotation;
+                MaximumReferencePerFrameRotation = maximumReferencePerFrameRotation;
+                MinimumFollowThroughAverageRotation = minimumFollowThroughAverageRotation;
+                MaximumJointRangeExcess = maximumJointRangeExcess;
                 Boundary52To53MaximumRotation = boundary52To53MaximumRotation;
                 Boundary93To94MaximumRotation = boundary93To94MaximumRotation;
             }
 
             internal int TargetBindingCount { get; }
-            internal float MaximumQuaternionError { get; }
-            internal float MaximumCommonProgressMismatch { get; }
-            internal float MaximumTargetTimingProgressError { get; }
+            internal float MaximumExpectedTrajectoryError { get; }
+            internal float MaximumReferenceCurveDeviation { get; }
+            internal float MaximumPerBoneProgressSpread { get; }
             internal float MaximumPerFrameRotation { get; }
+            internal float MaximumReferencePerFrameRotation { get; }
+            internal float MinimumFollowThroughAverageRotation { get; }
+            internal float MaximumJointRangeExcess { get; }
             internal float Boundary52To53MaximumRotation { get; }
             internal float Boundary93To94MaximumRotation { get; }
         }

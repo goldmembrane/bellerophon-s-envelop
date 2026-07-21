@@ -1,0 +1,10 @@
+Target=Approved Ostinato Enemy Placement/Ostinato_07_Seated_Rest
+PlaybackMode=Unity Editor Play Mode scene Animator
+AnimatorState=Ostinato_07_Seated_Rest
+CapturedFrames=15
+ViewsPerFrame=Front|ThreeQuarter
+AnimatorApplyRootMotion=False
+MaximumObservedRootDistance=0
+MaximumObservedRootRotation=0
+FinalImage=docs/validation/ostinato_seated_rest_fbx_replacement_2026-07-21/Ostinato_SeatedRest_RuntimeContactSheet.png
+FrameDirectory=docs/validation/ostinato_seated_rest_fbx_replacement_2026-07-21/runtime_frames

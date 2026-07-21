@@ -1,0 +1,85 @@
+{
+  "sample": "Dolore source-model material synchronization",
+  "source_fbx": "D:\\Bellerophon2\\Bellerophon\\enemies model\\dolore.fbx",
+  "source_fbx_sha256": "0A8DF2A16B881B24A5FC856E2E3534A05D506049CE4C49975BB8433E71A2204E",
+  "source_reference": [
+    "D:\\Bellerophon2\\Bellerophon\\image\\dolore(돌로레).png",
+    "D:\\Bellerophon2\\Bellerophon\\image\\dolore-attack.png"
+  ],
+  "geometry_policy": "source_mesh_only_no_shape_changes",
+  "mesh": "Dolore_CurrentModel",
+  "connected_components": 9,
+  "bones": 27,
+  "source_geometry_before_materials": {
+    "vertices": 2223,
+    "edges": 6353,
+    "polygons": 4139,
+    "vertex_position_sha256": "6481749BF97CE0AE570E41FB07604232FDC41CD6072DA2ED94D5E595EF1268C1",
+    "polygon_topology_sha256": "D68776656C4534ACCB8FBA2041C71066A0CC0FA7270E390B2F42384CB5A124C7"
+  },
+  "source_geometry_after_materials": {
+    "vertices": 2223,
+    "edges": 6353,
+    "polygons": 4139,
+    "vertex_position_sha256": "6481749BF97CE0AE570E41FB07604232FDC41CD6072DA2ED94D5E595EF1268C1",
+    "polygon_topology_sha256": "D68776656C4534ACCB8FBA2041C71066A0CC0FA7270E390B2F42384CB5A124C7"
+  },
+  "source_transform_before_materials": {
+    "location": [
+      3e-09,
+      -8e-09,
+      1.08e-07
+    ],
+    "rotation_euler": [
+      0.0,
+      -0.0,
+      0.0
+    ],
+    "scale": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "source_transform_after_materials": {
+    "location": [
+      3e-09,
+      -8e-09,
+      1.08e-07
+    ],
+    "rotation_euler": [
+      0.0,
+      -0.0,
+      0.0
+    ],
+    "scale": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "geometry_signature_preserved": true,
+  "transform_preserved": true,
+  "added_model_mesh_objects": 0,
+  "model_size_m_unchanged": [
+    0.00789,
+    0.01321,
+    0.011595
+  ],
+  "materials": [
+    "Dolore_Wet_Deep_Teal_Tissue",
+    "Dolore_Oxidized_Brass_Frame",
+    "Dolore_Faded_Portrait"
+  ],
+  "material_scope": [
+    "body color and wet tissue response",
+    "oxidized brass and verdigris frame",
+    "faded portrait panel"
+  ],
+  "static_export": "exports/Dolore_CurrentModel_ReferenceSync.fbx",
+  "review_export": "exports/Dolore_CurrentModel_ReferenceSync.glb",
+  "unity_applied": true,
+  "unity_model": "Assets/_Project/Art/Enemies/Dolore/ApprovedSample/Models/Dolore_CurrentModel_ReferenceSync.fbx",
+  "unity_scene": "Assets/_Project/Scenes/CargoRunMvp.unity",
+  "unity_direct_instances": 7
+}

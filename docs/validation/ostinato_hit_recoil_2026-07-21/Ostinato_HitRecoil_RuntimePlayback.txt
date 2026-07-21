@@ -1,0 +1,10 @@
+Target=Approved Ostinato Enemy Placement/Ostinato_05_Hit_Recoil
+PlaybackMode=Unity Editor Play Mode scene Animator
+AnimatorState=Ostinato_05_Hit_Recoil
+CapturedFrames=15
+ViewsPerFrame=Front|ThreeQuarter
+AnimatorApplyRootMotion=False
+MaximumObservedRootDistance=0
+MaximumObservedRootRotation=0
+FinalImage=docs/validation/ostinato_hit_recoil_2026-07-21/Ostinato_HitRecoil_RuntimeContactSheet.png
+FrameDirectory=docs/validation/ostinato_hit_recoil_2026-07-21/runtime_frames

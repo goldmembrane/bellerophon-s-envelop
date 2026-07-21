@@ -1,0 +1,106 @@
+{
+  "sample": "Dolore attack attachment art sample",
+  "status": "awaiting_user_approval",
+  "source_attack_glb": "D:\\Bellerophon2\\Bellerophon\\enemies model\\dolore attack.glb",
+  "source_attack_sha256": "56C400903A1B977024DFE7999F6D8AD0A19F6E0634E40816CCC18BCC04EF20A0",
+  "placement_reference": "D:\\Bellerophon2\\Bellerophon\\image\\dolore-attack.png",
+  "isolated_reference": "D:\\Bellerophon2\\Bellerophon\\image\\dolore attack model.png",
+  "base_blend": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\dolore\\blender\\Dolore_CurrentModel_ReferenceSync.blend",
+  "base_geometry_before": {
+    "vertices": 2223,
+    "edges": 6353,
+    "polygons": 4139,
+    "vertex_position_sha256": "6481749BF97CE0AE570E41FB07604232FDC41CD6072DA2ED94D5E595EF1268C1",
+    "polygon_topology_sha256": "D68776656C4534ACCB8FBA2041C71066A0CC0FA7270E390B2F42384CB5A124C7"
+  },
+  "base_geometry_after": {
+    "vertices": 2223,
+    "edges": 6353,
+    "polygons": 4139,
+    "vertex_position_sha256": "6481749BF97CE0AE570E41FB07604232FDC41CD6072DA2ED94D5E595EF1268C1",
+    "polygon_topology_sha256": "D68776656C4534ACCB8FBA2041C71066A0CC0FA7270E390B2F42384CB5A124C7"
+  },
+  "base_geometry_preserved": true,
+  "attack_geometry_before": {
+    "vertices": 13059,
+    "edges": 13156,
+    "polygons": 4417,
+    "vertex_position_sha256": "9FCA49C3111D107BBAEAFE1978407DDC056E69F49C7AAC3C6E2CEBACB8AA5889",
+    "polygon_topology_sha256": "D38E7042F34F87DC5D65AEC4994230D0DF16B2423B15FA25CF533C7A42A17738"
+  },
+  "attack_geometry_after": {
+    "vertices": 13059,
+    "edges": 13156,
+    "polygons": 4417,
+    "vertex_position_sha256": "9FCA49C3111D107BBAEAFE1978407DDC056E69F49C7AAC3C6E2CEBACB8AA5889",
+    "polygon_topology_sha256": "D38E7042F34F87DC5D65AEC4994230D0DF16B2423B15FA25CF533C7A42A17738"
+  },
+  "attack_geometry_preserved": true,
+  "attack_rig_bones": 13,
+  "attachment_parent": "Dolore_Attack_Attachment",
+  "attachment_location": [
+    0.004419316,
+    -0.00935263,
+    0.005689418
+  ],
+  "attachment_scale": [
+    0.0015,
+    0.0015,
+    0.0015
+  ],
+  "attachment_rotation_euler": [
+    0.0,
+    -0.261799395,
+    0.0
+  ],
+  "root_exit_bone": "Bone_000",
+  "root_exit_direction_world": [
+    0.0,
+    -0.99999994,
+    0.0
+  ],
+  "root_exit_front_direction_world": [
+    0.0,
+    -1.0,
+    0.0
+  ],
+  "root_exit_front_alignment": 0.99999994,
+  "root_exit_pose_applied_as_rest": true,
+  "downstream_curve_bone": "Bone_012",
+  "downstream_curve_rest_alignment": 1.00000007,
+  "attack_world_bounds": {
+    "min": [
+      0.000303321,
+      -0.00997763,
+      0.005522769
+    ],
+    "max": [
+      0.007358542,
+      -0.008734773,
+      0.0087398
+    ]
+  },
+  "portrait_world_bounds": {
+    "min": [
+      -0.001709757,
+      -0.009178581,
+      0.004185213
+    ],
+    "max": [
+      0.003605337,
+      -0.007567499,
+      0.010087118
+    ]
+  },
+  "attack_material": "Dolore_Attack_Flesh",
+  "attack_texture_source": "existing approved Dolore flesh texture set",
+  "unity_applied": false,
+  "animation_applied": false,
+  "review_files": [
+    "renders/01_front_attached.png",
+    "renders/02_three_quarter_attached.png",
+    "renders/03_side_attachment.png",
+    "renders/04_attachment_closeup.png",
+    "renders/05_reference_comparison.png"
+  ]
+}

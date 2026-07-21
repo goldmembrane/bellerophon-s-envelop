@@ -1,0 +1,10 @@
+Target=Approved Ostinato Enemy Placement/Ostinato_06_Roar_Enrage_Transition
+PlaybackMode=Unity Editor Play Mode scene Animator
+AnimatorState=Ostinato_06_Roar_Enrage_Transition
+CapturedFrames=15
+ViewsPerFrame=Front|ThreeQuarter
+AnimatorApplyRootMotion=False
+MaximumObservedRootDistance=0
+MaximumObservedRootRotation=0
+FinalImage=docs/validation/ostinato_roar_fbx_replacement_2026-07-21/Ostinato_Roar_RuntimeContactSheet.png
+FrameDirectory=docs/validation/ostinato_roar_fbx_replacement_2026-07-21/runtime_frames

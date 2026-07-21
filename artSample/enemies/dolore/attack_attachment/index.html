@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>돌로레 공격 촉수 부착 아트 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --night: #070a09;
+      --panel: #101512;
+      --panel-2: #171d19;
+      --ink: #e9e3d7;
+      --muted: #a69f92;
+      --blood: #b62d24;
+      --blood-hi: #ef6a51;
+      --verdigris: #55b69b;
+      --brass: #b79a63;
+      --line: rgba(205, 187, 150, .2);
+      --serif: "Noto Serif KR", "Nanum Myeongjo", Batang, serif;
+      --sans: Pretendard, "Noto Sans KR", "Malgun Gothic", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--night); }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at 83% 5%, rgba(151, 31, 26, .18), transparent 34rem),
+        radial-gradient(circle at 8% 30%, rgba(42, 130, 108, .13), transparent 30rem),
+        linear-gradient(145deg, #070a09, #0c110e 48%, #090806);
+    }
+    body::before {
+      position: fixed; inset: 0; z-index: -1; content: ""; pointer-events: none; opacity: .32;
+      background-image: repeating-linear-gradient(111deg, transparent 0 54px, rgba(255,255,255,.018) 55px 56px);
+    }
+    a { color: inherit; }
+    img { display: block; width: 100%; height: auto; }
+    .shell { width: min(1460px, calc(100% - 40px)); margin: 0 auto; }
+    header.top {
+      position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--line);
+      background: rgba(7, 10, 9, .86); backdrop-filter: blur(18px);
+    }
+    .bar { display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 24px; }
+    .brand { text-decoration: none; font-family: var(--serif); letter-spacing: .1em; }
+    .brand span { margin-left: 10px; color: var(--blood-hi); font: 700 10px var(--sans); letter-spacing: .18em; }
+    nav { display: flex; gap: 18px; }
+    nav a { color: var(--muted); font-size: 12px; text-decoration: none; }
+    nav a:hover { color: var(--blood-hi); }
+    .hero { display: grid; grid-template-columns: .72fr 1.28fr; gap: clamp(36px, 6vw, 94px); align-items: center; min-height: calc(100vh - 64px); padding: 72px 0; }
+    .eyebrow { color: var(--blood-hi); font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+    h1, h2, h3 { font-family: var(--serif); }
+    h1 { margin: 18px 0 24px; font-size: clamp(45px, 6.8vw, 102px); line-height: .92; letter-spacing: -.055em; }
+    h1 span { display: block; color: transparent; -webkit-text-stroke: 1px rgba(239, 106, 81, .72); }
+    .lede { margin: 0; color: #c2b9ab; font-size: clamp(15px, 1.4vw, 19px); line-height: 1.75; }
+    .pills { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 28px; }
+    .pill { padding: 8px 11px; border: 1px solid var(--line); border-radius: 999px; color: #d0c8ba; background: rgba(19, 25, 21, .82); font-size: 12px; }
+    .pill::before { display: inline-block; width: 7px; height: 7px; margin-right: 8px; border-radius: 50%; content: ""; background: var(--verdigris); box-shadow: 0 0 12px var(--verdigris); }
+    .pill.pending::before { background: var(--brass); box-shadow: 0 0 12px var(--brass); }
+    .hero figure { margin: 0; border: 1px solid var(--line); background: #050706; box-shadow: 0 35px 100px rgba(0,0,0,.48); transform: rotate(.7deg); }
+    figcaption { display: flex; justify-content: space-between; gap: 16px; padding: 11px 14px; color: var(--muted); font-size: 11px; }
+    figcaption b { color: var(--blood-hi); letter-spacing: .12em; }
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); border-block: 1px solid var(--line); }
+    .metric { padding: 28px clamp(18px, 3vw, 40px); border-right: 1px solid var(--line); }
+    .metric:last-child { border-right: 0; }
+    .metric strong { display: block; color: var(--blood-hi); font: 500 clamp(27px, 3vw, 43px) var(--serif); }
+    .metric span { color: var(--muted); font-size: 12px; }
+    section.block { padding: clamp(72px, 9vw, 132px) 0; border-bottom: 1px solid rgba(205,187,150,.12); }
+    .heading { display: grid; grid-template-columns: .62fr 1fr; gap: 36px; align-items: end; margin-bottom: 38px; }
+    .heading h2 { margin: 9px 0 0; font-size: clamp(34px, 5vw, 66px); line-height: 1; letter-spacing: -.04em; }
+    .heading p { margin: 0; color: var(--muted); line-height: 1.7; }
+    .comparison { overflow: hidden; border: 1px solid var(--line); background: var(--panel); }
+    .comparison img { aspect-ratio: 8 / 3; object-fit: contain; background: #060807; }
+    .gallery { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .gallery figure { grid-column: span 6; margin: 0; overflow: hidden; border: 1px solid var(--line); background: var(--panel); }
+    .gallery figure:nth-child(1) { grid-column: span 7; }
+    .gallery figure:nth-child(2) { grid-column: span 5; }
+    .gallery img { aspect-ratio: 4 / 3; object-fit: cover; transition: transform .5s cubic-bezier(.2,.7,.2,1), filter .2s; }
+    .gallery a:hover img { transform: scale(1.018); filter: saturate(1.08); }
+    .boundary { display: grid; grid-template-columns: .8fr 1.2fr; gap: 22px; }
+    .card { padding: clamp(24px, 3vw, 38px); border: 1px solid var(--line); background: linear-gradient(145deg, rgba(28,35,30,.94), rgba(12,16,14,.95)); }
+    .card h3 { margin: 0 0 15px; font-size: 25px; }
+    .card p, .card li { color: #bbb3a6; line-height: 1.7; }
+    .card ul { margin: 0; padding-left: 20px; }
+    .files { display: grid; gap: 9px; margin-top: 20px; }
+    .file { display: grid; grid-template-columns: 70px 1fr auto; gap: 12px; padding: 13px; border: 1px solid rgba(205,187,150,.17); text-decoration: none; background: rgba(5,8,7,.5); }
+    .file:hover { border-color: var(--blood-hi); transform: translateX(3px); }
+    .file b { color: var(--brass); font: 700 11px ui-monospace, monospace; }
+    .file span { overflow: hidden; color: #d8d0c2; font: 11px ui-monospace, monospace; text-overflow: ellipsis; white-space: nowrap; }
+    footer { display: flex; justify-content: space-between; gap: 20px; padding: 34px 0 52px; color: #777166; font-size: 11px; }
+    .reveal { animation: rise .7s both cubic-bezier(.2,.7,.2,1); }
+    @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+    @media (max-width: 920px) { .hero, .heading, .boundary { grid-template-columns: 1fr; } .hero { min-height: 0; } .metrics { grid-template-columns: 1fr 1fr; } .gallery figure, .gallery figure:nth-child(n) { grid-column: span 6; } }
+    @media (max-width: 640px) { .shell { width: calc(100% - 24px); } .bar { align-items: flex-start; flex-direction: column; padding: 14px 0; } .metrics { grid-template-columns: 1fr; } .metric { border-bottom: 1px solid var(--line); border-right: 0; } .gallery figure, .gallery figure:nth-child(n) { grid-column: 1 / -1; } footer { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <header class="top"><div class="shell bar"><a class="brand" href="#top">돌로레 공격 부착체<span>ATTACK APPENDAGE</span></a><nav><a href="#compare">기준 비교</a><a href="#views">결합 시점</a><a href="#files">파일·경계</a></nav></div></header>
+  <main id="top">
+    <section class="shell hero">
+      <div class="reveal"><div class="eyebrow">Dolore / Frame-born spike tentacle</div><h1>가슴에서<span>못이 자란다</span></h1><p class="lede">제공된 <strong>dolore attack.glb</strong>를 기존 승인 돌로레의 초상 중앙 가슴 위치에 결합한 아트 샘플입니다. 뿌리는 액자 정면으로 먼저 돌출되고, 이어지는 붉은 촉수는 기존 곡선을 따라 아래로 휘어진 뒤 오른쪽 위의 거대한 못 끝으로 연결됩니다.</p><div class="pills"><span class="pill pending">사용자 승인 대기</span><span class="pill">독립 점검 PASS</span><span class="pill pending">Unity 미적용</span><span class="pill">형상 지문 보존</span></div></div>
+      <figure class="reveal"><a href="renders/05_reference_comparison.png"><img src="renders/05_reference_comparison.png" alt="돌로레 공격 기준 이미지와 액자 중앙 촉수 부착 결과 비교"></a><figcaption><b>REFERENCE / SAMPLE</b><span>클릭하여 원본 크기로 보기</span></figcaption></figure>
+    </section>
+    <section class="metrics"><div class="metric"><strong>13,059</strong><span>보존된 공격 촉수 정점</span></div><div class="metric"><strong>4,417</strong><span>보존된 공격 촉수 면</span></div><div class="metric"><strong>13</strong><span>후속 애니메이션용 촉수 본</span></div><div class="metric"><strong>0</strong><span>Unity 적용·애니메이션</span></div></section>
+    <section id="compare" class="shell block"><header class="heading"><div><div class="eyebrow">01 / Placement reference</div><h2>기준과 결합 결과</h2></div><p>초상 중앙 출구의 첫 구간은 액자 면의 정면 법선과 일치시키고, 다음 본부터 아래로 처지는 기존 곡선과 오른쪽 위로 솟는 못 끝을 유지했습니다. 제공 GLB의 메시 형상은 재조형하지 않았습니다.</p></header><figure class="comparison"><a href="renders/05_reference_comparison.png"><img src="renders/05_reference_comparison.png" alt="기준 이미지와 최종 정면 결합 결과"></a><figcaption><b>LEFT / RIGHT</b><span>dolore-attack.png / 01_front_attached.png</span></figcaption></figure></section>
+    <section id="views" class="shell block"><header class="heading"><div><div class="eyebrow">02 / Attachment review</div><h2>공중에 뜨지 않는 결합</h2></div><p>정면에서는 가슴 중앙의 시작점을, 사선에서는 액자와 촉수의 전후 관계를, 측면에서는 초상 패널과 실제로 겹쳐 붙은 깊이를 확인할 수 있습니다.</p></header><div class="gallery">
+      <figure><a href="renders/01_front_attached.png"><img src="renders/01_front_attached.png" alt="돌로레 공격 촉수 정면 결합 렌더"></a><figcaption><b>01</b><span>정면 / 초상 가슴 중앙</span></figcaption></figure>
+      <figure><a href="renders/02_three_quarter_attached.png"><img src="renders/02_three_quarter_attached.png" alt="돌로레 공격 촉수 사선 결합 렌더"></a><figcaption><b>02</b><span>사선 / 깊이와 돌출</span></figcaption></figure>
+      <figure><a href="renders/03_side_attachment.png"><img src="renders/03_side_attachment.png" alt="돌로레 공격 촉수 측면 결합 렌더"></a><figcaption><b>03</b><span>측면 / 정면 돌출 각도 확인</span></figcaption></figure>
+      <figure><a href="renders/04_attachment_closeup.png"><img src="renders/04_attachment_closeup.png" alt="돌로레 초상과 공격 촉수 결합부 확대"></a><figcaption><b>04</b><span>확대 / 가슴 출구 정면 정렬</span></figcaption></figure>
+    </div></section>
+    <section id="files" class="shell block"><header class="heading"><div><div class="eyebrow">03 / Delivery boundary</div><h2>검토 파일과 적용 경계</h2></div><p>이 결과는 아트 샘플입니다. 사용자 승인 전에는 Unity의 3번 촉수 찌르기와 4번 처형 끌어오기 모션 개체에 연결하지 않습니다.</p></header><div class="boundary"><article class="card"><h3>보존·리깅 범위</h3><ul><li>기존 돌로레 `2,223정점·4,139면·27본` 보존</li><li>공격 촉수 `13,059정점·4,417면·13본` 보존</li><li>13본 단일 사슬과 전체 정점 스킨 웨이트 확인</li><li>뿌리 고정 상태에서도 10개 본으로 연속 몸통 변형 가능</li><li>말단 2본은 직접 웨이트가 없어 별도 미세 제어 제한</li><li>애니메이션·Unity 적용 없음</li></ul></article><article class="card"><h3>다운로드·점검</h3><p>기존 리깅은 촉수 몸통 움직임에 사용할 수 있어 재리깅하지 않았습니다. 상세 본별 변형 수치는 리깅 검사 자료에 기록했습니다.</p><div class="files">
+        <a class="file" href="blender/Dolore_AttackAttachment_Sample.blend"><b>BLEND</b><span>blender/Dolore_AttackAttachment_Sample.blend</span><i>↗</i></a>
+        <a class="file" href="exports/Dolore_AttackAttachment_Sample.glb"><b>GLB</b><span>exports/Dolore_AttackAttachment_Sample.glb</span><i>↗</i></a>
+        <a class="file" href="README.md"><b>README</b><span>README.md</span><i>↗</i></a>
+        <a class="file" href="SAMPLE_INSPECTION.txt"><b>CHECK</b><span>SAMPLE_INSPECTION.txt</span><i>↗</i></a>
+        <a class="file" href="RIG_INSPECTION.txt"><b>RIG</b><span>RIG_INSPECTION.txt</span><i>↗</i></a>
+        <a class="file" href="RIG_INSPECTION.json"><b>RIG JSON</b><span>RIG_INSPECTION.json</span><i>↗</i></a>
+        <a class="file" href="ASSET_MANIFEST.json"><b>JSON</b><span>ASSET_MANIFEST.json</span><i>↗</i></a>
+      </div></article></div></section>
+  </main>
+  <footer class="shell"><span>DOLORE ATTACK ATTACHMENT · 2026-07-21</span><span>상태: 사용자 승인 대기 / Unity 미적용</span></footer>
+</body>
+</html>

@@ -1,0 +1,741 @@
+{
+  "result": "USABLE",
+  "rig_present": true,
+  "requires_rerigging_for_body_motion": false,
+  "fine_terminal_articulation_limited": true,
+  "summary_ko": "13본 연결 리그와 전체 정점 스킨 웨이트가 있어 촉수 몸통 움직임에 사용할 수 있습니다. Bone_002와 Bone_001은 직접 웨이트가 없어 못 끝의 세밀한 독립 관절 제어에는 제한이 있습니다.",
+  "inspections": [
+    {
+      "label": "source_glb",
+      "rig_present": true,
+      "armature_modifier": true,
+      "armature": "UniRigArmature",
+      "bone_count": 13,
+      "vertex_group_count": 13,
+      "single_connected_chain": true,
+      "chain": [
+        {
+          "bone": "Bone_000",
+          "parent": null
+        },
+        {
+          "bone": "Bone_012",
+          "parent": "Bone_000"
+        },
+        {
+          "bone": "Bone_011",
+          "parent": "Bone_012"
+        },
+        {
+          "bone": "Bone_010",
+          "parent": "Bone_011"
+        },
+        {
+          "bone": "Bone_009",
+          "parent": "Bone_010"
+        },
+        {
+          "bone": "Bone_008",
+          "parent": "Bone_009"
+        },
+        {
+          "bone": "Bone_007",
+          "parent": "Bone_008"
+        },
+        {
+          "bone": "Bone_006",
+          "parent": "Bone_007"
+        },
+        {
+          "bone": "Bone_005",
+          "parent": "Bone_006"
+        },
+        {
+          "bone": "Bone_004",
+          "parent": "Bone_005"
+        },
+        {
+          "bone": "Bone_003",
+          "parent": "Bone_004"
+        },
+        {
+          "bone": "Bone_002",
+          "parent": "Bone_003"
+        },
+        {
+          "bone": "Bone_001",
+          "parent": "Bone_002"
+        }
+      ],
+      "vertex_count": 13059,
+      "unweighted_vertices": 0,
+      "minimum_total_weight": 0.999999871,
+      "maximum_total_weight": 1.000000112,
+      "vertices_with_more_than_four_influences": 3245,
+      "test_rotation_degrees": 10.0,
+      "meaningful_deformation_bones": [
+        "Bone_000",
+        "Bone_012",
+        "Bone_011",
+        "Bone_010",
+        "Bone_009",
+        "Bone_008",
+        "Bone_007",
+        "Bone_006",
+        "Bone_005",
+        "Bone_004",
+        "Bone_003"
+      ],
+      "root_locked_meaningful_bones": [
+        "Bone_012",
+        "Bone_011",
+        "Bone_010",
+        "Bone_009",
+        "Bone_008",
+        "Bone_007",
+        "Bone_006",
+        "Bone_005",
+        "Bone_004",
+        "Bone_003"
+      ],
+      "major_deformation_bones": [
+        "Bone_000",
+        "Bone_012",
+        "Bone_011",
+        "Bone_010",
+        "Bone_009",
+        "Bone_008",
+        "Bone_007",
+        "Bone_006",
+        "Bone_005",
+        "Bone_004"
+      ],
+      "terminal_bones_without_direct_weights": [
+        "Bone_002",
+        "Bone_001"
+      ],
+      "deformation": [
+        {
+          "bone": "Bone_000",
+          "weighted_vertices": 0,
+          "maximum_weight": 0.0,
+          "moved_vertices": 13059,
+          "maximum_displacement": 1.221843449,
+          "maximum_displacement_ratio": 0.235214918,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_012",
+          "weighted_vertices": 4000,
+          "maximum_weight": 0.169500932,
+          "moved_vertices": 13059,
+          "maximum_displacement": 1.015319961,
+          "maximum_displacement_ratio": 0.195457447,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_011",
+          "weighted_vertices": 6165,
+          "maximum_weight": 1.0,
+          "moved_vertices": 13059,
+          "maximum_displacement": 0.79910579,
+          "maximum_displacement_ratio": 0.15383444,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_010",
+          "weighted_vertices": 6291,
+          "maximum_weight": 0.692425013,
+          "moved_vertices": 13053,
+          "maximum_displacement": 0.746816579,
+          "maximum_displacement_ratio": 0.143768337,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_009",
+          "weighted_vertices": 2244,
+          "maximum_weight": 0.231406391,
+          "moved_vertices": 8928,
+          "maximum_displacement": 0.605145628,
+          "maximum_displacement_ratio": 0.116495513,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_008",
+          "weighted_vertices": 3257,
+          "maximum_weight": 0.409121722,
+          "moved_vertices": 8928,
+          "maximum_displacement": 0.557944365,
+          "maximum_displacement_ratio": 0.107408881,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_007",
+          "weighted_vertices": 3344,
+          "maximum_weight": 0.439103574,
+          "moved_vertices": 8850,
+          "maximum_displacement": 0.513322097,
+          "maximum_displacement_ratio": 0.098818727,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_006",
+          "weighted_vertices": 3155,
+          "maximum_weight": 0.382729143,
+          "moved_vertices": 8022,
+          "maximum_displacement": 0.471738209,
+          "maximum_displacement_ratio": 0.090813487,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_005",
+          "weighted_vertices": 7530,
+          "maximum_weight": 0.583617866,
+          "moved_vertices": 7530,
+          "maximum_displacement": 0.336931615,
+          "maximum_displacement_ratio": 0.064862108,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_004",
+          "weighted_vertices": 6996,
+          "maximum_weight": 0.935144424,
+          "moved_vertices": 6996,
+          "maximum_displacement": 0.14265383,
+          "maximum_displacement_ratio": 0.027462036,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_003",
+          "weighted_vertices": 245,
+          "maximum_weight": 0.035494223,
+          "moved_vertices": 245,
+          "maximum_displacement": 0.002634513,
+          "maximum_displacement_ratio": 0.000507166,
+          "meaningful_deformation": true,
+          "major_deformation": false
+        },
+        {
+          "bone": "Bone_002",
+          "weighted_vertices": 0,
+          "maximum_weight": 0.0,
+          "moved_vertices": 0,
+          "maximum_displacement": 0.0,
+          "maximum_displacement_ratio": 0.0,
+          "meaningful_deformation": false,
+          "major_deformation": false
+        },
+        {
+          "bone": "Bone_001",
+          "weighted_vertices": 0,
+          "maximum_weight": 0.0,
+          "moved_vertices": 0,
+          "maximum_displacement": 0.0,
+          "maximum_displacement_ratio": 0.0,
+          "meaningful_deformation": false,
+          "major_deformation": false
+        }
+      ],
+      "usable_for_body_motion": true,
+      "fine_terminal_articulation_limited": true
+    },
+    {
+      "label": "sample_blend",
+      "rig_present": true,
+      "armature_modifier": true,
+      "armature": "Dolore_Attack_Rig",
+      "bone_count": 13,
+      "vertex_group_count": 13,
+      "single_connected_chain": true,
+      "chain": [
+        {
+          "bone": "Bone_000",
+          "parent": null
+        },
+        {
+          "bone": "Bone_012",
+          "parent": "Bone_000"
+        },
+        {
+          "bone": "Bone_011",
+          "parent": "Bone_012"
+        },
+        {
+          "bone": "Bone_010",
+          "parent": "Bone_011"
+        },
+        {
+          "bone": "Bone_009",
+          "parent": "Bone_010"
+        },
+        {
+          "bone": "Bone_008",
+          "parent": "Bone_009"
+        },
+        {
+          "bone": "Bone_007",
+          "parent": "Bone_008"
+        },
+        {
+          "bone": "Bone_006",
+          "parent": "Bone_007"
+        },
+        {
+          "bone": "Bone_005",
+          "parent": "Bone_006"
+        },
+        {
+          "bone": "Bone_004",
+          "parent": "Bone_005"
+        },
+        {
+          "bone": "Bone_003",
+          "parent": "Bone_004"
+        },
+        {
+          "bone": "Bone_002",
+          "parent": "Bone_003"
+        },
+        {
+          "bone": "Bone_001",
+          "parent": "Bone_002"
+        }
+      ],
+      "vertex_count": 13059,
+      "unweighted_vertices": 0,
+      "minimum_total_weight": 0.999999871,
+      "maximum_total_weight": 1.000000112,
+      "vertices_with_more_than_four_influences": 3245,
+      "test_rotation_degrees": 10.0,
+      "meaningful_deformation_bones": [
+        "Bone_000",
+        "Bone_012",
+        "Bone_011",
+        "Bone_010",
+        "Bone_009",
+        "Bone_008",
+        "Bone_007",
+        "Bone_006",
+        "Bone_005",
+        "Bone_004",
+        "Bone_003"
+      ],
+      "root_locked_meaningful_bones": [
+        "Bone_012",
+        "Bone_011",
+        "Bone_010",
+        "Bone_009",
+        "Bone_008",
+        "Bone_007",
+        "Bone_006",
+        "Bone_005",
+        "Bone_004",
+        "Bone_003"
+      ],
+      "major_deformation_bones": [
+        "Bone_000",
+        "Bone_012",
+        "Bone_011",
+        "Bone_010",
+        "Bone_009",
+        "Bone_008",
+        "Bone_007",
+        "Bone_006",
+        "Bone_005",
+        "Bone_004"
+      ],
+      "terminal_bones_without_direct_weights": [
+        "Bone_002",
+        "Bone_001"
+      ],
+      "deformation": [
+        {
+          "bone": "Bone_000",
+          "weighted_vertices": 0,
+          "maximum_weight": 0.0,
+          "moved_vertices": 13059,
+          "maximum_displacement": 0.001832765,
+          "maximum_displacement_ratio": 0.233383069,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_012",
+          "weighted_vertices": 4000,
+          "maximum_weight": 0.169500932,
+          "moved_vertices": 13059,
+          "maximum_displacement": 0.00152298,
+          "maximum_displacement_ratio": 0.193935264,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_011",
+          "weighted_vertices": 6165,
+          "maximum_weight": 1.0,
+          "moved_vertices": 13059,
+          "maximum_displacement": 0.001198659,
+          "maximum_displacement_ratio": 0.152636485,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_010",
+          "weighted_vertices": 6291,
+          "maximum_weight": 0.692425013,
+          "moved_vertices": 13053,
+          "maximum_displacement": 0.001120225,
+          "maximum_displacement_ratio": 0.14264865,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_009",
+          "weighted_vertices": 2244,
+          "maximum_weight": 0.231406391,
+          "moved_vertices": 8928,
+          "maximum_displacement": 0.000907718,
+          "maximum_displacement_ratio": 0.115588191,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_008",
+          "weighted_vertices": 3257,
+          "maximum_weight": 0.409121722,
+          "moved_vertices": 8928,
+          "maximum_displacement": 0.000836916,
+          "maximum_displacement_ratio": 0.106572372,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_007",
+          "weighted_vertices": 3344,
+          "maximum_weight": 0.439103574,
+          "moved_vertices": 8850,
+          "maximum_displacement": 0.000769983,
+          "maximum_displacement_ratio": 0.098049149,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_006",
+          "weighted_vertices": 3155,
+          "maximum_weight": 0.382729143,
+          "moved_vertices": 8022,
+          "maximum_displacement": 0.000707607,
+          "maximum_displacement_ratio": 0.090106247,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_005",
+          "weighted_vertices": 7530,
+          "maximum_weight": 0.583617866,
+          "moved_vertices": 7530,
+          "maximum_displacement": 0.000505397,
+          "maximum_displacement_ratio": 0.064356976,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_004",
+          "weighted_vertices": 6996,
+          "maximum_weight": 0.935144424,
+          "moved_vertices": 6996,
+          "maximum_displacement": 0.000213981,
+          "maximum_displacement_ratio": 0.027248178,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_003",
+          "weighted_vertices": 245,
+          "maximum_weight": 0.035494223,
+          "moved_vertices": 245,
+          "maximum_displacement": 3.952e-06,
+          "maximum_displacement_ratio": 0.000503214,
+          "meaningful_deformation": true,
+          "major_deformation": false
+        },
+        {
+          "bone": "Bone_002",
+          "weighted_vertices": 0,
+          "maximum_weight": 0.0,
+          "moved_vertices": 0,
+          "maximum_displacement": 0.0,
+          "maximum_displacement_ratio": 0.0,
+          "meaningful_deformation": false,
+          "major_deformation": false
+        },
+        {
+          "bone": "Bone_001",
+          "weighted_vertices": 0,
+          "maximum_weight": 0.0,
+          "moved_vertices": 0,
+          "maximum_displacement": 0.0,
+          "maximum_displacement_ratio": 0.0,
+          "meaningful_deformation": false,
+          "major_deformation": false
+        }
+      ],
+      "usable_for_body_motion": true,
+      "fine_terminal_articulation_limited": true
+    },
+    {
+      "label": "sample_glb",
+      "rig_present": true,
+      "armature_modifier": true,
+      "armature": "Dolore_Attack_Rig",
+      "bone_count": 13,
+      "vertex_group_count": 13,
+      "single_connected_chain": true,
+      "chain": [
+        {
+          "bone": "Bone_000",
+          "parent": null
+        },
+        {
+          "bone": "Bone_012",
+          "parent": "Bone_000"
+        },
+        {
+          "bone": "Bone_011",
+          "parent": "Bone_012"
+        },
+        {
+          "bone": "Bone_010",
+          "parent": "Bone_011"
+        },
+        {
+          "bone": "Bone_009",
+          "parent": "Bone_010"
+        },
+        {
+          "bone": "Bone_008",
+          "parent": "Bone_009"
+        },
+        {
+          "bone": "Bone_007",
+          "parent": "Bone_008"
+        },
+        {
+          "bone": "Bone_006",
+          "parent": "Bone_007"
+        },
+        {
+          "bone": "Bone_005",
+          "parent": "Bone_006"
+        },
+        {
+          "bone": "Bone_004",
+          "parent": "Bone_005"
+        },
+        {
+          "bone": "Bone_003",
+          "parent": "Bone_004"
+        },
+        {
+          "bone": "Bone_002",
+          "parent": "Bone_003"
+        },
+        {
+          "bone": "Bone_001",
+          "parent": "Bone_002"
+        }
+      ],
+      "vertex_count": 13059,
+      "unweighted_vertices": 0,
+      "minimum_total_weight": 0.99999989,
+      "maximum_total_weight": 1.000000104,
+      "vertices_with_more_than_four_influences": 0,
+      "test_rotation_degrees": 10.0,
+      "meaningful_deformation_bones": [
+        "Bone_000",
+        "Bone_012",
+        "Bone_011",
+        "Bone_010",
+        "Bone_009",
+        "Bone_008",
+        "Bone_007",
+        "Bone_006",
+        "Bone_005",
+        "Bone_004",
+        "Bone_003"
+      ],
+      "root_locked_meaningful_bones": [
+        "Bone_012",
+        "Bone_011",
+        "Bone_010",
+        "Bone_009",
+        "Bone_008",
+        "Bone_007",
+        "Bone_006",
+        "Bone_005",
+        "Bone_004",
+        "Bone_003"
+      ],
+      "major_deformation_bones": [
+        "Bone_000",
+        "Bone_012",
+        "Bone_011",
+        "Bone_010",
+        "Bone_009",
+        "Bone_008",
+        "Bone_007",
+        "Bone_006",
+        "Bone_005",
+        "Bone_004"
+      ],
+      "terminal_bones_without_direct_weights": [
+        "Bone_002",
+        "Bone_001"
+      ],
+      "deformation": [
+        {
+          "bone": "Bone_000",
+          "weighted_vertices": 0,
+          "maximum_weight": 0.0,
+          "moved_vertices": 13059,
+          "maximum_displacement": 0.001832765,
+          "maximum_displacement_ratio": 0.233383039,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_012",
+          "weighted_vertices": 3459,
+          "maximum_weight": 0.169500932,
+          "moved_vertices": 13059,
+          "maximum_displacement": 0.00152298,
+          "maximum_displacement_ratio": 0.193935254,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_011",
+          "weighted_vertices": 5331,
+          "maximum_weight": 1.0,
+          "moved_vertices": 13059,
+          "maximum_displacement": 0.00119866,
+          "maximum_displacement_ratio": 0.152636564,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_010",
+          "weighted_vertices": 5757,
+          "maximum_weight": 0.692425013,
+          "moved_vertices": 13053,
+          "maximum_displacement": 0.001120225,
+          "maximum_displacement_ratio": 0.142648744,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_009",
+          "weighted_vertices": 1638,
+          "maximum_weight": 0.27849099,
+          "moved_vertices": 8928,
+          "maximum_displacement": 0.000907719,
+          "maximum_displacement_ratio": 0.115588278,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_008",
+          "weighted_vertices": 2538,
+          "maximum_weight": 0.491689593,
+          "moved_vertices": 8928,
+          "maximum_displacement": 0.000836917,
+          "maximum_displacement_ratio": 0.106572505,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_007",
+          "weighted_vertices": 2222,
+          "maximum_weight": 0.478239626,
+          "moved_vertices": 7728,
+          "maximum_displacement": 0.000769984,
+          "maximum_displacement_ratio": 0.098049256,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_006",
+          "weighted_vertices": 2429,
+          "maximum_weight": 0.413059264,
+          "moved_vertices": 7296,
+          "maximum_displacement": 0.000707608,
+          "maximum_displacement_ratio": 0.090106297,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_005",
+          "weighted_vertices": 7122,
+          "maximum_weight": 0.584132791,
+          "moved_vertices": 7122,
+          "maximum_displacement": 0.000505397,
+          "maximum_displacement_ratio": 0.064356897,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_004",
+          "weighted_vertices": 6390,
+          "maximum_weight": 0.935144424,
+          "moved_vertices": 6390,
+          "maximum_displacement": 0.000213981,
+          "maximum_displacement_ratio": 0.027248177,
+          "meaningful_deformation": true,
+          "major_deformation": true
+        },
+        {
+          "bone": "Bone_003",
+          "weighted_vertices": 245,
+          "maximum_weight": 0.035494227,
+          "moved_vertices": 245,
+          "maximum_displacement": 3.953e-06,
+          "maximum_displacement_ratio": 0.000503314,
+          "meaningful_deformation": true,
+          "major_deformation": false
+        },
+        {
+          "bone": "Bone_002",
+          "weighted_vertices": 0,
+          "maximum_weight": 0.0,
+          "moved_vertices": 0,
+          "maximum_displacement": 0.0,
+          "maximum_displacement_ratio": 0.0,
+          "meaningful_deformation": false,
+          "major_deformation": false
+        },
+        {
+          "bone": "Bone_001",
+          "weighted_vertices": 0,
+          "maximum_weight": 0.0,
+          "moved_vertices": 0,
+          "maximum_displacement": 0.0,
+          "maximum_displacement_ratio": 0.0,
+          "meaningful_deformation": false,
+          "major_deformation": false
+        }
+      ],
+      "usable_for_body_motion": true,
+      "fine_terminal_articulation_limited": true
+    }
+  ]
+}

@@ -722,6 +722,126 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.OstinatoCargoRunScene.OstinatoCargoRunSceneApplyAndReview.CaptureOstinatoPlacementFrames,
                         "Ostinato row and player-start views captured without Scene View focus.");
                     break;
+                case "InspectOstinatoHitFbxReplacementTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoHitRecoilAnimation.InspectOstinatoHitFbxReplacementTarget,
+                        "Supplied Ostinato hit FBX source hash and Unity default takes inspected without scene changes.");
+                    break;
+                case "ApplyOstinatoHitFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoHitRecoilAnimation.ApplyOstinatoHitFbxReplacement,
+                        "Supplied mixamo.com hit take instantiated in slot 05 with approved static appearance.");
+                    break;
+                case "InspectOstinatoHitFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoHitRecoilAnimation.InspectOstinatoHitFbxReplacement,
+                        "Supplied mixamo.com hit take, direct FBX instance, and approved appearance inspected.");
+                    break;
+                case "CaptureOstinatoHitFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoHitRecoilAnimation.CaptureOstinatoHitFbxReplacement,
+                        "Supplied mixamo.com hit take runtime capture started after replacement inspection.");
+                    break;
+                case "InspectOstinatoRoarFbxReplacementTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoRoarEnrageTransitionAnimation.InspectOstinatoRoarFbxReplacementTarget,
+                        "Supplied Ostinato roar FBX source hash and selected mixamo.com take inspected without scene changes.");
+                    break;
+                case "ApplyOstinatoRoarFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoRoarEnrageTransitionAnimation.ApplyOstinatoRoarFbxReplacement,
+                        "Supplied mixamo.com roar take instantiated in slot 06 with approved static appearance.");
+                    break;
+                case "InspectOstinatoRoarFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoRoarEnrageTransitionAnimation.InspectOstinatoRoarFbxReplacement,
+                        "Supplied mixamo.com roar take, direct FBX instance, and approved appearance inspected.");
+                    break;
+                case "CaptureOstinatoRoarFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoRoarEnrageTransitionAnimation.CaptureOstinatoRoarFbxReplacement,
+                        "Supplied mixamo.com roar take runtime capture started after replacement inspection.");
+                    break;
+                case "InspectOstinatoSeatedRestFbxReplacementTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoSeatedRestAnimation.InspectOstinatoSeatedRestFbxReplacementTarget,
+                        "Supplied Ostinato seated-rest FBX source hash and selected mixamo.com take inspected without scene changes.");
+                    break;
+                case "ApplyOstinatoSeatedRestFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoSeatedRestAnimation.ApplyOstinatoSeatedRestFbxReplacement,
+                        "Supplied mixamo.com seated-rest take instantiated in slot 07 with approved static appearance.");
+                    break;
+                case "InspectOstinatoSeatedRestFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoSeatedRestAnimation.InspectOstinatoSeatedRestFbxReplacement,
+                        "Supplied mixamo.com seated-rest take, direct FBX instance, and approved appearance inspected.");
+                    break;
+                case "CaptureOstinatoSeatedRestFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoSeatedRestAnimation.CaptureOstinatoSeatedRestFbxReplacement,
+                        "Supplied mixamo.com seated-rest take runtime capture started after replacement inspection.");
+                    break;
+                case "InspectOstinatoStandUpFbxReplacementTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoStandUpAnimation.InspectOstinatoStandUpFbxReplacementTarget,
+                        "Supplied Ostinato stand-up FBX source hash and selected mixamo.com take inspected without scene changes.");
+                    break;
+                case "ApplyOstinatoStandUpFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoStandUpAnimation.ApplyOstinatoStandUpFbxReplacement,
+                        "Supplied mixamo.com stand-up take instantiated in slot 08 with approved static appearance.");
+                    break;
+                case "InspectOstinatoStandUpFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoStandUpAnimation.InspectOstinatoStandUpFbxReplacement,
+                        "Supplied mixamo.com stand-up take, direct FBX instance, and approved appearance inspected.");
+                    break;
+                case "CaptureOstinatoStandUpFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoStandUpAnimation.CaptureOstinatoStandUpFbxReplacement,
+                        "Supplied mixamo.com stand-up take runtime capture started after replacement inspection.");
+                    break;
+                case "InspectOstinatoDeathFbxReplacementTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoDeathAnimation.InspectOstinatoDeathFbxReplacementTarget,
+                        "Supplied Ostinato death FBX source hash and selected mixamo.com take inspected without scene changes.");
+                    break;
+                case "ApplyOstinatoDeathFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoDeathAnimation.ApplyOstinatoDeathFbxReplacement,
+                        "Supplied mixamo.com death take instantiated in slot 09 with approved static appearance.");
+                    break;
+                case "InspectOstinatoDeathFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoDeathAnimation.InspectOstinatoDeathFbxReplacement,
+                        "Supplied mixamo.com death take, direct FBX instance, and approved appearance inspected.");
+                    break;
+                case "CaptureOstinatoDeathFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoDeathAnimation.CaptureOstinatoDeathFbxReplacement,
+                        "Supplied mixamo.com death take runtime capture started after replacement inspection.");
+                    break;
                 case "InspectApprovedOstinatoMaterialTarget":
                     RunSynchronous(
                         request,
@@ -1099,6 +1219,96 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.CantabileCargoRunScene.CantabileCargoRunSceneApplyAndReview.CaptureApprovedColorSampleReview,
                         "Approved Cantabile color sample review capture saved.");
+                    break;
+                case "InspectDolorePlacementTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreCargoRunScene.DoloreCargoRunSceneApplyAndReview.InspectPlacementTarget,
+                        "Supplied Dolore FBX and approved scene spacing target inspected without scene changes.");
+                    break;
+                case "ApplyDolorePlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreCargoRunScene.DoloreCargoRunSceneApplyAndReview.ApplyPlacement,
+                        "Supplied Dolore FBX placed in seven review slots and Player start moved to the front view.");
+                    break;
+                case "InspectDolorePlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreCargoRunScene.DoloreCargoRunSceneApplyAndReview.InspectAppliedPlacement,
+                        "Dolore placement, spacing, direct FBX instances, and Player start inspected.");
+                    break;
+                case "CaptureDolorePlayerStartView":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreCargoRunScene.DoloreCargoRunSceneApplyAndReview.CapturePlayerStartView,
+                        "Player start camera view of the complete Dolore lineup captured after inspection.");
+                    break;
+                case "ApplyApprovedDoloreMaterialToCurrentCargoRunScene":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreApprovedMaterial.DoloreApprovedMaterialApplyAndReview.ApplyApprovedMaterialToCurrentCargoRunScene,
+                        "Approved Dolore sample textures applied to all seven current CargoRunMvp placements without model changes.");
+                    break;
+                case "InspectApprovedDoloreMaterialState":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreApprovedMaterial.DoloreApprovedMaterialApplyAndReview.InspectApprovedMaterialState,
+                        "Approved Dolore material state and model invariants inspected without scene changes.");
+                    break;
+                case "CaptureApprovedDoloreMaterialReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreApprovedMaterial.DoloreApprovedMaterialApplyAndReview.CaptureApprovedMaterialReview,
+                        "Approved Dolore material review captured from the current Player camera.");
+                    break;
+                case "InspectDoloreAttackAttachmentTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreAttackAttachment.DoloreAttackAttachmentApplyAndReview.InspectTarget,
+                        "Dolore motion objects 3 and 4 inspected as approved attack attachment targets.");
+                    break;
+                case "ApplyApprovedDoloreAttackAttachment":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreAttackAttachment.DoloreAttackAttachmentApplyAndReview.ApplyApprovedAttachment,
+                        "Approved Dolore attack attachment applied to motion objects 3 and 4 only.");
+                    break;
+                case "InspectDoloreAttackAttachment":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreAttackAttachment.DoloreAttackAttachmentApplyAndReview.InspectAppliedAttachment,
+                        "Dolore attack attachment placement, appearance, source, and rig inspected.");
+                    break;
+                case "CaptureDoloreAttackAttachment":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreAttackAttachment.DoloreAttackAttachmentApplyAndReview.CaptureApprovedAttachment,
+                        "Approved sample and Unity motion objects 3 and 4 captured for attack attachment comparison.");
+                    break;
+                case "CaptureDoloreAttackImportedReference":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreAttackAttachment.DoloreAttackAttachmentApplyAndReview.CaptureImportedReferenceDiagnostic,
+                        "Imported approved Dolore attack reference captured for coordinate diagnostic.");
+                    break;
+                case "InspectDoloreAttackCoordinates":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreAttackAttachment.DoloreAttackAttachmentApplyAndReview.InspectCoordinateDiagnostic,
+                        "Dolore target and approved attack reference coordinate relationships inspected.");
+                    break;
+                case "CaptureDoloreAttackVisibility":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreAttackAttachment.DoloreAttackAttachmentApplyAndReview.CaptureVisibilityDiagnostic,
+                        "Dolore attack attachment-only and target back views captured.");
+                    break;
+                case "CaptureDoloreAttackContact":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.DoloreAttackAttachment.DoloreAttackAttachmentApplyAndReview.CaptureContactDiagnostic,
+                        "Dolore attack attachment right, left, and upper three-quarter contact views captured.");
                     break;
                 case "ApplyConSpiritoToCurrentCargoRunScene":
                     RunSynchronous(

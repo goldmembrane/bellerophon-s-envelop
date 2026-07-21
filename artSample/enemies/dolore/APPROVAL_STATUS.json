@@ -1,0 +1,12 @@
+{
+  "sample": "Dolore_CurrentModel_ReferenceSync",
+  "status": "approved_by_user",
+  "approved_on": "2026-07-21",
+  "approval_scope": "Unity material and texture synchronization without model changes",
+  "unity_applied": true,
+  "source_fbx_modified": false,
+  "geometry_modified": false,
+  "added_model_mesh_objects": 0,
+  "attack_preview_included": false,
+  "requires_separate_unity_application_approval": false
+}
