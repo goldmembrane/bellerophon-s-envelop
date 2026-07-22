@@ -19,6 +19,9 @@ namespace Bellerophon.Editor.Validation
         private const string ActiveRequestFileName = "UnityEditorBridge.active";
         private const string DefaultTestResultsFileName = "TestResults.xml";
         private const string TergoPierceAttackCurrentSceneVisualRunCommand = "RunTergoPierceAttackCurrentSceneVisualRun";
+        private const string Dolore04TentacleStabDiagnosticCommand = "CaptureDolore04TentacleStabFullMotionDiagnostic";
+        private const string Dolore04TentacleStabFinalCommand = "CaptureDolore04TentacleStabFullMotionFinal";
+        private const string Dolore05ExecutionOpeningDiagnosticCommand = "CaptureDolore05ExecutionOpeningDiagnostic";
         private const double PollIntervalSeconds = 0.5d;
         private const double TestRunnerStaleTimeoutSeconds = 120d;
 
@@ -118,7 +121,10 @@ namespace Bellerophon.Editor.Validation
         private static void StartRequest(BridgeRequest request)
         {
             if (request.Command != "PlayModeTests" &&
-                request.Command != TergoPierceAttackCurrentSceneVisualRunCommand)
+                request.Command != TergoPierceAttackCurrentSceneVisualRunCommand &&
+                request.Command != Dolore04TentacleStabDiagnosticCommand &&
+                request.Command != Dolore04TentacleStabFinalCommand &&
+                request.Command != Dolore05ExecutionOpeningDiagnosticCommand)
             {
                 TryDelete(ActiveRequestPath);
             }
@@ -1556,6 +1562,120 @@ namespace Bellerophon.Editor.Validation
                 case "ValidatePreparedSocietasAttackConsumeBiteChewAnimation":
                     RunSynchronous(
                         request,
+                case "InspectDolore04TentacleStabTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.InspectTarget,
+                        "Dolore motion object 3 built-in tentacle rig inspected without scene changes.");
+                    break;
+                case "ApplyDolore04TentacleStabAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.ApplyAnimation,
+                        "Dolore motion object 3 tentacle stab animation applied with the built-in 13-bone rig.");
+                    break;
+                case "InspectDolore04TentacleStabAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.InspectAnimation,
+                        "Dolore motion object 3 tentacle stab timing, rig curves, fixed root, and loop inspected.");
+                    break;
+                case "CaptureDolore04TentacleStabAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.CaptureAnimation,
+                        "Dolore motion object 3 tentacle emergence, strike, and recovery poses captured.");
+                    break;
+                case "InspectDolore04TentacleStabFullMotionTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.InspectTarget,
+                        "Dolore motion object 3 full tentacle motion target and built-in rig inspected.");
+                    break;
+                case "ApplyDolore04TentacleStabFullMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.ApplyAnimation,
+                        "Dolore motion object 3 emergence, outward downstrike, and recovery motion applied.");
+                    break;
+                case "InspectDolore04TentacleStabFullMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.InspectAnimation,
+                        "Dolore motion object 3 full motion timing, outward direction, fixed anchor, and loop inspected.");
+                    break;
+                case "ApplyDolore05ExecutionOpening":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionOpening.Dolore05ExecutionOpeningApplyAndReview.ApplyAnimation,
+                        "Dolore motion object 4 execution opening copied through the first frontal pierce impact.");
+                    break;
+                case "InspectDolore05ExecutionOpening":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionOpening.Dolore05ExecutionOpeningApplyAndReview.InspectAnimation,
+                        "Dolore motion object 4 execution opening source motion, timing, fixed anchor, and hold inspected.");
+                    break;
+                case "ApplyDolore05ExecutionTargetTransfer":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionTarget.Dolore05ExecutionTargetTransferApplyAndReview.ApplyPlacement,
+                        "transfer.fbx placed below Dolore motion object 4 within the PierceHold range.");
+                    break;
+                case "InspectDolore05ExecutionTargetTransfer":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionTarget.Dolore05ExecutionTargetTransferApplyAndReview.InspectPlacement,
+                        "Dolore motion object 4 transfer target position and PierceHold range inspected.");
+                    break;
+                case "CaptureDolore05ExecutionTargetTransferDiagnostic":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionTarget.Dolore05ExecutionTargetTransferApplyAndReview.CapturePlacementDiagnostic,
+                        "Dolore motion object 4 transfer target diagnostic views captured.");
+                    break;
+                case "ApplyDolore05ExecutionPullInLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionPullInLoop.Dolore05ExecutionPullInLoopApplyAndReview.ApplyLoop,
+                        "Dolore motion object 4 standing-to-lying penetration and two-second pull-in loop applied.");
+                    break;
+                case "InspectDolore05ExecutionPullInLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionPullInLoop.Dolore05ExecutionPullInLoopApplyAndReview.InspectLoop,
+                        "Dolore motion object 4 target scale, immediate lying swap, pull-in timing, and loop inspected.");
+                    break;
+                case "CaptureDolore05ExecutionPullInLoopDiagnostic":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionPullInLoop.Dolore05ExecutionPullInLoopApplyAndReview.CaptureDiagnostic,
+                        "Dolore motion object 4 actual Animator pull-in loop diagnostic states captured.");
+                    break;
+                case "InspectDolore06HitReactionTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore06HitReaction.Dolore06HitReactionApplyAndReview.InspectTarget,
+                        "Dolore motion object 5 hit-reaction rig and weighted target inspected.");
+                    break;
+                case "ApplyDolore06HitReaction":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore06HitReaction.Dolore06HitReactionApplyAndReview.ApplyAnimation,
+                        "Dolore motion object 5 two-second backward recoil and left head turn applied.");
+                    break;
+                case "InspectDolore06HitReaction":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore06HitReaction.Dolore06HitReactionApplyAndReview.InspectAnimation,
+                        "Dolore motion object 5 recoil direction, left head turn, recovery, and loop inspected.");
+                    break;
+                case "CaptureDolore06HitReactionDiagnostic":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore06HitReaction.Dolore06HitReactionApplyAndReview.CaptureDiagnostic,
+                        "Dolore motion object 5 actual hit-reaction Animator diagnostic views captured.");
+                    break;
                         Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ValidateAttackConsumeBiteChewAnimation,
                         "Prepared Societas 03 attack consume bite chew animation validated.");
                     break;
@@ -2366,6 +2486,15 @@ namespace Bellerophon.Editor.Validation
                         request,
                         ApprovedArmoryShellBootstrap.UpdateApprovedArmoryAr05Only,
                         "Approved armory AR-05 updated only.");
+                    break;
+                case Dolore04TentacleStabDiagnosticCommand:
+                    RunDolore04TentacleStabFullMotionCapture(request, false);
+                    break;
+                case Dolore04TentacleStabFinalCommand:
+                    RunDolore04TentacleStabFullMotionCapture(request, true);
+                    break;
+                case Dolore05ExecutionOpeningDiagnosticCommand:
+                    RunDolore05ExecutionOpeningCapture(request);
                     break;
                 case "UpdateApprovedArmoryAr02Ar03Only":
                     RunSynchronous(
@@ -3395,6 +3524,43 @@ namespace Bellerophon.Editor.Validation
                 File.Copy(DefaultTestResultsPath, request.ResultsPath, true);
                 WriteLog(request, false, null, "PlayModeTests completed.");
             }
+        private static void RunDolore04TentacleStabFullMotionCapture(BridgeRequest request, bool finalCapture)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabFullMotionPlayModeCapture.Start(
+                    finalCapture,
+                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
+                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunDolore05ExecutionOpeningCapture(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Bellerophon.Editor.Dolore05ExecutionOpening.Dolore05ExecutionOpeningPlayModeCapture.Start(
+                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
+                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
             catch (Exception exception)
             {
                 WriteLog(request, true, exception, string.Empty);
@@ -3429,7 +3595,10 @@ namespace Bellerophon.Editor.Validation
                 return false;
             }
 
-            if (request.Command == TergoPierceAttackCurrentSceneVisualRunCommand)
+            if (request.Command == TergoPierceAttackCurrentSceneVisualRunCommand ||
+                request.Command == Dolore04TentacleStabDiagnosticCommand ||
+                request.Command == Dolore04TentacleStabFinalCommand ||
+                request.Command == Dolore05ExecutionOpeningDiagnosticCommand)
             {
                 BeginRequest(request);
                 activeLog.AppendLine("Resuming Tergo current scene visual run after Play Mode transition.");
@@ -3693,6 +3862,27 @@ namespace Bellerophon.Editor.Validation
 
                 return new BridgeRequest
                 {
+            if (request.Command == Dolore04TentacleStabDiagnosticCommand ||
+                request.Command == Dolore04TentacleStabFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine("Resuming Dolore motion 3 actual Animator capture after Play Mode transition.");
+                Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabFullMotionPlayModeCapture.Resume(
+                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
+                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
+                return true;
+            }
+
+            if (request.Command == Dolore05ExecutionOpeningDiagnosticCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine("Resuming Dolore motion 4 actual Animator execution opening capture after Play Mode transition.");
+                Bellerophon.Editor.Dolore05ExecutionOpening.Dolore05ExecutionOpeningPlayModeCapture.Resume(
+                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
+                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
+                return true;
+            }
+
                     Id = Get(values, "id"),
                     Command = Get(values, "command"),
                     LogPath = Get(values, "logPath"),
