@@ -1316,6 +1316,60 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.DoloreAttackAttachment.DoloreAttackAttachmentApplyAndReview.CaptureContactDiagnostic,
                         "Dolore attack attachment right, left, and upper three-quarter contact views captured.");
                     break;
+                case "ApplyNegatifPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifCargoRunScenePlacementTool.ApplyPlacement,
+                        "Negatif static model and six animation placeholders placed below Dolore.");
+                    break;
+                case "InspectNegatifPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifCargoRunScenePlacementTool.InspectAppliedPlacement,
+                        "Negatif placement, supplied FBX instances, lineup, and Player start inspected.");
+                    break;
+                case "CaptureNegatifPlayerStartView":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifCargoRunScenePlacementTool.CapturePlayerStartView,
+                        "Negatif Player start camera view captured once after placement inspection.");
+                    break;
+                case "ApplyNegatifApprovedAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifCargoRunScenePlacementTool.ApplyApprovedAppearance,
+                        "Approved Negatif sample appearance applied to all seven placed models.");
+                    break;
+                case "InspectNegatifApprovedAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifCargoRunScenePlacementTool.InspectApprovedAppearance,
+                        "Approved Negatif model, material, texture, geometry, and placement contracts inspected.");
+                    break;
+                case "CaptureNegatifApprovedAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifCargoRunScenePlacementTool.CaptureApprovedAppearance,
+                        "Approved Negatif Unity appearance captured once for visual comparison.");
+                    break;
+                case "ApplyNegatifApprovedGlbAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifCargoRunScenePlacementTool.ApplyApprovedGlbAppearance,
+                        "Approved Negatif GLB sample applied to all seven placed models.");
+                    break;
+                case "InspectNegatifApprovedGlbAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifCargoRunScenePlacementTool.InspectApprovedGlbAppearance,
+                        "Approved Negatif GLB instances, eyes, materials, geometry, and placement inspected.");
+                    break;
+                case "CaptureNegatifApprovedGlbAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifCargoRunScenePlacementTool.CaptureApprovedGlbAppearance,
+                        "Approved Negatif GLB Unity appearance captured once for visual comparison.");
+                    break;
                 case "ApplyConSpiritoToCurrentCargoRunScene":
                     RunSynchronous(
                         request,

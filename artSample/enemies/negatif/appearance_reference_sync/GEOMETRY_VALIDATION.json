@@ -1,0 +1,84 @@
+{
+  "result": "PASS",
+  "source_sha256": "90AC1346B7C7E71E3A605667C4858816B9F2BD2C7F164721FDF88A544C75AC25",
+  "source_copy_sha256": "90AC1346B7C7E71E3A605667C4858816B9F2BD2C7F164721FDF88A544C75AC25",
+  "vertices_before": 3218,
+  "vertices_after": 3218,
+  "polygons_before": 6330,
+  "polygons_after": 6330,
+  "geometry_signature_before": "3A4A2B2AB23CD75FBBBBEA77003C731F093FD17D57A9EC6BC94703A0ED4ADC4F",
+  "geometry_signature_after": "3A4A2B2AB23CD75FBBBBEA77003C731F093FD17D57A9EC6BC94703A0ED4ADC4F",
+  "bounds_before": {
+    "min": [
+      -0.156416833,
+      0.008999996,
+      -0.275000006
+    ],
+    "max": [
+      0.156416833,
+      0.224708423,
+      0.275000006
+    ],
+    "size": [
+      0.312833667,
+      0.215708427,
+      0.550000012
+    ]
+  },
+  "bounds_after": {
+    "min": [
+      -0.156416833,
+      0.008999996,
+      -0.275000006
+    ],
+    "max": [
+      0.156416833,
+      0.224708423,
+      0.275000006
+    ],
+    "size": [
+      0.312833667,
+      0.215708427,
+      0.550000012
+    ]
+  },
+  "bone_names": [
+    "Hips",
+    "tail",
+    "tailstart",
+    "tail1",
+    "tail2",
+    "tail3",
+    "backleg",
+    "backleg0",
+    "backleg1",
+    "backleg2",
+    "R_backleg",
+    "R_backleg0",
+    "R_backleg1",
+    "R_backleg2",
+    "chest",
+    "head",
+    "headend",
+    "earend",
+    "R_earend",
+    "frontleg",
+    "frontleg0",
+    "frontleg1",
+    "frontleg2",
+    "R_frontleg",
+    "R_frontleg0",
+    "R_frontleg1",
+    "R_frontleg2"
+  ],
+  "allowed_sample_data_changes": [
+    "material_slots",
+    "polygon_material_index",
+    "UV:Negatif_MaterialUV",
+    "ColorAttribute:Negatif_MasksA",
+    "ColorAttribute:Negatif_MasksB",
+    "armature_modifier:retained_but_disabled_for_static_presentation"
+  ],
+  "modeling_changed": false,
+  "source_modeling_changed": false
+}

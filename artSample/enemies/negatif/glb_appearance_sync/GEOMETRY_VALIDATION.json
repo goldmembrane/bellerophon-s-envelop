@@ -1,0 +1,83 @@
+{
+  "result": "PASS",
+  "status": "PENDING_USER_APPROVAL",
+  "source": "enemies model/négatif.glb",
+  "source_sha256": "BD27F171F84E212273C841A2BAE44832519CEA0F0201C0D3FBD5707F870CE8E8",
+  "geometry_before": {
+    "Mesh1.0": {
+      "vertices": 17771,
+      "polygons": 6397,
+      "signature": "49E2C0826552842F350AF8A031A0D549926D713975444AA58189041577965290"
+    },
+    "Icosphere": {
+      "vertices": 42,
+      "polygons": 80,
+      "signature": "A8E40B00DA0547B6ED624F5FD3526CBD4E1D93065BD41E45C186DB062A0489A5"
+    },
+    "bones": 46
+  },
+  "geometry_after": {
+    "Mesh1.0": {
+      "vertices": 17771,
+      "polygons": 6397,
+      "signature": "49E2C0826552842F350AF8A031A0D549926D713975444AA58189041577965290"
+    },
+    "Icosphere": {
+      "vertices": 42,
+      "polygons": 80,
+      "signature": "A8E40B00DA0547B6ED624F5FD3526CBD4E1D93065BD41E45C186DB062A0489A5"
+    },
+    "bones": 46
+  },
+  "modeling_changed": true,
+  "source_geometry_changed": false,
+  "added_eyes": [
+    {
+      "object_name": "Negatif_ReferenceEye_PositiveX",
+      "side": "+X",
+      "vertices": 342,
+      "polygons": 342,
+      "parent_bone": "Bone_025",
+      "emission_strength": 9.0,
+      "surface_anchor": [
+        0.265533,
+        -1.553142,
+        1.198604
+      ],
+      "surface_normal": [
+        0.883422,
+        -0.058121,
+        0.46496
+      ]
+    },
+    {
+      "object_name": "Negatif_ReferenceEye_NegativeX",
+      "side": "-X",
+      "vertices": 342,
+      "polygons": 342,
+      "parent_bone": "Bone_025",
+      "emission_strength": 9.0,
+      "surface_anchor": [
+        -0.265533,
+        -1.553142,
+        1.198604
+      ],
+      "surface_normal": [
+        -0.883422,
+        -0.058121,
+        0.46496
+      ]
+    }
+  ],
+  "added_eye_object_count": 2,
+  "uv_added": true,
+  "material_face_counts": {
+    "Negatif_Dark_Mechanism": 2286,
+    "Negatif_Worn_Bronze": 2485,
+    "Negatif_Canvas_Sack": 726,
+    "Negatif_Leather_Strap": 863,
+    "Negatif_Copper_Accent": 401,
+    "Negatif_Amber_Eye": 400
+  },
+  "approved_texture_source": "artSample/enemies/negatif/appearance_reference_sync/textures"
+}

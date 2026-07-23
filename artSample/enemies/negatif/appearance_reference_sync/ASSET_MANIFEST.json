@@ -1,0 +1,111 @@
+{
+  "enemy_id": "negatif",
+  "sample": "appearance_reference_sync",
+  "approval_status": "APPROVED",
+  "source_fbx": "enemies model/négatif.fbx",
+  "source_sha256": "90AC1346B7C7E71E3A605667C4858816B9F2BD2C7F164721FDF88A544C75AC25",
+  "reference_image": "image/négatif(네거티프).png",
+  "modeling_policy": "원본 FBX와 샘플 복제본의 메시·리그·스킨 가중치를 유지하고, 재질 슬롯·UV·표면 마스크·절차적 텍스처만 추가했습니다.",
+  "presentation": {
+    "static_bind_mesh": true,
+    "armature_modifier_retained": true,
+    "armature_modifier_evaluated": false,
+    "shading": "source mesh uses flat presentation shading to avoid broken imported split normals",
+    "glb_note": "사용자 정의 표면 마스크 호환성 확인용 보조 산출물이며 Blender 파일과 렌더가 재질 검토 기준입니다."
+  },
+  "geometry_validation": {
+    "vertices_before": 3218,
+    "vertices_after": 3218,
+    "polygons_before": 6330,
+    "polygons_after": 6330,
+    "bones": 27,
+    "bounds_before": {
+      "min": [
+        -0.156416833,
+        0.008999996,
+        -0.275000006
+      ],
+      "max": [
+        0.156416833,
+        0.224708423,
+        0.275000006
+      ],
+      "size": [
+        0.312833667,
+        0.215708427,
+        0.550000012
+      ]
+    },
+    "bounds_after": {
+      "min": [
+        -0.156416833,
+        0.008999996,
+        -0.275000006
+      ],
+      "max": [
+        0.156416833,
+        0.224708423,
+        0.275000006
+      ],
+      "size": [
+        0.312833667,
+        0.215708427,
+        0.550000012
+      ]
+    },
+    "signature_before": "3A4A2B2AB23CD75FBBBBEA77003C731F093FD17D57A9EC6BC94703A0ED4ADC4F",
+    "signature_after": "3A4A2B2AB23CD75FBBBBEA77003C731F093FD17D57A9EC6BC94703A0ED4ADC4F",
+    "signature_match": true,
+    "intentional_modeling_change": false
+  },
+  "surface_mask_corner_counts": {
+    "Negatif_Worn_Bronze": 2406,
+    "Negatif_Dark_Mechanism": 12940,
+    "Negatif_Canvas_Sack": 5701,
+    "Negatif_Leather_Strap": 3982,
+    "Negatif_Copper_Accent": 148,
+    "Negatif_Amber_Eye": 12
+  },
+  "outputs": {
+    "blend": "blender/Negatif_Appearance_ReferenceSync.blend",
+    "glb": "exports/Negatif_Appearance_ReferenceSync.glb",
+    "source_copy": "source/Negatif_Source_Unmodified.fbx",
+    "reference_copy": "source/negatif_reference.png",
+    "textures": [
+      "textures/negatif_amber_eye_albedo.png",
+      "textures/negatif_amber_eye_bump.png",
+      "textures/negatif_amber_eye_roughness.png",
+      "textures/negatif_canvas_albedo.png",
+      "textures/negatif_canvas_bump.png",
+      "textures/negatif_canvas_roughness.png",
+      "textures/negatif_copper_accent_albedo.png",
+      "textures/negatif_copper_accent_bump.png",
+      "textures/negatif_copper_accent_roughness.png",
+      "textures/negatif_dark_mechanism_albedo.png",
+      "textures/negatif_dark_mechanism_bump.png",
+      "textures/negatif_dark_mechanism_roughness.png",
+      "textures/negatif_leather_albedo.png",
+      "textures/negatif_leather_bump.png",
+      "textures/negatif_leather_roughness.png",
+      "textures/negatif_worn_bronze_albedo.png",
+      "textures/negatif_worn_bronze_bump.png",
+      "textures/negatif_worn_bronze_roughness.png"
+    ],
+    "renders": [
+      "renders/01_reference_matched_three_quarter.png",
+      "renders/02_side.png",
+      "renders/03_front.png",
+      "renders/04_back_three_quarter.png",
+      "renders/05_reference_comparison.png",
+      "renders/06_material_texture_breakdown.png"
+    ],
+    "documents": [
+      "README.md",
+      "TEXTURE_ANALYSIS.md",
+      "ASSET_MANIFEST.json",
+      "APPROVAL_STATUS.json",
+      "GEOMETRY_VALIDATION.json",
+      "index.html"
+    ]
+  }
+}
