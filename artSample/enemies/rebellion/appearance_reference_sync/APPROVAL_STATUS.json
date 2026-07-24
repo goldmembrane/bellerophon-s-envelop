@@ -1,0 +1,27 @@
+{
+  "status": "APPROVED_FOR_UNITY",
+  "approved_for_unity": true,
+  "approved_date": "2026-07-25",
+  "scope": "Rebellion appearance synchronization art sample",
+  "unity_scene_modified": true,
+  "unity_asset_modified": true,
+  "unity_application_status": "APPLIED_TO_ALL_7_REBELLION_SLOTS",
+  "unity_model_asset": "Assets/_Project/Art/Enemies/Rebellion/ApprovedAppearance/Rebellion_ApprovedAppearance.glb",
+  "unity_scene": "Assets/_Project/Scenes/CargoRunMvp.unity",
+  "source_glb_modified": false,
+  "source_skinned_geometry_modified": false,
+  "added_reference_detail_objects": 18,
+  "front_panel_layout": "RECESSED_CAVITY_IN_DISC_MESH",
+  "floating_panel_removed": true,
+  "disc_panel_region_cut": true,
+  "panel_setback_depth": 0.201,
+  "panel_height": 0.16,
+  "panel_vertical_bounds": [
+    1.42,
+    1.58
+  ],
+  "panel_bottom_within_disc_band": true,
+  "gun_hub_radius": 0.075,
+  "barrel_radius": 0.01,
+  "barrel_array_radius": 0.032
+}

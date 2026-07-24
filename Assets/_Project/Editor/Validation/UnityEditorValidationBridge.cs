@@ -1316,6 +1316,42 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.DoloreAttackAttachment.DoloreAttackAttachmentApplyAndReview.CaptureContactDiagnostic,
                         "Dolore attack attachment right, left, and upper three-quarter contact views captured.");
                     break;
+                case "InspectRebellionImportedModel":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene.RebellionCargoRunScenePlacementTool.InspectImportedModel,
+                        "Supplied Rebellion GLB imported directly and its visible structure inspected.");
+                    break;
+                case "ApplyRebellionPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene.RebellionCargoRunScenePlacementTool.ApplyPlacement,
+                        "Supplied Rebellion GLB placed in one static and six finalized animation slots; Player start moved to the front view.");
+                    break;
+                case "CaptureRebellionPlayerStartView":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene.RebellionCargoRunScenePlacementTool.CapturePlayerStartView,
+                        "Rebellion Player start camera view captured once after placement inspection.");
+                    break;
+                case "ApplyApprovedRebellionAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene.RebellionApprovedAppearanceApplyAndReview.ApplyApprovedRebellionAppearance,
+                        "User-approved Rebellion appearance applied to all seven existing slots.");
+                    break;
+                case "InspectApprovedRebellionAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene.RebellionApprovedAppearanceApplyAndReview.InspectApprovedRebellionAppearance,
+                        "Approved Rebellion appearance state inspected without scene changes.");
+                    break;
+                case "CaptureApprovedRebellionAppearanceFinal":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene.RebellionApprovedAppearanceApplyAndReview.CaptureApprovedRebellionAppearanceFinal,
+                        "Approved Rebellion appearance final view captured once.");
+                    break;
                 case "ApplyNegatifPlacement":
                     RunSynchronous(
                         request,

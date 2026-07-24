@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>리벨리온 외형 동기화 샘플</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+    body { margin: 0; background: #111513; color: #e8ece9; }
+    main { width: min(1180px, 94vw); margin: 32px auto 64px; }
+    h1 { margin-bottom: 8px; }
+    p { color: #bbc5be; line-height: 1.65; }
+    .status { color: #ffd27a; }
+    .hero, .grid img { width: 100%; border-radius: 10px; background: #ddd; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 18px; }
+    figure { margin: 0; }
+    figcaption { margin: 8px 2px 18px; color: #9eaaa2; }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>리벨리온 외형 동기화 아트 샘플</h1>
+  <p class="status">상태: 사용자 검토 대기 — Unity 미적용</p>
+  <p>원반 전면 메시를 실제로 절삭하고 검은 무장 패널을 안쪽으로 후퇴시킨 수정본입니다. 왼쪽 기준 이미지와 오른쪽 샘플을 먼저 비교한 뒤 측면과 정면 무장 세부를 확인해 주세요.</p>
+  <figure>
+    <img class="hero" src="renders/06_reference_comparison.png" alt="리벨리온 기준 이미지와 샘플 비교">
+    <figcaption>왼쪽: 기준 이미지 / 오른쪽: 외형 동기화 샘플</figcaption>
+  </figure>
+  <div class="grid">
+    <figure><img src="renders/01_reference_matched_front.png" alt="정면"><figcaption>기준 시점 정면</figcaption></figure>
+    <figure><img src="renders/02_three_quarter.png" alt="사선"><figcaption>정면 사선</figcaption></figure>
+    <figure><img src="renders/03_side.png" alt="측면"><figcaption>측면</figcaption></figure>
+    <figure><img src="renders/04_back_three_quarter.png" alt="후면 사선"><figcaption>후면 사선</figcaption></figure>
+    <figure><img src="renders/05_front_weapon_detail.png" alt="정면 무장 세부"><figcaption>원반 내부 수납부·후퇴한 검은 패널·다연장 총구</figcaption></figure>
+  </div>
+</main>
+</body>
+</html>

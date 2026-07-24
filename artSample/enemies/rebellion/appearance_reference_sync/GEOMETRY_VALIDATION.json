@@ -1,0 +1,115 @@
+{
+  "result": "PASS",
+  "source_geometry": {
+    "skinned_mesh": "Mesh1.0",
+    "vertices": 18176,
+    "polygons": 6609,
+    "vertex_groups": 29,
+    "maximum_vertex_influences": 10,
+    "bones": 29,
+    "bounds_min": [
+      -1.591278791,
+      -1.28158915,
+      -1.0
+    ],
+    "bounds_max": [
+      1.591279387,
+      1.255232811,
+      1.699999928
+    ],
+    "bounds_size": [
+      3.18255806,
+      2.536821842,
+      2.699999809
+    ],
+    "signature": "8BF77AAFA0077ADB30E2D6783DB847EA792E6444CFC77833023148BD80E81E0B",
+    "topology_weight_signature": "B6BF5A28FFC39F383B1A6F88204CF79D84250D311B9BE5228B77780955BF737C"
+  },
+  "sample_geometry": {
+    "vertices": 3371,
+    "polygons": 6486,
+    "bones": 29,
+    "signature": "8BE96775D226D5196FB2C31DBDCF330ED40064ACD102A9299CF11D511E53A328",
+    "signature_match": false,
+    "signature_change_intentional": true,
+    "topology_weight_signature": "A655ABA542663D8C245920E78828E1364386F5BA10056B76087AA951404C013E",
+    "topology_weight_signature_match": false,
+    "topology_change_intentional_in_derived_sample": true,
+    "derived_sample_recess": {
+      "operation": "BOOLEAN_DIFFERENCE",
+      "target_region": "disc_front_panel_only",
+      "opening_center": [
+        0.0,
+        -1.1,
+        1.43
+      ],
+      "opening_size": [
+        0.96,
+        0.4,
+        0.41
+      ],
+      "corner_bevel": 0.018,
+      "vertices_before": 18176,
+      "vertices_after": 3371,
+      "polygons_before": 6609,
+      "polygons_after": 6486,
+      "topology_change_limited_to_derived_sample": true,
+      "new_vertices_weighted_to": "Bone_017",
+      "unweighted_vertices_after": 0,
+      "mesh_validation_fixed": true,
+      "mesh_is_valid_after_cleanup": true
+    },
+    "added_reference_detail_objects": 18,
+    "body_attachment_bone": "Bone_017",
+    "front_panel_contract": {
+      "object": "Rebellion_Front_Recess_Backplate",
+      "center": [
+        0.0,
+        -0.925,
+        1.5
+      ],
+      "size": [
+        0.848,
+        0.008,
+        0.16
+      ],
+      "vertical_bounds": [
+        1.42,
+        1.58
+      ],
+      "gun_hub_radius": 0.075,
+      "barrel_radius": 0.01,
+      "barrel_array_radius": 0.032,
+      "source_disc_face_y": -1.13,
+      "panel_front_y": -0.929,
+      "panel_setback_depth": 0.201,
+      "cavity_wall_source": "boolean_cut_in_disc_mesh",
+      "cavity_back_y": -0.9,
+      "panel_recessed_behind_disc_surface": true,
+      "panel_within_disc_front_band": true,
+      "disc_mesh_cut_around_panel": true,
+      "cavity_has_internal_walls": true,
+      "weapon_assembly_projects_forward_from_panel": true
+    }
+  },
+  "roundtrip_glb": {
+    "mesh_objects": 21,
+    "vertices": 20480,
+    "polygons": 8067,
+    "maximum_vertex_influences": 10,
+    "armatures": 1,
+    "bones": 29,
+    "materials": [
+      "Rebellion_Dark_Leg_Mechanism",
+      "Rebellion_Front_Weapon_Black",
+      "Rebellion_Hydraulic_Steel",
+      "Rebellion_Scan_Optic_Red",
+      "Rebellion_Scan_Optic_Red.001",
+      "Rebellion_Worn_Disc_Steel"
+    ]
+  },
+  "source_model_modified": false,
+  "derived_sample_panel_region_modified": true,
+  "unity_asset_modified": false,
+  "unity_scene_modified": false
+}

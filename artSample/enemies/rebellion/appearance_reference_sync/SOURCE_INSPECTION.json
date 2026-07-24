@@ -1,0 +1,97 @@
+{
+  "source_glb": "Assets/_Project/Art/Enemies/Rebellion/Models/Rebellion.glb",
+  "mesh_objects": [
+    {
+      "name": "Mesh1.0",
+      "vertices": 18176,
+      "polygons": 6609,
+      "materials": [],
+      "vertex_groups": 29,
+      "modifiers": [
+        {
+          "name": "Armature",
+          "type": "ARMATURE"
+        }
+      ]
+    },
+    {
+      "name": "Icosphere",
+      "vertices": 42,
+      "polygons": 80,
+      "materials": [],
+      "vertex_groups": 0,
+      "modifiers": []
+    }
+  ],
+  "armatures": [
+    {
+      "name": "UniRigArmature",
+      "bones": 29,
+      "bone_names": [
+        "Bone_000",
+        "Bone_001",
+        "Bone_003",
+        "Bone_002",
+        "Bone_013",
+        "Bone_012",
+        "Bone_011",
+        "Bone_010",
+        "Bone_009",
+        "Bone_018",
+        "Bone_017",
+        "Bone_016",
+        "Bone_015",
+        "Bone_014",
+        "Bone_023",
+        "Bone_022",
+        "Bone_021",
+        "Bone_020",
+        "Bone_019",
+        "Bone_028",
+        "Bone_027",
+        "Bone_026",
+        "Bone_025",
+        "Bone_024",
+        "Bone_005",
+        "Bone_004",
+        "Bone_008",
+        "Bone_007",
+        "Bone_006"
+      ]
+    }
+  ],
+  "bounds": {
+    "min": [
+      -1.591278791,
+      -1.28158915,
+      -1.0
+    ],
+    "max": [
+      1.591279387,
+      1.255232811,
+      1.699999928
+    ],
+    "size": [
+      3.18255806,
+      2.536821842,
+      2.699999809
+    ]
+  },
+  "objects": [
+    {
+      "name": "UniRigArmature",
+      "type": "ARMATURE",
+      "parent": null
+    },
+    {
+      "name": "Mesh1.0",
+      "type": "MESH",
+      "parent": "UniRigArmature"
+    },
+    {
+      "name": "Icosphere",
+      "type": "MESH",
+      "parent": null
+    }
+  ]
+}
