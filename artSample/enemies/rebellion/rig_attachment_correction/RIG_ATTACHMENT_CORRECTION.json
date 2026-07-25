@@ -1,0 +1,100 @@
+{
+  "result": "PASS",
+  "scope": "Rebellion animation-support rig attachment correction",
+  "original_unity_glb_sha256": "BAF8D47AE39523F5EE7DC366DF4E2110D8280725A387133A3ABDBF687F3211E9",
+  "approved_glb_before_sha256": "8DB44E37CDFB7B3C4D838C0C629A877871207C2A93CFF5660121925689680B51",
+  "corrected_glb_sha256": "2FCDD1322554251B2E4461946E98B97A83CF1CD9B53225E0ED1442742C29400C",
+  "unity_corrected_glb_sha256": "2FCDD1322554251B2E4461946E98B97A83CF1CD9B53225E0ED1442742C29400C",
+  "original_bone_count": 29,
+  "original_leg_branch_roots": [
+    "Bone_013",
+    "Bone_018",
+    "Bone_023",
+    "Bone_028"
+  ],
+  "weapon_branch": [
+    "Bone_008",
+    "Bone_007",
+    "Bone_006"
+  ],
+  "geometry_signature_before": "565572C2649511722CFDAD3C0ADC0DB949A9BD23B445E8CEBAB8E9DBB845A257",
+  "geometry_signature_after": "565572C2649511722CFDAD3C0ADC0DB949A9BD23B445E8CEBAB8E9DBB845A257",
+  "geometry_unchanged": true,
+  "skinned_vertices": 3371,
+  "skinned_polygons": 6486,
+  "reassigned_recess_vertices": 51,
+  "recess_weight_from": "Bone_017",
+  "recess_weight_to": "Bone_008",
+  "body_detail_objects": [
+    "Rebellion_Front_Recess_Backplate",
+    "Rebellion_Panel_Fastener_00",
+    "Rebellion_Panel_Fastener_01",
+    "Rebellion_Panel_Fastener_02",
+    "Rebellion_Panel_Fastener_03",
+    "Rebellion_Panel_Vent_00",
+    "Rebellion_Panel_Vent_01",
+    "Rebellion_Panel_Vent_02",
+    "Rebellion_Panel_Vent_03",
+    "Rebellion_Scan_Lens",
+    "Rebellion_Reference_Scan_Optic"
+  ],
+  "exported_body_detail_objects": [
+    "Rebellion_Front_Recess_Backplate",
+    "Rebellion_Panel_Fastener_00",
+    "Rebellion_Panel_Fastener_01",
+    "Rebellion_Panel_Fastener_02",
+    "Rebellion_Panel_Fastener_03",
+    "Rebellion_Panel_Vent_00",
+    "Rebellion_Panel_Vent_01",
+    "Rebellion_Panel_Vent_02",
+    "Rebellion_Panel_Vent_03",
+    "Rebellion_Scan_Lens"
+  ],
+  "blend_only_body_detail_objects": [
+    "Rebellion_Reference_Scan_Optic"
+  ],
+  "body_detail_parent": "Bone_008",
+  "weapon_detail_objects": [
+    "Rebellion_Gun_Hub",
+    "Rebellion_Gun_Barrel_00",
+    "Rebellion_Gun_Barrel_01",
+    "Rebellion_Gun_Barrel_02",
+    "Rebellion_Gun_Barrel_03",
+    "Rebellion_Gun_Barrel_04",
+    "Rebellion_Gun_Barrel_05",
+    "Rebellion_Gun_Barrel_06"
+  ],
+  "weapon_detail_parent": "Bone_007",
+  "maximum_rest_transform_difference": 2.384185791015625e-07,
+  "roundtrip": {
+    "armatures": 1,
+    "bones": 29,
+    "mesh_objects": 20,
+    "skinned_vertices": 18068,
+    "skinned_polygons": 6587,
+    "detail_parent_bones": {
+      "Rebellion_Front_Recess_Backplate": "Bone_008",
+      "Rebellion_Panel_Fastener_00": "Bone_008",
+      "Rebellion_Panel_Fastener_01": "Bone_008",
+      "Rebellion_Panel_Fastener_02": "Bone_008",
+      "Rebellion_Panel_Fastener_03": "Bone_008",
+      "Rebellion_Panel_Vent_00": "Bone_008",
+      "Rebellion_Panel_Vent_01": "Bone_008",
+      "Rebellion_Panel_Vent_02": "Bone_008",
+      "Rebellion_Panel_Vent_03": "Bone_008",
+      "Rebellion_Scan_Lens": "Bone_008",
+      "Rebellion_Gun_Hub": "Bone_007",
+      "Rebellion_Gun_Barrel_00": "Bone_007",
+      "Rebellion_Gun_Barrel_01": "Bone_007",
+      "Rebellion_Gun_Barrel_02": "Bone_007",
+      "Rebellion_Gun_Barrel_03": "Bone_007",
+      "Rebellion_Gun_Barrel_04": "Bone_007",
+      "Rebellion_Gun_Barrel_05": "Bone_007",
+      "Rebellion_Gun_Barrel_06": "Bone_007"
+    },
+    "corrected_region_influence_counts": {
+      "Bone_008": 183,
+      "Bone_017": 0
+    }
+  }
+}

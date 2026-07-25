@@ -1,0 +1,42 @@
+{
+  "result": "PASS",
+  "scope": "Rebellion attack transition disc-only lift rig support",
+  "source_glb_sha256": "712FE23B96B773204F2F1A56588F00B9CF5AEA81D6E9A60CA830FD3FEC89E24A",
+  "corrected_glb_sha256": "C791B028B759A82087C185A98ADD3A5412BCAE8A110DFAFF33F7E3E1694D60F9",
+  "unity_corrected_glb_sha256": "C791B028B759A82087C185A98ADD3A5412BCAE8A110DFAFF33F7E3E1694D60F9",
+  "original_unity_glb_sha256": "BAF8D47AE39523F5EE7DC366DF4E2110D8280725A387133A3ABDBF687F3211E9",
+  "target_bone": "Bone_008",
+  "disc_selection": {
+    "material": "Rebellion_Worn_Disc_Steel",
+    "minimum_polygon_center_z": 1.3,
+    "maximum_polygon_center_radius": 1.31,
+    "seed_minimum_z": 1.43,
+    "polygons": 398,
+    "vertices": 273,
+    "boundary_vertices": 39,
+    "visually_reviewed_as_disc_shell_only": true
+  },
+  "geometry_signature_before": "565572C2649511722CFDAD3C0ADC0DB949A9BD23B445E8CEBAB8E9DBB845A257",
+  "geometry_signature_after": "565572C2649511722CFDAD3C0ADC0DB949A9BD23B445E8CEBAB8E9DBB845A257",
+  "geometry_unchanged": true,
+  "non_disc_weight_signature_before": "72D28D06D12B49CFC2147CCAD3C0EADEEB4F685A35A253300E8653C1616BCB9F",
+  "non_disc_weight_signature_after": "72D28D06D12B49CFC2147CCAD3C0EADEEB4F685A35A253300E8653C1616BCB9F",
+  "non_disc_weights_unchanged": true,
+  "vertices_before": 3371,
+  "vertices_after": 3371,
+  "polygons_before": 6486,
+  "polygons_after": 6486,
+  "bone_hierarchy_unchanged": true,
+  "roundtrip": {
+    "armatures": 1,
+    "bones": 29,
+    "mesh_objects": 20,
+    "skinned_vertices": 18068,
+    "skinned_polygons": 6587,
+    "disc_polygons": 289,
+    "disc_vertices": 548,
+    "disc_boundary_vertices": 0,
+    "disc_leg_influenced_vertices": 0,
+    "disc_non_body_influenced_vertices": 0
+  }
+}

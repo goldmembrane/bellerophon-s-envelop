@@ -82,6 +82,9 @@ namespace Bellerophon.Editor.GraveCargoRunScene
         private const string GraveAttackSlotName = "Grave_03_Attack_RightArm_GiantSweep";
         private const string GraveAttackClipAssetPath = "Assets/_Project/Art/Enemies/Grave/Animations/Grave_Attack_CurtainCall_Sweep.anim";
         private const string GraveAttackControllerAssetPath = "Assets/_Project/Art/Enemies/Grave/Controllers/Grave_Attack_CurtainCall_Sweep.controller";
+        // Isolate the 21:40:18 video restoration from the unapproved primary attack assets until visual approval.
+        private const string GraveAttackWorkingClipAssetPath = "Assets/_Project/Art/Enemies/Grave/Animations/Grave_Attack_CurtainCall_Sweep_Working.anim";
+        private const string GraveAttackWorkingControllerAssetPath = "Assets/_Project/Art/Enemies/Grave/Controllers/Grave_Attack_CurtainCall_Sweep_Working.controller";
         private const string GraveAttackBladeMeshAssetPath = "Assets/_Project/Art/Enemies/Grave/Models/Grave_Attack_ScytheBlade_Body.asset";
         private const string GraveAttackBladeBlendShapeName = "GraveRightArmScytheBlade";
         private const string GraveAttackValidationRelativeFolder = "docs/validation/grave_scythe_blade_accelerated_attack_2026-07-16";
@@ -108,6 +111,20 @@ namespace Bellerophon.Editor.GraveCargoRunScene
         // Review the actual slash interval instead of skipping from side extension directly to the held pose.
         private static readonly float[] GraveAttackCaptureTimes =
             { 0f, 0.85f, 1.2f, 1.28f, 1.38f, 1.48f, 1.58f, 2f, 2.35f, 2.65f, 3f };
+        private const string GraveAttackRestore214018VisualRelativeFolder =
+            "docs/validation/grave_attack_restore_2026-07-17/automated_visual_capture";
+        // These fixed samples make the held pose, requested arm dip, and recovery visually comparable without Scene View focus.
+        private static readonly float[] GraveAttackCurtainEndingCaptureTimes =
+            { 1.58f, 2.15f, 2.25f, 2.35f, 2.65f, 3f };
+        private static readonly string[] GraveAttackCurtainEndingCaptureNames =
+        {
+            "Grave_Attack_CurtainEnding_t1_58.png",
+            "Grave_Attack_CurtainEnding_t2_15.png",
+            "Grave_Attack_CurtainEnding_t2_25.png",
+            "Grave_Attack_CurtainEnding_t2_35.png",
+            "Grave_Attack_CurtainEnding_t2_65.png",
+            "Grave_Attack_CurtainEnding_t3_00.png"
+        };
         private static LocalPoseState[] graveAttackPreviewNormalPoses;
         private static Transform graveAttackPreviewModel;
         private static Animator graveAttackPreviewAnimator;
@@ -126,6 +143,45 @@ namespace Bellerophon.Editor.GraveCargoRunScene
         private static readonly float[] GraveHitKeyTimes = { 0f, 0.07f, 0.18f, 0.34f, 0.5f, 0.78f, 1.1f };
         private static readonly float[] GraveHitBodyFactors = { 0f, 0.42f, 1f, -0.18f, 0.14f, 0.025f, 0f };
         private static readonly float[] GraveHitHeadLagFactors = { 0f, 0.08f, 0.72f, 1f, -0.15f, 0.05f, 0f };
+        // Grave death is a one-shot rigid back fall: the feet lead the pivot and the final 0.3 seconds hold without rebound.
+        private const string GraveDeathSlotName = "Grave_05_Death";
+        private const string GraveDeathWorkingClipAssetPath =
+            "Assets/_Project/Art/Enemies/Grave/Animations/Grave_Death_BackFall_Working.anim";
+        private const string GraveDeathWorkingControllerAssetPath =
+            "Assets/_Project/Art/Enemies/Grave/Controllers/Grave_Death_BackFall_Working.controller";
+        private const string GraveDeathVisualRelativeFolder =
+            "docs/validation/grave_death_backfall_2026-07-17/automated_visual_capture";
+        private const string GraveDeathReviewLoopVisualRelativeFolder =
+            "docs/validation/grave_death_backfall_2026-07-17/automated_visual_capture/review_loop";
+        private const float GraveDeathDuration = 1.3f;
+        private static readonly float[] GraveDeathKeyTimes = { 0f, 0.2f, 0.5f, 0.8f, 1f, 1.3f };
+        private static readonly float[] GraveDeathFallProgress = { 0f, 0.06f, 0.30f, 0.68f, 1f, 1f };
+        // Absolute controller times include the first-cycle end, reset, and matching points in the second cycle.
+        private static readonly float[] GraveDeathReviewLoopCaptureTimes = { 0f, 0.8f, 1.29f, 1.31f, 2.1f, 2.59f };
+        private static readonly string[] GraveDeathReviewLoopCaptureNames =
+        {
+            "Grave_Death_ReviewLoop_t0_00.png",
+            "Grave_Death_ReviewLoop_t0_80.png",
+            "Grave_Death_ReviewLoop_t1_29.png",
+            "Grave_Death_ReviewLoop_t1_31.png",
+            "Grave_Death_ReviewLoop_t2_10.png",
+            "Grave_Death_ReviewLoop_t2_59.png"
+        };
+        private static readonly string[] GraveDeathCaptureNames =
+        {
+            "Grave_Death_Side_t0_00.png",
+            "Grave_Death_Side_t0_20.png",
+            "Grave_Death_Side_t0_50.png",
+            "Grave_Death_Side_t0_80.png",
+            "Grave_Death_Side_t1_00.png",
+            "Grave_Death_Side_t1_30.png",
+            "Grave_Death_ThreeQuarter_t0_00.png",
+            "Grave_Death_ThreeQuarter_t0_20.png",
+            "Grave_Death_ThreeQuarter_t0_50.png",
+            "Grave_Death_ThreeQuarter_t0_80.png",
+            "Grave_Death_ThreeQuarter_t1_00.png",
+            "Grave_Death_ThreeQuarter_t1_30.png"
+        };
 
         private static readonly string[] AnimationSlotNames =
         {
@@ -1315,6 +1371,61 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             Debug.Log("GraveApprovedCurtainCallAttackApplied " + metrics);
         }
 
+        [MenuItem("Bellerophon/Enemies/Grave/Apply Restored Attack From User Video 214018")]
+        public static void ApplyRestoredGraveAttackFromUserVideo214018()
+        {
+            var scene = RequireOpenCargoRunScene();
+            var graveRoot = RequireRootSceneObject(scene, GraveRootName).transform;
+            var attackSlot = graveRoot.Find(GraveAttackSlotName) ??
+                throw new InvalidOperationException(GraveAttackSlotName + " is missing.");
+            var attackModel = attackSlot.Find(GraveModelName) ??
+                throw new InvalidOperationException(GraveAttackSlotName + "/" + GraveModelName + " is missing.");
+            var slotState = new RootState(attackSlot.gameObject);
+            var modelState = new RootState(attackModel.gameObject);
+            _ = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveAttackClipAssetPath) ??
+                throw new InvalidOperationException("Existing Grave curtain-call attack clip is missing.");
+
+            RestoreGraveAttackApprovedRestPose(attackModel);
+            var attackRenderer = RequireGraveAttackBodyRenderer(attackModel);
+            var bladeIndex = attackRenderer.sharedMesh.GetBlendShapeIndex(GraveAttackBladeBlendShapeName);
+            if (bladeIndex < 0)
+            {
+                throw new InvalidOperationException(
+                    "Existing Grave attack mesh is missing the scythe-blade BlendShape; the motion-only restore will not rebuild the mesh.");
+            }
+
+            attackRenderer.SetBlendShapeWeight(bladeIndex, 0f);
+            var clip = EnsureRestoredGraveAttackFromUserVideo214018Clip(attackModel);
+            var controller = EnsureGraveCurtainCallAttackController(
+                clip,
+                GraveAttackWorkingControllerAssetPath);
+            var animator = attackModel.GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = attackModel.gameObject.AddComponent<Animator>();
+            }
+
+            animator.runtimeAnimatorController = controller;
+            animator.applyRootMotion = false;
+            animator.updateMode = AnimatorUpdateMode.Normal;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            animator.enabled = true;
+            PrefabUtility.RecordPrefabInstancePropertyModifications(animator);
+            EditorUtility.SetDirty(animator);
+
+            slotState.AssertUnchanged();
+            modelState.AssertUnchanged();
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            RebindApprovedGraveCurtainCallAnimator(animator, controller, clip);
+            Debug.Log(
+                "GraveRestoredAttackFromUserVideo214018Applied " +
+                $"Target={GraveAttackSlotName}/{GraveModelName}, Clip={clip.name}, " +
+                $"Controller={controller.name}, Duration={clip.length:0.###}, " +
+                $"Loop={clip.isLooping}, LiveAnimatorBound=True, PrimaryClipUntouched=True");
+        }
+
         [MenuItem("Bellerophon/Enemies/Grave/Validate Approved Curtain Call Attack")]
         public static void ValidateApprovedGraveCurtainCallAttack()
         {
@@ -1406,6 +1517,139 @@ namespace Bellerophon.Editor.GraveCargoRunScene
 
                 UnityEngine.Object.DestroyImmediate(sheet);
                 UnityEngine.Object.DestroyImmediate(cameraObject);
+            }
+        }
+
+        [MenuItem("Bellerophon/Enemies/Grave/Capture Working Curtain Ending Frames")]
+        public static void CaptureGraveAttackCurtainEndingFrames()
+        {
+            var scene = RequireOpenCargoRunScene();
+            var sceneWasDirty = scene.isDirty;
+            var graveRoot = RequireRootSceneObject(scene, GraveRootName).transform;
+            var attackSlot = graveRoot.Find(GraveAttackSlotName) ??
+                throw new InvalidOperationException(GraveAttackSlotName + " is missing.");
+            var attackModel = attackSlot.Find(GraveModelName) ??
+                throw new InvalidOperationException(GraveAttackSlotName + "/" + GraveModelName + " is missing.");
+            var animator = attackModel.GetComponent<Animator>() ??
+                throw new InvalidOperationException("Grave working attack Animator is missing.");
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveAttackWorkingClipAssetPath) ??
+                throw new InvalidOperationException("Grave working attack clip is missing.");
+            var renderer = RequireGraveAttackBodyRenderer(attackModel);
+            var bladeIndex = renderer.sharedMesh.GetBlendShapeIndex(GraveAttackBladeBlendShapeName);
+            var originalBladeWeight = bladeIndex >= 0 ? renderer.GetBlendShapeWeight(bladeIndex) : 0f;
+            var originalAnimatorEnabled = animator.enabled;
+            var poses = CaptureLocalPoses(attackModel);
+            var cameraObject = new GameObject("Grave_WorkingCurtainEnding_CaptureCamera")
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            var lightObject = new GameObject("Grave_WorkingCurtainEnding_CaptureLight")
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            var frames = new Texture2D[GraveAttackCurtainEndingCaptureTimes.Length];
+            try
+            {
+                animator.enabled = false;
+                var hasReviewBounds = false;
+                var reviewBounds = new Bounds();
+                for (var i = 0; i < GraveAttackCurtainEndingCaptureTimes.Length; i++)
+                {
+                    RestoreLocalPoses(poses);
+                    clip.SampleAnimation(attackModel.gameObject, GraveAttackCurtainEndingCaptureTimes[i]);
+                    var baked = new Mesh();
+                    try
+                    {
+                        renderer.BakeMesh(baked, false);
+                        var sampledBounds = CalculateBakedWorldBounds(renderer, baked);
+                        if (hasReviewBounds)
+                        {
+                            reviewBounds.Encapsulate(sampledBounds);
+                        }
+                        else
+                        {
+                            reviewBounds = sampledBounds;
+                            hasReviewBounds = true;
+                        }
+                    }
+                    finally
+                    {
+                        UnityEngine.Object.DestroyImmediate(baked);
+                    }
+                }
+
+                if (!hasReviewBounds)
+                {
+                    throw new InvalidOperationException("Grave working attack capture bounds are empty.");
+                }
+
+                var camera = cameraObject.AddComponent<Camera>();
+                camera.cullingMask = 1 << CaptureLayer;
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0.96f, 0.965f, 0.97f, 1f);
+                camera.orthographic = true;
+                camera.nearClipPlane = 0.03f;
+                camera.farClipPlane = 80f;
+                var light = lightObject.AddComponent<Light>();
+                light.type = LightType.Directional;
+                light.intensity = 2.2f;
+                light.cullingMask = 1 << CaptureLayer;
+                var front = CalculateGraveAttackStableFront(attackModel);
+                var cameraPosition = reviewBounds.center + front * 5f;
+                var orthographicSize = Mathf.Max(
+                    reviewBounds.extents.y * 1.18f,
+                    reviewBounds.extents.x * 1.18f);
+                var outputFolder = ProjectAbsolutePath(GraveAttackRestore214018VisualRelativeFolder);
+                Directory.CreateDirectory(outputFolder);
+                for (var i = 0; i < GraveAttackCurtainEndingCaptureTimes.Length; i++)
+                {
+                    RestoreLocalPoses(poses);
+                    clip.SampleAnimation(attackModel.gameObject, GraveAttackCurtainEndingCaptureTimes[i]);
+                    frames[i] = RenderGraveAttackBakedFrame(
+                        camera,
+                        light,
+                        renderer,
+                        reviewBounds,
+                        cameraPosition,
+                        orthographicSize,
+                        720,
+                        720);
+                    File.WriteAllBytes(
+                        Path.Combine(outputFolder, GraveAttackCurtainEndingCaptureNames[i]),
+                        frames[i].EncodeToPNG());
+                }
+
+                File.WriteAllLines(
+                    Path.Combine(outputFolder, "Grave_Attack_CurtainEnding_CaptureManifest.txt"),
+                    GraveAttackCurtainEndingCaptureTimes.Select(
+                        (time, index) => $"{time:0.00}|{GraveAttackCurtainEndingCaptureNames[index]}"));
+                Debug.Log(
+                    $"GraveAttackCurtainEndingFramesCaptured Folder={outputFolder}, " +
+                    $"Clip={clip.name}, Times={string.Join("|", GraveAttackCurtainEndingCaptureTimes.Select(time => time.ToString("0.00")))}, " +
+                    "SceneViewFocused=False, SceneSaved=False");
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+                if (bladeIndex >= 0)
+                {
+                    renderer.SetBlendShapeWeight(bladeIndex, originalBladeWeight);
+                }
+
+                animator.enabled = originalAnimatorEnabled;
+                foreach (var frame in frames)
+                {
+                    UnityEngine.Object.DestroyImmediate(frame);
+                }
+
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+                UnityEngine.Object.DestroyImmediate(lightObject);
+                Selection.activeObject = null;
+                if (scene.isDirty != sceneWasDirty)
+                {
+                    throw new InvalidOperationException(
+                        "Grave automated visual capture changed the CargoRunMvp dirty state.");
+                }
             }
         }
 
@@ -1551,6 +1795,534 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                 UnityEngine.Object.DestroyImmediate(sheet);
                 UnityEngine.Object.DestroyImmediate(cameraObject);
                 UnityEngine.Object.DestroyImmediate(lightObject);
+            }
+        }
+
+        [MenuItem("Bellerophon/Enemies/Grave/Apply Working Death Back Fall")]
+        public static void ApplyGraveDeathBackFallWorking()
+        {
+            var scene = RequireOpenCargoRunScene();
+            var graveRoot = RequireRootSceneObject(scene, GraveRootName).transform;
+            var deathSlot = graveRoot.Find(GraveDeathSlotName) ??
+                throw new InvalidOperationException(GraveDeathSlotName + " is missing.");
+            var deathModel = deathSlot.Find(GraveModelName) ??
+                throw new InvalidOperationException(GraveDeathSlotName + "/" + GraveModelName + " is missing.");
+            var slotState = new RootState(deathSlot.gameObject);
+            var modelState = new RootState(deathModel.gameObject);
+            var renderer = RequireGraveAttackBodyRenderer(deathModel);
+            var clip = CreateOrUpdateGraveDeathBackFallClip(deathModel, renderer, graveRoot.position.y);
+            var controller = CreateOrUpdateGraveDeathBackFallController(clip);
+            var animator = deathModel.GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = deathModel.gameObject.AddComponent<Animator>();
+            }
+
+            animator.runtimeAnimatorController = controller;
+            animator.applyRootMotion = false;
+            animator.updateMode = AnimatorUpdateMode.Normal;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            animator.enabled = true;
+            var bladeIndex = renderer.sharedMesh.GetBlendShapeIndex(GraveAttackBladeBlendShapeName);
+            if (bladeIndex >= 0)
+            {
+                renderer.SetBlendShapeWeight(bladeIndex, 0f);
+            }
+
+            animator.Rebind();
+            animator.Update(0f);
+            animator.Play(Animator.StringToHash("Base Layer.DeathBackFall"), 0, 0f);
+            animator.Update(0f);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(animator);
+            EditorUtility.SetDirty(animator);
+            slotState.AssertUnchanged();
+            modelState.AssertUnchanged();
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            Selection.activeObject = null;
+            Debug.Log(
+                $"GraveDeathBackFallWorkingApplied Target={GraveDeathSlotName}/{GraveModelName}, " +
+                $"Clip={clip.name}, Controller={controller.name}, Duration={clip.length:0.00}, " +
+                "Loop=False, Rebound=False, ScytheWeight=0, SelectionCleared=True");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Grave/Apply Death Review Object Loop")]
+        public static void ApplyGraveDeathReviewLoop()
+        {
+            var scene = RequireOpenCargoRunScene();
+            var graveRoot = RequireRootSceneObject(scene, GraveRootName).transform;
+            var deathSlot = graveRoot.Find(GraveDeathSlotName) ??
+                throw new InvalidOperationException(GraveDeathSlotName + " is missing.");
+            var deathModel = deathSlot.Find(GraveModelName) ??
+                throw new InvalidOperationException(GraveDeathSlotName + "/" + GraveModelName + " is missing.");
+            var animator = deathModel.GetComponent<Animator>() ??
+                throw new InvalidOperationException("Grave death Animator is missing.");
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveDeathWorkingClipAssetPath) ??
+                throw new InvalidOperationException("Grave working death clip is missing.");
+            var clipSettings = AnimationUtility.GetAnimationClipSettings(clip);
+            if (clipSettings.loopTime)
+            {
+                throw new InvalidOperationException("Grave working death clip must remain non-looping.");
+            }
+
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(GraveDeathWorkingControllerAssetPath) ??
+                throw new InvalidOperationException("Grave working death controller is missing.");
+            var stateMachine = controller.layers[0].stateMachine;
+            var state = stateMachine.states.Select(child => child.state)
+                .FirstOrDefault(candidate => candidate.name == "DeathBackFall") ??
+                throw new InvalidOperationException("DeathBackFall state is missing.");
+            if (state.motion != clip)
+            {
+                throw new InvalidOperationException("DeathBackFall state is not using the working death clip.");
+            }
+
+            foreach (var transition in state.transitions.ToArray())
+            {
+                state.RemoveTransition(transition);
+            }
+
+            var reviewLoop = state.AddTransition(state);
+            reviewLoop.name = "ReviewLoop";
+            reviewLoop.hasExitTime = true;
+            reviewLoop.exitTime = 1f;
+            reviewLoop.hasFixedDuration = true;
+            reviewLoop.duration = 0f;
+            reviewLoop.offset = 0f;
+            reviewLoop.canTransitionToSelf = true;
+            reviewLoop.interruptionSource = TransitionInterruptionSource.None;
+            reviewLoop.orderedInterruption = true;
+            EditorUtility.SetDirty(reviewLoop);
+            EditorUtility.SetDirty(state);
+            EditorUtility.SetDirty(stateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+
+            if (animator.runtimeAnimatorController != controller)
+            {
+                animator.runtimeAnimatorController = controller;
+                PrefabUtility.RecordPrefabInstancePropertyModifications(animator);
+                EditorUtility.SetDirty(animator);
+                EditorSceneManager.MarkSceneDirty(scene);
+                EditorSceneManager.SaveScene(scene);
+            }
+
+            animator.enabled = true;
+            animator.Rebind();
+            animator.Update(0f);
+            animator.Play(Animator.StringToHash("Base Layer.DeathBackFall"), 0, 0f);
+            animator.Update(0f);
+            Selection.activeObject = null;
+            Debug.Log(
+                $"GraveDeathReviewLoopApplied Target={GraveDeathSlotName}/{GraveModelName}, " +
+                $"Controller={controller.name}, State={state.name}, ExitTime={reviewLoop.exitTime:0.00}, " +
+                "TransitionDuration=0, ClipLoop=False, ReviewObjectOnly=True, SelectionCleared=True");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Grave/Capture Working Death Back Fall Frames")]
+        public static void CaptureGraveDeathBackFallFrames()
+        {
+            var scene = RequireOpenCargoRunScene();
+            var sceneWasDirty = scene.isDirty;
+            var graveRoot = RequireRootSceneObject(scene, GraveRootName).transform;
+            var deathSlot = graveRoot.Find(GraveDeathSlotName) ??
+                throw new InvalidOperationException(GraveDeathSlotName + " is missing.");
+            var deathModel = deathSlot.Find(GraveModelName) ??
+                throw new InvalidOperationException(GraveDeathSlotName + "/" + GraveModelName + " is missing.");
+            var animator = deathModel.GetComponent<Animator>() ??
+                throw new InvalidOperationException("Grave death Animator is missing.");
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveDeathWorkingClipAssetPath) ??
+                throw new InvalidOperationException("Grave working death clip is missing.");
+            var renderer = RequireGraveAttackBodyRenderer(deathModel);
+            var bladeIndex = renderer.sharedMesh.GetBlendShapeIndex(GraveAttackBladeBlendShapeName);
+            var originalBladeWeight = bladeIndex >= 0 ? renderer.GetBlendShapeWeight(bladeIndex) : 0f;
+            var originalAnimatorEnabled = animator.enabled;
+            var poses = CaptureLocalPoses(deathModel);
+            var cameraObject = new GameObject("Grave_DeathBackFall_CaptureCamera")
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            var lightObject = new GameObject("Grave_DeathBackFall_CaptureLight")
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            GameObject floorObject = null;
+            Material floorMaterial = null;
+            var frames = new Texture2D[GraveDeathCaptureNames.Length];
+            try
+            {
+                animator.enabled = false;
+                var hasReviewBounds = false;
+                var reviewBounds = new Bounds();
+                for (var i = 0; i < GraveDeathKeyTimes.Length; i++)
+                {
+                    RestoreLocalPoses(poses);
+                    clip.SampleAnimation(deathModel.gameObject, GraveDeathKeyTimes[i]);
+                    var baked = new Mesh();
+                    try
+                    {
+                        renderer.BakeMesh(baked, false);
+                        var sampledBounds = CalculateBakedWorldBounds(renderer, baked);
+                        if (hasReviewBounds)
+                        {
+                            reviewBounds.Encapsulate(sampledBounds);
+                        }
+                        else
+                        {
+                            reviewBounds = sampledBounds;
+                            hasReviewBounds = true;
+                        }
+                    }
+                    finally
+                    {
+                        UnityEngine.Object.DestroyImmediate(baked);
+                    }
+                }
+
+                if (!hasReviewBounds)
+                {
+                    throw new InvalidOperationException("Grave death capture bounds are empty.");
+                }
+
+                var camera = cameraObject.AddComponent<Camera>();
+                camera.cullingMask = 1 << CaptureLayer;
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0.96f, 0.965f, 0.97f, 1f);
+                camera.orthographic = true;
+                camera.nearClipPlane = 0.03f;
+                camera.farClipPlane = 80f;
+                var light = lightObject.AddComponent<Light>();
+                light.type = LightType.Directional;
+                light.intensity = 2.2f;
+                light.cullingMask = 1 << CaptureLayer;
+                floorObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                floorObject.name = "Grave_DeathBackFall_CaptureFloor";
+                floorObject.hideFlags = HideFlags.HideAndDontSave;
+                floorObject.layer = CaptureLayer;
+                floorObject.transform.position = new Vector3(
+                    reviewBounds.center.x,
+                    graveRoot.position.y - 0.025f,
+                    reviewBounds.center.z);
+                floorObject.transform.localScale = new Vector3(6f, 0.05f, 6f);
+                var floorCollider = floorObject.GetComponent<Collider>();
+                if (floorCollider != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(floorCollider);
+                }
+
+                var floorShader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+                if (floorShader == null)
+                {
+                    throw new InvalidOperationException("Grave death capture floor shader is missing.");
+                }
+
+                floorMaterial = new Material(floorShader)
+                {
+                    hideFlags = HideFlags.HideAndDontSave,
+                    color = new Color(0.68f, 0.70f, 0.72f, 1f)
+                };
+                floorObject.GetComponent<MeshRenderer>().sharedMaterial = floorMaterial;
+                var front = CalculateVisualFront(deathModel);
+                var side = Vector3.Cross(Vector3.up, front).normalized;
+                if (side.sqrMagnitude < 0.0001f)
+                {
+                    side = deathModel.right;
+                }
+
+                var threeQuarter = (front + side).normalized;
+                var orthographicSize = reviewBounds.extents.magnitude * 1.18f;
+                var outputFolder = ProjectAbsolutePath(GraveDeathVisualRelativeFolder);
+                Directory.CreateDirectory(outputFolder);
+                for (var i = 0; i < GraveDeathKeyTimes.Length; i++)
+                {
+                    RestoreLocalPoses(poses);
+                    clip.SampleAnimation(deathModel.gameObject, GraveDeathKeyTimes[i]);
+                    frames[i] = RenderGraveAttackBakedFrame(
+                        camera,
+                        light,
+                        renderer,
+                        reviewBounds,
+                        reviewBounds.center + side * 5f,
+                        orthographicSize,
+                        720,
+                        720);
+                    frames[i + GraveDeathKeyTimes.Length] = RenderGraveAttackBakedFrame(
+                        camera,
+                        light,
+                        renderer,
+                        reviewBounds,
+                        reviewBounds.center + threeQuarter * 5f,
+                        orthographicSize,
+                        720,
+                        720);
+                    File.WriteAllBytes(
+                        Path.Combine(outputFolder, GraveDeathCaptureNames[i]),
+                        frames[i].EncodeToPNG());
+                    File.WriteAllBytes(
+                        Path.Combine(outputFolder, GraveDeathCaptureNames[i + GraveDeathKeyTimes.Length]),
+                        frames[i + GraveDeathKeyTimes.Length].EncodeToPNG());
+                }
+
+                File.WriteAllLines(
+                    Path.Combine(outputFolder, "Grave_Death_BackFall_CaptureManifest.txt"),
+                    GraveDeathKeyTimes.Select(
+                            (time, index) => $"Side|{time:0.00}|{GraveDeathCaptureNames[index]}")
+                        .Concat(GraveDeathKeyTimes.Select(
+                            (time, index) =>
+                                $"ThreeQuarter|{time:0.00}|{GraveDeathCaptureNames[index + GraveDeathKeyTimes.Length]}")));
+                Debug.Log(
+                    $"GraveDeathBackFallFramesCaptured Folder={outputFolder}, Clip={clip.name}, " +
+                    $"Times={string.Join("|", GraveDeathKeyTimes.Select(time => time.ToString("0.00")))}, " +
+                    "Views=Side|ThreeQuarter, SceneViewFocused=False, SceneSaved=False, SelectionCleared=True");
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+                if (bladeIndex >= 0)
+                {
+                    renderer.SetBlendShapeWeight(bladeIndex, originalBladeWeight);
+                }
+
+                animator.enabled = originalAnimatorEnabled;
+                foreach (var frame in frames)
+                {
+                    UnityEngine.Object.DestroyImmediate(frame);
+                }
+
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+                UnityEngine.Object.DestroyImmediate(lightObject);
+                UnityEngine.Object.DestroyImmediate(floorObject);
+                UnityEngine.Object.DestroyImmediate(floorMaterial);
+                Selection.activeObject = null;
+                if (scene.isDirty != sceneWasDirty)
+                {
+                    throw new InvalidOperationException(
+                        "Grave death automated visual capture changed the CargoRunMvp dirty state.");
+                }
+            }
+        }
+
+        [MenuItem("Bellerophon/Enemies/Grave/Capture Death Review Object Loop Frames")]
+        public static void CaptureGraveDeathReviewLoopFrames()
+        {
+            var scene = RequireOpenCargoRunScene();
+            var sceneWasDirty = scene.isDirty;
+            var graveRoot = RequireRootSceneObject(scene, GraveRootName).transform;
+            var deathSlot = graveRoot.Find(GraveDeathSlotName) ??
+                throw new InvalidOperationException(GraveDeathSlotName + " is missing.");
+            var deathModel = deathSlot.Find(GraveModelName) ??
+                throw new InvalidOperationException(GraveDeathSlotName + "/" + GraveModelName + " is missing.");
+            var animator = deathModel.GetComponent<Animator>() ??
+                throw new InvalidOperationException("Grave death Animator is missing.");
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(GraveDeathWorkingControllerAssetPath) ??
+                throw new InvalidOperationException("Grave working death controller is missing.");
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveDeathWorkingClipAssetPath) ??
+                throw new InvalidOperationException("Grave working death clip is missing.");
+            if (animator.runtimeAnimatorController != controller)
+            {
+                throw new InvalidOperationException("Grave death review object is not using the working death controller.");
+            }
+
+            if (AnimationUtility.GetAnimationClipSettings(clip).loopTime)
+            {
+                throw new InvalidOperationException("Grave working death clip must remain non-looping.");
+            }
+
+            var stateMachine = controller.layers[0].stateMachine;
+            var state = stateMachine.states.Select(child => child.state)
+                .FirstOrDefault(candidate => candidate.name == "DeathBackFall") ??
+                throw new InvalidOperationException("DeathBackFall state is missing.");
+            var reviewLoop = state.transitions.SingleOrDefault(transition => transition.destinationState == state);
+            if (reviewLoop == null || !reviewLoop.hasExitTime ||
+                !Mathf.Approximately(reviewLoop.exitTime, 1f) || !Mathf.Approximately(reviewLoop.duration, 0f))
+            {
+                throw new InvalidOperationException("Grave death review-loop transition is not configured.");
+            }
+
+            var renderer = RequireGraveAttackBodyRenderer(deathModel);
+            var bladeIndex = renderer.sharedMesh.GetBlendShapeIndex(GraveAttackBladeBlendShapeName);
+            var originalBladeWeight = bladeIndex >= 0 ? renderer.GetBlendShapeWeight(bladeIndex) : 0f;
+            var originalAnimatorEnabled = animator.enabled;
+            var originalUpdateMode = animator.updateMode;
+            var originalCullingMode = animator.cullingMode;
+            var poses = CaptureLocalPoses(deathModel);
+            var cameraObject = new GameObject("Grave_DeathReviewLoop_CaptureCamera")
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            var lightObject = new GameObject("Grave_DeathReviewLoop_CaptureLight")
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            GameObject floorObject = null;
+            Material floorMaterial = null;
+            var frames = new Texture2D[GraveDeathReviewLoopCaptureTimes.Length];
+            var sampledNormalizedTimes = new float[GraveDeathReviewLoopCaptureTimes.Length];
+            try
+            {
+                animator.enabled = true;
+                animator.updateMode = AnimatorUpdateMode.Normal;
+                animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                var hasReviewBounds = false;
+                var reviewBounds = new Bounds();
+                for (var i = 0; i < GraveDeathReviewLoopCaptureTimes.Length; i++)
+                {
+                    SampleGraveDeathReviewAnimatorAt(animator, deathModel, poses, GraveDeathReviewLoopCaptureTimes[i]);
+                    sampledNormalizedTimes[i] = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+                    var baked = new Mesh();
+                    try
+                    {
+                        renderer.BakeMesh(baked, false);
+                        var sampledBounds = CalculateBakedWorldBounds(renderer, baked);
+                        if (hasReviewBounds)
+                        {
+                            reviewBounds.Encapsulate(sampledBounds);
+                        }
+                        else
+                        {
+                            reviewBounds = sampledBounds;
+                            hasReviewBounds = true;
+                        }
+                    }
+                    finally
+                    {
+                        UnityEngine.Object.DestroyImmediate(baked);
+                    }
+                }
+
+                if (!hasReviewBounds)
+                {
+                    throw new InvalidOperationException("Grave death review-loop capture bounds are empty.");
+                }
+
+                var camera = cameraObject.AddComponent<Camera>();
+                camera.cullingMask = 1 << CaptureLayer;
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0.96f, 0.965f, 0.97f, 1f);
+                camera.orthographic = true;
+                camera.nearClipPlane = 0.03f;
+                camera.farClipPlane = 80f;
+                var light = lightObject.AddComponent<Light>();
+                light.type = LightType.Directional;
+                light.intensity = 2.2f;
+                light.cullingMask = 1 << CaptureLayer;
+                floorObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                floorObject.name = "Grave_DeathReviewLoop_CaptureFloor";
+                floorObject.hideFlags = HideFlags.HideAndDontSave;
+                floorObject.layer = CaptureLayer;
+                floorObject.transform.position = new Vector3(
+                    reviewBounds.center.x,
+                    graveRoot.position.y - 0.025f,
+                    reviewBounds.center.z);
+                floorObject.transform.localScale = new Vector3(6f, 0.05f, 6f);
+                var floorCollider = floorObject.GetComponent<Collider>();
+                if (floorCollider != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(floorCollider);
+                }
+
+                var floorShader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+                if (floorShader == null)
+                {
+                    throw new InvalidOperationException("Grave death review-loop capture floor shader is missing.");
+                }
+
+                floorMaterial = new Material(floorShader)
+                {
+                    hideFlags = HideFlags.HideAndDontSave,
+                    color = new Color(0.68f, 0.70f, 0.72f, 1f)
+                };
+                floorObject.GetComponent<MeshRenderer>().sharedMaterial = floorMaterial;
+                var front = CalculateVisualFront(deathModel);
+                var side = Vector3.Cross(Vector3.up, front).normalized;
+                if (side.sqrMagnitude < 0.0001f)
+                {
+                    side = deathModel.right;
+                }
+
+                var orthographicSize = reviewBounds.extents.magnitude * 1.18f;
+                var outputFolder = ProjectAbsolutePath(GraveDeathReviewLoopVisualRelativeFolder);
+                Directory.CreateDirectory(outputFolder);
+                for (var i = 0; i < GraveDeathReviewLoopCaptureTimes.Length; i++)
+                {
+                    SampleGraveDeathReviewAnimatorAt(animator, deathModel, poses, GraveDeathReviewLoopCaptureTimes[i]);
+                    frames[i] = RenderGraveAttackBakedFrame(
+                        camera,
+                        light,
+                        renderer,
+                        reviewBounds,
+                        reviewBounds.center + side * 5f,
+                        orthographicSize,
+                        720,
+                        720);
+                    File.WriteAllBytes(
+                        Path.Combine(outputFolder, GraveDeathReviewLoopCaptureNames[i]),
+                        frames[i].EncodeToPNG());
+                }
+
+                File.WriteAllLines(
+                    Path.Combine(outputFolder, "Grave_Death_ReviewLoop_CaptureManifest.txt"),
+                    GraveDeathReviewLoopCaptureTimes.Select(
+                        (time, index) =>
+                            $"ControllerSide|{time:0.00}|Normalized={sampledNormalizedTimes[index]:0.000}|" +
+                            GraveDeathReviewLoopCaptureNames[index]));
+                Debug.Log(
+                    $"GraveDeathReviewLoopFramesCaptured Folder={outputFolder}, Controller={controller.name}, " +
+                    $"Times={string.Join("|", GraveDeathReviewLoopCaptureTimes.Select(time => time.ToString("0.00")))}, " +
+                    "ActualAnimatorController=True, ClipLoop=False, View=Side, SceneViewFocused=False, " +
+                    "SceneSaved=False, SelectionCleared=True");
+            }
+            finally
+            {
+                animator.Rebind();
+                animator.Update(0f);
+                animator.Play(Animator.StringToHash("Base Layer.DeathBackFall"), 0, 0f);
+                animator.Update(0f);
+                animator.updateMode = originalUpdateMode;
+                animator.cullingMode = originalCullingMode;
+                animator.enabled = originalAnimatorEnabled;
+                RestoreLocalPoses(poses);
+                if (bladeIndex >= 0)
+                {
+                    renderer.SetBlendShapeWeight(bladeIndex, originalBladeWeight);
+                }
+
+                foreach (var frame in frames)
+                {
+                    UnityEngine.Object.DestroyImmediate(frame);
+                }
+
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+                UnityEngine.Object.DestroyImmediate(lightObject);
+                UnityEngine.Object.DestroyImmediate(floorObject);
+                UnityEngine.Object.DestroyImmediate(floorMaterial);
+                Selection.activeObject = null;
+                if (scene.isDirty != sceneWasDirty)
+                {
+                    throw new InvalidOperationException(
+                        "Grave death review-loop automated visual capture changed the CargoRunMvp dirty state.");
+                }
+            }
+        }
+
+        private static void SampleGraveDeathReviewAnimatorAt(
+            Animator animator,
+            Transform deathModel,
+            LocalPoseState[] poses,
+            float absoluteTime)
+        {
+            RestoreLocalPoses(poses);
+            animator.Rebind();
+            animator.Update(0f);
+            animator.Play(Animator.StringToHash("Base Layer.DeathBackFall"), 0, 0f);
+            animator.Update(0f);
+            var remaining = absoluteTime;
+            const float step = 1f / 120f;
+            while (remaining > 0.00001f)
+            {
+                var delta = Mathf.Min(step, remaining);
+                animator.Update(delta);
+                remaining -= delta;
             }
         }
 
@@ -2457,6 +3229,34 @@ namespace Bellerophon.Editor.GraveCargoRunScene
 
         private static AnimationClip EnsureApprovedGraveCurtainCallAttackClip(Transform attackModel)
         {
+            return EnsureGraveCurtainCallAttackClip(
+                attackModel,
+                GraveAttackClipAssetPath,
+                "Grave_Attack_CurtainCall_Sweep",
+                new Vector3(-0.45f, -0.86f, 0.24f).normalized,
+                new Vector3(-0.82f, 0.18f, 0.54f).normalized,
+                restoreVideoLoopRecovery: false);
+        }
+
+        private static AnimationClip EnsureRestoredGraveAttackFromUserVideo214018Clip(Transform attackModel)
+        {
+            return EnsureGraveCurtainCallAttackClip(
+                attackModel,
+                GraveAttackWorkingClipAssetPath,
+                "Grave_Attack_CurtainCall_Sweep_Working",
+                new Vector3(-0.45f, -0.86f, 0.24f).normalized,
+                new Vector3(-0.82f, 0.18f, 0.54f).normalized,
+                restoreVideoLoopRecovery: true);
+        }
+
+        private static AnimationClip EnsureGraveCurtainCallAttackClip(
+            Transform attackModel,
+            string clipAssetPath,
+            string clipName,
+            Vector3 pullingUpperDirection,
+            Vector3 pullingForeArmDirection,
+            bool restoreVideoLoopRecovery)
+        {
             var hips = RequireGraveAttackBone(attackModel, "Hips");
             var spine02 = RequireGraveAttackBone(attackModel, "Spine02");
             var spine01 = RequireGraveAttackBone(attackModel, "Spine01");
@@ -2469,12 +3269,12 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             var rightHand = RequireGraveAttackBone(attackModel, "RightHand");
             var leftShoulder = RequireGraveAttackBone(attackModel, "LeftShoulder");
             var leftArm = RequireGraveAttackBone(attackModel, "LeftArm");
-            EnsureAssetDirectory(GraveAttackClipAssetPath);
-            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveAttackClipAssetPath);
+            EnsureAssetDirectory(clipAssetPath);
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(clipAssetPath);
             if (clip == null)
             {
-                clip = new AnimationClip { name = "Grave_Attack_CurtainCall_Sweep", frameRate = 60f };
-                AssetDatabase.CreateAsset(clip, GraveAttackClipAssetPath);
+                clip = new AnimationClip { name = clipName, frameRate = 60f };
+                AssetDatabase.CreateAsset(clip, clipAssetPath);
             }
 
             clip.ClearCurves();
@@ -2538,9 +3338,6 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             var loweringForeArmDirection = new Vector3(0.68f, -0.72f, 0f).normalized;
             var sweepingUpperDirection = new Vector3(0.28f, -0.96f, 0f).normalized;
             var sweepingForeArmDirection = new Vector3(0.22f, -0.97f, 0f).normalized;
-            // Preserve the original bent curtain-call silhouette; front clearance is handled without straightening the elbow.
-            var pullingUpperDirection = new Vector3(-0.45f, -0.86f, 0.24f).normalized;
-            var pullingForeArmDirection = new Vector3(-0.82f, 0.18f, 0.54f).normalized;
             SetGraveAttackAimRotationCurves(clip, rightArm, rightForeArm, attackModel, new[]
             {
                 baseUpperDirection,
@@ -2591,6 +3388,29 @@ namespace Bellerophon.Editor.GraveCargoRunScene
                 clip, attackModel, rightShoulder, rightArm, rightForeArm, rightHand);
             AssertGraveAttackUnaffectedTransformCurvesUnchanged(
                 preservedTransformCurves, clip, attackModel);
+            if (restoreVideoLoopRecovery)
+            {
+                LowerGraveAttackVideo214018CurtainCallEnding(
+                    clip,
+                    attackModel,
+                    rightArm,
+                    rightForeArm);
+                RestoreGraveAttackVideo214018LoopRecovery(
+                    clip,
+                    attackModel,
+                    hips,
+                    spine02,
+                    spine01,
+                    spine,
+                    neck,
+                    head,
+                    rightShoulder,
+                    rightArm,
+                    rightForeArm,
+                    rightHand,
+                    leftShoulder,
+                    leftArm);
+            }
             SetGraveAttackScytheBladeCurve(clip, attackModel);
             var settings = AnimationUtility.GetAnimationClipSettings(clip);
             settings.loopTime = true;
@@ -2605,11 +3425,18 @@ namespace Bellerophon.Editor.GraveCargoRunScene
 
         private static AnimatorController EnsureApprovedGraveCurtainCallAttackController(AnimationClip clip)
         {
-            EnsureAssetDirectory(GraveAttackControllerAssetPath);
-            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(GraveAttackControllerAssetPath);
+            return EnsureGraveCurtainCallAttackController(clip, GraveAttackControllerAssetPath);
+        }
+
+        private static AnimatorController EnsureGraveCurtainCallAttackController(
+            AnimationClip clip,
+            string controllerAssetPath)
+        {
+            EnsureAssetDirectory(controllerAssetPath);
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerAssetPath);
             if (controller == null)
             {
-                controller = AnimatorController.CreateAnimatorControllerAtPath(GraveAttackControllerAssetPath);
+                controller = AnimatorController.CreateAnimatorControllerAtPath(controllerAssetPath);
             }
 
             var stateMachine = controller.layers[0].stateMachine;
@@ -3099,6 +3926,222 @@ namespace Bellerophon.Editor.GraveCargoRunScene
 
                     AnimationUtility.SetKeyLeftTangentMode(curve, keyIndex, AnimationUtility.TangentMode.Linear);
                     AnimationUtility.SetKeyRightTangentMode(curve, keyIndex, AnimationUtility.TangentMode.Linear);
+                }
+
+                AnimationUtility.SetEditorCurve(clip, binding, curve);
+            }
+        }
+
+        private static void LowerGraveAttackVideo214018CurtainCallEnding(
+            AnimationClip clip,
+            Transform attackModel,
+            Transform rightArm,
+            Transform rightForeArm)
+        {
+            // These working-clip-only values keep the curtain call still, then lower the whole right-arm chain slightly.
+            const float loweringStartTime = 2.15f;
+            const float loweringAngle = 5f;
+            var poses = CaptureLocalPoses(attackModel);
+            Quaternion holdRotation;
+            Quaternion loweredRotation;
+            try
+            {
+                clip.SampleAnimation(attackModel.gameObject, loweringStartTime);
+                holdRotation = rightArm.localRotation;
+
+                RestoreLocalPoses(poses);
+                clip.SampleAnimation(attackModel.gameObject, GraveAttackCurtainCallHoldTime);
+                var currentWorldDirection = (rightForeArm.position - rightArm.position).normalized;
+                var currentModelDirection = GraveAttackModelDirection(attackModel, currentWorldDirection);
+                var loweredModelDirection = Vector3.RotateTowards(
+                    currentModelDirection,
+                    Vector3.down,
+                    loweringAngle * Mathf.Deg2Rad,
+                    0f).normalized;
+                var loweredWorldDirection =
+                    (attackModel.right * loweredModelDirection.x +
+                     attackModel.up * loweredModelDirection.y +
+                     attackModel.forward * loweredModelDirection.z).normalized;
+                var loweredWorldRotation =
+                    Quaternion.FromToRotation(currentWorldDirection, loweredWorldDirection) * rightArm.rotation;
+                loweredRotation = Quaternion.Inverse(rightArm.parent.rotation) * loweredWorldRotation;
+                if (Quaternion.Dot(holdRotation, loweredRotation) < 0f)
+                {
+                    loweredRotation = new Quaternion(
+                        -loweredRotation.x,
+                        -loweredRotation.y,
+                        -loweredRotation.z,
+                        -loweredRotation.w);
+                }
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+            }
+
+            SetGraveAttackCurtainEndingQuaternionKeys(
+                clip,
+                rightArm,
+                attackModel,
+                new[] { loweringStartTime, GraveAttackCurtainCallHoldTime },
+                new[] { holdRotation, loweredRotation });
+        }
+
+        private static void SetGraveAttackCurtainEndingQuaternionKeys(
+            AnimationClip clip,
+            Transform target,
+            Transform attackModel,
+            IReadOnlyList<float> times,
+            IReadOnlyList<Quaternion> rotations)
+        {
+            var path = AnimationUtility.CalculateTransformPath(target, attackModel);
+            var properties = new[]
+            {
+                "m_LocalRotation.x", "m_LocalRotation.y", "m_LocalRotation.z", "m_LocalRotation.w"
+            };
+            for (var component = 0; component < properties.Length; component++)
+            {
+                var binding = EditorCurveBinding.FloatCurve(path, typeof(Transform), properties[component]);
+                var curve = AnimationUtility.GetEditorCurve(clip, binding) ??
+                    throw new InvalidOperationException(
+                        "Grave curtain-ending rotation curve is missing: " + properties[component]);
+                for (var poseIndex = 0; poseIndex < times.Count; poseIndex++)
+                {
+                    var time = times[poseIndex];
+                    for (var keyIndex = curve.length - 1; keyIndex >= 0; keyIndex--)
+                    {
+                        if (Mathf.Abs(curve.keys[keyIndex].time - time) <= 0.0001f)
+                        {
+                            curve.RemoveKey(keyIndex);
+                        }
+                    }
+
+                    var rotation = rotations[poseIndex];
+                    var value = component == 0 ? rotation.x :
+                        component == 1 ? rotation.y :
+                        component == 2 ? rotation.z : rotation.w;
+                    curve.AddKey(new Keyframe(time, value));
+                }
+
+                for (var keyIndex = 0; keyIndex < curve.length; keyIndex++)
+                {
+                    var time = curve.keys[keyIndex].time;
+                    if (time < times[0] - 0.0001f || time > times[times.Count - 1] + 0.0001f)
+                    {
+                        continue;
+                    }
+
+                    AnimationUtility.SetKeyLeftTangentMode(
+                        curve, keyIndex, AnimationUtility.TangentMode.Linear);
+                    AnimationUtility.SetKeyRightTangentMode(
+                        curve,
+                        keyIndex,
+                        Mathf.Abs(time - times[times.Count - 1]) <= 0.0001f
+                            ? AnimationUtility.TangentMode.ClampedAuto
+                            : AnimationUtility.TangentMode.Linear);
+                }
+
+                AnimationUtility.SetEditorCurve(clip, binding, curve);
+            }
+        }
+
+        private static void RestoreGraveAttackVideo214018LoopRecovery(
+            AnimationClip clip,
+            Transform attackModel,
+            params Transform[] animatedBones)
+        {
+            const float recoveryTime = 2.65f;
+            // The reference video shows a visible mid-recovery before the exact loop-start pose at 3 seconds.
+            const float recoveryProgress = 0.55f;
+            var poses = CaptureLocalPoses(attackModel);
+            var startRotations = new Quaternion[animatedBones.Length];
+            var curtainCallRotations = new Quaternion[animatedBones.Length];
+            try
+            {
+                clip.SampleAnimation(attackModel.gameObject, 0f);
+                for (var i = 0; i < animatedBones.Length; i++)
+                {
+                    startRotations[i] = animatedBones[i].localRotation;
+                }
+
+                RestoreLocalPoses(poses);
+                clip.SampleAnimation(attackModel.gameObject, GraveAttackCurtainCallHoldTime);
+                for (var i = 0; i < animatedBones.Length; i++)
+                {
+                    curtainCallRotations[i] = animatedBones[i].localRotation;
+                }
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+            }
+
+            for (var boneIndex = 0; boneIndex < animatedBones.Length; boneIndex++)
+            {
+                var curtainCall = curtainCallRotations[boneIndex];
+                var start = startRotations[boneIndex];
+                if (Quaternion.Dot(curtainCall, start) < 0f)
+                {
+                    start = new Quaternion(-start.x, -start.y, -start.z, -start.w);
+                }
+
+                var recovery = Quaternion.Slerp(curtainCall, start, recoveryProgress);
+                SetGraveAttackRecoveryQuaternionKeys(
+                    clip,
+                    animatedBones[boneIndex],
+                    attackModel,
+                    new[] { recoveryTime, GraveAttackDuration },
+                    new[] { recovery, start });
+            }
+        }
+
+        private static void SetGraveAttackRecoveryQuaternionKeys(
+            AnimationClip clip,
+            Transform target,
+            Transform attackModel,
+            IReadOnlyList<float> times,
+            IReadOnlyList<Quaternion> rotations)
+        {
+            var path = AnimationUtility.CalculateTransformPath(target, attackModel);
+            var properties = new[]
+            {
+                "m_LocalRotation.x", "m_LocalRotation.y", "m_LocalRotation.z", "m_LocalRotation.w"
+            };
+            for (var component = 0; component < properties.Length; component++)
+            {
+                var binding = EditorCurveBinding.FloatCurve(path, typeof(Transform), properties[component]);
+                var curve = AnimationUtility.GetEditorCurve(clip, binding) ??
+                    throw new InvalidOperationException(
+                        "Grave video-restoration rotation curve is missing: " + properties[component]);
+                for (var poseIndex = 0; poseIndex < times.Count; poseIndex++)
+                {
+                    var time = times[poseIndex];
+                    for (var keyIndex = curve.length - 1; keyIndex >= 0; keyIndex--)
+                    {
+                        if (Mathf.Abs(curve.keys[keyIndex].time - time) <= 0.0001f)
+                        {
+                            curve.RemoveKey(keyIndex);
+                        }
+                    }
+
+                    var rotation = rotations[poseIndex];
+                    var value = component == 0 ? rotation.x :
+                        component == 1 ? rotation.y :
+                        component == 2 ? rotation.z : rotation.w;
+                    curve.AddKey(new Keyframe(time, value));
+                }
+
+                for (var keyIndex = 0; keyIndex < curve.length; keyIndex++)
+                {
+                    if (curve.keys[keyIndex].time < 2.65f - 0.0001f)
+                    {
+                        continue;
+                    }
+
+                    AnimationUtility.SetKeyLeftTangentMode(
+                        curve, keyIndex, AnimationUtility.TangentMode.ClampedAuto);
+                    AnimationUtility.SetKeyRightTangentMode(
+                        curve, keyIndex, AnimationUtility.TangentMode.ClampedAuto);
                 }
 
                 AnimationUtility.SetEditorCurve(clip, binding, curve);
@@ -4890,6 +5933,331 @@ namespace Bellerophon.Editor.GraveCargoRunScene
             }
 
             return metrics;
+        }
+
+        private static AnimationClip CreateOrUpdateGraveDeathBackFallClip(
+            Transform deathModel,
+            SkinnedMeshRenderer renderer,
+            float groundY)
+        {
+            var hips = RequireGraveHitBone(deathModel, "Hips");
+            var leftArm = RequireGraveHitBone(deathModel, "LeftArm");
+            var leftForeArm = RequireGraveHitBone(deathModel, "LeftForeArm");
+            var leftHand = RequireGraveHitBone(deathModel, "LeftHand");
+            var rightArm = RequireGraveHitBone(deathModel, "RightArm");
+            var rightForeArm = RequireGraveHitBone(deathModel, "RightForeArm");
+            var rightHand = RequireGraveHitBone(deathModel, "RightHand");
+            var leftUpLeg = RequireGraveHitBone(deathModel, "LeftUpLeg");
+            var leftLeg = RequireGraveHitBone(deathModel, "LeftLeg");
+            var leftFoot = RequireGraveHitBone(deathModel, "LeftFoot");
+            var rightUpLeg = RequireGraveHitBone(deathModel, "RightUpLeg");
+            var rightLeg = RequireGraveHitBone(deathModel, "RightLeg");
+            var rightFoot = RequireGraveHitBone(deathModel, "RightFoot");
+            EnsureAssetDirectory(GraveDeathWorkingClipAssetPath);
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(GraveDeathWorkingClipAssetPath);
+            if (clip == null)
+            {
+                clip = new AnimationClip { name = "Grave_Death_BackFall_Working", frameRate = 60f };
+                AssetDatabase.CreateAsset(clip, GraveDeathWorkingClipAssetPath);
+            }
+
+            clip.ClearCurves();
+            clip.legacy = false;
+            clip.wrapMode = WrapMode.ClampForever;
+            clip.frameRate = 60f;
+            var poses = CaptureLocalPoses(deathModel);
+            var positions = new Vector3[GraveDeathKeyTimes.Length];
+            var rotations = new Quaternion[GraveDeathKeyTimes.Length];
+            var baseFootPivot = (leftFoot.position + rightFoot.position) * 0.5f;
+            var baseHipsWorldRotation = hips.rotation;
+            var visualFront = CalculateVisualFront(deathModel);
+            var finalFallDelta = Quaternion.FromToRotation(deathModel.up, -visualFront);
+            try
+            {
+                for (var i = 0; i < GraveDeathKeyTimes.Length; i++)
+                {
+                    RestoreLocalPoses(poses);
+                    var fallDelta = Quaternion.Slerp(
+                        Quaternion.identity,
+                        finalFallDelta,
+                        GraveDeathFallProgress[i]);
+                    hips.rotation = fallDelta * baseHipsWorldRotation;
+                    var movedFootPivot = (leftFoot.position + rightFoot.position) * 0.5f;
+                    hips.position += baseFootPivot - movedFootPivot;
+
+                    var baked = new Mesh();
+                    try
+                    {
+                        renderer.BakeMesh(baked, false);
+                        var bounds = CalculateBakedWorldBounds(renderer, baked);
+                        // Keep the current lowest surface on the ground while the horizontally anchored feet lead the fall.
+                        hips.position += Vector3.up * (groundY - bounds.min.y);
+                    }
+                    finally
+                    {
+                        UnityEngine.Object.DestroyImmediate(baked);
+                    }
+
+                    positions[i] = hips.localPosition;
+                    rotations[i] = hips.localRotation;
+                    if (i > 0 && Quaternion.Dot(rotations[i - 1], rotations[i]) < 0f)
+                    {
+                        var rotation = rotations[i];
+                        rotations[i] = new Quaternion(
+                            -rotation.x,
+                            -rotation.y,
+                            -rotation.z,
+                            -rotation.w);
+                    }
+                }
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+            }
+
+            var hipsPath = AnimationUtility.CalculateTransformPath(hips, deathModel);
+            SetGraveDeathFloatCurve(clip, hipsPath, "m_LocalPosition.x", positions.Select(value => value.x).ToArray());
+            SetGraveDeathFloatCurve(clip, hipsPath, "m_LocalPosition.y", positions.Select(value => value.y).ToArray());
+            SetGraveDeathFloatCurve(clip, hipsPath, "m_LocalPosition.z", positions.Select(value => value.z).ToArray());
+            SetGraveDeathFloatCurve(clip, hipsPath, "m_LocalRotation.x", rotations.Select(value => value.x).ToArray());
+            SetGraveDeathFloatCurve(clip, hipsPath, "m_LocalRotation.y", rotations.Select(value => value.y).ToArray());
+            SetGraveDeathFloatCurve(clip, hipsPath, "m_LocalRotation.z", rotations.Select(value => value.z).ToArray());
+            SetGraveDeathFloatCurve(clip, hipsPath, "m_LocalRotation.w", rotations.Select(value => value.w).ToArray());
+            SetGraveDeathStraightLimbCurves(
+                clip,
+                deathModel,
+                leftArm,
+                leftForeArm,
+                leftHand,
+                new Vector3(-0.18f, -0.98f, 0f).normalized,
+                new Vector3(-0.08f, -0.997f, 0f).normalized);
+            SetGraveDeathStraightLimbCurves(
+                clip,
+                deathModel,
+                rightArm,
+                rightForeArm,
+                rightHand,
+                new Vector3(0.18f, -0.98f, 0f).normalized,
+                new Vector3(0.08f, -0.997f, 0f).normalized);
+            SetGraveDeathStraightLimbCurves(
+                clip,
+                deathModel,
+                leftUpLeg,
+                leftLeg,
+                leftFoot,
+                new Vector3(-0.05f, -0.999f, 0f).normalized,
+                Vector3.down);
+            SetGraveDeathStraightLimbCurves(
+                clip,
+                deathModel,
+                rightUpLeg,
+                rightLeg,
+                rightFoot,
+                new Vector3(0.05f, -0.999f, 0f).normalized,
+                Vector3.down);
+            SetGraveDeathScytheOffCurve(clip, renderer, deathModel);
+            var settings = AnimationUtility.GetAnimationClipSettings(clip);
+            settings.loopTime = false;
+            settings.loopBlend = false;
+            settings.cycleOffset = 0f;
+            AnimationUtility.SetAnimationClipSettings(clip, settings);
+            clip.EnsureQuaternionContinuity();
+            EditorUtility.SetDirty(clip);
+            AssetDatabase.SaveAssets();
+            return clip;
+        }
+
+        private static AnimatorController CreateOrUpdateGraveDeathBackFallController(AnimationClip clip)
+        {
+            EnsureAssetDirectory(GraveDeathWorkingControllerAssetPath);
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(GraveDeathWorkingControllerAssetPath);
+            if (controller == null)
+            {
+                controller = AnimatorController.CreateAnimatorControllerAtPath(GraveDeathWorkingControllerAssetPath);
+            }
+
+            var stateMachine = controller.layers[0].stateMachine;
+            var state = stateMachine.states.Select(child => child.state)
+                .FirstOrDefault(candidate => candidate.name == "DeathBackFall");
+            if (state == null)
+            {
+                state = stateMachine.AddState("DeathBackFall");
+            }
+
+            foreach (var child in stateMachine.states.ToArray())
+            {
+                if (child.state != state)
+                {
+                    stateMachine.RemoveState(child.state);
+                }
+            }
+
+            foreach (var transition in state.transitions.ToArray())
+            {
+                state.RemoveTransition(transition);
+            }
+
+            state.motion = clip;
+            state.speed = 1f;
+            state.writeDefaultValues = true;
+            stateMachine.defaultState = state;
+            EditorUtility.SetDirty(state);
+            EditorUtility.SetDirty(stateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static void SetGraveDeathStraightLimbCurves(
+            AnimationClip clip,
+            Transform model,
+            Transform upper,
+            Transform middle,
+            Transform end,
+            Vector3 upperModelDirection,
+            Vector3 lowerModelDirection)
+        {
+            var poses = CaptureLocalPoses(model);
+            var startUpperRotation = upper.localRotation;
+            var startMiddleRotation = middle.localRotation;
+            Quaternion finalUpperRotation;
+            Quaternion finalMiddleRotation;
+            try
+            {
+                finalUpperRotation = AimGraveDeathBoneAtModelDirection(
+                    upper,
+                    middle,
+                    model,
+                    upperModelDirection);
+                upper.localRotation = finalUpperRotation;
+                finalMiddleRotation = AimGraveDeathBoneAtModelDirection(
+                    middle,
+                    end,
+                    model,
+                    lowerModelDirection);
+            }
+            finally
+            {
+                RestoreLocalPoses(poses);
+            }
+
+            var upperRotations = new Quaternion[GraveDeathKeyTimes.Length];
+            var middleRotations = new Quaternion[GraveDeathKeyTimes.Length];
+            for (var i = 0; i < GraveDeathKeyTimes.Length; i++)
+            {
+                upperRotations[i] = Quaternion.Slerp(
+                    startUpperRotation,
+                    finalUpperRotation,
+                    GraveDeathFallProgress[i]);
+                middleRotations[i] = Quaternion.Slerp(
+                    startMiddleRotation,
+                    finalMiddleRotation,
+                    GraveDeathFallProgress[i]);
+                if (i > 0 && Quaternion.Dot(upperRotations[i - 1], upperRotations[i]) < 0f)
+                {
+                    var rotation = upperRotations[i];
+                    upperRotations[i] = new Quaternion(-rotation.x, -rotation.y, -rotation.z, -rotation.w);
+                }
+
+                if (i > 0 && Quaternion.Dot(middleRotations[i - 1], middleRotations[i]) < 0f)
+                {
+                    var rotation = middleRotations[i];
+                    middleRotations[i] = new Quaternion(-rotation.x, -rotation.y, -rotation.z, -rotation.w);
+                }
+            }
+
+            SetGraveDeathRotationCurves(clip, upper, model, upperRotations);
+            SetGraveDeathRotationCurves(clip, middle, model, middleRotations);
+        }
+
+        private static Quaternion AimGraveDeathBoneAtModelDirection(
+            Transform target,
+            Transform child,
+            Transform model,
+            Vector3 modelDirection)
+        {
+            var currentDirection = (child.position - target.position).normalized;
+            var desiredDirection =
+                (model.right * modelDirection.x +
+                 model.up * modelDirection.y +
+                 model.forward * modelDirection.z).normalized;
+            var worldRotation = Quaternion.FromToRotation(currentDirection, desiredDirection) * target.rotation;
+            return Quaternion.Inverse(target.parent.rotation) * worldRotation;
+        }
+
+        private static void SetGraveDeathRotationCurves(
+            AnimationClip clip,
+            Transform target,
+            Transform model,
+            IReadOnlyList<Quaternion> rotations)
+        {
+            var path = AnimationUtility.CalculateTransformPath(target, model);
+            SetGraveDeathFloatCurve(clip, path, "m_LocalRotation.x", rotations.Select(value => value.x).ToArray());
+            SetGraveDeathFloatCurve(clip, path, "m_LocalRotation.y", rotations.Select(value => value.y).ToArray());
+            SetGraveDeathFloatCurve(clip, path, "m_LocalRotation.z", rotations.Select(value => value.z).ToArray());
+            SetGraveDeathFloatCurve(clip, path, "m_LocalRotation.w", rotations.Select(value => value.w).ToArray());
+        }
+
+        private static void SetGraveDeathFloatCurve(
+            AnimationClip clip,
+            string path,
+            string propertyName,
+            IReadOnlyList<float> values)
+        {
+            if (values.Count != GraveDeathKeyTimes.Length)
+            {
+                throw new ArgumentException(
+                    "Grave death curve value count must match death key times.",
+                    nameof(values));
+            }
+
+            var keys = new Keyframe[GraveDeathKeyTimes.Length];
+            for (var i = 0; i < keys.Length; i++)
+            {
+                keys[i] = new Keyframe(GraveDeathKeyTimes[i], values[i]);
+            }
+
+            var curve = new AnimationCurve(keys);
+            for (var i = 0; i < curve.length; i++)
+            {
+                AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.Linear);
+                AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.Linear);
+            }
+
+            AnimationUtility.SetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Transform), propertyName),
+                curve);
+        }
+
+        private static void SetGraveDeathScytheOffCurve(
+            AnimationClip clip,
+            SkinnedMeshRenderer renderer,
+            Transform deathModel)
+        {
+            if (renderer.sharedMesh.GetBlendShapeIndex(GraveAttackBladeBlendShapeName) < 0)
+            {
+                return;
+            }
+
+            var curve = new AnimationCurve(
+                new Keyframe(0f, 0f),
+                new Keyframe(GraveDeathDuration, 0f));
+            for (var i = 0; i < curve.length; i++)
+            {
+                AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.Constant);
+                AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.Constant);
+            }
+
+            var path = AnimationUtility.CalculateTransformPath(renderer.transform, deathModel);
+            AnimationUtility.SetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(
+                    path,
+                    typeof(SkinnedMeshRenderer),
+                    "blendShape." + GraveAttackBladeBlendShapeName),
+                curve);
         }
 
         private static AnimationClip EnsureApprovedGraveHitRecoilClip(Transform hitModel)

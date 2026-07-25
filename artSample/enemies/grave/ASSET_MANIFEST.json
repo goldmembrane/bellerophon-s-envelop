@@ -1,0 +1,33 @@
+{
+  "enemy_id": "grave",
+  "sample_root": "artSample/enemies/grave",
+  "review_entry": "index.html",
+  "source_model": "enemies model/grave.fbx",
+  "exports": [
+    "exports/grave_reference_reproduction.glb",
+    "reproduction/grave_reproduction.fbx",
+    "reproduction/grave_reproduction.blend"
+  ],
+  "renders": [
+    "renders/01_front_grave_reference_match.png",
+    "renders/02_side_grave_inferred_surface.png",
+    "renders/03_reference_side_by_side_overview.png",
+    "renders/04_three_quarter_grave_material.png",
+    "renders/05_close_grave_suit_application.png",
+    "renders/06_texture_material_breakdown.png"
+  ],
+  "textures": [
+    "textures/grave_front_albedo.png",
+    "textures/grave_textile_albedo.png",
+    "textures/grave_fabric_normal.png",
+    "textures/grave_fabric_roughness.png"
+  ],
+  "tools": [
+    "tools/build_grave_review_sample.py",
+    "tools/prepare_grave_review_assets.py"
+  ],
+  "review": [
+    "review/grave_art_sample_page.png"
+  ],
+  "unity_runtime_applied": false
+}

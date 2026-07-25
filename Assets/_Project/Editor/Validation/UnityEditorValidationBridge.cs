@@ -22,6 +22,32 @@ namespace Bellerophon.Editor.Validation
         private const string Dolore04TentacleStabDiagnosticCommand = "CaptureDolore04TentacleStabFullMotionDiagnostic";
         private const string Dolore04TentacleStabFinalCommand = "CaptureDolore04TentacleStabFullMotionFinal";
         private const string Dolore05ExecutionOpeningDiagnosticCommand = "CaptureDolore05ExecutionOpeningDiagnostic";
+        private const string RebellionMoveVisualReviewCommand =
+            "CaptureRebellionMoveVisualReview";
+        private const string RebellionFrontArtifactVisualReviewCommand =
+            "CaptureRebellionFrontArtifactReview";
+        private const string RebellionAttackTransitionVisualReviewCommand =
+            "CaptureRebellionAttackModeTransitionReview";
+        private const string RebellionForwardScanVisualReviewCommand =
+            "CaptureRebellionForwardScanReview";
+        private const string RebellionForwardBurstVisualReviewCommand =
+            "CaptureRebellionForwardBurstFireReview";
+        private const string RebellionHitReactionVisualReviewCommand =
+            "CaptureRebellionHitReactionReview";
+        private const string RebellionDeathVisualReviewCommand =
+            "CaptureRebellionDeathReview";
+        private const string NegatifIdleEyeEmissionVisualReviewCommand =
+            "CaptureNegatifIdleEyeEmissionVisualReview";
+        private const string NegatifMoveVisualReviewCommand =
+            "CaptureNegatifMoveVisualReview";
+        private const string NegatifClawAttackVisualReviewCommand =
+            "CaptureNegatifClawAttackVisualReview";
+        private const string NegatifHitReactionVisualReviewCommand =
+            "CaptureNegatifHitReactionVisualReview";
+        private const string NegatifFleeVisualReviewCommand =
+            "CaptureNegatifFleeVisualReview";
+        private const string NegatifDeathVisualReviewCommand =
+            "CaptureNegatifDeathVisualReview";
         private const double PollIntervalSeconds = 0.5d;
         private const double TestRunnerStaleTimeoutSeconds = 120d;
 
@@ -124,7 +150,18 @@ namespace Bellerophon.Editor.Validation
                 request.Command != TergoPierceAttackCurrentSceneVisualRunCommand &&
                 request.Command != Dolore04TentacleStabDiagnosticCommand &&
                 request.Command != Dolore04TentacleStabFinalCommand &&
-                request.Command != Dolore05ExecutionOpeningDiagnosticCommand)
+                request.Command != Dolore05ExecutionOpeningDiagnosticCommand &&
+                request.Command != RebellionAttackTransitionVisualReviewCommand &&
+                request.Command != RebellionForwardScanVisualReviewCommand &&
+                request.Command != RebellionForwardBurstVisualReviewCommand &&
+                request.Command != RebellionHitReactionVisualReviewCommand &&
+                request.Command != RebellionDeathVisualReviewCommand &&
+                request.Command != NegatifIdleEyeEmissionVisualReviewCommand &&
+                request.Command != NegatifMoveVisualReviewCommand &&
+                request.Command != NegatifClawAttackVisualReviewCommand &&
+                request.Command != NegatifHitReactionVisualReviewCommand &&
+                request.Command != NegatifFleeVisualReviewCommand &&
+                request.Command != NegatifDeathVisualReviewCommand)
             {
                 TryDelete(ActiveRequestPath);
             }
@@ -494,6 +531,12 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ApplyApprovedGraveCurtainCallAttack,
                         "Approved Grave curtain-call attack applied.");
                     break;
+                case "ApplyRestoredGraveAttackFromUserVideo214018":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ApplyRestoredGraveAttackFromUserVideo214018,
+                        "Grave attack restored from user video 21:40:18 and applied to the working slot.");
+                    break;
                 case "ValidateApprovedGraveCurtainCallAttack":
                     RunSynchronous(
                         request,
@@ -505,6 +548,36 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureApprovedGraveCurtainCallAttack,
                         "Approved Grave curtain-call attack review captured.");
+                    break;
+                case "CaptureGraveAttackCurtainEndingFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureGraveAttackCurtainEndingFrames,
+                        "Grave working curtain-ending frames captured without Scene View focus.");
+                    break;
+                case "ApplyGraveDeathBackFallWorking":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ApplyGraveDeathBackFallWorking,
+                        "Grave working death back-fall motion applied to the death slot.");
+                    break;
+                case "CaptureGraveDeathBackFallFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureGraveDeathBackFallFrames,
+                        "Grave working death back-fall frames captured without Scene View focus.");
+                    break;
+                case "ApplyGraveDeathReviewLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.ApplyGraveDeathReviewLoop,
+                        "Grave death review object loop applied without changing the clip loop setting.");
+                    break;
+                case "CaptureGraveDeathReviewLoopFrames":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.GraveCargoRunScene.GraveCargoRunSceneApplyAndReview.CaptureGraveDeathReviewLoopFrames,
+                        "Grave death review object loop frames captured without Scene View focus.");
                     break;
                 case "ApplySmorzandoScenePlacement":
                     RunSynchronous(
@@ -857,8 +930,8 @@ namespace Bellerophon.Editor.Validation
                 case "ApplyApprovedOstinatoMaterialSample":
                     RunSynchronous(
                         request,
-                        Bellerophon.Editor.OstinatoApprovedMaterial.OstinatoApprovedMaterialApplyAndReview.ApplyApprovedOstinatoMaterialSample,
-                        "Approved Ostinato front, side, and back sample images projected directly and applied to nine scene slots.");
+                        Bellerophon.Editor.OstinatoApprovedSample.OstinatoApprovedSampleApplicator.ApplyApprovedOstinatoSampleToCargoRunMvp,
+                        "Approved Blender Ostinato mesh and baked PBR materials applied to nine CargoRunMvp scene slots.");
                     break;
                 case "CaptureApprovedOstinatoMaterialReview":
                     RunSynchronous(
@@ -871,6 +944,42 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.OstinatoApprovedMaterial.OstinatoApprovedMaterialApplyAndReview.InspectApprovedOstinatoMaterialRender,
                         "Unity Ostinato front, side, and back material distribution inspected in memory without image capture.");
+                    break;
+                case "ApplyOstinatoIdleBreathingAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoIdleBreathingAnimation.ApplyOstinatoIdleBreathingAnimation,
+                        "Ostinato regional BlendShape and connected-pose idle breathing animation applied to slot 02.");
+                    break;
+                case "ReviewOstinatoIdleAnimatorPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoIdleBreathingAnimation.ReviewOstinatoIdleAnimatorPlayback,
+                        "Ostinato slot 02 idle Animator playback reviewed through one complete loop.");
+                    break;
+                case "CaptureOstinatoIdleBreathingRuntimePlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoIdleBreathingAnimation.CaptureOstinatoIdleBreathingRuntimePlayback,
+                        "Ostinato slot 02 runtime playback capture started in the open Unity editor.");
+                    break;
+                case "InspectOstinatoWalkingSource":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoWalkingAnimation.InspectOstinatoWalkingSource,
+                        "Ostinato walking FBX source, mesh, material slots, rig, and clips inspected without mesh changes.");
+                    break;
+                case "ApplyOstinatoWalkingAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoWalkingAnimation.ApplyOstinatoWalkingAnimation,
+                        "Ostinato slot 03 walking loop and approved body-tone material applied without mesh changes.");
+                    break;
+                case "CaptureOstinatoWalkingRuntimePlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoWalkingAnimation.CaptureOstinatoWalkingRuntimePlayback,
+                        "Ostinato slot 03 runtime walking playback capture started in the open Unity editor.");
                     break;
                 case "InspectOstinatoScissorAttackTarget":
                     RunSynchronous(
@@ -895,6 +1004,180 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.OstinatoScissorAttackAnimation.CaptureOstinatoScissorAttackRuntimePlayback,
                         "Ostinato slot 04 whole-arm hook attack runtime keyframe capture started in the open Unity editor.");
+                    break;
+                case "ApplyOstinatoAttackFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.ApplyOstinatoAttackFbxReplacement,
+                        "Supplied Ostinato attack FBX applied to slot 04 with the approved static appearance.");
+                    break;
+                case "InspectOstinatoAttackAppearanceSync":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.InspectOstinatoAttackAppearanceSync,
+                        "Ostinato slot 04 supplied attack clip bindings and approved static appearance inspected.");
+                    break;
+                case "CaptureOstinatoAttackAppearanceComparison":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.CaptureOstinatoAttackAppearanceComparison,
+                        "Ostinato slot 04 supplied-FBX attack appearance comparison capture started.");
+                    break;
+                case "ApplyOstinatoAttackFbxUnmodified":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.ApplyOstinatoAttackFbxUnmodified,
+                        "Supplied Ostinato attack FBX applied to slot 04 without movement overrides and with approved static appearance.");
+                    break;
+                case "InspectOstinatoAttackFbxUnmodified":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.InspectOstinatoAttackFbxUnmodified,
+                        "Ostinato slot 04 source attack curves, default take settings, bindings, and approved appearance inspected.");
+                    break;
+                case "ApplyOstinatoAttackDownstrikeAcceleration":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.ApplyOstinatoAttackDownstrikeAcceleration,
+                        "Ostinato attack speed-only downstrike acceleration profile applied.");
+                    break;
+                case "InspectOstinatoAttackDownstrikeAcceleration":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.InspectOstinatoAttackDownstrikeAcceleration,
+                        "Ostinato attack speed-only downstrike acceleration profile inspected.");
+                    break;
+                case "CaptureOstinatoAttackDownstrikeAcceleration":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.CaptureOstinatoAttackDownstrikeAcceleration,
+                        "Ostinato attack speed-only downstrike acceleration capture started.");
+                    break;
+                case "ApplyOstinatoAttackForwardSlashMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackForwardSlashMotion.ApplyOstinatoAttackForwardSlashMotion,
+                        "Ostinato attack arm and forearm rotation curves corrected into a forward slash during FBX import.");
+                    break;
+                case "InspectOstinatoAttackForwardSlashMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackForwardSlashMotion.InspectOstinatoAttackForwardSlashMotion,
+                        "Ostinato attack forward-slash import correction inspected.");
+                    break;
+                case "AnalyzeOstinatoAttackForwardSlashVelocity":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackForwardSlashMotion.AnalyzeOstinatoAttackForwardSlashVelocity,
+                        "Ostinato attack forward-slash frame-by-frame hand velocity analyzed.");
+                    break;
+                case "InspectOstinatoAttackForwardSlashBindings":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackForwardSlashMotion.InspectOstinatoAttackForwardSlashBindings,
+                        "Ostinato attack source rotation bindings inspected before import correction.");
+                    break;
+                case "CaptureOstinatoAttackForwardSlashMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackForwardSlashMotion.CaptureOstinatoAttackForwardSlashMotion,
+                        "Ostinato attack forward-slash import correction capture started.");
+                    break;
+                case "AnalyzeOstinatoAttackMotionSegments":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackMotionSegmentAnalysis.AnalyzeOstinatoAttackMotionSegments,
+                        "Ostinato slot 04 attack motion sampled across the full source timeline without modifying the animation.");
+                    break;
+                case "ApplyOstinatoAttackMotionPhaseCut":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackMotionPhaseCut.ApplyOstinatoAttackMotionPhaseCut,
+                        "Ostinato attack frames 0 through 100 preserved and a smooth return-to-default applied after impact.");
+                    break;
+                case "InspectOstinatoAttackMotionPhaseCut":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackMotionPhaseCut.InspectOstinatoAttackMotionPhaseCut,
+                        "Ostinato unchanged attack, smooth return continuity, loop, controller, source integrity, and appearance inspected.");
+                    break;
+                case "CaptureOstinatoAttackMotionPhaseCut":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackMotionPhaseCut.CaptureOstinatoAttackMotionPhaseCut,
+                        "Ostinato unchanged attack and smooth return-to-default contact sheet captured once after numeric inspection.");
+                    break;
+                case "ApplyOstinatoAttackFbxForwardCloseLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackForwardCloseLoop.ApplyOstinatoAttackFbxForwardCloseLoop,
+                        "Ostinato supplied-FBX attack object replaced, approved static appearance synchronized, and frames 0 through 93 loop applied.");
+                    break;
+                case "InspectOstinatoAttackFbxForwardCloseLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackForwardCloseLoop.InspectOstinatoAttackFbxForwardCloseLoop,
+                        "Ostinato direct supplied-FBX instance, approved appearance, and exact frames 0 through 93 loop inspected.");
+                    break;
+                case "CaptureOstinatoAttackFbxForwardCloseLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackForwardCloseLoop.CaptureOstinatoAttackFbxForwardCloseLoop,
+                        "Ostinato frames 0 through 93 forward-close loop contact sheet captured once after numeric inspection.");
+                    break;
+                case "EnableOstinatoAttackLoopPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.EnableOstinatoAttackLoopPlayback,
+                        "Ostinato slot 04 attack loop playback enabled without changing movement curves.");
+                    break;
+                case "InspectOstinatoAttackLoopPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.InspectOstinatoAttackLoopPlayback,
+                        "Ostinato slot 04 loop-only override, source curves, playback speed, and appearance inspected.");
+                    break;
+                case "ApplyOstinatoAttackHorizontalInwardWrist":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackWristOrientation.ApplyOstinatoAttackHorizontalInwardWrist,
+                        "Ostinato attack blade angles corrected horizontally inward without changing the body composition.");
+                    break;
+                case "InspectOstinatoAttackHorizontalInwardWrist":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackWristOrientation.InspectOstinatoAttackHorizontalInwardWrist,
+                        "Ostinato wrist-only blade orientation and unchanged body animation curves inspected.");
+                    break;
+                case "CaptureOstinatoAttackHorizontalInwardWrist":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackWristOrientation.CaptureOstinatoAttackHorizontalInwardWrist,
+                        "Ostinato wrist-only source/corrected exact-frame comparison captured.");
+                    break;
+                case "CaptureOstinatoAttackFbxUnmodifiedComparison":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoScissorAttackAnimation.CaptureOstinatoAttackFbxUnmodifiedComparison,
+                        "Ostinato slot 04 unmodified supplied-FBX attack comparison capture started.");
+                    break;
+                case "ApplyOstinatoAttackDownstrikeBladeRotation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackDownstrikeBladeRotation.ApplyOstinatoAttackDownstrikeBladeRotation,
+                        "Ostinato downstrike-only rigid blade rotation applied.");
+                    break;
+                case "InspectOstinatoAttackDownstrikeBladeRotation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackDownstrikeBladeRotation.InspectOstinatoAttackDownstrikeBladeRotation,
+                        "Ostinato downstrike rigid blade rotation inspected.");
+                    break;
+                case "CaptureOstinatoAttackDownstrikeBladeRotation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.OstinatoAttackDownstrikeBladeRotation.CaptureOstinatoAttackDownstrikeBladeRotation,
+                        "Ostinato downstrike rigid blade source/corrected comparison captured.");
                     break;
                 case "ApplyApprovedGraveHitRecoil":
                     RunSynchronous(
@@ -1316,6 +1599,150 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.DoloreAttackAttachment.DoloreAttackAttachmentApplyAndReview.CaptureContactDiagnostic,
                         "Dolore attack attachment right, left, and upper three-quarter contact views captured.");
                     break;
+                case "InspectDolore04TentacleStabTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.InspectTarget,
+                        "Dolore motion object 3 built-in tentacle rig inspected without scene changes.");
+                    break;
+                case "ApplyDolore04TentacleStabAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.ApplyAnimation,
+                        "Dolore motion object 3 tentacle stab animation applied with the built-in 13-bone rig.");
+                    break;
+                case "InspectDolore04TentacleStabAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.InspectAnimation,
+                        "Dolore motion object 3 tentacle stab timing, rig curves, fixed root, and loop inspected.");
+                    break;
+                case "CaptureDolore04TentacleStabAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.CaptureAnimation,
+                        "Dolore motion object 3 tentacle emergence, strike, and recovery poses captured.");
+                    break;
+                case "InspectDolore04TentacleStabFullMotionTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.InspectTarget,
+                        "Dolore motion object 3 full tentacle motion target and built-in rig inspected.");
+                    break;
+                case "ApplyDolore04TentacleStabFullMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.ApplyAnimation,
+                        "Dolore motion object 3 emergence, outward downstrike, and recovery motion applied.");
+                    break;
+                case "InspectDolore04TentacleStabFullMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.InspectAnimation,
+                        "Dolore motion object 3 full motion timing, outward direction, fixed anchor, and loop inspected.");
+                    break;
+                case "ApplyDolore05ExecutionOpening":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionOpening.Dolore05ExecutionOpeningApplyAndReview.ApplyAnimation,
+                        "Dolore motion object 4 execution opening copied through the first frontal pierce impact.");
+                    break;
+                case "InspectDolore05ExecutionOpening":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionOpening.Dolore05ExecutionOpeningApplyAndReview.InspectAnimation,
+                        "Dolore motion object 4 execution opening source motion, timing, fixed anchor, and hold inspected.");
+                    break;
+                case "ApplyDolore05ExecutionTargetTransfer":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionTarget.Dolore05ExecutionTargetTransferApplyAndReview.ApplyPlacement,
+                        "transfer.fbx placed below Dolore motion object 4 within the PierceHold range.");
+                    break;
+                case "InspectDolore05ExecutionTargetTransfer":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionTarget.Dolore05ExecutionTargetTransferApplyAndReview.InspectPlacement,
+                        "Dolore motion object 4 transfer target position and PierceHold range inspected.");
+                    break;
+                case "CaptureDolore05ExecutionTargetTransferDiagnostic":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionTarget.Dolore05ExecutionTargetTransferApplyAndReview.CapturePlacementDiagnostic,
+                        "Dolore motion object 4 transfer target diagnostic views captured.");
+                    break;
+                case "ApplyDolore05ExecutionPullInLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionPullInLoop.Dolore05ExecutionPullInLoopApplyAndReview.ApplyLoop,
+                        "Dolore motion object 4 standing-to-lying penetration and two-second pull-in loop applied.");
+                    break;
+                case "InspectDolore05ExecutionPullInLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionPullInLoop.Dolore05ExecutionPullInLoopApplyAndReview.InspectLoop,
+                        "Dolore motion object 4 target scale, immediate lying swap, pull-in timing, and loop inspected.");
+                    break;
+                case "CaptureDolore05ExecutionPullInLoopDiagnostic":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore05ExecutionPullInLoop.Dolore05ExecutionPullInLoopApplyAndReview.CaptureDiagnostic,
+                        "Dolore motion object 4 actual Animator pull-in loop diagnostic states captured.");
+                    break;
+                case "InspectDolore06HitReactionTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore06HitReaction.Dolore06HitReactionApplyAndReview.InspectTarget,
+                        "Dolore motion object 5 hit-reaction rig and weighted target inspected.");
+                    break;
+                case "ApplyDolore06HitReaction":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore06HitReaction.Dolore06HitReactionApplyAndReview.ApplyAnimation,
+                        "Dolore motion object 5 two-second backward recoil and left head turn applied.");
+                    break;
+                case "InspectDolore06HitReaction":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore06HitReaction.Dolore06HitReactionApplyAndReview.InspectAnimation,
+                        "Dolore motion object 5 recoil direction, left head turn, recovery, and loop inspected.");
+                    break;
+                case "CaptureDolore06HitReactionDiagnostic":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore06HitReaction.Dolore06HitReactionApplyAndReview.CaptureDiagnostic,
+                        "Dolore motion object 5 actual hit-reaction Animator diagnostic views captured.");
+                    break;
+                case "InspectDolore07DeathTarget":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore07Death.Dolore07DeathAnimationTool.InspectTarget,
+                        "Dolore motion object 6 death rig, portrait material slot, and target inspected.");
+                    break;
+                case "ApplyDolore07DeathAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore07Death.Dolore07DeathAnimationTool.ApplyAnimation,
+                        "Dolore motion object 6 left fall, white noise, black signal, and loop applied.");
+                    break;
+                case "InspectDolore07DeathAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore07Death.Dolore07DeathAnimationTool.InspectAnimation,
+                        "Dolore motion object 6 death direction, ground contact, portrait signal phases, and loop inspected.");
+                    break;
+                case "CaptureDolore07DeathAnimationDiagnostic":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore07Death.Dolore07DeathAnimationTool.CaptureDiagnostic,
+                        "Dolore motion object 6 death diagnostic views captured.");
+                    break;
+                case "CaptureDolore07DeathAnimationFinal":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.Dolore07Death.Dolore07DeathAnimationTool.CaptureFinal,
+                        "Dolore motion object 6 death final views captured.");
+                    break;
                 case "InspectRebellionImportedModel":
                     RunSynchronous(
                         request,
@@ -1351,6 +1778,147 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.RebellionCargoRunScene.RebellionApprovedAppearanceApplyAndReview.CaptureApprovedRebellionAppearanceFinal,
                         "Approved Rebellion appearance final view captured once.");
+                    break;
+                case "InspectRebellionMoveRig":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene.RebellionMoveAnimationTool.InspectMoveRig,
+                        "Rebellion move slot embedded rig hierarchy inspected without scene changes.");
+                    break;
+                case "InspectRebellionAttackTransitionRig":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene
+                            .RebellionAttackModeTransitionTool.InspectRig,
+                        "Rebellion attack transition rig separation inspected without scene changes.");
+                    break;
+                case "ApplyRebellionAttackModeTransition":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene
+                            .RebellionAttackModeTransitionTool
+                            .ApplyAttackModeTransition,
+                        "Rebellion attack mode transition applied to Rebellion_02.");
+                    break;
+                case "InspectRebellionAttackModeTransition":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene
+                            .RebellionAttackModeTransitionTool
+                            .InspectAttackModeTransition,
+                        "Rebellion attack mode transition structure and poses inspected.");
+                    break;
+                case "CaptureRebellionAttackModeTransitionReview":
+                    RunRebellionAttackTransitionVisualReview(request);
+                    break;
+                case "ApplyRebellionForwardScan":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene
+                            .RebellionForwardScanTool.ApplyForwardScan,
+                        "Rebellion forward scan applied to Rebellion_03.");
+                    break;
+                case "InspectRebellionForwardScan":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene
+                            .RebellionForwardScanTool.InspectForwardScan,
+                        "Rebellion forward scan structure, standing pose, and sweep inspected.");
+                    break;
+                case "CaptureRebellionForwardScanReview":
+                    RunRebellionForwardScanVisualReview(request);
+                    break;
+                case "ApplyRebellionForwardBurstFire":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene
+                            .RebellionForwardBurstFireTool
+                            .ApplyForwardBurstFire,
+                        "Rebellion forward burst fire applied to Rebellion_04.");
+                    break;
+                case "InspectRebellionForwardBurstFire":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene
+                            .RebellionForwardBurstFireTool
+                            .InspectForwardBurstFire,
+                        "Rebellion forward burst fire structure, standing " +
+                        "pose, firing cadence, and weapon rotation inspected.");
+                    break;
+                case "CaptureRebellionForwardBurstFireReview":
+                    RunRebellionForwardBurstVisualReview(request);
+                    break;
+                case "ApplyRebellionHitReaction":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene
+                            .RebellionAttackModeTransitionTool
+                            .ApplyHitReaction,
+                        "Rebellion hit reaction applied to Rebellion_05.");
+                    break;
+                case "InspectRebellionHitReaction":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene
+                            .RebellionAttackModeTransitionTool
+                            .InspectHitReaction,
+                        "Rebellion hit reaction structure, recoil, and " +
+                        "left-rear step inspected.");
+                    break;
+                case "CaptureRebellionHitReactionReview":
+                    RunRebellionHitReactionVisualReview(request);
+                    break;
+                case "ApplyRebellionDeath":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene
+                            .RebellionAttackModeTransitionTool
+                            .ApplyDeath,
+                        "Rebellion death animation applied to Rebellion_06.");
+                    break;
+                case "InspectRebellionDeath":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene
+                            .RebellionAttackModeTransitionTool
+                            .InspectDeath,
+                        "Rebellion death structure, collapse, body tilt, " +
+                        "floor contact, and final hold inspected.");
+                    break;
+                case "CaptureRebellionDeathReview":
+                    RunRebellionDeathVisualReview(request);
+                    break;
+                case "ApplyRebellionMoveAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene.RebellionMoveAnimationTool.ApplyMoveAnimation,
+                        "Rebellion diagonal spider crawl animation applied to Rebellion_01_Move.");
+                    break;
+                case "InspectRebellionMoveAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene.RebellionMoveAnimationTool.InspectMoveAnimation,
+                        "Rebellion move animation and corrected rig attachments inspected.");
+                    break;
+                case "CaptureRebellionMoveVisualReview":
+                    RunRebellionMoveVisualReview(request);
+                    break;
+                case "RemoveRebellionFrontArtifact":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene
+                            .RebellionFrontArtifactReviewTool.RemoveFrontArtifact,
+                        "Rebellion front square animation artifact removed only.");
+                    break;
+                case "InspectRebellionFrontArtifact":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RebellionCargoRunScene
+                            .RebellionFrontArtifactReviewTool.InspectFrontArtifact,
+                        "Rebellion front artifact correction inspected without scene changes.");
+                    break;
+                case "CaptureRebellionFrontArtifactReview":
+                    RunRebellionFrontArtifactVisualReview(request);
                     break;
                 case "ApplyNegatifPlacement":
                     RunSynchronous(
@@ -1405,6 +1973,66 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.NegatifCargoRunScene.NegatifCargoRunScenePlacementTool.CaptureApprovedGlbAppearance,
                         "Approved Negatif GLB Unity appearance captured once for visual comparison.");
+                    break;
+                case "ApplyNegatifIdleEyeEmission":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifCargoRunScenePlacementTool.ApplyIdleEyeEmissionAnimation,
+                        "Negatif idle eye emission animation applied to Negatif_01_Idle.");
+                    break;
+                case "InspectNegatifIdleEyeEmission":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifCargoRunScenePlacementTool.InspectIdleEyeEmissionAnimation,
+                        "Negatif idle eye emission animation inspected.");
+                    break;
+                case "CaptureNegatifIdleEyeEmissionVisualReview":
+                    RunNegatifIdleEyeEmissionVisualReview(request);
+                    break;
+                case "CaptureNegatifMoveVisualReview":
+                    RunNegatifMoveVisualReview(request);
+                    break;
+                case "ApplyNegatifMoveAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifMoveAnimationTool.ApplyMoveAnimation,
+                        "Negatif quadruped rig move animation applied to Negatif_02_Move.");
+                    break;
+                case "ApplyNegatifClawAttackAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifClawAttackAnimationTool.ApplyClawAttackAnimation,
+                        "Negatif alternating upright claw attack applied to Negatif_03_Claw_Attack.");
+                    break;
+                case "CaptureNegatifClawAttackVisualReview":
+                    RunNegatifClawAttackVisualReview(request);
+                    break;
+                case "ApplyNegatifHitReactionAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifHitReactionAnimationTool.ApplyHitReactionAnimation,
+                        "Negatif left hit reaction applied to Negatif_04_Hit_Reaction.");
+                    break;
+                case "CaptureNegatifHitReactionVisualReview":
+                    RunNegatifHitReactionVisualReview(request);
+                    break;
+                case "ApplyNegatifFleeAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifFleeAnimationTool.ApplyFleeAnimation,
+                        "Negatif accelerated quadruped flee and tail swing applied to Negatif_05_Flee.");
+                    break;
+                case "CaptureNegatifFleeVisualReview":
+                    RunNegatifFleeVisualReview(request);
+                    break;
+                case "ApplyNegatifDeathAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.NegatifCargoRunScene.NegatifDeathAnimationTool.ApplyDeathAnimation,
+                        "Negatif right-roll belly-up death animation applied to Negatif_06_Death.");
+                    break;
+                case "CaptureNegatifDeathVisualReview":
+                    RunNegatifDeathVisualReview(request);
                     break;
                 case "ApplyConSpiritoToCurrentCargoRunScene":
                     RunSynchronous(
@@ -1652,120 +2280,6 @@ namespace Bellerophon.Editor.Validation
                 case "ValidatePreparedSocietasAttackConsumeBiteChewAnimation":
                     RunSynchronous(
                         request,
-                case "InspectDolore04TentacleStabTarget":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.InspectTarget,
-                        "Dolore motion object 3 built-in tentacle rig inspected without scene changes.");
-                    break;
-                case "ApplyDolore04TentacleStabAnimation":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.ApplyAnimation,
-                        "Dolore motion object 3 tentacle stab animation applied with the built-in 13-bone rig.");
-                    break;
-                case "InspectDolore04TentacleStabAnimation":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.InspectAnimation,
-                        "Dolore motion object 3 tentacle stab timing, rig curves, fixed root, and loop inspected.");
-                    break;
-                case "CaptureDolore04TentacleStabAnimation":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.CaptureAnimation,
-                        "Dolore motion object 3 tentacle emergence, strike, and recovery poses captured.");
-                    break;
-                case "InspectDolore04TentacleStabFullMotionTarget":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.InspectTarget,
-                        "Dolore motion object 3 full tentacle motion target and built-in rig inspected.");
-                    break;
-                case "ApplyDolore04TentacleStabFullMotion":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.ApplyAnimation,
-                        "Dolore motion object 3 emergence, outward downstrike, and recovery motion applied.");
-                    break;
-                case "InspectDolore04TentacleStabFullMotion":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabAnimationApplyAndReview.InspectAnimation,
-                        "Dolore motion object 3 full motion timing, outward direction, fixed anchor, and loop inspected.");
-                    break;
-                case "ApplyDolore05ExecutionOpening":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore05ExecutionOpening.Dolore05ExecutionOpeningApplyAndReview.ApplyAnimation,
-                        "Dolore motion object 4 execution opening copied through the first frontal pierce impact.");
-                    break;
-                case "InspectDolore05ExecutionOpening":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore05ExecutionOpening.Dolore05ExecutionOpeningApplyAndReview.InspectAnimation,
-                        "Dolore motion object 4 execution opening source motion, timing, fixed anchor, and hold inspected.");
-                    break;
-                case "ApplyDolore05ExecutionTargetTransfer":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore05ExecutionTarget.Dolore05ExecutionTargetTransferApplyAndReview.ApplyPlacement,
-                        "transfer.fbx placed below Dolore motion object 4 within the PierceHold range.");
-                    break;
-                case "InspectDolore05ExecutionTargetTransfer":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore05ExecutionTarget.Dolore05ExecutionTargetTransferApplyAndReview.InspectPlacement,
-                        "Dolore motion object 4 transfer target position and PierceHold range inspected.");
-                    break;
-                case "CaptureDolore05ExecutionTargetTransferDiagnostic":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore05ExecutionTarget.Dolore05ExecutionTargetTransferApplyAndReview.CapturePlacementDiagnostic,
-                        "Dolore motion object 4 transfer target diagnostic views captured.");
-                    break;
-                case "ApplyDolore05ExecutionPullInLoop":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore05ExecutionPullInLoop.Dolore05ExecutionPullInLoopApplyAndReview.ApplyLoop,
-                        "Dolore motion object 4 standing-to-lying penetration and two-second pull-in loop applied.");
-                    break;
-                case "InspectDolore05ExecutionPullInLoop":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore05ExecutionPullInLoop.Dolore05ExecutionPullInLoopApplyAndReview.InspectLoop,
-                        "Dolore motion object 4 target scale, immediate lying swap, pull-in timing, and loop inspected.");
-                    break;
-                case "CaptureDolore05ExecutionPullInLoopDiagnostic":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore05ExecutionPullInLoop.Dolore05ExecutionPullInLoopApplyAndReview.CaptureDiagnostic,
-                        "Dolore motion object 4 actual Animator pull-in loop diagnostic states captured.");
-                    break;
-                case "InspectDolore06HitReactionTarget":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore06HitReaction.Dolore06HitReactionApplyAndReview.InspectTarget,
-                        "Dolore motion object 5 hit-reaction rig and weighted target inspected.");
-                    break;
-                case "ApplyDolore06HitReaction":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore06HitReaction.Dolore06HitReactionApplyAndReview.ApplyAnimation,
-                        "Dolore motion object 5 two-second backward recoil and left head turn applied.");
-                    break;
-                case "InspectDolore06HitReaction":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore06HitReaction.Dolore06HitReactionApplyAndReview.InspectAnimation,
-                        "Dolore motion object 5 recoil direction, left head turn, recovery, and loop inspected.");
-                    break;
-                case "CaptureDolore06HitReactionDiagnostic":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.Dolore06HitReaction.Dolore06HitReactionApplyAndReview.CaptureDiagnostic,
-                        "Dolore motion object 5 actual hit-reaction Animator diagnostic views captured.");
-                    break;
                         Bellerophon.Editor.SocietasCargoRunScene.SocietasCargoRunSceneApplyAndReview.ValidateAttackConsumeBiteChewAnimation,
                         "Prepared Societas 03 attack consume bite chew animation validated.");
                     break;
@@ -2331,6 +2845,15 @@ namespace Bellerophon.Editor.Validation
                 case TergoPierceAttackCurrentSceneVisualRunCommand:
                     RunTergoPierceAttackCurrentSceneVisualRun(request);
                     break;
+                case Dolore04TentacleStabDiagnosticCommand:
+                    RunDolore04TentacleStabFullMotionCapture(request, false);
+                    break;
+                case Dolore04TentacleStabFinalCommand:
+                    RunDolore04TentacleStabFullMotionCapture(request, true);
+                    break;
+                case Dolore05ExecutionOpeningDiagnosticCommand:
+                    RunDolore05ExecutionOpeningCapture(request);
+                    break;
                 case "InspectTergoBackRushAuthoredSprintRig":
                     RunSynchronous(
                         request,
@@ -2576,15 +3099,6 @@ namespace Bellerophon.Editor.Validation
                         request,
                         ApprovedArmoryShellBootstrap.UpdateApprovedArmoryAr05Only,
                         "Approved armory AR-05 updated only.");
-                    break;
-                case Dolore04TentacleStabDiagnosticCommand:
-                    RunDolore04TentacleStabFullMotionCapture(request, false);
-                    break;
-                case Dolore04TentacleStabFinalCommand:
-                    RunDolore04TentacleStabFullMotionCapture(request, true);
-                    break;
-                case Dolore05ExecutionOpeningDiagnosticCommand:
-                    RunDolore05ExecutionOpeningCapture(request);
                     break;
                 case "UpdateApprovedArmoryAr02Ar03Only":
                     RunSynchronous(
@@ -3368,6 +3882,586 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
+        private static void RunDolore04TentacleStabFullMotionCapture(BridgeRequest request, bool finalCapture)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabFullMotionPlayModeCapture.Start(
+                    finalCapture,
+                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
+                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunDolore05ExecutionOpeningCapture(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Bellerophon.Editor.Dolore05ExecutionOpening.Dolore05ExecutionOpeningPlayModeCapture.Start(
+                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
+                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunNegatifIdleEyeEmissionVisualReview(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (Bellerophon.Editor.NegatifCargoRunScene.NegatifIdleEyeEmissionPlayModeCapture.HasPendingCapture)
+                {
+                    Bellerophon.Editor.NegatifCargoRunScene.NegatifIdleEyeEmissionPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                }
+                else
+                {
+                    Bellerophon.Editor.NegatifCargoRunScene.NegatifIdleEyeEmissionPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunRebellionMoveVisualReview(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionMovePlayModeCapture.HasPendingCapture)
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionMovePlayModeCapture.Resume(
+                            completeCallback,
+                            failCallback);
+                }
+                else
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionMovePlayModeCapture.Start(
+                            completeCallback,
+                            failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunRebellionFrontArtifactVisualReview(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionFrontArtifactPlayModeCapture.HasPendingCapture)
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionFrontArtifactPlayModeCapture.Resume(
+                            completeCallback,
+                            failCallback);
+                }
+                else
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionFrontArtifactPlayModeCapture.Start(
+                            completeCallback,
+                            failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunRebellionAttackTransitionVisualReview(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionAttackModeTransitionPlayModeCapture
+                    .HasPendingCapture)
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionAttackModeTransitionPlayModeCapture.Resume(
+                            completeCallback,
+                            failCallback);
+                }
+                else
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionAttackModeTransitionPlayModeCapture.Start(
+                            completeCallback,
+                            failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunRebellionForwardScanVisualReview(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionForwardScanPlayModeCapture.HasPendingCapture)
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionForwardScanPlayModeCapture.Resume(
+                            completeCallback,
+                            failCallback);
+                }
+                else
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionForwardScanPlayModeCapture.Start(
+                            completeCallback,
+                            failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunRebellionForwardBurstVisualReview(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionForwardBurstFirePlayModeCapture
+                    .HasPendingCapture)
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionForwardBurstFirePlayModeCapture.Resume(
+                            completeCallback,
+                            failCallback);
+                }
+                else
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionForwardBurstFirePlayModeCapture.Start(
+                            completeCallback,
+                            failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunRebellionHitReactionVisualReview(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionHitReactionPlayModeCapture
+                    .HasPendingCapture)
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionHitReactionPlayModeCapture.Resume(
+                            completeCallback,
+                            failCallback);
+                }
+                else
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionHitReactionPlayModeCapture.Start(
+                            completeCallback,
+                            failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunRebellionDeathVisualReview(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionDeathPlayModeCapture
+                    .HasPendingCapture)
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionDeathPlayModeCapture.Resume(
+                            completeCallback,
+                            failCallback);
+                }
+                else
+                {
+                    Bellerophon.Editor.RebellionCargoRunScene
+                        .RebellionDeathPlayModeCapture.Start(
+                            completeCallback,
+                            failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunNegatifMoveVisualReview(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (Bellerophon.Editor.NegatifCargoRunScene.NegatifMovePlayModeCapture.HasPendingCapture)
+                {
+                    Bellerophon.Editor.NegatifCargoRunScene.NegatifMovePlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                }
+                else
+                {
+                    Bellerophon.Editor.NegatifCargoRunScene.NegatifMovePlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunNegatifClawAttackVisualReview(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (Bellerophon.Editor.NegatifCargoRunScene.NegatifClawAttackPlayModeCapture.HasPendingCapture)
+                {
+                    Bellerophon.Editor.NegatifCargoRunScene.NegatifClawAttackPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                }
+                else
+                {
+                    Bellerophon.Editor.NegatifCargoRunScene.NegatifClawAttackPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunNegatifHitReactionVisualReview(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (Bellerophon.Editor.NegatifCargoRunScene.NegatifHitReactionPlayModeCapture.HasPendingCapture)
+                {
+                    Bellerophon.Editor.NegatifCargoRunScene.NegatifHitReactionPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                }
+                else
+                {
+                    Bellerophon.Editor.NegatifCargoRunScene.NegatifHitReactionPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunNegatifFleeVisualReview(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (Bellerophon.Editor.NegatifCargoRunScene.NegatifFleePlayModeCapture.HasPendingCapture)
+                {
+                    Bellerophon.Editor.NegatifCargoRunScene.NegatifFleePlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                }
+                else
+                {
+                    Bellerophon.Editor.NegatifCargoRunScene.NegatifFleePlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunNegatifDeathVisualReview(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (Bellerophon.Editor.NegatifCargoRunScene.NegatifDeathPlayModeCapture.HasPendingCapture)
+                {
+                    Bellerophon.Editor.NegatifCargoRunScene.NegatifDeathPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                }
+                else
+                {
+                    Bellerophon.Editor.NegatifCargoRunScene.NegatifDeathPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
         private static void RunConSpiritoReferenceRunVideoCapture(BridgeRequest request)
         {
             BeginRequest(request);
@@ -3586,7 +4680,23 @@ namespace Bellerophon.Editor.Validation
                 return false;
             }
 
-            if (request.Command == TergoPierceAttackCurrentSceneVisualRunCommand)
+            if (request.Command == TergoPierceAttackCurrentSceneVisualRunCommand ||
+                request.Command == Dolore04TentacleStabDiagnosticCommand ||
+                request.Command == Dolore04TentacleStabFinalCommand ||
+                request.Command == Dolore05ExecutionOpeningDiagnosticCommand ||
+                request.Command == RebellionMoveVisualReviewCommand ||
+                request.Command == RebellionFrontArtifactVisualReviewCommand ||
+                request.Command == RebellionAttackTransitionVisualReviewCommand ||
+                request.Command == RebellionForwardScanVisualReviewCommand ||
+                request.Command == RebellionForwardBurstVisualReviewCommand ||
+                request.Command == RebellionHitReactionVisualReviewCommand ||
+                request.Command == RebellionDeathVisualReviewCommand ||
+                request.Command == NegatifIdleEyeEmissionVisualReviewCommand ||
+                request.Command == NegatifMoveVisualReviewCommand ||
+                request.Command == NegatifClawAttackVisualReviewCommand ||
+                request.Command == NegatifHitReactionVisualReviewCommand ||
+                request.Command == NegatifFleeVisualReviewCommand ||
+                request.Command == NegatifDeathVisualReviewCommand)
             {
                 return false;
             }
@@ -3614,43 +4724,6 @@ namespace Bellerophon.Editor.Validation
                 File.Copy(DefaultTestResultsPath, request.ResultsPath, true);
                 WriteLog(request, false, null, "PlayModeTests completed.");
             }
-        private static void RunDolore04TentacleStabFullMotionCapture(BridgeRequest request, bool finalCapture)
-        {
-            BeginRequest(request);
-            try
-            {
-                RequireScriptsCompiled();
-                request.Write(ActiveRequestPath);
-                Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabFullMotionPlayModeCapture.Start(
-                    finalCapture,
-                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
-                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
-            }
-            catch (Exception exception)
-            {
-                TryDelete(ActiveRequestPath);
-                FailRequest(request, exception);
-            }
-        }
-
-        private static void RunDolore05ExecutionOpeningCapture(BridgeRequest request)
-        {
-            BeginRequest(request);
-            try
-            {
-                RequireScriptsCompiled();
-                request.Write(ActiveRequestPath);
-                Bellerophon.Editor.Dolore05ExecutionOpening.Dolore05ExecutionOpeningPlayModeCapture.Start(
-                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
-                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
-            }
-            catch (Exception exception)
-            {
-                TryDelete(ActiveRequestPath);
-                FailRequest(request, exception);
-            }
-        }
-
             catch (Exception exception)
             {
                 WriteLog(request, true, exception, string.Empty);
@@ -3685,14 +4758,294 @@ namespace Bellerophon.Editor.Validation
                 return false;
             }
 
-            if (request.Command == TergoPierceAttackCurrentSceneVisualRunCommand ||
-                request.Command == Dolore04TentacleStabDiagnosticCommand ||
-                request.Command == Dolore04TentacleStabFinalCommand ||
-                request.Command == Dolore05ExecutionOpeningDiagnosticCommand)
+            if (request.Command == TergoPierceAttackCurrentSceneVisualRunCommand)
             {
                 BeginRequest(request);
                 activeLog.AppendLine("Resuming Tergo current scene visual run after Play Mode transition.");
                 Bellerophon.Editor.TergoCargoRunScene.TergoPierceAttackCurrentSceneVisualRun.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == Dolore04TentacleStabDiagnosticCommand ||
+                request.Command == Dolore04TentacleStabFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine("Resuming Dolore motion 3 actual Animator capture after Play Mode transition.");
+                Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabFullMotionPlayModeCapture.Resume(
+                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
+                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
+                return true;
+            }
+
+            if (request.Command == Dolore05ExecutionOpeningDiagnosticCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine("Resuming Dolore motion 4 actual Animator execution opening capture after Play Mode transition.");
+                Bellerophon.Editor.Dolore05ExecutionOpening.Dolore05ExecutionOpeningPlayModeCapture.Resume(
+                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
+                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
+                return true;
+            }
+
+            if (request.Command == NegatifIdleEyeEmissionVisualReviewCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Negatif idle eye emission actual Play Mode capture after Play Mode transition.");
+                Bellerophon.Editor.NegatifCargoRunScene.NegatifIdleEyeEmissionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == RebellionMoveVisualReviewCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Rebellion actual Play Mode move capture after " +
+                    "Play Mode transition.");
+                Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionMovePlayModeCapture.Resume(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command == RebellionFrontArtifactVisualReviewCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Rebellion front artifact actual Play Mode " +
+                    "capture after Play Mode transition.");
+                Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionFrontArtifactPlayModeCapture.Resume(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command ==
+                RebellionAttackTransitionVisualReviewCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Rebellion attack transition actual Play Mode " +
+                    "capture after Play Mode transition.");
+                Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionAttackModeTransitionPlayModeCapture.Resume(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command == RebellionForwardScanVisualReviewCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Rebellion forward scan actual Play Mode " +
+                    "capture after Play Mode transition.");
+                Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionForwardScanPlayModeCapture.Resume(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command == RebellionForwardBurstVisualReviewCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Rebellion forward burst actual Play Mode " +
+                    "capture after Play Mode transition.");
+                Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionForwardBurstFirePlayModeCapture.Resume(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command == RebellionHitReactionVisualReviewCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Rebellion hit reaction actual Play Mode " +
+                    "capture after Play Mode transition.");
+                Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionHitReactionPlayModeCapture.Resume(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command == RebellionDeathVisualReviewCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Rebellion death actual Play Mode capture after " +
+                    "Play Mode transition.");
+                Bellerophon.Editor.RebellionCargoRunScene
+                    .RebellionDeathPlayModeCapture.Resume(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command == NegatifMoveVisualReviewCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Negatif actual Play Mode move capture after Play Mode transition.");
+                Bellerophon.Editor.NegatifCargoRunScene.NegatifMovePlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == NegatifClawAttackVisualReviewCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Negatif actual Play Mode claw attack capture after Play Mode transition.");
+                Bellerophon.Editor.NegatifCargoRunScene.NegatifClawAttackPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == NegatifHitReactionVisualReviewCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Negatif actual Play Mode hit reaction capture after Play Mode transition.");
+                Bellerophon.Editor.NegatifCargoRunScene.NegatifHitReactionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == NegatifFleeVisualReviewCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Negatif actual Play Mode flee capture after Play Mode transition.");
+                Bellerophon.Editor.NegatifCargoRunScene.NegatifFleePlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == NegatifDeathVisualReviewCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Negatif actual Play Mode death capture after Play Mode transition.");
+                Bellerophon.Editor.NegatifCargoRunScene.NegatifDeathPlayModeCapture.Resume(
                     successMarker =>
                     {
                         TryDelete(ActiveRequestPath);
@@ -3952,27 +5305,6 @@ namespace Bellerophon.Editor.Validation
 
                 return new BridgeRequest
                 {
-            if (request.Command == Dolore04TentacleStabDiagnosticCommand ||
-                request.Command == Dolore04TentacleStabFinalCommand)
-            {
-                BeginRequest(request);
-                activeLog.AppendLine("Resuming Dolore motion 3 actual Animator capture after Play Mode transition.");
-                Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabFullMotionPlayModeCapture.Resume(
-                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
-                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
-                return true;
-            }
-
-            if (request.Command == Dolore05ExecutionOpeningDiagnosticCommand)
-            {
-                BeginRequest(request);
-                activeLog.AppendLine("Resuming Dolore motion 4 actual Animator execution opening capture after Play Mode transition.");
-                Bellerophon.Editor.Dolore05ExecutionOpening.Dolore05ExecutionOpeningPlayModeCapture.Resume(
-                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
-                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
-                return true;
-            }
-
                     Id = Get(values, "id"),
                     Command = Get(values, "command"),
                     LogPath = Get(values, "logPath"),

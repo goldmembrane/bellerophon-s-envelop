@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>돌로레 사망 초상 화면 효과 검토</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --void: #030706;
+      --ink: #e9eee8;
+      --muted: #97a39a;
+      --signal: #91e0c3;
+      --brass: #c3a263;
+      --danger: #d45242;
+      --line: rgba(145, 224, 195, 0.21);
+      --panel: rgba(8, 18, 15, 0.92);
+      --display: "Book Antiqua", "Palatino Linotype", serif;
+      --mono: "Cascadia Mono", "Lucida Console", monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { min-height: 100%; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      color: var(--ink);
+      font-family: var(--mono);
+      background:
+        radial-gradient(circle at 67% 14%, rgba(33, 112, 87, 0.15), transparent 28rem),
+        radial-gradient(circle at 18% 78%, rgba(116, 79, 34, 0.12), transparent 32rem),
+        linear-gradient(145deg, #020504, #07110e 52%, #020504);
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      content: "";
+      opacity: 0.2;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(0deg, transparent 0 3px, rgba(152, 215, 189, 0.05) 4px),
+        repeating-linear-gradient(90deg, transparent 0 79px, rgba(195, 162, 99, 0.03) 80px);
+    }
+
+    button { font: inherit; }
+
+    .page {
+      width: min(1500px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 48px;
+    }
+
+    .masthead {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin-bottom: 9px;
+      color: var(--signal);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(38px, 5.2vw, 78px);
+      font-weight: 500;
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+
+    h1 span {
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(195, 162, 99, 0.78);
+    }
+
+    .approval {
+      display: grid;
+      gap: 6px;
+      justify-items: end;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+    }
+
+    .approval b {
+      padding: 7px 10px;
+      border: 1px solid rgba(212, 82, 66, 0.44);
+      color: #f0a59a;
+      font-weight: 700;
+      background: rgba(82, 18, 13, 0.24);
+    }
+
+    .workbench {
+      display: grid;
+      grid-template-columns: minmax(420px, 0.9fr) minmax(520px, 1.1fr);
+      gap: clamp(28px, 4vw, 70px);
+      align-items: center;
+      min-height: calc(100vh - 175px);
+      padding: 52px 0 44px;
+    }
+
+    .specimen {
+      position: relative;
+      width: min(100%, 660px);
+      margin: 0 auto;
+      padding: clamp(26px, 4vw, 50px);
+      background:
+        linear-gradient(rgba(11, 25, 21, 0.3), rgba(2, 5, 4, 0.66)),
+        url("../textures/dolore_frame_albedo.png") center / cover;
+      box-shadow:
+        0 46px 100px rgba(0, 0, 0, 0.66),
+        inset 0 0 0 1px rgba(210, 178, 110, 0.24),
+        inset 0 0 70px rgba(0, 0, 0, 0.72);
+      transform: rotate(-0.7deg);
+      isolation: isolate;
+    }
+
+    .specimen::before,
+    .specimen::after {
+      position: absolute;
+      content: "";
+      pointer-events: none;
+    }
+
+    .specimen::before {
+      inset: 13px;
+      z-index: 2;
+      border: 1px solid rgba(195, 162, 99, 0.33);
+      box-shadow: inset 0 0 0 6px rgba(2, 7, 5, 0.52);
+    }
+
+    .specimen::after {
+      inset: -18px 8% 16px -20px;
+      z-index: -1;
+      border: 1px solid rgba(145, 224, 195, 0.15);
+      transform: rotate(2.8deg);
+    }
+
+    .portrait-screen {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      aspect-ratio: 1;
+      border: 1px solid rgba(196, 174, 122, 0.35);
+      background: #000;
+      box-shadow:
+        0 0 0 7px rgba(0, 10, 7, 0.76),
+        inset 0 0 58px rgba(0, 0, 0, 0.65);
+    }
+
+    #portraitCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+
+    .glass {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background:
+        linear-gradient(112deg, rgba(255, 255, 255, 0.1), transparent 27% 70%, rgba(255, 255, 255, 0.035)),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.015) 0 1px, transparent 1px 4px);
+      mix-blend-mode: screen;
+    }
+
+    .screen-state {
+      position: absolute;
+      right: 10px;
+      bottom: 9px;
+      z-index: 3;
+      padding: 5px 7px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .console {
+      padding: clamp(20px, 3vw, 38px);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(145deg, rgba(14, 31, 26, 0.94), rgba(4, 10, 8, 0.96));
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.34);
+    }
+
+    .console__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      padding-bottom: 21px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(27px, 3vw, 43px);
+      font-weight: 500;
+      line-height: 1.05;
+    }
+
+    .live-state {
+      flex: 0 0 auto;
+      min-width: 128px;
+      padding: 9px 11px;
+      border: 1px solid rgba(145, 224, 195, 0.26);
+      color: var(--signal);
+      font-size: 11px;
+      text-align: center;
+      letter-spacing: 0.1em;
+      background: rgba(19, 61, 48, 0.26);
+    }
+
+    .description {
+      margin: 21px 0 27px;
+      color: #b8c3bb;
+      font-family: "Malgun Gothic", sans-serif;
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      grid-template-columns: 0.9fr 1fr 1fr;
+      min-height: 92px;
+      border: 1px solid var(--line);
+      background: #030806;
+    }
+
+    .phase {
+      position: relative;
+      display: grid;
+      align-content: space-between;
+      padding: 13px 14px 12px;
+      border-right: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .phase:last-of-type { border-right: 0; }
+    .phase b { color: #dbe4dd; font-size: 11px; letter-spacing: 0.06em; }
+    .phase span { color: var(--muted); font-size: 10px; }
+    .phase--noise { background: linear-gradient(135deg, rgba(238, 244, 240, 0.14), rgba(70, 80, 75, 0.05)); }
+    .phase--black { background: #000; }
+
+    .playhead {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 3;
+      width: 2px;
+      pointer-events: none;
+      background: var(--danger);
+      box-shadow: 0 0 16px rgba(212, 82, 66, 0.75);
+      transform: translateX(-1px);
+    }
+
+    .readout {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .datum {
+      padding: 13px;
+      background: rgba(3, 9, 7, 0.95);
+    }
+
+    .datum span {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+    }
+
+    .datum strong { color: var(--brass); font-size: 14px; font-weight: 500; }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 17px;
+    }
+
+    .controls button {
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid rgba(145, 224, 195, 0.24);
+      color: #d8e2da;
+      cursor: pointer;
+      background: rgba(13, 35, 28, 0.72);
+      transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+    }
+
+    .controls button:hover,
+    .controls button:focus-visible {
+      border-color: var(--signal);
+      color: var(--signal);
+      outline: none;
+      background: rgba(25, 65, 52, 0.72);
+    }
+
+    .controls button[data-active="true"] {
+      border-color: var(--danger);
+      color: #ffb8ad;
+      background: rgba(89, 23, 17, 0.45);
+    }
+
+    .boundary {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.7fr) 1fr;
+      gap: 28px;
+      padding: 28px 0 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .reference {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 17px;
+      align-items: center;
+      margin: 0;
+    }
+
+    .reference img {
+      display: block;
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #000;
+    }
+
+    .reference figcaption,
+    .boundary-copy {
+      color: var(--muted);
+      font-family: "Malgun Gothic", sans-serif;
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .reference strong,
+    .boundary-copy strong { color: var(--ink); }
+
+    @media (max-width: 1040px) {
+      .workbench { grid-template-columns: 1fr; }
+      .specimen { width: min(88vw, 620px); }
+    }
+
+    @media (max-width: 720px) {
+      .page { width: min(100% - 24px, 1500px); }
+      .masthead { grid-template-columns: 1fr; }
+      .approval { justify-items: start; }
+      .console__head { display: grid; }
+      .live-state { width: 100%; }
+      .timeline { min-height: 118px; }
+      .phase { padding: 10px 8px; }
+      .phase b { font-size: 9px; }
+      .readout { grid-template-columns: 1fr; }
+      .boundary { grid-template-columns: 1fr; }
+      .reference { grid-template-columns: 100px 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="masthead">
+      <div>
+        <div class="eyebrow">Dolore / Death portrait signal study</div>
+        <h1>사망 화면 <span>신호 단절</span></h1>
+      </div>
+      <div class="approval">
+        <b>사용자 검토 대기 · UNITY 미적용</b>
+        <span>초상 재질/VFX 샘플</span>
+      </div>
+    </header>
+
+    <section class="workbench" aria-label="돌로레 사망 초상 화면 효과 검토">
+      <div class="specimen" aria-label="고정된 돌로레 액자와 변화하는 초상 화면">
+        <div class="portrait-screen">
+          <canvas id="portraitCanvas" width="512" height="512" aria-label="돌로레 초상 화면"></canvas>
+          <div class="glass" aria-hidden="true"></div>
+          <output id="screenState" class="screen-state">PORTRAIT SIGNAL</output>
+        </div>
+      </div>
+
+      <article id="console" class="console" data-current-state="portrait">
+        <header class="console__head">
+          <div>
+            <div class="eyebrow">2.9 second review loop</div>
+            <h2>초상 부분만<br>순차적으로 변경</h2>
+          </div>
+          <output id="liveState" class="live-state" aria-live="polite">정상 초상</output>
+        </header>
+
+        <p class="description">
+          왼쪽 쓰러짐이 진행되는 첫 0.9초 동안 기존 초상을 유지합니다. 완전히 쓰러진 직후 초상 화면만
+          TV 백색 노이즈로 1초간 전환되고, 이어서 완전한 검은색을 1초간 유지한 뒤 첫 프레임으로 즉시 복귀합니다.
+        </p>
+
+        <div class="timeline" aria-label="사망 화면 반복 시간표">
+          <div class="phase">
+            <b>쓰러짐 / 기존 초상</b>
+            <span>0.0 — 0.9초</span>
+          </div>
+          <div class="phase phase--noise">
+            <b>TV 백색 노이즈</b>
+            <span>0.9 — 1.9초</span>
+          </div>
+          <div class="phase phase--black">
+            <b>완전한 검은색</b>
+            <span>1.9 — 2.9초</span>
+          </div>
+          <div id="playhead" class="playhead" aria-hidden="true"></div>
+        </div>
+
+        <div class="readout" aria-label="타이밍 계측값">
+          <div class="datum"><span>CURRENT TIME</span><strong id="elapsed">0.000초</strong></div>
+          <div class="datum"><span>LOOP DURATION</span><strong>2.900초</strong></div>
+          <div class="datum"><span>AFFECTED AREA</span><strong>초상 화면만</strong></div>
+        </div>
+
+        <div class="controls" aria-label="미리보기 제어">
+          <button id="toggle" type="button" data-active="false">일시정지</button>
+          <button id="restart" type="button">처음부터</button>
+          <button id="portraitStep" type="button">정상 초상 고정</button>
+          <button id="noiseStep" type="button">노이즈 고정</button>
+          <button id="blackStep" type="button">검정 고정</button>
+          <button id="autoLoop" type="button">자동 반복</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="boundary" aria-label="적용 경계">
+      <figure class="reference">
+        <img src="../renders/02_front.png" alt="승인된 돌로레 정면 렌더">
+        <figcaption><strong>승인된 외형 기준</strong><br>몸체와 외곽 황동 액자는 화면 신호 변화의 영향을 받지 않습니다.</figcaption>
+      </figure>
+      <div class="boundary-copy">
+        <strong>적용 경계:</strong> 이 파일은 초상 화면 재질/VFX의 동작과 시간을 승인받기 위한 샘플입니다.
+        왼쪽으로 0.9초간 쓰러지는 리그 애니메이션, Unity 머티리얼, Animator와 사망 슬롯 연결은 아직 구현하지 않았습니다.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const FALL_DURATION_MS = 900;
+    const NOISE_DURATION_MS = 1000;
+    const BLACK_DURATION_MS = 1000;
+    const LOOP_DURATION_MS = FALL_DURATION_MS + NOISE_DURATION_MS + BLACK_DURATION_MS;
+
+    const canvas = document.querySelector("#portraitCanvas");
+    const context = canvas.getContext("2d", { alpha: false });
+    const portrait = new Image();
+    portrait.src = "../textures/dolore_portrait.png";
+
+    const consolePanel = document.querySelector("#console");
+    const liveState = document.querySelector("#liveState");
+    const screenState = document.querySelector("#screenState");
+    const elapsed = document.querySelector("#elapsed");
+    const playhead = document.querySelector("#playhead");
+    const toggle = document.querySelector("#toggle");
+
+    let loopStart = performance.now();
+    let pausedAt = 0;
+    let paused = false;
+    let fixedState = null;
+    let lastNoiseFrame = -1;
+
+    function stateAt(timeMs) {
+      if (timeMs < FALL_DURATION_MS) return "portrait";
+      if (timeMs < FALL_DURATION_MS + NOISE_DURATION_MS) return "noise";
+      return "black";
+    }
+
+    function drawPortrait() {
+      context.fillStyle = "#000";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      if (portrait.complete && portrait.naturalWidth) {
+        context.drawImage(portrait, 0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    function drawNoise(frameNumber) {
+      if (frameNumber === lastNoiseFrame) return;
+      lastNoiseFrame = frameNumber;
+
+      const block = 4;
+      const columns = Math.ceil(canvas.width / block);
+      const rows = Math.ceil(canvas.height / block);
+      const image = context.createImageData(columns, rows);
+
+      for (let index = 0; index < image.data.length; index += 4) {
+        const value = Math.random() < 0.08
+          ? (Math.random() > 0.5 ? 255 : 0)
+          : Math.floor(72 + Math.random() * 184);
+        image.data[index] = value;
+        image.data[index + 1] = value;
+        image.data[index + 2] = value;
+        image.data[index + 3] = 255;
+      }
+
+      const buffer = document.createElement("canvas");
+      buffer.width = columns;
+      buffer.height = rows;
+      buffer.getContext("2d", { alpha: false }).putImageData(image, 0, 0);
+      context.imageSmoothingEnabled = false;
+      context.drawImage(buffer, 0, 0, canvas.width, canvas.height);
+
+      context.fillStyle = "rgba(255,255,255,0.12)";
+      for (let y = frameNumber % 7; y < canvas.height; y += 7) {
+        context.fillRect(0, y, canvas.width, 1);
+      }
+
+      const tearY = (frameNumber * 23) % canvas.height;
+      context.fillStyle = "rgba(255,255,255,0.28)";
+      context.fillRect(0, tearY, canvas.width, 3);
+    }
+
+    function drawBlack() {
+      context.fillStyle = "#000";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function renderState(state, timeMs) {
+      consolePanel.dataset.currentState = state;
+
+      if (state === "portrait") {
+        drawPortrait();
+        liveState.value = "정상 초상";
+        screenState.value = "PORTRAIT SIGNAL";
+      } else if (state === "noise") {
+        drawNoise(Math.floor(performance.now() / 42));
+        liveState.value = "백색 노이즈";
+        screenState.value = "WHITE NOISE";
+      } else {
+        drawBlack();
+        liveState.value = "완전한 검정";
+        screenState.value = "NO SIGNAL";
+      }
+
+      elapsed.textContent = `${(timeMs / 1000).toFixed(3)}초`;
+      playhead.style.left = `${(timeMs / LOOP_DURATION_MS) * 100}%`;
+    }
+
+    function frame(now) {
+      const automaticTime = paused ? pausedAt : (now - loopStart) % LOOP_DURATION_MS;
+      const displayTime = fixedState === "portrait"
+        ? 0
+        : fixedState === "noise"
+          ? FALL_DURATION_MS
+          : fixedState === "black"
+            ? FALL_DURATION_MS + NOISE_DURATION_MS
+            : automaticTime;
+      renderState(fixedState || stateAt(displayTime), displayTime);
+      requestAnimationFrame(frame);
+    }
+
+    toggle.addEventListener("click", () => {
+      fixedState = null;
+      if (paused) {
+        loopStart = performance.now() - pausedAt;
+        paused = false;
+        toggle.textContent = "일시정지";
+        toggle.dataset.active = "false";
+      } else {
+        pausedAt = (performance.now() - loopStart) % LOOP_DURATION_MS;
+        paused = true;
+        toggle.textContent = "계속 재생";
+        toggle.dataset.active = "true";
+      }
+    });
+
+    document.querySelector("#restart").addEventListener("click", () => {
+      fixedState = null;
+      paused = false;
+      pausedAt = 0;
+      loopStart = performance.now();
+      toggle.textContent = "일시정지";
+      toggle.dataset.active = "false";
+    });
+
+    document.querySelector("#portraitStep").addEventListener("click", () => { fixedState = "portrait"; });
+    document.querySelector("#noiseStep").addEventListener("click", () => { fixedState = "noise"; });
+    document.querySelector("#blackStep").addEventListener("click", () => { fixedState = "black"; });
+    document.querySelector("#autoLoop").addEventListener("click", () => {
+      fixedState = null;
+      paused = false;
+      pausedAt = 0;
+      loopStart = performance.now();
+      toggle.textContent = "일시정지";
+      toggle.dataset.active = "false";
+    });
+
+    portrait.addEventListener("load", drawPortrait);
+    requestAnimationFrame(frame);
+  </script>
+</body>
+</html>

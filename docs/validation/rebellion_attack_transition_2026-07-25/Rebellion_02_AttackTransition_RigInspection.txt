@@ -1,0 +1,17 @@
+﻿Result=PASS
+Scene=Assets/_Project/Scenes/CargoRunMvp.unity
+Slot=Rebellion_02_Attack_Mode_Transition
+ModelSha256=C791B028B759A82087C185A98ADD3A5412BCAE8A110DFAFF33F7E3E1694D60F9
+RigBones=29
+WeaponBranch=Bone_008>Bone_007>Bone_006
+LegBranches=Bone_013>009;Bone_018>014;Bone_023>019;Bone_028>024
+DiscVerticesReweighted=273
+DiscRoundTripVertices=548
+DiscLegInfluencedVertices=0
+DiscNonBodyInfluencedVertices=0
+DiscExclusiveLiftBone=Bone_008
+GeometryUnchanged=True
+NonDiscWeightsUnchanged=True
+BoneHierarchyUnchanged=True
+CorrectedModelSharedByAllSevenSlots=True
+SceneChanged=False

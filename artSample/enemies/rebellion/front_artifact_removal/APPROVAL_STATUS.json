@@ -1,0 +1,11 @@
+{
+  "status": "APPROVED_DIRECT_UNITY_CORRECTION",
+  "approved_for_unity": true,
+  "approved_date": "2026-07-25",
+  "approval_basis": "User requested removal of only the square object flapping in front of the Rebellion weapon and approved direct correction.",
+  "unity_asset": "Assets/_Project/Art/Enemies/Rebellion/ApprovedAppearance/Rebellion_ApprovedAppearance.glb",
+  "unity_asset_sha256": "712FE23B96B773204F2F1A56588F00B9CF5AEA81D6E9A60CA830FD3FEC89E24A",
+  "geometry_modified": false,
+  "non_target_weights_modified": false,
+  "target_vertices_reweighted": 30
+}

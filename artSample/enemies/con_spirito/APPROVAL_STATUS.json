@@ -1,0 +1,12 @@
+{
+  "enemy_id": "con_spirito",
+  "status": "pending_user_approval",
+  "created_for": "Con Spirito current model color and material sample",
+  "reference_image": "image/con spirito(콘 스피리토).png",
+  "unity_runtime_applied": false,
+  "notes": [
+    "Unity scene and prefab assets were not modified.",
+    "Current FBX geometry and rig were kept unchanged.",
+    "Sample applies red fur, dark lower-leg shading, dark maroon hoof/nose material, and weak fur bump texture."
+  ]
+}

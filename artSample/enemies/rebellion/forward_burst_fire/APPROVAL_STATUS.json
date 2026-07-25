@@ -1,0 +1,18 @@
+{
+  "sample_id": "rebellion_forward_burst_fire_vfx",
+  "status": "APPROVED",
+  "approved_for_unity": true,
+  "review_entry": "index.html",
+  "target_slot": "Rebellion_04_Forward_Burst_Fire",
+  "duration_seconds": 5.0,
+  "shot_interval_seconds": 0.2,
+  "shot_count": 25,
+  "flash_duration_seconds": 0.08,
+  "rotation_degrees_per_shot": 51.428571,
+  "rotation_direction_front_view": "clockwise",
+  "flash_anchor": "upper_barrel_muzzle",
+  "flash_color": "white-yellow core, yellow middle, orange edge",
+  "flash_length_meters": 0.14,
+  "flash_max_width_meters": 0.07,
+  "unity_runtime_modified": true
+}

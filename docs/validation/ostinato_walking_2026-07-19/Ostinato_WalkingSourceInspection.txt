@@ -1,0 +1,36 @@
+Source=enemies model/ostinato walking.fbx
+UnityCopy=Assets/_Project/Art/Enemies/Ostinato/Models/Ostinato_Walking.fbx
+SourceSha256=B7F6A7148B7A1D66E4EA6DADBA725427B352B76C273E353E06BA53CAAE86FB5A
+UnityCopySha256=B7F6A7148B7A1D66E4EA6DADBA725427B352B76C273E353E06BA53CAAE86FB5A
+SourceCopyHashesMatch=True
+WalkingRenderer=char1
+WalkingMesh=char1
+WalkingVertexCount=3728
+WalkingSubMeshCount=1
+WalkingUvCount=3728
+WalkingBoneWeightCount=3728
+WalkingBindPoseCount=24
+WalkingRendererBoneCount=24
+WalkingMaterials=Lit
+WalkingSubMeshIndexCounts=15837
+ApprovedRenderer=Ostinato_CurrentModel_TexturedSample
+ApprovedMesh=Ostinato_CurrentModel_TexturedSample
+ApprovedVertexCount=5279
+ApprovedSubMeshCount=4
+ApprovedUvCount=5279
+ApprovedBoneWeightCount=5279
+ApprovedBindPoseCount=24
+ApprovedRendererBoneCount=24
+ApprovedMaterials=Lit|Lit|Lit|Lit
+ApprovedSubMeshIndexCounts=9279|3822|2514|222
+WalkingBoneNames=Hips|LeftUpLeg|LeftLeg|LeftFoot|LeftToeBase|RightUpLeg|RightLeg|RightFoot|RightToeBase|Spine02|Spine01|Spine|LeftShoulder|LeftArm|LeftForeArm|LeftHand|RightShoulder|RightArm|RightForeArm|RightHand|neck|Head|head_end|headfront
+ApprovedBoneNames=Hips|LeftUpLeg|LeftLeg|LeftFoot|LeftToeBase|RightUpLeg|RightLeg|RightFoot|RightToeBase|Spine02|Spine01|Spine|LeftShoulder|LeftArm|LeftForeArm|LeftHand|RightShoulder|RightArm|RightForeArm|RightHand|neck|Head|head_end|headfront
+BoneHierarchyCompatible=True
+ApprovedMaterialOrder=Ostinato_Approved_Chitin|Ostinato_Approved_SoftTissue|Ostinato_Approved_HookBlade|Ostinato_Approved_CompoundEye
+MaterialSlotCompatibleWithoutMeshChange=False
+AnimationClipCount=2
+Clip=Armature|Armature|Armature|Armature|walking_man|baselayer,Length=1.033333,FrameRate=60,CurveBindings=250,LoopTime=False,Legacy=False,HumanMotion=False
+Clip=mixamo.com,Length=1.5,FrameRate=60,CurveBindings=79,LoopTime=False,Legacy=False,HumanMotion=False
+RequestedAppearanceSync=Overall body tone and chitin surface response only
+PerPartMaterialSyncRequired=False
+MeshMutationPerformed=False

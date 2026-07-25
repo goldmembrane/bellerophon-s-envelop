@@ -1,0 +1,9 @@
+Result=PASS
+CaptureMode=Unity Edit Mode exact-frame AnimationMode sampling
+ViewsPerFrame=Front|ThreeQuarter
+DerivedFrames=0|53|84|85|93|94|100|101|104|109|114|118|119|131
+Timeline=AttackUnchanged[0..100]|SmoothReturn[101..118]|DefaultHold[119..131]
+AttackFrames=84|85|93|94|100
+ReturnFrames=101|104|109|114|118
+DefaultHoldFrames=119|131
+FinalImage=docs/validation/ostinato_attack_motion_phase_cut_2026-07-20/Ostinato_AttackMotionPhaseCutContactSheet.png

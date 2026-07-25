@@ -1,0 +1,12 @@
+{
+  "status": "APPROVED_DIRECT_UNITY_ANIMATION_SUPPORT",
+  "approved_for_unity": true,
+  "approved_date": "2026-07-25",
+  "approval_basis": "User approved disc-only skin-weight correction required for the Rebellion attack-mode transition animation.",
+  "unity_asset": "Assets/_Project/Art/Enemies/Rebellion/ApprovedAppearance/Rebellion_ApprovedAppearance.glb",
+  "unity_asset_sha256": "C791B028B759A82087C185A98ADD3A5412BCAE8A110DFAFF33F7E3E1694D60F9",
+  "geometry_modified": false,
+  "bone_hierarchy_modified": false,
+  "non_disc_weights_modified": false,
+  "disc_vertices_reweighted": 273
+}

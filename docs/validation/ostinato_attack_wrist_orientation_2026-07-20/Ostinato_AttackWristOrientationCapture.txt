@@ -1,0 +1,9 @@
+Panels=SourceFront|CorrectedFront|SourceThreeQuarter|CorrectedThreeQuarter
+ExactUnityFrames=50|61|67|77|78|83|93|94|99
+ReferenceFrame=83
+PreImpactUnchangedFrames=0-77
+PostImpactHorizontalFrames=78-93
+RenderPath=BakedMeshPerSample
+FrameDirectory=docs/validation/ostinato_attack_wrist_orientation_2026-07-20/exact_frames
+ComparisonSheet=docs/validation/ostinato_attack_wrist_orientation_2026-07-20/Ostinato_AttackWristOrientationComparison.png
+SourceFbxModified=False

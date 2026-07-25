@@ -1,0 +1,12 @@
+Side|0.00|Grave_Death_Side_t0_00.png
+Side|0.20|Grave_Death_Side_t0_20.png
+Side|0.50|Grave_Death_Side_t0_50.png
+Side|0.80|Grave_Death_Side_t0_80.png
+Side|1.00|Grave_Death_Side_t1_00.png
+Side|1.30|Grave_Death_Side_t1_30.png
+ThreeQuarter|0.00|Grave_Death_ThreeQuarter_t0_00.png
+ThreeQuarter|0.20|Grave_Death_ThreeQuarter_t0_20.png
+ThreeQuarter|0.50|Grave_Death_ThreeQuarter_t0_50.png
+ThreeQuarter|0.80|Grave_Death_ThreeQuarter_t0_80.png
+ThreeQuarter|1.00|Grave_Death_ThreeQuarter_t1_00.png
+ThreeQuarter|1.30|Grave_Death_ThreeQuarter_t1_30.png

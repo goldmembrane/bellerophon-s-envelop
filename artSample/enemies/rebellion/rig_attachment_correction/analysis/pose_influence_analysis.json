@@ -1,0 +1,109 @@
+{
+  "source": "artSample/enemies/rebellion/appearance_reference_sync/source/Rebellion_Unity_Source_Unmodified.glb",
+  "diagnostic_rotation_degrees": 15.0,
+  "diagnostic_local_axis": "X",
+  "results": {
+    "Bone_002": {
+      "affected_vertices": 17982,
+      "maximum_displacement": 0.6685886587839257,
+      "rest_bounds_min": [
+        -1.5912787914276123,
+        -1.255232810974121,
+        -5.262071454126271e-07
+      ],
+      "rest_bounds_max": [
+        1.59127938747406,
+        1.255232810974121,
+        1.6999999284744263
+      ],
+      "rest_centroid": [
+        -0.009171370416879654,
+        -0.010397751815617085,
+        0.9917474985122681
+      ]
+    },
+    "Bone_008": {
+      "affected_vertices": 1882,
+      "maximum_displacement": 0.11401935936597314,
+      "rest_bounds_min": [
+        -1.1234495639801025,
+        -1.281589150428772,
+        1.1399224996566772
+      ],
+      "rest_bounds_max": [
+        1.1234495639801025,
+        1.103682518005371,
+        1.6999999284744263
+      ],
+      "rest_centroid": [
+        0.0799519270658493,
+        -0.32582300901412964,
+        1.3790234327316284
+      ]
+    },
+    "Bone_007": {
+      "affected_vertices": 162,
+      "maximum_displacement": 0.03402673267804814,
+      "rest_bounds_min": [
+        0.2405039370059967,
+        -1.281589150428772,
+        1.4627907276153564
+      ],
+      "rest_bounds_max": [
+        0.3920542299747467,
+        -1.0773253440856934,
+        1.5550392866134644
+      ],
+      "rest_centroid": [
+        0.31998059153556824,
+        -1.21195650100708,
+        1.512169599533081
+      ]
+    },
+    "Bone_006": {
+      "affected_vertices": 0,
+      "maximum_displacement": 0.0,
+      "rest_bounds_min": null,
+      "rest_bounds_max": null,
+      "rest_centroid": null
+    },
+    "Bone_023": {
+      "affected_vertices": 4767,
+      "maximum_displacement": 0.47244052653637064,
+      "rest_bounds_min": [
+        -1.5912787914276123,
+        -1.255232810974121,
+        -3.751913482119562e-07
+      ],
+      "rest_bounds_max": [
+        0.3525193929672241,
+        0.4777132570743561,
+        1.6999999284744263
+      ],
+      "rest_centroid": [
+        -0.8649734854698181,
+        -0.7147230505943298,
+        1.0145838260650635
+      ]
+    },
+    "Bone_017": {
+      "affected_vertices": 3607,
+      "maximum_displacement": 0.3407265601149067,
+      "rest_bounds_min": [
+        0.18120136857032776,
+        0.1614341139793396,
+        1.6405981284606241e-07
+      ],
+      "rest_bounds_max": [
+        1.59127938747406,
+        1.255232334136963,
+        1.390310525894165
+      ],
+      "rest_centroid": [
+        0.9922892451286316,
+        0.7669753432273865,
+        0.9228158593177795
+      ]
+    }
+  }
+}

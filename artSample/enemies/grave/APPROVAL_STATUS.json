@@ -1,0 +1,11 @@
+{
+  "enemy_id": "grave",
+  "sample_type": "reference_model_texture_reproduction",
+  "status": "pending_user_review",
+  "unity_runtime_applied": false,
+  "source_model": "enemies model/grave.fbx",
+  "reference_images": [
+    "image/grave(그라베).png"
+  ],
+  "review_entry": "artSample/enemies/grave/index.html"
+}

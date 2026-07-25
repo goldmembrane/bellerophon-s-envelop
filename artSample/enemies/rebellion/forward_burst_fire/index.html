@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>리벨리온 전방 연속 사격 VFX 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --page: #15191f;
+      --panel: #20252d;
+      --figure: #0d1015;
+      --line: #444c58;
+      --text: #f1f3f6;
+      --muted: #c5cbd3;
+      --accent: #ffb338;
+      --accent-soft: #ffe09a;
+      --danger: #ff5d43;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Noto Sans KR", sans-serif;
+      background: var(--page);
+      color: var(--text);
+    }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    section { margin: 30px 0; }
+    p, li { line-height: 1.6; }
+    code { color: var(--accent-soft); }
+    .status {
+      display: inline-block;
+      margin: 6px 0 12px;
+      padding: 7px 11px;
+      border: 1px solid #a96c25;
+      background: #382712;
+      color: #ffd58b;
+      font-weight: 700;
+    }
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .comparison h3 { grid-column: 1 / -1; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .card strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--accent);
+      font-size: 22px;
+    }
+    figure {
+      margin: 0;
+      padding: 10px;
+      border: 1px solid #353c46;
+      background: var(--figure);
+    }
+    img, object {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    object { min-height: 480px; background: #080b10; }
+    figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      word-break: break-all;
+    }
+    .vfx-preview {
+      position: relative;
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+      background: #d4d4d4;
+    }
+    .vfx-preview > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .flash {
+      position: absolute;
+      left: 60%;
+      top: 51%;
+      width: 12%;
+      height: 8%;
+      transform: translate(-100%, -50%);
+      filter: drop-shadow(0 0 10px rgba(255, 124, 20, .85));
+    }
+    .flash::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      clip-path: polygon(100% 36%, 62% 0, 74% 38%, 0 50%, 74% 62%, 62% 100%, 100% 64%);
+      background: linear-gradient(90deg, rgba(255, 87, 0, 0), #ff7b0b 48%, #fff27a 82%, #fffde4 100%);
+    }
+    .flash::after {
+      content: "";
+      position: absolute;
+      right: -4%;
+      top: 34%;
+      width: 24%;
+      height: 32%;
+      border-radius: 50%;
+      background: #fffbd0;
+      box-shadow: 0 0 18px 9px rgba(255, 129, 20, .72);
+    }
+    .note {
+      padding: 14px 16px;
+      border-left: 4px solid var(--accent);
+      background: #25200f;
+      color: #f4e5c5;
+    }
+    .excluded { color: #ffc2b8; }
+    @media (max-width: 760px) {
+      main { padding: 18px; }
+      .comparison { grid-template-columns: 1fr; }
+      object { min-height: 260px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>리벨리온 전방 연속 사격 VFX 샘플</h1>
+  <div class="status">PENDING_USER_REVIEW · Unity 적용 전</div>
+  <p>
+    현재 승인 외형의 7연장 총구를 기준으로 만든 총구 화염 검토 샘플입니다.
+    공격 모드 기립 정점 자세에서 위쪽 총열이 발사한 뒤 총구 묶음이
+    오른쪽으로 <code>360÷7도</code> 회전합니다. 사용자 승인 전에는
+    <code>Rebellion_04_Forward_Burst_Fire</code> 슬롯에 연결하지 않습니다.
+  </p>
+
+  <section>
+    <h2>기준 이미지와 VFX 적용 샘플 비교</h2>
+    <article class="comparison">
+      <h3>원반 앞면 무장 확대</h3>
+      <figure>
+        <img src="../appearance_reference_sync/renders/05_front_weapon_detail.png"
+             alt="리벨리온 원반 앞면 총구 기준 이미지">
+        <figcaption>
+          기준 이미지:
+          ../appearance_reference_sync/renders/05_front_weapon_detail.png
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="vfx-preview"
+             role="img"
+             aria-label="위쪽 총열 끝에 주황색과 노란색 총구 화염을 적용한 샘플">
+          <img src="../appearance_reference_sync/renders/05_front_weapon_detail.png"
+               alt="">
+          <span class="flash" aria-hidden="true"></span>
+        </div>
+        <figcaption>
+          생성 샘플: 위쪽 총열 끝의 백황색 핵, 노란색 중간부,
+          주황색 외곽 화염
+        </figcaption>
+      </figure>
+    </article>
+  </section>
+
+  <section>
+    <h2>전체 요약 이미지</h2>
+    <figure>
+      <object data="Rebellion_ForwardBurstFire_VfxSample.svg"
+              type="image/svg+xml"
+              aria-label="전방 연속 사격 VFX의 발사와 회전 타이밍 요약">
+        <a href="Rebellion_ForwardBurstFire_VfxSample.svg">
+          Rebellion_ForwardBurstFire_VfxSample.svg 열기
+        </a>
+      </object>
+      <figcaption>
+        Rebellion_ForwardBurstFire_VfxSample.svg — 발사 앵커, 화염 모양,
+        회전 방향과 5초 타임라인
+      </figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>확정된 발사 구성</h2>
+    <div class="grid">
+      <div class="card">
+        <strong>5초</strong>
+        전체 반복 길이
+      </div>
+      <div class="card">
+        <strong>0.2초</strong>
+        발사 간격
+      </div>
+      <div class="card">
+        <strong>25회</strong>
+        한 루프의 발사 횟수
+      </div>
+      <div class="card">
+        <strong>51.428571°</strong>
+        발사 후 오른쪽 회전량
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>한 발의 동작 순서</h2>
+    <ol>
+      <li>
+        <code>0.00~0.08초</code>: 현재 위쪽 위치의 총열 끝에서
+        주황·노란 총구 화염을 표시합니다.
+      </li>
+      <li>
+        <code>0.08~0.20초</code>: 화염이 사라진 뒤 총구 묶음을
+        정면 기준 시계 방향으로 <code>360÷7도</code> 회전합니다.
+      </li>
+      <li>
+        다음 0.2초 구간에서 새로 위쪽에 도달한 총열이 같은 순서를
+        반복합니다.
+      </li>
+      <li>
+        <code>0.0~4.8초</code>에 총 25번 발사하고
+        <code>5.0초</code>에서 루프합니다.
+      </li>
+    </ol>
+    <p class="note">
+      화염 제안 크기는 길이 약 0.14m, 최대 폭 약 0.07m입니다.
+      중심은 백황색, 중간은 노란색, 외곽은 주황색으로 구성합니다.
+    </p>
+  </section>
+
+  <section>
+    <h2>Unity 적용 기준</h2>
+    <ul>
+      <li>
+        대상 씬:
+        <code>Assets/_Project/Scenes/CargoRunMvp.unity</code>
+      </li>
+      <li>
+        대상 슬롯:
+        <code>Rebellion_04_Forward_Burst_Fire</code>
+      </li>
+      <li>
+        기립 자세:
+        <code>Rebellion_02_Attack_Mode_Transition.anim</code>의
+        <code>1.2초</code> 정점
+      </li>
+      <li>
+        회전 대상:
+        총구 허브와 7개 총열이 연결된 <code>Bone_007</code>
+      </li>
+      <li>
+        발사 앵커:
+        회전 후 현재 위쪽 위치에 도달한 총열 끝
+      </li>
+      <li>
+        유지 대상:
+        리벨리온 배치 위치, 네 다리와 원반의 기립 자세, 기존 다른 애니메이션
+      </li>
+    </ul>
+    <p class="excluded">
+      연기, 탄피, 투사체, 궤적, 반동, 피해 판정, AI와 전투 로직은
+      이 샘플 및 다음 애니메이션 적용 범위에 포함하지 않습니다.
+    </p>
+  </section>
+
+  <section>
+    <h2>검토 파일</h2>
+    <div class="grid">
+      <figure>
+        <a href="Rebellion_ForwardBurstFire_VfxSample.svg">
+          <img src="Rebellion_ForwardBurstFire_VfxSample.svg"
+               alt="전방 연속 사격 VFX 전체 요약 SVG">
+        </a>
+        <figcaption>Rebellion_ForwardBurstFire_VfxSample.svg</figcaption>
+      </figure>
+      <div class="card">
+        <h3>문서와 상태</h3>
+        <ul>
+          <li><a href="README.md"><code>README.md</code></a></li>
+          <li><a href="APPROVAL_STATUS.json"><code>APPROVAL_STATUS.json</code></a></li>
+        </ul>
+        <p>
+          현재 상태는 <code>PENDING_USER_REVIEW</code>이며
+          <code>approved_for_unity=false</code>입니다.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,14 @@
+Result=PASS
+Mode=Final
+Frames=12
+Folder=docs/validation/dolore_death_2026-07-23/Dolore_07_Death_Final
+DurationSeconds=2.9
+LeftDisplacementMeters=0.3395538
+GroundContactErrorMeters=0.04026675
+PortraitOnlySignal=True
+PortraitSurfaceAttached=True
+PortraitSignalSizeMatched=True
+PortraitSignalStaticReferencePose=True
+CaptureCameraStable=True
+FrameAndBodyUnaffected=True
+SceneChanged=False

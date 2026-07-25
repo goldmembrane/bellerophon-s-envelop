@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>칸타빌레 현재 모델 색상 샘플</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #18201a; color: #edf2e6; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    section { margin: 30px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; background: #222b24; border: 1px solid #435041; padding: 14px; }
+    .comparison h3 { grid-column: 1 / -1; }
+    figure { margin: 0; background: #111711; border: 1px solid #364236; padding: 10px; }
+    img { width: 100%; height: auto; display: block; }
+    figcaption { margin-top: 8px; font-size: 13px; color: #cdd7c5; word-break: break-all; }
+    p, li { line-height: 1.55; }
+    code { color: #d7e6c8; }
+    @media (max-width: 760px) { .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>칸타빌레 현재 모델 색상 샘플</h1>
+  <p>1차 재현 기준은 <code>cantabile(칸타빌레).png</code>, <code>cantabile-beside.png</code>입니다. 현재 Unity에 들어간 <code>cantabille.glb</code> 메시 기준으로 색상과 절차적 텍스처를 입힌 검토 샘플이며, 사용자 승인 전에는 Unity에 연결하지 않습니다.</p>
+
+  <section>
+    <h2>기준 이미지와 생성 렌더 비교</h2>
+
+      <article class="comparison">
+        <h3>정면</h3>
+        <figure><img src="../../../image/cantabile(칸타빌레).png" alt="정면 기준 이미지"><figcaption>기준 이미지: ../../../image/cantabile(칸타빌레).png</figcaption></figure>
+        <figure><img src="renders/01_front_cantabile_reference_match.png" alt="정면 생성 렌더"><figcaption>생성 렌더: renders/01_front_cantabile_reference_match.png</figcaption></figure>
+      </article>
+
+      <article class="comparison">
+        <h3>측면</h3>
+        <figure><img src="../../../image/cantabile-beside.png" alt="측면 기준 이미지"><figcaption>기준 이미지: ../../../image/cantabile-beside.png</figcaption></figure>
+        <figure><img src="renders/02_side_cantabile_beside_reference_match.png" alt="측면 생성 렌더"><figcaption>생성 렌더: renders/02_side_cantabile_beside_reference_match.png</figcaption></figure>
+      </article>
+  </section>
+
+  <section>
+    <h2>생성 렌더</h2>
+    <div class="grid"><figure><img src="renders/01_front_cantabile_reference_match.png" alt="01_front_cantabile_reference_match"><figcaption>01_front_cantabile_reference_match.png</figcaption></figure>
+<figure><img src="renders/02_side_cantabile_beside_reference_match.png" alt="02_side_cantabile_beside_reference_match"><figcaption>02_side_cantabile_beside_reference_match.png</figcaption></figure>
+<figure><img src="renders/03_reference_side_by_side_overview.png" alt="03_reference_side_by_side_overview"><figcaption>03_reference_side_by_side_overview.png</figcaption></figure>
+<figure><img src="renders/04_three_quarter_current_model_material.png" alt="04_three_quarter_current_model_material"><figcaption>04_three_quarter_current_model_material.png</figcaption></figure>
+<figure><img src="renders/05_close_current_model_color_application.png" alt="05_close_current_model_color_application"><figcaption>05_close_current_model_color_application.png</figcaption></figure>
+<figure><img src="renders/06_texture_atlas_and_material_breakdown.png" alt="06_texture_atlas_and_material_breakdown"><figcaption>06_texture_atlas_and_material_breakdown.png</figcaption></figure></div>
+  </section>
+
+  <section>
+    <h2>현재 모델 적용 기준</h2>
+    <p>원본 칸타빌레 GLB는 UV와 텍스처가 없는 단일 메시 구조입니다. 이 샘플은 현재 모델링을 바꾸지 않고, 생성 UV, 정점색, 절차적 알베도 텍스처를 같이 넣은 검토용 GLB를 사용합니다.</p>
+    <ul>
+      <li>검토용 3D 파일: <code>exports/cantabile_current_model_colored_sample.glb</code></li>
+      <li>날개: 밝은 청록 내부, 진한 파랑 그라데이션, 검은 외곽, 흰 반점.</li>
+      <li>몸체: 갈색 나방형 몸통, 털 결 방향을 암시하는 밝기 변화.</li>
+      <li>눈과 절지부: 어두운 반사 눈, 짙은 갈색/푸른 회색 다리 끝단.</li>
+      <li>Unity 적용 단계에서는 이 샘플과 시각 비교 후 승인된 범위의 머티리얼/메시 에셋에만 반영해야 합니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>사용 텍스처</h2>
+    <div class="grid"><figure><img src="textures/cantabile_current_model_material_atlas_albedo.png" alt="cantabile_current_model_material_atlas_albedo"><figcaption>cantabile_current_model_material_atlas_albedo.png</figcaption></figure>
+<figure><img src="textures/cantabile_wing_blue_black_spots_albedo.png" alt="cantabile_wing_blue_black_spots_albedo"><figcaption>cantabile_wing_blue_black_spots_albedo.png</figcaption></figure>
+<figure><img src="textures/cantabile_body_brown_fur_albedo.png" alt="cantabile_body_brown_fur_albedo"><figcaption>cantabile_body_brown_fur_albedo.png</figcaption></figure>
+<figure><img src="textures/cantabile_eye_limb_dark_gloss_albedo.png" alt="cantabile_eye_limb_dark_gloss_albedo"><figcaption>cantabile_eye_limb_dark_gloss_albedo.png</figcaption></figure>
+<figure><img src="textures/cantabile_fur_wing_vein_bump.png" alt="cantabile_fur_wing_vein_bump"><figcaption>cantabile_fur_wing_vein_bump.png</figcaption></figure></div>
+  </section>
+</main>
+</body>
+</html>

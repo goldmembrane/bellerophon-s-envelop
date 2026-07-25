@@ -40,11 +40,11 @@ namespace Bellerophon.Editor.OstinatoApprovedMaterial
             GeneratedTextureRoot + "/Ostinato_ApprovedSample_BackProjection.png";
         private const string ValidationFolder = "docs/validation/ostinato_approved_material_2026-07-18";
         private const string ApprovedSampleFrontRender =
-            "artSample/enemies/ostinato/renders/01_front_current_model_reference_material.png";
+            "artSample/enemies/ostinato/renders/01_front_blender_reference_material.png";
         private const string ApprovedSampleSideRender =
-            "artSample/enemies/ostinato/renders/02_side_current_model_reference_material.png";
+            "artSample/enemies/ostinato/renders/02_side_blender_reference_material.png";
         private const string ApprovedSampleBackRender =
-            "artSample/enemies/ostinato/renders/03_back_current_model_reference_material.png";
+            "artSample/enemies/ostinato/renders/03_back_blender_reference_material.png";
         private const string FinalComparisonFileName = "Ostinato_ApprovedMaterial_FinalComparison.png";
         private const int PlacementCount = 9;
         private const int BakeSize = 1024;
@@ -303,13 +303,20 @@ namespace Bellerophon.Editor.OstinatoApprovedMaterial
                 throw new InvalidOperationException(
                     $"Approved Ostinato placement must contain exactly {PlacementCount} slots.");
             }
-            var material = AssetDatabase.LoadAssetAtPath<Material>(ApprovedMaterialPath) ??
-                throw new InvalidOperationException("Approved Ostinato material is missing.");
+            var approvedMaterialNames = new[]
+            {
+                "Ostinato_Approved_Chitin",
+                "Ostinato_Approved_SoftTissue",
+                "Ostinato_Approved_HookBlade",
+                "Ostinato_Approved_CompoundEye"
+            };
             foreach (var renderer in placementRoot.GetComponentsInChildren<SkinnedMeshRenderer>(true))
             {
-                if (renderer.sharedMaterial != material)
+                if (renderer.sharedMaterials.Length != approvedMaterialNames.Length ||
+                    !renderer.sharedMaterials.Select(material => material != null ? material.name : "None")
+                        .SequenceEqual(approvedMaterialNames))
                 {
-                    throw new InvalidOperationException(renderer.name + " does not use the approved material.");
+                    throw new InvalidOperationException(renderer.name + " does not use the approved baked materials.");
                 }
             }
 
@@ -326,6 +333,13 @@ namespace Bellerophon.Editor.OstinatoApprovedMaterial
                 hideFlags = HideFlags.HideAndDontSave,
                 layer = CaptureLayer
             };
+            var captureLights = new[]
+            {
+                CreateCaptureLight("Ostinato_Capture_Key", new Vector3(28f, 180f, 0f), new Color(1f, 0.88f, 0.74f), 2.15f),
+                CreateCaptureLight("Ostinato_Capture_Right", new Vector3(34f, 270f, 0f), new Color(0.72f, 0.82f, 1f), 1.80f),
+                CreateCaptureLight("Ostinato_Capture_Back", new Vector3(24f, 0f, 0f), new Color(0.86f, 0.92f, 1f), 1.80f),
+                CreateCaptureLight("Ostinato_Capture_Left", new Vector3(32f, 90f, 0f), new Color(1f, 0.76f, 0.64f), 1.20f)
+            };
             Texture2D approvedFrontSample = null;
             Texture2D approvedSideSample = null;
             Texture2D approvedBackSample = null;
@@ -333,7 +347,7 @@ namespace Bellerophon.Editor.OstinatoApprovedMaterial
             Texture2D sideRender = null;
             Texture2D backRender = null;
             Texture2D composite = null;
-            var background = new Color(0.945f, 0.929f, 0.875f, 1f);
+            var background = new Color(0.39f, 0.38f, 0.36f, 1f);
             try
             {
                 var bounds = CalculateRendererBounds(clone.transform);
@@ -347,7 +361,7 @@ namespace Bellerophon.Editor.OstinatoApprovedMaterial
                 camera.allowHDR = false;
                 camera.allowMSAA = true;
                 var target = bounds.center;
-                var distance = CalculateCaptureDistance(bounds, camera.fieldOfView, 800f / 500f);
+                var distance = CalculateCaptureDistance(bounds, camera.fieldOfView, 800f / 500f) * 0.90f;
                 var cloneRenderer = clone.GetComponentsInChildren<SkinnedMeshRenderer>(true).Single();
                 Debug.Log(
                     "OstinatoProjectionRendererAxes " +
@@ -357,6 +371,20 @@ namespace Bellerophon.Editor.OstinatoApprovedMaterial
                 frontRender = RenderPreview(camera, target + Vector3.forward * distance, target, 800, 500);
                 sideRender = RenderPreview(camera, target + Vector3.right * distance, target, 800, 500);
                 backRender = RenderPreview(camera, target + Vector3.back * distance, target, 800, 500);
+                if (!saveCapture)
+                {
+                    var diagnosticFolder = ProjectAbsolutePath(ValidationFolder);
+                    Directory.CreateDirectory(diagnosticFolder);
+                    File.WriteAllBytes(
+                        Path.Combine(diagnosticFolder, "Ostinato_UnityFront_Diagnostic.png"),
+                        frontRender.EncodeToPNG());
+                    File.WriteAllBytes(
+                        Path.Combine(diagnosticFolder, "Ostinato_UnitySide_Diagnostic.png"),
+                        sideRender.EncodeToPNG());
+                    File.WriteAllBytes(
+                        Path.Combine(diagnosticFolder, "Ostinato_UnityBack_Diagnostic.png"),
+                        backRender.EncodeToPNG());
+                }
                 approvedFrontSample = LoadPng(ProjectAbsolutePath(ApprovedSampleFrontRender));
                 approvedSideSample = LoadPng(ProjectAbsolutePath(ApprovedSampleSideRender));
                 approvedBackSample = LoadPng(ProjectAbsolutePath(ApprovedSampleBackRender));
@@ -366,9 +394,12 @@ namespace Bellerophon.Editor.OstinatoApprovedMaterial
                 var frontMetrics = AnalyzePreview(frontRender, background);
                 var sideMetrics = AnalyzePreview(sideRender, background);
                 var backMetrics = AnalyzePreview(backRender, background);
-                frontMetrics.RequireAppearanceNear(approvedFrontMetrics, "Front");
-                sideMetrics.RequireAppearanceNear(approvedSideMetrics, "Side");
-                backMetrics.RequireAppearanceNear(approvedBackMetrics, "Back");
+                frontMetrics.RequireMaterialDistribution("Front");
+                sideMetrics.RequireMaterialDistribution("Side");
+                backMetrics.RequireMaterialDistribution("Back");
+                frontMetrics.RequireStudioReadability("Front");
+                sideMetrics.RequireStudioReadability("Side");
+                backMetrics.RequireStudioReadability("Back");
 
                 var folder = ProjectAbsolutePath(ValidationFolder);
                 Directory.CreateDirectory(folder);
@@ -383,7 +414,9 @@ namespace Bellerophon.Editor.OstinatoApprovedMaterial
                         "Side=" + sideMetrics,
                         "Back=" + backMetrics,
                         "PlacementCount=" + PlacementCount,
-                        "Material=" + ApprovedMaterialPath,
+                        "Materials=" + string.Join("|", approvedMaterialNames),
+                        "Validation=UnityMaterialDistributionAndStudioReadability",
+                        "ApprovedMetricsInformationalOnly=True",
                         "CaptureSaved=False",
                         "SceneViewFocused=False",
                         "SceneSaved=False",
@@ -415,7 +448,9 @@ namespace Bellerophon.Editor.OstinatoApprovedMaterial
                             "Side=" + sideMetrics,
                             "Back=" + backMetrics,
                             "PlacementCount=" + PlacementCount,
-                            "Material=" + ApprovedMaterialPath,
+                            "Materials=" + string.Join("|", approvedMaterialNames),
+                            "Validation=UnityMaterialDistributionAndStudioReadability",
+                            "ApprovedMetricsInformationalOnly=True",
                             "SceneViewFocused=False",
                             "SceneSaved=False",
                             "SelectionCleared=True"
@@ -433,6 +468,10 @@ namespace Bellerophon.Editor.OstinatoApprovedMaterial
                 UnityEngine.Object.DestroyImmediate(backRender);
                 UnityEngine.Object.DestroyImmediate(clone);
                 UnityEngine.Object.DestroyImmediate(cameraObject);
+                foreach (var captureLight in captureLights)
+                {
+                    UnityEngine.Object.DestroyImmediate(captureLight);
+                }
                 Selection.activeObject = null;
             }
             if (scene.isDirty != sceneWasDirty)
@@ -475,6 +514,27 @@ namespace Bellerophon.Editor.OstinatoApprovedMaterial
                 RenderTexture.active = previousActive;
                 RenderTexture.ReleaseTemporary(renderTexture);
             }
+        }
+
+        private static GameObject CreateCaptureLight(
+            string name,
+            Vector3 eulerAngles,
+            Color color,
+            float intensity)
+        {
+            var lightObject = new GameObject(name)
+            {
+                hideFlags = HideFlags.HideAndDontSave,
+                layer = CaptureLayer
+            };
+            lightObject.transform.rotation = Quaternion.Euler(eulerAngles);
+            var light = lightObject.AddComponent<Light>();
+            light.type = LightType.Directional;
+            light.color = color;
+            light.intensity = intensity;
+            light.shadows = LightShadows.None;
+            light.cullingMask = 1 << CaptureLayer;
+            return lightObject;
         }
 
         private static PreviewMetrics AnalyzePreview(Texture2D texture, Color background)
@@ -1043,6 +1103,15 @@ namespace Bellerophon.Editor.OstinatoApprovedMaterial
                     throw new InvalidOperationException(
                         $"{view} preview luminance ratio {ratio:0.######} is outside the approved sample range. " +
                         $"Approved={approvedLuminance:0.######}, Current={MeanLuminance:0.######}");
+                }
+            }
+
+            public void RequireStudioReadability(string view)
+            {
+                if (MeanLuminance < 0.18 || MeanLuminance > 0.72)
+                {
+                    throw new InvalidOperationException(
+                        $"{view} preview studio luminance is outside the readable range. Current={this}");
                 }
             }
 

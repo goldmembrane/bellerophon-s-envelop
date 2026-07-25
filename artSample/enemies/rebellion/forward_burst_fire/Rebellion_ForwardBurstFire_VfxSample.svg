@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="pageBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#080b10"/>
+      <stop offset="1" stop-color="#121722"/>
+    </linearGradient>
+    <radialGradient id="flashGlow">
+      <stop offset="0" stop-color="#fffbd2" stop-opacity="1"/>
+      <stop offset="0.25" stop-color="#fff06a" stop-opacity="0.95"/>
+      <stop offset="0.62" stop-color="#ff8a18" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#ff3b00" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="flashCore" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#fffef0"/>
+      <stop offset="0.42" stop-color="#ffe84c"/>
+      <stop offset="1" stop-color="#ff6a00" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="softGlow" x="-80%" y="-120%" width="260%" height="340%">
+      <feGaussianBlur stdDeviation="11"/>
+    </filter>
+    <filter id="smallGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#ffb437"/>
+    </marker>
+    <clipPath id="photoClip">
+      <rect x="48" y="118" width="956" height="622" rx="18"/>
+    </clipPath>
+    <style>
+      .title { font: 700 38px "Malgun Gothic", "Noto Sans KR", sans-serif; fill: #f4f7fb; }
+      .subtitle { font: 500 19px "Malgun Gothic", "Noto Sans KR", sans-serif; fill: #9ca8b8; }
+      .section { font: 700 22px "Malgun Gothic", "Noto Sans KR", sans-serif; fill: #fff3cf; }
+      .body { font: 500 17px "Malgun Gothic", "Noto Sans KR", sans-serif; fill: #d8dee8; }
+      .small { font: 500 15px "Malgun Gothic", "Noto Sans KR", sans-serif; fill: #9ca8b8; }
+      .metric { font: 700 24px "Malgun Gothic", "Noto Sans KR", sans-serif; fill: #ffcc62; }
+      .label { font: 700 16px "Malgun Gothic", "Noto Sans KR", sans-serif; fill: #101318; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#pageBg)"/>
+  <text x="48" y="58" class="title">리벨리온 전방 연속 사격 — 총구 화염 VFX 승인 샘플</text>
+  <text x="48" y="91" class="subtitle">공격 모드 기립 정점 유지 · 위쪽 총열 발사 · 발사 후 오른쪽 회전 · 5초 반복</text>
+
+  <rect x="48" y="118" width="956" height="622" rx="18" fill="#1a202a" stroke="#303846" stroke-width="2"/>
+  <g clip-path="url(#photoClip)">
+    <image href="../appearance_reference_sync/renders/05_front_weapon_detail.png"
+           x="48" y="118" width="956" height="637" preserveAspectRatio="xMidYMid slice"/>
+    <rect x="48" y="118" width="956" height="622" fill="#05070b" opacity="0.17"/>
+
+    <!-- 상단 총열 끝 기준: 밝은 핵 + 짧은 주황 외곽 -->
+    <ellipse cx="609" cy="443" rx="116" ry="54" fill="url(#flashGlow)" opacity="0.82" filter="url(#softGlow)"/>
+    <path d="M616 432 L561 416 L584 437 L506 443 L581 450 L560 471 L616 454 Z"
+          fill="#ff7a0b" opacity="0.9" filter="url(#smallGlow)"/>
+    <path d="M621 438 L557 443 L621 448 Z" fill="url(#flashCore)"/>
+    <ellipse cx="618" cy="443" rx="16" ry="12" fill="#fffbd0" opacity="0.96"/>
+  </g>
+
+  <path d="M597 404 C562 377, 519 379, 487 403" fill="none" stroke="#ffcf68" stroke-width="3" marker-end="url(#arrowHead)"/>
+  <rect x="70" y="654" width="410" height="58" rx="12" fill="#ffe09a"/>
+  <text x="90" y="679" class="label">발사 앵커: 현재 위쪽 총열 끝</text>
+  <text x="90" y="700" class="label">제안 크기: 길이 0.14m · 최대 폭 0.07m</text>
+
+  <rect x="1032" y="118" width="520" height="622" rx="18" fill="#11161f" stroke="#303846" stroke-width="2"/>
+  <text x="1064" y="160" class="section">한 발의 0.2초 순서</text>
+
+  <rect x="1064" y="187" width="456" height="93" rx="12" fill="#20170d" stroke="#a86620"/>
+  <text x="1090" y="220" class="metric">0.00–0.08초</text>
+  <text x="1090" y="250" class="body">위쪽 총열에서 주황·노란 화염 표시</text>
+
+  <rect x="1064" y="297" width="456" height="93" rx="12" fill="#151c24" stroke="#475466"/>
+  <text x="1090" y="330" class="metric">0.08–0.20초</text>
+  <text x="1090" y="360" class="body">총구 묶음이 정면 기준 시계 방향 회전</text>
+
+  <g transform="translate(1292 498)">
+    <circle r="96" fill="#0b0e13" stroke="#5d6878" stroke-width="3"/>
+    <circle r="18" fill="#2c333e"/>
+    <g fill="#8d98a8" stroke="#d8e0eb" stroke-width="2">
+      <circle cx="0" cy="-62" r="13"/>
+      <circle cx="48.48" cy="-38.66" r="13"/>
+      <circle cx="60.44" cy="13.8" r="13"/>
+      <circle cx="26.9" cy="55.86" r="13"/>
+      <circle cx="-26.9" cy="55.86" r="13"/>
+      <circle cx="-60.44" cy="13.8" r="13"/>
+      <circle cx="-48.48" cy="-38.66" r="13"/>
+    </g>
+    <circle cx="0" cy="-62" r="18" fill="none" stroke="#ffb437" stroke-width="5"/>
+    <path d="M-78,-78 A110,110 0 0,1 87,-67" fill="none" stroke="#ffb437" stroke-width="5" marker-end="url(#arrowHead)"/>
+  </g>
+  <text x="1064" y="629" class="metric">회전량 360÷7 = 51.428571°</text>
+  <text x="1064" y="662" class="body">다음 총열이 위쪽 발사 위치로 이동</text>
+  <text x="1064" y="699" class="small">연기·탄피·투사체·반동은 이 샘플 범위에 포함하지 않음</text>
+
+  <rect x="48" y="772" width="1504" height="84" rx="16" fill="#0e1219" stroke="#303846" stroke-width="2"/>
+  <text x="76" y="804" class="section">5초 반복 구성</text>
+  <rect x="270" y="795" width="1010" height="22" rx="11" fill="#29313d"/>
+  <g fill="#ffb437">
+    <circle cx="280" cy="806" r="8"/><circle cx="320" cy="806" r="8"/><circle cx="360" cy="806" r="8"/>
+    <circle cx="400" cy="806" r="8"/><circle cx="440" cy="806" r="8"/><circle cx="480" cy="806" r="8"/>
+    <circle cx="520" cy="806" r="8"/><circle cx="560" cy="806" r="8"/><circle cx="600" cy="806" r="8"/>
+    <circle cx="640" cy="806" r="8"/><circle cx="680" cy="806" r="8"/><circle cx="720" cy="806" r="8"/>
+    <circle cx="760" cy="806" r="8"/><circle cx="800" cy="806" r="8"/><circle cx="840" cy="806" r="8"/>
+    <circle cx="880" cy="806" r="8"/><circle cx="920" cy="806" r="8"/><circle cx="960" cy="806" r="8"/>
+    <circle cx="1000" cy="806" r="8"/><circle cx="1040" cy="806" r="8"/><circle cx="1080" cy="806" r="8"/>
+    <circle cx="1120" cy="806" r="8"/><circle cx="1160" cy="806" r="8"/><circle cx="1200" cy="806" r="8"/>
+    <circle cx="1240" cy="806" r="8"/>
+  </g>
+  <text x="270" y="842" class="small">0.0초</text>
+  <text x="1236" y="842" class="small">4.8초</text>
+  <text x="1310" y="815" class="metric">25회 발사</text>
+  <text x="1310" y="842" class="small">5.0초에서 반복</text>
+</svg>

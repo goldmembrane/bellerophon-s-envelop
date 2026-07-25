@@ -1,0 +1,9 @@
+Grave FBX 재임포트 검증: 통과
+오브젝트: [('Grave_Body', 'MESH'), ('Grave_Rig', 'ARMATURE')]
+치수(X 폭 / Y 높이 / Z 깊이): 0.748327 / 1.598500 / 0.525680 m
+메시: 정점 2296, 폴리곤 4582
+리그: 본 24, Armature 대상 ['Grave_Rig']
+머티리얼: ['Grave_Suit_Front_Mat', 'Grave_Textile_BackSide_Mat']
+머티리얼별 폴리곤: {0: 3136, 1: 1446}
+UV: ['uv', 'GraveReferenceUV']
+연결 텍스처: ['grave_fabric_normal.png', 'grave_fabric_roughness.png', 'grave_front_albedo.png', 'grave_textile_albedo.png']

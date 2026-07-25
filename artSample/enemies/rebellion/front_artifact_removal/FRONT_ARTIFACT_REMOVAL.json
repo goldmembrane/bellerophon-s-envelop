@@ -1,0 +1,423 @@
+{
+  "result": "PASS",
+  "scope": "Rebellion front recess animated square artifact removal",
+  "cause": "Boolean-generated front recess vertices inherited animated leg bone weights and flipped out of the disc during the move clip.",
+  "fix": "Reassigned only the 30 front recess vertices carrying leg weights to Bone_008. No geometry was deleted.",
+  "source_glb_sha256": "2FCDD1322554251B2E4461946E98B97A83CF1CD9B53225E0ED1442742C29400C",
+  "corrected_glb_sha256": "712FE23B96B773204F2F1A56588F00B9CF5AEA81D6E9A60CA830FD3FEC89E24A",
+  "unity_corrected_glb_sha256": "712FE23B96B773204F2F1A56588F00B9CF5AEA81D6E9A60CA830FD3FEC89E24A",
+  "original_unity_glb_sha256": "BAF8D47AE39523F5EE7DC366DF4E2110D8280725A387133A3ABDBF687F3211E9",
+  "target_vertex_count": 30,
+  "target_vertex_indices": [
+    8,
+    9,
+    10,
+    11,
+    13,
+    14,
+    15,
+    17,
+    18,
+    19,
+    20,
+    22,
+    29,
+    30,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    39,
+    40,
+    41,
+    42,
+    3247,
+    3290,
+    3292,
+    3293,
+    3308,
+    3309
+  ],
+  "target_original_leg_weights": {
+    "8": {
+      "position": [
+        -0.462,
+        -0.918,
+        1.635
+      ],
+      "leg_weights": {
+        "Bone_014": 0.693111837,
+        "Bone_015": 0.168776512,
+        "Bone_016": 0.138111666
+      }
+    },
+    "9": {
+      "position": [
+        -0.462,
+        -0.9,
+        1.617
+      ],
+      "leg_weights": {
+        "Bone_014": 0.693111837,
+        "Bone_015": 0.168776512,
+        "Bone_016": 0.138111666
+      }
+    },
+    "10": {
+      "position": [
+        -0.48,
+        -0.918,
+        1.617
+      ],
+      "leg_weights": {
+        "Bone_014": 0.693111837,
+        "Bone_015": 0.168776512,
+        "Bone_016": 0.138111666
+      }
+    },
+    "11": {
+      "position": [
+        -0.462,
+        -0.909012,
+        1.632595
+      ],
+      "leg_weights": {
+        "Bone_014": 0.693111837,
+        "Bone_015": 0.168776512,
+        "Bone_016": 0.138111666
+      }
+    },
+    "13": {
+      "position": [
+        -0.470988,
+        -0.918,
+        1.632595
+      ],
+      "leg_weights": {
+        "Bone_014": 0.763627052,
+        "Bone_015": 0.131498724,
+        "Bone_016": 0.104874201
+      }
+    },
+    "14": {
+      "position": [
+        -0.470608,
+        -0.909392,
+        1.630259
+      ],
+      "leg_weights": {
+        "Bone_014": 0.763627052,
+        "Bone_015": 0.131498724,
+        "Bone_016": 0.104874201
+      }
+    },
+    "15": {
+      "position": [
+        -0.470988,
+        -0.902405,
+        1.617
+      ],
+      "leg_weights": {
+        "Bone_014": 0.763627052,
+        "Bone_015": 0.131498724,
+        "Bone_016": 0.104874201
+      }
+    },
+    "17": {
+      "position": [
+        -0.462,
+        -0.902405,
+        1.625988
+      ],
+      "leg_weights": {
+        "Bone_014": 0.759369969,
+        "Bone_015": 0.133850768,
+        "Bone_016": 0.106779233
+      }
+    },
+    "18": {
+      "position": [
+        -0.470608,
+        -0.904741,
+        1.625608
+      ],
+      "leg_weights": {
+        "Bone_014": 0.759369969,
+        "Bone_015": 0.133850768,
+        "Bone_016": 0.106779233
+      }
+    },
+    "19": {
+      "position": [
+        -0.477595,
+        -0.918,
+        1.625988
+      ],
+      "leg_weights": {
+        "Bone_014": 0.759369969,
+        "Bone_015": 0.133850768,
+        "Bone_016": 0.106779233
+      }
+    },
+    "20": {
+      "position": [
+        -0.477595,
+        -0.909012,
+        1.617
+      ],
+      "leg_weights": {
+        "Bone_014": 0.759369969,
+        "Bone_015": 0.133850768,
+        "Bone_016": 0.106779233
+      }
+    },
+    "22": {
+      "position": [
+        -0.475259,
+        -0.909392,
+        1.625608
+      ],
+      "leg_weights": {
+        "Bone_014": 0.640960455,
+        "Bone_015": 0.193119362,
+        "Bone_016": 0.165920138
+      }
+    },
+    "29": {
+      "position": [
+        0.462,
+        -0.918,
+        1.635
+      ],
+      "leg_weights": {
+        "Bone_014": 0.759120405,
+        "Bone_015": 0.133926198,
+        "Bone_016": 0.106953412
+      }
+    },
+    "30": {
+      "position": [
+        0.48,
+        -0.918,
+        1.617
+      ],
+      "leg_weights": {
+        "Bone_014": 0.642846346,
+        "Bone_015": 0.190871403,
+        "Bone_016": 0.166282266
+      }
+    },
+    "32": {
+      "position": [
+        0.462,
+        -0.9,
+        1.617
+      ],
+      "leg_weights": {
+        "Bone_014": 0.642846346,
+        "Bone_015": 0.190871403,
+        "Bone_016": 0.166282266
+      }
+    },
+    "33": {
+      "position": [
+        0.470988,
+        -0.918,
+        1.632595
+      ],
+      "leg_weights": {
+        "Bone_014": 0.642846346,
+        "Bone_015": 0.190871403,
+        "Bone_016": 0.166282266
+      }
+    },
+    "34": {
+      "position": [
+        0.462,
+        -0.909012,
+        1.632595
+      ],
+      "leg_weights": {
+        "Bone_014": 0.642846346,
+        "Bone_015": 0.190871403,
+        "Bone_016": 0.166282266
+      }
+    },
+    "35": {
+      "position": [
+        0.470608,
+        -0.909392,
+        1.630259
+      ],
+      "leg_weights": {
+        "Bone_014": 0.642846346,
+        "Bone_015": 0.190871403,
+        "Bone_016": 0.166282266
+      }
+    },
+    "36": {
+      "position": [
+        0.477595,
+        -0.909012,
+        1.617
+      ],
+      "leg_weights": {
+        "Bone_014": 0.642846346,
+        "Bone_015": 0.190871403,
+        "Bone_016": 0.166282266
+      }
+    },
+    "37": {
+      "position": [
+        0.477595,
+        -0.918,
+        1.625988
+      ],
+      "leg_weights": {
+        "Bone_009": 0.91374284,
+        "Bone_010": 0.014887973,
+        "Bone_011": 0.071369164
+      }
+    },
+    "39": {
+      "position": [
+        0.475259,
+        -0.909392,
+        1.625608
+      ],
+      "leg_weights": {
+        "Bone_009": 0.91374284,
+        "Bone_010": 0.014887973,
+        "Bone_011": 0.071369164
+      }
+    },
+    "40": {
+      "position": [
+        0.462,
+        -0.902405,
+        1.625988
+      ],
+      "leg_weights": {
+        "Bone_009": 0.91374284,
+        "Bone_010": 0.014887973,
+        "Bone_011": 0.071369164
+      }
+    },
+    "41": {
+      "position": [
+        0.470988,
+        -0.902405,
+        1.617
+      ],
+      "leg_weights": {
+        "Bone_009": 0.91374284,
+        "Bone_010": 0.014887973,
+        "Bone_011": 0.071369164
+      }
+    },
+    "42": {
+      "position": [
+        0.470608,
+        -0.904741,
+        1.625608
+      ],
+      "leg_weights": {
+        "Bone_009": 0.91374284,
+        "Bone_010": 0.014887973,
+        "Bone_011": 0.071369164
+      }
+    },
+    "3247": {
+      "position": [
+        -0.27345,
+        -1.103682,
+        1.640697
+      ],
+      "leg_weights": {
+        "Bone_013": 0.056308024,
+        "Bone_023": 0.124056734,
+        "Bone_028": 0.055851586
+      }
+    },
+    "3290": {
+      "position": [
+        -0.003295,
+        -1.103682,
+        1.640697
+      ],
+      "leg_weights": {
+        "Bone_023": 0.056996167,
+        "Bone_028": 0.031815212
+      }
+    },
+    "3292": {
+      "position": [
+        -0.003295,
+        -1.090504,
+        1.660465
+      ],
+      "leg_weights": {
+        "Bone_023": 0.053595245,
+        "Bone_028": 0.025250493
+      }
+    },
+    "3293": {
+      "position": [
+        -0.27345,
+        -1.090504,
+        1.660465
+      ],
+      "leg_weights": {
+        "Bone_013": 0.057609599,
+        "Bone_023": 0.122081697,
+        "Bone_028": 0.052083723
+      }
+    },
+    "3308": {
+      "position": [
+        -0.003295,
+        -1.057558,
+        1.686822
+      ],
+      "leg_weights": {
+        "Bone_013": 0.002518113,
+        "Bone_023": 0.04743262,
+        "Bone_028": 0.015191677
+      }
+    },
+    "3309": {
+      "position": [
+        -0.260271,
+        -1.057558,
+        1.686822
+      ],
+      "leg_weights": {
+        "Bone_013": 0.058329739,
+        "Bone_023": 0.116786599,
+        "Bone_028": 0.043649789
+      }
+    }
+  },
+  "target_bone": "Bone_008",
+  "geometry_signature_before": "565572C2649511722CFDAD3C0ADC0DB949A9BD23B445E8CEBAB8E9DBB845A257",
+  "geometry_signature_after": "565572C2649511722CFDAD3C0ADC0DB949A9BD23B445E8CEBAB8E9DBB845A257",
+  "geometry_unchanged": true,
+  "non_target_weight_signature_before": "5AF98CC1194BC2D6BDC02CD4EF124C78C141E0CC6ED5020359B528B8D9D9E852",
+  "non_target_weight_signature_after": "5AF98CC1194BC2D6BDC02CD4EF124C78C141E0CC6ED5020359B528B8D9D9E852",
+  "non_target_weights_unchanged": true,
+  "vertices_before": 3371,
+  "vertices_after": 3371,
+  "polygons_before": 6486,
+  "polygons_after": 6486,
+  "roundtrip": {
+    "armatures": 1,
+    "bones": 29,
+    "skinned_renderers": 1,
+    "skinned_vertices": 18068,
+    "skinned_polygons": 6587,
+    "front_recess_vertices": 279,
+    "front_recess_leg_influenced_vertices": 0
+  }
+}

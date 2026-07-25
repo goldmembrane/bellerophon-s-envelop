@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>그라베 기준 이미지 재현 아트 샘플</title>
+  <style>
+    :root { --bg: #181a1b; --panel: #232628; --panel-2: #111314; --line: #4a4f51; --text: #f0f1ed; --muted: #c8cbc7; --accent: #d3d7ce; --warning: #d6b76f; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, "Malgun Gothic", sans-serif; background: var(--bg); color: var(--text); }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    h1 { font-size: clamp(30px, 4vw, 48px); letter-spacing: -0.04em; }
+    h2 { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    section { margin: 34px 0; }
+    p, li { line-height: 1.62; }
+    code { color: #e0e4dc; }
+    a { color: #eef1e7; }
+    .status { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; margin: 8px 0 16px; border: 1px solid #8a7445; border-radius: 999px; color: #f0d999; background: #332c1d; font-weight: 700; }
+    .lede { max-width: 900px; color: var(--muted); }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; background: var(--panel); border: 1px solid var(--line); padding: 14px; }
+    .comparison h3 { grid-column: 1 / -1; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    figure { margin: 0; background: var(--panel-2); border: 1px solid #3b3f41; padding: 10px; }
+    img { width: 100%; height: auto; display: block; background: white; }
+    figcaption { margin-top: 8px; font-size: 13px; color: var(--muted); word-break: break-all; }
+    .notice { padding: 16px 18px; border-left: 4px solid var(--warning); background: #28251e; color: #e4dac4; }
+    .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+    .metric { padding: 16px; background: var(--panel); border: 1px solid var(--line); }
+    .metric strong { display: block; margin-top: 6px; font-size: 24px; }
+    .links { display: flex; flex-wrap: wrap; gap: 10px; }
+    .links a { padding: 10px 13px; border: 1px solid #676d6f; background: #2a2e30; text-decoration: none; }
+    .links a:hover, .links a:focus-visible { background: #3a3f41; outline: 2px solid #cdd1c9; outline-offset: 2px; }
+    @media (max-width: 760px) { main { padding: 20px; } .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>그라베 기준 이미지 재현 아트 샘플</h1>
+  <div class="status">사용자 검토 대기 · Unity 미적용</div>
+  <p class="lede">재현 기준은 <code>image/grave(그라베).png</code>입니다. 기존 <code>enemies model/grave.fbx</code>의 메시와 24본 리그를 유지하면서 정면 실루엣, 비율, 턱시도 선화, 회색 직물 알베도·노멀·거칠기를 적용한 검토 샘플입니다. 사용자 승인 전에는 Unity 씬, 프리팹, 런타임 에셋에 연결하지 않습니다.</p>
+
+  <section>
+    <h2>기준 이미지와 생성 렌더 비교</h2>
+    <article class="comparison">
+      <h3>정면 재현 카메라</h3>
+      <figure><img src="../../../image/grave(그라베).png" alt="그라베 정면 기준 이미지"><figcaption>기준 이미지: ../../../image/grave(그라베).png</figcaption></figure>
+      <figure><img src="renders/01_front_grave_reference_match.png" alt="그라베 정면 생성 렌더"><figcaption>생성 렌더: renders/01_front_grave_reference_match.png</figcaption></figure>
+    </article>
+    <p class="notice"><strong>추론 표시:</strong> 기준 자료는 정면 이미지 한 장뿐입니다. 측면·후면의 의상 선화는 새로 만들지 않았고, 정면에서 확인되는 회색 직물 표면만 연장했습니다. 아래 준측면과 사선 렌더는 그 추론 범위를 검토하기 위한 시점입니다.</p>
+  </section>
+
+  <section>
+    <h2>생성 렌더</h2>
+    <div class="grid">
+      <figure><img src="renders/01_front_grave_reference_match.png" alt="정면 기준 일치 렌더"><figcaption>01_front_grave_reference_match.png · 기준 카메라</figcaption></figure>
+      <figure><img src="renders/02_side_grave_inferred_surface.png" alt="준측면 추론 표면 렌더"><figcaption>02_side_grave_inferred_surface.png · 깊이와 추론 표면 확인</figcaption></figure>
+      <figure><img src="renders/03_reference_side_by_side_overview.png" alt="정면 기준 이미지와 생성 렌더 병렬 비교"><figcaption>03_reference_side_by_side_overview.png · 병렬 비교</figcaption></figure>
+      <figure><img src="renders/04_three_quarter_grave_material.png" alt="그라베 사선 재질 렌더"><figcaption>04_three_quarter_grave_material.png · 전면/옆면 재질 연결</figcaption></figure>
+      <figure><img src="renders/05_close_grave_suit_application.png" alt="턱시도 전면 근접 렌더"><figcaption>05_close_grave_suit_application.png · 턱시도 선화와 직물 질감</figcaption></figure>
+      <figure><img src="renders/06_texture_material_breakdown.png" alt="그라베 텍스처와 머티리얼 분석판"><figcaption>06_texture_material_breakdown.png · 알베도/노멀/거칠기</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>모델·재질 적용 기준</h2>
+    <ul>
+      <li>재현 치수: 폭 <code>0.748327m</code>, 높이 <code>1.598500m</code>, 깊이 <code>0.525680m</code>.</li>
+      <li>원본 구조 유지: 2,296정점, 4,582폴리곤, 24본, Armature 연결.</li>
+      <li>전면: <code>Grave_Suit_Front_Mat</code>과 <code>GraveReferenceUV</code>로 턱시도 선화를 투영합니다.</li>
+      <li>후면·옆면: <code>Grave_Textile_BackSide_Mat</code>으로 회색 직물 표면만 연장합니다.</li>
+      <li>표면 성질: 비금속, 높은 거칠기, 교차 섬유형 미세 노멀을 사용합니다.</li>
+      <li>검토용 3D 파일: <code>exports/grave_reference_reproduction.glb</code>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>사용 텍스처</h2>
+    <div class="grid">
+      <figure><img src="textures/grave_front_albedo.png" alt="그라베 전면 턱시도 알베도"><figcaption>grave_front_albedo.png · 전면 턱시도/직물 알베도</figcaption></figure>
+      <figure><img src="textures/grave_textile_albedo.png" alt="그라베 후면과 옆면 직물 알베도"><figcaption>grave_textile_albedo.png · 후면/옆면 추론 직물 알베도</figcaption></figure>
+      <figure><img src="textures/grave_fabric_normal.png" alt="그라베 직물 노멀 텍스처"><figcaption>grave_fabric_normal.png · 교차 섬유 미세 요철</figcaption></figure>
+      <figure><img src="textures/grave_fabric_roughness.png" alt="그라베 직물 거칠기 텍스처"><figcaption>grave_fabric_roughness.png · 무광 직물 반사 분포</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>검증 결과</h2>
+    <div class="metrics">
+      <div class="metric">실루엣 IoU<strong>0.799839</strong></div>
+      <div class="metric">폭 오차<strong>2.424%</strong></div>
+      <div class="metric">높이 오차<strong>1.153%</strong></div>
+      <div class="metric">중심 오차<strong>1px</strong></div>
+      <div class="metric">명도 중앙값 차이<strong>3.0</strong></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>승인 후 Unity 반영 범위</h2>
+    <p>이 샘플이 승인되더라도 Unity 적용은 별도 작업입니다. 별도 승인을 받은 뒤 <code>CargoRunMvp</code>의 <code>Approved Grave Enemy Placement</code> 아래 7개 슬롯에서 기존 <code>Grave_Model</code>의 보이는 모델과 머티리얼만 교체하는 방식을 우선 검토합니다. 슬롯 위치, Player, 카메라, 다른 씬 루트, 애니메이션·AI·물리·전투 로직은 승인 범위에 포함되지 않으면 유지합니다.</p>
+    <div class="links">
+      <a href="exports/grave_reference_reproduction.glb">검토용 GLB</a>
+      <a href="reproduction/grave_reproduction.fbx">FBX 내보내기</a>
+      <a href="reproduction/grave_reproduction.blend">Blender 원본</a>
+      <a href="reproduction/README.md">상세 README</a>
+      <a href="reproduction/review/fbx_validation.txt">FBX 검증 보고서</a>
+      <a href="reproduction/review/visual_validation.txt">시각 검증 보고서</a>
+    </div>
+  </section>
+</main>
+</body>
+</html>

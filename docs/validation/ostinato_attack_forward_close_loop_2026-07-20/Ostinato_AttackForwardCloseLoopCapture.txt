@@ -1,0 +1,7 @@
+Result=PASS
+CaptureMode=Unity Edit Mode exact-frame AnimationMode sampling
+ViewsPerFrame=Front|ThreeQuarter
+CapturedTimelineFrames=0|15|30|53|70|84|85|90|93|0
+LoopSequence=0->15->30->53->70->84->85->90->93->0
+LoopBoundary=93->0
+FinalImage=docs/validation/ostinato_attack_forward_close_loop_2026-07-20/Ostinato_AttackForwardCloseLoopContactSheet.png

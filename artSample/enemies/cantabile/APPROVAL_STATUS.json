@@ -1,0 +1,12 @@
+{
+  "enemy_id": "cantabile",
+  "sample_type": "current_model_color_texture",
+  "status": "pending_user_review",
+  "unity_runtime_applied": false,
+  "source_model": "Assets/_Project/Art/Enemies/Cantabile/Models/cantabille.glb",
+  "reference_images": [
+    "image/cantabile(칸타빌레).png",
+    "image/cantabile-beside.png"
+  ],
+  "review_entry": "artSample/enemies/cantabile/index.html"
+}

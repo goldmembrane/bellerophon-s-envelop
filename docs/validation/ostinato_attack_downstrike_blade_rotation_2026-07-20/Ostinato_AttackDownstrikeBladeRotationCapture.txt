@@ -1,0 +1,11 @@
+Panels=SourceFront|CorrectedFront|SourceSide|CorrectedSide|SourceThreeQuarter|CorrectedThreeQuarter
+ExactUnityFrames=50|61|62|67|72|77|78|83|93|94|99
+RotationFrames=62-77
+HorizontalFrontHoldFrames=78-93
+LeftBladeTipDirection=AnatomicalRight
+RightBladeTipDirection=AnatomicalLeft
+ReturnFrames=94-99
+RenderPath=BakedBodyPlusRigidBladeMeshRenderers
+FrameDirectory=docs/validation/ostinato_attack_downstrike_blade_rotation_2026-07-20/exact_frames
+ComparisonSheet=docs/validation/ostinato_attack_downstrike_blade_rotation_2026-07-20/Ostinato_AttackDownstrikeBladeRotationComparison.png
+SourceFbxModified=False

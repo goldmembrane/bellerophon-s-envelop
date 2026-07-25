@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using Bellerophon.Enemies.Negatif;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -35,6 +37,20 @@ namespace Bellerophon.Editor.NegatifCargoRunScene
         private const string ApprovedShaderPath =
             ArtRoot + "/Shaders/NegatifApprovedAppearance.shader";
         private const string ApprovedShaderName = "Bellerophon/Negatif/ApprovedAppearance";
+        private const string AnimationFolder = ArtRoot + "/Animations";
+        private const string ControllerFolder = ArtRoot + "/Controllers";
+        private const string IdleEyeEmissionClipPath =
+            AnimationFolder + "/Negatif_01_Idle_EyeEmission.anim";
+        private const string IdleEyeEmissionControllerPath =
+            ControllerFolder + "/Negatif_01_Idle_EyeEmission.controller";
+        private const string IdleEyeEmissionVisualReviewPath =
+            "Logs/Negatif_Idle_EyeEmission_VisualReview.png";
+        private const string IdleSlotName = "Negatif_01_Idle";
+        private const string IdleEyeEmissionStateName = "IdleEyeEmission";
+        private const string EmissionStrengthProperty = "emissionStrength";
+        private const float IdleEyeEmissionDurationSeconds = 3f;
+        private const float IdleEyeEmissionMinimum = 2f;
+        private const float IdleEyeEmissionMaximum = 9f;
         private const string SampleApprovalPath =
             "artSample/enemies/negatif/appearance_reference_sync/APPROVAL_STATUS.json";
         private const string LongaRootName = "Approved Longa Arma Enemy Placement";
@@ -64,6 +80,12 @@ namespace Bellerophon.Editor.NegatifCargoRunScene
             "Negatif_04_Hit_Reaction",
             "Negatif_05_Flee",
             "Negatif_06_Death"
+        };
+
+        private static readonly string[] EyeNames =
+        {
+            "Negatif_ReferenceEye_NegativeX",
+            "Negatif_ReferenceEye_PositiveX"
         };
 
         // These values are copied from the approved Blender sample's
@@ -522,6 +544,358 @@ namespace Bellerophon.Editor.NegatifCargoRunScene
                 ", Height=" + Num(metrics.Bounds.size.y) +
                 ", RootAndPlacementPreserved=True, Shader=" + ApprovedShaderName +
                 ", SourceAndApprovedGlbHashesPreserved=True.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Negatif/Apply Idle Eye Emission")]
+        public static void ApplyIdleEyeEmissionAnimation()
+        {
+            var scene = RequireCurrentScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp has unsaved editor changes. Save or discard them before applying the Negatif idle eye emission animation.");
+            }
+
+            var root = GameObject.Find(PlacementRootName) ??
+                       throw new InvalidOperationException("The Negatif placement root is missing.");
+            var idleSlot = root.transform.Find(IdleSlotName) ??
+                           throw new InvalidOperationException(
+                               IdleSlotName + " is missing under " + PlacementRootName + ".");
+            var protectedBefore = AppearanceProtectedRootSignatures(scene);
+            var rootTransformBefore = TransformSignature(root.transform);
+            var slotTransformsBefore = root.transform.Cast<Transform>()
+                .Select(TransformSignature)
+                .ToArray();
+
+            var model = idleSlot.Find(ModelName) ??
+                        throw new InvalidOperationException(
+                            ModelName + " is missing under " + IdleSlotName + ".");
+            var eyeRenderers = EyeNames
+                .Select(eyeName =>
+                {
+                    var eye = FindDescendant(model, eyeName) ??
+                              throw new InvalidOperationException(
+                                  IdleSlotName + " is missing approved eye " + eyeName + ".");
+                    return eye.GetComponent<Renderer>() ??
+                           throw new InvalidOperationException(
+                               IdleSlotName + " approved eye has no renderer: " + eyeName + ".");
+                })
+                .ToArray();
+            var pulse = idleSlot.GetComponent<NegatifEyeEmissionPulse>();
+            if (pulse == null)
+            {
+                pulse = idleSlot.gameObject.AddComponent<NegatifEyeEmissionPulse>();
+            }
+
+            pulse.Configure(
+                eyeRenderers[0],
+                eyeRenderers[1],
+                IdleEyeEmissionMaximum);
+            EditorUtility.SetDirty(pulse);
+
+            var clip = EnsureIdleEyeEmissionClip(idleSlot);
+            var controller = EnsureIdleEyeEmissionController(clip);
+            var animator = idleSlot.GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = idleSlot.gameObject.AddComponent<Animator>();
+            }
+
+            animator.runtimeAnimatorController = controller;
+            animator.applyRootMotion = false;
+            animator.updateMode = AnimatorUpdateMode.Normal;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            animator.enabled = true;
+            EditorUtility.SetDirty(animator);
+            EditorUtility.SetDirty(idleSlot.gameObject);
+
+            if (rootTransformBefore != TransformSignature(root.transform) ||
+                !slotTransformsBefore.SequenceEqual(
+                    root.transform.Cast<Transform>().Select(TransformSignature),
+                    StringComparer.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "Negatif root or slot transforms changed while applying the idle eye emission animation.");
+            }
+
+            var protectedAfter = AppearanceProtectedRootSignatures(scene);
+            if (!protectedBefore.SequenceEqual(protectedAfter, StringComparer.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "A scene root outside the Negatif placement changed while applying the idle eye emission animation.");
+            }
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene))
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp could not be saved after applying the Negatif idle eye emission animation.");
+            }
+
+            AssetDatabase.SaveAssets();
+            Debug.Log(
+                "NegatifIdleEyeEmissionApplied Slot=" + IdleSlotName +
+                ", DurationSeconds=" + Num(IdleEyeEmissionDurationSeconds) +
+                ", Minimum=" + Num(IdleEyeEmissionMinimum) +
+                ", Maximum=" + Num(IdleEyeEmissionMaximum) +
+                ", Driver=NegatifEyeEmissionPulse, EyeRenderers=2, BlendShapeCurves=0, TransformCurves=0, RootMotion=False, " +
+                "OtherNegatifSlotsUnchanged=True, OtherSceneRootsUnchanged=True, SceneSaved=True, PendingVisualReview=True.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Negatif/Inspect Idle Eye Emission")]
+        public static void InspectIdleEyeEmissionAnimation()
+        {
+            var scene = RequireCurrentScene();
+            var wasDirty = scene.isDirty;
+            var root = GameObject.Find(PlacementRootName) ??
+                       throw new InvalidOperationException("The Negatif placement root is missing.");
+
+            InspectIdleEyeEmissionAnimation(root.transform);
+            if (scene.isDirty != wasDirty)
+            {
+                throw new InvalidOperationException(
+                    "Negatif idle eye emission inspection changed the scene dirty state.");
+            }
+
+            Debug.Log(
+                "NegatifIdleEyeEmissionInspected Result=PASS, Slot=" + IdleSlotName +
+                ", DurationSeconds=" + Num(IdleEyeEmissionDurationSeconds) +
+                ", Minimum=" + Num(IdleEyeEmissionMinimum) +
+                ", Maximum=" + Num(IdleEyeEmissionMaximum) +
+                ", EyeRenderers=2, BlendShapeCurves=0, TransformCurves=0, RootMotion=False, SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Negatif/Capture Idle Eye Emission Visual Review")]
+        public static void CaptureIdleEyeEmissionVisualReview()
+        {
+            var scene = RequireCurrentScene();
+            var wasDirty = scene.isDirty;
+            var root = GameObject.Find(PlacementRootName) ??
+                       throw new InvalidOperationException("The Negatif placement root is missing.");
+            var idleSlot = root.transform.Find(IdleSlotName) ??
+                           throw new InvalidOperationException(
+                               IdleSlotName + " is missing under " + PlacementRootName + ".");
+            var model = idleSlot.Find(ModelName) ??
+                        throw new InvalidOperationException(
+                            ModelName + " is missing under " + IdleSlotName + ".");
+            var pulse = idleSlot.GetComponent<NegatifEyeEmissionPulse>() ??
+                        throw new InvalidOperationException(
+                            IdleSlotName + " has no NegatifEyeEmissionPulse component.");
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(IdleEyeEmissionClipPath) ??
+                       throw new InvalidOperationException(
+                           "Negatif idle eye emission clip is missing.");
+            var eyes = EyeNames
+                .Select(eyeName =>
+                    FindDescendant(model, eyeName) ??
+                    throw new InvalidOperationException(
+                        IdleSlotName + " is missing approved eye " + eyeName + "."))
+                .ToArray();
+            var eyeBounds = BoundsOf(
+                eyes[0],
+                new Bounds(eyes[0].position, Vector3.one * 0.02f));
+            eyeBounds.Encapsulate(BoundsOf(
+                eyes[1],
+                new Bounds(eyes[1].position, Vector3.one * 0.02f)));
+
+            var sourceCamera = RequirePlayer().GetComponentInChildren<Camera>(true) ??
+                               throw new InvalidOperationException("The Player camera is missing.");
+            var front = ApprovedGlbVisualForward(model);
+            var right = Vector3.Cross(Vector3.up, front).normalized;
+            var modelBounds = BoundsOf(
+                model,
+                new Bounds(model.position, Vector3.one * 0.5f));
+            var cameraDistance = Mathf.Max(0.42f, eyeBounds.size.magnitude * 1.6f);
+            var cameraObject = new GameObject(
+                "NegatifIdleEyeEmissionVisualReviewCamera",
+                typeof(Camera))
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            var panels = new List<Texture2D>();
+            var animationModeStarted = false;
+            try
+            {
+                var camera = cameraObject.GetComponent<Camera>();
+                camera.CopyFrom(sourceCamera);
+                camera.fieldOfView = 30f;
+                camera.aspect = 1f;
+                camera.transform.position =
+                    eyeBounds.center + front * cameraDistance +
+                    right * cameraDistance * 0.55f +
+                    Vector3.up * modelBounds.extents.y * 0.05f;
+                camera.transform.rotation = Quaternion.LookRotation(
+                    eyeBounds.center - camera.transform.position,
+                    Vector3.up);
+
+                var sampleTimes = new[]
+                {
+                    0f,
+                    IdleEyeEmissionDurationSeconds * 0.5f,
+                    IdleEyeEmissionDurationSeconds
+                };
+                AnimationMode.StartAnimationMode();
+                animationModeStarted = true;
+                foreach (var sampleTime in sampleTimes)
+                {
+                    AnimationMode.BeginSampling();
+                    try
+                    {
+                        AnimationMode.SampleAnimationClip(
+                            idleSlot.gameObject,
+                            clip,
+                            sampleTime);
+                    }
+                    finally
+                    {
+                        AnimationMode.EndSampling();
+                    }
+
+                    pulse.ApplyCurrentEmission();
+                    panels.Add(RenderCameraImage(camera, 640, 640));
+                }
+
+                WriteHorizontalComparison(
+                    panels,
+                    Absolute(IdleEyeEmissionVisualReviewPath),
+                    8);
+            }
+            finally
+            {
+                if (animationModeStarted && AnimationMode.InAnimationMode())
+                {
+                    AnimationMode.StopAnimationMode();
+                }
+
+                pulse.ApplyCurrentEmission();
+                foreach (var panel in panels)
+                {
+                    UnityEngine.Object.DestroyImmediate(panel);
+                }
+
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+            }
+
+            if (scene.isDirty != wasDirty)
+            {
+                throw new InvalidOperationException(
+                    "Negatif idle eye emission visual capture changed the scene dirty state.");
+            }
+
+            Debug.Log(
+                "NegatifIdleEyeEmissionVisualReviewCaptured Image=" +
+                IdleEyeEmissionVisualReviewPath +
+                ", Panels=0s_1.5s_3s, SameCameraAndExposure=True, SceneChanged=False.");
+        }
+
+        internal static void CaptureIdleEyeEmissionRuntimeFrame(string path)
+        {
+            var root = GameObject.Find(PlacementRootName) ??
+                       throw new InvalidOperationException(
+                           "The Negatif placement root is missing in Play Mode.");
+            var idleSlot = root.transform.Find(IdleSlotName) ??
+                           throw new InvalidOperationException(
+                               IdleSlotName + " is missing in Play Mode.");
+            var model = idleSlot.Find(ModelName) ??
+                        throw new InvalidOperationException(
+                            ModelName + " is missing under " + IdleSlotName + ".");
+            var eyes = EyeNames
+                .Select(eyeName =>
+                    FindDescendant(model, eyeName) ??
+                    throw new InvalidOperationException(
+                        IdleSlotName + " is missing approved eye " + eyeName + "."))
+                .ToArray();
+            var eyeBounds = BoundsOf(
+                eyes[0],
+                new Bounds(eyes[0].position, Vector3.one * 0.02f));
+            eyeBounds.Encapsulate(BoundsOf(
+                eyes[1],
+                new Bounds(eyes[1].position, Vector3.one * 0.02f)));
+            var modelBounds = BoundsOf(
+                model,
+                new Bounds(model.position, Vector3.one * 0.5f));
+            var sourceCamera = RequirePlayer().GetComponentInChildren<Camera>(true) ??
+                               throw new InvalidOperationException(
+                                   "The Player camera is missing in Play Mode.");
+            var front = ApprovedGlbVisualForward(model);
+            var right = Vector3.Cross(Vector3.up, front).normalized;
+            var cameraDistance = Mathf.Max(0.42f, eyeBounds.size.magnitude * 1.6f);
+            var cameraObject = new GameObject(
+                "NegatifIdleEyeEmissionRuntimeCamera",
+                typeof(Camera))
+            {
+                hideFlags = HideFlags.DontSave
+            };
+            try
+            {
+                var camera = cameraObject.GetComponent<Camera>();
+                camera.CopyFrom(sourceCamera);
+                camera.enabled = false;
+                camera.fieldOfView = 30f;
+                camera.aspect = 1f;
+                camera.transform.position =
+                    eyeBounds.center + front * cameraDistance +
+                    right * cameraDistance * 0.55f +
+                    Vector3.up * modelBounds.extents.y * 0.05f;
+                camera.transform.rotation = Quaternion.LookRotation(
+                    eyeBounds.center - camera.transform.position,
+                    Vector3.up);
+                var image = RenderCameraImage(camera, 640, 640);
+                try
+                {
+                    Directory.CreateDirectory(
+                        Path.GetDirectoryName(path) ??
+                        throw new InvalidOperationException(
+                            "Invalid Negatif runtime capture folder."));
+                    File.WriteAllBytes(path, image.EncodeToPNG());
+                }
+                finally
+                {
+                    UnityEngine.Object.DestroyImmediate(image);
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.Destroy(cameraObject);
+            }
+        }
+
+        internal static void ComposeIdleEyeEmissionRuntimeReview(
+            IReadOnlyList<string> panelPaths,
+            string outputPath)
+        {
+            var panels = new List<Texture2D>();
+            try
+            {
+                foreach (var panelPath in panelPaths)
+                {
+                    if (!File.Exists(panelPath))
+                    {
+                        throw new FileNotFoundException(
+                            "Negatif runtime review panel is missing.",
+                            panelPath);
+                    }
+
+                    var panel = new Texture2D(2, 2, TextureFormat.RGB24, false);
+                    if (!panel.LoadImage(File.ReadAllBytes(panelPath), false))
+                    {
+                        UnityEngine.Object.DestroyImmediate(panel);
+                        throw new InvalidOperationException(
+                            "Negatif runtime review panel could not be loaded: " +
+                            panelPath);
+                    }
+
+                    panels.Add(panel);
+                }
+
+                WriteHorizontalComparison(panels, outputPath, 8);
+            }
+            finally
+            {
+                foreach (var panel in panels)
+                {
+                    UnityEngine.Object.DestroyImmediate(panel);
+                }
+            }
         }
 
         [MenuItem("Bellerophon/Enemies/Negatif/Capture Approved GLB Appearance")]
@@ -1042,12 +1416,7 @@ namespace Bellerophon.Editor.NegatifCargoRunScene
                         ", Materials=" + body.sharedMaterials.Length + ".");
                 }
 
-                var eyeNames = new[]
-                {
-                    "Negatif_ReferenceEye_NegativeX",
-                    "Negatif_ReferenceEye_PositiveX"
-                };
-                foreach (var eyeName in eyeNames)
+                foreach (var eyeName in EyeNames)
                 {
                     var eye = FindDescendant(model, eyeName) ??
                               throw new InvalidOperationException(
@@ -1102,6 +1471,207 @@ namespace Bellerophon.Editor.NegatifCargoRunScene
                 RenderersPerModel = 3,
                 EyesPerModel = 2
             };
+        }
+
+        private static AnimationClip EnsureIdleEyeEmissionClip(Transform idleSlot)
+        {
+            var pulse = idleSlot.GetComponent<NegatifEyeEmissionPulse>() ??
+                        throw new InvalidOperationException(
+                            IdleSlotName + " has no NegatifEyeEmissionPulse component.");
+            EnsureFolder(AnimationFolder);
+
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(IdleEyeEmissionClipPath);
+            if (clip == null)
+            {
+                clip = new AnimationClip
+                {
+                    name = "Negatif_01_Idle_EyeEmission",
+                    frameRate = 30f
+                };
+                AssetDatabase.CreateAsset(clip, IdleEyeEmissionClipPath);
+            }
+
+            foreach (var binding in AnimationUtility.GetCurveBindings(clip))
+            {
+                AnimationUtility.SetEditorCurve(clip, binding, null);
+            }
+
+            foreach (var binding in AnimationUtility.GetObjectReferenceCurveBindings(clip))
+            {
+                AnimationUtility.SetObjectReferenceCurve(clip, binding, null);
+            }
+
+            var curve = new AnimationCurve(
+                new Keyframe(0f, IdleEyeEmissionMaximum, 0f, 0f),
+                new Keyframe(
+                    IdleEyeEmissionDurationSeconds * 0.5f,
+                    IdleEyeEmissionMinimum,
+                    0f,
+                    0f),
+                new Keyframe(
+                    IdleEyeEmissionDurationSeconds,
+                    IdleEyeEmissionMaximum,
+                    0f,
+                    0f));
+            AnimationUtility.SetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(
+                    string.Empty,
+                    typeof(NegatifEyeEmissionPulse),
+                    EmissionStrengthProperty),
+                curve);
+            pulse.ApplyCurrentEmission();
+
+            var settings = AnimationUtility.GetAnimationClipSettings(clip);
+            settings.loopTime = true;
+            settings.loopBlend = false;
+            AnimationUtility.SetAnimationClipSettings(clip, settings);
+            EditorUtility.SetDirty(clip);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.ImportAsset(
+                IdleEyeEmissionClipPath,
+                ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+            return AssetDatabase.LoadAssetAtPath<AnimationClip>(IdleEyeEmissionClipPath) ??
+                   throw new InvalidOperationException(
+                       "Negatif idle eye emission clip could not be reloaded.");
+        }
+
+        private static RuntimeAnimatorController EnsureIdleEyeEmissionController(AnimationClip clip)
+        {
+            EnsureFolder(ControllerFolder);
+            if (AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(
+                    IdleEyeEmissionControllerPath) != null)
+            {
+                AssetDatabase.DeleteAsset(IdleEyeEmissionControllerPath);
+            }
+
+            var controller = AnimatorController.CreateAnimatorControllerAtPath(
+                IdleEyeEmissionControllerPath);
+            var stateMachine = controller.layers[0].stateMachine;
+            var state = stateMachine.AddState(IdleEyeEmissionStateName);
+            state.motion = clip;
+            state.writeDefaultValues = true;
+            stateMachine.defaultState = state;
+            EditorUtility.SetDirty(state);
+            EditorUtility.SetDirty(stateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(
+                       IdleEyeEmissionControllerPath) ??
+                   throw new InvalidOperationException(
+                       "Negatif idle eye emission controller could not be reloaded.");
+        }
+
+        private static void InspectIdleEyeEmissionAnimation(Transform placementRoot)
+        {
+            InspectApprovedGlbAppearanceAssets(placementRoot);
+            var idleSlot = placementRoot.Find(IdleSlotName) ??
+                           throw new InvalidOperationException(
+                               IdleSlotName + " is missing under " + PlacementRootName + ".");
+            var model = idleSlot.Find(ModelName) ??
+                        throw new InvalidOperationException(
+                            ModelName + " is missing under " + IdleSlotName + ".");
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(IdleEyeEmissionClipPath) ??
+                       throw new InvalidOperationException(
+                           "Negatif idle eye emission clip is missing.");
+            var controller = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(
+                                 IdleEyeEmissionControllerPath) ??
+                             throw new InvalidOperationException(
+                                 "Negatif idle eye emission controller is missing.");
+            var animator = idleSlot.GetComponent<Animator>();
+            if (animator == null)
+            {
+                throw new InvalidOperationException(
+                    IdleSlotName + " has no Animator.");
+            }
+
+            var pulse = idleSlot.GetComponent<NegatifEyeEmissionPulse>();
+            if (pulse == null ||
+                pulse.EyeRenderers == null ||
+                pulse.EyeRenderers.Length != EyeNames.Length)
+            {
+                throw new InvalidOperationException(
+                    IdleSlotName + " must have one NegatifEyeEmissionPulse configured with two eye renderers.");
+            }
+
+            if (!animator.enabled ||
+                animator.runtimeAnimatorController != controller ||
+                animator.applyRootMotion)
+            {
+                throw new InvalidOperationException(
+                    IdleSlotName + " Animator must be enabled, use the idle eye emission controller, and disable root motion.");
+            }
+
+            var settings = AnimationUtility.GetAnimationClipSettings(clip);
+            if (!settings.loopTime ||
+                Mathf.Abs(clip.length - IdleEyeEmissionDurationSeconds) > 0.0001f)
+            {
+                throw new InvalidOperationException(
+                    "Negatif idle eye emission clip must loop every 3 seconds. Length=" +
+                    Num(clip.length) + ".");
+            }
+
+            var bindings = AnimationUtility.GetCurveBindings(clip);
+            if (bindings.Length != 1 ||
+                bindings[0].type != typeof(NegatifEyeEmissionPulse) ||
+                bindings[0].propertyName != EmissionStrengthProperty ||
+                !string.IsNullOrEmpty(bindings[0].path))
+            {
+                throw new InvalidOperationException(
+                    "Negatif idle clip must contain only the NegatifEyeEmissionPulse strength curve and no Transform or BlendShape curves.");
+            }
+
+            foreach (var binding in bindings)
+            {
+                var curve = AnimationUtility.GetEditorCurve(clip, binding) ??
+                            throw new InvalidOperationException(
+                                "Negatif idle eye emission curve is missing: " + binding.path + ".");
+                if (curve.keys.Length != 3 ||
+                    Mathf.Abs(curve.Evaluate(0f) - IdleEyeEmissionMaximum) > 0.0001f ||
+                    Mathf.Abs(curve.Evaluate(IdleEyeEmissionDurationSeconds * 0.5f) -
+                              IdleEyeEmissionMinimum) > 0.0001f ||
+                    Mathf.Abs(curve.Evaluate(IdleEyeEmissionDurationSeconds) -
+                              IdleEyeEmissionMaximum) > 0.0001f ||
+                    curve.keys.Any(key =>
+                        Mathf.Abs(key.inTangent) > 0.0001f ||
+                        Mathf.Abs(key.outTangent) > 0.0001f))
+                {
+                    throw new InvalidOperationException(
+                        "Negatif idle eye emission curve must smoothly follow 9.0 -> 2.0 -> 9.0 over 3 seconds.");
+                }
+            }
+
+            var animatorController = controller as AnimatorController ??
+                                     throw new InvalidOperationException(
+                                         "Negatif idle controller is not an AnimatorController.");
+            var states = animatorController.layers[0].stateMachine.states;
+            if (states.Length != 1 ||
+                states[0].state.name != IdleEyeEmissionStateName ||
+                states[0].state.motion != clip ||
+                animatorController.layers[0].stateMachine.defaultState != states[0].state)
+            {
+                throw new InvalidOperationException(
+                    "Negatif idle controller must contain only the default IdleEyeEmission state.");
+            }
+
+            for (var i = 0; i < SlotNames.Length; i++)
+            {
+                if (SlotNames[i] == IdleSlotName)
+                {
+                    continue;
+                }
+
+                var slot = placementRoot.Find(SlotNames[i]) ??
+                           throw new InvalidOperationException(
+                               SlotNames[i] + " is missing under " + PlacementRootName + ".");
+                var otherAnimator = slot.GetComponent<Animator>();
+                if (otherAnimator != null &&
+                    otherAnimator.runtimeAnimatorController == controller)
+                {
+                    throw new InvalidOperationException(
+                        SlotNames[i] + " must not use the Negatif idle eye emission controller.");
+                }
+            }
         }
 
         private static int MeshTriangleCount(Renderer renderer)
@@ -1478,6 +2048,78 @@ namespace Bellerophon.Editor.NegatifCargoRunScene
                 UnityEngine.Object.DestroyImmediate(image);
                 target.Release();
                 UnityEngine.Object.DestroyImmediate(target);
+            }
+        }
+
+        private static Texture2D RenderCameraImage(Camera camera, int width, int height)
+        {
+            var oldTarget = camera.targetTexture;
+            var oldActive = RenderTexture.active;
+            var target = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32);
+            var image = new Texture2D(width, height, TextureFormat.RGB24, false);
+            try
+            {
+                camera.targetTexture = target;
+                camera.Render();
+                RenderTexture.active = target;
+                image.ReadPixels(new Rect(0f, 0f, width, height), 0, 0);
+                image.Apply();
+                return image;
+            }
+            finally
+            {
+                camera.targetTexture = oldTarget;
+                RenderTexture.active = oldActive;
+                target.Release();
+                UnityEngine.Object.DestroyImmediate(target);
+            }
+        }
+
+        private static void WriteHorizontalComparison(
+            IReadOnlyList<Texture2D> panels,
+            string path,
+            int gap)
+        {
+            if (panels.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    "Negatif eye emission visual review has no panels.");
+            }
+
+            var panelWidth = panels[0].width;
+            var panelHeight = panels[0].height;
+            var width = panelWidth * panels.Count + gap * (panels.Count - 1);
+            var comparison = new Texture2D(width, panelHeight, TextureFormat.RGB24, false);
+            try
+            {
+                var background = Enumerable.Repeat(Color.black, width * panelHeight).ToArray();
+                comparison.SetPixels(background);
+                for (var i = 0; i < panels.Count; i++)
+                {
+                    if (panels[i].width != panelWidth || panels[i].height != panelHeight)
+                    {
+                        throw new InvalidOperationException(
+                            "Negatif eye emission review panels must use one resolution.");
+                    }
+
+                    comparison.SetPixels(
+                        i * (panelWidth + gap),
+                        0,
+                        panelWidth,
+                        panelHeight,
+                        panels[i].GetPixels());
+                }
+
+                comparison.Apply();
+                Directory.CreateDirectory(
+                    Path.GetDirectoryName(path) ??
+                    throw new InvalidOperationException(
+                        "Invalid Negatif eye emission visual review folder."));
+                File.WriteAllBytes(path, comparison.EncodeToPNG());
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(comparison);
             }
         }
 

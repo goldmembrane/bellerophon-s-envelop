@@ -1,16 +1,17 @@
 {
   "enemy_id": "ostinato",
-  "sample_type": "current_model_direct_reference_pixel_transfer",
+  "sample_type": "blender_current_model_uv_pbr_texture",
   "status": "approved",
   "geometry_changed": false,
+  "rig_changed": false,
   "unity_runtime_applied": true,
-  "unity_surface_sync": "approved_front_side_back_sample_render_projection_unlit",
-  "validated_views": [
-    "front",
-    "side",
-    "back"
-  ],
+  "unity_scene": "Assets/_Project/Scenes/CargoRunMvp.unity",
+  "unity_placement_root": "Approved Ostinato Enemy Placement",
+  "unity_placement_count": 9,
+  "unity_model": "Assets/_Project/Art/Enemies/Ostinato/Models/Ostinato_ApprovedUnity.fbx",
+  "unity_validation": "docs/validation/ostinato_approved_material_2026-07-18/Ostinato_ApprovedMaterial_FinalComparison.png",
   "source_model": "Assets/_Project/Art/Enemies/Ostinato/Models/Ostinato.fbx",
+  "source_model_sha256": "35F85E29015DE71416F5A8DD76A86424451CCF89B1C1130AC7B690E6D8B1E533",
   "reference_images": [
     "image/ostinato(오스티나토).png",
     "image/ostinato-beside.png",

@@ -1,0 +1,28 @@
+{
+  "enemy_id": "cantabile",
+  "sample_root": "artSample/enemies/cantabile",
+  "review_entry": "index.html",
+  "source_model": "Assets/_Project/Art/Enemies/Cantabile/Models/cantabille.glb",
+  "exports": [
+    "exports/cantabile_current_model_colored_sample.glb"
+  ],
+  "renders": [
+    "renders/01_front_cantabile_reference_match.png",
+    "renders/02_side_cantabile_beside_reference_match.png",
+    "renders/03_reference_side_by_side_overview.png",
+    "renders/04_three_quarter_current_model_material.png",
+    "renders/05_close_current_model_color_application.png",
+    "renders/06_texture_atlas_and_material_breakdown.png"
+  ],
+  "textures": [
+    "textures/cantabile_current_model_material_atlas_albedo.png",
+    "textures/cantabile_wing_blue_black_spots_albedo.png",
+    "textures/cantabile_body_brown_fur_albedo.png",
+    "textures/cantabile_eye_limb_dark_gloss_albedo.png",
+    "textures/cantabile_fur_wing_vein_bump.png"
+  ],
+  "tools": [
+    "tools/build_cantabile_sample.py"
+  ],
+  "unity_runtime_applied": false
+}

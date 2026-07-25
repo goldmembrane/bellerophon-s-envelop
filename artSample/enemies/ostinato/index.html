@@ -3,153 +3,173 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>오스티나토 원화 직접 전사 샘플</title>
+  <title>오스티나토 Blender 3D 아트 샘플</title>
   <style>
     :root {
-      --ink: #ece4cf;
-      --muted: #bdb49f;
-      --shell: #788451;
-      --rust: #9a5138;
-      --steel: #b6c0bc;
-      --eye: #d15a49;
-      --panel: #1e2119;
-      --panel-2: #151710;
-      --line: #465039;
+      --paper: #ebe8dc;
+      --ink: #f1eddf;
+      --muted: #b8b5a7;
+      --olive: #68723d;
+      --rust: #8c3f2b;
+      --steel: #9aa8aa;
+      --panel: #1b1e18;
+      --panel-deep: #10120f;
+      --line: #414a35;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       color: var(--ink);
-      background:
-        radial-gradient(circle at 78% 4%, rgba(120,132,81,.17), transparent 31rem),
-        repeating-linear-gradient(125deg, transparent 0 52px, rgba(255,255,255,.018) 53px 54px),
-        #10120d;
       font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+      background:
+        radial-gradient(circle at 80% 0, rgba(104, 114, 61, .24), transparent 34rem),
+        repeating-linear-gradient(118deg, transparent 0 58px, rgba(255,255,255,.018) 59px 60px),
+        #0d0f0c;
     }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: .18;
-      background-image: radial-gradient(rgba(235,226,202,.45) .55px, transparent .55px);
-      background-size: 5px 5px;
-    }
-    main { position: relative; max-width: 1240px; margin: 0 auto; padding: 42px 28px 80px; }
-    header { border-left: 5px solid var(--rust); padding: 8px 0 8px 22px; margin-bottom: 42px; }
-    .eyebrow { color: var(--steel); letter-spacing: .22em; font-size: 12px; text-transform: uppercase; }
-    h1, h2, h3 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-weight: 600; }
-    h1 { margin-top: 7px; font-size: clamp(34px, 5vw, 66px); letter-spacing: -.035em; }
-    h2 { font-size: 28px; margin-bottom: 17px; }
-    h3 { font-size: 18px; color: #f4ead4; }
-    p, li { line-height: 1.7; }
+    main { max-width: 1220px; margin: 0 auto; padding: 38px 28px 76px; }
+    header { margin-bottom: 42px; padding: 10px 0 12px 22px; border-left: 5px solid var(--rust); }
+    .eyebrow { color: var(--steel); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; }
+    h1, h2, h3 { margin: 0; font-family: Georgia, "Times New Roman", serif; }
+    h1 { margin-top: 8px; font-size: clamp(34px, 5vw, 64px); letter-spacing: -.035em; }
+    h2 { margin-bottom: 16px; font-size: 28px; }
+    h3 { font-size: 18px; }
+    p, li { line-height: 1.65; }
     p { color: var(--muted); }
-    code { color: #d4dda9; background: rgba(0,0,0,.28); padding: .12em .35em; border-radius: 3px; }
+    code { color: #d7dfa8; background: rgba(0,0,0,.3); padding: .12em .34em; border-radius: 3px; }
+    a { color: #d8e1a5; }
     section { margin: 42px 0; }
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      margin-top: 10px;
-      padding: 7px 11px;
-      border: 1px solid #675442;
-      color: #efd0b6;
-      background: rgba(115,55,36,.18);
-      font-size: 13px;
-    }
-    .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--rust); box-shadow: 0 0 0 4px rgba(154,81,56,.18); }
+    .status { display: inline-block; padding: 7px 11px; border: 1px solid #705443; color: #f0c9af; background: rgba(140,63,43,.15); font-size: 13px; }
     .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; padding: 14px; background: var(--panel); border: 1px solid var(--line); }
-    .comparison h3 { grid-column: 1 / -1; padding: 2px 0 4px; }
-    figure { margin: 0; background: var(--panel-2); border: 1px solid #353a2c; overflow: hidden; }
-    img { display: block; width: 100%; height: auto; background: #eeeadd; }
-    figcaption { padding: 10px 12px 12px; font-size: 12px; color: #bfc4ae; word-break: break-all; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 15px; }
-    .swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 18px 0 24px; }
-    .swatch { min-height: 86px; padding: 52px 10px 10px; border: 1px solid rgba(255,255,255,.18); color: #fff; font-size: 12px; text-shadow: 0 1px 2px #000; }
-    .swatch:nth-child(1) { background: #454727; }
-    .swatch:nth-child(2) { background: #412817; }
-    .swatch:nth-child(3) { background: #535850; }
-    .swatch:nth-child(4) { background: linear-gradient(135deg, #2a321f 0 45%, #873f31 65%, #e2d9b8 100%); }
-    .callout { padding: 18px 20px; border: 1px solid #5a6144; background: rgba(69,80,51,.2); }
-    .callout strong { color: #e9efc8; }
+    .comparison h3 { grid-column: 1 / -1; padding-bottom: 3px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 15px; }
+    figure { margin: 0; overflow: hidden; background: var(--panel-deep); border: 1px solid #353b2e; }
+    img { display: block; width: 100%; height: auto; background: var(--paper); }
+    figcaption { padding: 10px 12px 12px; color: #bfc4ae; font-size: 12px; word-break: break-all; }
+    .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; margin: 18px 0; }
+    .fact { min-height: 92px; padding: 16px; border: 1px solid var(--line); background: rgba(27,30,24,.85); }
+    .fact strong { display: block; margin-bottom: 6px; color: #e5e9bf; }
+    .downloads { padding: 18px 20px; border: 1px solid #5a6242; background: rgba(74,84,49,.18); }
+    .texture-group { margin: 24px 0; }
+    .texture-group h3 { margin-bottom: 10px; color: #e9e5cf; }
     @media (max-width: 760px) {
-      main { padding: 28px 16px 60px; }
+      main { padding: 28px 16px 58px; }
       .comparison { grid-template-columns: 1fr; }
       .comparison h3 { grid-column: 1; }
-      .swatches { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
 <main>
   <header>
-    <div class="eyebrow">Direct reference transfer review / Ostinato</div>
-    <h1>오스티나토 원화 직접 전사 샘플</h1>
-    <p>기준 이미지는 <code>ostinato(오스티나토).png</code>, <code>ostinato-beside.png</code>, <code>ostinato-back.png</code>입니다. 비슷한 색을 새로 만드는 방식이 아니라 기준 이미지의 실제 갑각·산화부·관절 조직·복안·가위날 픽셀을 현재 <code>Ostinato.fbx</code> 실루엣에 직접 전사했습니다.</p>
-    <div class="status">사용자 검토 대기 · Unity 미적용</div>
+    <div class="eyebrow">Blender 5.1 · current Unity model · UV/PBR review</div>
+    <h1>오스티나토 Blender 3D 아트 샘플</h1>
+    <p>현재 Unity의 <code>Ostinato.fbx</code> 형상과 24본 리그를 기준으로 Blender에서 다시 제작한 실제 3D 샘플입니다. 기준 이미지의 올리브색 외골격, 적갈색 관절 조직, 은회색 가위날, 녹적색 복안을 목표로 샘플 전용 UV와 PBR 텍스처·머티리얼을 구성했습니다. 몸통은 미세 키틴 이미지 맵과 UV 경계에 끊기지 않는 3D 갑각판 홈을 결합해 다시 제작했습니다.</p>
+    <div class="status">사용자 승인 완료 · CargoRunMvp 오스티나토 9개 Unity 적용 완료</div>
   </header>
 
   <section>
-    <h2>기준 이미지와 현재 모델 적용 시안</h2>
+    <h2>기준 이미지와 Blender 렌더 비교</h2>
     <article class="comparison">
       <h3>정면</h3>
       <figure><img src="../../../image/ostinato(오스티나토).png" alt="오스티나토 정면 기준 이미지"><figcaption>기준 이미지: ../../../image/ostinato(오스티나토).png</figcaption></figure>
-      <figure><img src="renders/01_front_current_model_reference_material.png" alt="현재 모델 정면 머티리얼 적용 시안"><figcaption>현재 모델 시안: renders/01_front_current_model_reference_material.png</figcaption></figure>
+      <figure><img src="renders/01_front_blender_reference_material.png" alt="Blender 정면 렌더"><figcaption>Blender 렌더: renders/01_front_blender_reference_material.png</figcaption></figure>
     </article>
     <article class="comparison">
       <h3>측면</h3>
       <figure><img src="../../../image/ostinato-beside.png" alt="오스티나토 측면 기준 이미지"><figcaption>기준 이미지: ../../../image/ostinato-beside.png</figcaption></figure>
-      <figure><img src="renders/02_side_current_model_reference_material.png" alt="현재 모델 측면 머티리얼 적용 시안"><figcaption>현재 모델 시안: renders/02_side_current_model_reference_material.png</figcaption></figure>
+      <figure><img src="renders/02_side_blender_reference_material.png" alt="Blender 측면 렌더"><figcaption>Blender 렌더: renders/02_side_blender_reference_material.png</figcaption></figure>
     </article>
     <article class="comparison">
       <h3>후면</h3>
       <figure><img src="../../../image/ostinato-back.png" alt="오스티나토 후면 기준 이미지"><figcaption>기준 이미지: ../../../image/ostinato-back.png</figcaption></figure>
-      <figure><img src="renders/03_back_current_model_reference_material.png" alt="현재 모델 후면 머티리얼 적용 시안"><figcaption>현재 모델 시안: renders/03_back_current_model_reference_material.png</figcaption></figure>
+      <figure><img src="renders/03_back_blender_reference_material.png" alt="Blender 후면 렌더"><figcaption>Blender 렌더: renders/03_back_blender_reference_material.png</figcaption></figure>
     </article>
+  </section>
+
+  <section>
+    <h2>승인 샘플 Unity 적용 결과</h2>
+    <p>승인된 Blender 샘플의 전용 UV에 갑각·연부 조직·가위날·복안 4종 PBR 표면을 2048px로 베이크하고, 같은 24본 리그의 Unity 전용 FBX로 내보냈습니다. <code>CargoRunMvp.unity</code>의 <code>Approved Ostinato Enemy Placement</code> 아래 9개 렌더러에 적용했으며 배치·변환·리그 계층·애니메이션·물리·AI와 다른 장면 루트는 변경하지 않았습니다.</p>
+    <figure>
+      <img src="renders/08_unity_final_comparison.png" alt="승인 Blender 샘플과 Unity 적용 결과의 정면 측면 후면 비교">
+      <figcaption>08_unity_final_comparison.png · 각 행 좌측은 승인 Blender, 우측은 Unity 적용 결과</figcaption>
+    </figure>
+    <div class="facts">
+      <div class="fact"><strong>Unity 대상</strong>Ostinato 9개 SkinnedMeshRenderer</div>
+      <div class="fact"><strong>Unity 메시</strong>4 SubMesh · 24 Bones</div>
+      <div class="fact"><strong>Unity 재질</strong>URP/Lit 4종 · 베이크 PBR</div>
+      <div class="fact"><strong>보존</strong>Transforms · Rig · Physics · AI 불변</div>
+    </div>
   </section>
 
   <section>
     <h2>생성 렌더</h2>
     <div class="grid">
-      <figure><img src="renders/01_front_current_model_reference_material.png" alt="정면 시안"><figcaption>01_front_current_model_reference_material.png</figcaption></figure>
-      <figure><img src="renders/02_side_current_model_reference_material.png" alt="측면 시안"><figcaption>02_side_current_model_reference_material.png</figcaption></figure>
-      <figure><img src="renders/03_back_current_model_reference_material.png" alt="후면 시안"><figcaption>03_back_current_model_reference_material.png</figcaption></figure>
-      <figure><img src="renders/04_reference_side_by_side_overview.png" alt="기준 이미지 비교표"><figcaption>04_reference_side_by_side_overview.png</figcaption></figure>
-      <figure><img src="renders/05_three_quarter_current_model_reference_material.png" alt="사선 시안"><figcaption>05_three_quarter_current_model_reference_material.png</figcaption></figure>
-      <figure><img src="renders/06_texture_material_breakdown.png" alt="텍스처와 머티리얼 분해"><figcaption>06_texture_material_breakdown.png</figcaption></figure>
+      <figure><img src="renders/01_front_blender_reference_material.png" alt="정면"><figcaption>01_front_blender_reference_material.png</figcaption></figure>
+      <figure><img src="renders/02_side_blender_reference_material.png" alt="측면"><figcaption>02_side_blender_reference_material.png</figcaption></figure>
+      <figure><img src="renders/03_back_blender_reference_material.png" alt="후면"><figcaption>03_back_blender_reference_material.png</figcaption></figure>
+      <figure><img src="renders/04_three_quarter_blender_reference_material.png" alt="사선"><figcaption>04_three_quarter_blender_reference_material.png</figcaption></figure>
+      <figure><img src="renders/05_head_blade_closeup.png" alt="머리와 가위날 확대"><figcaption>05_head_blade_closeup.png</figcaption></figure>
+      <figure><img src="renders/06_abdomen_closeup.png" alt="원본의 V자 겹갑각을 적용한 복부 확대"><figcaption>06_abdomen_closeup.png · 복부 V자 겹갑각 검토</figcaption></figure>
     </div>
   </section>
 
   <section>
-    <h2>현재 모델 적용 기준</h2>
-    <p>원본 모델은 <code>char1</code> 단일 SkinnedMeshRenderer, 정점 3,728개, 서브메시 1개입니다. 이 구조와 리깅·애니메이션은 유지하고, 승인 후 Unity 단계에서 부위 마스크와 PBR 텍스처를 기존 모델에 연결하는 것을 목표로 합니다.</p>
-    <div class="swatches" aria-label="오스티나토 핵심 색상">
-      <div class="swatch">갑각 실측 중앙색<br>#454727</div>
-      <div class="swatch">관절 조직 실측 중앙색<br>#412817</div>
-      <div class="swatch">가위날 실측 중앙색<br>#535850</div>
-      <div class="swatch">복안 원화 패치<br>녹색 렌즈 + 적색 반사</div>
+    <h2>현재 모델 보존 및 제작 기준</h2>
+    <div class="facts">
+      <div class="fact"><strong>형상</strong>현재 FBX 메시 형상 변경 없음</div>
+      <div class="fact"><strong>리그</strong>Armature 24본과 스킨 가중치 유지</div>
+      <div class="fact"><strong>UV</strong>원본 UV 유지 + 샘플 전용 <code>OstinatoSampleUV</code> 추가</div>
+      <div class="fact"><strong>재질</strong>갑각·연부 조직·가위날·복안 4종</div>
     </div>
     <ul>
-      <li>외골격: 정면 흉부와 후면 등판의 실제 원화 픽셀을 사용해 갑각판, 녹색 안료, 적갈 산화와 마모를 함께 전사합니다.</li>
-      <li>관절 조직: 정면 하체의 실제 적갈 조직 패치에서 기공, 섬유 주름과 어두운 홈을 가져옵니다.</li>
-      <li>양팔 가위날: 원화 가위날의 은회색 금속, 어두운 내측면과 밝은 날 경계를 그대로 사용합니다.</li>
-      <li>복안: 원화 복안 패치의 녹색 미세 렌즈, 적색 중심 반사와 백색 고광택을 그대로 사용합니다.</li>
-      <li>시점 보완: 주 기준 이미지의 흰 여백과 겹치는 현재 모델 부위만 다른 두 기준 시점의 실제 전경 픽셀로 보완합니다.</li>
-      <li>검토용 설정: <code>exports/ostinato_current_model_material_spec.json</code></li>
+      <li>외골격은 올리브·황록 갑각에 적갈 산화, 미세 패임, 좁고 어두운 판상 홈을 포함합니다.</li>
+      <li>기존의 넓은 적갈색 몸통 띠를 제거하고 연부 조직을 관절과 목 연결부 중심으로 제한했습니다.</li>
+      <li>복부의 일자형 홈을 제거하고 원본처럼 중앙 아래로 모이는 좌우 대칭 V자 갑각을 4~5단으로 겹쳤습니다.</li>
+      <li>관절과 목·복부 연결부는 적갈색 섬유 주름과 기공을 가진 비금속성 연부 조직입니다.</li>
+      <li>양팔 안쪽 가위날은 은회색 금속, 어두운 산화면, 밝은 날 경계와 방향성 마모를 사용합니다.</li>
+      <li>복안은 녹색 렌즈 격자에 적색 중심 반사와 낮은 거칠기를 사용합니다.</li>
+      <li>원화와 현재 FBX 사이의 실루엣·자세 차이는 형상 변경 없이 유지했습니다.</li>
     </ul>
-    <div class="callout"><strong>형상 변경 없음.</strong> 원화와 현재 FBX의 형상·자세 차이는 텍스처만으로 제거할 수 없으므로, 이번 샘플은 현재 형상에서 표현 가능한 표면 외형을 원화 픽셀로 재현합니다. 승인 후 Unity 적용은 별도 작업이며, 기존 FBX의 UV·정점 구조를 확인해 같은 분포를 옮겨야 합니다.</div>
+    <div class="downloads">
+      <strong>검토용 3D 파일</strong>
+      <ul>
+        <li><a href="blender/Ostinato_CurrentModel_TexturedSample.blend">Blender 원본 (.blend)</a></li>
+        <li><a href="exports/Ostinato_CurrentModel_TexturedSample.fbx">FBX 내보내기</a></li>
+        <li><a href="exports/Ostinato_CurrentModel_TexturedSample.glb">GLB 내보내기</a></li>
+        <li><a href="exports/unity/Ostinato_ApprovedUnity.fbx">Unity 전용 단일 UV FBX</a></li>
+        <li><a href="exports/unity/unity_bake_manifest.json">Unity 베이크 매니페스트</a></li>
+        <li><a href="ASSET_MANIFEST.json">에셋 매니페스트</a></li>
+      </ul>
+    </div>
   </section>
 
   <section>
-    <h2>사용 텍스처</h2>
-    <div class="grid">
-      <figure><img src="textures/ostinato_olive_rust_chitin_albedo.png" alt="녹청색 갑각 알베도"><figcaption>ostinato_olive_rust_chitin_albedo.png</figcaption></figure>
-      <figure><img src="textures/ostinato_red_brown_soft_tissue_albedo.png" alt="적갈색 연부 조직 알베도"><figcaption>ostinato_red_brown_soft_tissue_albedo.png</figcaption></figure>
-      <figure><img src="textures/ostinato_worn_hook_blade_albedo.png" alt="마모된 가위날 알베도"><figcaption>ostinato_worn_hook_blade_albedo.png</figcaption></figure>
-      <figure><img src="textures/ostinato_red_compound_eye_albedo.png" alt="적색 복안 알베도"><figcaption>ostinato_red_compound_eye_albedo.png</figcaption></figure>
-      <figure><img src="textures/ostinato_shell_tissue_normal.png" alt="갑각과 연부 조직 노멀"><figcaption>ostinato_shell_tissue_normal.png</figcaption></figure>
-      <figure><img src="textures/ostinato_material_roughness.png" alt="통합 거칠기"><figcaption>ostinato_material_roughness.png</figcaption></figure>
-      <figure><img src="textures/ostinato_material_region_mask_guide.png" alt="부위 마스크 가이드"><figcaption>R=갑각, G=연부, B=가위날, White=복안 · ostinato_material_region_mask_guide.png</figcaption></figure>
+    <h2>실제 연결된 PBR 텍스처</h2>
+    <p>각 재질은 Base Color, Roughness, Metallic, Normal 맵을 사용합니다. 갑각의 큰 판 구조는 Blender 3D 절차적 노드로 보강되며, 아래 이미지는 미세 표면과 내보내기용 PBR 기반을 구성하는 프로젝트 산출물입니다.</p>
+    <div class="texture-group">
+      <h3>갑각</h3>
+      <div class="grid">
+        <figure><img src="textures/Ostinato_Chitin_BaseColor.png" alt="갑각 Base Color"><figcaption>Ostinato_Chitin_BaseColor.png</figcaption></figure>
+        <figure><img src="textures/Ostinato_Chitin_Roughness.png" alt="갑각 Roughness"><figcaption>Ostinato_Chitin_Roughness.png</figcaption></figure>
+        <figure><img src="textures/Ostinato_Chitin_Normal.png" alt="갑각 Normal"><figcaption>Ostinato_Chitin_Normal.png</figcaption></figure>
+      </div>
+    </div>
+    <div class="texture-group">
+      <h3>연부 조직</h3>
+      <div class="grid">
+        <figure><img src="textures/Ostinato_SoftTissue_BaseColor.png" alt="연부 조직 Base Color"><figcaption>Ostinato_SoftTissue_BaseColor.png</figcaption></figure>
+        <figure><img src="textures/Ostinato_SoftTissue_Roughness.png" alt="연부 조직 Roughness"><figcaption>Ostinato_SoftTissue_Roughness.png</figcaption></figure>
+        <figure><img src="textures/Ostinato_SoftTissue_Normal.png" alt="연부 조직 Normal"><figcaption>Ostinato_SoftTissue_Normal.png</figcaption></figure>
+      </div>
+    </div>
+    <div class="texture-group">
+      <h3>가위날과 복안</h3>
+      <div class="grid">
+        <figure><img src="textures/Ostinato_HookBlade_BaseColor.png" alt="가위날 Base Color"><figcaption>Ostinato_HookBlade_BaseColor.png</figcaption></figure>
+        <figure><img src="textures/Ostinato_HookBlade_Metallic.png" alt="가위날 Metallic"><figcaption>Ostinato_HookBlade_Metallic.png</figcaption></figure>
+        <figure><img src="textures/Ostinato_CompoundEye_BaseColor.png" alt="복안 Base Color"><figcaption>Ostinato_CompoundEye_BaseColor.png</figcaption></figure>
+        <figure><img src="textures/Ostinato_CompoundEye_Normal.png" alt="복안 Normal"><figcaption>Ostinato_CompoundEye_Normal.png</figcaption></figure>
+      </div>
     </div>
   </section>
 </main>

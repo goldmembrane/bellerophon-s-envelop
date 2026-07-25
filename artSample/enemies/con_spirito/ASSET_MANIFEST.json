@@ -1,0 +1,57 @@
+{
+  "enemy_id": "con_spirito",
+  "source_fbx": "Assets/_Project/Art/Enemies/ConSpirito/Models/con_spirito_original.fbx",
+  "reference_image": "image/con spirito(콘 스피리토).png",
+  "sample_root": "artSample/enemies/con_spirito",
+  "modeling_policy": "Current model geometry was imported as-is; sample changes are material and texture assignment only.",
+  "reference_features": [
+    "unified bright blood-red fur across body, rear, head, legs, and tail",
+    "body and rear color are intentionally matched to the brighter body material",
+    "material assignment keeps the imported mesh and rig unchanged",
+    "weak rough fur grain is retained without separate dark rear material"
+  ],
+  "mesh_summary": {
+    "mesh_objects": 1,
+    "bounds_center": [
+      0.0004,
+      -0.001,
+      0.0037
+    ],
+    "bounds_size": [
+      0.0041,
+      0.013,
+      0.0078
+    ],
+    "vertices": 3725,
+    "polygons": 7446
+  },
+  "outputs": {
+    "documents": [
+      "index.html",
+      "README.md",
+      "TEXTURE_ANALYSIS.md",
+      "APPROVAL_STATUS.json",
+      "ASSET_MANIFEST.json",
+      "reference_con_spirito.png"
+    ],
+    "renders": [
+      "renders/01_side_reference_color_application.png",
+      "renders/02_front_current_model_material.png",
+      "renders/03_three_quarter_red_fur_material.png",
+      "renders/04_reference_side_by_side_overview.png",
+      "renders/05_texture_material_breakdown.png"
+    ],
+    "textures": [
+      "textures/con_spirito_blood_red_fur_albedo.png",
+      "textures/con_spirito_dark_wine_leg_albedo.png",
+      "textures/con_spirito_black_maroon_hoof_nose_albedo.png",
+      "textures/con_spirito_inner_ear_dark_rose_albedo.png",
+      "textures/con_spirito_gloss_amber_eye_albedo.png",
+      "textures/con_spirito_fur_direction_bump.png"
+    ],
+    "exports": [
+      "exports/con_spirito_current_model_colored_sample.glb",
+      "blender/con_spirito_current_model_colored_sample.blend"
+    ]
+  }
+}

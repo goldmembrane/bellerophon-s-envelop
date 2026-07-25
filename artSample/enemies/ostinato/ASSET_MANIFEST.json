@@ -5,29 +5,77 @@
   "source_model": "Assets/_Project/Art/Enemies/Ostinato/Models/Ostinato.fbx",
   "source_model_sha256": "35F85E29015DE71416F5A8DD76A86424451CCF89B1C1130AC7B690E6D8B1E533",
   "geometry_changed": false,
+  "rig_changed": false,
+  "source_structure": {
+    "mesh": "Ostinato_CurrentModel_TexturedSample",
+    "vertices_blender": 2649,
+    "polygons": 5279,
+    "uv_layers": [
+      "uv",
+      "OstinatoSampleUV"
+    ],
+    "sample_uv_rebuilt": true,
+    "armature": "Ostinato_CurrentModel_Armature",
+    "bones": 24
+  },
+  "material_polygon_counts": {
+    "chitin": 3093,
+    "soft_tissue": 1274,
+    "hook_blade": 838,
+    "compound_eye": 74
+  },
+  "blender": [
+    "blender/Ostinato_CurrentModel_TexturedSample.blend"
+  ],
   "exports": [
-    "exports/ostinato_current_model_material_spec.json"
+    "exports/Ostinato_CurrentModel_TexturedSample.fbx",
+    "exports/Ostinato_CurrentModel_TexturedSample.glb",
+    "exports/unity/Ostinato_ApprovedUnity.fbx",
+    "exports/unity/unity_bake_manifest.json"
   ],
   "renders": [
-    "renders/01_front_current_model_reference_material.png",
-    "renders/02_side_current_model_reference_material.png",
-    "renders/03_back_current_model_reference_material.png",
-    "renders/04_reference_side_by_side_overview.png",
-    "renders/05_three_quarter_current_model_reference_material.png",
-    "renders/06_texture_material_breakdown.png",
-    "renders/07_index_page_preview.png"
+    "renders/01_front_blender_reference_material.png",
+    "renders/02_side_blender_reference_material.png",
+    "renders/03_back_blender_reference_material.png",
+    "renders/04_three_quarter_blender_reference_material.png",
+    "renders/05_head_blade_closeup.png",
+    "renders/06_abdomen_closeup.png",
+    "renders/08_unity_final_comparison.png"
   ],
   "textures": [
-    "textures/ostinato_olive_rust_chitin_albedo.png",
-    "textures/ostinato_red_brown_soft_tissue_albedo.png",
-    "textures/ostinato_worn_hook_blade_albedo.png",
-    "textures/ostinato_red_compound_eye_albedo.png",
-    "textures/ostinato_shell_tissue_normal.png",
-    "textures/ostinato_material_roughness.png",
-    "textures/ostinato_material_region_mask_guide.png"
+    "textures/Ostinato_Chitin_BaseColor.png",
+    "textures/Ostinato_Chitin_Roughness.png",
+    "textures/Ostinato_Chitin_Metallic.png",
+    "textures/Ostinato_Chitin_Normal.png",
+    "textures/Ostinato_SoftTissue_BaseColor.png",
+    "textures/Ostinato_SoftTissue_Roughness.png",
+    "textures/Ostinato_SoftTissue_Metallic.png",
+    "textures/Ostinato_SoftTissue_Normal.png",
+    "textures/Ostinato_HookBlade_BaseColor.png",
+    "textures/Ostinato_HookBlade_Roughness.png",
+    "textures/Ostinato_HookBlade_Metallic.png",
+    "textures/Ostinato_HookBlade_Normal.png",
+    "textures/Ostinato_CompoundEye_BaseColor.png",
+    "textures/Ostinato_CompoundEye_Roughness.png",
+    "textures/Ostinato_CompoundEye_Metallic.png",
+    "textures/Ostinato_CompoundEye_Normal.png"
   ],
   "tools": [
-    "tools/build_ostinato_material_sample.py"
+    "tools/build_ostinato_blender_sample.py",
+    "tools/inspect_ostinato_fbx.py",
+    "tools/bake_ostinato_unity_assets.py"
   ],
-  "unity_runtime_applied": false
+  "user_approved": true,
+  "unity_runtime_applied": true,
+  "unity_scene": "Assets/_Project/Scenes/CargoRunMvp.unity",
+  "unity_placement_root": "Approved Ostinato Enemy Placement",
+  "unity_placement_count": 9,
+  "unity_model": "Assets/_Project/Art/Enemies/Ostinato/Models/Ostinato_ApprovedUnity.fbx",
+  "unity_materials": [
+    "Assets/_Project/Art/Enemies/Ostinato/ApprovedSample/Materials/Ostinato_Approved_Chitin.mat",
+    "Assets/_Project/Art/Enemies/Ostinato/ApprovedSample/Materials/Ostinato_Approved_SoftTissue.mat",
+    "Assets/_Project/Art/Enemies/Ostinato/ApprovedSample/Materials/Ostinato_Approved_HookBlade.mat",
+    "Assets/_Project/Art/Enemies/Ostinato/ApprovedSample/Materials/Ostinato_Approved_CompoundEye.mat"
+  ],
+  "unity_validation": "docs/validation/ostinato_approved_material_2026-07-18/Ostinato_ApprovedMaterial_FinalComparison.png"
 }

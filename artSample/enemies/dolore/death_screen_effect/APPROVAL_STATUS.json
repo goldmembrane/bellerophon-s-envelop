@@ -1,0 +1,17 @@
+{
+  "sample": "Dolore_07_Death_Portrait_Signal",
+  "status": "approved_by_user",
+  "approved_on": "2026-07-23",
+  "approval_scope": "0.9 second left fall with portrait retained, 1 second TV white noise, 1 second black screen, immediate loop reset; portrait area only",
+  "unity_applied": true,
+  "source_fbx_modified": false,
+  "geometry_modified": false,
+  "signal_overlay_geometry_added": false,
+  "portrait_fill_geometry_added": true,
+  "legacy_skinned_signal_overlay_removed": true,
+  "portrait_signal_size_matched": true,
+  "portrait_signal_static_reference_pose": true,
+  "post_correction_visual_recheck_pending": false,
+  "visual_result": "passed",
+  "requires_separate_unity_application_approval": false
+}

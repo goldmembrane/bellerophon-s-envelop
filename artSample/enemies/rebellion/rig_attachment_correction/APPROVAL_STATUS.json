@@ -1,0 +1,11 @@
+{
+  "status": "APPROVED_DIRECT_UNITY_APPLICATION",
+  "approved_for_unity": true,
+  "approved_date": "2026-07-25",
+  "approval_basis": "User approved the animation-support-only rig attachment correction and direct Unity application without a separate additional art sample review.",
+  "unity_asset": "Assets/_Project/Art/Enemies/Rebellion/ApprovedAppearance/Rebellion_ApprovedAppearance.glb",
+  "unity_asset_sha256": "2FCDD1322554251B2E4461946E98B97A83CF1CD9B53225E0ED1442742C29400C",
+  "source_geometry_modified": false,
+  "source_rig_hierarchy_modified": false,
+  "rest_appearance_modified": false
+}

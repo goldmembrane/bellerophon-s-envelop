@@ -1,0 +1,857 @@
+{
+  "approved_blend": "artSample/enemies/rebellion/appearance_reference_sync/blender/Rebellion_Appearance_ReferenceSync.blend",
+  "armature": "UniRigArmature",
+  "skinned_mesh": "Mesh1.0",
+  "bone_002_children": [
+    "Bone_013",
+    "Bone_018",
+    "Bone_023",
+    "Bone_028"
+  ],
+  "bone_017_parent": "Bone_018",
+  "candidate_vertex_count": 51,
+  "candidate_vertices": [
+    {
+      "index": 3320,
+      "position": [
+        -0.0006241142400540411,
+        -0.9000000357627869,
+        1.3481045961380005
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3321,
+      "position": [
+        -0.06270177662372589,
+        -0.9000000357627869,
+        1.3481922149658203
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3322,
+      "position": [
+        -0.2069259136915207,
+        -0.9000000357627869,
+        1.3481919765472412
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3323,
+      "position": [
+        -0.2874948978424072,
+        -0.9000000357627869,
+        1.348010778427124
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3324,
+      "position": [
+        -0.47999998927116394,
+        -0.9740505218505859,
+        1.3771315813064575
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3325,
+      "position": [
+        -0.47999998927116394,
+        -0.9569003582000732,
+        1.3646588325500488
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3326,
+      "position": [
+        -0.47999998927116394,
+        -0.9359678626060486,
+        1.350774884223938
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3327,
+      "position": [
+        -0.47999998927116394,
+        -0.9179999828338623,
+        1.3503724336624146
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3328,
+      "position": [
+        -0.4775952398777008,
+        -0.9090118408203125,
+        1.3501437902450562
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3329,
+      "position": [
+        -0.4709881544113159,
+        -0.90240478515625,
+        1.3499207496643066
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3330,
+      "position": [
+        -0.3470873534679413,
+        -0.9000000357627869,
+        1.348457932472229
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3331,
+      "position": [
+        -0.4619999825954437,
+        -0.9000000357627869,
+        1.3497645854949951
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3332,
+      "position": [
+        -0.32978683710098267,
+        -0.9000000357627869,
+        1.3481489419937134
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3333,
+      "position": [
+        0.26367419958114624,
+        -0.9000000357627869,
+        1.3484580516815186
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3334,
+      "position": [
+        0.2069258987903595,
+        -0.9000000357627869,
+        1.3481920957565308
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3335,
+      "position": [
+        0.287494957447052,
+        -0.9000000357627869,
+        1.348010778427124
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3336,
+      "position": [
+        0.32978692650794983,
+        -0.9000000357627869,
+        1.348149061203003
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3337,
+      "position": [
+        0.4709881544113159,
+        -0.90240478515625,
+        1.34988272190094
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3338,
+      "position": [
+        0.4619999825954437,
+        -0.9000000357627869,
+        1.3497196435928345
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3339,
+      "position": [
+        0.4775952398777008,
+        -0.9090118408203125,
+        1.3501157760620117
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3340,
+      "position": [
+        0.47999998927116394,
+        -0.9179999828338623,
+        1.3503546714782715
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3341,
+      "position": [
+        0.47999998927116394,
+        -0.9359679818153381,
+        1.3507750034332275
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3342,
+      "position": [
+        0.47999998927116394,
+        -0.956900417804718,
+        1.3646588325500488
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3343,
+      "position": [
+        0.47999998927116394,
+        -0.9740504622459412,
+        1.377131700515747
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3344,
+      "position": [
+        0.14436660706996918,
+        -0.9000000357627869,
+        1.3481045961380005
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3345,
+      "position": [
+        -0.2646442949771881,
+        -1.103682279586792,
+        1.6349999904632568
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3346,
+      "position": [
+        -0.27344954013824463,
+        -1.103682279586792,
+        1.6349999904632568
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3347,
+      "position": [
+        -0.47999998927116394,
+        -1.000407099723816,
+        1.5126924514770508
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3348,
+      "position": [
+        -0.47999998927116394,
+        -1.000407099723816,
+        1.6169999837875366
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3349,
+      "position": [
+        -0.4775952398777008,
+        -1.001609444618225,
+        1.6259881258010864
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3350,
+      "position": [
+        -0.4709881544113159,
+        -1.0049129724502563,
+        1.632595181465149
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3351,
+      "position": [
+        -0.4619999825954437,
+        -1.0094070434570312,
+        1.6349999904632568
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3352,
+      "position": [
+        -0.47999998927116394,
+        -1.000407099723816,
+        1.3968991041183472
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3353,
+      "position": [
+        -0.47999998927116394,
+        -0.9874976277351379,
+        1.3872170448303223
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3354,
+      "position": [
+        0.47999998927116394,
+        -0.9874976873397827,
+        1.3872170448303223
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3355,
+      "position": [
+        0.47999998927116394,
+        -1.000407099723816,
+        1.3968992233276367
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3356,
+      "position": [
+        0.47999998927116394,
+        -0.9906214475631714,
+        1.5665183067321777
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3357,
+      "position": [
+        0.47999998927116394,
+        -0.9906216263771057,
+        1.429518222808838
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3358,
+      "position": [
+        0.47999998927116394,
+        -0.9906214475631714,
+        1.568935751914978
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3359,
+      "position": [
+        0.27137771248817444,
+        -1.1036823987960815,
+        1.6349999904632568
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3360,
+      "position": [
+        0.1803099662065506,
+        -1.1036823987960815,
+        1.6349999904632568
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3361,
+      "position": [
+        0.17461232841014862,
+        -1.1036823987960815,
+        1.6349999904632568
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3362,
+      "position": [
+        0.010690223425626755,
+        -1.103682279586792,
+        1.6349999904632568
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3363,
+      "position": [
+        -0.0032945743296295404,
+        -1.103682279586792,
+        1.6349999904632568
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3364,
+      "position": [
+        -0.015725530683994293,
+        -1.103682279586792,
+        1.6349999904632568
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3365,
+      "position": [
+        0.2895064949989319,
+        -1.094877004623413,
+        1.6349999904632568
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3366,
+      "position": [
+        0.4619999825954437,
+        -1.0086302757263184,
+        1.6349999904632568
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3367,
+      "position": [
+        0.4709881544113159,
+        -1.0038082599639893,
+        1.632595181465149
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3368,
+      "position": [
+        0.47999998927116394,
+        -0.9971756935119629,
+        1.6169999837875366
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3369,
+      "position": [
+        0.4775952398777008,
+        -0.9996037483215332,
+        1.6259881258010864
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    },
+    {
+      "index": 3370,
+      "position": [
+        0.2755214273929596,
+        -1.101610541343689,
+        1.6349999904632568
+      ],
+      "weights": {
+        "Bone_017": 1.0
+      }
+    }
+  ],
+  "detail_object_count": 18,
+  "detail_objects": [
+    {
+      "name": "Rebellion_Front_Recess_Backplate",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_00",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_01",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_02",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_03",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_04",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_05",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_06",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Gun_Hub",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Panel_Fastener_00",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Panel_Fastener_01",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Panel_Fastener_02",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Panel_Fastener_03",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Panel_Vent_00",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Panel_Vent_01",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Panel_Vent_02",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Panel_Vent_03",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    },
+    {
+      "name": "Rebellion_Scan_Lens",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017"
+    }
+  ],
+  "all_mesh_objects": [
+    {
+      "name": "Mesh1.0",
+      "parent": "UniRigArmature",
+      "parent_type": "OBJECT",
+      "parent_bone": "",
+      "vertices": 3371,
+      "polygons": 6486
+    },
+    {
+      "name": "Rebellion_Front_Recess_Backplate",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 56,
+      "polygons": 54
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_00",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 32,
+      "polygons": 18
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_01",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 32,
+      "polygons": 18
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_02",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 32,
+      "polygons": 18
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_03",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 32,
+      "polygons": 18
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_04",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 32,
+      "polygons": 18
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_05",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 32,
+      "polygons": 18
+    },
+    {
+      "name": "Rebellion_Gun_Barrel_06",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 32,
+      "polygons": 18
+    },
+    {
+      "name": "Rebellion_Gun_Hub",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 48,
+      "polygons": 26
+    },
+    {
+      "name": "Rebellion_Panel_Fastener_00",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 24,
+      "polygons": 14
+    },
+    {
+      "name": "Rebellion_Panel_Fastener_01",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 24,
+      "polygons": 14
+    },
+    {
+      "name": "Rebellion_Panel_Fastener_02",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 24,
+      "polygons": 14
+    },
+    {
+      "name": "Rebellion_Panel_Fastener_03",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 24,
+      "polygons": 14
+    },
+    {
+      "name": "Rebellion_Panel_Vent_00",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 56,
+      "polygons": 54
+    },
+    {
+      "name": "Rebellion_Panel_Vent_01",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 56,
+      "polygons": 54
+    },
+    {
+      "name": "Rebellion_Panel_Vent_02",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 56,
+      "polygons": 54
+    },
+    {
+      "name": "Rebellion_Panel_Vent_03",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 56,
+      "polygons": 54
+    },
+    {
+      "name": "Rebellion_Reference_Scan_Optic",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 42,
+      "polygons": 80
+    },
+    {
+      "name": "Rebellion_Review_Ground",
+      "parent": null,
+      "parent_type": "OBJECT",
+      "parent_bone": "",
+      "vertices": 4,
+      "polygons": 1
+    },
+    {
+      "name": "Rebellion_Scan_Lens",
+      "parent": "UniRigArmature",
+      "parent_type": "BONE",
+      "parent_bone": "Bone_017",
+      "vertices": 48,
+      "polygons": 26
+    }
+  ]
+}
