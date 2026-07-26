@@ -1,0 +1,18 @@
+{
+  "enemy_id": "resistance",
+  "sample_type": "source_geometry_unchanged_material_sync",
+  "status": "pending_user_review",
+  "unity_runtime_applied": false,
+  "source_model_modified": false,
+  "sample_geometry_modified": false,
+  "facial_features_omitted": [
+    "eyes",
+    "nose",
+    "mouth"
+  ],
+  "source_model": "Assets/_Project/Art/Enemies/Resistance/Models/Resistance.fbx",
+  "reference_images": [
+    "image/résistance(레지스탕스).png"
+  ],
+  "review_entry": "artSample/enemies/resistance/index.html"
+}

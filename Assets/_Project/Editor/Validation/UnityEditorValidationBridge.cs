@@ -1761,6 +1761,96 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.RebellionCargoRunScene.RebellionCargoRunScenePlacementTool.CapturePlayerStartView,
                         "Rebellion Player start camera view captured once after placement inspection.");
                     break;
+                case "ApplyResistancePlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceCargoRunScenePlacementTool.ApplyPlacement,
+                        "Supplied Resistance FBX placed in fourteen static slots; Player start moved to the Resistance_07 front view.");
+                    break;
+                case "InspectResistancePlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceCargoRunScenePlacementTool.InspectPlacement,
+                        "Resistance placement, spacing, source hash, grounding, and Resistance_07 camera framing inspected.");
+                    break;
+                case "CaptureResistancePlacementReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceCargoRunScenePlacementTool.CapturePlacementReview,
+                        "Resistance_07 Player start camera view captured once after placement inspection.");
+                    break;
+                case "ApplyApprovedResistanceAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceApprovedBakedAppearanceApply.Apply,
+                        "Directly baked user-approved Resistance sample applied to all fourteen slots.");
+                    break;
+                case "InspectApprovedResistanceAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceApprovedAppearanceApplyAndReview.InspectApprovedAppearance,
+                        "Approved Resistance material, unchanged mesh topology, placement, and Player camera inspected.");
+                    break;
+                case "CaptureApprovedResistanceAppearanceFinal":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceApprovedAppearanceApplyAndReview.CaptureApprovedAppearanceFinal,
+                        "Resistance_07 approved appearance final view captured once.");
+                    break;
+                case "ApplyResistanceIdleAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceIdleAnimationTool.ApplyResistanceIdleAnimation,
+                        "Resistance_02 two-second grounded full-body idle morph loop applied.");
+                    break;
+                case "InspectResistanceIdleAnimation":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceIdleAnimationTool.InspectResistanceIdleAnimation,
+                        "Resistance_02 idle loop, grounded feet, fixed slot position, and unchanged meshes inspected.");
+                    break;
+                case "CaptureResistanceIdleAnimationReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceIdleAnimationTool.CaptureResistanceIdleAnimationReview,
+                        "Resistance_02 idle animation review progression captured once.");
+                    break;
+                case "ApplyResistanceMoveModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceMoveModelReplacementTool.ApplyResistanceMoveModelReplacement,
+                        "Resistance_03 replaced by the supplied walking FBX, synchronized to the Resistance_01 approved appearance, and configured to loop the selected Mixamo clip.");
+                    break;
+                case "InspectResistanceMoveModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceMoveModelReplacementTool.InspectResistanceMoveModelReplacement,
+                        "Resistance_03 walking source, exact approved appearance references, rig, grounding, playback, and loop inspected.");
+                    break;
+                case "CaptureResistanceMoveModelReplacementReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceMoveModelReplacementTool.CaptureResistanceMoveModelReplacementReview,
+                        "Resistance_01 static reference and Resistance_03 Mixamo walking progression captured once.");
+                    break;
+                case "ApplyResistanceBasicAttackModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceBasicAttackModelReplacementTool.ApplyResistanceBasicAttackModelReplacement,
+                        "Resistance_04 replaced by the supplied punching FBX, directly linked to the approved Resistance appearance, and configured to loop the selected Mixamo clip.");
+                    break;
+                case "InspectResistanceBasicAttackModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceBasicAttackModelReplacementTool.InspectResistanceBasicAttackModelReplacement,
+                        "Resistance_04 punching source, exact approved appearance references, right-hand motion, grounding, playback, and loop inspected.");
+                    break;
+                case "CaptureResistanceBasicAttackModelReplacementReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceBasicAttackModelReplacementTool.CaptureResistanceBasicAttackModelReplacementReview,
+                        "Resistance_01 static reference and Resistance_04 Mixamo punching progression captured once.");
+                    break;
                 case "ApplyApprovedRebellionAppearance":
                     RunSynchronous(
                         request,

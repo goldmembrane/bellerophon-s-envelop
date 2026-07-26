@@ -1,0 +1,25 @@
+Resistance Placement Inspection
+Result=PASS
+Scene=Assets/_Project/Scenes/CargoRunMvp.unity
+PlacementRoot=Approved Resistance Enemy Placement
+Slots=14
+SlotNames=Resistance_01..Resistance_14
+ResistancePosition=(57.86535, 0, -141.252)
+RebellionPosition=(57.86535, 0, -133.875)
+LongaTergoZSpacing=7.376999
+RebellionXSpacing=2.444763
+FocusSlot=Resistance_07
+FocusBoundsCenter=(72.54027, 0.75, -141.318)
+FocusBoundsSize=(0.957791, 1.5, 0.620044)
+PlayerPosition=(72.54027, 0, -145.2395)
+PlayerForward=(0, 0, 1)
+CameraPosition=(72.54027, 1.62, -145.2395)
+CameraForward=(0, 0, 1)
+SourceSha256=282B05DA51DEE72291B865940AA84E83CD0F90E49BCABA0A480996AA21A7C303
+ImportedSha256=282B05DA51DEE72291B865940AA84E83CD0F90E49BCABA0A480996AA21A7C303
+DirectFbxInstances=14
+TargetHeight=1.5
+Grounded=True
+AnimationApplied=False
+ScriptCompilationFailed=False
+SceneChanged=False

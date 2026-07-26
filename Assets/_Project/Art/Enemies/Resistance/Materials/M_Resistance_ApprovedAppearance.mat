@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: M_Resistance_ApprovedAppearance
+  m_Shader: {fileID: 4800000, guid: 9cfd194bf4b198742b92f2d2d4a297e8, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _ApprovedAlbedoTex:
+        m_Texture: {fileID: 2800000, guid: eedd41ef7932bbe4ea16aeff6df8dc75, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ApprovedEmissionTex:
+        m_Texture: {fileID: 2800000, guid: a5c3a640c07698f47b8d3dc37637245f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BronzeTex:
+        m_Texture: {fileID: 2800000, guid: 9596352944b6e214a93593a1ba7a69d6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpTex:
+        m_Texture: {fileID: 2800000, guid: 5d9010cded4a5b04a986f21bd85608e3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CyanTex:
+        m_Texture: {fileID: 2800000, guid: 7426883e5fb132b40b45ae4553f580ca, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DarkTex:
+        m_Texture: {fileID: 2800000, guid: fd984b41038ccda4dafaed336b557400, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FaceMaterialMask:
+        m_Texture: {fileID: 2800000, guid: bd858ebcbd1b2bb4fb95c00bac6718a9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OliveTex:
+        m_Texture: {fileID: 2800000, guid: f586a975d9285484db00ec6e77169c78, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RoughnessTex:
+        m_Texture: {fileID: 2800000, guid: 6cd13f2facc468940833df41f2295069, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SilverTex:
+        m_Texture: {fileID: 2800000, guid: 5e172d4f2284f94478d1ef45d68c10e1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TriangleAtlasAlbedo:
+        m_Texture: {fileID: 2800000, guid: f489da9abb34c054e8c5022452571de5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TriangleAtlasEmission:
+        m_Texture: {fileID: 2800000, guid: 6fe0b45e1ad0f6e43aebde49e4b9502e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TriangleMapA:
+        m_Texture: {fileID: 2800000, guid: df255b1ecf92ad74a8005912f14bbe14, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TriangleMapB:
+        m_Texture: {fileID: 2800000, guid: fc5c05957d4f51f44962f0d9b2c55c9f, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TriangleMapC:
+        m_Texture: {fileID: 2800000, guid: 75fb9c9ac82b4c948a29c759760318d0, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TriangleMaterialMap:
+        m_Texture: {fileID: 2800000, guid: 900d465d7b7a5cd40bba0d9e3ea0f5f7, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TrianglePanelAtlas:
+        m_Texture: {fileID: 2800000, guid: af58435886d0e4842864a54467ac869c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _EmissionStrength: 1
+    m_Colors: []
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

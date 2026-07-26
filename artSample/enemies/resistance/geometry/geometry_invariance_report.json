@@ -1,0 +1,327 @@
+{
+  "result": "PASS",
+  "source": {
+    "source_fbx": "Assets/_Project/Art/Enemies/Resistance/Models/Resistance.fbx",
+    "source_sha256": "282B05DA51DEE72291B865940AA84E83CD0F90E49BCABA0A480996AA21A7C303",
+    "mesh_object": "char1",
+    "armature_object": "Armature",
+    "vertex_count": 3004,
+    "edge_count": 9055,
+    "polygon_count": 6037,
+    "loop_count": 18111,
+    "bone_count": 24,
+    "bone_names": [
+      "Hips",
+      "LeftUpLeg",
+      "LeftLeg",
+      "LeftFoot",
+      "LeftToeBase",
+      "RightUpLeg",
+      "RightLeg",
+      "RightFoot",
+      "RightToeBase",
+      "Spine02",
+      "Spine01",
+      "Spine",
+      "LeftShoulder",
+      "LeftArm",
+      "LeftForeArm",
+      "LeftHand",
+      "RightShoulder",
+      "RightArm",
+      "RightForeArm",
+      "RightHand",
+      "neck",
+      "Head",
+      "head_end",
+      "headfront"
+    ],
+    "uv_layers": [
+      "uv"
+    ],
+    "shape_key_count": 0,
+    "bounds_min": [
+      -0.40174537897109985,
+      -0.2896304428577423,
+      -1.3724573477702506e-08
+    ],
+    "bounds_max": [
+      0.40174537897109985,
+      0.2896305024623871,
+      1.8199999332427979
+    ],
+    "bounds_size": [
+      0.8034907579421997,
+      0.5792609453201294,
+      1.8199999469673713
+    ],
+    "geometry_sha256": "AA6B9E615A2269B1CAA473706B0D8EB6736023B4818C4C903FC9D2E4574965AD"
+  },
+  "after_material_assignment": {
+    "source_fbx": "Assets/_Project/Art/Enemies/Resistance/Models/Resistance.fbx",
+    "source_sha256": "282B05DA51DEE72291B865940AA84E83CD0F90E49BCABA0A480996AA21A7C303",
+    "mesh_object": "char1",
+    "armature_object": "Armature",
+    "vertex_count": 3004,
+    "edge_count": 9055,
+    "polygon_count": 6037,
+    "loop_count": 18111,
+    "bone_count": 24,
+    "bone_names": [
+      "Hips",
+      "LeftUpLeg",
+      "LeftLeg",
+      "LeftFoot",
+      "LeftToeBase",
+      "RightUpLeg",
+      "RightLeg",
+      "RightFoot",
+      "RightToeBase",
+      "Spine02",
+      "Spine01",
+      "Spine",
+      "LeftShoulder",
+      "LeftArm",
+      "LeftForeArm",
+      "LeftHand",
+      "RightShoulder",
+      "RightArm",
+      "RightForeArm",
+      "RightHand",
+      "neck",
+      "Head",
+      "head_end",
+      "headfront"
+    ],
+    "uv_layers": [
+      "uv"
+    ],
+    "shape_key_count": 0,
+    "bounds_min": [
+      -0.40174537897109985,
+      -0.2896304428577423,
+      -1.3724573477702506e-08
+    ],
+    "bounds_max": [
+      0.40174537897109985,
+      0.2896305024623871,
+      1.8199999332427979
+    ],
+    "bounds_size": [
+      0.8034907579421997,
+      0.5792609453201294,
+      1.8199999469673713
+    ],
+    "geometry_sha256": "AA6B9E615A2269B1CAA473706B0D8EB6736023B4818C4C903FC9D2E4574965AD"
+  },
+  "before_blend_save": {
+    "source_fbx": "Assets/_Project/Art/Enemies/Resistance/Models/Resistance.fbx",
+    "source_sha256": "282B05DA51DEE72291B865940AA84E83CD0F90E49BCABA0A480996AA21A7C303",
+    "mesh_object": "char1",
+    "armature_object": "Armature",
+    "vertex_count": 3004,
+    "edge_count": 9055,
+    "polygon_count": 6037,
+    "loop_count": 18111,
+    "bone_count": 24,
+    "bone_names": [
+      "Hips",
+      "LeftUpLeg",
+      "LeftLeg",
+      "LeftFoot",
+      "LeftToeBase",
+      "RightUpLeg",
+      "RightLeg",
+      "RightFoot",
+      "RightToeBase",
+      "Spine02",
+      "Spine01",
+      "Spine",
+      "LeftShoulder",
+      "LeftArm",
+      "LeftForeArm",
+      "LeftHand",
+      "RightShoulder",
+      "RightArm",
+      "RightForeArm",
+      "RightHand",
+      "neck",
+      "Head",
+      "head_end",
+      "headfront"
+    ],
+    "uv_layers": [
+      "uv"
+    ],
+    "shape_key_count": 0,
+    "bounds_min": [
+      -0.40174537897109985,
+      -0.2896304428577423,
+      -1.3724573477702506e-08
+    ],
+    "bounds_max": [
+      0.40174537897109985,
+      0.2896305024623871,
+      1.8199999332427979
+    ],
+    "bounds_size": [
+      0.8034907579421997,
+      0.5792609453201294,
+      1.8199999469673713
+    ],
+    "geometry_sha256": "AA6B9E615A2269B1CAA473706B0D8EB6736023B4818C4C903FC9D2E4574965AD"
+  },
+  "after_blend_save": {
+    "source_fbx": "Assets/_Project/Art/Enemies/Resistance/Models/Resistance.fbx",
+    "source_sha256": "282B05DA51DEE72291B865940AA84E83CD0F90E49BCABA0A480996AA21A7C303",
+    "mesh_object": "char1",
+    "armature_object": "Armature",
+    "vertex_count": 3004,
+    "edge_count": 9055,
+    "polygon_count": 6037,
+    "loop_count": 18111,
+    "bone_count": 24,
+    "bone_names": [
+      "Hips",
+      "LeftUpLeg",
+      "LeftLeg",
+      "LeftFoot",
+      "LeftToeBase",
+      "RightUpLeg",
+      "RightLeg",
+      "RightFoot",
+      "RightToeBase",
+      "Spine02",
+      "Spine01",
+      "Spine",
+      "LeftShoulder",
+      "LeftArm",
+      "LeftForeArm",
+      "LeftHand",
+      "RightShoulder",
+      "RightArm",
+      "RightForeArm",
+      "RightHand",
+      "neck",
+      "Head",
+      "head_end",
+      "headfront"
+    ],
+    "uv_layers": [
+      "uv"
+    ],
+    "shape_key_count": 0,
+    "bounds_min": [
+      -0.40174537897109985,
+      -0.2896304428577423,
+      -1.3724573477702506e-08
+    ],
+    "bounds_max": [
+      0.40174537897109985,
+      0.2896305024623871,
+      1.8199999332427979
+    ],
+    "bounds_size": [
+      0.8034907579421997,
+      0.5792609453201294,
+      1.8199999469673713
+    ],
+    "geometry_sha256": "AA6B9E615A2269B1CAA473706B0D8EB6736023B4818C4C903FC9D2E4574965AD"
+  },
+  "source_fbx_sha256": "282B05DA51DEE72291B865940AA84E83CD0F90E49BCABA0A480996AA21A7C303",
+  "unchanged_fbx_sha256": "282B05DA51DEE72291B865940AA84E83CD0F90E49BCABA0A480996AA21A7C303",
+  "sample_blend_sha256": "1CF64AA43165E3AAC793DD8A0DDA5CBDB7B880773685DA333B9A7437FB5713E4",
+  "material_face_counts": {
+    "silver": 3023,
+    "dark": 2781,
+    "cyan": 0,
+    "bronze": 111,
+    "olive": 122
+  },
+  "geometry_changed": false,
+  "allowed_changes": [
+    "material_slots",
+    "polygon_material_indices",
+    "material_node_masks",
+    "texture_images",
+    "studio_lights",
+    "review_camera",
+    "review_floor"
+  ],
+  "prohibited_changes_confirmed_absent": [
+    "vertex_changes",
+    "edge_changes",
+    "polygon_changes",
+    "bone_changes",
+    "uv_changes",
+    "shape_keys",
+    "source_mesh_modifiers",
+    "model_part_additions",
+    "displacement",
+    "geometry_nodes"
+  ],
+  "unity_runtime_applied": false,
+  "reopened_saved_blend": {
+    "source_fbx": "Assets/_Project/Art/Enemies/Resistance/Models/Resistance.fbx",
+    "source_sha256": "282B05DA51DEE72291B865940AA84E83CD0F90E49BCABA0A480996AA21A7C303",
+    "mesh_object": "char1",
+    "armature_object": "Armature",
+    "vertex_count": 3004,
+    "edge_count": 9055,
+    "polygon_count": 6037,
+    "loop_count": 18111,
+    "bone_count": 24,
+    "bone_names": [
+      "Hips",
+      "LeftUpLeg",
+      "LeftLeg",
+      "LeftFoot",
+      "LeftToeBase",
+      "RightUpLeg",
+      "RightLeg",
+      "RightFoot",
+      "RightToeBase",
+      "Spine02",
+      "Spine01",
+      "Spine",
+      "LeftShoulder",
+      "LeftArm",
+      "LeftForeArm",
+      "LeftHand",
+      "RightShoulder",
+      "RightArm",
+      "RightForeArm",
+      "RightHand",
+      "neck",
+      "Head",
+      "head_end",
+      "headfront"
+    ],
+    "uv_layers": [
+      "uv"
+    ],
+    "shape_key_count": 0,
+    "bounds_min": [
+      -0.40174537897109985,
+      -0.2896304428577423,
+      -1.3724573477702506e-08
+    ],
+    "bounds_max": [
+      0.40174537897109985,
+      0.2896305024623871,
+      1.8199999332427979
+    ],
+    "bounds_size": [
+      0.8034907579421997,
+      0.5792609453201294,
+      1.8199999469673713
+    ],
+    "geometry_sha256": "AA6B9E615A2269B1CAA473706B0D8EB6736023B4818C4C903FC9D2E4574965AD"
+  },
+  "saved_blend_reopen_verified": true,
+  "saved_model_mesh_objects": [
+    "char1"
+  ],
+  "saved_model_part_additions": false,
+  "saved_geometry_nodes": false
+}

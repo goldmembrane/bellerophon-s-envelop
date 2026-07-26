@@ -1,0 +1,24 @@
+{
+  "source_blend": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\resistance\\exports\\resistance_current_model_material_sample.blend",
+  "export_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Resistance\\Models\\ResistanceApprovedAppearance.fbx",
+  "vertex_count": 3004,
+  "edge_count": 9055,
+  "polygon_count": 6037,
+  "loop_count": 18111,
+  "bone_count": 24,
+  "material_slots": [
+    "M_Resistance_Worn_Silver",
+    "M_Resistance_Dark_Mechanics",
+    "M_Resistance_Cyan_Emission",
+    "M_Resistance_Bronze_Accents",
+    "M_Resistance_Bandana_Olive"
+  ],
+  "export_uv_layers": [
+    "uv"
+  ],
+  "geometry_signature_before": "919DC944C301A8ED53E9DA71DE9FDFAD8A871D6A286142E38A7C92B8619B4060",
+  "geometry_signature_after_uv": "919DC944C301A8ED53E9DA71DE9FDFAD8A871D6A286142E38A7C92B8619B4060",
+  "geometry_changed": false,
+  "roughness_atlas": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\resistance\\textures\\resistance_approved_triangle_roughness.png",
+  "normal_atlas": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\resistance\\textures\\resistance_approved_triangle_normal.png"
+}

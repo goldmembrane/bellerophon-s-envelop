@@ -1,0 +1,47 @@
+{
+  "enemy_id": "resistance",
+  "sample_root": "artSample/enemies/resistance",
+  "review_entry": "index.html",
+  "source_model": "Assets/_Project/Art/Enemies/Resistance/Models/Resistance.fbx",
+  "exports": [
+    "exports/resistance_current_model_material_sample.blend",
+    "exports/Resistance_source_geometry_unchanged.fbx"
+  ],
+  "renders": [
+    "renders/00_neutral_current_model.png",
+    "renders/01_front_resistance_reference_match.png",
+    "renders/02_side_resistance_current_model_material.png",
+    "renders/03_reference_side_by_side_overview.png",
+    "renders/04_three_quarter_current_model_material.png",
+    "renders/05_close_current_model_color_application.png",
+    "renders/06_texture_atlas_and_material_breakdown.png",
+    "renders/07_back_current_model_material.png"
+  ],
+  "textures": [
+    "textures/resistance_worn_silver_albedo.png",
+    "textures/resistance_dark_mechanics_albedo.png",
+    "textures/resistance_cyan_emission_albedo.png",
+    "textures/resistance_bronze_accents_albedo.png",
+    "textures/resistance_bandana_olive_albedo.png",
+    "textures/resistance_surface_roughness.png",
+    "textures/resistance_surface_micro_bump.png"
+  ],
+  "geometry_reports": [
+    "geometry/source_geometry_signature.json",
+    "geometry/geometry_invariance_report.json"
+  ],
+  "documentation": [
+    "README.md",
+    "TEXTURE_ANALYSIS.md",
+    "PHYSICS_RIG_NOTES.md",
+    "APPROVAL_STATUS.json",
+    "ASSET_MANIFEST.json"
+  ],
+  "tools": [
+    "tools/build_resistance_sample.py",
+    "tools/build_resistance_review_assets.py"
+  ],
+  "source_model_modified": false,
+  "sample_geometry_modified": false,
+  "unity_runtime_applied": false
+}
