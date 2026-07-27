@@ -1,0 +1,9 @@
+{
+  "status": "awaiting_user_art_sample_approval",
+  "unity_model_replacement_completed_first": true,
+  "art_sample_source_is_replaced_project_fbx": true,
+  "art_sample_appearance_applied_to_unity": false,
+  "mesh_or_part_generation_used": false,
+  "mesh_geometry_modified": false,
+  "reference_image_pixel_generation_used": false
+}

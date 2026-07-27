@@ -1,0 +1,144 @@
+{
+  "reference_file": "image\\révolution-attack.png",
+  "reference_size": [
+    1408,
+    768
+  ],
+  "reference_sha256": "C7FC6DD7052ABD72E478AC2F84A2616203D82B91153053BEAF61B598F2BB73DC",
+  "regions": [
+    {
+      "id": "body_panel",
+      "box_xyxy": [
+        756,
+        188,
+        788,
+        220
+      ],
+      "size": [
+        32,
+        32
+      ],
+      "file": "textures/reference_body_panel_direct_crop.png",
+      "operation": "direct RGB crop; no resize, repaint, filtering, or generated pixels",
+      "sha256": "4C37ED7808A57C5AC546B241C3498FAFB9E8298EF6B91D6574B46EF4ED64E0C1"
+    },
+    {
+      "id": "body_wear",
+      "box_xyxy": [
+        650,
+        174,
+        682,
+        206
+      ],
+      "size": [
+        32,
+        32
+      ],
+      "file": "textures/reference_body_wear_direct_crop.png",
+      "operation": "direct RGB crop; no resize, repaint, filtering, or generated pixels",
+      "sha256": "0893766B8760AD8CB8ED8ECC39AD32014E22B81F06D66C5E6E5EE83E065FECE4"
+    },
+    {
+      "id": "body_light_steel",
+      "box_xyxy": [
+        712,
+        132,
+        744,
+        164
+      ],
+      "size": [
+        32,
+        32
+      ],
+      "file": "textures/reference_body_light_steel_direct_crop.png",
+      "operation": "direct RGB crop; no resize, repaint, filtering, or generated pixels",
+      "sha256": "C183FFCCF721DA4ECD862C94831FE9C1EEA11BF3B98EBCB2E285FDA5B9259E13"
+    },
+    {
+      "id": "weapon_housing",
+      "box_xyxy": [
+        436,
+        420,
+        452,
+        436
+      ],
+      "size": [
+        16,
+        16
+      ],
+      "file": "textures/reference_weapon_housing_direct_crop.png",
+      "operation": "direct RGB crop; no resize, repaint, filtering, or generated pixels",
+      "sha256": "0692F4F7066993D3BCA085A62481D42CFFC113C94FF2C18E6F86D6D5167CF2BF"
+    },
+    {
+      "id": "leg_armor",
+      "box_xyxy": [
+        796,
+        548,
+        828,
+        580
+      ],
+      "size": [
+        32,
+        32
+      ],
+      "file": "textures/reference_leg_armor_direct_crop.png",
+      "operation": "direct RGB crop; no resize, repaint, filtering, or generated pixels",
+      "sha256": "49AC0CFCD61ACAC6E24209D82D739BAB7DC129298379388A801BD9C7CADCFCED"
+    },
+    {
+      "id": "copper_mechanics",
+      "box_xyxy": [
+        862,
+        268,
+        886,
+        292
+      ],
+      "size": [
+        24,
+        24
+      ],
+      "file": "textures/reference_copper_mechanics_direct_crop.png",
+      "operation": "direct RGB crop; no resize, repaint, filtering, or generated pixels",
+      "sha256": "4DDC3A6E2C8DCDD5FF4F601A2E7C1ABE504EC4DFA97A16EE5CAD3109BE9E5266"
+    },
+    {
+      "id": "dark_mechanics",
+      "box_xyxy": [
+        700,
+        212,
+        732,
+        244
+      ],
+      "size": [
+        32,
+        32
+      ],
+      "file": "textures/reference_dark_mechanics_direct_crop.png",
+      "operation": "direct RGB crop; no resize, repaint, filtering, or generated pixels",
+      "sha256": "D8E8DF40D946AFFDBED3D34FAD917A627AF6E9BCDBA6E5940635F6D9C9A6C303"
+    },
+    {
+      "id": "blue_optic",
+      "box_xyxy": [
+        657,
+        108,
+        675,
+        126
+      ],
+      "size": [
+        18,
+        18
+      ],
+      "file": "textures/reference_blue_optic_direct_crop.png",
+      "operation": "direct RGB crop; no resize, repaint, filtering, or generated pixels",
+      "sha256": "26721B993574252E3F041975619D999B4183BC47231C73F7612F1CAE270545E3"
+    }
+  ],
+  "restrictions": [
+    "No source pixel was generated.",
+    "No crop was resized, repainted, or filtered.",
+    "No metallic, roughness, normal, height, or emission map was inferred.",
+    "The original FBX UV layer remains unchanged."
+  ]
+}

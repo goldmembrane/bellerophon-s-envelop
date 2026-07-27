@@ -1,0 +1,41 @@
+Result=PASS
+Scene=Assets/_Project/Scenes/CargoRunMvp.unity
+SourceFbx=D:/Bellerophon2/Bellerophon/enemies model/révolution attack.fbx
+ProjectFbx=Assets/_Project/Art/Enemies/Revolution/Models/RevolutionAttack.fbx
+SourceFbxSha256=4BDA56A5EA04D4CDEDFAC4F3588F6D66D9AEDEFEC1779D2BFDC56CF6FA938FE4
+ProjectFbxSha256=4BDA56A5EA04D4CDEDFAC4F3588F6D66D9AEDEFEC1779D2BFDC56CF6FA938FE4
+AuthoredVertices=3705
+ImportedRenderVertices=5587
+Triangles=7062
+Bones=24
+ImportedMaterialSlots=1
+ProjectMaterialReferences=0
+UnityBuiltinDefaultMaterialOnly=True
+OriginalFbxHasMaterials=False
+PlacementRoot=Approved Revolution Enemy Placement
+SlotCount=8
+ResistancePosition=(57.86535, 0, -141.252)
+RevolutionPosition=(57.86535, 0, -148.629)
+LongaTergoZSpacing=7.376999
+ResistanceXSpacing=2.444763
+TargetHeight=2
+FacingYaw=180
+Slot=Revolution_01, LocalPosition=(0, 0, 0), WorldPosition=(57.86535, 0, -148.629), LocalRotation=(0, 1, 0, 0)
+Slot=Revolution_02, LocalPosition=(2.444763, 0, 0), WorldPosition=(60.31011, 0, -148.629), LocalRotation=(0, 1, 0, 0)
+Slot=Revolution_03, LocalPosition=(4.889526, 0, 0), WorldPosition=(62.75488, 0, -148.629), LocalRotation=(0, 1, 0, 0)
+Slot=Revolution_04, LocalPosition=(7.33429, 0, 0), WorldPosition=(65.19964, 0, -148.629), LocalRotation=(0, 1, 0, 0)
+Slot=Revolution_05, LocalPosition=(9.779053, 0, 0), WorldPosition=(67.6444, 0, -148.629), LocalRotation=(0, 1, 0, 0)
+Slot=Revolution_06, LocalPosition=(12.22382, 0, 0), WorldPosition=(70.08916, 0, -148.629), LocalRotation=(0, 1, 0, 0)
+Slot=Revolution_07, LocalPosition=(14.66858, 0, 0), WorldPosition=(72.53393, 0, -148.629), LocalRotation=(0, 1, 0, 0)
+Slot=Revolution_08, LocalPosition=(17.11334, 0, 0), WorldPosition=(74.97869, 0, -148.629), LocalRotation=(0, 1, 0, 0)
+LineupBoundsCenter=(66.44154, 1, -148.7772)
+LineupBoundsSize=(19.72876, 2, 2.558716)
+PlayerPosition=(66.40921, 0, -158.6279)
+PlayerForward=(0, 0, 1)
+DirectFbxInstances=8
+AllRevolutionCentersVisible=True
+FullLineupBoundsVisible=False
+AnimationApplied=False
+OtherSceneRootsChanged=False
+SceneChangedByInspection=False
+ReviewImage=docs/validation/revolution_attack_model_2026-07-27/Revolution_AttackModel_VisualReview.png

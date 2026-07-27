@@ -1,0 +1,83 @@
+{
+  "source": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Revolution\\Models\\Revolution.fbx",
+  "mesh_name": "char1",
+  "vertices": 2307,
+  "polygons": 3945,
+  "loops": 11835,
+  "triangles": 3945,
+  "uv_layers": [
+    "uv"
+  ],
+  "material_slots": [],
+  "bones": 24,
+  "bone_names": [
+    "Hips",
+    "LeftUpLeg",
+    "LeftLeg",
+    "LeftFoot",
+    "LeftToeBase",
+    "RightUpLeg",
+    "RightLeg",
+    "RightFoot",
+    "RightToeBase",
+    "Spine02",
+    "Spine01",
+    "Spine",
+    "LeftShoulder",
+    "LeftArm",
+    "LeftForeArm",
+    "LeftHand",
+    "RightShoulder",
+    "RightArm",
+    "RightForeArm",
+    "RightHand",
+    "neck",
+    "Head",
+    "head_end",
+    "headfront"
+  ],
+  "actions": [
+    "Armature|Armature|Armature|Armature|Armature|walking_man|baselayer"
+  ],
+  "bounds": {
+    "minimum": [
+      -1.2925482988357544,
+      -0.8731181025505066,
+      -0.024366555735468864
+    ],
+    "maximum": [
+      1.3190138339996338,
+      0.6732556819915771,
+      1.7009220123291016
+    ],
+    "dimensions": [
+      2.6115622520446777,
+      1.5463738441467285,
+      1.7252885103225708
+    ]
+  },
+  "vertex_groups": [
+    "Hips",
+    "LeftUpLeg",
+    "LeftLeg",
+    "LeftFoot",
+    "LeftToeBase",
+    "RightUpLeg",
+    "RightLeg",
+    "RightFoot",
+    "RightToeBase",
+    "Spine02",
+    "Spine01",
+    "Spine",
+    "LeftShoulder",
+    "LeftArm",
+    "LeftForeArm",
+    "LeftHand",
+    "RightShoulder",
+    "RightArm",
+    "RightForeArm",
+    "RightHand",
+    "neck",
+    "Head"
+  ]
+}

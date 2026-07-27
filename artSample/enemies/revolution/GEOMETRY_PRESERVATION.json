@@ -1,0 +1,27 @@
+{
+  "source_file": "D:\\Bellerophon2\\Bellerophon\\enemies model\\révolution.fbx",
+  "source_sha256": "645226EEFA4AEBE8CF43168B8A16E0595506E77F032ADBABFB394DB67FFA578E",
+  "before": {
+    "vertices": 2307,
+    "polygons": 3945,
+    "loops": 11835,
+    "uv_layers": [
+      "uv"
+    ],
+    "bones": 24
+  },
+  "after": {
+    "vertices": 2307,
+    "polygons": 3945,
+    "loops": 11835,
+    "uv_layers": [
+      "uv"
+    ],
+    "bones": 24
+  },
+  "vertex_coordinates_exact_match": true,
+  "polygon_topology_exact_match": true,
+  "uv_data_exact_match": true,
+  "armature_exact_match": true,
+  "geometry_changed": false
+}

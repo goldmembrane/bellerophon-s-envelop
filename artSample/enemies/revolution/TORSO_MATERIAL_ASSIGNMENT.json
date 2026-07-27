@@ -1,0 +1,33 @@
+{
+  "mapping_basis": "Existing connected mesh component boundaries; no bone-weight or inferred polygon split.",
+  "primary_outer_shell": {
+    "component_id": 0,
+    "polygon_count": 553,
+    "material": "body_panel",
+    "material_distribution": {
+      "body_panel": 553
+    },
+    "base_texture": "textures/reference_body_panel_direct_crop.png",
+    "wear_detail_texture": "textures/reference_body_wear_direct_crop.png",
+    "texture_combination": "Direct-crop base mixed 35% toward direct-crop wear detail",
+    "color_mix_factor": 0.35,
+    "roughness_from_wear_luminance": true,
+    "bump_from_wear_luminance": true
+  },
+  "inset_steel": {
+    "component_id": 1,
+    "polygon_count": 114,
+    "material": "torso_inset_steel",
+    "material_distribution": {
+      "torso_inset_steel": 114
+    },
+    "base_texture": "textures/reference_body_wear_direct_crop.png"
+  },
+  "torso_surface_polygon_count": 667,
+  "unpainted_torso_polygons": 0,
+  "all_torso_sides_reference_painted": true,
+  "mesh_changed": false,
+  "uv_changed": false,
+  "arm_copy_total_changed_polygons": 281,
+  "arm_copy_all_records_valid": true
+}

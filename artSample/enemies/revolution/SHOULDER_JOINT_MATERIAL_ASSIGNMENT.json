@@ -1,0 +1,159 @@
+{
+  "mapping_basis": "Confirmed connected shoulder-joint components from front component-mask render.",
+  "reference_material_mapping": {
+    "shell_and_upper_link": "textures/reference_body_panel_direct_crop.png",
+    "inner_ring_and_rotation_axis": "textures/reference_dark_mechanics_direct_crop.png"
+  },
+  "components": [
+    {
+      "component_id": 14,
+      "polygon_count": 36,
+      "material": "body_panel",
+      "role": "worn gunmetal shoulder shell and upper link",
+      "material_distribution": {
+        "body_panel": 36
+      }
+    },
+    {
+      "component_id": 16,
+      "polygon_count": 36,
+      "material": "body_panel",
+      "role": "worn gunmetal shoulder shell and upper link",
+      "material_distribution": {
+        "body_panel": 36
+      }
+    },
+    {
+      "component_id": 25,
+      "polygon_count": 32,
+      "material": "body_panel",
+      "role": "worn gunmetal shoulder shell and upper link",
+      "material_distribution": {
+        "body_panel": 32
+      }
+    },
+    {
+      "component_id": 27,
+      "polygon_count": 32,
+      "material": "body_panel",
+      "role": "worn gunmetal shoulder shell and upper link",
+      "material_distribution": {
+        "body_panel": 32
+      }
+    },
+    {
+      "component_id": 2,
+      "polygon_count": 62,
+      "material": "dark_mechanics",
+      "role": "dark mechanical inner ring and rotation axis",
+      "material_distribution": {
+        "dark_mechanics": 62
+      }
+    },
+    {
+      "component_id": 3,
+      "polygon_count": 62,
+      "material": "dark_mechanics",
+      "role": "dark mechanical inner ring and rotation axis",
+      "material_distribution": {
+        "dark_mechanics": 62
+      }
+    },
+    {
+      "component_id": 40,
+      "polygon_count": 26,
+      "material": "dark_mechanics",
+      "role": "dark mechanical inner ring and rotation axis",
+      "material_distribution": {
+        "dark_mechanics": 26
+      }
+    },
+    {
+      "component_id": 55,
+      "polygon_count": 24,
+      "material": "dark_mechanics",
+      "role": "dark mechanical inner ring and rotation axis",
+      "material_distribution": {
+        "dark_mechanics": 24
+      }
+    }
+  ],
+  "shoulder_joint_polygon_count": 310,
+  "connector_frame": {
+    "component_ids": [
+      21,
+      23,
+      43,
+      52,
+      72,
+      77,
+      79,
+      84,
+      89,
+      135,
+      136,
+      141
+    ],
+    "changed_polygon_count": 97,
+    "pre_symmetry_override_count": 153,
+    "before_material": "body_light_steel",
+    "after_material": "dark_mechanics",
+    "texture": "textures/reference_dark_mechanics_direct_crop.png",
+    "mapping_basis": "Existing bright-steel material boundary confirmed by remaining-frame mask render."
+  },
+  "shoulder_connection_polygon_count": 407,
+  "unpainted_shoulder_joint_polygons": 0,
+  "unpainted_shoulder_connection_polygons": 0,
+  "changed_polygons": 407,
+  "changed_components": [
+    2,
+    3,
+    14,
+    16,
+    21,
+    23,
+    25,
+    27,
+    40,
+    43,
+    52,
+    55,
+    72,
+    77,
+    79,
+    84,
+    89,
+    135,
+    136,
+    141
+  ],
+  "allowed_components": [
+    2,
+    3,
+    14,
+    16,
+    21,
+    23,
+    25,
+    27,
+    40,
+    43,
+    52,
+    55,
+    72,
+    77,
+    79,
+    84,
+    89,
+    135,
+    136,
+    141
+  ],
+  "non_target_changed_polygons": 0,
+  "torso_surface_polygon_count": 667,
+  "torso_materials_unchanged": true,
+  "mesh_changed": false,
+  "uv_changed": false,
+  "arm_copy_total_changed_polygons": 281,
+  "arm_copy_all_records_valid": true
+}

@@ -1,0 +1,12 @@
+{
+  "rule": "The screen-right component polygon materials are copied to confirmed mirrored screen-left components. Rear preservation never overrides an arm polygon.",
+  "source_view_side": "screen right",
+  "source_object_axis": "+X",
+  "copy_record_count": 39,
+  "total_changed_polygons": 281,
+  "right_to_left_copy_applied": true,
+  "default_preserved_arm_polygons": 0,
+  "mirrored_texture_x_coordinate": true,
+  "texture_x_coordinate_rule": "abs(2 * Generated.X - 1)",
+  "copy_report": "SCREEN_RIGHT_ARM_COPY.json"
+}

@@ -1,0 +1,890 @@
+{
+  "source_view_side": "screen right",
+  "source_object_axis": "+X",
+  "source_mixamo_groups": [
+    "LeftShoulder",
+    "LeftArm",
+    "LeftForeArm",
+    "LeftHand"
+  ],
+  "copy_principle": "Copy actual material indices from confirmed screen-right components to their mirrored screen-left components.",
+  "copy_records": [
+    {
+      "source_components": [
+        28
+      ],
+      "target_components": [
+        30
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "body_light_steel": 32
+      },
+      "target_before": {
+        "body_light_steel": 32
+      },
+      "target_after": {
+        "body_light_steel": 32
+      },
+      "target_polygons": 32,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.17199409623075687
+    },
+    {
+      "source_components": [
+        51
+      ],
+      "target_components": [
+        53
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "body_light_steel": 24
+      },
+      "target_before": {
+        "body_light_steel": 24
+      },
+      "target_after": {
+        "body_light_steel": 24
+      },
+      "target_polygons": 24,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.15148090135663553
+    },
+    {
+      "source_components": [
+        3
+      ],
+      "target_components": [
+        2
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "dark_mechanics": 62
+      },
+      "target_before": {
+        "dark_mechanics": 62
+      },
+      "target_after": {
+        "dark_mechanics": 62
+      },
+      "target_polygons": 62,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.4038184757476504
+    },
+    {
+      "source_components": [
+        17
+      ],
+      "target_components": [
+        19
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 36
+      },
+      "target_before": {
+        "weapon_housing": 36
+      },
+      "target_after": {
+        "weapon_housing": 36
+      },
+      "target_polygons": 36,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.34528155134213623
+    },
+    {
+      "source_components": [
+        56
+      ],
+      "target_components": [
+        50
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "body_light_steel": 24
+      },
+      "target_before": {
+        "body_light_steel": 24
+      },
+      "target_after": {
+        "body_light_steel": 24
+      },
+      "target_polygons": 24,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.09425335906347791
+    },
+    {
+      "source_components": [
+        65
+      ],
+      "target_components": [
+        62
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 22
+      },
+      "target_before": {
+        "body_light_steel": 22
+      },
+      "target_after": {
+        "weapon_housing": 22
+      },
+      "target_polygons": 22,
+      "changed_polygons": 22,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.41657265669975385
+    },
+    {
+      "source_components": [
+        39
+      ],
+      "target_components": [
+        41
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "body_light_steel": 26
+      },
+      "target_before": {
+        "body_light_steel": 26
+      },
+      "target_after": {
+        "body_light_steel": 26
+      },
+      "target_polygons": 26,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.24417233070491634
+    },
+    {
+      "source_components": [
+        77
+      ],
+      "target_components": [
+        84
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "dark_mechanics": 16,
+        "weapon_housing": 4
+      },
+      "target_before": {
+        "weapon_housing": 4,
+        "dark_mechanics": 16
+      },
+      "target_after": {
+        "dark_mechanics": 16,
+        "weapon_housing": 4
+      },
+      "target_polygons": 20,
+      "changed_polygons": 4,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.27257663823572625
+    },
+    {
+      "source_components": [
+        74
+      ],
+      "target_components": [
+        83
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 20
+      },
+      "target_before": {
+        "body_light_steel": 20
+      },
+      "target_after": {
+        "weapon_housing": 20
+      },
+      "target_polygons": 20,
+      "changed_polygons": 20,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.3998138982886332
+    },
+    {
+      "source_components": [
+        120
+      ],
+      "target_components": [
+        117
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 14
+      },
+      "target_before": {
+        "weapon_housing": 14
+      },
+      "target_after": {
+        "weapon_housing": 14
+      },
+      "target_polygons": 14,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.2651560637580744
+    },
+    {
+      "source_components": [
+        29
+      ],
+      "target_components": [
+        26
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 32
+      },
+      "target_before": {
+        "weapon_housing": 32
+      },
+      "target_after": {
+        "weapon_housing": 32
+      },
+      "target_polygons": 32,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.301604126863876
+    },
+    {
+      "source_components": [
+        129
+      ],
+      "target_components": [
+        133
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 12
+      },
+      "target_before": {
+        "weapon_housing": 12
+      },
+      "target_after": {
+        "weapon_housing": 12
+      },
+      "target_polygons": 12,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.2949812541957022
+    },
+    {
+      "source_components": [
+        16
+      ],
+      "target_components": [
+        14
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "body_panel": 36
+      },
+      "target_before": {
+        "body_panel": 36
+      },
+      "target_after": {
+        "body_panel": 36
+      },
+      "target_polygons": 36,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.4616968562107953
+    },
+    {
+      "source_components": [
+        35
+      ],
+      "target_components": [
+        37
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 28
+      },
+      "target_before": {
+        "body_light_steel": 28
+      },
+      "target_after": {
+        "weapon_housing": 28
+      },
+      "target_polygons": 28,
+      "changed_polygons": 28,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.43099446994204943
+    },
+    {
+      "source_components": [
+        79
+      ],
+      "target_components": [
+        72
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 13,
+        "dark_mechanics": 7
+      },
+      "target_before": {
+        "dark_mechanics": 20
+      },
+      "target_after": {
+        "weapon_housing": 13,
+        "dark_mechanics": 7
+      },
+      "target_polygons": 20,
+      "changed_polygons": 13,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.37015087155580617
+    },
+    {
+      "source_components": [
+        92
+      ],
+      "target_components": [
+        93
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 18
+      },
+      "target_before": {
+        "body_light_steel": 18
+      },
+      "target_after": {
+        "weapon_housing": 18
+      },
+      "target_polygons": 18,
+      "changed_polygons": 18,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.34251862208181616
+    },
+    {
+      "source_components": [
+        131
+      ],
+      "target_components": [
+        127
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 12
+      },
+      "target_before": {
+        "weapon_housing": 12
+      },
+      "target_after": {
+        "weapon_housing": 12
+      },
+      "target_polygons": 12,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.32260451127152867
+    },
+    {
+      "source_components": [
+        43
+      ],
+      "target_components": [
+        52
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 16,
+        "dark_mechanics": 8
+      },
+      "target_before": {
+        "weapon_housing": 12,
+        "dark_mechanics": 12
+      },
+      "target_after": {
+        "weapon_housing": 16,
+        "dark_mechanics": 8
+      },
+      "target_polygons": 24,
+      "changed_polygons": 4,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.18389501895004484
+    },
+    {
+      "source_components": [
+        27
+      ],
+      "target_components": [
+        25
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "body_panel": 32
+      },
+      "target_before": {
+        "body_panel": 32
+      },
+      "target_after": {
+        "body_panel": 32
+      },
+      "target_polygons": 32,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.2873856494927383
+    },
+    {
+      "source_components": [
+        18
+      ],
+      "target_components": [
+        15
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 36
+      },
+      "target_before": {
+        "weapon_housing": 36
+      },
+      "target_after": {
+        "weapon_housing": 36
+      },
+      "target_polygons": 36,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.4473334452587762
+    },
+    {
+      "source_components": [
+        4
+      ],
+      "target_components": [
+        5
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 60
+      },
+      "target_before": {
+        "weapon_housing": 33,
+        "body_light_steel": 27
+      },
+      "target_after": {
+        "weapon_housing": 60
+      },
+      "target_polygons": 60,
+      "changed_polygons": 27,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.4088634487192357
+    },
+    {
+      "source_components": [
+        119
+      ],
+      "target_components": [
+        121
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 14
+      },
+      "target_before": {
+        "weapon_housing": 14
+      },
+      "target_after": {
+        "weapon_housing": 14
+      },
+      "target_polygons": 14,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.7159758286314428
+    },
+    {
+      "source_components": [
+        63
+      ],
+      "target_components": [
+        58
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 22
+      },
+      "target_before": {
+        "body_light_steel": 22
+      },
+      "target_after": {
+        "weapon_housing": 22
+      },
+      "target_polygons": 22,
+      "changed_polygons": 22,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.40767054060118535
+    },
+    {
+      "source_components": [
+        106
+      ],
+      "target_components": [
+        100
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 16
+      },
+      "target_before": {
+        "body_light_steel": 16
+      },
+      "target_after": {
+        "weapon_housing": 16
+      },
+      "target_polygons": 16,
+      "changed_polygons": 16,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.4372647836733997
+    },
+    {
+      "source_components": [
+        23
+      ],
+      "target_components": [
+        21
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 28,
+        "dark_mechanics": 6
+      },
+      "target_before": {
+        "dark_mechanics": 34
+      },
+      "target_after": {
+        "weapon_housing": 28,
+        "dark_mechanics": 6
+      },
+      "target_polygons": 34,
+      "changed_polygons": 28,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.5337357568068822
+    },
+    {
+      "source_components": [
+        60
+      ],
+      "target_components": [
+        59
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 22
+      },
+      "target_before": {
+        "weapon_housing": 22
+      },
+      "target_after": {
+        "weapon_housing": 22
+      },
+      "target_polygons": 22,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.2850085449127254
+    },
+    {
+      "source_components": [
+        90
+      ],
+      "target_components": [
+        95
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 18
+      },
+      "target_before": {
+        "weapon_housing": 18
+      },
+      "target_after": {
+        "weapon_housing": 18
+      },
+      "target_polygons": 18,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.25987881152090464
+    },
+    {
+      "source_components": [
+        122
+      ],
+      "target_components": [
+        118
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "weapon_housing": 14
+      },
+      "target_before": {
+        "weapon_housing": 14
+      },
+      "target_after": {
+        "weapon_housing": 14
+      },
+      "target_polygons": 14,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.3491221197455426
+    },
+    {
+      "source_components": [
+        57
+      ],
+      "target_components": [
+        44
+      ],
+      "mode": "one_to_one",
+      "source_materials": {
+        "copper_mechanics": 24
+      },
+      "target_before": {
+        "copper_mechanics": 24
+      },
+      "target_after": {
+        "copper_mechanics": 24
+      },
+      "target_polygons": 24,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.07080779225889423
+    },
+    {
+      "source_components": [
+        8
+      ],
+      "target_components": [
+        12
+      ],
+      "mode": "spatial_sample",
+      "source_materials": {
+        "weapon_housing": 46
+      },
+      "target_before": {
+        "body_light_steel": 42
+      },
+      "target_after": {
+        "weapon_housing": 42
+      },
+      "target_polygons": 42,
+      "changed_polygons": 42,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.24754925151555338
+    },
+    {
+      "source_components": [
+        34
+      ],
+      "target_components": [
+        32
+      ],
+      "mode": "spatial_sample",
+      "source_materials": {
+        "body_light_steel": 30
+      },
+      "target_before": {
+        "body_light_steel": 32
+      },
+      "target_after": {
+        "body_light_steel": 32
+      },
+      "target_polygons": 32,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.13571455513398664
+    },
+    {
+      "source_components": [
+        40
+      ],
+      "target_components": [
+        55
+      ],
+      "mode": "spatial_sample",
+      "source_materials": {
+        "dark_mechanics": 26
+      },
+      "target_before": {
+        "dark_mechanics": 24
+      },
+      "target_after": {
+        "dark_mechanics": 24
+      },
+      "target_polygons": 24,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.09755442617537034
+    },
+    {
+      "source_components": [
+        47
+      ],
+      "target_components": [
+        66
+      ],
+      "mode": "spatial_sample",
+      "source_materials": {
+        "weapon_housing": 24
+      },
+      "target_before": {
+        "body_light_steel": 22
+      },
+      "target_after": {
+        "weapon_housing": 22
+      },
+      "target_polygons": 22,
+      "changed_polygons": 22,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.23525216399656526
+    },
+    {
+      "source_components": [
+        88
+      ],
+      "target_components": [
+        101
+      ],
+      "mode": "spatial_sample",
+      "source_materials": {
+        "weapon_housing": 18
+      },
+      "target_before": {
+        "weapon_housing": 16
+      },
+      "target_after": {
+        "weapon_housing": 16
+      },
+      "target_polygons": 16,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.24981241061401344
+    },
+    {
+      "source_components": [
+        89
+      ],
+      "target_components": [
+        135
+      ],
+      "mode": "spatial_sample",
+      "source_materials": {
+        "dark_mechanics": 8,
+        "weapon_housing": 10
+      },
+      "target_before": {
+        "dark_mechanics": 12
+      },
+      "target_after": {
+        "weapon_housing": 7,
+        "dark_mechanics": 5
+      },
+      "target_polygons": 12,
+      "changed_polygons": 7,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.1185888159092844
+    },
+    {
+      "source_components": [
+        94
+      ],
+      "target_components": [
+        109
+      ],
+      "mode": "spatial_sample",
+      "source_materials": {
+        "weapon_housing": 18
+      },
+      "target_before": {
+        "weapon_housing": 16
+      },
+      "target_after": {
+        "weapon_housing": 16
+      },
+      "target_polygons": 16,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.2505290535505427
+    },
+    {
+      "source_components": [
+        103
+      ],
+      "target_components": [
+        123
+      ],
+      "mode": "spatial_sample",
+      "source_materials": {
+        "weapon_housing": 16
+      },
+      "target_before": {
+        "weapon_housing": 14
+      },
+      "target_after": {
+        "weapon_housing": 14
+      },
+      "target_polygons": 14,
+      "changed_polygons": 0,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.2608694308976958
+    },
+    {
+      "source_components": [
+        141
+      ],
+      "target_components": [
+        136
+      ],
+      "mode": "spatial_sample",
+      "source_materials": {
+        "weapon_housing": 2,
+        "dark_mechanics": 4
+      },
+      "target_before": {
+        "dark_mechanics": 10
+      },
+      "target_after": {
+        "dark_mechanics": 6,
+        "weapon_housing": 4
+      },
+      "target_polygons": 10,
+      "changed_polygons": 4,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.15902022810112373
+    },
+    {
+      "source_components": [
+        20,
+        111
+      ],
+      "target_components": [
+        6
+      ],
+      "mode": "spatial_sample",
+      "source_materials": {
+        "weapon_housing": 52
+      },
+      "target_before": {
+        "weapon_housing": 46,
+        "body_light_steel": 4
+      },
+      "target_after": {
+        "weapon_housing": 50
+      },
+      "target_polygons": 50,
+      "changed_polygons": 4,
+      "copy_valid": true,
+      "maximum_mirrored_center_distance": 0.17074294620462402
+    }
+  ],
+  "total_changed_polygons": 281,
+  "all_records_valid": true
+}

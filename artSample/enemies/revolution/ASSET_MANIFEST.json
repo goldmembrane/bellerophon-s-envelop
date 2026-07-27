@@ -1,0 +1,27 @@
+{
+  "source_model": {
+    "file": "../../../Assets/_Project/Art/Enemies/Revolution/Models/Revolution.fbx",
+    "sha256": "645226EEFA4AEBE8CF43168B8A16E0595506E77F032ADBABFB394DB67FFA578E"
+  },
+  "reference_image": {
+    "file": "../../../image/révolution-attack.png",
+    "sha256": "C7FC6DD7052ABD72E478AC2F84A2616203D82B91153053BEAF61B598F2BB73DC"
+  },
+  "review_exports": [
+    "exports/revolution_replaced_model_reference_sample.blend",
+    "exports/revolution_replaced_model_reference_sample.fbx",
+    "exports/revolution_replaced_model_reference_sample.glb"
+  ],
+  "evidence": [
+    "SOURCE_MODEL_INSPECTION.json",
+    "GEOMETRY_PRESERVATION.json",
+    "CROP_PROVENANCE.json",
+    "MATERIAL_ASSIGNMENT.json",
+    "TORSO_MATERIAL_ASSIGNMENT.json",
+    "SHOULDER_JOINT_MATERIAL_ASSIGNMENT.json",
+    "ARM_COLOR_SYMMETRY.json",
+    "SCREEN_RIGHT_ARM_COPY.json",
+    "EXPORT_INSPECTION.json"
+  ],
+  "summary": "index.html"
+}

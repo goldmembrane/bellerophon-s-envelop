@@ -1779,6 +1779,90 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.ResistanceCargoRunScene.ResistanceCargoRunScenePlacementTool.CapturePlacementReview,
                         "Resistance_07 Player start camera view captured once after placement inspection.");
                     break;
+                case "ApplyRevolutionModelPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionCargoRunScenePlacementTool.ApplyRevolutionModelPlacement,
+                        "Supplied Revolution FBX placed in eight static slots below Resistance, using Resistance X spacing and Longa Arma/Tergo Z spacing; Player start moved to the full front view.");
+                    break;
+                case "InspectRevolutionModelPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionCargoRunScenePlacementTool.InspectRevolutionModelPlacement,
+                        "Revolution source hash, direct FBX instances, eight-slot spacing, grounding, unchanged roots, and Player front framing inspected.");
+                    break;
+                case "CaptureRevolutionModelPlacementReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionCargoRunScenePlacementTool.CaptureRevolutionModelPlacementReview,
+                        "Revolution eight-model Player start front view captured once after placement inspection.");
+                    break;
+                case "ApplyRevolutionAttackModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionCargoRunScenePlacementTool.ApplyRevolutionAttackModelReplacement,
+                        "All eight placed Revolution model children replaced by direct instances of the supplied attack FBX while preserving slots, lineup, and Player start.");
+                    break;
+                case "InspectRevolutionAttackModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionCargoRunScenePlacementTool.InspectRevolutionAttackModelReplacement,
+                        "Revolution attack FBX hash, eight direct instances, static playback state, height, grounding, unchanged slots, and Player framing inspected.");
+                    break;
+                case "CaptureRevolutionAttackModelReplacementReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionCargoRunScenePlacementTool.CaptureRevolutionAttackModelReplacementReview,
+                        "All eight replaced Revolution attack models captured once from the preserved Player start.");
+                    break;
+                case "ApplyRevolutionBaseModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionBaseModelReplacementTool.ApplyRevolutionBaseModelReplacement,
+                        "All eight placed Revolution model children replaced by direct instances of the supplied base FBX while preserving slots, lineup, Player, and camera transforms.");
+                    break;
+                case "InspectRevolutionBaseModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionBaseModelReplacementTool.InspectRevolutionBaseModelReplacement,
+                        "Revolution base FBX hash, eight direct instances, imported geometry, static playback state, target height, and grounding inspected without changing the scene.");
+                    break;
+                case "ApplyRevolutionApprovedAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionApprovedAppearanceTool.ApplyRevolutionApprovedAppearance,
+                        "The approved Revolution sample mesh partition, direct-crop textures, and converted material graph were applied to all eight placed models without changing placement transforms.");
+                    break;
+                case "InspectRevolutionApprovedAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionApprovedAppearanceTool.InspectRevolutionApprovedAppearance,
+                        "All eight Revolution models use the approved sample mesh, eight active materials, direct-crop textures, symmetric mapping, and preserved placement; Unity omitted the approved Blender sample's zero-face ninth slot.");
+                    break;
+                case "CaptureRevolutionApprovedAppearanceReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionApprovedAppearanceTool.CaptureRevolutionApprovedAppearanceReview,
+                        "The approved Revolution appearance lineup was captured once from the preserved Player camera after inspection.");
+                    break;
+                case "ApplyRevolutionIdleMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionIdleMotionTool.ApplyRevolutionIdleMotion,
+                        "A two-second planted-foot breathing idle was applied only to Revolution_02 with 3 cm pelvis travel and no root motion.");
+                    break;
+                case "InspectRevolutionIdleMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionIdleMotionTool.InspectRevolutionIdleMotion,
+                        "Revolution_02 idle loop duration, pelvis travel, planted feet, knee flex, approved appearance, and unchanged placement were inspected.");
+                    break;
+                case "CaptureRevolutionIdleMotionReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionIdleMotionTool.CaptureRevolutionIdleMotionReview,
+                        "Revolution_02 idle poses at 0, 0.5, 1, 1.5, and 2 seconds were captured once after inspection.");
+                    break;
                 case "ApplyApprovedResistanceAppearance":
                     RunSynchronous(
                         request,
@@ -1850,6 +1934,60 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.ResistanceCargoRunScene.ResistanceBasicAttackModelReplacementTool.CaptureResistanceBasicAttackModelReplacementReview,
                         "Resistance_01 static reference and Resistance_04 Mixamo punching progression captured once.");
+                    break;
+                case "ApplyResistanceHitModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceHitModelReplacementTool.ApplyResistanceHitModelReplacement,
+                        "Resistance_05 replaced by the supplied hit FBX, directly linked to the approved Resistance appearance, and configured to loop the selected Mixamo clip.");
+                    break;
+                case "InspectResistanceHitModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceHitModelReplacementTool.InspectResistanceHitModelReplacement,
+                        "Resistance_05 hit source, exact approved appearance references, visible motion, grounding, playback, and loop inspected.");
+                    break;
+                case "CaptureResistanceHitModelReplacementReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceHitModelReplacementTool.CaptureResistanceHitModelReplacementReview,
+                        "Resistance_01 static reference and Resistance_05 Mixamo hit progression captured once.");
+                    break;
+                case "ApplyResistanceDeathModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceDeathModelReplacementTool.ApplyResistanceDeathModelReplacement,
+                        "Resistance_06 replaced by the supplied death FBX, linked to the exact approved appearance, and configured with the repeating death-to-self-destruct sequence.");
+                    break;
+                case "InspectResistanceDeathModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceDeathModelReplacementTool.InspectResistanceDeathModelReplacement,
+                        "Resistance_06 Mixamo death, exact appearance, grounding, model hide, yellow-orange explosion, and sequence reset inspected.");
+                    break;
+                case "CaptureResistanceDeathModelReplacementReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistanceDeathModelReplacementTool.CaptureResistanceDeathModelReplacementReview,
+                        "Resistance_01 static reference and Resistance_06 death-to-explosion sequence captured once.");
+                    break;
+                case "ApplyResistancePickingModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistancePickingModelReplacementTool.ApplyResistancePickingModelReplacement,
+                        "Resistance_07 replaced by the supplied picking FBX, directly linked to the approved Resistance appearance, and configured to loop its stationary Mixamo clip.");
+                    break;
+                case "InspectResistancePickingModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistancePickingModelReplacementTool.InspectResistancePickingModelReplacement,
+                        "Resistance_07 picking source, exact approved appearance references, stationary model root, visible motion, grounding, playback, and loop inspected.");
+                    break;
+                case "CaptureResistancePickingModelReplacementReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ResistanceCargoRunScene.ResistancePickingModelReplacementTool.CaptureResistancePickingModelReplacementReview,
+                        "Resistance_01 static reference and Resistance_07 stationary Mixamo picking progression captured once.");
                     break;
                 case "ApplyApprovedRebellionAppearance":
                     RunSynchronous(

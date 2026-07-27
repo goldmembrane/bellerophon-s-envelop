@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>레볼루션 교체 모델 외형 아트 샘플</title>
+  <style>
+    body { margin: 0; font-family: Arial, "Malgun Gothic", sans-serif; background: #18201a; color: #edf2e6; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    section { margin: 30px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; background: #222b24; border: 1px solid #435041; padding: 14px; }
+    .comparison h3 { grid-column: 1 / -1; }
+    figure { margin: 0; background: #111711; border: 1px solid #364236; padding: 10px; }
+    img { width: 100%; height: auto; display: block; }
+    figcaption { margin-top: 8px; font-size: 13px; color: #cdd7c5; word-break: break-all; }
+    p, li { line-height: 1.55; }
+    code, a { color: #d7e6c8; }
+    .notice { padding: 14px; border-left: 4px solid #77a86a; background: #222b24; }
+    @media (max-width: 760px) { .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>레볼루션 교체 모델 외형 아트 샘플</h1>
+  <p>Unity의 레볼루션 8개를 먼저 <code>révolution.fbx</code>로 교체한 뒤, 교체된 동일 모델을 기준으로 제작한 검토용 샘플입니다. 외형 기준은 <code>image/révolution-attack.png</code>이며, 메시·토폴로지·원본 UV·본·포즈를 바꾸거나 부품을 생성하지 않았습니다.</p>
+  <p class="notice">이 외형은 아직 Unity에 적용하지 않은 승인 전 아트 샘플입니다.</p>
+
+  <section>
+    <h2>기준 이미지와 교체 모델 비교</h2>
+    <article class="comparison">
+      <h3>참조 이미지 / 3분의 4 뷰</h3>
+      <figure><img src="../../../image/révolution-attack.png" alt="레볼루션 참조 이미지"><figcaption>기준 이미지: ../../../image/révolution-attack.png</figcaption></figure>
+      <figure><img src="renders/03_three_quarter_reference_material.png" alt="교체 모델 아트 샘플"><figcaption>교체 모델 샘플: renders/03_three_quarter_reference_material.png</figcaption></figure>
+    </article>
+    <article class="comparison">
+      <h3>동일 메시의 적용 전 / 적용 후</h3>
+      <figure><img src="renders/00_source_front_neutral.png" alt="교체된 원본 FBX 중립 렌더"><figcaption>적용 전: renders/00_source_front_neutral.png</figcaption></figure>
+      <figure><img src="renders/02_front_reference_material.png" alt="참조 외형 적용 렌더"><figcaption>적용 후: renders/02_front_reference_material.png</figcaption></figure>
+    </article>
+  </section>
+
+  <section>
+    <h2>생성 렌더</h2>
+    <div class="grid">
+      <figure><img src="renders/02_front_reference_material.png" alt="정면"><figcaption>02_front_reference_material.png</figcaption></figure>
+      <figure><img src="renders/03_three_quarter_reference_material.png" alt="3분의 4 뷰"><figcaption>03_three_quarter_reference_material.png</figcaption></figure>
+      <figure><img src="renders/04_side_reference_material.png" alt="측면"><figcaption>04_side_reference_material.png</figcaption></figure>
+      <figure><img src="renders/05_rear_preserved.png" alt="후면 몸통 색 적용"><figcaption>05_rear_preserved.png — 후면 몸통까지 동일 팔레트 적용</figcaption></figure>
+      <figure><img src="renders/06_before_after_same_mesh.png" alt="동일 메시 전후 비교"><figcaption>06_before_after_same_mesh.png</figcaption></figure>
+      <figure><img src="renders/07_reference_and_sample.png" alt="참조와 샘플 비교"><figcaption>07_reference_and_sample.png</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>외형 적용 기준</h2>
+    <ul>
+      <li>몸체: 원본 FBX의 연결 컴포넌트 경계를 사용해 큰 외피 553면은 건메탈 기본 크롭 65%와 마모 크롭 35%를 혼합하고, 삽입 패널 114면은 중간톤 마모 건메탈 크롭을 적용. 전·측·후면 667면 전부에 참조 팔레트가 적용되어 미도색 또는 중립 재질은 0면. 마모 크롭의 실제 명도로 러프니스와 미세 범프를 구동.</li>
+      <li>몸통·팔 이음부: 큰 관절 외피와 상부 연결편 136면은 낡은 건메탈, 내부 링과 회전축 174면 및 관절에서 팔로 이어지는 연결봉 97면은 어두운 기계 금속으로 적용. 좌우 연결부 총 407면 전부에 참조 이미지 직접 크롭 재질이 적용되어 밝은 기본 강철 또는 미도색 재질은 0면.</li>
+      <li>무장: 양팔 기관총을 어두운 금속으로 유지.</li>
+      <li>좌우 팔: 정면 화면 오른쪽 팔을 기준으로 확인된 대응 부품의 폴리곤 재질을 화면 왼쪽에 복사. 같은 토폴로지는 일대일 대응하고, 분할 방식이 다른 부품은 미러 위치의 오른쪽 폴리곤을 사용.</li>
+      <li>기계부: 검은 내부 구조와 작은 구리색 리벳만 분리.</li>
+      <li>광학부: 중앙 기존 부품에 참조 이미지의 청색 광학 표면 적용.</li>
+      <li>참조에 보이지 않는 후면에는 새 무늬나 부품을 만들지 않고, 참조 전면에서 직접 확인한 동일 건메탈 팔레트를 기존 몸통 표면에 연속 적용.</li>
+      <li>텍스처 입력은 참조 이미지에서 자른 원본 픽셀 크기의 직접 크롭만 사용.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>사용 텍스처</h2>
+    <div class="grid">
+      <figure><img src="textures/reference_body_panel_direct_crop.png" alt="몸체 패널 직접 크롭"><figcaption>reference_body_panel_direct_crop.png</figcaption></figure>
+      <figure><img src="textures/reference_body_wear_direct_crop.png" alt="몸체 마모 직접 크롭"><figcaption>reference_body_wear_direct_crop.png</figcaption></figure>
+      <figure><img src="textures/reference_body_light_steel_direct_crop.png" alt="밝은 강철 직접 크롭"><figcaption>reference_body_light_steel_direct_crop.png</figcaption></figure>
+      <figure><img src="textures/reference_weapon_housing_direct_crop.png" alt="무장 하우징 직접 크롭"><figcaption>reference_weapon_housing_direct_crop.png</figcaption></figure>
+      <figure><img src="textures/reference_leg_armor_direct_crop.png" alt="다리 장갑 직접 크롭"><figcaption>reference_leg_armor_direct_crop.png</figcaption></figure>
+      <figure><img src="textures/reference_copper_mechanics_direct_crop.png" alt="구리 기계부 직접 크롭"><figcaption>reference_copper_mechanics_direct_crop.png</figcaption></figure>
+      <figure><img src="textures/reference_dark_mechanics_direct_crop.png" alt="어두운 기계부 직접 크롭"><figcaption>reference_dark_mechanics_direct_crop.png</figcaption></figure>
+      <figure><img src="textures/reference_blue_optic_direct_crop.png" alt="청색 광학부 직접 크롭"><figcaption>reference_blue_optic_direct_crop.png</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>검토용 3D 파일</h2>
+    <ul>
+      <li><a href="exports/revolution_replaced_model_reference_sample.blend">Blender 샘플</a></li>
+      <li><a href="exports/revolution_replaced_model_reference_sample.fbx">FBX 샘플</a></li>
+      <li><a href="exports/revolution_replaced_model_reference_sample.glb">GLB 정적 미리보기</a></li>
+    </ul>
+    <p>기하 보존 근거는 <code>GEOMETRY_PRESERVATION.json</code>, 몸통 컴포넌트별 재질 조합은 <code>TORSO_MATERIAL_ASSIGNMENT.json</code>, 어깨 이음부 재질은 <code>SHOULDER_JOINT_MATERIAL_ASSIGNMENT.json</code>, 직접 크롭 좌표와 해시는 <code>CROP_PROVENANCE.json</code>, 내보내기 재검사는 <code>EXPORT_INSPECTION.json</code>에 기록했습니다.</p>
+  </section>
+</main>
+</body>
+</html>

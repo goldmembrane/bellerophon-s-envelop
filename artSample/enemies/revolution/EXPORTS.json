@@ -1,0 +1,14 @@
+{
+  "blend": {
+    "file": "exports/revolution_replaced_model_reference_sample.blend",
+    "sha256": "E32C8A3AE8EA62745241C363A8756D3BD1430CA3BCB89CE9FCC95CC37426CF6D"
+  },
+  "fbx": {
+    "file": "exports/revolution_replaced_model_reference_sample.fbx",
+    "sha256": "9F27490A8C786F409F02F8D8AA1D22BECD3E9384EC3AE6B938EB886665F75252"
+  },
+  "glb": {
+    "file": "exports/revolution_replaced_model_reference_sample.glb",
+    "sha256": "5843224B2B6F79E558A82FEA1DDAC41B1A63AFF9A169DD06AD169BB55D8DCE1B"
+  }
+}
