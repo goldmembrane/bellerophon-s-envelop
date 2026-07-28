@@ -1863,6 +1863,24 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.RevolutionCargoRunScene.RevolutionIdleMotionTool.CaptureRevolutionIdleMotionReview,
                         "Revolution_02 idle poses at 0, 0.5, 1, 1.5, and 2 seconds were captured once after inspection.");
                     break;
+                case "ApplyRevolutionMachineGunAttackMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionMachineGunAttackMotionTool.ApplyRevolutionMachineGunAttackMotion,
+                        "Revolution_04 received a looping bilateral machine-gun attack with rightward barrel rotation and reused Rebellion muzzle flashes.");
+                    break;
+                case "InspectRevolutionMachineGunAttackMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionMachineGunAttackMotionTool.InspectRevolutionMachineGunAttackMotion,
+                        "Revolution_04 bilateral gun rotation, firing cadence, muzzle flashes, loop closure, approved appearance, and protected scene scope were inspected.");
+                    break;
+                case "CaptureRevolutionMachineGunAttackMotionReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionMachineGunAttackMotionTool.CaptureRevolutionMachineGunAttackMotionReview,
+                        "Revolution_04 machine-gun firing poses and a direct visual-review frame sequence were captured without automated motion judgement.");
+                    break;
                 case "ApplyApprovedResistanceAppearance":
                     RunSynchronous(
                         request,
