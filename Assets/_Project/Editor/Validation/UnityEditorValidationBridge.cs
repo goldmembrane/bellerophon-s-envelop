@@ -1761,6 +1761,24 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.RebellionCargoRunScene.RebellionCargoRunScenePlacementTool.CapturePlayerStartView,
                         "Rebellion Player start camera view captured once after placement inspection.");
                     break;
+                case "ApplyPahurPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.PahurCargoRunScene.PahurPlacementEditor.ApplyPahurPlacement,
+                        "Supplied Pahur FBX placed in ten named static slots below Revolution using Longa Arma/Tergo Z spacing and Revolution X spacing; Player start moved to the full lineup front view.");
+                    break;
+                case "InspectPahurPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.PahurCargoRunScene.PahurPlacementEditor.InspectPahurPlacement,
+                        "Pahur source hash, ten direct FBX instances, spacing, grounding, static state, unchanged roots, and Player front framing inspected.");
+                    break;
+                case "CapturePahurPlacementReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.PahurCargoRunScene.PahurPlacementEditor.CapturePahurPlacementReview,
+                        "Pahur ten-model Player start front view captured once after placement inspection.");
+                    break;
                 case "ApplyResistancePlacement":
                     RunSynchronous(
                         request,
@@ -1863,6 +1881,67 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.RevolutionCargoRunScene.RevolutionIdleMotionTool.CaptureRevolutionIdleMotionReview,
                         "Revolution_02 idle poses at 0, 0.5, 1, 1.5, and 2 seconds were captured once after inspection.");
                     break;
+                case "ApplyRevolutionMoveMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionMoveMotionTool.ApplyRevolutionMoveMotion,
+                        "Revolution_03 now repeats the walking_man clip embedded in its existing FBX without changing its mesh or appearance.");
+                    break;
+                case "ApplyRevolutionMeleeAttack":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionMeleeAttackModelReplacementTool.ApplyRevolutionMeleeAttack,
+                        "Revolution_05 was replaced by the supplied slash FBX, synchronized to the current Revolution_01 appearance, and configured to loop only its Mixamo attack take.");
+                    break;
+                case "ApplyRevolutionDeath":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionMeleeAttackModelReplacementTool.ApplyRevolutionDeath,
+                        "Revolution_08 was replaced by the supplied death FBX, synchronized to the current Revolution_01 appearance, and configured to loop only its Mixamo death take.");
+                    break;
+                case "ReviewRevolutionDeathToEnd":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionMeleeAttackModelReplacementTool.ReviewRevolutionDeathToEnd,
+                        "Revolution_08 death was sampled at its exact authored end without changing the runtime clip, then returned to looping Play Mode.");
+                    break;
+                case "PlayCurrentRevolutionDeathLoop":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionMeleeAttackModelReplacementTool.PlayCurrentRevolutionDeathLoop,
+                        "Revolution_08 current full-length Mixamo death clip is playing in a loop.");
+                    break;
+                case "ApplyRevolutionHit":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionHitModelReplacementTool.ApplyRevolutionHit,
+                        "Revolution_06 was replaced by the supplied hit FBX, synchronized to the current Revolution_01 appearance, and configured to loop only its Mixamo hit take.");
+                    break;
+                case "ApplyRevolutionHitStaticArmPose":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionHitModelReplacementTool.ApplyRevolutionHitStaticArmPose,
+                        "Revolution_06 keeps its Mixamo hit motion while both Shoulder-to-Hand chains remain at the Revolution_01 static local rotations.");
+                    break;
+                // Revolution_07 uses only the supplied FBX Mixamo turn take.
+                case "ApplyRevolutionTurn":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionTurnModelReplacementTool.ApplyRevolutionTurn,
+                        "Revolution_07 was replaced by the supplied turn FBX, synchronized to the current Revolution_01 appearance, and configured to loop only its Mixamo turn take.");
+                    break;
+                case "InspectRevolutionTurnSourceCurves":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionTurnModelReplacementTool.InspectRevolutionTurnSourceCurves,
+                        "The supplied Revolution turn Mixamo clip curve bindings and sampled source rotations were recorded without changing the scene.");
+                    break;
+                case "ApplyRevolutionTurn360StaticArms":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionTurnModelReplacementTool.ApplyRevolutionTurn360StaticArms,
+                        "Revolution_07 now performs the supplied Mixamo turn direction and stepping motion as an exact 360-degree turn over 3 seconds while both Shoulder-to-Hand chains remain at the Revolution_01 static local rotations.");
+                    break;
                 case "ApplyRevolutionMachineGunAttackMotion":
                     RunSynchronous(
                         request,
@@ -1880,6 +1959,18 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.RevolutionCargoRunScene.RevolutionMachineGunAttackMotionTool.CaptureRevolutionMachineGunAttackMotionReview,
                         "Revolution_04 machine-gun firing poses and a direct visual-review frame sequence were captured without automated motion judgement.");
+                    break;
+                case "CaptureRevolutionMachineGunRightArmShapeReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionMachineGunAttackMotionTool.CaptureRevolutionMachineGunRightArmShapeReview,
+                        "Revolution_01 static and Revolution_04 animated right-arm shapes were captured from matched front and oblique views.");
+                    break;
+                case "ApplyRevolutionMachineGunRightArmShapeRepair":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.RevolutionCargoRunScene.RevolutionMachineGunAttackMotionTool.ApplyRevolutionMachineGunRightArmShapeRepair,
+                        "Revolution_04 right-arm firing shape was restored from Revolution_01 while preserving every barrel-spin and left-arm curve.");
                     break;
                 case "ApplyApprovedResistanceAppearance":
                     RunSynchronous(

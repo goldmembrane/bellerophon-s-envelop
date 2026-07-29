@@ -45,11 +45,6 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
         private const string RightBarrelMeshPath =
             AnimationFolder +
             "/Revolution_04_Right_MachineGun_Barrels.asset";
-        private const string RightBarrelGroupNamePrefix =
-            "Revolution_Right_MachineGun_BarrelGroup_";
-        private const string RightBarrelGroupAssetPrefix =
-            AnimationFolder +
-            "/Revolution_04_Right_MachineGun_BarrelGroup_";
         private const string ApprovedModelPath =
             ArtRoot +
             "/ApprovedAppearance/Models/Revolution_ApprovedAppearance.fbx";
@@ -86,6 +81,9 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
         private const string CapturePath =
             "docs/validation/revolution_machinegun_attack_2026-07-28/" +
             "Revolution_04_MachineGunAttack_VisualReview.png";
+        private const string RightArmShapeReviewPath =
+            "docs/validation/revolution_machinegun_attack_2026-07-28/" +
+            "Revolution_04_RightArmShape_StaticComparison.png";
         private const string VisualSequenceFolderName =
             "Bellerophon_RevolutionMachineGunVisualReview";
         private const float LoopSeconds = 5f;
@@ -100,6 +98,17 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
         private const int ExpectedRiggedBones = 26;
         private const int ExpectedMaterials = 8;
         private const int RightBarrelGroupCount = 5;
+        // Mapping the accepted left cage into the right axis space adds
+        // exactly eight source triangles.
+        private const int LeftMatchedRightTriangleDelta = 8;
+        // The two right-side fixed discs remain in the base renderer;
+        // together they contribute thirty-six source triangles.
+        private const int RightFixedDiscTriangleDelta = 36;
+        // The mirrored source rig assigns four valid right barrel
+        // components 0.375-0.443 RightHand weight; 0.35 preserves the
+        // complete 12-component cage without admitting another forward
+        // radial source component.
+        private const float RightBarrelMinimumHandWeight = 0.35f;
 
         private static readonly string[] SlotNames =
         {
@@ -138,8 +147,8 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             RequireSlotContract(root.transform);
             var slot = RequireDirectChild(root.transform, AttackSlotName);
             var model = RequireModel(slot);
-            DisablePreviousAnimatorForRebuild(model);
             var renderer = RequireBaseOrPreviousRenderer(model);
+            DisablePreviousAnimatorForRebuild(model);
             var flashMesh =
                 AssetDatabase.LoadAssetAtPath<Mesh>(
                     RebellionFlashMeshPath) ??
@@ -308,7 +317,7 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                 Undo.CollapseUndoOperations(undoGroup);
                 Debug.Log(
                     "RevolutionMachineGunAttackApplied" +
-                    ", Correction=RebellionStyleInPlaceBarrelRingRotation" +
+                    ", Correction=LeftCageMappedToRightTwoDiscAxis" +
                     ", Slot=" + AttackSlotName +
                     ", LoopSeconds=" + Num(LoopSeconds) +
                     ", ShotIntervalSeconds=" + Num(ShotInterval) +
@@ -324,10 +333,10 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                     ", RightBarrelVertices=" +
                     rightSelection.VertexIndices.Count +
                     ", LeftRotationAxis=FixedMuzzleRingPlaneNormal" +
-                    ", RightRotationAxis=RightBarrelFrontRearRingCenterLine" +
-                    ", BarrelGeometry=LeftCombinedRigidRing_RightFiveCompleteCounterRotatingBarrelGroups" +
-                    ", RightBarrelOrientationCompensation=EqualAndOppositePerGroup" +
-                    ", RightBarrelOrbitRadius=MatchedToNormalLeftBarrelCenters" +
+                    ", RightRotationAxis=RightFrontRearDiscCommonAxis" +
+                    ", BarrelGeometry=LeftAcceptedCageAndRightLeftMatchedCage" +
+                    ", RightBarrelGeometry=AcceptedLeftCageInRightAxisSpace" +
+                    ", RightFixedDiscs=True" +
                     ", FlashAnchor=FixedUpperBarrelMuzzle" +
                     ", WholeArmSpin=False" +
                     ", ReusedRebellionFlashAssets=True" +
@@ -433,9 +442,17 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             var destination = Absolute(CapturePath);
             if (File.Exists(destination))
             {
-                throw new InvalidOperationException(
-                    "The corrected one-time Revolution machine-gun review path already exists: " +
-                    CapturePath);
+                var diagnosticFolder = Absolute(
+                    "Logs/RevolutionMachineGunInvalidDiagnostics");
+                Directory.CreateDirectory(diagnosticFolder);
+                var archived = Path.Combine(
+                    diagnosticFolder,
+                    "Revolution_04_MachineGunAttack_VisualReview_before_combined_right_ring_" +
+                    DateTime.Now.ToString(
+                        "yyyyMMdd_HHmmss",
+                        CultureInfo.InvariantCulture) +
+                    ".png");
+                File.Move(destination, archived);
             }
             CaptureReviewGrid(
                 scene,
@@ -445,13 +462,162 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                 destination);
             Debug.Log(
                 "RevolutionMachineGunAttackCaptured" +
-                ", Correction=RebellionStyleInPlaceBarrelRingRotation" +
+                ", Correction=LeftCageMappedToRightTwoDiscAxis" +
                 ", Slot=" + AttackSlotName +
-                ", ReviewTimes=0.00,0.04,0.08,0.12,0.16,0.20" +
-                ", Views=FullBodyFront,GunFront,RightGunFrontCloseup" +
+                ", ReviewTimes=0.00,0.10,0.20,0.40,0.60,0.80,1.00" +
+                ", Views=PlayerCamera,FullBodyFront,GunFront,LeftGunFrontCloseup,RightGunFrontCloseup" +
                 ", Image=" + CapturePath +
                 ", AutomatedMotionJudgement=False" +
                 ", SceneChanged=False.");
+        }
+
+        public static void CaptureRevolutionMachineGunRightArmShapeReview()
+        {
+            var scene = RequireCurrentScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Revolution right-arm shape capture.");
+            }
+            var root = RequirePlacementRoot();
+            RequireSlotContract(root.transform);
+            var staticSlot = RequireDirectChild(
+                root.transform,
+                "Revolution_01");
+            var attackSlot = RequireDirectChild(
+                root.transform,
+                AttackSlotName);
+            var staticModel = RequireModel(staticSlot);
+            var attackModel = RequireModel(attackSlot);
+            var animator = RequireAnimator(attackModel);
+            var clip =
+                AssetDatabase.LoadAssetAtPath<AnimationClip>(ClipPath) ??
+                throw new InvalidOperationException(
+                    "The corrected Revolution machine-gun clip is missing.");
+            CaptureRightArmShapeComparison(
+                scene,
+                staticSlot,
+                staticModel,
+                attackSlot,
+                attackModel,
+                animator,
+                clip,
+                Absolute(RightArmShapeReviewPath));
+            Debug.Log(
+                "RevolutionMachineGunRightArmShapeCaptured" +
+                ", StaticReference=Revolution_01" +
+                ", AnimatedTarget=Revolution_04" +
+                ", Views=Front,Oblique" +
+                ", Image=" + RightArmShapeReviewPath +
+                ", SceneChanged=False.");
+        }
+
+        public static void ApplyRevolutionMachineGunRightArmShapeRepair()
+        {
+            var scene = RequireCurrentScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Revolution right-arm shape repair.");
+            }
+            var root = RequirePlacementRoot();
+            RequireSlotContract(root.transform);
+            var staticModel = RequireModel(
+                RequireDirectChild(
+                    root.transform,
+                    "Revolution_01"));
+            var attackModel = RequireModel(
+                RequireDirectChild(
+                    root.transform,
+                    AttackSlotName));
+            var animator = RequireAnimator(attackModel);
+            var clip =
+                AssetDatabase.LoadAssetAtPath<AnimationClip>(ClipPath) ??
+                throw new InvalidOperationException(
+                    "The corrected Revolution machine-gun clip is missing.");
+            var attackSnapshots =
+                attackModel.GetComponentsInChildren<Transform>(true)
+                    .Select(item => new TransformSnapshot(item))
+                    .ToArray();
+            var animatorEnabled = animator.enabled;
+            try
+            {
+                animator.enabled = false;
+                clip.SampleAnimation(
+                    attackModel.gameObject,
+                    0f);
+                var rightArmRotations =
+                    CalculateStaticBasedRightAimRotations(
+                        staticModel,
+                        attackModel,
+                        RequireDirectChild(
+                                root.transform,
+                                AttackSlotName)
+                            .forward);
+                var editablePaths = new HashSet<string>(
+                    rightArmRotations.Keys.Select(name =>
+                        AnimationUtility.CalculateTransformPath(
+                            RequireDescendant(
+                                attackModel,
+                                name),
+                            attackModel)),
+                    StringComparer.Ordinal);
+                var protectedBefore =
+                    AnimationCurveSignature(
+                        clip,
+                        editablePaths,
+                        false);
+                foreach (var pair in rightArmRotations)
+                {
+                    var bone = RequireDescendant(
+                        attackModel,
+                        pair.Key);
+                    SetQuaternionCurves(
+                        clip,
+                        AnimationUtility.CalculateTransformPath(
+                            bone,
+                            attackModel),
+                        new[]
+                        {
+                            new QuaternionKey(
+                                0f,
+                                pair.Value),
+                            new QuaternionKey(
+                                LoopSeconds,
+                                pair.Value)
+                        });
+                }
+                var protectedAfter =
+                    AnimationCurveSignature(
+                        clip,
+                        editablePaths,
+                        false);
+                if (!string.Equals(
+                        protectedBefore,
+                        protectedAfter,
+                        StringComparison.Ordinal))
+                {
+                    throw new InvalidOperationException(
+                        "Revolution right-arm shape repair changed a protected animation curve.");
+                }
+                EditorUtility.SetDirty(clip);
+                AssetDatabase.SaveAssets();
+                animator.Rebind();
+                animator.Update(0f);
+                Debug.Log(
+                    "RevolutionMachineGunRightArmShapeRepaired" +
+                    ", StaticReference=Revolution_01" +
+                    ", UpdatedBones=RightArm,RightForeArm,RightHand" +
+                    ", RightBarrelSpinCurvesChanged=False" +
+                    ", LeftArmCurvesChanged=False" +
+                    ", OtherCurvesChanged=False" +
+                    ", SceneChanged=False.");
+            }
+            finally
+            {
+                RestoreAll(attackSnapshots);
+                animator.enabled = animatorEnabled;
+            }
         }
 
         private static ReadableSource PrepareReadableSourceModel()
@@ -528,7 +694,8 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             IReadOnlyList<Vector3> bakedWorldVertices,
             string forearmName,
             string handName,
-            Vector3? fixedRotationAxis = null)
+            Vector3? fixedRotationAxis = null,
+            float minimumHandWeight = 0.45f)
         {
             if (sourceMesh.vertexCount != bakedWorldVertices.Count)
             {
@@ -573,7 +740,7 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                         hand.position,
                         approximateAxis))
                 .Where(item =>
-                    item.HandWeight >= 0.45f &&
+                    item.HandWeight >= minimumHandWeight &&
                     item.MaximumProjection > 0.04f)
                 .ToArray();
             if (components.Length == 0)
@@ -724,9 +891,11 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                     " readable source does not expose legacy four-weight skinning.");
             }
 
-            // The right model has different disconnected topology from
-            // the left. Select its ten longitudinal components, then
-            // pair them into five complete barrels.
+            // Use the complete twelve-component assembly to identify
+            // the two fixed discs and the ten longitudinal barrel
+            // components. Only the barrels are extracted; both discs
+            // must remain in the base renderer like the accepted left
+            // arm.
             var forwardComponents =
                 ConnectedComponents(sourceMesh)
                     .Select(indices =>
@@ -738,12 +907,24 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                             hand.position,
                             approximateAxis))
                     .Where(item =>
+                        item.HandWeight >=
+                        RightBarrelMinimumHandWeight &&
                         item.MaximumProjection > 0.04f)
                     .ToArray();
-            var barrelCores = forwardComponents
+            var selected = forwardComponents
                 .Where(item =>
                     item.MeanRadialDistance >= 0.008f &&
-                    item.ProjectionLength >= 0.025f)
+                    (item.ProjectionLength >= 0.025f ||
+                     item.MeanProjection >= 0.04f))
+                .ToArray();
+            if (selected.Length != 12)
+            {
+                throw new InvalidOperationException(
+                    handName +
+                    " complete barrel cage must match the left arm's twelve-component contract. SelectedComponents=" +
+                    selected.Length + ".");
+            }
+            var barrelCores = selected
                 .OrderByDescending(item =>
                     item.ProjectionLength)
                 .Take(10)
@@ -752,12 +933,29 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             {
                 throw new InvalidOperationException(
                     handName +
-                    " complete barrel assembly does not expose all ten longitudinal barrel components.");
+                    " complete barrel assembly does not expose all ten longitudinal barrel components. Candidates=" +
+                    string.Join(
+                        " | ",
+                        forwardComponents
+                            .Where(item =>
+                                item.MeanRadialDistance >= 0.008f &&
+                                item.ProjectionLength >= 0.025f)
+                            .OrderByDescending(item =>
+                                item.ProjectionLength)
+                            .Take(24)
+                            .Select(item =>
+                                "V=" + item.VertexIndices.Length +
+                                ",HW=" + Num(item.HandWeight) +
+                                ",Len=" + Num(item.ProjectionLength) +
+                                ",Rad=" + Num(item.MeanRadialDistance) +
+                                ",Mean=" + Num(item.MeanProjection) +
+                                ",Max=" + Num(item.MaximumProjection))) +
+                    ".");
             }
-            var initialVertices = new HashSet<int>(
+            var barrelVertices = new HashSet<int>(
                 barrelCores.SelectMany(item =>
                     item.VertexIndices));
-            var selectedPoints = initialVertices
+            var selectedPoints = barrelVertices
                 .Select(index =>
                     bakedWorldVertices[index])
                 .ToArray();
@@ -812,10 +1010,10 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             var vertexGroups = PairRightBarrelComponents(
                 barrelCores,
                 bakedWorldVertices,
-                center,
+                (frontCenter + rearCenter) * 0.5f,
                 axis);
             var muzzleRing = SelectMuzzleRingCluster(
-                barrelCores
+                selected
                     .Select(component =>
                         ComponentMuzzle(
                             component,
@@ -823,25 +1021,14 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                             hand.position,
                             axis))
                     .ToArray());
-            var axisPoint = vertexGroups
-                .Select(group =>
-                    group
-                        .Select(index =>
-                            bakedWorldVertices[index])
-                        .Aggregate(
-                            Vector3.zero,
-                            (sum, point) => sum + point) /
-                    group.Count)
-                .Aggregate(
-                    Vector3.zero,
-                    (sum, point) => sum + point) /
-                vertexGroups.Count;
-            var vertices = initialVertices;
+            var axisPoint =
+                (frontCenter + rearCenter) * 0.5f;
+            var vertices = barrelVertices;
             if (vertices.Count < 12)
             {
                 throw new InvalidOperationException(
                     handName +
-                    " complete barrel assembly selection is insufficient.");
+                    " longitudinal barrel selection is insufficient.");
             }
             var up = Vector3.ProjectOnPlane(
                 Vector3.up,
@@ -1454,6 +1641,7 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             AssetDatabase.CreateAsset(derived, RiggedMeshPath);
             EditorUtility.SetDirty(derived);
             Mesh leftBarrels;
+            Mesh rightBarrels;
             var poseSnapshots =
                 model.GetComponentsInChildren<Transform>(true)
                     .Select(item => new TransformSnapshot(item))
@@ -1474,99 +1662,11 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                     LeftBarrelMeshPath,
                     "Revolution_04_Left_MachineGun_Barrels");
                 DeletePreviousRightBarrelGroupAssets();
-                DeleteAssetIfPresent(RightBarrelMeshPath);
-                if (rightSelection.VertexGroups.Count !=
-                    RightBarrelGroupCount)
-                {
-                    throw new InvalidOperationException(
-                        "The right barrel selection does not contain five complete counter-rotating groups.");
-                }
-                for (var groupIndex = 0;
-                     groupIndex <
-                     rightSelection.VertexGroups.Count;
-                     groupIndex++)
-                {
-                    var groupVertices =
-                        rightSelection.VertexGroups[
-                            groupIndex];
-                    var suffix = (groupIndex + 1)
-                        .ToString(
-                            "D2",
-                            CultureInfo.InvariantCulture);
-                    var groupObject = new GameObject(
-                        RightBarrelGroupNamePrefix +
-                        suffix);
-                    Undo.RegisterCreatedObjectUndo(
-                        groupObject,
-                        "Create Revolution right barrel ring group");
-                    var groupTransform =
-                        groupObject.transform;
-                    groupTransform.SetParent(
-                        right.SpinBone,
-                        true);
-                    var originalGroupCenter =
-                        groupVertices
-                            .Select(vertex =>
-                                SkinWorldPoint(
-                                    source.vertices[vertex],
-                                    source.boneWeights[
-                                        vertex],
-                                    source.bindposes,
-                                    renderer.bones))
-                            .Aggregate(
-                                Vector3.zero,
-                                (sum, point) =>
-                                    sum + point) /
-                        groupVertices.Count;
-                    groupTransform.position =
-                        originalGroupCenter;
-                    groupTransform.rotation =
-                        right.SpinBone.rotation;
-                    groupTransform.localScale =
-                        Vector3.one;
-                    var groupMesh =
-                        CreateExtractedBarrelMesh(
-                            source,
-                            renderer,
-                            groupTransform,
-                            groupVertices,
-                            RightBarrelGroupAssetPrefix +
-                            suffix + ".asset",
-                            RightBarrelGroupNamePrefix +
-                            suffix);
-                    var firingAxis =
-                        right.SpinBone.forward;
-                    var axialCenter =
-                        right.SpinBone.position +
-                        Vector3.Project(
-                            originalGroupCenter -
-                            right.SpinBone.position,
-                            firingAxis);
-                    var radialDirection =
-                        Vector3.ProjectOnPlane(
-                            originalGroupCenter -
-                            right.SpinBone.position,
-                            firingAxis);
-                    if (radialDirection.sqrMagnitude <
-                        0.000001f)
-                    {
-                        throw new InvalidOperationException(
-                            "A right barrel group cannot be placed on " +
-                            "the normal left-arm ring radius.");
-                    }
-                    groupTransform.position =
-                        axialCenter +
-                        (radialDirection.normalized *
-                         leftSelection.MeanBarrelOrbitRadius);
-                    AttachExtractedBarrelRenderer(
-                        groupTransform,
-                        groupMesh,
-                        renderer.sharedMaterials);
-                    right.CounterRotatingBarrelGroups.Add(
-                        new CounterRotatingBarrelGroup(
-                            groupTransform,
-                            groupTransform.localRotation));
-                }
+                rightBarrels =
+                    CreateLeftMatchedRightBarrelMesh(
+                        leftBarrels,
+                        left.SpinBone,
+                        right.SpinBone);
             }
             finally
             {
@@ -1575,6 +1675,10 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             AttachExtractedBarrelRenderer(
                 left.SpinBone,
                 leftBarrels,
+                renderer.sharedMaterials);
+            AttachExtractedBarrelRenderer(
+                right.SpinBone,
+                rightBarrels,
                 renderer.sharedMaterials);
             return derived;
         }
@@ -1592,6 +1696,325 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                     "/Revolution_04_Right_MachineGun_BarrelGroup_" +
                     suffix + ".asset");
             }
+        }
+
+        private static Mesh CreateAlignedRightBarrelMesh(
+            Mesh source,
+            SkinnedMeshRenderer renderer,
+            Transform spinBone,
+            BarrelSelection selection)
+        {
+            if (selection.VertexGroups.Count !=
+                RightBarrelGroupCount)
+            {
+                throw new InvalidOperationException(
+                    "The right barrel cage must contain exactly five complete barrel units.");
+            }
+
+            var sourceVertices = source.vertices;
+            var sourceWeights = source.boneWeights;
+            var sourceBindPoses = source.bindposes;
+            var sourceBones = renderer.bones;
+            var worldVertices = new Vector3[
+                source.vertexCount];
+            for (var vertex = 0;
+                 vertex < worldVertices.Length;
+                 vertex++)
+            {
+                worldVertices[vertex] = SkinWorldPoint(
+                    sourceVertices[vertex],
+                    sourceWeights[vertex],
+                    sourceBindPoses,
+                    sourceBones);
+            }
+
+            var commonAxis = spinBone.forward.normalized;
+            var alignments =
+                new List<RightBarrelAlignment>(
+                    RightBarrelGroupCount);
+            foreach (var group in selection.VertexGroups)
+            {
+                var points = group
+                    .Select(index => worldVertices[index])
+                    .ToArray();
+                var barrelAxis = DominantPointAxis(
+                    points,
+                    commonAxis);
+                if (Vector3.Dot(barrelAxis, commonAxis) < 0f)
+                {
+                    barrelAxis = -barrelAxis;
+                }
+                var insertion = RearInsertionPoint(
+                    points,
+                    barrelAxis);
+                alignments.Add(
+                    new RightBarrelAlignment(
+                        group,
+                        insertion,
+                        Quaternion.FromToRotation(
+                            barrelAxis,
+                            commonAxis)));
+            }
+
+            var insertionRingCenter =
+                alignments
+                    .Select(item =>
+                        item.OriginalInsertion)
+                    .Aggregate(
+                        Vector3.zero,
+                        (sum, point) => sum + point) /
+                alignments.Count;
+            insertionRingCenter =
+                spinBone.position +
+                Vector3.Project(
+                    insertionRingCenter -
+                    spinBone.position,
+                    commonAxis);
+            var insertionRadii = alignments
+                .Select(item =>
+                    Vector3.ProjectOnPlane(
+                        item.OriginalInsertion -
+                        insertionRingCenter,
+                        commonAxis).magnitude)
+                .ToArray();
+            var rightInsertionRingRadius =
+                insertionRadii.Average();
+            if (rightInsertionRingRadius < 0.001f)
+            {
+                throw new InvalidOperationException(
+                    "The right barrel insertion points do not define a usable ring.");
+            }
+
+            foreach (var alignment in alignments)
+            {
+                var axialOffset = Vector3.Project(
+                    alignment.OriginalInsertion -
+                    insertionRingCenter,
+                    commonAxis);
+                var radialDirection =
+                    Vector3.ProjectOnPlane(
+                        alignment.OriginalInsertion -
+                        insertionRingCenter,
+                        commonAxis);
+                if (radialDirection.sqrMagnitude <
+                    0.000001f)
+                {
+                    throw new InvalidOperationException(
+                        "A right barrel insertion point lies on the rotation axis.");
+                }
+                alignment.TargetInsertion =
+                    insertionRingCenter +
+                    axialOffset +
+                    (radialDirection.normalized *
+                     rightInsertionRingRadius);
+            }
+
+            var alignmentByVertex =
+                new RightBarrelAlignment[source.vertexCount];
+            foreach (var alignment in alignments)
+            {
+                foreach (var vertex in alignment.Vertices)
+                {
+                    if (alignmentByVertex[vertex] != null)
+                    {
+                        throw new InvalidOperationException(
+                            "Right barrel units overlap in the source mesh.");
+                    }
+                    alignmentByVertex[vertex] = alignment;
+                }
+            }
+
+            var extracted =
+                UnityEngine.Object.Instantiate(source);
+            extracted.name =
+                "Revolution_04_Right_MachineGun_Barrels";
+            var bakedVertices = source.vertices;
+            for (var vertex = 0;
+                 vertex < bakedVertices.Length;
+                 vertex++)
+            {
+                var alignment =
+                    alignmentByVertex[vertex];
+                var worldPoint = worldVertices[vertex];
+                if (alignment != null)
+                {
+                    worldPoint =
+                        alignment.TargetInsertion +
+                        (alignment.Rotation *
+                         (worldPoint -
+                          alignment.OriginalInsertion));
+                }
+                bakedVertices[vertex] =
+                    spinBone.InverseTransformPoint(
+                        worldPoint);
+            }
+            extracted.vertices = bakedVertices;
+
+            var bakedNormals = source.normals;
+            if (bakedNormals.Length == extracted.vertexCount)
+            {
+                for (var vertex = 0;
+                     vertex < bakedNormals.Length;
+                     vertex++)
+                {
+                    var worldNormal = SkinWorldDirection(
+                        bakedNormals[vertex],
+                        sourceWeights[vertex],
+                        sourceBindPoses,
+                        sourceBones);
+                    var alignment =
+                        alignmentByVertex[vertex];
+                    if (alignment != null)
+                    {
+                        worldNormal =
+                            alignment.Rotation *
+                            worldNormal;
+                    }
+                    bakedNormals[vertex] =
+                        spinBone
+                            .InverseTransformDirection(
+                                worldNormal)
+                            .normalized;
+                }
+                extracted.normals = bakedNormals;
+            }
+
+            var bakedTangents = source.tangents;
+            if (bakedTangents.Length ==
+                extracted.vertexCount)
+            {
+                for (var vertex = 0;
+                     vertex < bakedTangents.Length;
+                     vertex++)
+                {
+                    var worldTangent =
+                        SkinWorldDirection(
+                            new Vector3(
+                                bakedTangents[vertex].x,
+                                bakedTangents[vertex].y,
+                                bakedTangents[vertex].z),
+                            sourceWeights[vertex],
+                            sourceBindPoses,
+                            sourceBones);
+                    var alignment =
+                        alignmentByVertex[vertex];
+                    if (alignment != null)
+                    {
+                        worldTangent =
+                            alignment.Rotation *
+                            worldTangent;
+                    }
+                    var tangent = spinBone
+                        .InverseTransformDirection(
+                            worldTangent)
+                        .normalized;
+                    bakedTangents[vertex] =
+                        new Vector4(
+                            tangent.x,
+                            tangent.y,
+                            tangent.z,
+                            bakedTangents[vertex].w);
+                }
+                extracted.tangents = bakedTangents;
+            }
+
+            for (var subMesh = 0;
+                 subMesh < source.subMeshCount;
+                 subMesh++)
+            {
+                var sourceTriangles =
+                    source.GetTriangles(subMesh);
+                var selectedTriangles = new List<int>();
+                for (var index = 0;
+                     index < sourceTriangles.Length;
+                     index += 3)
+                {
+                    if (!selection.VertexIndices.Contains(
+                            sourceTriangles[index]) ||
+                        !selection.VertexIndices.Contains(
+                            sourceTriangles[index + 1]) ||
+                        !selection.VertexIndices.Contains(
+                            sourceTriangles[index + 2]))
+                    {
+                        continue;
+                    }
+                    selectedTriangles.Add(
+                        sourceTriangles[index]);
+                    selectedTriangles.Add(
+                        sourceTriangles[index + 1]);
+                    selectedTriangles.Add(
+                        sourceTriangles[index + 2]);
+                }
+                extracted.SetTriangles(
+                    selectedTriangles,
+                    subMesh,
+                    false);
+            }
+            extracted.RecalculateBounds();
+            AssetDatabase.CreateAsset(
+                extracted,
+                RightBarrelMeshPath);
+            EditorUtility.SetDirty(extracted);
+            return extracted;
+        }
+
+        private static Vector3 DominantPointAxis(
+            IReadOnlyList<Vector3> points,
+            Vector3 fallbackAxis)
+        {
+            var center = points.Aggregate(
+                             Vector3.zero,
+                             (sum, point) => sum + point) /
+                         points.Count;
+            var axis = fallbackAxis.normalized;
+            for (var iteration = 0;
+                 iteration < 12;
+                 iteration++)
+            {
+                var next = Vector3.zero;
+                foreach (var point in points)
+                {
+                    var offset = point - center;
+                    next += offset *
+                            Vector3.Dot(offset, axis);
+                }
+                if (next.sqrMagnitude <
+                    0.000000001f)
+                {
+                    return fallbackAxis.normalized;
+                }
+                axis = next.normalized;
+            }
+            return axis;
+        }
+
+        private static Vector3 RearInsertionPoint(
+            IReadOnlyList<Vector3> points,
+            Vector3 barrelAxis)
+        {
+            var projections = points
+                .Select(point =>
+                    Vector3.Dot(point, barrelAxis))
+                .ToArray();
+            var minimum = projections.Min();
+            var maximum = projections.Max();
+            var rearBand = Mathf.Max(
+                0.0015f,
+                (maximum - minimum) * 0.12f);
+            var rearPoints = points
+                .Where((point, index) =>
+                    projections[index] <=
+                    minimum + rearBand)
+                .ToArray();
+            if (rearPoints.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "A right barrel unit has no rear insertion vertices.");
+            }
+            return rearPoints.Aggregate(
+                       Vector3.zero,
+                       (sum, point) => sum + point) /
+                   rearPoints.Length;
         }
 
         private static Mesh CreateExtractedBarrelMesh(
@@ -1720,6 +2143,95 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             AssetDatabase.CreateAsset(extracted, assetPath);
             EditorUtility.SetDirty(extracted);
             return extracted;
+        }
+
+        private static Mesh
+            CreateLeftMatchedRightBarrelMesh(
+                Mesh leftBarrelMesh,
+                Transform leftSpinBone,
+                Transform rightSpinBone)
+        {
+            DeleteAssetIfPresent(RightBarrelMeshPath);
+            var rightBarrelMesh =
+                UnityEngine.Object.Instantiate(
+                    leftBarrelMesh);
+            rightBarrelMesh.name =
+                "Revolution_04_Right_MachineGun_Barrels";
+            var leftToRightRotation =
+                rightSpinBone.rotation *
+                Quaternion.Inverse(leftSpinBone.rotation);
+            var vertices = rightBarrelMesh.vertices;
+            for (var index = 0;
+                 index < vertices.Length;
+                 index++)
+            {
+                var leftWorld =
+                    leftSpinBone.TransformPoint(
+                        vertices[index]);
+                var rightWorld =
+                    rightSpinBone.position +
+                    (leftToRightRotation *
+                     (leftWorld - leftSpinBone.position));
+                vertices[index] =
+                    rightSpinBone.InverseTransformPoint(
+                        rightWorld);
+            }
+            rightBarrelMesh.vertices = vertices;
+
+            var normals = rightBarrelMesh.normals;
+            if (normals.Length == vertices.Length)
+            {
+                for (var index = 0;
+                     index < normals.Length;
+                     index++)
+                {
+                    var leftWorld =
+                        leftSpinBone.TransformDirection(
+                            normals[index]);
+                    normals[index] =
+                        rightSpinBone
+                            .InverseTransformDirection(
+                                leftToRightRotation *
+                                leftWorld)
+                            .normalized;
+                }
+                rightBarrelMesh.normals = normals;
+            }
+
+            var tangents = rightBarrelMesh.tangents;
+            if (tangents.Length == vertices.Length)
+            {
+                for (var index = 0;
+                     index < tangents.Length;
+                     index++)
+                {
+                    var leftLocal = new Vector3(
+                        tangents[index].x,
+                        tangents[index].y,
+                        tangents[index].z);
+                    var leftWorld =
+                        leftSpinBone.TransformDirection(
+                            leftLocal);
+                    var rightLocal =
+                        rightSpinBone
+                            .InverseTransformDirection(
+                                leftToRightRotation *
+                                leftWorld)
+                            .normalized;
+                    tangents[index] = new Vector4(
+                        rightLocal.x,
+                        rightLocal.y,
+                        rightLocal.z,
+                        tangents[index].w);
+                }
+                rightBarrelMesh.tangents = tangents;
+            }
+            rightBarrelMesh.RecalculateBounds();
+            AssetDatabase.CreateAsset(
+                rightBarrelMesh,
+                RightBarrelMeshPath);
+            EditorUtility.SetDirty(rightBarrelMesh);
+            return rightBarrelMesh;
         }
 
         private static Vector3 SkinWorldPoint(
@@ -2178,49 +2690,6 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                         rig.SpinBone,
                         model),
                     CoalesceQuaternionKeys(rotations));
-                foreach (var barrelGroup in
-                         rig.CounterRotatingBarrelGroups)
-                {
-                    var counterRotations =
-                        new List<QuaternionKey>();
-                    for (var shot = 0;
-                         shot < ShotCount;
-                         shot++)
-                    {
-                        var start =
-                            shot * ShotInterval;
-                        var flashEnd =
-                            start + FlashSeconds;
-                        var end =
-                            start + ShotInterval;
-                        counterRotations.Add(
-                            new QuaternionKey(
-                                start,
-                                CounterSpinRotation(
-                                    barrelGroup,
-                                    shot)));
-                        counterRotations.Add(
-                            new QuaternionKey(
-                                flashEnd,
-                                CounterSpinRotation(
-                                    barrelGroup,
-                                    shot)));
-                        counterRotations.Add(
-                            new QuaternionKey(
-                                end,
-                                CounterSpinRotation(
-                                    barrelGroup,
-                                    shot + 1)));
-                    }
-                    SetQuaternionCurves(
-                        clip,
-                        AnimationUtility
-                            .CalculateTransformPath(
-                                barrelGroup.Transform,
-                                model),
-                        CoalesceQuaternionKeys(
-                            counterRotations));
-                }
 
                 var flashKeys = new List<Keyframe>();
                 for (var shot = 0;
@@ -2282,17 +2751,6 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             return rig.BaseLocalRotation *
                    Quaternion.AngleAxis(
                        completedShots * RotationDegreesPerShot,
-                       Vector3.forward);
-        }
-
-        private static Quaternion CounterSpinRotation(
-            CounterRotatingBarrelGroup barrelGroup,
-            int completedShots)
-        {
-            return barrelGroup.BaseLocalRotation *
-                   Quaternion.AngleAxis(
-                       -completedShots *
-                       RotationDegreesPerShot,
                        Vector3.forward);
         }
 
@@ -2907,17 +3365,54 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                 player.GetComponentInChildren<Camera>(true) ??
                 throw new InvalidOperationException(
                     "The Player camera is missing.");
+            var leftBarrelRenderer = RequireDescendant(
+                    model,
+                    LeftSpinBoneName)
+                .GetComponent<MeshRenderer>() ??
+                throw new InvalidOperationException(
+                    "The combined left barrel cage renderer is missing.");
+            var rightBarrelRenderer = RequireDescendant(
+                    model,
+                    RightSpinBoneName)
+                .GetComponent<MeshRenderer>() ??
+                throw new InvalidOperationException(
+                    "The combined right barrel cage renderer is missing.");
+            var leftBarrelMaterials =
+                leftBarrelRenderer.sharedMaterials;
+            var rightBarrelMaterials =
+                rightBarrelRenderer.sharedMaterials;
+            var muzzleReviewShader =
+                Shader.Find("Unlit/Color") ??
+                Shader.Find("Sprites/Default") ??
+                throw new InvalidOperationException(
+                    "A temporary muzzle-on review shader is unavailable.");
+            var muzzleReviewMaterial =
+                CreateDebugOverlayMaterial(
+                    muzzleReviewShader,
+                    "RevolutionRightBarrelMuzzleReview",
+                    new Color(1f, 0.05f, 0.85f, 1f));
+            var leftMuzzleReviewMaterial =
+                CreateDebugOverlayMaterial(
+                    muzzleReviewShader,
+                    "RevolutionLeftBarrelMuzzleReview",
+                    new Color(0.05f, 0.9f, 1f, 1f));
             var cameraObject = new GameObject(
                 "RevolutionCorrectedMachineGunReviewCamera",
-                typeof(Camera))
+                typeof(Camera),
+                typeof(Light))
             {
                 hideFlags = HideFlags.HideAndDontSave
             };
             const int panelWidth = 640;
             const int panelHeight = 420;
+            var times = new[]
+            {
+                0f, 0.1f, 0.2f, 0.4f,
+                0.6f, 0.8f, 1f
+            };
             var grid = new Texture2D(
-                panelWidth * 6,
-                panelHeight * 3,
+                panelWidth * times.Length,
+                panelHeight * 5,
                 TextureFormat.RGB24,
                 false);
             var target = new RenderTexture(
@@ -2931,10 +3426,6 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                 TextureFormat.RGB24,
                 false);
             var oldActive = RenderTexture.active;
-            var times = new[]
-            {
-                0f, 0.04f, 0.08f, 0.12f, 0.16f, 0.20f
-            };
             try
             {
                 foreach (var snapshot in otherRenderers)
@@ -2950,7 +3441,11 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                     new Color(0.14f, 0.15f, 0.17f, 1f);
                 camera.fieldOfView = 34f;
                 camera.targetTexture = target;
-                for (var row = 0; row < 3; row++)
+                var reviewLight = cameraObject.GetComponent<Light>();
+                reviewLight.type = LightType.Directional;
+                reviewLight.intensity = 1.6f;
+                reviewLight.shadows = LightShadows.None;
+                for (var row = 0; row < 5; row++)
                 {
                     for (var column = 0;
                          column < times.Length;
@@ -2962,6 +3457,25 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                             times[column]);
                         if (row == 0)
                         {
+                            foreach (var snapshot in
+                                     otherRenderers)
+                            {
+                                snapshot.Restore();
+                            }
+                            camera.transform.SetPositionAndRotation(
+                                sourceCamera.transform.position,
+                                sourceCamera.transform.rotation);
+                        }
+                        else
+                        {
+                            foreach (var snapshot in
+                                     otherRenderers)
+                            {
+                                snapshot.Renderer.enabled = false;
+                            }
+                        }
+                        if (row == 1)
+                        {
                             FrameFullModel(
                                 camera,
                                 model,
@@ -2969,7 +3483,7 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                                 panelWidth /
                                 (float)panelHeight);
                         }
-                        else if (row == 1)
+                        else if (row == 2)
                         {
                             FrameGunCloseup(
                                 camera,
@@ -2979,12 +3493,33 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                                 (float)panelHeight,
                                 0f);
                         }
-                        else
+                        else if (row == 3)
                         {
-                            FrameRightGunFrontCloseup(
+                            leftBarrelRenderer.sharedMaterials =
+                                Enumerable.Repeat(
+                                        leftMuzzleReviewMaterial,
+                                        leftBarrelMaterials.Length)
+                                    .ToArray();
+                            FrameGunFrontCloseup(
                                 camera,
                                 model,
-                                sourceCamera,
+                                LeftSpinBoneName,
+                                LeftBarrelMeshPath,
+                                panelWidth /
+                                (float)panelHeight);
+                        }
+                        else if (row == 4)
+                        {
+                            rightBarrelRenderer.sharedMaterials =
+                                Enumerable.Repeat(
+                                        muzzleReviewMaterial,
+                                        rightBarrelMaterials.Length)
+                                    .ToArray();
+                            FrameGunFrontCloseup(
+                                camera,
+                                model,
+                                RightSpinBoneName,
+                                RightBarrelMeshPath,
                                 panelWidth /
                                 (float)panelHeight);
                         }
@@ -3010,16 +3545,24 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                         }
                         grid.SetPixels32(
                             column * panelWidth,
-                            (2 - row) * panelHeight,
+                            (4 - row) * panelHeight,
                             panelWidth,
                             panelHeight,
                             pixels);
+                        leftBarrelRenderer.sharedMaterials =
+                            leftBarrelMaterials;
+                        rightBarrelRenderer.sharedMaterials =
+                            rightBarrelMaterials;
                     }
                 }
                 grid.Apply();
                 File.WriteAllBytes(
                     destination,
                     grid.EncodeToPNG());
+                leftBarrelRenderer.sharedMaterials =
+                    leftBarrelMaterials;
+                rightBarrelRenderer.sharedMaterials =
+                    rightBarrelMaterials;
                 CaptureVisualSequenceFrames(
                     model,
                     clip,
@@ -3028,6 +3571,88 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                     sourceCamera,
                     target,
                     panel);
+                leftBarrelRenderer.sharedMaterials =
+                    Enumerable.Repeat(
+                            leftMuzzleReviewMaterial,
+                            leftBarrelMaterials.Length)
+                        .ToArray();
+                CaptureMuzzleSequenceFrames(
+                    model,
+                    clip,
+                    snapshots,
+                    camera,
+                    target,
+                    panel,
+                    LeftSpinBoneName,
+                    LeftBarrelMeshPath,
+                    "Left");
+                leftBarrelRenderer.sharedMaterials =
+                    leftBarrelMaterials;
+                rightBarrelRenderer.sharedMaterials =
+                    Enumerable.Repeat(
+                            muzzleReviewMaterial,
+                            rightBarrelMaterials.Length)
+                        .ToArray();
+                CaptureMuzzleSequenceFrames(
+                    model,
+                    clip,
+                    snapshots,
+                    camera,
+                    target,
+                    panel,
+                    RightSpinBoneName,
+                    RightBarrelMeshPath,
+                    "Right");
+                rightBarrelRenderer.sharedMaterials =
+                    rightBarrelMaterials;
+                CaptureObliqueSequenceFrames(
+                    model,
+                    clip,
+                    snapshots,
+                    camera,
+                    sourceCamera,
+                    target,
+                    panel,
+                    LeftSpinBoneName,
+                    LeftBarrelMeshPath,
+                    "LeftOblique",
+                    0.32f);
+                CaptureObliqueSequenceFrames(
+                    model,
+                    clip,
+                    snapshots,
+                    camera,
+                    sourceCamera,
+                    target,
+                    panel,
+                    RightSpinBoneName,
+                    RightBarrelMeshPath,
+                    "RightOblique",
+                    0.32f);
+                CaptureObliqueSequenceFrames(
+                    model,
+                    clip,
+                    snapshots,
+                    camera,
+                    sourceCamera,
+                    target,
+                    panel,
+                    LeftSpinBoneName,
+                    LeftBarrelMeshPath,
+                    "LeftRearOblique",
+                    -0.45f);
+                CaptureObliqueSequenceFrames(
+                    model,
+                    clip,
+                    snapshots,
+                    camera,
+                    sourceCamera,
+                    target,
+                    panel,
+                    RightSpinBoneName,
+                    RightBarrelMeshPath,
+                    "RightRearOblique",
+                    -0.45f);
                 CaptureSelectedBarrelOverlay(
                     model,
                     clip,
@@ -3046,14 +3671,539 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                 {
                     snapshot.Restore();
                 }
+                leftBarrelRenderer.sharedMaterials =
+                    leftBarrelMaterials;
+                rightBarrelRenderer.sharedMaterials =
+                    rightBarrelMaterials;
                 RestoreAll(snapshots);
                 animator.enabled = animatorEnabled;
+                UnityEngine.Object.DestroyImmediate(
+                    muzzleReviewMaterial);
+                UnityEngine.Object.DestroyImmediate(
+                    leftMuzzleReviewMaterial);
                 UnityEngine.Object.DestroyImmediate(panel);
                 UnityEngine.Object.DestroyImmediate(grid);
                 target.Release();
                 UnityEngine.Object.DestroyImmediate(target);
                 UnityEngine.Object.DestroyImmediate(cameraObject);
             }
+        }
+
+        private static void CaptureRightArmShapeComparison(
+            Scene scene,
+            Transform staticSlot,
+            Transform staticModel,
+            Transform attackSlot,
+            Transform attackModel,
+            Animator attackAnimator,
+            AnimationClip attackClip,
+            string destination)
+        {
+            Directory.CreateDirectory(
+                Path.GetDirectoryName(destination) ??
+                throw new InvalidOperationException(
+                    "Invalid Revolution right-arm comparison folder."));
+            var staticSnapshots =
+                staticModel.GetComponentsInChildren<Transform>(true)
+                    .Select(item => new TransformSnapshot(item))
+                    .ToArray();
+            var attackSnapshots =
+                attackModel.GetComponentsInChildren<Transform>(true)
+                    .Select(item => new TransformSnapshot(item))
+                    .ToArray();
+            var animatorEnabled = attackAnimator.enabled;
+            var renderers = scene.GetRootGameObjects()
+                .SelectMany(item =>
+                    item.GetComponentsInChildren<Renderer>(true))
+                .Select(item =>
+                    new RendererEnabledSnapshot(item))
+                .ToArray();
+            var cameraObject = new GameObject(
+                "RevolutionRightArmShapeReviewCamera",
+                typeof(Camera),
+                typeof(Light))
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            const int panelWidth = 800;
+            const int panelHeight = 620;
+            var target = new RenderTexture(
+                panelWidth,
+                panelHeight,
+                24,
+                RenderTextureFormat.ARGB32);
+            var panel = new Texture2D(
+                panelWidth,
+                panelHeight,
+                TextureFormat.RGB24,
+                false);
+            var grid = new Texture2D(
+                panelWidth * 3,
+                panelHeight * 2,
+                TextureFormat.RGB24,
+                false);
+            var oldActive = RenderTexture.active;
+            try
+            {
+                attackAnimator.enabled = false;
+                RestoreAll(staticSnapshots);
+                RestoreAll(attackSnapshots);
+                attackClip.SampleAnimation(
+                    attackModel.gameObject,
+                    0f);
+                var candidateRightArmRotations =
+                    CalculateStaticBasedRightAimRotations(
+                        staticModel,
+                        attackModel,
+                        attackSlot.forward);
+                var camera = cameraObject.GetComponent<Camera>();
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor =
+                    new Color(0.14f, 0.15f, 0.17f, 1f);
+                camera.nearClipPlane = 0.03f;
+                camera.farClipPlane = 100f;
+                camera.targetTexture = target;
+                var reviewLight = cameraObject.GetComponent<Light>();
+                reviewLight.type = LightType.Directional;
+                reviewLight.intensity = 1.8f;
+                reviewLight.shadows = LightShadows.None;
+
+                for (var row = 0; row < 2; row++)
+                {
+                    for (var column = 0; column < 3; column++)
+                    {
+                        RestoreAll(staticSnapshots);
+                        RestoreAll(attackSnapshots);
+                        if (column > 0)
+                        {
+                            attackClip.SampleAnimation(
+                                attackModel.gameObject,
+                                0f);
+                        }
+                        if (column == 2)
+                        {
+                            foreach (var pair in
+                                     candidateRightArmRotations)
+                            {
+                                RequireDescendant(
+                                        attackModel,
+                                        pair.Key)
+                                    .localRotation =
+                                    pair.Value;
+                            }
+                        }
+                        foreach (var snapshot in renderers)
+                        {
+                            snapshot.Renderer.enabled = false;
+                        }
+                        var model =
+                            column == 0
+                                ? staticModel
+                                : attackModel;
+                        foreach (var renderer in
+                                 model.GetComponentsInChildren<Renderer>(true)
+                                     .Where(item =>
+                                         item.name.IndexOf(
+                                             "Muzzle_Flash",
+                                             StringComparison.Ordinal) < 0))
+                        {
+                            renderer.enabled = true;
+                        }
+
+                        var slot =
+                            column == 0
+                                ? staticSlot
+                                : attackSlot;
+                        var viewDirection =
+                            Vector3.ProjectOnPlane(
+                                slot.forward,
+                                Vector3.up);
+                        if (viewDirection.sqrMagnitude <
+                            0.000001f)
+                        {
+                            viewDirection = Vector3.forward;
+                        }
+                        viewDirection.Normalize();
+                        if (row == 1)
+                        {
+                            viewDirection =
+                                Quaternion.AngleAxis(
+                                    38f,
+                                    Vector3.up) *
+                                viewDirection;
+                        }
+                        FrameRightArmShape(
+                            camera,
+                            RightArmVisualBounds(model),
+                            viewDirection,
+                            panelWidth /
+                            (float)panelHeight);
+                        camera.Render();
+                        RenderTexture.active = target;
+                        panel.ReadPixels(
+                            new Rect(
+                                0f,
+                                0f,
+                                panelWidth,
+                                panelHeight),
+                            0,
+                            0);
+                        panel.Apply();
+                        grid.SetPixels32(
+                            column * panelWidth,
+                            (1 - row) * panelHeight,
+                            panelWidth,
+                            panelHeight,
+                            panel.GetPixels32());
+                    }
+                }
+                grid.Apply();
+                File.WriteAllBytes(
+                    destination,
+                    grid.EncodeToPNG());
+                CaptureRightArmShapeMotionFrames(
+                    attackSlot,
+                    attackModel,
+                    attackClip,
+                    attackSnapshots,
+                    renderers,
+                    camera,
+                    target,
+                    panel,
+                    Path.GetDirectoryName(destination) ??
+                    throw new InvalidOperationException(
+                        "Invalid Revolution right-arm motion review folder."));
+            }
+            finally
+            {
+                RenderTexture.active = oldActive;
+                cameraObject.GetComponent<Camera>()
+                    .targetTexture = null;
+                foreach (var snapshot in renderers)
+                {
+                    snapshot.Restore();
+                }
+                RestoreAll(staticSnapshots);
+                RestoreAll(attackSnapshots);
+                attackAnimator.enabled = animatorEnabled;
+                UnityEngine.Object.DestroyImmediate(panel);
+                UnityEngine.Object.DestroyImmediate(grid);
+                target.Release();
+                UnityEngine.Object.DestroyImmediate(target);
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+            }
+        }
+
+        private static void CaptureRightArmShapeMotionFrames(
+            Transform attackSlot,
+            Transform attackModel,
+            AnimationClip attackClip,
+            IReadOnlyList<TransformSnapshot> attackSnapshots,
+            IReadOnlyList<RendererEnabledSnapshot> rendererSnapshots,
+            Camera camera,
+            RenderTexture target,
+            Texture2D panel,
+            string destinationFolder)
+        {
+            foreach (var oldFrame in
+                     Directory.GetFiles(
+                         destinationFolder,
+                         "Revolution_04_RightArmShapeMotion_*.png"))
+            {
+                File.Delete(oldFrame);
+            }
+            foreach (var snapshot in rendererSnapshots)
+            {
+                snapshot.Renderer.enabled = false;
+            }
+            foreach (var renderer in
+                     attackModel.GetComponentsInChildren<Renderer>(true)
+                         .Where(item =>
+                             item.name.IndexOf(
+                                 "Muzzle_Flash",
+                                 StringComparison.Ordinal) < 0))
+            {
+                renderer.enabled = true;
+            }
+            RestoreAll(attackSnapshots);
+            attackClip.SampleAnimation(
+                attackModel.gameObject,
+                0f);
+            var viewDirection = Vector3.ProjectOnPlane(
+                attackSlot.forward,
+                Vector3.up);
+            if (viewDirection.sqrMagnitude < 0.000001f)
+            {
+                viewDirection = Vector3.forward;
+            }
+            viewDirection =
+                Quaternion.AngleAxis(
+                    38f,
+                    Vector3.up) *
+                viewDirection.normalized;
+            FrameRightArmShape(
+                camera,
+                RightArmVisualBounds(attackModel),
+                viewDirection,
+                target.width /
+                (float)target.height);
+            const int framesPerSecond = 30;
+            const int frameCount = 61;
+            for (var frameIndex = 0;
+                 frameIndex < frameCount;
+                 frameIndex++)
+            {
+                RestoreAll(attackSnapshots);
+                attackClip.SampleAnimation(
+                    attackModel.gameObject,
+                    frameIndex /
+                    (float)framesPerSecond);
+                camera.Render();
+                RenderTexture.active = target;
+                panel.ReadPixels(
+                    new Rect(
+                        0f,
+                        0f,
+                        target.width,
+                        target.height),
+                    0,
+                    0);
+                panel.Apply();
+                File.WriteAllBytes(
+                    Path.Combine(
+                        destinationFolder,
+                        "Revolution_04_RightArmShapeMotion_" +
+                        frameIndex.ToString("D4") +
+                        ".png"),
+                    panel.EncodeToPNG());
+            }
+        }
+
+        private static IReadOnlyDictionary<string, Quaternion>
+            CalculateStaticBasedRightAimRotations(
+                Transform staticModel,
+                Transform attackModel,
+                Vector3 requestedForward)
+        {
+            var snapshots =
+                attackModel.GetComponentsInChildren<Transform>(true)
+                    .Select(item => new TransformSnapshot(item))
+                    .ToArray();
+            try
+            {
+                foreach (var boneName in
+                         new[]
+                         {
+                             "RightArm",
+                             "RightForeArm",
+                             "RightHand"
+                         })
+                {
+                    RequireDescendant(
+                            attackModel,
+                            boneName)
+                        .localRotation =
+                        RequireDescendant(
+                                staticModel,
+                                boneName)
+                            .localRotation;
+                }
+
+                var forward = Vector3.ProjectOnPlane(
+                    requestedForward,
+                    Vector3.up);
+                if (forward.sqrMagnitude < 0.000001f)
+                {
+                    throw new InvalidOperationException(
+                        "Revolution right-arm repair does not define a horizontal firing direction.");
+                }
+                forward.Normalize();
+                var upperArm =
+                    RequireDescendant(
+                        attackModel,
+                        "RightArm");
+                var spin =
+                    RequireDescendant(
+                        attackModel,
+                        RightSpinBoneName);
+                upperArm.rotation =
+                    Quaternion.FromToRotation(
+                        spin.forward,
+                        forward) *
+                    upperArm.rotation;
+                return new Dictionary<string, Quaternion>(
+                    StringComparer.Ordinal)
+                {
+                    ["RightArm"] =
+                        upperArm.localRotation,
+                    ["RightForeArm"] =
+                        RequireDescendant(
+                                attackModel,
+                                "RightForeArm")
+                            .localRotation,
+                    ["RightHand"] =
+                        RequireDescendant(
+                                attackModel,
+                                "RightHand")
+                            .localRotation
+                };
+            }
+            finally
+            {
+                RestoreAll(snapshots);
+            }
+        }
+
+        private static Bounds RightArmVisualBounds(
+            Transform model)
+        {
+            var skinned =
+                model.GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                    .Single();
+            var mesh = skinned.sharedMesh ??
+                       throw new InvalidOperationException(
+                           "Revolution right-arm comparison mesh is missing.");
+            var weights = mesh.boneWeights;
+            var bakedVertices = BakeWorldVertices(skinned);
+            if (weights.Length != bakedVertices.Count)
+            {
+                throw new InvalidOperationException(
+                    "Revolution right-arm comparison weights differ.");
+            }
+            var rightBoneIndices = new HashSet<int>(
+                skinned.bones
+                    .Select((bone, index) =>
+                        new
+                        {
+                            bone,
+                            index
+                        })
+                    .Where(item =>
+                        item.bone.name == "RightArm" ||
+                        item.bone.name == "RightForeArm" ||
+                        item.bone.name == "RightHand")
+                    .Select(item => item.index));
+            var selected = Enumerable.Range(
+                    0,
+                    weights.Length)
+                .Where(index =>
+                    WeightForBones(
+                        weights[index],
+                        rightBoneIndices) >=
+                    0.35f)
+                .Select(index =>
+                    bakedVertices[index])
+                .ToArray();
+            if (selected.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Revolution right-arm comparison has no weighted vertices.");
+            }
+            var bounds = new Bounds(
+                selected[0],
+                Vector3.zero);
+            foreach (var point in selected)
+            {
+                bounds.Encapsulate(point);
+            }
+            var rightSpin = model
+                .GetComponentsInChildren<Transform>(true)
+                .FirstOrDefault(item =>
+                    item.name == RightSpinBoneName);
+            if (rightSpin != null)
+            {
+                foreach (var filter in
+                         rightSpin.GetComponentsInChildren<MeshFilter>(true))
+                {
+                    var renderedMesh = filter.sharedMesh;
+                    if (renderedMesh == null)
+                    {
+                        continue;
+                    }
+                    var renderedVertices =
+                        Enumerable.Range(
+                                0,
+                                renderedMesh.subMeshCount)
+                            .SelectMany(index =>
+                                renderedMesh.GetTriangles(index))
+                            .Distinct()
+                            .Select(index =>
+                                filter.transform.TransformPoint(
+                                    renderedMesh.vertices[index]));
+                    foreach (var point in renderedVertices)
+                    {
+                        bounds.Encapsulate(point);
+                    }
+                }
+            }
+            bounds.Expand(0.1f);
+            return bounds;
+        }
+
+        private static float WeightForBones(
+            BoneWeight weight,
+            ISet<int> boneIndices)
+        {
+            var result = 0f;
+            if (boneIndices.Contains(weight.boneIndex0))
+            {
+                result += weight.weight0;
+            }
+            if (boneIndices.Contains(weight.boneIndex1))
+            {
+                result += weight.weight1;
+            }
+            if (boneIndices.Contains(weight.boneIndex2))
+            {
+                result += weight.weight2;
+            }
+            if (boneIndices.Contains(weight.boneIndex3))
+            {
+                result += weight.weight3;
+            }
+            return result;
+        }
+
+        private static void FrameRightArmShape(
+            Camera camera,
+            Bounds bounds,
+            Vector3 viewDirection,
+            float aspect)
+        {
+            camera.aspect = aspect;
+            camera.fieldOfView = 30f;
+            var verticalDistance =
+                bounds.extents.y /
+                Mathf.Tan(
+                    camera.fieldOfView *
+                    Mathf.Deg2Rad *
+                    0.5f);
+            var horizontalFov =
+                2f * Mathf.Atan(
+                    Mathf.Tan(
+                        camera.fieldOfView *
+                        Mathf.Deg2Rad *
+                        0.5f) *
+                    aspect);
+            var horizontalDistance =
+                Mathf.Max(
+                    bounds.extents.x,
+                    bounds.extents.z) /
+                Mathf.Tan(horizontalFov * 0.5f);
+            var distance =
+                Mathf.Max(
+                    verticalDistance,
+                    horizontalDistance) *
+                1.18f;
+            camera.transform.position =
+                bounds.center +
+                (viewDirection.normalized *
+                 Mathf.Max(distance, 0.4f));
+            camera.transform.rotation =
+                Quaternion.LookRotation(
+                    bounds.center -
+                    camera.transform.position,
+                    Vector3.up);
         }
 
         private static void CaptureSelectedBarrelOverlay(
@@ -3123,38 +4273,22 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             };
             GameObject leftSpinMarker = null;
             GameObject rightSpinMarker = null;
-            var rightGroupRenderers = model
-                .GetComponentsInChildren<MeshRenderer>(true)
-                .Where(item =>
-                    item.name.StartsWith(
-                        RightBarrelGroupNamePrefix,
-                        StringComparison.Ordinal))
-                .OrderBy(item => item.name)
-                .ToArray();
-            var rightGroupMaterials =
-                rightGroupRenderers
-                    .Select(item =>
-                        item.sharedMaterials)
-                    .ToArray();
+            var rightSpin = RequireDescendant(
+                model,
+                RightSpinBoneName);
+            var rightBarrelRenderer =
+                rightSpin.GetComponent<MeshRenderer>() ??
+                throw new InvalidOperationException(
+                    "The combined right barrel cage renderer is missing.");
+            var rightBarrelMaterials =
+                rightBarrelRenderer.sharedMaterials;
             try
             {
-                for (var groupIndex = 0;
-                     groupIndex <
-                     rightGroupRenderers.Length;
-                     groupIndex++)
-                {
-                    var groupRenderer =
-                        rightGroupRenderers[groupIndex];
-                    groupRenderer.sharedMaterials =
-                        Enumerable.Repeat(
-                                overlayMaterials[
-                                    groupIndex %
-                                    overlayMaterials.Length],
-                                groupRenderer
-                                    .sharedMaterials
-                                    .Length)
-                            .ToArray();
-                }
+                rightBarrelRenderer.sharedMaterials =
+                    Enumerable.Repeat(
+                            overlayMaterials[4],
+                            rightBarrelMaterials.Length)
+                        .ToArray();
                 leftSpinMarker = CreateSpinReviewMarker(
                     RequireDescendant(model, LeftSpinBoneName),
                     overlayMaterials[2],
@@ -3293,15 +4427,8 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             }
             finally
             {
-                for (var groupIndex = 0;
-                     groupIndex <
-                     rightGroupRenderers.Length;
-                     groupIndex++)
-                {
-                    rightGroupRenderers[groupIndex]
-                        .sharedMaterials =
-                        rightGroupMaterials[groupIndex];
-                }
+                rightBarrelRenderer.sharedMaterials =
+                    rightBarrelMaterials;
                 if (leftSpinMarker != null)
                 {
                     UnityEngine.Object.DestroyImmediate(leftSpinMarker);
@@ -3476,6 +4603,140 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             }
         }
 
+        private static void CaptureMuzzleSequenceFrames(
+            Transform model,
+            AnimationClip clip,
+            IReadOnlyList<TransformSnapshot> snapshots,
+            Camera camera,
+            RenderTexture target,
+            Texture2D panel,
+            string spinBoneName,
+            string barrelMeshPath,
+            string sideName)
+        {
+            var sequenceFolder = Path.Combine(
+                Path.GetTempPath(),
+                VisualSequenceFolderName);
+            Directory.CreateDirectory(sequenceFolder);
+            foreach (var oldFrame in
+                     Directory.GetFiles(
+                         sequenceFolder,
+                         "RevolutionMachineGun" +
+                         sideName +
+                         "Muzzle_*.png"))
+            {
+                File.Delete(oldFrame);
+            }
+
+            const int framesPerSecond = 30;
+            const int frameCount = 31;
+            camera.targetTexture = target;
+            for (var frameIndex = 0;
+                 frameIndex < frameCount;
+                 frameIndex++)
+            {
+                RestoreAll(snapshots);
+                clip.SampleAnimation(
+                    model.gameObject,
+                    frameIndex / (float)framesPerSecond);
+                FrameGunFrontCloseup(
+                    camera,
+                    model,
+                    spinBoneName,
+                    barrelMeshPath,
+                    target.width / (float)target.height);
+                camera.Render();
+                RenderTexture.active = target;
+                panel.ReadPixels(
+                    new Rect(
+                        0f,
+                        0f,
+                        target.width,
+                        target.height),
+                    0,
+                    0);
+                panel.Apply();
+                File.WriteAllBytes(
+                    Path.Combine(
+                        sequenceFolder,
+                        "RevolutionMachineGun" +
+                        sideName +
+                        "Muzzle_" +
+                        frameIndex.ToString("D4") +
+                        ".png"),
+                    panel.EncodeToPNG());
+            }
+        }
+
+        private static void CaptureObliqueSequenceFrames(
+            Transform model,
+            AnimationClip clip,
+            IReadOnlyList<TransformSnapshot> snapshots,
+            Camera camera,
+            Camera sourceCamera,
+            RenderTexture target,
+            Texture2D panel,
+            string spinBoneName,
+            string barrelMeshPath,
+            string sequenceName,
+            float axialViewBias)
+        {
+            var sequenceFolder = Path.Combine(
+                Path.GetTempPath(),
+                VisualSequenceFolderName);
+            Directory.CreateDirectory(sequenceFolder);
+            foreach (var oldFrame in
+                     Directory.GetFiles(
+                         sequenceFolder,
+                         "RevolutionMachineGun" +
+                         sequenceName +
+                         "_*.png"))
+            {
+                File.Delete(oldFrame);
+            }
+
+            const int framesPerSecond = 30;
+            const int frameCount = 31;
+            camera.targetTexture = target;
+            for (var frameIndex = 0;
+                 frameIndex < frameCount;
+                 frameIndex++)
+            {
+                RestoreAll(snapshots);
+                clip.SampleAnimation(
+                    model.gameObject,
+                    frameIndex / (float)framesPerSecond);
+                FrameGunObliqueCloseup(
+                    camera,
+                    model,
+                    sourceCamera,
+                    spinBoneName,
+                    barrelMeshPath,
+                    target.width / (float)target.height,
+                    axialViewBias);
+                camera.Render();
+                RenderTexture.active = target;
+                panel.ReadPixels(
+                    new Rect(
+                        0f,
+                        0f,
+                        target.width,
+                        target.height),
+                    0,
+                    0);
+                panel.Apply();
+                File.WriteAllBytes(
+                    Path.Combine(
+                        sequenceFolder,
+                        "RevolutionMachineGun" +
+                        sequenceName +
+                        "_" +
+                        frameIndex.ToString("D4") +
+                        ".png"),
+                    panel.EncodeToPNG());
+            }
+        }
+
         private static void FrameFullModel(
             Camera camera,
             Transform model,
@@ -3539,83 +4800,195 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                 yawOffset);
         }
 
-        private static void FrameRightGunFrontCloseup(
+        private static void FrameGunFrontCloseup(
             Camera camera,
             Transform model,
-            Camera sourceCamera,
+            string spinBoneName,
+            string barrelMeshPath,
             float aspect)
         {
             var spin = RequireDescendant(
                 model,
-                RightSpinBoneName);
-            var groupRenderers = spin
-                .GetComponentsInChildren<MeshRenderer>(true)
-                .Where(item =>
-                    item.name.StartsWith(
-                        RightBarrelGroupNamePrefix,
-                        StringComparison.Ordinal))
-                .ToArray();
-            if (groupRenderers.Length != RightBarrelGroupCount)
+                spinBoneName);
+            var filter = spin.GetComponent<MeshFilter>();
+            var renderer = spin.GetComponent<MeshRenderer>();
+            if (filter == null ||
+                renderer == null ||
+                filter.sharedMesh == null ||
+                AssetDatabase.GetAssetPath(
+                    filter.sharedMesh) !=
+                barrelMeshPath)
             {
                 throw new InvalidOperationException(
-                    "The right muzzle-on review requires exactly " +
-                    RightBarrelGroupCount +
-                    " counter-rotating barrel groups, but found " +
-                    groupRenderers.Length +
-                    ".");
+                    "The muzzle-on review requires the requested combined barrel cage mesh.");
             }
-            var groupWorldVertices = new List<Vector3>();
-            foreach (var groupRenderer in groupRenderers)
+            var mesh = filter.sharedMesh;
+            var renderedVertexIndices = new HashSet<int>();
+            for (var subMesh = 0;
+                 subMesh < mesh.subMeshCount;
+                 subMesh++)
             {
-                var filter =
-                    groupRenderer.GetComponent<MeshFilter>();
-                if (filter == null ||
-                    filter.sharedMesh == null)
+                foreach (var vertexIndex in
+                         mesh.GetTriangles(subMesh))
                 {
-                    throw new InvalidOperationException(
-                        "A right counter-rotating barrel group has " +
-                        "no readable mesh.");
+                    renderedVertexIndices.Add(vertexIndex);
                 }
-                var mesh = filter.sharedMesh;
-                var renderedVertexIndices = new HashSet<int>();
-                for (var subMesh = 0;
-                     subMesh < mesh.subMeshCount;
-                     subMesh++)
-                {
-                    foreach (var vertexIndex in
-                             mesh.GetTriangles(subMesh))
-                    {
-                        renderedVertexIndices.Add(vertexIndex);
-                    }
-                }
-                var vertices = mesh.vertices;
-                var renderedWorldVertices =
-                    renderedVertexIndices.Select(vertexIndex =>
-                        filter.transform.TransformPoint(
-                            vertices[vertexIndex]))
-                        .ToArray();
-                groupWorldVertices.AddRange(renderedWorldVertices);
             }
-            if (groupWorldVertices.Count == 0)
+            var vertices = mesh.vertices;
+            var barrelWorldVertices =
+                renderedVertexIndices.Select(vertexIndex =>
+                    filter.transform.TransformPoint(
+                        vertices[vertexIndex]))
+                    .ToArray();
+            if (barrelWorldVertices.Length == 0)
             {
                 throw new InvalidOperationException(
-                    "The right counter-rotating barrel groups have " +
-                    "no vertices for muzzle-on framing.");
+                    "The requested combined barrel cage has no vertices for muzzle-on framing.");
             }
-            var groupCenter = Vector3.zero;
-            foreach (var vertex in groupWorldVertices)
-            {
-                groupCenter += vertex;
-            }
-            groupCenter /= groupWorldVertices.Count;
+            var radialExtent = barrelWorldVertices
+                .Select(vertex =>
+                    Vector3.ProjectOnPlane(
+                        vertex - spin.position,
+                        spin.forward).magnitude)
+                .Max();
+            var frontExtent = barrelWorldVertices
+                .Select(vertex =>
+                    Vector3.Dot(
+                        vertex - spin.position,
+                        spin.forward))
+                .Max();
             camera.aspect = aspect;
-            camera.fieldOfView = 24f;
+            camera.fieldOfView = 28f;
             camera.nearClipPlane = 0.03f;
-            camera.transform.rotation =
-                sourceCamera.transform.rotation;
+            var distance = Mathf.Max(
+                0.3f,
+                frontExtent +
+                ((radialExtent /
+                  Mathf.Tan(
+                      camera.fieldOfView *
+                      Mathf.Deg2Rad *
+                      0.5f)) *
+                 1.45f));
             camera.transform.position =
-                groupCenter +
-                (-camera.transform.forward * 1.2f);
+                spin.position +
+                (spin.forward * distance);
+            var cameraUp = Vector3.ProjectOnPlane(
+                model.up,
+                spin.forward);
+            if (cameraUp.sqrMagnitude < 0.000001f)
+            {
+                cameraUp = Vector3.ProjectOnPlane(
+                    model.right,
+                    spin.forward);
+            }
+            camera.transform.rotation =
+                Quaternion.LookRotation(
+                    spin.position -
+                    camera.transform.position,
+                    cameraUp.normalized);
+        }
+
+        private static void FrameGunObliqueCloseup(
+            Camera camera,
+            Transform model,
+            Camera sourceCamera,
+            string spinBoneName,
+            string barrelMeshPath,
+            float aspect,
+            float axialViewBias)
+        {
+            var spin = RequireDescendant(
+                model,
+                spinBoneName);
+            var filter = spin.GetComponent<MeshFilter>();
+            if (filter == null ||
+                filter.sharedMesh == null ||
+                AssetDatabase.GetAssetPath(
+                    filter.sharedMesh) !=
+                barrelMeshPath)
+            {
+                throw new InvalidOperationException(
+                    "The oblique review requires the requested combined barrel cage mesh.");
+            }
+
+            var mesh = filter.sharedMesh;
+            var vertices = mesh.vertices;
+            var triangles = Enumerable.Range(0, mesh.subMeshCount)
+                .SelectMany(mesh.GetTriangles)
+                .Distinct()
+                .ToArray();
+            if (triangles.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "The requested combined barrel cage has no vertices for oblique framing.");
+            }
+
+            var worldVertices = triangles
+                .Select(index =>
+                    filter.transform.TransformPoint(vertices[index]))
+                .ToArray();
+            var bounds = new Bounds(
+                worldVertices[0],
+                Vector3.zero);
+            foreach (var vertex in worldVertices)
+            {
+                bounds.Encapsulate(vertex);
+            }
+            bounds.Expand(0.18f);
+
+            var sideDirection = Vector3.ProjectOnPlane(
+                sourceCamera.transform.position - bounds.center,
+                spin.forward);
+            if (sideDirection.sqrMagnitude < 0.000001f)
+            {
+                sideDirection = Vector3.Cross(
+                    model.up,
+                    spin.forward);
+            }
+            sideDirection.Normalize();
+            var viewDirection =
+                (sideDirection +
+                 (spin.forward * axialViewBias)).normalized;
+
+            camera.aspect = aspect;
+            camera.fieldOfView = 26f;
+            camera.nearClipPlane = 0.03f;
+            var verticalDistance =
+                bounds.extents.y /
+                Mathf.Tan(
+                    camera.fieldOfView *
+                    Mathf.Deg2Rad *
+                    0.5f);
+            var horizontalFov =
+                2f * Mathf.Atan(
+                    Mathf.Tan(
+                        camera.fieldOfView *
+                        Mathf.Deg2Rad *
+                        0.5f) *
+                    aspect);
+            var horizontalExtent =
+                Mathf.Max(
+                    Vector3.Project(
+                        bounds.extents,
+                        model.right).magnitude,
+                    Vector3.Project(
+                        bounds.extents,
+                        model.forward).magnitude);
+            var horizontalDistance =
+                horizontalExtent /
+                Mathf.Tan(horizontalFov * 0.5f);
+            var distance =
+                Mathf.Max(
+                    verticalDistance,
+                    horizontalDistance) *
+                1.6f;
+            camera.transform.position =
+                bounds.center +
+                (viewDirection * Mathf.Max(distance, 0.45f));
+            camera.transform.rotation =
+                Quaternion.LookRotation(
+                    bounds.center - camera.transform.position,
+                    model.up);
         }
 
         private static void FrameBounds(
@@ -3827,11 +5200,46 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             RequireBaseOrPreviousRenderer(Transform model)
         {
             var renderer = RequireSingleRenderer(model);
+            if (renderer.sharedMesh == null)
+            {
+                if (renderer.bones.Length <
+                    ExpectedBaseBones)
+                {
+                    throw new InvalidOperationException(
+                        "Revolution_04 cannot recover its missing mesh because the base bone array is incomplete.");
+                }
+                var approvedAsset =
+                    AssetDatabase.LoadAssetAtPath<GameObject>(
+                        ApprovedModelPath) ??
+                    throw new InvalidOperationException(
+                        "Approved Revolution model asset is missing during failed-apply recovery.");
+                var approvedRenderer =
+                    approvedAsset.GetComponentsInChildren<
+                            SkinnedMeshRenderer>(true)
+                        .SingleOrDefault() ??
+                    throw new InvalidOperationException(
+                        "Approved Revolution model renderer is missing during failed-apply recovery.");
+                renderer.sharedMesh =
+                    approvedRenderer.sharedMesh;
+                renderer.bones =
+                    renderer.bones
+                        .Take(ExpectedBaseBones)
+                        .ToArray();
+                EditorUtility.SetDirty(renderer);
+            }
             var path =
                 AssetDatabase.GetAssetPath(
                     renderer.sharedMesh);
+            var isRecoveredPreviousMesh =
+                string.IsNullOrEmpty(path) &&
+                renderer.sharedMesh != null &&
+                renderer.sharedMesh.name ==
+                "Revolution_04_MachineGun_RiggedMesh" &&
+                renderer.bones.Length ==
+                ExpectedRiggedBones;
             if (path != ApprovedModelPath &&
-                path != RiggedMeshPath)
+                path != RiggedMeshPath &&
+                !isRecoveredPreviousMesh)
             {
                 throw new InvalidOperationException(
                     "Revolution_04 uses an unexpected mesh before correction: " +
@@ -3894,18 +5302,22 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             var meshes = new List<Mesh>
             {
                 baseMesh,
-                leftMesh
+                leftMesh,
+                RequireExtractedBarrelMesh(
+                    model,
+                    RightSpinBoneName,
+                    RightBarrelMeshPath)
             };
-            meshes.AddRange(
-                RequireExtractedRightBarrelGroupMeshes(
-                    model));
             var triangles = meshes.Sum(item =>
                 Enumerable.Range(0, item.subMeshCount)
                     .Sum(index =>
                         checked(
                             (int)item.GetIndexCount(index) /
                             3)));
-            if (triangles != ExpectedTriangles ||
+            if (triangles !=
+                    ExpectedTriangles +
+                    LeftMatchedRightTriangleDelta +
+                    RightFixedDiscTriangleDelta ||
                 meshes.Any(item =>
                     item.subMeshCount !=
                     ExpectedMaterials) ||
@@ -3917,63 +5329,6 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                     triangles + ", BaseBindPoses=" +
                     baseMesh.bindposes.Length + ".");
             }
-        }
-
-        private static IReadOnlyList<Mesh>
-            RequireExtractedRightBarrelGroupMeshes(
-                Transform model)
-        {
-            var spinBone = RequireDescendant(
-                model,
-                RightSpinBoneName);
-            var meshes = new List<Mesh>(
-                RightBarrelGroupCount);
-            for (var groupIndex = 0;
-                 groupIndex < RightBarrelGroupCount;
-                 groupIndex++)
-            {
-                var suffix = (groupIndex + 1)
-                    .ToString(
-                        "D2",
-                        CultureInfo.InvariantCulture);
-                var groupName =
-                    RightBarrelGroupNamePrefix + suffix;
-                var group = spinBone
-                    .GetComponentsInChildren<Transform>(true)
-                    .SingleOrDefault(item =>
-                        item.name == groupName) ??
-                    throw new InvalidOperationException(
-                        "The corrected right barrel ring is missing " +
-                        groupName + ".");
-                if (group.parent != spinBone)
-                {
-                    throw new InvalidOperationException(
-                        groupName +
-                        " must remain a direct child of the right barrel ring.");
-                }
-                var filter =
-                    group.GetComponent<MeshFilter>();
-                var renderer =
-                    group.GetComponent<MeshRenderer>();
-                var expectedPath =
-                    RightBarrelGroupAssetPrefix +
-                    suffix + ".asset";
-                if (filter == null ||
-                    renderer == null ||
-                    filter.sharedMesh == null ||
-                    AssetDatabase.GetAssetPath(
-                        filter.sharedMesh) !=
-                    expectedPath ||
-                    renderer.sharedMaterials.Length !=
-                    ExpectedMaterials)
-                {
-                    throw new InvalidOperationException(
-                        groupName +
-                        " does not contain its extracted barrel mesh and approved material slots.");
-                }
-                meshes.Add(filter.sharedMesh);
-            }
-            return meshes;
         }
 
         private static Mesh RequireExtractedBarrelMesh(
@@ -4149,8 +5504,18 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             DestroyNamedIfPresent(model, RightSpinBoneName);
             DestroyNamedIfPresent(model, LeftFlashPivotName);
             DestroyNamedIfPresent(model, RightFlashPivotName);
-            if (AssetDatabase.GetAssetPath(renderer.sharedMesh) ==
-                RiggedMeshPath)
+            var currentMeshPath =
+                AssetDatabase.GetAssetPath(
+                    renderer.sharedMesh);
+            var isRecoveredPreviousMesh =
+                string.IsNullOrEmpty(currentMeshPath) &&
+                renderer.sharedMesh != null &&
+                renderer.sharedMesh.name ==
+                "Revolution_04_MachineGun_RiggedMesh" &&
+                renderer.bones.Length ==
+                ExpectedRiggedBones;
+            if (currentMeshPath == RiggedMeshPath ||
+                isRecoveredPreviousMesh)
             {
                 var approvedAsset =
                     AssetDatabase.LoadAssetAtPath<GameObject>(
@@ -4596,6 +5961,78 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                 curve);
         }
 
+        private static string AnimationCurveSignature(
+            AnimationClip clip,
+            ISet<string> selectedPaths,
+            bool includeSelectedPaths)
+        {
+            var builder = new StringBuilder();
+            foreach (var binding in
+                     AnimationUtility.GetCurveBindings(clip)
+                         .Where(binding =>
+                             selectedPaths.Contains(
+                                 binding.path) ==
+                             includeSelectedPaths)
+                         .OrderBy(
+                             binding => binding.path,
+                             StringComparer.Ordinal)
+                         .ThenBy(
+                             binding => binding.propertyName,
+                             StringComparer.Ordinal))
+            {
+                var curve =
+                    AnimationUtility.GetEditorCurve(
+                        clip,
+                        binding) ??
+                    throw new InvalidOperationException(
+                        "Revolution animation curve is missing while protecting right-arm rotation.");
+                builder.Append(binding.path);
+                builder.Append('|');
+                builder.Append(binding.propertyName);
+                builder.Append('|');
+                builder.Append((int)curve.preWrapMode);
+                builder.Append('|');
+                builder.Append((int)curve.postWrapMode);
+                foreach (var key in curve.keys)
+                {
+                    builder.Append('|');
+                    builder.Append(
+                        key.time.ToString(
+                            "R",
+                            CultureInfo.InvariantCulture));
+                    builder.Append(',');
+                    builder.Append(
+                        key.value.ToString(
+                            "R",
+                            CultureInfo.InvariantCulture));
+                    builder.Append(',');
+                    builder.Append(
+                        key.inTangent.ToString(
+                            "R",
+                            CultureInfo.InvariantCulture));
+                    builder.Append(',');
+                    builder.Append(
+                        key.outTangent.ToString(
+                            "R",
+                            CultureInfo.InvariantCulture));
+                    builder.Append(',');
+                    builder.Append(
+                        key.inWeight.ToString(
+                            "R",
+                            CultureInfo.InvariantCulture));
+                    builder.Append(',');
+                    builder.Append(
+                        key.outWeight.ToString(
+                            "R",
+                            CultureInfo.InvariantCulture));
+                    builder.Append(',');
+                    builder.Append((int)key.weightedMode);
+                }
+                builder.AppendLine();
+            }
+            return builder.ToString();
+        }
+
         private static void RequireSameTransform(
             TransformState expected,
             Transform actual,
@@ -4795,8 +6232,6 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
                 BarrelVertexCount = barrelVertexCount;
                 BarrelComponentCount =
                     barrelComponentCount;
-                CounterRotatingBarrelGroups =
-                    new List<CounterRotatingBarrelGroup>();
             }
 
             public Transform Forearm { get; }
@@ -4809,22 +6244,24 @@ namespace Bellerophon.Editor.RevolutionCargoRunScene
             public Quaternion BaseLocalRotation { get; }
             public int BarrelVertexCount { get; }
             public int BarrelComponentCount { get; }
-            public List<CounterRotatingBarrelGroup>
-                CounterRotatingBarrelGroups { get; }
         }
 
-        private sealed class CounterRotatingBarrelGroup
+        private sealed class RightBarrelAlignment
         {
-            public CounterRotatingBarrelGroup(
-                Transform transform,
-                Quaternion baseLocalRotation)
+            public RightBarrelAlignment(
+                HashSet<int> vertices,
+                Vector3 originalInsertion,
+                Quaternion rotation)
             {
-                Transform = transform;
-                BaseLocalRotation = baseLocalRotation;
+                Vertices = vertices;
+                OriginalInsertion = originalInsertion;
+                Rotation = rotation;
             }
 
-            public Transform Transform { get; }
-            public Quaternion BaseLocalRotation { get; }
+            public HashSet<int> Vertices { get; }
+            public Vector3 OriginalInsertion { get; }
+            public Quaternion Rotation { get; }
+            public Vector3 TargetInsertion { get; set; }
         }
 
         private sealed class AimPose

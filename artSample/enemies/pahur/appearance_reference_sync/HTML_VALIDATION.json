@@ -1,0 +1,221 @@
+{
+  "result": "PASS",
+  "static_dom_and_asset_check": "PASS",
+  "browser_render_check": {
+    "attempted": true,
+    "result": "BLOCKED_BY_BROWSER_CONNECTION_METADATA",
+    "note": "The in-app browser connection rejected the session before page navigation. Static DOM/asset validation and direct render-image review were completed instead."
+  },
+  "direct_visual_review": {
+    "result": "PASS",
+    "reviewed_images": [
+      "renders/01_front_pahur_reference_match.png",
+      "renders/02_three_quarter_pahur_reference_match.png",
+      "renders/03_reference_side_by_side_overview.png",
+      "renders/05_rear_current_model_material.png"
+    ]
+  },
+  "pages": [
+    {
+      "file": "artSample/enemies/pahur/appearance_reference_sync/index.html",
+      "titles": [
+        "파후르 현재 모델 외형 동기화 샘플"
+      ],
+      "headings": [
+        "파후르 현재 모델 외형 동기화 샘플",
+        "기준 이미지와 생성 렌더 비교",
+        "생성 렌더",
+        "현재 모델 적용 기준",
+        "현재 모델 한계와 추론 범위",
+        "사용 텍스처"
+      ],
+      "images": [
+        {
+          "src": "../../../../image/pāḫḫur(파후르).png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\image\\pāḫḫur(파후르).png",
+          "exists": true,
+          "dimensions": [
+            1408,
+            768
+          ]
+        },
+        {
+          "src": "renders/01_front_pahur_reference_match.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\renders\\01_front_pahur_reference_match.png",
+          "exists": true,
+          "dimensions": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "src": "renders/01_front_pahur_reference_match.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\renders\\01_front_pahur_reference_match.png",
+          "exists": true,
+          "dimensions": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "src": "renders/02_three_quarter_pahur_reference_match.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\renders\\02_three_quarter_pahur_reference_match.png",
+          "exists": true,
+          "dimensions": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "src": "renders/03_reference_side_by_side_overview.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\renders\\03_reference_side_by_side_overview.png",
+          "exists": true,
+          "dimensions": [
+            1760,
+            980
+          ]
+        },
+        {
+          "src": "renders/04_side_current_model_material.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\renders\\04_side_current_model_material.png",
+          "exists": true,
+          "dimensions": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "src": "renders/05_rear_current_model_material.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\renders\\05_rear_current_model_material.png",
+          "exists": true,
+          "dimensions": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "src": "renders/06_texture_atlas_and_material_breakdown.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\renders\\06_texture_atlas_and_material_breakdown.png",
+          "exists": true,
+          "dimensions": [
+            1400,
+            840
+          ]
+        },
+        {
+          "src": "textures/pahur_armor_bluegray_albedo.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\textures\\pahur_armor_bluegray_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/pahur_dark_mechanics_albedo.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\textures\\pahur_dark_mechanics_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/pahur_hood_navy_cloth_albedo.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\textures\\pahur_hood_navy_cloth_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/pahur_weapon_gunmetal_albedo.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\textures\\pahur_weapon_gunmetal_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/pahur_fuel_tank_steel_albedo.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\textures\\pahur_fuel_tank_steel_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/pahur_head_reference_projection_decal.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\textures\\pahur_head_reference_projection_decal.png",
+          "exists": true,
+          "dimensions": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "src": "textures/pahur_shared_micro_normal.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\textures\\pahur_shared_micro_normal.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/reference_armor_bluegray_direct_crop.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\textures\\reference_armor_bluegray_direct_crop.png",
+          "exists": true,
+          "dimensions": [
+            74,
+            86
+          ]
+        }
+      ],
+      "links": [
+        {
+          "href": "summary.html",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\summary.html",
+          "exists": true
+        }
+      ],
+      "broken_images": 0,
+      "broken_links": 0
+    },
+    {
+      "file": "artSample/enemies/pahur/appearance_reference_sync/summary.html",
+      "titles": [
+        "파후르 외형 동기화 요약"
+      ],
+      "headings": [
+        "파후르 외형 동기화 요약",
+        "비교 요약",
+        "반영된 외형",
+        "보존 및 한계"
+      ],
+      "images": [
+        {
+          "src": "renders/03_reference_side_by_side_overview.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\renders\\03_reference_side_by_side_overview.png",
+          "exists": true,
+          "dimensions": [
+            1760,
+            980
+          ]
+        }
+      ],
+      "links": [
+        {
+          "href": "index.html",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\index.html",
+          "exists": true
+        }
+      ],
+      "broken_images": 0,
+      "broken_links": 0
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+Revolution_07 Turn Source Curve Inspection
+SourceClip=Revolution_07_Turn_Mixamo
+Length=1.616667
+FrameRate=60
+BindingCount=79
+
+[CurveBindings]
+Path=Armature | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=2 | First=0:0.7071068 | Last=0.01666667:0.7071068
+Path=Armature | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=2 | First=0:-0.7071068 | Last=0.01666667:-0.7071068
+Path=Armature | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=2 | First=0:0 | Last=0.01666667:0
+Path=Armature | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=2 | First=0:0 | Last=0.01666667:0
+Path=Armature/Hips | Property=m_LocalPosition.x | Type=UnityEngine.Transform | Keys=98 | First=0:-0.04252003 | Last=1.616667:0.04248165
+Path=Armature/Hips | Property=m_LocalPosition.y | Type=UnityEngine.Transform | Keys=98 | First=0:0.000593253 | Last=1.616667:0.002301487
+Path=Armature/Hips | Property=m_LocalPosition.z | Type=UnityEngine.Transform | Keys=98 | First=0:0.6661198 | Last=1.616667:0.6662214
+Path=Armature/Hips | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:-0.4662276 | Last=1.616667:-0.05667134
+Path=Armature/Hips | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:-0.8832735 | Last=1.616667:-0.05762568
+Path=Armature/Hips | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:-0.02797837 | Last=1.616667:0.8818321
+Path=Armature/Hips | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:-0.04095012 | Last=1.616667:0.4645857
+Path=Armature/Hips/LeftUpLeg | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.62178 | Last=1.616667:0.6216995
+Path=Armature/Hips/LeftUpLeg | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:0.6061023 | Last=1.616667:0.606174
+Path=Armature/Hips/LeftUpLeg | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:-0.04196681 | Last=1.616667:-0.04204988
+Path=Armature/Hips/LeftUpLeg | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:0.4942352 | Last=1.616667:0.4942415
+Path=Armature/Hips/LeftUpLeg/LeftLeg | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.6361023 | Last=1.616667:0.636233
+Path=Armature/Hips/LeftUpLeg/LeftLeg | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:0.7357651 | Last=1.616667:0.73564
+Path=Armature/Hips/LeftUpLeg/LeftLeg | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:-0.2284629 | Last=1.616667:-0.2284879
+Path=Armature/Hips/LeftUpLeg/LeftLeg | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:-0.04275891 | Last=1.616667:-0.04283433
+Path=Armature/Hips/LeftUpLeg/LeftLeg/LeftFoot | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.8910158 | Last=1.616667:0.89104
+Path=Armature/Hips/LeftUpLeg/LeftLeg/LeftFoot | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:-0.4318346 | Last=1.616667:-0.4317861
+Path=Armature/Hips/LeftUpLeg/LeftLeg/LeftFoot | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:0.1230355 | Last=1.616667:0.1230194
+Path=Armature/Hips/LeftUpLeg/LeftLeg/LeftFoot | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:0.06687279 | Last=1.616667:0.06689369
+Path=Armature/Hips/RightUpLeg | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.4985825 | Last=1.616667:0.4981307
+Path=Armature/Hips/RightUpLeg | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:0.8072081 | Last=1.616667:0.8074346
+Path=Armature/Hips/RightUpLeg | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:0.0185488 | Last=1.616667:0.01923163
+Path=Armature/Hips/RightUpLeg | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:-0.315415 | Last=1.616667:-0.3155082
+Path=Armature/Hips/RightUpLeg/RightLeg | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.7465646 | Last=1.616667:0.7468635
+Path=Armature/Hips/RightUpLeg/RightLeg | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:0.6215519 | Last=1.616667:0.6209881
+Path=Armature/Hips/RightUpLeg/RightLeg | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:0.225343 | Last=1.616667:0.2253978
+Path=Armature/Hips/RightUpLeg/RightLeg | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:0.0743981 | Last=1.616667:0.07592504
+Path=Armature/Hips/RightUpLeg/RightLeg/RightFoot | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.6957077 | Last=1.616667:0.6958862
+Path=Armature/Hips/RightUpLeg/RightLeg/RightFoot | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:-0.7001193 | Last=1.616667:-0.6998889
+Path=Armature/Hips/RightUpLeg/RightLeg/RightFoot | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:-0.1523407 | Last=1.616667:-0.1523454
+Path=Armature/Hips/RightUpLeg/RightLeg/RightFoot | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:-0.05114717 | Last=1.616667:-0.05185307
+Path=Armature/Hips/Spine02 | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=2 | First=0:0.9806838 | Last=0.01666667:0.9806838
+Path=Armature/Hips/Spine02 | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=2 | First=0:-0.1870384 | Last=0.01666667:-0.1870384
+Path=Armature/Hips/Spine02 | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=2 | First=0:-0.03738758 | Last=0.01666667:-0.03738758
+Path=Armature/Hips/Spine02 | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=2 | First=0:0.04333628 | Last=0.01666667:0.04333628
+Path=Armature/Hips/Spine02/Spine01 | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=2 | First=0:0.999329 | Last=0.01666667:0.999329
+Path=Armature/Hips/Spine02/Spine01 | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=2 | First=0:0.02894754 | Last=0.01666667:0.02894754
+Path=Armature/Hips/Spine02/Spine01 | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=2 | First=0:0.01935966 | Last=0.01666667:0.01935966
+Path=Armature/Hips/Spine02/Spine01 | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=2 | First=0:-0.01135108 | Last=0.01666667:-0.01135108
+Path=Armature/Hips/Spine02/Spine01/Spine | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.9985894 | Last=1.616667:0.9985868
+Path=Armature/Hips/Spine02/Spine01/Spine | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:-0.03762617 | Last=1.616667:-0.03762274
+Path=Armature/Hips/Spine02/Spine01/Spine | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:0.01335042 | Last=1.616667:0.01334931
+Path=Armature/Hips/Spine02/Spine01/Spine | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:-0.03500441 | Last=1.616667:-0.03508331
+Path=Armature/Hips/Spine02/Spine01/Spine/LeftShoulder | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.5509884 | Last=1.616667:0.5509883
+Path=Armature/Hips/Spine02/Spine01/Spine/LeftShoulder | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:0.7059857 | Last=1.616667:0.7059857
+Path=Armature/Hips/Spine02/Spine01/Spine/LeftShoulder | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:-0.3212112 | Last=1.616667:-0.3212111
+Path=Armature/Hips/Spine02/Spine01/Spine/LeftShoulder | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:0.3079279 | Last=1.616667:0.3079279
+Path=Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.7662269 | Last=1.616667:0.7662269
+Path=Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:0.4238074 | Last=1.616667:0.4238073
+Path=Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:-0.3610243 | Last=1.616667:-0.3610242
+Path=Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:-0.3208507 | Last=1.616667:-0.3208507
+Path=Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.9955751 | Last=1.616667:0.9955751
+Path=Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:-0.01206503 | Last=1.616667:-0.01206511
+Path=Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:-0.09310288 | Last=1.616667:-0.09310291
+Path=Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:-0.004076276 | Last=1.616667:-0.004076101
+Path=Armature/Hips/Spine02/Spine01/Spine/neck | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=2 | First=0:0.9996045 | Last=0.01666667:0.9996045
+Path=Armature/Hips/Spine02/Spine01/Spine/neck | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=2 | First=0:0.001159351 | Last=0.01666667:0.001159351
+Path=Armature/Hips/Spine02/Spine01/Spine/neck | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=2 | First=0:-0.0270615 | Last=0.01666667:-0.0270615
+Path=Armature/Hips/Spine02/Spine01/Spine/neck | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=2 | First=0:-0.007568954 | Last=0.01666667:-0.007568954
+Path=Armature/Hips/Spine02/Spine01/Spine/neck/Head | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.8930985 | Last=1.616667:0.8930985
+Path=Armature/Hips/Spine02/Spine01/Spine/neck/Head | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:0.4454336 | Last=1.616667:0.4454336
+Path=Armature/Hips/Spine02/Spine01/Spine/neck/Head | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:-0.06057302 | Last=1.616667:-0.06057302
+Path=Armature/Hips/Spine02/Spine01/Spine/neck/Head | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:0.01717204 | Last=1.616667:0.01717203
+Path=Armature/Hips/Spine02/Spine01/Spine/RightShoulder | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.511456 | Last=1.616667:0.5114558
+Path=Armature/Hips/Spine02/Spine01/Spine/RightShoulder | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:0.735792 | Last=1.616667:0.7357921
+Path=Armature/Hips/Spine02/Spine01/Spine/RightShoulder | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:0.2651964 | Last=1.616667:0.2651963
+Path=Armature/Hips/Spine02/Spine01/Spine/RightShoulder | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:-0.3559406 | Last=1.616667:-0.3559408
+Path=Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.7635245 | Last=1.616667:0.7635247
+Path=Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:0.3516622 | Last=1.616667:0.3516622
+Path=Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:0.4478404 | Last=1.616667:0.4478404
+Path=Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:0.3046358 | Last=1.616667:0.3046356
+Path=Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm/RightForeArm | Property=m_LocalRotation.w | Type=UnityEngine.Transform | Keys=98 | First=0:0.9949077 | Last=1.616667:0.9949077
+Path=Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm/RightForeArm | Property=m_LocalRotation.x | Type=UnityEngine.Transform | Keys=98 | First=0:-0.04914648 | Last=1.616667:-0.04914637
+Path=Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm/RightForeArm | Property=m_LocalRotation.y | Type=UnityEngine.Transform | Keys=98 | First=0:0.08216112 | Last=1.616667:0.08216106
+Path=Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm/RightForeArm | Property=m_LocalRotation.z | Type=UnityEngine.Transform | Keys=98 | First=0:0.0315108 | Last=1.616667:0.03151089
+
+[WorldHeadingSamples]
+Time=0 | RootForward=(0,0,1)
+  Armature/Hips Forward=(0.09842891,-0.56191,0.8213215) LocalEuler=(55.2173,170.0644,171.1658)
+Time=0.4041667 | RootForward=(0,0,1)
+  Armature/Hips Forward=(-0.3937314,-0.5622016,0.7272586) LocalEuler=(46.65706,215.005,226.5123)
+Time=0.8083334 | RootForward=(0,0,1)
+  Armature/Hips Forward=(-0.8130118,-0.5607631,0.1567065) LocalEuler=(9.015802,235.4046,267.7334)
+Time=1.2125 | RootForward=(0,0,1)
+  Armature/Hips Forward=(-0.6164591,-0.5620898,-0.5513924) LocalEuler=(326.5374,227.6413,299.6612)
+Time=1.616667 | RootForward=(0,0,1)
+  Armature/Hips Forward=(-0.1534934,-0.5618972,-0.8128423) LocalEuler=(305.6255,195.2787,344.64)
+
+[LocalRotationStartToEnd]
+Path=Armature/Hips | Angle=176.1463 | StartEuler=(55.2173,170.0644,171.1658) | EndEuler=(305.6255,195.2787,344.64)
+Path=Armature/Hips/RightUpLeg/RightLeg | Angle=0.1855748 | StartEuler=(63.44776,73.65652,61.06451) | EndEuler=(63.29855,73.5639,61.09133)

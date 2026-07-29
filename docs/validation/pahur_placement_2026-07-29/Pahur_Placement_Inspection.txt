@@ -1,0 +1,41 @@
+Pahur Placement Inspection
+Result=PASS
+Scene=Assets/_Project/Scenes/CargoRunMvp.unity
+SourceFbx=D:/Bellerophon2/Bellerophon/enemies model/pāḫḫur.fbx
+ProjectFbx=Assets/_Project/Art/Enemies/Pahur/Models/Pahur.fbx
+SourceFbxSha256=797D3663D6249F4924322D8487DD308F364CC5663A454D72123824C117AC66A9
+ProjectFbxSha256=797D3663D6249F4924322D8487DD308F364CC5663A454D72123824C117AC66A9
+SourceFbxBytes=479452
+PlacementRoot=Approved Pahur Enemy Placement
+SlotCount=10
+RevolutionPosition=(57.86535, 0, -148.629)
+PahurPosition=(57.86535, 0, -156.006)
+LongaTergoZSpacing=7.376999
+RevolutionXSpacing=2.444763
+TargetHeight=1.5
+FacingYaw=180
+RendererCountPerSlot=1
+Slot=Pahur_01_Static_Review, LocalPosition=(0, 0, 0), WorldPosition=(57.86535, 0, -156.006), LocalRotation=(0, 1, 0, 0)
+Slot=Pahur_02_Idle, LocalPosition=(2.444763, 0, 0), WorldPosition=(60.31011, 0, -156.006), LocalRotation=(0, 1, 0, 0)
+Slot=Pahur_03_Move, LocalPosition=(4.889526, 0, 0), WorldPosition=(62.75488, 0, -156.006), LocalRotation=(0, 1, 0, 0)
+Slot=Pahur_04_MiniFlamethrower, LocalPosition=(7.33429, 0, 0), WorldPosition=(65.19964, 0, -156.006), LocalRotation=(0, 1, 0, 0)
+Slot=Pahur_05_BreakthroughFlamethrower, LocalPosition=(9.779053, 0, 0), WorldPosition=(67.6444, 0, -156.006), LocalRotation=(0, 1, 0, 0)
+Slot=Pahur_06_GuardianFlamethrower, LocalPosition=(12.22382, 0, 0), WorldPosition=(70.08916, 0, -156.006), LocalRotation=(0, 1, 0, 0)
+Slot=Pahur_07_Stop, LocalPosition=(14.66858, 0, 0), WorldPosition=(72.53393, 0, -156.006), LocalRotation=(0, 1, 0, 0)
+Slot=Pahur_08_FormationTransition, LocalPosition=(17.11334, 0, 0), WorldPosition=(74.97869, 0, -156.006), LocalRotation=(0, 1, 0, 0)
+Slot=Pahur_09_Hit, LocalPosition=(19.55811, 0, 0), WorldPosition=(77.42345, 0, -156.006), LocalRotation=(0, 1, 0, 0)
+Slot=Pahur_10_Death, LocalPosition=(22.00287, 0, 0), WorldPosition=(79.86822, 0, -156.006), LocalRotation=(0, 1, 0, 0)
+LineupBoundsCenter=(68.81515, 0.75, -155.9368)
+LineupBoundsSize=(23.62025, 1.5, 1.453735)
+PlayerPosition=(68.81515, 0, -168.2432)
+PlayerForward=(0, 0, 1)
+CameraPosition=(68.81515, 1.62, -168.2432)
+CameraForward=(0, 0, 1)
+DirectFbxInstances=10
+Grounded=True
+FullLineupBoundsVisible=True
+AnimationApplied=False
+ModelMeshRigMaterialModified=False
+OtherSceneRootsChanged=False
+SceneChangedByInspection=False
+ReviewImage=docs/validation/pahur_placement_2026-07-29/Pahur_Placement_VisualReview.png

@@ -1,0 +1,281 @@
+{
+  "result": "PASS",
+  "canonical_structural_check": "Source FBX, review Blend, and review FBX must preserve vertex/edge/polygon/loop/bone counts, vertex-group names, and UV-layer names.",
+  "glb_note": "GLB is a portable visual-review export. Blender's glTF exporter limits skin influences to four and may triangulate/split primitives; the Blend and FBX are the canonical structure-preserving samples.",
+  "source": {
+    "path": "Assets/_Project/Art/Enemies/Pahur/Models/Pahur.fbx",
+    "bytes": 479452,
+    "sha256": "797D3663D6249F4924322D8487DD308F364CC5663A454D72123824C117AC66A9",
+    "mesh_objects": 1,
+    "vertices": 3554,
+    "edges": 10585,
+    "polygons": 7043,
+    "loops": 21129,
+    "uv_layers": [
+      "uv"
+    ],
+    "material_slots": 0,
+    "vertex_groups": [
+      "Head",
+      "Hips",
+      "LeftArm",
+      "LeftFoot",
+      "LeftForeArm",
+      "LeftHand",
+      "LeftLeg",
+      "LeftShoulder",
+      "LeftToeBase",
+      "LeftUpLeg",
+      "RightArm",
+      "RightFoot",
+      "RightForeArm",
+      "RightHand",
+      "RightLeg",
+      "RightShoulder",
+      "RightToeBase",
+      "RightUpLeg",
+      "Spine",
+      "Spine01",
+      "Spine02",
+      "neck"
+    ],
+    "armature_objects": 1,
+    "bones": 24,
+    "actions": [
+      {
+        "name": "Armature|Armature|Armature|Armature|Armature|walking_man|baselayer",
+        "frame_range": [
+          1.0,
+          63.0
+        ]
+      }
+    ],
+    "world_bounds": {
+      "min": [
+        -0.440245,
+        -1.025219,
+        0.021804
+      ],
+      "max": [
+        0.432464,
+        0.79513,
+        1.444431
+      ]
+    }
+  },
+  "blend": {
+    "path": "artSample/enemies/pahur/appearance_reference_sync/blender/Pahur_Appearance_ReferenceSync.blend",
+    "bytes": 560320,
+    "sha256": "A9026EB18A2444274C538C7CF0AF437DC39C93B31C9F95E8E8A7545F61CB5E5B",
+    "mesh_objects": 1,
+    "vertices": 3554,
+    "edges": 10585,
+    "polygons": 7043,
+    "loops": 21129,
+    "uv_layers": [
+      "uv"
+    ],
+    "material_slots": 10,
+    "vertex_groups": [
+      "Head",
+      "Hips",
+      "LeftArm",
+      "LeftFoot",
+      "LeftForeArm",
+      "LeftHand",
+      "LeftLeg",
+      "LeftShoulder",
+      "LeftToeBase",
+      "LeftUpLeg",
+      "RightArm",
+      "RightFoot",
+      "RightForeArm",
+      "RightHand",
+      "RightLeg",
+      "RightShoulder",
+      "RightToeBase",
+      "RightUpLeg",
+      "Spine",
+      "Spine01",
+      "Spine02",
+      "neck"
+    ],
+    "armature_objects": 1,
+    "bones": 24,
+    "actions": [
+      {
+        "name": "Armature|Armature|Armature|Armature|Armature|walking_man|baselayer",
+        "frame_range": [
+          1.0,
+          63.0
+        ]
+      }
+    ],
+    "world_bounds": {
+      "min": [
+        -0.440245,
+        -1.025219,
+        0.021804
+      ],
+      "max": [
+        0.432464,
+        0.79513,
+        1.444431
+      ]
+    }
+  },
+  "fbx": {
+    "path": "artSample/enemies/pahur/appearance_reference_sync/exports/Pahur_Appearance_ReferenceSync.fbx",
+    "bytes": 4884044,
+    "sha256": "4A031F1FDE7A515B58C681D023A1E8CB9981A9E4AC218D3D576A05CFAEF204C0",
+    "mesh_objects": 1,
+    "vertices": 3554,
+    "edges": 10585,
+    "polygons": 7043,
+    "loops": 21129,
+    "uv_layers": [
+      "uv"
+    ],
+    "material_slots": 10,
+    "vertex_groups": [
+      "Head",
+      "Hips",
+      "LeftArm",
+      "LeftFoot",
+      "LeftForeArm",
+      "LeftHand",
+      "LeftLeg",
+      "LeftShoulder",
+      "LeftToeBase",
+      "LeftUpLeg",
+      "RightArm",
+      "RightFoot",
+      "RightForeArm",
+      "RightHand",
+      "RightLeg",
+      "RightShoulder",
+      "RightToeBase",
+      "RightUpLeg",
+      "Spine",
+      "Spine01",
+      "Spine02",
+      "neck"
+    ],
+    "armature_objects": 1,
+    "bones": 24,
+    "actions": [
+      {
+        "name": "Armature|Armature|Armature|Armature|Armature|Armature|Armature|w_5c458b3",
+        "frame_range": [
+          1.0,
+          63.0
+        ]
+      }
+    ],
+    "world_bounds": {
+      "min": [
+        -0.440245,
+        -1.025219,
+        0.021804
+      ],
+      "max": [
+        0.432464,
+        0.79513,
+        1.444431
+      ]
+    }
+  },
+  "glb": {
+    "path": "artSample/enemies/pahur/appearance_reference_sync/exports/Pahur_Appearance_ReferenceSync.glb",
+    "bytes": 4732824,
+    "sha256": "E61A831935762925F4D85BD16AF8B819B1CFF5B62A457198D3042888A796815E",
+    "mesh_objects": 2,
+    "vertices": 3833,
+    "edges": 10941,
+    "polygons": 7123,
+    "loops": 21369,
+    "uv_layers": [
+      "UVMap"
+    ],
+    "material_slots": 9,
+    "vertex_groups": [
+      "Head",
+      "Hips",
+      "LeftArm",
+      "LeftFoot",
+      "LeftForeArm",
+      "LeftHand",
+      "LeftLeg",
+      "LeftShoulder",
+      "LeftToeBase",
+      "LeftUpLeg",
+      "RightArm",
+      "RightFoot",
+      "RightForeArm",
+      "RightHand",
+      "RightLeg",
+      "RightShoulder",
+      "RightToeBase",
+      "RightUpLeg",
+      "Spine",
+      "Spine01",
+      "Spine02",
+      "head_end",
+      "headfront",
+      "neck"
+    ],
+    "armature_objects": 1,
+    "bones": 24,
+    "actions": [
+      {
+        "name": "Armature|Armature|Armature|Armature|Armature|walking_man|basela",
+        "frame_range": [
+          0.4,
+          25.199999
+        ]
+      }
+    ],
+    "world_bounds": {
+      "min": [
+        -0.951058,
+        -1.031731,
+        -1.0
+      ],
+      "max": [
+        0.951058,
+        1.0,
+        1.43522
+      ]
+    }
+  },
+  "shape_comparison": {
+    "source": {
+      "vertices": 3554,
+      "edges": 10585,
+      "polygons": 7043,
+      "loops": 21129,
+      "bones": 24
+    },
+    "blend": {
+      "vertices": 3554,
+      "edges": 10585,
+      "polygons": 7043,
+      "loops": 21129,
+      "bones": 24
+    },
+    "fbx": {
+      "vertices": 3554,
+      "edges": 10585,
+      "polygons": 7043,
+      "loops": 21129,
+      "bones": 24
+    },
+    "glb": {
+      "vertices": 3833,
+      "edges": 10941,
+      "polygons": 7123,
+      "loops": 21369,
+      "bones": 24
+    }
+  }
+}

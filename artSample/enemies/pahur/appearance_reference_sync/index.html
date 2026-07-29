@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>파후르 현재 모델 외형 동기화 샘플</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #18201a; color: #edf2e6; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    section { margin: 30px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; background: #222b24; border: 1px solid #435041; padding: 14px; }
+    .comparison h3 { grid-column: 1 / -1; }
+    figure { margin: 0; background: #111711; border: 1px solid #364236; padding: 10px; }
+    img { width: 100%; height: auto; display: block; }
+    figcaption { margin-top: 8px; font-size: 13px; color: #cdd7c5; word-break: break-all; }
+    p, li { line-height: 1.55; }
+    code { color: #d7e6c8; }
+    @media (max-width: 760px) { .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>파후르 현재 모델 외형 동기화 샘플</h1>
+  <p>1차 재현 기준은 <code>pāḫḫur(파후르).png</code>입니다. 현재 Unity에 배치된 <code>Assets/_Project/Art/Enemies/Pahur/Models/Pahur.fbx</code> 메시·리그·UV·애니메이션을 유지하고 색상, 머티리얼, 텍스처만 입힌 검토 샘플입니다. 승인 상태는 <code>PENDING_USER_REVIEW</code>이며 사용자 승인 전에는 Unity에 연결하지 않습니다. 간단한 판정 요약은 <a href="summary.html">summary.html</a>에 있습니다.</p>
+
+  <section>
+    <h2>기준 이미지와 생성 렌더 비교</h2>
+
+    <article class="comparison">
+      <h3>정면</h3>
+      <figure><img src="../../../../image/pāḫḫur(파후르).png" alt="파후르 정면 기준 이미지"><figcaption>기준 이미지: ../../../../image/pāḫḫur(파후르).png</figcaption></figure>
+      <figure><img src="renders/01_front_pahur_reference_match.png" alt="현재 파후르 FBX 정면 생성 렌더"><figcaption>생성 렌더: renders/01_front_pahur_reference_match.png</figcaption></figure>
+    </article>
+  </section>
+
+  <section>
+    <h2>생성 렌더</h2>
+    <div class="grid">
+      <figure><img src="renders/01_front_pahur_reference_match.png" alt="01_front_pahur_reference_match"><figcaption>01_front_pahur_reference_match.png</figcaption></figure>
+      <figure><img src="renders/02_three_quarter_pahur_reference_match.png" alt="02_three_quarter_pahur_reference_match"><figcaption>02_three_quarter_pahur_reference_match.png</figcaption></figure>
+      <figure><img src="renders/03_reference_side_by_side_overview.png" alt="03_reference_side_by_side_overview"><figcaption>03_reference_side_by_side_overview.png</figcaption></figure>
+      <figure><img src="renders/04_side_current_model_material.png" alt="04_side_current_model_material"><figcaption>04_side_current_model_material.png</figcaption></figure>
+      <figure><img src="renders/05_rear_current_model_material.png" alt="05_rear_current_model_material"><figcaption>05_rear_current_model_material.png</figcaption></figure>
+      <figure><img src="renders/06_texture_atlas_and_material_breakdown.png" alt="06_texture_atlas_and_material_breakdown"><figcaption>06_texture_atlas_and_material_breakdown.png</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>현재 모델 적용 기준</h2>
+    <p>원본 파후르 FBX는 머티리얼 슬롯이 없는 단일 스킨 메시입니다. 기존 UV, 연결 메시 섬, 폴리곤 중심, 본 가중치만 기준으로 재질 영역을 나눴으며 정점·면·UV·본·가중치·내장 이동 애니메이션은 수정하지 않았습니다.</p>
+    <ul>
+      <li>검토용 원본 파일: <code>blender/Pahur_Appearance_ReferenceSync.blend</code></li>
+      <li>구조 보존 검토용 FBX: <code>exports/Pahur_Appearance_ReferenceSync.fbx</code></li>
+      <li>범용 시각 검토용 GLB: <code>exports/Pahur_Appearance_ReferenceSync.glb</code></li>
+      <li>후드와 안면: 짙은 남색 천, 주황 화염 표식, 푸른 광학부.</li>
+      <li>몸체와 다리: 청회색 마모 장갑, 짙은 관절·발·손, 제한된 금속 반사.</li>
+      <li>총신과 장비: 짙은 건메탈, 총구 끝 열변색, 검은 호스, 후방 마모 연료통.</li>
+      <li>Unity 적용 승인 후에는 원본 FBX 임포트 설정과 리그를 유지한 채 Pahur 전용 머티리얼·텍스처를 만들고, <code>Approved Pahur Enemy Placement</code> 아래 10개 인스턴스의 동일 Renderer에 연결하는 방식이 기준입니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>현재 모델 한계와 추론 범위</h2>
+    <ul>
+      <li>기준 이미지는 정밀한 판금 장갑과 안드로이드형 손·발을 가지지만 현재 FBX는 근육형 저폴리 실루엣입니다. 메시를 건드리지 않는 이번 범위에서는 이 형태 차이를 해소하지 않았습니다.</li>
+      <li>기준 이미지의 화염 분사는 VFX이며 이번 색·머티리얼·텍스처 샘플에 새로 생성하지 않았습니다.</li>
+      <li>후면 기준 이미지가 없으므로 후면은 새 문양이나 기계 부품을 만들지 않고 정면에서 확인된 청회색 장갑·짙은 장비·마모 연료통 재질만 연장했습니다.</li>
+      <li>GLB는 휴대용 시각 검토본입니다. 구조 보존 기준은 Blend와 FBX이며 상세 결과는 <code>GEOMETRY_PRESERVATION.json</code>, <code>EXPORT_INSPECTION.json</code>에 기록했습니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>사용 텍스처</h2>
+    <div class="grid">
+      <figure><img src="textures/pahur_armor_bluegray_albedo.png" alt="청회색 장갑 알베도"><figcaption>pahur_armor_bluegray_albedo.png</figcaption></figure>
+      <figure><img src="textures/pahur_dark_mechanics_albedo.png" alt="짙은 기계부 알베도"><figcaption>pahur_dark_mechanics_albedo.png</figcaption></figure>
+      <figure><img src="textures/pahur_hood_navy_cloth_albedo.png" alt="남색 후드 알베도"><figcaption>pahur_hood_navy_cloth_albedo.png</figcaption></figure>
+      <figure><img src="textures/pahur_weapon_gunmetal_albedo.png" alt="건메탈 총신 알베도"><figcaption>pahur_weapon_gunmetal_albedo.png</figcaption></figure>
+      <figure><img src="textures/pahur_fuel_tank_steel_albedo.png" alt="연료통 마모 강철 알베도"><figcaption>pahur_fuel_tank_steel_albedo.png</figcaption></figure>
+      <figure><img src="textures/pahur_head_reference_projection_decal.png" alt="화염 표식 및 광학부 투영 데칼"><figcaption>pahur_head_reference_projection_decal.png</figcaption></figure>
+      <figure><img src="textures/pahur_shared_micro_normal.png" alt="공통 미세 표면 노멀"><figcaption>pahur_shared_micro_normal.png</figcaption></figure>
+      <figure><img src="textures/reference_armor_bluegray_direct_crop.png" alt="원화 청회색 장갑 직접 크롭"><figcaption>reference_armor_bluegray_direct_crop.png</figcaption></figure>
+    </div>
+  </section>
+</main>
+</body>
+</html>

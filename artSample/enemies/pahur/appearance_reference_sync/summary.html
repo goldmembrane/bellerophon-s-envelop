@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>파후르 외형 동기화 요약</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #18201a; color: #edf2e6; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    section { margin: 30px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; background: #222b24; border: 1px solid #435041; padding: 14px; }
+    .comparison h3 { grid-column: 1 / -1; }
+    figure { margin: 0; background: #111711; border: 1px solid #364236; padding: 10px; }
+    img { width: 100%; height: auto; display: block; }
+    figcaption { margin-top: 8px; font-size: 13px; color: #cdd7c5; word-break: break-all; }
+    p, li { line-height: 1.55; }
+    code { color: #d7e6c8; }
+    @media (max-width: 760px) { .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>파후르 외형 동기화 요약</h1>
+  <p>상태는 <code>PENDING_USER_REVIEW</code>입니다. 현재 Unity 파후르 FBX 외형을 기준으로 원화에서 확인되는 색·금속성·거칠기·마모·후드·표식·광학부를 반영했으며 Unity에는 아직 적용하지 않았습니다. 전체 자료는 <a href="index.html">index.html</a>에서 확인할 수 있습니다.</p>
+
+  <section>
+    <h2>비교 요약</h2>
+    <figure><img src="renders/03_reference_side_by_side_overview.png" alt="파후르 원화와 현재 FBX 재질 샘플 비교"><figcaption>원화와 현재 FBX 재질 샘플의 정면 비교</figcaption></figure>
+  </section>
+
+  <section>
+    <h2>반영된 외형</h2>
+    <ul>
+      <li>짙은 남색 후드, 주황 화염 표식, 푸른 안면 광학부.</li>
+      <li>청회색 마모 장갑과 짙은 관절·손·발의 명도 분리.</li>
+      <li>건메탈 총신, 열변색 총구 끝, 검은 호스, 마모 강철 연료통.</li>
+      <li>알베도·러프니스·메탈릭·미세 노멀 텍스처를 적용한 비단색 재질.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>보존 및 한계</h2>
+    <ul>
+      <li>원본 FBX의 정점 3,554개, 면 7,043개, 루프 21,129개, 본 24개, UV, 본 가중치와 내장 이동 애니메이션을 유지했습니다.</li>
+      <li>현재 근육형 저폴리 실루엣은 원화의 정밀 안드로이드 판금 형태와 다릅니다. 사용자가 금지한 메시·모델 외형 수정 없이 재질만 동기화했기 때문에 남는 차이입니다.</li>
+      <li>화염 분사 VFX와 보이지 않는 후면 신규 부품·문양은 만들지 않았습니다.</li>
+      <li>사용자 승인 후에도 Unity 적용은 별도 승인을 받아 진행해야 합니다.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
