@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <title>파후르 현재 모델 외형 동기화 샘플</title>
+  <title>교체 파후르 모델 외형 동기화 아트 샘플</title>
   <style>
     body { margin: 0; font-family: Arial, sans-serif; background: #18201a; color: #edf2e6; }
     main { max-width: 1180px; margin: 0 auto; padding: 28px; }
@@ -21,8 +21,8 @@
 </head>
 <body>
 <main>
-  <h1>파후르 현재 모델 외형 동기화 샘플</h1>
-  <p>1차 재현 기준은 <code>pāḫḫur(파후르).png</code>입니다. 현재 Unity에 배치된 <code>Assets/_Project/Art/Enemies/Pahur/Models/Pahur.fbx</code> 메시·리그·UV·애니메이션을 유지하고 색상, 머티리얼, 텍스처만 입힌 검토 샘플입니다. 승인 상태는 <code>PENDING_USER_REVIEW</code>이며 사용자 승인 전에는 Unity에 연결하지 않습니다. 간단한 판정 요약은 <a href="summary.html">summary.html</a>에 있습니다.</p>
+  <h1>교체 파후르 모델 외형 동기화 아트 샘플</h1>
+  <p>현재 Unity 배치에 사용된 교체 모델 <code>Assets/_Project/Art/Enemies/Pahur/Models/Pahur.fbx</code>와 <code>image/pāḫḫur(파후르).png</code>를 직접 비교해 제작했습니다. 프로젝트 원본 FBX는 수정하지 않았습니다. 이번 20차에서는 좌우 눈이 각 상단 안면판을 따르는 19차 배치를 유지한 채, 기준 이미지처럼 바깥쪽 눈꼬리는 높고 중앙 쪽 끝은 낮아지도록 두 접선 평면 안에서 눈 각도만 조정했습니다. 정면 발광 영역의 주축은 화면 왼쪽 <code>+8.9°</code>, 오른쪽 <code>-11.6°</code>로 중앙을 향해 내려가 화난 인상을 냅니다. 얼굴 금속, 렌즈 텍스처, 두건, 화염 문양과 기존 몸통·팔·다리·가스통·무기는 변경하지 않았습니다. 입·환기구·코·턱·추가 패널도 만들지 않았습니다. 승인 상태는 <code>PENDING_USER_REVIEW</code>이며 사용자 승인 전에는 Unity에 연결하지 않습니다. 간단한 판정 요약은 <a href="summary.html">summary.html</a>에 있습니다.</p>
 
   <section>
     <h2>기준 이미지와 생성 렌더 비교</h2>
@@ -43,30 +43,47 @@
       <figure><img src="renders/04_side_current_model_material.png" alt="04_side_current_model_material"><figcaption>04_side_current_model_material.png</figcaption></figure>
       <figure><img src="renders/05_rear_current_model_material.png" alt="05_rear_current_model_material"><figcaption>05_rear_current_model_material.png</figcaption></figure>
       <figure><img src="renders/06_texture_atlas_and_material_breakdown.png" alt="06_texture_atlas_and_material_breakdown"><figcaption>06_texture_atlas_and_material_breakdown.png</figcaption></figure>
+      <figure><img src="renders/07_head_front_detail.png" alt="파후르 재작업 머리 정면 확대"><figcaption>07_head_front_detail.png</figcaption></figure>
+      <figure><img src="renders/07_head_three_quarter_detail.png" alt="파후르 재작업 머리 3/4 확대"><figcaption>07_head_three_quarter_detail.png</figcaption></figure>
+      <figure><img src="renders/08_head_detail_comparison.png" alt="기준 이미지와 파후르 재작업 머리 확대 비교"><figcaption>08_head_detail_comparison.png</figcaption></figure>
+      <figure><img src="renders/10_shoulders_left_arm_detail.png" alt="양쪽 어깨와 파후르 자신의 왼팔 기계 재질 확대"><figcaption>10_shoulders_left_arm_detail.png</figcaption></figure>
+      <figure><img src="renders/11_shoulders_left_arm_comparison.png" alt="기준 이미지와 어깨·왼팔 기계 재질 비교"><figcaption>11_shoulders_left_arm_comparison.png</figcaption></figure>
+      <figure><img src="renders/12_torso_front_detail.png" alt="몸통 전용 정면 근접 렌더"><figcaption>12_torso_front_detail.png</figcaption></figure>
+      <figure><img src="renders/13_torso_detail_comparison.png" alt="기준 이미지와 몸통 정면 구조 비교"><figcaption>13_torso_detail_comparison.png</figcaption></figure>
+      <figure><img src="renders/14_torso_connected_components.png" alt="몸통의 실제 연결 표면 일곱 개 분석"><figcaption>14_torso_connected_components.png — 재질 경계로 사용한 실제 연결 표면</figcaption></figure>
     </div>
   </section>
 
   <section>
-    <h2>현재 모델 적용 기준</h2>
-    <p>원본 파후르 FBX는 머티리얼 슬롯이 없는 단일 스킨 메시입니다. 기존 UV, 연결 메시 섬, 폴리곤 중심, 본 가중치만 기준으로 재질 영역을 나눴으며 정점·면·UV·본·가중치·내장 이동 애니메이션은 수정하지 않았습니다.</p>
+    <h2>교체 모델 적용 기준</h2>
+    <p>교체 파후르 원본 FBX는 머티리얼 슬롯이 없는 단일 스킨 메시 <code>char1</code>입니다. 검토 샘플은 원본의 114개 연결 표면 중 승인된 <code>97</code>만 삭제하고, 나머지 연결 표면의 정점 좌표·UV·본 가중치와 내장 이동 애니메이션을 유지했습니다.</p>
     <ul>
       <li>검토용 원본 파일: <code>blender/Pahur_Appearance_ReferenceSync.blend</code></li>
-      <li>구조 보존 검토용 FBX: <code>exports/Pahur_Appearance_ReferenceSync.fbx</code></li>
+      <li>승인된 판 삭제 범위 검토용 FBX: <code>exports/Pahur_Appearance_ReferenceSync.fbx</code></li>
       <li>범용 시각 검토용 GLB: <code>exports/Pahur_Appearance_ReferenceSync.glb</code></li>
-      <li>후드와 안면: 짙은 남색 천, 주황 화염 표식, 푸른 광학부.</li>
-      <li>몸체와 다리: 청회색 마모 장갑, 짙은 관절·발·손, 제한된 금속 반사.</li>
-      <li>총신과 장비: 짙은 건메탈, 총구 끝 열변색, 검은 호스, 후방 마모 연료통.</li>
+      <li>두건과 안면: 높이 임계값 대신 토폴로지에서 확정한 기존 두건 폴리곤 126개를 짙은 남색 비금속 천으로 고정하고 얼굴은 별도의 매끄러운 중암도 건메탈로 분리했습니다.</li>
+      <li>얼굴 광학부: 기존 얼굴 208면의 정적 좌표와 렌더 프레임 평가 좌표·법선·UV·인접 관계를 분석했습니다. 좌우 상단 안면판에 각각 맞춘 접선축으로 두 눈을 독립 배치하고, 접선 평면 안에서 화면 왼쪽 -16°·오른쪽 -14°를 적용해 두 눈의 중앙 쪽 끝을 낮췄습니다.</li>
+      <li>이마 문양: 임의 아이콘을 그리지 않고 기준 이미지의 실제 화염 문양 크롭을 기존 두건 정면 표면에 적용했습니다.</li>
+      <li>몸통: 원본 몸통 442면 중 독립 판 97의 18면을 실제 삭제했습니다. 남은 424면의 큰 중앙 표면 63과 골반 표면 84는 중간 명도 강철, 외장은 청회색 강철, 좁은 측면 연결부는 짙은 내부 기계 재질로 구성했습니다.</li>
+      <li>중앙 상단 판: 재질로 숨기거나 다른 위치로 옮기지 않고 독립 연결 표면 97의 정점·에지·면을 검토 샘플에서 제거했습니다.</li>
+      <li>팔과 다리: 이번 작업에서 머티리얼 배정과 텍스처를 변경하지 않았습니다.</li>
+      <li>총신과 장비: 화염방사기는 짙은 건메탈, 후방 탱크는 넓고 매끄러운 마모 강철, 연결 호스는 거친 검은 고무, 작은 탱크 피팅만 제한된 황동·열변색 계열로 분리했습니다.</li>
+      <li>표면 정보: 새 모델의 기존 판금 형상을 우선하고, 텍스처에는 저주파 색 변화·짧은 긁힘·미세 수평 금속결, 재질별 메탈릭·러프니스와 낮은 강도의 노멀만 사용했습니다. 굵은 격자·대각선·볼트 무늬와 전신 패널 범프는 제거했습니다.</li>
+      <li>기계 구조 표면 분리: 몸통 2D 색상·발광·금속성·거칠기 오버레이를 셰이더에서 제거했습니다. 법선 각도 기준으로 나눈 122개 조각도 삼각 얼룩을 만들기 때문에 사용하지 않고, 실제 연결 표면별 알베도·금속성·거칠기·미세 노멀만 사용했습니다.</li>
+      <li>얼굴 표면: 알베도의 반복 가로선과 러프니스 파형을 제거했습니다. 입·세로 환기구·추가 패널·코·턱 문양을 생성하지 않았으며 얼굴 노멀과 높이 맵은 평탄하게 유지했습니다.</li>
+      <li>메시 변경 범위: 승인된 표면 97만 삭제해 검토 샘플은 정점 2,434개·면 4,330개입니다. 나머지 정점 좌표·가중치·에지·면·UV 해시는 삭제 전후 일치하며 새 메시 생성이나 다른 표면 이동·변형은 하지 않았습니다.</li>
       <li>Unity 적용 승인 후에는 원본 FBX 임포트 설정과 리그를 유지한 채 Pahur 전용 머티리얼·텍스처를 만들고, <code>Approved Pahur Enemy Placement</code> 아래 10개 인스턴스의 동일 Renderer에 연결하는 방식이 기준입니다.</li>
     </ul>
   </section>
 
   <section>
-    <h2>현재 모델 한계와 추론 범위</h2>
+    <h2>교체 모델 한계와 추론 범위</h2>
     <ul>
-      <li>기준 이미지는 정밀한 판금 장갑과 안드로이드형 손·발을 가지지만 현재 FBX는 근육형 저폴리 실루엣입니다. 메시를 건드리지 않는 이번 범위에서는 이 형태 차이를 해소하지 않았습니다.</li>
+      <li>교체 FBX는 기준 이미지의 주요 부품을 갖고 있지만 판금 세부와 손가락 구조는 더 단순합니다. 승인된 상단 판 삭제 외의 형태 차이를 텍스처로 가장하거나 새 부품으로 보완하지 않았습니다.</li>
+      <li>두건·얼굴·탱크·화염방사기의 실제 외곽선과 부품 수는 교체 FBX 원형을 그대로 유지했습니다.</li>
       <li>기준 이미지의 화염 분사는 VFX이며 이번 색·머티리얼·텍스처 샘플에 새로 생성하지 않았습니다.</li>
-      <li>후면 기준 이미지가 없으므로 후면은 새 문양이나 기계 부품을 만들지 않고 정면에서 확인된 청회색 장갑·짙은 장비·마모 연료통 재질만 연장했습니다.</li>
-      <li>GLB는 휴대용 시각 검토본입니다. 구조 보존 기준은 Blend와 FBX이며 상세 결과는 <code>GEOMETRY_PRESERVATION.json</code>, <code>EXPORT_INSPECTION.json</code>에 기록했습니다.</li>
+      <li>후면 기준 이미지가 없으므로 후면은 새 문양이나 기계 부품을 만들지 않고 정면에서 확인된 청회색 장갑·짙은 장비·매끄러운 탱크 재질만 연장했습니다.</li>
+      <li>GLB는 휴대용 시각 검토본입니다. 승인된 삭제 범위와 나머지 구조 보존 기준은 Blend와 FBX이며 상세 결과는 <code>GEOMETRY_PRESERVATION.json</code>, <code>EXPORT_INSPECTION.json</code>에 기록했습니다.</li>
     </ul>
   </section>
 
@@ -74,12 +91,25 @@
     <h2>사용 텍스처</h2>
     <div class="grid">
       <figure><img src="textures/pahur_armor_bluegray_albedo.png" alt="청회색 장갑 알베도"><figcaption>pahur_armor_bluegray_albedo.png</figcaption></figure>
+      <figure><img src="textures/pahur_light_steel_albedo.png" alt="밝은 강철 가슴판 알베도"><figcaption>pahur_light_steel_albedo.png</figcaption></figure>
+      <figure><img src="textures/pahur_leg_steel_albedo.png" alt="어두운 다리 강철 알베도"><figcaption>pahur_leg_steel_albedo.png</figcaption></figure>
       <figure><img src="textures/pahur_dark_mechanics_albedo.png" alt="짙은 기계부 알베도"><figcaption>pahur_dark_mechanics_albedo.png</figcaption></figure>
+      <figure><img src="textures/pahur_shoulder_machine_blue_albedo.png" alt="양쪽 어깨 기계 캡 알베도"><figcaption>pahur_shoulder_machine_blue_albedo.png</figcaption></figure>
+      <figure><img src="textures/pahur_left_arm_machine_albedo.png" alt="왼쪽 상완·전완 분절 기계 알베도"><figcaption>pahur_left_arm_machine_albedo.png</figcaption></figure>
+      <figure><img src="textures/pahur_left_hand_machine_albedo.png" alt="왼손 관절 기계 알베도"><figcaption>pahur_left_hand_machine_albedo.png</figcaption></figure>
       <figure><img src="textures/pahur_hood_navy_cloth_albedo.png" alt="남색 후드 알베도"><figcaption>pahur_hood_navy_cloth_albedo.png</figcaption></figure>
       <figure><img src="textures/pahur_weapon_gunmetal_albedo.png" alt="건메탈 총신 알베도"><figcaption>pahur_weapon_gunmetal_albedo.png</figcaption></figure>
       <figure><img src="textures/pahur_fuel_tank_steel_albedo.png" alt="연료통 마모 강철 알베도"><figcaption>pahur_fuel_tank_steel_albedo.png</figcaption></figure>
-      <figure><img src="textures/pahur_head_reference_projection_decal.png" alt="화염 표식 및 광학부 투영 데칼"><figcaption>pahur_head_reference_projection_decal.png</figcaption></figure>
-      <figure><img src="textures/pahur_shared_micro_normal.png" alt="공통 미세 표면 노멀"><figcaption>pahur_shared_micro_normal.png</figcaption></figure>
+      <figure><img src="textures/pahur_orange_trim_albedo.png" alt="주황 상태등과 트림 알베도"><figcaption>pahur_orange_trim_albedo.png</figcaption></figure>
+      <figure><img src="textures/pahur_head_reference_projection_decal.png" alt="기준 이미지 화염 표식 머리 로컬 데칼"><figcaption>pahur_head_reference_projection_decal.png</figcaption></figure>
+      <figure><img src="textures/reference_head_detail_crop.png" alt="원화 머리 직접 확대 크롭"><figcaption>reference_head_detail_crop.png</figcaption></figure>
+      <figure><img src="textures/pahur_face_reference_overlay.png" alt="좌우 안면판에 독립 배치하는 단일 광학 렌즈 텍스처"><figcaption>pahur_face_reference_overlay.png — 좌우 표면 공용 렌즈 원본</figcaption></figure>
+      <figure><img src="textures/pahur_face_reference_height.png" alt="금속 얼굴 전용 높이 맵"><figcaption>pahur_face_reference_height.png</figcaption></figure>
+      <figure><img src="textures/pahur_face_reference_emission.png" alt="좌우 표면에 독립 배치하는 청색 광학 발광 맵"><figcaption>pahur_face_reference_emission.png — 좌우 표면 공용 발광 원본</figcaption></figure>
+      <figure><img src="textures/pahur_torso_rigid_shell_albedo.png" alt="몸통 큰 외장 표면 알베도"><figcaption>pahur_torso_rigid_shell_albedo.png — 큰 청회색 연결 외장</figcaption></figure>
+      <figure><img src="textures/pahur_torso_pelvis_plate_albedo.png" alt="몸통 중앙 및 골반 갑주 알베도"><figcaption>pahur_torso_pelvis_plate_albedo.png — 중앙·골반 연결 갑주</figcaption></figure>
+      <figure><img src="textures/pahur_torso_inner_mechanics_albedo.png" alt="몸통 좁은 내부 기계부 알베도"><figcaption>pahur_torso_inner_mechanics_albedo.png — 좁은 측면 연결부</figcaption></figure>
+      <figure><img src="textures/pahur_light_steel_normal.png" alt="강철 장갑 매크로 노멀"><figcaption>pahur_light_steel_normal.png</figcaption></figure>
       <figure><img src="textures/reference_armor_bluegray_direct_crop.png" alt="원화 청회색 장갑 직접 크롭"><figcaption>reference_armor_bluegray_direct_crop.png</figcaption></figure>
     </div>
   </section>

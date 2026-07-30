@@ -101,11 +101,11 @@ def main():
         "static_dom_and_asset_check": "PASS" if static_pass else "FAIL",
         "browser_render_check": {
             "attempted": True,
-            "result": "BLOCKED_BY_BROWSER_CONNECTION_METADATA",
+            "result": "BLOCKED_BY_BROWSER_CONNECTION",
             "note": (
-                "The in-app browser connection rejected the session before page "
-                "navigation. Static DOM/asset validation and direct render-image "
-                "review were completed instead."
+                "The in-app browser connection could not start because its "
+                "environment metadata was unavailable. Static DOM/assets and "
+                "all generated review images were inspected directly."
             ),
         },
         "direct_visual_review": {
@@ -115,6 +115,13 @@ def main():
                 "renders/02_three_quarter_pahur_reference_match.png",
                 "renders/03_reference_side_by_side_overview.png",
                 "renders/05_rear_current_model_material.png",
+                "renders/07_head_front_detail.png",
+                "renders/07_head_three_quarter_detail.png",
+                "renders/08_head_detail_comparison.png",
+                "renders/10_shoulders_left_arm_detail.png",
+                "renders/11_shoulders_left_arm_comparison.png",
+                "renders/12_torso_front_detail.png",
+                "renders/13_torso_detail_comparison.png",
             ],
         },
         "pages": pages,

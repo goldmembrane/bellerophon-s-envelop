@@ -11,8 +11,7 @@
   "approved_for_unity": false,
   "unity_runtime_applied": false,
   "blender": [
-    "blender/Pahur_Appearance_ReferenceSync.blend",
-    "blender/Pahur_Appearance_ReferenceSync.blend1"
+    "blender/Pahur_Appearance_ReferenceSync.blend"
   ],
   "exports": [
     "exports/Pahur_Appearance_ReferenceSync.fbx",
@@ -32,208 +31,520 @@
     "renders/00_source_front_neutral.png",
     "renders/00_source_rear_neutral.png",
     "renders/00_source_side_neutral.png",
-    "renders/00_source_three_quarter_neutral.png"
+    "renders/00_source_three_quarter_neutral.png",
+    "renders/07_head_front_detail.png",
+    "renders/07_head_three_quarter_detail.png",
+    "renders/08_head_detail_comparison.png",
+    "renders/09_head_topology_front.png",
+    "renders/09_head_topology_rear.png",
+    "renders/09_head_topology_side.png",
+    "renders/09_head_topology_three_quarter.png",
+    "renders/10_shoulders_left_arm_detail.png",
+    "renders/11_shoulders_left_arm_comparison.png",
+    "renders/12_torso_front_detail.png",
+    "renders/13_torso_detail_comparison.png",
+    "renders/14_torso_connected_components.png",
+    "renders/14_torso_connected_components_three_quarter.png",
+    "renders/14_torso_surface_regions.png"
   ],
   "textures": [
     "textures/pahur_armor_bluegray_albedo.png",
     "textures/pahur_armor_bluegray_metallic.png",
+    "textures/pahur_armor_bluegray_normal.png",
     "textures/pahur_armor_bluegray_roughness.png",
     "textures/pahur_dark_mechanics_albedo.png",
     "textures/pahur_dark_mechanics_metallic.png",
+    "textures/pahur_dark_mechanics_normal.png",
     "textures/pahur_dark_mechanics_roughness.png",
+    "textures/pahur_face_metal_albedo.png",
+    "textures/pahur_face_metal_metallic.png",
+    "textures/pahur_face_metal_normal.png",
+    "textures/pahur_face_metal_roughness.png",
+    "textures/pahur_face_reference_emission.png",
+    "textures/pahur_face_reference_height.png",
+    "textures/pahur_face_reference_overlay.png",
     "textures/pahur_flame_orange_emission.png",
     "textures/pahur_fuel_tank_steel_albedo.png",
     "textures/pahur_fuel_tank_steel_metallic.png",
+    "textures/pahur_fuel_tank_steel_normal.png",
     "textures/pahur_fuel_tank_steel_roughness.png",
     "textures/pahur_head_reference_projection_decal.png",
     "textures/pahur_heat_bronze_albedo.png",
     "textures/pahur_heat_bronze_metallic.png",
+    "textures/pahur_heat_bronze_normal.png",
     "textures/pahur_heat_bronze_roughness.png",
     "textures/pahur_hood_navy_cloth_albedo.png",
     "textures/pahur_hood_navy_cloth_metallic.png",
+    "textures/pahur_hood_navy_cloth_normal.png",
     "textures/pahur_hood_navy_cloth_roughness.png",
     "textures/pahur_hose_rubber_albedo.png",
     "textures/pahur_hose_rubber_metallic.png",
+    "textures/pahur_hose_rubber_normal.png",
     "textures/pahur_hose_rubber_roughness.png",
+    "textures/pahur_left_arm_machine_albedo.png",
+    "textures/pahur_left_arm_machine_metallic.png",
+    "textures/pahur_left_arm_machine_normal.png",
+    "textures/pahur_left_arm_machine_roughness.png",
+    "textures/pahur_left_hand_machine_albedo.png",
+    "textures/pahur_left_hand_machine_metallic.png",
+    "textures/pahur_left_hand_machine_normal.png",
+    "textures/pahur_left_hand_machine_roughness.png",
+    "textures/pahur_leg_steel_albedo.png",
+    "textures/pahur_leg_steel_metallic.png",
+    "textures/pahur_leg_steel_normal.png",
+    "textures/pahur_leg_steel_roughness.png",
     "textures/pahur_light_steel_albedo.png",
     "textures/pahur_light_steel_metallic.png",
+    "textures/pahur_light_steel_normal.png",
     "textures/pahur_light_steel_roughness.png",
+    "textures/pahur_mechanical_body_front_overlay.png",
+    "textures/pahur_mechanical_front_height.png",
+    "textures/pahur_mechanical_front_normal.png",
+    "textures/pahur_mechanical_front_overlay.png",
     "textures/pahur_optic_blue_emission.png",
+    "textures/pahur_orange_trim_albedo.png",
+    "textures/pahur_orange_trim_metallic.png",
+    "textures/pahur_orange_trim_normal.png",
+    "textures/pahur_orange_trim_roughness.png",
     "textures/pahur_shared_micro_normal.png",
+    "textures/pahur_shoulder_machine_blue_albedo.png",
+    "textures/pahur_shoulder_machine_blue_metallic.png",
+    "textures/pahur_shoulder_machine_blue_normal.png",
+    "textures/pahur_shoulder_machine_blue_roughness.png",
+    "textures/pahur_torso_center_plate_albedo.png",
+    "textures/pahur_torso_center_plate_metallic.png",
+    "textures/pahur_torso_center_plate_normal.png",
+    "textures/pahur_torso_center_plate_roughness.png",
+    "textures/pahur_torso_inner_mechanics_albedo.png",
+    "textures/pahur_torso_inner_mechanics_metallic.png",
+    "textures/pahur_torso_inner_mechanics_normal.png",
+    "textures/pahur_torso_inner_mechanics_roughness.png",
+    "textures/pahur_torso_pelvis_plate_albedo.png",
+    "textures/pahur_torso_pelvis_plate_metallic.png",
+    "textures/pahur_torso_pelvis_plate_normal.png",
+    "textures/pahur_torso_pelvis_plate_roughness.png",
+    "textures/pahur_torso_rigid_emission.png",
+    "textures/pahur_torso_rigid_metallic_overlay.png",
+    "textures/pahur_torso_rigid_overlay.png",
+    "textures/pahur_torso_rigid_roughness_overlay.png",
+    "textures/pahur_torso_rigid_shell_albedo.png",
+    "textures/pahur_torso_rigid_shell_metallic.png",
+    "textures/pahur_torso_rigid_shell_normal.png",
+    "textures/pahur_torso_rigid_shell_roughness.png",
     "textures/pahur_weapon_gunmetal_albedo.png",
     "textures/pahur_weapon_gunmetal_metallic.png",
+    "textures/pahur_weapon_gunmetal_normal.png",
     "textures/pahur_weapon_gunmetal_roughness.png",
     "textures/reference_armor_bluegray_direct_crop.png",
     "textures/reference_blue_optic_direct_crop.png",
     "textures/reference_dark_mechanics_direct_crop.png",
     "textures/reference_flame_mark_direct_crop.png",
     "textures/reference_fuel_tank_direct_crop.png",
+    "textures/reference_head_detail_crop.png",
     "textures/reference_heat_bronze_direct_crop.png",
     "textures/reference_hood_navy_direct_crop.png",
     "textures/reference_light_steel_direct_crop.png"
   ],
   "tools": [
+    "tools/analyze_pahur_eye_surfaces.py",
+    "tools/analyze_pahur_torso_surfaces.py",
     "tools/build_pahur_appearance_sample.py",
     "tools/build_pahur_manifest.py",
     "tools/build_pahur_review_assets.py",
     "tools/build_pahur_textures.py",
     "tools/inspect_pahur_source.py",
     "tools/render_pahur_analysis.py",
+    "tools/render_pahur_head_topology.py",
     "tools/validate_pahur_exports.py",
     "tools/validate_pahur_html.py"
   ],
+  "analysis_reports": [
+    "EYE_SURFACE_ANALYSIS.json"
+  ],
   "integrity": {
     "exports/Pahur_Appearance_ReferenceSync.fbx": {
-      "bytes": 4884044,
-      "sha256": "4A031F1FDE7A515B58C681D023A1E8CB9981A9E4AC218D3D576A05CFAEF204C0"
+      "bytes": 10277612,
+      "sha256": "E56AD2CCAA9A1025264A92A5AD014C3B8FBA3336BD9C9F15E5526F7ED169A8C2"
     },
     "exports/Pahur_Appearance_ReferenceSync.glb": {
-      "bytes": 4732824,
-      "sha256": "E61A831935762925F4D85BD16AF8B819B1CFF5B62A457198D3042888A796815E"
+      "bytes": 10227324,
+      "sha256": "7802BF2C6201BD97348C639B1750CF5038506195FA4B28260AC5B14F5B1EDB2C"
     },
     "blender/Pahur_Appearance_ReferenceSync.blend": {
-      "bytes": 560320,
-      "sha256": "A9026EB18A2444274C538C7CF0AF437DC39C93B31C9F95E8E8A7545F61CB5E5B"
-    },
-    "blender/Pahur_Appearance_ReferenceSync.blend1": {
-      "bytes": 560305,
-      "sha256": "6A985375E82644207BC3C2D52DEA674AE06B45D781C43A65A4721D9B84F97FF7"
+      "bytes": 537070,
+      "sha256": "0E87EBD17ACFE11E54042E2E2F99D95F797413280E182E27494FFDB5014665CF"
     },
     "renders/01_front_pahur_reference_match.png": {
-      "bytes": 1151537,
-      "sha256": "78A82176242949094FD3888E62489875161EDCDD7574B6C4EFD1D1089DEB1574"
+      "bytes": 1949107,
+      "sha256": "5778BA0ACDAC8D0D3B8166E89B03B5D2ABC425660A532B931A25EEF5FE827488"
     },
     "renders/02_three_quarter_pahur_reference_match.png": {
-      "bytes": 1175842,
-      "sha256": "2A3D2207EA2F8D04C514787E7BBFC94BD42643B408BFBD5D314AC0C6641BC246"
+      "bytes": 1960333,
+      "sha256": "27E3C884BDFA3A331F60FB5A6EB3B2682EE3894EF35688E85B87E42209561CF3"
     },
     "renders/03_reference_side_by_side_overview.png": {
-      "bytes": 1116746,
-      "sha256": "3EF20A5EB85828D99728F34B0B344D76D3252364035F0A9C566B21373F27A86D"
+      "bytes": 1201694,
+      "sha256": "FC2D5342C32E3245790616ED92929CDE030228CD23C0EFFA23C8335B46B4BB39"
     },
     "renders/04_side_current_model_material.png": {
-      "bytes": 1189286,
-      "sha256": "A2CC676E442D2B6D00150D7028BF021C9DC3C49412BC146909BEBA9226A025F3"
+      "bytes": 1892158,
+      "sha256": "B38F00B525952BEE375053E0394A647DCEAA616A45335E6BE31DDEB69E4B2950"
     },
     "renders/05_rear_current_model_material.png": {
-      "bytes": 1179187,
-      "sha256": "2C00832BB8545CF22EF2BB364C9D8633A1323013B3A5D5CC9B63DDDE9EA1BBB9"
+      "bytes": 1932212,
+      "sha256": "1034F6B9C2B3740123600882A4D8A8BE531C1ED1E6ED4A15D84358FA9F28A139"
     },
     "renders/06_texture_atlas_and_material_breakdown.png": {
-      "bytes": 698198,
-      "sha256": "DC6FFE596EE0D4B4FBF7809048F80F86B199744CDED7024594599782EE045887"
+      "bytes": 788038,
+      "sha256": "DA9C4A79DE9581EB01227B42C6AC3D2E0FDB35680F6D8406ACC067E58018A184"
     },
     "textures/pahur_armor_bluegray_albedo.png": {
-      "bytes": 250533,
-      "sha256": "8EC5F94FDD928697872177DE332DF2508C31DA467B528AEB73E5562639BD4E2F"
+      "bytes": 190312,
+      "sha256": "CB0300D2F79FFC095ADEB2BDA63B3616D5E7A44715A35E693ED8391F73CF1253"
     },
     "textures/pahur_armor_bluegray_metallic.png": {
-      "bytes": 147445,
-      "sha256": "19927EA7961C4D13B3B046B3BA3F50FBF569808BA2EB7FBEE9E1948AEC6DC7E2"
+      "bytes": 147456,
+      "sha256": "C8936486782551CB46D2815C1580D802FA4D5E1AAD9F4E4E392AE8D080F2CCF3"
+    },
+    "textures/pahur_armor_bluegray_normal.png": {
+      "bytes": 124124,
+      "sha256": "3E12198A37E9957B0260700F95C1D10F65E2AB241FDAE9515CDC0383B44A59E5"
     },
     "textures/pahur_armor_bluegray_roughness.png": {
-      "bytes": 146665,
-      "sha256": "5199497070CB6EE364CE4584FC0563D1AC25258C8F1EAECEDEA7055F15F4F421"
+      "bytes": 116587,
+      "sha256": "8FFADB73EE4672C078131E0DFC2526FACB4FA4884B431F654F6E2769A912B0E9"
     },
     "textures/pahur_dark_mechanics_albedo.png": {
-      "bytes": 239475,
-      "sha256": "857DE206AEF6F2413CFC57F07C3ADA317CF3CF5D8FC6A0FAE7BE1FA5D33ACDD8"
+      "bytes": 187377,
+      "sha256": "0DA7BD49D337176B4BC021C3B5D889D533B4658EDF80DA805B671637DBE1C83D"
     },
     "textures/pahur_dark_mechanics_metallic.png": {
-      "bytes": 147327,
-      "sha256": "E3F7AAE4962967313BE512341384FA105CF5F6E51C79B815672ADBADA1DFB831"
+      "bytes": 147342,
+      "sha256": "93A29D14445BE94A4A08ECF63AAF889AD8D964B175174D474B97BBA9DA1E4866"
+    },
+    "textures/pahur_dark_mechanics_normal.png": {
+      "bytes": 176692,
+      "sha256": "DF4953CEA753633AD0BF07438D23FDB3726B3843E480EB3B21367F06B9F3AADA"
     },
     "textures/pahur_dark_mechanics_roughness.png": {
-      "bytes": 146653,
-      "sha256": "459D826BFAF1FB2C8FE4EF8B3F1DB5157B794C3BDFEE5D037853F8BFB925B5D7"
+      "bytes": 121799,
+      "sha256": "87B39A20344AB8986148D2EF9499CC902F94085217D043513C5CD065D60EA378"
+    },
+    "textures/pahur_face_metal_albedo.png": {
+      "bytes": 5181,
+      "sha256": "342459D1B4ECA2BE057AEC8F440AAD82A252C812EF1EA7635E0DB6FB264A1A98"
+    },
+    "textures/pahur_face_metal_metallic.png": {
+      "bytes": 1302,
+      "sha256": "6902CCDB4EA4BD4BCDBCABF08F8FFD5D0C0901E0476534330DBD6F2ACD9807CB"
+    },
+    "textures/pahur_face_metal_normal.png": {
+      "bytes": 1879,
+      "sha256": "76944F0BC81A92B281CD35587AE86667B41849EFC89093DB9FA79CC271E8EDFD"
+    },
+    "textures/pahur_face_metal_roughness.png": {
+      "bytes": 1302,
+      "sha256": "6AA975E76D64760F383AC53A96FBA654F6DBE21D0D926F3027FE52B20DD7DCA4"
+    },
+    "textures/pahur_face_reference_emission.png": {
+      "bytes": 9894,
+      "sha256": "9ACC8FC9CF1A08B41625C82E332B24EF017CB8EA0B61D861B645924FE9F5AAB1"
+    },
+    "textures/pahur_face_reference_height.png": {
+      "bytes": 3157,
+      "sha256": "E06669FE7BE418D29189D3DA2937334BA14BD67B942E3D408E6D92C89855017E"
+    },
+    "textures/pahur_face_reference_overlay.png": {
+      "bytes": 9948,
+      "sha256": "853F4DFE51FD9C6575436A714A4CD0C3DD21CAF2DA948C3E9F4CA51965DB8B83"
     },
     "textures/pahur_flame_orange_emission.png": {
       "bytes": 25814,
       "sha256": "16B34DE23ED51AE7C1BEEA4E98BBF08538C5680B2770BD39B1BAE0F1EA074E6D"
     },
     "textures/pahur_fuel_tank_steel_albedo.png": {
-      "bytes": 271411,
-      "sha256": "CBAC6D08BF87B2594A3EADFE6AB4F34A8044A9187143616DA1FEC1DFF37168E7"
+      "bytes": 216893,
+      "sha256": "92853F39748307B63981365D88B5CC72FCB42C233CA44157DA5C5AEC3D0EC344"
     },
     "textures/pahur_fuel_tank_steel_metallic.png": {
-      "bytes": 147408,
-      "sha256": "FB4BFD983524ED5A9F0E9B43A42A6456415DD1630146A3C3A5F8B56984545C69"
+      "bytes": 147396,
+      "sha256": "46F1DB8DEF327D54A85B15D8F2823C08D4CDD1E49F1BFDBD7FDD139274131C14"
+    },
+    "textures/pahur_fuel_tank_steel_normal.png": {
+      "bytes": 137832,
+      "sha256": "E55B4B008A410A969BEFD5909FF310FBCD371E7756FE4F0F1A594D5837F69F89"
     },
     "textures/pahur_fuel_tank_steel_roughness.png": {
-      "bytes": 146643,
-      "sha256": "1D09BAF2EA797202F2AE2E19D91432D43BF131B89CA503542711492AEADB58DE"
+      "bytes": 116572,
+      "sha256": "36646E00BB941B35BB94DBE26DDC5965A2102E8F02D115F8B9C10EC774D31262"
     },
     "textures/pahur_head_reference_projection_decal.png": {
-      "bytes": 10463,
-      "sha256": "DB87BD5DE906225938C4E42AF361266E93B867F58775BAD40B9734485CBF180C"
+      "bytes": 59894,
+      "sha256": "7FAC84C6CFE8D73005036D5F87466AF0F82AA28B9028902C8852FFF631B43ECB"
     },
     "textures/pahur_heat_bronze_albedo.png": {
-      "bytes": 254686,
-      "sha256": "F835030A33FE222AF5BE496802683BAD8D50144F6C0C50046AF1CACD8DD4FB75"
+      "bytes": 198258,
+      "sha256": "CAD92E1D1AD3E87A9D3D1570547F0D9280E645F8C9A7DC66D67B565E6C0E0A75"
     },
     "textures/pahur_heat_bronze_metallic.png": {
       "bytes": 147489,
       "sha256": "A39D0698FE043266E20FEE77C9507285C3F9C683D43B1F35EFE486D86994607C"
     },
+    "textures/pahur_heat_bronze_normal.png": {
+      "bytes": 261986,
+      "sha256": "E9B4F3D71554284B47DC4CADBCA84195A395A1B5FCC82288C4A620C137FE074E"
+    },
     "textures/pahur_heat_bronze_roughness.png": {
-      "bytes": 146607,
-      "sha256": "D549D08C33580F7BD748C6623F05E3F3F4463508737B6A8C17BD0E9171C5BC07"
+      "bytes": 134433,
+      "sha256": "7D0972035BDA2725E6131189DC188C2F33D0EB1DC7617C049BBD231E52674EEF"
     },
     "textures/pahur_hood_navy_cloth_albedo.png": {
-      "bytes": 201985,
-      "sha256": "CF542459A4EF02D76997361A3A951B2EB1C9C94EAE2CFAA8690A9A1C0CF4AE79"
+      "bytes": 220854,
+      "sha256": "70877B138543F6100F847653969FC498234F58CFA7DB1F3E22084349E4D1CA85"
     },
     "textures/pahur_hood_navy_cloth_metallic.png": {
       "bytes": 144867,
       "sha256": "E2F83212F957655D5FA2ECD16E33893FF9E4D7C67B3F1E82228215B8E2EFD78B"
     },
+    "textures/pahur_hood_navy_cloth_normal.png": {
+      "bytes": 297685,
+      "sha256": "A369FCCACFAAEC9E97BFD5CFD556551D95A23A1B9CBDCC45F22F562789A1C257"
+    },
     "textures/pahur_hood_navy_cloth_roughness.png": {
-      "bytes": 146564,
-      "sha256": "A8AAEABE04BF8B34450143BFDCD8A2C6377B428DF6C8ED45690B9D9DB9795F3F"
+      "bytes": 134326,
+      "sha256": "E61ECB20D11E84E50F448793F8ED3511EAEC6B21BBE8FA185D70CAD4632298F0"
     },
     "textures/pahur_hose_rubber_albedo.png": {
-      "bytes": 236193,
-      "sha256": "EA6142362C7E609D007A0B8A15883F6E99BEE93BA22D052CE2E4BCEA20624140"
+      "bytes": 219074,
+      "sha256": "A76D7C56FF99C176C3402A62E5F96DE4F0DB2EAE2245D48F784A95C9E29BF223"
     },
     "textures/pahur_hose_rubber_metallic.png": {
       "bytes": 147161,
       "sha256": "FA977BBE66DC1566F3419274A2389048525A54AEE8D304F304003FD790A5C9BB"
     },
+    "textures/pahur_hose_rubber_normal.png": {
+      "bytes": 233492,
+      "sha256": "8893DD823D5F78120DF1F14BBB59BA4A2BE2E92CC659525EB43CE5102DAB6DF3"
+    },
     "textures/pahur_hose_rubber_roughness.png": {
-      "bytes": 146629,
-      "sha256": "4F364E17BDA6CC1B53C8DF7D9CFE401880E7364EEEFBA9993D788F313A6D5059"
+      "bytes": 134294,
+      "sha256": "1693B1CF9AE3A3A8F05B875518E33B08FC2CC2C494D153CF8904EC33044EDD59"
+    },
+    "textures/pahur_left_arm_machine_albedo.png": {
+      "bytes": 175995,
+      "sha256": "34798ED0B13483ACEEC93D9858587EBD0DE86B90734F8A46149B6468AE44B624"
+    },
+    "textures/pahur_left_arm_machine_metallic.png": {
+      "bytes": 147456,
+      "sha256": "C8936486782551CB46D2815C1580D802FA4D5E1AAD9F4E4E392AE8D080F2CCF3"
+    },
+    "textures/pahur_left_arm_machine_normal.png": {
+      "bytes": 124124,
+      "sha256": "3E12198A37E9957B0260700F95C1D10F65E2AB241FDAE9515CDC0383B44A59E5"
+    },
+    "textures/pahur_left_arm_machine_roughness.png": {
+      "bytes": 116587,
+      "sha256": "8FFADB73EE4672C078131E0DFC2526FACB4FA4884B431F654F6E2769A912B0E9"
+    },
+    "textures/pahur_left_hand_machine_albedo.png": {
+      "bytes": 185462,
+      "sha256": "024876045F33E297416D4C06B9243717F1D32CC14B109DA4C94BAF8A513014C3"
+    },
+    "textures/pahur_left_hand_machine_metallic.png": {
+      "bytes": 147327,
+      "sha256": "E3F7AAE4962967313BE512341384FA105CF5F6E51C79B815672ADBADA1DFB831"
+    },
+    "textures/pahur_left_hand_machine_normal.png": {
+      "bytes": 176692,
+      "sha256": "DF4953CEA753633AD0BF07438D23FDB3726B3843E480EB3B21367F06B9F3AADA"
+    },
+    "textures/pahur_left_hand_machine_roughness.png": {
+      "bytes": 121797,
+      "sha256": "9386DB486237105AB43E7E72C1C2192EBC6063380661527120AEDDCEF2B1FB08"
+    },
+    "textures/pahur_leg_steel_albedo.png": {
+      "bytes": 160407,
+      "sha256": "7CADD809271B472D69DC69E88279C11E1731F3A6102B6C40D8497ADA39DA9F41"
+    },
+    "textures/pahur_leg_steel_metallic.png": {
+      "bytes": 147343,
+      "sha256": "5DCF5F2546A180EFA1407CB32477E52280FB52822C842539D5DAE3171151AFEE"
+    },
+    "textures/pahur_leg_steel_normal.png": {
+      "bytes": 123965,
+      "sha256": "A9CD8D7DF1370C36AFC4D297DF5DD70ED58FDEE987B726E6A6B22D0663F12ADA"
+    },
+    "textures/pahur_leg_steel_roughness.png": {
+      "bytes": 116811,
+      "sha256": "A637178FAA9141EBCEDBCC14596C361F00CDA0470761EA61E1FDD1068B44575C"
     },
     "textures/pahur_light_steel_albedo.png": {
-      "bytes": 278952,
-      "sha256": "5341D95CEBBE13E88EA3FE1A2FEA50A9A76301B9D14F7D1956FF8A81CB617814"
+      "bytes": 221859,
+      "sha256": "AE7CDB8F8DD15C8129BD1FD5C211F2DD20DEA7013A8E42762B8EF5D24F36F2E7"
     },
     "textures/pahur_light_steel_metallic.png": {
-      "bytes": 147227,
-      "sha256": "B3E5B63EC84234B0954AF87BFA878DC8A45FC71C546F7280EA985211987DADA5"
+      "bytes": 147241,
+      "sha256": "603E8335754C71027881FBEBB7FE5350BD271C2B89C1AB0444DE5F54A93FD530"
+    },
+    "textures/pahur_light_steel_normal.png": {
+      "bytes": 124010,
+      "sha256": "0C755A58EF41C5E25DF281405947489193622AA93318653863ADC0D9115E5AFB"
     },
     "textures/pahur_light_steel_roughness.png": {
-      "bytes": 146592,
-      "sha256": "C00E135A4996B9DACF5F03934270E4BA5B2D928C958A89A2E9445FE0315603F2"
+      "bytes": 116640,
+      "sha256": "20DA9449E86AF3E84FEAD312138FBC47B80DD2640D71399DFF58A317B668BFE8"
+    },
+    "textures/pahur_mechanical_body_front_overlay.png": {
+      "bytes": 32534,
+      "sha256": "0F05D6E385FDC412E5E49020A03BD00C0B9185BC2C926B7874B78CC1F6E86BCB"
+    },
+    "textures/pahur_mechanical_front_height.png": {
+      "bytes": 24088,
+      "sha256": "02862D075B83AF7B559FD489C86D9CBF9C548CC2EA886B7B8BD1C3872663AEB7"
+    },
+    "textures/pahur_mechanical_front_normal.png": {
+      "bytes": 96482,
+      "sha256": "C4946F84E2D5B5727543EB41E45CA1E114D39D4FB2FE38D094A4006566B35004"
+    },
+    "textures/pahur_mechanical_front_overlay.png": {
+      "bytes": 37225,
+      "sha256": "56D3F6ADC5EFDC371AA9966C62B7175F532912FC8AD47414411709D0C525285F"
     },
     "textures/pahur_optic_blue_emission.png": {
       "bytes": 7761,
       "sha256": "A4C95F07266ACDBB53BBFDDAD70D359A7DEC6FED9E62CFE06A72A0BCF3AEB497"
     },
+    "textures/pahur_orange_trim_albedo.png": {
+      "bytes": 229587,
+      "sha256": "1A713E03D64971A646E1BBCF3A2B0F091DBBC908EEDCA11BE5AB9E08D7C2585E"
+    },
+    "textures/pahur_orange_trim_metallic.png": {
+      "bytes": 147468,
+      "sha256": "8BBB850B1183BD4EA2CC66ABD0569C68B73683FA0F512B7C0426641CEF638CA9"
+    },
+    "textures/pahur_orange_trim_normal.png": {
+      "bytes": 262627,
+      "sha256": "6589B5A3F3DE9710CB2E7812295524EE149823044C34249685491B18DD9BA1C6"
+    },
+    "textures/pahur_orange_trim_roughness.png": {
+      "bytes": 134406,
+      "sha256": "975977D784F17E2E2166C6FB3307D8F785EEC599B0E85AF525A8DB2A876EE7D4"
+    },
     "textures/pahur_shared_micro_normal.png": {
       "bytes": 401895,
       "sha256": "1C66EA1681EEDA2B70286DBCCCF41CA52C85D237938805F2D7207B7EB8232C36"
     },
+    "textures/pahur_shoulder_machine_blue_albedo.png": {
+      "bytes": 175995,
+      "sha256": "34798ED0B13483ACEEC93D9858587EBD0DE86B90734F8A46149B6468AE44B624"
+    },
+    "textures/pahur_shoulder_machine_blue_metallic.png": {
+      "bytes": 147456,
+      "sha256": "C8936486782551CB46D2815C1580D802FA4D5E1AAD9F4E4E392AE8D080F2CCF3"
+    },
+    "textures/pahur_shoulder_machine_blue_normal.png": {
+      "bytes": 124124,
+      "sha256": "3E12198A37E9957B0260700F95C1D10F65E2AB241FDAE9515CDC0383B44A59E5"
+    },
+    "textures/pahur_shoulder_machine_blue_roughness.png": {
+      "bytes": 116587,
+      "sha256": "8FFADB73EE4672C078131E0DFC2526FACB4FA4884B431F654F6E2769A912B0E9"
+    },
+    "textures/pahur_torso_center_plate_albedo.png": {
+      "bytes": 197930,
+      "sha256": "29DA190DA5BC499F320557A8BE76995720D56848B97099F6C360137E569AF32C"
+    },
+    "textures/pahur_torso_center_plate_metallic.png": {
+      "bytes": 147342,
+      "sha256": "D5EC1523AF590F7D2B96F54A7F099A1AD6F54B558B59500E41F3199E9037BD4B"
+    },
+    "textures/pahur_torso_center_plate_normal.png": {
+      "bytes": 124266,
+      "sha256": "1D04A2F0FE47CB0BFE2A9CF7ECC57AEADD8778ECDE06C0B717F6CB166971F4B3"
+    },
+    "textures/pahur_torso_center_plate_roughness.png": {
+      "bytes": 116627,
+      "sha256": "ED1B8B1D8945143A085E97832C80723E037E666A0765A23CB6423DADBEF985C8"
+    },
+    "textures/pahur_torso_inner_mechanics_albedo.png": {
+      "bytes": 176013,
+      "sha256": "FDD415196443061025638D515B942C0C8358DD06A88C059AED493D8931CBD08A"
+    },
+    "textures/pahur_torso_inner_mechanics_metallic.png": {
+      "bytes": 147515,
+      "sha256": "ADE2902B68FD6684922D54E57FA19272BDE7A2ED8978F97FF5E31CA50DCB0BD7"
+    },
+    "textures/pahur_torso_inner_mechanics_normal.png": {
+      "bytes": 176378,
+      "sha256": "EFB41C18DF829F199C5CB88916E54C0A7AC45E5E53EABA25B7D0106D59B8A76E"
+    },
+    "textures/pahur_torso_inner_mechanics_roughness.png": {
+      "bytes": 121591,
+      "sha256": "30F4B3ED99CB7A5BCD847CE8B6EAB923355B7AEA190DB59F7ED5DC140C381267"
+    },
+    "textures/pahur_torso_pelvis_plate_albedo.png": {
+      "bytes": 205004,
+      "sha256": "52D408A86A921AE0AC56F82CBA4AB1AD32404732BAB11D77F10BE7E15E0D10B6"
+    },
+    "textures/pahur_torso_pelvis_plate_metallic.png": {
+      "bytes": 147378,
+      "sha256": "30809C82B25F14E3461CFA489D0D7791BB1CC4B6A49D6C45CAFC3D0DAC2279A0"
+    },
+    "textures/pahur_torso_pelvis_plate_normal.png": {
+      "bytes": 124197,
+      "sha256": "02CC1BC0E580F3B3ED41059E6E737F905BB413FEAB74F265E83229C8CABD7C10"
+    },
+    "textures/pahur_torso_pelvis_plate_roughness.png": {
+      "bytes": 116676,
+      "sha256": "3205E56DCF4CF802F83AA11E16BA902CB6E369290B1760C8636B46940CF90853"
+    },
+    "textures/pahur_torso_rigid_emission.png": {
+      "bytes": 3673,
+      "sha256": "0FF57F2911B54B5249E2440F1D0A2D6FE4982BC4D593E8F1C9D0D2517D3DA433"
+    },
+    "textures/pahur_torso_rigid_metallic_overlay.png": {
+      "bytes": 4410,
+      "sha256": "F73A7089AD24E331E2BC63E79D9E10FAD005B41C0BB9AE292BC46DD77C988112"
+    },
+    "textures/pahur_torso_rigid_overlay.png": {
+      "bytes": 6533,
+      "sha256": "A346E6EB130151F0E66C6A1B858F6E9E1C849B44C692CC6634691FC2C233F550"
+    },
+    "textures/pahur_torso_rigid_roughness_overlay.png": {
+      "bytes": 4405,
+      "sha256": "CCFE4175B095087667E49592D188DC24511751300068A0CCA4EA4D0DC79507E4"
+    },
+    "textures/pahur_torso_rigid_shell_albedo.png": {
+      "bytes": 139266,
+      "sha256": "50116990D192CDF65F0EF2EC93F344D27E508CC60466CAA3C358E48FBF7F79A4"
+    },
+    "textures/pahur_torso_rigid_shell_metallic.png": {
+      "bytes": 147448,
+      "sha256": "FF6B253D9607A90EBABEF636374247A25B9FB49F8EE0DD1D804FAF8E93A90A1E"
+    },
+    "textures/pahur_torso_rigid_shell_normal.png": {
+      "bytes": 123877,
+      "sha256": "4CBDEF9AD41895597B42C0BFF592088CB4D75AB628E86C9B405250CA1B76DC95"
+    },
+    "textures/pahur_torso_rigid_shell_roughness.png": {
+      "bytes": 116543,
+      "sha256": "A0EA88E9BA5A990E49215676A6D63063548060EACE6164A42B0569A55CAA9B70"
+    },
     "textures/pahur_weapon_gunmetal_albedo.png": {
-      "bytes": 265927,
-      "sha256": "EDDF49B04D336E2967D1347B85DF55BC0BE2388DE19E98D6D8BDE3AE4FAF9333"
+      "bytes": 173062,
+      "sha256": "2FE99A54362172A15287A4EC41DA246ED45179BB8840BCB21D79A3822CEC6049"
     },
     "textures/pahur_weapon_gunmetal_metallic.png": {
       "bytes": 147329,
       "sha256": "96ECB77B9289E754CA51B8577465D57FDF9AC7D9174CBC23175261BAC3154C6D"
     },
+    "textures/pahur_weapon_gunmetal_normal.png": {
+      "bytes": 298242,
+      "sha256": "26AB8A8FC7395747B5658DB34D9D815B4DA128D74FE3B007A140308C92B0A8DB"
+    },
     "textures/pahur_weapon_gunmetal_roughness.png": {
-      "bytes": 146677,
-      "sha256": "CF4EDA7BC9ADE4C53943021D4658865F542A90BE5C9E8D9965D4CFB37C254687"
+      "bytes": 134378,
+      "sha256": "CB2176BC3F4B4A0E397EF910A16AECE264EA024D2262221BC48043007B2275A5"
     },
     "textures/reference_armor_bluegray_direct_crop.png": {
       "bytes": 14882,
@@ -248,12 +559,16 @@
       "sha256": "E08D199336A151665DFB11B1094DB346D6F0B7DBC04424A47BAD4C66705A224E"
     },
     "textures/reference_flame_mark_direct_crop.png": {
-      "bytes": 4460,
-      "sha256": "DF0826FBA15941328FC23879AB556AB399BEFCEE5A844F4DA72A47364A5825A3"
+      "bytes": 11356,
+      "sha256": "81978596DCC4B6A5837588DFC714A511ADBC057508D21A5F5DCBC16FDF7A774D"
     },
     "textures/reference_fuel_tank_direct_crop.png": {
       "bytes": 29463,
       "sha256": "DE0898DDD5464E3096A7146FBDE27A2648714D13E253588B943C34786BC33FCD"
+    },
+    "textures/reference_head_detail_crop.png": {
+      "bytes": 43695,
+      "sha256": "BE275D1C68BCF9F7303820E487859EF4F3033B1E445B8F568308C34AC27AE888"
     },
     "textures/reference_heat_bronze_direct_crop.png": {
       "bytes": 16500,
@@ -266,6 +581,10 @@
     "textures/reference_light_steel_direct_crop.png": {
       "bytes": 14304,
       "sha256": "73DDBCB68077B8E158F0F54E99778FA0462E5D48896BB8101D1FBADAF185C7CF"
+    },
+    "EYE_SURFACE_ANALYSIS.json": {
+      "bytes": 295125,
+      "sha256": "28BF569C9A977278686A3BF035B7763EF494F1B55D37FABFE2015001DB592EA0"
     }
   }
 }

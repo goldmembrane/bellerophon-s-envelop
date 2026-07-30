@@ -1,22 +1,54 @@
 {
   "result": "PASS",
   "source_fbx": "Assets/_Project/Art/Enemies/Pahur/Models/Pahur.fbx",
-  "source_fbx_sha256": "797D3663D6249F4924322D8487DD308F364CC5663A454D72123824C117AC66A9",
-  "before_mesh": {
-    "vertices": 3554,
-    "edges": 10585,
-    "polygons": 7043,
-    "loops": 21129,
-    "coordinates_hash": "FC09AEBF3CA63FE575F68C898F0246B7B60FF0D3893B6C62910DC1CB38311892",
-    "topology_hash": "DD48FB747664C461ECE917AD4AE1DBF5CCE14B37BCC00C77825D2A168C14855F",
-    "uv_hash": "E49C02BD55677540D16A1711E90F69C543460872ED5705B5B6E6A42B438DB60C",
-    "weights_hash": "389999E66532D5D3E552507825A0306B139773086AC66B9A82E6D6D63DF2A5FB",
+  "source_fbx_sha256": "9D376E7BD5262E9DF347D8CCC37675DDBCF647D063011C0A71E80CDDA4A9DEA3",
+  "source_mesh": {
+    "vertices": 2445,
+    "edges": 6575,
+    "polygons": 4348,
+    "loops": 13044,
+    "coordinates_hash": "CAEDBBCB4C83ED1CC6E4D541C9E63BF514CF6D43ED60C37D225FBDA97C322F88",
+    "topology_hash": "D4C4A613063FE2116F398E99A6229A63D6FA384EFB12FCB890790F00AAA8B3E5",
+    "uv_hash": "23CC30895FC79EEF69190ACA7B62C8182AE57A53F42D6C180B73416FF17EE78A",
+    "weights_hash": "D303959FB5D1C91A88D8CFD1B0874C8BF2F32953999DF71BC5A225CEE450AA18",
     "vertex_groups": [
       "Hips",
       "LeftUpLeg",
       "LeftLeg",
       "LeftFoot",
-      "LeftToeBase",
+      "RightUpLeg",
+      "RightLeg",
+      "RightFoot",
+      "RightToeBase",
+      "Spine02",
+      "Spine01",
+      "Spine",
+      "LeftShoulder",
+      "LeftArm",
+      "LeftForeArm",
+      "LeftHand",
+      "RightShoulder",
+      "RightArm",
+      "RightForeArm",
+      "RightHand",
+      "neck",
+      "Head"
+    ]
+  },
+  "before_deletion_mesh": {
+    "vertices": 2445,
+    "edges": 6575,
+    "polygons": 4348,
+    "loops": 13044,
+    "coordinates_hash": "CAEDBBCB4C83ED1CC6E4D541C9E63BF514CF6D43ED60C37D225FBDA97C322F88",
+    "topology_hash": "D4C4A613063FE2116F398E99A6229A63D6FA384EFB12FCB890790F00AAA8B3E5",
+    "uv_hash": "23CC30895FC79EEF69190ACA7B62C8182AE57A53F42D6C180B73416FF17EE78A",
+    "weights_hash": "D303959FB5D1C91A88D8CFD1B0874C8BF2F32953999DF71BC5A225CEE450AA18",
+    "vertex_groups": [
+      "Hips",
+      "LeftUpLeg",
+      "LeftLeg",
+      "LeftFoot",
       "RightUpLeg",
       "RightLeg",
       "RightFoot",
@@ -37,20 +69,19 @@
     ]
   },
   "after_mesh": {
-    "vertices": 3554,
-    "edges": 10585,
-    "polygons": 7043,
-    "loops": 21129,
-    "coordinates_hash": "FC09AEBF3CA63FE575F68C898F0246B7B60FF0D3893B6C62910DC1CB38311892",
-    "topology_hash": "DD48FB747664C461ECE917AD4AE1DBF5CCE14B37BCC00C77825D2A168C14855F",
-    "uv_hash": "E49C02BD55677540D16A1711E90F69C543460872ED5705B5B6E6A42B438DB60C",
-    "weights_hash": "389999E66532D5D3E552507825A0306B139773086AC66B9A82E6D6D63DF2A5FB",
+    "vertices": 2434,
+    "edges": 6548,
+    "polygons": 4330,
+    "loops": 12990,
+    "coordinates_hash": "0361E701010D88837405F0EF13D2EC071D5EBD3F550949FA93D853F77222E057",
+    "topology_hash": "588F065AF5B9AABB11E370125CD1EA232DEC1936607C21717E8C49F77F6401FD",
+    "uv_hash": "CABA905E992A34D013474FDBBEB389AF095F42E4DAC4C3DD6BA24B6351D7E6B0",
+    "weights_hash": "DB0702EA7E8423AD6B231A459094F3BE725CE83D0D4DF6C89E85424D8E4950A5",
     "vertex_groups": [
       "Hips",
       "LeftUpLeg",
       "LeftLeg",
       "LeftFoot",
-      "LeftToeBase",
       "RightUpLeg",
       "RightLeg",
       "RightFoot",
@@ -70,15 +101,82 @@
       "Head"
     ]
   },
+  "expected_after_shape": {
+    "vertices": 2434,
+    "edges": 6548,
+    "polygons": 4330,
+    "loops": 12990
+  },
+  "approved_deletion": {
+    "component_ids": [
+      97
+    ],
+    "source_polygon_indices": [
+      1346,
+      1347,
+      1411,
+      1412,
+      1413,
+      1414,
+      1415,
+      1416,
+      1640,
+      1641,
+      1987,
+      3591,
+      3592,
+      4058,
+      4059,
+      4060,
+      4061,
+      4062
+    ],
+    "source_vertex_indices": [
+      287,
+      303,
+      361,
+      463,
+      1132,
+      1222,
+      1558,
+      1782,
+      2204,
+      2278,
+      2388
+    ],
+    "removed": {
+      "vertices": 11,
+      "edges": 27,
+      "polygons": 18,
+      "loops": 54
+    },
+    "expected_removed": {
+      "vertices": 11,
+      "edges": 27,
+      "polygons": 18,
+      "loops": 54
+    },
+    "remaining_content_before": {
+      "vertices_hash": "47DCDA261342E5E53904AAD1AF42686C4090842466998BE02A3AF6DD1B7018FE",
+      "edges_hash": "3E05637F85678B495BC540BE56ECA4E949C64BCC6E4297C8764E51C1CEC217A1",
+      "polygons_uv_hash": "BB0A7BF300D5528052707F60A2395FFD557CF5DF63E66F8F7172F1032C1D1121"
+    },
+    "remaining_content_after": {
+      "vertices_hash": "47DCDA261342E5E53904AAD1AF42686C4090842466998BE02A3AF6DD1B7018FE",
+      "edges_hash": "3E05637F85678B495BC540BE56ECA4E949C64BCC6E4297C8764E51C1CEC217A1",
+      "polygons_uv_hash": "BB0A7BF300D5528052707F60A2395FFD557CF5DF63E66F8F7172F1032C1D1121"
+    },
+    "remaining_content_unchanged": true
+  },
   "before_armature": {
     "bones": 24,
-    "bone_hash": "43A6F9E7E8CB9586958D052CD48961710F3769478F11D7D81C701480E3C3D4EE"
+    "bone_hash": "A3AA72E36BB48DA5B7AC5978DCDADC774A07B7B3D7BDC13563AF80711D854AA9"
   },
   "after_armature": {
     "bones": 24,
-    "bone_hash": "43A6F9E7E8CB9586958D052CD48961710F3769478F11D7D81C701480E3C3D4EE"
+    "bone_hash": "A3AA72E36BB48DA5B7AC5978DCDADC774A07B7B3D7BDC13563AF80711D854AA9"
   },
-  "mesh_unchanged_except_material_assignment": true,
+  "remaining_mesh_content_unchanged": true,
   "armature_unchanged": true,
-  "scope": "Material slots and polygon material indices only."
+  "scope": "Only independent connected component 97 is deleted from the review sample. All remaining geometry, UVs, weights, and the armature are unchanged."
 }

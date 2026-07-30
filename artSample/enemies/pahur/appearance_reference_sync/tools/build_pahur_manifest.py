@@ -27,7 +27,7 @@ def files_under(relative_directory, suffix=None):
 
 def main():
     exports = files_under("exports")
-    blender = files_under("blender")
+    blender = files_under("blender", ".blend")
     final_renders = [
         f"renders/{name}"
         for name in (
@@ -46,7 +46,8 @@ def main():
     ]
     textures = files_under("textures", ".png")
     tools = files_under("tools", ".py")
-    tracked = exports + blender + final_renders + textures
+    analysis_reports = ["EYE_SURFACE_ANALYSIS.json"]
+    tracked = exports + blender + final_renders + textures + analysis_reports
     report = {
         "enemy_id": "pahur",
         "sample_root": "artSample/enemies/pahur/appearance_reference_sync",
@@ -63,6 +64,7 @@ def main():
         "analysis_renders": analysis_renders,
         "textures": textures,
         "tools": tools,
+        "analysis_reports": analysis_reports,
         "integrity": {
             path: {
                 "bytes": (SAMPLE_ROOT / path).stat().st_size,
@@ -84,6 +86,7 @@ def main():
                 "analysis_renders": len(analysis_renders),
                 "textures": len(textures),
                 "tools": len(tools),
+                "analysis_reports": len(analysis_reports),
             }
         )
     )

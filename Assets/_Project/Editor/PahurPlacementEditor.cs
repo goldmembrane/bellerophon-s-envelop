@@ -39,7 +39,7 @@ namespace Bellerophon.Editor.PahurCargoRunScene
         private const string CapturePath =
             ValidationFolder + "/Pahur_Placement_VisualReview.png";
         private const string ExpectedSourceSha256 =
-            "797D3663D6249F4924322D8487DD308F364CC5663A454D72123824C117AC66A9";
+            "9D376E7BD5262E9DF347D8CCC37675DDBCF647D063011C0A71E80CDDA4A9DEA3";
         private const int SlotCount = 10;
         private const float TargetHeight = 1.5f;
         private const float FacingYaw = 180f;
@@ -60,6 +60,127 @@ namespace Bellerophon.Editor.PahurCargoRunScene
             "Pahur_09_Hit",
             "Pahur_10_Death"
         };
+
+        [MenuItem("Bellerophon/Enemies/Pahur/Replace Placed Models")]
+        public static void ReplacePlacedPahurModels()
+        {
+            RequireSource();
+            var scene = RequireCurrentScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp has unsaved editor changes. Save or discard them before replacing Pahur models.");
+            }
+
+            var sourceHash = Sha256(SourcePath);
+            RequireSameHash(ExpectedSourceSha256, sourceHash);
+            var root = RequireRoot(PlacementRootName).transform;
+            var placementBefore = PlacementFrameSignatures(root);
+            var protectedBefore = NonPahurRootSignatures(scene);
+
+            CopyAndImportModel();
+            var importedHash = Sha256(Absolute(ModelPath));
+            RequireSameHash(sourceHash, importedHash);
+            var modelAsset = RequireModelAsset();
+            RequireVisibleGeometry(modelAsset.transform);
+
+            var oldModels = new List<GameObject>();
+            var newModels = new List<GameObject>();
+            try
+            {
+                for (var index = 0; index < SlotCount; index++)
+                {
+                    var slot = root.GetChild(index);
+                    if (slot.name != SlotNames[index] ||
+                        slot.childCount != 1)
+                    {
+                        throw new InvalidOperationException(
+                            "Pahur slot contract changed at index " +
+                            index + ".");
+                    }
+
+                    oldModels.Add(slot.GetChild(0).gameObject);
+                    var model =
+                        PrefabUtility.InstantiatePrefab(modelAsset, scene)
+                        as GameObject ??
+                        throw new InvalidOperationException(
+                            "The replacement Pahur FBX could not be instantiated.");
+                    newModels.Add(model);
+                    model.name = ModelName;
+                    model.transform.SetParent(slot, false);
+                    model.transform.SetLocalPositionAndRotation(
+                        Vector3.zero,
+                        Quaternion.identity);
+                    model.transform.localScale = Vector3.one;
+                    ConfigureStaticModel(model.transform);
+                    ScaleAndGround(model.transform, root.position.y);
+                    RequireVisibleGeometry(model.transform);
+                }
+            }
+            catch
+            {
+                foreach (var model in newModels)
+                {
+                    if (model != null)
+                    {
+                        UnityEngine.Object.DestroyImmediate(model);
+                    }
+                }
+
+                throw;
+            }
+
+            foreach (var oldModel in oldModels)
+            {
+                UnityEngine.Object.DestroyImmediate(oldModel);
+            }
+
+            foreach (var model in newModels)
+            {
+                EditorUtility.SetDirty(model);
+                EditorUtility.SetDirty(model.transform.parent);
+            }
+
+            var placementAfter = PlacementFrameSignatures(root);
+            if (!placementBefore.SequenceEqual(
+                    placementAfter,
+                    StringComparer.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "Pahur root or slot transforms changed during model replacement.");
+            }
+
+            var protectedAfter = NonPahurRootSignatures(scene);
+            if (!protectedBefore.SequenceEqual(
+                    protectedAfter,
+                    StringComparer.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "A scene root outside Pahur changed during model replacement.");
+            }
+
+            var metrics = InspectState(scene, root, true);
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene))
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp could not be saved after Pahur model replacement.");
+            }
+
+            AssetDatabase.SaveAssets();
+            RequireSameHash(sourceHash, Sha256(SourcePath));
+            RequireSameHash(importedHash, Sha256(Absolute(ModelPath)));
+            Debug.Log(
+                "PahurModelsReplaced Result=PASS, Slots=" + SlotCount +
+                ", SourceSha256=" + sourceHash +
+                ", DirectFbxInstances=" + SlotCount +
+                ", TargetHeight=" + Num(TargetHeight) +
+                ", LineupBounds=" + Vec(metrics.Bounds.size) +
+                ", SlotNamesAndTransformsPreserved=True" +
+                ", PlayerUnchanged=True" +
+                ", OtherSceneRootsUnchanged=True" +
+                ", SceneSaved=True.");
+        }
 
         [MenuItem("Bellerophon/Enemies/Pahur/Apply Placement")]
         public static void ApplyPahurPlacement()
@@ -800,6 +921,55 @@ namespace Bellerophon.Editor.PahurCargoRunScene
                     value => value,
                     StringComparer.Ordinal)
                 .ToArray();
+        }
+
+        private static string[] NonPahurRootSignatures(Scene scene)
+        {
+            return scene.GetRootGameObjects()
+                .Where(root => root.name != PlacementRootName)
+                .Select(root =>
+                    GlobalObjectId.GetGlobalObjectIdSlow(root) + "|" +
+                    root.name + "|" +
+                    root.activeSelf + "|" +
+                    Vec(root.transform.position) + "|" +
+                    Quat(root.transform.rotation) + "|" +
+                    Vec(root.transform.localScale) + "|" +
+                    root.transform.childCount)
+                .OrderBy(
+                    value => value,
+                    StringComparer.Ordinal)
+                .ToArray();
+        }
+
+        private static string[] PlacementFrameSignatures(Transform root)
+        {
+            if (root.childCount != SlotCount)
+            {
+                throw new InvalidOperationException(
+                    "The Pahur placement must retain ten slots.");
+            }
+
+            var signatures = new List<string>
+            {
+                "Root|" + root.name + "|" +
+                root.gameObject.activeSelf + "|" +
+                Vec(root.position) + "|" +
+                Quat(root.rotation) + "|" +
+                Vec(root.localScale) + "|" +
+                root.childCount
+            };
+            for (var index = 0; index < SlotCount; index++)
+            {
+                var slot = root.GetChild(index);
+                signatures.Add(
+                    index + "|" + slot.name + "|" +
+                    slot.gameObject.activeSelf + "|" +
+                    Vec(slot.localPosition) + "|" +
+                    Quat(slot.localRotation) + "|" +
+                    Vec(slot.localScale));
+            }
+
+            return signatures.ToArray();
         }
 
         private static Scene RequireCurrentScene()

@@ -1,0 +1,560 @@
+{
+  "source": "Assets/_Project/Art/Enemies/Pahur/Models/Pahur.fbx",
+  "head_polygon_count": 349,
+  "patch_angle_degrees": 38.0,
+  "patches": [
+    {
+      "patch_index": 0,
+      "polygon_count": 176,
+      "polygon_indices": [
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        342,
+        343,
+        344,
+        345,
+        346,
+        590,
+        591,
+        592,
+        593,
+        594,
+        595,
+        596,
+        825,
+        826,
+        827,
+        828,
+        829,
+        913,
+        914,
+        915,
+        916,
+        917,
+        918,
+        919,
+        920,
+        952,
+        953,
+        954,
+        955,
+        956,
+        957,
+        1087,
+        1088,
+        1089,
+        1351,
+        1352,
+        1353,
+        1354,
+        1373,
+        1374,
+        1375,
+        1376,
+        1540,
+        1541,
+        1607,
+        1608,
+        1629,
+        1630,
+        1631,
+        1746,
+        1747,
+        1748,
+        1749,
+        1750,
+        1792,
+        1793,
+        1794,
+        1795,
+        1796,
+        1797,
+        1798,
+        1854,
+        1855,
+        1856,
+        1857,
+        1858,
+        1859,
+        1972,
+        1973,
+        1974,
+        1975,
+        1976,
+        2275,
+        2276,
+        2277,
+        2278,
+        2279,
+        2286,
+        2287,
+        2288,
+        2342,
+        2343,
+        2344,
+        2345,
+        2346,
+        2347,
+        2424,
+        2425,
+        2426,
+        2427,
+        2499,
+        2500,
+        2501,
+        2544,
+        2545,
+        2546,
+        2547,
+        2580,
+        2581,
+        2582,
+        2583,
+        2612,
+        2613,
+        2614,
+        2615,
+        2616,
+        2639,
+        2706,
+        2707,
+        2848,
+        2849,
+        2850,
+        2851,
+        2867,
+        2916,
+        2917,
+        2929,
+        2930,
+        2931,
+        2932,
+        3015,
+        3016,
+        3090,
+        3091,
+        3092,
+        3164,
+        3165,
+        3166,
+        3167,
+        3172,
+        3173,
+        3312,
+        3345,
+        3346,
+        3354,
+        3355,
+        3400,
+        3401,
+        3402,
+        3426,
+        3427,
+        3448,
+        3449,
+        3461,
+        3538,
+        3541,
+        3584,
+        3585,
+        3586,
+        3611,
+        3624,
+        3625,
+        3671,
+        3689,
+        3707,
+        3715,
+        3725,
+        3764,
+        3926,
+        3964,
+        3967,
+        4090
+      ]
+    },
+    {
+      "patch_index": 1,
+      "polygon_count": 72,
+      "polygon_indices": [
+        296,
+        298,
+        299,
+        382,
+        383,
+        384,
+        449,
+        450,
+        451,
+        452,
+        453,
+        559,
+        564,
+        619,
+        620,
+        621,
+        637,
+        638,
+        639,
+        640,
+        738,
+        979,
+        981,
+        982,
+        983,
+        984,
+        1039,
+        1040,
+        1058,
+        1059,
+        1060,
+        1061,
+        1062,
+        1063,
+        1455,
+        1456,
+        1457,
+        1693,
+        1824,
+        1930,
+        1931,
+        1932,
+        1934,
+        2171,
+        2204,
+        2205,
+        2206,
+        2207,
+        2331,
+        2332,
+        2381,
+        2385,
+        2677,
+        2678,
+        2794,
+        2831,
+        2832,
+        2949,
+        2986,
+        2987,
+        2988,
+        3075,
+        3076,
+        3249,
+        3287,
+        3288,
+        3484,
+        3492,
+        3651,
+        3652,
+        3690,
+        3781
+      ]
+    },
+    {
+      "patch_index": 2,
+      "polygon_count": 18,
+      "polygon_indices": [
+        560,
+        561,
+        562,
+        563,
+        565,
+        1038,
+        1041,
+        1929,
+        1933,
+        1935,
+        1991,
+        1992,
+        2091,
+        2734,
+        2735,
+        3276,
+        3277,
+        3335
+      ]
+    },
+    {
+      "patch_index": 3,
+      "polygon_count": 17,
+      "polygon_indices": [
+        737,
+        739,
+        1881,
+        1882,
+        1885,
+        2117,
+        2119,
+        2329,
+        2330,
+        2833,
+        2834,
+        2948,
+        2950,
+        3057,
+        3320,
+        3942,
+        3944
+      ]
+    },
+    {
+      "patch_index": 4,
+      "polygon_count": 10,
+      "polygon_indices": [
+        1316,
+        2626,
+        2627,
+        2845,
+        3193,
+        3195,
+        3578,
+        3579,
+        3906,
+        3907
+      ]
+    },
+    {
+      "patch_index": 5,
+      "polygon_count": 8,
+      "polygon_indices": [
+        4256,
+        4257,
+        4258,
+        4259,
+        4260,
+        4261,
+        4262,
+        4263
+      ]
+    },
+    {
+      "patch_index": 6,
+      "polygon_count": 6,
+      "polygon_indices": [
+        1883,
+        1884,
+        1886,
+        1887,
+        2118,
+        3691
+      ]
+    },
+    {
+      "patch_index": 7,
+      "polygon_count": 5,
+      "polygon_indices": [
+        2383,
+        2384,
+        3247,
+        3248,
+        3441
+      ]
+    },
+    {
+      "patch_index": 8,
+      "polygon_count": 3,
+      "polygon_indices": [
+        2090,
+        3043,
+        3336
+      ]
+    },
+    {
+      "patch_index": 9,
+      "polygon_count": 3,
+      "polygon_indices": [
+        4092,
+        4093,
+        4094
+      ]
+    },
+    {
+      "patch_index": 10,
+      "polygon_count": 2,
+      "polygon_indices": [
+        295,
+        300
+      ]
+    },
+    {
+      "patch_index": 11,
+      "polygon_count": 2,
+      "polygon_indices": [
+        297,
+        2795
+      ]
+    },
+    {
+      "patch_index": 12,
+      "polygon_count": 2,
+      "polygon_indices": [
+        2116,
+        2120
+      ]
+    },
+    {
+      "patch_index": 13,
+      "polygon_count": 2,
+      "polygon_indices": [
+        3108,
+        3468
+      ]
+    },
+    {
+      "patch_index": 14,
+      "polygon_count": 2,
+      "polygon_indices": [
+        3469,
+        3470
+      ]
+    },
+    {
+      "patch_index": 15,
+      "polygon_count": 2,
+      "polygon_indices": [
+        3555,
+        3556
+      ]
+    },
+    {
+      "patch_index": 16,
+      "polygon_count": 2,
+      "polygon_indices": [
+        3973,
+        3979
+      ]
+    },
+    {
+      "patch_index": 17,
+      "polygon_count": 1,
+      "polygon_indices": [
+        691
+      ]
+    },
+    {
+      "patch_index": 18,
+      "polygon_count": 1,
+      "polygon_indices": [
+        980
+      ]
+    },
+    {
+      "patch_index": 19,
+      "polygon_count": 1,
+      "polygon_indices": [
+        1255
+      ]
+    },
+    {
+      "patch_index": 20,
+      "polygon_count": 1,
+      "polygon_indices": [
+        1256
+      ]
+    },
+    {
+      "patch_index": 21,
+      "polygon_count": 1,
+      "polygon_indices": [
+        1314
+      ]
+    },
+    {
+      "patch_index": 22,
+      "polygon_count": 1,
+      "polygon_indices": [
+        1481
+      ]
+    },
+    {
+      "patch_index": 23,
+      "polygon_count": 1,
+      "polygon_indices": [
+        2141
+      ]
+    },
+    {
+      "patch_index": 24,
+      "polygon_count": 1,
+      "polygon_indices": [
+        2144
+      ]
+    },
+    {
+      "patch_index": 25,
+      "polygon_count": 1,
+      "polygon_indices": [
+        2203
+      ]
+    },
+    {
+      "patch_index": 26,
+      "polygon_count": 1,
+      "polygon_indices": [
+        2208
+      ]
+    },
+    {
+      "patch_index": 27,
+      "polygon_count": 1,
+      "polygon_indices": [
+        2382
+      ]
+    },
+    {
+      "patch_index": 28,
+      "polygon_count": 1,
+      "polygon_indices": [
+        2467
+      ]
+    },
+    {
+      "patch_index": 29,
+      "polygon_count": 1,
+      "polygon_indices": [
+        2793
+      ]
+    },
+    {
+      "patch_index": 30,
+      "polygon_count": 1,
+      "polygon_indices": [
+        3058
+      ]
+    },
+    {
+      "patch_index": 31,
+      "polygon_count": 1,
+      "polygon_indices": [
+        3109
+      ]
+    },
+    {
+      "patch_index": 32,
+      "polygon_count": 1,
+      "polygon_indices": [
+        3943
+      ]
+    },
+    {
+      "patch_index": 33,
+      "polygon_count": 1,
+      "polygon_indices": [
+        4091
+      ]
+    }
+  ]
+}

@@ -13,6 +13,7 @@ BLEND = SAMPLE_ROOT / "blender/Pahur_Appearance_ReferenceSync.blend"
 FBX = SAMPLE_ROOT / "exports/Pahur_Appearance_ReferenceSync.fbx"
 GLB = SAMPLE_ROOT / "exports/Pahur_Appearance_ReferenceSync.glb"
 OUTPUT = SAMPLE_ROOT / "EXPORT_INSPECTION.json"
+PRESERVATION = SAMPLE_ROOT / "GEOMETRY_PRESERVATION.json"
 
 
 def sha256(path):
@@ -102,6 +103,7 @@ def main():
     blend = inspect(BLEND, "blend")
     fbx = inspect(FBX, "fbx")
     glb = inspect(GLB, "glb")
+    preservation = json.loads(PRESERVATION.read_text(encoding="utf-8"))
 
     source_shape = {
         key: source[key]
@@ -119,16 +121,25 @@ def main():
         key: glb[key]
         for key in ("vertices", "edges", "polygons", "loops", "bones")
     }
+    expected_shape = {
+        **preservation["expected_after_shape"],
+        "bones": source["bones"],
+    }
     report = {
         "result": "PASS"
-        if source_shape == blend_shape == fbx_shape
+        if blend_shape == fbx_shape == expected_shape
+        and preservation["result"] == "PASS"
+        and preservation["approved_deletion"]["component_ids"] == [97]
+        and preservation["approved_deletion"]["remaining_content_unchanged"]
         and source["vertex_groups"] == blend["vertex_groups"] == fbx["vertex_groups"]
         and source["uv_layers"] == blend["uv_layers"] == fbx["uv_layers"]
         else "FAIL",
         "canonical_structural_check": (
-            "Source FBX, review Blend, and review FBX must preserve vertex/edge/"
-            "polygon/loop/bone counts, vertex-group names, and UV-layer names."
+            "Review Blend and FBX must match the source after deleting only "
+            "approved independent connected component 97. All remaining "
+            "geometry content, vertex groups, UV layers, and bones are preserved."
         ),
+        "approved_deletion": preservation["approved_deletion"],
         "glb_note": (
             "GLB is a portable visual-review export. Blender's glTF exporter "
             "limits skin influences to four and may triangulate/split primitives; "
@@ -140,6 +151,7 @@ def main():
         "glb": glb,
         "shape_comparison": {
             "source": source_shape,
+            "expected_after_approved_deletion": expected_shape,
             "blend": blend_shape,
             "fbx": fbx_shape,
             "glb": glb_shape,

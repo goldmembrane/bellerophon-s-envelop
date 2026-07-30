@@ -1767,6 +1767,12 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.PahurCargoRunScene.PahurPlacementEditor.ApplyPahurPlacement,
                         "Supplied Pahur FBX placed in ten named static slots below Revolution using Longa Arma/Tergo Z spacing and Revolution X spacing; Player start moved to the full lineup front view.");
                     break;
+                case "ReplacePlacedPahurModels":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.PahurCargoRunScene.PahurPlacementEditor.ReplacePlacedPahurModels,
+                        "All ten placed Pahur model children replaced from the supplied FBX while preserving slot names, transforms, Player, and other scene roots.");
+                    break;
                 case "InspectPahurPlacement":
                     RunSynchronous(
                         request,

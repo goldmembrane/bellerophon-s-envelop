@@ -1,16 +1,77 @@
 {
   "result": "PASS",
-  "canonical_structural_check": "Source FBX, review Blend, and review FBX must preserve vertex/edge/polygon/loop/bone counts, vertex-group names, and UV-layer names.",
+  "canonical_structural_check": "Review Blend and FBX must match the source after deleting only approved independent connected component 97. All remaining geometry content, vertex groups, UV layers, and bones are preserved.",
+  "approved_deletion": {
+    "component_ids": [
+      97
+    ],
+    "source_polygon_indices": [
+      1346,
+      1347,
+      1411,
+      1412,
+      1413,
+      1414,
+      1415,
+      1416,
+      1640,
+      1641,
+      1987,
+      3591,
+      3592,
+      4058,
+      4059,
+      4060,
+      4061,
+      4062
+    ],
+    "source_vertex_indices": [
+      287,
+      303,
+      361,
+      463,
+      1132,
+      1222,
+      1558,
+      1782,
+      2204,
+      2278,
+      2388
+    ],
+    "removed": {
+      "vertices": 11,
+      "edges": 27,
+      "polygons": 18,
+      "loops": 54
+    },
+    "expected_removed": {
+      "vertices": 11,
+      "edges": 27,
+      "polygons": 18,
+      "loops": 54
+    },
+    "remaining_content_before": {
+      "vertices_hash": "47DCDA261342E5E53904AAD1AF42686C4090842466998BE02A3AF6DD1B7018FE",
+      "edges_hash": "3E05637F85678B495BC540BE56ECA4E949C64BCC6E4297C8764E51C1CEC217A1",
+      "polygons_uv_hash": "BB0A7BF300D5528052707F60A2395FFD557CF5DF63E66F8F7172F1032C1D1121"
+    },
+    "remaining_content_after": {
+      "vertices_hash": "47DCDA261342E5E53904AAD1AF42686C4090842466998BE02A3AF6DD1B7018FE",
+      "edges_hash": "3E05637F85678B495BC540BE56ECA4E949C64BCC6E4297C8764E51C1CEC217A1",
+      "polygons_uv_hash": "BB0A7BF300D5528052707F60A2395FFD557CF5DF63E66F8F7172F1032C1D1121"
+    },
+    "remaining_content_unchanged": true
+  },
   "glb_note": "GLB is a portable visual-review export. Blender's glTF exporter limits skin influences to four and may triangulate/split primitives; the Blend and FBX are the canonical structure-preserving samples.",
   "source": {
     "path": "Assets/_Project/Art/Enemies/Pahur/Models/Pahur.fbx",
-    "bytes": 479452,
-    "sha256": "797D3663D6249F4924322D8487DD308F364CC5663A454D72123824C117AC66A9",
+    "bytes": 416412,
+    "sha256": "9D376E7BD5262E9DF347D8CCC37675DDBCF647D063011C0A71E80CDDA4A9DEA3",
     "mesh_objects": 1,
-    "vertices": 3554,
-    "edges": 10585,
-    "polygons": 7043,
-    "loops": 21129,
+    "vertices": 2445,
+    "edges": 6575,
+    "polygons": 4348,
+    "loops": 13044,
     "uv_layers": [
       "uv"
     ],
@@ -24,7 +85,6 @@
       "LeftHand",
       "LeftLeg",
       "LeftShoulder",
-      "LeftToeBase",
       "LeftUpLeg",
       "RightArm",
       "RightFoot",
@@ -52,30 +112,30 @@
     ],
     "world_bounds": {
       "min": [
-        -0.440245,
-        -1.025219,
-        0.021804
+        -0.713182,
+        -0.600003,
+        -0.060771
       ],
       "max": [
-        0.432464,
-        0.79513,
-        1.444431
+        0.718746,
+        0.488842,
+        1.812614
       ]
     }
   },
   "blend": {
     "path": "artSample/enemies/pahur/appearance_reference_sync/blender/Pahur_Appearance_ReferenceSync.blend",
-    "bytes": 560320,
-    "sha256": "A9026EB18A2444274C538C7CF0AF437DC39C93B31C9F95E8E8A7545F61CB5E5B",
+    "bytes": 537070,
+    "sha256": "0E87EBD17ACFE11E54042E2E2F99D95F797413280E182E27494FFDB5014665CF",
     "mesh_objects": 1,
-    "vertices": 3554,
-    "edges": 10585,
-    "polygons": 7043,
-    "loops": 21129,
+    "vertices": 2434,
+    "edges": 6548,
+    "polygons": 4330,
+    "loops": 12990,
     "uv_layers": [
       "uv"
     ],
-    "material_slots": 10,
+    "material_slots": 20,
     "vertex_groups": [
       "Head",
       "Hips",
@@ -85,7 +145,6 @@
       "LeftHand",
       "LeftLeg",
       "LeftShoulder",
-      "LeftToeBase",
       "LeftUpLeg",
       "RightArm",
       "RightFoot",
@@ -113,30 +172,30 @@
     ],
     "world_bounds": {
       "min": [
-        -0.440245,
-        -1.025219,
-        0.021804
+        -0.713182,
+        -0.600003,
+        -0.060771
       ],
       "max": [
-        0.432464,
-        0.79513,
-        1.444431
+        0.718746,
+        0.488842,
+        1.812614
       ]
     }
   },
   "fbx": {
     "path": "artSample/enemies/pahur/appearance_reference_sync/exports/Pahur_Appearance_ReferenceSync.fbx",
-    "bytes": 4884044,
-    "sha256": "4A031F1FDE7A515B58C681D023A1E8CB9981A9E4AC218D3D576A05CFAEF204C0",
+    "bytes": 10277612,
+    "sha256": "E56AD2CCAA9A1025264A92A5AD014C3B8FBA3336BD9C9F15E5526F7ED169A8C2",
     "mesh_objects": 1,
-    "vertices": 3554,
-    "edges": 10585,
-    "polygons": 7043,
-    "loops": 21129,
+    "vertices": 2434,
+    "edges": 6548,
+    "polygons": 4330,
+    "loops": 12990,
     "uv_layers": [
       "uv"
     ],
-    "material_slots": 10,
+    "material_slots": 20,
     "vertex_groups": [
       "Head",
       "Hips",
@@ -146,7 +205,6 @@
       "LeftHand",
       "LeftLeg",
       "LeftShoulder",
-      "LeftToeBase",
       "LeftUpLeg",
       "RightArm",
       "RightFoot",
@@ -174,30 +232,30 @@
     ],
     "world_bounds": {
       "min": [
-        -0.440245,
-        -1.025219,
-        0.021804
+        -0.713182,
+        -0.600002,
+        -0.060771
       ],
       "max": [
-        0.432464,
-        0.79513,
-        1.444431
+        0.718745,
+        0.488842,
+        1.812614
       ]
     }
   },
   "glb": {
     "path": "artSample/enemies/pahur/appearance_reference_sync/exports/Pahur_Appearance_ReferenceSync.glb",
-    "bytes": 4732824,
-    "sha256": "E61A831935762925F4D85BD16AF8B819B1CFF5B62A457198D3042888A796815E",
+    "bytes": 10227324,
+    "sha256": "7802BF2C6201BD97348C639B1750CF5038506195FA4B28260AC5B14F5B1EDB2C",
     "mesh_objects": 2,
-    "vertices": 3833,
-    "edges": 10941,
-    "polygons": 7123,
-    "loops": 21369,
+    "vertices": 2643,
+    "edges": 6829,
+    "polygons": 4410,
+    "loops": 13230,
     "uv_layers": [
       "UVMap"
     ],
-    "material_slots": 9,
+    "material_slots": 15,
     "vertex_groups": [
       "Head",
       "Hips",
@@ -238,43 +296,50 @@
     "world_bounds": {
       "min": [
         -0.951058,
-        -1.031731,
+        -1.0,
         -1.0
       ],
       "max": [
         0.951058,
         1.0,
-        1.43522
+        1.809969
       ]
     }
   },
   "shape_comparison": {
     "source": {
-      "vertices": 3554,
-      "edges": 10585,
-      "polygons": 7043,
-      "loops": 21129,
+      "vertices": 2445,
+      "edges": 6575,
+      "polygons": 4348,
+      "loops": 13044,
+      "bones": 24
+    },
+    "expected_after_approved_deletion": {
+      "vertices": 2434,
+      "edges": 6548,
+      "polygons": 4330,
+      "loops": 12990,
       "bones": 24
     },
     "blend": {
-      "vertices": 3554,
-      "edges": 10585,
-      "polygons": 7043,
-      "loops": 21129,
+      "vertices": 2434,
+      "edges": 6548,
+      "polygons": 4330,
+      "loops": 12990,
       "bones": 24
     },
     "fbx": {
-      "vertices": 3554,
-      "edges": 10585,
-      "polygons": 7043,
-      "loops": 21129,
+      "vertices": 2434,
+      "edges": 6548,
+      "polygons": 4330,
+      "loops": 12990,
       "bones": 24
     },
     "glb": {
-      "vertices": 3833,
-      "edges": 10941,
-      "polygons": 7123,
-      "loops": 21369,
+      "vertices": 2643,
+      "edges": 6829,
+      "polygons": 4410,
+      "loops": 13230,
       "bones": 24
     }
   }
