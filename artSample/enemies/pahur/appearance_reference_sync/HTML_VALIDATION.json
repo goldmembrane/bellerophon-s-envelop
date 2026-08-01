@@ -30,7 +30,7 @@
       ],
       "headings": [
         "교체 파후르 모델 외형 동기화 아트 샘플",
-        "기준 이미지와 생성 렌더 비교",
+        "적갈색 생성 렌더 비교",
         "생성 렌더",
         "교체 모델 적용 기준",
         "교체 모델 한계와 추론 범위",
@@ -38,17 +38,17 @@
       ],
       "images": [
         {
-          "src": "../../../../image/pāḫḫur(파후르).png",
-          "resolved": "D:\\Bellerophon2\\Bellerophon\\image\\pāḫḫur(파후르).png",
+          "src": "renders/01_front_pahur_reference_match.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\renders\\01_front_pahur_reference_match.png",
           "exists": true,
           "dimensions": [
-            1408,
-            768
+            1280,
+            1280
           ]
         },
         {
-          "src": "renders/01_front_pahur_reference_match.png",
-          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\renders\\01_front_pahur_reference_match.png",
+          "src": "renders/02_three_quarter_pahur_reference_match.png",
+          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\renders\\02_three_quarter_pahur_reference_match.png",
           "exists": true,
           "dimensions": [
             1280,
@@ -290,15 +290,6 @@
           ]
         },
         {
-          "src": "textures/reference_head_detail_crop.png",
-          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\textures\\reference_head_detail_crop.png",
-          "exists": true,
-          "dimensions": [
-            145,
-            146
-          ]
-        },
-        {
           "src": "textures/pahur_face_reference_overlay.png",
           "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\textures\\pahur_face_reference_overlay.png",
           "exists": true,
@@ -359,15 +350,6 @@
           "dimensions": [
             512,
             512
-          ]
-        },
-        {
-          "src": "textures/reference_armor_bluegray_direct_crop.png",
-          "resolved": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\pahur\\appearance_reference_sync\\textures\\reference_armor_bluegray_direct_crop.png",
-          "exists": true,
-          "dimensions": [
-            74,
-            86
           ]
         }
       ],

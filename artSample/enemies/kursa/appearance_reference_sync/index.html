@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>쿠르사 모델 외형 동기화 아트 샘플</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #18201a; color: #edf2e6; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    section { margin: 30px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; background: #222b24; border: 1px solid #435041; padding: 14px; }
+    .comparison h3 { grid-column: 1 / -1; }
+    figure { margin: 0; background: #111711; border: 1px solid #364236; padding: 10px; }
+    img { width: 100%; height: auto; display: block; }
+    figcaption { margin-top: 8px; font-size: 13px; color: #cdd7c5; word-break: break-all; }
+    p, li { line-height: 1.55; }
+    code { color: #d7e6c8; }
+    @media (max-width: 760px) { .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>쿠르사 모델 외형 동기화 아트 샘플</h1>
+  <p>현재 Unity에 배치된 쿠르사와 동일한 <code>Assets/_Project/Art/Enemies/Kursa/Models/Kursa.fbx</code>를 사용한 검토 샘플입니다. <code>image/KUŠkursa(쿠르사).png</code>에서 확인되는 색 배치·표면 질감·머티리얼 특성만 기존 표면에 동기화했으며, 메시 형상·UV·웨이트·리그·내장 애니메이션은 변경하지 않았습니다. 상태는 <code>APPROVED_FOR_UNITY_NOT_APPLIED</code>이며 2026-08-02 사용자가 최종 승인했습니다. Unity 적용은 별도 작업입니다. 간단한 판정용 요약은 <a href="summary.html">summary.html</a>에 있습니다.</p>
+
+  <section>
+    <h2>기준 이미지와 생성 렌더 비교</h2>
+    <article class="comparison">
+      <h3>정면과 3/4</h3>
+      <figure><img src="renders/01_front_kursa_reference_match.png" alt="쿠르사 FBX 정면 생성 렌더"><figcaption>정면: renders/01_front_kursa_reference_match.png</figcaption></figure>
+      <figure><img src="renders/02_three_quarter_kursa_reference_match.png" alt="쿠르사 FBX 3/4 생성 렌더"><figcaption>3/4: renders/02_three_quarter_kursa_reference_match.png</figcaption></figure>
+    </article>
+  </section>
+
+  <section>
+    <h2>생성 렌더</h2>
+    <div class="grid">
+      <figure><img src="renders/01_front_kursa_reference_match.png" alt="01_front_kursa_reference_match"><figcaption>01_front_kursa_reference_match.png</figcaption></figure>
+      <figure><img src="renders/02_three_quarter_kursa_reference_match.png" alt="02_three_quarter_kursa_reference_match"><figcaption>02_three_quarter_kursa_reference_match.png</figcaption></figure>
+      <figure><img src="renders/03_reference_side_by_side_overview.png" alt="기준 이미지와 전체 렌더 비교"><figcaption>03_reference_side_by_side_overview.png</figcaption></figure>
+      <figure><img src="renders/04_side_current_model_material.png" alt="쿠르사 측면 렌더"><figcaption>04_side_current_model_material.png</figcaption></figure>
+      <figure><img src="renders/05_rear_current_model_material.png" alt="쿠르사 후면 렌더"><figcaption>05_rear_current_model_material.png</figcaption></figure>
+      <figure><img src="renders/06_texture_atlas_and_material_breakdown.png" alt="쿠르사 재질 분석판"><figcaption>06_texture_atlas_and_material_breakdown.png</figcaption></figure>
+      <figure><img src="renders/07_head_front_detail.png" alt="쿠르사 머리 정면 상세"><figcaption>07_head_front_detail.png</figcaption></figure>
+      <figure><img src="renders/07_head_three_quarter_detail.png" alt="쿠르사 머리 3/4 상세"><figcaption>07_head_three_quarter_detail.png</figcaption></figure>
+      <figure><img src="renders/08_head_detail_comparison.png" alt="기준 이미지와 머리 상세 비교"><figcaption>08_head_detail_comparison.png</figcaption></figure>
+      <figure><img src="renders/09_eye_surface_multiview.png" alt="쿠르사 눈 표면 5시점 검토"><figcaption>09_eye_surface_multiview.png</figcaption></figure>
+      <figure><img src="renders/10_shield_arm_detail.png" alt="쿠르사 방패와 왼팔 상세"><figcaption>10_shield_arm_detail.png</figcaption></figure>
+      <figure><img src="renders/11_shield_arm_comparison.png" alt="기준 이미지와 방패 비교"><figcaption>11_shield_arm_comparison.png</figcaption></figure>
+      <figure><img src="renders/12_torso_front_detail.png" alt="쿠르사 몸통 정면 상세"><figcaption>12_torso_front_detail.png</figcaption></figure>
+      <figure><img src="renders/13_torso_detail_comparison.png" alt="기준 이미지와 몸통 비교"><figcaption>13_torso_detail_comparison.png</figcaption></figure>
+      <figure><img src="renders/14_eye_cavity_geometry_verification.png" alt="쿠르사 사용자 지정 눈 위치 이미지 대조"><figcaption>14_eye_cavity_geometry_verification.png</figcaption></figure>
+      <figure><img src="renders/15_eye_shape_distortion_correction.png" alt="쿠르사 눈 형태 왜곡 교정 비교"><figcaption>15_eye_shape_distortion_correction.png</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>쿠르사 모델 적용 기준</h2>
+    <p>원본 FBX는 재질 슬롯이 없는 단일 스킨 메시 <code>char1</code>입니다. 검토본은 원본의 47개 연결 표면, 기존 버텍스 그룹, 머리의 실제 전면 평면을 기준으로 아홉 재질군만 배정했습니다.</p>
+    <ul>
+      <li>검토용 원본 파일: <code>blender/Kursa_Appearance_ReferenceSync.blend</code></li>
+      <li>검토용 FBX: <code>exports/Kursa_Appearance_ReferenceSync.fbx</code></li>
+      <li>범용 시각 검토용 GLB: <code>exports/Kursa_Appearance_ReferenceSync.glb</code></li>
+      <li>장갑: 기준 이미지의 중성 건메탈을 주조로 하고, 어깨·무릎 일부만 어두운 청회색 패널로 제한했습니다. 알베도·러프니스·메탈릭·노멀에 패널 이음선, 리벳, 도장 벗겨짐, 노출 금속, 오일 얼룩, 미세 요철을 함께 구성했습니다.</li>
+      <li>몸통: 기존 흉부 분리 표면에 전용 기계 장갑 재질을 추가하고, 조밀한 패널 경계와 금속 마모를 적용했습니다. 기준 이미지에서 분리한 청록 문양만 상부 흉갑에 낮은 불투명도로 사용했으며 몸체 사진 자체는 투영하지 않았습니다.</li>
+      <li>머리: 기존 후드·목도리 표면에는 청흑색 직물과 기준 이미지에서 분리한 청록 문양을 적용했습니다. 사용자가 지정한 48×27 픽셀 얼굴 부분을 3/4 렌더에 직접 대조해 바이저 바로 아래의 어두운 가로 홈을 확정했습니다. 일치 영역은 렌더 02의 <code>x=534..606, y=154..194</code>이며, 좌우 어두운 영역 중심 <code>(550,176)</code>, <code>(586,174)</code>에서 원본 메시로 광선을 역투영했습니다. 적중한 폴리곤 <code>3801</code>과 <code>3627</code>의 중심은 그대로 유지합니다. 가로·세로 크기는 2배 상태이며, 서로 다른 오목면 법선 때문에 생긴 전단을 제거하기 위해 두 눈 UV에 공통 시각 평면 법선 <code>(0.552875, -0.117583, 0.824926)</code>을 적용했습니다. 오른쪽 깊이 마스크는 <code>2.05</code>로 맞춰 수직 잘림을 제거했습니다. 이전 관자·얼굴 옆면과 코 양옆 삼각면 판정은 폐기했습니다.</li>
+      <li>방패: 기존 대형 방패 표면에는 어두운 무광 건메탈, 방향성 연마 흔적, 긁힘, 충격 자국, 불균일 오염과 독립된 노멀·러프니스 변화를 적용했습니다. 별도 테두리 표면에는 밝은 강철을 적용했으며 기준 이미지의 방패 사진 자체는 투영하지 않았습니다.</li>
+      <li>관절·손: 기준 이미지처럼 장갑보다 어둡고 거친 기계 재질을 적용했습니다.</li>
+      <li>형상 보존: 정점 2,109개, 에지 5,936개, 면 3,913개, 루프 11,739개, 본 24개, UV 레이어 1개가 작업 전후 동일합니다.</li>
+      <li>샘플 승인은 완료됐습니다. 향후 Unity 적용은 별도 작업 승인 후 쿠르사 전용 머티리얼과 텍스처를 만들고 <code>Approved Kursa Enemy Placement</code> 아래 12개 인스턴스의 동일 Renderer에 연결하는 방식이 기준입니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>쿠르사 모델 한계와 추론 범위</h2>
+    <ul>
+      <li>현재 FBX의 형태는 기준 이미지보다 단순합니다. 기준 이미지의 볼트·세부 패널·케이블·안면 프레임을 새 메시나 가짜 형상으로 보완하지 않았습니다.</li>
+      <li>방패에 가려진 부위와 기준 이미지에서 보이지 않는 후면은 확인 가능한 색 체계의 연속성만 적용했습니다.</li>
+      <li>후드·목도리·흉부의 청록 문양과 눈은 기준 이미지의 해당 영역만 분리해 기존 표면에 투영했습니다. 눈은 별도 메시를 추가하지 않고 <code>USER_EYE_TARGET_MAP.json</code>에 기록한 사용자 지정 이미지 영역의 두 표면 적중점에 맞춘 뒤, 중심 위치를 유지한 채 투영 크기만 2배로 확대했습니다. 새로운 기호나 도안을 생성하지 않았고, 분석용 몸체·방패 표면 크롭은 최종 재질에 사용하지 않았습니다.</li>
+      <li>발광은 눈의 청색 안광만 낮은 세기로 사용하며 VFX는 생성하지 않았습니다.</li>
+      <li>FBX 재가져오기는 원본 수치를 유지합니다. GLB는 4개 초과 본 영향 제한과 머티리얼 프리미티브 분리로 정점·면이 분할되므로, 형상 보존 판정은 Blend와 FBX 및 <code>GEOMETRY_PRESERVATION.json</code>을 기준으로 합니다.</li>
+      <li>Blender 종료 시 사용자 설치 Auto-Rig Pro의 정리 핸들 경고가 발생했으나 생성·저장·FBX 재가져오기 결과에는 오류가 없었습니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>사용 텍스처</h2>
+    <div class="grid">
+      <figure><img src="textures/kursa_armor_gunmetal_albedo.png" alt="건메탈 장갑 알베도"><figcaption>kursa_armor_gunmetal_albedo.png</figcaption></figure>
+      <figure><img src="textures/kursa_armor_bluegray_albedo.png" alt="청회색 장갑 알베도"><figcaption>kursa_armor_bluegray_albedo.png</figcaption></figure>
+      <figure><img src="textures/kursa_light_steel_albedo.png" alt="밝은 강철 알베도"><figcaption>kursa_light_steel_albedo.png</figcaption></figure>
+      <figure><img src="textures/kursa_dark_mechanics_albedo.png" alt="어두운 기계부 알베도"><figcaption>kursa_dark_mechanics_albedo.png</figcaption></figure>
+      <figure><img src="textures/kursa_torso_mechanical_albedo.png" alt="흉부 기계 장갑 알베도"><figcaption>kursa_torso_mechanical_albedo.png</figcaption></figure>
+      <figure><img src="textures/kursa_hood_cloth_albedo.png" alt="후드 직물 알베도"><figcaption>kursa_hood_cloth_albedo.png</figcaption></figure>
+      <figure><img src="textures/kursa_face_metal_albedo.png" alt="안면 금속 알베도"><figcaption>kursa_face_metal_albedo.png</figcaption></figure>
+      <figure><img src="textures/kursa_shield_worn_albedo.png" alt="방패 마모 알베도"><figcaption>kursa_shield_worn_albedo.png</figcaption></figure>
+      <figure><img src="textures/kursa_shield_frame_albedo.png" alt="방패 테두리 알베도"><figcaption>kursa_shield_frame_albedo.png</figcaption></figure>
+      <figure><img src="textures/kursa_eye_left_reference_overlay.png" alt="기준 이미지 좌안 투영본"><figcaption>kursa_eye_left_reference_overlay.png</figcaption></figure>
+      <figure><img src="textures/kursa_eye_right_reference_overlay.png" alt="기준 이미지 우안 투영본"><figcaption>kursa_eye_right_reference_overlay.png</figcaption></figure>
+      <figure><img src="textures/kursa_hood_reference_decal.png" alt="기준 이미지 후드 문양"><figcaption>kursa_hood_reference_decal.png</figcaption></figure>
+      <figure><img src="textures/kursa_scarf_reference_decal.png" alt="기준 이미지 목도리 문양"><figcaption>kursa_scarf_reference_decal.png</figcaption></figure>
+      <figure><img src="textures/kursa_torso_reference_glyph.png" alt="기준 이미지 흉부 청록 문양"><figcaption>kursa_torso_reference_glyph.png</figcaption></figure>
+      <figure><img src="textures/kursa_shield_worn_normal.png" alt="방패 마모 노멀"><figcaption>kursa_shield_worn_normal.png</figcaption></figure>
+    </div>
+  </section>
+</main>
+</body>
+</html>

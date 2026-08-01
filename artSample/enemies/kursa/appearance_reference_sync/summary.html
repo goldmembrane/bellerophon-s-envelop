@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>쿠르사 외형 동기화 요약</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #18201a; color: #edf2e6; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    section { margin: 30px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; background: #222b24; border: 1px solid #435041; padding: 14px; }
+    .comparison h3 { grid-column: 1 / -1; }
+    figure { margin: 0; background: #111711; border: 1px solid #364236; padding: 10px; }
+    img { width: 100%; height: auto; display: block; }
+    figcaption { margin-top: 8px; font-size: 13px; color: #cdd7c5; word-break: break-all; }
+    p, li { line-height: 1.55; }
+    code { color: #d7e6c8; }
+    @media (max-width: 760px) { .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>쿠르사 외형 동기화 요약</h1>
+  <p>현재 상태는 <code>APPROVED_FOR_UNITY_NOT_APPLIED</code>입니다. 2026-08-02 사용자가 최종 샘플을 승인했습니다. Unity에 배치된 쿠르사 FBX의 형상은 그대로 유지하고 기준 이미지에서 확인한 색 배치·텍스처·머티리얼만 적용했으며, 실제 Unity 반영은 아직 수행하지 않았습니다. 전체 자료는 <a href="index.html">index.html</a>에서 확인할 수 있습니다.</p>
+
+  <section>
+    <h2>비교 요약</h2>
+    <figure><img src="renders/03_reference_side_by_side_overview.png" alt="쿠르사 기준 이미지와 전체 렌더 비교"><figcaption>기준 이미지와 현재 FBX 머티리얼 샘플</figcaption></figure>
+    <figure><img src="renders/08_head_detail_comparison.png" alt="쿠르사 머리 상세 비교"><figcaption>후드·청록 문양·기존 좌우 안와에 정렬된 청색 안광·금속 안면 비교</figcaption></figure>
+    <figure><img src="renders/09_eye_surface_multiview.png" alt="쿠르사 눈 표면 5시점 검토"><figcaption>사용자 지정 바이저 아래 가로 홈에서 크기를 2배로 확대한 청색 안광 5시점 확인</figcaption></figure>
+    <figure><img src="renders/14_eye_cavity_geometry_verification.png" alt="쿠르사 사용자 지정 눈 위치 이미지 대조"><figcaption>제공된 얼굴 부분, 일치한 모델 영역과 최종 눈 투영을 직접 대조</figcaption></figure>
+    <figure><img src="renders/15_eye_shape_distortion_correction.png" alt="쿠르사 눈 형태 왜곡 교정 비교"><figcaption>사용자 제보 시점과 전단·수직 잘림을 제거한 최종 눈 형태 비교</figcaption></figure>
+    <figure><img src="renders/11_shield_arm_comparison.png" alt="쿠르사 방패 상세 비교"><figcaption>무광 회색 방패의 방향성 연마 흔적·긁힘·오염 비교</figcaption></figure>
+    <figure><img src="renders/13_torso_detail_comparison.png" alt="쿠르사 몸통 상세 비교"><figcaption>전용 흉부 기계 장갑의 패널 이음선·리벳·금속 마모 비교</figcaption></figure>
+  </section>
+
+  <section>
+    <h2>반영된 외형</h2>
+    <ul>
+      <li>기준 이미지에서 확인되는 중성 회색 건메탈 장갑과 제한된 청회색 패널.</li>
+      <li>청흑색 후드·목도리 직물과 기준 이미지에서 분리한 청록 문양.</li>
+      <li>회색 금속 안면의 기존 좌우 안와 프레임 중앙에 정렬한 청색 안광.</li>
+      <li>눈 형상 추가 없이 기준 이미지의 좌안·우안을 분리하고, 사용자가 지정한 바이저 아래 가로 홈에 각각 접평면 투영.</li>
+      <li>확정된 중심·대상 폴리곤·표면 마스크 법선을 유지하고 양쪽 눈의 가로·세로 투영 크기는 정확히 2배 상태로 유지.</li>
+      <li>눈 중심은 유지하고 양쪽 UV 투영에 공통 시각 평면을 적용해 오른쪽 눈의 약 <code>35.2°</code> 전단을 약 <code>90°</code>로 교정.</li>
+      <li>오른쪽 깊이 마스크의 수직 잘림을 제거해 최종 청색 형태 비율을 왼쪽 약 <code>1.39:1</code>, 오른쪽 약 <code>1.37:1</code>로 균형화.</li>
+      <li>제공 이미지의 좌우 어두운 영역 중심을 렌더 02의 <code>(550,176)</code>, <code>(586,174)</code>로 대응하고 원본 폴리곤 <code>3801</code>, <code>3627</code>에 역투영.</li>
+      <li>측면 스트랩·관자·얼굴 옆면과 코 양옆 삼각면에 걸리던 이전 눈 위치 판정을 모두 폐기.</li>
+      <li>전용 흉부 기계 장갑과 검고 거친 관절·손 기계부.</li>
+      <li>장갑 전반의 패널 이음선·리벳·도장 벗겨짐·노출 금속·오일 얼룩·미세 요철.</li>
+      <li>어두운 무광 방패, 밝은 테두리, 방향성 연마 흔적·긁힘·충격 자국·불균일 오염.</li>
+      <li>총 3,913면에 9개 재질군을 배정했으며 새 메시·패널·부품은 만들지 않았습니다.</li>
+      <li>흉부 청록 문양만 기준 이미지에서 분리해 사용했으며 몸체·방패 사진 자체는 최종 재질에 투영하지 않았습니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>보존 및 한계</h2>
+    <ul>
+      <li>작업 전후 정점 2,109개, 에지 5,936개, 면 3,913개, 루프 11,739개, 본 24개가 동일하며 형상 보존 결과는 <code>PASS</code>입니다.</li>
+      <li>UV·웨이트·리그·내장 애니메이션도 작업 전후 동일합니다.</li>
+      <li>기준 이미지보다 단순한 기존 FBX 형태를 유지했으며, 이미지에만 있는 볼트·패널·케이블은 생성하지 않았습니다.</li>
+      <li>FBX 재가져오기는 원본 수치를 유지합니다. GLB는 포맷 제약으로 표면 분할이 발생해 시각 검토용으로만 제공합니다.</li>
+      <li>샘플 승인은 완료됐으며 Unity 적용은 별도 작업 승인 전까지 수행하지 않습니다.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>

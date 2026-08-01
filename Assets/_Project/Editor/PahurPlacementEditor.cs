@@ -40,7 +40,7 @@ namespace Bellerophon.Editor.PahurCargoRunScene
             ValidationFolder + "/Pahur_Placement_VisualReview.png";
         private const string ExpectedSourceSha256 =
             "9D376E7BD5262E9DF347D8CCC37675DDBCF647D063011C0A71E80CDDA4A9DEA3";
-        private const int SlotCount = 10;
+        private const int SlotCount = 11;
         private const float TargetHeight = 1.5f;
         private const float FacingYaw = 180f;
         private const float Tolerance = 0.03f;
@@ -56,9 +56,10 @@ namespace Bellerophon.Editor.PahurCargoRunScene
             "Pahur_05_BreakthroughFlamethrower",
             "Pahur_06_GuardianFlamethrower",
             "Pahur_07_Stop",
-            "Pahur_08_FormationTransition",
-            "Pahur_09_Hit",
-            "Pahur_10_Death"
+            "Pahur_08_ToGuardianStance",
+            "Pahur_09_FromGuardianStance",
+            "Pahur_10_Hit",
+            "Pahur_11_Death"
         };
 
         [MenuItem("Bellerophon/Enemies/Pahur/Replace Placed Models")]
@@ -377,7 +378,7 @@ namespace Bellerophon.Editor.PahurCargoRunScene
                 root.childCount != SlotCount)
             {
                 throw new InvalidOperationException(
-                    "Pahur root position or ten-slot contract changed.");
+                    "Pahur root position or eleven-slot contract changed.");
             }
 
             var rendererCount = -1;
@@ -946,7 +947,7 @@ namespace Bellerophon.Editor.PahurCargoRunScene
             if (root.childCount != SlotCount)
             {
                 throw new InvalidOperationException(
-                    "The Pahur placement must retain ten slots.");
+                    "The Pahur placement must retain eleven slots.");
             }
 
             var signatures = new List<string>

@@ -1,0 +1,391 @@
+{
+  "result": "PASS",
+  "pahur_format_css_match": true,
+  "static_dom_and_asset_check": "PASS",
+  "direct_visual_review": {
+    "result": "PASS",
+    "reviewed_images": [
+      "renders/01_front_kursa_reference_match.png",
+      "renders/02_three_quarter_kursa_reference_match.png",
+      "renders/03_reference_side_by_side_overview.png",
+      "renders/07_head_front_detail.png",
+      "renders/08_head_detail_comparison.png",
+      "renders/09_eye_surface_multiview.png",
+      "renders/10_shield_arm_detail.png",
+      "renders/11_shield_arm_comparison.png",
+      "renders/12_torso_front_detail.png",
+      "renders/13_torso_detail_comparison.png",
+      "renders/14_eye_cavity_geometry_verification.png",
+      "renders/15_eye_shape_distortion_correction.png"
+    ]
+  },
+  "pages": [
+    {
+      "file": "artSample/enemies/kursa/appearance_reference_sync/index.html",
+      "titles": [
+        "쿠르사 모델 외형 동기화 아트 샘플"
+      ],
+      "headings": [
+        "쿠르사 모델 외형 동기화 아트 샘플",
+        "기준 이미지와 생성 렌더 비교",
+        "정면과 3/4",
+        "생성 렌더",
+        "쿠르사 모델 적용 기준",
+        "쿠르사 모델 한계와 추론 범위",
+        "사용 텍스처"
+      ],
+      "images": [
+        {
+          "src": "renders/01_front_kursa_reference_match.png",
+          "exists": true,
+          "dimensions": [
+            1280,
+            1280
+          ]
+        },
+        {
+          "src": "renders/02_three_quarter_kursa_reference_match.png",
+          "exists": true,
+          "dimensions": [
+            1280,
+            1280
+          ]
+        },
+        {
+          "src": "renders/01_front_kursa_reference_match.png",
+          "exists": true,
+          "dimensions": [
+            1280,
+            1280
+          ]
+        },
+        {
+          "src": "renders/02_three_quarter_kursa_reference_match.png",
+          "exists": true,
+          "dimensions": [
+            1280,
+            1280
+          ]
+        },
+        {
+          "src": "renders/03_reference_side_by_side_overview.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            940
+          ]
+        },
+        {
+          "src": "renders/04_side_current_model_material.png",
+          "exists": true,
+          "dimensions": [
+            1280,
+            1280
+          ]
+        },
+        {
+          "src": "renders/05_rear_current_model_material.png",
+          "exists": true,
+          "dimensions": [
+            1280,
+            1280
+          ]
+        },
+        {
+          "src": "renders/06_texture_atlas_and_material_breakdown.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            1450
+          ]
+        },
+        {
+          "src": "renders/07_head_front_detail.png",
+          "exists": true,
+          "dimensions": [
+            1280,
+            1280
+          ]
+        },
+        {
+          "src": "renders/07_head_three_quarter_detail.png",
+          "exists": true,
+          "dimensions": [
+            1280,
+            1280
+          ]
+        },
+        {
+          "src": "renders/08_head_detail_comparison.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            940
+          ]
+        },
+        {
+          "src": "renders/09_eye_surface_multiview.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            1160
+          ]
+        },
+        {
+          "src": "renders/10_shield_arm_detail.png",
+          "exists": true,
+          "dimensions": [
+            1280,
+            1280
+          ]
+        },
+        {
+          "src": "renders/11_shield_arm_comparison.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            940
+          ]
+        },
+        {
+          "src": "renders/12_torso_front_detail.png",
+          "exists": true,
+          "dimensions": [
+            1280,
+            1280
+          ]
+        },
+        {
+          "src": "renders/13_torso_detail_comparison.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            940
+          ]
+        },
+        {
+          "src": "renders/14_eye_cavity_geometry_verification.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            1160
+          ]
+        },
+        {
+          "src": "renders/15_eye_shape_distortion_correction.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            760
+          ]
+        },
+        {
+          "src": "textures/kursa_armor_gunmetal_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_armor_bluegray_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_light_steel_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_dark_mechanics_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_torso_mechanical_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_hood_cloth_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_face_metal_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_shield_worn_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_shield_frame_albedo.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_eye_left_reference_overlay.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_eye_right_reference_overlay.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_hood_reference_decal.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_scarf_reference_decal.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_torso_reference_glyph.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "src": "textures/kursa_shield_worn_normal.png",
+          "exists": true,
+          "dimensions": [
+            512,
+            512
+          ]
+        }
+      ],
+      "links": [
+        {
+          "href": "summary.html",
+          "exists": true
+        }
+      ],
+      "broken_images": 0,
+      "broken_links": 0
+    },
+    {
+      "file": "artSample/enemies/kursa/appearance_reference_sync/summary.html",
+      "titles": [
+        "쿠르사 외형 동기화 요약"
+      ],
+      "headings": [
+        "쿠르사 외형 동기화 요약",
+        "비교 요약",
+        "반영된 외형",
+        "보존 및 한계"
+      ],
+      "images": [
+        {
+          "src": "renders/03_reference_side_by_side_overview.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            940
+          ]
+        },
+        {
+          "src": "renders/08_head_detail_comparison.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            940
+          ]
+        },
+        {
+          "src": "renders/09_eye_surface_multiview.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            1160
+          ]
+        },
+        {
+          "src": "renders/14_eye_cavity_geometry_verification.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            1160
+          ]
+        },
+        {
+          "src": "renders/15_eye_shape_distortion_correction.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            760
+          ]
+        },
+        {
+          "src": "renders/11_shield_arm_comparison.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            940
+          ]
+        },
+        {
+          "src": "renders/13_torso_detail_comparison.png",
+          "exists": true,
+          "dimensions": [
+            1600,
+            940
+          ]
+        }
+      ],
+      "links": [
+        {
+          "href": "index.html",
+          "exists": true
+        }
+      ],
+      "broken_images": 0,
+      "broken_links": 0
+    }
+  ]
+}

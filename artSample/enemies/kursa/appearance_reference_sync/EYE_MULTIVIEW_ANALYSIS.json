@@ -1,0 +1,225 @@
+{
+  "result": "ANALYSIS_ONLY",
+  "source_model": "Assets/_Project/Art/Enemies/Kursa/Models/Kursa.fbx",
+  "frame": 1,
+  "head_component_id": 7,
+  "head_polygon_count": 686,
+  "face_polygon_count": 269,
+  "forward_basis_polygon_count": 96,
+  "rejected_average_polygon_normal_world": [
+    -0.1796694,
+    -0.97174519,
+    -0.15306906
+  ],
+  "forward_basis": "bilateral depth-symmetry search around posed headfront bone",
+  "posed_face_forward_world": [
+    -0.50975686,
+    -0.85912806,
+    -0.04524137
+  ],
+  "headfront_head_world": [
+    -0.00828697,
+    -0.22453755,
+    1.46922851
+  ],
+  "solved_face_axis": {
+    "yaw_from_headfront_degrees": -33,
+    "horizontal_center_offset": -0.06,
+    "symmetry_score": 0.010171379434739374,
+    "matched_ray_coverage": 0.986013986013986
+  },
+  "best_axis_candidates": [
+    {
+      "yaw_from_headfront_degrees": -33,
+      "horizontal_center_offset": -0.06,
+      "symmetry_score": 0.010171379434739374,
+      "matched_ray_coverage": 0.986013986013986
+    },
+    {
+      "yaw_from_headfront_degrees": -30,
+      "horizontal_center_offset": -0.055,
+      "symmetry_score": 0.010352249535490998,
+      "matched_ray_coverage": 0.9790209790209791
+    },
+    {
+      "yaw_from_headfront_degrees": -33,
+      "horizontal_center_offset": -0.065,
+      "symmetry_score": 0.010386006001291888,
+      "matched_ray_coverage": 0.993006993006993
+    },
+    {
+      "yaw_from_headfront_degrees": -30,
+      "horizontal_center_offset": -0.06,
+      "symmetry_score": 0.010420010569928721,
+      "matched_ray_coverage": 0.986013986013986
+    },
+    {
+      "yaw_from_headfront_degrees": -36,
+      "horizontal_center_offset": -0.07,
+      "symmetry_score": 0.010441495102367826,
+      "matched_ray_coverage": 1.0
+    },
+    {
+      "yaw_from_headfront_degrees": -30,
+      "horizontal_center_offset": -0.065,
+      "symmetry_score": 0.010534913091874726,
+      "matched_ray_coverage": 1.0
+    },
+    {
+      "yaw_from_headfront_degrees": -36,
+      "horizontal_center_offset": -0.065,
+      "symmetry_score": 0.010646001200478239,
+      "matched_ray_coverage": 0.993006993006993
+    },
+    {
+      "yaw_from_headfront_degrees": -39,
+      "horizontal_center_offset": -0.07,
+      "symmetry_score": 0.010890371849193805,
+      "matched_ray_coverage": 1.0
+    },
+    {
+      "yaw_from_headfront_degrees": -27,
+      "horizontal_center_offset": -0.06,
+      "symmetry_score": 0.011203209294748682,
+      "matched_ray_coverage": 0.993006993006993
+    },
+    {
+      "yaw_from_headfront_degrees": -27,
+      "horizontal_center_offset": -0.055,
+      "symmetry_score": 0.011231061994143714,
+      "matched_ray_coverage": 0.9790209790209791
+    },
+    {
+      "yaw_from_headfront_degrees": -33,
+      "horizontal_center_offset": -0.07,
+      "symmetry_score": 0.011233155977899222,
+      "matched_ray_coverage": 1.0
+    },
+    {
+      "yaw_from_headfront_degrees": -39,
+      "horizontal_center_offset": -0.075,
+      "symmetry_score": 0.011440405072611789,
+      "matched_ray_coverage": 1.0
+    }
+  ],
+  "head_center_world": [
+    -0.059887,
+    -0.193921,
+    1.544229
+  ],
+  "head_bounds_world": {
+    "min": [
+      -0.219887,
+      -0.353921,
+      1.404229
+    ],
+    "max": [
+      0.100112,
+      -0.033921,
+      1.684229
+    ]
+  },
+  "eye_overlay_enabled": false,
+  "diagnostic_geometry_only": true,
+  "views": [
+    {
+      "name": "actual_front",
+      "yaw_degrees": 0.0,
+      "pitch_degrees": 0.0,
+      "camera_location": [
+        -0.477888,
+        -0.898406,
+        1.507131
+      ],
+      "image": "diagnostics/eye_multiview/no_eye_actual_front.png"
+    },
+    {
+      "name": "left_30",
+      "yaw_degrees": -30.0,
+      "pitch_degrees": 0.0,
+      "camera_location": [
+        -0.774129,
+        -0.595022,
+        1.507131
+      ],
+      "image": "diagnostics/eye_multiview/no_eye_left_30.png"
+    },
+    {
+      "name": "left_60",
+      "yaw_degrees": -60.0,
+      "pitch_degrees": 0.0,
+      "camera_location": [
+        -0.87899,
+        -0.184164,
+        1.507131
+      ],
+      "image": "diagnostics/eye_multiview/no_eye_left_60.png"
+    },
+    {
+      "name": "left_90",
+      "yaw_degrees": -90.0,
+      "pitch_degrees": 0.0,
+      "camera_location": [
+        -0.764372,
+        0.22408,
+        1.507131
+      ],
+      "image": "diagnostics/eye_multiview/no_eye_left_90.png"
+    },
+    {
+      "name": "right_30",
+      "yaw_degrees": 30.0,
+      "pitch_degrees": 0.0,
+      "camera_location": [
+        -0.069644,
+        -1.013023,
+        1.507131
+      ],
+      "image": "diagnostics/eye_multiview/no_eye_right_30.png"
+    },
+    {
+      "name": "right_60",
+      "yaw_degrees": 60.0,
+      "pitch_degrees": 0.0,
+      "camera_location": [
+        0.341214,
+        -0.908162,
+        1.507131
+      ],
+      "image": "diagnostics/eye_multiview/no_eye_right_60.png"
+    },
+    {
+      "name": "right_90",
+      "yaw_degrees": 90.0,
+      "pitch_degrees": 0.0,
+      "camera_location": [
+        0.644598,
+        -0.611922,
+        1.507131
+      ],
+      "image": "diagnostics/eye_multiview/no_eye_right_90.png"
+    },
+    {
+      "name": "top_25",
+      "yaw_degrees": 0.0,
+      "pitch_degrees": 25.0,
+      "camera_location": [
+        -0.446725,
+        -0.845885,
+        1.856799
+      ],
+      "image": "diagnostics/eye_multiview/no_eye_top_25.png"
+    },
+    {
+      "name": "bottom_25",
+      "yaw_degrees": 0.0,
+      "pitch_degrees": -25.0,
+      "camera_location": [
+        -0.430724,
+        -0.818918,
+        1.164414
+      ],
+      "image": "diagnostics/eye_multiview/no_eye_bottom_25.png"
+    }
+  ]
+}

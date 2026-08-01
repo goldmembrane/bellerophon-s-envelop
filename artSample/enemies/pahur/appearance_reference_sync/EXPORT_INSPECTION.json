@@ -125,8 +125,8 @@
   },
   "blend": {
     "path": "artSample/enemies/pahur/appearance_reference_sync/blender/Pahur_Appearance_ReferenceSync.blend",
-    "bytes": 537070,
-    "sha256": "0E87EBD17ACFE11E54042E2E2F99D95F797413280E182E27494FFDB5014665CF",
+    "bytes": 536631,
+    "sha256": "9C9774AF02C1919C79CC5B0C93AC4B0A05E1FB3C2EED615854DA65A0955D360F",
     "mesh_objects": 1,
     "vertices": 2434,
     "edges": 6548,
@@ -185,8 +185,8 @@
   },
   "fbx": {
     "path": "artSample/enemies/pahur/appearance_reference_sync/exports/Pahur_Appearance_ReferenceSync.fbx",
-    "bytes": 10277612,
-    "sha256": "E56AD2CCAA9A1025264A92A5AD014C3B8FBA3336BD9C9F15E5526F7ED169A8C2",
+    "bytes": 10235404,
+    "sha256": "5A2354A0B89A451DB98EF5AA5409C61EE12CF5638FA6EC2C88110B4C146B537C",
     "mesh_objects": 1,
     "vertices": 2434,
     "edges": 6548,
@@ -245,8 +245,8 @@
   },
   "glb": {
     "path": "artSample/enemies/pahur/appearance_reference_sync/exports/Pahur_Appearance_ReferenceSync.glb",
-    "bytes": 10227324,
-    "sha256": "7802BF2C6201BD97348C639B1750CF5038506195FA4B28260AC5B14F5B1EDB2C",
+    "bytes": 10184836,
+    "sha256": "FF0B710BC2D767447189985BDAA34C6613BBD9125D0E2C12671C745067C2A096",
     "mesh_objects": 2,
     "vertices": 2643,
     "edges": 6829,

@@ -15,8 +15,8 @@ SIZE = 512
 
 PALETTE = {
     "armor_bluegray": {
-        "base": (38, 54, 68),
-        "accent": (92, 107, 117),
+        "base": (65, 32, 27),
+        "accent": (127, 69, 55),
         "metallic": 184,
         "roughness": 132,
         "seed": 104,
@@ -31,8 +31,8 @@ PALETTE = {
         "style": "brushed_plate",
     },
     "leg_steel": {
-        "base": (37, 47, 54),
-        "accent": (88, 101, 108),
+        "base": (45, 25, 23),
+        "accent": (88, 48, 42),
         "metallic": 187,
         "roughness": 138,
         "seed": 257,
@@ -47,8 +47,8 @@ PALETTE = {
         "style": "mechanical_joint",
     },
     "torso_rigid_shell": {
-        "base": (33, 47, 58),
-        "accent": (73, 89, 100),
+        "base": (55, 27, 24),
+        "accent": (106, 56, 48),
         "metallic": 184,
         "roughness": 138,
         "seed": 331,
@@ -71,24 +71,24 @@ PALETTE = {
         "style": "mechanical_joint",
     },
     "torso_pelvis_plate": {
-        "base": (68, 80, 87),
-        "accent": (126, 136, 140),
+        "base": (72, 37, 32),
+        "accent": (132, 74, 60),
         "metallic": 198,
         "roughness": 132,
         "seed": 349,
         "style": "rigid_plate",
     },
     "shoulder_machine_blue": {
-        "base": (34, 51, 68),
-        "accent": (86, 104, 119),
+        "base": (62, 30, 26),
+        "accent": (122, 64, 52),
         "metallic": 184,
         "roughness": 132,
         "seed": 104,
         "style": "rigid_plate",
     },
     "left_arm_machine": {
-        "base": (34, 51, 68),
-        "accent": (86, 104, 119),
+        "base": (62, 30, 26),
+        "accent": (122, 64, 52),
         "metallic": 184,
         "roughness": 132,
         "seed": 104,
@@ -103,8 +103,8 @@ PALETTE = {
         "style": "mechanical_joint",
     },
     "hood_navy_cloth": {
-        "base": (15, 25, 42),
-        "accent": (52, 68, 88),
+        "base": (35, 16, 18),
+        "accent": (76, 37, 38),
         "metallic": 4,
         "roughness": 234,
         "seed": 401,
@@ -622,12 +622,12 @@ def make_mechanical_front_maps():
 
     steel = (132, 150, 158, 242)
     light = (186, 198, 199, 230)
-    blue = (31, 65, 91, 244)
+    red_brown = (82, 39, 32, 244)
     dark = (13, 22, 29, 248)
     groove = (4, 9, 13, 255)
     edge = (213, 224, 222, 205)
     orange = (239, 82, 17, 248)
-    blue_light = (51, 183, 244, 250)
+    warm_red_light = (201, 68, 45, 250)
 
     def panel(points, fill, outline=edge, seam_width=8):
         color.polygon(points, fill=fill)
@@ -672,20 +672,20 @@ def make_mechanical_front_maps():
 
     center = 624
 
-    # Face plate beneath the retained navy hood.
+    # Face plate beneath the retained dark red-brown hood.
     panel([(574, 140), (674, 140), (684, 207), (654, 265), (594, 265), (564, 207)], dark)
-    panel([(582, 166), (617, 175), (613, 199), (575, 191)], blue_light)
-    panel([(631, 175), (666, 166), (673, 191), (635, 199)], blue_light)
+    panel([(582, 166), (617, 175), (613, 199), (575, 191)], warm_red_light)
+    panel([(631, 175), (666, 166), (673, 191), (635, 199)], warm_red_light)
     color.line((624, 199, 624, 251), fill=edge, width=5)
     relief.line((624, 199, 624, 251), fill=220, width=6)
     vent_box((601, 220, 647, 253), count=4, horizontal=False)
 
     # Layered shoulder shells and the central chest breastplate.
-    panel([(505, 270), (559, 250), (585, 282), (570, 346), (506, 355), (480, 316)], blue)
-    panel([(689, 282), (715, 250), (769, 270), (794, 316), (768, 355), (704, 346)], blue)
+    panel([(505, 270), (559, 250), (585, 282), (570, 346), (506, 355), (480, 316)], red_brown)
+    panel([(689, 282), (715, 250), (769, 270), (794, 316), (768, 355), (704, 346)], red_brown)
     panel([(548, 275), (700, 275), (726, 339), (688, 432), (560, 432), (522, 339)], steel, seam_width=11)
     panel([(570, 300), (678, 300), (697, 345), (673, 391), (575, 391), (551, 345)], light)
-    panel([(600, 405), (648, 405), (661, 444), (646, 467), (602, 467), (587, 444)], blue)
+    panel([(600, 405), (648, 405), (661, 444), (646, 467), (602, 467), (587, 444)], red_brown)
     vent_box((605, 318, 643, 372), count=3, horizontal=True)
     for point in ((544, 303), (704, 303), (562, 406), (686, 406)):
         rivet(*point)
@@ -700,7 +700,7 @@ def make_mechanical_front_maps():
                 (center, top + 44),
                 (center - half_width + 8, top + 32),
             ],
-            blue if index % 2 == 0 else dark,
+            red_brown if index % 2 == 0 else dark,
             seam_width=7,
         )
     color.rectangle((610, 476, 638, 533), fill=orange)
@@ -720,7 +720,7 @@ def make_mechanical_front_maps():
                 (outer_x + mirror * 8, 420),
                 (shoulder_x + mirror * 18, 408),
             ],
-            blue,
+            red_brown,
             seam_width=8,
         )
         panel(
@@ -766,7 +766,7 @@ def make_mechanical_front_maps():
                 (outer + mirror * 11, 770),
                 (inner + mirror * 21, 779),
             ],
-            blue,
+            red_brown,
             seam_width=9,
         )
         rivet(outer + mirror * 2, 737, 10)
@@ -801,12 +801,12 @@ def make_mechanical_front_maps():
             seam_width=8,
         )
 
-    # Small orange service markers and cool-blue status lights.
+    # Small orange service markers and warm red status lights.
     for x, y in ((530, 390), (718, 390), (550, 684), (698, 684), (559, 906), (689, 906)):
         color.rounded_rectangle((x - 14, y - 5, x + 14, y + 5), radius=3, fill=orange)
         relief.rounded_rectangle((x - 14, y - 5, x + 14, y + 5), radius=3, fill=205)
     for x, y in ((515, 324), (733, 324), (541, 754), (707, 754)):
-        color.rounded_rectangle((x - 6, y - 10, x + 6, y + 10), radius=3, fill=blue_light)
+        color.rounded_rectangle((x - 6, y - 10, x + 6, y + 10), radius=3, fill=warm_red_light)
         relief.rounded_rectangle((x - 6, y - 10, x + 6, y + 10), radius=3, fill=224)
 
     overlay = overlay.filter(ImageFilter.GaussianBlur(radius=0.35))
@@ -831,19 +831,19 @@ def make_torso_rigid_overlay_maps():
     center = 664
     seam = (17, 25, 30, 252)
     dark = (24, 34, 40, 252)
-    dark_blue = (39, 58, 70, 252)
-    blue = (48, 68, 81, 252)
+    dark_red_brown = (63, 30, 27, 252)
+    red_brown = (91, 44, 36, 252)
     steel = (100, 112, 118, 252)
     light_steel = (136, 145, 147, 252)
     orange = (211, 78, 29, 250)
-    blue_light = (45, 155, 207, 250)
+    warm_red_light = (190, 61, 40, 250)
 
     def panel(points, fill, metallic_value, roughness_value):
         color.polygon(points, fill=fill)
         metal.polygon(points, fill=metallic_value)
         rough.polygon(points, fill=roughness_value)
 
-    # The collar and the jagged upper edge remain one restrained blue-gray
+    # The collar and the jagged upper edge remain one restrained red-brown
     # shell. A single dark underlay suppresses the irregular upper facets
     # without introducing separate projected collar fragments.
     panel(
@@ -899,7 +899,7 @@ def make_torso_rigid_overlay_maps():
             (center + 72, 350),
             (center + 8, 350),
         ],
-        blue,
+        red_brown,
         198,
         126,
     )
@@ -907,7 +907,7 @@ def make_torso_rigid_overlay_maps():
     metal.rectangle((center - 4, 262, center + 4, 350), fill=148)
     rough.rectangle((center - 4, 262, center + 4, 350), fill=176)
 
-    # The reference has a small centered blue status core.
+    # Keep a small centered status core in the approved warm red palette.
     color.rounded_rectangle(
         (center - 18, 286, center + 18, 326),
         radius=5,
@@ -916,7 +916,7 @@ def make_torso_rigid_overlay_maps():
     color.rounded_rectangle(
         (center - 11, 293, center + 11, 319),
         radius=3,
-        fill=blue_light,
+        fill=warm_red_light,
     )
     metal.rounded_rectangle(
         (center - 18, 286, center + 18, 326),
@@ -931,7 +931,7 @@ def make_torso_rigid_overlay_maps():
     glow.rounded_rectangle(
         (center - 11, 293, center + 11, 319),
         radius=3,
-        fill=(22, 133, 210),
+        fill=(151, 34, 20),
     )
 
     # Two restrained amber service indicators sit at the lower chest edge.
@@ -947,9 +947,9 @@ def make_torso_rigid_overlay_maps():
     # Four compact horizontal abdomen modules now occupy the lower half of the
     # existing torso shell instead of being projected below it.
     abdomen_bands = (
-        (362, 380, 80, 76, dark_blue, 174, 150),
+        (362, 380, 80, 76, dark_red_brown, 174, 150),
         (383, 401, 76, 70, dark, 164, 162),
-        (404, 422, 70, 64, dark_blue, 176, 148),
+        (404, 422, 70, 64, dark_red_brown, 176, 148),
         (425, 443, 64, 56, dark, 164, 164),
     )
     for (
@@ -1070,7 +1070,7 @@ def make_emission(name, color, dark):
             draw.rounded_rectangle(
                 (x, 190, x + 56, 322),
                 radius=18,
-                outline=(175, 235, 255),
+                outline=(255, 171, 139),
                 width=8,
             )
     else:
@@ -1146,9 +1146,9 @@ def make_face_projection_maps():
     color = ImageDraw.Draw(overlay, "RGBA")
     glow = ImageDraw.Draw(emission)
 
-    socket = (8, 15, 20, 255)
-    optic = (20, 142, 222, 255)
-    optic_hot = (151, 226, 255, 255)
+    socket = (24, 9, 8, 255)
+    optic = (135, 45, 33, 255)
+    optic_hot = (255, 164, 132, 255)
 
     # This texture contains one optic only. The face shader places two
     # independent copies in tangent frames fitted to the existing left and
@@ -1179,11 +1179,11 @@ def make_face_projection_maps():
     ]
     color.polygon(socket_points, fill=socket)
     color.polygon(eye_points, fill=optic)
-    color.polygon(inner_glow, fill=(38, 166, 232, 255))
+    color.polygon(inner_glow, fill=(192, 62, 43, 255))
     color.line(inner_glow[:2], fill=optic_hot, width=8)
-    glow.polygon(eye_points, fill=(4, 92, 166))
-    glow.polygon(inner_glow, fill=(24, 142, 218))
-    glow.line(inner_glow[:2], fill=(116, 220, 255), width=7)
+    glow.polygon(eye_points, fill=(83, 17, 11))
+    glow.polygon(inner_glow, fill=(157, 39, 24))
+    glow.line(inner_glow[:2], fill=(255, 129, 94), width=7)
 
     return (
         overlay.filter(ImageFilter.GaussianBlur(radius=0.28)),
@@ -1202,7 +1202,7 @@ def make_palette_sheet(generated):
     draw.text((34, 28), "PAHUR MATERIAL / TEXTURE BREAKDOWN", fill=(236, 241, 242), font=title_font)
     draw.text(
         (34, 54),
-        "Current FBX mesh preserved — reference-derived palette and procedural wear",
+        "Current FBX mesh preserved — approved red-brown palette and procedural wear",
         fill=(169, 183, 188),
         font=font,
     )
@@ -1222,6 +1222,56 @@ def make_palette_sheet(generated):
 
 def main():
     TEXTURE_DIR.mkdir(parents=True, exist_ok=True)
+    if "--red-brown-palette-only" in sys.argv:
+        # This mode deliberately avoids opening the concept reference. It
+        # rewrites only the approved blue-family color assets while preserving
+        # their existing roughness, metallic, normal, and height maps.
+        red_brown_materials = (
+            "armor_bluegray",
+            "leg_steel",
+            "torso_rigid_shell",
+            "torso_pelvis_plate",
+            "shoulder_machine_blue",
+            "left_arm_machine",
+            "hood_navy_cloth",
+        )
+        for name in red_brown_materials:
+            make_surface_texture(name, PALETTE[name]).save(
+                TEXTURE_DIR / f"pahur_{name}_albedo.png"
+            )
+
+        optic = make_emission("optic_blue", (205, 68, 43), (25, 7, 5))
+        optic.save(TEXTURE_DIR / "pahur_optic_blue_emission.png")
+
+        mechanical_overlay, _, _ = make_mechanical_front_maps()
+        mechanical_overlay.save(
+            TEXTURE_DIR / "pahur_mechanical_front_overlay.png"
+        )
+
+        torso_overlay, torso_emission, _, _ = make_torso_rigid_overlay_maps()
+        torso_overlay.save(TEXTURE_DIR / "pahur_torso_rigid_overlay.png")
+        torso_emission.save(TEXTURE_DIR / "pahur_torso_rigid_emission.png")
+
+        face_overlay, _, face_emission = make_face_projection_maps()
+        face_overlay.save(TEXTURE_DIR / "pahur_face_reference_overlay.png")
+        face_emission.save(TEXTURE_DIR / "pahur_face_reference_emission.png")
+
+        current_albedos = {
+            name: Image.open(
+                TEXTURE_DIR / f"pahur_{name}_albedo.png"
+            ).convert("RGB")
+            for name in PALETTE
+        }
+        current_albedos["optic_blue_emission"] = optic
+        current_albedos["flame_orange_emission"] = Image.open(
+            TEXTURE_DIR / "pahur_flame_orange_emission.png"
+        ).convert("RGB")
+        make_palette_sheet(current_albedos).save(
+            SAMPLE_ROOT / "renders/06_texture_atlas_and_material_breakdown.png"
+        )
+        print("Created approved red-brown palette assets without opening the reference image.")
+        return
+
     reference = Image.open(REFERENCE).convert("RGB")
     if "--head-only" in sys.argv:
         for filename in (

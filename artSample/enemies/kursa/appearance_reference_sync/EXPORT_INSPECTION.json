@@ -1,0 +1,31 @@
+{
+  "result": "REVIEW",
+  "expected_source_counts": {
+    "vertices": 2109,
+    "polygons": 3913,
+    "bones": 24
+  },
+  "fbx_reimport": {
+    "mesh_objects": 1,
+    "vertices": 2109,
+    "edges": 5936,
+    "polygons": 3913,
+    "loops": 11739,
+    "material_slots": 9,
+    "armature_objects": 1,
+    "bones": 24,
+    "actions": 1
+  },
+  "glb_reimport": {
+    "mesh_objects": 2,
+    "vertices": 2250,
+    "edges": 6152,
+    "polygons": 3993,
+    "loops": 11979,
+    "material_slots": 9,
+    "armature_objects": 1,
+    "bones": 24,
+    "actions": 1
+  },
+  "note": "Blend-file geometry preservation is authoritative; exchange formats are additionally reimport-inspected for review portability."
+}

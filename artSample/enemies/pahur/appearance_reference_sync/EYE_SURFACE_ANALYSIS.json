@@ -50,7 +50,7 @@
         0.233325
       ],
       "projection_width": 5.0,
-      "projection_height": 3.0,
+      "projection_height": 4.5,
       "rotation_degrees": -16.0
     },
     "right_eye": {
@@ -85,7 +85,7 @@
         0.17195
       ],
       "projection_width": 5.0,
-      "projection_height": 3.0,
+      "projection_height": 4.5,
       "rotation_degrees": -14.0
     }
   },

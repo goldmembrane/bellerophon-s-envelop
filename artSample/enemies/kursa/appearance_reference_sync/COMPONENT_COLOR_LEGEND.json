@@ -1,0 +1,1422 @@
+{
+  "source_model": "Assets/_Project/Art/Enemies/Kursa/Models/Kursa.fbx",
+  "component_count": 47,
+  "note": "분석 렌더에서만 사용하는 기존 연결 표면 색상입니다. 메시 정점과 토폴로지는 변경하지 않았습니다.",
+  "components": [
+    {
+      "component_id": 0,
+      "rgb": [
+        0.84,
+        0.2856,
+        0.2856
+      ],
+      "hex": "#D64949",
+      "polygon_count": 74,
+      "center_local": [
+        -13.069366,
+        105.822968,
+        9.308379
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "Spine02",
+          "weight_sum": 15.524017
+        },
+        {
+          "name": "Hips",
+          "weight_sum": 11.160656
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 8.585526
+        },
+        {
+          "name": "RightShoulder",
+          "weight_sum": 2.069601
+        },
+        {
+          "name": "RightArm",
+          "weight_sum": 1.660201
+        }
+      ]
+    },
+    {
+      "component_id": 1,
+      "rgb": [
+        0.2856,
+        0.447372,
+        0.84
+      ],
+      "hex": "#4972D6",
+      "polygon_count": 146,
+      "center_local": [
+        7.760126,
+        71.389313,
+        -3.798506
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftUpLeg",
+          "weight_sum": 44.181518
+        },
+        {
+          "name": "Hips",
+          "weight_sum": 29.296316
+        },
+        {
+          "name": "LeftLeg",
+          "weight_sum": 1.370116
+        },
+        {
+          "name": "Spine02",
+          "weight_sum": 0.152051
+        }
+      ]
+    },
+    {
+      "component_id": 2,
+      "rgb": [
+        0.609143,
+        0.84,
+        0.2856
+      ],
+      "hex": "#9BD649",
+      "polygon_count": 222,
+      "center_local": [
+        -36.149456,
+        105.924164,
+        1.180676
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightForeArm",
+          "weight_sum": 65.190247
+        },
+        {
+          "name": "RightArm",
+          "weight_sum": 28.000846
+        },
+        {
+          "name": "RightShoulder",
+          "weight_sum": 10.080731
+        },
+        {
+          "name": "RightHand",
+          "weight_sum": 9.859469
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 0.316536
+        }
+      ]
+    },
+    {
+      "component_id": 3,
+      "rgb": [
+        0.84,
+        0.2856,
+        0.770915
+      ],
+      "hex": "#D649C5",
+      "polygon_count": 60,
+      "center_local": [
+        -18.237778,
+        85.488449,
+        -0.337933
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "Hips",
+          "weight_sum": 25.158232
+        },
+        {
+          "name": "RightUpLeg",
+          "weight_sum": 3.937149
+        },
+        {
+          "name": "Spine02",
+          "weight_sum": 2.863417
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 0.022921
+        },
+        {
+          "name": "RightArm",
+          "weight_sum": 0.015339
+        }
+      ]
+    },
+    {
+      "component_id": 4,
+      "rgb": [
+        0.2856,
+        0.84,
+        0.747313
+      ],
+      "hex": "#49D6BF",
+      "polygon_count": 60,
+      "center_local": [
+        32.965538,
+        97.383728,
+        -9.167953
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftHand",
+          "weight_sum": 32.0
+        }
+      ]
+    },
+    {
+      "component_id": 5,
+      "rgb": [
+        0.84,
+        0.585541,
+        0.2856
+      ],
+      "hex": "#D69549",
+      "polygon_count": 50,
+      "center_local": [
+        13.626262,
+        50.173611,
+        2.109562
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftUpLeg",
+          "weight_sum": 14.830457
+        },
+        {
+          "name": "LeftLeg",
+          "weight_sum": 12.168884
+        },
+        {
+          "name": "Hips",
+          "weight_sum": 0.000658
+        }
+      ]
+    },
+    {
+      "component_id": 6,
+      "rgb": [
+        0.42377,
+        0.2856,
+        0.84
+      ],
+      "hex": "#6C49D6",
+      "polygon_count": 26,
+      "center_local": [
+        -33.660507,
+        78.400543,
+        10.369649
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightHand",
+          "weight_sum": 12.451367
+        },
+        {
+          "name": "RightForeArm",
+          "weight_sum": 2.548633
+        }
+      ]
+    },
+    {
+      "component_id": 7,
+      "rgb": [
+        0.309202,
+        0.84,
+        0.2856
+      ],
+      "hex": "#4FD649",
+      "polygon_count": 686,
+      "center_local": [
+        -4.478243,
+        151.963303,
+        3.91144
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "Head",
+          "weight_sum": 235.496518
+        },
+        {
+          "name": "RightShoulder",
+          "weight_sum": 46.836848
+        },
+        {
+          "name": "neck",
+          "weight_sum": 37.840458
+        },
+        {
+          "name": "Spine",
+          "weight_sum": 25.607375
+        },
+        {
+          "name": "LeftShoulder",
+          "weight_sum": 9.878472
+        }
+      ]
+    },
+    {
+      "component_id": 8,
+      "rgb": [
+        0.84,
+        0.2856,
+        0.470974
+      ],
+      "hex": "#D64978",
+      "polygon_count": 70,
+      "center_local": [
+        19.900581,
+        4.702281,
+        -0.822272
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftFoot",
+          "weight_sum": 19.217048
+        },
+        {
+          "name": "LeftToeBase",
+          "weight_sum": 15.660475
+        },
+        {
+          "name": "LeftLeg",
+          "weight_sum": 2.122478
+        }
+      ]
+    },
+    {
+      "component_id": 9,
+      "rgb": [
+        0.2856,
+        0.632746,
+        0.84
+      ],
+      "hex": "#49A1D6",
+      "polygon_count": 44,
+      "center_local": [
+        -8.728849,
+        101.380959,
+        -12.584147
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "Spine02",
+          "weight_sum": 16.140827
+        },
+        {
+          "name": "Hips",
+          "weight_sum": 12.435947
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 1.601106
+        },
+        {
+          "name": "RightShoulder",
+          "weight_sum": 0.430124
+        },
+        {
+          "name": "LeftShoulder",
+          "weight_sum": 0.214326
+        }
+      ]
+    },
+    {
+      "component_id": 10,
+      "rgb": [
+        0.794517,
+        0.84,
+        0.2856
+      ],
+      "hex": "#CBD649",
+      "polygon_count": 44,
+      "center_local": [
+        -23.308273,
+        49.749352,
+        -1.02576
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightUpLeg",
+          "weight_sum": 12.039707
+        },
+        {
+          "name": "RightLeg",
+          "weight_sum": 11.948344
+        },
+        {
+          "name": "Hips",
+          "weight_sum": 0.011949
+        }
+      ]
+    },
+    {
+      "component_id": 11,
+      "rgb": [
+        0.723711,
+        0.2856,
+        0.84
+      ],
+      "hex": "#B949D6",
+      "polygon_count": 26,
+      "center_local": [
+        23.793512,
+        106.958336,
+        15.828847
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftHand",
+          "weight_sum": 15.0
+        }
+      ]
+    },
+    {
+      "component_id": 12,
+      "rgb": [
+        0.2856,
+        0.84,
+        0.561939
+      ],
+      "hex": "#49D68F",
+      "polygon_count": 151,
+      "center_local": [
+        -6.859176,
+        105.595551,
+        -0.198114
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "Spine02",
+          "weight_sum": 46.138574
+        },
+        {
+          "name": "Hips",
+          "weight_sum": 26.501334
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 15.50808
+        },
+        {
+          "name": "RightShoulder",
+          "weight_sum": 2.677819
+        },
+        {
+          "name": "RightArm",
+          "weight_sum": 1.773446
+        }
+      ]
+    },
+    {
+      "component_id": 13,
+      "rgb": [
+        0.84,
+        0.400167,
+        0.2856
+      ],
+      "hex": "#D66649",
+      "polygon_count": 144,
+      "center_local": [
+        10.41816,
+        29.916466,
+        -10.522206
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftLeg",
+          "weight_sum": 67.110936
+        },
+        {
+          "name": "LeftFoot",
+          "weight_sum": 5.526019
+        },
+        {
+          "name": "LeftUpLeg",
+          "weight_sum": 1.363045
+        }
+      ]
+    },
+    {
+      "component_id": 14,
+      "rgb": [
+        0.2856,
+        0.332804,
+        0.84
+      ],
+      "hex": "#4955D6",
+      "polygon_count": 154,
+      "center_local": [
+        21.900299,
+        106.012016,
+        -11.035749
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftHand",
+          "weight_sum": 36.988691
+        },
+        {
+          "name": "LeftForeArm",
+          "weight_sum": 31.300534
+        },
+        {
+          "name": "LeftArm",
+          "weight_sum": 10.696909
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 0.011743
+        },
+        {
+          "name": "Spine02",
+          "weight_sum": 0.002124
+        }
+      ]
+    },
+    {
+      "component_id": 15,
+      "rgb": [
+        0.494576,
+        0.84,
+        0.2856
+      ],
+      "hex": "#7ED649",
+      "polygon_count": 50,
+      "center_local": [
+        -24.827814,
+        50.302734,
+        8.347847
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightUpLeg",
+          "weight_sum": 14.606621
+        },
+        {
+          "name": "RightLeg",
+          "weight_sum": 12.386637
+        },
+        {
+          "name": "Hips",
+          "weight_sum": 0.006742
+        }
+      ]
+    },
+    {
+      "component_id": 16,
+      "rgb": [
+        0.84,
+        0.2856,
+        0.656348
+      ],
+      "hex": "#D649A7",
+      "polygon_count": 92,
+      "center_local": [
+        14.28392,
+        122.996826,
+        -14.801607
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftArm",
+          "weight_sum": 24.748392
+        },
+        {
+          "name": "LeftShoulder",
+          "weight_sum": 10.605437
+        },
+        {
+          "name": "LeftForeArm",
+          "weight_sum": 9.482244
+        },
+        {
+          "name": "Spine",
+          "weight_sum": 1.424198
+        },
+        {
+          "name": "neck",
+          "weight_sum": 1.03004
+        }
+      ]
+    },
+    {
+      "component_id": 17,
+      "rgb": [
+        0.2856,
+        0.81812,
+        0.84
+      ],
+      "hex": "#49D1D6",
+      "polygon_count": 38,
+      "center_local": [
+        27.220524,
+        98.877998,
+        16.350784
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftHand",
+          "weight_sum": 21.0
+        }
+      ]
+    },
+    {
+      "component_id": 18,
+      "rgb": [
+        0.84,
+        0.700109,
+        0.2856
+      ],
+      "hex": "#D6B349",
+      "polygon_count": 152,
+      "center_local": [
+        -20.66699,
+        72.51796,
+        1.455409
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightUpLeg",
+          "weight_sum": 44.532191
+        },
+        {
+          "name": "Hips",
+          "weight_sum": 29.845893
+        },
+        {
+          "name": "Spine02",
+          "weight_sum": 2.502525
+        },
+        {
+          "name": "RightLeg",
+          "weight_sum": 1.10589
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 0.007875
+        }
+      ]
+    },
+    {
+      "component_id": 19,
+      "rgb": [
+        0.538337,
+        0.2856,
+        0.84
+      ],
+      "hex": "#8949D6",
+      "polygon_count": 78,
+      "center_local": [
+        14.357518,
+        133.593979,
+        -11.126032
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftArm",
+          "weight_sum": 22.020172
+        },
+        {
+          "name": "LeftShoulder",
+          "weight_sum": 16.121291
+        },
+        {
+          "name": "Spine",
+          "weight_sum": 1.310416
+        },
+        {
+          "name": "neck",
+          "weight_sum": 1.113867
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 0.409367
+        }
+      ]
+    },
+    {
+      "component_id": 20,
+      "rgb": [
+        0.2856,
+        0.84,
+        0.376565
+      ],
+      "hex": "#49D660",
+      "polygon_count": 24,
+      "center_local": [
+        11.047604,
+        2.324219,
+        -17.084606
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftFoot",
+          "weight_sum": 7.422013
+        },
+        {
+          "name": "LeftLeg",
+          "weight_sum": 6.577987
+        }
+      ]
+    },
+    {
+      "component_id": 21,
+      "rgb": [
+        0.84,
+        0.2856,
+        0.356407
+      ],
+      "hex": "#D6495B",
+      "polygon_count": 38,
+      "center_local": [
+        -36.738403,
+        105.26577,
+        0.770809
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightForeArm",
+          "weight_sum": 18.689564
+        },
+        {
+          "name": "RightArm",
+          "weight_sum": 2.309892
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 0.000338
+        },
+        {
+          "name": "Spine02",
+          "weight_sum": 0.000206
+        }
+      ]
+    },
+    {
+      "component_id": 22,
+      "rgb": [
+        0.2856,
+        0.518178,
+        0.84
+      ],
+      "hex": "#4984D6",
+      "polygon_count": 38,
+      "center_local": [
+        -38.077137,
+        71.929375,
+        8.610291
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightHand",
+          "weight_sum": 20.996177
+        },
+        {
+          "name": "RightForeArm",
+          "weight_sum": 0.003823
+        }
+      ]
+    },
+    {
+      "component_id": 23,
+      "rgb": [
+        0.67995,
+        0.84,
+        0.2856
+      ],
+      "hex": "#ADD649",
+      "polygon_count": 214,
+      "center_local": [
+        -7.922349,
+        125.459068,
+        -5.991288
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightShoulder",
+          "weight_sum": 25.152851
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 25.037682
+        },
+        {
+          "name": "LeftShoulder",
+          "weight_sum": 17.859025
+        },
+        {
+          "name": "Spine02",
+          "weight_sum": 14.10497
+        },
+        {
+          "name": "Spine",
+          "weight_sum": 8.471444
+        }
+      ]
+    },
+    {
+      "component_id": 24,
+      "rgb": [
+        0.838278,
+        0.2856,
+        0.84
+      ],
+      "hex": "#D649D6",
+      "polygon_count": 126,
+      "center_local": [
+        -6.740803,
+        92.694672,
+        -1.342262
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "Hips",
+          "weight_sum": 53.680263
+        },
+        {
+          "name": "Spine02",
+          "weight_sum": 16.809791
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 0.269501
+        },
+        {
+          "name": "RightArm",
+          "weight_sum": 0.108495
+        },
+        {
+          "name": "LeftUpLeg",
+          "weight_sum": 0.068606
+        }
+      ]
+    },
+    {
+      "component_id": 25,
+      "rgb": [
+        0.2856,
+        0.84,
+        0.676507
+      ],
+      "hex": "#49D6AD",
+      "polygon_count": 144,
+      "center_local": [
+        -25.604841,
+        30.432459,
+        -4.438539
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightLeg",
+          "weight_sum": 67.170007
+        },
+        {
+          "name": "RightFoot",
+          "weight_sum": 6.171474
+        },
+        {
+          "name": "RightUpLeg",
+          "weight_sum": 0.656416
+        },
+        {
+          "name": "RightToeBase",
+          "weight_sum": 0.002103
+        }
+      ]
+    },
+    {
+      "component_id": 26,
+      "rgb": [
+        0.84,
+        0.514735,
+        0.2856
+      ],
+      "hex": "#D68349",
+      "polygon_count": 60,
+      "center_local": [
+        4.329698,
+        85.458176,
+        -3.984691
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "Hips",
+          "weight_sum": 26.836806
+        },
+        {
+          "name": "LeftUpLeg",
+          "weight_sum": 3.730495
+        },
+        {
+          "name": "Spine02",
+          "weight_sum": 1.432595
+        },
+        {
+          "name": "LeftArm",
+          "weight_sum": 0.000105
+        }
+      ]
+    },
+    {
+      "component_id": 27,
+      "rgb": [
+        0.352963,
+        0.2856,
+        0.84
+      ],
+      "hex": "#5A49D6",
+      "polygon_count": 40,
+      "center_local": [
+        -28.859556,
+        7.249803,
+        -4.854115
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightFoot",
+          "weight_sum": 14.406984
+        },
+        {
+          "name": "RightLeg",
+          "weight_sum": 6.934867
+        },
+        {
+          "name": "RightToeBase",
+          "weight_sum": 0.658149
+        }
+      ]
+    },
+    {
+      "component_id": 28,
+      "rgb": [
+        0.380009,
+        0.84,
+        0.2856
+      ],
+      "hex": "#61D649",
+      "polygon_count": 40,
+      "center_local": [
+        26.458097,
+        103.746849,
+        15.80304
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftHand",
+          "weight_sum": 22.0
+        }
+      ]
+    },
+    {
+      "component_id": 29,
+      "rgb": [
+        0.84,
+        0.2856,
+        0.54178
+      ],
+      "hex": "#D6498A",
+      "polygon_count": 42,
+      "center_local": [
+        9.425452,
+        49.443787,
+        -6.449598
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftLeg",
+          "weight_sum": 11.711811
+        },
+        {
+          "name": "LeftUpLeg",
+          "weight_sum": 11.288189
+        }
+      ]
+    },
+    {
+      "component_id": 30,
+      "rgb": [
+        0.2856,
+        0.703552,
+        0.84
+      ],
+      "hex": "#49B3D6",
+      "polygon_count": 82,
+      "center_local": [
+        -31.211798,
+        131.387848,
+        1.274342
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightArm",
+          "weight_sum": 31.896779
+        },
+        {
+          "name": "RightShoulder",
+          "weight_sum": 10.904571
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 0.121285
+        },
+        {
+          "name": "neck",
+          "weight_sum": 0.035118
+        },
+        {
+          "name": "LeftShoulder",
+          "weight_sum": 0.022039
+        }
+      ]
+    },
+    {
+      "component_id": 31,
+      "rgb": [
+        0.84,
+        0.814676,
+        0.2856
+      ],
+      "hex": "#D6D049",
+      "polygon_count": 36,
+      "center_local": [
+        -36.922466,
+        71.577637,
+        10.96244
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightHand",
+          "weight_sum": 19.940714
+        },
+        {
+          "name": "RightForeArm",
+          "weight_sum": 0.059286
+        }
+      ]
+    },
+    {
+      "component_id": 32,
+      "rgb": [
+        0.652904,
+        0.2856,
+        0.84
+      ],
+      "hex": "#A649D6",
+      "polygon_count": 25,
+      "center_local": [
+        -1.747108,
+        129.96402,
+        -19.880814
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftShoulder",
+          "weight_sum": 8.289331
+        },
+        {
+          "name": "Spine",
+          "weight_sum": 3.188557
+        },
+        {
+          "name": "RightShoulder",
+          "weight_sum": 2.823023
+        },
+        {
+          "name": "neck",
+          "weight_sum": 2.357928
+        },
+        {
+          "name": "LeftArm",
+          "weight_sum": 1.745974
+        }
+      ]
+    },
+    {
+      "component_id": 33,
+      "rgb": [
+        0.2856,
+        0.84,
+        0.491133
+      ],
+      "hex": "#49D67D",
+      "polygon_count": 70,
+      "center_local": [
+        28.605726,
+        101.34581,
+        9.467785
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftHand",
+          "weight_sum": 37.0
+        }
+      ]
+    },
+    {
+      "component_id": 34,
+      "rgb": [
+        0.84,
+        0.329361,
+        0.2856
+      ],
+      "hex": "#D65449",
+      "polygon_count": 76,
+      "center_local": [
+        36.107037,
+        108.366699,
+        -8.754409
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftHand",
+          "weight_sum": 40.0
+        }
+      ]
+    },
+    {
+      "component_id": 35,
+      "rgb": [
+        0.2856,
+        0.403611,
+        0.84
+      ],
+      "hex": "#4967D6",
+      "polygon_count": 48,
+      "center_local": [
+        -40.644051,
+        79.94561,
+        7.889421
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightHand",
+          "weight_sum": 20.823218
+        },
+        {
+          "name": "RightForeArm",
+          "weight_sum": 5.176782
+        }
+      ]
+    },
+    {
+      "component_id": 36,
+      "rgb": [
+        0.565383,
+        0.84,
+        0.2856
+      ],
+      "hex": "#90D649",
+      "polygon_count": 68,
+      "center_local": [
+        -31.888411,
+        4.712999,
+        7.962069
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightFoot",
+          "weight_sum": 19.357132
+        },
+        {
+          "name": "RightToeBase",
+          "weight_sum": 16.298778
+        },
+        {
+          "name": "RightLeg",
+          "weight_sum": 0.34409
+        }
+      ]
+    },
+    {
+      "component_id": 37,
+      "rgb": [
+        0.84,
+        0.2856,
+        0.727154
+      ],
+      "hex": "#D649B9",
+      "polygon_count": 24,
+      "center_local": [
+        -28.155405,
+        2.419085,
+        -10.293634
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightFoot",
+          "weight_sum": 7.996749
+        },
+        {
+          "name": "RightLeg",
+          "weight_sum": 5.954171
+        },
+        {
+          "name": "RightToeBase",
+          "weight_sum": 0.049079
+        }
+      ]
+    },
+    {
+      "component_id": 38,
+      "rgb": [
+        0.2856,
+        0.84,
+        0.791074
+      ],
+      "hex": "#49D6CA",
+      "polygon_count": 38,
+      "center_local": [
+        26.986849,
+        101.496483,
+        16.293648
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftHand",
+          "weight_sum": 21.0
+        }
+      ]
+    },
+    {
+      "component_id": 39,
+      "rgb": [
+        0.84,
+        0.629302,
+        0.2856
+      ],
+      "hex": "#D6A049",
+      "polygon_count": 36,
+      "center_local": [
+        17.534506,
+        110.910889,
+        -19.535944
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftForeArm",
+          "weight_sum": 11.943581
+        },
+        {
+          "name": "LeftArm",
+          "weight_sum": 8.017782
+        },
+        {
+          "name": "LeftHand",
+          "weight_sum": 0.035148
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 0.002863
+        },
+        {
+          "name": "Spine02",
+          "weight_sum": 0.000626
+        }
+      ]
+    },
+    {
+      "component_id": 40,
+      "rgb": [
+        0.46753,
+        0.2856,
+        0.84
+      ],
+      "hex": "#7749D6",
+      "polygon_count": 38,
+      "center_local": [
+        -41.515976,
+        72.512787,
+        3.735722
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightHand",
+          "weight_sum": 21.0
+        }
+      ]
+    },
+    {
+      "component_id": 41,
+      "rgb": [
+        0.2856,
+        0.84,
+        0.305759
+      ],
+      "hex": "#49D64E",
+      "polygon_count": 72,
+      "center_local": [
+        2.00257,
+        106.009552,
+        6.935989
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "Spine02",
+          "weight_sum": 18.497215
+        },
+        {
+          "name": "Hips",
+          "weight_sum": 9.888863
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 9.604456
+        },
+        {
+          "name": "LeftArm",
+          "weight_sum": 0.009466
+        }
+      ]
+    },
+    {
+      "component_id": 42,
+      "rgb": [
+        0.84,
+        0.2856,
+        0.427213
+      ],
+      "hex": "#D6496D",
+      "polygon_count": 40,
+      "center_local": [
+        12.938513,
+        7.243809,
+        -11.957729
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftFoot",
+          "weight_sum": 13.416793
+        },
+        {
+          "name": "LeftLeg",
+          "weight_sum": 8.447203
+        },
+        {
+          "name": "LeftToeBase",
+          "weight_sum": 0.136005
+        }
+      ]
+    },
+    {
+      "component_id": 43,
+      "rgb": [
+        0.2856,
+        0.588985,
+        0.84
+      ],
+      "hex": "#4996D6",
+      "polygon_count": 28,
+      "center_local": [
+        -9.525192,
+        114.086784,
+        -17.556068
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "Spine02",
+          "weight_sum": 7.452775
+        },
+        {
+          "name": "Spine01",
+          "weight_sum": 3.067252
+        },
+        {
+          "name": "RightShoulder",
+          "weight_sum": 2.024883
+        },
+        {
+          "name": "LeftShoulder",
+          "weight_sum": 1.638184
+        },
+        {
+          "name": "LeftArm",
+          "weight_sum": 0.680446
+        }
+      ]
+    },
+    {
+      "component_id": 44,
+      "rgb": [
+        0.750757,
+        0.84,
+        0.2856
+      ],
+      "hex": "#BFD649",
+      "polygon_count": 36,
+      "center_local": [
+        26.95517,
+        93.705444,
+        14.045616
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "LeftHand",
+          "weight_sum": 20.0
+        }
+      ]
+    },
+    {
+      "component_id": 45,
+      "rgb": [
+        0.767472,
+        0.2856,
+        0.84
+      ],
+      "hex": "#C449D6",
+      "polygon_count": 38,
+      "center_local": [
+        -39.90797,
+        71.952843,
+        5.552904
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightHand",
+          "weight_sum": 21.0
+        }
+      ]
+    },
+    {
+      "component_id": 46,
+      "rgb": [
+        0.2856,
+        0.84,
+        0.6057
+      ],
+      "hex": "#49D69A",
+      "polygon_count": 25,
+      "center_local": [
+        -17.331173,
+        129.780533,
+        -17.555904
+      ],
+      "dominant_vertex_groups": [
+        {
+          "name": "RightShoulder",
+          "weight_sum": 9.242562
+        },
+        {
+          "name": "LeftShoulder",
+          "weight_sum": 4.14574
+        },
+        {
+          "name": "Spine",
+          "weight_sum": 2.358242
+        },
+        {
+          "name": "neck",
+          "weight_sum": 2.10603
+        },
+        {
+          "name": "Spine02",
+          "weight_sum": 0.904968
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1904 @@
+{
+  "result": "ANALYSIS_ONLY",
+  "source_model": "Assets/_Project/Art/Enemies/Kursa/Models/Kursa.fbx",
+  "frame": 1,
+  "color_basis": "Original bind-pose local X bins applied to evaluated frame-1 head polygons",
+  "bins": [
+    {
+      "name": "x_lt_m7",
+      "bounds": [
+        -1000000000.0,
+        -7.0
+      ],
+      "color": [
+        0.38,
+        0.1,
+        0.7
+      ]
+    },
+    {
+      "name": "x_m7_m4",
+      "bounds": [
+        -7.0,
+        -4.0
+      ],
+      "color": [
+        0.1,
+        0.28,
+        0.95
+      ]
+    },
+    {
+      "name": "x_m4_m1",
+      "bounds": [
+        -4.0,
+        -1.0
+      ],
+      "color": [
+        0.06,
+        0.78,
+        0.94
+      ]
+    },
+    {
+      "name": "x_m1_p2",
+      "bounds": [
+        -1.0,
+        2.0
+      ],
+      "color": [
+        0.12,
+        0.82,
+        0.32
+      ]
+    },
+    {
+      "name": "x_p2_p5",
+      "bounds": [
+        2.0,
+        5.0
+      ],
+      "color": [
+        0.95,
+        0.62,
+        0.06
+      ]
+    },
+    {
+      "name": "x_ge_p5",
+      "bounds": [
+        5.0,
+        1000000000.0
+      ],
+      "color": [
+        0.92,
+        0.12,
+        0.08
+      ]
+    }
+  ],
+  "candidate_polygons": [
+    {
+      "polygon_index": 79,
+      "bind_center": [
+        -13.893512,
+        156.608078,
+        5.941437
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 81,
+      "bind_center": [
+        -13.910003,
+        155.279953,
+        5.320444
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 92,
+      "bind_center": [
+        3.720999,
+        155.279953,
+        14.645562
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 96,
+      "bind_center": [
+        4.050593,
+        156.165359,
+        13.695225
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 97,
+      "bind_center": [
+        2.315758,
+        155.501297,
+        14.817103
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 210,
+      "bind_center": [
+        -9.052216,
+        156.829422,
+        9.440628
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 211,
+      "bind_center": [
+        -9.316887,
+        156.940109,
+        9.623646
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 212,
+      "bind_center": [
+        -9.174356,
+        155.611984,
+        9.292233
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 213,
+      "bind_center": [
+        -9.451442,
+        153.066406,
+        10.696557
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 214,
+      "bind_center": [
+        -9.680809,
+        155.722656,
+        9.626529
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 215,
+      "bind_center": [
+        -9.209661,
+        153.066406,
+        10.545278
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 303,
+      "bind_center": [
+        3.544746,
+        152.955734,
+        9.923051
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 304,
+      "bind_center": [
+        3.20232,
+        153.730469,
+        9.950482
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 305,
+      "bind_center": [
+        3.547482,
+        152.513016,
+        10.567295
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 306,
+      "bind_center": [
+        3.407077,
+        153.619797,
+        9.440812
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 307,
+      "bind_center": [
+        3.243237,
+        153.066406,
+        10.700662
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 395,
+      "bind_center": [
+        -2.139478,
+        155.279953,
+        13.744782
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 396,
+      "bind_center": [
+        -0.088376,
+        154.505203,
+        13.496667
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 397,
+      "bind_center": [
+        -1.550608,
+        154.947922,
+        13.789556
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 398,
+      "bind_center": [
+        0.956723,
+        154.394547,
+        13.775875
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 399,
+      "bind_center": [
+        0.259358,
+        154.837234,
+        14.421391
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 400,
+      "bind_center": [
+        -1.374612,
+        155.279953,
+        14.097409
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 433,
+      "bind_center": [
+        -9.826639,
+        151.295578,
+        5.524506
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 435,
+      "bind_center": [
+        -7.810116,
+        151.295578,
+        6.89896
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 437,
+      "bind_center": [
+        -7.643775,
+        147.643234,
+        5.589654
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 468,
+      "bind_center": [
+        3.506513,
+        149.082031,
+        10.57393
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 469,
+      "bind_center": [
+        2.778372,
+        147.089844,
+        8.533566
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 470,
+      "bind_center": [
+        3.644966,
+        150.520828,
+        8.897745
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 471,
+      "bind_center": [
+        2.307725,
+        147.200516,
+        9.927196
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 472,
+      "bind_center": [
+        3.578888,
+        149.856766,
+        9.917521
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 473,
+      "bind_center": [
+        3.401365,
+        149.192703,
+        7.956155
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 474,
+      "bind_center": [
+        2.732735,
+        148.639328,
+        10.615165
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 512,
+      "bind_center": [
+        -7.918041,
+        156.829422,
+        9.607306
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 513,
+      "bind_center": [
+        -6.748563,
+        152.402344,
+        8.520936
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 514,
+      "bind_center": [
+        -6.731838,
+        154.0625,
+        9.835629
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 515,
+      "bind_center": [
+        -11.122867,
+        154.283859,
+        5.48218
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 646,
+      "bind_center": [
+        4.154402,
+        153.287766,
+        8.408802
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 647,
+      "bind_center": [
+        3.69214,
+        153.730469,
+        8.777986
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 648,
+      "bind_center": [
+        4.23678,
+        153.730469,
+        7.554564
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 649,
+      "bind_center": [
+        3.953736,
+        153.951828,
+        8.273124
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 650,
+      "bind_center": [
+        3.82231,
+        153.398438,
+        8.911067
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 651,
+      "bind_center": [
+        4.437014,
+        153.398438,
+        7.536148
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 652,
+      "bind_center": [
+        4.349787,
+        153.509109,
+        7.213918
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 668,
+      "bind_center": [
+        -0.365712,
+        149.524734,
+        11.943883
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 669,
+      "bind_center": [
+        1.401235,
+        149.967453,
+        11.601642
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 670,
+      "bind_center": [
+        0.012344,
+        151.295578,
+        12.33113
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 671,
+      "bind_center": [
+        0.59164,
+        148.75,
+        11.424438
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 672,
+      "bind_center": [
+        1.119503,
+        151.516922,
+        12.095749
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 713,
+      "bind_center": [
+        4.780078,
+        154.0625,
+        5.630615
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 715,
+      "bind_center": [
+        4.50454,
+        152.845047,
+        5.703272
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 740,
+      "bind_center": [
+        -2.68633,
+        156.276047,
+        14.954548
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 742,
+      "bind_center": [
+        -1.202469,
+        156.165359,
+        15.246783
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1007,
+      "bind_center": [
+        3.731277,
+        152.845047,
+        9.668601
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 1008,
+      "bind_center": [
+        3.762622,
+        151.184891,
+        10.770703
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 1009,
+      "bind_center": [
+        3.820955,
+        151.074219,
+        10.200659
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 1010,
+      "bind_center": [
+        3.792346,
+        152.291672,
+        9.7428
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 1069,
+      "bind_center": [
+        -11.343577,
+        150.078125,
+        5.936623
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 1070,
+      "bind_center": [
+        -9.878524,
+        153.287766,
+        7.107835
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 1087,
+      "bind_center": [
+        -1.535117,
+        152.070312,
+        12.890091
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1088,
+      "bind_center": [
+        -2.615336,
+        151.848953,
+        12.364304
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1089,
+      "bind_center": [
+        -2.682556,
+        150.299484,
+        11.646416
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1090,
+      "bind_center": [
+        -0.442198,
+        151.959641,
+        12.628987
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 1091,
+      "bind_center": [
+        -1.47875,
+        148.75,
+        11.5075
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1287,
+      "bind_center": [
+        -9.681306,
+        147.200516,
+        12.219368
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 1288,
+      "bind_center": [
+        -9.846528,
+        148.639328,
+        11.545382
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 1289,
+      "bind_center": [
+        -10.231997,
+        147.311203,
+        12.28053
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 1302,
+      "bind_center": [
+        -3.484533,
+        147.864578,
+        9.463845
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1303,
+      "bind_center": [
+        -5.497629,
+        149.856766,
+        8.024016
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 1304,
+      "bind_center": [
+        -4.57138,
+        148.860672,
+        7.902026
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 1305,
+      "bind_center": [
+        -4.515127,
+        148.75,
+        9.028123
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 1306,
+      "bind_center": [
+        -3.220147,
+        147.200516,
+        8.846413
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1496,
+      "bind_center": [
+        4.823838,
+        155.501297,
+        5.511407
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 1520,
+      "bind_center": [
+        -9.867778,
+        151.516922,
+        10.721944
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 1521,
+      "bind_center": [
+        -9.249574,
+        151.516922,
+        10.818027
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 1522,
+      "bind_center": [
+        -9.534339,
+        152.955734,
+        9.925148
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 1523,
+      "bind_center": [
+        -9.417792,
+        148.639328,
+        12.288808
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 1555,
+      "bind_center": [
+        -10.179683,
+        147.311203,
+        12.776595
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 1556,
+      "bind_center": [
+        -9.691695,
+        148.639328,
+        12.501349
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 1557,
+      "bind_center": [
+        -9.76526,
+        151.516922,
+        11.181847
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 1599,
+      "bind_center": [
+        4.024949,
+        152.623703,
+        8.864231
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 1644,
+      "bind_center": [
+        -0.425898,
+        152.845047,
+        12.794528
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 1645,
+      "bind_center": [
+        -1.366335,
+        154.0625,
+        13.283203
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1646,
+      "bind_center": [
+        0.118735,
+        152.734375,
+        12.566167
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 1647,
+      "bind_center": [
+        -1.739104,
+        153.619797,
+        13.23146
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1648,
+      "bind_center": [
+        -1.031362,
+        153.398438,
+        13.144859
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1703,
+      "bind_center": [
+        3.171254,
+        153.841141,
+        10.277858
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 1704,
+      "bind_center": [
+        4.063275,
+        154.173172,
+        8.689845
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 1705,
+      "bind_center": [
+        3.676072,
+        154.0625,
+        9.803678
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 1788,
+      "bind_center": [
+        -3.04515,
+        155.722656,
+        14.339948
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1791,
+      "bind_center": [
+        -4.657108,
+        156.165359,
+        13.213551
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 1792,
+      "bind_center": [
+        -6.584325,
+        156.71875,
+        12.390484
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 1829,
+      "bind_center": [
+        -0.065245,
+        153.177078,
+        12.511875
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 1830,
+      "bind_center": [
+        0.795969,
+        152.845047,
+        12.064061
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 1831,
+      "bind_center": [
+        0.654978,
+        153.177078,
+        12.058866
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 1909,
+      "bind_center": [
+        -2.822405,
+        154.837234,
+        13.378886
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1910,
+      "bind_center": [
+        -2.367696,
+        154.505203,
+        13.417358
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1911,
+      "bind_center": [
+        -3.67046,
+        155.169266,
+        12.815495
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 1912,
+      "bind_center": [
+        -3.918007,
+        153.841141,
+        12.238933
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 2006,
+      "bind_center": [
+        6.691792,
+        156.608078,
+        9.343266
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 2007,
+      "bind_center": [
+        6.411916,
+        156.165359,
+        10.860164
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 2008,
+      "bind_center": [
+        7.394155,
+        155.944016,
+        8.444673
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 2009,
+      "bind_center": [
+        7.114278,
+        155.501297,
+        9.96157
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 2030,
+      "bind_center": [
+        -9.396516,
+        155.501297,
+        9.132005
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 2031,
+      "bind_center": [
+        -9.582901,
+        156.71875,
+        9.106133
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 2085,
+      "bind_center": [
+        5.471803,
+        155.390625,
+        6.310422
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 2086,
+      "bind_center": [
+        4.986705,
+        155.390625,
+        5.954528
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2087,
+      "bind_center": [
+        6.036828,
+        155.944016,
+        5.602252
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 2104,
+      "bind_center": [
+        3.297617,
+        150.410156,
+        11.490704
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2105,
+      "bind_center": [
+        2.947811,
+        152.513016,
+        11.267062
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2106,
+      "bind_center": [
+        3.651827,
+        150.299484,
+        11.125007
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2107,
+      "bind_center": [
+        3.032302,
+        153.066406,
+        10.945049
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2108,
+      "bind_center": [
+        3.019675,
+        151.295578,
+        11.591779
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2172,
+      "bind_center": [
+        -5.248655,
+        153.066406,
+        10.77266
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 2173,
+      "bind_center": [
+        -4.093225,
+        150.520828,
+        10.767715
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 2174,
+      "bind_center": [
+        -5.140657,
+        154.837234,
+        11.52599
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 2206,
+      "bind_center": [
+        -2.755927,
+        147.421875,
+        10.284836
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 2207,
+      "bind_center": [
+        -1.784191,
+        147.311203,
+        10.660016
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 2250,
+      "bind_center": [
+        4.004702,
+        154.283859,
+        12.665553
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2251,
+      "bind_center": [
+        4.943564,
+        155.169266,
+        13.886952
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2252,
+      "bind_center": [
+        4.947563,
+        154.505203,
+        12.765111
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2253,
+      "bind_center": [
+        2.129258,
+        154.837234,
+        14.847309
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2254,
+      "bind_center": [
+        5.448914,
+        154.947922,
+        13.048299
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 2255,
+      "bind_center": [
+        3.096989,
+        154.173187,
+        13.737556
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2297,
+      "bind_center": [
+        -8.839675,
+        155.501297,
+        9.714532
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 2299,
+      "bind_center": [
+        -8.308805,
+        156.829422,
+        11.002013
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 2300,
+      "bind_center": [
+        -9.95173,
+        155.279953,
+        9.684422
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 2301,
+      "bind_center": [
+        -7.801296,
+        156.71875,
+        10.933829
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 2302,
+      "bind_center": [
+        -8.177234,
+        156.165359,
+        10.083748
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 2303,
+      "bind_center": [
+        -11.172553,
+        156.497391,
+        9.069287
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 2304,
+      "bind_center": [
+        -8.869784,
+        156.940109,
+        10.826588
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 2367,
+      "bind_center": [
+        -4.577665,
+        156.054688,
+        12.752206
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 2368,
+      "bind_center": [
+        -1.746903,
+        155.390625,
+        14.438006
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 2410,
+      "bind_center": [
+        1.813922,
+        152.955734,
+        11.534801
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 2411,
+      "bind_center": [
+        1.79123,
+        152.180984,
+        11.678624
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 2412,
+      "bind_center": [
+        2.261303,
+        151.848953,
+        11.71461
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2413,
+      "bind_center": [
+        2.283995,
+        152.623703,
+        11.570786
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2432,
+      "bind_center": [
+        -4.999575,
+        147.532547,
+        5.301536
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 2470,
+      "bind_center": [
+        -0.730915,
+        154.173172,
+        13.096198
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 2471,
+      "bind_center": [
+        -1.469531,
+        154.615891,
+        13.468097
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 2472,
+      "bind_center": [
+        -0.670708,
+        153.730469,
+        12.862208
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 2490,
+      "bind_center": [
+        6.967344,
+        156.276047,
+        7.280488
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 2547,
+      "bind_center": [
+        -11.16143,
+        147.532547,
+        6.888166
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 2656,
+      "bind_center": [
+        -5.728279,
+        156.497391,
+        11.705254
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 2692,
+      "bind_center": [
+        1.10861,
+        153.509109,
+        11.789185
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 2693,
+      "bind_center": [
+        1.265016,
+        153.841141,
+        12.1843
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 2694,
+      "bind_center": [
+        0.321232,
+        154.0625,
+        12.953816
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 2786,
+      "bind_center": [
+        4.859707,
+        154.837234,
+        6.122255
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2787,
+      "bind_center": [
+        4.765744,
+        154.283859,
+        6.277622
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2828,
+      "bind_center": [
+        -9.338521,
+        154.615891,
+        8.884358
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 2829,
+      "bind_center": [
+        -10.450577,
+        154.394531,
+        8.854248
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 2840,
+      "bind_center": [
+        -4.523018,
+        149.414062,
+        9.758177
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 2841,
+      "bind_center": [
+        -3.786521,
+        148.307297,
+        9.849114
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 2842,
+      "bind_center": [
+        -5.695173,
+        150.299484,
+        8.448428
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 2916,
+      "bind_center": [
+        5.273158,
+        156.054688,
+        12.936615
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 2938,
+      "bind_center": [
+        -1.879616,
+        154.947922,
+        13.618606
+      ],
+      "x_bin": "x_m4_m1"
+    },
+    {
+      "polygon_index": 2980,
+      "bind_center": [
+        2.641702,
+        149.082031,
+        11.3727
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2981,
+      "bind_center": [
+        2.149635,
+        149.635422,
+        11.452397
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 2982,
+      "bind_center": [
+        2.513566,
+        150.963547,
+        11.75784
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3059,
+      "bind_center": [
+        -0.732948,
+        155.611984,
+        15.030587
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 3085,
+      "bind_center": [
+        -12.863706,
+        154.615891,
+        7.107815
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 3086,
+      "bind_center": [
+        -12.847215,
+        155.944016,
+        7.728808
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 3087,
+      "bind_center": [
+        1.703831,
+        153.398438,
+        11.440513
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 3088,
+      "bind_center": [
+        2.157677,
+        153.509109,
+        11.170798
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3089,
+      "bind_center": [
+        2.464395,
+        152.955734,
+        11.289298
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3153,
+      "bind_center": [
+        3.728893,
+        150.188797,
+        6.711839
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3154,
+      "bind_center": [
+        4.119636,
+        152.070312,
+        8.302314
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3155,
+      "bind_center": [
+        4.243515,
+        151.959641,
+        7.076966
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3254,
+      "bind_center": [
+        6.726718,
+        155.611984,
+        7.179311
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 3255,
+      "bind_center": [
+        6.480871,
+        155.169266,
+        11.199368
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 3256,
+      "bind_center": [
+        6.292281,
+        154.837234,
+        10.16478
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 3257,
+      "bind_center": [
+        6.450017,
+        154.947922,
+        8.499485
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 3264,
+      "bind_center": [
+        2.604344,
+        147.643234,
+        5.436425
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3266,
+      "bind_center": [
+        3.437493,
+        149.303391,
+        5.777991
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3302,
+      "bind_center": [
+        -4.108295,
+        148.417969,
+        6.607725
+      ],
+      "x_bin": "x_m7_m4"
+    },
+    {
+      "polygon_index": 3355,
+      "bind_center": [
+        1.342194,
+        152.291672,
+        11.891502
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 3398,
+      "bind_center": [
+        4.707457,
+        154.726562,
+        7.085913
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3399,
+      "bind_center": [
+        4.660815,
+        154.505203,
+        6.841199
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3483,
+      "bind_center": [
+        5.656782,
+        154.947922,
+        7.88517
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 3595,
+      "bind_center": [
+        2.671289,
+        153.841141,
+        11.508058
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3596,
+      "bind_center": [
+        2.613468,
+        153.730469,
+        11.096974
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3597,
+      "bind_center": [
+        3.567317,
+        154.0625,
+        10.830365
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3605,
+      "bind_center": [
+        -11.636581,
+        149.967453,
+        7.588788
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 3606,
+      "bind_center": [
+        -10.186862,
+        150.410156,
+        7.886551
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 3618,
+      "bind_center": [
+        4.55012,
+        153.730469,
+        6.676933
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3619,
+      "bind_center": [
+        4.437113,
+        153.951828,
+        7.01758
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3627,
+      "bind_center": [
+        4.418747,
+        154.394531,
+        10.159898
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3628,
+      "bind_center": [
+        2.193982,
+        153.951828,
+        12.089902
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3629,
+      "bind_center": [
+        2.295296,
+        154.062515,
+        13.138626
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3630,
+      "bind_center": [
+        4.531746,
+        154.394531,
+        10.814311
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3654,
+      "bind_center": [
+        4.538954,
+        154.505203,
+        8.122279
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3655,
+      "bind_center": [
+        5.003181,
+        154.726562,
+        8.565643
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 3698,
+      "bind_center": [
+        -12.051712,
+        152.955734,
+        7.102435
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 3699,
+      "bind_center": [
+        -9.242439,
+        153.619797,
+        8.266155
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 3700,
+      "bind_center": [
+        -11.68789,
+        154.283859,
+        7.61812
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 3717,
+      "bind_center": [
+        -7.698392,
+        156.829422,
+        11.309581
+      ],
+      "x_bin": "x_lt_m7"
+    },
+    {
+      "polygon_index": 3730,
+      "bind_center": [
+        2.4336,
+        153.619797,
+        11.013988
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3753,
+      "bind_center": [
+        5.474607,
+        154.615891,
+        10.913869
+      ],
+      "x_bin": "x_ge_p5"
+    },
+    {
+      "polygon_index": 3801,
+      "bind_center": [
+        0.6302,
+        155.169266,
+        14.893894
+      ],
+      "x_bin": "x_m1_p2"
+    },
+    {
+      "polygon_index": 3818,
+      "bind_center": [
+        4.431441,
+        152.623703,
+        6.76623
+      ],
+      "x_bin": "x_p2_p5"
+    },
+    {
+      "polygon_index": 3826,
+      "bind_center": [
+        -4.747025,
+        156.497391,
+        12.485324
+      ],
+      "x_bin": "x_m7_m4"
+    }
+  ],
+  "views": [
+    {
+      "name": "global_front",
+      "image": "diagnostics/eye_pose_map/global_front.png"
+    },
+    {
+      "name": "global_left_30",
+      "image": "diagnostics/eye_pose_map/global_left_30.png"
+    },
+    {
+      "name": "global_right_30",
+      "image": "diagnostics/eye_pose_map/global_right_30.png"
+    },
+    {
+      "name": "global_left_60",
+      "image": "diagnostics/eye_pose_map/global_left_60.png"
+    },
+    {
+      "name": "global_right_60",
+      "image": "diagnostics/eye_pose_map/global_right_60.png"
+    }
+  ]
+}

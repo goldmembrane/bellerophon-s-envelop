@@ -1,0 +1,102 @@
+{
+  "result": "PASS",
+  "source_fbx": "Assets/_Project/Art/Enemies/Kursa/Models/Kursa.fbx",
+  "source_fbx_sha256": "C1FD1C872ADA95B597DC2F93C9BFC523E5A7E88410541F85B2F6B2DA2F7D18A7",
+  "before_mesh": {
+    "vertices": 2109,
+    "edges": 5936,
+    "polygons": 3913,
+    "loops": 11739,
+    "coordinates_hash": "BCEA5D717C772925246CE23053729F44E4F6C3B9F1A6B84F2F48F671B1E50534",
+    "topology_hash": "74E42137B1C2160F74C09797CEA793316313A433A265538C170DB8A58327920E",
+    "uv_hash": "8A0BAA0AF5E150C086BE3724B106F3B1F4433E427B91C529722075756A5BC675",
+    "weights_hash": "D9496D2CACB00BB2D3175FDA9206F7CE48FC6871D3EB7CA1404D2ECAEF5018FE",
+    "vertex_groups": [
+      "Hips",
+      "LeftUpLeg",
+      "LeftLeg",
+      "LeftFoot",
+      "LeftToeBase",
+      "RightUpLeg",
+      "RightLeg",
+      "RightFoot",
+      "RightToeBase",
+      "Spine02",
+      "Spine01",
+      "Spine",
+      "LeftShoulder",
+      "LeftArm",
+      "LeftForeArm",
+      "LeftHand",
+      "RightShoulder",
+      "RightArm",
+      "RightForeArm",
+      "RightHand",
+      "neck",
+      "Head"
+    ]
+  },
+  "after_mesh": {
+    "vertices": 2109,
+    "edges": 5936,
+    "polygons": 3913,
+    "loops": 11739,
+    "coordinates_hash": "BCEA5D717C772925246CE23053729F44E4F6C3B9F1A6B84F2F48F671B1E50534",
+    "topology_hash": "74E42137B1C2160F74C09797CEA793316313A433A265538C170DB8A58327920E",
+    "uv_hash": "8A0BAA0AF5E150C086BE3724B106F3B1F4433E427B91C529722075756A5BC675",
+    "weights_hash": "D9496D2CACB00BB2D3175FDA9206F7CE48FC6871D3EB7CA1404D2ECAEF5018FE",
+    "vertex_groups": [
+      "Hips",
+      "LeftUpLeg",
+      "LeftLeg",
+      "LeftFoot",
+      "LeftToeBase",
+      "RightUpLeg",
+      "RightLeg",
+      "RightFoot",
+      "RightToeBase",
+      "Spine02",
+      "Spine01",
+      "Spine",
+      "LeftShoulder",
+      "LeftArm",
+      "LeftForeArm",
+      "LeftHand",
+      "RightShoulder",
+      "RightArm",
+      "RightForeArm",
+      "RightHand",
+      "neck",
+      "Head"
+    ]
+  },
+  "before_armature": {
+    "bones": 24,
+    "bone_hash": "5CC50FA6403A035CF63E7E787F13FCECB71751C0930A9B5B55714C2EFD48E4E2"
+  },
+  "after_armature": {
+    "bones": 24,
+    "bone_hash": "5CC50FA6403A035CF63E7E787F13FCECB71751C0930A9B5B55714C2EFD48E4E2"
+  },
+  "before_actions": [
+    {
+      "name": "Armature|Armature|Armature|Armature|Armature|walking_man|baselayer",
+      "frame_range": [
+        1.0,
+        63.0
+      ],
+      "slots": 1
+    }
+  ],
+  "after_actions": [
+    {
+      "name": "Armature|Armature|Armature|Armature|Armature|walking_man|baselayer",
+      "frame_range": [
+        1.0,
+        63.0
+      ],
+      "slots": 1
+    }
+  ],
+  "scope": "Material slots and polygon material indices only; geometry, UVs, weights, armature, and animation data are unchanged."
+}

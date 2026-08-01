@@ -22,32 +22,32 @@
 <body>
 <main>
   <h1>파후르 외형 동기화 요약</h1>
-  <p>현재 상태는 <code>PENDING_USER_REVIEW</code>입니다. 이번 20차에서는 각 안면판 표면을 따르는 기존 눈 배치를 유지하면서, 기준 이미지처럼 바깥쪽 눈꼬리는 높고 중앙 쪽 끝은 낮아지도록 두 눈의 접선 평면 내 각도만 조정했습니다. 정면과 3/4에서 화난 인상이 유지되고 중앙 금속·관자놀이·두건·얼굴 하단을 침범하지 않습니다. 얼굴 금속, 렌즈 텍스처, 두건, 화염 문양과 프로젝트 원본 FBX, 기존 몸통·팔·다리·가스통·무기는 변경하지 않았고 Unity에도 적용하지 않았습니다. 전체 자료는 <a href="index.html">index.html</a>에서 확인할 수 있습니다.</p>
+  <p>현재 상태는 <code>PENDING_USER_REVIEW</code>입니다. 이번 22차에서는 원본 이미지 색상을 참고하지 않고 청회색 장갑·남색 두건·푸른 눈·흉부 청색 표시를 산화철·마호가니 계열 적갈색과 따뜻한 암적색 발광으로 변경했습니다. 기존 눈 중심·크기·화난 각도와 메시 구조는 유지했습니다. 건메탈 얼굴·무기·가스통, 검은 기계부·호스와 주황 화염 문양은 변경하지 않았고 Unity에도 적용하지 않았습니다. 전체 자료는 <a href="index.html">index.html</a>에서 확인할 수 있습니다.</p>
 
   <section>
     <h2>비교 요약</h2>
-    <figure><img src="renders/03_reference_side_by_side_overview.png" alt="파후르 원화와 현재 FBX 재질 샘플 비교"><figcaption>원화와 현재 FBX 재질 샘플의 정면 비교</figcaption></figure>
-    <figure><img src="renders/08_head_detail_comparison.png" alt="파후르 원화와 교체 FBX 머리 확대 비교"><figcaption>묶은 두건·화염 문양·청색 광학부·매끄러운 얼굴 확대 비교</figcaption></figure>
-    <figure><img src="renders/11_shoulders_left_arm_comparison.png" alt="파후르 원화와 교체 FBX 상반신 확대 비교"><figcaption>밝은 흉부판·청회색 어깨와 팔·짙은 관절 재질 비교</figcaption></figure>
-    <figure><img src="renders/13_torso_detail_comparison.png" alt="파후르 원화와 교체 FBX 몸통 정면 비교"><figcaption>중앙 상단 독립 연결 표면 97을 실제 삭제한 직접 비교</figcaption></figure>
+    <figure><img src="renders/03_reference_side_by_side_overview.png" alt="파후르 적갈색 정면과 3/4 비교"><figcaption>적갈색 팔레트의 정면·3/4 비교</figcaption></figure>
+    <figure><img src="renders/08_head_detail_comparison.png" alt="파후르 적갈색 머리 확대 비교"><figcaption>어두운 적갈색 두건·암적색 광학부·매끄러운 얼굴 확대 비교</figcaption></figure>
+    <figure><img src="renders/11_shoulders_left_arm_comparison.png" alt="파후르 적갈색 상반신 확대 비교"><figcaption>적갈색 어깨와 팔·짙은 관절 재질 비교</figcaption></figure>
+    <figure><img src="renders/13_torso_detail_comparison.png" alt="파후르 적갈색 몸통 정면 비교"><figcaption>적갈색 흉갑·복부·골반 연결판 비교</figcaption></figure>
   </section>
 
   <section>
     <h2>반영된 외형</h2>
     <ul>
-      <li>토폴로지에서 확정한 기존 표면의 짙은 남색 두건과 기준 이미지에서 직접 가져온 주황 화염 표식.</li>
-      <li>좌우 상단 안면판을 따르면서 바깥쪽 눈꼬리는 높고 중앙 쪽 끝은 낮아 화난 인상을 내는 두 개의 푸른 안면 광학부.</li>
+      <li>토폴로지에서 확정한 기존 표면의 짙은 적갈색 두건과 기존 주황 화염 표식.</li>
+      <li>좌우 상단 안면판을 따르면서 바깥쪽 눈꼬리는 높고 중앙 쪽 끝은 낮아 화난 인상을 내는 두 개의 따뜻한 암적색 안면 광학부.</li>
       <li>반복 가로선·입·환기구·추가 패널이 없는 매끈한 중암도 건메탈 얼굴.</li>
       <li>몸통 상단 독립 연결 표면 97의 정점 11개·에지 27개·면 18개·루프 54개를 실제 삭제.</li>
       <li>큰 중앙 연결 표면 63과 중앙 하단 63·84는 수정하지 않음.</li>
       <li>짙은 건메탈 화염방사기, 검은 고무 호스, 매끄러운 마모 강철 후방 탱크.</li>
-      <li>청색 흉부 표시와 제한된 주황 상태등·탱크 피팅.</li>
+      <li>적갈색 흉부 표시와 제한된 주황 상태등·탱크 피팅.</li>
       <li>알베도·메탈릭·러프니스와 낮은 강도의 표면 노멀로 금속·천·고무의 반응을 분리하고, 굵은 격자·대각선·볼트 무늬와 전신 패널 범프는 제거.</li>
       <li>몸통 2D 색상·발광·금속성·거칠기 투영을 제거하고 실제 연결 표면별 전용 PBR 텍스처만 사용.</li>
       <li>법선 각도 기반 122개 조각은 삼각 얼룩을 만들기 때문에 사용하지 않음.</li>
       <li>팔과 다리의 재질 배정 및 텍스처는 이번 작업에서 변경하지 않음.</li>
       <li>몸통·가스통·무기 재질 배정과 텍스처도 이번 얼굴 작업 전 상태를 유지.</li>
-      <li>얼굴 금속·렌즈 텍스처·두건·화염 문양은 이번 눈 각도 수정 전 상태를 유지.</li>
+      <li>얼굴 금속·렌즈 텍스처·두건·화염 문양은 이번 눈 세로 크기 수정 전 상태를 유지.</li>
       <li>승인된 표면 삭제 후 남은 4,330면에 15개 재질군을 배정.</li>
     </ul>
   </section>

@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Pahur_torso_center_plate_Approved
+  m_Shader: {fileID: 4800000, guid: cddb95d2f3a97824bb323c80eab6baa9, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 25142dab41c200b41b935da831a8b60f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FaceEmission:
+        m_Texture: {fileID: 2800000, guid: 5949c83e5f30f6c4fbe4b1e030936493, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FaceOverlay:
+        m_Texture: {fileID: 2800000, guid: 371ab523a047d5147af67b5e8eb23cd3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HoodDecal:
+        m_Texture: {fileID: 2800000, guid: a1ecb0ba87b6eb448920c3fc5f2a5b2c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicMap:
+        m_Texture: {fileID: 2800000, guid: f35cbee521b57344caaf40284e732988, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: e5db07c90aae4c64cb28621952864b17, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RoughnessMap:
+        m_Texture: {fileID: 2800000, guid: 9adf8894fddeb0f4ea3d44e176f6579e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ApprovedAmbientStrength: 0.88
+    - _ApprovedFillStrength: 1.35
+    - _ApprovedKeyStrength: 3
+    - _ApprovedRimStrength: 2.1
+    - _Cutoff: 0.5
+    - _EmissionStrength: 0
+    - _FeatureMode: 0
+    - _MachineScale: 0
+    - _MachineStrength: 0
+    - _MachineThreshold: 0
+    - _NormalStrength: 0.06
+    - _PreviewUnlit: 0
+    - _TextureScale: 1.5
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GeneratedBoundsInvSize: {r: 0.0077353925, g: 0.0055555557, b: 0.009247195, a: 0}
+    - _GeneratedBoundsMin: {r: -64.63796, g: 0, b: -54.07045, a: 0}
+    - _MachineColor: {r: 0, g: 0, b: 0, a: 0}
+    - _ObjectToSample0: {r: 100, g: 0, b: 0, a: 0}
+    - _ObjectToSample1: {r: 0, g: 100, b: 0, a: 0}
+    - _ObjectToSample2: {r: 0, g: 0, b: -100, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

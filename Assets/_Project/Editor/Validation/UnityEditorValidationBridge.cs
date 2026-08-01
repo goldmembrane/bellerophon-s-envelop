@@ -189,6 +189,276 @@ namespace Bellerophon.Editor.Validation
                         RefreshAssets,
                         "Unity assets refreshed.");
                     break;
+                case "ApplyApprovedPahurAppearance":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurApprovedAppearanceApplicator.ApplyApprovedPahurAppearance,
+                        "Approved Pahur appearance applied.");
+                    break;
+                case "ValidateApprovedPahurAppearance":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurApprovedAppearanceApplicator.ValidateApprovedPahurAppearance,
+                        "Approved Pahur appearance validation passed.");
+                    break;
+                case "CaptureApprovedPahurAppearance":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurApprovedAppearanceApplicator.CaptureApprovedPahurAppearance,
+                        "Approved Pahur appearance capture saved.");
+                    break;
+                case "ApplyPahurApprovedAppearanceSceneLightingParity":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurApprovedAppearanceApplicator.ApplyPahurApprovedAppearanceSceneLightingParity,
+                        "Approved Pahur scene parity applied.");
+                    break;
+                case "InspectPahurApprovedAppearanceSceneLightingParity":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurApprovedAppearanceApplicator.InspectPahurApprovedAppearanceSceneLightingParity,
+                        "Approved Pahur scene parity inspected.");
+                    break;
+                case "CapturePahurApprovedAppearanceActualSceneParity":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurApprovedAppearanceApplicator.CapturePahurApprovedAppearanceActualSceneParity,
+                        "Approved Pahur actual-scene parity capture saved.");
+                    break;
+                case "ApplyPahurGroundedIdleAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurGroundedIdleAnimationTool.ApplyPahurGroundedIdleAnimation,
+                        "Pahur grounded idle animation applied.");
+                    break;
+                case "ValidatePahurGroundedIdleAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurGroundedIdleAnimationTool.ValidatePahurGroundedIdleAnimation,
+                        "Pahur grounded idle animation validation passed.");
+                    break;
+                case "CapturePahurGroundedIdleAnimationReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurGroundedIdleAnimationTool.CapturePahurGroundedIdleAnimationReview,
+                        "Pahur grounded idle animation review captured.");
+                    break;
+                case "ApplyPahurStopAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurStopAnimationTool.ApplyPahurStopAnimation,
+                        "Pahur stop animation applied.");
+                    break;
+                case "ValidatePahurStopAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurStopAnimationTool.ValidatePahurStopAnimation,
+                        "Pahur stop animation validation passed.");
+                    break;
+                case "CapturePahurStopAnimationReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurStopAnimationTool.CapturePahurStopAnimationReview,
+                        "Pahur stop animation review captured.");
+                    break;
+                case "ApplyPahurElevenSlotExpansion":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurElevenSlotExpansionTool.ApplyPahurElevenSlotExpansion,
+                        "Pahur eleven-slot expansion applied.");
+                    break;
+                case "ValidatePahurElevenSlotExpansion":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurElevenSlotExpansionTool.ValidatePahurElevenSlotExpansion,
+                        "Pahur eleven-slot expansion validation passed.");
+                    break;
+                case "ApplyPahurToGuardianStanceAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurToGuardianStanceAnimationTool.ApplyPahurToGuardianStanceAnimation,
+                        "Pahur to-guardian-stance animation applied.");
+                    break;
+                case "ValidatePahurToGuardianStanceAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurToGuardianStanceAnimationTool.ValidatePahurToGuardianStanceAnimation,
+                        "Pahur to-guardian-stance animation validation passed.");
+                    break;
+                case "CapturePahurToGuardianStanceReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurToGuardianStanceAnimationTool.CapturePahurToGuardianStanceReview,
+                        "Pahur to-guardian-stance review captured.");
+                    break;
+                case "ApplyPahurFromGuardianStanceAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurFromGuardianStanceAnimationTool.ApplyPahurFromGuardianStanceAnimation,
+                        "Pahur from-guardian-stance animation applied.");
+                    break;
+                case "ValidatePahurFromGuardianStanceAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurFromGuardianStanceAnimationTool.ValidatePahurFromGuardianStanceAnimation,
+                        "Pahur from-guardian-stance animation validation passed.");
+                    break;
+                case "CapturePahurFromGuardianStanceReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurFromGuardianStanceAnimationTool.CapturePahurFromGuardianStanceReview,
+                        "Pahur from-guardian-stance review captured.");
+                    break;
+                case "InspectPahurHitSource":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.InspectPahurHitSource,
+                        "Pahur hit source inspected.");
+                    break;
+                case "ApplyPahurHitAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.ApplyPahurHitAnimation,
+                        "Pahur hit animation applied.");
+                    break;
+                case "ValidatePahurHitAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.ValidatePahurHitAnimation,
+                        "Pahur hit animation validation passed.");
+                    break;
+                case "CapturePahurHitReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.CapturePahurHitReview,
+                        "Pahur hit review captured.");
+                    break;
+                case "InspectPahurDeathSource":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.InspectPahurDeathSource,
+                        "Pahur death source inspected.");
+                    break;
+                case "ApplyPahurDeathAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.ApplyPahurDeathAnimation,
+                        "Pahur death animation applied.");
+                    break;
+                case "ValidatePahurDeathAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.ValidatePahurDeathAnimation,
+                        "Pahur death animation validation passed.");
+                    break;
+                case "InspectPahurDeathVerticalMotion":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.InspectPahurDeathVerticalMotion,
+                        "Pahur death vertical motion inspected.");
+                    break;
+                case "CapturePahurDeathReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.CapturePahurDeathReview,
+                        "Pahur death review captured.");
+                    break;
+                case "ApplyPahurRunningModelAndAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.ApplyPahurRunningModelAndAnimation,
+                        "Pahur running model and animation applied.");
+                    break;
+                case "InspectPahurRunningSource":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.InspectPahurRunningSource,
+                        "Pahur running source inspected.");
+                    break;
+                case "InspectPahurMiniFlameAttackSource":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.InspectPahurMiniFlameAttackSource,
+                        "Pahur mini flame attack source inspected.");
+                    break;
+                case "ApplyPahurMiniFlameAttack":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.ApplyPahurMiniFlameAttack,
+                        "Pahur mini flame attack applied.");
+                    break;
+                case "ValidatePahurMiniFlameAttack":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.ValidatePahurMiniFlameAttack,
+                        "Pahur mini flame attack validated.");
+                    break;
+                case "CapturePahurMiniFlameAttackReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.CapturePahurMiniFlameAttackReview,
+                        "Pahur mini flame attack review captured.");
+                    break;
+                case "InspectPahurBreakthroughSource":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.InspectPahurBreakthroughSource,
+                        "Pahur breakthrough source inspected.");
+                    break;
+                case "ApplyPahurBreakthroughFlamethrower":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.ApplyPahurBreakthroughFlamethrower,
+                        "Pahur breakthrough flamethrower applied.");
+                    break;
+                case "ValidatePahurBreakthroughFlamethrower":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.ValidatePahurBreakthroughFlamethrower,
+                        "Pahur breakthrough flamethrower validated.");
+                    break;
+                case "CapturePahurBreakthroughFlamethrowerReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.CapturePahurBreakthroughFlamethrowerReview,
+                        "Pahur breakthrough flamethrower review captured.");
+                    break;
+                case "InspectPahurGuardianSource":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.InspectPahurGuardianSource,
+                        "Pahur guardian source inspected.");
+                    break;
+                case "ApplyPahurGuardianFlamethrower":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.ApplyPahurGuardianFlamethrower,
+                        "Pahur guardian flamethrower applied.");
+                    break;
+                case "ValidatePahurGuardianFlamethrower":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.ValidatePahurGuardianFlamethrower,
+                        "Pahur guardian flamethrower validated.");
+                    break;
+                case "AlignPahurMoveModelY":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.AlignPahurMoveModelY,
+                        "Pahur move model Y aligned.");
+                    break;
+                case "ValidatePahurRunningModelAndAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.ValidatePahurRunningModelAndAnimation,
+                        "Pahur running model and animation validation passed.");
+                    break;
+                case "CapturePahurRunningModelAndAnimationReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.PahurCargoRunScene.PahurRunningModelAndAnimationTool.CapturePahurRunningModelAndAnimationReview,
+                        "Pahur running model and animation review captured.");
+                    break;
                 case "EnsureApprovedEngineRoomShell":
                     RunSynchronous(
                         request,
@@ -1784,6 +2054,18 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.PahurCargoRunScene.PahurPlacementEditor.CapturePahurPlacementReview,
                         "Pahur ten-model Player start front view captured once after placement inspection.");
+                    break;
+                case "ApplyKursaPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.KursaCargoRunScene.KursaPlacementEditor.ApplyKursaPlacement,
+                        "Supplied Kursa FBX placed in twelve named static slots below Pahur using Longa Arma/Tergo Z spacing and Pahur X spacing; Player start moved to the full lineup front view.");
+                    break;
+                case "InspectKursaPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.KursaCargoRunScene.KursaPlacementEditor.InspectKursaPlacement,
+                        "Kursa source hash, twelve direct FBX instances, spacing, grounding, static state, and Player front framing inspected.");
                     break;
                 case "ApplyResistancePlacement":
                     RunSynchronous(

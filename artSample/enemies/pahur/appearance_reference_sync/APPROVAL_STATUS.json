@@ -1,11 +1,11 @@
 {
   "enemy_id": "pahur",
   "sample_type": "current_model_appearance_reference_sync",
-  "status": "PENDING_USER_REVIEW",
-  "revision": "2026-07-30_face_surface_fitted_angry_eyes_rework_20",
+  "status": "UNITY_RUNTIME_APPLIED_AND_VALIDATED",
+  "revision": "2026-07-31_red_brown_palette_rework_22",
   "previous_result": "SUPERSEDED_BY_REPLACEMENT_FBX_2026-07-30",
-  "approved_for_unity": false,
-  "unity_runtime_applied": false,
+  "approved_for_unity": true,
+  "unity_runtime_applied": true,
   "source_model": "Assets/_Project/Art/Enemies/Pahur/Models/Pahur.fbx",
   "reference_images": [
     "image/pāḫḫur(파후르).png"

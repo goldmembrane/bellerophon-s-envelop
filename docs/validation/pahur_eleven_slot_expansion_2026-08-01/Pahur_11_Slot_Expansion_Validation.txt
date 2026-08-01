@@ -1,0 +1,21 @@
+Pahur Eleven Slot Expansion Validation
+Result=PASS
+Scene=Assets/_Project/Scenes/CargoRunMvp.unity
+PlacementRoot=Approved Pahur Enemy Placement
+SlotCount=11
+SlotOrder=Pahur_01_Static_Review,Pahur_02_Idle,Pahur_03_Move,Pahur_04_MiniFlamethrower,Pahur_05_BreakthroughFlamethrower,Pahur_06_GuardianFlamethrower,Pahur_07_Stop,Pahur_08_ToGuardianStance,Pahur_09_FromGuardianStance,Pahur_10_Hit,Pahur_11_Death
+XSpacing=2.44476318
+Slot08Position=17.1133423,0,0
+Slot09Position=19.5581055,0,0
+Slot10Position=22.0028687,0,0
+Slot11Position=24.4476318,0,0
+NewSlotModelPath=Assets/_Project/Art/Enemies/Pahur/Models/Pahur.fbx
+NewSlotTriangles=4330
+NewSlotBones=24
+NewSlotMaterialCount=15
+NewSlotMatchesSlot08Materials=True
+NewSlotAnimationActive=False
+FirstSevenSlotsPreservedByApply=True
+OtherSceneRootsPreservedByApply=True
+SceneSaved=True
+ValidationSceneChanged=False

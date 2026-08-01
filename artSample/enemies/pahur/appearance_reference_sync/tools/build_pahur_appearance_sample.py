@@ -20,7 +20,7 @@ EXPORT_DIR = SAMPLE_ROOT / "exports"
 
 MATERIAL_SPECS = {
     "armor_bluegray": {
-        "display": "Pahur_Armor_BlueGray_RigidPlate",
+        "display": "Pahur_Armor_RedBrown_RigidPlate",
         "metallic": 0.64,
         "roughness": 0.52,
     },
@@ -30,7 +30,7 @@ MATERIAL_SPECS = {
         "roughness": 0.50,
     },
     "leg_steel": {
-        "display": "Pahur_Dark_Leg_Steel",
+        "display": "Pahur_Dark_RedBrown_Leg_Steel",
         "metallic": 0.66,
         "roughness": 0.54,
     },
@@ -40,7 +40,7 @@ MATERIAL_SPECS = {
         "roughness": 0.60,
     },
     "torso_rigid_shell": {
-        "display": "Pahur_Torso_Outer_BlueGray_Armor",
+        "display": "Pahur_Torso_Outer_RedBrown_Armor",
         "metallic": 0.72,
         "roughness": 0.54,
     },
@@ -55,12 +55,12 @@ MATERIAL_SPECS = {
         "roughness": 0.62,
     },
     "torso_pelvis_plate": {
-        "display": "Pahur_Torso_Pelvis_Steel_Plate",
+        "display": "Pahur_Torso_Pelvis_RedBrown_Plate",
         "metallic": 0.77,
         "roughness": 0.52,
     },
     "shoulder_machine_blue": {
-        "display": "Pahur_Shoulder_Mechanical_Blue",
+        "display": "Pahur_Shoulder_Mechanical_RedBrown",
         "metallic": 0.64,
         "roughness": 0.52,
     },
@@ -75,7 +75,7 @@ MATERIAL_SPECS = {
         "roughness": 0.56,
     },
     "hood_navy_cloth": {
-        "display": "Pahur_Hood_Navy_Cloth",
+        "display": "Pahur_Hood_Dark_RedBrown_Cloth",
         "metallic": 0.02,
         "roughness": 0.82,
     },
@@ -105,7 +105,7 @@ MATERIAL_SPECS = {
         "roughness": 0.78,
     },
     "optic_blue": {
-        "display": "Pahur_Optic_Blue_Emission",
+        "display": "Pahur_Optic_WarmRed_Emission",
         "metallic": 0.24,
         "roughness": 0.22,
         "emission": 3.6,
@@ -167,7 +167,9 @@ EYE_SURFACE_PROJECTIONS = (
         "u_axis": (0.806456, 0.0, 0.591294),
         "v_axis": (-0.171074, 0.957232, 0.233325),
         "width": 5.0,
-        "height": 3.0,
+        # Match the reference eye's taller silhouette without changing its
+        # horizontal size, surface anchor, or angry rotation.
+        "height": 4.5,
         # Both U axes point from the outer corner toward the face center.
         # Negative rotation lowers the inner corner inside the fitted plane.
         "rotation_degrees": -16.0,
@@ -178,7 +180,9 @@ EYE_SURFACE_PROJECTIONS = (
         "u_axis": (-0.952586, 0.0, 0.304270),
         "v_axis": (0.054923, 0.983573, 0.171950),
         "width": 5.0,
-        "height": 3.0,
+        # Match the reference eye's taller silhouette without changing its
+        # horizontal size, surface anchor, or angry rotation.
+        "height": 4.5,
         "rotation_degrees": -14.0,
     },
 )
@@ -729,7 +733,11 @@ def build_material(material_id, spec):
                 else 0.10
             )
             machine_mix = nodes.new("ShaderNodeMixRGB")
-            machine_mix.inputs[2].default_value = (0.025, 0.045, 0.060, 1.0)
+            machine_mix.inputs[2].default_value = (
+                (0.060, 0.025, 0.020, 1.0)
+                if material_id in {"shoulder_machine_blue", "left_arm_machine"}
+                else (0.025, 0.045, 0.060, 1.0)
+            )
             links.new(uv.outputs["Generated"], machine_wave.inputs["Vector"])
             links.new(machine_wave.outputs["Fac"], machine_band.inputs[0])
             links.new(machine_band.outputs[0], machine_band_strength.inputs[0])

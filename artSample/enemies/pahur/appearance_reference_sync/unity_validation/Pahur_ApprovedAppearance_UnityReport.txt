@@ -1,0 +1,14 @@
+Result=VALIDATION_PASS
+Revision=2026-07-31_red_brown_palette_rework_22
+Scene=Assets/_Project/Scenes/CargoRunMvp.unity
+PlacementRoot=Approved Pahur Enemy Placement
+Slots=10
+MaterialsPerRenderer=15
+Triangles=4330
+ApprovedMeshShape=Vertices:2434,Edges:6548,Polygons:4330,Loops:12990
+Bones=24
+FbxSha256=5A2354A0B89A451DB98EF5AA5409C61EE12CF5638FA6EC2C88110B4C146B537C
+EyeProjection=Width:5.0,Height:4.5,LeftRotation:-16,RightRotation:-14
+SceneTransformsChanged=False
+GameplayComponentsChanged=False
+OtherSceneRootsChanged=False

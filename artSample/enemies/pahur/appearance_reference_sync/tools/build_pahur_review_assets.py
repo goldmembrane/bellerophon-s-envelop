@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -7,6 +8,9 @@ ROOT = Path(r"D:\Bellerophon2\Bellerophon")
 SAMPLE_ROOT = ROOT / "artSample/enemies/pahur/appearance_reference_sync"
 REFERENCE = ROOT / "image/pāḫḫur(파후르).png"
 FRONT_RENDER = SAMPLE_ROOT / "renders/01_front_pahur_reference_match.png"
+THREE_QUARTER_RENDER = (
+    SAMPLE_ROOT / "renders/02_three_quarter_pahur_reference_match.png"
+)
 HEAD_RENDER = SAMPLE_ROOT / "renders/07_head_front_detail.png"
 HEAD_THREE_QUARTER_RENDER = (
     SAMPLE_ROOT / "renders/07_head_three_quarter_detail.png"
@@ -45,7 +49,130 @@ def fitted_enlarged(image, width, height):
     return result
 
 
+def make_red_brown_review_assets():
+    # This review mode deliberately uses only generated sample renders. The
+    # concept image is not opened or used to choose the approved red-brown
+    # palette.
+    front = Image.open(FRONT_RENDER).convert("RGB")
+    three_quarter = Image.open(THREE_QUARTER_RENDER).convert("RGB")
+    head_front = Image.open(HEAD_RENDER).convert("RGB")
+    head_three_quarter = Image.open(HEAD_THREE_QUARTER_RENDER).convert("RGB")
+    shoulder_arm = Image.open(SHOULDER_ARM_RENDER).convert("RGB")
+    torso = Image.open(TORSO_RENDER).convert("RGB")
+    font_path = Path(r"C:\Windows\Fonts\malgun.ttf")
+    font = (
+        ImageFont.truetype(str(font_path), 20)
+        if font_path.exists()
+        else ImageFont.load_default()
+    )
+
+    canvas = Image.new("RGB", (1760, 980), (24, 32, 35))
+    draw = ImageDraw.Draw(canvas)
+    draw.text(
+        (44, 30),
+        "파후르 적갈색 팔레트 — 정면 / 3/4 검토",
+        fill=(237, 242, 241),
+        font=font,
+    )
+    draw.text(
+        (44, 54),
+        "이미지 원화의 색상을 사용하지 않고 현재 FBX 검토본의 푸른 계열을 적갈색으로 교체했습니다.",
+        fill=(166, 182, 184),
+        font=font,
+    )
+    canvas.paste(fitted(front, 820, 820), (44, 106))
+    canvas.paste(fitted(three_quarter, 820, 820), (896, 106))
+    draw.rectangle((44, 106, 864, 926), outline=(83, 101, 103), width=2)
+    draw.rectangle((896, 106, 1716, 926), outline=(83, 101, 103), width=2)
+    draw.text((44, 942), "적갈색 팔레트 정면", fill=(218, 226, 226), font=font)
+    draw.text((896, 942), "적갈색 팔레트 3/4", fill=(218, 226, 226), font=font)
+    canvas.save(OUTPUT)
+    print(OUTPUT)
+
+    head_canvas = Image.new("RGB", (2000, 760), (24, 32, 35))
+    head_draw = ImageDraw.Draw(head_canvas)
+    head_draw.text(
+        (44, 28),
+        "파후르 머리 — 어두운 적갈색 두건 / 따뜻한 암적색 눈",
+        fill=(237, 242, 241),
+        font=font,
+    )
+    head_draw.text(
+        (44, 56),
+        "기존 화난 눈의 중심·각도·크기를 유지한 상태로 정면과 3/4의 색상 반응을 확인합니다.",
+        fill=(166, 182, 184),
+        font=font,
+    )
+    head_front_crop = head_front.crop((165, 130, 1115, 1080))
+    head_three_quarter_crop = head_three_quarter.crop((165, 130, 1115, 1080))
+    head_canvas.paste(fitted_enlarged(head_front_crop, 900, 610), (44, 104))
+    head_canvas.paste(
+        fitted_enlarged(head_three_quarter_crop, 900, 610),
+        (1056, 104),
+    )
+    head_draw.rectangle((44, 104, 944, 714), outline=(83, 101, 103), width=2)
+    head_draw.rectangle((1056, 104, 1956, 714), outline=(83, 101, 103), width=2)
+    head_draw.text((44, 724), "머리 정면", fill=(218, 226, 226), font=font)
+    head_draw.text((1056, 724), "머리 3/4", fill=(218, 226, 226), font=font)
+    head_canvas.save(HEAD_OUTPUT)
+    print(HEAD_OUTPUT)
+
+    shoulder_canvas = Image.new("RGB", (1600, 760), (24, 32, 35))
+    shoulder_draw = ImageDraw.Draw(shoulder_canvas)
+    shoulder_draw.text(
+        (44, 28),
+        "파후르 상반신 — 적갈색 외장 / 비대상 건메탈 보존",
+        fill=(237, 242, 241),
+        font=font,
+    )
+    shoulder_draw.text(
+        (44, 56),
+        "양 어깨·팔 외장의 적갈색과 얼굴·무기·기계부의 기존 중성 금속 대비를 확인합니다.",
+        fill=(166, 182, 184),
+        font=font,
+    )
+    front_upper = front.crop((250, 130, 1130, 900))
+    shoulder_crop = shoulder_arm.crop((110, 120, 1220, 1160))
+    shoulder_canvas.paste(fitted_enlarged(front_upper, 720, 610), (44, 104))
+    shoulder_canvas.paste(fitted_enlarged(shoulder_crop, 720, 610), (836, 104))
+    shoulder_draw.rectangle((44, 104, 764, 714), outline=(83, 101, 103), width=2)
+    shoulder_draw.rectangle((836, 104, 1556, 714), outline=(83, 101, 103), width=2)
+    shoulder_draw.text((44, 724), "정면 상반신", fill=(218, 226, 226), font=font)
+    shoulder_draw.text((836, 724), "어깨·팔 확대", fill=(218, 226, 226), font=font)
+    shoulder_canvas.save(SHOULDER_ARM_OUTPUT)
+    print(SHOULDER_ARM_OUTPUT)
+
+    torso_canvas = Image.new("RGB", (1600, 760), (24, 32, 35))
+    torso_draw = ImageDraw.Draw(torso_canvas)
+    torso_draw.text(
+        (44, 28),
+        "파후르 몸통 — 적갈색 흉갑 / 골반 연결판",
+        fill=(237, 242, 241),
+        font=font,
+    )
+    torso_draw.text(
+        (44, 56),
+        "흉갑과 골반 연결판을 적갈색으로 통일하고 검은 내부 기계부는 유지했습니다.",
+        fill=(166, 182, 184),
+        font=font,
+    )
+    front_torso = front.crop((345, 250, 1035, 1010))
+    torso_crop = torso.crop((170, 125, 1110, 1165))
+    torso_canvas.paste(fitted_enlarged(front_torso, 720, 610), (44, 104))
+    torso_canvas.paste(fitted_enlarged(torso_crop, 720, 610), (836, 104))
+    torso_draw.rectangle((44, 104, 764, 714), outline=(83, 101, 103), width=2)
+    torso_draw.rectangle((836, 104, 1556, 714), outline=(83, 101, 103), width=2)
+    torso_draw.text((44, 724), "정면 몸통", fill=(218, 226, 226), font=font)
+    torso_draw.text((836, 724), "몸통 확대", fill=(218, 226, 226), font=font)
+    torso_canvas.save(TORSO_OUTPUT)
+    print(TORSO_OUTPUT)
+
+
 def main():
+    if "--red-brown-palette-only" in sys.argv:
+        make_red_brown_review_assets()
+        return
+
     reference = Image.open(REFERENCE).convert("RGB")
     render = Image.open(FRONT_RENDER).convert("RGB")
     head_render = Image.open(HEAD_RENDER).convert("RGB")
@@ -95,13 +222,13 @@ def main():
     head_draw = ImageDraw.Draw(head_canvas)
     head_draw.text(
         (44, 28),
-        "파후르 머리 세부 비교 — 안쪽이 낮아지는 화난 눈 각도",
+        "파후르 머리 세부 비교 — 화난 눈 각도 유지 + 세로 크기 확대",
         fill=(237, 242, 241),
         font=font,
     )
     head_draw.text(
         (44, 56),
-        "기준 이미지와 정면·3/4에서 바깥 눈꼬리는 높고 중앙 쪽 끝은 낮게 유지되는지 비교합니다.",
+        "기준 이미지와 정면·3/4에서 화난 각도를 유지한 채 눈의 세로 크기가 가까워졌는지 비교합니다.",
         fill=(166, 182, 184),
         font=font,
     )

@@ -1,0 +1,701 @@
+{
+  "status": "APPROVED_FOR_UNITY_NOT_APPLIED",
+  "source_model": "Assets/_Project/Art/Enemies/Kursa/Models/Kursa.fbx",
+  "source_model_sha256": "C1FD1C872ADA95B597DC2F93C9BFC523E5A7E88410541F85B2F6B2DA2F7D18A7",
+  "reference_image": "image/KUŠkursa(쿠르사).png",
+  "reference_image_sha256": "267B1E2850B8ACD558BB7154DCFA4F0E6872E6B7F44E35B6A65B111CBF841288",
+  "files": {
+    "APPROVAL_STATUS.json": {
+      "bytes": 691,
+      "sha256": "EC301B95ADAEE2BB1FE421223E10493568B4E3FE2263FA22321FE869AD008207"
+    },
+    "blender/Kursa_Appearance_ReferenceSync.blend": {
+      "bytes": 492934,
+      "sha256": "2F06F45AB81E3F8E31E651BD91ED7433D2B8BE0F994BE765941CFDEAD9233379"
+    },
+    "blender/Kursa_Appearance_ReferenceSync.blend1": {
+      "bytes": 492919,
+      "sha256": "38A434CCBCB084AEE10A58FFD8D8135F40B8F50653AE104BF5393B2CB824FDB6"
+    },
+    "COMPONENT_COLOR_LEGEND.json": {
+      "bytes": 28351,
+      "sha256": "9ADD46434EEB65A2D76B72B9242B9B4EA7164783332BA697A702AF36ED145BF3"
+    },
+    "diagnostics/eye_cavities/cavity_front.png": {
+      "bytes": 1402369,
+      "sha256": "EB6493A5D101F68C2B140181D77D280E7A992F97AF0D3308A062958515F5834D"
+    },
+    "diagnostics/eye_cavities/cavity_left_25.png": {
+      "bytes": 1383472,
+      "sha256": "EE9275C11B575B93D95676DA4CDE98A90BED75CC14D583B958BB78E2A4117C35"
+    },
+    "diagnostics/eye_cavities/cavity_left_50.png": {
+      "bytes": 1379094,
+      "sha256": "7C20695CAA292CDCE3B1C6F0B72696198E568D85D42F8679E878F646683ABFB2"
+    },
+    "diagnostics/eye_cavities/cavity_right_25.png": {
+      "bytes": 1415618,
+      "sha256": "E78D4EB3C9F708AF2E60D021B3DEEE72EE0C71D4987C26D2EA274D750FDF2C82"
+    },
+    "diagnostics/eye_cavities/cavity_right_50.png": {
+      "bytes": 1405225,
+      "sha256": "9EC3B26BE900E205095F0D8BC7E5828A6E8AC04DE16FA874578A51DC5467E855"
+    },
+    "diagnostics/eye_cavities/cluster_front.png": {
+      "bytes": 1393128,
+      "sha256": "1256977CC044579BFE07C68006DF10AA1FEEF733F2198953696369B24C1108B9"
+    },
+    "diagnostics/eye_cavities/cluster_left_25.png": {
+      "bytes": 1372378,
+      "sha256": "8085B43D82F1391B7EF914BA36A77BA9007AE83116A4158A6B71D8C862A7CC7A"
+    },
+    "diagnostics/eye_cavities/cluster_right_25.png": {
+      "bytes": 1410259,
+      "sha256": "209D4C8B8B5FC2B6CDEB2CD6B8B257E6E56EF0EB16861A0BB0FC3EB5C6B22301"
+    },
+    "diagnostics/eye_cavities/confirmed_front.png": {
+      "bytes": 1383750,
+      "sha256": "404965A556949F91E5D658D5B63357E510E16CC564975DA9175A1BFC0A70C2D7"
+    },
+    "diagnostics/eye_cavities/confirmed_left_25.png": {
+      "bytes": 1359393,
+      "sha256": "01F9DACDB7DA72CB48D1747E441A6B19DB94361537A71103737D500F99691767"
+    },
+    "diagnostics/eye_cavities/confirmed_right_25.png": {
+      "bytes": 1397210,
+      "sha256": "0A81F65E1836A4BAE934CF00CA52C71B37A2B7538416746CBE9132252740250E"
+    },
+    "diagnostics/eye_multiview/face_forward_depth.png": {
+      "bytes": 32060,
+      "sha256": "1AA4B5773F55BF86A219FF68DD54E4B2B0F0CCF8AEEE0EAB4EA37E59DE18C4CE"
+    },
+    "diagnostics/eye_multiview/face_forward_hit_class.png": {
+      "bytes": 5619,
+      "sha256": "E52DDD6E33C665D7B28DF753B03C823519744679B6D53843E104D89C581FA7F7"
+    },
+    "diagnostics/eye_multiview/no_eye_actual_front.png": {
+      "bytes": 1283435,
+      "sha256": "00AA1B7588B37D8BDED06A99BB348A28C664A6A92F2212D557E0F04476DB2D0B"
+    },
+    "diagnostics/eye_multiview/no_eye_bottom_25.png": {
+      "bytes": 1241288,
+      "sha256": "2C27BE76C67E91D555E90E8F3F3A1B17E62036003F2D27A7EE2633A0DC128614"
+    },
+    "diagnostics/eye_multiview/no_eye_left_30.png": {
+      "bytes": 1250792,
+      "sha256": "BC0C6218B39159B4603BC931DD1CBD69220F0397B6901AD41F48FE9595B3B840"
+    },
+    "diagnostics/eye_multiview/no_eye_left_60.png": {
+      "bytes": 1213221,
+      "sha256": "ED7A9DCF4968574D6BBEB37CB7572D17C7336F585B24DFF7CC7E7BD06AC0C6EF"
+    },
+    "diagnostics/eye_multiview/no_eye_left_90.png": {
+      "bytes": 1190408,
+      "sha256": "B6FFEB632299820C3106F3597E3BB682103AA44385A7B4EF13B6D5A7A9C5979C"
+    },
+    "diagnostics/eye_multiview/no_eye_right_30.png": {
+      "bytes": 1284830,
+      "sha256": "A3E1E9700B17A8EB2B3690A2BDE153262CD66FE6B9A68943CC19F436055067FA"
+    },
+    "diagnostics/eye_multiview/no_eye_right_60.png": {
+      "bytes": 1297198,
+      "sha256": "C2CA7498379D5D0BA2A556789285BB9FDA705D85D33ED8C13563827BD2ECCEC3"
+    },
+    "diagnostics/eye_multiview/no_eye_right_90.png": {
+      "bytes": 1278320,
+      "sha256": "C571A50E23A9B5DCEECDE2AF00319B5E658E23DCD0BA46D56A78148933EF2ED9"
+    },
+    "diagnostics/eye_multiview/no_eye_top_25.png": {
+      "bytes": 1297673,
+      "sha256": "A6C8A353C8FC5980230532E7248E23920A144C3F15CCC379D1F2E231A6004959"
+    },
+    "diagnostics/eye_pose_map/global_front.png": {
+      "bytes": 1018692,
+      "sha256": "F925A2AB4467DC794528A331A575352B42AA0A04246251EAB3CF51E283539730"
+    },
+    "diagnostics/eye_pose_map/global_left_30.png": {
+      "bytes": 1025765,
+      "sha256": "EE236A76B318C911D33476CA5F595DAE8515BF9A1257657DA1459C2622C90D0F"
+    },
+    "diagnostics/eye_pose_map/global_left_60.png": {
+      "bytes": 990216,
+      "sha256": "EDC1DB0BF95C57D8A430322FD8E2C01EFD6EF44BB11C24B3654F20A426ED8925"
+    },
+    "diagnostics/eye_pose_map/global_right_30.png": {
+      "bytes": 987173,
+      "sha256": "51E10F0993B449B4695CDFABF53153F7E6B295914D6E0CAD9E20E9AD82F8FA66"
+    },
+    "diagnostics/eye_pose_map/global_right_60.png": {
+      "bytes": 962301,
+      "sha256": "43E0976578E508782530AFEC4211A22B68BC49BFD6017B526EB1C12FB473D612"
+    },
+    "diagnostics/eye_surface_map/rest_front.png": {
+      "bytes": 835138,
+      "sha256": "39531128F408A1007D3A51524DD764AB846BF3A0E529D9027D1423FEE98E3173"
+    },
+    "diagnostics/eye_surface_map/rest_left_30.png": {
+      "bytes": 838698,
+      "sha256": "5B1DACF955D059AD8CF23FFBF9CDBE2881C9A33035B75DE7A829F7CC52E7FF4D"
+    },
+    "diagnostics/eye_surface_map/rest_left_60.png": {
+      "bytes": 830750,
+      "sha256": "41ADE5916C396C3B1CB9490D99358AAF516AAA0349EECC9C17141B9BCFB65583"
+    },
+    "diagnostics/eye_surface_map/rest_right_30.png": {
+      "bytes": 775853,
+      "sha256": "2DD269704C5095D80C597A29643DB534B2838EB5090970A6856C1CEE6027E74A"
+    },
+    "diagnostics/eye_surface_map/rest_right_60.png": {
+      "bytes": 773386,
+      "sha256": "B4205CEC3E51A53AA1E7998A544CADC9DF3E3ADD08B362DCC51A4A62F022B859"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_+000.png": {
+      "bytes": 835138,
+      "sha256": "7A95879E9CE6A84BD5EB7C3AE3DA6F8E0D51DBBB2CA5E58CC1559F9775011AD7"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_+015.png": {
+      "bytes": 789346,
+      "sha256": "C3A30CB34987442F97CA58FDC6E0A0F7560A69EFCE7DA0DBE86B995E6F8C9685"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_+030.png": {
+      "bytes": 775853,
+      "sha256": "E08F5943035C81453D537DC993C4DB0F2918403EF476236A5AE3896480431B5B"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_+045.png": {
+      "bytes": 774645,
+      "sha256": "411E79145CF7141599FB95641AF8104659679A6F48EC6BB4685E0DFC49BBDD9F"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_+060.png": {
+      "bytes": 773386,
+      "sha256": "6289D862E2AC060C5B4E6ADF759F06BB4F96064BBA78583B2052C3B5A8EE6699"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_+075.png": {
+      "bytes": 769933,
+      "sha256": "5743FE303C755954A20A8D3AA2C1DC4EB3765BCB66DE9B23C393128E41B56263"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_+090.png": {
+      "bytes": 774271,
+      "sha256": "9C61606471CABF4356277487463E45C12822704C725ABE1C3B57361B774409C6"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_+105.png": {
+      "bytes": 777521,
+      "sha256": "369E0C48939B440CF34CABB351C7E985F4921E0117141B3E2137FF8A78B26133"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_+120.png": {
+      "bytes": 763952,
+      "sha256": "4C1C217A371AABD1BF0A4A17F54D708DE1B7377A051F8FC2B34AFB91D08AE15A"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_+135.png": {
+      "bytes": 761184,
+      "sha256": "3C2E5AD67292528C761A9CFC4808ED0F47754792605AD7E7F51358161905A9CC"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_+150.png": {
+      "bytes": 745150,
+      "sha256": "2D0C0B68AE0FC205A8D0DDEE9C6E18C94122B1437ECD553258F6D3C26C04C7AB"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_+165.png": {
+      "bytes": 722727,
+      "sha256": "480D3B5D1CA50968949C853FE923B041E428D0C8A4E60B8E703413E72F8C615B"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_+180.png": {
+      "bytes": 736317,
+      "sha256": "E9AEF34DEEF66312A859CCDC302F0CE0FFEE3E539D7D820E26981FC0B4521BCF"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_-015.png": {
+      "bytes": 829975,
+      "sha256": "480E1E3253A3F7C2FAEE8B238DEE387BC7C03082317A8A505968A595DF9E9947"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_-030.png": {
+      "bytes": 838698,
+      "sha256": "28382EF79BBBC6EC2B24245623632FF8E002A17ACFF76A5418C7270154B82CE1"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_-045.png": {
+      "bytes": 840698,
+      "sha256": "AC822069F83EE2E73D62E350390749AA46AB24852F3395F010B43FA63B0D4EE8"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_-060.png": {
+      "bytes": 830750,
+      "sha256": "795EF0CAB03C713D75B7B4CF36EDC50E5E80C66CB897FA9A73A5DE495DCAE27F"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_-075.png": {
+      "bytes": 809737,
+      "sha256": "6326767C17FC69B98BD14782287EDA3D1F34BF135C50B416C7E411F7A66E8818"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_-090.png": {
+      "bytes": 783743,
+      "sha256": "3F9D2975FE85A4C57096DBF0DA6174A96B755C885484B87960523D5ECA0CF4D2"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_-105.png": {
+      "bytes": 754653,
+      "sha256": "E809C10F0646F0E30FA704C453830DAD9EF8369136BF4617ECE8A54099DC726A"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_-120.png": {
+      "bytes": 724064,
+      "sha256": "E479B949EC2ED3EB66CAE02D4B3C9B3D5C36C2A031DD28BC5ECA120D2AB53832"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_-135.png": {
+      "bytes": 702657,
+      "sha256": "D0028C8461C39DFE55EC7BF6FFAA35DB01BC7967E874BC7E3870DF499C65A298"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_-150.png": {
+      "bytes": 682073,
+      "sha256": "ED40B371B49999BD3328BB93D5AE1AE654CA8A5DF33AF4010B0ABBAFC089059E"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_-165.png": {
+      "bytes": 688499,
+      "sha256": "4B1BF628500FCAEA622CFF4E70598C99CF0764CFAF97AB260BF83C1F0FCD1C5F"
+    },
+    "diagnostics/eye_surface_map/rest_yaw_-180.png": {
+      "bytes": 736317,
+      "sha256": "38C2F8DDD50071ECECADE90FC550BC269715EE2EFC1936AE1471818FABA479DF"
+    },
+    "diagnostics/render02_head_target_zoom.png": {
+      "bytes": 619014,
+      "sha256": "A228C5C7B8F60E6C01DEFC8C0166BBBB233DBB348CE0C0163FE3E22328817AE2"
+    },
+    "diagnostics/user_eye_target_match.png": {
+      "bytes": 20456,
+      "sha256": "7891334DEE02506822287BA30311F83A53886119BC63ED13FC8D645AFE2F0481"
+    },
+    "diagnostics/user_eye_target_zoom.png": {
+      "bytes": 10727,
+      "sha256": "B5418EC60AC0BA2966190411D8BBDB90B6B370C40602AB2ACB6EFF00EF355C1F"
+    },
+    "EXPORT_INSPECTION.json": {
+      "bytes": 726,
+      "sha256": "ADDF8B5908BE30D6D76E51CE715173490E44EC5A536F3143ADBFA3682146ECC8"
+    },
+    "exports/Kursa_Appearance_ReferenceSync.fbx": {
+      "bytes": 2114972,
+      "sha256": "6BEC48F1822B4815ACD18E40006BD8D0567B5E4E67611A692B12F038A3942F9E"
+    },
+    "exports/Kursa_Appearance_ReferenceSync.glb": {
+      "bytes": 2681332,
+      "sha256": "62C1D976671CBC73FF0274EF48DBA5945DFEDD0FAF8E81C498CC08675F1FE6EF"
+    },
+    "EYE_CAVITY_ANALYSIS.json": {
+      "bytes": 34415,
+      "sha256": "311E2A0C29960596AF12C8C614558A0A10DCC38FFE59AE382B9DA3E9B3CA424E"
+    },
+    "EYE_DEPTH_ANALYSIS.json": {
+      "bytes": 362451,
+      "sha256": "64120C5C3B7A23F816CC03585508A507CB70D0AFCEC03C20A939791F5FF14E3E"
+    },
+    "EYE_MULTIVIEW_ANALYSIS.json": {
+      "bytes": 5803,
+      "sha256": "44A86D1F0F40F31B7BDE35652AFE1D577FC18509BA6E064C8AA7937173172730"
+    },
+    "EYE_POSE_MAP.json": {
+      "bytes": 34560,
+      "sha256": "424869875D1DA7E061BD4A9A0B8D66606225E5A8B3B7C6592C08F42F3EC08C0D"
+    },
+    "EYE_SURFACE_INSPECTION.json": {
+      "bytes": 90191,
+      "sha256": "D3377B40433070731B373D05126A02C8F1291BF2277C52731E33AD4B24109740"
+    },
+    "EYE_SURFACE_MAP.json": {
+      "bytes": 59445,
+      "sha256": "F300EA7848E4B6277D6AA4E892150F2F20E5124F7494BC0165359C8517D561E1"
+    },
+    "GEOMETRY_PRESERVATION.json": {
+      "bytes": 2853,
+      "sha256": "C2721EA61F5AB23F7E82DDCB073E3F523AE1F59B8425634CA1BF78BA6ED63CC4"
+    },
+    "HTML_VALIDATION.json": {
+      "bytes": 9572,
+      "sha256": "2BF2C6E8563C0210BF659B0A94D0B58BE1A16E7938CE41BB5E35B4A98E880E6B"
+    },
+    "index.html": {
+      "bytes": 12633,
+      "sha256": "797E5EAFF5CB6BE617D7E07B7C5500479BA79A04CC85A67658FBD177EFE0157B"
+    },
+    "MATERIAL_ASSIGNMENT.json": {
+      "bytes": 564084,
+      "sha256": "78C96FD15EEDBF05FF92487C160F9AE2062807C09105C7926A5E653EA6151B79"
+    },
+    "README.md": {
+      "bytes": 3620,
+      "sha256": "8894C583DF768B882189578F1B7B4EA986BB2F08F571C9E7CEDD2E7B5B9D889E"
+    },
+    "reference/Kursa_reference.png": {
+      "bytes": 1103844,
+      "sha256": "B3015DF86E49379A1C281439732EBCAF8FC536E8B4CAAD8490E41E20E2E4D4A1"
+    },
+    "reference/Kursa_reference_head_and_hood.png": {
+      "bytes": 50759,
+      "sha256": "1D48BA1978E87B7ACA400CB70DF23D15E41A1A62B2CDBEEC4461994C634A9D26"
+    },
+    "reference/Kursa_reference_legs.png": {
+      "bytes": 162052,
+      "sha256": "BD12FB908AB47958DEEF1E4855B6E349E8FD78180676FA16BA3ABAB22C278E51"
+    },
+    "reference/Kursa_reference_shield.png": {
+      "bytes": 100992,
+      "sha256": "841E4D5B6EA28C5BF990DF2AAACBD0E987F602299DA6DDFE208C8AD5B9EABC70"
+    },
+    "reference/Kursa_reference_torso_and_arms.png": {
+      "bytes": 187016,
+      "sha256": "01930CC123E8BB2F35B1D435AAF97BF6098676FE53487886629D80A06D33B366"
+    },
+    "REFERENCE_IMAGE_ANALYSIS.json": {
+      "bytes": 13495,
+      "sha256": "11A3E91A5BF834F146E36B044BDA7D26FD2FBADA885B660EFBC7216EAD53E4DD"
+    },
+    "renders/00_component_mask_front.png": {
+      "bytes": 1521397,
+      "sha256": "C7AEA1A76B044B6E14014286AC3DD669AF50C817D57FC1523384ED8427774FF1"
+    },
+    "renders/00_component_mask_three_quarter.png": {
+      "bytes": 1516906,
+      "sha256": "100AFC71E1508E9FC5F00DC6A83E2A371F28211E74B01F7B40AAFE44D914D76D"
+    },
+    "renders/00_source_front_neutral.png": {
+      "bytes": 1546842,
+      "sha256": "A1441384EAFB61351DCA35518791281E321D2F4135B3076F95EEBF56EE0060C7"
+    },
+    "renders/00_source_rear_neutral.png": {
+      "bytes": 1547576,
+      "sha256": "0647DDDE9E38279C18B440D9C7D2C042BAEDCB73C22A1288BB832BF7DBC1775C"
+    },
+    "renders/00_source_side_neutral.png": {
+      "bytes": 1492486,
+      "sha256": "01D163148B2767C5FA15FE3984475ADDB1E7588ADC63B955A2D9E76E78C4A629"
+    },
+    "renders/00_source_three_quarter_neutral.png": {
+      "bytes": 1544339,
+      "sha256": "7B7786461279AED11222FC16A052CD0B2A4424CE1AFA56D2D0FA72ACF60CE805"
+    },
+    "renders/01_front_kursa_reference_match.png": {
+      "bytes": 1877492,
+      "sha256": "CFB313CD28621D9B5FF006E1DED03E0C0D6C1E7798A942D8D82E7CE4123DBA3A"
+    },
+    "renders/02_three_quarter_kursa_reference_match.png": {
+      "bytes": 1847334,
+      "sha256": "7568537E8929F629AC5003883DB59CDB7BE0D8A95A8CDF1AB5A189A730FA8DD7"
+    },
+    "renders/03_reference_side_by_side_overview.png": {
+      "bytes": 925063,
+      "sha256": "5C2839BCD7686B10A0555B218048EC07D147B1F2E1F8B3FCC7D5C987E05BB1F6"
+    },
+    "renders/04_side_current_model_material.png": {
+      "bytes": 1757998,
+      "sha256": "ADB043002138B403A0C728ACED30DB8586D3371EC89E5DBD478858A0F073DB24"
+    },
+    "renders/05_rear_current_model_material.png": {
+      "bytes": 1869546,
+      "sha256": "A6B8649D34CEC7F708B25E991851456381D723672D6DDB69C38F15D4EC6B3EE6"
+    },
+    "renders/06_texture_atlas_and_material_breakdown.png": {
+      "bytes": 579174,
+      "sha256": "A9A5048899A3A395F953E4D1A08D093C4E1561398160B1B6126C6D1B5134B05C"
+    },
+    "renders/07_head_front_detail.png": {
+      "bytes": 2000586,
+      "sha256": "37DCCCF8373A75D46B7890F9A5658F30ECA07AA24F7B2A8093419EBF51F75247"
+    },
+    "renders/07_head_left_60_detail.png": {
+      "bytes": 2018898,
+      "sha256": "EAFB34F15C9847E32C113E1BA21B3B204D8F461638CF2559ABE6E8B208324740"
+    },
+    "renders/07_head_left_three_quarter_detail.png": {
+      "bytes": 2032547,
+      "sha256": "9C782CF7D7B29BB22C5933F4E3AE5989AA8A140ED19034640F29889E74411089"
+    },
+    "renders/07_head_right_60_detail.png": {
+      "bytes": 1803508,
+      "sha256": "261C458679375A8B3C273A03088A8C7086AE8C90F8259835B9BFB9E68A369B80"
+    },
+    "renders/07_head_three_quarter_detail.png": {
+      "bytes": 1905548,
+      "sha256": "2E980320AC98EF512774EF58E0761C04B09F52856D1DC7C3A7AC94D97A30D9A6"
+    },
+    "renders/08_head_detail_comparison.png": {
+      "bytes": 1085433,
+      "sha256": "6C7BC907DC4220C2C5173C104942045057CCD27C99E0103B2E9F0631CB420D5F"
+    },
+    "renders/09_eye_surface_multiview.png": {
+      "bytes": 1006874,
+      "sha256": "52CD4A309A8B9F5A4FDEF2C4E59C5343477A5BEC6C5352223B4F65290136FAA2"
+    },
+    "renders/10_shield_arm_detail.png": {
+      "bytes": 1951309,
+      "sha256": "F1FC8D569390BBAE4A9D691722CA6DB8BAD0242498152148C24BBD3615DE7AB0"
+    },
+    "renders/11_shield_arm_comparison.png": {
+      "bytes": 916060,
+      "sha256": "12A84952E55ABEAEB8C6C1F4251C0F19ADE5E4A8C3D233E2352390EBD47AA6C1"
+    },
+    "renders/12_torso_front_detail.png": {
+      "bytes": 2054479,
+      "sha256": "0840485E59CED1FF4007D74D0614805D36269B47BB423EF8E0978A86873AEEB4"
+    },
+    "renders/13_torso_detail_comparison.png": {
+      "bytes": 1359343,
+      "sha256": "5126EB07DD1238C36F7C2836094F844539E71F5A9270054F5C9256402F8C3B05"
+    },
+    "renders/14_eye_cavity_geometry_verification.png": {
+      "bytes": 407124,
+      "sha256": "5466BD07641A919B16BCBE0E282E738B636792CEA30C5C43042D63B72C86461E"
+    },
+    "renders/15_eye_shape_distortion_correction.png": {
+      "bytes": 636507,
+      "sha256": "D3CAAB36CC2CE602380A82FA9492379C524A5E45B90F16F7EE8AD1FB96561237"
+    },
+    "SOURCE_MODEL_INSPECTION.json": {
+      "bytes": 121806,
+      "sha256": "91BBEC1687B0399E3C80AA531C75E8786ECAB6EAC43C46F261F68533657FC045"
+    },
+    "summary.html": {
+      "bytes": 6087,
+      "sha256": "1514C6D6C43DBE5647D2FFB76C04F3213447D72105C14000B66DC89891D20766"
+    },
+    "TEXTURE_ANALYSIS.md": {
+      "bytes": 2669,
+      "sha256": "680D5540B88728C3433148A992F62CF3C84F1283D5EB04E540D7298072330538"
+    },
+    "textures/kursa_armor_bluegray_albedo.png": {
+      "bytes": 82309,
+      "sha256": "3B33E8748F1442B60BC21975A0EB2CF741D3ABF581CAD25A624AF2324A5B7227"
+    },
+    "textures/kursa_armor_bluegray_metallic.png": {
+      "bytes": 2356,
+      "sha256": "E5D02B7DA0C50E70F513054E0CF55D0FAF5577D46C1652C1495F2CE63ECB94EC"
+    },
+    "textures/kursa_armor_bluegray_normal.png": {
+      "bytes": 124018,
+      "sha256": "DE138D40E33A2A49F0CE575822956EEF3A0DEDC4E42AA461040F68BA50A466C7"
+    },
+    "textures/kursa_armor_bluegray_roughness.png": {
+      "bytes": 7552,
+      "sha256": "D57765C2E6D9A0D2AB0193F8C925FCC41EC68BBFF69B173BB996F36F1D72F182"
+    },
+    "textures/kursa_armor_gunmetal_albedo.png": {
+      "bytes": 82623,
+      "sha256": "40025AE668CA445A67FD42C2FB97482A02E6EC93549846A48CC09A7462DFFC51"
+    },
+    "textures/kursa_armor_gunmetal_metallic.png": {
+      "bytes": 2324,
+      "sha256": "464CD9B630068FCD71D72F90532B7FB88EA0FF9000E2B715846799C940A41633"
+    },
+    "textures/kursa_armor_gunmetal_normal.png": {
+      "bytes": 124268,
+      "sha256": "22282D6F1D5553C3E5BD148E51A7C23527E055FF3BA9B86968E1DA53DB2FB213"
+    },
+    "textures/kursa_armor_gunmetal_roughness.png": {
+      "bytes": 7854,
+      "sha256": "09B40F8D4A7909508CD6B38F6B2A62691A90A0F7E8A4811556C019384402D704"
+    },
+    "textures/kursa_dark_mechanics_albedo.png": {
+      "bytes": 70866,
+      "sha256": "FEB858748EC83EF0BC1815809F1BD1CA947D7B1D0D92F28FE53E604A66512050"
+    },
+    "textures/kursa_dark_mechanics_metallic.png": {
+      "bytes": 3410,
+      "sha256": "F796B93E4749272574E20C11B66EEB1989E8F8E1E92B0DB6FAACC1F314913E84"
+    },
+    "textures/kursa_dark_mechanics_normal.png": {
+      "bytes": 97927,
+      "sha256": "AB320137D8D1F02EEC10E102FC784C98764209BEA5AA50AF7ACE27399A7EEC46"
+    },
+    "textures/kursa_dark_mechanics_roughness.png": {
+      "bytes": 4494,
+      "sha256": "A932B858CB959D8764C42A42C13BF16B14DB6E683E125E73960C98629B6BA468"
+    },
+    "textures/kursa_eye_left_reference_overlay.png": {
+      "bytes": 99482,
+      "sha256": "042F64DD17A76459CC2525A43473DB3DD92440E973E93FBCE84B206234233111"
+    },
+    "textures/kursa_eye_reference_overlay.png": {
+      "bytes": 55630,
+      "sha256": "56FC24F9E4DEBB7C3A6A33940F2B91AFAF27CA37FCA6F8EE3A2E2424FD2E472E"
+    },
+    "textures/kursa_eye_right_reference_overlay.png": {
+      "bytes": 87896,
+      "sha256": "16CCA9380AAB71D5DFE8F81DDD579D4135F3F3D535FADBC37B805A48BDC23D9C"
+    },
+    "textures/kursa_face_metal_albedo.png": {
+      "bytes": 68742,
+      "sha256": "0B81ACE11CE36AF2CDEA89D365EC3285D96D3A734D2BEB8C6228D4372DA223F2"
+    },
+    "textures/kursa_face_metal_metallic.png": {
+      "bytes": 2295,
+      "sha256": "93AA11B2554C90291C0DC1CB82C9F8321825B2A5EF08CFAF409E1BD5B37451E9"
+    },
+    "textures/kursa_face_metal_normal.png": {
+      "bytes": 112451,
+      "sha256": "C5BEEA32CC98FB3F2FE484BCBF102843AD0D461B62382D218C67BA2DA3A53FB6"
+    },
+    "textures/kursa_face_metal_roughness.png": {
+      "bytes": 5184,
+      "sha256": "98DE65BBE25B82DC21F37F7768940376ECABC05EFD55E9DFE6871A7A5198EDF2"
+    },
+    "textures/kursa_hood_cloth_albedo.png": {
+      "bytes": 65055,
+      "sha256": "024543369D6613A0D75FD04A3220BAA65831AA2170B252970A7FF1083119412F"
+    },
+    "textures/kursa_hood_cloth_metallic.png": {
+      "bytes": 1303,
+      "sha256": "6558C7E512F323A29826720E6DC8FEEA51C5F05BE36C4C6EE5DFAF1789632D69"
+    },
+    "textures/kursa_hood_cloth_normal.png": {
+      "bytes": 92391,
+      "sha256": "31B5EF14FA4DFC354E172FB2909F9A90F77A95E2AE39B4F8F9BF97D5F74B90C1"
+    },
+    "textures/kursa_hood_cloth_roughness.png": {
+      "bytes": 1429,
+      "sha256": "EF78890FB029204F26D724767597E5BF942FEB0E86F7BFDA5F63650F839295A4"
+    },
+    "textures/kursa_hood_reference_decal.png": {
+      "bytes": 150500,
+      "sha256": "FDB505C30C333FEDDC2444CB571E726912EBB39D8E20C0ACA323C8200FE46B2E"
+    },
+    "textures/kursa_light_steel_albedo.png": {
+      "bytes": 82240,
+      "sha256": "C7E04FD686F44AFC1DB7644DBBFDDE90B19B9BF83E87C845225619F8727157D3"
+    },
+    "textures/kursa_light_steel_metallic.png": {
+      "bytes": 2326,
+      "sha256": "63AF31CE24F848E436A1B1A14FA4584D65710DCA307BB6C5056BE82537B62E08"
+    },
+    "textures/kursa_light_steel_normal.png": {
+      "bytes": 123472,
+      "sha256": "2DFEDF945C35FD7C5531FDB23B395D2988FBEAD913C824735E9185BBB918877C"
+    },
+    "textures/kursa_light_steel_roughness.png": {
+      "bytes": 7778,
+      "sha256": "23F0BC8E28196BB4B3715D0F26A656B6068108823BFF17280D2057A816CF7CAD"
+    },
+    "textures/kursa_scarf_reference_decal.png": {
+      "bytes": 199339,
+      "sha256": "249250B3F77F4447E557E0B26BD61AD53AF425005F79387C89CF95524F39CA04"
+    },
+    "textures/kursa_shield_frame_albedo.png": {
+      "bytes": 81976,
+      "sha256": "5F03096865647767D045B051019EE30E1EFB68898902E9F7BDB214E872C0ED70"
+    },
+    "textures/kursa_shield_frame_metallic.png": {
+      "bytes": 2366,
+      "sha256": "3F790C2D8C707CE70C24B305E88CF1A667507EAD2882F5CF52EFE70400BE0697"
+    },
+    "textures/kursa_shield_frame_normal.png": {
+      "bytes": 123231,
+      "sha256": "193B2BB4FDF9240E27C359FA927236A80480D97A9F2D4E815E3E122A7D86A88C"
+    },
+    "textures/kursa_shield_frame_roughness.png": {
+      "bytes": 7399,
+      "sha256": "D02D065462A8E2E1077376652E284F1DD66304D5AAE283D41F6C639F07328643"
+    },
+    "textures/kursa_shield_reference_surface.png": {
+      "bytes": 539169,
+      "sha256": "034B10DE4EB1777EE61A46E6BE1302B388AD9E6BC67D5E2EF299D9A11650EEB6"
+    },
+    "textures/kursa_shield_worn_albedo.png": {
+      "bytes": 100691,
+      "sha256": "D130DF08BE485CED7FFC43A8C89CFD039F521AD60C2FC7AA7DFCD37AF67D7D96"
+    },
+    "textures/kursa_shield_worn_metallic.png": {
+      "bytes": 7105,
+      "sha256": "1F5097896C92D4CDD490D9DCFC85ABE352B277014AD75CB5AF8E8FD70A4B09D3"
+    },
+    "textures/kursa_shield_worn_normal.png": {
+      "bytes": 124934,
+      "sha256": "DF534B8ED03BD8689CE8F2A524041AD84302D5194BC3D46459B84AFC675B407C"
+    },
+    "textures/kursa_shield_worn_roughness.png": {
+      "bytes": 17051,
+      "sha256": "239108D3AF5458925322DD019534E8FA5551CC8F042C6036C5A37FA5A7B5A370"
+    },
+    "textures/kursa_torso_mechanical_albedo.png": {
+      "bytes": 86121,
+      "sha256": "B2B678CD78F4CBD63A45F0C4EE2FE188F3F1404D0F6321A9D0842D34604D7E11"
+    },
+    "textures/kursa_torso_mechanical_metallic.png": {
+      "bytes": 2637,
+      "sha256": "1727D1C88C715BE97BCA41B5F1BABD9065445452511FFBDEBB788222AAE4EED4"
+    },
+    "textures/kursa_torso_mechanical_normal.png": {
+      "bytes": 135493,
+      "sha256": "9B4490F3A8F4842F68661A206111DDFC82495D29DF3694E6102B1E9D4EDDC107"
+    },
+    "textures/kursa_torso_mechanical_roughness.png": {
+      "bytes": 10430,
+      "sha256": "BBF5EE0AC2777D61A2858AF688AAA3BE14EB564206CF4CD5D688D6773681B363"
+    },
+    "textures/kursa_torso_reference_glyph.png": {
+      "bytes": 207912,
+      "sha256": "82E7F0502F9E0522278179882CE614F0F54083128422DA54613FC42DE259689D"
+    },
+    "textures/kursa_torso_reference_surface.png": {
+      "bytes": 1028771,
+      "sha256": "2C82E5237BC979182A94001C973CD185FD06E3B5CFD205D391B71AC7CD793D5B"
+    },
+    "tools/analyze_kursa_eye_cavities.py": {
+      "bytes": 17760,
+      "sha256": "C719E1A81147344ACE6F20BC987218479FB367573B6B2B7BEAEB70D8C3A7D38D"
+    },
+    "tools/analyze_kursa_eye_depth.py": {
+      "bytes": 8024,
+      "sha256": "95653C81E2D35D86039018F3EB8273DDDBDAD3165A482666EE8E60531CF4B339"
+    },
+    "tools/analyze_kursa_reference.py": {
+      "bytes": 4645,
+      "sha256": "6C60F00E9F68C59AC15FE9C7B1D45766CFE4C8312C4EB543710B8FF6A0A25EBB"
+    },
+    "tools/build_kursa_appearance_sample.py": {
+      "bytes": 28748,
+      "sha256": "213A857569C80F26582E60B3403B998E25EFBE5E35BF22C87FD0055FACBD0363"
+    },
+    "tools/build_kursa_manifest.py": {
+      "bytes": 1340,
+      "sha256": "036951CBC67AC7C01368BC992F88825F3609506E93849F03B158285BC4461B5F"
+    },
+    "tools/build_kursa_review_assets.py": {
+      "bytes": 8168,
+      "sha256": "C50B0BF1990A3BFA07E9019A2A6A6BDB67A37B259C109DFF3A8E30DB840C022B"
+    },
+    "tools/build_kursa_textures.py": {
+      "bytes": 19881,
+      "sha256": "3304F1F7C3585F164309DC60D917F2825EAA7D13C75ADCE3FBD8B5D4A72D6008"
+    },
+    "tools/inspect_kursa_eye_surface.py": {
+      "bytes": 3193,
+      "sha256": "1FF09C186182E1B39DD582065216FB4B99B7F3EA57E752CBE7EFC59DBB495AEC"
+    },
+    "tools/inspect_kursa_source.py": {
+      "bytes": 9648,
+      "sha256": "59ED2D7C55B6DE39189F542F25206F9A7FFEF8FF5446B11CC8B152ADCDF69032"
+    },
+    "tools/map_kursa_user_eye_target.py": {
+      "bytes": 8515,
+      "sha256": "EDEAFBD5761ED2CB3892DCFC5F6F4C54D6AC72F55A8A50226B15BCDD20B6FC88"
+    },
+    "tools/render_kursa_eye_multiview_analysis.py": {
+      "bytes": 13300,
+      "sha256": "CDF9DE2650A4088CF11BF4916A819A85D7CDB0C2842305A7A01581012ECB4EC1"
+    },
+    "tools/render_kursa_eye_pose_map.py": {
+      "bytes": 6774,
+      "sha256": "29BFCC8739F0BF6E6BAC5947EB516E53AD583027F74CD26D57057D294ED32EB6"
+    },
+    "tools/render_kursa_eye_surface_map.py": {
+      "bytes": 8980,
+      "sha256": "444579932BEFFD77E0B435D09A7023FEB527288DFCA17ECD52EA4324F0C1D627"
+    },
+    "tools/render_kursa_source_analysis.py": {
+      "bytes": 7530,
+      "sha256": "462C447190CA8FD77F09A36683DEB03B4F8AFF43D83DC17696883DE7CE359010"
+    },
+    "tools/validate_kursa_exports.py": {
+      "bytes": 2205,
+      "sha256": "BE1EF0FC9E8DE207A6E2C999A51DA48DA9FE590EE55F4F531814FAB7EE0A9A79"
+    },
+    "tools/validate_kursa_html.py": {
+      "bytes": 3753,
+      "sha256": "602611E421E8798F344F3165E4897417CA411E3B2242DEA3B625037BBCB400AE"
+    },
+    "USER_EYE_TARGET_MAP.json": {
+      "bytes": 807618,
+      "sha256": "45513002CEC1E187DDA0E30A9E5E0772329801D96AA2761E46357FC31950E662"
+    }
+  }
+}

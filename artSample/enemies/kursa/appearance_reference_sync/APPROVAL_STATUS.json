@@ -1,0 +1,11 @@
+{
+  "status": "APPROVED_FOR_UNITY_NOT_APPLIED",
+  "approved_for_unity": true,
+  "unity_runtime_applied": false,
+  "scope": "Kursa appearance art sample using colors, textures, and materials only",
+  "source_model": "Assets/_Project/Art/Enemies/Kursa/Models/Kursa.fbx",
+  "reference_image": "image/KUŠkursa(쿠르사).png",
+  "geometry_changed": false,
+  "revision": "USER_CROP_VISOR_GROOVE_2X_EYE_SIZE_NO_SHEAR_PROJECTION",
+  "message": "2026-08-02 사용자가 최종 외형 아트 샘플을 승인했습니다. 확정된 눈 중심을 유지하고 양쪽 UV 투영의 전단과 수직 잘림을 제거한 리비전이며, Unity 런타임 적용은 아직 수행하지 않았습니다."
+}

@@ -30,7 +30,7 @@ EYE_SURFACE_FITS = {
         "u_axis": [0.806456, 0.0, 0.591294],
         "v_axis": [-0.171074, 0.957232, 0.233325],
         "projection_width": 5.0,
-        "projection_height": 3.0,
+        "projection_height": 4.5,
         "rotation_degrees": -16.0,
     },
     "right_eye": {
@@ -53,7 +53,7 @@ EYE_SURFACE_FITS = {
         "u_axis": [-0.952586, 0.0, 0.304270],
         "v_axis": [0.054923, 0.983573, 0.171950],
         "projection_width": 5.0,
-        "projection_height": 3.0,
+        "projection_height": 4.5,
         "rotation_degrees": -14.0,
     },
 }
