@@ -1,0 +1,295 @@
+{
+  "result": "PASS",
+  "source_blend": "artSample/enemies/kursa/appearance_reference_sync/blender/Kursa_Appearance_ReferenceSync.blend",
+  "source_blend_sha256": "2F06F45AB81E3F8E31E651BD91ED7433D2B8BE0F994BE765941CFDEAD9233379",
+  "source_approved_fbx_sha256": "6BEC48F1822B4815ACD18E40006BD8D0567B5E4E67611A692B12F038A3942F9E",
+  "output_fbx": "Assets/_Project/Art/Enemies/Kursa/ApprovedAppearance/Models/Kursa_Appearance_RuntimeProjection.fbx",
+  "output_fbx_sha256": "D9F30E87DE6C8D2438D8A8C56D7CD1E394E8F3E6CD15248A1F69CFB8F62472E9",
+  "frame": 1,
+  "mesh": "char1",
+  "armature": "Armature",
+  "vertices": 2109,
+  "polygons": 3913,
+  "loops": 11739,
+  "bones": 24,
+  "actions": 1,
+  "uv_layers": [
+    "uv",
+    "KursaEyeLeftProjection",
+    "KursaEyeRightProjection",
+    "KursaEyeSignedDepth"
+  ],
+  "geometry_material_uv0_hash_before": "76ED53101986D9785599DDD72CB4E3AB9149CFB5F108EA54E306A67D8423CFDC",
+  "geometry_material_uv0_hash_after_eye_projection": "76ED53101986D9785599DDD72CB4E3AB9149CFB5F108EA54E306A67D8423CFDC",
+  "geometry_material_uv0_preserved_while_adding_eye_projection": true,
+  "topology_material_uv0_hash_before": "60C7BBE4D8852A1DF5425B5BEE968A2F49E19E107E5350D3BC426D905D6F1774",
+  "topology_material_uv0_hash_after_pose": "60C7BBE4D8852A1DF5425B5BEE968A2F49E19E107E5350D3BC426D905D6F1774",
+  "topology_material_uv0_preserved_after_pose": true,
+  "skin_weights_hash_before": "7D0551F0AC59CCA8E4B3CD9F95F4C15EAF4FA10FB8261443711EE846DDEAF571",
+  "skin_weights_hash_after_pose": "7D0551F0AC59CCA8E4B3CD9F95F4C15EAF4FA10FB8261443711EE846DDEAF571",
+  "skin_weights_preserved_after_pose": true,
+  "allowed_pose_vertices": 932,
+  "allowed_left_arm_vertices": 470,
+  "allowed_right_arm_vertices": 462,
+  "changed_pose_vertices": 932,
+  "changed_left_arm_vertices": 470,
+  "changed_right_arm_vertices": 462,
+  "unauthorized_changed_vertices": 0,
+  "changed_rest_bones": [
+    "LeftArm",
+    "LeftForeArm",
+    "LeftHand",
+    "RightArm",
+    "RightForeArm",
+    "RightHand"
+  ],
+  "base_pose": {
+    "source_outward_normal": [
+      0.2715478539466858,
+      0.5680263638496399,
+      0.7769221067428589
+    ],
+    "target_outward_normal": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "source_angle_degrees": 39.020351633905925,
+    "final_angle_degrees": 0.0,
+    "source_long_axis": [
+      -0.7680926322937012,
+      0.6143190264701843,
+      -0.1806815266609192
+    ],
+    "target_long_axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "source_vertical_angle_degrees": 52.097544516933645,
+    "forward_alignment_degrees": 39.020351633905925,
+    "roll_correction_degrees": -47.77240859080304,
+    "final_long_axis": [
+      9.388578803282144e-08,
+      1.0,
+      7.776645247759006e-07
+    ],
+    "final_vertical_angle_degrees": 0.0,
+    "rotation_axis_mesh_local": [
+      0.4282273054122925,
+      -0.5002672076225281,
+      -0.7525653839111328
+    ],
+    "bounds_center_correction": [
+      1.9974288940429688,
+      -0.1092071533203125,
+      -0.6243801116943359
+    ],
+    "reach_correction": [
+      -1.876826286315918,
+      0.41678425669670105,
+      -0.5166663527488708
+    ],
+    "reach_correction_distance": 1.9907611939566907,
+    "torso_centerline_bone": "Spine01",
+    "torso_centerline_bone_head": [
+      -1.7320244312286377,
+      112.38225555419922,
+      5.821329116821289
+    ],
+    "torso_centerline_bone_tail": [
+      -1.5171438455581665,
+      127.70819854736328,
+      7.719910144805908
+    ],
+    "torso_centerline_x": -1.7186902526853234,
+    "baseline_shield_center": [
+      49.84548568725586,
+      113.33329010009766,
+      28.204153060913086
+    ],
+    "baseline_lateral_gap": 51.56417593994118,
+    "target_lateral_gap_ratio": 0.5,
+    "target_lateral_gap": 25.78208796997059,
+    "target_shield_center_x": 24.063397717285266,
+    "lateral_center_correction": [
+      -25.782087326049805,
+      0.0,
+      0.0
+    ],
+    "final_lateral_gap": 25.782086706542746,
+    "shield_center_before": [
+      51.722312927246094,
+      112.91650390625,
+      28.7208194732666
+    ],
+    "shield_center_after": [
+      24.063396453857422,
+      113.33328247070312,
+      28.204151153564453
+    ],
+    "shield_center_shift": [
+      -27.658916473388672,
+      0.416778564453125,
+      -0.5166683197021484
+    ],
+    "shield_bounds_size_before": [
+      92.59205627441406,
+      80.60208892822266,
+      44.67978286743164
+    ],
+    "shield_bounds_size_after": [
+      46.86875915527344,
+      94.8844223022461,
+      12.226890563964844
+    ],
+    "left_hand_head_before": [
+      43.55495834350586,
+      110.46371459960938,
+      16.84718132019043
+    ],
+    "left_hand_head_target": [
+      27.142297744750977,
+      120.13591766357422,
+      14.743809700012207
+    ],
+    "upper_arm_length": 24.288846196254116,
+    "forearm_length": 15.364327983566241,
+    "minimum_reach": 8.924518212687875,
+    "maximum_reach": 39.653174179820354,
+    "uncorrected_target_distance": 41.64383543997079,
+    "target_distance": 17.590476780123122,
+    "connection_error": 1.104987166047713e-05,
+    "right_arm": {
+      "extension_ratio": 0.95,
+      "outward_offset": 16.0,
+      "target_thigh_clearance": 1.0,
+      "source_arm_root": [
+        -24.287944793701172,
+        125.05023956298828,
+        5.819905757904053
+      ],
+      "source_elbow": [
+        -45.39082717895508,
+        118.82456970214844,
+        14.364236831665039
+      ],
+      "source_hand_head": [
+        -67.55757904052734,
+        104.00225067138672,
+        29.007884979248047
+      ],
+      "target_elbow": [
+        -31.169071197509766,
+        104.07742309570312,
+        -2.5399651527404785
+      ],
+      "target_hand_head": [
+        -40.28794479370117,
+        76.28424072265625,
+        5.819905757904053
+      ],
+      "upper_arm_length": 23.602885073161193,
+      "forearm_length": 30.42207211752395,
+      "target_distance": 51.32370367182936,
+      "target_vertical_distance": 48.766003932129436,
+      "elbow_bend_offset": 8.35987054412965,
+      "source_upper_down_angle_degrees": 74.70628004709249,
+      "source_forearm_down_angle_degrees": 60.841808824477845,
+      "target_upper_down_angle_degrees": 27.305912971437273,
+      "target_forearm_down_angle_degrees": 23.99425989386345,
+      "source_mesh_centroid": [
+        -40.7208251953125,
+        106.84550476074219,
+        17.72132682800293
+      ],
+      "final_mesh_centroid": [
+        -26.567651748657227,
+        94.20048522949219,
+        6.143470287322998
+      ],
+      "source_mesh_bounds_min": [
+        -77.00650024414062,
+        85.86546325683594,
+        -9.704684257507324
+      ],
+      "source_mesh_bounds_max": [
+        4.284724712371826,
+        133.0236053466797,
+        37.60295104980469
+      ],
+      "final_mesh_bounds_min": [
+        -44.70524597167969,
+        60.07201385498047,
+        -10.264424324035645
+      ],
+      "final_mesh_bounds_max": [
+        4.288703441619873,
+        133.16879272460938,
+        21.302412033081055
+      ],
+      "source_mesh_centroid_lateral_gap": 37.7607959830356,
+      "final_mesh_centroid_lateral_gap": 23.45049515307689,
+      "thigh_surface_arm_polygons": 538,
+      "thigh_surface_polygons": 145,
+      "thigh_surface_overlap_count": 0,
+      "thigh_surface_clearance": 1.2518070936203003,
+      "maximum_baked_mesh_position_error": 1.9428188595195394e-05,
+      "connection_error": 1.546783598261699e-05
+    },
+    "embedded_animation_frames": [
+      1,
+      63
+    ],
+    "embedded_animation_maximum_local_matrix_error": 0.0,
+    "base_pose_source": "Approved embedded action frame 1, preserving its front-of-character shield placement.",
+    "method": "The approved shield orientation and half-gap torso-front left-arm solve are preserved, then a deterministic two-bone right-arm solve keeps the existing 95 percent extension and backward elbow bend while moving the hand target outward by the measured minimum safe offset; explicit right-arm/right-thigh surface overlap and clearance checks prove non-penetration before both approved arm poses are baked as rest, while the embedded action's local motion channels remain unchanged."
+  },
+  "covered_loops": {
+    "left": 185,
+    "right": 311
+  },
+  "approved_projection": {
+    "left": {
+      "center": [
+        3.3430941104888916,
+        151.8154754638672,
+        24.5799560546875
+      ],
+      "surface_normal": [
+        -0.1822429895401001,
+        -0.5717499256134033,
+        0.7999308705329895
+      ],
+      "size": [
+        8.348116,
+        8.98805
+      ],
+      "depth": 2.05,
+      "polygon": 3801
+    },
+    "right": {
+      "center": [
+        5.9164581298828125,
+        152.45480346679688,
+        19.357757568359375
+      ],
+      "surface_normal": [
+        0.25764894485473633,
+        -0.9650787711143494,
+        -0.04732898995280266
+      ],
+      "size": [
+        10.07667,
+        8.897684
+      ],
+      "depth": 2.05,
+      "polygon": 3627
+    },
+    "projection_normal": [
+      0.5528751611709595,
+      -0.11758304387331009,
+      0.8249263167381287
+    ]
+  }
+}

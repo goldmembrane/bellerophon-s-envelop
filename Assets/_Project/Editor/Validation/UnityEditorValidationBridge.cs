@@ -231,6 +231,66 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.PahurCargoRunScene.PahurGroundedIdleAnimationTool.ApplyPahurGroundedIdleAnimation,
                         "Pahur grounded idle animation applied.");
                     break;
+                case "ApplyKursaIdleAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaGroundedIdleAnimationTool.ApplyKursaIdleAnimation,
+                        "Kursa grounded idle animation applied.");
+                    break;
+                case "InspectKursaIdleAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaGroundedIdleAnimationTool.InspectKursaIdleAnimation,
+                        "Kursa grounded idle animation inspected.");
+                    break;
+                case "CaptureKursaIdleAnimationReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaGroundedIdleAnimationTool.CaptureKursaIdleAnimationReview,
+                        "Kursa grounded idle animation review captured.");
+                    break;
+                case "ApplyKursaMoveAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaMoveAnimationTool.ApplyKursaMoveAnimation,
+                        "Kursa move animation applied.");
+                    break;
+                case "InspectKursaMoveAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaMoveAnimationTool.InspectKursaMoveAnimation,
+                        "Kursa move animation inspected.");
+                    break;
+                case "MeasureKursaMoveAdjustment":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaMoveAnimationTool.MeasureKursaMoveAdjustment,
+                        "Kursa move adjustment measured.");
+                    break;
+                case "CaptureKursaMoveAnimationReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaMoveAnimationTool.CaptureKursaMoveAnimationReview,
+                        "Kursa move animation review captured.");
+                    break;
+                case "ApplyKursaForwardHeadAlignment":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaForwardHeadAlignmentTool.ApplyKursaForwardHeadAlignment,
+                        "Kursa forward head alignment applied.");
+                    break;
+                case "InspectKursaForwardHeadAlignment":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaForwardHeadAlignmentTool.InspectKursaForwardHeadAlignment,
+                        "Kursa forward head alignment inspected.");
+                    break;
+                case "CaptureKursaForwardHeadAlignmentReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaForwardHeadAlignmentTool.CaptureKursaForwardHeadAlignmentReview,
+                        "Kursa forward head alignment review captured.");
+                    break;
                 case "ValidatePahurGroundedIdleAnimation":
                     RunSynchronous(
                         request,
@@ -2066,6 +2126,24 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.KursaCargoRunScene.KursaPlacementEditor.InspectKursaPlacement,
                         "Kursa source hash, twelve direct FBX instances, spacing, grounding, static state, and Player front framing inspected.");
+                    break;
+                case "ApplyApprovedKursaAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.KursaCargoRunScene.KursaApprovedAppearanceApplicator.ApplyApprovedKursaAppearance,
+                        "The exact approved Kursa material-only FBX mesh, nine material slots, copied textures, and approved projection values applied to the twelve placed Kursa renderers while preserving transforms, rig, animation, and other scene roots.");
+                    break;
+                case "InspectApprovedKursaAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.KursaCargoRunScene.KursaApprovedAppearanceApplicator.InspectApprovedKursaAppearance,
+                        "The twelve placed Kursa renderers, exact approved mesh/material order, copied texture hashes, geometry, UV, weights, rig, animation, and unchanged scene state inspected.");
+                    break;
+                case "CaptureApprovedKursaAppearanceReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.KursaCargoRunScene.KursaApprovedAppearanceApplicator.CaptureApprovedKursaAppearanceReview,
+                        "A single side-by-side approved Blender sample and Unity Kursa appearance review image captured after the dedicated inspection passed.");
                     break;
                 case "ApplyResistancePlacement":
                     RunSynchronous(
