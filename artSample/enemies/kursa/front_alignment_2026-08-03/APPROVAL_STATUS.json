@@ -1,0 +1,14 @@
+{
+  "status": "USER_REVIEW_REQUIRED_NOT_APPLIED_TO_UNITY",
+  "approved_for_unity": false,
+  "unity_runtime_applied": false,
+  "sample_scope": "Kursa torso, both arms, actual shoulder connections, face front alignment, and eye projection follow-up",
+  "review_files": [
+    "renders/13_reference_current_candidate.png",
+    "renders/14_upper_face_comparison.png",
+    "renders/15_candidate_yaw_review.png",
+    "renders/09_candidate_landmarks_front.png",
+    "renders/10_candidate_upper_front_no_shield.png"
+  ],
+  "message": "사용자 직접 확인 전 승인되지 않은 artSample이며 Unity에는 반영하지 않았습니다."
+}

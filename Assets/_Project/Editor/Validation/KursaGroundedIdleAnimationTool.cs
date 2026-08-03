@@ -25,7 +25,7 @@ namespace Bellerophon.Editor.KursaCargoRunScene
         internal const string ControllerPath = "Assets/_Project/Art/Enemies/Kursa/Animations/Kursa_02_GroundedIdle.controller";
         private const string ReportPath = "docs/validation/kursa_idle_animation_2026-08-02/Kursa_02_GroundedIdle_Inspection.txt";
         private const string CapturePath = "docs/validation/kursa_idle_animation_2026-08-02/Kursa_02_GroundedIdle_Review.png";
-        private const string ExpectedRuntimeSha256 = "D9F30E87DE6C8D2438D8A8C56D7CD1E394E8F3E6CD15248A1F69CFB8F62472E9";
+        private const string ExpectedRuntimeSha256 = "7C39FC6B7587E66A73899C282ABAFAC7671ADEFF84EC2304548795EF6A9E639C";
         private const string ExpectedAnimationSha256 = "F87EB8AB62687571DC686350DD2BB7CF9734DE6EA54E5DB9BA86A233DD469AAE";
         private const float Duration = 2f;
         private const float FrameRate = 60f;
@@ -33,7 +33,7 @@ namespace Bellerophon.Editor.KursaCargoRunScene
         private const float Travel = 0.03f;
         private const float PositionTolerance = 0.001f;
         private const float CurveTolerance = 0.0002f;
-        private const int ExpectedVertices = 3377;
+        private const int ExpectedVertices = 3376;
         private const int ExpectedTriangles = 3913;
         private const int ExpectedBones = 24;
         private const int ExpectedMaterials = 9;

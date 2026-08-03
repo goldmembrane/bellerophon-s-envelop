@@ -1,0 +1,21 @@
+Result=TECHNICAL_PASS_VISUAL_REVIEW_REQUIRED
+Target=Approved Kursa Enemy Placement
+Slots=12
+EyeRepresentation=ApprovedSampleExistingFaceSurfaceProjection
+SeparateEyeObjects=0
+VisualReference=image/KUŠkursa(쿠르사).png
+ApprovedArtSampleEyeUsedAsReference=True
+ApprovedTexturesChanged=False
+LeftProjectionCenter=-7.5734329,154.7818909,14.1791105
+LeftProjectionSize=3.45,3.45
+LeftProjectionDepth=2.05
+RightProjectionCenter=-1.9516227,154.7818909,11.907753
+RightProjectionSize=3.95,3.95
+RightProjectionDepth=2.05
+ProjectionSource=ExactApprovedBlenderSampleMaterialValues
+VisualAngleSamples=Front,YawMinus25,YawPlus25
+AnimationVisualSamples=IdleMid,MoveQuarter,MoveMid,MoveThreeQuarter
+StaticLeftCenterCandidates=Tri3:Depth=-1.26193917:Projection=0.460170835,0.5987419|0.650597036,0.325141162|0.530861855,0.2083547:World=57.8266373,0.729274869,-163.412964;Tri42:Depth=-0.3070704:Projection=0.501896739,0.391005874|0.438308,0.5369584|0.641423762,0.46921435:World=57.8298531,0.7297978,-163.437851;Tri95:Depth=-2.04492335E-06:Projection=0.335435629,0.6408425|0.302656621,0.712117732|0.5040122,0.496108919:World=57.83115,0.729768157,-163.447769;Tri96:Depth=-0.005092208:Projection=0.5040122,0.496108919|0.3931126,0.607737839|0.335435629,0.6408425:World=57.83113,0.729768634,-163.4476;Tri129:Depth=-1.07864261:Projection=0.79572916,0.170623854|0.4691551,0.601315558|0.5711308,0.171574563:World=57.8274269,0.7295388,-163.4159
+StaticRightCenterCandidates=Tri222:Depth=-5.02318335E-06:Projection=0.4881941,0.4895716|0.194767937,0.437810242|0.5726666,0.529265046:World=57.8486938,0.72979784,-163.44548
+RuntimeVisualReviewRequired=True
+SceneChanged=False

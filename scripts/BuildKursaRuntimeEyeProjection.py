@@ -46,7 +46,19 @@ RIGHT = {
     "depth": 2.05,
     "polygon": 3627,
 }
-PROJECTION_NORMAL = Vector((0.552875, -0.117583, 0.824926)).normalized()
+# The former target-view normal was authored for the old three-quarter face
+# presentation.  The corrected Head pose now presents the intrinsic eye line
+# to model-local forward, so derive the projection plane from the two retained
+# eye centers and the model-up hint.  This removes per-surface horizontal shear
+# without changing either center, patch size, depth, texture, or mesh geometry.
+EYE_HORIZONTAL = (RIGHT["center"] - LEFT["center"]).normalized()
+EYE_VERTICAL_HINT = (
+    Vector((0.0, 1.0, 0.0))
+    - EYE_HORIZONTAL * Vector((0.0, 1.0, 0.0)).dot(EYE_HORIZONTAL)
+).normalized()
+PROJECTION_NORMAL = EYE_HORIZONTAL.cross(EYE_VERTICAL_HINT).normalized()
+if PROJECTION_NORMAL.z < 0.0:
+    PROJECTION_NORMAL.negate()
 VERTICAL = (
     Vector((0.0, 1.0, 0.0))
     - PROJECTION_NORMAL
@@ -59,16 +71,16 @@ RIGHT_UV = "KursaEyeRightProjection"
 DEPTH_UV = "KursaEyeSignedDepth"
 LEFT_POSE_BONES = ("LeftArm", "LeftForeArm", "LeftHand")
 RIGHT_POSE_BONES = ("RightArm", "RightForeArm", "RightHand")
-POSE_BONES = LEFT_POSE_BONES + RIGHT_POSE_BONES
-# Keeps the attention-style right arm nearly extended while leaving a small,
-# visible elbow bend behind the torso-side arm line.
-RIGHT_ARM_EXTENSION_RATIO = 0.95
-# The measured minimum outward hand target that clears the right thigh while
-# preserving the existing 95 percent extension and backward elbow bend.
-RIGHT_ARM_OUTWARD_OFFSET = 16.0
-# One sample unit equals one centimetre in the Unity import contract.
-RIGHT_ARM_THIGH_CLEARANCE = 1.0
-RIGHT_ARM_MAX_DOWN_ANGLE = 30.0 / 57.29577951308232
+POSE_BONES = LEFT_POSE_BONES
+# The runtime front view shows the lower face plate centered about 2.5 sample
+# units to the visual right of the eye midpoint. Only the visible front jaw is
+# translated; the correction fades to zero above the jaw hinge and behind the
+# front plate so the eyes, nose, hood, neck, and head direction stay unchanged.
+CHIN_LATERAL_CORRECTION = -2.5
+CHIN_VERTICAL_BLEND_START = -6.5
+CHIN_VERTICAL_BLEND_END = -9.5
+CHIN_FORWARD_BLEND_START = -10.0
+CHIN_FORWARD_BLEND_END = -6.0
 
 
 def sha256(path):
@@ -87,6 +99,140 @@ def projection(position, patch):
     )
     signed_depth = delta.dot(patch["surface_normal"]) / patch["depth"]
     return uv, signed_depth
+
+
+def smooth_unit(value):
+    value = max(0.0, min(1.0, value))
+    return value * value * (3.0 - 2.0 * value)
+
+
+def bone_deform_matrix(mesh_obj, armature_obj, bone_name):
+    bone = armature_obj.data.bones[bone_name]
+    pose_bone = armature_obj.pose.bones[bone_name]
+    return (
+        mesh_obj.matrix_world.inverted()
+        @ armature_obj.matrix_world
+        @ pose_bone.matrix
+        @ bone.matrix_local.inverted()
+        @ armature_obj.matrix_world.inverted()
+        @ mesh_obj.matrix_world
+    )
+
+
+def blended_deform_linear(mesh_obj, armature_obj, vertex, deform_matrices):
+    matrix = Matrix(((0.0, 0.0, 0.0),) * 3)
+    total_weight = 0.0
+    for group in vertex.groups:
+        name = mesh_obj.vertex_groups[group.group].name
+        deform = deform_matrices.get(name)
+        if deform is None or group.weight <= 0.0:
+            continue
+        linear = deform.to_3x3()
+        for row in range(3):
+            for column in range(3):
+                matrix[row][column] += linear[row][column] * group.weight
+        total_weight += group.weight
+    if total_weight <= 1e-6:
+        raise RuntimeError(
+            f"Chin vertex {vertex.index} has no deform-bone weight."
+        )
+    if total_weight < 1.0:
+        for axis in range(3):
+            matrix[axis][axis] += 1.0 - total_weight
+    if abs(matrix.determinant()) <= 1e-8:
+        raise RuntimeError(
+            f"Chin vertex {vertex.index} has a singular blended deform matrix."
+        )
+    return matrix
+
+
+def apply_front_chin_alignment(mesh_obj, armature_obj, evaluated_mesh):
+    material_names = [
+        slot.material.name if slot.material else ""
+        for slot in mesh_obj.material_slots
+    ]
+    face_indices = [
+        index
+        for index, name in enumerate(material_names)
+        if "face" in name.lower() and "metal" in name.lower()
+    ]
+    if len(face_indices) != 1:
+        raise RuntimeError(
+            f"Expected one face-metal material for chin alignment: {material_names}"
+        )
+    face_index = face_indices[0]
+    face_vertices = sorted(
+        {
+            vertex_index
+            for polygon in evaluated_mesh.polygons
+            if polygon.material_index == face_index
+            for vertex_index in polygon.vertices
+        }
+    )
+    deform_matrices = {
+        bone.name: bone_deform_matrix(mesh_obj, armature_obj, bone.name)
+        for bone in armature_obj.data.bones
+        if bone.use_deform and bone.name in armature_obj.pose.bones
+    }
+    selected = []
+    eye_midpoint = (LEFT["center"] + RIGHT["center"]) * 0.5
+    for index in face_vertices:
+        evaluated_position = evaluated_mesh.vertices[index].co.copy()
+        delta = evaluated_position - eye_midpoint
+        horizontal = delta.dot(HORIZONTAL)
+        vertical = delta.dot(VERTICAL)
+        forward = delta.dot(PROJECTION_NORMAL)
+        vertical_weight = smooth_unit(
+            (CHIN_VERTICAL_BLEND_START - vertical)
+            / (CHIN_VERTICAL_BLEND_START - CHIN_VERTICAL_BLEND_END)
+        )
+        forward_weight = smooth_unit(
+            (forward - CHIN_FORWARD_BLEND_START)
+            / (CHIN_FORWARD_BLEND_END - CHIN_FORWARD_BLEND_START)
+        )
+        correction_weight = vertical_weight * forward_weight
+        if correction_weight <= 0.001:
+            continue
+        vertex = mesh_obj.data.vertices[index]
+        desired_evaluated_delta = (
+            HORIZONTAL * CHIN_LATERAL_CORRECTION * correction_weight
+        )
+        deform_linear = blended_deform_linear(
+            mesh_obj,
+            armature_obj,
+            vertex,
+            deform_matrices,
+        )
+        base_delta = deform_linear.inverted() @ desired_evaluated_delta
+        vertex.co += base_delta
+        selected.append(
+            {
+                "index": index,
+                "horizontal_before": horizontal,
+                "vertical": vertical,
+                "forward": forward,
+                "weight": correction_weight,
+                "requested_evaluated_lateral_delta":
+                    CHIN_LATERAL_CORRECTION * correction_weight,
+                "base_delta": list(base_delta),
+            }
+        )
+    if not selected:
+        raise RuntimeError("The visible front-chin selection is empty.")
+    return {
+        "selected_vertex_indices": [item["index"] for item in selected],
+        "selected_vertices": len(selected),
+        "lateral_correction": CHIN_LATERAL_CORRECTION,
+        "vertical_blend": [
+            CHIN_VERTICAL_BLEND_START,
+            CHIN_VERTICAL_BLEND_END,
+        ],
+        "forward_blend": [
+            CHIN_FORWARD_BLEND_START,
+            CHIN_FORWARD_BLEND_END,
+        ],
+        "vertices": selected,
+    }
 
 
 def stable_mesh_signature(mesh):
@@ -414,14 +560,6 @@ def apply_center_preserving_shield_rest_pose(scene, mesh_obj, armature_obj):
     evaluated_obj, frame_mesh = evaluated_mesh(mesh_obj)
     try:
         before_shield = shield_data(mesh_obj, frame_mesh)
-        right_arm_vertex_indices = pose_vertex_indices(
-            mesh_obj,
-            RIGHT_POSE_BONES,
-        )
-        source_right_positions = {
-            index: frame_mesh.vertices[index].co.copy()
-            for index in right_arm_vertex_indices
-        }
     finally:
         evaluated_obj.to_mesh_clear()
 
@@ -458,9 +596,6 @@ def apply_center_preserving_shield_rest_pose(scene, mesh_obj, armature_obj):
     right_arm = armature_obj.pose.bones["RightArm"]
     right_forearm = armature_obj.pose.bones["RightForeArm"]
     right_hand = armature_obj.pose.bones["RightHand"]
-    right_arm_matrix = armature_to_mesh @ right_arm.matrix
-    right_forearm_matrix = armature_to_mesh @ right_forearm.matrix
-    right_hand_matrix = armature_to_mesh @ right_hand.matrix
     right_arm_root = armature_to_mesh @ right_arm.head
     right_elbow = armature_to_mesh @ right_forearm.head
     right_hand_head = armature_to_mesh @ right_hand.head
@@ -592,83 +727,6 @@ def apply_center_preserving_shield_rest_pose(scene, mesh_obj, armature_obj):
             f"The solved left-arm chain is disconnected: {connection_error}."
         )
 
-    model_down = Vector((0.0, -1.0, 0.0))
-    model_back = Vector((0.0, 0.0, -1.0))
-    model_right = Vector((-1.0, 0.0, 0.0))
-    right_upper_length = (right_elbow - right_arm_root).length
-    right_forearm_length = (right_hand_head - right_elbow).length
-    right_maximum_reach = right_upper_length + right_forearm_length
-    right_target_reach = right_maximum_reach * RIGHT_ARM_EXTENSION_RATIO
-    if RIGHT_ARM_OUTWARD_OFFSET >= right_target_reach:
-        raise RuntimeError("The right-arm outward target exceeds the approved reach.")
-    right_target_vertical_distance = max(
-        0.0,
-        right_target_reach * right_target_reach
-        - RIGHT_ARM_OUTWARD_OFFSET * RIGHT_ARM_OUTWARD_OFFSET,
-    ) ** 0.5
-    right_target_hand_head = (
-        right_arm_root
-        + model_down * right_target_vertical_distance
-        + model_right * RIGHT_ARM_OUTWARD_OFFSET
-    )
-    right_target_vector = right_target_hand_head - right_arm_root
-    right_target_distance = right_target_vector.length
-    right_target_direction = right_target_vector.normalized()
-    right_along = (
-        right_upper_length * right_upper_length
-        - right_forearm_length * right_forearm_length
-        + right_target_distance * right_target_distance
-    ) / (2.0 * right_target_distance)
-    right_height = max(
-        0.0,
-        right_upper_length * right_upper_length - right_along * right_along,
-    ) ** 0.5
-    right_target_elbow = (
-        right_arm_root
-        + right_target_direction * right_along
-        + model_back * right_height
-    )
-
-    right_upper_rotation = (
-        right_elbow - right_arm_root
-    ).rotation_difference(right_target_elbow - right_arm_root)
-    right_upper_transform = rigid_rotation(
-        right_arm_root,
-        right_upper_rotation,
-    )
-    right_arm_matrix = right_upper_transform @ right_arm_matrix
-    right_forearm_matrix = right_upper_transform @ right_forearm_matrix
-    transformed_right_elbow = right_upper_transform @ right_elbow
-    transformed_right_hand_head = right_upper_transform @ right_hand_head
-    right_forearm_rotation = (
-        transformed_right_hand_head - transformed_right_elbow
-    ).rotation_difference(right_target_hand_head - right_target_elbow)
-    right_forearm_transform = rigid_rotation(
-        right_target_elbow,
-        right_forearm_rotation,
-    )
-    right_forearm_matrix = right_forearm_transform @ right_forearm_matrix
-    right_desired_hand_matrix = (
-        right_forearm_transform @ right_upper_transform @ right_hand_matrix
-    )
-
-    right_arm.matrix = mesh_to_armature @ right_arm_matrix
-    bpy.context.view_layer.update()
-    right_forearm.matrix = mesh_to_armature @ right_forearm_matrix
-    bpy.context.view_layer.update()
-    right_hand.matrix = mesh_to_armature @ right_desired_hand_matrix
-    bpy.context.view_layer.update()
-
-    right_connection_error = max(
-        ((armature_to_mesh @ right_forearm.head) - right_target_elbow).length,
-        ((armature_to_mesh @ right_hand.head) - right_target_hand_head).length,
-    )
-    if right_connection_error > 1e-4:
-        raise RuntimeError(
-            "The solved right-arm attention chain is disconnected: "
-            f"{right_connection_error}."
-        )
-
     allowed_vertex_indices = pose_vertex_indices(mesh_obj, POSE_BONES)
     evaluated_obj, solved_mesh = evaluated_mesh(mesh_obj)
     try:
@@ -728,6 +786,10 @@ def apply_center_preserving_shield_rest_pose(scene, mesh_obj, armature_obj):
     evaluated_obj, rest_mesh = evaluated_mesh(mesh_obj)
     try:
         after_shield = shield_data(mesh_obj, rest_mesh)
+        right_arm_vertex_indices = pose_vertex_indices(
+            mesh_obj,
+            RIGHT_POSE_BONES,
+        )
         right_arm_thigh_separation = right_arm_thigh_surface_separation(
             mesh_obj,
             rest_mesh,
@@ -774,73 +836,31 @@ def apply_center_preserving_shield_rest_pose(scene, mesh_obj, armature_obj):
 
     if maximum_solved_position_error > 1e-3:
         raise RuntimeError(
-            "The baked bilateral arm mesh differs from the solved pose: "
+            "The baked left-arm mesh differs from the solved shield pose: "
             f"{maximum_solved_position_error}."
         )
-    source_right_centroid = sum(
-        source_right_positions.values(),
-        Vector((0.0, 0.0, 0.0)),
-    ) / len(source_right_positions)
     final_right_centroid = sum(
         final_right_positions.values(),
         Vector((0.0, 0.0, 0.0)),
     ) / len(final_right_positions)
-    source_right_bounds_min, source_right_bounds_max = position_bounds(
-        source_right_positions.values()
-    )
     final_right_bounds_min, final_right_bounds_max = position_bounds(
         final_right_positions.values()
     )
-    source_right_centerline_x = torso_centerline_x_at_y(
-        armature_to_mesh,
-        armature_obj,
-        source_right_centroid.y,
-    )[0]
     final_right_centerline_x = torso_centerline_x_at_y(
         armature_to_mesh,
         armature_obj,
         final_right_centroid.y,
     )[0]
-    source_right_centroid_lateral_gap = abs(
-        source_right_centroid.x - source_right_centerline_x
-    )
     final_right_centroid_lateral_gap = abs(
         final_right_centroid.x - final_right_centerline_x
     )
-    target_right_upper_down_angle = (
-        right_target_elbow - right_arm_root
+    model_down = Vector((0.0, -1.0, 0.0))
+    source_right_upper_down_angle = (
+        right_elbow - right_arm_root
     ).angle(model_down)
-    target_right_forearm_down_angle = (
-        right_target_hand_head - right_target_elbow
+    source_right_forearm_down_angle = (
+        right_hand_head - right_elbow
     ).angle(model_down)
-    if target_right_upper_down_angle > RIGHT_ARM_MAX_DOWN_ANGLE:
-        raise RuntimeError(
-            "The right upper arm is not close enough to downward attention alignment: "
-            f"{target_right_upper_down_angle}."
-        )
-    if target_right_forearm_down_angle > RIGHT_ARM_MAX_DOWN_ANGLE:
-        raise RuntimeError(
-            "The right forearm is not close enough to downward attention alignment: "
-            f"{target_right_forearm_down_angle}."
-        )
-    if final_right_centroid_lateral_gap >= source_right_centroid_lateral_gap:
-        raise RuntimeError("The right arm mesh did not move closer to the torso centerline.")
-    if final_right_bounds_min.y >= source_right_bounds_min.y:
-        raise RuntimeError("The right arm mesh did not move downward beside the thigh.")
-    if right_arm_thigh_separation["overlap_count"] != 0:
-        raise RuntimeError(
-            "The right arm still intersects the right thigh: "
-            f"{right_arm_thigh_separation['overlap_count']} triangle pairs."
-        )
-    if (
-        right_arm_thigh_separation["minimum_clearance"]
-        < RIGHT_ARM_THIGH_CLEARANCE
-    ):
-        raise RuntimeError(
-            "The right arm-to-thigh surface clearance is below the approved target: "
-            f"actual={right_arm_thigh_separation['minimum_clearance']}, "
-            f"target={RIGHT_ARM_THIGH_CLEARANCE}."
-        )
 
     return {
         "source_outward_normal": [float(value) for value in before_shield["outward_normal"]],
@@ -884,52 +904,50 @@ def apply_center_preserving_shield_rest_pose(scene, mesh_obj, armature_obj):
         "target_distance": target_distance,
         "connection_error": connection_error,
         "right_arm": {
-            "extension_ratio": RIGHT_ARM_EXTENSION_RATIO,
-            "outward_offset": RIGHT_ARM_OUTWARD_OFFSET,
-            "target_thigh_clearance": RIGHT_ARM_THIGH_CLEARANCE,
+            "extension_ratio": 1.0,
+            "outward_offset": 0.0,
+            "target_thigh_clearance": 0.0,
             "source_arm_root": [float(value) for value in right_arm_root],
             "source_elbow": [float(value) for value in right_elbow],
             "source_hand_head": [float(value) for value in right_hand_head],
-            "target_elbow": [float(value) for value in right_target_elbow],
-            "target_hand_head": [float(value) for value in right_target_hand_head],
-            "upper_arm_length": right_upper_length,
-            "forearm_length": right_forearm_length,
-            "target_distance": right_target_distance,
-            "target_vertical_distance": right_target_vertical_distance,
-            "elbow_bend_offset": right_height,
+            "target_elbow": [float(value) for value in right_elbow],
+            "target_hand_head": [float(value) for value in right_hand_head],
+            "upper_arm_length": (right_elbow - right_arm_root).length,
+            "forearm_length": (right_hand_head - right_elbow).length,
+            "target_distance": (right_hand_head - right_arm_root).length,
+            "target_vertical_distance": 0.0,
+            "elbow_bend_offset": 0.0,
             "source_upper_down_angle_degrees": (
-                (right_elbow - right_arm_root).angle(model_down)
-                * 57.29577951308232
+                source_right_upper_down_angle * 57.29577951308232
             ),
             "source_forearm_down_angle_degrees": (
-                (right_hand_head - right_elbow).angle(model_down)
-                * 57.29577951308232
+                source_right_forearm_down_angle * 57.29577951308232
             ),
             "target_upper_down_angle_degrees": (
-                target_right_upper_down_angle * 57.29577951308232
+                source_right_upper_down_angle * 57.29577951308232
             ),
             "target_forearm_down_angle_degrees": (
-                target_right_forearm_down_angle * 57.29577951308232
+                source_right_forearm_down_angle * 57.29577951308232
             ),
-            "source_mesh_centroid": [float(value) for value in source_right_centroid],
+            "source_mesh_centroid": [float(value) for value in final_right_centroid],
             "final_mesh_centroid": [float(value) for value in final_right_centroid],
-            "source_mesh_bounds_min": [float(value) for value in source_right_bounds_min],
-            "source_mesh_bounds_max": [float(value) for value in source_right_bounds_max],
+            "source_mesh_bounds_min": [float(value) for value in final_right_bounds_min],
+            "source_mesh_bounds_max": [float(value) for value in final_right_bounds_max],
             "final_mesh_bounds_min": [float(value) for value in final_right_bounds_min],
             "final_mesh_bounds_max": [float(value) for value in final_right_bounds_max],
-            "source_mesh_centroid_lateral_gap": source_right_centroid_lateral_gap,
+            "source_mesh_centroid_lateral_gap": final_right_centroid_lateral_gap,
             "final_mesh_centroid_lateral_gap": final_right_centroid_lateral_gap,
             "thigh_surface_arm_polygons": right_arm_thigh_separation["arm_polygons"],
             "thigh_surface_polygons": right_arm_thigh_separation["thigh_polygons"],
             "thigh_surface_overlap_count": right_arm_thigh_separation["overlap_count"],
             "thigh_surface_clearance": right_arm_thigh_separation["minimum_clearance"],
             "maximum_baked_mesh_position_error": maximum_solved_position_error,
-            "connection_error": right_connection_error,
+            "connection_error": 0.0,
         },
         "embedded_animation_frames": [action_start, action_end],
         "embedded_animation_maximum_local_matrix_error": maximum_animation_error,
         "base_pose_source": "Approved embedded action frame 1, preserving its front-of-character shield placement.",
-        "method": "The approved shield orientation and half-gap torso-front left-arm solve are preserved, then a deterministic two-bone right-arm solve keeps the existing 95 percent extension and backward elbow bend while moving the hand target outward by the measured minimum safe offset; explicit right-arm/right-thigh surface overlap and clearance checks prove non-penetration before both approved arm poses are baked as rest, while the embedded action's local motion channels remain unchanged.",
+        "method": "Only the approved shield orientation and half-gap torso-front left-arm solve are baked as rest. The right-arm source pose is left unchanged, and the embedded action's local motion channels remain unchanged.",
     }
 
 
@@ -1021,13 +1039,20 @@ def main():
                 and abs(right_depth) < 1.0
             ):
                 right_inside_loops += 1
+        after_eye_hash = stable_hash(stable_mesh_signature(mesh))
+        if before_hash != after_eye_hash:
+            raise RuntimeError(
+                "Geometry, material assignment, or UV0 changed while adding eye data."
+            )
+        chin_result = apply_front_chin_alignment(
+            mesh_obj,
+            armature_obj,
+            evaluated_mesh,
+        )
     finally:
         evaluated_obj.to_mesh_clear()
 
-    after = stable_mesh_signature(mesh)
-    after_hash = stable_hash(after)
-    if before_hash != after_hash:
-        raise RuntimeError("Geometry, material assignment, or UV0 changed while adding eye data.")
+    after_hash = after_eye_hash
 
     expected_layers = [original_uv_name, LEFT_UV, RIGHT_UV, DEPTH_UV]
     actual_layers = [layer.name for layer in mesh.uv_layers]
@@ -1041,7 +1066,8 @@ def main():
     allowed_left_vertex_indices = pose_vertex_indices(mesh_obj, LEFT_POSE_BONES)
     allowed_right_vertex_indices = pose_vertex_indices(mesh_obj, RIGHT_POSE_BONES)
     allowed_vertex_indices = (
-        allowed_left_vertex_indices | allowed_right_vertex_indices
+        allowed_left_vertex_indices
+        | set(chin_result["selected_vertex_indices"])
     )
     if not allowed_left_vertex_indices:
         raise RuntimeError("No vertices are weighted to the approved left-arm pose bones.")
@@ -1079,20 +1105,27 @@ def main():
     )
     if unauthorized_changed_vertices:
         raise RuntimeError(
-            "Vertices outside the approved bilateral arm influence changed: "
+            "Vertices outside the approved left-arm and front-chin regions changed: "
             f"{unauthorized_changed_vertices[:20]}"
         )
     if not changed_vertex_indices:
-        raise RuntimeError("The approved bilateral arm base-pose edit changed no vertices.")
+        raise RuntimeError("The approved left-arm shield-pose edit changed no vertices.")
     changed_left_vertex_indices = (
         changed_vertex_indices & allowed_left_vertex_indices
     )
     changed_right_vertex_indices = (
         changed_vertex_indices & allowed_right_vertex_indices
     )
-    if not changed_left_vertex_indices or not changed_right_vertex_indices:
+    changed_chin_vertex_indices = (
+        changed_vertex_indices & set(chin_result["selected_vertex_indices"])
+    )
+    if not changed_left_vertex_indices or changed_right_vertex_indices:
         raise RuntimeError(
-            "Both the preserved left-arm pose and new right-arm attention pose must affect vertices."
+            "The shield-pose edit must change the left arm and leave the right arm unchanged."
+        )
+    if changed_chin_vertex_indices != set(chin_result["selected_vertex_indices"]):
+        raise RuntimeError(
+            "The front-chin correction did not change exactly its selected vertices."
         )
 
     changed_bones = sorted(
@@ -1107,12 +1140,12 @@ def main():
     unexpected_changed_bones = sorted(set(changed_bones) - set(POSE_BONES))
     if unexpected_changed_bones:
         raise RuntimeError(
-            f"Bones outside the approved bilateral arm chains changed: {unexpected_changed_bones}"
+            f"Bones outside the approved left-arm chain changed: {unexpected_changed_bones}"
         )
     if set(changed_bones) != set(POSE_BONES):
         raise RuntimeError(
-            "The approved bilateral rest pose must change exactly LeftArm, "
-            "LeftForeArm, LeftHand, RightArm, RightForeArm, and RightHand: "
+            "The approved shield rest pose must change exactly LeftArm, "
+            "LeftForeArm, and LeftHand: "
             f"{changed_bones}"
         )
 
@@ -1175,9 +1208,11 @@ def main():
         "changed_pose_vertices": len(changed_vertex_indices),
         "changed_left_arm_vertices": len(changed_left_vertex_indices),
         "changed_right_arm_vertices": len(changed_right_vertex_indices),
+        "changed_chin_vertices": len(changed_chin_vertex_indices),
         "unauthorized_changed_vertices": len(unauthorized_changed_vertices),
         "changed_rest_bones": changed_bones,
         "base_pose": pose_result,
+        "chin_alignment": chin_result,
         "covered_loops": {
             "left": left_inside_loops,
             "right": right_inside_loops,

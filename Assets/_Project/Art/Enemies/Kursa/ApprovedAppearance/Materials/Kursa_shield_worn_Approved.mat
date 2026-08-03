@@ -68,6 +68,7 @@ Material:
     - _FeatureMode: 0
     - _NormalStrength: 0.7
     - _PreviewUnlit: 0
+    - _ProjectedEyesEnabled: 1
     - _TextureScale: 1.05
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

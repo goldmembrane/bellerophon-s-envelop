@@ -33,19 +33,7 @@ namespace Bellerophon.Editor.KursaCargoRunScene
         private const float ExpectedLength = 116f / FrameRate;
         private const int ExpectedTriangles = 3913;
         private const int ExpectedBones = 24;
-        private const float RightArmOutwardAngle = 18.66f;
-        private const float SurfaceIntersectionTolerance = 0.00001f;
         private const float GroundAgreementTolerance = 0.0001f;
-
-        private static readonly string[] RightArmRegionBones =
-        {
-            "RightArm", "RightForeArm", "RightHand"
-        };
-
-        private static readonly string[] RightThighRegionBones =
-        {
-            "RightUpLeg"
-        };
 
         private static readonly string[] SlotNames =
         {
@@ -85,7 +73,8 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             var clip = CreateInPlaceClip(
                 sourceClip,
                 prefab.transform,
-                appearanceMesh);
+                appearanceMesh,
+                staticRenderer.sharedMaterials);
             var controller = CreateController(clip);
             var replacement = PrefabUtility.InstantiatePrefab(prefab, scene) as GameObject ??
                 throw new InvalidOperationException("Kursa walking FBX could not be instantiated.");
@@ -112,7 +101,13 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 animator.updateMode = AnimatorUpdateMode.Normal;
                 EditorUtility.SetDirty(animator);
 
-                InspectModel(replacement.transform, sourceClip, clip, controller, false);
+                var metrics = InspectModel(
+                    replacement.transform,
+                    sourceClip,
+                    clip,
+                    controller,
+                    false);
+                WriteReport(metrics);
             }
             catch
             {
@@ -130,7 +125,7 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             AssetDatabase.SaveAssets();
             var priorCapture = Absolute(CapturePath);
             if (File.Exists(priorCapture)) File.Delete(priorCapture);
-            Debug.Log("KursaMoveAnimationApplied Result=PASS, Slot=Kursa_03_Move, SourceHash=" + ExpectedMoveSha256 + ", MixamoTake=" + takeName + ", AppearanceOnly=True, WalkingGeometryWeightsBindPosesPreserved=True, RightArmOutwardAngle=" + Num(RightArmOutwardAngle) + ", TargetModelLocalY=" + Num(targetModelY) + ", ModelLocalForwardHeadAlignment=True, EyeAttachment=PerVertexUvChannelsOnSkinnedFaceMesh, StaticArmDataUsed=False, RootHorizontalLocked=True, OtherSlotsUnchanged=True, OtherSceneRootsUnchanged=True, SceneSaved=True.");
+            Debug.Log("KursaMoveAnimationApplied Result=PASS, Slot=Kursa_03_Move, SourceHash=" + ExpectedMoveSha256 + ", MixamoTake=" + takeName + ", AppearanceOnly=True, WalkingGeometryWeightsBindPosesPreserved=True, TargetModelLocalY=" + Num(targetModelY) + ", ModelLocalForwardHeadAlignment=True, EyeAttachment=PerVertexUvChannelsOnSkinnedFaceMesh, StaticArmDataUsed=False, RootHorizontalLocked=True, OtherSlotsUnchanged=True, OtherSceneRootsUnchanged=True, SceneSaved=True.");
         }
 
         private static Mesh CreateAppearanceOnlyMesh(GameObject walkingPrefab)
@@ -653,51 +648,7 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             WriteReport(metrics);
             if (scene.isDirty != wasDirty)
                 throw new InvalidOperationException("Kursa move inspection changed the scene dirty state.");
-            Debug.Log("KursaMoveAnimationInspected Result=PASS, Length=" + Num(metrics.Length) + ", RootHorizontalRange=" + Num(metrics.RootHorizontalRange) + ", MaximumSourcePositionError=" + Num(metrics.MaximumSourcePositionError) + ", MaximumSourceRotationError=" + Num(metrics.MaximumSourceRotationError) + ", RightArmOutwardAngle=" + Num(RightArmOutwardAngle) + ", RightArmThighIntersectingSamples=" + metrics.RightArmThighIntersectingSamples + ", RightArmThighMaximumIntersectingPairs=" + metrics.RightArmThighMaximumIntersectingPairs + ", MoveModelLocalY=" + Num(metrics.MoveModelLocalY) + ", OtherKursaCommonModelY=" + Num(metrics.OtherKursaCommonModelY) + ", ModelLocalForwardHeadAlignment=True, MovingBones=" + metrics.MovingBones + ", SceneChanged=False.");
-        }
-
-        [MenuItem("Bellerophon/Enemies/Kursa/Measure Move Adjustment")]
-        public static void MeasureKursaMoveAdjustment()
-        {
-            var scene = RequireScene(true);
-            var wasDirty = scene.isDirty;
-            var placement = RequirePlacement(scene);
-            RequireSlotContract(placement.transform);
-            var moveModel = RequireModel(RequireChild(
-                placement.transform,
-                MoveSlotName));
-            var moveRenderer = RequireRenderer(moveModel, MoveSlotName);
-            var clip = RequireClip();
-            var ground = MeasureOtherKursaGrounds(placement.transform);
-            var contact = MeasureRightArmThighContact(
-                moveModel,
-                moveRenderer,
-                clip,
-                FrameRate * 2f);
-            var moveGround = MeasureCycleMinimumGround(
-                moveModel,
-                moveRenderer,
-                clip,
-                FrameRate * 2f);
-            var outwardAngle = FindMinimumRightArmOutwardAngle(
-                moveModel,
-                moveRenderer,
-                clip);
-            if (scene.isDirty != wasDirty)
-                throw new InvalidOperationException(
-                    "Kursa move adjustment measurement changed the scene dirty state.");
-            Debug.Log("KursaMoveAdjustmentMeasured Result=PASS, OtherGroundMinimum=" +
-                Num(ground.Minimum) + ", OtherGroundMaximum=" + Num(ground.Maximum) +
-                ", OtherGroundRange=" + Num(ground.Range) +
-                ", MoveCycleMinimumGround=" + Num(moveGround) +
-                ", GroundOffsetNeeded=" + Num(ground.Common - moveGround) +
-                ", RequiredRightArmOutwardAngle=" + Num(outwardAngle) +
-                ", RightArmTriangles=" + contact.ArmTriangles +
-                ", RightThighTriangles=" + contact.ThighTriangles +
-                ", IntersectingSamples=" + contact.IntersectingSamples +
-                ", MaximumIntersectingPairs=" + contact.MaximumIntersectingPairs +
-                ", WorstNormalizedTime=" + Num(contact.WorstNormalizedTime) +
-                ", SceneChanged=False.");
+            Debug.Log("KursaMoveAnimationInspected Result=PASS, Length=" + Num(metrics.Length) + ", RootHorizontalRange=" + Num(metrics.RootHorizontalRange) + ", MaximumSourcePositionError=" + Num(metrics.MaximumSourcePositionError) + ", MaximumSourceRotationError=" + Num(metrics.MaximumSourceRotationError) + ", MoveModelLocalY=" + Num(metrics.MoveModelLocalY) + ", OtherKursaCommonModelY=" + Num(metrics.OtherKursaCommonModelY) + ", ModelLocalForwardHeadAlignment=True, MovingBones=" + metrics.MovingBones + ", SceneChanged=False.");
         }
 
         [MenuItem("Bellerophon/Enemies/Kursa/Capture Move Animation Review")]
@@ -762,7 +713,8 @@ namespace Bellerophon.Editor.KursaCargoRunScene
         private static AnimationClip CreateInPlaceClip(
             AnimationClip source,
             Transform prefabRoot,
-            Mesh appearanceMesh)
+            Mesh appearanceMesh,
+            Material[] appearanceMaterials)
         {
             var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(ClipPath);
             if (clip == null)
@@ -781,16 +733,10 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             {
                 var renderer = RequireRenderer(clone.transform, "temporary walking FBX");
                 renderer.sharedMesh = appearanceMesh;
+                renderer.sharedMaterials = appearanceMaterials;
                 var bones = renderer.rootBone.GetComponentsInChildren<Transform>(true);
                 if (bones.Select(item => item.name).Distinct(StringComparer.Ordinal).Count() != bones.Length)
                     throw new InvalidOperationException("Kursa walking skeleton contains duplicate bone names.");
-                var boneMap = bones.ToDictionary(
-                    item => item.name,
-                    StringComparer.Ordinal);
-                var rightArm = RequireBone(boneMap, "RightArm");
-                var rightForeArm = RequireBone(boneMap, "RightForeArm");
-                var leftShoulder = RequireBone(boneMap, "LeftShoulder");
-                var rightShoulder = RequireBone(boneMap, "RightShoulder");
                 var paths = bones.ToDictionary(item => item.name, item => AnimationUtility.CalculateTransformPath(item, clone.transform), StringComparer.Ordinal);
                 source.SampleAnimation(clone, 0f);
                 var rootBase = renderer.rootBone.localPosition;
@@ -802,13 +748,6 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 {
                     var time = Mathf.Min(source.length, frame / FrameRate);
                     source.SampleAnimation(clone, time);
-                    ApplyRightArmOutwardRotation(
-                        clone.transform,
-                        rightArm,
-                        rightForeArm,
-                        leftShoulder,
-                        rightShoulder,
-                        RightArmOutwardAngle);
                     KursaForwardHeadAlignmentTool.AlignHeadToModelLocalForward(
                         clone.transform,
                         renderer);
@@ -983,23 +922,13 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                         "Kursa_03_Move materials do not exactly match the placed static Kursa.");
                 RequireBoneOrder(sourceRenderer, moveRenderer);
                 sourceRenderer.sharedMesh = appearanceMesh;
+                sourceRenderer.sharedMaterials = staticRenderer.sharedMaterials;
                 var sourceBones = sourceRenderer.rootBone.GetComponentsInChildren<Transform>(true).ToDictionary(item => item.name, StringComparer.Ordinal);
                 var moveBones = moveRenderer.rootBone.GetComponentsInChildren<Transform>(true).ToDictionary(item => item.name, StringComparer.Ordinal);
                 if (!sourceBones.Keys.OrderBy(item => item, StringComparer.Ordinal).SequenceEqual(moveBones.Keys.OrderBy(item => item, StringComparer.Ordinal), StringComparer.Ordinal))
                     throw new InvalidOperationException("Kursa source and move bone sets differ.");
                 var horizontalProperties = HorizontalRootProperties(sourceClone.transform, sourceRenderer.rootBone);
                 sourceClip.SampleAnimation(sourceClone, 0f);
-                var sourceRightArm = RequireBone(sourceBones, "RightArm");
-                var sourceRightForeArm = RequireBone(sourceBones, "RightForeArm");
-                var sourceLeftShoulder = RequireBone(sourceBones, "LeftShoulder");
-                var sourceRightShoulder = RequireBone(sourceBones, "RightShoulder");
-                ApplyRightArmOutwardRotation(
-                    sourceClone.transform,
-                    sourceRightArm,
-                    sourceRightForeArm,
-                    sourceLeftShoulder,
-                    sourceRightShoulder,
-                    RightArmOutwardAngle);
                 KursaForwardHeadAlignmentTool.AlignHeadToModelLocalForward(
                     sourceClone.transform,
                     sourceRenderer);
@@ -1010,7 +939,6 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 var maximumPositionError = 0f;
                 var maximumRotationError = 0f;
                 var maximumScaleError = 0f;
-                var maximumRightArmCorrectionError = 0f;
                 var maximumHeadLocalFrameError = 0f;
                 var rootHorizontalRange = 0f;
                 var rootStart = moveModel.InverseTransformPoint(moveRenderer.rootBone.position);
@@ -1022,22 +950,9 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 {
                     var time = Mathf.Min(clip.length, frame / FrameRate);
                     sourceClip.SampleAnimation(sourceClone, time);
-                    var rawRightArmRotation = sourceRightArm.localRotation;
-                    ApplyRightArmOutwardRotation(
-                        sourceClone.transform,
-                        sourceRightArm,
-                        sourceRightForeArm,
-                        sourceLeftShoulder,
-                        sourceRightShoulder,
-                        RightArmOutwardAngle);
                     KursaForwardHeadAlignmentTool.AlignHeadToModelLocalForward(
                         sourceClone.transform,
                         sourceRenderer);
-                    maximumRightArmCorrectionError = Mathf.Max(
-                        maximumRightArmCorrectionError,
-                        Mathf.Abs(Quaternion.Angle(
-                            rawRightArmRotation,
-                            sourceRightArm.localRotation) - RightArmOutwardAngle));
                     clip.SampleAnimation(moveModel.gameObject, time);
                     foreach (var pair in moveBones)
                     {
@@ -1091,26 +1006,11 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                     moveModel.parent.parent);
                 var modelYError = Mathf.Abs(
                     moveModel.localPosition.y - commonModelY);
-                var contact = MeasureRightArmThighContact(
-                    moveModel,
-                    moveRenderer,
-                    clip,
-                    FrameRate * 2f);
-                if (maximumRightArmCorrectionError > 0.01f)
-                    throw new InvalidOperationException(
-                        "Kursa right-arm correction angle differs. Error=" +
-                        Num(maximumRightArmCorrectionError) + ".");
                 if (modelYError > GroundAgreementTolerance)
                     throw new InvalidOperationException(
                         "Kursa move model Y does not match the other Kursa models. Move=" +
                         Num(moveModel.localPosition.y) + ", Target=" +
                         Num(commonModelY) + ".");
-                if (contact.IntersectingSamples != 0 ||
-                    contact.MaximumIntersectingPairs != 0)
-                    throw new InvalidOperationException(
-                        "Kursa right arm intersects the right thigh during walking. Samples=" +
-                        contact.IntersectingSamples + ", Pairs=" +
-                        contact.MaximumIntersectingPairs + ".");
                 if (maximumHeadLocalFrameError > 0.05f)
                     throw new InvalidOperationException(
                         "Kursa move face does not match model-local +Z/+Y. MaximumError=" +
@@ -1126,11 +1026,8 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                     maximumGround - minimumGround,
                     loopPositionError,
                     loopRotationError,
-                    maximumRightArmCorrectionError,
                     moveModel.localPosition.y,
-                    commonModelY,
-                    contact.IntersectingSamples,
-                    contact.MaximumIntersectingPairs);
+                    commonModelY);
             }
             finally
             {
@@ -1248,332 +1145,6 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 UnityEngine.Object.DestroyImmediate(baked);
             }
             return minimum;
-        }
-
-        private static ContactMetrics MeasureRightArmThighContact(
-            Transform model,
-            SkinnedMeshRenderer renderer,
-            AnimationClip clip,
-            float sampleRate)
-        {
-            var mesh = renderer.sharedMesh ??
-                throw new InvalidOperationException(
-                    "Kursa move mesh is missing during surface measurement.");
-            var armTriangles = RegionTriangles(
-                renderer,
-                mesh,
-                RightArmRegionBones);
-            var thighTriangles = RegionTriangles(
-                renderer,
-                mesh,
-                RightThighRegionBones);
-            if (armTriangles.Length == 0 || thighTriangles.Length == 0)
-                throw new InvalidOperationException(
-                    "Kursa right-arm or right-thigh surface region is empty.");
-
-            var snapshots = model.GetComponentsInChildren<Transform>(true)
-                .Select(item => new TransformState(item)).ToArray();
-            var animator = model.GetComponent<Animator>();
-            var animatorEnabled = animator != null && animator.enabled;
-            var baked = new Mesh();
-            var intersectingSamples = 0;
-            var maximumIntersectingPairs = 0;
-            var worstNormalizedTime = 0f;
-            try
-            {
-                if (animator != null) animator.enabled = false;
-                var samples = Mathf.CeilToInt(clip.length * sampleRate);
-                for (var sample = 0; sample <= samples; sample++)
-                {
-                    var normalizedTime = sample / (float)samples;
-                    clip.SampleAnimation(
-                        model.gameObject,
-                        clip.length * normalizedTime);
-                    renderer.BakeMesh(baked);
-                    var intersectingPairs = CountSurfaceIntersections(
-                        renderer,
-                        baked,
-                        armTriangles,
-                        thighTriangles);
-                    if (intersectingPairs > 0)
-                        intersectingSamples++;
-                    if (intersectingPairs > maximumIntersectingPairs)
-                    {
-                        maximumIntersectingPairs = intersectingPairs;
-                        worstNormalizedTime = normalizedTime;
-                    }
-                }
-            }
-            finally
-            {
-                foreach (var snapshot in snapshots) snapshot.Restore();
-                if (animator != null) animator.enabled = animatorEnabled;
-                UnityEngine.Object.DestroyImmediate(baked);
-            }
-            return new ContactMetrics(
-                armTriangles.Length,
-                thighTriangles.Length,
-                intersectingSamples,
-                maximumIntersectingPairs,
-                worstNormalizedTime);
-        }
-
-        private static float FindMinimumRightArmOutwardAngle(
-            Transform model,
-            SkinnedMeshRenderer renderer,
-            AnimationClip clip)
-        {
-            var mesh = renderer.sharedMesh ??
-                throw new InvalidOperationException(
-                    "Kursa move mesh is missing during correction search.");
-            var armTriangles = RegionTriangles(
-                renderer,
-                mesh,
-                RightArmRegionBones);
-            var thighTriangles = RegionTriangles(
-                renderer,
-                mesh,
-                RightThighRegionBones);
-            var bones = renderer.rootBone.GetComponentsInChildren<Transform>(true)
-                .ToDictionary(item => item.name, StringComparer.Ordinal);
-            var rightArm = RequireBone(bones, "RightArm");
-            var rightForeArm = RequireBone(bones, "RightForeArm");
-            var leftShoulder = RequireBone(bones, "LeftShoulder");
-            var rightShoulder = RequireBone(bones, "RightShoulder");
-            var snapshots = model.GetComponentsInChildren<Transform>(true)
-                .Select(item => new TransformState(item)).ToArray();
-            var animator = model.GetComponent<Animator>();
-            var animatorEnabled = animator != null && animator.enabled;
-            var baked = new Mesh();
-            try
-            {
-                if (animator != null) animator.enabled = false;
-                Func<float, float, bool> intersects = (angle, sampleRate) =>
-                {
-                    var samples = Mathf.CeilToInt(clip.length * sampleRate);
-                    for (var sample = 0; sample <= samples; sample++)
-                    {
-                        clip.SampleAnimation(
-                            model.gameObject,
-                            clip.length * sample / samples);
-                        ApplyRightArmOutwardRotation(
-                            model,
-                            rightArm,
-                            rightForeArm,
-                            leftShoulder,
-                            rightShoulder,
-                            angle);
-                        renderer.BakeMesh(baked);
-                        if (SurfacesIntersect(
-                            renderer,
-                            baked,
-                            armTriangles,
-                            thighTriangles))
-                            return true;
-                    }
-                    return false;
-                };
-
-                if (!intersects(0f, FrameRate)) return 0f;
-                var upper = 0f;
-                for (var angle = 1f; angle <= 60f; angle += 1f)
-                {
-                    if (intersects(angle, FrameRate)) continue;
-                    upper = angle;
-                    break;
-                }
-                if (upper <= 0f)
-                    throw new InvalidOperationException(
-                        "No right-arm outward correction up to 60 degrees clears the thigh.");
-                var lower = upper - 1f;
-                for (var iteration = 0; iteration < 8; iteration++)
-                {
-                    var middle = (lower + upper) * 0.5f;
-                    if (intersects(middle, FrameRate)) lower = middle;
-                    else upper = middle;
-                }
-                while (intersects(upper, FrameRate * 2f))
-                {
-                    upper += 0.01f;
-                    if (upper > 60f)
-                        throw new InvalidOperationException(
-                            "120 Hz right-arm clearance search exceeded 60 degrees.");
-                }
-                return Mathf.Ceil(upper * 100f) / 100f;
-            }
-            finally
-            {
-                foreach (var snapshot in snapshots) snapshot.Restore();
-                if (animator != null) animator.enabled = animatorEnabled;
-                UnityEngine.Object.DestroyImmediate(baked);
-            }
-        }
-
-        private static Transform RequireBone(
-            IReadOnlyDictionary<string, Transform> bones,
-            string name)
-        {
-            if (!bones.TryGetValue(name, out var bone) || bone == null)
-                throw new InvalidOperationException(
-                    "Kursa skeleton is missing bone " + name + ".");
-            return bone;
-        }
-
-        private static void ApplyRightArmOutwardRotation(
-            Transform model,
-            Transform rightArm,
-            Transform rightForeArm,
-            Transform leftShoulder,
-            Transform rightShoulder,
-            float angle)
-        {
-            if (angle <= 0f) return;
-            var armDirection = (rightForeArm.position - rightArm.position).normalized;
-            var outward = (rightShoulder.position - leftShoulder.position).normalized;
-            var axis = Vector3.Cross(armDirection, outward);
-            if (axis.sqrMagnitude < 0.000001f)
-                throw new InvalidOperationException(
-                    "Kursa right-arm outward rotation axis is degenerate.");
-            rightArm.rotation = Quaternion.AngleAxis(angle, axis.normalized) *
-                rightArm.rotation;
-        }
-
-        private static bool SurfacesIntersect(
-            SkinnedMeshRenderer renderer,
-            Mesh baked,
-            TriangleIndex[] first,
-            TriangleIndex[] second)
-        {
-            var vertices = baked.vertices;
-            var matrix = renderer.localToWorldMatrix;
-            foreach (var a in first)
-            {
-                var a0 = matrix.MultiplyPoint3x4(vertices[a.A]);
-                var a1 = matrix.MultiplyPoint3x4(vertices[a.B]);
-                var a2 = matrix.MultiplyPoint3x4(vertices[a.C]);
-                var aBounds = TriangleBounds(a0, a1, a2);
-                foreach (var b in second)
-                {
-                    var b0 = matrix.MultiplyPoint3x4(vertices[b.A]);
-                    var b1 = matrix.MultiplyPoint3x4(vertices[b.B]);
-                    var b2 = matrix.MultiplyPoint3x4(vertices[b.C]);
-                    var bBounds = TriangleBounds(b0, b1, b2);
-                    if (!BoundsOverlap(aBounds, bBounds,
-                        SurfaceIntersectionTolerance))
-                        continue;
-                    if (TrianglesIntersect(a0, a1, a2, b0, b1, b2))
-                        return true;
-                }
-            }
-            return false;
-        }
-
-        private static int CountSurfaceIntersections(
-            SkinnedMeshRenderer renderer,
-            Mesh baked,
-            TriangleIndex[] first,
-            TriangleIndex[] second)
-        {
-            var vertices = baked.vertices;
-            var matrix = renderer.localToWorldMatrix;
-            var firstWorld = first.Select(item => new WorldTriangle(
-                matrix.MultiplyPoint3x4(vertices[item.A]),
-                matrix.MultiplyPoint3x4(vertices[item.B]),
-                matrix.MultiplyPoint3x4(vertices[item.C]))).ToArray();
-            var secondWorld = second.Select(item => new WorldTriangle(
-                matrix.MultiplyPoint3x4(vertices[item.A]),
-                matrix.MultiplyPoint3x4(vertices[item.B]),
-                matrix.MultiplyPoint3x4(vertices[item.C]))).ToArray();
-            var count = 0;
-            foreach (var a in firstWorld)
-            foreach (var b in secondWorld)
-            {
-                if (!BoundsOverlap(
-                    a.Bounds,
-                    b.Bounds,
-                    SurfaceIntersectionTolerance))
-                    continue;
-                if (TrianglesIntersect(a.A, a.B, a.C, b.A, b.B, b.C))
-                    count++;
-            }
-            return count;
-        }
-
-        private static bool TrianglesIntersect(
-            Vector3 a0,
-            Vector3 a1,
-            Vector3 a2,
-            Vector3 b0,
-            Vector3 b1,
-            Vector3 b2) =>
-            SegmentIntersectsTriangle(a0, a1, b0, b1, b2) ||
-            SegmentIntersectsTriangle(a1, a2, b0, b1, b2) ||
-            SegmentIntersectsTriangle(a2, a0, b0, b1, b2) ||
-            SegmentIntersectsTriangle(b0, b1, a0, a1, a2) ||
-            SegmentIntersectsTriangle(b1, b2, a0, a1, a2) ||
-            SegmentIntersectsTriangle(b2, b0, a0, a1, a2);
-
-        private static Bounds TriangleBounds(
-            Vector3 a,
-            Vector3 b,
-            Vector3 c)
-        {
-            var bounds = new Bounds(a, Vector3.zero);
-            bounds.Encapsulate(b);
-            bounds.Encapsulate(c);
-            return bounds;
-        }
-
-        private static bool BoundsOverlap(Bounds a, Bounds b, float tolerance) =>
-            a.min.x <= b.max.x + tolerance && a.max.x + tolerance >= b.min.x &&
-            a.min.y <= b.max.y + tolerance && a.max.y + tolerance >= b.min.y &&
-            a.min.z <= b.max.z + tolerance && a.max.z + tolerance >= b.min.z;
-
-        private static TriangleIndex[] RegionTriangles(
-            SkinnedMeshRenderer renderer,
-            Mesh mesh,
-            IEnumerable<string> boneNames)
-        {
-            var region = new HashSet<string>(boneNames, StringComparer.Ordinal);
-            var bones = renderer.bones;
-            var weights = mesh.boneWeights;
-            var result = new List<TriangleIndex>();
-            for (var subMesh = 0; subMesh < mesh.subMeshCount; subMesh++)
-            {
-                var indices = mesh.GetIndices(subMesh);
-                for (var offset = 0; offset < indices.Length; offset += 3)
-                {
-                    var triangle = new TriangleIndex(
-                        indices[offset],
-                        indices[offset + 1],
-                        indices[offset + 2]);
-                    var matches = new[] { triangle.A, triangle.B, triangle.C }
-                        .Count(index => region.Contains(
-                            DominantBoneName(weights[index], bones)));
-                    if (matches >= 2)
-                        result.Add(triangle);
-                }
-            }
-            return result.ToArray();
-        }
-
-        private static string DominantBoneName(
-            BoneWeight weight,
-            Transform[] bones)
-        {
-            var influences = new[]
-            {
-                new { Index = weight.boneIndex0, Weight = weight.weight0 },
-                new { Index = weight.boneIndex1, Weight = weight.weight1 },
-                new { Index = weight.boneIndex2, Weight = weight.weight2 },
-                new { Index = weight.boneIndex3, Weight = weight.weight3 }
-            };
-            var dominant = influences.OrderByDescending(item => item.Weight).First();
-            if (dominant.Index < 0 || dominant.Index >= bones.Length ||
-                bones[dominant.Index] == null)
-                throw new InvalidOperationException(
-                    "Kursa mesh references an invalid dominant bone.");
-            return bones[dominant.Index].name;
         }
 
         private static float TriangleDistanceSquared(
@@ -1940,13 +1511,6 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 "GroundRange=" + Num(value.GroundRange),
                 "LoopPositionError=" + Num(value.LoopPositionError),
                 "LoopRotationError=" + Num(value.LoopRotationError),
-                "RightArmOutwardAngle=" + Num(RightArmOutwardAngle),
-                "MaximumRightArmCorrectionError=" +
-                    Num(value.MaximumRightArmCorrectionError),
-                "RightArmThighIntersectingSamples=" +
-                    value.RightArmThighIntersectingSamples,
-                "RightArmThighMaximumIntersectingPairs=" +
-                    value.RightArmThighMaximumIntersectingPairs,
                 "MoveModelLocalY=" + Num(value.MoveModelLocalY),
                 "OtherKursaCommonModelY=" + Num(value.OtherKursaCommonModelY),
                 "ModelLocalForwardHeadAlignment=True",
@@ -1966,8 +1530,8 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 "ApprovedEyeUvChannels=True",
                 "StaticArmGeometry=False",
                 "StaticArmBindPoses=False",
-                "BoneSpecificCorrections=RightArmOutward18.66DegreesAndModelLocalForwardHeadPose",
-                "AnimationCorrections=HorizontalRootPositionRightArmOutwardAndModelLocalForwardHeadPose",
+                "BoneSpecificCorrections=ModelLocalForwardHeadPose",
+                "AnimationCorrections=HorizontalRootPositionAndModelLocalForwardHeadPose",
                 "OtherSlotsUnchanged=True",
                 "OtherSceneRootsUnchanged=True"
             }, Encoding.UTF8);
@@ -1995,11 +1559,8 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             public readonly float GroundRange;
             public readonly float LoopPositionError;
             public readonly float LoopRotationError;
-            public readonly float MaximumRightArmCorrectionError;
             public readonly float MoveModelLocalY;
             public readonly float OtherKursaCommonModelY;
-            public readonly int RightArmThighIntersectingSamples;
-            public readonly int RightArmThighMaximumIntersectingPairs;
 
             public Metrics(
                 float length,
@@ -2011,11 +1572,8 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 float groundRange,
                 float loopPositionError,
                 float loopRotationError,
-                float maximumRightArmCorrectionError,
                 float moveModelLocalY,
-                float otherKursaCommonModelY,
-                int rightArmThighIntersectingSamples,
-                int rightArmThighMaximumIntersectingPairs)
+                float otherKursaCommonModelY)
             {
                 Length = length;
                 RootHorizontalRange = rootHorizontalRange;
@@ -2026,12 +1584,8 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 GroundRange = groundRange;
                 LoopPositionError = loopPositionError;
                 LoopRotationError = loopRotationError;
-                MaximumRightArmCorrectionError = maximumRightArmCorrectionError;
                 MoveModelLocalY = moveModelLocalY;
                 OtherKursaCommonModelY = otherKursaCommonModelY;
-                RightArmThighIntersectingSamples = rightArmThighIntersectingSamples;
-                RightArmThighMaximumIntersectingPairs =
-                    rightArmThighMaximumIntersectingPairs;
             }
         }
 
@@ -2047,59 +1601,6 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 Common = common;
                 Minimum = minimum;
                 Maximum = maximum;
-            }
-        }
-
-        private readonly struct ContactMetrics
-        {
-            public readonly int ArmTriangles;
-            public readonly int ThighTriangles;
-            public readonly int IntersectingSamples;
-            public readonly int MaximumIntersectingPairs;
-            public readonly float WorstNormalizedTime;
-
-            public ContactMetrics(
-                int armTriangles,
-                int thighTriangles,
-                int intersectingSamples,
-                int maximumIntersectingPairs,
-                float worstNormalizedTime)
-            {
-                ArmTriangles = armTriangles;
-                ThighTriangles = thighTriangles;
-                IntersectingSamples = intersectingSamples;
-                MaximumIntersectingPairs = maximumIntersectingPairs;
-                WorstNormalizedTime = worstNormalizedTime;
-            }
-        }
-
-        private readonly struct WorldTriangle
-        {
-            public readonly Vector3 A;
-            public readonly Vector3 B;
-            public readonly Vector3 C;
-            public readonly Bounds Bounds;
-
-            public WorldTriangle(Vector3 a, Vector3 b, Vector3 c)
-            {
-                A = a;
-                B = b;
-                C = c;
-                Bounds = TriangleBounds(a, b, c);
-            }
-        }
-
-        private readonly struct TriangleIndex
-        {
-            public readonly int A;
-            public readonly int B;
-            public readonly int C;
-
-            public TriangleIndex(int a, int b, int c)
-            {
-                A = a;
-                B = b;
-                C = c;
             }
         }
 

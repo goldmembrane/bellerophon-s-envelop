@@ -1,0 +1,15 @@
+Result=TECHNICAL_PASS_VISUAL_REVIEW_REQUIRED
+Target=Approved Kursa Enemy Placement
+Slots=12
+EyeObjects=24
+LegacyProjectedFaceEyesEnabled=False
+EyeAttachment=Head
+SurfaceMesh=32SegmentEllipse
+ApprovedTexturesReused=True
+LeftWidthToSeparation=0.42
+RightWidthToSeparation=0.4
+LeftAspect=1.39
+RightAspect=1.37
+SurfaceOffset=0.006
+RuntimeVisualReviewRequired=True
+SceneChanged=False

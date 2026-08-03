@@ -1,0 +1,404 @@
+{
+  "before_bone_points": {
+    "LeftArm": {
+      "head_armature": [
+        14.4196043,
+        6.5138884,
+        133.3345642
+      ],
+      "tail_armature": [
+        38.3568268,
+        10.3019981,
+        131.7198334
+      ]
+    },
+    "LeftForeArm": {
+      "head_armature": [
+        38.356823,
+        10.3020134,
+        131.7197876
+      ],
+      "tail_armature": [
+        29.5541229,
+        -2.2904234,
+        131.6448822
+      ]
+    },
+    "LeftHand": {
+      "head_armature": [
+        29.5541382,
+        -2.2904367,
+        131.644928
+      ],
+      "tail_armature": [
+        24.4990578,
+        -11.4038782,
+        120.3553696
+      ]
+    },
+    "RightArm": {
+      "head_armature": [
+        -26.6872597,
+        0.8119588,
+        133.4520721
+      ],
+      "tail_armature": [
+        -36.3532753,
+        0.052238,
+        111.9326172
+      ]
+    },
+    "RightForeArm": {
+      "head_armature": [
+        -36.3532867,
+        0.052249,
+        111.9326172
+      ],
+      "tail_armature": [
+        -42.7835312,
+        -5.810472,
+        82.7815552
+      ]
+    },
+    "RightHand": {
+      "head_armature": [
+        -42.7835312,
+        -5.810472,
+        82.7815552
+      ],
+      "tail_armature": [
+        -30.771656,
+        -11.5243835,
+        55.4215469
+      ]
+    },
+    "neck": {
+      "head_armature": [
+        -2.3030705,
+        0.8152938,
+        142.3337402
+      ],
+      "tail_armature": [
+        -2.1059051,
+        1.1375616,
+        149.1337738
+      ]
+    },
+    "Head": {
+      "head_armature": [
+        -2.1059072,
+        1.1375616,
+        149.1337738
+      ],
+      "tail_armature": [
+        -1.7721732,
+        -11.0760765,
+        160.6285095
+      ]
+    }
+  },
+  "after_bone_points": {
+    "LeftArm": {
+      "head_armature": [
+        14.4196072,
+        6.5138888,
+        133.3345642
+      ],
+      "tail_armature": [
+        30.2394447,
+        -0.7073808,
+        116.3777466
+      ]
+    },
+    "LeftForeArm": {
+      "head_armature": [
+        30.2394218,
+        -0.707366,
+        116.3777084
+      ],
+      "tail_armature": [
+        29.5541477,
+        -2.2904272,
+        131.6448822
+      ]
+    },
+    "LeftHand": {
+      "head_armature": [
+        29.5541344,
+        -2.2904356,
+        131.6449432
+      ],
+      "tail_armature": [
+        24.4990578,
+        -11.4038792,
+        120.3553772
+      ]
+    },
+    "RightArm": {
+      "head_armature": [
+        -26.687254,
+        0.8119557,
+        133.4520721
+      ],
+      "tail_armature": [
+        -32.8248405,
+        0.1037717,
+        110.6721573
+      ]
+    },
+    "RightForeArm": {
+      "head_armature": [
+        -32.824852,
+        0.1037815,
+        110.6721649
+      ],
+      "tail_armature": [
+        -35.8668671,
+        0.4079813,
+        80.404068
+      ]
+    },
+    "RightHand": {
+      "head_armature": [
+        -35.8668671,
+        0.4079813,
+        80.404068
+      ],
+      "tail_armature": [
+        -23.8549919,
+        -5.3059297,
+        53.0440598
+      ]
+    },
+    "neck": {
+      "head_armature": [
+        -2.3030705,
+        0.8152938,
+        142.3337402
+      ],
+      "tail_armature": [
+        -2.1059051,
+        1.1375616,
+        149.1337738
+      ]
+    },
+    "Head": {
+      "head_armature": [
+        -2.105907,
+        1.1375511,
+        149.1337585
+      ],
+      "tail_armature": [
+        -7.7977142,
+        -9.6739073,
+        160.6284943
+      ]
+    }
+  },
+  "right_arm_target": {
+    "actual_shoulder_root": [
+      -26.6872597,
+      0.8119588,
+      133.4520721
+    ],
+    "elbow": [
+      -32.824852,
+      0.103775,
+      110.6721573
+    ],
+    "wrist": [
+      -35.8668709,
+      0.407977,
+      80.4040604
+    ],
+    "hand_world_orientation_preserved": true
+  },
+  "left_arm_target": {
+    "actual_shoulder_root": [
+      14.4196043,
+      6.5138884,
+      133.3345642
+    ],
+    "elbow": [
+      30.2394428,
+      -0.707375,
+      116.3777466
+    ],
+    "wrist_and_shield_grip": [
+      29.5541382,
+      -2.2904367,
+      131.644928
+    ],
+    "hand_and_shield_world_matrix_preserved": true
+  },
+  "face_before": {
+    "center": [
+      2.5244737,
+      -12.5269079,
+      154.7818909
+    ],
+    "normal": [
+      0.7807601,
+      -0.6248309,
+      0.0
+    ],
+    "surface_area_normal": [
+      -0.0906455,
+      -0.9052244,
+      -0.4151532
+    ],
+    "left_orbit": [
+      0.6302001,
+      -14.8939056,
+      155.1692505
+    ],
+    "right_orbit": [
+      4.4187474,
+      -10.1599102,
+      154.394516
+    ],
+    "legacy_orbit_line_yaw_degrees": -51.3302229,
+    "polygon_count": 269,
+    "vertex_count": 166,
+    "normalized_skin_influence": {
+      "Head": 0.8313077,
+      "RightShoulder": 0.0990107,
+      "neck": 0.0351083,
+      "Spine": 0.030878,
+      "Spine01": 0.0036562,
+      "LeftShoulder": 3.91e-05
+    }
+  },
+  "face_after": {
+    "center": [
+      -4.7625275,
+      -13.0434322,
+      154.7818604
+    ],
+    "normal": [
+      0.3746064,
+      -0.9271839,
+      0.0
+    ],
+    "surface_area_normal": [
+      -0.4333483,
+      -0.814782,
+      -0.3851485
+    ],
+    "left_orbit": [
+      -7.5734329,
+      -14.1791105,
+      155.1692352
+    ],
+    "right_orbit": [
+      -1.9516225,
+      -11.907753,
+      154.3945007
+    ],
+    "legacy_orbit_line_yaw_degrees": -21.9999882,
+    "polygon_count": 269,
+    "vertex_count": 166,
+    "normalized_skin_influence": {
+      "Head": 0.8313077,
+      "RightShoulder": 0.0990107,
+      "neck": 0.0351083,
+      "Spine": 0.030878,
+      "Spine01": 0.0036562,
+      "LeftShoulder": 3.91e-05
+    }
+  },
+  "accumulated_head_yaw_correction_degrees": -29.3302229,
+  "automatic_orbit_line_correction_degrees": -51.3302229,
+  "visual_front_offset_from_orbit_line_degrees": 22.0,
+  "face_alignment_method": "Rotate only the existing Head pose bone. Preserve the imported mesh coordinates, topology, and skin weights, and update only the existing eye material projection after the final pose.",
+  "eye_projection_after_final_face_pose": {
+    "left": {
+      "center_mesh_object": [
+        -7.5734329,
+        155.1692505,
+        14.1791105
+      ],
+      "projection_center_mesh_object": [
+        -7.5734329,
+        154.7818909,
+        14.1791105
+      ],
+      "surface_normal_mesh_object": [
+        -0.5901751,
+        -0.5339217,
+        0.6054925
+      ],
+      "projection_normal_mesh_object": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "size": [
+        3.45,
+        3.45
+      ],
+      "depth": 2.05
+    },
+    "right": {
+      "center_mesh_object": [
+        -1.9516227,
+        154.394516,
+        11.907753
+      ],
+      "projection_center_mesh_object": [
+        -1.9516227,
+        154.7818909,
+        11.907753
+      ],
+      "surface_normal_mesh_object": [
+        0.21726,
+        -0.9674319,
+        0.1298978
+      ],
+      "projection_normal_mesh_object": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "size": [
+        3.95,
+        3.95
+      ],
+      "depth": 2.05
+    }
+  },
+  "status": "ART_SAMPLE_USER_REVIEW_REQUIRED",
+  "source_runtime_fbx": "Assets/_Project/Art/Enemies/Kursa/ApprovedAppearance/Models/Kursa_Appearance_RuntimeProjection.fbx",
+  "reference_image": "image/KUŠkursa(쿠르사).png",
+  "approved_appearance_source": "artSample/enemies/kursa/appearance_reference_sync/blender/Kursa_Appearance_ReferenceSync.blend",
+  "mesh_contract": {
+    "vertices": 2109,
+    "edges": 5936,
+    "polygons": 3913,
+    "geometry_data_edited": false,
+    "skin_weights_edited": false,
+    "visible_face_rebuilt_from_front_reference": false,
+    "reference_face_object_count": 0,
+    "materials_reused_from_approved_sample": [
+      "Kursa_Armor_Gunmetal",
+      "Kursa_Armor_BlueGray",
+      "Kursa_Light_Steel",
+      "Kursa_Dark_Mechanics",
+      "Kursa_Torso_Mechanical_Plates",
+      "Kursa_Hood_Navy_Cloth",
+      "Kursa_Face_Metal_Blue_Optics",
+      "Kursa_Shield_Worn_Gunmetal",
+      "Kursa_Shield_Frame_Steel"
+    ]
+  },
+  "torso_decision": "No large torso rotation was applied. The restored torso is already within the documented small yaw range; the candidate changes arm chains and actual face yaw.",
+  "coordinate_contract": {
+    "blender_armature_front": [
+      0.0,
+      -1.0,
+      0.0
+    ],
+    "unity_model_local_equivalent": "+Z",
+    "render_projection": "orthographic"
+  }
+}

@@ -1,0 +1,17 @@
+Result=TECHNICAL_PASS_VISUAL_REVIEW_REQUIRED
+Target=Approved Kursa Enemy Placement
+Slots=12
+EyeRepresentation=PerVertexUvProjectionOnSkinnedFaceMesh
+ApprovedLeftAspectRatio=1.39
+ApprovedRightAspectRatio=1.37
+LeftUvEllipseRadius=0.36,0.24
+RightUvEllipseRadius=0.29,0.24
+EllipseEdge=Smoothstep:0.82,1.0
+SignedDepthGuard=2.5
+ApprovedTexturesChanged=False
+ApprovedCentersChanged=False
+ApprovedProjectionSizesChanged=False
+ProjectionBasis=RetainedEyeCentersCrossModelUp
+FormerTargetViewProjectionRemoved=True
+RuntimeVisualReviewRequired=True
+SceneChanged=False

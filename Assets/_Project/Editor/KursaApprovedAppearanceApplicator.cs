@@ -14,8 +14,6 @@ namespace Bellerophon.Editor.KursaCargoRunScene
 {
     internal static class KursaApprovedAppearanceApplicator
     {
-        private const string Revision =
-            "USER_APPROVED_RIGHT_ARM_THIGH_CLEARANCE_BASE_POSE";
         private const string ScenePath =
             "Assets/_Project/Scenes/CargoRunMvp.unity";
         private const string PlacementRootName =
@@ -50,11 +48,11 @@ namespace Bellerophon.Editor.KursaCargoRunScene
         private const string ExpectedApprovedFbxSha256 =
             "6BEC48F1822B4815ACD18E40006BD8D0567B5E4E67611A692B12F038A3942F9E";
         private const string ExpectedRuntimeProjectionFbxSha256 =
-            "D9F30E87DE6C8D2438D8A8C56D7CD1E394E8F3E6CD15248A1F69CFB8F62472E9";
+            "7C39FC6B7587E66A73899C282ABAFAC7671ADEFF84EC2304548795EF6A9E639C";
         private const int ExpectedSlots = 12;
         private const int ApprovedSampleVertices = 2109;
         private const int ExpectedUnityImportedVertices = 3372;
-        private const int ExpectedUnityRuntimeVertices = 3377;
+        private const int ExpectedUnityRuntimeVertices = 3376;
         private const int ExpectedTriangles = 3913;
         private const int ExpectedBones = 24;
 
@@ -78,10 +76,7 @@ namespace Bellerophon.Editor.KursaCargoRunScene
         {
             "LeftArm",
             "LeftForeArm",
-            "LeftHand",
-            "RightArm",
-            "RightForeArm",
-            "RightHand"
+            "LeftHand"
         };
 
         private static readonly MaterialDefinition[] MaterialDefinitions =
@@ -159,7 +154,6 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             WriteReport(result, "APPLY_PASS");
             Debug.Log(
                 "KursaApprovedAppearanceApplied Result=PASS" +
-                ", Revision=" + Revision +
                 ", Slots=" + result.SlotCount +
                 ", MaterialsPerRenderer=" + result.MaterialCount +
                 ", Vertices=" + result.VertexCount +
@@ -214,7 +208,6 @@ namespace Bellerophon.Editor.KursaCargoRunScene
 
             Debug.Log(
                 "KursaApprovedAppearanceInspected Result=PASS" +
-                ", Revision=" + Revision +
                 ", ActiveScene=" + scene.path +
                 ", Slots=" + result.SlotCount +
                 ", MaterialsPerRenderer=" + result.MaterialCount +
@@ -271,7 +264,6 @@ namespace Bellerophon.Editor.KursaCargoRunScene
 
             Debug.Log(
                 "KursaApprovedAppearanceReviewCaptured Result=PASS" +
-                ", Revision=" + Revision +
                 ", Image=" + CaptureRelativePath +
                 ", Left=ApprovedBlenderSample" +
                 ", Right=UnityApprovedAppearance" +
@@ -877,10 +869,10 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                         approved.bones[index].name + " for " + label + ".");
                 }
             }
-            if (changedBindPoses != allowedBoneNames.Count)
+            if (changedBindPoses != 3)
             {
                 throw new InvalidOperationException(
-                    "Kursa base-pose edit must change exactly the approved six bilateral arm bind poses for " +
+                    "Kursa base-pose edit must change exactly the approved three left-arm bind poses for " +
                     label + ". Changed=" + changedBindPoses + ".");
             }
 
@@ -1721,7 +1713,7 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 report.unauthorized_changed_vertices != 0 ||
                 report.changed_pose_vertices <= 0 ||
                 report.changed_left_arm_vertices <= 0 ||
-                report.changed_right_arm_vertices <= 0 ||
+                report.changed_right_arm_vertices != 0 ||
                 !report.topology_material_uv0_preserved_after_pose ||
                 !report.skin_weights_preserved_after_pose ||
                 report.changed_rest_bones == null ||
@@ -1741,13 +1733,12 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 report.base_pose.shield_center_after.Length != 3 ||
                 report.base_pose.shield_center_after[2] <= 0f ||
                 report.base_pose.right_arm == null ||
-                Mathf.Abs(report.base_pose.right_arm.extension_ratio - 0.95f) > 0.000001f ||
-                Mathf.Abs(report.base_pose.right_arm.outward_offset - 16f) > 0.000001f ||
-                Mathf.Abs(report.base_pose.right_arm.target_thigh_clearance - 1f) > 0.000001f ||
-                report.base_pose.right_arm.target_upper_down_angle_degrees > 30f ||
-                report.base_pose.right_arm.target_forearm_down_angle_degrees > 30f ||
-                report.base_pose.right_arm.final_mesh_centroid_lateral_gap >=
-                    report.base_pose.right_arm.source_mesh_centroid_lateral_gap ||
+                Mathf.Abs(report.base_pose.right_arm.extension_ratio - 1f) > 0.000001f ||
+                Mathf.Abs(report.base_pose.right_arm.outward_offset) > 0.000001f ||
+                Mathf.Abs(report.base_pose.right_arm.target_thigh_clearance) > 0.000001f ||
+                Mathf.Abs(
+                    report.base_pose.right_arm.final_mesh_centroid_lateral_gap -
+                    report.base_pose.right_arm.source_mesh_centroid_lateral_gap) > 0.000001f ||
                 report.base_pose.right_arm.thigh_surface_overlap_count != 0 ||
                 report.base_pose.right_arm.thigh_surface_clearance <
                     report.base_pose.right_arm.target_thigh_clearance ||
@@ -2360,7 +2351,6 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 new[]
                 {
                     "Result=" + status,
-                    "Revision=" + Revision,
                     "Scene=" + ScenePath,
                     "PlacementRoot=" + PlacementRootName,
                     "Slots=" + result.SlotCount,
@@ -2379,7 +2369,7 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                     "TopologyMaterialUv0SkinWeightsPreserved=True",
                     "ChangedBlenderVertices=" + result.ChangedVertices,
                     "ChangedBindPoses=" + result.ChangedBindPoses +
-                        ":LeftArm,LeftForeArm,LeftHand,RightArm,RightForeArm,RightHand",
+                        ":LeftArm,LeftForeArm,LeftHand",
                     "EmbeddedAnimationLocalChannelsPreserved=True",
                     "ShieldBasePoseForwardAngleDegrees=" +
                         result.ShieldForwardAngleDegrees.ToString(
@@ -2434,7 +2424,7 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                     "EyeLeft=Center:3.343094,151.815475,24.579956;Size:8.348116,8.988050;Depth:2.05;Polygon:3801",
                     "EyeRight=Center:5.916458,152.454803,19.357758;Size:10.076670,8.897684;Depth:2.05;Polygon:3627",
                     "EyeProjectionNormal=0.552875,-0.117583,0.824926",
-                    "SceneTransformsChanged=LeftArm,LeftForeArm,LeftHand,RightArm,RightForeArm,RightHandOnly",
+                    "SceneTransformsChanged=LeftArm,LeftForeArm,LeftHandOnly",
                     "OtherSceneRootsChanged=False"
                 },
                 new UTF8Encoding(false));

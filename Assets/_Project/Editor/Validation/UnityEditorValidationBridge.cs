@@ -261,12 +261,6 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.KursaCargoRunScene.KursaMoveAnimationTool.InspectKursaMoveAnimation,
                         "Kursa move animation inspected.");
                     break;
-                case "MeasureKursaMoveAdjustment":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.KursaCargoRunScene.KursaMoveAnimationTool.MeasureKursaMoveAdjustment,
-                        "Kursa move adjustment measured.");
-                    break;
                 case "CaptureKursaMoveAnimationReview":
                     RunSynchronous(
                         request,
@@ -285,11 +279,53 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.KursaCargoRunScene.KursaForwardHeadAlignmentTool.InspectKursaForwardHeadAlignment,
                         "Kursa forward head alignment inspected.");
                     break;
+                case "CaptureKursaForwardHeadAlignmentDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaForwardHeadAlignmentTool.CaptureKursaForwardHeadAlignmentDiagnostic,
+                        "Kursa forward head alignment diagnostic captured.");
+                    break;
                 case "CaptureKursaForwardHeadAlignmentReview":
                     RunSynchronous(
                         request,
                         global::Bellerophon.Editor.KursaCargoRunScene.KursaForwardHeadAlignmentTool.CaptureKursaForwardHeadAlignmentReview,
                         "Kursa forward head alignment review captured.");
+                    break;
+                case "InspectKursaEyeShapeCorrection":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaForwardHeadAlignmentTool.InspectKursaEyeShapeCorrection,
+                        "Kursa eye shape correction inspected.");
+                    break;
+                case "CaptureKursaEyeShapeDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaForwardHeadAlignmentTool.CaptureKursaEyeShapeDiagnostic,
+                        "Kursa eye shape diagnostic captured.");
+                    break;
+                case "CaptureKursaEyeShapeReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaForwardHeadAlignmentTool.CaptureKursaEyeShapeReview,
+                        "Kursa eye shape review captured.");
+                    break;
+                case "InspectKursaChinAlignment":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaForwardHeadAlignmentTool.InspectKursaChinAlignment,
+                        "Kursa chin alignment inspected.");
+                    break;
+                case "CaptureKursaChinAlignmentDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaForwardHeadAlignmentTool.CaptureKursaChinAlignmentDiagnostic,
+                        "Kursa chin alignment diagnostic captured.");
+                    break;
+                case "CaptureKursaChinAlignmentReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaForwardHeadAlignmentTool.CaptureKursaChinAlignmentReview,
+                        "Kursa chin alignment review captured.");
                     break;
                 case "ValidatePahurGroundedIdleAnimation":
                     RunSynchronous(

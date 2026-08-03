@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>쿠르사 몸통·양팔·얼굴 정면 정렬 아트 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --page: #151c17;
+      --panel: #202a23;
+      --panel-deep: #101611;
+      --line: #435246;
+      --line-strong: #71816f;
+      --text: #edf2e9;
+      --muted: #c8d2c4;
+      --accent: #9fc7a1;
+      --warning: #e3c66c;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.014) 1px, transparent 1px),
+        var(--page);
+      background-size: 32px 32px;
+      color: var(--text);
+    }
+    main { width: min(1240px, calc(100% - 40px)); margin: 0 auto; padding: 34px 0 64px; }
+    h1, h2, h3 { margin: 0; line-height: 1.25; letter-spacing: -.025em; }
+    h1 { max-width: none; font-size: clamp(30px, 4vw, 46px); }
+    h2 { margin-bottom: 15px; font-size: clamp(22px, 3vw, 31px); }
+    h3 { font-size: 18px; }
+    p, li { line-height: 1.65; }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    code { color: #d7e7d2; overflow-wrap: anywhere; }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .lede { max-width: 980px; margin: 18px 0 0; color: var(--muted); font-size: 16px; }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 20px;
+      padding: 9px 12px;
+      border: 1px solid #776b3a;
+      background: #302b18;
+      color: #f2dd95;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .035em;
+    }
+    .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--warning); box-shadow: 0 0 12px rgba(227,198,108,.65); }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 28px 0 0;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+    nav a { padding: 7px 10px; border: 1px solid var(--line); background: rgba(16,22,17,.7); color: var(--muted); font-size: 13px; text-decoration: none; }
+    nav a:hover { border-color: var(--accent); color: var(--text); }
+
+    section { margin-top: 42px; }
+    .comparison {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .comparison > h3, .comparison > p { grid-column: 1 / -1; }
+    .comparison > p { margin: -4px 0 0; color: var(--muted); }
+    .comparison.single { grid-template-columns: 1fr; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    figure { margin: 0; padding: 10px; border: 1px solid #364238; background: var(--panel-deep); }
+    img { display: block; width: 100%; height: auto; background: #59605d; }
+    figcaption { margin-top: 9px; color: var(--muted); font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
+
+    .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+    .fact { padding: 16px; border-top: 2px solid var(--line-strong); background: var(--panel); }
+    .fact strong { display: block; margin-bottom: 8px; color: var(--accent); font-size: 22px; }
+    .fact span { color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+    .notes { padding: 18px 20px; border: 1px solid var(--line); background: var(--panel); }
+    .notes ul { margin: 0; padding-left: 20px; }
+    .notes li + li { margin-top: 8px; }
+    .files { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .files a { padding: 9px 12px; border: 1px solid var(--line); background: var(--panel-deep); text-decoration: none; }
+    .files a:hover { border-color: var(--accent); }
+
+    @media (max-width: 820px) {
+      main { width: min(100% - 24px, 1240px); padding-top: 22px; }
+      .comparison { grid-template-columns: 1fr; }
+      .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 520px) {
+      .facts { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">Kursa · Front Alignment Review</div>
+    <h1>쿠르사 몸통·양팔·얼굴 정면 정렬 아트 샘플</h1>
+    <p class="lede">현재 Unity 런타임 FBX의 메시를 그대로 유지한 채 실제 양쪽 어깨 위치에서 팔 연결을 잡고, 기존 Head 본 자세와 기존 얼굴 재질의 눈 투영만으로 양눈·미간·코·턱이 정면에서 분명하게 보이도록 조정한 승인용 샘플입니다. 몸통은 복구된 상태의 정면 편차가 작아 큰 회전을 추가하지 않았습니다.</p>
+    <div class="status">사용자 검토 필요 · Unity 미적용</div>
+    <nav aria-label="페이지 내 이동">
+      <a href="#core">핵심 비교</a>
+      <a href="#angles">사선 검토</a>
+      <a href="#details">세부 렌더</a>
+      <a href="#decision">판정 기준</a>
+      <a href="#files">산출물</a>
+    </nav>
+  </header>
+
+  <section id="core">
+    <h2>기준·현재·정렬 후보 비교</h2>
+    <article class="comparison single">
+      <h3>전체 정면 실루엣</h3>
+      <p>원본 기준 이미지, 현재 정적 자세, 정면 정렬 후보를 같은 판에서 비교합니다.</p>
+      <figure>
+        <img src="renders/13_reference_current_candidate.png" alt="쿠르사 원본 기준, 현재 자세, 정면 정렬 후보 전체 비교">
+        <figcaption>renders/13_reference_current_candidate.png</figcaption>
+      </figure>
+    </article>
+    <article class="comparison single">
+      <h3>상체·양팔·얼굴 확대</h3>
+      <p>방패 없는 오른팔의 실제 어깨 연결과 얼굴 중심선 변화를 확대해서 확인합니다.</p>
+      <figure>
+        <img src="renders/14_upper_face_comparison.png" alt="쿠르사 상체 양팔 얼굴 확대 비교" loading="lazy">
+        <figcaption>renders/14_upper_face_comparison.png</figcaption>
+      </figure>
+    </article>
+
+    <div class="facts" aria-label="핵심 작업 수치">
+      <div class="fact"><strong>-29.3302°</strong><span>원본 메시를 단계별로 직접 비교해 확정한 최종 Head 본 회전 보정</span></div>
+      <div class="fact"><strong>+22° 시각 보정</strong><span>양눈 중점 아래로 콧등과 턱이 가장 곧게 들어오는 정면 후보</span></div>
+      <div class="fact"><strong>2109점·3913면 보존</strong><span>정점 이동·면 삭제·토폴로지 변경·대체 얼굴 메시 생성 없이 원본 런타임 메시 유지</span></div>
+      <div class="fact"><strong>기존 눈 투영만 조정</strong><span>두 투영 중심 높이를 맞추고 곡면 노출 차이만 재질에서 보상</span></div>
+      <div class="fact"><strong>12개 미적용</strong><span>Unity에 배치된 쿠르사 개체와 런타임 자산은 아직 변경하지 않음</span></div>
+    </div>
+  </section>
+
+  <section id="angles">
+    <h2>좌우 사선과 방패 뒤 연결</h2>
+    <article class="comparison single">
+      <h3>후보 ±25도 검토</h3>
+      <p>방패 표시 상태와 방패를 숨긴 상태를 함께 두어, 얼굴 형상과 방패 팔의 어깨–팔꿈치–손목 연결을 확인합니다.</p>
+      <figure>
+        <img src="renders/15_candidate_yaw_review.png" alt="쿠르사 정면 정렬 후보 좌우 25도 및 방패 숨김 검토" loading="lazy">
+        <figcaption>renders/15_candidate_yaw_review.png</figcaption>
+      </figure>
+    </article>
+    <div class="grid">
+      <figure><img src="renders/10_candidate_upper_front_no_shield.png" alt="방패를 숨긴 쿠르사 후보 상체 정면" loading="lazy"><figcaption>방패 뒤 왼팔 연결: renders/10_candidate_upper_front_no_shield.png</figcaption></figure>
+      <figure><img src="renders/11_candidate_yaw_minus25_no_shield.png" alt="방패를 숨긴 쿠르사 후보 마이너스 25도" loading="lazy"><figcaption>-25도: renders/11_candidate_yaw_minus25_no_shield.png</figcaption></figure>
+      <figure><img src="renders/12_candidate_yaw_plus25_no_shield.png" alt="방패를 숨긴 쿠르사 후보 플러스 25도" loading="lazy"><figcaption>+25도: renders/12_candidate_yaw_plus25_no_shield.png</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="details">
+    <h2>전체 세부 렌더</h2>
+    <div class="grid">
+      <figure><img src="renders/01_current_front.png" alt="현재 쿠르사 정면" loading="lazy"><figcaption>현재 전체 정면: renders/01_current_front.png</figcaption></figure>
+      <figure><img src="renders/04_candidate_front.png" alt="정렬 후보 쿠르사 정면" loading="lazy"><figcaption>후보 전체 정면: renders/04_candidate_front.png</figcaption></figure>
+      <figure><img src="renders/02_current_upper_front.png" alt="현재 쿠르사 상체 정면" loading="lazy"><figcaption>현재 상체: renders/02_current_upper_front.png</figcaption></figure>
+      <figure><img src="renders/05_candidate_upper_front.png" alt="정렬 후보 쿠르사 상체 정면" loading="lazy"><figcaption>후보 상체: renders/05_candidate_upper_front.png</figcaption></figure>
+      <figure><img src="renders/03_current_face_front.png" alt="현재 쿠르사 얼굴 정면" loading="lazy"><figcaption>현재 얼굴: renders/03_current_face_front.png</figcaption></figure>
+      <figure><img src="renders/06_candidate_face_front.png" alt="정렬 후보 쿠르사 얼굴 정면" loading="lazy"><figcaption>후보 얼굴: renders/06_candidate_face_front.png</figcaption></figure>
+      <figure><img src="renders/07_candidate_yaw_minus25.png" alt="방패를 표시한 후보 마이너스 25도" loading="lazy"><figcaption>방패 포함 -25도: renders/07_candidate_yaw_minus25.png</figcaption></figure>
+      <figure><img src="renders/08_candidate_yaw_plus25.png" alt="방패를 표시한 후보 플러스 25도" loading="lazy"><figcaption>방패 포함 +25도: renders/08_candidate_yaw_plus25.png</figcaption></figure>
+      <figure><img src="renders/09_candidate_landmarks_front.png" alt="쿠르사 후보 양쪽 어깨 팔꿈치 손목 기준점" loading="lazy"><figcaption>관절 기준점: renders/09_candidate_landmarks_front.png</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="decision">
+    <h2>사용자 판정 기준</h2>
+    <div class="notes">
+      <ul>
+        <li><strong>방패 없는 오른팔:</strong> 본 이름만이 아니라 실제 오른쪽 어깨 캡 아래에서 팔이 끊김 없이 몸 옆으로 이어지는지 확인합니다.</li>
+        <li><strong>방패를 든 왼팔:</strong> 실제 왼쪽 어깨에서 연결되고 기존 손잡이 그립과 방패 방향을 유지하는지 확인합니다.</li>
+        <li><strong>얼굴:</strong> 원본 얼굴 메시에서 양눈 투영의 높이와 화면 크기가 맞고 미간·콧등·턱이 한 중앙축에 놓이며, 좌우 25도에서도 눈이 얼굴에서 이탈하지 않는지 확인합니다.</li>
+        <li><strong>몸통:</strong> 큰 추가 회전 없이 정면 실루엣이 유지되고 양팔과의 연결이 자연스러운지 확인합니다.</li>
+        <li><strong>적용 상태:</strong> 이 페이지는 승인 전 <code>artSample</code>이며 Unity FBX·프리팹·애니메이션·배치된 12개 쿠르사에는 아직 반영하지 않았습니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="files">
+    <h2>검토 산출물</h2>
+    <p class="lede">편집 원본과 분석 기록을 함께 확인할 수 있습니다. Unity 적용은 이 샘플 승인 후 별도 작업으로 진행합니다.</p>
+    <div class="files">
+      <a href="blender/Kursa_FrontAlignment_Sample.blend">Blender 샘플</a>
+      <a href="KURSA_FRONT_ALIGNMENT_SAMPLE.json">분석·변경 기록</a>
+      <a href="APPROVAL_STATUS.json">승인 상태</a>
+      <a href="README.md">검토 설명서</a>
+    </div>
+  </section>
+</main>
+</body>
+</html>

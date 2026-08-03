@@ -37,8 +37,9 @@ Shader "Bellerophon/Kursa/ApprovedAppearance"
             Tags { "LightMode" = "UniversalForward" }
 
             HLSLPROGRAM
-            #pragma target 3.5
+            #pragma target 4.5
             #pragma vertex Vert
+            #pragma geometry EyeGeometry
             #pragma fragment Frag
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
@@ -107,6 +108,8 @@ Shader "Bellerophon/Kursa/ApprovedAppearance"
                 float4 shadowCoord : TEXCOORD6;
                 float4 eyeProjectionUv : TEXCOORD7;
                 float2 eyeSignedDepth : TEXCOORD8;
+                half eyeLens : TEXCOORD9;
+                float2 lensUv : TEXCOORD10;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -134,9 +137,128 @@ Shader "Bellerophon/Kursa/ApprovedAppearance"
                     input.eyeLeftProjection,
                     input.eyeRightProjection);
                 output.eyeSignedDepth = input.eyeSignedDepth;
+                output.eyeLens = 0.0h;
+                output.lensUv = 0.0;
                 output.fogFactor = ComputeFogFactor(positions.positionCS.z);
                 output.shadowCoord = GetShadowCoord(positions);
                 return output;
+            }
+
+            bool EyeCenterBarycentricForward(
+                float2 a,
+                float2 b,
+                float2 c,
+                out float3 barycentric)
+            {
+                const float2 center = float2(0.5, 0.5);
+                float2 ab = b - a;
+                float2 ac = c - a;
+                float2 ap = center - a;
+                float determinant = ab.x * ac.y - ab.y * ac.x;
+                if (abs(determinant) < 1e-8)
+                {
+                    barycentric = 0.0;
+                    return false;
+                }
+                float inverse = 1.0 / determinant;
+                float weightB = (ap.x * ac.y - ap.y * ac.x) * inverse;
+                float weightC = (ab.x * ap.y - ab.y * ap.x) * inverse;
+                barycentric = float3(1.0 - weightB - weightC, weightB, weightC);
+                return all(barycentric >= -1e-4) &&
+                       all(barycentric <= 1.0001);
+            }
+
+            void EmitRoundEyeForward(
+                Varyings source,
+                float3 centerWS,
+                inout TriangleStream<Varyings> stream)
+            {
+                float3 toCamera = normalize(GetCameraPositionWS() - centerWS);
+                float3 cameraRight = normalize(UNITY_MATRIX_I_V[0].xyz);
+                float3 cameraUp = normalize(UNITY_MATRIX_I_V[1].xyz);
+                centerWS += toCamera * 0.0025;
+                const float radius = 0.0045;
+                const float2 corners[4] =
+                {
+                    float2(-1.0, -1.0),
+                    float2(-1.0,  1.0),
+                    float2( 1.0, -1.0),
+                    float2( 1.0,  1.0)
+                };
+                [unroll]
+                for (int index = 0; index < 4; index++)
+                {
+                    Varyings output = (Varyings)0;
+                    UNITY_TRANSFER_INSTANCE_ID(source, output);
+                    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
+                    float2 corner = corners[index];
+                    float3 positionWS = centerWS +
+                        cameraRight * corner.x * radius +
+                        cameraUp * corner.y * radius;
+                    output.positionCS = TransformWorldToHClip(positionWS);
+                    output.positionWS = positionWS;
+                    output.eyeLens = 1.0h;
+                    output.lensUv = corner;
+                    stream.Append(output);
+                }
+                stream.RestartStrip();
+            }
+
+            [maxvertexcount(11)]
+            void EyeGeometry(
+                triangle Varyings input[3],
+                inout TriangleStream<Varyings> stream)
+            {
+                [unroll]
+                for (int index = 0; index < 3; index++)
+                    stream.Append(input[index]);
+                stream.RestartStrip();
+
+                if (_FeatureMode <= 2.5h || _FeatureMode >= 3.5h)
+                    return;
+
+                float3 barycentric;
+                if (EyeCenterBarycentricForward(
+                        input[0].eyeProjectionUv.xy,
+                        input[1].eyeProjectionUv.xy,
+                        input[2].eyeProjectionUv.xy,
+                        barycentric))
+                {
+                    float depth = dot(float3(
+                        input[0].eyeSignedDepth.x,
+                        input[1].eyeSignedDepth.x,
+                        input[2].eyeSignedDepth.x), barycentric);
+                    if (abs(depth) < 0.001)
+                    {
+                        EmitRoundEyeForward(
+                            input[0],
+                            input[0].positionWS * barycentric.x +
+                            input[1].positionWS * barycentric.y +
+                            input[2].positionWS * barycentric.z,
+                            stream);
+                    }
+                }
+
+                if (EyeCenterBarycentricForward(
+                        input[0].eyeProjectionUv.zw,
+                        input[1].eyeProjectionUv.zw,
+                        input[2].eyeProjectionUv.zw,
+                        barycentric))
+                {
+                    float depth = dot(float3(
+                        input[0].eyeSignedDepth.y,
+                        input[1].eyeSignedDepth.y,
+                        input[2].eyeSignedDepth.y), barycentric);
+                    if (abs(depth) < 0.001)
+                    {
+                        EmitRoundEyeForward(
+                            input[0],
+                            input[0].positionWS * barycentric.x +
+                            input[1].positionWS * barycentric.y +
+                            input[2].positionWS * barycentric.z,
+                            stream);
+                    }
+                }
             }
 
             half InUnitSquare(float2 uv)
@@ -195,31 +317,6 @@ Shader "Bellerophon/Kursa/ApprovedAppearance"
                 emission += tint * factor * emissionStrength;
             }
 
-            void ApplyEye(
-                float2 overlayUv,
-                float signedDepth,
-                half isRight,
-                inout half3 albedo,
-                inout half3 emission)
-            {
-                half4 overlay = isRight < 0.5h
-                    ? SAMPLE_TEXTURE2D(
-                        _EyeLeft,
-                        sampler_EyeLeft,
-                        saturate(overlayUv))
-                    : SAMPLE_TEXTURE2D(
-                        _EyeRight,
-                        sampler_EyeRight,
-                        saturate(overlayUv));
-                // Signed depth is normalized by the exact approved depth 2.05
-                // when the frame-1 projection channels are exported from Blender.
-                half depthMask = 1.0h - step(1.0, abs(signedDepth));
-                half factor = overlay.a * InUnitSquare(overlayUv) * depthMask;
-                half3 tint = ApprovedBlueTint(overlay.rgb);
-                albedo = lerp(albedo, tint, factor);
-                emission += tint * factor * 2.2h;
-            }
-
             half3 ApplyApprovedFeatures(
                 float3 positionOS,
                 float2 uv,
@@ -271,18 +368,8 @@ Shader "Bellerophon/Kursa/ApprovedAppearance"
                 }
                 else if (_FeatureMode > 2.5h && _FeatureMode < 3.5h)
                 {
-                    ApplyEye(
-                        eyeProjectionUv.xy,
-                        eyeSignedDepth.x,
-                        0.0h,
-                        albedo,
-                        emission);
-                    ApplyEye(
-                        eyeProjectionUv.zw,
-                        eyeSignedDepth.y,
-                        1.0h,
-                        albedo,
-                        emission);
+                    // The round lenses are emitted by the geometry pass from
+                    // the existing UV projection centers and signed depth.
                 }
 
                 return albedo;
@@ -360,6 +447,30 @@ Shader "Bellerophon/Kursa/ApprovedAppearance"
             {
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
+
+                if (input.eyeLens > 0.5h)
+                {
+                    float distanceFromCenter = length(input.lensUv);
+                    clip(1.0 - distanceFromCenter);
+                    half edge = 1.0h - smoothstep(
+                        0.82h,
+                        1.0h,
+                        distanceFromCenter);
+                    half core = 1.0h - smoothstep(
+                        0.0h,
+                        0.72h,
+                        distanceFromCenter);
+                    half highlight = 1.0h - smoothstep(
+                        0.0h,
+                        0.24h,
+                        length(input.lensUv - float2(-0.24, 0.28)));
+                    half3 lensColor = lerp(
+                        half3(0.015h, 0.07h, 0.19h),
+                        half3(0.07h, 0.42h, 1.0h),
+                        core);
+                    lensColor += highlight * half3(0.48h, 0.72h, 1.0h);
+                    return half4(lensColor, edge);
+                }
 
                 float2 tiledUv = input.uv * _TextureScale;
                 half3 emission = half3(0, 0, 0);

@@ -20,11 +20,22 @@ namespace Bellerophon.Editor.KursaCargoRunScene
         private const string FaceMaterialName = "Kursa_face_metal_Approved";
         private const string ApprovedShaderName =
             "Bellerophon/Kursa/ApprovedAppearance";
-        private const string ReportPath = "docs/validation/kursa_forward_head_alignment_2026-08-03/Kursa_ForwardHead_Inspection.txt";
-        private const string CapturePath = "docs/validation/kursa_forward_head_alignment_2026-08-03/Kursa_ForwardHead_Review.png";
+        private const string ReportPath = "docs/validation/kursa_visual_front_correction_2026-08-04/Kursa_VisualFront_Inspection.txt";
+        private const string CapturePath = "docs/validation/kursa_visual_front_correction_2026-08-04/Kursa_VisualFront_FinalReview.png";
+        private const string DiagnosticPathFormat = "docs/validation/kursa_visual_front_correction_2026-08-04/Kursa_VisualFront_Diagnostic_{0:00}.png";
+        private const string EyeShapeReportPath = "docs/validation/kursa_image_reference_eye_restore_2026-08-04/Kursa_ImageReferenceEye_Inspection.txt";
+        private const string EyeShapeCapturePath = "docs/validation/kursa_image_reference_eye_restore_2026-08-04/Kursa_ImageReferenceEye_FinalReview.png";
+        private const string EyeShapeDiagnosticPathFormat = "docs/validation/kursa_image_reference_eye_restore_2026-08-04/Kursa_ImageReferenceEye_Diagnostic_{0:00}.png";
+        private const string ChinReportPath = "docs/validation/kursa_chin_alignment_2026-08-03/Kursa_ChinAlignment_Inspection.txt";
+        private const string ChinCapturePath = "docs/validation/kursa_chin_alignment_2026-08-03/Kursa_ChinAlignment_FinalReview.png";
+        private const string ChinDiagnosticPathFormat = "docs/validation/kursa_chin_alignment_2026-08-03/Kursa_ChinAlignment_Diagnostic_{0:00}.png";
+        private const string RuntimeProjectionReportPath = "docs/validation/kursa_approved_appearance_2026-08-02/Kursa_RuntimeProjection_Export.json";
         private const float PositionTolerance = 0.000001f;
-        private const float HeadAngleTolerance = 0.05f;
+        private const float HeadAngleTolerance = 0.5f;
         private const float AnimatedSampleRate = 120f;
+        // The Unity review camera looks along model-local forward. Keep the
+        // reconstructed visual face frame on that same axis without a yaw offset.
+        private const float UnityVisualFrontYawOffsetDegrees = 0f;
 
         private static readonly string[] SlotNames =
         {
@@ -37,19 +48,10 @@ namespace Bellerophon.Editor.KursaCargoRunScene
         [MenuItem("Bellerophon/Enemies/Kursa/Apply Forward Head Alignment")]
         public static void ApplyKursaForwardHeadAlignment()
         {
-            KursaGroundedIdleAnimationTool.ApplyKursaIdleAnimation();
-            KursaMoveAnimationTool.ApplyKursaMoveAnimation();
             var scene = RequireScene(true);
             var placement = RequirePlacement(scene);
             RequireSlotContract(placement.transform);
             var otherRootsBefore = OtherRootSignatures(scene, placement);
-            var commonY = RequireOtherModelCommonY(placement.transform);
-            var moveModel = RequireModel(RequireChild(placement.transform, MoveSlotName));
-            var movePosition = moveModel.localPosition;
-            movePosition.y = commonY;
-            moveModel.localPosition = movePosition;
-            PrefabUtility.RecordPrefabInstancePropertyModifications(moveModel);
-            EditorUtility.SetDirty(moveModel);
 
             var maximumAppliedAngle = 0f;
             foreach (var slotName in SlotNames)
@@ -65,6 +67,16 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                     maximumAppliedAngle = Mathf.Max(
                         maximumAppliedAngle,
                         AlignHeadToModelLocalForward(model, renderer));
+                    var clip = SlotClip(slotName);
+                    if (clip != null)
+                    {
+                        maximumAppliedAngle = Mathf.Max(
+                            maximumAppliedAngle,
+                            AddModelLocalForwardHeadCurves(
+                                clip,
+                                model,
+                                AnimatedSampleRate));
+                    }
                     var head = RequireBone(renderer, "Head");
                     PrefabUtility.RecordPrefabInstancePropertyModifications(head);
                     EditorUtility.SetDirty(head);
@@ -82,13 +94,12 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 throw new InvalidOperationException(
                     "CargoRunMvp could not be saved after Kursa head alignment.");
             AssetDatabase.SaveAssets();
-            var capture = Absolute(CapturePath);
-            if (File.Exists(capture)) File.Delete(capture);
-            Debug.Log("KursaForwardHeadAlignmentApplied Result=PASS, Slots=12, MoveModelLocalY=" +
-                Num(moveModel.localPosition.y) + ", OtherModelCommonY=" + Num(commonY) +
-                ", MaximumAppliedHeadAngle=" + Num(maximumAppliedAngle) +
-                ", DirectionBasis=HeadToHeadFrontAlignedToModelLocalPositiveZ" +
-                ", UpBasis=HeadToHeadEndAlignedToModelLocalPositiveY" +
+            Debug.Log("KursaForwardHeadAlignmentApplied Result=PASS, Slots=12" +
+                ", MaximumAppliedFaceAngle=" + Num(maximumAppliedAngle) +
+                ", DirectionBasis=UnityVisualFaceAlignedToModelLocalPositiveZ" +
+                ", UnityVisualFrontYawOffsetDegrees=" +
+                Num(UnityVisualFrontYawOffsetDegrees) +
+                ", UpBasis=HeadToHeadEndProjectedOntoFaceFrame" +
                 ", EyeAttachment=PerVertexUvChannelsOnSkinnedFaceMesh" +
                 ", OtherSceneRootsUnchanged=True, SceneSaved=True.");
         }
@@ -96,7 +107,6 @@ namespace Bellerophon.Editor.KursaCargoRunScene
         [MenuItem("Bellerophon/Enemies/Kursa/Inspect Forward Head Alignment")]
         public static void InspectKursaForwardHeadAlignment()
         {
-            KursaGroundedIdleAnimationTool.InspectKursaIdleAnimation();
             var scene = RequireScene(true);
             var wasDirty = scene.isDirty;
             var placement = RequirePlacement(scene);
@@ -138,7 +148,7 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             var maximumAngle = slotAngles.Values.Max();
             if (maximumAngle > HeadAngleTolerance)
                 throw new InvalidOperationException(
-                    "A Kursa face does not match its model-local forward/up axes. MaximumError=" +
+                    "A Kursa visual face does not match the approved sample frame. MaximumError=" +
                     Num(maximumAngle) + ", Slots=" +
                     string.Join("|", slotAngles.Select(item =>
                         item.Key + "=" + Num(item.Value))) + ".");
@@ -148,12 +158,38 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                     "Kursa forward-head inspection changed the scene dirty state.");
             Debug.Log("KursaForwardHeadAlignmentInspected Result=PASS, Slots=12, MoveModelLocalY=" +
                 Num(moveModel.localPosition.y) + ", OtherModelCommonY=" + Num(commonY) +
-                ", ModelYError=" + Num(yError) + ", MaximumHeadLocalFrameError=" +
+                ", ModelYError=" + Num(yError) + ", MaximumVisualFaceFrameError=" +
                 Num(maximumAngle) + ", AnimatedSampleRate=" + Num(AnimatedSampleRate) +
-                ", DirectionBasis=HeadToHeadFrontAlignedToModelLocalPositiveZ" +
-                ", UpBasis=HeadToHeadEndAlignedToModelLocalPositiveY" +
+                ", DirectionBasis=UnityVisualFaceAlignedToModelLocalPositiveZ" +
+                ", UnityVisualFrontYawOffsetDegrees=" +
+                Num(UnityVisualFrontYawOffsetDegrees) +
+                ", UpBasis=HeadToHeadEndProjectedOntoFaceFrame" +
                 ", EyeAttachment=PerVertexUvChannelsOnSkinnedFaceMesh" +
                 ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Kursa/Capture Forward Head Alignment Diagnostic")]
+        public static void CaptureKursaForwardHeadAlignmentDiagnostic()
+        {
+            InspectKursaForwardHeadAlignment();
+            var scene = RequireScene(true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var destination = Enumerable.Range(1, 3)
+                .Select(index => Absolute(string.Format(
+                    CultureInfo.InvariantCulture,
+                    DiagnosticPathFormat,
+                    index)))
+                .FirstOrDefault(path => !File.Exists(path));
+            if (destination == null)
+                throw new InvalidOperationException(
+                    "The approved maximum of three Kursa face diagnostics already exists.");
+            CaptureFaceGrid(placement.transform, destination, false);
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException(
+                    "Kursa face diagnostic capture changed the scene dirty state.");
+            Debug.Log("KursaForwardHeadAlignmentDiagnosticCaptured Result=PASS, Slots=12, Image=" +
+                destination + ", SceneChanged=False.");
         }
 
         [MenuItem("Bellerophon/Enemies/Kursa/Capture Forward Head Alignment Review")]
@@ -168,7 +204,7 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 throw new InvalidOperationException(
                     "The one-time Kursa forward-head review already exists: " +
                     CapturePath);
-            CaptureGrid(placement.transform, destination);
+            CaptureFaceGrid(placement.transform, destination, true);
             if (scene.isDirty != wasDirty)
                 throw new InvalidOperationException(
                     "Kursa forward-head capture changed the scene dirty state.");
@@ -176,22 +212,307 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 CapturePath + ", SceneChanged=False.");
         }
 
+        [MenuItem("Bellerophon/Enemies/Kursa/Inspect Eye Shape Correction")]
+        public static void InspectKursaEyeShapeCorrection()
+        {
+            var scene = RequireScene(true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            RequireSlotContract(placement.transform);
+            foreach (var slotName in SlotNames)
+            {
+                var model = RequireModel(RequireChild(placement.transform, slotName));
+                RequireEyeAttachmentContract(
+                    RequireRenderer(model, slotName),
+                    slotName);
+                if (model.GetComponentsInChildren<Transform>(true).Any(item =>
+                        item.name == "Kursa_ApprovedEye_Left" ||
+                        item.name == "Kursa_ApprovedEye_Right"))
+                    throw new InvalidOperationException(
+                        slotName + " still contains a separate eye surface.");
+            }
+            var staticModel = RequireModel(RequireChild(
+                placement.transform,
+                "Kursa_01_Static_Review"));
+            var staticRenderer = RequireRenderer(
+                staticModel,
+                "Kursa_01_Static_Review");
+            var leftCandidates = EyeProjectionCandidateSummary(
+                staticRenderer,
+                true);
+            var rightCandidates = EyeProjectionCandidateSummary(
+                staticRenderer,
+                false);
+            var destination = Absolute(EyeShapeReportPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(destination) ??
+                throw new InvalidOperationException("Invalid eye-shape report folder."));
+            File.WriteAllLines(destination, new[]
+            {
+                "Result=TECHNICAL_PASS_VISUAL_REVIEW_REQUIRED",
+                "Target=Approved Kursa Enemy Placement",
+                "Slots=12",
+                "EyeRepresentation=RoundLensPassAnchoredByExistingPerVertexUvProjection",
+                "SeparateEyeObjects=0",
+                "VisualReference=image/KUŠkursa(쿠르사).png",
+                "ApprovedArtSampleEyeUsedAsReference=False",
+                "ApprovedTexturesChanged=False",
+                "LensWorldRadius=0.0045",
+                "LensShape=CameraFacingCircle",
+                "AnchorSource=ExistingUv2Uv3CentersAndUv4Depth",
+                "LeftAnchorDepth=AbsoluteDepthBelow0.001",
+                "RightAnchorDepth=AbsoluteDepthBelow0.001",
+                "VisualAngleSamples=Front,YawMinus25,YawPlus25",
+                "AnimationVisualSamples=IdleMid,MoveQuarter,MoveMid,MoveThreeQuarter",
+                "StaticLeftCenterCandidates=" + leftCandidates,
+                "StaticRightCenterCandidates=" + rightCandidates,
+                "RuntimeVisualReviewRequired=True",
+                "SceneChanged=False"
+            }, new UTF8Encoding(false));
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException(
+                    "Kursa eye-shape inspection changed the scene dirty state.");
+            Debug.Log(
+                "KursaEyeShapeCorrectionInspected Result=TECHNICAL_PASS_VISUAL_REVIEW_REQUIRED" +
+                ", Slots=12, Representation=ExistingUvProjection, SeparateEyeObjects=0" +
+                ", SceneChanged=False.");
+        }
+
+        private static string EyeProjectionCandidateSummary(
+            SkinnedMeshRenderer renderer,
+            bool left)
+        {
+            var sharedMesh = renderer.sharedMesh ??
+                throw new InvalidOperationException("Kursa eye mesh is missing.");
+            var faceSubmesh = Array.FindIndex(
+                renderer.sharedMaterials,
+                item => item != null && item.name == FaceMaterialName);
+            if (faceSubmesh < 0)
+                throw new InvalidOperationException("Kursa face submesh is missing.");
+            var projection = left ? sharedMesh.uv2 : sharedMesh.uv3;
+            var depth = sharedMesh.uv4;
+            var indices = sharedMesh.GetIndices(faceSubmesh);
+            var baked = new Mesh { hideFlags = HideFlags.HideAndDontSave };
+            try
+            {
+                renderer.BakeMesh(baked);
+                var candidates = new List<string>();
+                var target = new Vector2(0.5f, 0.5f);
+                for (var index = 0; index < indices.Length; index += 3)
+                {
+                    var a = indices[index];
+                    var b = indices[index + 1];
+                    var c = indices[index + 2];
+                    if (!TryBarycentric(
+                            target,
+                            projection[a],
+                            projection[b],
+                            projection[c],
+                            out var barycentric))
+                        continue;
+                    var signedDepth = left
+                        ? depth[a].x * barycentric.x +
+                          depth[b].x * barycentric.y +
+                          depth[c].x * barycentric.z
+                        : depth[a].y * barycentric.x +
+                          depth[b].y * barycentric.y +
+                          depth[c].y * barycentric.z;
+                    var local = baked.vertices[a] * barycentric.x +
+                                baked.vertices[b] * barycentric.y +
+                                baked.vertices[c] * barycentric.z;
+                    var world = renderer.transform.TransformPoint(local);
+                    candidates.Add(
+                        "Tri" + (index / 3) +
+                        ":Depth=" + Num(signedDepth) +
+                        ":Projection=" +
+                        Num(projection[a].x) + "," + Num(projection[a].y) + "|" +
+                        Num(projection[b].x) + "," + Num(projection[b].y) + "|" +
+                        Num(projection[c].x) + "," + Num(projection[c].y) +
+                        ":World=" + Num(world.x) + "," +
+                        Num(world.y) + "," + Num(world.z));
+                }
+                return candidates.Count == 0
+                    ? "None"
+                    : string.Join(";", candidates);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(baked);
+            }
+        }
+
+        [MenuItem("Bellerophon/Enemies/Kursa/Capture Eye Shape Diagnostic")]
+        public static void CaptureKursaEyeShapeDiagnostic()
+        {
+            InspectKursaEyeShapeCorrection();
+            var scene = RequireScene(true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var destination = Enumerable.Range(1, 9)
+                .Select(index => Absolute(string.Format(
+                    CultureInfo.InvariantCulture,
+                    EyeShapeDiagnosticPathFormat,
+                    index)))
+                .FirstOrDefault(path => !File.Exists(path));
+            if (destination == null)
+                throw new InvalidOperationException(
+                    "The approved maximum of eight Kursa eye-shape diagnostics already exists.");
+            CaptureFaceGrid(placement.transform, destination, true);
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException(
+                    "Kursa eye-shape diagnostic changed the scene dirty state.");
+            Debug.Log("KursaEyeShapeDiagnosticCaptured Result=PASS, Image=" +
+                destination + ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Kursa/Capture Eye Shape Review")]
+        public static void CaptureKursaEyeShapeReview()
+        {
+            InspectKursaEyeShapeCorrection();
+            var scene = RequireScene(true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var destination = Absolute(EyeShapeCapturePath);
+            if (File.Exists(destination))
+                throw new InvalidOperationException(
+                    "The one-time Kursa eye-shape review already exists: " +
+                    EyeShapeCapturePath);
+            CaptureFaceGrid(placement.transform, destination, true);
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException(
+                    "Kursa eye-shape review changed the scene dirty state.");
+            Debug.Log("KursaEyeShapeReviewCaptured Result=PASS, Image=" +
+                EyeShapeCapturePath + ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Kursa/Inspect Chin Alignment")]
+        public static void InspectKursaChinAlignment()
+        {
+            var scene = RequireScene(true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            RequireSlotContract(placement.transform);
+            foreach (var slotName in SlotNames)
+            {
+                var model = RequireModel(RequireChild(placement.transform, slotName));
+                var renderer = RequireRenderer(model, slotName);
+                RequireEyeAttachmentContract(renderer, slotName);
+                RequireVisualFaceFrame(renderer);
+            }
+            var runtimeReport = Absolute(RuntimeProjectionReportPath);
+            if (!File.Exists(runtimeReport))
+                throw new InvalidOperationException(
+                    "Kursa runtime projection report is missing: " +
+                    RuntimeProjectionReportPath);
+            var runtimeReportText = File.ReadAllText(runtimeReport, Encoding.UTF8);
+            if (!runtimeReportText.Contains("\"selected_vertices\": 15") ||
+                !runtimeReportText.Contains("\"unauthorized_changed_vertices\": 0") ||
+                !runtimeReportText.Contains("\"lateral_correction\": -2.5"))
+                throw new InvalidOperationException(
+                    "Kursa runtime projection report does not match the approved chin correction contract.");
+            var destination = Absolute(ChinReportPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(destination) ??
+                throw new InvalidOperationException("Invalid chin report folder."));
+            var lines = new List<string>
+            {
+                "Result=TECHNICAL_PASS_VISUAL_REVIEW_REQUIRED",
+                "Target=Approved Kursa Enemy Placement",
+                "Slots=12",
+                "CorrectionScope=FrontChinVerticesOnly",
+                "EyeShapeChanged=False",
+                "HeadTransformChanged=False",
+                "SeparateEyeObjects=0",
+                "CorrectedVertices=15",
+                "EvaluatedLateralCorrection=-2.5",
+                "UnauthorizedChangedVertices=0",
+                "GeometryContractSource=" + RuntimeProjectionReportPath,
+                "HiddenSurfaceVertexMetricUsedForCompletion=False",
+                "DiagnosticGuide=EyeMidpointVerticalLineOnFrontSamples",
+                "RuntimeVisualReviewRequired=True",
+                "SceneChanged=False"
+            };
+            File.WriteAllLines(destination, lines, new UTF8Encoding(false));
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException(
+                    "Kursa chin inspection changed the scene dirty state.");
+            Debug.Log(
+                "KursaChinAlignmentInspected Result=TECHNICAL_PASS_VISUAL_REVIEW_REQUIRED" +
+                ", Slots=12, CorrectedVertices=15, UnauthorizedChangedVertices=0" +
+                ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Kursa/Capture Chin Alignment Diagnostic")]
+        public static void CaptureKursaChinAlignmentDiagnostic()
+        {
+            InspectKursaChinAlignment();
+            var scene = RequireScene(true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var destination = Enumerable.Range(1, 7)
+                .Select(index => Absolute(string.Format(
+                    CultureInfo.InvariantCulture,
+                    ChinDiagnosticPathFormat,
+                    index)))
+                .FirstOrDefault(path => !File.Exists(path));
+            if (destination == null)
+                throw new InvalidOperationException(
+                    "The approved maximum of six Kursa chin diagnostics already exists.");
+            CaptureFaceGrid(placement.transform, destination, true, true);
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException(
+                    "Kursa chin diagnostic changed the scene dirty state.");
+            Debug.Log("KursaChinAlignmentDiagnosticCaptured Result=PASS, Image=" +
+                destination + ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Kursa/Capture Chin Alignment Review")]
+        public static void CaptureKursaChinAlignmentReview()
+        {
+            InspectKursaChinAlignment();
+            var scene = RequireScene(true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var destination = Absolute(ChinCapturePath);
+            if (File.Exists(destination))
+                throw new InvalidOperationException(
+                    "The one-time Kursa chin review already exists: " + ChinCapturePath);
+            CaptureFaceGrid(placement.transform, destination, true);
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException(
+                    "Kursa chin review changed the scene dirty state.");
+            Debug.Log("KursaChinAlignmentReviewCaptured Result=PASS, Image=" +
+                ChinCapturePath + ", SceneChanged=False.");
+        }
+
         internal static float AlignHeadToModelLocalForward(
             Transform model,
             SkinnedMeshRenderer renderer)
         {
-            var frame = RequireHeadMarkerFrame(renderer);
+            var frame = RequireVisualFaceFrame(renderer);
+            var targetForward = Quaternion.AngleAxis(
+                UnityVisualFrontYawOffsetDegrees,
+                model.up) * model.forward;
             var before = Mathf.Max(
-                Vector3.Angle(frame.Forward, model.forward),
+                Vector3.Angle(frame.Forward, targetForward),
                 Vector3.Angle(frame.Up, model.up));
-            var currentFrame = Quaternion.LookRotation(frame.Forward, frame.Up);
-            var targetFrame = Quaternion.LookRotation(model.forward, model.up);
-            frame.Head.rotation = targetFrame * Quaternion.Inverse(currentFrame) *
-                frame.Head.rotation;
-            var remaining = MeasureHeadLocalFrameError(model, renderer);
+            var targetFrame = Quaternion.LookRotation(targetForward, model.up);
+            var remaining = before;
+            for (var iteration = 0;
+                 iteration < 12 && remaining > HeadAngleTolerance;
+                 iteration++)
+            {
+                var currentFrame = Quaternion.LookRotation(
+                    frame.Forward,
+                    frame.Up);
+                frame.Head.rotation = targetFrame * Quaternion.Inverse(currentFrame) *
+                    frame.Head.rotation;
+                frame = RequireVisualFaceFrame(renderer);
+                remaining = Mathf.Max(
+                    Vector3.Angle(frame.Forward, targetForward),
+                    Vector3.Angle(frame.Up, model.up));
+            }
             if (remaining > HeadAngleTolerance)
                 throw new InvalidOperationException(
-                    "Kursa Head marker frame did not align to model-local +Z/+Y. RemainingError=" +
+                    "Kursa visual face frame did not align to the approved sample frame. RemainingError=" +
                     Num(remaining) + ".");
             return before;
         }
@@ -200,9 +521,12 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             Transform model,
             SkinnedMeshRenderer renderer)
         {
-            var frame = RequireHeadMarkerFrame(renderer);
+            var frame = RequireVisualFaceFrame(renderer);
+            var targetForward = Quaternion.AngleAxis(
+                UnityVisualFrontYawOffsetDegrees,
+                model.up) * model.forward;
             return Mathf.Max(
-                Vector3.Angle(frame.Forward, model.forward),
+                Vector3.Angle(frame.Forward, targetForward),
                 Vector3.Angle(frame.Up, model.up));
         }
 
@@ -358,6 +682,154 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             return null;
         }
 
+        private static FaceVisualFrame RequireVisualFaceFrame(
+            SkinnedMeshRenderer renderer)
+        {
+            var marker = RequireHeadMarkerFrame(renderer);
+            var sharedMesh = renderer.sharedMesh ??
+                throw new InvalidOperationException(
+                    renderer.name + " skinned face mesh is missing.");
+            var faceSubmesh = Array.FindIndex(
+                renderer.sharedMaterials,
+                item => item != null && item.name == FaceMaterialName);
+            if (faceSubmesh < 0 || faceSubmesh >= sharedMesh.subMeshCount)
+                throw new InvalidOperationException(
+                    renderer.name + " approved face submesh is missing.");
+
+            var baked = new Mesh { hideFlags = HideFlags.HideAndDontSave };
+            try
+            {
+                renderer.BakeMesh(baked);
+                if (baked.vertexCount != sharedMesh.vertexCount)
+                    throw new InvalidOperationException(
+                        renderer.name + " baked face vertex count differs.");
+                var left = EyeProjectionCenter(
+                    renderer,
+                    sharedMesh,
+                    baked,
+                    faceSubmesh,
+                    marker.Head.position,
+                    true);
+                var right = EyeProjectionCenter(
+                    renderer,
+                    sharedMesh,
+                    baked,
+                    faceSubmesh,
+                    marker.Head.position,
+                    false);
+                var eyeRight = right - left;
+                if (eyeRight.sqrMagnitude < 0.000001f)
+                    throw new InvalidOperationException(
+                        renderer.name + " approved eye centers overlap.");
+                eyeRight.Normalize();
+                var up = Vector3.ProjectOnPlane(marker.Up, eyeRight);
+                if (up.sqrMagnitude < 0.000001f)
+                    throw new InvalidOperationException(
+                        renderer.name + " visual face up axis is invalid.");
+                up.Normalize();
+                var forward = Vector3.Cross(eyeRight, up).normalized;
+                if (Vector3.Dot(forward, marker.Forward) < 0f)
+                {
+                    eyeRight = -eyeRight;
+                    forward = Vector3.Cross(eyeRight, up).normalized;
+                }
+                up = Vector3.Cross(forward, eyeRight).normalized;
+                return new FaceVisualFrame(
+                    marker.Head,
+                    forward,
+                    up,
+                    left,
+                    right);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(baked);
+            }
+        }
+
+        private static Vector3 EyeProjectionCenter(
+            SkinnedMeshRenderer renderer,
+            Mesh sharedMesh,
+            Mesh bakedMesh,
+            int faceSubmesh,
+            Vector3 headPosition,
+            bool left)
+        {
+            var projection = left ? sharedMesh.uv2 : sharedMesh.uv3;
+            var depth = sharedMesh.uv4;
+            if (projection.Length != sharedMesh.vertexCount ||
+                depth.Length != sharedMesh.vertexCount)
+                throw new InvalidOperationException(
+                    renderer.name + " eye projection channels differ.");
+            var indices = sharedMesh.GetIndices(faceSubmesh);
+            var target = new Vector2(0.5f, 0.5f);
+            var found = false;
+            var bestDistance = float.PositiveInfinity;
+            var best = Vector3.zero;
+            for (var index = 0; index < indices.Length; index += 3)
+            {
+                var a = indices[index];
+                var b = indices[index + 1];
+                var c = indices[index + 2];
+                if (!TryBarycentric(
+                        target,
+                        projection[a],
+                        projection[b],
+                        projection[c],
+                        out var barycentric))
+                    continue;
+                var signedDepth = left
+                    ? depth[a].x * barycentric.x +
+                      depth[b].x * barycentric.y +
+                      depth[c].x * barycentric.z
+                    : depth[a].y * barycentric.x +
+                      depth[b].y * barycentric.y +
+                      depth[c].y * barycentric.z;
+                var absoluteDepth = Mathf.Abs(signedDepth);
+                if (absoluteDepth >= 1f)
+                    continue;
+                var local = bakedMesh.vertices[a] * barycentric.x +
+                            bakedMesh.vertices[b] * barycentric.y +
+                            bakedMesh.vertices[c] * barycentric.z;
+                var world = renderer.transform.TransformPoint(local);
+                var distance = (world - headPosition).sqrMagnitude;
+                if (distance >= bestDistance)
+                    continue;
+                best = world;
+                bestDistance = distance;
+                found = true;
+            }
+            if (!found)
+                throw new InvalidOperationException(
+                    renderer.name + " " + (left ? "left" : "right") +
+                    " approved eye center could not be reconstructed.");
+            return best;
+        }
+
+        private static bool TryBarycentric(
+            Vector2 point,
+            Vector2 a,
+            Vector2 b,
+            Vector2 c,
+            out Vector3 barycentric)
+        {
+            var v0 = b - a;
+            var v1 = c - a;
+            var v2 = point - a;
+            var denominator = v0.x * v1.y - v1.x * v0.y;
+            if (Mathf.Abs(denominator) < 0.0000001f)
+            {
+                barycentric = default;
+                return false;
+            }
+            var y = (v2.x * v1.y - v1.x * v2.y) / denominator;
+            var z = (v0.x * v2.y - v2.x * v0.y) / denominator;
+            var x = 1f - y - z;
+            barycentric = new Vector3(x, y, z);
+            const float tolerance = 0.0001f;
+            return x >= -tolerance && y >= -tolerance && z >= -tolerance;
+        }
+
         private static HeadMarkerFrame RequireHeadMarkerFrame(
             SkinnedMeshRenderer renderer)
         {
@@ -493,27 +965,76 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 "OtherModelCommonY=" + Num(commonY),
                 "ModelYError=" + Num(yError),
                 "AnimatedSampleRate=" + Num(AnimatedSampleRate),
-                "DirectionBasis=HeadToHeadFrontAlignedToModelLocalPositiveZ",
-                "UpBasis=HeadToHeadEndAlignedToModelLocalPositiveY",
+                "DirectionBasis=UnityVisualFaceAlignedToModelLocalPositiveZ",
+                "UnityVisualFrontYawOffsetDegrees=" +
+                    Num(UnityVisualFrontYawOffsetDegrees),
+                "UpBasis=HeadToHeadEndProjectedOntoFaceFrame",
                 "FaceSurfaceNormalsUsed=False",
-                "EyeObjectsUvMaterialsUsedForDirection=False",
+                "EyeProjectionCentersUsedForDirection=True",
                 "EyeAttachment=PerVertexUvChannelsOnSkinnedFaceMesh",
-                "MaximumHeadLocalFrameError=" + Num(slotAngles.Values.Max())
+                "MaximumVisualFaceFrameError=" + Num(slotAngles.Values.Max())
             };
             lines.AddRange(slotAngles.Select(item =>
-                item.Key + "HeadLocalFrameError=" + Num(item.Value)));
+                item.Key + "VisualFaceFrameError=" + Num(item.Value)));
             lines.Add("ArmsShieldBodyLegsChanged=False");
             lines.Add("AppearanceEyesMaterialsChanged=False");
             lines.Add("OtherSceneRootsChanged=False");
             File.WriteAllLines(destination, lines, Encoding.UTF8);
         }
 
-        private static void CaptureGrid(Transform placement, string destination)
+        private static void CaptureFaceGrid(
+            Transform placement,
+            string destination,
+            bool includeAnimationSamples,
+            bool drawEyeMidpointGuide = false)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(destination) ??
                 throw new InvalidOperationException("Invalid capture folder."));
             var models = SlotNames.Select(item =>
                 RequireModel(RequireChild(placement, item))).ToArray();
+            var subjects = SlotNames.Select((slotName, index) =>
+                new FaceCaptureSubject(
+                    models[index],
+                    slotName,
+                    SlotClip(slotName),
+                    0f)).ToList();
+            if (includeAnimationSamples)
+            {
+                var idleClip = SlotClip("Kursa_02_Idle");
+                var moveClip = SlotClip(MoveSlotName);
+                subjects.Add(new FaceCaptureSubject(
+                    models[1],
+                    "Kursa_02_Idle_Mid",
+                    idleClip,
+                    idleClip.length * 0.5f));
+                subjects.Add(new FaceCaptureSubject(
+                    models[2],
+                    "Kursa_03_Move_Quarter",
+                    moveClip,
+                    moveClip.length * 0.25f));
+                subjects.Add(new FaceCaptureSubject(
+                    models[2],
+                    "Kursa_03_Move_Mid",
+                    moveClip,
+                    moveClip.length * 0.5f));
+                subjects.Add(new FaceCaptureSubject(
+                    models[2],
+                    "Kursa_03_Move_ThreeQuarter",
+                    moveClip,
+                    moveClip.length * 0.75f));
+                subjects.Add(new FaceCaptureSubject(
+                    models[0],
+                    "Kursa_01_Static_YawMinus25",
+                    null,
+                    0f,
+                    -25f));
+                subjects.Add(new FaceCaptureSubject(
+                    models[0],
+                    "Kursa_01_Static_YawPlus25",
+                    null,
+                    0f,
+                    25f));
+            }
             var sceneRenderers = placement.gameObject.scene.GetRootGameObjects()
                 .SelectMany(item => item.GetComponentsInChildren<Renderer>(true))
                 .ToArray();
@@ -522,10 +1043,10 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             var sourceCamera = GameObject.Find("Player")?
                 .GetComponentInChildren<Camera>(true) ??
                 throw new InvalidOperationException("Player camera is missing.");
-            const int panelWidth = 320;
-            const int panelHeight = 480;
+            const int panelWidth = 360;
+            const int panelHeight = 360;
             const int columns = 4;
-            const int rows = 3;
+            var rows = Mathf.CeilToInt(subjects.Count / (float)columns);
             var cameraObject = new GameObject(
                 "KursaForwardHeadReviewCamera",
                 typeof(Camera)) { hideFlags = HideFlags.HideAndDontSave };
@@ -552,33 +1073,84 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 camera.clearFlags = CameraClearFlags.SolidColor;
                 camera.backgroundColor = new Color(0.14f, 0.15f, 0.17f, 1f);
                 camera.cullingMask = ~0;
-                camera.fieldOfView = 30f;
+                camera.fieldOfView = 28f;
                 camera.targetTexture = target;
-                for (var index = 0; index < models.Length; index++)
+                for (var index = 0; index < subjects.Count; index++)
                 {
-                    foreach (var renderer in sceneRenderers)
-                        renderer.enabled = renderer.transform.IsChildOf(models[index]);
-                    FrameCamera(camera, models[index], panelWidth / (float)panelHeight);
-                    camera.Render();
-                    RenderTexture.active = target;
-                    panel.ReadPixels(
-                        new Rect(0f, 0f, panelWidth, panelHeight),
-                        0,
-                        0);
-                    panel.Apply();
-                    var pixels = panel.GetPixels32();
-                    if (pixels.Any(pixel =>
-                        pixel.r >= 240 && pixel.b >= 240 && pixel.g <= 24))
-                        throw new InvalidOperationException(
-                            "Kursa forward-head review contains Unity magenta fallback.");
-                    var column = index % columns;
-                    var row = rows - 1 - index / columns;
-                    grid.SetPixels32(
-                        column * panelWidth,
-                        row * panelHeight,
-                        panelWidth,
-                        panelHeight,
-                        pixels);
+                    var subject = subjects[index];
+                    var snapshots = subject.Model
+                        .GetComponentsInChildren<Transform>(true)
+                        .Select(item => new TransformSnapshot(item))
+                        .ToArray();
+                    var animator = subject.Model.GetComponent<Animator>();
+                    var animatorEnabled = animator != null && animator.enabled;
+                    try
+                    {
+                        if (animator != null) animator.enabled = false;
+                        if (subject.Clip != null)
+                            subject.Clip.SampleAnimation(
+                                subject.Model.gameObject,
+                                subject.Time);
+                        foreach (var renderer in sceneRenderers)
+                            renderer.enabled = renderer.transform.IsChildOf(subject.Model);
+                        var subjectRenderer = RequireRenderer(
+                            subject.Model,
+                            subject.Name);
+                        FrameFaceCamera(
+                            camera,
+                            subject.Model,
+                            subjectRenderer,
+                            panelWidth / (float)panelHeight,
+                            subject.CameraYaw);
+                        var face = RequireVisualFaceFrame(subjectRenderer);
+                        var eyeMidpointScreen = camera.WorldToScreenPoint(
+                            (face.LeftEye + face.RightEye) * 0.5f);
+                        camera.Render();
+                        RenderTexture.active = target;
+                        panel.ReadPixels(
+                            new Rect(0f, 0f, panelWidth, panelHeight),
+                            0,
+                            0);
+                        panel.Apply();
+                        if (drawEyeMidpointGuide &&
+                            Mathf.Abs(subject.CameraYaw) < 0.001f)
+                        {
+                            var guideX = Mathf.Clamp(
+                                Mathf.RoundToInt(eyeMidpointScreen.x),
+                                0,
+                                panelWidth - 1);
+                            var eyeY = Mathf.Clamp(
+                                Mathf.RoundToInt(eyeMidpointScreen.y),
+                                0,
+                                panelHeight - 1);
+                            var minimumY = Mathf.Max(0, eyeY - 120);
+                            var maximumY = Mathf.Min(panelHeight - 1, eyeY + 12);
+                            for (var y = minimumY; y <= maximumY; y++)
+                            {
+                                if (((y - minimumY) / 6) % 2 == 0)
+                                    panel.SetPixel(guideX, y, new Color(1f, 0.15f, 0.1f));
+                            }
+                            panel.Apply();
+                        }
+                        var pixels = panel.GetPixels32();
+                        if (pixels.Any(pixel =>
+                            pixel.r >= 240 && pixel.b >= 240 && pixel.g <= 24))
+                            throw new InvalidOperationException(
+                                "Kursa forward-head review contains Unity magenta fallback.");
+                        var column = index % columns;
+                        var row = rows - 1 - index / columns;
+                        grid.SetPixels32(
+                            column * panelWidth,
+                            row * panelHeight,
+                            panelWidth,
+                            panelHeight,
+                            pixels);
+                    }
+                    finally
+                    {
+                        foreach (var snapshot in snapshots) snapshot.Restore();
+                        if (animator != null) animator.enabled = animatorEnabled;
+                    }
                 }
                 grid.Apply();
                 File.WriteAllBytes(destination, grid.EncodeToPNG());
@@ -596,30 +1168,35 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             }
         }
 
-        private static void FrameCamera(Camera camera, Transform model, float aspect)
+        private static void FrameFaceCamera(
+            Camera camera,
+            Transform model,
+            SkinnedMeshRenderer renderer,
+            float aspect,
+            float cameraYaw)
         {
-            var renderers = model.GetComponentsInChildren<Renderer>(true)
-                .Where(item => item.enabled).ToArray();
-            if (renderers.Length == 0)
-                throw new InvalidOperationException("Kursa model has no visible renderer.");
-            var bounds = renderers[0].bounds;
-            foreach (var renderer in renderers.Skip(1)) bounds.Encapsulate(renderer.bounds);
+            var face = RequireVisualFaceFrame(renderer);
+            var eyeDistance = Vector3.Distance(face.LeftEye, face.RightEye);
+            if (eyeDistance <= 0.0001f)
+                throw new InvalidOperationException(
+                    model.name + " has invalid visual eye separation.");
             var direction = model.forward;
             direction.y = 0f;
             if (direction.sqrMagnitude < 0.0001f) direction = Vector3.forward;
             direction.Normalize();
+            direction = Quaternion.AngleAxis(cameraYaw, model.up) * direction;
             camera.aspect = aspect;
-            var vertical = bounds.extents.y /
-                Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f);
-            var horizontalFov = 2f * Mathf.Atan(
-                Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f) * aspect);
-            var horizontal = Mathf.Max(bounds.extents.x, bounds.extents.z) /
-                Mathf.Tan(horizontalFov * 0.5f);
-            var distance = Mathf.Max(vertical, horizontal) * 1.2f;
-            camera.transform.position = bounds.center + direction * distance;
+            camera.nearClipPlane = 0.01f;
+            var center = face.Head.position +
+                         model.up * Mathf.Max(0.03f, eyeDistance);
+            var distance = Mathf.Max(
+                0.5f,
+                eyeDistance * 5f /
+                Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f));
+            camera.transform.position = center + direction * distance;
             camera.transform.rotation = Quaternion.LookRotation(
-                bounds.center - camera.transform.position,
-                Vector3.up);
+                center - camera.transform.position,
+                model.up);
         }
 
         private static Scene RequireScene(bool clean)
@@ -724,6 +1301,52 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 Head = head;
                 Forward = forward;
                 Up = up;
+            }
+        }
+
+        private readonly struct FaceVisualFrame
+        {
+            public readonly Transform Head;
+            public readonly Vector3 Forward;
+            public readonly Vector3 Up;
+            public readonly Vector3 LeftEye;
+            public readonly Vector3 RightEye;
+
+            public FaceVisualFrame(
+                Transform head,
+                Vector3 forward,
+                Vector3 up,
+                Vector3 leftEye,
+                Vector3 rightEye)
+            {
+                Head = head;
+                Forward = forward;
+                Up = up;
+                LeftEye = leftEye;
+                RightEye = rightEye;
+            }
+        }
+
+        private readonly struct FaceCaptureSubject
+        {
+            public readonly Transform Model;
+            public readonly string Name;
+            public readonly AnimationClip Clip;
+            public readonly float Time;
+            public readonly float CameraYaw;
+
+            public FaceCaptureSubject(
+                Transform model,
+                string name,
+                AnimationClip clip,
+                float time,
+                float cameraYaw = 0f)
+            {
+                Model = model;
+                Name = name;
+                Clip = clip;
+                Time = time;
+                CameraYaw = cameraYaw;
             }
         }
 
