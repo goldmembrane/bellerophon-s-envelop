@@ -28,22 +28,32 @@ namespace Bellerophon.Editor.KursaCargoRunScene
         internal const string ControllerPath = "Assets/_Project/Art/Enemies/Kursa/Animations/Kursa_03_Move.controller";
         private const string ReportPath = "docs/validation/kursa_move_animation_2026-08-02/Kursa_03_Move_Inspection.txt";
         private const string CapturePath = "docs/validation/kursa_move_animation_2026-08-02/Kursa_03_Move_Review.png";
+        private const string RightArmClearanceFolder = "docs/validation/kursa_move_right_arm_clearance_2026-08-04";
+        private const string RightArmFinalCapturePath = RightArmClearanceFolder + "/Kursa_MoveRightArm_FinalReview.png";
+        private const string MoveFaceStabilityFolder = "docs/validation/kursa_move_face_deformation_2026-08-04";
+        private const string MoveFaceFinalCapturePath = MoveFaceStabilityFolder + "/Kursa_MoveFaceStability_FinalReview.png";
         private const string ExpectedMoveSha256 = "A1E365B11C6A0C316E7208891E223746C125B49ECB61E9A15629D852C959603C";
         private const float FrameRate = 60f;
         private const float ExpectedLength = 116f / FrameRate;
         private const int ExpectedTriangles = 3913;
         private const int ExpectedBones = 24;
         private const float GroundAgreementTolerance = 0.0001f;
+        // Applied only while baking Kursa_03_Move so the complete right arm stays visibly clear of the torso and thigh.
+        private const float RightArmOutwardCorrectionDegrees = 26f;
 
         private static readonly string[] SlotNames =
         {
             "Kursa_01_Static_Review", "Kursa_02_Idle", "Kursa_03_Move",
-            "Kursa_04_ShieldBash", "Kursa_05_ToShieldStance", "Kursa_06_ShieldStance",
+            "Kursa_04_ShieldBash", "Kursa_05_ToShieldStance", "Kursa_06_PostBreakRecovery",
             "Kursa_07_ShieldStanceMove", "Kursa_08_FromShieldStance", "Kursa_09_Stop",
             "Kursa_10_Hit", "Kursa_11_Death", "Kursa_12_ShieldBreakReaction"
         };
 
         private static readonly float[] ReviewTimes = { 0f, 0.25f, 0.5f, 0.75f, 1f };
+        // Twenty close-up samples cover the full walking loop for direct visual review; they are not a numeric pass criterion.
+        private static readonly float[] RightArmReviewTimes = Enumerable.Range(0, 20)
+            .Select(index => index / 20f)
+            .ToArray();
 
         [MenuItem("Bellerophon/Enemies/Kursa/Apply Move Animation")]
         public static void ApplyKursaMoveAnimation()
@@ -126,6 +136,42 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             var priorCapture = Absolute(CapturePath);
             if (File.Exists(priorCapture)) File.Delete(priorCapture);
             Debug.Log("KursaMoveAnimationApplied Result=PASS, Slot=Kursa_03_Move, SourceHash=" + ExpectedMoveSha256 + ", MixamoTake=" + takeName + ", AppearanceOnly=True, WalkingGeometryWeightsBindPosesPreserved=True, TargetModelLocalY=" + Num(targetModelY) + ", ModelLocalForwardHeadAlignment=True, EyeAttachment=PerVertexUvChannelsOnSkinnedFaceMesh, StaticArmDataUsed=False, RootHorizontalLocked=True, OtherSlotsUnchanged=True, OtherSceneRootsUnchanged=True, SceneSaved=True.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Kursa/Apply Move Right Arm Clearance")]
+        public static void ApplyKursaMoveRightArmClearance()
+        {
+            var scene = RequireScene(true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            RequireSlotContract(placement.transform);
+            var moveModel = RequireModel(RequireChild(placement.transform, MoveSlotName));
+            var renderer = RequireRenderer(moveModel, MoveSlotName);
+            var sourceClip = RequireEmbeddedClip("Kursa_03_Move_Mixamo");
+
+            CreateInPlaceClip(
+                sourceClip,
+                moveModel,
+                renderer.sharedMesh,
+                renderer.sharedMaterials);
+
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException(
+                    "Applying Kursa move right-arm clearance changed the scene dirty state.");
+            Debug.Log(
+                "KursaMoveRightArmClearanceApplied Slot=Kursa_03_Move, " +
+                "RightArmOnly=True, ForeArmAndHandLocalMotionPreserved=True, " +
+                "OtherSlotsUnchanged=True, SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Kursa/Apply Move Face Deformation Fix")]
+        public static void ApplyKursaMoveFaceDeformationFix()
+        {
+            ApplyKursaMoveRightArmClearance();
+            Debug.Log(
+                "KursaMoveFaceDeformationFixApplied Slot=Kursa_03_Move, " +
+                "StableReferenceHeadCorrection=True, PerFrameFaceCandidateSelection=False, " +
+                "RightArmClearancePreserved=True, SceneChanged=False.");
         }
 
         private static Mesh CreateAppearanceOnlyMesh(GameObject walkingPrefab)
@@ -669,6 +715,96 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             Debug.Log("KursaMoveAnimationReviewCaptured Result=PASS, NormalizedTimes=0,0.25,0.5,0.75,1, Image=" + CapturePath + ", SceneChanged=False.");
         }
 
+        [MenuItem("Bellerophon/Enemies/Kursa/Capture Move Right Arm Clearance Diagnostic")]
+        public static void CaptureKursaMoveRightArmClearanceDiagnostic()
+        {
+            var destination = Enumerable.Range(1, 3)
+                .Select(index => Absolute(
+                    RightArmClearanceFolder +
+                    "/Kursa_MoveRightArm_Diagnostic_" + index.ToString("00", CultureInfo.InvariantCulture) + ".png"))
+                .FirstOrDefault(path => !File.Exists(path));
+            if (string.IsNullOrEmpty(destination))
+                throw new InvalidOperationException(
+                    "The approved three Kursa move right-arm diagnostic captures already exist.");
+            CaptureKursaMoveRightArmClearance(destination, "Diagnostic");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Kursa/Capture Move Right Arm Clearance Final Review")]
+        public static void CaptureKursaMoveRightArmClearanceFinalReview()
+        {
+            var destination = Absolute(RightArmFinalCapturePath);
+            if (File.Exists(destination))
+                throw new InvalidOperationException(
+                    "The one-time Kursa move right-arm final review already exists: " +
+                    RightArmFinalCapturePath);
+            CaptureKursaMoveRightArmClearance(destination, "FinalReview");
+        }
+
+        private static void CaptureKursaMoveRightArmClearance(
+            string destination,
+            string captureKind)
+        {
+            var scene = RequireScene(true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            RequireSlotContract(placement.transform);
+            var moveModel = RequireModel(RequireChild(placement.transform, MoveSlotName));
+            CaptureRightArmContactSheet(moveModel, RequireClip(), destination);
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException(
+                    "Kursa move right-arm capture changed the scene dirty state.");
+            Debug.Log(
+                "KursaMoveRightArmClearanceCaptured Kind=" + captureKind +
+                ", DirectVisualReviewRequired=True, Image=" +
+                destination + ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Kursa/Capture Move Face Deformation Diagnostic")]
+        public static void CaptureKursaMoveFaceDeformationDiagnostic()
+        {
+            var destination = Enumerable.Range(1, 3)
+                .Select(index => Absolute(
+                    MoveFaceStabilityFolder +
+                    "/Kursa_MoveFaceStability_Diagnostic_" +
+                    index.ToString("00", CultureInfo.InvariantCulture) + ".png"))
+                .FirstOrDefault(path => !File.Exists(path));
+            if (string.IsNullOrEmpty(destination))
+                throw new InvalidOperationException(
+                    "The approved three Kursa move face diagnostics already exist.");
+            CaptureKursaMoveFaceStability(destination, "Diagnostic");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Kursa/Capture Move Face Deformation Final Review")]
+        public static void CaptureKursaMoveFaceDeformationFinalReview()
+        {
+            var destination = Absolute(MoveFaceFinalCapturePath);
+            if (File.Exists(destination))
+                throw new InvalidOperationException(
+                    "The one-time Kursa move face final review already exists: " +
+                    MoveFaceFinalCapturePath);
+            CaptureKursaMoveFaceStability(destination, "FinalReview");
+        }
+
+        private static void CaptureKursaMoveFaceStability(
+            string destination,
+            string captureKind)
+        {
+            var scene = RequireScene(true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            RequireSlotContract(placement.transform);
+            var moveModel = RequireModel(RequireChild(placement.transform, MoveSlotName));
+            CaptureMoveFaceAndArmContactSheet(moveModel, RequireClip(), destination);
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException(
+                    "Kursa move face capture changed the scene dirty state.");
+            Debug.Log(
+                "KursaMoveFaceStabilityCaptured Kind=" + captureKind +
+                ", FullMoveFaceFrames=True, RightArmReviewIncluded=True, " +
+                "DirectVisualReviewRequired=True, Image=" + destination +
+                ", SceneChanged=False.");
+        }
+
         private static string ConfigureImporter()
         {
             var importer = AssetImporter.GetAtPath(MoveModelPath) as ModelImporter ??
@@ -737,9 +873,23 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 var bones = renderer.rootBone.GetComponentsInChildren<Transform>(true);
                 if (bones.Select(item => item.name).Distinct(StringComparer.Ordinal).Count() != bones.Length)
                     throw new InvalidOperationException("Kursa walking skeleton contains duplicate bone names.");
+                var bonesByName = bones.ToDictionary(
+                    item => item.name,
+                    item => item,
+                    StringComparer.Ordinal);
                 var paths = bones.ToDictionary(item => item.name, item => AnimationUtility.CalculateTransformPath(item, clone.transform), StringComparer.Ordinal);
                 source.SampleAnimation(clone, 0f);
                 var rootBase = renderer.rootBone.localPosition;
+                var head = RequireBone(bonesByName, "Head");
+                var sourceReferenceHeadRotation = head.localRotation;
+                KursaForwardHeadAlignmentTool.AlignHeadToModelLocalForward(
+                    clone.transform,
+                    renderer);
+                // Calibrate the approved visual-front correction once from a stable
+                // reference pose. Reusing it avoids per-frame eye-surface candidate
+                // swaps while preserving the source clip's local Head motion.
+                var stableHeadCorrection = head.localRotation *
+                    Quaternion.Inverse(sourceReferenceHeadRotation);
                 var horizontalProperties = HorizontalRootProperties(clone.transform, renderer.rootBone);
                 var keySets = bones.ToDictionary(item => item.name, _ => new TransformKeys(), StringComparer.Ordinal);
                 var frames = Mathf.RoundToInt(source.length * FrameRate);
@@ -747,10 +897,10 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 for (var frame = 0; frame <= frames; frame++)
                 {
                     var time = Mathf.Min(source.length, frame / FrameRate);
+                    head.localRotation = sourceReferenceHeadRotation;
                     source.SampleAnimation(clone, time);
-                    KursaForwardHeadAlignmentTool.AlignHeadToModelLocalForward(
-                        clone.transform,
-                        renderer);
+                    head.localRotation = stableHeadCorrection * head.localRotation;
+                    ApplyRightArmOutwardClearance(bonesByName);
                     foreach (var bone in bones)
                     {
                         var position = bone.localPosition;
@@ -780,6 +930,40 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             EditorUtility.SetDirty(clip);
             AssetDatabase.SaveAssets();
             return clip;
+        }
+
+        private static void ApplyRightArmOutwardClearance(
+            IReadOnlyDictionary<string, Transform> bones)
+        {
+            var leftShoulder = RequireBone(bones, "LeftShoulder");
+            var rightShoulder = RequireBone(bones, "RightShoulder");
+            var rightArm = RequireBone(bones, "RightArm");
+            var rightForeArm = RequireBone(bones, "RightForeArm");
+            var outward = rightShoulder.position - leftShoulder.position;
+            var upperArm = rightForeArm.position - rightArm.position;
+            if (outward.sqrMagnitude <= 0.00000001f ||
+                upperArm.sqrMagnitude <= 0.00000001f)
+                throw new InvalidOperationException(
+                    "Kursa right-arm outward frame could not be reconstructed.");
+
+            var correctedUpperArm = Vector3.RotateTowards(
+                upperArm,
+                outward,
+                RightArmOutwardCorrectionDegrees * Mathf.Deg2Rad,
+                0f);
+            rightArm.rotation = Quaternion.FromToRotation(
+                upperArm,
+                correctedUpperArm) * rightArm.rotation;
+        }
+
+        private static Transform RequireBone(
+            IReadOnlyDictionary<string, Transform> bones,
+            string boneName)
+        {
+            if (!bones.TryGetValue(boneName, out var bone) || bone == null)
+                throw new InvalidOperationException(
+                    "Kursa move skeleton is missing bone " + boneName + ".");
+            return bone;
         }
 
         private static void SetTransformCurves(AnimationClip clip, string path, TransformKeys keys)
@@ -1373,6 +1557,362 @@ namespace Bellerophon.Editor.KursaCargoRunScene
                 UnityEngine.Object.DestroyImmediate(target);
                 UnityEngine.Object.DestroyImmediate(cameraObject);
             }
+        }
+
+        private static void CaptureRightArmContactSheet(
+            Transform model,
+            AnimationClip clip,
+            string destination)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(destination) ??
+                throw new InvalidOperationException("Invalid capture folder."));
+            var snapshots = model.GetComponentsInChildren<Transform>(true)
+                .Select(item => new TransformState(item))
+                .ToArray();
+            var animator = model.GetComponent<Animator>();
+            var animatorEnabled = animator.enabled;
+            var otherRenderers = model.gameObject.scene.GetRootGameObjects()
+                .SelectMany(item => item.GetComponentsInChildren<Renderer>(true))
+                .Where(item => !item.transform.IsChildOf(model))
+                .Select(item => new RendererState(item))
+                .ToArray();
+            var sourceCamera = GameObject.Find("Player")?
+                .GetComponentInChildren<Camera>(true) ??
+                throw new InvalidOperationException("Player camera is missing.");
+            var cameraObject = new GameObject(
+                "KursaMoveRightArmReviewCamera",
+                typeof(Camera))
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            const int columns = 5;
+            const int width = 384;
+            const int height = 480;
+            var rows = Mathf.CeilToInt(RightArmReviewTimes.Length / (float)columns);
+            var sheet = new Texture2D(
+                width * columns,
+                height * rows,
+                TextureFormat.RGB24,
+                false);
+            var target = new RenderTexture(
+                width,
+                height,
+                24,
+                RenderTextureFormat.ARGB32);
+            var panel = new Texture2D(width, height, TextureFormat.RGB24, false);
+            var oldActive = RenderTexture.active;
+            try
+            {
+                foreach (var item in otherRenderers)
+                    item.Renderer.enabled = false;
+                animator.enabled = false;
+                var camera = cameraObject.GetComponent<Camera>();
+                camera.CopyFrom(sourceCamera);
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0.14f, 0.15f, 0.17f, 1f);
+                camera.cullingMask = ~0;
+                camera.fieldOfView = 28f;
+                camera.targetTexture = target;
+                for (var index = 0; index < RightArmReviewTimes.Length; index++)
+                {
+                    clip.SampleAnimation(
+                        model.gameObject,
+                        clip.length * RightArmReviewTimes[index]);
+                    FrameRightArmCamera(
+                        camera,
+                        model,
+                        sourceCamera,
+                        width / (float)height);
+                    camera.Render();
+                    RenderTexture.active = target;
+                    panel.ReadPixels(new Rect(0f, 0f, width, height), 0, 0);
+                    panel.Apply();
+                    var pixels = panel.GetPixels32();
+                    if (pixels.Any(pixel =>
+                        pixel.r >= 240 && pixel.b >= 240 && pixel.g <= 24))
+                        throw new InvalidOperationException(
+                            "Kursa move right-arm review contains Unity magenta fallback.");
+                    var column = index % columns;
+                    var row = rows - 1 - index / columns;
+                    sheet.SetPixels32(
+                        column * width,
+                        row * height,
+                        width,
+                        height,
+                        pixels);
+                }
+                sheet.Apply();
+                File.WriteAllBytes(destination, sheet.EncodeToPNG());
+            }
+            finally
+            {
+                RenderTexture.active = oldActive;
+                cameraObject.GetComponent<Camera>().targetTexture = null;
+                foreach (var item in otherRenderers)
+                    item.Restore();
+                foreach (var snapshot in snapshots)
+                    snapshot.Restore();
+                animator.enabled = animatorEnabled;
+                UnityEngine.Object.DestroyImmediate(panel);
+                UnityEngine.Object.DestroyImmediate(sheet);
+                target.Release();
+                UnityEngine.Object.DestroyImmediate(target);
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+            }
+        }
+
+        private static void CaptureMoveFaceAndArmContactSheet(
+            Transform model,
+            AnimationClip clip,
+            string destination)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(destination) ??
+                throw new InvalidOperationException("Invalid capture folder."));
+            var snapshots = model.GetComponentsInChildren<Transform>(true)
+                .Select(item => new TransformState(item))
+                .ToArray();
+            var animator = model.GetComponent<Animator>();
+            var animatorEnabled = animator.enabled;
+            var otherRenderers = model.gameObject.scene.GetRootGameObjects()
+                .SelectMany(item => item.GetComponentsInChildren<Renderer>(true))
+                .Where(item => !item.transform.IsChildOf(model))
+                .Select(item => new RendererState(item))
+                .ToArray();
+            var sourceCamera = GameObject.Find("Player")?
+                .GetComponentInChildren<Camera>(true) ??
+                throw new InvalidOperationException("Player camera is missing.");
+            var cameraObject = new GameObject(
+                "KursaMoveFaceReviewCamera",
+                typeof(Camera))
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+
+            const int faceColumns = 13;
+            const int facePanelSize = 240;
+            const int armPanelWidth = 384;
+            const int armPanelHeight = 480;
+            var faceFrameCount = Mathf.RoundToInt(clip.length * clip.frameRate) + 1;
+            var faceRows = Mathf.CeilToInt(faceFrameCount / (float)faceColumns);
+            var faceWidth = faceColumns * facePanelSize;
+            var faceHeight = faceRows * facePanelSize;
+            var armWidth = ReviewTimes.Length * armPanelWidth;
+            var sheet = new Texture2D(
+                Mathf.Max(faceWidth, armWidth),
+                faceHeight + armPanelHeight,
+                TextureFormat.RGB24,
+                false);
+            var faceTarget = new RenderTexture(
+                facePanelSize,
+                facePanelSize,
+                24,
+                RenderTextureFormat.ARGB32);
+            var armTarget = new RenderTexture(
+                armPanelWidth,
+                armPanelHeight,
+                24,
+                RenderTextureFormat.ARGB32);
+            var facePanel = new Texture2D(
+                facePanelSize,
+                facePanelSize,
+                TextureFormat.RGB24,
+                false);
+            var armPanel = new Texture2D(
+                armPanelWidth,
+                armPanelHeight,
+                TextureFormat.RGB24,
+                false);
+            var oldActive = RenderTexture.active;
+            try
+            {
+                var black = Enumerable.Repeat(
+                    new Color32(20, 22, 25, 255),
+                    sheet.width * sheet.height).ToArray();
+                sheet.SetPixels32(black);
+                foreach (var item in otherRenderers)
+                    item.Renderer.enabled = false;
+                animator.enabled = false;
+                var camera = cameraObject.GetComponent<Camera>();
+                camera.CopyFrom(sourceCamera);
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0.08f, 0.09f, 0.10f, 1f);
+                camera.cullingMask = ~0;
+                camera.fieldOfView = 26f;
+
+                camera.targetTexture = faceTarget;
+                for (var index = 0; index < faceFrameCount; index++)
+                {
+                    var time = Mathf.Min(clip.length, index / clip.frameRate);
+                    clip.SampleAnimation(model.gameObject, time);
+                    FrameFaceCamera(
+                        camera,
+                        model,
+                        sourceCamera,
+                        1f);
+                    camera.Render();
+                    RenderTexture.active = faceTarget;
+                    facePanel.ReadPixels(
+                        new Rect(0f, 0f, facePanelSize, facePanelSize),
+                        0,
+                        0);
+                    facePanel.Apply();
+                    var pixels = facePanel.GetPixels32();
+                    RequireNoMagenta(pixels, "Kursa move face review");
+                    var column = index % faceColumns;
+                    var row = faceRows - 1 - index / faceColumns;
+                    sheet.SetPixels32(
+                        column * facePanelSize,
+                        armPanelHeight + row * facePanelSize,
+                        facePanelSize,
+                        facePanelSize,
+                        pixels);
+                }
+
+                camera.targetTexture = armTarget;
+                camera.fieldOfView = 28f;
+                for (var index = 0; index < ReviewTimes.Length; index++)
+                {
+                    clip.SampleAnimation(
+                        model.gameObject,
+                        clip.length * ReviewTimes[index]);
+                    FrameRightArmCamera(
+                        camera,
+                        model,
+                        sourceCamera,
+                        armPanelWidth / (float)armPanelHeight);
+                    camera.Render();
+                    RenderTexture.active = armTarget;
+                    armPanel.ReadPixels(
+                        new Rect(0f, 0f, armPanelWidth, armPanelHeight),
+                        0,
+                        0);
+                    armPanel.Apply();
+                    var pixels = armPanel.GetPixels32();
+                    RequireNoMagenta(pixels, "Kursa move right-arm review");
+                    sheet.SetPixels32(
+                        index * armPanelWidth,
+                        0,
+                        armPanelWidth,
+                        armPanelHeight,
+                        pixels);
+                }
+                sheet.Apply();
+                File.WriteAllBytes(destination, sheet.EncodeToPNG());
+            }
+            finally
+            {
+                RenderTexture.active = oldActive;
+                cameraObject.GetComponent<Camera>().targetTexture = null;
+                foreach (var item in otherRenderers)
+                    item.Restore();
+                foreach (var snapshot in snapshots)
+                    snapshot.Restore();
+                animator.enabled = animatorEnabled;
+                UnityEngine.Object.DestroyImmediate(facePanel);
+                UnityEngine.Object.DestroyImmediate(armPanel);
+                UnityEngine.Object.DestroyImmediate(sheet);
+                faceTarget.Release();
+                armTarget.Release();
+                UnityEngine.Object.DestroyImmediate(faceTarget);
+                UnityEngine.Object.DestroyImmediate(armTarget);
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+            }
+        }
+
+        private static void FrameFaceCamera(
+            Camera camera,
+            Transform model,
+            Camera source,
+            float aspect)
+        {
+            var bones = model.GetComponentsInChildren<Transform>(true)
+                .GroupBy(item => item.name, StringComparer.Ordinal)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.Single(),
+                    StringComparer.Ordinal);
+            var focusBones = new[]
+            {
+                RequireBone(bones, "neck"),
+                RequireBone(bones, "Head"),
+                RequireBone(bones, "headfront"),
+                RequireBone(bones, "head_end")
+            };
+            var bounds = new Bounds(focusBones[0].position, Vector3.zero);
+            foreach (var bone in focusBones.Skip(1))
+                bounds.Encapsulate(bone.position);
+            bounds.Expand(new Vector3(0.34f, 0.28f, 0.34f));
+
+            var direction = source.transform.position - bounds.center;
+            direction.y = 0f;
+            if (direction.sqrMagnitude < 0.0001f)
+                direction = Vector3.back;
+            direction.Normalize();
+            camera.aspect = aspect;
+            var vertical = bounds.extents.y /
+                Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f);
+            var horizontalFov = 2f * Mathf.Atan(
+                Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f) * aspect);
+            var horizontal = Mathf.Max(bounds.extents.x, bounds.extents.z) /
+                Mathf.Tan(horizontalFov * 0.5f);
+            var distance = Mathf.Max(vertical, horizontal) * 1.08f;
+            camera.transform.position = bounds.center + direction * distance;
+            camera.transform.rotation = Quaternion.LookRotation(
+                bounds.center - camera.transform.position,
+                Vector3.up);
+        }
+
+        private static void RequireNoMagenta(Color32[] pixels, string context)
+        {
+            if (pixels.Any(pixel =>
+                pixel.r >= 240 && pixel.b >= 240 && pixel.g <= 24))
+                throw new InvalidOperationException(
+                    context + " contains Unity magenta fallback.");
+        }
+
+        private static void FrameRightArmCamera(
+            Camera camera,
+            Transform model,
+            Camera source,
+            float aspect)
+        {
+            var bones = model.GetComponentsInChildren<Transform>(true)
+                .GroupBy(item => item.name, StringComparer.Ordinal)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.Single(),
+                    StringComparer.Ordinal);
+            var focusBones = new[]
+            {
+                RequireBone(bones, "RightShoulder"),
+                RequireBone(bones, "RightArm"),
+                RequireBone(bones, "RightForeArm"),
+                RequireBone(bones, "RightHand"),
+                RequireBone(bones, "RightUpLeg"),
+                RequireBone(bones, "RightLeg")
+            };
+            var bounds = new Bounds(focusBones[0].position, Vector3.zero);
+            foreach (var bone in focusBones.Skip(1))
+                bounds.Encapsulate(bone.position);
+            bounds.Expand(new Vector3(0.32f, 0.18f, 0.32f));
+
+            var direction = source.transform.position - bounds.center;
+            direction.y = 0f;
+            if (direction.sqrMagnitude < 0.0001f)
+                direction = Vector3.back;
+            direction.Normalize();
+            camera.aspect = aspect;
+            var vertical = bounds.extents.y /
+                Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f);
+            var horizontalFov = 2f * Mathf.Atan(
+                Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f) * aspect);
+            var horizontal = Mathf.Max(bounds.extents.x, bounds.extents.z) /
+                Mathf.Tan(horizontalFov * 0.5f);
+            var distance = Mathf.Max(vertical, horizontal) * 1.12f;
+            camera.transform.position = bounds.center + direction * distance;
+            camera.transform.rotation = Quaternion.LookRotation(
+                bounds.center - camera.transform.position,
+                Vector3.up);
         }
 
         private static void FrameCamera(Camera camera, Transform model, Camera source, float aspect)

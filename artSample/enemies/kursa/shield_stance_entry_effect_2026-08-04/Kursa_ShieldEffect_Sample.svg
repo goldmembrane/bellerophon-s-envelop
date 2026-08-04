@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <filter id="outerGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+    <linearGradient id="shieldBlue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#39bfff"/>
+      <stop offset="1" stop-color="#0874e8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Review background only; it is not part of the Unity effect. -->
+  <rect width="512" height="512" fill="#20242c"/>
+
+  <!-- Five vertices matched to the reference's tall heater-shield silhouette. -->
+  <polygon
+    points="126,50 386,50 386,304 256,466 126,304"
+    fill="#00a8ff"
+    opacity="0.72"
+    filter="url(#outerGlow)"/>
+  <polygon
+    points="126,50 386,50 386,304 256,466 126,304"
+    fill="url(#shieldBlue)"
+    stroke="#9eeeff"
+    stroke-width="14"
+    stroke-linejoin="round"/>
+</svg>

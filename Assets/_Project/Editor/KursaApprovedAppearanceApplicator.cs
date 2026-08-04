@@ -63,7 +63,7 @@ namespace Bellerophon.Editor.KursaCargoRunScene
             "Kursa_03_Move",
             "Kursa_04_ShieldBash",
             "Kursa_05_ToShieldStance",
-            "Kursa_06_ShieldStance",
+            "Kursa_06_PostBreakRecovery",
             "Kursa_07_ShieldStanceMove",
             "Kursa_08_FromShieldStance",
             "Kursa_09_Stop",

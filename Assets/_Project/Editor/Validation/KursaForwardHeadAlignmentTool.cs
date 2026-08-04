@@ -40,7 +40,7 @@ namespace Bellerophon.Editor.KursaCargoRunScene
         private static readonly string[] SlotNames =
         {
             "Kursa_01_Static_Review", "Kursa_02_Idle", "Kursa_03_Move",
-            "Kursa_04_ShieldBash", "Kursa_05_ToShieldStance", "Kursa_06_ShieldStance",
+            "Kursa_04_ShieldBash", "Kursa_05_ToShieldStance", "Kursa_06_PostBreakRecovery",
             "Kursa_07_ShieldStanceMove", "Kursa_08_FromShieldStance", "Kursa_09_Stop",
             "Kursa_10_Hit", "Kursa_11_Death", "Kursa_12_ShieldBreakReaction"
         };

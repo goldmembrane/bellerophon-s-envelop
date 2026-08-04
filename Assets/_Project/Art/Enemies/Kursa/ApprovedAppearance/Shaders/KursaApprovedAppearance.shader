@@ -15,6 +15,7 @@ Shader "Bellerophon/Kursa/ApprovedAppearance"
         _ScarfDecal("Scarf Reference Decal", 2D) = "black" {}
         _EyeLeft("Left Eye Reference Overlay", 2D) = "black" {}
         _EyeRight("Right Eye Reference Overlay", 2D) = "black" {}
+        [HideInInspector] _EyeDesaturation("Eye Desaturation", Range(0, 1)) = 0
         _ApprovedAmbientStrength("Approved Studio Ambient", Range(0, 3)) = 0.88
         _ApprovedKeyStrength("Approved Studio Key", Range(0, 5)) = 3.00
         _ApprovedFillStrength("Approved Studio Fill", Range(0, 5)) = 1.35
@@ -82,6 +83,7 @@ Shader "Bellerophon/Kursa/ApprovedAppearance"
                 half _ApprovedFillStrength;
                 half _ApprovedRimStrength;
                 half _PreviewUnlit;
+                half _EyeDesaturation;
             CBUFFER_END
 
             struct Attributes
@@ -469,6 +471,13 @@ Shader "Bellerophon/Kursa/ApprovedAppearance"
                         half3(0.07h, 0.42h, 1.0h),
                         core);
                     lensColor += highlight * half3(0.48h, 0.72h, 1.0h);
+                    half eyeLuminance = dot(
+                        lensColor,
+                        half3(0.2126h, 0.7152h, 0.0722h));
+                    lensColor = lerp(
+                        lensColor,
+                        eyeLuminance.xxx,
+                        saturate(_EyeDesaturation));
                     return half4(lensColor, edge);
                 }
 

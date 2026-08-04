@@ -267,6 +267,270 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.KursaCargoRunScene.KursaMoveAnimationTool.CaptureKursaMoveAnimationReview,
                         "Kursa move animation review captured.");
                     break;
+                case "ApplyKursaMoveRightArmClearance":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaMoveAnimationTool.ApplyKursaMoveRightArmClearance,
+                        "Kursa move right-arm clearance applied.");
+                    break;
+                case "CaptureKursaMoveRightArmClearanceDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaMoveAnimationTool.CaptureKursaMoveRightArmClearanceDiagnostic,
+                        "Kursa move right-arm clearance diagnostic captured.");
+                    break;
+                case "CaptureKursaMoveRightArmClearanceFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaMoveAnimationTool.CaptureKursaMoveRightArmClearanceFinalReview,
+                        "Kursa move right-arm clearance final review captured.");
+                    break;
+                case "ApplyKursaMoveFaceDeformationFix":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaMoveAnimationTool.ApplyKursaMoveFaceDeformationFix,
+                        "Kursa move face deformation fix applied.");
+                    break;
+                case "InspectKursaShieldBashScale":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaShieldBashAnimationTool.InspectKursaShieldBashScale,
+                        "Kursa shield-bash scale inspected.");
+                    break;
+                case "ApplyKursaShieldBashScaleMatch":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaShieldBashAnimationTool.ApplyKursaShieldBashScaleMatch,
+                        "Kursa shield-bash scale matched to the static Kursa.");
+                    break;
+                case "ApplyKursaShieldBashAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaShieldBashAnimationTool.ApplyKursaShieldBashAnimation,
+                        "Kursa shield-bash animation applied.");
+                    break;
+                case "CaptureKursaShieldBashDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaShieldBashAnimationTool.CaptureKursaShieldBashDiagnostic,
+                        "Kursa shield-bash diagnostic captured.");
+                    break;
+                case "CaptureKursaShieldBashFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaShieldBashAnimationTool.CaptureKursaShieldBashFinalReview,
+                        "Kursa shield-bash final review captured.");
+                    break;
+                case "CaptureKursaShieldBashScaleFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaShieldBashAnimationTool.CaptureKursaShieldBashScaleFinalReview,
+                        "Kursa shield-bash scale final review captured.");
+                    break;
+                case "CaptureKursaShieldBashScaleDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaShieldBashAnimationTool.CaptureKursaShieldBashScaleDiagnostic,
+                        "Kursa shield-bash scale diagnostic captured.");
+                    break;
+                case "ApplyKursaToShieldStanceAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaToShieldStanceAnimationTool.ApplyKursaToShieldStanceAnimation,
+                        "Kursa to-shield-stance animation applied.");
+                    break;
+                case "CaptureKursaToShieldStanceDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaToShieldStanceAnimationTool.CaptureKursaToShieldStanceDiagnostic,
+                        "Kursa to-shield-stance diagnostic captured.");
+                    break;
+                case "CaptureKursaToShieldStanceFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaToShieldStanceAnimationTool.CaptureKursaToShieldStanceFinalReview,
+                        "Kursa to-shield-stance final review captured.");
+                    break;
+                case "ApplyKursaShieldStanceMoveAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaToShieldStanceAnimationTool.ApplyKursaShieldStanceMoveAnimation,
+                        "Kursa shield-stance move animation applied.");
+                    break;
+                case "CaptureKursaShieldStanceMoveDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaToShieldStanceAnimationTool.CaptureKursaShieldStanceMoveDiagnostic,
+                        "Kursa shield-stance move diagnostic captured.");
+                    break;
+                case "CaptureKursaShieldStanceMoveFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaToShieldStanceAnimationTool.CaptureKursaShieldStanceMoveFinalReview,
+                        "Kursa shield-stance move final review captured.");
+                    break;
+                case "ApplyKursaShieldStanceMoveFbx":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaShieldStanceMoveFbxTool.ApplyKursaShieldStanceMoveFbx,
+                        "Kursa shield-stance move FBX applied.");
+                    break;
+                case "CaptureKursaShieldStanceMoveFbxDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaShieldStanceMoveFbxTool.CaptureKursaShieldStanceMoveFbxDiagnostic,
+                        "Kursa shield-stance move FBX diagnostic captured.");
+                    break;
+                case "CaptureKursaShieldStanceMoveFbxFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaShieldStanceMoveFbxTool.CaptureKursaShieldStanceMoveFbxFinalReview,
+                        "Kursa shield-stance move FBX final review captured.");
+                    break;
+                case "ApplyKursaFromShieldStanceAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaFromShieldStanceAnimationTool.ApplyKursaFromShieldStanceAnimation,
+                        "Kursa from-shield-stance animation applied.");
+                    break;
+                case "ClearKursaFromShieldStanceFailedApplyDirtyState":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaFromShieldStanceAnimationTool.ClearFailedApplyDirtyState,
+                        "Kursa from-shield-stance failed apply dirty state cleared.");
+                    break;
+                case "CaptureKursaFromShieldStanceDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaFromShieldStanceAnimationTool.CaptureKursaFromShieldStanceDiagnostic,
+                        "Kursa from-shield-stance diagnostic captured.");
+                    break;
+                case "CaptureKursaFromShieldStanceFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaFromShieldStanceAnimationTool.CaptureKursaFromShieldStanceFinalReview,
+                        "Kursa from-shield-stance final review captured.");
+                    break;
+                case "ApplyKursaStopAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaStopAnimationTool.ApplyKursaStopAnimation,
+                        "Kursa stop animation applied.");
+                    break;
+                case "CaptureKursaStopDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaStopAnimationTool.CaptureKursaStopDiagnostic,
+                        "Kursa stop diagnostic captured.");
+                    break;
+                case "CaptureKursaStopFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaStopAnimationTool.CaptureKursaStopFinalReview,
+                        "Kursa stop final review captured.");
+                    break;
+                case "InspectKursaStopShieldSkinning":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaStopAnimationTool.InspectKursaStopShieldSkinning,
+                        "Kursa stop shield skinning inspected.");
+                    break;
+                case "ApplyKursaPostBreakRecoveryFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaPostBreakRecoveryFbxTool.ApplyKursaPostBreakRecoveryFbxReplacement,
+                        "Kursa post-break recovery FBX replacement applied.");
+                    break;
+                case "CaptureKursaPostBreakRecoveryFbxDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaPostBreakRecoveryFbxTool.CaptureKursaPostBreakRecoveryFbxDiagnostic,
+                        "Kursa post-break recovery FBX diagnostic captured.");
+                    break;
+                case "CaptureKursaPostBreakRecoveryFbxFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaPostBreakRecoveryFbxTool.CaptureKursaPostBreakRecoveryFbxFinalReview,
+                        "Kursa post-break recovery FBX final review captured.");
+                    break;
+                case "ApplyKursaHitFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaHitFbxTool.ApplyKursaHitFbxReplacement,
+                        "Kursa hit FBX replacement applied.");
+                    break;
+                case "CaptureKursaHitFbxDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaHitFbxTool.CaptureKursaHitFbxDiagnostic,
+                        "Kursa hit FBX diagnostic captured.");
+                    break;
+                case "CaptureKursaHitFbxFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaHitFbxTool.CaptureKursaHitFbxFinalReview,
+                        "Kursa hit FBX final review captured.");
+                    break;
+                case "ApplyKursaDeathFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaDeathFbxTool.ApplyKursaDeathFbxReplacement,
+                        "Kursa death FBX replacement applied.");
+                    break;
+                case "CaptureKursaDeathFbxDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaDeathFbxTool.CaptureKursaDeathFbxDiagnostic,
+                        "Kursa death FBX diagnostic captured.");
+                    break;
+                case "CaptureKursaDeathFbxFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaDeathFbxTool.CaptureKursaDeathFbxFinalReview,
+                        "Kursa death FBX final review captured.");
+                    break;
+                case "ApplyKursaShieldBreakFbxReplacement":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaShieldBreakFbxTool.ApplyKursaShieldBreakFbxReplacement,
+                        "Kursa shield-break FBX replacement applied.");
+                    break;
+                case "CaptureKursaShieldBreakFbxDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaShieldBreakFbxTool.CaptureKursaShieldBreakFbxDiagnostic,
+                        "Kursa shield-break FBX diagnostic captured.");
+                    break;
+                case "CaptureKursaShieldBreakFbxFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaShieldBreakFbxTool.CaptureKursaShieldBreakFbxFinalReview,
+                        "Kursa shield-break FBX final review captured.");
+                    break;
+                case "CaptureKursaMoveFaceDeformationDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaMoveAnimationTool.CaptureKursaMoveFaceDeformationDiagnostic,
+                        "Kursa move face deformation diagnostic captured.");
+                    break;
+                case "CaptureKursaMoveFaceDeformationFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaMoveAnimationTool.CaptureKursaMoveFaceDeformationFinalReview,
+                        "Kursa move face deformation final review captured.");
+                    break;
+                case "InstallKursaFbxExporterDependency":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaStaticFbxExportTool.InstallKursaFbxExporterDependency,
+                        "Kursa FBX Exporter dependency installed.");
+                    break;
+                case "ExportKursaStaticFbx":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.KursaCargoRunScene.KursaStaticFbxExportTool.ExportKursaStaticFbx,
+                        "Kursa static rigged FBX exported.");
+                    break;
                 case "ApplyKursaForwardHeadAlignment":
                     RunSynchronous(
                         request,
@@ -2162,6 +2426,48 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.KursaCargoRunScene.KursaPlacementEditor.InspectKursaPlacement,
                         "Kursa source hash, twelve direct FBX instances, spacing, grounding, static state, and Player front framing inspected.");
+                    break;
+                case "ApplyIspantArmedPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.ApplyIspantArmedPlacement,
+                        "Supplied Ispant armed FBX placed in twelve static slots below Kursa using Longa Arma/Tergo Z spacing and Kursa X spacing without changing existing scene roots.");
+                    break;
+                case "InspectIspantArmedPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.InspectIspantArmedPlacement,
+                        "Ispant source hash, twelve direct FBX instances, spacing, grounding, static state, and unchanged scene state inspected.");
+                    break;
+                case "CaptureIspantArmedPlacementDiagnostic":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.CaptureIspantArmedPlacementDiagnostic,
+                        "Ispant placement diagnostic review image captured for direct visual inspection.");
+                    break;
+                case "CaptureIspantArmedPlacementFinalReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.CaptureIspantArmedPlacementFinalReview,
+                        "Ispant placement final review image captured once after direct visual diagnostics passed.");
+                    break;
+                case "ApplyIspantPlayerStartFraming":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.ApplyIspantPlayerStartFraming,
+                        "Player start moved to the centered front view of the complete twelve-model Ispant lineup without changing other scene roots.");
+                    break;
+                case "CaptureIspantPlayerStartDiagnostic":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.CaptureIspantPlayerStartDiagnostic,
+                        "Ispant Player-start diagnostic image captured from the actual Player camera for direct visual inspection.");
+                    break;
+                case "CaptureIspantPlayerStartFinalReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.CaptureIspantPlayerStartFinalReview,
+                        "Ispant Player-start final image captured once from the actual Player camera after diagnostics passed.");
                     break;
                 case "ApplyApprovedKursaAppearance":
                     RunSynchronous(
