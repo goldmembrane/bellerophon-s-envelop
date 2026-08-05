@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>이슈판트 무장 외형 기준 비교</title>
+  <style>
+    :root { color-scheme: dark; font-family: "Malgun Gothic", sans-serif; }
+    body { margin: 0; background: #090d14; color: #edf3f8; }
+    main { max-width: 1800px; margin: 0 auto; padding: 28px; }
+    h1 { margin: 0 0 10px; font-size: 28px; }
+    p { margin: 0 0 24px; color: #aebdca; line-height: 1.6; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    figure { margin: 0; padding: 14px; background: #111923; border: 1px solid #283544; border-radius: 10px; }
+    img { width: 100%; height: auto; display: block; border-radius: 6px; background: #05080d; }
+    figcaption { padding: 12px 2px 0; color: #c9d5df; }
+    ul { color: #b8c5cf; line-height: 1.7; }
+    @media (max-width: 900px) { .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>이슈판트 무장 외형 기준 비교</h1>
+    <p>현재 수정된 모델의 색 배치·표면 재질·초승달과 무기 구성을 유지하면서, 대각선 가슴 스트랩 보존·허리띠 제거·사용자 제공 얼굴 기준의 검은 패턴선과 두 눈 슬릿을 확인하는 승인용 비교입니다.</p>
+    <section class="comparison">
+      <figure>
+        <img src="../../../image/išpant(이슈판트)-armed.png" alt="이슈판트 기준 이미지">
+        <figcaption>기준 이미지 — 아이보리 장갑, 검은 기계부, 가죽·목재, 은색 초승달</figcaption>
+      </figure>
+      <figure>
+        <img src="Ispant_Armed_Appearance_FinalReview.png" alt="이슈판트 아트 샘플 최종 검토 이미지">
+        <figcaption>제작 샘플 — 현재 FBX 실루엣과 리그를 유지한 정면·사선·후면 결과</figcaption>
+      </figure>
+    </section>
+    <ul>
+      <li>가슴의 대각선 스트랩은 유지하고 허리띠 본체·파우치·버클·연결 고정부만 제거했습니다.</li>
+      <li>장갑 마모, 금속성, 거칠기, 가죽과 목재 결을 PBR 텍스처로 구분했습니다.</li>
+      <li>새 초승달은 기존 Head 본에 연결되며 오른쪽으로 열린 방향입니다.</li>
+      <li>얼굴에는 기준 이미지에서 직접 보이는 좌우 두 개의 청록색 슬릿만 재현했습니다.</li>
+      <li>중앙 콧등 접점에서 급상승하고 눈 중앙 위에서 완만해졌다가 외측에서 다시 급상승해 장갑 외곽 끝까지 연결되는 다단 눈 위 프레임, 검은 눈 소켓, 채워진 짧은 콧등판, 외측·내측 볼 프레임과 닫힌 턱판은 사용자 제공 얼굴 기준에 맞춘 대칭 PBR 재질로 구성했습니다.</li>
+      <li>청록색 눈은 폭·두께·토폴로지를 유지하고 바깥쪽 상승 각도만 약 14.5도로 조정했습니다.</li>
+      <li>상태는 사용자 승인 대기이며 Unity에는 아직 반영하지 않았습니다.</li>
+    </ul>
+  </main>
+</body>
+</html>

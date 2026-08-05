@@ -249,6 +249,54 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.KursaCargoRunScene.KursaGroundedIdleAnimationTool.CaptureKursaIdleAnimationReview,
                         "Kursa grounded idle animation review captured.");
                     break;
+                case "ApplyIspantIdleAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantIdleAnimationTool.ApplyIspantIdleAnimation,
+                        "Ispant idle animation applied.");
+                    break;
+                case "InspectIspantIdleAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantIdleAnimationTool.InspectIspantIdleAnimation,
+                        "Ispant idle animation inspected.");
+                    break;
+                case "CaptureIspantIdleAnimationDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantIdleAnimationTool.CaptureIspantIdleAnimationDiagnostic,
+                        "Ispant idle animation diagnostic captured.");
+                    break;
+                case "CaptureIspantIdleAnimationFinalReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantIdleAnimationTool.CaptureIspantIdleAnimationFinalReview,
+                        "Ispant idle animation final review captured.");
+                    break;
+                case "ApplyIspantMoveModel":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantMoveAnimationTool.ApplyIspantMoveModel,
+                        "The revised Ispant move model was applied only to Ispant_03_Move with exact static appearance, in-place walking, matched size, and rigid body-following weapons.");
+                    break;
+                case "ApplyIspantMoveRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantMoveAnimationTool.ApplyIspantMoveRevision,
+                        "The revised Ispant move model was applied only to Ispant_03_Move with exact static appearance, in-place walking, matched size, and rigid body-following weapons.");
+                    break;
+                case "CaptureIspantMoveReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantMoveAnimationTool.CaptureIspantMoveReview,
+                        "A static-reference and five-phase revised Ispant in-place walking review was captured after size and rigid body-following weapon inspection passed.");
+                    break;
+                case "CaptureIspantMoveRevisionReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantMoveAnimationTool.CaptureIspantMoveRevisionReview,
+                        "A static-reference and five-phase revised Ispant in-place walking review was captured after size and rigid body-following weapon inspection passed.");
+                    break;
                 case "ApplyKursaMoveAnimation":
                     RunSynchronous(
                         request,
@@ -2438,6 +2486,96 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.InspectIspantArmedPlacement,
                         "Ispant source hash, twelve direct FBX instances, spacing, grounding, static state, and unchanged scene state inspected.");
+                    break;
+                case "ExportIspantStaticFbx":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantStaticFbxExportTool.ExportIspantStaticFbx,
+                        "One currently placed approved Ispant was baked and exported as a pure static three-mesh FBX without rig, bones, animation, or scene changes.");
+                    break;
+                case "ApplyApprovedIspantAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.ApplyApprovedIspantAppearance,
+                        "The exact approved belt-removed Ispant body, preserved diagonal chest strap, beveled crescent, explicit cyan eye mesh, edge-connected face pattern, approved materials, and twenty-eight copied textures applied to all twelve placed Ispant slots while preserving brightness, slot transforms, and other scene roots.");
+                    break;
+                case "InspectApprovedIspantAppearance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.InspectApprovedIspantAppearance,
+                        "The twelve approved Ispant FBX instances, belt-removed body, crescent and explicit eye topology, face UV, rig, exact material order, texture hashes, preserved brightness, and unchanged scene state inspected.");
+                    break;
+                case "CaptureApprovedIspantAppearanceReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.CaptureApprovedIspantAppearanceReview,
+                        "A single side-by-side approved Blender sample and Unity Ispant appearance review image captured after the dedicated inspection passed.");
+                    break;
+                case "DiagnoseApprovedIspantPreviewLighting":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.DiagnoseApprovedIspantPreviewLighting,
+                        "The approved custom shader and standard URP Lit were rendered under identical off-scene preview lighting with luminance metrics and no scene changes.");
+                    break;
+                case "CaptureApprovedIspantAppearanceReviewReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.CaptureApprovedIspantAppearanceReviewReplacement,
+                        "One corrected side-by-side approved Blender sample and Unity Ispant appearance comparison was captured after the lighting diagnosis and dedicated structural inspection passed.");
+                    break;
+                case "ApplyApprovedIspantBrightnessSync":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.ApplyApprovedIspantBrightnessSync,
+                        "The body-only white armor brightness was corrected on all twelve Ispant instances while preserving the helmet, approved UV-independent crescent material, and scene contract.");
+                    break;
+                case "CaptureApprovedIspantBrightnessDiagnostic":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.CaptureApprovedIspantBrightnessDiagnostic,
+                        "A diagnostic side-by-side approved sample and Unity Ispant brightness comparison was captured after dedicated structural inspection.");
+                    break;
+                case "CaptureApprovedIspantBrightnessReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.CaptureApprovedIspantBrightnessReview,
+                        "One final side-by-side approved sample and Unity Ispant white armor and crescent brightness review was captured after the dedicated inspection passed.");
+                    break;
+                case "CaptureApprovedIspantBodyBrightnessDiagnostic":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.CaptureApprovedIspantBodyBrightnessDiagnostic,
+                        "A diagnostic side-by-side comparison was captured after increasing only the twelve approved Ispant body and helmet white armor materials while preserving the crescent material.");
+                    break;
+                case "CaptureApprovedIspantBodyBrightnessReview":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.CaptureApprovedIspantBodyBrightnessReview,
+                        "One final side-by-side approved sample and Unity Ispant body white armor brightness review was captured after the dedicated inspection passed.");
+                    break;
+                case "CalibrateApprovedIspantBodyArmorMeanLuminance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.CalibrateApprovedIspantBodyArmorMeanLuminance,
+                        "The body-only white armor brightness required to reach the user-approved mean luminance target was calibrated in an off-scene preview without changing the helmet, crescent, or scene.");
+                    break;
+                case "InspectApprovedIspantBodyArmorMeanLuminance":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.InspectApprovedIspantBodyArmorMeanLuminance,
+                        "The applied body-only white armor mean luminance matched the user-approved 25 percent increase target while the helmet, crescent, and scene remained unchanged.");
+                    break;
+                case "CaptureApprovedIspantBodyMean25Diagnostic":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.CaptureApprovedIspantBodyMean25Diagnostic,
+                        "A diagnostic comparison was captured after applying the calibrated 25 percent body-only white armor mean luminance increase.");
+                    break;
+                case "CaptureApprovedIspantBodyMean25Review":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantApprovedAppearanceApplicator.CaptureApprovedIspantBodyMean25Review,
+                        "One final comparison was captured after the body-only white armor mean luminance and dedicated structural inspections passed.");
                     break;
                 case "CaptureIspantArmedPlacementDiagnostic":
                     RunSynchronous(

@@ -1,0 +1,43 @@
+{
+  "result": "PASS",
+  "walking_source": "D:\\Bellerophon2\\Bellerophon\\enemies model\\išpant walking.fbx",
+  "walking_sha256": "705BD9FEBC2B03529C2392F62425A80544B75182D0D26F4A534532D9905778E7",
+  "static_source": "D:\\Bellerophon2\\Bellerophon\\enemies model\\Ispant_Static.fbx",
+  "static_sha256": "14A011FA502815AD37CB4817B0BCD353C92AF6227BABE0118C09CA70A5484506",
+  "output": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\Animations\\Ispant_Move.fbx",
+  "output_sha256": "25E2CEC76F1FB3AF0A406E450649D38399799581B0F2B4644995B108BAFC0FA8",
+  "source_action": "Armature|mixamo.com|Layer0",
+  "source_frame_range": [
+    1,
+    62
+  ],
+  "source_bones": 33,
+  "walking_static_max_world_vertex_error": 1.2731557704981462e-07,
+  "body_components": 81,
+  "musket_components": [
+    41,
+    75,
+    76
+  ],
+  "sword_components": [
+    77,
+    78,
+    79,
+    80
+  ],
+  "musket_material_faces": {
+    "Ispant_Leather_Approved.001": 6,
+    "Ispant_Wood_Approved.001": 60,
+    "Ispant_Steel_Approved.001": 88
+  },
+  "sword_material_faces": {
+    "Ispant_Steel_Approved.001": 78
+  },
+  "animated_body_vertices_after_split": 1915,
+  "fixed_musket_vertices": 83,
+  "fixed_sword_vertices": 46,
+  "fixed_musket_parent_bone": "mixamorig:Spine2",
+  "fixed_sword_parent_bone": "mixamorig:Hips",
+  "weapons_have_armature_modifier": false,
+  "weapons_have_vertex_groups": false
+}

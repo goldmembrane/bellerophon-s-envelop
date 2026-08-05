@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>이슈판트 무장 모델 외형 동기화 아트 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #ece9df;
+      --muted: #b9b7ae;
+      --panel: #181b1c;
+      --panel-deep: #0e1112;
+      --line: #4d5150;
+      --ivory: #d8d4c8;
+      --copper: #a86d43;
+      --cyan: #86d9ee;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Bahnschrift", "Malgun Gothic", sans-serif;
+      background:
+        linear-gradient(115deg, rgba(168, 109, 67, .08), transparent 36%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 5px),
+        #101314;
+      color: var(--ink);
+    }
+    main { max-width: 1180px; margin: 0 auto; padding: 34px 28px 56px; }
+    h1, h2, h3 { margin: 0 0 14px; letter-spacing: .01em; }
+    h1 { max-width: 860px; font-size: clamp(2rem, 5vw, 4.2rem); line-height: .98; color: var(--ivory); }
+    h2 { padding-bottom: 10px; border-bottom: 1px solid var(--line); color: var(--ivory); }
+    section { margin: 36px 0; }
+    p, li { line-height: 1.62; }
+    a { color: var(--cyan); text-underline-offset: 3px; }
+    code { color: var(--cyan); }
+    .eyebrow { color: var(--copper); font-size: .82rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    .lead { max-width: 960px; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 10px 10px 0 rgba(0,0,0,.22);
+    }
+    .comparison h3 { grid-column: 1 / -1; color: var(--ivory); }
+    figure { margin: 0; padding: 10px; background: var(--panel-deep); border: 1px solid #343939; }
+    img { width: 100%; height: auto; display: block; background: #f2f1ed; }
+    figcaption { margin-top: 9px; color: var(--muted); font-size: 13px; word-break: break-all; }
+    .facts { padding: 18px 20px; background: rgba(216,212,200,.055); border-left: 3px solid var(--copper); }
+    .texture img { aspect-ratio: 1; object-fit: cover; }
+    @media (max-width: 760px) {
+      main { padding: 26px 18px 44px; }
+      .comparison { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Appearance Reference Sync · Armed Ispant</p>
+  <h1>이슈판트 무장 모델 외형 동기화 아트 샘플</h1>
+  <p class="lead">현재 수정된 이슈판트 모델의 초승달·무기 구성을 유지한 채 <code>image/išpant(이슈판트)-armed.png</code>와 사용자 제공 얼굴 기준을 대조한 검토 샘플입니다. 대각선 가슴 스트랩은 보존하고 허리띠 본체·파우치·버클·연결 고정부만 제거했습니다. 얼굴에는 사용자 제공 기준에 따라 중앙 콧등 접점에서 급상승하고 눈 중앙 위에서 완만해졌다가 외측에서 다시 급상승해 장갑 외곽 끝까지 연결되는 다단 눈 위 프레임, 검은 눈 소켓, 채워진 짧은 콧등판, 외측·내측 볼 프레임과 닫힌 턱판을 대칭 PBR 패턴으로 고정했습니다. 두 눈 슬릿은 폭·두께·토폴로지를 유지하고 바깥쪽 상승 각도만 약 14.5도로 조정했으며 숨은 눈 구조는 만들지 않았습니다. 상태는 <code>ART_SAMPLE_PENDING_USER_APPROVAL_2026-08-05</code>입니다. 빠른 판정용 요약은 <a href="summary.html">summary.html</a>에서 확인할 수 있습니다.</p>
+
+  <section>
+    <h2>이번 개정의 승인·적용 경계 · 2026-08-05</h2>
+    <div class="facts">
+      <p><code>ART_SAMPLE_PENDING_USER_APPROVAL_2026-08-05</code></p>
+      <p>이 페이지의 허리띠 제거·가슴 스트랩 보존·청록색 눈 슬릿·대칭 얼굴 PBR 개정은 아트 샘플에만 존재합니다. 이전 승인본의 Unity 명도 적용 상태를 덮어쓰지 않았고, Unity 씬·프리팹·런타임 자산에는 이번 개정을 연결하지 않았습니다. 하네스 검증, EditMode·PlayMode 테스트와 빌드도 실행하지 않았습니다.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>기준 이미지와 생성 렌더 비교</h2>
+    <article class="comparison">
+      <h3>기준 외형과 현재 모델 적용 결과</h3>
+      <figure>
+        <img src="../../../../image/išpant(이슈판트)-armed.png" alt="이슈판트 무장 기준 이미지">
+        <figcaption>기준 이미지: image/išpant(이슈판트)-armed.png</figcaption>
+      </figure>
+      <figure>
+        <img src="../Ispant_Armed_Appearance_FinalReview.png" alt="이슈판트 무장 외형 최종 검토 렌더">
+        <figcaption>생성 렌더: 정면·3/4·후면 및 초승달 상세</figcaption>
+      </figure>
+    </article>
+    <article class="comparison">
+      <h3>얼굴 패턴과 눈 슬릿 확인</h3>
+      <figure>
+        <img src="../../../../image/išpant(이슈판트)-armed.png" alt="두 개의 청록색 눈 슬릿이 보이는 이슈판트 기준 이미지">
+        <figcaption>기준 이미지에서 직접 확인되는 정보: 좌우 두 개의 좁은 청록색 슬릿</figcaption>
+      </figure>
+      <figure>
+        <img src="../diagnostics/Ispant_Face_Reference_SideBySide.png" alt="사용자 제공 얼굴 기준과 수정된 검은 기계 패턴의 병렬 비교">
+        <figcaption>병렬 비교: 왼쪽 사용자 제공 얼굴 기준 / 오른쪽 재구성한 검은 PBR 패턴과 약 14.5도 눈 슬릿</figcaption>
+      </figure>
+    </article>
+  </section>
+
+  <section>
+    <h2>생성 렌더</h2>
+    <div class="grid">
+      <figure>
+        <img src="../Ispant_Armed_Appearance_FinalReview.png" alt="이슈판트 최종 다중 시점 검토 렌더">
+        <figcaption>Ispant_Armed_Appearance_FinalReview.png — FRONT / THREE QUARTER / BACK / CRESCENT DETAIL</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>이슈판트 모델 적용 기준</h2>
+    <div class="facts">
+      <ul>
+        <li>검토용 원본 파일: <code>../Ispant_Armed_Appearance_Sample.blend</code></li>
+        <li>범용 시각 검토용 GLB: <code>../Ispant_Armed_Appearance_Sample.glb</code></li>
+        <li>장갑판: 기준 이미지의 낡은 아이보리·백색 도장 금속을 주조로 하고, 흰색 장갑 연결 부품 43개마다 같은 규격의 이중 절곡 림, 팔각형 음각 중앙판, 네 개의 링형 체결구와 상·하 점검 슬롯을 반복했습니다. 페인트 면·어두운 노출 금속·깊은 홈의 명도와 PBR 반응을 분리하고, 표면 마모만 약하게 불규칙하게 두었습니다.</li>
+        <li>투구·관절·내부 기계부: 어두운 건메탈과 검은 고무성 표면으로 장갑과 명도·광택을 분리했습니다.</li>
+        <li>얼굴 전면: 사용자 제공 얼굴 기준에 따라 중앙 콧등 접점에서 급상승하고 눈 중앙 위에서 완만해졌다가 외측에서 다시 급상승해 장갑 외곽 끝까지 연결되는 다단 눈 위 프레임, 눈을 감싸는 검은 건메탈 소켓, 채워진 짧은 콧등판, 외측·내측 볼 프레임과 닫힌 턱판을 좌우대칭으로 배치했습니다.</li>
+        <li>눈 슬릿: 기존 32정점·28폴리곤과 폭·두께는 유지하고 바깥쪽 상승량만 <code>0.014m</code>, 정면 기울기 약 <code>14.5도</code>로 조정했습니다.</li>
+        <li>대각선 가슴 스트랩: 갈색 가죽의 얼룩과 눌림, 불균일한 거칠기를 유지했습니다.</li>
+        <li>허리: 허리띠 본체·전후면 파우치·버클·측면 연결 고정부를 제거하고 골반 및 복부 장갑은 보존했습니다.</li>
+        <li>어깨 머스켓: 목재 결이 보이는 갈색 개머리판과 은회색 강철 총열로 구분했습니다.</li>
+        <li>장검·초승달: 긁힘과 러프니스 변화가 있는 은회색 강철로 구성했습니다.</li>
+        <li>소형 관절 장식은 구리색 금속으로 제한하고, 눈은 기준 이미지에서 보이는 외곽만 32정점·28폴리곤의 두 개 청록색 발광 슬릿으로 표현했습니다.</li>
+        <li>본체에는 기존 8개 재질 슬롯과 얼굴 전용 <code>Ispant_Helmet_Face</code>를 합쳐 9개 재질 슬롯을 사용했습니다.</li>
+        <li>일곱 재질군별 Base Color·Roughness·Metallic·Normal 텍스처를 구성해 총 28개 PNG를 사용했습니다.</li>
+        <li>장갑·일반 헬멧은 <code>IspantMechanicalUV</code>, 얼굴 전면은 대칭 평면 UV <code>IspantHelmetFaceUV</code>를 사용합니다. 원본 <code>uv</code>는 활성 렌더 UV로 보존됩니다.</li>
+        <li>장갑·헬멧의 노멀 강도는 <code>0.66</code>, 도장 코팅 가중치는 <code>0.16</code>으로 맞춰 절곡부와 체결부의 깊이 및 금속 반사를 같은 규격으로 유지했습니다.</li>
+        <li>이번 허리띠·눈 개정의 Unity 적용은 사용자께서 이 샘플을 승인하고 적용 범위를 별도로 지정한 뒤에만 진행합니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>메시 변경과 구조 보존</h2>
+    <ul>
+      <li>원본 스킨드 메시에서 머리 위 원형 장식의 독립 메시 섬 48정점·96폴리곤을 제거했습니다.</li>
+      <li>사용자께서 표시한 우측의 평행한 막대형 보조 총기는 원본 연결 표면 <code>57</code>, <code>79</code>, <code>92</code>이며, 목재 부품 2개와 강철 부품 1개를 합쳐 34정점·56폴리곤만 제거했습니다.</li>
+      <li>허리띠는 원본 연결 표면 <code>48, 50, 55, 63, 65, 70, 82, 84, 85, 90, 91, 94, 96, 98, 99</code>의 158정점·256폴리곤을 제거했습니다.</li>
+      <li>대각선 가슴 스트랩은 별도 연결 표면 <code>22</code>로 고정해 제거 집합에서 제외했습니다.</li>
+      <li>같은 장착 위치에 오른쪽으로 열린 초승달 메시 148정점·146폴리곤을 생성했습니다.</li>
+      <li>초승달 전체 정점은 기존 <code>Head</code> 본에 가중치 <code>1.0</code>으로 연결했습니다.</li>
+      <li>눈은 헬멧 평가 표면을 따라 좌우 각각 하나의 연속 메시로 생성했으며 두 슬릿 합계는 32정점·28폴리곤입니다. <code>Head</code> 본 직접 자식으로 연결했습니다.</li>
+      <li>원형 장식·지정 보조 총기·허리띠를 제외한 본체 2,044정점과 본 이름·부모 계층은 보존됩니다.</li>
+      <li>GLB 본체에는 원본 UV와 기계 장갑용 UV 두 세트가 보존됩니다.</li>
+      <li>신체·어깨 머스켓·장검·비율·기본 자세·애니메이션 구조는 변경하지 않았습니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>이슈판트 모델 한계와 추론 범위</h2>
+    <ul>
+      <li>현재 FBX의 세부 분할과 장갑 형상은 기준 이미지보다 단순합니다. 기준 이미지에만 보이는 추가 볼트·케이블·세부 패널은 새 메시로 만들지 않았습니다.</li>
+      <li>기준 이미지에서 직접 확인되지 않는 후면은 전면에서 확정된 아이보리 기계 장갑, 검은 기계부, 가죽·목재, 강철 색 체계와 판금 표면 언어의 연속성만 적용했습니다.</li>
+      <li>청록색 눈은 기준 이미지에 실제로 보이는 두 슬릿 외곽만 메시로 만들었습니다. 안구·렌즈·내부 발광 장치나 VFX는 추가하지 않았습니다.</li>
+      <li>초승달의 방향과 외곽 인상은 기준 이미지에 맞췄지만, 두께와 세부 단면은 기존 원형 장식의 장착 범위 안에서 모델 구조에 맞게 구성했습니다.</li>
+      <li>GLB는 범용 시각 검토용이며 구조 보존 판정은 Blender 원본과 원본 FBX 대조 결과를 기준으로 합니다.</li>
+      <li>이번 개정은 사용자 승인 전이므로 Unity 씬·프리팹·런타임 자산에 반영하지 않았습니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>사용 텍스처</h2>
+    <p class="lead">아래에는 각 재질군의 Base Color와 Normal을 대표로 표시합니다. 같은 이름의 Metallic과 Roughness 맵도 함께 구성되어 있습니다. 기존 24개 PBR 텍스처는 유지하고, 이번 얼굴 개정에 <code>helmet_face</code> Base Color·Roughness·Metallic·Normal 4개를 추가했습니다.</p>
+    <div class="grid">
+      <figure class="texture"><img src="../textures/armor_ivory_basecolor.png" alt="아이보리 장갑 Base Color"><figcaption>armor_ivory_basecolor.png</figcaption></figure>
+      <figure class="texture"><img src="../textures/armor_ivory_normal.png" alt="아이보리 장갑 Normal"><figcaption>armor_ivory_normal.png</figcaption></figure>
+      <figure class="texture"><img src="../textures/helmet_face_basecolor.png" alt="냉정한 정밀 대칭 얼굴 패턴 Base Color"><figcaption>helmet_face_basecolor.png</figcaption></figure>
+      <figure class="texture"><img src="../textures/helmet_face_normal.png" alt="냉정한 정밀 대칭 얼굴 패턴 Normal"><figcaption>helmet_face_normal.png</figcaption></figure>
+      <figure class="texture"><img src="../textures/gunmetal_basecolor.png" alt="건메탈 Base Color"><figcaption>gunmetal_basecolor.png</figcaption></figure>
+      <figure class="texture"><img src="../textures/gunmetal_normal.png" alt="건메탈 Normal"><figcaption>gunmetal_normal.png</figcaption></figure>
+      <figure class="texture"><img src="../textures/leather_brown_basecolor.png" alt="갈색 가죽 Base Color"><figcaption>leather_brown_basecolor.png</figcaption></figure>
+      <figure class="texture"><img src="../textures/leather_brown_normal.png" alt="갈색 가죽 Normal"><figcaption>leather_brown_normal.png</figcaption></figure>
+      <figure class="texture"><img src="../textures/musket_wood_basecolor.png" alt="머스켓 목재 Base Color"><figcaption>musket_wood_basecolor.png</figcaption></figure>
+      <figure class="texture"><img src="../textures/musket_wood_normal.png" alt="머스켓 목재 Normal"><figcaption>musket_wood_normal.png</figcaption></figure>
+      <figure class="texture"><img src="../textures/steel_silver_basecolor.png" alt="은회색 강철 Base Color"><figcaption>steel_silver_basecolor.png</figcaption></figure>
+      <figure class="texture"><img src="../textures/steel_silver_normal.png" alt="은회색 강철 Normal"><figcaption>steel_silver_normal.png</figcaption></figure>
+      <figure class="texture"><img src="../textures/copper_accent_basecolor.png" alt="구리 장식 Base Color"><figcaption>copper_accent_basecolor.png</figcaption></figure>
+      <figure class="texture"><img src="../textures/copper_accent_normal.png" alt="구리 장식 Normal"><figcaption>copper_accent_normal.png</figcaption></figure>
+    </div>
+  </section>
+</main>
+</body>
+</html>

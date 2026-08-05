@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>이슈판트 무장 외형 동기화 요약</title>
+  <style>
+    :root { color-scheme: dark; --ink: #ece9df; --muted: #b9b7ae; --panel: #181b1c; --line: #4d5150; --copper: #a86d43; --cyan: #86d9ee; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Bahnschrift", "Malgun Gothic", sans-serif;
+      background: linear-gradient(115deg, rgba(168,109,67,.08), transparent 36%), #101314;
+      color: var(--ink);
+    }
+    main { max-width: 1180px; margin: 0 auto; padding: 34px 28px 56px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    h1 { font-size: clamp(2rem, 5vw, 3.7rem); line-height: 1; }
+    h2 { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    section { margin: 36px 0; }
+    p, li { line-height: 1.62; }
+    a, code { color: var(--cyan); }
+    a { text-underline-offset: 3px; }
+    .eyebrow { color: var(--copper); font-size: .82rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    .lead { color: var(--muted); }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 14px; background: var(--panel); border: 1px solid var(--line); }
+    figure { margin: 0; padding: 10px; background: #0e1112; border: 1px solid #343939; }
+    img { width: 100%; height: auto; display: block; background: #f2f1ed; }
+    figcaption { margin-top: 9px; color: var(--muted); font-size: 13px; }
+    .verdict { padding: 20px; background: rgba(216,212,200,.055); border-left: 3px solid var(--copper); }
+    @media (max-width: 760px) { main { padding: 26px 18px 44px; } .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Quick Review · Armed Ispant</p>
+  <h1>이슈판트 무장 외형 동기화 요약</h1>
+  <p class="lead">현재 상태는 <code>ART_SAMPLE_PENDING_USER_APPROVAL_2026-08-05</code>입니다. 현재 수정된 이슈판트 모델에서 대각선 가슴 스트랩은 유지하고 허리띠·파우치·버클·연결 고정부를 제거했습니다. 얼굴에는 사용자 제공 얼굴 기준에 따라 중앙 콧등 접점에서 급상승하고 눈 중앙 위에서 완만해졌다가 외측에서 다시 급상승해 장갑 외곽 끝까지 연결되는 다단 눈 위 프레임, 검은 눈 소켓, 채워진 짧은 콧등판, 외측·내측 볼 프레임과 닫힌 턱판을 대칭 PBR 패턴으로 적용했습니다. 두 눈 슬릿은 폭·두께·토폴로지를 유지하고 기울기만 약 14.5도로 조정했습니다. 전체 자료는 <a href="index.html">index.html</a>에서 확인할 수 있습니다.</p>
+
+  <section>
+    <h2>승인·적용 판정</h2>
+    <div class="verdict">
+      <p><code>PENDING_USER_APPROVAL / UNITY_NOT_APPLIED</code></p>
+      <p>최종 검토 렌더와 얼굴 병렬 비교는 생성됐지만, 이번 허리띠·눈·대칭 얼굴 PBR 개정은 Unity 씬·프리팹·런타임 자산에 반영하지 않았습니다. 하네스 검증, EditMode·PlayMode 테스트와 빌드도 실행하지 않았습니다.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>얼굴 패턴 병렬 비교</h2>
+    <div class="comparison">
+      <figure>
+        <img src="../../../../image/išpant(이슈판트)-armed.png" alt="청록색 눈 슬릿이 보이는 기준 이미지">
+        <figcaption>기준에서 확인 가능한 눈 정보: 좌우 두 개의 좁은 청록색 슬릿</figcaption>
+      </figure>
+      <figure>
+        <img src="../diagnostics/Ispant_Face_Reference_SideBySide.png" alt="사용자 제공 얼굴 기준과 수정된 검은 얼굴 패턴의 병렬 비교">
+        <figcaption>왼쪽 사용자 제공 얼굴 기준 / 오른쪽 연결된 검은 패턴·건메탈 눈 소켓·약 14.5도 눈 슬릿 적용 결과</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>비교 요약</h2>
+    <div class="comparison">
+      <figure>
+        <img src="../../../../image/išpant(이슈판트)-armed.png" alt="이슈판트 무장 기준 이미지">
+        <figcaption>기준: 아이보리 장갑·검은 기계부·가죽과 목재·강철 무기·오른쪽으로 열린 초승달</figcaption>
+      </figure>
+      <figure>
+        <img src="../Ispant_Armed_Appearance_FinalReview.png" alt="이슈판트 무장 최종 검토 렌더">
+        <figcaption>결과: 현재 모델의 정면·3/4·후면과 초승달 상세</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>반영된 외형</h2>
+    <div class="verdict">
+      <ul>
+        <li>낡은 아이보리 도장 장갑의 연결 부품 43개마다 같은 규격의 이중 절곡 림, 팔각형 음각 중앙판, 네 개의 링형 체결구와 상·하 점검 슬롯을 반복해 참조 이미지의 조립식 기계 장갑 인상을 강화했습니다.</li>
+        <li>흰 페인트 면과 어두운 노출 금속·깊은 홈의 명도, 금속성, 거칠기, 노멀 반응을 분리하고 무작위 요소는 약한 경계 마모와 미세 표면 변화에만 제한했습니다.</li>
+        <li>대각선 가슴 스트랩의 갈색 가죽은 유지하고, 허리띠 본체·전후면 파우치·버클·측면 연결 고정부는 제거했습니다.</li>
+        <li>얼굴 전면은 전용 <code>IspantHelmetFaceUV</code>로 고정해 중앙 콧등 접점에서 급상승하고 눈 중앙 위에서 완만해졌다가 외측에서 다시 급상승해 장갑 외곽 끝까지 연결되는 다단 눈 위 프레임, 검은 눈 소켓, 채워진 짧은 콧등판, 외측·내측 볼 프레임과 닫힌 턱판이 좌우대칭을 유지합니다.</li>
+        <li>소형 관절부에는 구리색 포인트를 제한적으로 배치했습니다.</li>
+        <li>32정점·28폴리곤의 두 개 청록색 발광 슬릿은 폭·두께·토폴로지를 유지하고 바깥쪽 상승량만 <code>0.014m</code>, 정면 기울기 약 <code>14.5도</code>로 조정했으며 안구·렌즈·내부 구조와 VFX는 추가하지 않았습니다.</li>
+        <li>기존 PBR 텍스처 24개에 얼굴 전용 Base Color·Roughness·Metallic·Normal 4개를 추가해 총 28개를 사용했습니다.</li>
+        <li>얼굴 이외의 장갑·가죽·목재·건메탈·강철·구리 텍스처와 원본 UV는 변경하지 않았습니다.</li>
+        <li>원형 장식만 제거하고 같은 장착 위치에 오른쪽으로 열린 은회색 초승달을 생성했습니다.</li>
+        <li>우측 저해상도 보조 총기의 목재 부품 2개와 강철 부품 1개, 총 34정점·56폴리곤을 제거했습니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>보존 및 한계</h2>
+    <ul>
+      <li>원형 장식 48정점·96폴리곤, 지정 보조 총기 34정점·56폴리곤, 허리띠 158정점·256폴리곤을 제거한 본체는 2,044정점·3,596폴리곤입니다.</li>
+      <li>대각선 가슴 스트랩 연결 표면 <code>22</code>는 제거 집합에서 제외해 보존했습니다.</li>
+      <li>새 초승달은 148정점·146폴리곤이며 모든 정점이 <code>Head</code> 본 가중치 <code>1.0</code>을 사용합니다.</li>
+      <li>두 눈 슬릿은 합계 32정점·28폴리곤이며 <code>Head</code> 본 직접 자식입니다.</li>
+      <li>본 이름과 부모 계층, 신체·어깨 머스켓·장검 형상, 비율, 기본 자세와 애니메이션 구조는 유지했습니다.</li>
+      <li>GLB 본체에는 원본·장갑용 UV 두 세트가 보존됩니다.</li>
+      <li>기준 이미지에서 보이지 않는 후면은 확인 가능한 전면 색 체계의 연속성만 적용했습니다.</li>
+      <li>기준 이미지에만 있는 추가 세부 패널·볼트·케이블은 현재 FBX에 새 메시로 만들지 않았습니다.</li>
+      <li>이번 샘플은 승인 전이므로 Unity 씬·프리팹·런타임 자산에 연결하지 않았습니다.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
