@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>이슈판트 발검 장검 외형 동기화 요약</title>
+  <style>
+    :root { color-scheme: dark; --ink: #ece9df; --muted: #b9b7ae; --panel: #181b1c; --line: #4d5150; --copper: #a86d43; --cyan: #86d9ee; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Bahnschrift", "Malgun Gothic", sans-serif;
+      background: linear-gradient(115deg, rgba(168,109,67,.08), transparent 36%), #101314;
+      color: var(--ink);
+    }
+    main { max-width: 1180px; margin: 0 auto; padding: 34px 28px 56px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    h1 { font-size: clamp(2rem, 5vw, 3.7rem); line-height: 1; }
+    h2 { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    section { margin: 36px 0; }
+    p, li { line-height: 1.62; }
+    a, code { color: var(--cyan); }
+    a { text-underline-offset: 3px; }
+    .eyebrow { color: var(--copper); font-size: .82rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    .lead { color: var(--muted); }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 14px; background: var(--panel); border: 1px solid var(--line); }
+    figure { margin: 0; padding: 10px; background: #0e1112; border: 1px solid #343939; }
+    img { width: 100%; height: auto; display: block; background: #f2f1ed; }
+    figcaption { margin-top: 9px; color: var(--muted); font-size: 13px; }
+    .verdict { padding: 20px; background: rgba(216,212,200,.055); border-left: 3px solid var(--copper); }
+    @media (max-width: 760px) { main { padding: 26px 18px 44px; } .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Quick Review · Ispant Draw Sword</p>
+  <h1>이슈판트 발검 장검 외형 동기화 요약</h1>
+  <p class="lead">현재 상태는 <code>ART_SAMPLE_APPROVED_AND_UNITY_APPLIED_2026-08-06</code>입니다. 기준 이미지의 길고 좁은 은회색 장검을 짙은 갈색 손잡이·가드·폼멜까지 갖춘 단일 메시로 구현했고 Unity 이슈판트 12개 슬롯에 적용했습니다. 발검 슬롯은 기존 손잡이 중심에 맞춰 <code>mixamorig:RightHand</code>에 연결했습니다. 전체 자료는 <a href="index.html">index.html</a>에서 확인할 수 있습니다.</p>
+
+  <section>
+    <h2>승인·적용 판정</h2>
+    <div class="verdict">
+      <p><code>USER_APPROVED / UNITY_APPLIED_TO_12_SLOTS / INSPECTION_PASS</code></p>
+      <p>승인 장검을 12개 슬롯에 적용했습니다. 10개 정적 슬롯과 이동 슬롯은 기존 장착 위치를 유지하고, 발검 슬롯만 오른손을 직접 추종합니다. 원본 FBX와 승인 Blender 샘플은 보존했습니다. <code>Run-HarnessValidation.ps1</code>, EditMode·PlayMode 테스트와 빌드는 실행하지 않았습니다.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>장검 외형 병렬 비교</h2>
+    <div class="comparison">
+      <figure>
+        <img src="../diagnostics/Ispant_Reference_Sword_Crop.png" alt="기준 이미지에서 확대한 이슈판트 장검">
+        <figcaption>기준: 길고 좁은 은회색 장검, 가장자리 마모와 짙은 갈색 손잡이 계열</figcaption>
+      </figure>
+      <figure>
+        <img src="../Ispant_DrawSword_HandleCloseup.png" alt="새 이슈판트 장검의 손잡이 확대 렌더">
+        <figcaption>결과: 짙은 갈색 감기 손잡이, 은회색 가드·폼멜과 마모 강철 칼날</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>비교 요약</h2>
+    <div class="comparison">
+      <figure>
+        <img src="../../../../image/išpant(이슈판트)-armed.png" alt="이슈판트 무장 기준 이미지">
+        <figcaption>기준: 이슈판트 전신 비례와 허리 측면의 길고 좁은 장검</figcaption>
+      </figure>
+      <figure>
+        <img src="../Ispant_DrawSword_FinalReview.png" alt="이슈판트 발검 장검 최종 검토 렌더">
+        <figcaption>결과: 기준 크롭 / 발검 정면 / 발검 측면 / 손잡이 상세</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>반영된 외형</h2>
+    <div class="verdict">
+      <ul>
+        <li>전체 길이 <code>1.0715m</code>의 좁고 곧은 테이퍼형 장검으로 구성했습니다.</li>
+        <li>칼날은 길이 <code>0.82m</code>, 뿌리 폭 <code>0.068m</code>, 두께 <code>0.012m</code>입니다.</li>
+        <li>가드 폭은 <code>0.19m</code>이며 중앙 칼라와 좌우 대칭의 짧은 곡선형 금속 가드로 구성했습니다.</li>
+        <li>손잡이는 길이 <code>0.17m</code>, 지름 <code>0.052m</code>이며 짙은 갈색 가죽과 반복 감기 표현을 적용했습니다.</li>
+        <li>폼멜은 길이 <code>0.055m</code>의 마모된 은회색 금속입니다.</li>
+        <li>칼날·가드·폼멜에는 절차형 마모 강철 PBR, 손잡이에는 짙은 갈색 가죽 PBR을 사용했습니다.</li>
+        <li>장검은 손잡이와 칼날이 분리되지 않는 <code>Ispant_Reference_LongSword</code> 단일 메시입니다.</li>
+        <li>발검 몸체 38개 머티리얼 슬롯은 승인된 정적 이슈판트 샘플의 기존 머티리얼 객체와 동기화했습니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>보존 및 한계</h2>
+    <ul>
+      <li>새 장검은 2,080정점·4,092삼각형이며 전체 치수는 <code>0.198372m × 0.076m × 1.0715m</code>입니다.</li>
+      <li><code>mixamorig:RightHand</code> 본의 직접 자식이며 기존 발검 손잡이 중심과의 정렬 오차는 <code>0m</code>입니다.</li>
+      <li>몸체·초승달·눈·머스켓과 Mixamo 액션 1~46프레임은 현재 발검 개체 기준을 유지했습니다.</li>
+      <li>Unity 적용본의 기존 손잡이 없는 장검과 발검 칼집은 제거됐고 승인 장검으로 교체됐습니다.</li>
+      <li>기준 이미지에서 보이지 않는 후면 깊이는 정면 윤곽의 대칭 두께만 사용했고 추가 장식을 만들지 않았습니다.</li>
+      <li>BLEND·FBX·GLB 재가져오기에서 장검 메시 1개, 재질 3개, 4,092삼각형과 오른손 본 연결을 확인했습니다.</li>
+      <li>Unity 발검 FBX의 원본 해시는 변경되지 않았습니다.</li>
+      <li>발검 1~46프레임의 최대 부착 오차는 <code>0m</code>, 오른손 표면 최대 거리는 <code>0.01422674m</code>입니다.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,120 @@
+{
+  "source_blend": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\length_0_9m_revision\\Ispant_DrawSword_0_9m_ArtSample.blend",
+  "source_blend_sha256": "52E995ED3B121C5363E53FFA8BB832D7BF9FF4795560711AA7D12105C9CABA3D",
+  "source_report": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\length_0_9m_revision\\Ispant_DrawSword_0_9m_ArtSample_Report.json",
+  "source_report_sha256": "CA890AE2EB72F9756F6285891FB4AABFA582CC84DD7833B97B4D890101BD1416",
+  "object_name": "Ispant_Reference_LongSword",
+  "mesh_name": "Ispant_Reference_LongSword_Mesh",
+  "vertices": 2080,
+  "triangles": 4092,
+  "dimensions_m": [
+    0.19837234914302826,
+    0.07599999755620956,
+    0.8999999761581421
+  ],
+  "material_slots": [
+    "Ispant_LongSword_WornSteel",
+    "Ispant_LongSword_BrownLeather",
+    "Ispant_LongSword_DarkEngraving"
+  ],
+  "grip_center_local_m": [
+    0.0,
+    0.0,
+    -0.103
+  ],
+  "textures": {
+    "BaseColor": {
+      "path": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Textures\\Ispant_ApprovedLongSword_BaseColor.png",
+      "sha256": "51590660010EBDE19F79D7EEAB600F9C74CF71EA4797B1EEC57A6AD64D2ABAFF",
+      "width": 1024,
+      "height": 1024,
+      "pixel_min": 0.0,
+      "pixel_max": 0.2039215862751007
+    },
+    "Roughness": {
+      "path": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Textures\\Ispant_ApprovedLongSword_Roughness.png",
+      "sha256": "19C7CB84635665C26A6832622B3B10540F476C796F16E327BC77717A708D0259",
+      "width": 1024,
+      "height": 1024,
+      "pixel_min": 0.0,
+      "pixel_max": 0.5803921818733215
+    },
+    "Metallic": {
+      "path": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Textures\\Ispant_ApprovedLongSword_Metallic.png",
+      "sha256": "1741DB3FBD470FE6D4875AA66F8E510E9508D180EBB8BF57A4A88731C832A97F",
+      "width": 1024,
+      "height": 1024,
+      "pixel_min": 0.0,
+      "pixel_max": 0.9215686917304993
+    },
+    "Normal": {
+      "path": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Textures\\Ispant_ApprovedLongSword_Normal.png",
+      "sha256": "B404202362E6E98E919E067A5CC168D5C9B3C53A277A5718984B2C82174537D1",
+      "width": 1024,
+      "height": 1024,
+      "pixel_min": 0.2666666805744171,
+      "pixel_max": 1.0
+    }
+  },
+  "output_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Models\\Ispant_ApprovedLongSword.fbx",
+  "output_fbx_sha256": "6E33AB875BD84512609E81F70D726014F61CE833251A3B3D91A42CEB4CA1A017",
+  "static_mount": {
+    "source_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedAppearance\\Models\\Ispant_Armed_Approved.fbx",
+    "source_fbx_sha256": "E33AE0B988CD7CA6FE96D42D7D5E057F1CB57800009EBF7413EE0694BC6825FA",
+    "source_components": 81,
+    "removed_component_indices": [
+      69,
+      72,
+      75,
+      76
+    ],
+    "handle_component_index": 76,
+    "blade_component_index": 72,
+    "removed_triangles": 78,
+    "body_triangles_after_removal": 3518,
+    "handle_center_world_m": [
+      0.27770739793777466,
+      -0.19926732778549194,
+      1.3359699249267578
+    ],
+    "blade_length_axis_world": [
+      0.2522941529750824,
+      -0.43893587589263916,
+      -0.8623705506324768
+    ],
+    "sword_parent_bone": "Hips",
+    "output_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Models\\Ispant_ApprovedLongSword_StaticMount.fbx",
+    "output_fbx_sha256": "D0ADDCC934DDC306FF74B73C75588291EADDC163C7ADBB7902F7412D011F8E60"
+  },
+  "move_mount": {
+    "source_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\Animations\\Ispant_Move.fbx",
+    "source_fbx_sha256": "25E2CEC76F1FB3AF0A406E450649D38399799581B0F2B4644995B108BAFC0FA8",
+    "component_map": {
+      "sheath_77": 0,
+      "blade": 1,
+      "handle": 2,
+      "sheath_80": 3
+    },
+    "handle_center_world_m": [
+      0.13622727990150452,
+      -0.09257803857326508,
+      0.6152105331420898
+    ],
+    "blade_length_axis_world": [
+      0.28302299976348877,
+      -0.4571836590766907,
+      -0.8431376218795776
+    ],
+    "sword_parent_bone": "mixamorig:Hips",
+    "output_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Models\\Ispant_ApprovedLongSword_MoveMount.fbx",
+    "output_fbx_sha256": "308D0069FBD07CE241DE0CAA1537A4D2ECB0067A41BC4EF92DAD8C276FACD26C"
+  },
+  "draw_mount": {
+    "source_fbx": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\length_0_9m_revision\\Ispant_DrawSword_0_9m_ArtSample.fbx",
+    "source_fbx_sha256": "4058A90B57C8ABA7BCAF185B9BF5D1D1C47C2F0E0991A43BE5178E071D543208",
+    "output_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Models\\Ispant_ApprovedLongSword_DrawMount.fbx",
+    "output_fbx_sha256": "4058A90B57C8ABA7BCAF185B9BF5D1D1C47C2F0E0991A43BE5178E071D543208",
+    "byte_exact_copy": true
+  },
+  "result": "PASS"
+}

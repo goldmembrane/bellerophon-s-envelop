@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>이슈판트 장검 0.9m 승인 요약</title>
+  <style>
+    :root { color-scheme:dark; --ink:#ece9df; --muted:#b9b7ae; --panel:#181b1c; --line:#4d5150; --copper:#a86d43; --cyan:#86d9ee; --pending:#e8b65d; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Bahnschrift","Malgun Gothic",sans-serif; color:var(--ink); background:linear-gradient(115deg,rgba(168,109,67,.09),transparent 36%),#101314; }
+    main { max-width:1080px; margin:0 auto; padding:34px 28px 56px; }
+    h1,h2 { margin:0 0 14px; }
+    h1 { font-size:clamp(2rem,5vw,3.7rem); line-height:1; }
+    h2 { padding-bottom:10px; border-bottom:1px solid var(--line); }
+    section { margin:34px 0; }
+    p,li { line-height:1.62; }
+    a,code { color:var(--cyan); }
+    a { text-underline-offset:3px; }
+    .eyebrow { color:var(--copper); font-size:.82rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+    .lead { color:var(--muted); }
+    .status { display:inline-block; padding:8px 11px; color:#211a0c; background:var(--pending); font-weight:800; }
+    .review { padding:14px; background:var(--panel); border:1px solid var(--line); }
+    img { display:block; width:100%; height:auto; background:#111; }
+    .verdict { padding:20px; background:rgba(216,212,200,.055); border-left:3px solid var(--copper); }
+    @media (max-width:760px) { main{padding:26px 18px 44px} }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Quick Review · Blade-only Revision</p>
+  <h1>이슈판트 장검 0.9m 승인 요약</h1>
+  <p class="status">사용자 승인 대기 · Unity 미적용</p>
+  <p class="lead">기존 승인 장검에서 칼날만 줄였습니다. 전체 자료와 3D 파일은 <a href="index.html">index.html</a>에서 확인할 수 있습니다.</p>
+
+  <section>
+    <h2>판정용 비교</h2>
+    <div class="review"><a href="../Ispant_DrawSword_0_9m_FinalReview.png"><img src="../Ispant_DrawSword_0_9m_FinalReview.png" alt="1.0715미터와 0.9미터 이슈판트 장검 비교"></a></div>
+  </section>
+
+  <section>
+    <h2>개정 내용</h2>
+    <div class="verdict">
+      <ul>
+        <li>전체 길이: <code>0.9m</code></li>
+        <li>칼날: <code>0.6485m</code> — 칼날만 축소</li>
+        <li>손잡이: <code>0.17m</code> — 형상·UV·머티리얼 변경 없음</li>
+        <li>가드 폭 / 폼멜: <code>0.19m / 0.055m</code> — 변경 없음</li>
+        <li>BLEND·FBX·GLB 독립 재가져오기: <code>PASS</code></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>아직 실행하지 않은 항목</h2>
+    <div class="verdict">
+      <p>Unity 12개 슬롯 교체, 발검 종료 후 <code>0.8초 / 20프레임</code> 칼끝 위 방향 회전, Unity 종료·재시작, 하네스 검증, EditMode·PlayMode 테스트, 빌드, Git 작업은 실행하지 않았습니다.</p>
+    </div>
+  </section>
+</main>
+</body>
+</html>

@@ -285,6 +285,18 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.IspantCargoRunScene.IspantMoveAnimationTool.ApplyIspantMoveRevision,
                         "The revised Ispant move model was applied only to Ispant_03_Move with exact static appearance, in-place walking, matched size, and rigid body-following weapons.");
                     break;
+                case "ApplyIspantMoveLeftArmClearance":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantMoveAnimationTool.ApplyIspantMoveLeftArmClearance,
+                        "The Ispant move left arm was moved outward only on Ispant_03_Move while preserving the in-place walk and rigid body-following weapons.");
+                    break;
+                case "InspectIspantMoveLeftArmClearance":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantMoveAnimationTool.InspectIspantMoveLeftArmClearance,
+                        "The Ispant move left-arm clearance was inspected across the complete walking cycle without changing the scene.");
+                    break;
                 case "CaptureIspantMoveReview":
                     RunSynchronous(
                         request,
@@ -296,6 +308,48 @@ namespace Bellerophon.Editor.Validation
                         request,
                         global::Bellerophon.Editor.IspantCargoRunScene.IspantMoveAnimationTool.CaptureIspantMoveRevisionReview,
                         "A static-reference and five-phase revised Ispant in-place walking review was captured after size and rigid body-following weapon inspection passed.");
+                    break;
+                case "CaptureIspantMoveLeftArmClearanceReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantMoveAnimationTool.CaptureIspantMoveLeftArmClearanceReview,
+                        "A static-reference and five-phase Ispant left-arm clearance review was captured after full-cycle inspection passed.");
+                    break;
+                case "ApplyIspantDrawSwordAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantDrawSwordAnimationTool.ApplyIspantDrawSwordAnimation,
+                        "The supplied Ispant draw-sword model replaced only Ispant_04_DrawSword with exact static appearance, looping Mixamo animation, and its own sword rigidly attached to the right hand.");
+                    break;
+                case "InspectIspantDrawSwordAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantDrawSwordAnimationTool.InspectIspantDrawSwordAnimation,
+                        "The Ispant draw-sword replacement, exact static appearance, looping Mixamo clip, and right-hand source-sword attachment were inspected across every frame without changing the scene.");
+                    break;
+                case "CaptureIspantDrawSwordAnimationReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantDrawSwordAnimationTool.CaptureIspantDrawSwordAnimationReview,
+                        "A static-reference and five-phase Ispant draw-sword review was captured after full-cycle inspection passed.");
+                    break;
+                case "ApplyIspantApprovedLongSwordAllSlots":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantApprovedLongSwordTool.ApplyIspantApprovedLongSwordAllSlots,
+                        "The approved Ispant long sword was applied to all twelve slots while preserving the eleven non-draw mounts and binding only the draw-sword slot to its right hand.");
+                    break;
+                case "InspectIspantApprovedLongSwordAllSlots":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantApprovedLongSwordTool.InspectIspantApprovedLongSwordAllSlots,
+                        "The twelve-slot approved Ispant long-sword structure and draw-sword right-hand attachment were inspected without changing the scene.");
+                    break;
+                case "CaptureIspantApprovedLongSwordReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantApprovedLongSwordTool.CaptureIspantApprovedLongSwordReview,
+                        "The final twelve-slot approved Ispant long-sword review was captured after structural and animation inspection passed.");
                     break;
                 case "ApplyKursaMoveAnimation":
                     RunSynchronous(

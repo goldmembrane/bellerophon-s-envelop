@@ -1,0 +1,69 @@
+{
+  "result": "PASS",
+  "approval_status": "PENDING_USER_APPROVAL",
+  "unity_runtime_applied": false,
+  "source_approved_blend_sha256": "F112EFF207D2EAB5FC89AF5735103877B51F973FBAD9B5EBD8D3DBEB44770FB9",
+  "artifacts": {
+    "blend": {
+      "sha256": "52E995ED3B121C5363E53FFA8BB832D7BF9FF4795560711AA7D12105C9CABA3D",
+      "vertices": 2080,
+      "triangles": 4092,
+      "dimensions_m": [
+        0.198372,
+        0.076,
+        0.9
+      ],
+      "materials": [
+        "Ispant_LongSword_BrownLeather",
+        "Ispant_LongSword_DarkEngraving",
+        "Ispant_LongSword_WornSteel"
+      ],
+      "parent": "Armature",
+      "parent_type": "BONE",
+      "parent_bone": "mixamorig:RightHand",
+      "approved_dimensions": {
+        "blade_length_m": 0.6485,
+        "grip_length_m": 0.17,
+        "guard_width_m": 0.19,
+        "pommel_length_m": 0.055,
+        "overall_length_m": 0.9
+      }
+    },
+    "fbx": {
+      "sha256": "4058A90B57C8ABA7BCAF185B9BF5D1D1C47C2F0E0991A43BE5178E071D543208",
+      "vertices": 2080,
+      "triangles": 4092,
+      "dimensions_m": [
+        0.198372,
+        0.076,
+        0.9
+      ],
+      "materials": [
+        "Ispant_LongSword_BrownLeather",
+        "Ispant_LongSword_DarkEngraving",
+        "Ispant_LongSword_WornSteel"
+      ],
+      "parent": "Armature",
+      "parent_type": "BONE",
+      "parent_bone": "mixamorig:RightHand"
+    },
+    "glb": {
+      "sha256": "7A3B8F91C5F9FCAFDBB78493C89755458F478130BC717FD73EE9B0281AF6AF85",
+      "vertices": 3597,
+      "triangles": 4092,
+      "dimensions_m": [
+        0.198372,
+        0.076,
+        0.9
+      ],
+      "materials": [
+        "Ispant_LongSword_BrownLeather",
+        "Ispant_LongSword_DarkEngraving",
+        "Ispant_LongSword_WornSteel"
+      ],
+      "parent": "Armature",
+      "parent_type": "BONE",
+      "parent_bone": "mixamorig:RightHand"
+    }
+  }
+}

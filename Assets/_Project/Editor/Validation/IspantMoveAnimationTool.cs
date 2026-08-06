@@ -32,9 +32,9 @@ namespace Bellerophon.Editor.IspantCargoRunScene
         private const string InPlaceClipPath =
             "Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_03_Move_InPlace.anim";
         private const string InspectionPath =
-            "docs/validation/ispant_move_revision_2026-08-05/Ispant_03_Move_Revision_Inspection.txt";
+            "docs/validation/ispant_move_left_arm_2026-08-06/Ispant_03_Move_LeftArm_Inspection.txt";
         private const string CapturePath =
-            "docs/validation/ispant_move_revision_2026-08-05/Ispant_03_Move_Revision_FinalReview.png";
+            "docs/validation/ispant_move_left_arm_2026-08-06/Ispant_03_Move_LeftArm_FinalReview.png";
         private const string SourceWalkingSha256 =
             "705BD9FEBC2B03529C2392F62425A80544B75182D0D26F4A534532D9905778E7";
         private const string SourceStaticSha256 =
@@ -53,12 +53,21 @@ namespace Bellerophon.Editor.IspantCargoRunScene
         private const float WeaponTransformTolerance = 0.00001f;
         private const float InPlaceForwardTolerance = 0.0001f;
         private const float SizeRatioTolerance = 0.01f;
+        // Parent-space abduction applied only to the character-left upper arm so it clears the hip sword.
+        private const float LeftArmClearanceDegrees = 15f;
+        private const float MinimumLeftHandOutwardDisplacement = 0.01f;
 
         private static readonly float[] ReviewNormalizedTimes =
             { 0f, 0.25f, 0.5f, 0.75f, 1f };
 
         [MenuItem("Bellerophon/Enemies/Ispant/Apply Move Model")]
         public static void ApplyIspantMoveModel()
+        {
+            ApplyIspantMoveRevision();
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Apply Move Left Arm Clearance")]
+        public static void ApplyIspantMoveLeftArmClearance()
         {
             ApplyIspantMoveRevision();
         }
@@ -138,6 +147,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 ", Clip=" + InPlaceClipName +
                 ", Loop=True, RootMotion=False" +
                 ", ForwardTranslation=InPlace" +
+                ", LeftArmClearanceDegrees=" + Num(LeftArmClearanceDegrees) +
                 ", MusketParent=mixamorig:Spine2" +
                 ", SwordParent=mixamorig:Hips" +
                 ", FixedMusketTriangles=" + ExpectedFixedMusketTriangles +
@@ -148,6 +158,41 @@ namespace Bellerophon.Editor.IspantCargoRunScene
 
         [MenuItem("Bellerophon/Enemies/Ispant/Capture Move Review")]
         public static void CaptureIspantMoveReview()
+        {
+            CaptureIspantMoveRevisionReview();
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Inspect Move Left Arm Clearance")]
+        public static void InspectIspantMoveLeftArmClearance()
+        {
+            RequireHashes();
+            var scene = RequireScene(requireClean: true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var staticModel = RequireDirectChild(
+                RequireSlot(placement.transform, StaticSlotName, 0), StaticModelName);
+            var moveModel = RequireDirectChild(
+                RequireSlot(placement.transform, MoveSlotName, 2), MoveModelName);
+            var animator = moveModel.GetComponentsInChildren<Animator>(true).Single();
+            var metrics = InspectModel(
+                moveModel,
+                staticModel,
+                animator,
+                RequireInPlaceClip(),
+                RequireController());
+            WriteInspection(metrics);
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException("Ispant left-arm inspection changed the scene dirty state.");
+            Debug.Log(
+                "IspantMoveLeftArmClearanceInspected Result=PASS" +
+                ", LeftArmClearanceDegrees=" + Num(LeftArmClearanceDegrees) +
+                ", MinimumLeftHandOutwardDisplacement=" +
+                Num(metrics.MinimumLeftHandOutwardDisplacement) +
+                ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Capture Move Left Arm Clearance Review")]
+        public static void CaptureIspantMoveLeftArmClearanceReview()
         {
             CaptureIspantMoveRevisionReview();
         }
@@ -272,6 +317,8 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                     "Exactly one Mixamo hips Z position curve must be flattened. Count=" +
                     flattenedForwardCurves + ".");
 
+            ApplyLeftArmClearance(clip);
+
             clip.frameRate = source.frameRate;
             clip.wrapMode = WrapMode.Loop;
             AnimationUtility.SetAnimationEvents(clip, AnimationUtility.GetAnimationEvents(source));
@@ -282,6 +329,99 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             EditorUtility.SetDirty(clip);
             AssetDatabase.SaveAssets();
             return clip;
+        }
+
+        private static void ApplyLeftArmClearance(AnimationClip clip)
+        {
+            var propertyNames = new[]
+            {
+                "m_LocalRotation.x",
+                "m_LocalRotation.y",
+                "m_LocalRotation.z",
+                "m_LocalRotation.w"
+            };
+            var bindings = AnimationUtility.GetCurveBindings(clip)
+                .Where(IsLeftUpperArmRotationCurve)
+                .ToDictionary(binding => binding.propertyName, StringComparer.Ordinal);
+            if (bindings.Count != propertyNames.Length ||
+                propertyNames.Any(propertyName => !bindings.ContainsKey(propertyName)))
+                throw new InvalidOperationException(
+                    "The Mixamo left upper-arm quaternion binding set differs.");
+
+            var curves = propertyNames
+                .Select(propertyName => AnimationUtility.GetEditorCurve(clip, bindings[propertyName]))
+                .ToArray();
+            if (curves.Any(curve => curve == null || curve.length == 0))
+                throw new InvalidOperationException("A Mixamo left upper-arm rotation curve is empty.");
+            var keyCount = curves[0].length;
+            if (curves.Any(curve => curve.length != keyCount))
+                throw new InvalidOperationException(
+                    "The Mixamo left upper-arm quaternion curves have different key counts.");
+
+            var keys = curves.Select(curve => curve.keys).ToArray();
+            var correction = Quaternion.AngleAxis(LeftArmClearanceDegrees, Vector3.forward);
+            for (var index = 0; index < keyCount; index++)
+            {
+                var time = keys[0][index].time;
+                if (keys.Any(componentKeys => Mathf.Abs(componentKeys[index].time - time) > 0.000001f))
+                    throw new InvalidOperationException(
+                        "The Mixamo left upper-arm quaternion key times differ.");
+
+                var value = LeftMultiply(
+                    correction,
+                    new Vector4(
+                        keys[0][index].value,
+                        keys[1][index].value,
+                        keys[2][index].value,
+                        keys[3][index].value));
+                var inSlope = LeftMultiply(
+                    correction,
+                    new Vector4(
+                        keys[0][index].inTangent,
+                        keys[1][index].inTangent,
+                        keys[2][index].inTangent,
+                        keys[3][index].inTangent));
+                var outSlope = LeftMultiply(
+                    correction,
+                    new Vector4(
+                        keys[0][index].outTangent,
+                        keys[1][index].outTangent,
+                        keys[2][index].outTangent,
+                        keys[3][index].outTangent));
+                for (var component = 0; component < propertyNames.Length; component++)
+                {
+                    var key = keys[component][index];
+                    key.value = value[component];
+                    key.inTangent = inSlope[component];
+                    key.outTangent = outSlope[component];
+                    keys[component][index] = key;
+                }
+            }
+
+            for (var component = 0; component < propertyNames.Length; component++)
+            {
+                curves[component].keys = keys[component];
+                AnimationUtility.SetEditorCurve(
+                    clip,
+                    bindings[propertyNames[component]],
+                    curves[component]);
+            }
+        }
+
+        private static bool IsLeftUpperArmRotationCurve(EditorCurveBinding binding)
+        {
+            return (binding.path == "mixamorig:LeftArm" ||
+                    binding.path.EndsWith("/mixamorig:LeftArm", StringComparison.Ordinal)) &&
+                   binding.propertyName.StartsWith("m_LocalRotation.", StringComparison.Ordinal);
+        }
+
+        private static Vector4 LeftMultiply(Quaternion left, Vector4 right)
+        {
+            return new Vector4(
+                left.w * right.x + left.x * right.w + left.y * right.z - left.z * right.y,
+                left.w * right.y - left.x * right.z + left.y * right.w + left.z * right.x,
+                left.w * right.z + left.x * right.y - left.y * right.x + left.z * right.w,
+                left.w * right.w - left.x * right.x - left.y * right.y - left.z * right.z);
         }
 
         private static bool IsHipsForwardPositionCurve(EditorCurveBinding binding)
@@ -530,6 +670,16 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             if (groundDifference > 0.005f)
                 throw new InvalidOperationException("The moving Ispant does not share the static ground level: " + Num(groundDifference) + ".");
 
+            var leftArmMetrics = MeasureLeftArmClearance(model, RequireMoveClip(), clip);
+            if (leftArmMetrics.MinimumAngularCorrection < LeftArmClearanceDegrees - 0.05f ||
+                leftArmMetrics.MaximumAngularCorrection > LeftArmClearanceDegrees + 0.05f)
+                throw new InvalidOperationException(
+                    "The Ispant left upper-arm correction is not constant across the walking cycle.");
+            if (leftArmMetrics.MinimumHandOutwardDisplacement < MinimumLeftHandOutwardDisplacement)
+                throw new InvalidOperationException(
+                    "The Ispant left hand did not remain farther from the torso across the walking cycle: " +
+                    Num(leftArmMetrics.MinimumHandOutwardDisplacement) + ".");
+
             return new Metrics(
                 clip.length,
                 clip.frameRate,
@@ -544,7 +694,71 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 groundDifference,
                 SharedMesh(body).vertexCount,
                 SharedMesh(musket).vertexCount,
-                SharedMesh(sword).vertexCount);
+                SharedMesh(sword).vertexCount,
+                leftArmMetrics.MinimumAngularCorrection,
+                leftArmMetrics.MaximumAngularCorrection,
+                leftArmMetrics.MinimumHandOutwardDisplacement,
+                leftArmMetrics.MaximumHandOutwardDisplacement);
+        }
+
+        private static LeftArmMetrics MeasureLeftArmClearance(
+            Transform model,
+            AnimationClip sourceClip,
+            AnimationClip adjustedClip)
+        {
+            var leftShoulder = RequireDescendant(model, "mixamorig:LeftShoulder");
+            var leftArm = RequireDescendant(model, "mixamorig:LeftArm");
+            var leftHand = RequireDescendant(model, "mixamorig:LeftHand");
+            var snapshots = model.GetComponentsInChildren<Transform>(true)
+                .Select(item => new TransformSnapshot(item)).ToArray();
+            var minimumAngle = float.PositiveInfinity;
+            var maximumAngle = float.NegativeInfinity;
+            var minimumOutward = float.PositiveInfinity;
+            var maximumOutward = float.NegativeInfinity;
+            try
+            {
+                SampleClip(model.gameObject, sourceClip, 0f);
+                var shoulderLocalX = model.InverseTransformPoint(leftShoulder.position).x;
+                if (Mathf.Abs(shoulderLocalX) < 0.001f)
+                    throw new InvalidOperationException(
+                        "The Ispant left shoulder does not define a stable character-left axis.");
+                var outwardAxis = Vector3.right * Mathf.Sign(shoulderLocalX);
+                var frameCount = Mathf.RoundToInt(adjustedClip.length * adjustedClip.frameRate);
+                for (var frame = 0; frame <= frameCount; frame++)
+                {
+                    var time = Mathf.Min(frame / adjustedClip.frameRate, adjustedClip.length);
+                    SampleClip(model.gameObject, sourceClip, time);
+                    var sourceRotation = leftArm.localRotation;
+                    var sourceShoulderPosition = model.InverseTransformPoint(leftShoulder.position);
+                    var sourceHandOffset =
+                        model.InverseTransformPoint(leftHand.position) - sourceShoulderPosition;
+
+                    SampleClip(model.gameObject, adjustedClip, time);
+                    var adjustedRotation = leftArm.localRotation;
+                    var adjustedShoulderPosition = model.InverseTransformPoint(leftShoulder.position);
+                    var adjustedHandOffset =
+                        model.InverseTransformPoint(leftHand.position) - adjustedShoulderPosition;
+                    var angularCorrection = Quaternion.Angle(sourceRotation, adjustedRotation);
+                    var outwardDisplacement =
+                        Vector3.Dot(adjustedHandOffset - sourceHandOffset, outwardAxis);
+                    minimumAngle = Mathf.Min(minimumAngle, angularCorrection);
+                    maximumAngle = Mathf.Max(maximumAngle, angularCorrection);
+                    minimumOutward = Mathf.Min(minimumOutward, outwardDisplacement);
+                    maximumOutward = Mathf.Max(maximumOutward, outwardDisplacement);
+                }
+            }
+            finally
+            {
+                foreach (var snapshot in snapshots)
+                    snapshot.Restore();
+                StopSampling();
+            }
+
+            return new LeftArmMetrics(
+                minimumAngle,
+                maximumAngle,
+                minimumOutward,
+                maximumOutward);
         }
 
         private static void RequireExactStaticMaterials(Transform staticModel, Transform moveModel)
@@ -774,6 +988,13 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 "MaximumMoveBodyHeight=" + Num(metrics.MaximumMoveBodyHeight),
                 "MoveToStaticHeightRatio=" + Num(metrics.MaximumMoveBodyHeight / metrics.StaticBodyHeight),
                 "GroundLevelDifference=" + Num(metrics.GroundLevelDifference),
+                "LeftArmBone=mixamorig:LeftArm",
+                "LeftArmClearanceAxis=ParentLocalPositiveZRotation",
+                "LeftArmClearanceDegrees=" + Num(LeftArmClearanceDegrees),
+                "MinimumLeftArmAngularCorrection=" + Num(metrics.MinimumLeftArmAngularCorrection),
+                "MaximumLeftArmAngularCorrection=" + Num(metrics.MaximumLeftArmAngularCorrection),
+                "MinimumLeftHandOutwardDisplacement=" + Num(metrics.MinimumLeftHandOutwardDisplacement),
+                "MaximumLeftHandOutwardDisplacement=" + Num(metrics.MaximumLeftHandOutwardDisplacement),
                 "StaticAppearanceMaterialsDirectReference=True",
                 "StaticGeometrySourceExact=True",
                 "WalkingStaticMaximumWorldVertexError=0.000000127315577",
@@ -1039,6 +1260,10 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             public readonly int AnimatedBodyVertices;
             public readonly int FixedMusketVertices;
             public readonly int FixedSwordVertices;
+            public readonly float MinimumLeftArmAngularCorrection;
+            public readonly float MaximumLeftArmAngularCorrection;
+            public readonly float MinimumLeftHandOutwardDisplacement;
+            public readonly float MaximumLeftHandOutwardDisplacement;
 
             public Metrics(
                 float clipLength,
@@ -1054,7 +1279,11 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 float groundLevelDifference,
                 int animatedBodyVertices,
                 int fixedMusketVertices,
-                int fixedSwordVertices)
+                int fixedSwordVertices,
+                float minimumLeftArmAngularCorrection,
+                float maximumLeftArmAngularCorrection,
+                float minimumLeftHandOutwardDisplacement,
+                float maximumLeftHandOutwardDisplacement)
             {
                 ClipLength = clipLength;
                 FrameRate = frameRate;
@@ -1070,6 +1299,30 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 AnimatedBodyVertices = animatedBodyVertices;
                 FixedMusketVertices = fixedMusketVertices;
                 FixedSwordVertices = fixedSwordVertices;
+                MinimumLeftArmAngularCorrection = minimumLeftArmAngularCorrection;
+                MaximumLeftArmAngularCorrection = maximumLeftArmAngularCorrection;
+                MinimumLeftHandOutwardDisplacement = minimumLeftHandOutwardDisplacement;
+                MaximumLeftHandOutwardDisplacement = maximumLeftHandOutwardDisplacement;
+            }
+        }
+
+        private readonly struct LeftArmMetrics
+        {
+            public readonly float MinimumAngularCorrection;
+            public readonly float MaximumAngularCorrection;
+            public readonly float MinimumHandOutwardDisplacement;
+            public readonly float MaximumHandOutwardDisplacement;
+
+            public LeftArmMetrics(
+                float minimumAngularCorrection,
+                float maximumAngularCorrection,
+                float minimumHandOutwardDisplacement,
+                float maximumHandOutwardDisplacement)
+            {
+                MinimumAngularCorrection = minimumAngularCorrection;
+                MaximumAngularCorrection = maximumAngularCorrection;
+                MinimumHandOutwardDisplacement = minimumHandOutwardDisplacement;
+                MaximumHandOutwardDisplacement = maximumHandOutwardDisplacement;
             }
         }
     }

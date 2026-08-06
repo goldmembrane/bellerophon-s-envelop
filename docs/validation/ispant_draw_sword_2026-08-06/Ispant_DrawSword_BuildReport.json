@@ -1,0 +1,50 @@
+{
+  "result": "PASS",
+  "source": "D:\\Bellerophon2\\Bellerophon\\enemies model\\išpant draw sword.fbx",
+  "source_sha256": "EDDE5E8B668C987E0C92F37E2D7809AC196F5A4EAC0BE3F5B2408CBAC8862E72",
+  "static_verification_source": "D:\\Bellerophon2\\Bellerophon\\enemies model\\Ispant_Static.fbx",
+  "static_sha256": "14A011FA502815AD37CB4817B0BCD353C92AF6227BABE0118C09CA70A5484506",
+  "output": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\Animations\\Ispant_DrawSword.fbx",
+  "output_sha256": "B9DEB78C6BECA61C81EE5ECD86C4763E56186B8925EED29720B4B62ED482CE42",
+  "source_action": "Armature|mixamo.com|Layer0",
+  "source_frame_range": [
+    1,
+    46
+  ],
+  "source_bones": 33,
+  "source_static_max_world_vertex_error": 1.2731557704981462e-07,
+  "body_components": 81,
+  "musket_components": [
+    41,
+    75,
+    76
+  ],
+  "drawn_sword_components": [
+    78,
+    79
+  ],
+  "sheath_components": [
+    77,
+    80
+  ],
+  "handle_component": 79,
+  "handle_fit_max_error": 0.04335803761329977,
+  "handle_fit_rms_error": 0.015717951826630227,
+  "animated_body_vertices_after_split": 1915,
+  "animated_body_triangles_after_split": 3364,
+  "rigid_musket_vertices": 83,
+  "rigid_musket_triangles": 154,
+  "rigid_musket_parent_bone": "mixamorig:Spine2",
+  "rigid_musket_has_armature_modifier": false,
+  "rigid_musket_has_vertex_groups": false,
+  "rigid_sheath_vertices": 22,
+  "rigid_sheath_triangles": 38,
+  "rigid_sheath_parent_bone": "mixamorig:Hips",
+  "rigid_sheath_has_armature_modifier": false,
+  "rigid_sheath_has_vertex_groups": false,
+  "rigid_sword_vertices": 24,
+  "rigid_sword_triangles": 40,
+  "rigid_sword_parent_bone": "mixamorig:RightHand",
+  "rigid_sword_has_armature_modifier": false,
+  "rigid_sword_has_vertex_groups": false
+}

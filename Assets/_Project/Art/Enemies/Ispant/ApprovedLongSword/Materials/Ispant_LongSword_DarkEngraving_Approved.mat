@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Ispant_LongSword_DarkEngraving_Approved
+  m_Shader: {fileID: 4800000, guid: 62d35afd51371e04b861d0d45c67d94a, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: b33026774929e4743b49bb63757b14b9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicMap:
+        m_Texture: {fileID: 2800000, guid: ff0d4fb2df18c914a9d46a491aaa3d67, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: dd5b19587ea70064f9bd9cbf14f2bfb8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RoughnessMap:
+        m_Texture: {fileID: 2800000, guid: 78cb5d35f6935bf4b9ae43bed7a91271, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ApprovedYFlip: 0
+    - _CoatRoughness: 0.34
+    - _CoatWeight: 0
+    - _FeatureMode: 0
+    - _MetallicBias: 0
+    - _NormalStrength: 1
+    - _RoughnessBias: 0
+    - _UseMaps: 1
+    - _UseUv1: 0
+    m_Colors:
+    - _BaseColor: {r: 3, g: 3, b: 3, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>이슈판트 발검 장검 외형 동기화 아트 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #ece9df;
+      --muted: #b9b7ae;
+      --panel: #181b1c;
+      --panel-deep: #0e1112;
+      --line: #4d5150;
+      --ivory: #d8d4c8;
+      --copper: #a86d43;
+      --cyan: #86d9ee;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Bahnschrift", "Malgun Gothic", sans-serif;
+      background:
+        linear-gradient(115deg, rgba(168, 109, 67, .08), transparent 36%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 5px),
+        #101314;
+      color: var(--ink);
+    }
+    main { max-width: 1180px; margin: 0 auto; padding: 34px 28px 56px; }
+    h1, h2, h3 { margin: 0 0 14px; letter-spacing: .01em; }
+    h1 { max-width: 860px; font-size: clamp(2rem, 5vw, 4.2rem); line-height: .98; color: var(--ivory); }
+    h2 { padding-bottom: 10px; border-bottom: 1px solid var(--line); color: var(--ivory); }
+    section { margin: 36px 0; }
+    p, li { line-height: 1.62; }
+    a { color: var(--cyan); text-underline-offset: 3px; }
+    code { color: var(--cyan); }
+    .eyebrow { color: var(--copper); font-size: .82rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    .lead { max-width: 960px; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 10px 10px 0 rgba(0,0,0,.22);
+    }
+    .comparison h3 { grid-column: 1 / -1; color: var(--ivory); }
+    figure { margin: 0; padding: 10px; background: var(--panel-deep); border: 1px solid #343939; }
+    img { width: 100%; height: auto; display: block; background: #f2f1ed; }
+    figcaption { margin-top: 9px; color: var(--muted); font-size: 13px; word-break: break-all; }
+    .facts { padding: 18px 20px; background: rgba(216,212,200,.055); border-left: 3px solid var(--copper); }
+    .texture img { aspect-ratio: 1; object-fit: cover; }
+    @media (max-width: 760px) {
+      main { padding: 26px 18px 44px; }
+      .comparison { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Appearance Reference Sync · Ispant Draw Sword</p>
+  <h1>이슈판트 발검 장검 외형 동기화 아트 샘플</h1>
+  <p class="lead">현재 Unity에 배치된 이슈판트 발검 개체의 몸체·리그·자세와 승인된 정적 외형을 유지하면서 <code>image/išpant(이슈판트)-armed.png</code>의 길고 좁은 은회색 장검 외형을 손잡이까지 구현한 승인 샘플입니다. 이 장검은 Unity 이슈판트 12개 슬롯에 적용했고, 발검 슬롯은 손잡이 중심을 맞춰 <code>mixamorig:RightHand</code>에 직접 연결했습니다. 상태는 <code>ART_SAMPLE_APPROVED_AND_UNITY_APPLIED_2026-08-06</code>입니다. 빠른 판정용 요약은 <a href="summary.html">summary.html</a>에서 확인할 수 있습니다.</p>
+
+  <section>
+    <h2>이번 개정의 승인·적용 경계 · 2026-08-06</h2>
+    <div class="facts">
+      <p><code>ART_SAMPLE_APPROVED_2026-08-06 / UNITY_APPLIED_TO_12_SLOTS</code></p>
+      <p>승인된 장검과 전용 PBR 재질을 Unity 이슈판트 12개 슬롯에 적용했습니다. 10개 정적 슬롯과 이동 슬롯은 기존 장착 위치를 유지하고, 발검 슬롯만 <code>mixamorig:RightHand</code>를 직접 추종합니다. 원본 FBX와 승인 Blender 샘플은 덮어쓰지 않았습니다. <code>Run-HarnessValidation.ps1</code>, EditMode·PlayMode 테스트와 빌드는 실행하지 않았습니다.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>기준 이미지와 생성 렌더 비교</h2>
+    <article class="comparison">
+      <h3>기준 장검과 현재 발검 개체 적용 결과</h3>
+      <figure>
+        <img src="../../../../image/išpant(이슈판트)-armed.png" alt="이슈판트 무장 기준 이미지의 장검">
+        <figcaption>기준 이미지: image/išpant(이슈판트)-armed.png</figcaption>
+      </figure>
+      <figure>
+        <img src="../Ispant_DrawSword_FinalReview.png" alt="이슈판트 발검 장검 최종 4분할 검토 렌더">
+        <figcaption>생성 렌더: 기준 크롭 / 발검 정면 / 발검 측면 / 손잡이 상세</figcaption>
+      </figure>
+    </article>
+    <article class="comparison">
+      <h3>장검 윤곽과 손잡이 확인</h3>
+      <figure>
+        <img src="../diagnostics/Ispant_Reference_Sword_Crop.png" alt="기준 이미지에서 확대한 이슈판트 장검">
+        <figcaption>기준에서 직접 확인되는 정보: 길고 좁은 칼날, 은회색 마모 금속, 짙은 갈색 손잡이 계열</figcaption>
+      </figure>
+      <figure>
+        <img src="../Ispant_DrawSword_HandleCloseup.png" alt="새 장검의 손잡이와 가드 확대 렌더">
+        <figcaption>구현 결과: 짙은 갈색 감기 손잡이, 은회색 가드·칼라·폼멜과 마모된 칼날</figcaption>
+      </figure>
+    </article>
+  </section>
+
+  <section>
+    <h2>생성 렌더</h2>
+    <div class="grid">
+      <figure>
+        <img src="../Ispant_DrawSword_Full.png" alt="이슈판트 발검 장검 정면 렌더">
+        <figcaption>Ispant_DrawSword_Full.png — DRAW SWORD FRONT</figcaption>
+      </figure>
+      <figure>
+        <img src="../Ispant_DrawSword_Side.png" alt="이슈판트 발검 장검 측면 렌더">
+        <figcaption>Ispant_DrawSword_Side.png — DRAW SWORD SIDE</figcaption>
+      </figure>
+      <figure>
+        <img src="../Ispant_DrawSword_HandleCloseup.png" alt="이슈판트 발검 장검 손잡이 확대 렌더">
+        <figcaption>Ispant_DrawSword_HandleCloseup.png — HILT DETAIL</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>이슈판트 장검 적용 기준</h2>
+    <div class="facts">
+      <ul>
+        <li>검토용 Blender 원본: <a href="../Ispant_DrawSword_ArtSample.blend"><code>../Ispant_DrawSword_ArtSample.blend</code></a></li>
+        <li>범용 3D 검토 파일: <a href="../Ispant_DrawSword_ArtSample.glb"><code>../Ispant_DrawSword_ArtSample.glb</code></a></li>
+        <li>FBX 검토 파일: <a href="../Ispant_DrawSword_ArtSample.fbx"><code>../Ispant_DrawSword_ArtSample.fbx</code></a></li>
+        <li>전체 길이: <code>1.0715m</code></li>
+        <li>칼날: 길이 <code>0.82m</code>, 뿌리 폭 <code>0.068m</code>, 두께 <code>0.012m</code>의 좁고 곧은 테이퍼형 칼날입니다.</li>
+        <li>가드: 전체 폭 <code>0.19m</code>이며 중앙 칼라와 좌우 대칭의 짧은 곡선형 금속 가드로 구성했습니다.</li>
+        <li>손잡이: 길이 <code>0.17m</code>, 지름 <code>0.052m</code>의 짙은 갈색 가죽 몸체에 반복 감기 표현을 적용했습니다.</li>
+        <li>폼멜: 길이 <code>0.055m</code>의 마모된 은회색 금속으로 손잡이 끝을 닫았습니다.</li>
+        <li>칼날·가드·폼멜은 절차형 마모 강철 PBR, 손잡이는 짙은 갈색 가죽 PBR, 가장자리 세부에는 어두운 금속 재질을 사용했습니다.</li>
+        <li>장검은 <code>Ispant_Reference_LongSword</code> 단일 메시이며 손잡이와 칼날이 분리되지 않습니다.</li>
+        <li>새 장검은 <code>mixamorig:RightHand</code> 본의 직접 자식이며 기존 발검 장검 손잡이 중심과의 정렬 오차는 <code>0m</code>입니다.</li>
+        <li>오른손 본 원점에서 손잡이 중심까지의 거리는 <code>0.0557747075m</code>입니다.</li>
+        <li>사용자 승인과 적용 지시에 따라 Unity의 이슈판트 12개 슬롯에 적용했습니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>메시 변경과 구조 보존</h2>
+    <ul>
+      <li>새 장검은 2,080정점·4,092삼각형의 단일 메시입니다.</li>
+      <li>전체 메시 치수는 <code>0.198372m × 0.076m × 1.0715m</code>입니다.</li>
+      <li>발검 몸체의 38개 머티리얼 슬롯은 승인된 정적 이슈판트 샘플의 동일 이름 머티리얼 객체와 동기화했습니다.</li>
+      <li>본체 UV 이름은 승인 외형의 <code>uv</code>, <code>IspantMechanicalUV</code>, <code>IspantHelmetFaceUV</code>로 맞췄습니다.</li>
+      <li>몸체·초승달·눈·머스켓과 Mixamo 액션 1~46프레임은 현재 발검 개체 기준을 유지했습니다.</li>
+      <li>Unity 적용본에서 기존 <code>Ispant_DrawSword_RigidSword</code>와 <code>Ispant_DrawSword_RigidSheath</code>를 제거하고 승인 장검으로 교체했습니다.</li>
+      <li>BLEND·FBX·GLB를 각각 재가져오기해 장검 메시 1개, 재질 3개, 4,092삼각형과 오른손 본 부모 연결을 확인했습니다.</li>
+      <li>원본 Unity 발검 FBX의 SHA-256 <code>B9DEB78C6BECA61C81EE5ECD86C4763E56186B8925EED29720B4B62ED482CE42</code>는 변경되지 않았습니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>장검 모델 한계와 추론 범위</h2>
+    <ul>
+      <li>기준 이미지에서 직접 확인되는 정면 윤곽, 칼날 비례, 금속 마모와 짙은 갈색 손잡이 계열을 우선했습니다.</li>
+      <li>기준 이미지에서 보이지 않는 후면 깊이는 정면 윤곽의 대칭 두께만 사용했고 별도 장식이나 기계 부품을 추가하지 않았습니다.</li>
+      <li>정적 렌더는 Mixamo 액션 1프레임을 기준으로 하며, 3D 파일에는 1~46프레임 액션이 보존됩니다.</li>
+      <li>GLB는 범용 시각 검토용이며 구조 보존 판정은 Blender 원본과 FBX·GLB 재가져오기 기록을 함께 기준으로 합니다.</li>
+      <li>Unity 적용본은 10개 정적 슬롯과 이동 슬롯의 기존 장착 위치를 유지하며 발검 슬롯만 오른손을 직접 추종합니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>장검 전용 재질</h2>
+    <p class="lead">장검에는 아래 세 가지 절차형 PBR 재질을 사용했습니다. 몸체 외형은 승인된 정적 이슈판트 샘플의 기존 재질을 직접 사용하며 새로 생성하거나 재해석하지 않았습니다.</p>
+    <div class="grid">
+      <figure class="texture"><img src="../Ispant_DrawSword_HandleCloseup.png" alt="마모 강철 장검 재질"><figcaption>Ispant_LongSword_WornSteel — 칼날·가드·칼라·폼멜</figcaption></figure>
+      <figure class="texture"><img src="../Ispant_DrawSword_HandleCloseup.png" alt="짙은 갈색 가죽 손잡이 재질"><figcaption>Ispant_LongSword_BrownLeather — 손잡이와 반복 감기</figcaption></figure>
+      <figure class="texture"><img src="../Ispant_DrawSword_HandleCloseup.png" alt="어두운 장검 각인 재질"><figcaption>Ispant_LongSword_DarkEngraving — 가장자리 세부</figcaption></figure>
+    </div>
+  </section>
+</main>
+</body>
+</html>

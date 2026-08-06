@@ -1,0 +1,51 @@
+{
+  "result": "PASS",
+  "unity_runtime_applied": false,
+  "source_current_unity_draw_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\Animations\\Ispant_DrawSword.fbx",
+  "source_current_unity_draw_fbx_sha256": "B9DEB78C6BECA61C81EE5ECD86C4763E56186B8925EED29720B4B62ED482CE42",
+  "approved_appearance_blend": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_armed\\Ispant_Armed_Appearance_Sample.blend",
+  "approved_appearance_blend_sha256": "4DA80CAB606F6A7A3C76FFB216636DC0D2CF39ADBA82FC4431741977CDE1EDEF",
+  "reference_image": "D:\\Bellerophon2\\Bellerophon\\image\\išpant(이슈판트)-armed.png",
+  "reference_image_sha256": "5B220058A614D883B9A82B6E84EB00F362587E29FDF4F641C051AD6AAABDC1DB",
+  "source_mixamo_frame_range": [
+    1,
+    46
+  ],
+  "sample_pose_frame": 1,
+  "approved_material_slots_synchronized": 38,
+  "replaced_sample_only_objects": [
+    "Ispant_DrawSword_RigidSword",
+    "Ispant_DrawSword_RigidSheath"
+  ],
+  "new_sword_object": "Ispant_Reference_LongSword",
+  "new_sword_parent_bone": "mixamorig:RightHand",
+  "new_sword_materials": [
+    "Ispant_LongSword_WornSteel",
+    "Ispant_LongSword_BrownLeather",
+    "Ispant_LongSword_DarkEngraving"
+  ],
+  "new_sword_vertices": 2080,
+  "new_sword_triangles": 4092,
+  "blade_length_m": 0.82,
+  "blade_base_width_m": 0.068,
+  "blade_thickness_m": 0.012,
+  "guard_width_m": 0.19,
+  "grip_length_m": 0.17,
+  "grip_diameter_m": 0.052,
+  "pommel_length_m": 0.055,
+  "overall_length_m": 1.07150000333786,
+  "grip_source_alignment_error_m": 0.0,
+  "right_hand_to_grip_center_m": 0.05577470753034574,
+  "symmetric_unseen_thickness_only": true,
+  "output_blend": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\Ispant_DrawSword_ArtSample.blend",
+  "output_blend_sha256": "F112EFF207D2EAB5FC89AF5735103877B51F973FBAD9B5EBD8D3DBEB44770FB9",
+  "output_glb": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\Ispant_DrawSword_ArtSample.glb",
+  "output_glb_sha256": "C659F47C298459169F0B69DBB77C5CA84E1E81275363455344E959CB4B40BFA0",
+  "output_fbx": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\Ispant_DrawSword_ArtSample.fbx",
+  "output_fbx_sha256": "FCDFE999620445DC85AD2535977FA5D9E4EE5325BF625C3C8439A020482F1392",
+  "diagnostic_render": null,
+  "diagnostic_handle_render": null,
+  "full_render": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\Ispant_DrawSword_Full.png",
+  "handle_closeup_render": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\Ispant_DrawSword_HandleCloseup.png",
+  "side_render": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\Ispant_DrawSword_Side.png"
+}

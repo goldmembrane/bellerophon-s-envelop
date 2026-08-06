@@ -1,0 +1,47 @@
+{
+  "result": "PASS",
+  "approval_status": "PENDING_USER_APPROVAL",
+  "unity_runtime_applied": false,
+  "source_approved_blend": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\Ispant_DrawSword_ArtSample.blend",
+  "source_approved_blend_sha256": "F112EFF207D2EAB5FC89AF5735103877B51F973FBAD9B5EBD8D3DBEB44770FB9",
+  "original_overall_length_m": 1.0715,
+  "target_overall_length_m": 0.9,
+  "measured_overall_length_m": 0.8999999761581421,
+  "original_blade_length_m": 0.82,
+  "target_blade_length_m": 0.6485,
+  "blade_scale": 0.7908536585365854,
+  "grip_length_m": 0.17,
+  "guard_width_m": 0.19,
+  "pommel_length_m": 0.055,
+  "vertices": 2080,
+  "triangles": 4092,
+  "blade_component_count": 3,
+  "hilt_signature_before": {
+    "vertex_count": 1798,
+    "polygon_count": 1732,
+    "sha256": "06AD25964A6E973EC10E336AA5BDE8F04A8562180DF66EA4094F4E51FD7FEB87"
+  },
+  "hilt_signature_after": {
+    "vertex_count": 1798,
+    "polygon_count": 1732,
+    "sha256": "06AD25964A6E973EC10E336AA5BDE8F04A8562180DF66EA4094F4E51FD7FEB87"
+  },
+  "hilt_geometry_and_uv_preserved": true,
+  "blade_uv_signature_before": {
+    "vertex_count": 282,
+    "polygon_count": 268,
+    "sha256": "54BF28D5975A324BADCC3E44EFF6600C242D27771B8B757F0BFE46FA4211CA4F"
+  },
+  "blade_uv_signature_after": {
+    "vertex_count": 282,
+    "polygon_count": 268,
+    "sha256": "54BF28D5975A324BADCC3E44EFF6600C242D27771B8B757F0BFE46FA4211CA4F"
+  },
+  "blade_topology_material_and_uv_preserved": true,
+  "output_blend": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\length_0_9m_revision\\Ispant_DrawSword_0_9m_ArtSample.blend",
+  "output_blend_sha256": "52E995ED3B121C5363E53FFA8BB832D7BF9FF4795560711AA7D12105C9CABA3D",
+  "output_fbx": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\length_0_9m_revision\\Ispant_DrawSword_0_9m_ArtSample.fbx",
+  "output_fbx_sha256": "4058A90B57C8ABA7BCAF185B9BF5D1D1C47C2F0E0991A43BE5178E071D543208",
+  "output_glb": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\length_0_9m_revision\\Ispant_DrawSword_0_9m_ArtSample.glb",
+  "output_glb_sha256": "7A3B8F91C5F9FCAFDBB78493C89755458F478130BC717FD73EE9B0281AF6AF85"
+}

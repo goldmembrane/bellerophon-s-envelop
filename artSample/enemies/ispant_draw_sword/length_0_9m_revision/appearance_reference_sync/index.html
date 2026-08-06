@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>이슈판트 장검 0.9m 개정 아트 샘플</title>
+  <style>
+    :root { color-scheme: dark; --ink:#ece9df; --muted:#b9b7ae; --panel:#181b1c; --deep:#0e1112; --line:#4d5150; --ivory:#d8d4c8; --copper:#a86d43; --cyan:#86d9ee; --pending:#e8b65d; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Bahnschrift","Malgun Gothic",sans-serif; color:var(--ink); background:linear-gradient(115deg,rgba(168,109,67,.09),transparent 36%),repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 5px),#101314; }
+    main { max-width:1180px; margin:0 auto; padding:34px 28px 56px; }
+    h1,h2,h3 { margin:0 0 14px; letter-spacing:.01em; }
+    h1 { max-width:900px; color:var(--ivory); font-size:clamp(2rem,5vw,4.2rem); line-height:.98; }
+    h2 { padding-bottom:10px; color:var(--ivory); border-bottom:1px solid var(--line); }
+    section { margin:36px 0; }
+    p,li { line-height:1.62; }
+    a,code { color:var(--cyan); }
+    a { text-underline-offset:3px; }
+    .eyebrow { color:var(--copper); font-size:.82rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+    .lead { max-width:980px; color:var(--muted); }
+    .status { display:inline-block; margin:8px 0 4px; padding:8px 11px; color:#211a0c; background:var(--pending); font-weight:800; letter-spacing:.04em; }
+    .comparison { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:14px; background:var(--panel); border:1px solid var(--line); box-shadow:10px 10px 0 rgba(0,0,0,.22); }
+    figure { margin:0; padding:10px; background:var(--deep); border:1px solid #343939; }
+    img { display:block; width:100%; height:auto; background:#f2f1ed; }
+    figcaption { margin-top:9px; color:var(--muted); font-size:13px; }
+    .hero img { background:#111; }
+    .facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+    .fact { padding:17px 18px; background:rgba(216,212,200,.055); border-left:3px solid var(--copper); }
+    .fact strong { display:block; margin-bottom:6px; color:var(--ivory); }
+    .boundary { padding:20px; background:var(--panel); border:1px solid var(--line); }
+    @media (max-width:760px) { main{padding:26px 18px 44px}.comparison{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Appearance Reference Sync · Blade-only Revision</p>
+  <h1>이슈판트 장검 0.9m 개정 아트 샘플</h1>
+  <p class="status">ART_SAMPLE_PENDING_USER_APPROVAL_2026-08-06</p>
+  <p class="lead">승인된 기존 장검의 손잡이·가드·폼멜과 외형을 그대로 보존하고 칼날 길이만 줄인 검토본입니다. 전체 길이는 정확히 <code>0.9m</code>이며 Unity에는 아직 적용하지 않았습니다. 빠른 판정은 <a href="summary.html">요약 페이지</a>에서 확인할 수 있습니다.</p>
+
+  <section class="hero">
+    <h2>최종 전후 비교</h2>
+    <figure>
+      <a href="../Ispant_DrawSword_0_9m_FinalReview.png"><img src="../Ispant_DrawSword_0_9m_FinalReview.png" alt="기존 1.0715미터 장검과 개정 0.9미터 장검 병렬 비교"></a>
+      <figcaption>왼쪽: 현재 승인본 1.0715m · 오른쪽: 승인 대기 0.9m. 손잡이 위치와 형상은 유지하고 칼날만 0.1715m 줄였습니다.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>기준과 개정 결과</h2>
+    <div class="comparison">
+      <figure>
+        <img src="../../../../../image/išpant(이슈판트)-armed.png" alt="이슈판트 무장 외형 기준 이미지">
+        <figcaption>외형 기준: <code>image/išpant(이슈판트)-armed.png</code></figcaption>
+      </figure>
+      <figure>
+        <img src="../Ispant_DrawSword_0_9m_Full.png" alt="칼날만 줄인 0.9미터 이슈판트 장검 렌더">
+        <figcaption>개정 결과: 기존 승인 외형을 유지한 전체 길이 0.9m 장검</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>고정된 수치</h2>
+    <div class="facts">
+      <div class="fact"><strong>전체 길이</strong><code>1.0715m → 0.9m</code></div>
+      <div class="fact"><strong>칼날 길이</strong><code>0.82m → 0.6485m</code></div>
+      <div class="fact"><strong>손잡이</strong><code>0.17m · 변경 없음</code></div>
+      <div class="fact"><strong>가드 / 폼멜</strong><code>0.19m / 0.055m · 변경 없음</code></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>추측 없이 보존한 구조</h2>
+    <div class="boundary">
+      <ul>
+        <li>원본은 승인 BLEND의 SHA-256 <code>F112EFF207D2EAB5FC89AF5735103877B51F973FBAD9B5EBD8D3DBEB44770FB9</code>와 일치합니다.</li>
+        <li>칼날 연결 성분 3개의 길이축 좌표만 <code>0.7908536585365854</code>배 했습니다.</li>
+        <li>손잡이 영역의 형상·UV·머티리얼 서명은 수정 전후 완전히 같습니다.</li>
+        <li>BLEND·FBX·GLB 재가져오기에서 <code>4,092</code>삼각형, 재질 3개, <code>mixamorig:RightHand</code> 부모와 0.9m 치수를 확인했습니다.</li>
+      </ul>
+      <p><a href="../Ispant_DrawSword_0_9m_ArtSample.blend">BLEND</a> · <a href="../Ispant_DrawSword_0_9m_ArtSample.fbx">FBX</a> · <a href="../Ispant_DrawSword_0_9m_ArtSample.glb">GLB</a> · <a href="../Ispant_DrawSword_0_9m_ArtSample_Report.json">제작 기록</a> · <a href="../Ispant_DrawSword_0_9m_ExportValidation.json">구조 검사 기록</a></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>현재 적용 경계</h2>
+    <div class="boundary">
+      <p><code>UNITY_RUNTIME_APPLIED = FALSE</code></p>
+      <p>현재 작업은 아트 샘플 제작까지만 완료했습니다. 승인 이후 별도 작업 범위에서 12개 장검 외형을 교체하고, 발검 개체에만 손 위치를 고정한 채 칼끝을 위로 부드럽게 돌리는 <code>0.8초 / 20프레임 / 25fps</code> 구간을 구현할 예정입니다.</p>
+      <p><code>Run-HarnessValidation.ps1</code>, EditMode·PlayMode 테스트, Windows 빌드, Unity 종료·재시작은 실행하지 않았습니다.</p>
+    </div>
+  </section>
+</main>
+</body>
+</html>
