@@ -333,6 +333,240 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.IspantCargoRunScene.IspantDrawSwordAnimationTool.CaptureIspantDrawSwordAnimationReview,
                         "A static-reference and five-phase Ispant draw-sword review was captured after full-cycle inspection passed.");
                     break;
+                case "ApplyIspantRunningSwordAttackAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantRunningSwordAttackAnimationTool.ApplyIspantRunningSwordAttackAnimation,
+                        "Only Ispant_05_RunningOneHandedSwordAttack was replaced with the supplied looping in-place Mixamo attack, exact static appearance, exact right-hand sword, and rigid back musket.");
+                    break;
+                case "InspectIspantRunningSwordAttackAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantRunningSwordAttackAnimationTool.InspectIspantRunningSwordAttackAnimation,
+                        "The slot-5 in-place loop, exact static appearance, rigid right-hand sword, and rigid back musket were inspected across every frame without changing the scene.");
+                    break;
+                case "CaptureIspantRunningSwordAttackAnimationReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantRunningSwordAttackAnimationTool.CaptureIspantRunningSwordAttackAnimationReview,
+                        "A static-reference and five-phase slot-5 running sword attack review was captured after full-cycle inspection passed.");
+                    break;
+                case "ApplyIspantSheathSwordAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.ApplyIspantSheathSwordAnimation,
+                        "Only Ispant_06_SheathSwordDrawMusket was replaced with the supplied looping Mixamo motion, exact static appearance, exact right-hand sword, and rigid back musket.");
+                    break;
+                case "InspectIspantSheathSwordAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.InspectIspantSheathSwordAnimation,
+                        "The slot-6 looping Mixamo clip, exact static appearance, rigid right-hand sword, and rigid back musket were inspected across every frame without changing the scene.");
+                    break;
+                case "CaptureIspantSheathSwordAnimationReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.CaptureIspantSheathSwordAnimationReview,
+                        "A static-reference and five-phase slot-6 sheath-sword review was captured after full-cycle inspection passed.");
+                    break;
+                case "ApplyIspantSheathSwordStaticHold":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.ApplyIspantSheathSwordStaticHold,
+                        "Only slot 6 was updated to play the unchanged Mixamo sheath motion, place its sword at the exact static-model transform, hold the final pose for 0.5 seconds, and repeat.");
+                    break;
+                case "InspectIspantSheathSwordStaticHold":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.InspectIspantSheathSwordStaticHold,
+                        "The slot-6 Mixamo-to-static-hold sequence, exact 0.5-second duration, fixed sword transform, and repeat transitions were inspected without changing the scene.");
+                    break;
+                case "CaptureIspantSheathSwordStaticHoldReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.CaptureIspantSheathSwordStaticHoldReview,
+                        "A static, Mixamo-end, three-phase hold, and repeat-start slot-6 review was captured after the static-hold inspection passed.");
+                    break;
+                case "ApplyIspantSheathSwordWaistHoldRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.ApplyIspantSheathSwordWaistHoldRevision,
+                        "Only slot 6 was revised to keep the unchanged Mixamo arm return, switch from the hand sword to an exact static-reference left-waist sword, hold for 0.5 seconds, and repeat.");
+                    break;
+                case "InspectIspantSheathSwordWaistHoldRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.InspectIspantSheathSwordWaistHoldRevision,
+                        "The slot-6 final arm pose, exact left-waist sword reference, rigid 0.5-second hold, visibility switch, and unchanged neighboring slots were inspected.");
+                    break;
+                case "CaptureIspantSheathSwordWaistHoldRevisionReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.CaptureIspantSheathSwordWaistHoldRevisionReview,
+                        "A one-time static, Mixamo-end, left-waist hold, and repeat-start slot-6 review was captured after inspection passed.");
+                    break;
+                case "ApplyIspantSheathToRifleSequence":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.ApplyIspantSheathToRifleSequence,
+                        "Only slot 6 was extended from the approved sheath and 0.5-second hold into the supplied 213-frame Mixamo rifle-change motion, with a measured back-to-right-hand rigid musket switch and full-sequence repeat.");
+                    break;
+                case "InspectIspantSheathToRifleSequence":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.InspectIspantSheathToRifleSequence,
+                        "The slot-6 three-state sequence, unchanged Mixamo curves, measured musket grab, rigid right-hand follow, forward motion, weapon visibility, and scene isolation were inspected.");
+                    break;
+                case "CaptureIspantSheathToRifleSequenceReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.CaptureIspantSheathToRifleSequenceReview,
+                        "A one-time static, sheath-end, hold, rifle-start, pre-grab, grab, forward, and rifle-end slot-6 review was captured after inspection passed.");
+                    break;
+                case "ApplyIspantSheathToRifleMotionRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.ApplyIspantSheathToRifleMotionRevision,
+                        "Slot 6 received the measured sheath-to-rifle bridge and right-hand-driven musket muzzle rotation revision.");
+                    break;
+                case "InspectIspantSheathToRifleMotionRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.InspectIspantSheathToRifleMotionRevision,
+                        "The bridge continuity, right-hand musket attachment, angle change, and forward muzzle direction were inspected without changing the scene.");
+                    break;
+                case "CaptureIspantSheathToRifleMotionRevisionReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.CaptureIspantSheathToRifleMotionRevisionReview,
+                        "The one-time final slot-6 motion-revision review was captured after inspection passed.");
+                    break;
+                case "ApplyIspantSheathToRifleTwoHandGripRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.ApplyIspantSheathToRifleTwoHandGripRevision,
+                        "Slot 6 received the right-hand contact pivot and data-derived two-hand musket grip revision.");
+                    break;
+                case "InspectIspantSheathToRifleTwoHandGripRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.InspectIspantSheathToRifleTwoHandGripRevision,
+                        "The slot-6 right-hand pivot, left-hand support contact, muzzle direction, and sequence isolation were inspected without changing the scene.");
+                    break;
+                case "CaptureIspantSheathToRifleTwoHandGripRevisionReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.CaptureIspantSheathToRifleTwoHandGripRevisionReview,
+                        "The one-time final slot-6 two-hand musket grip review was captured after inspection passed.");
+                    break;
+                case "ApplyIspantSheathToRifleArmDrivenAimRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.ApplyIspantSheathToRifleArmDrivenAimRevision,
+                        "Slot 6 received the right-hand-driven musket rotation and final two-hand forward-aim revision.");
+                    break;
+                case "InspectIspantSheathToRifleArmDrivenAimRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.InspectIspantSheathToRifleArmDrivenAimRevision,
+                        "The slot-6 right-hand-driven local rotation, two-hand support, final muzzle direction, and sequence isolation were inspected without changing the scene.");
+                    break;
+                case "CaptureIspantSheathToRifleArmDrivenAimRevisionReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.CaptureIspantSheathToRifleArmDrivenAimRevisionReview,
+                        "The one-time final slot-6 arm-driven two-hand aim review was captured after inspection passed.");
+                    break;
+                case "ApplyIspantSheathToRifleForwardMuzzleRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.ApplyIspantSheathToRifleForwardMuzzleRevision,
+                        "Slot 6 received the corrected transformed model-forward muzzle aim while preserving its arm-driven two-hand grip.");
+                    break;
+                case "InspectIspantSheathToRifleForwardMuzzleRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.InspectIspantSheathToRifleForwardMuzzleRevision,
+                        "The slot-6 muzzle endpoint, transformed model-forward aim, arm-driven grip, two-hand support, and scene isolation were inspected without changing the scene.");
+                    break;
+                case "CaptureIspantSheathToRifleForwardMuzzleRevisionReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.CaptureIspantSheathToRifleForwardMuzzleRevisionReview,
+                        "The one-time final slot-6 forward-muzzle review was captured after inspection passed.");
+                    break;
+                case "ApplyIspantSheathToRifleUprightTriggerGripRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.ApplyIspantSheathToRifleUprightTriggerGripRevision,
+                        "Slot 6 received the upright trigger-below-barrel roll while preserving its forward muzzle and arm-driven grip.");
+                    break;
+                case "InspectIspantSheathToRifleUprightTriggerGripRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.InspectIspantSheathToRifleUprightTriggerGripRevision,
+                        "The slot-6 upright trigger roll, right-hand grip pivot, left-hand support, forward muzzle, arm-driven rotation, and scene isolation were inspected without changing the scene.");
+                    break;
+                case "CaptureIspantSheathToRifleUprightTriggerGripRevisionReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.CaptureIspantSheathToRifleUprightTriggerGripRevisionReview,
+                        "The one-time final slot-6 upright trigger-grip review was captured after inspection passed.");
+                    break;
+                case "ApplyIspantSheathToRifleStockAndTriggerDownRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.ApplyIspantSheathToRifleStockAndTriggerDownRevision,
+                        "Slot 6 received a mesh-axis-derived stock-thick-side and trigger-down firing roll while preserving its forward muzzle and right-hand pivot.");
+                    break;
+                case "InspectIspantSheathToRifleStockAndTriggerDownRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.InspectIspantSheathToRifleStockAndTriggerDownRevision,
+                        "The slot-6 broad stock side, trigger-down axis, right-hand grip pivot, forward muzzle, left support, and scene isolation were inspected without changing the scene.");
+                    break;
+                case "CaptureIspantSheathToRifleStockAndTriggerDownRevisionReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.CaptureIspantSheathToRifleStockAndTriggerDownRevisionReview,
+                        "The one-time final slot-6 stock-and-trigger-down firing-pose review was captured after inspection passed.");
+                    break;
+                case "ApplyIspantSheathToRifleWaistSwordBodyFollowRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.ApplyIspantSheathToRifleWaistSwordBodyFollowRevision,
+                        "Slot 6 received a rigid left-waist sword attachment under mixamorig:Hips while preserving its approved sheath-end placement and musket sequence.");
+                    break;
+                case "InspectIspantSheathToRifleWaistSwordBodyFollowRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.InspectIspantSheathToRifleWaistSwordBodyFollowRevision,
+                        "The slot-6 left-waist sword hip attachment, rigid local mount, body-driven position and angle motion, musket pose, and scene isolation were inspected without changing the scene.");
+                    break;
+                case "CaptureIspantSheathToRifleWaistSwordBodyFollowRevisionReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.CaptureIspantSheathToRifleWaistSwordBodyFollowRevisionReview,
+                        "The one-time final slot-6 waist-sword body-follow review was captured after inspection passed.");
+                    break;
+                case "ApplyIspantSheathToRifleFinalAimArmLiftRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.ApplyIspantSheathToRifleFinalAimArmLiftRevision,
+                        "Slot 6 received a 0.15m final aiming lift through bilateral arm-bone rotation while preserving musket aim, grips, and waist-sword follow.");
+                    break;
+                case "InspectIspantSheathToRifleFinalAimArmLiftRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.InspectIspantSheathToRifleFinalAimArmLiftRevision,
+                        "The slot-6 final weapon-pivot lift, arm-only implementation, muzzle and stock orientation, bilateral grips, waist-sword follow, and scene isolation were inspected without changing the scene.");
+                    break;
+                case "CaptureIspantSheathToRifleFinalAimArmLiftRevisionReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.CaptureIspantSheathToRifleFinalAimArmLiftRevisionReview,
+                        "The one-time final slot-6 0.15m arm-lift aiming review was captured after inspection passed.");
+                    break;
                 case "ApplyIspantApprovedLongSwordAllSlots":
                     RunSynchronous(
                         request,
@@ -350,6 +584,24 @@ namespace Bellerophon.Editor.Validation
                         request,
                         global::Bellerophon.Editor.IspantCargoRunScene.IspantApprovedLongSwordTool.CaptureIspantApprovedLongSwordReview,
                         "The final twelve-slot approved Ispant long-sword review was captured after structural and animation inspection passed.");
+                    break;
+                case "ApplyIspantStaticSwordMeshConsistency":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantApprovedLongSwordTool.ApplyIspantStaticSwordMeshConsistency,
+                        "The exact Ispant_01_Static sword mesh was applied only to Ispant_03_Move and Ispant_04_DrawSword while preserving their mounts and animation.");
+                    break;
+                case "InspectIspantSwordMeshConsistency":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantApprovedLongSwordTool.InspectIspantSwordMeshConsistency,
+                        "All twelve Ispant slots were inspected for exact Ispant_01_Static sword mesh identity without changing the scene.");
+                    break;
+                case "CaptureIspantSwordConsistencyReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantApprovedLongSwordTool.CaptureIspantSwordConsistencyReview,
+                        "A one-time static, move, and draw sword mesh consistency review was captured after inspection passed.");
                     break;
                 case "ApplyKursaMoveAnimation":
                     RunSynchronous(
@@ -2545,7 +2797,7 @@ namespace Bellerophon.Editor.Validation
                     RunSynchronous(
                         request,
                         Bellerophon.Editor.IspantCargoRunScene.IspantStaticFbxExportTool.ExportIspantStaticFbx,
-                        "One currently placed approved Ispant was baked and exported as a pure static three-mesh FBX without rig, bones, animation, or scene changes.");
+                        "One currently placed approved Ispant was baked and exported as a pure static four-mesh FBX without rig, bones, animation, or scene changes.");
                     break;
                 case "ApplyApprovedIspantAppearance":
                     RunSynchronous(
@@ -5083,7 +5335,13 @@ namespace Bellerophon.Editor.Validation
             BeginRequest(request);
             try
             {
-                RequireScriptsCompiled();
+                // RefreshAssets is the recovery path that imports a corrected script after a
+                // previous compilation failure. Checking the stale failure flag before the
+                // refresh would permanently prevent that corrected source from compiling.
+                if (!string.Equals(request.Command, "RefreshAssets", StringComparison.Ordinal))
+                {
+                    RequireScriptsCompiled();
+                }
                 action();
                 CompleteRequest(successMarker);
             }

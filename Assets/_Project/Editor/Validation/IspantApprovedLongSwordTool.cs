@@ -54,13 +54,18 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             "docs/validation/ispant_approved_longsword_2026-08-06/Ispant_ApprovedLongSword_Inspection.txt";
         private const string CapturePath =
             "docs/validation/ispant_approved_longsword_2026-08-06/Ispant_ApprovedLongSword_FinalReview.png";
+        private const string MeshConsistencyInspectionPath =
+            "docs/validation/ispant_sword_world_length_0_6m_2026-08-09/Ispant_SwordWorldLength_0_6m_Inspection.txt";
+        private const string MeshConsistencyCapturePath =
+            "docs/validation/ispant_sword_world_length_0_6m_2026-08-09/Ispant_SwordWorldLength_0_6m_FinalReview.png";
         private const string ApprovedBlendSha256 =
             "52E995ED3B121C5363E53FFA8BB832D7BF9FF4795560711AA7D12105C9CABA3D";
         private const string DrawMountSha256 =
-            "4058A90B57C8ABA7BCAF185B9BF5D1D1C47C2F0E0991A43BE5178E071D543208";
+            "BD9997C994AE8528054CA371C4DCC303921C96296AA8D4242AE71B1495C20743";
         private const int ExpectedSlots = 12;
         private const int ExpectedSwordTriangles = 4092;
-        private const float ExpectedSwordLength = 0.9f;
+        private const float ExpectedSwordLength = 1.4374533f;
+        private const float TargetWorldBladeLength = 0.6f;
         private const int ExpectedStaticBodyTriangles = 3518;
         private const int ExpectedAnimatedBodyTriangles = 3364;
         private const int FirstFrame = 1;
@@ -69,6 +74,9 @@ namespace Bellerophon.Editor.IspantCargoRunScene
         private const float PlaybackFrameRate = 25f;
         private const float TransformTolerance = 0.0001f;
         private const float CorrectionTrsTolerance = 0.0002f;
+        // Maximum accepted world-space difference from the Ispant_01_Static sword
+        // for both blade length and handle size after mount-specific transforms.
+        private const float WorldDimensionTolerance = 0.0001f;
         private const float MaximumHandSurfaceDistance = 0.04f;
         private const float MaximumGripCenterToPalmCenter = 0.02f;
         private const float MaximumTipUpErrorDegrees = 0.25f;
@@ -98,10 +106,26 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                     ApplyStaticSlot(placement.GetChild(index), sources, materials);
                 ApplyMoveSlot(placement.GetChild(2), sources, materials);
                 ApplyDrawSlot(placement.GetChild(3), sources, materials);
+                var referenceSword = RequireSlotSword(placement.GetChild(0));
+                var referenceGripCenter = CalculateMountedGripCenterLocal(
+                    sources,
+                    referenceSword.GetComponent<MeshFilter>().sharedMesh);
+                MatchSwordWorldDimensions(
+                    referenceSword,
+                    RequireSlotSword(placement.GetChild(2)),
+                    referenceGripCenter,
+                    "Ispant_03_Move");
+                MatchSwordWorldDimensions(
+                    referenceSword,
+                    RequireSlotSword(placement.GetChild(3)),
+                    referenceGripCenter,
+                    "Ispant_04_DrawSword");
                 var drawModel = RequireSingleModel(placement.GetChild(3));
+                var staticMesh = sources.StaticSword.GetComponent<MeshFilter>().sharedMesh;
                 var playbackClip = CreateOrUpdateDrawPlaybackClip(
                     drawModel,
-                    sources.DrawSword.GetComponent<MeshFilter>().sharedMesh);
+                    staticMesh,
+                    CalculateMountedGripCenterLocal(sources, staticMesh));
                 ConfigureDrawAnimator(drawModel, CreateOrUpdateDrawController(playbackClip));
 
                 for (var index = 0; index < slotSnapshots.Length; index++)
@@ -129,7 +153,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             AssetDatabase.SaveAssets();
             Debug.Log(
                 "IspantApprovedLongSwordApplied Result=PASS" +
-                ", Slots=12, ApprovedMountMeshes=True, SwordLength=0.9m, SwordTriangles=4092" +
+                ", Slots=12, ApprovedMountMeshes=True, WorldGripToTip=0.6m, SwordTriangles=4092" +
                 ", StaticMountsPreserved=10, MoveMountPreserved=True" +
                 ", DrawParent=mixamorig:RightHand, DrawFrames=1-46" +
                 ", RotationDuringDraw=True, FinalTipWorldUp=True" +
@@ -139,6 +163,116 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 ", UpwardRotationDegrees=" + Num(metrics.UpwardRotationDegrees) +
                 ", FinalTipUpError=" + Num(metrics.FinalTipUpError) +
                 ", OtherSceneRootsChanged=False, SceneSaved=True.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Apply Static Sword Mesh Consistency")]
+        public static void ApplyIspantStaticSwordMeshConsistency()
+        {
+            var materials = RequireMaterials();
+            var sources = RequireSources(materials);
+            // A previous transactional attempt can leave only these two target
+            // renderer references dirty before the scene has been saved.
+            var scene = RequireScene(requireClean: false);
+            var placement = RequirePlacement(scene);
+            var slotSnapshots = Enumerable.Range(0, ExpectedSlots)
+                .Select(index => new TransformSnapshot(placement.GetChild(index)))
+                .ToArray();
+            var otherRootsBefore = OtherRootSignatures(scene, placement);
+            var staticSword = RequireSlotSword(placement.GetChild(0));
+            var staticMesh = staticSword.GetComponent<MeshFilter>().sharedMesh ??
+                throw new InvalidOperationException("The static Ispant sword mesh is missing.");
+            var staticMaterials = staticSword.sharedMaterials;
+            if (!staticMaterials.SequenceEqual(materials))
+                throw new InvalidOperationException("The static Ispant sword materials differ from the approved materials.");
+
+            ApplyMoveSlot(placement.GetChild(2), sources, staticMaterials);
+            ApplyDrawSlot(placement.GetChild(3), sources, staticMaterials);
+            var gripCenterLocal = CalculateMountedGripCenterLocal(sources, staticMesh);
+            MatchSwordWorldDimensions(
+                staticSword,
+                RequireSlotSword(placement.GetChild(2)),
+                gripCenterLocal,
+                "Ispant_03_Move");
+            MatchSwordWorldDimensions(
+                staticSword,
+                RequireSlotSword(placement.GetChild(3)),
+                gripCenterLocal,
+                "Ispant_04_DrawSword");
+            var drawModel = RequireSingleModel(placement.GetChild(3));
+            var playbackClip = CreateOrUpdateDrawPlaybackClip(
+                drawModel,
+                staticMesh,
+                CalculateMountedGripCenterLocal(sources, staticMesh));
+            ConfigureDrawAnimator(drawModel, CreateOrUpdateDrawController(playbackClip));
+
+            for (var index = 0; index < slotSnapshots.Length; index++)
+            {
+                if (!slotSnapshots[index].Matches(TransformTolerance))
+                    throw new InvalidOperationException(
+                        "Ispant slot transform changed: " + placement.GetChild(index).name + ".");
+            }
+            RequireEqual(
+                otherRootsBefore,
+                OtherRootSignatures(scene, placement),
+                "A scene root outside Approved Ispant Enemy Placement changed.");
+
+            var metrics = InspectApplied(scene, placement, sources, materials);
+            WriteMeshConsistencyInspection(metrics, placement);
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene, ScenePath))
+                throw new InvalidOperationException("CargoRunMvp could not be saved after sword mesh unification.");
+            AssetDatabase.SaveAssets();
+            Debug.Log(
+                "IspantStaticSwordMeshConsistencyApplied Result=PASS" +
+                ", Reference=Ispant_01_Static" +
+                ", Targets=Ispant_03_Move,Ispant_04_DrawSword" +
+                ", ExactSharedMesh=True, MaterialsMatched=True" +
+                ", WorldBladeLengthMatched=True, WorldHandleSizeMatched=True" +
+                ", MoveMountChanged=False, DrawMountChanged=False" +
+                ", DrawAnimationPreserved=True, OtherSceneRootsChanged=False, SceneSaved=True.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Inspect Static Sword Mesh Consistency")]
+        public static void InspectIspantSwordMeshConsistency()
+        {
+            var materials = RequireMaterials();
+            var sources = RequireSources(materials);
+            var scene = RequireScene(requireClean: true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var metrics = InspectApplied(scene, placement, sources, materials);
+            WriteMeshConsistencyInspection(metrics, placement);
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException("Sword mesh consistency inspection changed the scene dirty state.");
+            Debug.Log(
+                "IspantSwordMeshConsistencyInspected Result=PASS" +
+                ", Reference=Ispant_01_Static, Slots=12" +
+                ", ExactSharedMesh=True, MaterialsMatched=True" +
+                ", WorldBladeLengthMatched=True, WorldHandleSizeMatched=True" +
+                ", MoveParent=mixamorig:Hips, DrawParent=mixamorig:RightHand" +
+                ", DrawAnimationPreserved=True, SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Capture Static Sword Mesh Consistency Review")]
+        public static void CaptureIspantSwordConsistencyReview()
+        {
+            var materials = RequireMaterials();
+            var sources = RequireSources(materials);
+            var scene = RequireScene(requireClean: true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var metrics = InspectApplied(scene, placement, sources, materials);
+            WriteMeshConsistencyInspection(metrics, placement);
+            var destination = Absolute(MeshConsistencyCapturePath);
+            if (File.Exists(destination))
+                throw new InvalidOperationException("The one-time sword mesh consistency review already exists.");
+            CaptureSwordMeshConsistencyReview(placement, RequireDrawPlaybackClip(), destination);
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException("Sword mesh consistency capture changed the scene dirty state.");
+            Debug.Log(
+                "IspantSwordMeshConsistencyReviewCaptured Result=PASS" +
+                ", Panels=Static,Move,DrawFinal" +
+                ", Image=" + MeshConsistencyCapturePath + ", SceneChanged=False.");
         }
 
         [MenuItem("Bellerophon/Enemies/Ispant/Inspect Approved Long Sword All Slots")]
@@ -157,7 +291,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 ", Slots=" + metrics.SwordCount +
                 ", ApprovedMountMeshes=True" +
                 ", StaticBodyTriangles=3518, AnimatedBodyTriangles=3364" +
-                ", SwordLength=0.9m, DrawFrames=1-46" +
+                ", WorldGripToTip=0.6m, DrawFrames=1-46" +
                 ", RotationDuringDraw=True, FinalTipWorldUp=True" +
                 ", MaximumAttachmentError=" + Num(metrics.MaximumAttachmentError) +
                 ", MaximumHandSurfaceDistance=" + Num(metrics.MaximumHandSurfaceDistance) +
@@ -325,7 +459,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 commonRenderer.transform.lossyScale).z;
             if (Mathf.Abs(standaloneImportedLength - ExpectedSwordLength) > TransformTolerance)
                 throw new InvalidOperationException(
-                    "The approved standalone sword is not 0.9m long after FBX scale: " +
+                    "The runtime sword overall length differs after FBX scale: " +
                     Num(standaloneImportedLength) + ".");
             foreach (var mounted in new[] { commonMesh, moveSword.GetComponent<MeshFilter>().sharedMesh, drawSword.GetComponent<MeshFilter>().sharedMesh })
             {
@@ -333,7 +467,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                     throw new InvalidOperationException("An approved mounted long-sword mesh structure differs.");
             }
             return new Sources(
-                commonMesh,
+                standaloneMesh,
                 staticBody,
                 staticSword,
                 moveSword,
@@ -376,12 +510,14 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 throw new InvalidOperationException("The current move legacy sword structure differs.");
             var hips = model.GetComponentsInChildren<Transform>(true)
                 .Single(item => item.name == "mixamorig:Hips");
+            var staticMesh = sources.StaticSword.GetComponent<MeshFilter>().sharedMesh;
+            var moveMesh = sources.MoveSword.GetComponent<MeshFilter>().sharedMesh;
             CloneSword(
                 sources.MoveSword.gameObject,
                 hips,
-                sources.MoveSword.GetComponent<MeshFilter>().sharedMesh,
+                staticMesh,
                 materials,
-                Matrix4x4.identity);
+                CalculateMeshCorrection(staticMesh, moveMesh, "move mount"));
             if (legacyMatches.Length == 1)
                 UnityEngine.Object.DestroyImmediate(legacyMatches[0].gameObject);
             EditorUtility.SetDirty(model.gameObject);
@@ -401,14 +537,17 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 throw new InvalidOperationException("The current draw-sword legacy sword/sheath structure differs.");
             var rightHand = model.GetComponentsInChildren<Transform>(true)
                 .Single(item => item.name == "mixamorig:RightHand");
+            var staticMesh = sources.StaticSword.GetComponent<MeshFilter>().sharedMesh;
+            var drawMesh = sources.DrawSword.GetComponent<MeshFilter>().sharedMesh;
             var approvedSword = CloneSword(
                 sources.DrawSword.gameObject,
                 rightHand,
-                sources.DrawSword.GetComponent<MeshFilter>().sharedMesh,
+                staticMesh,
                 materials,
-                Matrix4x4.identity);
-            AlignGripCenterToRightPalm(model, rightHand, approvedSword.transform);
-            RecenterSwordRootAtGrip(approvedSword.transform);
+                CalculateMeshCorrection(staticMesh, drawMesh, "draw mount"));
+            var gripCenterLocal = CalculateMountedGripCenterLocal(sources, staticMesh);
+            AlignGripCenterToRightPalm(model, rightHand, approvedSword.transform, gripCenterLocal);
+            RecenterSwordRootAtGrip(approvedSword.transform, gripCenterLocal);
             if (legacySwords.Length == 1)
                 UnityEngine.Object.DestroyImmediate(legacySwords[0].gameObject);
             if (legacySheaths.Length == 1)
@@ -443,7 +582,8 @@ namespace Bellerophon.Editor.IspantCargoRunScene
         private static void AlignGripCenterToRightPalm(
             Transform model,
             Transform rightHand,
-            Transform swordRoot)
+            Transform swordRoot,
+            Vector3 gripCenterLocal)
         {
             var body = RequireRenderer<SkinnedMeshRenderer>(model, "Ispant_Armed_Body");
             var swordRenderer = RequireRenderer<MeshRenderer>(swordRoot, SwordRendererName);
@@ -469,21 +609,21 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             }
 
             var gripCenterInHand = rightHand.InverseTransformPoint(
-                swordRenderer.transform.TransformPoint(ApprovedGripCenterLocal));
+                swordRenderer.transform.TransformPoint(gripCenterLocal));
             swordRoot.localPosition += palmCenterInHand - gripCenterInHand;
             EditorUtility.SetDirty(swordRoot);
         }
 
-        private static void RecenterSwordRootAtGrip(Transform swordRoot)
+        private static void RecenterSwordRootAtGrip(Transform swordRoot, Vector3 gripCenterLocal)
         {
             var renderer = RequireRenderer<MeshRenderer>(swordRoot, SwordRendererName);
-            var gripWorld = renderer.transform.TransformPoint(ApprovedGripCenterLocal);
-            var gripCenterInRoot = swordRoot.InverseTransformPoint(gripWorld);
+            var gripWorld = renderer.transform.TransformPoint(gripCenterLocal);
+            var rendererWorld = renderer.transform.localToWorldMatrix;
             swordRoot.position = gripWorld;
-            renderer.transform.localPosition -= gripCenterInRoot;
+            SetLocalMatrix(renderer.transform, swordRoot.worldToLocalMatrix * rendererWorld);
             var residual = Vector3.Distance(
                 swordRoot.position,
-                renderer.transform.TransformPoint(ApprovedGripCenterLocal));
+                renderer.transform.TransformPoint(gripCenterLocal));
             if (residual > TransformTolerance)
                 throw new InvalidOperationException(
                     "The draw-sword root could not be recentered on the grip: " + Num(residual) + ".");
@@ -491,7 +631,10 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             EditorUtility.SetDirty(renderer);
         }
 
-        private static AnimationClip CreateOrUpdateDrawPlaybackClip(Transform model, Mesh swordMesh)
+        private static AnimationClip CreateOrUpdateDrawPlaybackClip(
+            Transform model,
+            Mesh swordMesh,
+            Vector3 gripCenterLocal)
         {
             var source = RequireDrawClip();
             if (Mathf.Abs(source.frameRate - PlaybackFrameRate) > 0.001f)
@@ -504,7 +647,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             if (sword.parent != hand)
                 throw new InvalidOperationException("The upward draw-sword rotation requires a direct RightHand child.");
 
-            var bladeAxisLocal = CalculateBladeAxisLocal(swordMesh);
+            var bladeAxisLocal = CalculateBladeAxisLocal(swordMesh, gripCenterLocal);
             var snapshots = model.GetComponentsInChildren<Transform>(true)
                 .Select(item => new TransformSnapshot(item)).ToArray();
             Quaternion startLocalRotation;
@@ -626,7 +769,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 curve);
         }
 
-        private static Vector3 CalculateBladeAxisLocal(Mesh mesh)
+        private static Vector3 CalculateBladeAxisLocal(Mesh mesh, Vector3 gripCenterLocal)
         {
             var vertices = mesh.vertices;
             var maximumZ = vertices.Max(vertex => vertex.z);
@@ -635,7 +778,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 throw new InvalidOperationException("The approved sword tip vertices are missing.");
             var tipCenter = tipVertices.Aggregate(Vector3.zero, (sum, vertex) => sum + vertex) /
                             tipVertices.Length;
-            var axis = (tipCenter - ApprovedGripCenterLocal).normalized;
+            var axis = (tipCenter - gripCenterLocal).normalized;
             if (Vector3.Dot(axis, Vector3.forward) < 0.99f)
                 throw new InvalidOperationException("The approved sword blade axis is not local +Z.");
             return axis;
@@ -760,6 +903,19 @@ namespace Bellerophon.Editor.IspantCargoRunScene
         {
             if (placement.childCount != ExpectedSlots)
                 throw new InvalidOperationException("Approved Ispant placement must contain twelve slots.");
+            var referenceSword = RequireSlotSword(placement.GetChild(0));
+            var referenceMesh = referenceSword.GetComponent<MeshFilter>().sharedMesh ??
+                throw new InvalidOperationException("The static Ispant reference sword mesh is missing.");
+            var referenceGripCenterLocal = CalculateMountedGripCenterLocal(sources, referenceMesh);
+            var referenceDimensions = MeasureSwordDimensions(
+                referenceSword,
+                referenceGripCenterLocal);
+            if (Mathf.Abs(referenceDimensions.BladeLength - TargetWorldBladeLength) >
+                WorldDimensionTolerance)
+                throw new InvalidOperationException(
+                    "Ispant_01_Static sword world grip-to-tip length is " +
+                    Num(referenceDimensions.BladeLength) + "m instead of " +
+                    Num(TargetWorldBladeLength) + "m.");
             var swords = new List<MeshRenderer>();
             for (var index = 0; index < ExpectedSlots; index++)
             {
@@ -770,13 +926,9 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 if (swordRoot == null || swordRoot.name != SwordName)
                     throw new InvalidOperationException(slot.name + " approved sword renderer root differs.");
                 var filter = sword.GetComponent<MeshFilter>();
-                var expectedMesh = index == 2
-                    ? sources.MoveSword.GetComponent<MeshFilter>().sharedMesh
-                    : index == 3
-                        ? sources.DrawSword.GetComponent<MeshFilter>().sharedMesh
-                        : sources.StaticSword.GetComponent<MeshFilter>().sharedMesh;
-                if (filter.sharedMesh != expectedMesh)
-                    throw new InvalidOperationException(slot.name + " does not reference its exact approved mount mesh.");
+                if (filter.sharedMesh != referenceMesh)
+                    throw new InvalidOperationException(
+                        slot.name + " does not reference the exact Ispant_01_Static sword mesh.");
                 if (!sword.sharedMaterials.SequenceEqual(materials))
                     throw new InvalidOperationException(slot.name + " approved sword materials differ.");
                 if (materials.Any(material =>
@@ -790,6 +942,10 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                     throw new InvalidOperationException("The approved sword visibility exposure differs.");
                 if (TriangleCount(filter.sharedMesh) != ExpectedSwordTriangles)
                     throw new InvalidOperationException(slot.name + " approved sword triangle count differs.");
+                RequireWorldDimensionMatch(
+                    referenceDimensions,
+                    MeasureSwordDimensions(sword, referenceGripCenterLocal),
+                    slot.name);
                 swords.Add(sword);
 
                 var body = RequireRenderer<SkinnedMeshRenderer>(model, "Ispant_Armed_Body");
@@ -824,6 +980,10 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                         swordRoot,
                         sources.StaticSword.transform,
                         slot.name + " static Hips mount");
+                    RequireLocalMatrixMatch(
+                        sword.transform,
+                        Matrix4x4.identity,
+                        slot.name + " static mesh transform");
                 }
             }
             if (swords.Count != ExpectedSlots)
@@ -836,7 +996,8 @@ namespace Bellerophon.Editor.IspantCargoRunScene
 
             var animation = InspectDrawAnimation(
                 placement.GetChild(3),
-                sources.DrawSword.GetComponent<MeshFilter>().sharedMesh);
+                referenceMesh,
+                referenceGripCenterLocal);
             return new Metrics(
                 swords.Count,
                 animation.MaximumAttachmentError,
@@ -856,7 +1017,10 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 animation.FinalTipUpError);
         }
 
-        private static AnimationMetrics InspectDrawAnimation(Transform drawSlot, Mesh commonMesh)
+        private static AnimationMetrics InspectDrawAnimation(
+            Transform drawSlot,
+            Mesh commonMesh,
+            Vector3 gripCenterLocal)
         {
             var model = RequireSingleModel(drawSlot);
             var swordRenderer = RequireRenderer<MeshRenderer>(model, SwordRendererName);
@@ -881,7 +1045,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var snapshots = model.GetComponentsInChildren<Transform>(true)
                 .Select(item => new TransformSnapshot(item)).ToArray();
             var vertices = commonMesh.vertices;
-            var bladeAxisLocal = CalculateBladeAxisLocal(commonMesh);
+            var bladeAxisLocal = CalculateBladeAxisLocal(commonMesh, gripCenterLocal);
             var maximumAttachment = 0f;
             var maximumHandDistance = 0f;
             var maximumFollow = 0f;
@@ -921,7 +1085,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                     foreach (var vertex in vertices)
                         nearest = Mathf.Min(nearest, Vector3.Distance(matrix.MultiplyPoint3x4(vertex), hand.position));
                     maximumHandDistance = Mathf.Max(maximumHandDistance, nearest);
-                    var gripCenter = swordRenderer.transform.TransformPoint(ApprovedGripCenterLocal);
+                    var gripCenter = swordRenderer.transform.TransformPoint(gripCenterLocal);
                     if (sample == 0)
                     {
                         firstPosition = sword.position;
@@ -996,7 +1160,12 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                     Num(maximumAttachment) + ".");
             if (maximumHandDistance > MaximumHandSurfaceDistance)
                 throw new InvalidOperationException(
-                    "The draw-sword hand is outside the approved grip surface distance: " + Num(maximumHandDistance) + ".");
+                    "The draw-sword hand is outside the approved grip surface distance: " +
+                    Num(maximumHandDistance) +
+                    ", GripCenterLocal=" + Vec(gripCenterLocal) +
+                    ", MeshBoundsSize=" + Vec(commonMesh.bounds.size) +
+                    ", RendererLocalScale=" + Vec(swordRenderer.transform.localScale) +
+                    ", SwordRootLocalScale=" + Vec(sword.localScale) + ".");
             if (maximumFollow <= 0.02f)
                 throw new InvalidOperationException("The approved draw sword did not follow visible right-arm motion.");
             if (maximumSwordWorldRotation <= 45f || maximumHandWorldRotation <= 45f)
@@ -1142,6 +1311,222 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             }
         }
 
+        private static void CaptureSwordMeshConsistencyReview(
+            Transform placement,
+            AnimationClip drawClip,
+            string destination)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(destination) ??
+                throw new InvalidOperationException("The sword mesh consistency capture folder is invalid."));
+            var allRenderers = placement.gameObject.scene.GetRootGameObjects()
+                .SelectMany(root => root.GetComponentsInChildren<Renderer>(true))
+                .Select(item => new RendererSnapshot(item)).ToArray();
+            var drawModel = RequireSingleModel(placement.GetChild(3));
+            var drawSnapshots = drawModel.GetComponentsInChildren<Transform>(true)
+                .Select(item => new TransformSnapshot(item)).ToArray();
+            var sourceCamera = GameObject.Find("Player")?.GetComponentInChildren<Camera>(true) ??
+                throw new InvalidOperationException("The Player camera is missing for sword mesh consistency review.");
+            var cameraObject = new GameObject("IspantSwordMeshConsistencyReviewCamera", typeof(Camera))
+                { hideFlags = HideFlags.HideAndDontSave };
+            const int panelWidth = 640;
+            const int panelHeight = 640;
+            const int panels = 3;
+            var strip = new Texture2D(panelWidth * panels, panelHeight, TextureFormat.RGB24, false);
+            var target = new RenderTexture(panelWidth, panelHeight, 24, RenderTextureFormat.ARGB32);
+            var panel = new Texture2D(panelWidth, panelHeight, TextureFormat.RGB24, false);
+            var oldActive = RenderTexture.active;
+            var referenceSword = RequireSlotSword(placement.GetChild(0));
+            var referenceSize = referenceSword.bounds.size;
+            var commonFramingHeight = Mathf.Max(
+                referenceSize.x,
+                Mathf.Max(referenceSize.y, referenceSize.z)) * 1.35f;
+            try
+            {
+                foreach (var snapshot in allRenderers)
+                    snapshot.Renderer.enabled = false;
+                var camera = cameraObject.GetComponent<Camera>();
+                camera.CopyFrom(sourceCamera);
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0.14f, 0.15f, 0.17f, 1f);
+                camera.cullingMask = ~0;
+                camera.fieldOfView = 28f;
+                camera.targetTexture = target;
+
+                var slotIndices = new[] { 0, 2, 3 };
+                for (var panelIndex = 0; panelIndex < slotIndices.Length; panelIndex++)
+                {
+                    var slot = placement.GetChild(slotIndices[panelIndex]);
+                    var model = RequireSingleModel(slot);
+                    if (slotIndices[panelIndex] == 3)
+                    {
+                        AnimationMode.StartAnimationMode();
+                        AnimationMode.BeginSampling();
+                        AnimationMode.SampleAnimationClip(model.gameObject, drawClip, drawClip.length);
+                        AnimationMode.EndSampling();
+                    }
+                    var renderers = model.GetComponentsInChildren<Renderer>(true);
+                    foreach (var renderer in renderers)
+                        renderer.enabled = true;
+                    var sword = RequireRenderer<MeshRenderer>(model, SwordRendererName);
+                    FrameCamera(camera, sword.bounds.center, commonFramingHeight, 1f);
+                    RenderPanel(camera, panel, strip, target, panelIndex, panelWidth, panelHeight);
+                    foreach (var renderer in renderers)
+                        renderer.enabled = false;
+                    if (AnimationMode.InAnimationMode())
+                        AnimationMode.StopAnimationMode();
+                }
+                strip.Apply();
+                File.WriteAllBytes(destination, strip.EncodeToPNG());
+            }
+            finally
+            {
+                if (AnimationMode.InAnimationMode())
+                    AnimationMode.StopAnimationMode();
+                RenderTexture.active = oldActive;
+                cameraObject.GetComponent<Camera>().targetTexture = null;
+                foreach (var snapshot in allRenderers)
+                    snapshot.Restore();
+                foreach (var snapshot in drawSnapshots)
+                    snapshot.Restore();
+                UnityEngine.Object.DestroyImmediate(panel);
+                UnityEngine.Object.DestroyImmediate(strip);
+                target.Release();
+                UnityEngine.Object.DestroyImmediate(target);
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+            }
+        }
+
+        private static void WriteMeshConsistencyInspection(Metrics metrics, Transform placement)
+        {
+            var destination = Absolute(MeshConsistencyInspectionPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(destination) ??
+                throw new InvalidOperationException("The sword mesh consistency inspection folder is invalid."));
+            var staticSword = RequireSlotSword(placement.GetChild(0));
+            var moveSword = RequireSlotSword(placement.GetChild(2));
+            var drawSword = RequireSlotSword(placement.GetChild(3));
+            var mesh = staticSword.GetComponent<MeshFilter>().sharedMesh;
+            var gripCenterLocal = CalculateMountedGripCenterLocal(null, mesh);
+            var staticDimensions = MeasureSwordDimensions(staticSword, gripCenterLocal);
+            var moveDimensions = MeasureSwordDimensions(moveSword, gripCenterLocal);
+            var drawDimensions = MeasureSwordDimensions(drawSword, gripCenterLocal);
+            File.WriteAllLines(destination, new[]
+            {
+                "Result=PASS",
+                "Scene=" + ScenePath,
+                "ReferenceSlot=Ispant_01_Static",
+                "TargetSlots=Ispant_03_Move,Ispant_04_DrawSword",
+                "ReferenceMeshAsset=" + AssetDatabase.GetAssetPath(mesh),
+                "ReferenceMeshName=" + mesh.name,
+                "ReferenceVertices=" + mesh.vertexCount,
+                "ReferenceTriangles=" + TriangleCount(mesh),
+                "ReferenceSubMeshes=" + mesh.subMeshCount,
+                "AllTwelveSlotsExactSharedMesh=True",
+                "MoveExactSharedMesh=" + (moveSword.GetComponent<MeshFilter>().sharedMesh == mesh),
+                "DrawExactSharedMesh=" + (drawSword.GetComponent<MeshFilter>().sharedMesh == mesh),
+                "MoveParent=" + moveSword.transform.parent.parent.name,
+                "DrawParent=" + drawSword.transform.parent.parent.name,
+                "StaticWorldBladeLength=" + Num(staticDimensions.BladeLength),
+                "MoveWorldBladeLength=" + Num(moveDimensions.BladeLength),
+                "DrawWorldBladeLength=" + Num(drawDimensions.BladeLength),
+                "StaticWorldHandleMaximumDimension=" + Num(staticDimensions.HandleMaximumDimension),
+                "MoveWorldHandleMaximumDimension=" + Num(moveDimensions.HandleMaximumDimension),
+                "DrawWorldHandleMaximumDimension=" + Num(drawDimensions.HandleMaximumDimension),
+                "WorldBladeLengthMatched=True",
+                "WorldHandleSizeMatched=True",
+                "MaximumAttachmentError=" + Num(metrics.MaximumAttachmentError),
+                "MaximumHandSurfaceDistance=" + Num(metrics.MaximumHandSurfaceDistance),
+                "MaximumGripCenterToPalmCenter=" + Num(metrics.MaximumGripCenterToPalmCenter),
+                "FinalTipUpError=" + Num(metrics.FinalTipUpError),
+                "SceneChanged=False"
+            });
+        }
+
+        private static void MatchSwordWorldDimensions(
+            MeshRenderer reference,
+            MeshRenderer target,
+            Vector3 gripCenterLocal,
+            string label)
+        {
+            var referenceDimensions = MeasureSwordDimensions(reference, gripCenterLocal);
+            var targetDimensions = MeasureSwordDimensions(target, gripCenterLocal);
+            if (targetDimensions.BladeLength <= 0f || targetDimensions.HandleMaximumDimension <= 0f)
+                throw new InvalidOperationException(label + " sword has invalid world dimensions.");
+            var bladeRatio = referenceDimensions.BladeLength / targetDimensions.BladeLength;
+            var handleRatio = referenceDimensions.HandleMaximumDimension /
+                              targetDimensions.HandleMaximumDimension;
+            if (Mathf.Abs(bladeRatio - handleRatio) > 0.001f)
+                throw new InvalidOperationException(
+                    label + " sword blade and handle require different scale corrections: Blade=" +
+                    Num(bladeRatio) + ", Handle=" + Num(handleRatio) + ".");
+
+            var gripWorld = target.transform.TransformPoint(gripCenterLocal);
+            target.transform.localScale *= bladeRatio;
+            target.transform.position += gripWorld - target.transform.TransformPoint(gripCenterLocal);
+            EditorUtility.SetDirty(target.transform);
+            EditorUtility.SetDirty(target);
+            RequireWorldDimensionMatch(
+                referenceDimensions,
+                MeasureSwordDimensions(target, gripCenterLocal),
+                label);
+        }
+
+        private static SwordDimensions MeasureSwordDimensions(
+            MeshRenderer renderer,
+            Vector3 gripCenterLocal)
+        {
+            var mesh = renderer.GetComponent<MeshFilter>().sharedMesh ??
+                throw new InvalidOperationException(renderer.name + " sword mesh is missing.");
+            var vertices = mesh.vertices;
+            var maximumZ = vertices.Max(vertex => vertex.z);
+            var tipVertices = vertices.Where(vertex => maximumZ - vertex.z <= 0.000005f).ToArray();
+            if (tipVertices.Length == 0)
+                throw new InvalidOperationException(renderer.name + " sword tip vertices are missing.");
+            var tipCenterLocal = tipVertices.Aggregate(Vector3.zero, (sum, vertex) => sum + vertex) /
+                                 tipVertices.Length;
+            var bladeLength = Vector3.Distance(
+                renderer.transform.TransformPoint(gripCenterLocal),
+                renderer.transform.TransformPoint(tipCenterLocal));
+
+            if (mesh.subMeshCount < 2)
+                throw new InvalidOperationException(renderer.name + " sword leather submesh is missing.");
+            var handleIndices = mesh.GetTriangles(1).Distinct().ToArray();
+            var handlePoints = handleIndices
+                .Select(index => renderer.transform.TransformPoint(vertices[index]))
+                .ToArray();
+            var handleMaximumDimension = 0f;
+            for (var first = 0; first < handlePoints.Length; first++)
+            {
+                for (var second = first + 1; second < handlePoints.Length; second++)
+                {
+                    handleMaximumDimension = Mathf.Max(
+                        handleMaximumDimension,
+                        Vector3.Distance(handlePoints[first], handlePoints[second]));
+                }
+            }
+            return new SwordDimensions(bladeLength, handleMaximumDimension);
+        }
+
+        private static void RequireWorldDimensionMatch(
+            SwordDimensions reference,
+            SwordDimensions target,
+            string label)
+        {
+            var bladeError = Mathf.Abs(reference.BladeLength - target.BladeLength);
+            var handleError = Mathf.Abs(
+                reference.HandleMaximumDimension - target.HandleMaximumDimension);
+            if (bladeError > WorldDimensionTolerance || handleError > WorldDimensionTolerance)
+                throw new InvalidOperationException(
+                    label + " sword world dimensions differ from Ispant_01_Static: Blade=" +
+                    Num(target.BladeLength) + " vs " + Num(reference.BladeLength) +
+                    ", Handle=" + Num(target.HandleMaximumDimension) + " vs " +
+                    Num(reference.HandleMaximumDimension) + ".");
+        }
+
+        private static MeshRenderer RequireSlotSword(Transform slot)
+        {
+            return RequireRenderer<MeshRenderer>(RequireSingleModel(slot), SwordRendererName);
+        }
+
         private static void RenderPanel(
             Camera camera,
             Texture2D panel,
@@ -1181,10 +1566,10 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 "Placement=" + PlacementRootName,
                 "Slots=" + metrics.SwordCount,
                 "ApprovedBlendSha256=" + ApprovedBlendSha256,
-                "DrawMountSourceByteExactSha256=" + DrawMountSha256,
+                "DrawMountRuntimeFbxSha256=" + DrawMountSha256,
                 "StandaloneApprovedSwordFbx=" + SwordFbxPath,
                 "StandaloneApprovedSwordFbxSha256=" + Sha256(AbsoluteAsset(SwordFbxPath)),
-                "ApprovedMountedSwordMeshSources=StaticMount,MoveMount,DrawMount",
+                "ApprovedMountedSwordMeshSource=Ispant_01_Static exact shared mesh for all slots",
                 "StaticMountFbx=" + StaticMountFbxPath,
                 "StaticMountFbxSha256=" + Sha256(AbsoluteAsset(StaticMountFbxPath)),
                 "MoveMountFbx=" + MoveMountFbxPath,
@@ -1346,6 +1731,15 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             return correction;
         }
 
+        private static Vector3 CalculateMountedGripCenterLocal(Sources sources, Mesh mountedMesh)
+        {
+            var localLength = mountedMesh.bounds.size.z;
+            if (localLength <= 0f)
+                throw new InvalidOperationException("The mounted sword mesh has no local blade length.");
+            var localToApprovedRatio = localLength / ExpectedSwordLength;
+            return ApprovedGripCenterLocal * localToApprovedRatio;
+        }
+
         private static Matrix4x4 PointBasis(Vector3 first, Vector3 second, Vector3 third, Vector3 fourth)
         {
             var firstAxis = second - first;
@@ -1369,6 +1763,21 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             target.localPosition = position;
             target.localRotation = rotation;
             target.localScale = scale;
+        }
+
+        private static void RequireLocalMatrixMatch(
+            Transform target,
+            Matrix4x4 expected,
+            string label)
+        {
+            var actual = Matrix4x4.TRS(
+                target.localPosition,
+                target.localRotation,
+                target.localScale);
+            var error = MatrixError(actual, expected);
+            if (error > CorrectionTrsTolerance)
+                throw new InvalidOperationException(
+                    label + " differs. Error=" + Num(error) + ".");
         }
 
         private static void RequireTrsMatrix(Matrix4x4 matrix, string label)
@@ -1521,6 +1930,18 @@ namespace Bellerophon.Editor.IspantCargoRunScene
 
             public float Time { get; }
             public Quaternion Rotation { get; }
+        }
+
+        private readonly struct SwordDimensions
+        {
+            public SwordDimensions(float bladeLength, float handleMaximumDimension)
+            {
+                BladeLength = bladeLength;
+                HandleMaximumDimension = handleMaximumDimension;
+            }
+
+            public float BladeLength { get; }
+            public float HandleMaximumDimension { get; }
         }
 
         private readonly struct Metrics

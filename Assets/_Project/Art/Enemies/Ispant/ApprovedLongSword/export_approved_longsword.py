@@ -3,7 +3,6 @@ from __future__ import annotations
 import hashlib
 import json
 import math
-import shutil
 import sys
 from pathlib import Path
 
@@ -59,13 +58,28 @@ EXPECTED_MOVE_SHA256 = "25E2CEC76F1FB3AF0A406E450649D38399799581B0F2B4644995B108
 EXPECTED_OBJECT_NAME = "Ispant_Reference_LongSword"
 EXPECTED_VERTEX_COUNT = 2080
 EXPECTED_TRIANGLE_COUNT = 4092
-EXPECTED_DIMENSIONS = Vector((0.198372, 0.076, 0.9))
+EXPECTED_SOURCE_DIMENSIONS = Vector((0.198372, 0.076, 0.9))
 EXPECTED_MATERIALS = (
     "Ispant_LongSword_WornSteel",
     "Ispant_LongSword_BrownLeather",
     "Ispant_LongSword_DarkEngraving",
 )
 EXPECTED_GRIP_CENTER_Z = -0.103
+SOURCE_MIN_Z = -0.251500010
+SOURCE_MAX_Z = 0.648499966
+SOURCE_GRIP_TO_TIP = 0.751499966
+BASELINE_STATIC_WORLD_GRIP_TO_TIP = 0.3498093
+TARGET_STATIC_WORLD_GRIP_TO_TIP = 0.6
+# Calibrated from the Unity FBX reimport at the current 0.6 m target, where the
+# first pass measured 0.5998676 m. This includes mount-hierarchy precision.
+WORLD_METERS_PER_SOURCE_METER = 0.465493981354656
+TARGET_SOURCE_GRIP_TO_TIP = (
+    TARGET_STATIC_WORLD_GRIP_TO_TIP / WORLD_METERS_PER_SOURCE_METER
+)
+TARGET_TIP_Z = EXPECTED_GRIP_CENTER_Z + TARGET_SOURCE_GRIP_TO_TIP
+TARGET_RUNTIME_OVERALL_LENGTH = TARGET_TIP_Z - SOURCE_MIN_Z
+RUNTIME_BLADE_Z_SCALE = TARGET_TIP_Z / SOURCE_MAX_Z
+PRESERVED_HILT_MAX_Z = 0.017
 REFERENCE_SWORD_COMPONENTS = (77, 78, 79, 80)
 REFERENCE_BLADE_COMPONENT = 78
 REFERENCE_HANDLE_COMPONENT = 79
@@ -101,7 +115,7 @@ def validate_source(source: bpy.types.Object) -> dict:
         raise RuntimeError(f"Approved vertex count mismatch: {vertex_count}")
     if triangle_count != EXPECTED_TRIANGLE_COUNT:
         raise RuntimeError(f"Approved triangle count mismatch: {triangle_count}")
-    for index, expected in enumerate(EXPECTED_DIMENSIONS):
+    for index, expected in enumerate(EXPECTED_SOURCE_DIMENSIONS):
         assert_close(dimensions[index], expected, f"dimension[{index}]")
     if materials != EXPECTED_MATERIALS:
         raise RuntimeError(f"Approved material slots mismatch: {materials}")
@@ -327,6 +341,63 @@ def connected_components(mesh: bpy.types.Mesh) -> list[set[int]]:
     return result
 
 
+def extend_runtime_blade_only(sword: bpy.types.Object) -> dict:
+    components = connected_components(sword.data)
+    blade_components = [
+        component
+        for component in components
+        if max(sword.data.vertices[index].co.z for index in component) > PRESERVED_HILT_MAX_Z
+    ]
+    if len(blade_components) != 3:
+        raise RuntimeError(
+            "Expected the blade plus two engraving components, "
+            f"found {len(blade_components)}"
+        )
+    blade_vertices = set().union(*blade_components)
+    hilt_vertices = set(range(len(sword.data.vertices))) - blade_vertices
+    hilt_before = {
+        index: tuple(float(value) for value in sword.data.vertices[index].co)
+        for index in hilt_vertices
+    }
+    for index in blade_vertices:
+        sword.data.vertices[index].co.z *= RUNTIME_BLADE_Z_SCALE
+    sword.data.update()
+    hilt_after = {
+        index: tuple(float(value) for value in sword.data.vertices[index].co)
+        for index in hilt_vertices
+    }
+    if hilt_before != hilt_after:
+        raise RuntimeError("The runtime blade extension changed hilt geometry")
+    measured_tip_z = max(vertex.co.z for vertex in sword.data.vertices)
+    measured_min_z = min(vertex.co.z for vertex in sword.data.vertices)
+    measured_overall = measured_tip_z - measured_min_z
+    assert_close(measured_tip_z, TARGET_TIP_Z, "runtime tip z")
+    assert_close(
+        measured_overall,
+        TARGET_RUNTIME_OVERALL_LENGTH,
+        "runtime overall length",
+    )
+    sword["runtime_world_grip_to_tip_target_m"] = TARGET_STATIC_WORLD_GRIP_TO_TIP
+    sword["runtime_source_grip_to_tip_m"] = TARGET_SOURCE_GRIP_TO_TIP
+    sword["runtime_overall_length_m"] = TARGET_RUNTIME_OVERALL_LENGTH
+    sword["runtime_revision_rule"] = (
+        "Blade and engraving Z coordinates only; hilt vertices preserved"
+    )
+    return {
+        "baseline_static_world_grip_to_tip_m": BASELINE_STATIC_WORLD_GRIP_TO_TIP,
+        "target_static_world_grip_to_tip_m": TARGET_STATIC_WORLD_GRIP_TO_TIP,
+        "world_meters_per_source_meter": WORLD_METERS_PER_SOURCE_METER,
+        "target_source_grip_to_tip_m": TARGET_SOURCE_GRIP_TO_TIP,
+        "target_tip_z_m": TARGET_TIP_Z,
+        "target_runtime_overall_length_m": TARGET_RUNTIME_OVERALL_LENGTH,
+        "blade_z_scale": RUNTIME_BLADE_Z_SCALE,
+        "blade_component_count": len(blade_components),
+        "blade_vertex_count": len(blade_vertices),
+        "hilt_vertex_count": len(hilt_vertices),
+        "hilt_vertices_preserved": hilt_before == hilt_after,
+    }
+
+
 def delete_vertices(obj: bpy.types.Object, vertex_indices: set[int]) -> None:
     editable = bmesh.new()
     editable.from_mesh(obj.data)
@@ -351,6 +422,7 @@ def append_approved_sword() -> bpy.types.Object:
     sword.parent = None
     sword.matrix_parent_inverse = Matrix.Identity(4)
     sword.name = "Ispant_ApprovedLongSword"
+    extend_runtime_blade_only(sword)
     return sword
 
 
@@ -733,20 +805,54 @@ def export_static_mount() -> dict:
     }
 
 
-def copy_draw_mount() -> dict:
+def export_draw_mount() -> dict:
     source_hash = sha256(DRAW_MOUNT_SOURCE_FBX)
     if source_hash != EXPECTED_DRAW_MOUNT_SHA256:
         raise RuntimeError("The approved draw-sword sample FBX hash differs")
-    shutil.copy2(DRAW_MOUNT_SOURCE_FBX, OUTPUT_DRAW_MOUNT_FBX)
-    output_hash = sha256(OUTPUT_DRAW_MOUNT_FBX)
-    if output_hash != source_hash:
-        raise RuntimeError("The copied approved draw-sword mount FBX differs")
+    bpy.ops.wm.open_mainfile(filepath=str(SOURCE_BLEND))
+    sword = bpy.data.objects.get(EXPECTED_OBJECT_NAME)
+    armature = bpy.data.objects.get("Armature")
+    if sword is None or armature is None:
+        raise RuntimeError("The approved draw-sword blend structure differs")
+    revision = extend_runtime_blade_only(sword)
+    export_meshes = [
+        obj
+        for obj in bpy.context.scene.objects
+        if obj.type == "MESH"
+        and obj.name not in {"Ispant_DrawSword_RigidSword", "Ispant_DrawSword_RigidSheath"}
+    ]
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in [armature] + export_meshes:
+        obj.hide_set(False)
+        obj.hide_render = False
+        obj.select_set(True)
+    bpy.context.view_layer.objects.active = armature
+    bpy.ops.export_scene.fbx(
+        filepath=str(OUTPUT_DRAW_MOUNT_FBX),
+        use_selection=True,
+        object_types={"ARMATURE", "MESH"},
+        global_scale=1.0,
+        apply_unit_scale=True,
+        apply_scale_options="FBX_SCALE_ALL",
+        axis_forward="-Z",
+        axis_up="Y",
+        add_leaf_bones=False,
+        bake_anim=True,
+        bake_anim_use_all_bones=True,
+        bake_anim_use_nla_strips=False,
+        bake_anim_use_all_actions=True,
+        bake_anim_force_startend_keying=True,
+        bake_anim_step=1.0,
+        bake_anim_simplify_factor=0.0,
+        path_mode="COPY",
+        embed_textures=True,
+    )
     return {
         "source_fbx": str(DRAW_MOUNT_SOURCE_FBX),
         "source_fbx_sha256": source_hash,
         "output_fbx": str(OUTPUT_DRAW_MOUNT_FBX),
-        "output_fbx_sha256": output_hash,
-        "byte_exact_copy": True,
+        "output_fbx_sha256": sha256(OUTPUT_DRAW_MOUNT_FBX),
+        "runtime_blade_revision": revision,
     }
 
 
@@ -901,13 +1007,14 @@ def main() -> None:
 
     report = validate_source(source)
     sword = duplicate_at_origin(source)
+    report["runtime_blade_revision"] = extend_runtime_blade_only(sword)
     report["textures"] = bake_texture_set(sword)
     export_fbx(sword)
     report["output_fbx"] = str(OUTPUT_FBX)
     report["output_fbx_sha256"] = sha256(OUTPUT_FBX)
     report["static_mount"] = export_static_mount()
     report["move_mount"] = export_move_mount()
-    report["draw_mount"] = copy_draw_mount()
+    report["draw_mount"] = export_draw_mount()
     report["result"] = "PASS"
     OUTPUT_REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2))

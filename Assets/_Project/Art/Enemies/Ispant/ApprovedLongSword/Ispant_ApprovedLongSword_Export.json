@@ -22,14 +22,27 @@
     0.0,
     -0.103
   ],
+  "runtime_blade_revision": {
+    "baseline_static_world_grip_to_tip_m": 0.3498093,
+    "target_static_world_grip_to_tip_m": 0.6,
+    "world_meters_per_source_meter": 0.465493981354656,
+    "target_source_grip_to_tip_m": 1.2889532927018985,
+    "target_tip_z_m": 1.1859532927018985,
+    "target_runtime_overall_length_m": 1.4374533027018985,
+    "blade_z_scale": 1.8287638471547714,
+    "blade_component_count": 3,
+    "blade_vertex_count": 282,
+    "hilt_vertex_count": 1798,
+    "hilt_vertices_preserved": true
+  },
   "textures": {
     "BaseColor": {
       "path": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Textures\\Ispant_ApprovedLongSword_BaseColor.png",
-      "sha256": "51590660010EBDE19F79D7EEAB600F9C74CF71EA4797B1EEC57A6AD64D2ABAFF",
+      "sha256": "2A7699C0FFE4F468E48DACF7341580114D28A7FFA2A53AF495783145F4F548E8",
       "width": 1024,
       "height": 1024,
       "pixel_min": 0.0,
-      "pixel_max": 0.2039215862751007
+      "pixel_max": 0.20784315466880798
     },
     "Roughness": {
       "path": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Textures\\Ispant_ApprovedLongSword_Roughness.png",
@@ -49,15 +62,15 @@
     },
     "Normal": {
       "path": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Textures\\Ispant_ApprovedLongSword_Normal.png",
-      "sha256": "B404202362E6E98E919E067A5CC168D5C9B3C53A277A5718984B2C82174537D1",
+      "sha256": "1EAABD04F5CE1BF39BE0C78C0B29D5DF527469A9AA00F769F779FE5F35F0B8F1",
       "width": 1024,
       "height": 1024,
-      "pixel_min": 0.2666666805744171,
+      "pixel_min": 0.250980406999588,
       "pixel_max": 1.0
     }
   },
   "output_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Models\\Ispant_ApprovedLongSword.fbx",
-  "output_fbx_sha256": "6E33AB875BD84512609E81F70D726014F61CE833251A3B3D91A42CEB4CA1A017",
+  "output_fbx_sha256": "941A5036673BD54E214DBB86D25D4E63247534E4FB72B3C590D6634EFFA50D44",
   "static_mount": {
     "source_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedAppearance\\Models\\Ispant_Armed_Approved.fbx",
     "source_fbx_sha256": "E33AE0B988CD7CA6FE96D42D7D5E057F1CB57800009EBF7413EE0694BC6825FA",
@@ -84,7 +97,7 @@
     ],
     "sword_parent_bone": "Hips",
     "output_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Models\\Ispant_ApprovedLongSword_StaticMount.fbx",
-    "output_fbx_sha256": "D0ADDCC934DDC306FF74B73C75588291EADDC163C7ADBB7902F7412D011F8E60"
+    "output_fbx_sha256": "6931BF84F76835C9CEB673C3E78C275F991004A1AB9898B99CA83806FC24D251"
   },
   "move_mount": {
     "source_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\Animations\\Ispant_Move.fbx",
@@ -107,14 +120,26 @@
     ],
     "sword_parent_bone": "mixamorig:Hips",
     "output_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Models\\Ispant_ApprovedLongSword_MoveMount.fbx",
-    "output_fbx_sha256": "308D0069FBD07CE241DE0CAA1537A4D2ECB0067A41BC4EF92DAD8C276FACD26C"
+    "output_fbx_sha256": "1539B520BC4E851E3D0A942E6A0A15D543A333805E97FEB334950FFC3ED889FC"
   },
   "draw_mount": {
     "source_fbx": "D:\\Bellerophon2\\Bellerophon\\artSample\\enemies\\ispant_draw_sword\\length_0_9m_revision\\Ispant_DrawSword_0_9m_ArtSample.fbx",
     "source_fbx_sha256": "4058A90B57C8ABA7BCAF185B9BF5D1D1C47C2F0E0991A43BE5178E071D543208",
     "output_fbx": "D:\\Bellerophon2\\Bellerophon\\Assets\\_Project\\Art\\Enemies\\Ispant\\ApprovedLongSword\\Models\\Ispant_ApprovedLongSword_DrawMount.fbx",
-    "output_fbx_sha256": "4058A90B57C8ABA7BCAF185B9BF5D1D1C47C2F0E0991A43BE5178E071D543208",
-    "byte_exact_copy": true
+    "output_fbx_sha256": "BD9997C994AE8528054CA371C4DCC303921C96296AA8D4242AE71B1495C20743",
+    "runtime_blade_revision": {
+      "baseline_static_world_grip_to_tip_m": 0.3498093,
+      "target_static_world_grip_to_tip_m": 0.6,
+      "world_meters_per_source_meter": 0.465493981354656,
+      "target_source_grip_to_tip_m": 1.2889532927018985,
+      "target_tip_z_m": 1.1859532927018985,
+      "target_runtime_overall_length_m": 1.4374533027018985,
+      "blade_z_scale": 1.8287638471547714,
+      "blade_component_count": 3,
+      "blade_vertex_count": 282,
+      "hilt_vertex_count": 1798,
+      "hilt_vertices_preserved": true
+    }
   },
   "result": "PASS"
 }

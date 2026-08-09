@@ -22,14 +22,15 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             "Assets/_Project/Art/Enemies/Ispant/ApprovedAppearance/Models/Ispant_Armed_Approved.fbx";
         private const string OutputFilePath = "enemies model/Ispant_Static.fbx";
         private const int ExpectedSlots = 12;
-        private const int ExpectedRenderers = 3;
-        private const int ExpectedTriangles = 3596 + 1258 + 312;
+        private const int ExpectedRenderers = 4;
+        private const int ExpectedTriangles = 3518 + 1258 + 312 + 4092;
 
         private static readonly string[] ExpectedMeshNames =
         {
             "Ispant_Armed_Body",
             "Ispant_Crescent_Ornament",
-            "Ispant_Reference_Eye_Slits"
+            "Ispant_Reference_Eye_Slits",
+            "Ispant_ApprovedLongSword"
         };
 
         [MenuItem("Bellerophon/Enemies/Ispant/Export Current Static FBX")]
@@ -128,7 +129,8 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             if (renderers.Length != ExpectedRenderers)
             {
                 throw new InvalidOperationException(
-                    "The current Ispant must contain exactly body, crescent, and eye renderers.");
+                    "The current Ispant must contain exactly body, crescent, eye, and approved long-sword renderers. " +
+                    "Actual=" + renderers.Length + ".");
             }
 
             var meshNames = renderers
@@ -257,7 +259,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 exportRoot.GetComponentsInChildren<Animation>(true).Length != 0)
             {
                 throw new InvalidOperationException(
-                    "The Ispant export root is not a pure three-mesh static model.");
+                    "The Ispant export root is not a pure four-mesh static model.");
             }
             var triangles = exportRoot.GetComponentsInChildren<MeshFilter>(true)
                 .Sum(item => TriangleCount(item.sharedMesh));
