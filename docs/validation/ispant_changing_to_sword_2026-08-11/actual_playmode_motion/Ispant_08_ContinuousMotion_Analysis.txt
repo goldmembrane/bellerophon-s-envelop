@@ -1,0 +1,57 @@
+Ispant slot 8 continuous motion verification
+Date: 2026-08-11
+
+Target
+- Scene: Assets/_Project/Scenes/CargoRunMvp.unity
+- Slot: Approved Ispant Enemy Placement/Ispant_08_StowMusketDrawSword
+- Animator state count: 1
+- Animator state transitions: 0
+- Continuous sequence clip: Ispant_08_StowMusketDrawSword_ContinuousSequence
+
+Authored sequence
+- Changing-to-sword source motion: 3.4 seconds
+- Separate lowered-pose hold: 0 seconds
+- Immediate exact-pose bridge to slot 4: 0.3 seconds
+- Slot-4 draw-sword continuation start frame: 0
+- Slot-4 draw-sword removed opening: 0 seconds
+- Slot-4 draw-sword continuation: 1.76 seconds
+- Total loop: 5.46 seconds
+
+Actual Play Mode recording
+- Playback source: the Animator attached to the CargoRunMvp slot-8 model
+- Isolation: dedicated camera layer renders only slot 8
+- Capture: asynchronous GPU readback while Play Mode advances normally
+- Recorded loops: 2.04617
+- Recorded Animator time: 11.17209 seconds
+- Encoded frames: 296
+- Encoded rate: 26.405094 fps
+- Normal-speed video duration: 11.209958 seconds
+- Half-speed video duration: 22.382045 seconds
+
+Temporal result
+- Normal-speed target-body crop: no identical-frame interval lasting 0.25 seconds or longer.
+- Half-speed target-body crop: no identical-frame interval lasting 0.50 seconds or longer.
+- Completion was judged from the two-loop motion videos, not from still captures.
+
+Structural inspection
+- InspectIspant08ChangingToSwordReplacement: PASS
+- ClipLength=3.4
+- TransitionBridgeSeconds=0.3
+- DrawContinuationSourceStartFrame=0
+- DrawContinuationSourceStartTime=0
+- DrawContinuationRemovedOpeningSeconds=0
+- DrawContinuationSeconds=1.76
+- SequenceCycleSeconds=5.46
+- LoweredPoseHoldSeconds=0
+- SceneChanged=False
+
+Log note
+- The Play Mode exit warning originates from ResistanceDeathExplosionLoop.OnDisable sampling its own inactive Animator.
+- Its stack trace does not reference the Ispant slot-8 Animator or capture tool.
+
+Not run
+- Harness validation
+- EditMode tests
+- PlayMode tests
+- Windows development build
+- Ensure, Validate, or Smoke commands

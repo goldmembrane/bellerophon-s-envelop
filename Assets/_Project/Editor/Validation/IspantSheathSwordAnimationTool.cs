@@ -118,6 +118,12 @@ namespace Bellerophon.Editor.IspantCargoRunScene
         // User-approved final aiming lift, achieved through arm-bone rotation rather
         // than a direct weapon or root-position animation curve.
         private const float FinalAimArmLift = 0.15f;
+        // The user explicitly requires the right glove below the musket at the trigger.
+        // The weapon receives the exact inverse displacement so its world pose stays fixed.
+        private const float RightHandTriggerDownOffset = 0.08f;
+        // User-specified positional lift for both arms and the right-hand child musket.
+        // This changes position only; the existing arm and musket rotations remain unchanged.
+        private const float FinalAimAssemblyVerticalTranslation = 0.1f;
         private static readonly Vector3 ApprovedGripCenterLocal = new Vector3(0f, 0f, -0.103f);
         private static readonly float[] ReviewNormalizedTimes = { 0f, 0.25f, 0.5f, 0.75f, 1f };
 
@@ -935,6 +941,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
         private static RifleGrabSample FindRifleGrab(Transform model, AnimationClip clip)
         {
             var rightHand = RequireDescendant(model, "mixamorig:RightHand");
+            var body = RequireRenderer<SkinnedMeshRenderer>(model, BODY_NAME);
             var backMusket = RequireRenderer<MeshRenderer>(model, MusketName);
             var vertices = SharedMesh(backMusket).vertices;
             var snapshots = model.GetComponentsInChildren<Transform>(true)
@@ -944,14 +951,23 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var startDistance = 0f;
             try
             {
+                SampleClip(
+                    model.gameObject,
+                    clip,
+                    ChangeToRifleTimeForFrame(ChangeToRifleFirstFrame, clip));
+                var visibleRightHandAnchorLocal =
+                    VisibleHandAnchorLocal(body, rightHand);
                 for (var frame = ChangeToRifleFirstFrame;
                      frame <= ChangeToRifleLastFrame;
                      frame++)
                 {
                     var time = ChangeToRifleTimeForFrame(frame, clip);
                     SampleClip(model.gameObject, clip, time);
+                    var visibleRightHandCenter = rightHand.TransformPoint(
+                        visibleRightHandAnchorLocal);
                     var distance = vertices.Min(vertex => Vector3.Distance(
-                        rightHand.position, backMusket.transform.TransformPoint(vertex)));
+                        visibleRightHandCenter,
+                        backMusket.transform.TransformPoint(vertex)));
                     if (frame == ChangeToRifleFirstFrame)
                         startDistance = distance;
                     if (distance < minimumDistance)
@@ -1001,6 +1017,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var rightArm = RequireDescendant(model, "mixamorig:RightArm");
             var rightForeArm = RequireDescendant(model, "mixamorig:RightForeArm");
             var leftHand = RequireDescendant(model, "mixamorig:LeftHand");
+            var body = RequireRenderer<SkinnedMeshRenderer>(model, BODY_NAME);
             var mesh = SharedMesh(backMusket);
             var vertices = mesh.vertices;
             var localMuzzleAxis = DetermineMusketLocalMuzzleAxis(mesh);
@@ -1019,12 +1036,16 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 SampleClip(model.gameObject, rifleSourceClip, grabTime);
                 grabRightHandWorld = rightHand.localToWorldMatrix;
                 grabMusketWorld = backMusket.transform.localToWorldMatrix;
+                var visibleRightHandCenter = rightHand.TransformPoint(
+                    VisibleHandAnchorLocal(body, rightHand));
                 grabVertexDistances = vertices.Select(vertex => Vector3.Distance(
-                    rightHand.position, grabMusketWorld.MultiplyPoint3x4(vertex))).ToArray();
+                    visibleRightHandCenter,
+                    grabMusketWorld.MultiplyPoint3x4(vertex))).ToArray();
 
                 SampleClip(model.gameObject, rifleSourceClip, rifleSourceClip.length);
                 finalRightHandWorld = rightHand.localToWorldMatrix;
-                finalLeftHandPosition = leftHand.position;
+                finalLeftHandPosition = leftHand.TransformPoint(
+                    VisibleHandAnchorLocal(body, leftHand));
             }
             finally
             {
@@ -1059,8 +1080,18 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 var currentMuzzle = finalPivotRotation * rootLocalMuzzleAxis;
                 var baseFinalRotation = Quaternion.FromToRotation(
                     currentMuzzle, characterForward) * finalPivotRotation;
-                var supportVertexIndices = DetermineApprovedLeatherForegripVertexIndices(
-                    backMusket, gripVertex, localMuzzleAxis);
+                int[] supportVertexIndices;
+                try
+                {
+                    supportVertexIndices = DetermineApprovedLeatherForegripVertexIndices(
+                        backMusket, gripVertex, localMuzzleAxis);
+                }
+                catch (InvalidOperationException exception) when (
+                    exception.Message.Contains(
+                        "no surface ahead", StringComparison.Ordinal))
+                {
+                    continue;
+                }
                 if (supportVertexIndices.Length == 0)
                     continue;
                 var candidateDistance = float.PositiveInfinity;
@@ -1210,8 +1241,10 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var rightArm = RequireDescendant(model, "mixamorig:RightArm");
             var rightForeArm = RequireDescendant(model, "mixamorig:RightForeArm");
             var leftHand = RequireDescendant(model, "mixamorig:LeftHand");
+            var leftShoulder = RequireDescendant(model, "mixamorig:LeftShoulder");
             var leftArm = RequireDescendant(model, "mixamorig:LeftArm");
             var leftForeArm = RequireDescendant(model, "mixamorig:LeftForeArm");
+            var body = RequireRenderer<SkinnedMeshRenderer>(model, BODY_NAME);
             var handMusket = RequireRenderer<MeshRenderer>(model, HandMusketRendererName);
             var handMusketRoot = handMusket.transform.parent ??
                 throw new InvalidOperationException("The hand-musket root is missing.");
@@ -1225,12 +1258,18 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var times = new List<float>();
             var handPositions = new List<Vector3>();
             var leftHandPositions = new List<Vector3>();
+            var leftHandVisibleCenters = new List<Vector3>();
+            var leftHandAnchorLocalPositions = new List<Vector3>();
             var rootPositions = new List<Vector3>();
             var rootScales = new List<Vector3>();
             var rightHandRotations = new List<Quaternion>();
             var rightHandScales = new List<Vector3>();
+            var leftHandWorldRotations = new List<Quaternion>();
+            var leftHandScales = new List<Vector3>();
             var baselineRootRotations = new List<Quaternion>();
             var rightShoulderParentRotations = new List<Quaternion>();
+            var rightShoulderLocalPositions = new List<Vector3>();
+            var rightShoulderLiftLocalVectors = new List<Vector3>();
             var rightShoulderWorldRotations = new List<Quaternion>();
             var rightShoulderPositions = new List<Vector3>();
             var rightArmParentRotations = new List<Quaternion>();
@@ -1245,14 +1284,20 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var leftForeArmLocalRotations = new List<Quaternion>();
             var leftArmWorldRotations = new List<Quaternion>();
             var leftForeArmWorldRotations = new List<Quaternion>();
+            var leftShoulderLocalPositions = new List<Vector3>();
+            var leftShoulderLiftLocalVectors = new List<Vector3>();
             var leftArmPositions = new List<Vector3>();
             var leftForeArmPositions = new List<Vector3>();
             var characterForward = DetermineCharacterForward(model);
             Vector3 grabMuzzleDirection;
             int gripVertexIndex;
+            Vector3 visibleRightHandAnchorLocal;
+            Vector3 visibleLeftHandAnchorLocal;
             try
             {
                 SampleClip(model.gameObject, source, grabTime);
+                visibleRightHandAnchorLocal = VisibleHandAnchorLocal(body, rightHand);
+                visibleLeftHandAnchorLocal = VisibleHandAnchorLocal(body, leftHand);
                 grabMuzzleDirection = handMusket.transform.TransformDirection(localMuzzleAxis)
                     .normalized;
                 gripVertexIndex = Enumerable.Range(0, vertices.Length).OrderBy(index =>
@@ -1278,12 +1323,22 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                     times.Add(time);
                     handPositions.Add(rightHand.position);
                     leftHandPositions.Add(leftHand.position);
+                    var visibleLeftHandCenter = leftHand.TransformPoint(
+                        visibleLeftHandAnchorLocal);
+                    leftHandVisibleCenters.Add(visibleLeftHandCenter);
+                    leftHandAnchorLocalPositions.Add(visibleLeftHandAnchorLocal);
                     rootPositions.Add(handMusketRoot.position);
                     rootScales.Add(handMusketRoot.lossyScale);
                     rightHandRotations.Add(rightHand.rotation);
                     rightHandScales.Add(rightHand.lossyScale);
+                    leftHandWorldRotations.Add(leftHand.rotation);
+                    leftHandScales.Add(leftHand.lossyScale);
                     baselineRootRotations.Add(handMusketRoot.rotation);
                     rightShoulderParentRotations.Add(rightShoulder.parent.rotation);
+                    rightShoulderLocalPositions.Add(rightShoulder.localPosition);
+                    rightShoulderLiftLocalVectors.Add(
+                        rightShoulder.parent.InverseTransformVector(
+                            Vector3.up * FinalAimAssemblyVerticalTranslation));
                     rightShoulderWorldRotations.Add(rightShoulder.rotation);
                     rightShoulderPositions.Add(rightShoulder.position);
                     rightArmParentRotations.Add(rightArm.parent.rotation);
@@ -1298,6 +1353,10 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                     leftForeArmLocalRotations.Add(leftForeArm.localRotation);
                     leftArmWorldRotations.Add(leftArm.rotation);
                     leftForeArmWorldRotations.Add(leftForeArm.rotation);
+                    leftShoulderLocalPositions.Add(leftShoulder.localPosition);
+                    leftShoulderLiftLocalVectors.Add(
+                        leftShoulder.parent.InverseTransformVector(
+                            Vector3.up * FinalAimAssemblyVerticalTranslation));
                     leftArmPositions.Add(leftArm.position);
                     leftForeArmPositions.Add(leftForeArm.position);
                 }
@@ -1344,12 +1403,22 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var rightHandLocalRotations = new Quaternion[times.Count];
             var liftedRightHandRotations = new Quaternion[times.Count];
             var liftedRootPositions = new Vector3[times.Count];
+            var desiredRootLocalPositions = new Vector3[times.Count];
             var liftedBaselineRootRotations = new Quaternion[times.Count];
             var rootLocalPosition = handMusketRoot.localPosition;
             for (var index = 0; index < times.Count; index++)
             {
+                desiredRootLocalPositions[index] = Vector3.Lerp(
+                    rootLocalPosition,
+                    visibleRightHandAnchorLocal,
+                    progressValues[index]);
+                var rootLocalCorrection =
+                    desiredRootLocalPositions[index] - rootLocalPosition;
                 var desiredRootPosition = rootPositions[index] +
-                    Vector3.up * (FinalAimArmLift * progressValues[index]);
+                    rightHandRotations[index] * Vector3.Scale(
+                        rootLocalCorrection, rightHandScales[index]) +
+                    Vector3.up * (FinalAimArmLift * progressValues[index]) +
+                    Vector3.down * (RightHandTriggerDownOffset * progressValues[index]);
                 SolveRightArmLiftForMusketRoot(
                     rightShoulderPositions[index],
                     rightArmPositions[index],
@@ -1362,7 +1431,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                     rightForeArmWorldRotations[index],
                     rightHandRotations[index],
                     rightHandScales[index],
-                    rootLocalPosition,
+                    desiredRootLocalPositions[index],
                     desiredRootPosition,
                     out rightShoulderRotations[index],
                     out rightArmRotations[index],
@@ -1382,9 +1451,28 @@ namespace Bellerophon.Editor.IspantCargoRunScene
 
             var rightShoulderPath = AnimationUtility.CalculateTransformPath(
                 rightShoulder, model);
+            var leftShoulderPath = AnimationUtility.CalculateTransformPath(
+                leftShoulder, model);
             var rightArmPath = AnimationUtility.CalculateTransformPath(rightArm, model);
             var rightForeArmPath = AnimationUtility.CalculateTransformPath(rightForeArm, model);
             var rightHandPath = AnimationUtility.CalculateTransformPath(rightHand, model);
+            var liftedRightShoulderLocalPositions = new Vector3[times.Count];
+            var liftedLeftShoulderLocalPositions = new Vector3[times.Count];
+            for (var index = 0; index < times.Count; index++)
+            {
+                liftedRightShoulderLocalPositions[index] =
+                    rightShoulderLocalPositions[index] +
+                    rightShoulderLiftLocalVectors[index] * progressValues[index];
+                liftedLeftShoulderLocalPositions[index] =
+                    leftShoulderLocalPositions[index] +
+                    leftShoulderLiftLocalVectors[index] * progressValues[index];
+            }
+            SetVector3OverrideCurves(
+                clip, source, rightShoulderPath, times,
+                liftedRightShoulderLocalPositions);
+            SetVector3OverrideCurves(
+                clip, source, leftShoulderPath, times,
+                liftedLeftShoulderLocalPositions);
             SetQuaternionOverrideCurves(
                 clip, source, rightShoulderPath, times, rightShoulderRotations);
             SetQuaternionOverrideCurves(
@@ -1445,6 +1533,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 finalDesiredWorldRotation;
             var rotations = new Quaternion[times.Count];
             var desiredRootWorldRotations = new Quaternion[times.Count];
+            var compensatedRootPositions = new Vector3[times.Count];
             for (var index = 0; index < times.Count; index++)
             {
                 rotations[index] = Quaternion.Slerp(
@@ -1455,50 +1544,93 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                     rotations[index] = new Quaternion(
                         -rotations[index].x, -rotations[index].y,
                         -rotations[index].z, -rotations[index].w);
+                var worldCompensation = Vector3.up *
+                    (RightHandTriggerDownOffset * progressValues[index]);
+                var scaledLocalCompensation =
+                    Quaternion.Inverse(liftedRightHandRotations[index]) *
+                    worldCompensation;
+                var handScale = rightHandScales[index];
+                if (Mathf.Abs(handScale.x) < 0.000001f ||
+                    Mathf.Abs(handScale.y) < 0.000001f ||
+                    Mathf.Abs(handScale.z) < 0.000001f)
+                    throw new InvalidOperationException(
+                        "The right-hand scale cannot preserve the musket while lowering the glove.");
+                desiredRootLocalPositions[index] += new Vector3(
+                    scaledLocalCompensation.x / handScale.x,
+                    scaledLocalCompensation.y / handScale.y,
+                    scaledLocalCompensation.z / handScale.z);
+                var uncompensatedRootLocalPosition = desiredRootLocalPositions[index] -
+                    new Vector3(
+                        scaledLocalCompensation.x / handScale.x,
+                        scaledLocalCompensation.y / handScale.y,
+                        scaledLocalCompensation.z / handScale.z);
+                var solvedWristPosition = liftedRootPositions[index] -
+                    liftedRightHandRotations[index] * Vector3.Scale(
+                        uncompensatedRootLocalPosition, handScale);
+                compensatedRootPositions[index] = solvedWristPosition +
+                    liftedRightHandRotations[index] * Vector3.Scale(
+                        desiredRootLocalPositions[index], handScale);
             }
 
             var path = AnimationUtility.CalculateTransformPath(handMusketRoot, model);
+            SetVector3Curve(
+                clip, path, "m_LocalPosition.x", times,
+                desiredRootLocalPositions, item => item.x);
+            SetVector3Curve(
+                clip, path, "m_LocalPosition.y", times,
+                desiredRootLocalPositions, item => item.y);
+            SetVector3Curve(
+                clip, path, "m_LocalPosition.z", times,
+                desiredRootLocalPositions, item => item.z);
             SetQuaternionCurve(clip, path, "m_LocalRotation.x", times, rotations, item => item.x);
             SetQuaternionCurve(clip, path, "m_LocalRotation.y", times, rotations, item => item.y);
             SetQuaternionCurve(clip, path, "m_LocalRotation.z", times, rotations, item => item.z);
             SetQuaternionCurve(clip, path, "m_LocalRotation.w", times, rotations, item => item.w);
 
             var finalRootWorld = Matrix4x4.TRS(
-                liftedRootPositions[liftedRootPositions.Length - 1],
+                compensatedRootPositions[compensatedRootPositions.Length - 1],
                 desiredRootWorldRotations[desiredRootWorldRotations.Length - 1],
                 rootScales[rootScales.Count - 1]) * rendererLocal;
             var supportVertexIndex = supportVertexIndices.OrderBy(index => Vector3.Distance(
-                leftHandPositions[leftHandPositions.Count - 1],
+                leftHandVisibleCenters[leftHandVisibleCenters.Count - 1],
                 finalRootWorld.MultiplyPoint3x4(vertices[index]))).First();
-            var wristSurfaceOffset = Mathf.Max(
-                0f,
-                Vector3.Distance(handPositions[0], rootPositions[0]) -
-                SupportHandSurfaceDistanceTolerance);
             var leftArmRotations = new Quaternion[times.Count];
             var leftForeArmRotations = new Quaternion[times.Count];
             for (var index = 0; index < times.Count; index++)
             {
                 var musketWorld = Matrix4x4.TRS(
-                    liftedRootPositions[index], desiredRootWorldRotations[index],
+                    compensatedRootPositions[index], desiredRootWorldRotations[index],
                     rootScales[index]) * rendererLocal;
                 var supportPoint = musketWorld.MultiplyPoint3x4(
                     vertices[supportVertexIndex]);
-                var surfaceToWrist = leftHandPositions[index] - supportPoint;
-                if (surfaceToWrist.sqrMagnitude < 0.000001f)
-                    throw new InvalidOperationException(
-                        "The left wrist direction at the musket support surface is undefined.");
-                var wristTarget = supportPoint +
-                    surfaceToWrist.normalized * wristSurfaceOffset;
-                SolveLeftArmSupportIk(
-                    leftArmPositions[index],
-                    leftForeArmPositions[index],
-                    leftHandPositions[index],
-                    leftArmParentRotations[index],
-                    leftArmWorldRotations[index],
-                    leftForeArmWorldRotations[index],
-                    out var targetArmLocal,
-                    out var targetForeArmLocal,
-                    wristTarget);
+                var visibleAnchorLocal = leftHandAnchorLocalPositions[index];
+                var wristTarget = supportPoint -
+                    leftHandWorldRotations[index] * Vector3.Scale(
+                        visibleAnchorLocal, leftHandScales[index]);
+                Quaternion targetArmLocal = Quaternion.identity;
+                Quaternion targetForeArmLocal = Quaternion.identity;
+                for (var iteration = 0; iteration < 4; iteration++)
+                {
+                    SolveLeftArmSupportIk(
+                        leftArmPositions[index],
+                        leftForeArmPositions[index],
+                        leftHandPositions[index],
+                        leftArmParentRotations[index],
+                        leftArmWorldRotations[index],
+                        leftForeArmWorldRotations[index],
+                        leftHandWorldRotations[index],
+                        out targetArmLocal,
+                        out targetForeArmLocal,
+                        out var solvedWristRotation,
+                        out var solvedWristPosition,
+                        wristTarget);
+                    var solvedVisibleCenter = Matrix4x4.TRS(
+                            solvedWristPosition,
+                            solvedWristRotation,
+                            leftHandScales[index])
+                        .MultiplyPoint3x4(visibleAnchorLocal);
+                    wristTarget += supportPoint - solvedVisibleCenter;
+                }
                 leftArmRotations[index] = Quaternion.Slerp(
                     leftArmLocalRotations[index], targetArmLocal,
                     progressValues[index]);
@@ -1732,8 +1864,11 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             Quaternion armParentWorldRotation,
             Quaternion armWorldRotation,
             Quaternion foreArmWorldRotation,
+            Quaternion wristWorldRotation,
             out Quaternion armLocalRotation,
             out Quaternion foreArmLocalRotation,
+            out Quaternion solvedWristWorldRotation,
+            out Vector3 solvedWristPosition,
             Vector3 wristTarget)
         {
             var upperLength = Vector3.Distance(shoulder, elbow);
@@ -1772,6 +1907,9 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                                targetArmWorld;
             foreArmLocalRotation = Quaternion.Inverse(targetArmWorld) *
                                    targetForeArmWorld;
+            solvedWristWorldRotation = lowerDelta * upperDelta * wristWorldRotation;
+            solvedWristPosition = targetElbow +
+                                  lowerDelta * lowerDirectionAfterUpper;
         }
 
         private static void MakeQuaternionContinuous(
@@ -1832,6 +1970,60 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 .Where(key => key.time < times[0] - 0.000001f)
                 .Concat(times.Select((time, index) =>
                     new Keyframe(time, component(rotations[index]))))
+                .ToArray();
+            var curve = new AnimationCurve(keys)
+            {
+                preWrapMode = sourceCurve.preWrapMode,
+                postWrapMode = sourceCurve.postWrapMode
+            };
+            var prefixCount = keys.Length - times.Count;
+            for (var index = prefixCount; index < curve.length; index++)
+            {
+                AnimationUtility.SetKeyLeftTangentMode(
+                    curve, index, AnimationUtility.TangentMode.Linear);
+                AnimationUtility.SetKeyRightTangentMode(
+                    curve, index, AnimationUtility.TangentMode.Linear);
+            }
+            AnimationUtility.SetEditorCurve(clip, binding, curve);
+        }
+
+        private static void SetVector3OverrideCurves(
+            AnimationClip clip,
+            AnimationClip source,
+            string path,
+            IReadOnlyList<float> times,
+            IReadOnlyList<Vector3> positions)
+        {
+            SetVector3OverrideCurve(
+                clip, source, path, "m_LocalPosition.x", times, positions,
+                item => item.x);
+            SetVector3OverrideCurve(
+                clip, source, path, "m_LocalPosition.y", times, positions,
+                item => item.y);
+            SetVector3OverrideCurve(
+                clip, source, path, "m_LocalPosition.z", times, positions,
+                item => item.z);
+        }
+
+        private static void SetVector3OverrideCurve(
+            AnimationClip clip,
+            AnimationClip source,
+            string path,
+            string propertyName,
+            IReadOnlyList<float> times,
+            IReadOnlyList<Vector3> positions,
+            Func<Vector3, float> component)
+        {
+            var binding = EditorCurveBinding.FloatCurve(
+                path, typeof(Transform), propertyName);
+            var sourceCurve = AnimationUtility.GetEditorCurve(source, binding) ??
+                throw new InvalidOperationException(
+                    "A required shoulder source-position curve is missing: " +
+                    path + "/" + propertyName + ".");
+            var keys = sourceCurve.keys
+                .Where(key => key.time < times[0] - 0.000001f)
+                .Concat(times.Select((time, index) =>
+                    new Keyframe(time, component(positions[index]))))
                 .ToArray();
             var curve = new AnimationCurve(keys)
             {
@@ -2028,10 +2220,36 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 curve);
         }
 
+        private static void SetVector3Curve(
+            AnimationClip clip,
+            string path,
+            string propertyName,
+            IReadOnlyList<float> times,
+            IReadOnlyList<Vector3> values,
+            Func<Vector3, float> component)
+        {
+            var keys = new Keyframe[times.Count + 1];
+            keys[0] = new Keyframe(0f, component(values[0]));
+            for (var index = 0; index < times.Count; index++)
+                keys[index + 1] = new Keyframe(times[index], component(values[index]));
+            var curve = new AnimationCurve(keys);
+            for (var index = 0; index < curve.length; index++)
+            {
+                AnimationUtility.SetKeyLeftTangentMode(
+                    curve, index, AnimationUtility.TangentMode.Linear);
+                AnimationUtility.SetKeyRightTangentMode(
+                    curve, index, AnimationUtility.TangentMode.Linear);
+            }
+            AnimationUtility.SetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(path, typeof(Transform), propertyName),
+                curve);
+        }
+
         private static void SetSequenceDefaultVisibility(Transform model)
         {
-            RequireRenderer<MeshRenderer>(model, SwordRendererName).enabled = true;
-            RequireRenderer<MeshRenderer>(model, WaistSwordRendererName).enabled = false;
+            RequireRenderer<MeshRenderer>(model, SwordRendererName).enabled = false;
+            RequireRenderer<MeshRenderer>(model, WaistSwordRendererName).enabled = true;
             RequireRenderer<MeshRenderer>(model, MusketName).enabled = true;
             RequireRenderer<MeshRenderer>(model, HandMusketRendererName).enabled = false;
         }
@@ -2137,9 +2355,10 @@ namespace Bellerophon.Editor.IspantCargoRunScene
 
             var sourceBindings = bridgeSourceBindings;
             var runtimeBindings = AnimationUtility.GetCurveBindings(rifleClip);
-            if (runtimeBindings.Length != sourceBindings.Length + 8)
+            if (runtimeBindings.Length != sourceBindings.Length + 11)
                 throw new InvalidOperationException(
-                    "The runtime rifle clip must add four visibility and four aim-rotation curves.");
+                    "The runtime rifle clip must add four visibility, three grip-position, " +
+                    "and four aim-rotation curves.");
             foreach (var binding in sourceBindings)
             {
                 var sourceCurve = AnimationUtility.GetEditorCurve(rifleSourceClip, binding) ??
@@ -2161,6 +2380,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var waistSwordRoot = waistSword.transform.parent;
             var rightHand = RequireDescendant(model, "mixamorig:RightHand");
             var rightShoulder = RequireDescendant(model, "mixamorig:RightShoulder");
+            var leftShoulder = RequireDescendant(model, "mixamorig:LeftShoulder");
             var rightArm = RequireDescendant(model, "mixamorig:RightArm");
             var rightForeArm = RequireDescendant(model, "mixamorig:RightForeArm");
             var leftHand = RequireDescendant(model, "mixamorig:LeftHand");
@@ -2168,6 +2388,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var spine2 = RequireDescendant(model, "mixamorig:Spine2");
             var handMusketMesh = SharedMesh(handMusket);
             var handMusketVertices = handMusketMesh.vertices;
+            var bodyRenderer = RequireRenderer<SkinnedMeshRenderer>(model, BODY_NAME);
             var localMuzzleAxis = DetermineMusketLocalMuzzleAxis(handMusketMesh);
             var localStockAndTriggerDown = DetermineMusketLocalStockAndTriggerDownAxis(
                 handMusketMesh, localMuzzleAxis);
@@ -2192,10 +2413,10 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 binding.path == handMusketRootPath &&
                 binding.propertyName.StartsWith(
                     "m_LocalPosition.", StringComparison.Ordinal));
-            if (musketRootPositionCurveCount != 0)
+            if (musketRootPositionCurveCount != 3)
                 throw new InvalidOperationException(
-                    "The 0.15m final aim lift directly animates the musket root position.");
-            if (!handSword.enabled || waistSword.enabled ||
+                    "The aimed musket must have exactly three right-hand grip-position curves.");
+            if (handSword.enabled || !waistSword.enabled ||
                 !backMusket.enabled || handMusket.enabled)
                 throw new InvalidOperationException(
                     "The saved sequence-start weapon visibility differs.");
@@ -2222,7 +2443,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var handMusketFollowError = 0f;
             var maximumHandMusketRotationChange = 0f;
             var maximumRightGripPivotError = 0f;
-            var maximumRightHandGripDistanceDrift = 0f;
+            var finalRightHandDownOffsetError = float.PositiveInfinity;
             var forwardLeftHandSurfaceDistance = float.PositiveInfinity;
             var finalLeftHandSurfaceDistance = float.PositiveInfinity;
             var finalMuzzleForwardAngle = 180f;
@@ -2242,8 +2463,12 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var finalRightShoulderRotationOverride = 0f;
             var finalRightArmRotationOverride = 0f;
             var finalRightForeArmRotationOverride = 0f;
+            var finalRightShoulderTranslationError = float.PositiveInfinity;
+            var finalLeftShoulderTranslationError = float.PositiveInfinity;
             var sourceFinalMusketRootPosition = Vector3.zero;
             var sourceFinalRightHandPosition = Vector3.zero;
+            var sourceFinalRightShoulderPosition = Vector3.zero;
+            var sourceFinalLeftShoulderPosition = Vector3.zero;
             var sourceFinalRightShoulderLocalRotation = Quaternion.identity;
             var sourceFinalRightArmLocalRotation = Quaternion.identity;
             var sourceFinalRightForeArmLocalRotation = Quaternion.identity;
@@ -2258,6 +2483,8 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 SampleClip(model.gameObject, rifleSourceClip, rifleSourceClip.length);
                 sourceFinalMusketRootPosition = handMusketRoot.position;
                 sourceFinalRightHandPosition = rightHand.position;
+                sourceFinalRightShoulderPosition = rightShoulder.position;
+                sourceFinalLeftShoulderPosition = leftShoulder.position;
                 sourceFinalRightShoulderLocalRotation = rightShoulder.localRotation;
                 sourceFinalRightArmLocalRotation = rightArm.localRotation;
                 sourceFinalRightForeArmLocalRotation = rightForeArm.localRotation;
@@ -2355,12 +2582,13 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 var backAtGrab = model.worldToLocalMatrix * backMusket.transform.localToWorldMatrix;
                 var handAtGrab = model.worldToLocalMatrix * handMusket.transform.localToWorldMatrix;
                 grabContinuityError = MatrixError(backAtGrab, handAtGrab);
-                var handRootLocalPosition = handMusketRoot.localPosition;
                 var handRootLocalScale = handMusketRoot.localScale;
                 var handRootGrabRotation = handMusketRoot.localRotation;
                 var grabCenter = MeshWorldCenter(handMusket);
-                var rightHandGripDistance = Vector3.Distance(
-                    rightHand.position, handMusketRoot.position);
+                var visibleRightHandAnchorLocal =
+                    VisibleHandAnchorLocal(bodyRenderer, rightHand);
+                var visibleLeftHandAnchorLocal =
+                    VisibleHandAnchorLocal(bodyRenderer, leftHand);
                 var gripVertexIndex = Enumerable.Range(0, handMusketVertices.Length)
                     .OrderBy(index => Vector3.Distance(
                         handMusketRoot.position,
@@ -2387,7 +2615,6 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                         label: "post-grab frame " + frame);
                     handMusketFollowError = Mathf.Max(
                         handMusketFollowError,
-                        Vector3.Distance(handRootLocalPosition, handMusketRoot.localPosition),
                         Vector3.Distance(handRootLocalScale, handMusketRoot.localScale));
                     maximumHandMusketRotationChange = Mathf.Max(
                         maximumHandMusketRotationChange,
@@ -2398,11 +2625,6 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                             handMusketRoot.position,
                             handMusket.transform.TransformPoint(
                                 handMusketVertices[gripVertexIndex])));
-                    maximumRightHandGripDistanceDrift = Mathf.Max(
-                        maximumRightHandGripDistanceDrift,
-                        Mathf.Abs(Vector3.Distance(
-                            rightHand.position, handMusketRoot.position) -
-                            rightHandGripDistance));
                     postGrabRightHandPositions.Add(rightHand.position);
                     postGrabMusketLocalRotations.Add(handMusketRoot.localRotation);
                     var motion = Vector3.Distance(grabCenter, MeshWorldCenter(handMusket));
@@ -2420,10 +2642,14 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                         forwardLeftHandSurfaceDistance = Mathf.Min(
                             forwardLeftHandSurfaceDistance,
                             MinimumCurrentMeshSurfaceDistance(
-                                leftHand.position, handMusket,
+                                leftHand.TransformPoint(visibleLeftHandAnchorLocal), handMusket,
                                 handMusketVertices, supportVertexIndices));
                     if (frame == ChangeToRifleLastFrame)
                     {
+                        finalRightHandDownOffsetError = Vector3.Distance(
+                            rightHand.TransformPoint(visibleRightHandAnchorLocal),
+                            handMusketRoot.position +
+                            Vector3.down * RightHandTriggerDownOffset);
                         var musketRootDelta =
                             handMusketRoot.position - sourceFinalMusketRootPosition;
                         finalMusketRootVerticalLift = Vector3.Dot(
@@ -2445,6 +2671,14 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                         finalRightForeArmRotationOverride = Quaternion.Angle(
                             sourceFinalRightForeArmLocalRotation,
                             rightForeArm.localRotation);
+                        finalRightShoulderTranslationError = Vector3.Distance(
+                            rightShoulder.position,
+                            sourceFinalRightShoulderPosition +
+                            Vector3.up * FinalAimAssemblyVerticalTranslation);
+                        finalLeftShoulderTranslationError = Vector3.Distance(
+                            leftShoulder.position,
+                            sourceFinalLeftShoulderPosition +
+                            Vector3.up * FinalAimAssemblyVerticalTranslation);
                         var finalMuzzleDirection = handMusket.transform
                             .TransformDirection(localMuzzleAxis).normalized;
                         finalMuzzleForwardAngle = Vector3.Angle(
@@ -2457,7 +2691,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                             desiredFinalDown);
                         finalLeftHandSurfaceDistance =
                             MinimumCurrentMeshSurfaceDistance(
-                                leftHand.position, handMusket,
+                                leftHand.TransformPoint(visibleLeftHandAnchorLocal), handMusket,
                                 handMusketVertices, supportVertexIndices);
                     }
                 }
@@ -2531,13 +2765,13 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                     Num(grabContinuityError) + ".");
             if (handMusketFollowError > 0.0001f)
                 throw new InvalidOperationException(
-                    "The post-grab musket position or scale drifts from the right hand.");
+                    "The post-grab musket scale drifts from the right hand.");
             if (maximumRightGripPivotError > TransformTolerance ||
-                maximumRightHandGripDistanceDrift > TransformTolerance)
+                finalRightHandDownOffsetError > TransformTolerance)
                 throw new InvalidOperationException(
-                    "The post-grab musket does not rotate around its right-hand surface pivot: " +
+                    "The visible right hand was not lowered beneath the preserved musket pose: " +
                     "PivotError=" + Num(maximumRightGripPivotError) +
-                    ", HandDistanceDrift=" + Num(maximumRightHandGripDistanceDrift) + ".");
+                    ", DownOffsetError=" + Num(finalRightHandDownOffsetError) + ".");
             if (maximumHandMusketRotationChange < 10f)
                 throw new InvalidOperationException(
                     "The post-grab musket angle does not respond to the right-arm motion.");
@@ -2549,17 +2783,17 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             if (maximumPostGrabMusketMotion < 0.1f)
                 throw new InvalidOperationException(
                     "The supplied Mixamo right arm does not carry the hand musket forward.");
-            if (Mathf.Abs(finalMusketRootVerticalLift - FinalAimArmLift) > 0.001f ||
-                finalMusketRootHorizontalDrift > 0.001f)
-                throw new InvalidOperationException(
-                    "The final musket pivot was not raised exactly 0.15m by the arms: " +
-                    "Vertical=" + Num(finalMusketRootVerticalLift) +
-                    ", Horizontal=" + Num(finalMusketRootHorizontalDrift) + ".");
             if (finalRightShoulderRotationOverride < 0.1f &&
                 finalRightArmRotationOverride < 0.5f &&
                 finalRightForeArmRotationOverride < 0.5f)
                 throw new InvalidOperationException(
                     "The final 0.15m weapon lift was not produced by right-arm rotation.");
+            if (finalRightShoulderTranslationError > TransformTolerance ||
+                finalLeftShoulderTranslationError > TransformTolerance)
+                throw new InvalidOperationException(
+                    "The final arm assembly was not translated upward by exactly 0.1m: Right=" +
+                    Num(finalRightShoulderTranslationError) + ", Left=" +
+                    Num(finalLeftShoulderTranslationError) + ".");
             if (holdWaistSwordStaticReferenceMatrixError > StaticHoldTolerance)
                 throw new InvalidOperationException(
                     "The hip-attached waist sword does not preserve the approved sheath-end placement: " +
@@ -2619,7 +2853,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 handMusketFollowError,
                 maximumHandMusketRotationChange,
                 maximumRightGripPivotError,
-                maximumRightHandGripDistanceDrift,
+                finalRightHandDownOffsetError,
                 forwardLeftHandSurfaceDistance,
                 finalLeftHandSurfaceDistance,
                 forwardPoseMuzzleAngle,
@@ -2639,6 +2873,8 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 finalRightShoulderRotationOverride,
                 finalRightArmRotationOverride,
                 finalRightForeArmRotationOverride,
+                finalRightShoulderTranslationError,
+                finalLeftShoulderTranslationError,
                 musketRootPositionCurveCount);
         }
 
@@ -2721,12 +2957,13 @@ namespace Bellerophon.Editor.IspantCargoRunScene
 
         private static bool IsAimArmOverrideBinding(EditorCurveBinding binding)
         {
-            return binding.type == typeof(Transform) &&
-                   binding.propertyName.StartsWith(
-                       "m_LocalRotation.", StringComparison.Ordinal) &&
-                   (binding.path.EndsWith(
+            if (binding.type != typeof(Transform))
+                return false;
+            var isArmRotation = binding.propertyName.StartsWith(
+                    "m_LocalRotation.", StringComparison.Ordinal) &&
+                (binding.path.EndsWith(
                         "mixamorig:LeftArm", StringComparison.Ordinal) ||
-                    binding.path.EndsWith(
+                     binding.path.EndsWith(
                         "mixamorig:LeftForeArm", StringComparison.Ordinal) ||
                     binding.path.EndsWith(
                         "mixamorig:RightShoulder", StringComparison.Ordinal) ||
@@ -2734,8 +2971,15 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                         "mixamorig:RightArm", StringComparison.Ordinal) ||
                     binding.path.EndsWith(
                         "mixamorig:RightForeArm", StringComparison.Ordinal) ||
-                    binding.path.EndsWith(
+                     binding.path.EndsWith(
                         "mixamorig:RightHand", StringComparison.Ordinal));
+            var isShoulderTranslation = binding.propertyName.StartsWith(
+                    "m_LocalPosition.", StringComparison.Ordinal) &&
+                (binding.path.EndsWith(
+                     "mixamorig:LeftShoulder", StringComparison.Ordinal) ||
+                 binding.path.EndsWith(
+                     "mixamorig:RightShoulder", StringComparison.Ordinal));
+            return isArmRotation || isShoulderTranslation;
         }
 
         private static void RequireRifleVisibility(
@@ -2758,6 +3002,78 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var vertices = SharedMesh(renderer).vertices;
             return vertices.Aggregate(Vector3.zero,
                 (sum, vertex) => sum + renderer.transform.TransformPoint(vertex)) / vertices.Length;
+        }
+
+        private static Vector3 VisibleHandAnchorLocal(
+            SkinnedMeshRenderer body,
+            Transform handBone)
+        {
+            var mesh = body.sharedMesh ??
+                throw new InvalidOperationException(
+                    "The Ispant body mesh is missing while locating the visible hand.");
+            var handBoneIndices = new HashSet<int>(Enumerable.Range(0, body.bones.Length)
+                .Where(index => body.bones[index] == handBone ||
+                                (body.bones[index] != null &&
+                                 body.bones[index].IsChildOf(handBone))));
+            if (handBoneIndices.Count == 0)
+                throw new InvalidOperationException(
+                    "The visible Ispant hand bone is not bound to the body mesh: " +
+                    handBone.name + ".");
+            var weights = mesh.boneWeights;
+            if (weights.Length != mesh.vertexCount)
+                throw new InvalidOperationException(
+                    "The Ispant body bone weights do not match its vertices.");
+            var vertices = mesh.vertices;
+            var bindPoses = mesh.bindposes;
+            var selected = Enumerable.Range(0, vertices.Length)
+                .Where(index => BoneWeightForIndices(
+                    weights[index], handBoneIndices) >= 0.25f)
+                .Select(index => handBone.InverseTransformPoint(
+                    SkinnedVertexWorld(
+                        vertices[index], weights[index], body.bones, bindPoses)))
+                .ToArray();
+            if (selected.Length < 4)
+                throw new InvalidOperationException(
+                    "The visible Ispant hand region has too few weighted vertices: " +
+                    handBone.name + ", Vertices=" + selected.Length + ".");
+            var bounds = new Bounds(selected[0], Vector3.zero);
+            for (var index = 1; index < selected.Length; index++)
+                bounds.Encapsulate(selected[index]);
+            return bounds.center;
+        }
+
+        private static Vector3 SkinnedVertexWorld(
+            Vector3 vertex,
+            BoneWeight weight,
+            IReadOnlyList<Transform> bones,
+            IReadOnlyList<Matrix4x4> bindPoses)
+        {
+            var result = Vector3.zero;
+            result += weight.weight0 * (bones[weight.boneIndex0].localToWorldMatrix *
+                                        bindPoses[weight.boneIndex0]).MultiplyPoint3x4(vertex);
+            result += weight.weight1 * (bones[weight.boneIndex1].localToWorldMatrix *
+                                        bindPoses[weight.boneIndex1]).MultiplyPoint3x4(vertex);
+            result += weight.weight2 * (bones[weight.boneIndex2].localToWorldMatrix *
+                                        bindPoses[weight.boneIndex2]).MultiplyPoint3x4(vertex);
+            result += weight.weight3 * (bones[weight.boneIndex3].localToWorldMatrix *
+                                        bindPoses[weight.boneIndex3]).MultiplyPoint3x4(vertex);
+            return result;
+        }
+
+        private static float BoneWeightForIndices(
+            BoneWeight weight,
+            ISet<int> boneIndices)
+        {
+            var result = 0f;
+            if (boneIndices.Contains(weight.boneIndex0))
+                result += weight.weight0;
+            if (boneIndices.Contains(weight.boneIndex1))
+                result += weight.weight1;
+            if (boneIndices.Contains(weight.boneIndex2))
+                result += weight.weight2;
+            if (boneIndices.Contains(weight.boneIndex3))
+                result += weight.weight3;
+            return result;
         }
 
         private static void ConfigureImporter()
@@ -4033,8 +4349,8 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 ChangeToRifleLastFrame,
                 "ChangeToRifleSourceCurveCount=" + metrics.RifleSourceCurveCount,
                 "ChangeToRifleRuntimeCurveCount=" + metrics.RifleRuntimeCurveCount,
-                "OriginalMixamoCurvesModified=RightShoulderRightArmRightForeArmAndRightHandRotationFor0.15mLift;LeftArmAndLeftForeArmRotationForTwoHandSupport",
-                "AimArmOverrideCurveCount=24",
+                "OriginalMixamoCurvesModified=RightShoulderRightArmRightForeArmAndRightHandRotationFor0.15mLift;LeftArmAndLeftForeArmRotationForTwoHandSupport;LeftAndRightShoulderPositionFor0.1mAssemblyTranslation",
+                "AimArmOverrideCurveCount=30",
                 "SheathDurationSeconds=" + Num(metrics.SheathDuration),
                 "HoldDurationSeconds=" + Num(metrics.HoldDuration),
                 "BridgeDurationSeconds=" + Num(metrics.BridgeDuration),
@@ -4059,13 +4375,13 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 Num(metrics.MaximumBridgeEndToRifleStartError),
                 "BridgeRightHandWorldMotion=" + Num(metrics.BridgeRightHandMotion),
                 "GrabBackToHandMusketMatrixError=" + Num(metrics.GrabContinuityError),
-                "PostGrabHandMusketLocalPositionScaleDrift=" + Num(metrics.HandMusketFollowError),
+                "PostGrabHandMusketLocalScaleDrift=" + Num(metrics.HandMusketFollowError),
                 "MaximumPostGrabHandMusketLocalRotationChangeDegrees=" +
                 Num(metrics.MaximumHandMusketRotationChange),
                 "MaximumRightGripPivotError=" +
                 Num(metrics.MaximumRightGripPivotError),
-                "MaximumRightHandGripDistanceDrift=" +
-                Num(metrics.MaximumRightHandGripDistanceDrift),
+                "FinalVisibleRightHandDownOffsetError=" +
+                Num(metrics.FinalRightHandDownOffsetError),
                 "MinimumAimedLeftHandToMusketSurfaceDistance=" +
                 Num(metrics.ForwardLeftHandSurfaceDistance),
                 "FinalLeftHandToMusketSurfaceDistance=" +
@@ -4107,16 +4423,23 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 Num(metrics.FinalRightArmRotationOverride),
                 "FinalRightForeArmRotationOverrideDegrees=" +
                 Num(metrics.FinalRightForeArmRotationOverride),
+                "FinalAimAssemblyVerticalTranslationMeters=" +
+                Num(FinalAimAssemblyVerticalTranslation),
+                "FinalRightShoulderTranslationErrorMeters=" +
+                Num(metrics.FinalRightShoulderTranslationError),
+                "FinalLeftShoulderTranslationErrorMeters=" +
+                Num(metrics.FinalLeftShoulderTranslationError),
                 "MusketRootPositionCurveCount=" +
                 metrics.MusketRootPositionCurveCount,
-                "FinalAimLiftImplementation=RightShoulderRightArmRightForeArmAndRightHandRotationOnly;NoMusketRootPositionCurve",
-                "SheathWeaponVisibility=RightHandSwordTrue,LeftWaistSwordFalse,BackMusketTrue,HandMusketFalse",
+                "FinalAimLiftImplementation=ArmBoneRotationFor0.15mLift;BothShouldersAndRightHandChildMusketTranslatedUp0.1mWithoutRotationChange;RightHandLoweredBelowMusket;ThreeLocalPositionCurvesPreserveWeaponWorldPose",
+                "SheathWeaponVisibility=RightHandSwordFalse,LeftWaistSwordTrue,BackMusketTrue,HandMusketFalse",
                 "HoldWeaponVisibility=RightHandSwordFalse,LeftWaistSwordTrue,BackMusketTrue,HandMusketFalse",
                 "RiflePreGrabVisibility=RightHandSwordFalse,LeftWaistSwordTrue,BackMusketTrue,HandMusketFalse",
                 "RiflePostGrabVisibility=RightHandSwordFalse,LeftWaistSwordTrue,BackMusketFalse,HandMusketTrue",
                 "HandMusketParent=mixamorig:RightHand",
                 "HandMusketSkinned=False",
                 "HandMusketPivot=Best two-hand support candidate within 0.02m of measured closest right-hand grab surface distance",
+                "HandMusketGripPosition=Visible right hand lowered below the musket while inverse local displacement preserves the weapon world pose",
                 "HandMusketAimRotation=Right-hand-driven fixed local grip blended to one final local aim rotation",
                 "StockAndTriggerDownRollSource=Approved broad-stock authoring -Y projected orthogonal to measured muzzle axis",
                 "FinalTriggerAssemblyDirection=Down",
@@ -4433,7 +4756,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             public readonly float HandMusketFollowError;
             public readonly float MaximumHandMusketRotationChange;
             public readonly float MaximumRightGripPivotError;
-            public readonly float MaximumRightHandGripDistanceDrift;
+            public readonly float FinalRightHandDownOffsetError;
             public readonly float ForwardLeftHandSurfaceDistance;
             public readonly float FinalLeftHandSurfaceDistance;
             public readonly float ForwardPoseMuzzleAngle;
@@ -4453,6 +4776,8 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             public readonly float FinalRightShoulderRotationOverride;
             public readonly float FinalRightArmRotationOverride;
             public readonly float FinalRightForeArmRotationOverride;
+            public readonly float FinalRightShoulderTranslationError;
+            public readonly float FinalLeftShoulderTranslationError;
             public readonly int MusketRootPositionCurveCount;
 
             public RifleSequenceMetrics(
@@ -4478,7 +4803,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 float handMusketFollowError,
                 float maximumHandMusketRotationChange,
                 float maximumRightGripPivotError,
-                float maximumRightHandGripDistanceDrift,
+                float finalRightHandDownOffsetError,
                 float forwardLeftHandSurfaceDistance,
                 float finalLeftHandSurfaceDistance,
                 float forwardPoseMuzzleAngle,
@@ -4498,6 +4823,8 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 float finalRightShoulderRotationOverride,
                 float finalRightArmRotationOverride,
                 float finalRightForeArmRotationOverride,
+                float finalRightShoulderTranslationError,
+                float finalLeftShoulderTranslationError,
                 int musketRootPositionCurveCount)
             {
                 GrabFrame = grabFrame;
@@ -4522,7 +4849,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 HandMusketFollowError = handMusketFollowError;
                 MaximumHandMusketRotationChange = maximumHandMusketRotationChange;
                 MaximumRightGripPivotError = maximumRightGripPivotError;
-                MaximumRightHandGripDistanceDrift = maximumRightHandGripDistanceDrift;
+                FinalRightHandDownOffsetError = finalRightHandDownOffsetError;
                 ForwardLeftHandSurfaceDistance = forwardLeftHandSurfaceDistance;
                 FinalLeftHandSurfaceDistance = finalLeftHandSurfaceDistance;
                 ForwardPoseMuzzleAngle = forwardPoseMuzzleAngle;
@@ -4548,6 +4875,8 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                     finalRightShoulderRotationOverride;
                 FinalRightArmRotationOverride = finalRightArmRotationOverride;
                 FinalRightForeArmRotationOverride = finalRightForeArmRotationOverride;
+                FinalRightShoulderTranslationError = finalRightShoulderTranslationError;
+                FinalLeftShoulderTranslationError = finalLeftShoulderTranslationError;
                 MusketRootPositionCurveCount = musketRootPositionCurveCount;
             }
         }

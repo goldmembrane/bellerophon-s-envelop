@@ -21,6 +21,8 @@ namespace Bellerophon.Editor.Validation
         private const string TergoPierceAttackCurrentSceneVisualRunCommand = "RunTergoPierceAttackCurrentSceneVisualRun";
         private const string Dolore04TentacleStabDiagnosticCommand = "CaptureDolore04TentacleStabFullMotionDiagnostic";
         private const string Dolore04TentacleStabFinalCommand = "CaptureDolore04TentacleStabFullMotionFinal";
+        private const string Ispant08ContinuousMotionCaptureCommand =
+            "CaptureIspant08ContinuousMotionTwoLoops";
         private const string Dolore05ExecutionOpeningDiagnosticCommand = "CaptureDolore05ExecutionOpeningDiagnostic";
         private const string RebellionMoveVisualReviewCommand =
             "CaptureRebellionMoveVisualReview";
@@ -150,6 +152,7 @@ namespace Bellerophon.Editor.Validation
                 request.Command != TergoPierceAttackCurrentSceneVisualRunCommand &&
                 request.Command != Dolore04TentacleStabDiagnosticCommand &&
                 request.Command != Dolore04TentacleStabFinalCommand &&
+                request.Command != Ispant08ContinuousMotionCaptureCommand &&
                 request.Command != Dolore05ExecutionOpeningDiagnosticCommand &&
                 request.Command != RebellionAttackTransitionVisualReviewCommand &&
                 request.Command != RebellionForwardScanVisualReviewCommand &&
@@ -566,6 +569,60 @@ namespace Bellerophon.Editor.Validation
                         request,
                         global::Bellerophon.Editor.IspantCargoRunScene.IspantSheathSwordAnimationTool.CaptureIspantSheathToRifleFinalAimArmLiftRevisionReview,
                         "The one-time final slot-6 0.15m arm-lift aiming review was captured after inspection passed.");
+                    break;
+                case "ApplyIspant07FiringReplacement":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantFiringAnimationTool.ApplyIspant07FiringReplacement,
+                        "Slot 7 was rebuilt with the supplied Mixamo firing model, the exact static shared appearance, the slot-6 final two-hand musket placement, the design-source 2.5-second breakthrough attack interval, and the approved reused muzzle flash.");
+                    break;
+                case "InspectIspant07FiringReplacement":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantFiringAnimationTool.InspectIspant07FiringReplacement,
+                        "The slot-7 source hash, single Mixamo take, 2.5-second breakthrough interval, detected recoil firing frame, approved muzzle flash, exact static shared appearance, and slot-6 final musket placement were inspected without changing the scene.");
+                    break;
+                case "CaptureIspant07FiringReplacementReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantFiringAnimationTool.CaptureIspant07FiringReplacementReview,
+                        "A one-time pre-fire, firing, and post-fire slot-7 muzzle-flash review was captured after inspection passed.");
+                    break;
+                case "ApplyIspant08ChangingToSwordReplacement":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantChangingToSwordAnimationTool.ApplyIspant08ChangingToSwordReplacement,
+                        "Slot 8 was rebuilt so its hand-lowering endpoint immediately enters the exact 0.3-second pose bridge and vertically aligned slot-4 draw continuation while preserving equipment.");
+                    break;
+                case "InspectIspant08ChangingToSwordReplacement":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantChangingToSwordAnimationTool.InspectIspant08ChangingToSwordReplacement,
+                        "The slot-8 source motion, removed lowered-pose hold, immediate 0.3-second exact-pose bridge, vertical continuity, shared appearance, equipment, and scene isolation were inspected without changing the scene.");
+                    break;
+                case "CaptureIspant08ChangingToSwordReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantChangingToSwordAnimationTool.CaptureIspant08ChangingToSwordReview,
+                        "A one-time front-and-back review of the musket sequence, hand-lowering endpoint, immediate 0.3-second bridge, draw start, draw motion, and loop start was captured after inspection passed.");
+                    break;
+                case "CaptureIspant06And07GripDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantFiringAnimationTool.CaptureIspant06And07GripDiagnostic,
+                        "Slot 6 final aim and slot 7 start, middle, and end grip close-ups were captured from the front, left, and right without changing the scene.");
+                    break;
+                case "CaptureIspant07GroundAlignmentDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantFiringAnimationTool.CaptureIspant07GroundAlignmentDiagnostic,
+                        "The static model and slot 7 start, middle, and end were captured with one shared camera and ground height without changing the scene.");
+                    break;
+                case "CaptureIspant07MuzzleFlashDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantFiringAnimationTool.CaptureIspant07MuzzleFlashDiagnostic,
+                        "Slot 7 pre-fire, detected firing instant, and post-fire muzzle close-ups were captured with the approved reused muzzle flash without changing the scene.");
                     break;
                 case "ApplyIspantApprovedLongSwordAllSlots":
                     RunSynchronous(
@@ -4340,6 +4397,9 @@ namespace Bellerophon.Editor.Validation
                 case Dolore04TentacleStabFinalCommand:
                     RunDolore04TentacleStabFullMotionCapture(request, true);
                     break;
+                case Ispant08ContinuousMotionCaptureCommand:
+                    RunIspant08ContinuousMotionCapture(request);
+                    break;
                 case Dolore05ExecutionOpeningDiagnosticCommand:
                     RunDolore05ExecutionOpeningCapture(request);
                     break;
@@ -5396,6 +5456,24 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
+        private static void RunIspant08ContinuousMotionCapture(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Bellerophon.Editor.IspantCargoRunScene.Ispant08ContinuousMotionPlayModeCapture.Start(
+                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
+                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
         private static void RunDolore05ExecutionOpeningCapture(BridgeRequest request)
         {
             BeginRequest(request);
@@ -6178,6 +6256,7 @@ namespace Bellerophon.Editor.Validation
             if (request.Command == TergoPierceAttackCurrentSceneVisualRunCommand ||
                 request.Command == Dolore04TentacleStabDiagnosticCommand ||
                 request.Command == Dolore04TentacleStabFinalCommand ||
+                request.Command == Ispant08ContinuousMotionCaptureCommand ||
                 request.Command == Dolore05ExecutionOpeningDiagnosticCommand ||
                 request.Command == RebellionMoveVisualReviewCommand ||
                 request.Command == RebellionFrontArtifactVisualReviewCommand ||
@@ -6277,6 +6356,17 @@ namespace Bellerophon.Editor.Validation
                 BeginRequest(request);
                 activeLog.AppendLine("Resuming Dolore motion 3 actual Animator capture after Play Mode transition.");
                 Bellerophon.Editor.Dolore04TentacleStabAnimation.Dolore04TentacleStabFullMotionPlayModeCapture.Resume(
+                    successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
+                    exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
+                return true;
+            }
+
+            if (request.Command == Ispant08ContinuousMotionCaptureCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Ispant slot 8 actual Play Mode two-loop motion capture after Play Mode transition.");
+                Bellerophon.Editor.IspantCargoRunScene.Ispant08ContinuousMotionPlayModeCapture.Resume(
                     successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
                     exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
                 return true;
