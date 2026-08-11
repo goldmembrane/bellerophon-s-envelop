@@ -1,0 +1,10 @@
+﻿Target=Approved Ata Enemy Placement/Ata_03_Move
+Source=Embedded Ata.fbx animation clip
+ClipName=Armature|Armature|Armature|Armature|walking_man|baselayer
+DurationSeconds=1.033333
+Loop=True
+RootMotion=False
+MaximumSlotPositionError=0
+NewMotionCreated=False
+OtherAtaSlotsChanged=False
+PlayerOrCameraChanged=False

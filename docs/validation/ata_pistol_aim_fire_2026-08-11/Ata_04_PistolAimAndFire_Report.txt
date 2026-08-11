@@ -1,0 +1,15 @@
+﻿Target=Approved Ata Enemy Placement/Ata_04_PistolAimAndFire
+Source=enemies model/attas draw.fbx
+ProjectSource=Assets/_Project/Art/Enemies/Ata/Animations/Sources/Ata_PistolAimAndFire.fbx
+ClipName=mixamo.com
+DurationSeconds=2
+Loop=True
+RootMotion=False
+MaximumSlotPositionError=0
+ExistingAtaAppearancePreserved=True
+OtherAtaSlotsChanged=False
+PlayerOrCameraChanged=False
+CurrentAtaVisualReviewSamples=49
+SourceFbxVisualReviewSamples=49
+VisualObservation=The supplied mixamo.com clip shows only subtle pose changes; no visible pistol aim or fire pose appears in either the current Ata or source FBX review.
+SubstituteMotionCreated=False

@@ -16,6 +16,7 @@ Shader "Bellerophon/Ispant/ApprovedAppearance"
         _CoatRoughness("Paint Coat Roughness", Range(0, 1)) = 0.34
         _FeatureMode("Approved Feature Mode", Float) = 0
         _ApprovedYFlip("Approved Blender Y Flip", Float) = 0
+        _EyeDesaturation("Eye Desaturation", Range(0, 1)) = 0
     }
 
     SubShader
@@ -69,6 +70,7 @@ Shader "Bellerophon/Ispant/ApprovedAppearance"
                 half _CoatRoughness;
                 half _FeatureMode;
                 half _ApprovedYFlip;
+                half _EyeDesaturation;
             CBUFFER_END
 
             struct Attributes
@@ -183,11 +185,28 @@ Shader "Bellerophon/Ispant/ApprovedAppearance"
 
                 half eyeMask = ApprovedHelmetEyeMask(input);
                 half3 eyeColor = half3(0.015h, 0.65h, 1.0h);
+                half eyeLuminance = dot(eyeColor, half3(0.2126h, 0.7152h, 0.0722h));
+                eyeColor = lerp(
+                    eyeColor,
+                    half3(eyeLuminance, eyeLuminance, eyeLuminance),
+                    saturate(_EyeDesaturation));
                 albedo = lerp(albedo, eyeColor * 0.42h, eyeMask);
                 // Feature mode 3 is reserved for the approved explicit cyan eye mesh.
                 half eyeSurface = step(2.5h, _FeatureMode);
+                half albedoLuminance = dot(albedo, half3(0.2126h, 0.7152h, 0.0722h));
+                albedo = lerp(
+                    albedo,
+                    half3(albedoLuminance, albedoLuminance, albedoLuminance),
+                    eyeSurface * saturate(_EyeDesaturation));
                 half3 emission = eyeColor * eyeMask * 5.0h +
                                  half3(0.015h, 0.48h, 0.70h) * 2.4h * eyeSurface;
+                half emissionLuminance = dot(
+                    emission,
+                    half3(0.2126h, 0.7152h, 0.0722h));
+                emission = lerp(
+                    emission,
+                    half3(emissionLuminance, emissionLuminance, emissionLuminance),
+                    eyeSurface * saturate(_EyeDesaturation));
 
                 half3 normalWS = normalize(input.normalWS);
                 half3 tangentWS = normalize(input.tangentWS.xyz);

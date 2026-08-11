@@ -192,6 +192,138 @@ namespace Bellerophon.Editor.Validation
                         RefreshAssets,
                         "Unity assets refreshed.");
                     break;
+                case "StartAtaModelPerformanceProbe":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaPerformance.AtaModelPerformanceProbe.Start,
+                        "Ata model performance probe started.");
+                    break;
+                case "ApplyAtaNineSlotPlacement":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaCargoRunScenePlacementTool.ApplyAtaNineSlotPlacement,
+                        "Ata nine-slot placement applied.");
+                    break;
+                case "ApplyAtaEmbeddedTexture":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaCargoRunScenePlacementTool.ApplyAtaEmbeddedTexture,
+                        "Ata embedded texture applied.");
+                    break;
+                case "ApplyAtaFacingRotation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaCargoRunScenePlacementTool.ApplyAtaFacingRotation,
+                        "Ata facing rotation applied.");
+                    break;
+                case "CaptureAtaNineSlotPlacementDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaCargoRunScenePlacementTool.CaptureAtaNineSlotPlacementDiagnostic,
+                        "Ata nine-slot placement diagnostic captured.");
+                    break;
+                case "CaptureAtaNineSlotPlacementFinal":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaCargoRunScenePlacementTool.CaptureAtaNineSlotPlacementFinal,
+                        "Ata nine-slot placement final captured.");
+                    break;
+                case "CaptureAtaEmbeddedTextureFinal":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaCargoRunScenePlacementTool.CaptureAtaEmbeddedTextureFinal,
+                        "Ata embedded texture final captured.");
+                    break;
+                case "CaptureAtaFacingRotationFinal":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaCargoRunScenePlacementTool.CaptureAtaFacingRotationFinal,
+                        "Ata facing rotation final captured.");
+                    break;
+                case "CaptureAtaFacingRotationDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaCargoRunScenePlacementTool.CaptureAtaFacingRotationDiagnostic,
+                        "Ata facing rotation diagnostic captured.");
+                    break;
+                case "ApplyAtaIdleAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaIdleAnimationTool.ApplyAtaIdleAnimation,
+                        "Ata idle animation applied.");
+                    break;
+                case "CaptureAtaIdleAnimationDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaIdleAnimationTool.CaptureAtaIdleAnimationDiagnostic,
+                        "Ata idle animation diagnostic captured.");
+                    break;
+                case "CaptureAtaIdleAnimationFinal":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaIdleAnimationTool.CaptureAtaIdleAnimationFinal,
+                        "Ata idle animation final captured.");
+                    break;
+                case "ApplyAtaMoveAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaMoveAnimationTool.ApplyAtaMoveAnimation,
+                        "Ata move animation applied.");
+                    break;
+                case "CaptureAtaMoveAnimationDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaMoveAnimationTool.CaptureAtaMoveAnimationDiagnostic,
+                        "Ata move animation diagnostic captured.");
+                    break;
+                case "CaptureAtaMoveAnimationFinal":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaMoveAnimationTool.CaptureAtaMoveAnimationFinal,
+                        "Ata move animation final captured.");
+                    break;
+                case "ApplyAtaPistolAimFireAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.ApplyAtaPistolAimFireAnimation,
+                        "Ata pistol aim and fire animation applied.");
+                    break;
+                case "InspectAtaPistolStructure":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.InspectAtaPistolStructure,
+                        "Ata pistol structure inspected.");
+                    break;
+                case "CaptureAtaPistolWaistGeometryDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.CaptureAtaPistolWaistGeometryDiagnostic,
+                        "Ata pistol waist geometry diagnostic captured.");
+                    break;
+                case "CaptureAtaPistolRegionDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.CaptureAtaPistolRegionDiagnostic,
+                        "Ata pistol region diagnostic captured.");
+                    break;
+                case "CaptureAtaExtractedPistolGeometryDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.CaptureAtaExtractedPistolGeometryDiagnostic,
+                        "Extracted Ata pistol geometry diagnostic captured.");
+                    break;
+                case "CaptureAtaPistolAimFireAnimationDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.CaptureAtaPistolAimFireAnimationDiagnostic,
+                        "Ata pistol aim and fire animation diagnostic captured.");
+                    break;
+                case "CaptureAtaPistolAimFireAnimationFinal":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.CaptureAtaPistolAimFireAnimationFinal,
+                        "Ata pistol aim and fire animation final captured.");
+                    break;
                 case "ApplyApprovedPahurAppearance":
                     RunSynchronous(
                         request,
@@ -353,6 +485,114 @@ namespace Bellerophon.Editor.Validation
                         request,
                         global::Bellerophon.Editor.IspantCargoRunScene.IspantRunningSwordAttackAnimationTool.CaptureIspantRunningSwordAttackAnimationReview,
                         "A static-reference and five-phase slot-5 running sword attack review was captured after full-cycle inspection passed.");
+                    break;
+                case "ApplyIspant09SlashReplacement":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantOneHandedSwordAttackAnimationTool.ApplyIspantOneHandedSwordAttackAnimation,
+                        "Only Ispant_09_OneHandedSwordAttack was replaced with the supplied slash model, exact static appearance, and looping embedded Mixamo animation.");
+                    break;
+                case "InspectIspant09SlashReplacement":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantOneHandedSwordAttackAnimationTool.InspectIspantOneHandedSwordAttackAnimation,
+                        "The slot-9 supplied slash source, exact static appearance references, and looping Mixamo state were inspected without changing the scene.");
+                    break;
+                case "CaptureIspant09SlashReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantOneHandedSwordAttackAnimationTool.CaptureIspantOneHandedSwordAttackReview,
+                        "A static-reference and five-phase slot-9 one-handed sword attack review was captured after inspection passed.");
+                    break;
+                case "CaptureIspant09VisualDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantOneHandedSwordAttackAnimationTool.CaptureIspant09VisualDiagnostic,
+                        "A dense slot-9 visual diagnostic strip was captured without numeric inspection.");
+                    break;
+                case "CaptureIspant09VisualFinal":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantOneHandedSwordAttackAnimationTool.CaptureIspant09VisualFinal,
+                        "The one-time dense slot-9 final visual strip was captured without numeric inspection.");
+                    break;
+                case "ApplyIspant10StopAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantStopAnimationTool.ApplyIspant10StopAnimation,
+                        "Only Ispant_10_Stop received the rotation-only bowed-head, hanging-arms, and gradual eye-desaturation loop.");
+                    break;
+                case "CaptureIspant10StopDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantStopAnimationTool.CaptureIspant10StopDiagnostic,
+                        "A body-and-face slot-10 visual diagnostic was captured without numeric visual inspection.");
+                    break;
+                case "CaptureIspant10StopFinal":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantStopAnimationTool.CaptureIspant10StopFinal,
+                        "The one-time body-and-face slot-10 final visual strip was captured.");
+                    break;
+                case "ApplyIspant11HitReplacement":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantHitReactionAnimationTool.ApplyIspant11HitReplacement,
+                        "Only Ispant_11_HitReaction was replaced with the supplied hit FBX, exact static appearance, looping Mixamo motion, and both arms lowered for the entire clip.");
+                    break;
+                case "CaptureIspant11HitDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantHitReactionAnimationTool.CaptureIspant11HitDiagnostic,
+                        "A static-reference and thirteen-phase slot-11 hit-reaction diagnostic strip was captured for direct visual review.");
+                    break;
+                case "CaptureIspant11HitFinal":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantHitReactionAnimationTool.CaptureIspant11HitFinal,
+                        "The one-time slot-11 hit-reaction final visual strip was captured after direct review.");
+                    break;
+                case "ApplyIspant11HeightAlignment":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantHitReactionAnimationTool.ApplyIspant11HeightAlignment,
+                        "Only the slot-11 hit model local Y position was copied from the already height-corrected slot-9 model.");
+                    break;
+                case "CaptureIspant11HeightDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantHitReactionAnimationTool.CaptureIspant11HeightDiagnostic,
+                        "A fixed-vertical-reference slot-11 height diagnostic was captured for direct visual review.");
+                    break;
+                case "CaptureIspant11HeightFinal":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantHitReactionAnimationTool.CaptureIspant11HeightFinal,
+                        "The one-time fixed-reference slot-11 height final was captured after direct review.");
+                    break;
+                  case "ApplyIspant12DeathReplacement":
+                      RunSynchronous(
+                          request,
+                          global::Bellerophon.Editor.IspantCargoRunScene.IspantDeathAnimationTool.ApplyIspant12DeathReplacement,
+                          "Only Ispant_12_Death was replaced with the supplied FBX, exact static appearance, the embedded Mixamo loop, aligned ground height, and thigh-to-foot closure during the fall.");
+                      break;
+                  case "InspectIspant12SwordStructure":
+                      RunSynchronous(
+                          request,
+                          global::Bellerophon.Editor.IspantCargoRunScene.IspantDeathAnimationTool.InspectIspant12SwordStructure,
+                          "The slot-12 death source and current scene renderer structures were inspected without changing the scene.");
+                      break;
+                  case "CaptureIspant12DeathDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantDeathAnimationTool.CaptureIspant12DeathDiagnostic,
+                        "Full-body and lower-body slot-12 death diagnostics were captured for direct visual review.");
+                    break;
+                case "CaptureIspant12DeathFinal":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantDeathAnimationTool.CaptureIspant12DeathFinal,
+                        "The one-time full-body and lower-body slot-12 death finals were captured after direct review.");
                     break;
                 case "ApplyIspantSheathSwordAnimation":
                     RunSynchronous(
