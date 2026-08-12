@@ -1,0 +1,8 @@
+Unity editor bridge request completed: 1d45ff70fddf4a4ea1192a2697a791a2
+Unity editor bridge command: ApplyAtaCommandAnimation
+Unity editor bridge mode: open editor
+Ata command animation applied.
+
+Captured Unity log:
+Log: AtaRightArmModelCorrection Slot=Ata_05_Command, StretchComponents=1, ComponentTriangles=25, MaximumRatio=3.630468, Changed=True
+Log: AtaCommandAnimationApplied Result=PASS, Slot=Ata_05_Command, Source=Assets/_Project/Art/Enemies/Ata/Animations/Sources/Ata_Pointing.fbx, EmbeddedClip=mixamo.com, Duration=2.75, CorrectedRightArmComponents=1, GuardianEffect=Kursa_ShieldStanceIcon, ShieldSprite=Assets/_Project/Art/Enemies/Kursa/Effects/Kursa_ShieldStanceIcon.png, BreakthroughEffect=Ata_BreakthroughStanceEffect, BreakthroughSprite=Assets/_Project/Art/Enemies/Ata/Effects/Ata_BreakthroughStanceEffect.png, StanceOrder=GuardianThenBreakthroughAlternatingEachLoop, RootMotion=False, SceneSaved=True.

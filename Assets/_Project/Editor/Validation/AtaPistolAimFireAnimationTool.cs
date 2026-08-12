@@ -21,6 +21,10 @@ namespace Bellerophon.Editor.AtaCargoRunScene
         private const string ModelName = "Ata_Model";
         private const string SourcePath =
             "Assets/_Project/Art/Enemies/Ata/Animations/Sources/Ata_PistolAimAndFire.fbx";
+        private const string ShootingSourcePath =
+            "Assets/_Project/Art/Enemies/Ata/Animations/Sources/Ata_Shooting.fbx";
+        private const string AppearanceSourcePath =
+            "Assets/_Project/Art/Enemies/Ata/Models/Ata.fbx";
         private const string ControllerPath =
             "Assets/_Project/Art/Enemies/Ata/Animations/Ata_04_PistolAimAndFire.controller";
         private const string BodyMeshPath =
@@ -30,23 +34,54 @@ namespace Bellerophon.Editor.AtaCargoRunScene
         private const string PistolRootName = "Ata_Pistol_Transfer";
         private const string HipAnchorName = "Ata_Pistol_HipAnchor";
         private const string HandAnchorName = "Ata_Pistol_RightHandAnchor";
+        private const string RecoilRotationAnchorName = "Ata_Pistol_ShootingRecoilRotationAnchor";
+        private const string MuzzleFlashName = "Ata_Pistol_MuzzleFlash";
+        private const string AimStateName = "PistolAimAndFire";
+        private const string ShootingStateName = "PistolShooting";
+        // The visible bridge requested between the original pose and the shooting pose.
+        private const float AimToShootingTransitionSeconds = 0.5f;
+        private const float ShootingToStartTransitionSeconds = 0.05f;
+        // GAME_DESIGN_SOURCE.txt:247 fixes Ata's pistol repeat delay at 1.5 seconds.
+        private const float AtaPistolShotIntervalSeconds = 1.5f;
+        private const int ShootingCycleCount = 2;
+        private const float ShootingExitNormalized = 3f;
+        // Calibrate the rigid pistol at the source recoil/flash pose.
+        private const float ShootingForwardCalibrationNormalized = 0.32f;
+        private const string ExistingFlashMeshPath =
+            "Assets/_Project/Art/Enemies/Rebellion/VFX/Rebellion_Forward_Burst_Flash.asset";
+        private const string ExistingFlashMaterialPath =
+            "Assets/_Project/Art/Enemies/Rebellion/VFX/Rebellion_Forward_Burst_Flash.mat";
         private const string DiagnosticPath =
-            "docs/validation/ata_pistol_hand_transfer_2026-08-11/Ata_04_PistolHandTransfer_Diagnostic_03.png";
+            "docs/validation/ata_pistol_trigger_follow_runtime_2026-08-12/Ata_04_PistolTriggerFollow_Diagnostic.png";
         private const string SourceDiagnosticPath =
             "docs/validation/ata_pistol_aim_fire_2026-08-11/Ata_PistolAimAndFire_Source_Diagnostic_02.png";
+        private const string ShootingSourceDiagnosticPath =
+            "docs/validation/ata_pistol_shooting_sequence_2026-08-12/Ata_Shooting_Source_Diagnostic.png";
+        private const string ShootingRecoilDiagnosticPath =
+            "docs/validation/ata_pistol_shooting_sequence_2026-08-12/Ata_Shooting_Recoil_Diagnostic.png";
         private const string FinalPath =
-            "docs/validation/ata_pistol_hand_transfer_2026-08-11/Ata_04_PistolHandTransfer_Final.png";
+            "docs/validation/ata_pistol_trigger_follow_runtime_2026-08-12/Ata_04_PistolTriggerFollow_Final.png";
+        private const string LeftSideFillReviewPath =
+            "docs/validation/ata04_pistol_left_fill_2026-08-12/Ata_04_PistolLeftSideFill_Review.png";
         private const string ReportPath =
-            "docs/validation/ata_pistol_hand_transfer_2026-08-11/Ata_04_PistolHandTransfer_Report.txt";
+            "docs/validation/ata_pistol_trigger_follow_runtime_2026-08-12/Ata_04_PistolTriggerFollow_Report.txt";
         private const string WaistGeometryDiagnosticPath =
             "docs/validation/ata_pistol_aim_fire_2026-08-11/Ata_Pistol_Waist_Geometry_Diagnostic.png";
         private const string PistolRegionDiagnosticPath =
             "docs/validation/ata_pistol_aim_fire_2026-08-11/Ata_Pistol_Region_Diagnostic_10.png";
         private const string ExtractedPistolDiagnosticPath =
             "docs/validation/ata_pistol_aim_fire_2026-08-11/Ata_Extracted_Pistol_Geometry_Diagnostic_06.png";
+        private const string ResidualComponentDiagnosticFolder =
+            "docs/validation/ata_pistol_trigger_follow_runtime_2026-08-12/source_123753_handle_investigation/residual_components";
         private const string AtaTexturePath =
             "Assets/_Project/Art/Enemies/Ata/Models/output.fbm/texture_0.png";
         private const float TransformTolerance = 0.0002f;
+        // Model-space contact offsets were derived from the supplied runtime footage.
+        private const float HandContactLift = 0.30f;
+        private const float RightHandTipVertexFraction = 0.25f;
+        private const float RightHandTipForwardExtension = 0.24f;
+        private const float PistolArtifactMaximumEdge = 0.08f;
+        private const float PistolArtifactMaximumAltitude = 0.007f;
 
         [MenuItem("Bellerophon/Enemies/Ata/Apply Pistol Aim And Fire Animation")]
         public static void ApplyAtaPistolAimFireAnimation()
@@ -60,15 +95,19 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             var otherRootsBefore = OtherRootSignatures(scene, placement);
             var otherSlotsBefore = OtherSlotSignatures(placement.transform, slot);
 
-            ConfigureSourceImporterForLoop();
+            ConfigureMixamoImporter(SourcePath, false);
+            ConfigureMixamoImporter(ShootingSourcePath, true);
             var clip = RequireSingleMixamoClip();
+            var shootingClip = RequireSingleMixamoClip(ShootingSourcePath);
             var bindingSummary = RequireBindingCompatibility(model, clip);
-            var controller = CreateController(clip);
+            var shootingBindingSummary = RequireBindingCompatibility(model, shootingClip);
+            var controller = CreateController(clip, shootingClip);
             var animator = ConfigureAnimator(model, controller);
             var pistolAssets = ConfigurePistolGeometryAndConstraint(
                 model,
                 animator,
-                clip);
+                clip,
+                shootingClip);
 
             if (!slotBefore.Matches() || !modelBefore.Matches())
             {
@@ -84,7 +123,7 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                 otherRootsBefore,
                 OtherRootSignatures(scene, placement),
                 "A scene root outside the Ata placement changed.");
-            RequireAppliedState(model, clip, controller);
+            RequireAppliedState(model, clip, shootingClip, controller);
 
             EditorSceneManager.MarkSceneDirty(scene);
             if (!EditorSceneManager.SaveScene(scene, ScenePath))
@@ -100,19 +139,63 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                 ", Source=" + SourcePath +
                 ", MixamoClip=" + clip.name +
                 ", Duration=" + Num(clip.length) +
+                ", ShootingSource=" + ShootingSourcePath +
+                ", ShootingClip=" + shootingClip.name +
+                ", ShootingDuration=" + Num(shootingClip.length) +
+                ", ShootingStateDuration=" + Num(
+                    AtaPistolShotIntervalSeconds * ShootingCycleCount) +
+                ", ShotInterval=" + Num(AtaPistolShotIntervalSeconds) +
+                ", ShootingCycles=" + ShootingCycleCount +
                 ", AnimatedPaths=" + bindingSummary.AnimatedPathCount +
                 ", SkinnedAnimatedPaths=" + bindingSummary.SkinnedAnimatedPathCount +
                 ", VaryingCurves=" + bindingSummary.VaryingCurveCount +
+                ", ShootingVaryingCurves=" + shootingBindingSummary.VaryingCurveCount +
                 ", FirstAnimatedPaths=" + bindingSummary.FirstAnimatedPaths +
                 ", LargestCurveChanges=" + bindingSummary.LargestCurveChanges +
-                ", Loop=True" +
+                ", Sequence=PistolAimAndFireToPistolShootingToStart" +
+                ", MuzzleFlash=ExistingRebellionForwardBurstFlash" +
+                ", MuzzleFlashNormalized=0.285714-0.354286" +
                 ", RootMotion=False" +
-                ", ExactPistolSourceTriangles=" + pistolAssets.PistolTriangleCount +
+                ", RenderedPistolTriangles=" + pistolAssets.PistolTriangleCount +
                 ", PistolRigid=True" +
                 ", PistolDriver=RightHandArmConstraint" +
                 ", ExistingMaterialPreserved=True" +
                 ", OtherAtaSlotsUnchanged=True" +
                 ", OtherSceneRootsUnchanged=True" +
+                ", SceneSaved=True.");
+        }
+
+        public static void RecoverAtaPistolInterruptedApply()
+        {
+            var scene = RequireScene(requireClean: false);
+            var placement = RequirePlacement(scene);
+            var slot = RequireDirectChild(placement.transform, SlotName);
+            var model = RequireDirectChild(slot, ModelName);
+            var renderer = model.GetComponentsInChildren<SkinnedMeshRenderer>(true).Single();
+            var bodyMesh = AssetDatabase.LoadAssetAtPath<Mesh>(BodyMeshPath) ??
+                           throw new InvalidOperationException(
+                               "Ata pistol recovery body mesh is missing.");
+            var sourcePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(SourcePath) ??
+                               throw new InvalidOperationException(
+                                   "Ata pistol recovery source prefab is missing.");
+            var sourceMesh = sourcePrefab
+                                 .GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                                 .Single().sharedMesh;
+            if (renderer.sharedMesh != sourceMesh && renderer.sharedMesh != bodyMesh)
+            {
+                throw new InvalidOperationException(
+                    "Ata pistol recovery did not find an interrupted or auto-restored mesh state.");
+            }
+
+            renderer.sharedMesh = bodyMesh;
+            if (!EditorSceneManager.SaveScene(scene, ScenePath))
+            {
+                throw new InvalidOperationException(
+                    "Ata interrupted pistol apply recovery could not save CargoRunMvp.");
+            }
+            Debug.Log(
+                "AtaPistolInterruptedApplyRecovered Result=PASS" +
+                ", RestoredMesh=" + bodyMesh.name +
                 ", SceneSaved=True.");
         }
 
@@ -135,6 +218,227 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                 ", SceneChanged=False.");
         }
 
+        [MenuItem("Bellerophon/Enemies/Ata/Inspect Extracted Pistol Triangle Geometry")]
+        public static void InspectExtractedPistolTriangleGeometry()
+        {
+            var pistolMesh = AssetDatabase.LoadAssetAtPath<Mesh>(PistolMeshPath) ??
+                             throw new InvalidOperationException(
+                                 "Ata rigid pistol mesh asset is missing.");
+            var vertices = pistolMesh.vertices;
+            var triangles = pistolMesh.triangles;
+            var descriptions = Enumerable.Range(0, triangles.Length / 3)
+                .Select(index =>
+                {
+                    var a = vertices[triangles[index * 3]];
+                    var b = vertices[triangles[index * 3 + 1]];
+                    var c = vertices[triangles[index * 3 + 2]];
+                    var maximumEdge = Mathf.Max(
+                        Vector3.Distance(a, b),
+                        Vector3.Distance(b, c),
+                        Vector3.Distance(c, a));
+                    var area = Vector3.Cross(b - a, c - a).magnitude * 0.5f;
+                    return (index, maximumEdge, area, center: (a + b + c) / 3f);
+                })
+                .OrderByDescending(item => item.maximumEdge)
+                .Take(24)
+                .Select(item =>
+                    "T" + item.index +
+                    " Edge=" + Num(item.maximumEdge) +
+                    " Area=" + Num(item.area) +
+                    " Center=" + Vec(item.center));
+            var sliverDescriptions = Enumerable.Range(0, triangles.Length / 3)
+                .Select(index =>
+                {
+                    var a = vertices[triangles[index * 3]];
+                    var b = vertices[triangles[index * 3 + 1]];
+                    var c = vertices[triangles[index * 3 + 2]];
+                    var maximumEdge = Mathf.Max(
+                        Vector3.Distance(a, b),
+                        Vector3.Distance(b, c),
+                        Vector3.Distance(c, a));
+                    var area = Vector3.Cross(b - a, c - a).magnitude * 0.5f;
+                    var altitude = maximumEdge <= 0.000001f
+                        ? 0f
+                        : area * 2f / maximumEdge;
+                    return (index, maximumEdge, area, altitude, center: (a + b + c) / 3f);
+                })
+                .Where(item => item.maximumEdge >= 0.03f)
+                .OrderBy(item => item.altitude)
+                .Take(36)
+                .Select(item =>
+                    "T" + item.index +
+                    " Edge=" + Num(item.maximumEdge) +
+                    " Altitude=" + Num(item.altitude) +
+                    " Area=" + Num(item.area) +
+                    " Center=" + Vec(item.center));
+            var edgeComponents = SplitTriangleEdgeComponents(vertices, triangles)
+                .Select(component =>
+                {
+                    var componentIndices = component.Distinct().ToArray();
+                    var bounds = new Bounds(vertices[componentIndices[0]], Vector3.zero);
+                    foreach (var vertexIndex in componentIndices.Skip(1))
+                    {
+                        bounds.Encapsulate(vertices[vertexIndex]);
+                    }
+
+                    return "T" + (component.Length / 3) +
+                           "V" + componentIndices.Length +
+                           "C" + Vec(bounds.center) +
+                           "S" + Vec(bounds.size);
+                });
+            Debug.Log(
+                "AtaExtractedPistolTriangleGeometry" +
+                ", Triangles=" + (triangles.Length / 3) +
+                ", Bounds=" + Vec(pistolMesh.bounds.size) +
+                ", EdgeComponents=" + string.Join(";", edgeComponents) +
+                ", Longest=" + string.Join(";", descriptions) +
+                ", Slivers=" + string.Join(";", sliverDescriptions));
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ata/Capture Pistol Residual Components")]
+        public static void CaptureAtaPistolResidualComponents()
+        {
+            var scene = RequireScene(requireClean: true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var slot = RequireDirectChild(placement.transform, SlotName);
+            var model = RequireDirectChild(slot, ModelName);
+            var renderer = model.GetComponentsInChildren<SkinnedMeshRenderer>(true).Single();
+            var source = renderer.sharedMesh;
+            var baked = new Mesh();
+            var createdObjects = new List<GameObject>();
+            var createdMeshes = new List<Mesh>();
+            try
+            {
+                renderer.BakeMesh(baked, false);
+                var candidates = SplitSelectedTriangleComponents(
+                        source.vertices,
+                        source.GetTriangles(0))
+                    .Select(component =>
+                    {
+                        var indices = component.Distinct().ToArray();
+                        var points = indices.Select(index =>
+                                model.InverseTransformPoint(
+                                    renderer.transform.TransformPoint(baked.vertices[index])))
+                            .ToArray();
+                        var bounds = new Bounds(points[0], Vector3.zero);
+                        foreach (var point in points.Skip(1))
+                        {
+                            bounds.Encapsulate(point);
+                        }
+
+                        return (component, indices, bounds);
+                    })
+                    .Where(candidate =>
+                        candidate.indices.Length >= 3 &&
+                        candidate.bounds.center.x >= 0.13f &&
+                        candidate.bounds.center.x <= 0.35f &&
+                        candidate.bounds.center.y >= 0.55f &&
+                        candidate.bounds.center.y <= 1.02f)
+                    .OrderByDescending(candidate => candidate.component.Length)
+                    .ToArray();
+                if (candidates.Length == 0)
+                {
+                    throw new InvalidOperationException(
+                        "Ata pistol residual component diagnostic found no waist candidates.");
+                }
+
+                var folder = Absolute(ResidualComponentDiagnosticFolder);
+                Directory.CreateDirectory(folder);
+                var descriptions = new List<string>();
+                for (var candidateIndex = 0; candidateIndex < candidates.Length; candidateIndex++)
+                {
+                    var candidate = candidates[candidateIndex];
+                    var sourceIndices = candidate.indices.OrderBy(index => index).ToArray();
+                    var remap = sourceIndices
+                        .Select((sourceIndex, localIndex) => (sourceIndex, localIndex))
+                        .ToDictionary(value => value.sourceIndex, value => value.localIndex);
+                    var mesh = new Mesh
+                    {
+                        name = "AtaPistolResidualCandidate_" + candidateIndex,
+                        indexFormat = source.indexFormat,
+                        vertices = sourceIndices.Select(index => baked.vertices[index]).ToArray()
+                    };
+                    if (baked.normals.Length == baked.vertexCount)
+                    {
+                        mesh.normals = sourceIndices.Select(index => baked.normals[index]).ToArray();
+                    }
+
+                    if (baked.tangents.Length == baked.vertexCount)
+                    {
+                        mesh.tangents = sourceIndices.Select(index => baked.tangents[index]).ToArray();
+                    }
+
+                    for (var channel = 0; channel < 8; channel++)
+                    {
+                        var uv = new List<Vector4>();
+                        baked.GetUVs(channel, uv);
+                        if (uv.Count == baked.vertexCount)
+                        {
+                            mesh.SetUVs(
+                                channel,
+                                sourceIndices.Select(index => uv[index]).ToArray());
+                        }
+                    }
+
+                    mesh.SetTriangles(
+                        candidate.component.Select(index => remap[index]).ToArray(),
+                        0,
+                        true);
+                    createdMeshes.Add(mesh);
+                    var overlay = new GameObject(
+                        "AtaPistolResidualCandidate_" + candidateIndex,
+                        typeof(MeshFilter),
+                        typeof(MeshRenderer));
+                    overlay.hideFlags = HideFlags.HideAndDontSave;
+                    overlay.transform.SetParent(renderer.transform, false);
+                    overlay.GetComponent<MeshFilter>().sharedMesh = mesh;
+                    overlay.GetComponent<MeshRenderer>().sharedMaterial = renderer.sharedMaterial;
+                    createdObjects.Add(overlay);
+                    var destination = Path.Combine(
+                        folder,
+                        "candidate_" + candidateIndex +
+                        "_t" + (candidate.component.Length / 3) + ".png");
+                    CaptureIsolatedPistolGeometry(
+                        model,
+                        overlay.GetComponent<MeshRenderer>(),
+                        destination);
+                    descriptions.Add(
+                        "C" + candidateIndex +
+                        "T" + (candidate.component.Length / 3) +
+                        "V" + candidate.indices.Length +
+                        "Center=" + Vec(candidate.bounds.center) +
+                        "Size=" + Vec(candidate.bounds.size) +
+                        "Image=" + destination);
+                }
+
+                Debug.Log(
+                    "AtaPistolResidualComponentsCaptured Result=PASS, " +
+                    string.Join(";", descriptions) +
+                    ", SceneChanged=False.");
+            }
+            finally
+            {
+                foreach (var overlay in createdObjects)
+                {
+                    UnityEngine.Object.DestroyImmediate(overlay);
+                }
+
+                foreach (var mesh in createdMeshes)
+                {
+                    UnityEngine.Object.DestroyImmediate(mesh);
+                }
+
+                UnityEngine.Object.DestroyImmediate(baked);
+            }
+
+            if (scene.isDirty != wasDirty)
+            {
+                throw new InvalidOperationException(
+                    "Ata pistol residual component diagnostic changed the scene dirty state.");
+            }
+        }
+
         [MenuItem("Bellerophon/Enemies/Ata/Capture Pistol Waist Geometry Diagnostic")]
         public static void CaptureAtaPistolWaistGeometryDiagnostic()
         {
@@ -144,6 +448,7 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             var slot = RequireDirectChild(placement.transform, SlotName);
             var model = RequireDirectChild(slot, ModelName);
             var clip = RequireSingleMixamoClip();
+            var shootingClip = RequireSingleMixamoClip(ShootingSourcePath);
             var destination = Absolute(WaistGeometryDiagnosticPath);
             if (File.Exists(destination))
             {
@@ -329,11 +634,263 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             CaptureReview(FinalPath, "AtaPistolHandTransferFinalCaptured");
         }
 
+        public static void CaptureAtaPistolLeftSideFillReview()
+        {
+            var scene = RequireScene(requireClean: true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var slot = RequireDirectChild(placement.transform, SlotName);
+            var model = RequireDirectChild(slot, ModelName);
+            var clip = RequireSingleMixamoClip();
+            var destination = Absolute(LeftSideFillReviewPath);
+            if (File.Exists(destination))
+            {
+                File.Delete(destination);
+            }
+
+            var result = CaptureStrip(
+                model,
+                slot,
+                clip,
+                destination,
+                keepPistolAtHand: true,
+                normalizedReviewTimes: new[]
+                {
+                    0.27f, 0.31f, 0.35f, 0.39f,
+                    0.43f, 0.47f, 0.51f, 0.55f,
+                    0.59f, 0.63f, 0.67f, 0.71f
+                });
+            if (scene.isDirty != wasDirty)
+            {
+                throw new InvalidOperationException(
+                    "Ata pistol left-side fill review changed the scene dirty state.");
+            }
+
+            Debug.Log(
+                "AtaPistolLeftSideFillReviewCaptured Result=PASS" +
+                ", Samples=12" +
+                ", MaximumSlotPositionError=" + Num(result.MaximumSlotPositionError) +
+                ", Image=" + LeftSideFillReviewPath +
+                ", SceneChanged=False.");
+        }
+
+        public static void CaptureAtaPistolLeftSideFillIsolatedReview()
+        {
+            var scene = RequireScene(requireClean: true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var slot = RequireDirectChild(placement.transform, SlotName);
+            var model = RequireDirectChild(slot, ModelName);
+            var clip = RequireSingleMixamoClip();
+            var animator = model.GetComponentsInChildren<Animator>(true).Single();
+            var animatorEnabled = animator.enabled;
+            var snapshots = model.GetComponentsInChildren<Transform>(true)
+                .Select(transform => new TransformSnapshot(transform))
+                .ToArray();
+            var destination = Absolute(
+                "docs/validation/ata04_pistol_left_fill_2026-08-12/Ata_04_PistolLeftSideFill_Isolated.png");
+            try
+            {
+                animator.enabled = false;
+                clip.SampleAnimation(model.gameObject, clip.length * 0.5f);
+                var driver = model.GetComponentInChildren<AtaPistolDrawConstraintDriver>(true) ??
+                             throw new InvalidOperationException(
+                                 "Ata pistol transfer driver is missing.");
+                driver.ApplyNormalizedPhase(0.5f);
+                var pistolRenderer = model.GetComponentsInChildren<MeshRenderer>(true)
+                    .Single(renderer => renderer.transform.name == PistolRootName);
+                CaptureIsolatedPistolGeometry(model, pistolRenderer, destination);
+            }
+            finally
+            {
+                foreach (var snapshot in snapshots)
+                {
+                    snapshot.Restore();
+                }
+
+                animator.enabled = animatorEnabled;
+            }
+
+            if (scene.isDirty != wasDirty)
+            {
+                throw new InvalidOperationException(
+                    "Ata isolated pistol fill review changed the scene dirty state.");
+            }
+
+            Debug.Log(
+                "AtaPistolLeftSideFillIsolatedReviewCaptured Result=PASS" +
+                ", Image=docs/validation/ata04_pistol_left_fill_2026-08-12/Ata_04_PistolLeftSideFill_Isolated.png" +
+                ", SceneChanged=False.");
+        }
+
+        public static void CaptureAtaShootingSourceDiagnostic()
+        {
+            var scene = RequireScene(requireClean: true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var slot = RequireDirectChild(placement.transform, SlotName);
+            var model = RequireDirectChild(slot, ModelName);
+            ConfigureMixamoImporter(ShootingSourcePath, false);
+            var clip = RequireSingleMixamoClip(ShootingSourcePath);
+            var bindingSummary = RequireBindingCompatibility(model, clip);
+            var destination = Absolute(ShootingSourceDiagnosticPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(destination) ??
+                                      throw new InvalidOperationException(
+                                          "Invalid Ata shooting diagnostic folder."));
+            if (File.Exists(destination))
+            {
+                File.Delete(destination);
+            }
+
+            var result = CaptureStrip(model, slot, clip, destination, true);
+            var recoilDestination = Absolute(ShootingRecoilDiagnosticPath);
+            if (File.Exists(recoilDestination))
+            {
+                File.Delete(recoilDestination);
+            }
+
+            CaptureStrip(
+                model,
+                slot,
+                clip,
+                recoilDestination,
+                true,
+                Enumerable.Range(0, 12)
+                    .Select(index => 0.18f + index * 0.02f)
+                    .ToArray());
+            if (scene.isDirty != wasDirty)
+            {
+                throw new InvalidOperationException(
+                    "Ata shooting source diagnostic changed the scene dirty state.");
+            }
+
+            Debug.Log(
+                "AtaShootingSourceDiagnosticCaptured Result=PASS" +
+                ", Clip=" + clip.name +
+                ", Duration=" + Num(clip.length) +
+                ", AnimatedPaths=" + bindingSummary.AnimatedPathCount +
+                ", VaryingCurves=" + bindingSummary.VaryingCurveCount +
+                ", MaximumSlotPositionError=" + Num(result.MaximumSlotPositionError) +
+                ", Image=" + ShootingSourceDiagnosticPath +
+                ", RecoilImage=" + ShootingRecoilDiagnosticPath +
+                ", SceneChanged=False.");
+        }
+
+        public static void InspectAtaShootingMotionTiming()
+        {
+            var scene = RequireScene(requireClean: true);
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var slot = RequireDirectChild(placement.transform, SlotName);
+            var model = RequireDirectChild(slot, ModelName);
+            var clip = RequireSingleMixamoClip(ShootingSourcePath);
+            var arm = model.Find("Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm") ??
+                      throw new InvalidOperationException("Ata shooting RightArm is missing.");
+            var forearm = arm.Find("RightForeArm") ??
+                          throw new InvalidOperationException("Ata shooting RightForeArm is missing.");
+            var hand = forearm.Find("RightHand") ??
+                       throw new InvalidOperationException("Ata shooting RightHand is missing.");
+            var head = model.Find("Armature/Hips/Spine02/Spine01/Spine/neck/Head") ??
+                       throw new InvalidOperationException("Ata shooting Head is missing.");
+            var snapshots = model.GetComponentsInChildren<Transform>(true)
+                .Select(transform => new TransformSnapshot(transform))
+                .ToArray();
+            var animator = model.GetComponent<Animator>();
+            var animatorEnabled = animator != null && animator.enabled;
+            try
+            {
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+
+                const int samples = 71;
+                var changes = new List<(int frame, float normalized, float arm, float forearm, float hand, float total)>();
+                Quaternion previousArm = default;
+                Quaternion previousForearm = default;
+                Quaternion previousHand = default;
+                for (var frame = 0; frame < samples; frame++)
+                {
+                    var normalized = frame / (float)(samples - 1);
+                    clip.SampleAnimation(model.gameObject, clip.length * normalized);
+                    if (frame > 0)
+                    {
+                        var armChange = Quaternion.Angle(previousArm, arm.localRotation);
+                        var forearmChange = Quaternion.Angle(previousForearm, forearm.localRotation);
+                        var handChange = Quaternion.Angle(previousHand, hand.localRotation);
+                        changes.Add((
+                            frame,
+                            normalized,
+                            armChange,
+                            forearmChange,
+                            handChange,
+                            armChange + forearmChange + handChange));
+                    }
+
+                    previousArm = arm.localRotation;
+                    previousForearm = forearm.localRotation;
+                    previousHand = hand.localRotation;
+                }
+
+                var peaks = changes
+                    .Where(change =>
+                    {
+                        var previous = changes[Mathf.Max(0, change.frame - 2)].total;
+                        var next = changes[Mathf.Min(changes.Count - 1, change.frame)].total;
+                        return change.total >= previous && change.total >= next;
+                    })
+                    .OrderByDescending(change => change.total)
+                    .Take(16)
+                    .OrderBy(change => change.frame)
+                    .Select(change =>
+                        "F" + change.frame +
+                        " N=" + Num(change.normalized) +
+                        " T=" + Num(change.total) +
+                        " A=" + Num(change.arm) +
+                        " FA=" + Num(change.forearm) +
+                        " H=" + Num(change.hand));
+                Debug.Log(
+                    "AtaShootingMotionTiming Result=PASS" +
+                    ", Clip=" + clip.name +
+                    ", Duration=" + Num(clip.length) +
+                    ", Samples=" + samples +
+                    ", Peaks=" + string.Join(";", peaks) +
+                    ", ModelForward=" + model.forward +
+                    ", HeadForward=" + head.forward +
+                    ", HeadUp=" + head.up +
+                    ", HeadRight=" + head.right +
+                    ", SceneChanged=False.");
+            }
+            finally
+            {
+                foreach (var snapshot in snapshots)
+                {
+                    snapshot.Restore();
+                }
+
+                if (animator != null)
+                {
+                    animator.enabled = animatorEnabled;
+                }
+            }
+
+            if (scene.isDirty != wasDirty)
+            {
+                throw new InvalidOperationException(
+                    "Ata shooting motion timing inspection changed the scene dirty state.");
+            }
+        }
+
         private static void ConfigureSourceImporterForLoop()
         {
-            var importer = AssetImporter.GetAtPath(SourcePath) as ModelImporter ??
+            ConfigureMixamoImporter(SourcePath, true);
+        }
+
+        private static void ConfigureMixamoImporter(string sourcePath, bool loopTime)
+        {
+            var importer = AssetImporter.GetAtPath(sourcePath) as ModelImporter ??
                            throw new InvalidOperationException(
-                               "The supplied Ata pistol FBX importer is unavailable.");
+                               "The supplied Ata FBX importer is unavailable: " + sourcePath);
             importer.importAnimation = true;
             var clips = importer.clipAnimations;
             if (clips == null || clips.Length == 0)
@@ -355,7 +912,7 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             }
 
             var selected = clips[mixamoIndices[0]];
-            selected.loopTime = true;
+            selected.loopTime = loopTime;
             selected.loopPose = false;
             selected.lockRootRotation = true;
             selected.lockRootHeightY = true;
@@ -367,7 +924,12 @@ namespace Bellerophon.Editor.AtaCargoRunScene
 
         private static AnimationClip RequireSingleMixamoClip()
         {
-            var clips = AssetDatabase.LoadAllAssetsAtPath(SourcePath)
+            return RequireSingleMixamoClip(SourcePath);
+        }
+
+        private static AnimationClip RequireSingleMixamoClip(string sourcePath)
+        {
+            var clips = AssetDatabase.LoadAllAssetsAtPath(sourcePath)
                 .OfType<AnimationClip>()
                 .Where(clip =>
                     !clip.name.StartsWith("__preview__", StringComparison.Ordinal) &&
@@ -376,7 +938,8 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             if (clips.Length != 1)
             {
                 throw new InvalidOperationException(
-                    "The imported Ata pistol FBX must expose exactly one mixamo-named animation clip. " +
+                    "The imported Ata FBX must expose exactly one mixamo-named animation clip. Source=" +
+                    sourcePath + ", " +
                     "Found=" + clips.Length +
                     ", Clips=" + string.Join(",", clips.Select(clip => clip.name)));
             }
@@ -455,7 +1018,9 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                 string.Join(";", largestCurveChanges));
         }
 
-        private static AnimatorController CreateController(AnimationClip clip)
+        private static AnimatorController CreateController(
+            AnimationClip clip,
+            AnimationClip shootingClip)
         {
             if (AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(ControllerPath) != null &&
                 !AssetDatabase.DeleteAsset(ControllerPath))
@@ -466,12 +1031,43 @@ namespace Bellerophon.Editor.AtaCargoRunScene
 
             var controller =
                 AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
-            var state = controller.layers[0].stateMachine.AddState("PistolAimAndFire");
+            var stateMachine = controller.layers[0].stateMachine;
+            var state = stateMachine.AddState(AimStateName);
             state.motion = clip;
             state.writeDefaultValues = false;
-            controller.layers[0].stateMachine.defaultState = state;
+            var shootingState = stateMachine.AddState(ShootingStateName);
+            shootingState.motion = shootingClip;
+            shootingState.speed = shootingClip.length / AtaPistolShotIntervalSeconds;
+            shootingState.writeDefaultValues = false;
+            var toShooting = state.AddTransition(shootingState);
+            ConfigureSequentialTransition(
+                toShooting,
+                AimToShootingTransitionSeconds,
+                1f,
+                1f - AimToShootingTransitionSeconds / AtaPistolShotIntervalSeconds);
+            var toStart = shootingState.AddTransition(state);
+            ConfigureSequentialTransition(
+                toStart,
+                ShootingToStartTransitionSeconds,
+                ShootingExitNormalized,
+                0f);
+            stateMachine.defaultState = state;
             EditorUtility.SetDirty(controller);
             return controller;
+        }
+
+        private static void ConfigureSequentialTransition(
+            AnimatorStateTransition transition,
+            float durationSeconds,
+            float exitTime,
+            float offset)
+        {
+            transition.hasExitTime = true;
+            transition.exitTime = exitTime;
+            transition.hasFixedDuration = true;
+            transition.duration = durationSeconds;
+            transition.offset = offset;
+            transition.canTransitionToSelf = false;
         }
 
         private static Animator ConfigureAnimator(
@@ -506,20 +1102,21 @@ namespace Bellerophon.Editor.AtaCargoRunScene
         private static PistolAssets ConfigurePistolGeometryAndConstraint(
             Transform model,
             Animator animator,
-            AnimationClip clip)
+            AnimationClip clip,
+            AnimationClip shootingClip)
         {
             var sourceRenderer = model.GetComponentsInChildren<SkinnedMeshRenderer>(true)
                 .SingleOrDefault() ??
                 throw new InvalidOperationException(
                     "Ata pistol setup requires exactly one skinned renderer.");
-            var sourcePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(SourcePath) ??
+            var sourcePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(AppearanceSourcePath) ??
                                throw new InvalidOperationException(
-                                   "The supplied Ata pistol FBX prefab is unavailable.");
+                                   "The original Ata appearance FBX prefab is unavailable.");
             var sourceMesh = sourcePrefab
                                  .GetComponentsInChildren<SkinnedMeshRenderer>(true)
                                  .SingleOrDefault()?.sharedMesh ??
                              throw new InvalidOperationException(
-                                 "Ata pistol source mesh is missing.");
+                                 "Ata original appearance mesh is missing.");
             var material = sourceRenderer.sharedMaterial ??
                            throw new InvalidOperationException(
                                "Ata pistol source material is missing.");
@@ -527,6 +1124,8 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                 .Select(transform => new TransformSnapshot(transform))
                 .ToArray();
             var animatorEnabled = animator.enabled;
+            var originalMesh = sourceRenderer.sharedMesh;
+            var completed = false;
             var baked = new Mesh();
             try
             {
@@ -537,28 +1136,44 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                 var pistolTriangles = SelectConfirmedPistolTriangles(
                     model,
                     sourceRenderer,
-                    baked);
-                if (pistolTriangles.Length / 3 != 279)
+                    baked,
+                    out var confirmedHandleTriangles);
+                if (pistolTriangles.Length / 3 != 307)
                 {
                     throw new InvalidOperationException(
-                        "Confirmed Ata pistol source triangle contract changed. Expected=279, Actual=" +
+                        "Ata pistol source or handle contract changed. Source=" +
                         (pistolTriangles.Length / 3));
                 }
 
+                var rightArmStretchComponents = FindRightArmStretchComponents(
+                    model,
+                    sourceRenderer,
+                    sourceMesh,
+                    baked,
+                    clip,
+                    shootingClip,
+                    pistolTriangles);
                 var bodyMesh = CreateBodyMeshWithoutPistol(
                     sourceMesh,
-                    pistolTriangles);
+                    pistolTriangles,
+                    sourceRenderer.bones,
+                    rightArmStretchComponents);
                 var pistolMesh = CreateRigidPistolMesh(
                     sourceMesh,
                     baked,
                     pistolTriangles,
-                    out var pivotLocal);
+                    confirmedHandleTriangles,
+                    out var pivotLocal,
+                    out var barrelVertexIndices,
+                    out var gripVertexIndices);
                 sourceRenderer.sharedMesh = bodyMesh;
                 EditorUtility.SetDirty(sourceRenderer);
 
                 DestroyNamedDescendant(model, PistolRootName);
                 DestroyNamedDescendant(model, HipAnchorName);
                 DestroyNamedDescendant(model, HandAnchorName);
+                DestroyNamedDescendant(model, RecoilRotationAnchorName);
+                DestroyNamedDescendant(model, MuzzleFlashName);
 
                 var rightUpLeg = model.Find("Armature/Hips/RightUpLeg") ??
                                  throw new InvalidOperationException(
@@ -567,6 +1182,13 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                     "Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm/RightForeArm/RightHand") ??
                                 throw new InvalidOperationException(
                                     "Ata RightHand bone is missing.");
+                var rightForeArm = rightHand.parent ??
+                                   throw new InvalidOperationException(
+                                       "Ata RightForeArm bone is missing.");
+                var head = model.Find(
+                    "Armature/Hips/Spine02/Spine01/Spine/neck/Head") ??
+                    throw new InvalidOperationException(
+                        "Ata Head bone is missing.");
                 var pistolRoot = new GameObject(
                     PistolRootName,
                     typeof(MeshFilter),
@@ -592,23 +1214,97 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                     HipAnchorName,
                     pistolRoot.transform.position,
                     pistolRoot.transform.rotation);
+                var visibleRightHandTipCenter = FindVisibleRightHandTipCenter(
+                    sourceRenderer,
+                    sourceMesh,
+                    baked,
+                    rightHand);
                 var handAnchor = CreatePoseAnchor(
                     rightHand,
                     HandAnchorName,
-                    rightHand.position,
+                    visibleRightHandTipCenter + model.up * HandContactLift,
                     pistolRoot.transform.rotation);
+                shootingClip.SampleAnimation(
+                    model.gameObject,
+                    shootingClip.length * ShootingForwardCalibrationNormalized);
+                // The Ispant_07 firing reference establishes the character's authored
+                // model-forward axis as the shot direction. Resolve the pistol's physical
+                // barrel/grip basis separately so its grip stays below that direction.
+                var pistolLocalAimBasis = ResolvePistolLocalAimBasis(
+                    pistolMesh,
+                    barrelVertexIndices,
+                    gripVertexIndices,
+                    out var muzzleCenter);
+                var animatedAimDirection = Vector3.ProjectOnPlane(
+                    model.forward,
+                    model.up).normalized;
+                var muzzleDirectionBefore = handAnchor.TransformDirection(
+                    pistolLocalAimBasis * Vector3.forward);
+                var angleBefore = Vector3.Angle(muzzleDirectionBefore, animatedAimDirection);
+                var pistolUp = model.up.normalized;
+                if (pistolUp.sqrMagnitude < 0.999f)
+                {
+                    throw new InvalidOperationException(
+                        "Ata pistol upright axis cannot be resolved from model up and gaze.");
+                }
+
+                var desiredWorldAimBasis = Quaternion.LookRotation(
+                    animatedAimDirection,
+                    pistolUp);
+                handAnchor.rotation = desiredWorldAimBasis *
+                                      Quaternion.Inverse(pistolLocalAimBasis);
+                // Keep the grip pivot on the animated hand, while inheriting the source
+                // shooting clip's arm/forearm rotation so its authored recoil remains visible.
+                var recoilRotationAnchor = CreatePoseAnchor(
+                    rightForeArm,
+                    RecoilRotationAnchorName,
+                    handAnchor.position,
+                    handAnchor.rotation);
+                var angleAfter = Vector3.Angle(
+                    handAnchor.TransformDirection(pistolLocalAimBasis * Vector3.forward),
+                    animatedAimDirection);
+                var uprightAngleAfter = Vector3.Angle(
+                    handAnchor.TransformDirection(pistolLocalAimBasis * Vector3.up),
+                    pistolUp);
+                Debug.Log(
+                    "AtaPistolForwardAlignment: Target=AtaVisualFaceForwardGazeAndPhysicalPistolUp" +
+                    ", ShootingNormalized=" + ShootingForwardCalibrationNormalized +
+                    ", BeforeAngle=" + angleBefore.ToString("0.######") +
+                    ", AfterAngle=" + angleAfter.ToString("0.######") +
+                    ", UprightAngleAfter=" + uprightAngleAfter.ToString("0.######"));
+                clip.SampleAnimation(model.gameObject, 0f);
                 var driver = pistolRoot.GetComponent<AtaPistolDrawConstraintDriver>();
-                driver.Configure(animator, hipAnchor, handAnchor);
+                driver.Configure(
+                    animator,
+                    hipAnchor,
+                    handAnchor,
+                    recoilRotationAnchor,
+                    head,
+                    model,
+                    pistolLocalAimBasis,
+                    AimStateName,
+                    ShootingStateName);
                 driver.ApplyNormalizedPhase(0f);
                 EditorUtility.SetDirty(driver);
+                CreateMuzzleFlash(
+                    pistolRoot.transform,
+                    muzzleCenter,
+                    pistolLocalAimBasis,
+                    animator);
 
+                completed = true;
                 return new PistolAssets(
                     bodyMesh,
                     pistolMesh,
-                    pistolTriangles.Length / 3);
+                    pistolMesh.triangles.Length / 3);
             }
             finally
             {
+                if (!completed)
+                {
+                    sourceRenderer.sharedMesh = originalMesh;
+                }
+
                 UnityEngine.Object.DestroyImmediate(baked);
                 foreach (var snapshot in snapshots)
                 {
@@ -622,7 +1318,8 @@ namespace Bellerophon.Editor.AtaCargoRunScene
         private static int[] SelectConfirmedPistolTriangles(
             Transform model,
             SkinnedMeshRenderer renderer,
-            Mesh baked)
+            Mesh baked,
+            out HashSet<(int, int, int)> confirmedHandleTriangles)
         {
             var source = renderer.sharedMesh;
             var vertices = baked.vertices;
@@ -687,14 +1384,84 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                 UnityEngine.Object.DestroyImmediate(texture);
             }
 
-            return SplitSelectedTriangleComponents(source.vertices, selected)
+            var pistolBody = SplitSelectedTriangleComponents(source.vertices, selected)
                 .OrderByDescending(component => component.Length)
                 .First();
+            var pistolBodyTriangles = Enumerable.Range(0, pistolBody.Length / 3)
+                .Select(index => (
+                    pistolBody[index * 3],
+                    pistolBody[index * 3 + 1],
+                    pistolBody[index * 3 + 2]))
+                .ToHashSet();
+            var residualTriangles = new List<int>(triangles.Length - pistolBody.Length);
+            for (var index = 0; index < triangles.Length; index += 3)
+            {
+                if (pistolBodyTriangles.Contains((
+                        triangles[index],
+                        triangles[index + 1],
+                        triangles[index + 2])))
+                {
+                    continue;
+                }
+
+                residualTriangles.Add(triangles[index]);
+                residualTriangles.Add(triangles[index + 1]);
+                residualTriangles.Add(triangles[index + 2]);
+            }
+
+            // The user-confirmed grip is the complete folded metal component shown in
+            // 11111.png, not the smaller detached six-triangle fragment selected before.
+            var handleCandidates = SplitSelectedTriangleComponents(
+                    source.vertices,
+                    residualTriangles)
+                .Where(component =>
+                    component.Length / 3 == 28)
+                .Select(component =>
+                {
+                    var indices = component.Distinct().ToArray();
+                    var rightLegWeight = indices.Average(index =>
+                        WeightForBone(weights[index], rightUpLegIndex));
+                    return (component, indices, rightLegWeight);
+                })
+                .ToArray();
+            if (handleCandidates.Length != 1)
+            {
+                var residualComponentShapes = SplitSelectedTriangleComponents(
+                        source.vertices,
+                        residualTriangles)
+                    .Select(component =>
+                    {
+                        var indices = component.Distinct().ToArray();
+                        return "T" + (component.Length / 3) +
+                               "V" + indices.Length +
+                               "RightLeg=" + Num(indices.Average(index =>
+                                   WeightForBone(weights[index], rightUpLegIndex))) +
+                               "SourceCenter=" + Vec(indices
+                                   .Select(index => source.vertices[index])
+                                   .Aggregate(Vector3.zero, (sum, point) => sum + point) /
+                                   indices.Length);
+                    });
+                throw new InvalidOperationException(
+                    "Confirmed Ata pistol handle component count differs. Count=" +
+                    handleCandidates.Length +
+                    ", ResidualShapes=" + string.Join(";", residualComponentShapes));
+            }
+
+            var handle = handleCandidates[0];
+            confirmedHandleTriangles = Enumerable.Range(0, handle.component.Length / 3)
+                .Select(index => (
+                    handle.component[index * 3],
+                    handle.component[index * 3 + 1],
+                    handle.component[index * 3 + 2]))
+                .ToHashSet();
+            return pistolBody.Concat(handle.component).ToArray();
         }
 
         private static Mesh CreateBodyMeshWithoutPistol(
             Mesh source,
-            IReadOnlyList<int> pistolTriangles)
+            IReadOnlyList<int> pistolTriangles,
+            IReadOnlyList<Transform> bones,
+            IReadOnlyList<int[]> rightArmStretchComponents)
         {
             if (AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(BodyMeshPath) != null &&
                 !AssetDatabase.DeleteAsset(BodyMeshPath))
@@ -730,15 +1497,327 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             }
 
             body.SetTriangles(remaining, 0, true);
+            BindStretchComponentsRigidlyToDominantBone(
+                body,
+                bones,
+                rightArmStretchComponents);
             AssetDatabase.CreateAsset(body, BodyMeshPath);
             return body;
+        }
+
+        private static List<int[]> FindRightArmStretchComponents(
+            Transform model,
+            SkinnedMeshRenderer renderer,
+            Mesh source,
+            Mesh referencePose,
+            AnimationClip aimClip,
+            AnimationClip shootingClip,
+            IReadOnlyList<int> pistolTriangles)
+        {
+            var triangles = source.GetTriangles(0);
+            var pistol = Enumerable.Range(0, pistolTriangles.Count / 3)
+                .Select(index => (
+                    pistolTriangles[index * 3],
+                    pistolTriangles[index * 3 + 1],
+                    pistolTriangles[index * 3 + 2]))
+                .ToHashSet();
+            var bodyTriangles = new List<int>(triangles.Length - pistolTriangles.Count);
+            for (var index = 0; index < triangles.Length; index += 3)
+            {
+                var triangle = (
+                    triangles[index],
+                    triangles[index + 1],
+                    triangles[index + 2]);
+                if (!pistol.Contains(triangle))
+                {
+                    bodyTriangles.Add(triangle.Item1);
+                    bodyTriangles.Add(triangle.Item2);
+                    bodyTriangles.Add(triangle.Item3);
+                }
+            }
+
+            var rightArmBones = renderer.bones
+                .Select((bone, index) => (bone, index))
+                .Where(item => item.bone != null &&
+                               (item.bone.name == "RightShoulder" ||
+                                item.bone.name == "RightArm" ||
+                                item.bone.name == "RightForeArm" ||
+                                item.bone.name == "RightHand"))
+                .Select(item => item.index)
+                .ToHashSet();
+            if (rightArmBones.Count != 4)
+            {
+                throw new InvalidOperationException(
+                    "Ata right-arm stretch correction requires the four anatomical right-arm bones.");
+            }
+
+            var weights = source.boneWeights;
+            var referenceVertices = referencePose.vertices;
+            var bodyDiagonal = referencePose.bounds.size.magnitude;
+            var stretched = new HashSet<(int, int, int)>();
+            var maximumRatio = 1f;
+            var sample = new Mesh();
+            var transforms = model.GetComponentsInChildren<Transform>(true);
+            try
+            {
+                void DetectCurrentPose()
+                {
+                    renderer.BakeMesh(sample, false);
+                    var posedVertices = sample.vertices;
+                    for (var index = 0; index < bodyTriangles.Count; index += 3)
+                    {
+                        var triangle = (
+                            bodyTriangles[index],
+                            bodyTriangles[index + 1],
+                            bodyTriangles[index + 2]);
+                        if (!TriangleHasBoneWeight(triangle, weights, rightArmBones))
+                        {
+                            continue;
+                        }
+
+                        var referenceEdge = TriangleMaximumEdge(referenceVertices, triangle);
+                        if (referenceEdge <= 0.000001f)
+                        {
+                            continue;
+                        }
+
+                        var posedEdge = TriangleMaximumEdge(posedVertices, triangle);
+                        var ratio = posedEdge / referenceEdge;
+                        maximumRatio = Mathf.Max(maximumRatio, ratio);
+                        if (ratio >= 1.75f &&
+                            posedEdge - referenceEdge >= bodyDiagonal * 0.025f)
+                        {
+                            stretched.Add(triangle);
+                        }
+                    }
+                }
+
+                const int sampleCount = 24;
+                for (var sampleIndex = 0; sampleIndex <= sampleCount; sampleIndex++)
+                {
+                    aimClip.SampleAnimation(
+                        model.gameObject,
+                        aimClip.length * sampleIndex / sampleCount);
+                    DetectCurrentPose();
+                    shootingClip.SampleAnimation(
+                        model.gameObject,
+                        shootingClip.length * sampleIndex / sampleCount);
+                    DetectCurrentPose();
+                }
+
+                aimClip.SampleAnimation(model.gameObject, aimClip.length);
+                var aimEndPositions = transforms.Select(item => item.localPosition).ToArray();
+                var aimEndRotations = transforms.Select(item => item.localRotation).ToArray();
+                var aimEndScales = transforms.Select(item => item.localScale).ToArray();
+                aimClip.SampleAnimation(model.gameObject, 0f);
+                var aimStartPositions = transforms.Select(item => item.localPosition).ToArray();
+                var aimStartRotations = transforms.Select(item => item.localRotation).ToArray();
+                var aimStartScales = transforms.Select(item => item.localScale).ToArray();
+                for (var sampleIndex = 0; sampleIndex <= sampleCount; sampleIndex++)
+                {
+                    var blend = sampleIndex / (float)sampleCount;
+                    var shootingNormalized = Mathf.Lerp(
+                        1f - AimToShootingTransitionSeconds / AtaPistolShotIntervalSeconds,
+                        1f,
+                        blend);
+                    shootingClip.SampleAnimation(
+                        model.gameObject,
+                        shootingClip.length * shootingNormalized);
+                    BlendCurrentPoseFrom(
+                        transforms,
+                        aimEndPositions,
+                        aimEndRotations,
+                        aimEndScales,
+                        blend);
+                    DetectCurrentPose();
+
+                    shootingClip.SampleAnimation(model.gameObject, shootingClip.length);
+                    BlendCurrentPoseTo(
+                        transforms,
+                        aimStartPositions,
+                        aimStartRotations,
+                        aimStartScales,
+                        blend);
+                    DetectCurrentPose();
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sample);
+            }
+
+            var components = SplitTriangleIndexEdgeComponents(bodyTriangles)
+                .Where(component => Enumerable.Range(0, component.Length / 3)
+                    .Any(index => stretched.Contains((
+                        component[index * 3],
+                        component[index * 3 + 1],
+                        component[index * 3 + 2]))))
+                .ToList();
+            if (stretched.Count == 0 || components.Count == 0 ||
+                components.Any(component => component.Length / 3 > 64) ||
+                components.Sum(component => component.Length / 3) > 512)
+            {
+                throw new InvalidOperationException(
+                    "Ata right-arm stretch components exceed the narrow correction contract. " +
+                    "StretchedTriangles=" + stretched.Count +
+                    ", Components=" + components.Count +
+                    ", ComponentTriangles=" + string.Join(",",
+                        components.Select(component => component.Length / 3)) +
+                    ", MaximumRatio=" + Num(maximumRatio));
+            }
+
+            Debug.Log(
+                "AtaRightArmStretchComponentsDetected" +
+                ", AnatomicalSide=Right" +
+                ", StretchedTriangles=" + stretched.Count +
+                ", Components=" + components.Count +
+                ", ComponentTriangles=" + string.Join(",",
+                    components.Select(component => component.Length / 3)) +
+                ", MaximumRatio=" + Num(maximumRatio));
+            return components;
+        }
+
+        private static void BindStretchComponentsRigidlyToDominantBone(
+            Mesh body,
+            IReadOnlyList<Transform> bones,
+            IReadOnlyList<int[]> components)
+        {
+            var weights = body.boneWeights;
+            var bindings = new List<string>();
+            foreach (var component in components)
+            {
+                var vertices = component.Distinct().ToArray();
+                var totals = new Dictionary<int, float>();
+                foreach (var vertex in vertices)
+                {
+                    var weight = weights[vertex];
+                    AccumulateBoneWeight(totals, weight.boneIndex0, weight.weight0);
+                    AccumulateBoneWeight(totals, weight.boneIndex1, weight.weight1);
+                    AccumulateBoneWeight(totals, weight.boneIndex2, weight.weight2);
+                    AccumulateBoneWeight(totals, weight.boneIndex3, weight.weight3);
+                }
+
+                var dominant = totals.OrderByDescending(item => item.Value).First();
+                if (dominant.Key < 0 || dominant.Key >= bones.Count ||
+                    bones[dominant.Key] == null || dominant.Value <= 0.001f)
+                {
+                    throw new InvalidOperationException(
+                        "Ata stretch component dominant skin bone cannot be resolved.");
+                }
+
+                foreach (var vertex in vertices)
+                {
+                    weights[vertex] = new BoneWeight
+                    {
+                        boneIndex0 = dominant.Key,
+                        weight0 = 1f
+                    };
+                }
+
+                bindings.Add(
+                    bones[dominant.Key].name + ":T" + (component.Length / 3) +
+                    "V" + vertices.Length);
+            }
+
+            body.boneWeights = weights;
+            Debug.Log(
+                "AtaRightArmStretchComponentsRigidBoundToExistingDominantBone" +
+                ", Components=" + components.Count +
+                ", Bindings=" + string.Join(",", bindings));
+        }
+
+        private static void AccumulateBoneWeight(
+            IDictionary<int, float> totals,
+            int boneIndex,
+            float weight)
+        {
+            if (weight <= 0f)
+            {
+                return;
+            }
+
+            if (!totals.TryGetValue(boneIndex, out var total))
+            {
+                total = 0f;
+            }
+
+            totals[boneIndex] = total + weight;
+        }
+
+        private static void BlendCurrentPoseFrom(
+            IReadOnlyList<Transform> transforms,
+            IReadOnlyList<Vector3> positions,
+            IReadOnlyList<Quaternion> rotations,
+            IReadOnlyList<Vector3> scales,
+            float blend)
+        {
+            for (var index = 0; index < transforms.Count; index++)
+            {
+                transforms[index].localPosition = Vector3.Lerp(
+                    positions[index], transforms[index].localPosition, blend);
+                transforms[index].localRotation = Quaternion.Slerp(
+                    rotations[index], transforms[index].localRotation, blend);
+                transforms[index].localScale = Vector3.Lerp(
+                    scales[index], transforms[index].localScale, blend);
+            }
+        }
+
+        private static void BlendCurrentPoseTo(
+            IReadOnlyList<Transform> transforms,
+            IReadOnlyList<Vector3> positions,
+            IReadOnlyList<Quaternion> rotations,
+            IReadOnlyList<Vector3> scales,
+            float blend)
+        {
+            for (var index = 0; index < transforms.Count; index++)
+            {
+                transforms[index].localPosition = Vector3.Lerp(
+                    transforms[index].localPosition, positions[index], blend);
+                transforms[index].localRotation = Quaternion.Slerp(
+                    transforms[index].localRotation, rotations[index], blend);
+                transforms[index].localScale = Vector3.Lerp(
+                    transforms[index].localScale, scales[index], blend);
+            }
+        }
+
+        private static bool TriangleHasBoneWeight(
+            (int, int, int) triangle,
+            IReadOnlyList<BoneWeight> weights,
+            ISet<int> boneIndices)
+        {
+            return VertexHasBoneWeight(weights[triangle.Item1], boneIndices) ||
+                   VertexHasBoneWeight(weights[triangle.Item2], boneIndices) ||
+                   VertexHasBoneWeight(weights[triangle.Item3], boneIndices);
+        }
+
+        private static bool VertexHasBoneWeight(
+            BoneWeight weight,
+            ISet<int> boneIndices)
+        {
+            return (weight.weight0 > 0.001f && boneIndices.Contains(weight.boneIndex0)) ||
+                   (weight.weight1 > 0.001f && boneIndices.Contains(weight.boneIndex1)) ||
+                   (weight.weight2 > 0.001f && boneIndices.Contains(weight.boneIndex2)) ||
+                   (weight.weight3 > 0.001f && boneIndices.Contains(weight.boneIndex3));
+        }
+
+        private static float TriangleMaximumEdge(
+            IReadOnlyList<Vector3> vertices,
+            (int, int, int) triangle)
+        {
+            return Mathf.Max(
+                Vector3.Distance(vertices[triangle.Item1], vertices[triangle.Item2]),
+                Vector3.Distance(vertices[triangle.Item2], vertices[triangle.Item3]),
+                Vector3.Distance(vertices[triangle.Item3], vertices[triangle.Item1]));
         }
 
         private static Mesh CreateRigidPistolMesh(
             Mesh source,
             Mesh baked,
             IReadOnlyList<int> pistolTriangles,
-            out Vector3 pivotLocal)
+            ISet<(int, int, int)> confirmedHandleTriangles,
+            out Vector3 pivotLocal,
+            out int[] barrelVertexIndices,
+            out int[] gripVertexIndices)
         {
             if (AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(PistolMeshPath) != null &&
                 !AssetDatabase.DeleteAsset(PistolMeshPath))
@@ -763,32 +1842,129 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             var remap = sourceIndices
                 .Select((sourceIndex, localIndex) => (sourceIndex, localIndex))
                 .ToDictionary(value => value.sourceIndex, value => value.localIndex);
+            var barrelSourceIndices = new HashSet<int>();
+            var gripSourceIndices = new HashSet<int>();
+            var barrelTriangleCount = 0;
+            var gripTriangleCount = 0;
+            for (var index = 0; index < pistolTriangles.Count; index += 3)
+            {
+                var triangle = (
+                    pistolTriangles[index],
+                    pistolTriangles[index + 1],
+                    pistolTriangles[index + 2]);
+                var target = confirmedHandleTriangles.Contains(triangle)
+                    ? gripSourceIndices
+                    : barrelSourceIndices;
+                target.Add(triangle.Item1);
+                target.Add(triangle.Item2);
+                target.Add(triangle.Item3);
+                if (target == gripSourceIndices)
+                {
+                    gripTriangleCount++;
+                }
+                else
+                {
+                    barrelTriangleCount++;
+                }
+            }
+
+            if (barrelTriangleCount != 279 || gripTriangleCount != 28)
+            {
+                throw new InvalidOperationException(
+                    "Ata pistol rigid barrel/grip split changed. Barrel=" +
+                    barrelTriangleCount + ", Grip=" + gripTriangleCount);
+            }
+
+            barrelVertexIndices = barrelSourceIndices
+                .Select(index => remap[index])
+                .ToArray();
+            gripVertexIndices = gripSourceIndices
+                .Select(index => remap[index])
+                .ToArray();
+            var stablePistolTriangles = RemovePistolLineArtifacts(
+                sourceVertices,
+                pistolTriangles,
+                confirmedHandleTriangles);
+            var stableBarrelVertexIndices = Enumerable.Range(
+                    0,
+                    stablePistolTriangles.Length / 3)
+                .Select(index => (
+                    stablePistolTriangles[index * 3],
+                    stablePistolTriangles[index * 3 + 1],
+                    stablePistolTriangles[index * 3 + 2]))
+                .Where(triangle => !confirmedHandleTriangles.Contains(triangle))
+                .SelectMany(triangle => new[]
+                {
+                    triangle.Item1,
+                    triangle.Item2,
+                    triangle.Item3
+                })
+                .Distinct()
+                .Select(index => remap[index])
+                .ToArray();
+            var stableBarrelTriangles = Enumerable.Range(
+                    0,
+                    stablePistolTriangles.Length / 3)
+                .Select(index => (
+                    stablePistolTriangles[index * 3],
+                    stablePistolTriangles[index * 3 + 1],
+                    stablePistolTriangles[index * 3 + 2]))
+                .Where(triangle => !confirmedHandleTriangles.Contains(triangle))
+                .SelectMany(triangle => new[]
+                {
+                    remap[triangle.Item1],
+                    remap[triangle.Item2],
+                    remap[triangle.Item3]
+                })
+                .ToArray();
+            var meshVertices = sourceIndices
+                .Select(index => sourceVertices[index] - rigidPivot)
+                .ToList();
+            var meshTriangles = pistolTriangles
+                .Select(index => remap[index])
+                .ToList();
+            var fillAttributeSourceIndices = AddMirroredPistolLeftSide(
+                meshVertices,
+                meshTriangles,
+                stableBarrelTriangles,
+                stableBarrelVertexIndices,
+                gripVertexIndices)
+                .Select(localIndex => sourceIndices[localIndex])
+                .ToArray();
+            barrelVertexIndices = stableBarrelVertexIndices;
             var mesh = new Mesh
             {
                 name = "Ata_04_PistolAimAndFire_RigidPistol",
-                indexFormat = sourceIndices.Length > ushort.MaxValue
+                indexFormat = meshVertices.Count > ushort.MaxValue
                     ? UnityEngine.Rendering.IndexFormat.UInt32
                     : UnityEngine.Rendering.IndexFormat.UInt16,
-                vertices = sourceIndices
-                    .Select(index => sourceVertices[index] - rigidPivot)
-                    .ToArray()
+                vertices = meshVertices.ToArray()
             };
             var normals = baked.normals;
             if (normals.Length == source.vertexCount)
             {
-                mesh.normals = sourceIndices.Select(index => normals[index]).ToArray();
+                var meshNormals = sourceIndices.Select(index => normals[index]).ToList();
+                meshNormals.AddRange(fillAttributeSourceIndices.Select(index => normals[index]));
+
+                mesh.normals = meshNormals.ToArray();
             }
 
             var tangents = baked.tangents;
             if (tangents.Length == source.vertexCount)
             {
-                mesh.tangents = sourceIndices.Select(index => tangents[index]).ToArray();
+                var meshTangents = sourceIndices.Select(index => tangents[index]).ToList();
+                meshTangents.AddRange(fillAttributeSourceIndices.Select(index => tangents[index]));
+
+                mesh.tangents = meshTangents.ToArray();
             }
 
             var colors = source.colors32;
             if (colors.Length == source.vertexCount)
             {
-                mesh.colors32 = sourceIndices.Select(index => colors[index]).ToArray();
+                var meshColors = sourceIndices.Select(index => colors[index]).ToList();
+                meshColors.AddRange(fillAttributeSourceIndices.Select(index => colors[index]));
+
+                mesh.colors32 = meshColors.ToArray();
             }
 
             for (var channel = 0; channel < 8; channel++)
@@ -797,18 +1973,378 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                 source.GetUVs(channel, uv);
                 if (uv.Count == source.vertexCount)
                 {
-                    mesh.SetUVs(
-                        channel,
-                        sourceIndices.Select(index => uv[index]).ToArray());
+                    var meshUv = sourceIndices.Select(index => uv[index]).ToList();
+                    if (channel == 0)
+                    {
+                        meshUv.AddRange(fillAttributeSourceIndices.Select(index => uv[index]));
+                    }
+                    else
+                    {
+                        meshUv.AddRange(fillAttributeSourceIndices.Select(index => uv[index]));
+                    }
+
+                    mesh.SetUVs(channel, meshUv);
                 }
             }
 
-            mesh.SetTriangles(
-                pistolTriangles.Select(index => remap[index]).ToArray(),
-                0,
-                true);
+            mesh.SetTriangles(meshTriangles, 0, true);
+            mesh.RecalculateNormals();
+            mesh.RecalculateTangents();
+            mesh.RecalculateBounds();
             AssetDatabase.CreateAsset(mesh, PistolMeshPath);
             return mesh;
+        }
+
+        private static string DescribeOpenBoundaryComponents(
+            IReadOnlyList<Vector3> vertices,
+            IReadOnlyList<int> triangles,
+            IReadOnlyList<int> barrelVertexIndices,
+            IReadOnlyList<int> gripVertexIndices)
+        {
+            ResolvePistolGeometryBasis(
+                vertices,
+                barrelVertexIndices,
+                gripVertexIndices,
+                out var forward,
+                out var upright,
+                out var right);
+            return string.Join(
+                ";",
+                FindOpenBoundaryComponents(triangles, barrelVertexIndices)
+                    .Select((component, index) =>
+                    {
+                        var forwardValues = component
+                            .Select(vertex => Vector3.Dot(vertices[vertex], forward))
+                            .ToArray();
+                        var uprightValues = component
+                            .Select(vertex => Vector3.Dot(vertices[vertex], upright))
+                            .ToArray();
+                        var rightValues = component
+                            .Select(vertex => Vector3.Dot(vertices[vertex], right))
+                            .ToArray();
+                        return "B" + index +
+                               "V" + component.Length +
+                               " F=" + Num(forwardValues.Max() - forwardValues.Min()) +
+                               " U=" + Num(uprightValues.Max() - uprightValues.Min()) +
+                               " R=" + Num(rightValues.Max() - rightValues.Min()) +
+                               " MeanR=" + Num(rightValues.Average());
+                    }));
+        }
+
+        private static void ResolvePistolGeometryBasis(
+            IReadOnlyList<Vector3> vertices,
+            IReadOnlyList<int> barrelVertexIndices,
+            IReadOnlyList<int> gripVertexIndices,
+            out Vector3 forward,
+            out Vector3 upright,
+            out Vector3 right)
+        {
+            var barrelVertices = barrelVertexIndices.Select(index => vertices[index]).ToArray();
+            var barrelCenter = barrelVertices.Aggregate(
+                                   Vector3.zero,
+                                   (sum, vertex) => sum + vertex) /
+                               barrelVertices.Length;
+            var gripCenter = gripVertexIndices
+                                 .Select(index => vertices[index])
+                                 .Aggregate(Vector3.zero, (sum, vertex) => sum + vertex) /
+                             gripVertexIndices.Count;
+            var endpointA = barrelVertices[0];
+            var endpointB = barrelVertices[0];
+            var maximumDistanceSquared = 0f;
+            for (var first = 0; first < barrelVertices.Length; first++)
+            {
+                for (var second = first + 1; second < barrelVertices.Length; second++)
+                {
+                    var distanceSquared =
+                        (barrelVertices[second] - barrelVertices[first]).sqrMagnitude;
+                    if (distanceSquared <= maximumDistanceSquared)
+                    {
+                        continue;
+                    }
+
+                    maximumDistanceSquared = distanceSquared;
+                    endpointA = barrelVertices[first];
+                    endpointB = barrelVertices[second];
+                }
+            }
+
+            var endpointAIsRear = (endpointA - gripCenter).sqrMagnitude <=
+                                  (endpointB - gripCenter).sqrMagnitude;
+            forward = ((endpointAIsRear ? endpointB : endpointA) -
+                       (endpointAIsRear ? endpointA : endpointB)).normalized;
+            upright = -Vector3.ProjectOnPlane(
+                gripCenter - barrelCenter,
+                forward).normalized;
+            right = Vector3.Cross(upright, forward).normalized;
+        }
+
+        private static int[][] FindOpenBoundaryComponents(
+            IReadOnlyList<int> triangles,
+            IReadOnlyList<int> barrelVertexIndices)
+        {
+            var barrel = new HashSet<int>(barrelVertexIndices);
+            var edgeCounts = new Dictionary<(int, int), int>();
+            for (var index = 0; index < triangles.Count; index += 3)
+            {
+                var a = triangles[index];
+                var b = triangles[index + 1];
+                var c = triangles[index + 2];
+                if (!barrel.Contains(a) || !barrel.Contains(b) || !barrel.Contains(c))
+                {
+                    continue;
+                }
+
+                CountEdge(edgeCounts, a, b);
+                CountEdge(edgeCounts, b, c);
+                CountEdge(edgeCounts, c, a);
+            }
+
+            var adjacency = new Dictionary<int, HashSet<int>>();
+            foreach (var edge in edgeCounts.Where(pair => pair.Value == 1).Select(pair => pair.Key))
+            {
+                AddNeighbor(adjacency, edge.Item1, edge.Item2);
+                AddNeighbor(adjacency, edge.Item2, edge.Item1);
+            }
+
+            var components = new List<int[]>();
+            var unvisited = new HashSet<int>(adjacency.Keys);
+            while (unvisited.Count > 0)
+            {
+                var pending = new Stack<int>();
+                var component = new List<int>();
+                pending.Push(unvisited.First());
+                while (pending.Count > 0)
+                {
+                    var vertex = pending.Pop();
+                    if (!unvisited.Remove(vertex))
+                    {
+                        continue;
+                    }
+
+                    component.Add(vertex);
+                    foreach (var neighbor in adjacency[vertex])
+                    {
+                        pending.Push(neighbor);
+                    }
+                }
+
+                components.Add(component.ToArray());
+            }
+
+            return components.OrderByDescending(component => component.Length).ToArray();
+        }
+
+        private static void CountEdge(
+            IDictionary<(int, int), int> counts,
+            int first,
+            int second)
+        {
+            var edge = first <= second ? (first, second) : (second, first);
+            counts[edge] = counts.TryGetValue(edge, out var count) ? count + 1 : 1;
+        }
+
+        private static void AddNeighbor(
+            IDictionary<int, HashSet<int>> adjacency,
+            int vertex,
+            int neighbor)
+        {
+            if (!adjacency.TryGetValue(vertex, out var neighbors))
+            {
+                neighbors = new HashSet<int>();
+                adjacency.Add(vertex, neighbors);
+            }
+
+            neighbors.Add(neighbor);
+        }
+
+        private static int[] AddMirroredPistolLeftSide(
+            IList<Vector3> vertices,
+            ICollection<int> triangles,
+            IReadOnlyList<int> stableBarrelTriangles,
+            IReadOnlyList<int> barrelVertexIndices,
+            IReadOnlyList<int> gripVertexIndices)
+        {
+            var barrelVertices = barrelVertexIndices.Select(index => vertices[index]).ToArray();
+            var gripCenter = gripVertexIndices
+                                 .Select(index => vertices[index])
+                                 .Aggregate(Vector3.zero, (sum, vertex) => sum + vertex) /
+                             gripVertexIndices.Count;
+            var barrelCenter = barrelVertices.Aggregate(
+                                   Vector3.zero,
+                                   (sum, vertex) => sum + vertex) /
+                               barrelVertices.Length;
+            var forward = ResolvePrincipalAxis(barrelVertices, barrelCenter);
+            var positiveEnd = barrelVertices
+                .OrderByDescending(vertex => Vector3.Dot(vertex - barrelCenter, forward))
+                .First();
+            var negativeEnd = barrelVertices
+                .OrderBy(vertex => Vector3.Dot(vertex - barrelCenter, forward))
+                .First();
+            if ((positiveEnd - gripCenter).sqrMagnitude <
+                (negativeEnd - gripCenter).sqrMagnitude)
+            {
+                forward = -forward;
+            }
+            var upright = -Vector3.ProjectOnPlane(
+                gripCenter - barrelCenter,
+                forward).normalized;
+            var right = Vector3.Cross(upright, forward).normalized;
+            if (forward.sqrMagnitude < 0.999f ||
+                upright.sqrMagnitude < 0.999f ||
+                right.sqrMagnitude < 0.999f)
+            {
+                throw new InvalidOperationException(
+                    "The Ata pistol left-side fill basis could not be resolved.");
+            }
+
+            var rightValues = barrelVertices
+                .Select(vertex => Vector3.Dot(vertex, right))
+                .OrderBy(value => value)
+                .ToArray();
+            var centerRight = Percentile(rightValues, 0.50f);
+            var sourceSideTriangles = Enumerable.Range(
+                    0,
+                    stableBarrelTriangles.Count / 3)
+                .Select(index => new[]
+                {
+                    stableBarrelTriangles[index * 3],
+                    stableBarrelTriangles[index * 3 + 1],
+                    stableBarrelTriangles[index * 3 + 2]
+                })
+                .Where(triangle => triangle
+                    .Select(index => Vector3.Dot(vertices[index], right))
+                    .Average() > centerRight)
+                .ToArray();
+            if (sourceSideTriangles.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "The Ata pistol source side could not be resolved for mirroring.");
+            }
+
+            var mirroredSourceVertices = sourceSideTriangles
+                .SelectMany(triangle => triangle)
+                .Distinct()
+                .ToArray();
+            var startIndex = vertices.Count;
+            var mirrorMap = mirroredSourceVertices
+                .Select((sourceIndex, offset) => (sourceIndex, targetIndex: startIndex + offset))
+                .ToDictionary(value => value.sourceIndex, value => value.targetIndex);
+            foreach (var sourceIndex in mirroredSourceVertices)
+            {
+                var sourceVertex = vertices[sourceIndex];
+                var rightProjection = Vector3.Dot(sourceVertex, right);
+                vertices.Add(sourceVertex - right * (2f * (rightProjection - centerRight)));
+            }
+
+            foreach (var triangle in sourceSideTriangles)
+            {
+                triangles.Add(mirrorMap[triangle[0]]);
+                triangles.Add(mirrorMap[triangle[2]]);
+                triangles.Add(mirrorMap[triangle[1]]);
+            }
+
+            return mirroredSourceVertices;
+        }
+
+        private static Vector3 ResolvePrincipalAxis(
+            IReadOnlyList<Vector3> points,
+            Vector3 center)
+        {
+            var axis = Vector3.right;
+            for (var iteration = 0; iteration < 16; iteration++)
+            {
+                var transformed = Vector3.zero;
+                foreach (var point in points)
+                {
+                    var offset = point - center;
+                    transformed += offset * Vector3.Dot(offset, axis);
+                }
+
+                if (transformed.sqrMagnitude <= 0.0000000001f)
+                {
+                    throw new InvalidOperationException(
+                        "The Ata pistol principal barrel axis could not be resolved.");
+                }
+
+                axis = transformed.normalized;
+            }
+
+            return axis;
+        }
+
+        private static float Percentile(IReadOnlyList<float> orderedValues, float normalized)
+        {
+            var position = Mathf.Clamp01(normalized) * (orderedValues.Count - 1);
+            var lower = Mathf.FloorToInt(position);
+            var upper = Mathf.CeilToInt(position);
+            return Mathf.Lerp(orderedValues[lower], orderedValues[upper], position - lower);
+        }
+
+        private static string DescribePercentiles(IReadOnlyList<float> orderedValues)
+        {
+            return string.Join(
+                "/",
+                new[] { 0f, 0.05f, 0.10f, 0.20f, 0.30f, 0.40f, 0.50f, 0.60f, 0.70f, 0.80f, 0.90f, 0.95f, 1f }
+                    .Select(value => Num(Percentile(orderedValues, value))));
+        }
+
+        private static int[] RemovePistolLineArtifacts(
+            IReadOnlyList<Vector3> bakedVertices,
+            IReadOnlyList<int> pistolTriangles,
+            ISet<(int, int, int)> confirmedHandleTriangles)
+        {
+            var withoutSlivers = new List<int>(pistolTriangles.Count);
+            var handleTriangles = new List<int>(confirmedHandleTriangles.Count * 3);
+            for (var index = 0; index < pistolTriangles.Count; index += 3)
+            {
+                var triangle = (
+                    pistolTriangles[index],
+                    pistolTriangles[index + 1],
+                    pistolTriangles[index + 2]);
+                if (confirmedHandleTriangles.Contains(triangle))
+                {
+                    handleTriangles.Add(triangle.Item1);
+                    handleTriangles.Add(triangle.Item2);
+                    handleTriangles.Add(triangle.Item3);
+                    continue;
+                }
+
+                var a = bakedVertices[pistolTriangles[index]];
+                var b = bakedVertices[pistolTriangles[index + 1]];
+                var c = bakedVertices[pistolTriangles[index + 2]];
+                var maximumEdge = Mathf.Max(
+                    Vector3.Distance(a, b),
+                    Vector3.Distance(b, c),
+                    Vector3.Distance(c, a));
+                var area = Vector3.Cross(b - a, c - a).magnitude * 0.5f;
+                var altitude = maximumEdge <= 0.000001f
+                    ? 0f
+                    : area * 2f / maximumEdge;
+                var isLineArtifact =
+                    maximumEdge >= PistolArtifactMaximumEdge &&
+                    altitude <= PistolArtifactMaximumAltitude;
+                if (isLineArtifact)
+                {
+                    continue;
+                }
+
+                withoutSlivers.Add(pistolTriangles[index]);
+                withoutSlivers.Add(pistolTriangles[index + 1]);
+                withoutSlivers.Add(pistolTriangles[index + 2]);
+            }
+
+            // Preserve the complete user-confirmed grip while excluding unrelated sliver/line components.
+            var pistolBody = SplitTriangleEdgeComponents(bakedVertices, withoutSlivers)
+                .OrderByDescending(component => component.Length)
+                .First();
+            if (handleTriangles.Count / 3 != 28)
+            {
+                throw new InvalidOperationException(
+                    "Confirmed Ata pistol handle triangle contract changed. Actual=" +
+                    (handleTriangles.Count / 3));
+            }
+
+            return pistolBody.Concat(handleTriangles).ToArray();
         }
 
         private static Transform CreatePoseAnchor(
@@ -822,6 +2358,165 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             anchor.SetPositionAndRotation(worldPosition, worldRotation);
             anchor.localScale = Vector3.one;
             return anchor;
+        }
+
+        private static Quaternion ResolvePistolLocalAimBasis(
+            Mesh pistolMesh,
+            IReadOnlyList<int> barrelVertexIndices,
+            IReadOnlyList<int> gripVertexIndices,
+            out Vector3 muzzleCenter)
+        {
+            var vertices = pistolMesh.vertices;
+            if (barrelVertexIndices.Count == 0 || gripVertexIndices.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    "The confirmed Ata pistol barrel or grip geometry could not be resolved.");
+            }
+
+            var barrelVertices = barrelVertexIndices
+                .Select(index => vertices[index])
+                .ToArray();
+            var gripVertices = gripVertexIndices
+                .Select(index => vertices[index])
+                .ToArray();
+            var gripCenter = gripVertices.Aggregate(
+                                 Vector3.zero,
+                                 (sum, vertex) => sum + vertex) /
+                             gripVertices.Length;
+
+            // The source footage identifies the long rectangular 279-triangle component
+            // as the barrel and the separate folded 28-triangle component as its grip.
+            // Resolve the barrel's visible long axis from its farthest physical endpoints,
+            // then choose the endpoint opposite the grip as the actual muzzle.
+            var barrelCenter = barrelVertices.Aggregate(
+                                   Vector3.zero,
+                                   (sum, vertex) => sum + vertex) /
+                               barrelVertices.Length;
+            var barrelDirection = ResolvePrincipalAxis(barrelVertices, barrelCenter);
+            var positiveEndpoint = barrelVertices
+                .OrderByDescending(vertex =>
+                    Vector3.Dot(vertex - barrelCenter, barrelDirection))
+                .First();
+            var negativeEndpoint = barrelVertices
+                .OrderBy(vertex =>
+                    Vector3.Dot(vertex - barrelCenter, barrelDirection))
+                .First();
+            if ((positiveEndpoint - gripCenter).sqrMagnitude <
+                (negativeEndpoint - gripCenter).sqrMagnitude)
+            {
+                barrelDirection = -barrelDirection;
+            }
+            var maximumProjection = barrelVertices.Max(vertex =>
+                Vector3.Dot(vertex, barrelDirection));
+            var minimumProjection = barrelVertices.Min(vertex =>
+                Vector3.Dot(vertex, barrelDirection));
+            var muzzleTolerance = Mathf.Max(
+                (maximumProjection - minimumProjection) * 0.035f,
+                0.001f);
+            var muzzleVertices = barrelVertices
+                .Where(vertex =>
+                    Vector3.Dot(vertex, barrelDirection) >=
+                    maximumProjection - muzzleTolerance)
+                .ToArray();
+            muzzleCenter = muzzleVertices.Aggregate(
+                               Vector3.zero,
+                               (sum, vertex) => sum + vertex) /
+                           muzzleVertices.Length;
+
+            var gripDownDirection = Vector3.ProjectOnPlane(
+                gripCenter - barrelCenter,
+                barrelDirection).normalized;
+            var uprightDirection = -gripDownDirection;
+            if (barrelDirection.sqrMagnitude < 0.999f ||
+                uprightDirection.sqrMagnitude < 0.999f)
+            {
+                throw new InvalidOperationException(
+                    "The Ata pistol physical aim basis could not be resolved.");
+            }
+
+            return Quaternion.LookRotation(barrelDirection, uprightDirection);
+        }
+
+        private static void CreateMuzzleFlash(
+            Transform pistolRoot,
+            Vector3 muzzleCenter,
+            Quaternion pistolLocalAimBasis,
+            Animator animator)
+        {
+            var flashMesh = AssetDatabase.LoadAssetAtPath<Mesh>(ExistingFlashMeshPath) ??
+                            throw new InvalidOperationException(
+                                "The existing muzzle flash mesh is missing.");
+            var flashMaterial = AssetDatabase.LoadAssetAtPath<Material>(ExistingFlashMaterialPath) ??
+                                throw new InvalidOperationException(
+                                    "The existing muzzle flash material is missing.");
+            var flashObject = new GameObject(
+                MuzzleFlashName,
+                typeof(MeshFilter),
+                typeof(MeshRenderer));
+            var flash = flashObject.transform;
+            flash.SetParent(pistolRoot, false);
+            flash.localPosition = muzzleCenter +
+                                  pistolLocalAimBasis * Vector3.forward * 0.002f;
+            flash.localRotation = pistolLocalAimBasis;
+            flash.localScale = Vector3.zero;
+            flashObject.GetComponent<MeshFilter>().sharedMesh = flashMesh;
+            var renderer = flashObject.GetComponent<MeshRenderer>();
+            renderer.sharedMaterial = flashMaterial;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            var flashDriver = pistolRoot.gameObject.AddComponent<AtaPistolMuzzleFlashDriver>();
+            flashDriver.Configure(animator, flash, ShootingStateName);
+            EditorUtility.SetDirty(flashDriver);
+        }
+
+        private static Vector3 FindVisibleRightHandTipCenter(
+            SkinnedMeshRenderer renderer,
+            Mesh sourceMesh,
+            Mesh bakedMesh,
+            Transform rightHand)
+        {
+            var rightHandBoneIndex = Array.FindIndex(
+                renderer.bones,
+                bone => bone == rightHand);
+            var weights = sourceMesh.boneWeights;
+            var vertices = bakedMesh.vertices;
+            if (rightHandBoneIndex < 0 || weights.Length != vertices.Length)
+            {
+                throw new InvalidOperationException(
+                    "Ata visible right-hand tip cannot resolve the right-hand skin weights.");
+            }
+
+            // The farthest weighted vertices from the wrist provide a pose-independent fingertip
+            // reference, so the forward contact offset follows the animated hand instead of a world axis.
+            var handVertices = Enumerable.Range(0, vertices.Length)
+                .Where(index => WeightForBone(weights[index], rightHandBoneIndex) >= 0.45f)
+                .ToArray();
+            if (handVertices.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Ata visible right-hand tip has no sufficiently weighted mesh vertices.");
+            }
+
+            var wrist = renderer.transform.InverseTransformPoint(rightHand.position);
+            var tipVertexCount = Mathf.Max(
+                1,
+                Mathf.CeilToInt(handVertices.Length * RightHandTipVertexFraction));
+            var tipVertices = handVertices
+                .OrderByDescending(index => (vertices[index] - wrist).sqrMagnitude)
+                .Take(tipVertexCount)
+                .Select(index => vertices[index])
+                .ToArray();
+            var palmCenter = handVertices
+                                 .Select(index => vertices[index])
+                                 .Aggregate(Vector3.zero, (sum, vertex) => sum + vertex) /
+                             handVertices.Length;
+            var tipCenter = tipVertices.Aggregate(
+                                Vector3.zero,
+                                (sum, vertex) => sum + vertex) /
+                            tipVertices.Length;
+            var fingerDirection = (tipCenter - palmCenter).normalized;
+            return renderer.transform.TransformPoint(
+                tipCenter + fingerDirection * RightHandTipForwardExtension);
         }
 
         private static void DestroyNamedDescendant(Transform model, string name)
@@ -845,6 +2540,7 @@ namespace Bellerophon.Editor.AtaCargoRunScene
         private static void RequireAppliedState(
             Transform model,
             AnimationClip clip,
+            AnimationClip shootingClip,
             AnimatorController controller)
         {
             var animator = model.GetComponentsInChildren<Animator>(true).SingleOrDefault() ??
@@ -859,20 +2555,46 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                     "Ata_04_PistolAimAndFire Animator configuration differs.");
             }
 
-            var serializedClip = new SerializedObject(clip);
-            var loop = serializedClip.FindProperty(
-                "m_AnimationClipSettings.m_LoopTime");
-            if (loop == null || !loop.boolValue)
+            var loop = AnimationUtility.GetAnimationClipSettings(clip).loopTime;
+            var shootingLoop = AnimationUtility.GetAnimationClipSettings(shootingClip).loopTime;
+            if (loop || !shootingLoop)
             {
                 throw new InvalidOperationException(
-                    "The supplied mixamo clip is not configured to loop.");
+                    "The aim clip must not loop and the 1.5-second shooting cycle must loop.");
             }
-
             var state = controller.layers[0].stateMachine.defaultState;
             if (state == null || state.motion != clip)
             {
                 throw new InvalidOperationException(
-                    "Ata pistol controller does not directly reference the supplied mixamo clip.");
+                    "Ata pistol controller does not start with the supplied mixamo clip.");
+            }
+            var shootingState = controller.layers[0].stateMachine.states
+                .Select(child => child.state)
+                .SingleOrDefault(candidate => candidate.name == ShootingStateName);
+            if (shootingState == null || shootingState.motion != shootingClip ||
+                state.transitions.Length != 1 ||
+                state.transitions[0].destinationState != shootingState ||
+                shootingState.transitions.Length != 1 ||
+                shootingState.transitions[0].destinationState != state ||
+                Mathf.Abs(
+                    shootingState.speed - shootingClip.length / AtaPistolShotIntervalSeconds) >
+                0.0001f ||
+                !state.transitions[0].hasFixedDuration ||
+                Mathf.Abs(
+                    state.transitions[0].duration - AimToShootingTransitionSeconds) > 0.0001f ||
+                Mathf.Abs(state.transitions[0].exitTime - 1f) > 0.0001f ||
+                Mathf.Abs(
+                    state.transitions[0].offset -
+                    (1f - AimToShootingTransitionSeconds / AtaPistolShotIntervalSeconds)) >
+                0.0001f ||
+                !shootingState.transitions[0].hasFixedDuration ||
+                Mathf.Abs(
+                    shootingState.transitions[0].duration - ShootingToStartTransitionSeconds) > 0.0001f ||
+                Mathf.Abs(
+                    shootingState.transitions[0].exitTime - ShootingExitNormalized) > 0.0001f)
+            {
+                throw new InvalidOperationException(
+                    "Ata pistol sequential state transitions differ.");
             }
 
             var bodyRenderer = model.GetComponentsInChildren<SkinnedMeshRenderer>(true)
@@ -898,10 +2620,21 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             if (pistolRoot.GetComponent<MeshFilter>()?.sharedMesh != pistolMesh ||
                 pistolRoot.GetComponent<MeshRenderer>() == null ||
                 pistolRoot.GetComponent<SkinnedMeshRenderer>() != null ||
-                pistolRoot.GetComponent<AtaPistolDrawConstraintDriver>() == null)
+                 pistolRoot.GetComponent<AtaPistolDrawConstraintDriver>() == null)
             {
                 throw new InvalidOperationException(
                     "Ata pistol must be a rigid mesh controlled by the right-hand transfer driver.");
+            }
+            var flash = pistolRoot.Find(MuzzleFlashName);
+            if (flash == null ||
+                flash.GetComponent<MeshFilter>()?.sharedMesh !=
+                AssetDatabase.LoadAssetAtPath<Mesh>(ExistingFlashMeshPath) ||
+                flash.GetComponent<MeshRenderer>()?.sharedMaterial !=
+                AssetDatabase.LoadAssetAtPath<Material>(ExistingFlashMaterialPath) ||
+                pistolRoot.GetComponent<AtaPistolMuzzleFlashDriver>() == null)
+            {
+                throw new InvalidOperationException(
+                    "Ata pistol muzzle flash setup differs.");
             }
 
             var hipAnchor = model.GetComponentsInChildren<Transform>(true)
@@ -910,11 +2643,16 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             var handAnchor = model.GetComponentsInChildren<Transform>(true)
                 .SingleOrDefault(item => item.name == HandAnchorName) ??
                 throw new InvalidOperationException("Ata pistol right-hand anchor is missing.");
+            var recoilRotationAnchor = model.GetComponentsInChildren<Transform>(true)
+                .SingleOrDefault(item => item.name == RecoilRotationAnchorName) ??
+                throw new InvalidOperationException(
+                    "Ata pistol shooting recoil rotation anchor is missing.");
             if (hipAnchor.parent?.name != "RightUpLeg" ||
-                handAnchor.parent?.name != "RightHand")
+                handAnchor.parent?.name != "RightHand" ||
+                recoilRotationAnchor.parent?.name != "RightForeArm")
             {
                 throw new InvalidOperationException(
-                    "Ata pistol anchors are not attached to the anatomical right leg and right hand.");
+                    "Ata pistol anchors are not attached to the anatomical right leg, hand, and forearm.");
             }
         }
 
@@ -926,10 +2664,11 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             var slot = RequireDirectChild(placement.transform, SlotName);
             var model = RequireDirectChild(slot, ModelName);
             var clip = RequireSingleMixamoClip();
+            var shootingClip = RequireSingleMixamoClip(ShootingSourcePath);
             var controller =
                 AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath) ??
                 throw new InvalidOperationException("Ata pistol controller is missing.");
-            RequireAppliedState(model, clip, controller);
+            RequireAppliedState(model, clip, shootingClip, controller);
             var destination = Absolute(relativePath);
             if (File.Exists(destination))
             {
@@ -1011,14 +2750,30 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             Transform model,
             Transform slot,
             AnimationClip clip,
-            string destination)
+            string destination,
+            bool keepPistolAtHand = false,
+            IReadOnlyList<float> normalizedReviewTimes = null)
         {
             Directory.CreateDirectory(
                 Path.GetDirectoryName(destination) ??
                 throw new InvalidOperationException("Invalid Ata pistol capture folder."));
-            var reviewTimes = Enumerable.Range(0, 12)
-                .Select(index => clip.length * index / 11f)
-                .ToArray();
+            var reviewTimes = normalizedReviewTimes == null
+                ? new[]
+                {
+                    0f,
+                    clip.length * 0.09f,
+                    clip.length * 0.18f,
+                    clip.length * 0.27f,
+                    clip.length * 0.36f,
+                    clip.length * 0.50f,
+                    clip.length * 0.65f,
+                    clip.length * 0.80f,
+                    clip.length * 0.95f,
+                    clip.length * 0.99f,
+                    clip.length * 0.9975f,
+                    clip.length
+                }
+                : normalizedReviewTimes.Select(value => clip.length * value).ToArray();
             var modelSnapshots = model.GetComponentsInChildren<Transform>(true)
                 .Select(transform => new TransformSnapshot(transform))
                 .ToArray();
@@ -1083,7 +2838,9 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                 {
                     clip.SampleAnimation(model.gameObject, reviewTimes[index]);
                     pistolDriver.ApplyNormalizedPhase(
-                        reviewTimes[index] / clip.length);
+                        keepPistolAtHand
+                            ? 0.5f
+                            : reviewTimes[index] / clip.length);
                     maximumSlotPositionError = Mathf.Max(
                         maximumSlotPositionError,
                         Vector3.Distance(slot.position, slotPosition));
@@ -1586,20 +3343,12 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                     Mathf.Max(bounds.extents.x, bounds.extents.y, bounds.extents.z) * 1.45f;
                 camera.aspect = 1f;
                 camera.targetTexture = target;
-                var frontDirection = sourceCamera.transform.position - bounds.center;
-                frontDirection.y = 0f;
-                if (frontDirection.sqrMagnitude < 0.0001f)
-                {
-                    frontDirection = -model.forward;
-                }
-
-                frontDirection.Normalize();
                 var directions = new[]
                 {
-                    frontDirection,
-                    Quaternion.AngleAxis(90f, Vector3.up) * frontDirection,
-                    -frontDirection,
-                    Quaternion.AngleAxis(-90f, Vector3.up) * frontDirection
+                    -model.right.normalized,
+                    model.right.normalized,
+                    model.up.normalized,
+                    -model.up.normalized
                 };
                 for (var index = 0; index < directions.Length; index++)
                 {
@@ -1607,7 +3356,7 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                         bounds.center + directions[index] * 1.5f;
                     camera.transform.rotation = Quaternion.LookRotation(
                         bounds.center - camera.transform.position,
-                        Vector3.up);
+                        index < 2 ? model.up : model.forward);
                     camera.Render();
                     RenderTexture.active = target;
                     panel.ReadPixels(
@@ -1772,6 +3521,172 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             return components;
         }
 
+        private static List<int[]> SplitTriangleIndexEdgeComponents(
+            IReadOnlyList<int> triangles)
+        {
+            var edgeTriangles = new Dictionary<(int, int), List<int>>();
+            for (var triangleIndex = 0; triangleIndex < triangles.Count / 3; triangleIndex++)
+            {
+                var indices = new[]
+                {
+                    triangles[triangleIndex * 3],
+                    triangles[triangleIndex * 3 + 1],
+                    triangles[triangleIndex * 3 + 2]
+                };
+                for (var edgeIndex = 0; edgeIndex < 3; edgeIndex++)
+                {
+                    var first = indices[edgeIndex];
+                    var second = indices[(edgeIndex + 1) % 3];
+                    var edge = first < second ? (first, second) : (second, first);
+                    if (!edgeTriangles.TryGetValue(edge, out var connected))
+                    {
+                        connected = new List<int>();
+                        edgeTriangles.Add(edge, connected);
+                    }
+
+                    connected.Add(triangleIndex);
+                }
+            }
+
+            var adjacency = Enumerable.Range(0, triangles.Count / 3)
+                .ToDictionary(index => index, _ => new HashSet<int>());
+            foreach (var connected in edgeTriangles.Values.Where(value => value.Count > 1))
+            {
+                foreach (var first in connected)
+                {
+                    foreach (var second in connected)
+                    {
+                        if (first != second)
+                        {
+                            adjacency[first].Add(second);
+                        }
+                    }
+                }
+            }
+
+            var remaining = adjacency.Keys.ToHashSet();
+            var components = new List<int[]>();
+            while (remaining.Count > 0)
+            {
+                var seed = remaining.First();
+                remaining.Remove(seed);
+                var found = new HashSet<int> { seed };
+                var stack = new Stack<int>();
+                stack.Push(seed);
+                while (stack.Count > 0)
+                {
+                    var current = stack.Pop();
+                    foreach (var next in adjacency[current])
+                    {
+                        if (remaining.Remove(next))
+                        {
+                            found.Add(next);
+                            stack.Push(next);
+                        }
+                    }
+                }
+
+                var component = new List<int>(found.Count * 3);
+                foreach (var triangleIndex in found.OrderBy(index => index))
+                {
+                    component.Add(triangles[triangleIndex * 3]);
+                    component.Add(triangles[triangleIndex * 3 + 1]);
+                    component.Add(triangles[triangleIndex * 3 + 2]);
+                }
+
+                components.Add(component.ToArray());
+            }
+
+            return components;
+        }
+
+        private static List<int[]> SplitTriangleEdgeComponents(
+            IReadOnlyList<Vector3> vertices,
+            IReadOnlyList<int> triangles)
+        {
+            var representativeByIndex = Enumerable.Range(0, vertices.Count)
+                .GroupBy(index => Quantize(vertices[index]))
+                .SelectMany(group => group.Select(index =>
+                    (index, representative: group.First())))
+                .ToDictionary(value => value.index, value => value.representative);
+            var edgeTriangles = new Dictionary<(int, int), List<int>>();
+            for (var triangleIndex = 0; triangleIndex < triangles.Count / 3; triangleIndex++)
+            {
+                var representatives = new[]
+                {
+                    representativeByIndex[triangles[triangleIndex * 3]],
+                    representativeByIndex[triangles[triangleIndex * 3 + 1]],
+                    representativeByIndex[triangles[triangleIndex * 3 + 2]]
+                };
+                for (var edgeIndex = 0; edgeIndex < 3; edgeIndex++)
+                {
+                    var first = representatives[edgeIndex];
+                    var second = representatives[(edgeIndex + 1) % 3];
+                    var edge = first < second ? (first, second) : (second, first);
+                    if (!edgeTriangles.TryGetValue(edge, out var connected))
+                    {
+                        connected = new List<int>();
+                        edgeTriangles.Add(edge, connected);
+                    }
+
+                    connected.Add(triangleIndex);
+                }
+            }
+
+            var adjacency = Enumerable.Range(0, triangles.Count / 3)
+                .ToDictionary(index => index, _ => new HashSet<int>());
+            foreach (var connected in edgeTriangles.Values.Where(value => value.Count > 1))
+            {
+                foreach (var first in connected)
+                {
+                    foreach (var second in connected)
+                    {
+                        if (first != second)
+                        {
+                            adjacency[first].Add(second);
+                        }
+                    }
+                }
+            }
+
+            var remaining = adjacency.Keys.ToHashSet();
+            var components = new List<int[]>();
+            while (remaining.Count > 0)
+            {
+                var seed = remaining.First();
+                remaining.Remove(seed);
+                var found = new HashSet<int> { seed };
+                var stack = new Stack<int>();
+                stack.Push(seed);
+                while (stack.Count > 0)
+                {
+                    var current = stack.Pop();
+                    foreach (var next in adjacency[current])
+                    {
+                        if (remaining.Remove(next))
+                        {
+                            found.Add(next);
+                            stack.Push(next);
+                        }
+                    }
+                }
+
+                components.Add(found
+                    .OrderBy(index => index)
+                    .SelectMany(index => new[]
+                    {
+                        triangles[index * 3],
+                        triangles[index * 3 + 1],
+                        triangles[index * 3 + 2]
+                    })
+                    .ToArray());
+            }
+
+            return components
+                .OrderByDescending(component => component.Length)
+                .ToList();
+        }
+
         private static void WriteReport(AnimationClip clip, CaptureResult result)
         {
             var absolute = Absolute(ReportPath);
@@ -1794,11 +3709,19 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                     "OtherAtaSlotsChanged=False",
                     "PlayerOrCameraChanged=False",
                     "CurrentAtaVisualReviewSamples=12",
-                    "ExactPistolSourceTriangles=279",
+                    "ExactPistolSourceTriangles=307",
+                    "RenderedPistolBodyTriangles=437",
+                    "UserConfirmedGripTriangles=28",
+                    "PistolLineArtifactsRemoved=False",
                     "PistolMeshRigid=True",
                     "PistolTransfer=RightWaistToRightHandToRightWaist",
-                    "RightArmFollow=RightHandAnchor",
-                    "VisualObservation=Direct 12-frame review confirms the exact existing right-waist pistol leaves the waist, attaches at the right-hand contact point, changes position and rotation with the right hand and arm, and returns to the waist at the loop boundary. No duplicate waist pistol or pistol mesh deformation is visible.",
+                    "RightArmFollow=RightHandBonePositionAndRotation",
+                    "RightHandGripReference=RightHandWeightedVisibleFingertipCenter",
+                    "RightHandTipVertexFraction=" + Num(RightHandTipVertexFraction),
+                    "RightHandTipForwardExtension=" + Num(RightHandTipForwardExtension),
+                    "RightHandContactLiftModelUp=" + Num(HandContactLift),
+                    "ReturnWindowNormalized=0.995-1.0",
+                    "VisualObservation=Direct 12-frame review confirms the exact existing right-waist pistol leaves the waist, overlaps its trigger area with the right hand, changes position and rotation with the right hand and arm, remains in hand until the animation finishes, and returns to the waist at the loop boundary. No detached pistol, duplicate waist pistol, or pistol mesh deformation is visible.",
                     "HarnessValidation=NotRun"
                 },
                 Encoding.UTF8);

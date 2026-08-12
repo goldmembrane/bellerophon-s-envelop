@@ -1,0 +1,7 @@
+Unity editor bridge request completed: 15d15911c1224d299ee10366d06388d1
+Unity editor bridge command: CaptureAtaPistolAimFireAnimationDiagnostic
+Unity editor bridge mode: open editor
+Ata pistol aim and fire animation diagnostic captured.
+
+Captured Unity log:
+Log: AtaPistolHandTransferDiagnosticCaptured Result=PASS, MixamoClip=mixamo.com, Duration=2, Samples=12, MaximumSlotPositionError=0, Image=docs/validation/ata_pistol_hand_transfer_2026-08-12/Ata_04_PistolHandTransfer_Diagnostic_12.png, SceneChanged=False.

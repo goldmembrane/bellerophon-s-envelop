@@ -23,6 +23,10 @@ namespace Bellerophon.Editor.Validation
         private const string Dolore04TentacleStabFinalCommand = "CaptureDolore04TentacleStabFullMotionFinal";
         private const string Ispant08ContinuousMotionCaptureCommand =
             "CaptureIspant08ContinuousMotionTwoLoops";
+        private const string AtaPistolTriggerFollowCaptureCommand =
+            "CaptureAtaPistolTriggerFollowTwoLoops";
+        private const string AtaCommandStanceAlternationCaptureCommand =
+            "CaptureAtaCommandStanceAlternationThreeLoops";
         private const string Dolore05ExecutionOpeningDiagnosticCommand = "CaptureDolore05ExecutionOpeningDiagnostic";
         private const string RebellionMoveVisualReviewCommand =
             "CaptureRebellionMoveVisualReview";
@@ -153,6 +157,8 @@ namespace Bellerophon.Editor.Validation
                 request.Command != Dolore04TentacleStabDiagnosticCommand &&
                 request.Command != Dolore04TentacleStabFinalCommand &&
                 request.Command != Ispant08ContinuousMotionCaptureCommand &&
+                request.Command != AtaPistolTriggerFollowCaptureCommand &&
+                request.Command != AtaCommandStanceAlternationCaptureCommand &&
                 request.Command != Dolore05ExecutionOpeningDiagnosticCommand &&
                 request.Command != RebellionAttackTransitionVisualReviewCommand &&
                 request.Command != RebellionForwardScanVisualReviewCommand &&
@@ -282,17 +288,59 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.AtaCargoRunScene.AtaMoveAnimationTool.CaptureAtaMoveAnimationFinal,
                         "Ata move animation final captured.");
                     break;
+                case "ApplyAtaCommandAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaCommandAnimationTool.ApplyAtaCommandAnimation,
+                        "Ata command animation applied.");
+                    break;
+                case "CaptureAtaCommandShieldReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaCommandAnimationTool.CaptureAtaCommandShieldReview,
+                        "Ata command shield review captured.");
+                    break;
+                case "InspectAndFixAtaOtherSlotsRightArmMesh":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaOtherSlotsRightArmMeshTool.InspectAndFix,
+                        "Ata other slots right-arm mesh inspected and corrected.");
+                    break;
+                case "CaptureAtaCurrentRightArmReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaOtherSlotsRightArmMeshTool.CaptureCurrentRightArmReview,
+                        "Ata current right-arm review captured.");
+                    break;
                 case "ApplyAtaPistolAimFireAnimation":
                     RunSynchronous(
                         request,
                         global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.ApplyAtaPistolAimFireAnimation,
                         "Ata pistol aim and fire animation applied.");
                     break;
+                case "RecoverAtaPistolInterruptedApply":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.RecoverAtaPistolInterruptedApply,
+                        "Ata interrupted pistol apply recovered.");
+                    break;
                 case "InspectAtaPistolStructure":
                     RunSynchronous(
                         request,
                         global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.InspectAtaPistolStructure,
                         "Ata pistol structure inspected.");
+                    break;
+                case "InspectExtractedPistolTriangleGeometry":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.InspectExtractedPistolTriangleGeometry,
+                        "Ata extracted pistol triangle geometry inspected.");
+                    break;
+                case "CaptureAtaPistolResidualComponents":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.CaptureAtaPistolResidualComponents,
+                        "Ata pistol residual components captured.");
                     break;
                 case "CaptureAtaPistolWaistGeometryDiagnostic":
                     RunSynchronous(
@@ -318,11 +366,35 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.CaptureAtaPistolAimFireAnimationDiagnostic,
                         "Ata pistol aim and fire animation diagnostic captured.");
                     break;
+                case "CaptureAtaShootingSourceDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.CaptureAtaShootingSourceDiagnostic,
+                        "Ata shooting source diagnostic captured.");
+                    break;
+                case "InspectAtaShootingMotionTiming":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.InspectAtaShootingMotionTiming,
+                        "Ata shooting motion timing inspected.");
+                    break;
                 case "CaptureAtaPistolAimFireAnimationFinal":
                     RunSynchronous(
                         request,
                         global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.CaptureAtaPistolAimFireAnimationFinal,
                         "Ata pistol aim and fire animation final captured.");
+                    break;
+                case "CaptureAtaPistolLeftSideFillReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.CaptureAtaPistolLeftSideFillReview,
+                        "Ata pistol left-side fill review captured.");
+                    break;
+                case "CaptureAtaPistolLeftSideFillIsolatedReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaPistolAimFireAnimationTool.CaptureAtaPistolLeftSideFillIsolatedReview,
+                        "Ata isolated pistol left-side fill review captured.");
                     break;
                 case "ApplyApprovedPahurAppearance":
                     RunSynchronous(
@@ -4640,6 +4712,12 @@ namespace Bellerophon.Editor.Validation
                 case Ispant08ContinuousMotionCaptureCommand:
                     RunIspant08ContinuousMotionCapture(request);
                     break;
+                case AtaPistolTriggerFollowCaptureCommand:
+                    RunAtaPistolTriggerFollowCapture(request);
+                    break;
+                case AtaCommandStanceAlternationCaptureCommand:
+                    RunAtaCommandStanceAlternationCapture(request);
+                    break;
                 case Dolore05ExecutionOpeningDiagnosticCommand:
                     RunDolore05ExecutionOpeningCapture(request);
                     break;
@@ -5714,6 +5792,58 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
+        private static void RunAtaPistolTriggerFollowCapture(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Bellerophon.Editor.AtaCargoRunScene.AtaPistolTriggerFollowPlayModeCapture.Start(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunAtaCommandStanceAlternationCapture(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Bellerophon.Editor.AtaCargoRunScene.AtaCommandStanceAlternationPlayModeCapture.Start(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
         private static void RunDolore05ExecutionOpeningCapture(BridgeRequest request)
         {
             BeginRequest(request);
@@ -6497,6 +6627,8 @@ namespace Bellerophon.Editor.Validation
                 request.Command == Dolore04TentacleStabDiagnosticCommand ||
                 request.Command == Dolore04TentacleStabFinalCommand ||
                 request.Command == Ispant08ContinuousMotionCaptureCommand ||
+                request.Command == AtaPistolTriggerFollowCaptureCommand ||
+                request.Command == AtaCommandStanceAlternationCaptureCommand ||
                 request.Command == Dolore05ExecutionOpeningDiagnosticCommand ||
                 request.Command == RebellionMoveVisualReviewCommand ||
                 request.Command == RebellionFrontArtifactVisualReviewCommand ||
@@ -6609,6 +6741,44 @@ namespace Bellerophon.Editor.Validation
                 Bellerophon.Editor.IspantCargoRunScene.Ispant08ContinuousMotionPlayModeCapture.Resume(
                     successMarker => { TryDelete(ActiveRequestPath); CompleteRequest(request, successMarker); },
                     exception => { TryDelete(ActiveRequestPath); FailRequest(request, exception); });
+                return true;
+            }
+
+            if (request.Command == AtaPistolTriggerFollowCaptureCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Ata pistol actual Play Mode two-loop capture after Play Mode transition.");
+                Bellerophon.Editor.AtaCargoRunScene.AtaPistolTriggerFollowPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == AtaCommandStanceAlternationCaptureCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Ata command stance alternation actual Play Mode capture after Play Mode transition.");
+                Bellerophon.Editor.AtaCargoRunScene.AtaCommandStanceAlternationPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
                 return true;
             }
 
