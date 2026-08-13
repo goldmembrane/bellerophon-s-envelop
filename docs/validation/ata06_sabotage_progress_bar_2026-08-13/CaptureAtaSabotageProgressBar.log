@@ -1,0 +1,7 @@
+Unity editor bridge request completed: e8d79761e4524313804a17737a36309d
+Unity editor bridge command: CaptureAtaSabotageProgressBar
+Unity editor bridge mode: open editor
+Ata sabotage progress bar captured.
+
+Captured Unity log:
+Log: AtaSabotageProgressBarCaptured Result=PASS, Path=docs/validation/ata06_sabotage_progress_bar_2026-08-13/Ata_06_Sabotage_ProgressBarReview.png, States=0,0.25,0.5,0.75,1, DurationSeconds=35, MaximumHeadAnchorError=0, SceneChanged=False.

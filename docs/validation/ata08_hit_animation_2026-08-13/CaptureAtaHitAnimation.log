@@ -1,0 +1,7 @@
+Unity editor bridge request completed: f18c4f4c6b9843c995ef0b9a0fd3fee2
+Unity editor bridge command: CaptureAtaHitAnimation
+Unity editor bridge mode: open editor
+Ata hit animation captured.
+
+Captured Unity log:
+Log: AtaHitAnimationCaptured Result=PASS, Path=docs/validation/ata08_hit_animation_2026-08-13/Ata_08_Hit_TwoLoopReview.png, Duration=1.333333, Samples=16, Views=FrontThreeQuarter,Side, ReviewedLoops=2, MaximumLoopPairPositionError=0, MaximumLoopPairRotationError=0, RemainingRightArmStretchComponents=0, MaximumRightArmStretchRatio=4.033225, SceneChanged=False.

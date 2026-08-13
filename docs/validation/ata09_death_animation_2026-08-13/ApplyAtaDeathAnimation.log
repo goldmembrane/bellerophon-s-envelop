@@ -1,0 +1,8 @@
+Unity editor bridge request completed: d1a8a31de67243e896ef26ae6c96842f
+Unity editor bridge command: ApplyAtaDeathAnimation
+Unity editor bridge mode: open editor
+Ata death animation applied.
+
+Captured Unity log:
+Log: AtaRightArmModelCorrection Slot=Ata_09_Death, StretchComponents=0, MaximumRatio=2.390408, Changed=False
+Log: AtaDeathAnimationApplied Result=PASS, Slot=Ata_09_Death, Source=Assets/_Project/Art/Enemies/Ata/Animations/Sources/Ata_Death.fbx, EmbeddedClip=mixamo.com, Duration=3.7, Loop=True, StateSpeed=1, RootMotion=False, RightArmBefore={StretchComponents=0, ComponentTriangles=, MaximumRatio=2.390408}, CorrectedRightArmComponents=0, RemainingRightArmComponents=0, MaximumRightArmStretchRatioAfter=2.390408, SlotTransformFixed=True, OtherAtaSlotsUnchanged=True, OtherSceneRootsUnchanged=True, SceneSaved=True.

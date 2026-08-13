@@ -229,10 +229,52 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                 ", SceneChanged=False.");
         }
 
+        internal static int InspectModelForClips(
+            Transform model,
+            IReadOnlyList<AnimationClip> clips,
+            out float maximumRatio)
+        {
+            var renderer = model.GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                .SingleOrDefault() ??
+                throw new InvalidOperationException(
+                    model.name + " must contain one skinned renderer.");
+            var animator = model.GetComponentsInChildren<Animator>(true).SingleOrDefault();
+            return FindStretchComponents(
+                model,
+                renderer,
+                animator,
+                clips,
+                out maximumRatio).Count;
+        }
+
+        internal static string DescribeModelForClips(
+            Transform model,
+            IReadOnlyList<AnimationClip> clips)
+        {
+            var renderer = model.GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                .SingleOrDefault() ??
+                throw new InvalidOperationException(
+                    model.name + " must contain one skinned renderer.");
+            var animator = model.GetComponentsInChildren<Animator>(true).SingleOrDefault();
+            var components = FindStretchComponents(
+                model,
+                renderer,
+                animator,
+                clips,
+                out var maximumRatio,
+                enforceComponentContract: false);
+            return
+                "StretchComponents=" + components.Count +
+                ", ComponentTriangles=" + string.Join(",",
+                    components.Select(component => component.Length / 3)) +
+                ", MaximumRatio=" + Num(maximumRatio);
+        }
+
         internal static int CorrectModelForClips(
             string slotName,
             Transform model,
-            IReadOnlyList<AnimationClip> clips)
+            IReadOnlyList<AnimationClip> clips,
+            int maximumComponentTriangles = 64)
         {
             var renderer = model.GetComponentsInChildren<SkinnedMeshRenderer>(true)
                 .SingleOrDefault() ??
@@ -243,7 +285,8 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                 renderer,
                 animator,
                 clips,
-                out var maximumRatio);
+                out var maximumRatio,
+                maximumComponentTriangles);
             if (components.Count == 0)
             {
                 Debug.Log(
@@ -284,7 +327,9 @@ namespace Bellerophon.Editor.AtaCargoRunScene
             SkinnedMeshRenderer renderer,
             Animator animator,
             IReadOnlyList<AnimationClip> clips,
-            out float maximumRatio)
+            out float maximumRatio,
+            int maximumComponentTriangles = 64,
+            bool enforceComponentContract = true)
         {
             var mesh = renderer.sharedMesh;
             var triangles = mesh.GetTriangles(0);
@@ -404,11 +449,16 @@ namespace Bellerophon.Editor.AtaCargoRunScene
                         component[index * 3 + 1],
                         component[index * 3 + 2]))))
                 .ToList();
-            if (components.Any(component => component.Length / 3 > 64) ||
-                components.Sum(component => component.Length / 3) > 512)
+            if (enforceComponentContract &&
+                (components.Any(component =>
+                     component.Length / 3 > maximumComponentTriangles) ||
+                 components.Sum(component => component.Length / 3) > 512))
             {
                 throw new InvalidOperationException(
-                    "Ata right-arm correction exceeded the separated-component contract.");
+                    "Ata right-arm correction exceeded the separated-component contract. " +
+                    "ComponentTriangles=" + string.Join(",",
+                        components.Select(component => component.Length / 3)) +
+                    ", MaximumRatio=" + Num(maximumRatio));
             }
 
             return components;

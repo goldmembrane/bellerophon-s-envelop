@@ -1,0 +1,7 @@
+Unity editor bridge request completed: 8cca0bcfd0714c5591f64f12c78f28f5
+Unity editor bridge command: CaptureAtaBombInstallProgressBar
+Unity editor bridge mode: open editor
+Ata bomb-install progress bar captured.
+
+Captured Unity log:
+Log: AtaBombInstallProgressBarCaptured Result=PASS, Path=docs/validation/ata07_bomb_install_progress_bar_2026-08-13/Ata_07_BombInstall_ProgressBarReview.png, States=0,0.25,0.5,0.75,1, StateSeconds=0,6.25,12.5,18.75,25, DurationSeconds=25, MaximumHeadAnchorError=0.000001, BombAnimationPreserved=True, SkinnedMeshesPreserved=True, SceneChanged=False.

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>아타 사보타주 머리 위 진행바 요약</title>
+  <style>
+    :root { color-scheme: dark; --ink: #ece9df; --muted: #b9b7ae; --panel: #181b1c; --line: #4d5150; --copper: #d84535; --cyan: #86d9ee; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Bahnschrift", "Malgun Gothic", sans-serif;
+      background: linear-gradient(115deg, rgba(216,69,53,.08), transparent 36%), #101314;
+      color: var(--ink);
+    }
+    main { max-width: 1180px; margin: 0 auto; padding: 34px 28px 56px; }
+    h1, h2, h3 { margin: 0 0 14px; }
+    h1 { font-size: clamp(2rem, 5vw, 3.7rem); line-height: 1; }
+    h2 { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    section { margin: 36px 0; }
+    p, li { line-height: 1.62; }
+    a, code { color: var(--cyan); }
+    a { text-underline-offset: 3px; }
+    .eyebrow { color: var(--copper); font-size: .82rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    .lead { color: var(--muted); }
+    .comparison { display: grid; grid-template-columns: 1fr; gap: 14px; padding: 14px; background: var(--panel); border: 1px solid var(--line); }
+    figure { margin: 0; padding: 10px; background: #0e1112; border: 1px solid #343939; }
+    img { width: 100%; height: auto; display: block; background: #0b0f14; }
+    figcaption { margin-top: 9px; color: var(--muted); font-size: 13px; }
+    .verdict { padding: 20px; background: rgba(216,212,200,.055); border-left: 3px solid var(--copper); }
+    @media (max-width: 760px) { main { padding: 26px 18px 44px; } }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Quick Review · Ata Sabotage Progress Bar</p>
+  <h1>아타 사보타주 머리 위 진행바 요약</h1>
+  <p class="lead">현재 상태는 <code>ART_SAMPLE_APPROVED_AND_UNITY_APPLIED_2026-08-13</code>입니다. 사용자가 승인한 진행바 부분만 <code>Ata_06_Sabotage</code> 머리 위에 적용했으며, 최신 원본 기획서에 따라 <code>35초</code> 동안 왼쪽에서 오른쪽으로 채워집니다. 전체 자료는 <a href="index.html">index.html</a>에서 확인할 수 있습니다.</p>
+
+  <section>
+    <h2>승인·적용 판정</h2>
+    <div class="verdict">
+      <p><code>USER_APPROVED_PROGRESS_BAR_ONLY / UNITY_APPLIED_TO_ATA_06</code></p>
+      <p>승인된 머리 위 배치 비율, 무광 흑철 프레임, 적색·주황색 채움 표현을 적용했습니다. SVG의 아타 실루엣과 HTML 검토 화면은 적용하지 않았고, SVG의 기존 시간 문구 대신 최신 기획서의 35초를 사용합니다.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>전체 시안</h2>
+    <div class="comparison">
+      <figure>
+        <a href="Ata_SabotageProgressBar_ApprovalSample.svg"><img src="Ata_SabotageProgressBar_ApprovalSample.svg" alt="아타 사보타주 머리 위 진행바 전체 승인 시안"></a>
+        <figcaption>진행바 시각과 배치 기준만 승인됨 / 실제 시간 단계는 0·8.75·17.5·26.25·35초</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>핵심 수치</h2>
+    <div class="verdict">
+      <ul>
+        <li>대상: <code>CargoRunMvp/Ata_06_Sabotage</code></li>
+        <li>시전시간: <code>35초</code></li>
+        <li>시간 단계: <code>0초 0%</code> / <code>8.75초 25%</code> / <code>17.5초 50%</code> / <code>26.25초 75%</code> / <code>35초 100%</code></li>
+        <li>머리 위 간격: <code>0.18m</code></li>
+        <li>제안 크기: 폭 <code>0.62m</code>, 높이 <code>0.055m</code></li>
+        <li>채움 방향: 왼쪽에서 오른쪽</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>반영된 표현</h2>
+    <div class="verdict">
+      <ul>
+        <li>무광 흑철 프레임과 좌우 경고 브래킷을 사용합니다.</li>
+        <li>채움은 <code>#8F201F</code>에서 <code>#D84535</code>, <code>#FF8A4C</code>로 이어집니다.</li>
+        <li>실제 진행바에는 숫자와 문구를 넣지 않아 아타의 실루엣을 가리지 않습니다.</li>
+        <li>아타를 따라 이동하며 카메라 정면을 유지하는 월드 공간 UI를 전제로 합니다.</li>
+        <li>무기실의 30초와 비품실·운송 창고의 25초 폭탄 설치는 별도 행동이므로 포함하지 않았습니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>보존 및 적용 경계</h2>
+    <ul>
+      <li>기존 서 있는 타이핑 애니메이션은 변경하지 않았습니다.</li>
+      <li>오른팔 메시와 기존 메시 변형 상태는 변경하지 않았습니다.</li>
+      <li>다른 아타 모션 개체와 기존 머리 위 효과는 변경하지 않았습니다.</li>
+      <li>현재 결과물은 <code>artSample/</code> 검토 파일이며 Unity에는 적용하지 않았습니다.</li>
+      <li>승인 후 Unity 적용은 별도의 승인 범위에서 진행합니다.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>

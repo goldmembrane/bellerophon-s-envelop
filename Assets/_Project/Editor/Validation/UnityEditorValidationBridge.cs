@@ -300,6 +300,138 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.AtaCargoRunScene.AtaCommandAnimationTool.CaptureAtaCommandShieldReview,
                         "Ata command shield review captured.");
                     break;
+                case "ApplyAtaSabotageAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaSabotageAnimationTool.ApplyAtaSabotageAnimation,
+                        "Ata sabotage animation applied.");
+                    break;
+                case "CaptureAtaSabotageAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaSabotageAnimationTool.CaptureAtaSabotageAnimation,
+                        "Ata sabotage animation captured.");
+                    break;
+                case "ApplyAtaSabotageProgressBar":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaSabotageAnimationTool.ApplyAtaSabotageProgressBar,
+                        "Ata sabotage progress bar applied.");
+                    break;
+                case "CaptureAtaSabotageProgressBar":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaSabotageAnimationTool.CaptureAtaSabotageProgressBar,
+                        "Ata sabotage progress bar captured.");
+                    break;
+                case "ApplyAtaSabotageRepeatingCycle":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaSabotageAnimationTool.ApplyAtaSabotageRepeatingCycle,
+                        "Ata sabotage repeating cycle applied.");
+                    break;
+                case "CaptureAtaSabotageRepeatingCycle":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaSabotageAnimationTool.CaptureAtaSabotageRepeatingCycle,
+                        "Ata sabotage repeating cycle captured.");
+                    break;
+                case "ApplyAtaBombInstallAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaBombInstallAnimationTool.ApplyAtaBombInstallAnimation,
+                        "Ata bomb-install animation applied.");
+                    break;
+                case "CaptureAtaBombInstallAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaBombInstallAnimationTool.CaptureAtaBombInstallAnimation,
+                        "Ata bomb-install animation captured.");
+                    break;
+                case "ApplyAtaBombInstallProgressBar":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaBombInstallAnimationTool.ApplyAtaBombInstallProgressBar,
+                        "Ata bomb-install progress bar applied.");
+                    break;
+                case "CaptureAtaBombInstallProgressBar":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaBombInstallAnimationTool.CaptureAtaBombInstallProgressBar,
+                        "Ata bomb-install progress bar captured.");
+                    break;
+                case "CaptureAtaBombInstallSourceAnalysis":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaBombInstallAnimationTool.CaptureAtaBombInstallSourceAnalysis,
+                        "Ata bomb-install source motion analyzed.");
+                    break;
+                case "ApplyAtaBombInstallSeatedLoop":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaBombInstallAnimationTool.ApplyAtaBombInstallSeatedLoop,
+                        "Ata bomb-install seated loop applied.");
+                    break;
+                case "CaptureAtaBombInstallSeatedLoop":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaBombInstallAnimationTool.CaptureAtaBombInstallSeatedLoop,
+                        "Ata bomb-install seated loop captured.");
+                    break;
+                case "ApplyAtaHitAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaHitAnimationTool.ApplyAtaHitAnimation,
+                        "Ata hit animation applied.");
+                    break;
+                case "CaptureAtaHitAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaHitAnimationTool.CaptureAtaHitAnimation,
+                        "Ata hit animation captured.");
+                    break;
+                case "ApplyAtaHitStaticArms":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaHitAnimationTool.ApplyAtaHitStaticArms,
+                        "Ata hit static arms applied.");
+                    break;
+                case "CaptureAtaHitStaticArms":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaHitAnimationTool.CaptureAtaHitStaticArms,
+                        "Ata hit static arms captured.");
+                    break;
+                case "ApplyAtaDeathAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaDeathAnimationTool.ApplyAtaDeathAnimation,
+                        "Ata death animation applied.");
+                    break;
+                case "CaptureAtaDeathAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaDeathAnimationTool.CaptureAtaDeathAnimation,
+                        "Ata death animation captured.");
+                    break;
+                case "ApplyAtaDeathPreFallStaticArms":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaDeathAnimationTool.ApplyAtaDeathPreFallStaticArms,
+                        "Ata death pre-fall static arms applied.");
+                    break;
+                case "CaptureAtaDeathPreFallStaticArms":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaDeathAnimationTool.CaptureAtaDeathPreFallStaticArms,
+                        "Ata death pre-fall static arms captured.");
+                    break;
+                case "DiagnoseAtaBombInstallAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.AtaCargoRunScene.AtaBombInstallAnimationTool.DiagnoseAtaBombInstallAnimation,
+                        "Ata bomb-install animation diagnosed.");
+                    break;
                 case "InspectAndFixAtaOtherSlotsRightArmMesh":
                     RunSynchronous(
                         request,

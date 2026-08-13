@@ -1,0 +1,7 @@
+Unity editor bridge request completed: 90be806dc80749d9a0fe740e7abd9bd4
+Unity editor bridge command: ApplyAtaBombInstallSeatedLoop
+Unity editor bridge mode: open editor
+Ata bomb-install seated loop applied.
+
+Captured Unity log:
+Log: AtaBombInstallSeatedLoopApplied Result=PASS, SourceDurationSeconds=8.366667, EnterDurationSeconds=6.633333, SeatedLoopStartSeconds=6.633333, SeatedLoopEndSeconds=7.633333, SeatedLoopDurationSeconds=1, EnterStateSpeed=1, SeatedLoopStateSpeed=1, ReturnsToStandingStart=False, ProgressBarSeconds=25, OriginalMixamoClipPreserved=True, RightArmCorrectedMeshPreserved=True, SceneSaved=True.

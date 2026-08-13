@@ -594,9 +594,10 @@ namespace Bellerophon.Core.Session
         public const float AtaPistolAttackDelaySeconds = 1.5f;
         public const float AtaCommandRadiusMeters = 3f;
         public const float AtaCommandedMovementSpeed = 1.5f;
-        public const float AtaSabotageCastSeconds = 60f;
+        public const float AtaSabotageCastSeconds = 35f;
+        public const float AtaArmorySabotageCastSeconds = 30f;
         public const float AtaSabotageRecoverySeconds = 10f;
-        public const float AtaBombInstallSeconds = 45f;
+        public const float AtaBombInstallSeconds = 25f;
         public const int AtaControlHackClosedCorridorCount = 7;
         public const int AtaEngineBlackoutRoomCount = 5;
 
@@ -1205,8 +1206,9 @@ namespace Bellerophon.Core.Session
                 case SpacePirateSabotageKind.EngineOutputReduction:
                 case SpacePirateSabotageKind.ControlRoomHack:
                 case SpacePirateSabotageKind.AutoPilotDisable:
-                case SpacePirateSabotageKind.ArmoryTurretDisable:
                     return AtaSabotageCastSeconds;
+                case SpacePirateSabotageKind.ArmoryTurretDisable:
+                    return AtaArmorySabotageCastSeconds;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(sabotageKind), sabotageKind, "Unsupported Ata sabotage kind.");
             }

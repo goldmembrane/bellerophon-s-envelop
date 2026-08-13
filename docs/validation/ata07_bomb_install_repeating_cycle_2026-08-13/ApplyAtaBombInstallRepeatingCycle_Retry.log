@@ -1,0 +1,8 @@
+Unity editor bridge request completed: 83037f39742d4603bc90f8718052a2b6
+Unity editor bridge command: ApplyAtaBombInstallSeatedLoop
+Unity editor bridge mode: open editor
+Unity editor bridge failed.
+System.InvalidOperationException: CargoRunMvp has unsaved editor changes.
+  at Bellerophon.Editor.AtaCargoRunScene.AtaBombInstallAnimationTool.RequireCleanScene () [0x0001a] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\AtaBombInstallAnimationTool.cs:1834 
+  at Bellerophon.Editor.AtaCargoRunScene.AtaBombInstallAnimationTool.ApplyAtaBombInstallSeatedLoop () [0x00000] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\AtaBombInstallAnimationTool.cs:460 
+  at Bellerophon.Editor.Validation.UnityEditorValidationBridge.RunSynchronous (Bellerophon.Editor.Validation.UnityEditorValidationBridge+BridgeRequest request, System.Action action, System.String successMarker) [0x0001e] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\UnityEditorValidationBridge.cs:5795 

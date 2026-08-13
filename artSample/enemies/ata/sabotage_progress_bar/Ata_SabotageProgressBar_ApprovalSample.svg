@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">아타 사보타주 머리 위 진행바 승인용 UI 샘플</title>
+  <desc id="desc">아타의 60초 사보타주 시전 중 머리 위에 표시되는 진행바의 배치와 0, 25, 50, 75, 100퍼센트 상태를 보여주는 검토 시안</desc>
+  <defs>
+    <linearGradient id="pageBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#090d12"/>
+      <stop offset="0.55" stop-color="#111821"/>
+      <stop offset="1" stop-color="#080b10"/>
+    </linearGradient>
+    <linearGradient id="panelBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#171e27"/>
+      <stop offset="1" stop-color="#0e131a"/>
+    </linearGradient>
+    <linearGradient id="ataBody" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#48515d"/>
+      <stop offset="0.52" stop-color="#202832"/>
+      <stop offset="1" stop-color="#11161d"/>
+    </linearGradient>
+    <linearGradient id="fillRed" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8f201f"/>
+      <stop offset="0.62" stop-color="#d84535"/>
+      <stop offset="1" stop-color="#ff8a4c"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#718092" stroke-opacity="0.08" stroke-width="1"/>
+    </pattern>
+    <pattern id="fillStripes" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="skewX(-18)">
+      <rect width="7" height="14" fill="#ffffff" opacity="0.06"/>
+    </pattern>
+    <filter id="redGlow" x="-30%" y="-100%" width="160%" height="300%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+    <clipPath id="mainFillClip"><rect x="260" y="217" width="129" height="16" rx="4"/></clipPath>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#pageBg)"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+  <path d="M0 92H1600" stroke="#74302d" stroke-width="2"/>
+  <rect x="48" y="32" width="9" height="34" fill="#d84535"/>
+  <text x="76" y="61" fill="#f2f5f8" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="31" font-weight="700">아타 사보타주 진행바</text>
+  <text x="76" y="88" fill="#929eac" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="15">머리 위 월드 UI · 아트 샘플 · 기획서 시전시간 60초</text>
+  <rect x="1310" y="38" width="238" height="38" rx="19" fill="#241516" stroke="#8f302b"/>
+  <circle cx="1335" cy="57" r="6" fill="#e34b3c"/>
+  <text x="1350" y="63" fill="#f3bbb5" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="15" font-weight="700">사용자 승인 대기</text>
+
+  <!-- 머리 위 배치 검토 -->
+  <g filter="url(#shadow)">
+    <rect x="48" y="124" width="938" height="578" rx="18" fill="url(#panelBg)" stroke="#2d3744" stroke-width="2"/>
+  </g>
+  <text x="78" y="165" fill="#eef1f5" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="21" font-weight="700">01 · 실제 배치 비율</text>
+  <text x="78" y="190" fill="#8995a4" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="14">1920×1080 기준 시각 크기 / 아타 신장 1.85 m 기준</text>
+
+  <!-- 메인 진행바 50% -->
+  <g aria-label="30초, 50퍼센트 진행 상태">
+    <g filter="url(#redGlow)" opacity="0.35"><rect x="260" y="217" width="129" height="16" rx="4" fill="#e64c3d"/></g>
+    <path d="M238 208H508L522 225L508 242H238L224 225Z" fill="#070a0e" stroke="#657180" stroke-width="2"/>
+    <path d="M246 214H500L508 225L500 236H246L238 225Z" fill="#202833"/>
+    <rect x="246" y="217" width="258" height="16" rx="4" fill="#141a21" stroke="#090c11"/>
+    <rect x="246" y="217" width="129" height="16" rx="4" fill="url(#fillRed)"/>
+    <rect x="246" y="217" width="129" height="16" rx="4" fill="url(#fillStripes)"/>
+    <rect x="370" y="217" width="5" height="16" rx="2" fill="#ffd2a7" opacity="0.9"/>
+    <path d="M230 219L238 225L230 231Z" fill="#d84535"/>
+    <path d="M516 219L508 225L516 231Z" fill="#7b8795"/>
+  </g>
+  <path d="M373 245V274" stroke="#8f9cab" stroke-width="1.5" stroke-dasharray="4 5"/>
+  <text x="373" y="292" text-anchor="middle" fill="#f1a096" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="13" font-weight="700">머리 위 0.18 m</text>
+
+  <!-- Ata schematic silhouette -->
+  <g transform="translate(373 330)">
+    <ellipse cx="0" cy="347" rx="160" ry="18" fill="#000000" opacity="0.42"/>
+    <path d="M-51 81C-83 99-103 133-104 190L-85 294L-42 291L-29 185L0 156L29 185L42 291L85 294L104 190C103 133 83 99 51 81Z" fill="url(#ataBody)" stroke="#6a7581" stroke-width="3"/>
+    <path d="M-49 93L-91 127L-137 226L-104 242L-57 171L-34 132Z" fill="#2b333e" stroke="#687482" stroke-width="3"/>
+    <path d="M49 93L91 127L137 226L104 242L57 171L34 132Z" fill="#2b333e" stroke="#687482" stroke-width="3"/>
+    <path d="M-70 110L-43 95L-27 175L0 195L27 175L43 95L70 110L83 222L42 238L0 213L-42 238L-83 222Z" fill="#7e2524" stroke="#c4483c" stroke-width="3"/>
+    <path d="M-72 221L0 208L72 221L55 282L0 264L-55 282Z" fill="#5c1d1d" opacity="0.95"/>
+    <path d="M-43 282L-20 282L-16 342H-63Z" fill="#252d37" stroke="#66727e" stroke-width="3"/>
+    <path d="M20 282L43 282L63 342H16Z" fill="#252d37" stroke="#66727e" stroke-width="3"/>
+    <rect x="-72" y="336" width="58" height="14" rx="6" fill="#161c23" stroke="#697481" stroke-width="3"/>
+    <rect x="14" y="336" width="58" height="14" rx="6" fill="#161c23" stroke="#697481" stroke-width="3"/>
+    <path d="M-47 6Q0-24 47 6V64Q0 94-47 64Z" fill="#343d48" stroke="#8a949f" stroke-width="3"/>
+    <path d="M-48 28Q0 8 48 28" fill="none" stroke="#a93630" stroke-width="8"/>
+    <path d="M-28 47H27" stroke="#11161c" stroke-width="9"/>
+    <circle cx="18" cy="47" r="5" fill="#f26a51"/>
+    <path d="M-90 145H90" stroke="#d44a3c" stroke-width="3" opacity="0.75"/>
+  </g>
+
+  <!-- scale notes -->
+  <path d="M164 330V680M154 330H174M154 680H174" stroke="#687584" stroke-width="2"/>
+  <text x="144" y="512" text-anchor="middle" transform="rotate(-90 144 512)" fill="#9ca8b7" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="14">아타 기준 신장 1.85 m</text>
+  <path d="M528 225H652" stroke="#606c7a" stroke-width="1.5"/>
+  <text x="667" y="220" fill="#e2e7ed" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="15" font-weight="700">월드 폭 0.62 m</text>
+  <text x="667" y="243" fill="#909caa" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="13">높이 0.055 m · 정면 고정 표시</text>
+  <rect x="651" y="279" width="277" height="145" rx="12" fill="#111720" stroke="#303a47"/>
+  <text x="674" y="310" fill="#e7ebf0" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="16" font-weight="700">표시 원칙</text>
+  <circle cx="680" cy="340" r="4" fill="#d84535"/><text x="694" y="346" fill="#b6c0cc" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="14">사보타주 시작 시 0%로 표시</text>
+  <circle cx="680" cy="372" r="4" fill="#d84535"/><text x="694" y="378" fill="#b6c0cc" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="14">60초 동안 왼쪽에서 오른쪽으로 충전</text>
+  <circle cx="680" cy="404" r="4" fill="#d84535"/><text x="694" y="410" fill="#b6c0cc" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="14">아타 머리 중심을 따라 카메라 정면 유지</text>
+
+  <!-- specification panel -->
+  <g filter="url(#shadow)"><rect x="1014" y="124" width="538" height="578" rx="18" fill="url(#panelBg)" stroke="#2d3744" stroke-width="2"/></g>
+  <text x="1044" y="165" fill="#eef1f5" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="21" font-weight="700">02 · 시각 사양</text>
+  <text x="1044" y="202" fill="#8793a2" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="13">FRAME</text>
+  <text x="1044" y="231" fill="#e6eaf0" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="16">무광 흑철 외곽 + 짧은 좌우 경고 브래킷</text>
+  <line x1="1044" y1="253" x2="1522" y2="253" stroke="#303947"/>
+  <text x="1044" y="286" fill="#8793a2" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="13">FILL</text>
+  <rect x="1044" y="302" width="34" height="34" rx="6" fill="#8f201f"/><rect x="1088" y="302" width="34" height="34" rx="6" fill="#d84535"/><rect x="1132" y="302" width="34" height="34" rx="6" fill="#ff8a4c"/>
+  <text x="1182" y="325" fill="#e6eaf0" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="15">#8F201F → #D84535 → #FF8A4C</text>
+  <line x1="1044" y1="361" x2="1522" y2="361" stroke="#303947"/>
+  <text x="1044" y="394" fill="#8793a2" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="13">TIMING</text>
+  <text x="1044" y="438" fill="#f3f5f7" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="32" font-weight="700">60초</text>
+  <text x="1160" y="435" fill="#aab4c0" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="15">기획서 1분 기준 · 선형 진행</text>
+  <line x1="1044" y1="469" x2="1522" y2="469" stroke="#303947"/>
+  <text x="1044" y="502" fill="#8793a2" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="13">RUNTIME TARGET</text>
+  <text x="1044" y="532" fill="#e6eaf0" font-family="Consolas, monospace" font-size="15">CargoRunMvp / Ata_06_Sabotage</text>
+  <text x="1044" y="559" fill="#b0bac6" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="14">머리 앵커 하위 월드 공간 UI</text>
+  <text x="1044" y="585" fill="#b0bac6" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="14">사보타주 모션 활성 동안 표시</text>
+  <rect x="1044" y="617" width="478" height="52" rx="10" fill="#201719" stroke="#6f2b29"/>
+  <text x="1063" y="648" fill="#efb0a9" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="14">현재는 아트 샘플이며 Unity에는 적용하지 않습니다.</text>
+
+  <!-- timeline -->
+  <rect x="48" y="732" width="1504" height="220" rx="18" fill="#0d1218" stroke="#2d3744" stroke-width="2"/>
+  <text x="78" y="772" fill="#eef1f5" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="21" font-weight="700">03 · 60초 충전 단계</text>
+  <text x="78" y="799" fill="#8995a4" font-family="Malgun Gothic, Noto Sans KR, sans-serif" font-size="14">진행률 = 경과시간 ÷ 60초 · 선형 · 완료 시 100% 고정</text>
+
+  <g font-family="Malgun Gothic, Noto Sans KR, sans-serif">
+    <!-- 0% -->
+    <g transform="translate(82 834)">
+      <text x="112" y="-8" text-anchor="middle" fill="#f1f3f6" font-size="15" font-weight="700">0초 · 0%</text>
+      <rect x="0" y="7" width="224" height="28" rx="7" fill="#070a0e" stroke="#657180" stroke-width="2"/>
+      <rect x="8" y="13" width="208" height="16" rx="4" fill="#171d25"/>
+      <text x="112" y="61" text-anchor="middle" fill="#8692a1" font-size="13">시전 시작</text>
+    </g>
+    <!-- 25% -->
+    <g transform="translate(383 834)">
+      <text x="112" y="-8" text-anchor="middle" fill="#f1f3f6" font-size="15" font-weight="700">15초 · 25%</text>
+      <rect x="0" y="7" width="224" height="28" rx="7" fill="#070a0e" stroke="#657180" stroke-width="2"/>
+      <rect x="8" y="13" width="208" height="16" rx="4" fill="#171d25"/>
+      <rect x="8" y="13" width="52" height="16" rx="4" fill="url(#fillRed)"/>
+      <text x="112" y="61" text-anchor="middle" fill="#8692a1" font-size="13">1/4 경과</text>
+    </g>
+    <!-- 50% -->
+    <g transform="translate(684 834)">
+      <text x="112" y="-8" text-anchor="middle" fill="#f1f3f6" font-size="15" font-weight="700">30초 · 50%</text>
+      <rect x="0" y="7" width="224" height="28" rx="7" fill="#070a0e" stroke="#657180" stroke-width="2"/>
+      <rect x="8" y="13" width="208" height="16" rx="4" fill="#171d25"/>
+      <rect x="8" y="13" width="104" height="16" rx="4" fill="url(#fillRed)"/>
+      <text x="112" y="61" text-anchor="middle" fill="#8692a1" font-size="13">절반 경과</text>
+    </g>
+    <!-- 75% -->
+    <g transform="translate(985 834)">
+      <text x="112" y="-8" text-anchor="middle" fill="#f1f3f6" font-size="15" font-weight="700">45초 · 75%</text>
+      <rect x="0" y="7" width="224" height="28" rx="7" fill="#070a0e" stroke="#657180" stroke-width="2"/>
+      <rect x="8" y="13" width="208" height="16" rx="4" fill="#171d25"/>
+      <rect x="8" y="13" width="156" height="16" rx="4" fill="url(#fillRed)"/>
+      <text x="112" y="61" text-anchor="middle" fill="#8692a1" font-size="13">3/4 경과</text>
+    </g>
+    <!-- 100% -->
+    <g transform="translate(1286 834)">
+      <text x="112" y="-8" text-anchor="middle" fill="#ffd0c9" font-size="15" font-weight="700">60초 · 100%</text>
+      <rect x="0" y="7" width="224" height="28" rx="7" fill="#070a0e" stroke="#a74a43" stroke-width="2"/>
+      <rect x="8" y="13" width="208" height="16" rx="4" fill="url(#fillRed)"/>
+      <rect x="8" y="13" width="208" height="16" rx="4" fill="url(#fillStripes)"/>
+      <text x="112" y="61" text-anchor="middle" fill="#df8f86" font-size="13">시전 완료</text>
+    </g>
+  </g>
+</svg>

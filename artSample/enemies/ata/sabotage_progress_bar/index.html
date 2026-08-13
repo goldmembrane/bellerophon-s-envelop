@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>아타 사보타주 머리 위 진행바 아트 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #ece9df;
+      --muted: #b9b7ae;
+      --panel: #181b1c;
+      --panel-deep: #0e1112;
+      --line: #4d5150;
+      --ivory: #d8d4c8;
+      --copper: #d84535;
+      --cyan: #86d9ee;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Bahnschrift", "Malgun Gothic", sans-serif;
+      background:
+        linear-gradient(115deg, rgba(216, 69, 53, .08), transparent 36%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 5px),
+        #101314;
+      color: var(--ink);
+    }
+    main { max-width: 1180px; margin: 0 auto; padding: 34px 28px 56px; }
+    h1, h2, h3 { margin: 0 0 14px; letter-spacing: .01em; }
+    h1 { max-width: 860px; font-size: clamp(2rem, 5vw, 4.2rem); line-height: .98; color: var(--ivory); }
+    h2 { padding-bottom: 10px; border-bottom: 1px solid var(--line); color: var(--ivory); }
+    section { margin: 36px 0; }
+    p, li { line-height: 1.62; }
+    a { color: var(--cyan); text-underline-offset: 3px; }
+    code { color: var(--cyan); }
+    .eyebrow { color: var(--copper); font-size: .82rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    .lead { max-width: 960px; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 10px 10px 0 rgba(0,0,0,.22);
+    }
+    .comparison h3 { color: var(--ivory); }
+    figure { margin: 0; padding: 10px; background: var(--panel-deep); border: 1px solid #343939; }
+    img { width: 100%; height: auto; display: block; background: #0b0f14; }
+    figcaption { margin-top: 9px; color: var(--muted); font-size: 13px; word-break: break-all; }
+    .facts { padding: 18px 20px; background: rgba(216,212,200,.055); border-left: 3px solid var(--copper); }
+    .swatch { min-height: 92px; display: grid; place-content: center; border: 1px solid #343939; font-weight: 700; color: #f4eee8; }
+    .track { background: linear-gradient(90deg, #070a0e 0 50%, #202833 50% 100%); }
+    .fill { background: linear-gradient(90deg, #8f201f, #d84535 62%, #ff8a4c); }
+    .frame { background: linear-gradient(135deg, #657180, #070a0e 42%, #202833 75%, #657180); }
+    @media (max-width: 760px) {
+      main { padding: 26px 18px 44px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">World UI Art Sample · Ata Sabotage</p>
+  <h1>아타 사보타주 머리 위 진행바 아트 샘플</h1>
+  <p class="lead"><code>CargoRunMvp/Ata_06_Sabotage</code> 개체가 구역 특수 상호작용을 시전하는 동안 머리 위에 표시할 월드 공간 진행바의 승인용 샘플입니다. 최신 원본 기획서의 공통 사보타주 시전시간인 <code>35초</code>를 기준으로 빈 상태에서 완료 상태까지 선형으로 채워집니다. 현재 상태는 <code>ART_SAMPLE_APPROVED_AND_UNITY_APPLIED_2026-08-13</code>이며 빠른 판정용 요약은 <a href="summary.html">summary.html</a>에서 확인할 수 있습니다.</p>
+
+  <section>
+    <h2>이번 샘플의 승인·적용 경계 · 2026-08-13</h2>
+    <div class="facts">
+      <p><code>USER_APPROVED_PROGRESS_BAR_ONLY / UNITY_APPLIED_TO_ATA_06</code></p>
+      <p>사용자가 승인한 진행바의 형태·색상·크기·배치·채움 표현만 <code>Ata_06_Sabotage</code> 머리 위에 적용했습니다. SVG의 아타 실루엣과 HTML 검토 화면은 적용하지 않았고, 기존 서 있는 타이핑 애니메이션과 오른팔 메시도 변경하지 않았습니다.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>진행바 전체 검토 시안</h2>
+    <article class="comparison">
+      <h3>머리 위 배치·시각 사양·승인된 진행바 표현</h3>
+      <figure>
+        <a href="Ata_SabotageProgressBar_ApprovalSample.svg"><img src="Ata_SabotageProgressBar_ApprovalSample.svg" alt="아타 사보타주 머리 위 진행바 전체 승인 시안"></a>
+        <figcaption>Ata_SabotageProgressBar_ApprovalSample.svg — 진행바 시각과 배치 기준만 승인됨 / SVG의 기존 시간 문구는 최신 35초 기준으로 대체</figcaption>
+      </figure>
+    </article>
+  </section>
+
+  <section>
+    <h2>기획서 시간 기준</h2>
+    <div class="facts">
+      <ul>
+        <li>동력실 출력 감소 사보타주: <code>35초</code></li>
+        <li>통제실 해킹: <code>35초</code></li>
+        <li>조종실 자동 조종 무력화: <code>35초</code></li>
+        <li><code>Ata_06_Sabotage</code> 진행바 기준값: <code>35초</code></li>
+        <li>진행률 계산 기준: <code>경과시간 / 35초</code></li>
+        <li>무기실 포탑 비활성화는 <code>30초</code>, 비품실·운송 창고 내부 폭탄 설치는 <code>25초</code>의 별도 행동입니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>시간별 상태 전환</h2>
+    <div class="grid">
+      <div class="facts"><h3>0초 · 0%</h3><p>사보타주 모션 개체가 활성화될 때 빈 상태로 표시합니다.</p></div>
+      <div class="facts"><h3>8.75초 · 25%</h3><p>전체 트랙의 4분의 1을 왼쪽부터 채웁니다.</p></div>
+      <div class="facts"><h3>17.5초 · 50%</h3><p>전체 시전시간의 절반이 경과한 상태입니다.</p></div>
+      <div class="facts"><h3>26.25초 · 75%</h3><p>완료 직전 단계로 트랙의 4분의 3을 채웁니다.</p></div>
+      <div class="facts"><h3>35초 · 100%</h3><p>시전 완료 시 가득 찬 상태로 고정하는 표현입니다.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>진행바 시각 구성</h2>
+    <p class="lead">숫자나 문구를 실제 머리 위 바에 넣지 않고 프레임과 채움만 사용해 아타의 머리·팔 실루엣을 가리지 않도록 구성했습니다.</p>
+    <div class="grid">
+      <figure><div class="swatch frame">FRAME</div><figcaption>무광 흑철 외곽과 짧은 좌우 경고 브래킷</figcaption></figure>
+      <figure><div class="swatch track">EMPTY TRACK</div><figcaption>비어 있는 영역은 짙은 청회색·흑색으로 유지</figcaption></figure>
+      <figure><div class="swatch fill">ACTIVE FILL</div><figcaption>#8F201F → #D84535 → #FF8A4C 사보타주 계열 채움</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>Unity 적용 기준</h2>
+    <div class="facts">
+      <ul>
+        <li>예정 대상: <code>CargoRunMvp/Ata_06_Sabotage</code></li>
+        <li>예정 위치: 아타 머리 중심 위 <code>0.18m</code></li>
+        <li>제안 월드 크기: 폭 <code>0.62m</code>, 높이 <code>0.055m</code></li>
+        <li>진행 방향: 왼쪽에서 오른쪽</li>
+        <li>방향 기준: 아타를 따라 이동하며 카메라 정면 유지</li>
+        <li>표시 기준: 사보타주 모션 개체 활성 동안 표시</li>
+        <li>보존 대상: 현재 서 있는 타이핑 애니메이션, 오른팔 메시, 다른 아타 모션 개체</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>검토 파일</h2>
+    <ul>
+      <li>빠른 판정 페이지: <a href="summary.html"><code>summary.html</code></a></li>
+      <li>원본 벡터 시안: <a href="Ata_SabotageProgressBar_ApprovalSample.svg"><code>Ata_SabotageProgressBar_ApprovalSample.svg</code></a></li>
+      <li>설계 설명: <a href="README.md"><code>README.md</code></a></li>
+      <li>승인 상태: <a href="APPROVAL_STATUS.json"><code>APPROVAL_STATUS.json</code></a></li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>

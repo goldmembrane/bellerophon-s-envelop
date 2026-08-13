@@ -1,0 +1,8 @@
+Unity editor bridge request completed: 6a7543365675402e9a91ae49d95d1c2e
+Unity editor bridge command: ApplyAtaSabotageAnimation
+Unity editor bridge mode: open editor
+Ata sabotage animation applied.
+
+Captured Unity log:
+Log: AtaRightArmModelCorrection Slot=Ata_06_Sabotage, StretchComponents=0, MaximumRatio=1.440911, Changed=False
+Log: AtaSabotageAnimationApplied Result=PASS, Slot=Ata_06_Sabotage, Source=Assets/_Project/Art/Enemies/Ata/Animations/Sources/Ata_Typing.fbx, EmbeddedClip=mixamo.com, AppliedClip=Ata_06_Sabotage_Standing, Duration=16.45, StandingReference=AnatomicalLegLengthPose, RemovedLowerBodyCurves=31, BakedLowerBodyCurves=90, LeftKneeFlexion=12.11839, RightKneeFlexion=19.46455, FootHeightDifference=0.000003, Loop=True, RootMotion=False, CorrectedRightArmComponents=0, SlotTransformFixed=True, SceneSaved=True.

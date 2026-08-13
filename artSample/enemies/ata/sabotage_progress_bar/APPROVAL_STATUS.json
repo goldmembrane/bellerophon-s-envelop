@@ -1,0 +1,14 @@
+{
+  "sample": "ata_sabotage_progress_bar",
+  "target": "CargoRunMvp/Ata_06_Sabotage",
+  "approvalState": "사용자 승인 및 Unity 적용 완료",
+  "approvedScope": "진행바의 형태, 색상, 크기, 배치, 채움 표현만",
+  "approvedDate": "2026-08-13",
+  "castDurationSeconds": 35,
+  "unityApplicationAllowed": true,
+  "unityApplied": true,
+  "unityAppliedDate": "2026-08-13",
+  "unityTargetObject": "Approved Ata Enemy Placement/Ata_06_Sabotage/Ata_Model/Armature/Hips/Spine02/Spine01/Spine/neck/Head/Ata_SabotageProgressBar",
+  "requiresUserApprovalBeforeUnity": false,
+  "note": "SVG의 아타 실루엣과 HTML 검토 화면은 승인 대상이 아닙니다. Unity에는 진행바만 적용합니다."
+}

@@ -1,0 +1,7 @@
+Unity editor bridge request completed: 56f369d33fc2482385ca254491894545
+Unity editor bridge command: ApplyAtaSabotageRepeatingCycle
+Unity editor bridge mode: open editor
+Ata sabotage repeating cycle applied.
+
+Captured Unity log:
+Log: AtaSabotageRepeatingCycleApplied Result=PASS, ClipDurationSeconds=16.45, StateSpeed=1, CycleDurationSeconds=35, RestartExitTime=2.12766, ReturnsToStartAtCycleEnd=True, ProgressBarRestarts=True, StandingTypingClipPreserved=True, RightArmCorrectedMeshPreserved=True, SceneSaved=True.
