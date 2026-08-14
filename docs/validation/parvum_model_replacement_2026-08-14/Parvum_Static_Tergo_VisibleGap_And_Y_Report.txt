@@ -1,0 +1,17 @@
+Parvum Static Tergo Visible Gap And Y Alignment Report
+Result=PASS
+ParvumSlots=6
+TergoPrimarySlotCenterSpacing=1.450001
+StaticTergoActiveRendererWidthX=0.683167
+StaticTergoDerivedRendererBoundXGap=0.766834
+ParvumRendererBoundXGap=0.766834
+StaticTergoActiveRendererGroundY=0
+ParvumRendererGroundY=0
+LineupBoundsCenter=(57.82943,2.850135,-23.2663)
+LineupBoundsSize=(41.21847,5.70027,5.199249)
+PlayerFacesParvum=True
+CompleteLineupVisible=True
+TergoChanged=False
+OtherSceneRootsChanged=False
+CaptureCreated=True
+HarnessValidationRun=False

@@ -1758,6 +1758,96 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.ParvumCargoRunScene.ParvumCargoRunSceneApplyAndReview.ApplyApprovedSampleToCurrentCargoRunScene,
                         "Approved Parvum sample applied to current CargoRunMvp scene.");
                     break;
+                case "ApplyParvumGlbReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumGlbReplacementTool.ApplyParvumGlbReplacement,
+                        "The supplied Parvum GLB replaced the existing visible models, matched the current Ispant X spacing, and updated the Player start framing.");
+                    break;
+                case "CaptureParvumGlbReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumGlbReplacementTool.CaptureParvumGlbReplacement,
+                        "The final supplied Parvum GLB lineup was captured from the actual Player start camera.");
+                    break;
+                case "ApplyParvumTergoVisibleGapAndYAlignment":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumGlbReplacementTool.ApplyParvumTergoVisibleGapAndYAlignment,
+                        "Parvum active renderer-bound gaps and ground height were aligned to the current Tergo lineup, and the Player start framing was updated.");
+                    break;
+                case "CaptureParvumTergoVisibleGapAndYAlignment":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumGlbReplacementTool.CaptureParvumTergoVisibleGapAndYAlignment,
+                        "The Tergo-referenced Parvum visible-gap and ground-aligned lineup was captured from the actual Player start camera.");
+                    break;
+                case "ApplyParvumIdleBreathing":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumIdleBreathingTool.ApplyParvumIdleBreathing,
+                        "The new two-second, 2.5-percent full-body BlendShape breathing loop was applied only to Parvum_01_Idle.");
+                    break;
+                case "InspectParvumIdleBreathing":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumIdleBreathingTool.InspectParvumIdleBreathing,
+                        "The Parvum idle full-body breathing assets and current scene binding were inspected.");
+                    break;
+                case "CaptureParvumIdleBreathingComparison":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumIdleBreathingTool.CaptureParvumIdleBreathingComparison,
+                        "The final five-panel Parvum idle breathing comparison was captured without changing the scene.");
+                    break;
+                case "ApplyParvumMoveMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumMoveMotionTool.ApplyParvumMoveMotion,
+                        "The new-model Parvum forward slime movement was applied only to Parvum_02_Move.");
+                    break;
+                case "InspectParvumMoveMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumMoveMotionTool.InspectParvumMoveMotion,
+                        "The new-model Parvum forward slime movement assets and scene binding were inspected.");
+                    break;
+                case "CaptureParvumMoveMouthRootRigIdentification":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumMoveMotionTool.CaptureParvumMoveMouthRootRigIdentification,
+                        "The Parvum body-side mouth-root rig candidates were captured without changing the scene.");
+                    break;
+                case "CaptureParvumMoveMotionComparison":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumMoveMotionTool.CaptureParvumMoveMotionComparison,
+                        "The final five-panel new-model Parvum move comparison was captured without changing the scene.");
+                    break;
+                case "ApplyParvumAttackMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumAttackMotionTool.ApplyParvumAttackMotion,
+                        "The new-model Parvum wide-open forward bite attack was applied only to Parvum_03_Attack.");
+                    break;
+                case "InspectParvumAttackMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumAttackMotionTool.InspectParvumAttackMotion,
+                        "The new-model Parvum bite attack assets, mouth roots, physics binding, and scene scope were inspected.");
+                    break;
+                case "InspectParvumAttackOuterLipRegion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumAttackMotionTool.InspectParvumAttackOuterLipRegion,
+                        "The Parvum attack outer-lip rig and vertex regions were identified without changing the scene.");
+                    break;
+                case "CaptureParvumAttackMotionComparison":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumAttackMotionTool.CaptureParvumAttackMotionComparison,
+                        "The final five-panel new-model Parvum bite attack comparison was captured without changing the scene.");
+                    break;
                 case "ApplyApprovedFugaToCurrentCargoRunScene":
                     RunSynchronous(
                         request,

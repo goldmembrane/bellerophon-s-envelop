@@ -1,0 +1,15 @@
+Parvum GLB Replacement Report
+Result=PASS
+Source=D:/Bellerophon2/Bellerophon/enemies model/parvum.glb
+ImportedAsset=Assets/_Project/Art/Enemies/Parvum/Models/parvum.glb
+SourceSha256=E27840896F1DFA15BEE6F45F2BA943D28375A485E141907283CF79446B5640AB
+ParvumSlots=6
+IspantXSpacing=2.444763
+LineupBoundsCenter=(57.82944,2.830132,-23.2663)
+LineupBoundsSize=(18.45453,5.700268,5.199249)
+PlayerFacesParvum=True
+CompleteLineupVisible=True
+IspantChanged=False
+OtherSceneRootsChanged=False
+CaptureCreated=True
+HarnessValidationRun=False
