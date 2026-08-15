@@ -186,7 +186,8 @@ namespace Bellerophon.Enemies.Resistance
         private void SampleAnimator(float normalizedTime)
         {
             if (animator == null ||
-                animator.runtimeAnimatorController == null)
+                animator.runtimeAnimatorController == null ||
+                !animator.gameObject.activeInHierarchy)
             {
                 return;
             }

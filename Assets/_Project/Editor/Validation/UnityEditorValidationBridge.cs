@@ -1848,6 +1848,42 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.ParvumCargoRunScene.ParvumAttackMotionTool.CaptureParvumAttackMotionComparison,
                         "The final five-panel new-model Parvum bite attack comparison was captured without changing the scene.");
                     break;
+                case "ApplyParvumHitMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumHitMotionTool.ApplyParvumHitMotion,
+                        "The new three-second Parvum left-crush hit motion was applied only to Parvum_04_Hit.");
+                    break;
+                case "InspectParvumHitMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumHitMotionTool.InspectParvumHitMotion,
+                        "The new Parvum left-crush and single object-left head-shake motion was inspected.");
+                    break;
+                case "CaptureParvumHitMotionComparison":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumHitMotionTool.CaptureParvumHitMotionComparison,
+                        "The final six-panel Parvum hit motion comparison was captured without changing the scene.");
+                    break;
+                case "ApplyParvumDeathMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumDeathMotionTool.ApplyParvumDeathMotion,
+                        "The new three-second whole-body melt and one-second puddle-hold death motion was applied only to Parvum_05_Death.");
+                    break;
+                case "InspectParvumDeathMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumDeathMotionTool.InspectParvumDeathMotion,
+                        "The new Parvum whole-body melt, mouth disappearance, full-width puddle, loop timing, physics, and scene scope were inspected.");
+                    break;
+                case "CaptureParvumDeathMotionComparison":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.ParvumCargoRunScene.ParvumDeathMotionTool.CaptureParvumDeathMotionComparison,
+                        "The final seven-panel Parvum whole-body melt death comparison was captured without changing the scene.");
+                    break;
                 case "ApplyApprovedFugaToCurrentCargoRunScene":
                     RunSynchronous(
                         request,

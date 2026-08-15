@@ -29,7 +29,6 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
         private const string ControllerPath = "Assets/_Project/Art/Enemies/Parvum/Animations/Controllers/Parvum_Attack_NewModel_Controller.controller";
         private const string OpenRootBlendShapeName = "Attack_Upper_Lower_Mouth_Roots_Open";
         private const string BiteRootBlendShapeName = "Attack_Upper_Lower_Mouth_Roots_Bite";
-        private const string BodyImpactBlendShapeName = "Attack_Full_Body_Impact_Expansion";
         private const string UpperMouthRootBoneName = "Bone_002";
         private const string LowerMouthRootBoneName = "Bone_018";
         private const string LowerMouthRootSecondBoneName = "Bone_017";
@@ -51,28 +50,30 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
         // Briefly holds most of the impact pose before the longer recovery begins.
         private const float ImpactFollowThroughTime = 2.64f;
         private const float RecoveryTime = 3f;
-        private const float MouthRootOpenRatio = 0.65f;
-        private const float MouthRootBiteRatio = 0.50f;
-        // Advances both lip surfaces by a geometry-scaled amount during impact so the bite closes toward the target.
-        private const float LipPuckerForwardGapRatio = 0.50f;
-        // Outer-rim boosts keep the body-side mouth silhouette readable from the in-game side camera.
-        private const float OuterLipOpenBoost = 0.45f;
-        private const float OuterUpperBiteBoost = 0.65f;
-        private const float OuterLowerBiteBoost = 1.10f;
-        private const float OuterLipPuckerBoost = 0.60f;
-        // Image #2 is the foremost biting assembly, not the averaged outer-mouth group.
-        // Its own measured aperture drives a near-contact snap at impact.
+        // Whole-jaw translation supplies complete-mouth travel; pivot rotation preserves each jaw's shape.
+        private const float MouthRootOpenRatio = 0.45f;
+        private const float MouthRootBiteRatio = 0.856f;
+        private const float FrontMouthBiteCloseRatio = 0.025f;
+        private const float UpperMouthBiteTravelMultiplier = 1.10f;
+        private const float LowerMouthBiteTravelMultiplier = 0.90f;
+        // The complete upper and lower mouth preserve their shape by rotating around rear jaw pivots.
+        private const float JawPivotMinimumZ = 0.82f;
+        private const float JawOpenAngleDegrees = 20f;
+        private const float JawBiteAngleDegrees = 5.63f;
+        // Advances both complete jaw assemblies toward the target during the bite.
+        private const float LipPuckerForwardGapRatio = 0.80f;
         private const float FrontMouthMinimumZ = 1.12f;
-        private const float FrontMouthOpenRatio = 0.42f;
-        // The broad exterior muzzle must remain visibly separated instead of using the tooth-center contact gap.
-        private const float FrontMouthBiteApertureRatio = 0.085f;
-        private const float FrontUpperClosureShare = 0.48f;
-        private const float FrontRigidMotionBoost = 1.08f;
-        // The forceful bite is driven by a grounded full-body bulge instead of moving the model Transform.
-        private const float BodyImpactForwardExpansionMaximum = 0.68f;
-        private const float BodyImpactForwardExpansionRatio = 0.25f;
-        private const float BodyImpactSideExpansionRatio = 0.19f;
-        private const float BodyImpactVerticalExpansionRatio = 0.14f;
+        // The visual model lunges inside the unchanged physics root, then returns without drift.
+        private const float ModelForwardAnticipationDistance = 0.14f;
+        private const float ModelForwardLungeDistance = 0.58f;
+        private const float ModelForwardFollowThroughDistance = 0.46f;
+        // The lunge is reinforced by coherent visual-model scaling around its ground-level origin.
+        private const float ModelImpactScaleXMultiplier = 1.16f;
+        private const float ModelImpactScaleYMultiplier = 1.08f;
+        private const float ModelImpactScaleZMultiplier = 1.20f;
+        private const float ModelFollowScaleXMultiplier = 1.12f;
+        private const float ModelFollowScaleYMultiplier = 1.05f;
+        private const float ModelFollowScaleZMultiplier = 1.15f;
         private const float GeometryTolerance = 0.0001f;
         private const int ReviewLayer = 31;
         private const int PanelWidth = 420;
@@ -132,7 +133,7 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             }
 
             RequireLipBlendShapeMotion(model, renderer, animator);
-            var clip = EnsureClip(attackSlot, renderer);
+            var clip = EnsureClip(attackSlot, model, renderer);
             var controller = EnsureController(clip);
             animator.runtimeAnimatorController = controller;
             animator.avatar = null;
@@ -250,7 +251,7 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 ", BodyImpactVertices=" + result.BodyImpactVertexCount.ToString(CultureInfo.InvariantCulture) +
                 ", BodyImpactForwardExpansion=" + Num(result.BodyImpactForwardExpansion) +
                 ", BodyImpactSideExpansion=" + Num(result.BodyImpactSideExpansion) +
-                ", MouthAndBodyImpactBlendShapes=True" +
+                ", MouthBlendShapesAndModelScaleImpact=True" +
                 ", PhysicsPreserved=True" +
                 ", RootTransformCurves=False.");
         }
@@ -366,24 +367,19 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             generated.ClearBlendShapes();
             var vertices = generated.vertices;
             var rootDeltas = BuildMouthRootDeltas(renderer, generated, out var rootAnalysis);
-            var bodyImpactDeltas = BuildBodyImpactDeltas(renderer, generated, rootDeltas, out var bodyImpactAnalysis);
             var openTargets = new Vector3[vertices.Length];
             var biteTargets = new Vector3[vertices.Length];
-            var bodyImpactTargets = new Vector3[vertices.Length];
             for (var index = 0; index < vertices.Length; index++)
             {
                 openTargets[index] = vertices[index] + rootDeltas.OpenDeltas[index];
                 biteTargets[index] = vertices[index] + rootDeltas.BiteDeltas[index];
-                bodyImpactTargets[index] = vertices[index] + bodyImpactDeltas[index];
             }
 
             AddBlendShape(generated, OpenRootBlendShapeName, rootDeltas.OpenDeltas, openTargets);
             AddBlendShape(generated, BiteRootBlendShapeName, rootDeltas.BiteDeltas, biteTargets);
-            AddBlendShape(generated, BodyImpactBlendShapeName, bodyImpactDeltas, bodyImpactTargets);
             var combinedBounds = generated.bounds;
             combinedBounds.Encapsulate(BoundsFromVertices(openTargets));
             combinedBounds.Encapsulate(BoundsFromVertices(biteTargets));
-            combinedBounds.Encapsulate(BoundsFromVertices(bodyImpactTargets));
             generated.bounds = combinedBounds;
 
             var existing = AssetDatabase.LoadAssetAtPath<Mesh>(GeneratedMeshPath);
@@ -408,9 +404,7 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 ", RootOpenPercent=" + Num(rootAnalysis.OpenPercent) +
                 ", RootBiteClosurePercent=" + Num(rootAnalysis.BiteClosurePercent) +
                 ", LipPuckerForwardDistance=" + Num(rootAnalysis.PuckerForwardDistance) +
-                ", BodyImpactVertices=" + bodyImpactAnalysis.AffectedVertexCount.ToString(CultureInfo.InvariantCulture) +
-                ", BodyImpactForwardExpansion=" + Num(bodyImpactAnalysis.MaximumForwardDelta) +
-                ", BodyImpactSideExpansion=" + Num(bodyImpactAnalysis.MaximumSideDelta) + ".");
+                ", BodyScaleImpact=True.");
             return existing;
         }
 
@@ -420,63 +414,14 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             mesh.AddBlendShapeFrame(name, 100f, deltas, normalDeltas, tangentDeltas);
         }
 
-        private static Vector3[] BuildBodyImpactDeltas(
-            SkinnedMeshRenderer renderer,
-            Mesh mesh,
-            MouthRootDeltas mouthDeltas,
-            out BodyImpactAnalysis analysis)
+        private static BodyImpactAnalysis BuildBodyImpactAnalysis(Mesh mesh)
         {
-            var vertices = mesh.vertices;
-            // Use immutable base-vertex bounds so rebuilding and inspecting the expanded mesh select the same region.
-            var bounds = BoundsFromVertices(vertices);
-            var influence = BuildMouthRigInfluenceData(renderer, mesh);
-            var groundStart = bounds.min.y + bounds.size.y * 0.01f;
-            var groundFull = bounds.min.y + bounds.size.y * 0.12f;
-            var deltas = new Vector3[vertices.Length];
-            var affectedVertexCount = 0;
-            var maximumForwardDelta = 0f;
-            var maximumSideDelta = 0f;
-            var minimumAffectedHeight = float.PositiveInfinity;
-            for (var index = 0; index < vertices.Length; index++)
-            {
-                if (influence.ExclusionWeights[index] <= GeometryTolerance ||
-                    mouthDeltas.OpenDeltas[index].sqrMagnitude > GeometryTolerance * GeometryTolerance ||
-                    mouthDeltas.BiteDeltas[index].sqrMagnitude > GeometryTolerance * GeometryTolerance)
-                {
-                    continue;
-                }
-
-                var vertex = vertices[index];
-                var groundWeight = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(groundStart, groundFull, vertex.y));
-                var weight = groundWeight;
-                if (weight <= GeometryTolerance)
-                {
-                    continue;
-                }
-
-                var sideDelta = (vertex.x - bounds.center.x) * BodyImpactSideExpansionRatio * weight;
-                var verticalDelta = Mathf.Max(0f, vertex.y - bounds.min.y) *
-                                    BodyImpactVerticalExpansionRatio * weight;
-                var forwardDelta = Mathf.Min(
-                    BodyImpactForwardExpansionMaximum,
-                    Mathf.Max(0f, vertex.z - bounds.min.z) * BodyImpactForwardExpansionRatio) * weight;
-                deltas[index] = new Vector3(sideDelta, verticalDelta, forwardDelta);
-                affectedVertexCount++;
-                maximumForwardDelta = Mathf.Max(maximumForwardDelta, deltas[index].z);
-                maximumSideDelta = Mathf.Max(maximumSideDelta, Mathf.Abs(deltas[index].x));
-                minimumAffectedHeight = Mathf.Min(minimumAffectedHeight, vertex.y);
-            }
-
-            if (affectedVertexCount == 0)
-            {
-                throw new InvalidOperationException("Parvum front-body impact expansion region is empty.");
-            }
-            analysis = new BodyImpactAnalysis(
-                affectedVertexCount,
-                maximumForwardDelta,
-                maximumSideDelta,
-                minimumAffectedHeight - bounds.min.y);
-            return deltas;
+            var bounds = mesh.bounds;
+            return new BodyImpactAnalysis(
+                mesh.vertexCount,
+                bounds.size.z * (ModelImpactScaleZMultiplier - 1f),
+                bounds.extents.x * (ModelImpactScaleXMultiplier - 1f),
+                0f);
         }
 
         private static MouthRootDeltas BuildMouthRootDeltas(
@@ -484,141 +429,10 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             Mesh mesh,
             out MouthRootAnalysis analysis)
         {
-            var bones = renderer.bones;
-            var upperSurfaceNames = new HashSet<string>(UpperMouthSurfaceBoneNames, StringComparer.Ordinal);
-            var lowerSurfaceNames = new HashSet<string>(LowerMouthSurfaceBoneNames, StringComparer.Ordinal);
-            var upperRootIndices = new HashSet<int>(Enumerable.Range(0, bones.Length).Where(index =>
-                bones[index] != null && upperSurfaceNames.Contains(bones[index].name)));
-            var lowerRootIndices = new HashSet<int>(Enumerable.Range(0, bones.Length).Where(index =>
-                bones[index] != null && lowerSurfaceNames.Contains(bones[index].name)));
-            if (upperRootIndices.Count != UpperMouthSurfaceBoneNames.Length ||
-                lowerRootIndices.Count != LowerMouthSurfaceBoneNames.Length)
-            {
-                throw new InvalidOperationException("Parvum visible upper/lower mouth surface rigs are incomplete.");
-            }
-
-            var toothTransforms = new HashSet<Transform>();
-            foreach (var rootName in ToothBranchRootBoneNames)
-            {
-                var toothRoot = bones.FirstOrDefault(bone =>
-                    bone != null && string.Equals(bone.name, rootName, StringComparison.Ordinal)) ??
-                                throw new InvalidOperationException("Parvum tooth branch is missing: " + rootName + ".");
-                foreach (var item in toothRoot.GetComponentsInChildren<Transform>(true))
-                {
-                    toothTransforms.Add(item);
-                }
-            }
-
-            var toothIndices = new HashSet<int>(Enumerable.Range(0, bones.Length)
-                .Where(index => bones[index] != null && toothTransforms.Contains(bones[index])));
             var vertices = mesh.vertices;
-            var upperRootWeights = new float[vertices.Length];
-            var lowerRootWeights = new float[vertices.Length];
-            var toothWeights = new float[vertices.Length];
-            var bonesPerVertex = mesh.GetBonesPerVertex();
-            var allWeights = mesh.GetAllBoneWeights();
-            try
-            {
-                var weightIndex = 0;
-                for (var vertexIndex = 0; vertexIndex < vertices.Length; vertexIndex++)
-                {
-                    var influenceCount = bonesPerVertex[vertexIndex];
-                    for (var influenceIndex = 0; influenceIndex < influenceCount; influenceIndex++)
-                    {
-                        var influence = allWeights[weightIndex++];
-                        if (upperRootIndices.Contains(influence.boneIndex))
-                        {
-                            upperRootWeights[vertexIndex] += influence.weight;
-                        }
-                        if (lowerRootIndices.Contains(influence.boneIndex))
-                        {
-                            lowerRootWeights[vertexIndex] += influence.weight;
-                        }
-                        if (toothIndices.Contains(influence.boneIndex))
-                        {
-                            toothWeights[vertexIndex] += influence.weight;
-                        }
-                    }
-                }
-            }
-            finally
-            {
-                bonesPerVertex.Dispose();
-                allWeights.Dispose();
-            }
-
-            var innerUpperWeights = new float[vertices.Length];
-            var innerLowerWeights = new float[vertices.Length];
-            var outerUpperWeights = new float[vertices.Length];
-            var outerLowerWeights = new float[vertices.Length];
-            var upperFrontRigidWeights = new float[vertices.Length];
-            var lowerFrontRigidWeights = new float[vertices.Length];
-            var upperSnoutWeights = new float[vertices.Length];
-            var lowerSnoutWeights = new float[vertices.Length];
-            var frontUpperWeights = new float[vertices.Length];
-            var frontLowerWeights = new float[vertices.Length];
-            var upperWeights = new float[vertices.Length];
-            var lowerWeights = new float[vertices.Length];
-            for (var index = 0; index < vertices.Length; index++)
-            {
-                var vertex = vertices[index];
-                var exclusion = 1f - Mathf.SmoothStep(0.15f, 0.65f, toothWeights[index]);
-                innerUpperWeights[index] = upperRootWeights[index] * exclusion *
-                                           BandWeight(vertex.x, -0.42f, -0.34f, 0.34f, 0.42f) *
-                                           BandWeight(vertex.y, 0.78f, 0.84f, 1.10f, 1.17f) *
-                                           BandWeight(vertex.z, 0.68f, 0.76f, 1.12f, 1.22f);
-                innerLowerWeights[index] = Mathf.Clamp01(lowerRootWeights[index]) * exclusion *
-                                           BandWeight(vertex.x, -0.45f, -0.36f, 0.36f, 0.45f) *
-                                           BandWeight(vertex.y, 0.52f, 0.60f, 0.88f, 0.94f) *
-                                           BandWeight(vertex.z, 0.56f, 0.65f, 1.08f, 1.18f);
-
-                // The user's Image #2 includes the broad exterior muzzle, not only the central teeth.
-                // Include the full front-facing Bone_002..006 surface, then taper it separately from the rigid teeth.
-                var upperFrontSurface = upperRootWeights[index] > 0.02f && exclusion > 0.05f && vertex.y >= 0.76f
-                    ? BandWeight(vertex.x, -0.60f, -0.52f, 0.52f, 0.60f) *
-                      BandWeight(vertex.y, 0.66f, 0.74f, 1.24f, 1.32f) *
-                      BandWeight(vertex.z, 0.52f, 0.64f, 1.34f, 1.42f)
-                    : 0f;
-                var rigidUpperTeeth = toothWeights[index] > 0.01f ? 1f : 0f;
-                upperSnoutWeights[index] = upperFrontSurface;
-                var upperFrontRigid = rigidUpperTeeth;
-                // Include the lower exterior jaw through Bone_011..018; only its central tooth-bearing tip stays rigid.
-                var lowerFrontSurface = lowerRootWeights[index] > 0.02f && exclusion > 0.05f && vertex.y < 0.76f
-                    ? BandWeight(vertex.x, -0.60f, -0.52f, 0.52f, 0.60f) *
-                      BandWeight(vertex.y, 0.30f, 0.38f, 0.86f, 0.94f) *
-                      BandWeight(vertex.z, 0.48f, 0.60f, 1.34f, 1.42f)
-                    : 0f;
-                lowerSnoutWeights[index] = lowerFrontSurface;
-                var lowerFrontRigid = lowerFrontSurface *
-                                      BandWeight(vertex.x, -0.38f, -0.30f, 0.30f, 0.38f) *
-                                      BandWeight(vertex.y, 0.46f, 0.52f, 0.72f, 0.78f) *
-                                      BandWeight(vertex.z, 1.12f, 1.20f, 1.34f, 1.42f);
-                upperFrontRigidWeights[index] = upperFrontRigid;
-                lowerFrontRigidWeights[index] = lowerFrontRigid;
-                if (vertex.z >= FrontMouthMinimumZ)
-                {
-                    frontUpperWeights[index] = upperFrontRigid >= 0.999f && vertex.y >= 0.76f ? 1f : 0f;
-                    frontLowerWeights[index] = lowerFrontRigid >= 0.999f && vertex.y < 0.76f ? 1f : 0f;
-                }
-
-                // The visible upper lip spans the Bone_006-to-Bone_002 muzzle surface chain.
-                var upperFlesh = Mathf.Clamp01(upperRootWeights[index]) * exclusion *
-                                 BandWeight(vertex.x, -0.55f, -0.47f, 0.47f, 0.55f) *
-                                 BandWeight(vertex.y, 0.70f, 0.76f, 1.22f, 1.30f) *
-                                 BandWeight(vertex.z, 0.52f, 0.64f, 1.26f, 1.34f);
-                var fullUpperMouth = Mathf.Max(upperFlesh, Mathf.Max(upperFrontSurface, upperFrontRigid));
-                outerUpperWeights[index] = Mathf.Max(0f, fullUpperMouth - innerUpperWeights[index]);
-
-                // The visible lower lip reaches from Bone_018 at the root through Bone_011 at the front.
-                var lowerFlesh = Mathf.Clamp01(lowerRootWeights[index]) * exclusion *
-                                 BandWeight(vertex.x, -0.55f, -0.47f, 0.47f, 0.55f) *
-                                 BandWeight(vertex.y, 0.38f, 0.46f, 0.94f, 1.00f) *
-                                 BandWeight(vertex.z, 0.48f, 0.60f, 1.26f, 1.34f);
-                var fullLowerMouth = Mathf.Max(lowerFlesh, Mathf.Max(lowerFrontSurface, lowerFrontRigid));
-                outerLowerWeights[index] = Mathf.Max(0f, fullLowerMouth - innerLowerWeights[index]);
-                upperWeights[index] = Mathf.Max(innerUpperWeights[index], fullUpperMouth);
-                lowerWeights[index] = Mathf.Max(innerLowerWeights[index], fullLowerMouth);
-            }
+            var groups = BuildWholeMouthSelection(renderer, mesh);
+            var upperWeights = groups.UpperWeights;
+            var lowerWeights = groups.LowerWeights;
 
             var upperCenter = WeightedCenter(vertices, upperWeights);
             var lowerCenter = WeightedCenter(vertices, lowerWeights);
@@ -632,79 +446,53 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             var openTravel = gap * MouthRootOpenRatio / response;
             var biteTravel = gap * MouthRootBiteRatio / response;
             var puckerTravel = gap * LipPuckerForwardGapRatio / (response * 0.5f);
-            if (frontUpperWeights.All(weight => weight <= GeometryTolerance) ||
-                frontLowerWeights.All(weight => weight <= GeometryTolerance))
+            if (groups.FrontUpperWeights.All(weight => weight <= GeometryTolerance) ||
+                groups.FrontLowerWeights.All(weight => weight <= GeometryTolerance))
             {
                 throw new InvalidOperationException("Parvum Image #2 foremost upper/lower mouth groups are empty.");
             }
-            var frontGap = WeightedCenter(vertices, frontUpperWeights).y -
-                           WeightedCenter(vertices, frontLowerWeights).y;
+            var frontGap = WeightedCenter(vertices, groups.FrontUpperWeights).y -
+                           WeightedCenter(vertices, groups.FrontLowerWeights).y;
             if (frontGap <= GeometryTolerance)
             {
                 throw new InvalidOperationException("Parvum Image #2 foremost mouth aperture is invalid.");
             }
-            var frontOpenTravel = frontGap * FrontMouthOpenRatio;
-            var frontTargetAperture = Mathf.Max(GeometryTolerance * 10f, frontGap * FrontMouthBiteApertureRatio);
-            var frontClosureTravel = frontGap - frontTargetAperture;
-            var frontUpperBiteTravel = frontClosureTravel * FrontUpperClosureShare;
-            var frontLowerBiteTravel = frontClosureTravel * (1f - FrontUpperClosureShare);
-            var frontPuckerTravel = frontGap * LipPuckerForwardGapRatio;
             var openDeltas = new Vector3[vertices.Length];
             var biteDeltas = new Vector3[vertices.Length];
             var rigidUpperFrontVertices = new bool[vertices.Length];
             var rigidLowerFrontVertices = new bool[vertices.Length];
             var openTargets = new Vector3[vertices.Length];
             var biteTargets = new Vector3[vertices.Length];
+            var upperPivot = new Vector3(upperCenter.x, upperCenter.y, JawPivotMinimumZ);
+            var lowerPivot = new Vector3(lowerCenter.x, lowerCenter.y, JawPivotMinimumZ);
+            var upperOpenRotation = Quaternion.AngleAxis(-JawOpenAngleDegrees, Vector3.right);
+            var lowerOpenRotation = Quaternion.AngleAxis(JawOpenAngleDegrees, Vector3.right);
+            var upperBiteRotation = Quaternion.AngleAxis(JawBiteAngleDegrees, Vector3.right);
+            var lowerBiteRotation = Quaternion.AngleAxis(-JawBiteAngleDegrees, Vector3.right);
             for (var index = 0; index < vertices.Length; index++)
             {
-                var outerOpenUpper = outerUpperWeights[index] * OuterLipOpenBoost;
-                var outerOpenLower = outerLowerWeights[index] * OuterLipOpenBoost;
-                var outerBiteUpper = outerUpperWeights[index] * OuterUpperBiteBoost;
-                var outerBiteLower = outerLowerWeights[index] * OuterLowerBiteBoost;
-                var outerPucker = Mathf.Max(outerUpperWeights[index], outerLowerWeights[index]) * OuterLipPuckerBoost;
-                openDeltas[index] = Vector3.up * openTravel * (upperWeights[index] + outerOpenUpper) +
-                                    Vector3.down * openTravel * (lowerWeights[index] + outerOpenLower);
-                biteDeltas[index] = Vector3.down * biteTravel * (upperWeights[index] + outerBiteUpper) +
-                                    Vector3.up * biteTravel * (lowerWeights[index] + outerBiteLower) +
-                                    Vector3.forward * puckerTravel *
-                                    (Mathf.Max(upperWeights[index], lowerWeights[index]) + outerPucker);
-                var snoutFrontness = Mathf.Clamp01(Mathf.InverseLerp(0.52f, 1.34f, vertices[index].z));
-                var snoutTravelScale = Mathf.Lerp(0.51f, 1.18f, snoutFrontness);
-                if (upperSnoutWeights[index] > GeometryTolerance)
-                {
-                    var upperSnoutOpen = Vector3.up * frontOpenTravel * snoutTravelScale;
-                    var upperSnoutBite = Vector3.down * frontUpperBiteTravel * snoutTravelScale +
-                                         Vector3.forward * frontPuckerTravel * snoutTravelScale;
-                    openDeltas[index] = Vector3.Lerp(openDeltas[index], upperSnoutOpen, upperSnoutWeights[index]);
-                    biteDeltas[index] = Vector3.Lerp(biteDeltas[index], upperSnoutBite, upperSnoutWeights[index]);
-                }
-                if (lowerSnoutWeights[index] > GeometryTolerance)
-                {
-                    var lowerSnoutOpen = Vector3.down * frontOpenTravel * snoutTravelScale;
-                    var lowerSnoutBite = Vector3.up * frontLowerBiteTravel * snoutTravelScale +
-                                         Vector3.forward * frontPuckerTravel * snoutTravelScale;
-                    openDeltas[index] = Vector3.Lerp(openDeltas[index], lowerSnoutOpen, lowerSnoutWeights[index]);
-                    biteDeltas[index] = Vector3.Lerp(biteDeltas[index], lowerSnoutBite, lowerSnoutWeights[index]);
-                }
-                rigidUpperFrontVertices[index] = upperFrontRigidWeights[index] >= 0.999f;
-                rigidLowerFrontVertices[index] = lowerFrontRigidWeights[index] >= 0.999f;
-                if (rigidUpperFrontVertices[index] && rigidLowerFrontVertices[index])
-                {
-                    rigidUpperFrontVertices[index] = vertices[index].y >= 0.76f;
-                    rigidLowerFrontVertices[index] = !rigidUpperFrontVertices[index];
-                }
-                if (rigidUpperFrontVertices[index])
-                {
-                    openDeltas[index] = Vector3.up * frontOpenTravel * FrontRigidMotionBoost;
-                    biteDeltas[index] = Vector3.down * frontUpperBiteTravel * FrontRigidMotionBoost +
-                                        Vector3.forward * frontPuckerTravel * FrontRigidMotionBoost;
-                }
-                else if (rigidLowerFrontVertices[index])
-                {
-                    openDeltas[index] = Vector3.down * frontOpenTravel * FrontRigidMotionBoost;
-                    biteDeltas[index] = Vector3.up * frontLowerBiteTravel * FrontRigidMotionBoost +
-                                        Vector3.forward * frontPuckerTravel * FrontRigidMotionBoost;
-                }
+                var upperWeight = upperWeights[index];
+                var lowerWeight = lowerWeights[index];
+                var combinedWeight = Mathf.Max(upperWeight, lowerWeight);
+                var upperOpenTarget = upperPivot + upperOpenRotation * (vertices[index] - upperPivot);
+                var lowerOpenTarget = lowerPivot + lowerOpenRotation * (vertices[index] - lowerPivot);
+                var upperBiteTarget = upperPivot + upperBiteRotation * (vertices[index] - upperPivot);
+                var lowerBiteTarget = lowerPivot + lowerBiteRotation * (vertices[index] - lowerPivot);
+                openDeltas[index] = Vector3.up * openTravel * upperWeight +
+                                    Vector3.down * openTravel * lowerWeight +
+                                    (upperOpenTarget - vertices[index]) * upperWeight +
+                                    (lowerOpenTarget - vertices[index]) * lowerWeight;
+                biteDeltas[index] = Vector3.down * biteTravel * UpperMouthBiteTravelMultiplier * upperWeight +
+                                    Vector3.up * biteTravel * LowerMouthBiteTravelMultiplier * lowerWeight +
+                                    (upperBiteTarget - vertices[index]) * upperWeight +
+                                    (lowerBiteTarget - vertices[index]) * lowerWeight +
+                                    Vector3.down * frontGap * FrontMouthBiteCloseRatio *
+                                    groups.FrontUpperWeights[index] +
+                                    Vector3.up * frontGap * FrontMouthBiteCloseRatio *
+                                    groups.FrontLowerWeights[index] +
+                                    Vector3.forward * puckerTravel * combinedWeight;
+                rigidUpperFrontVertices[index] = groups.FrontUpperWeights[index] >= 0.999f;
+                rigidLowerFrontVertices[index] = groups.FrontLowerWeights[index] >= 0.999f;
                 openTargets[index] = vertices[index] + openDeltas[index];
                 biteTargets[index] = vertices[index] + biteDeltas[index];
             }
@@ -716,8 +504,8 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             analysis = new MouthRootAnalysis(
                 upperWeights.Count(weight => weight > GeometryTolerance),
                 lowerWeights.Count(weight => weight > GeometryTolerance),
-                outerUpperWeights.Count(weight => weight > GeometryTolerance),
-                outerLowerWeights.Count(weight => weight > GeometryTolerance),
+                groups.OuterUpperWeights.Count(weight => weight > GeometryTolerance),
+                groups.OuterLowerWeights.Count(weight => weight > GeometryTolerance),
                 (openGap / gap - 1f) * 100f,
                 (1f - biteGap / gap) * 100f,
                 biteForward - restForward);
@@ -759,9 +547,17 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
 
             var toothIndices = new HashSet<int>(Enumerable.Range(0, bones.Length)
                 .Where(index => bones[index] != null && toothTransforms.Contains(bones[index])));
+            var innerMouthRoot = bones.FirstOrDefault(bone =>
+                bone != null && string.Equals(bone.name, InnerMouthRootBoneName, StringComparison.Ordinal)) ??
+                                 throw new InvalidOperationException("Parvum inner-mouth branch is missing.");
+            var innerTransforms = new HashSet<Transform>(
+                innerMouthRoot.GetComponentsInChildren<Transform>(true));
+            var innerIndices = new HashSet<int>(Enumerable.Range(0, bones.Length)
+                .Where(index => bones[index] != null && innerTransforms.Contains(bones[index])));
             var upperRootWeights = new float[mesh.vertexCount];
             var lowerRootWeights = new float[mesh.vertexCount];
             var toothWeights = new float[mesh.vertexCount];
+            var innerWeights = new float[mesh.vertexCount];
             var bonesPerVertex = mesh.GetBonesPerVertex();
             var allWeights = mesh.GetAllBoneWeights();
             try
@@ -785,6 +581,10 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                         {
                             toothWeights[vertexIndex] += influence.weight;
                         }
+                        if (innerIndices.Contains(influence.boneIndex))
+                        {
+                            innerWeights[vertexIndex] += influence.weight;
+                        }
                     }
                 }
             }
@@ -799,7 +599,127 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             {
                 exclusionWeights[index] = 1f - Mathf.SmoothStep(0.15f, 0.65f, toothWeights[index]);
             }
-            return new MouthRigInfluenceData(upperRootWeights, lowerRootWeights, exclusionWeights);
+            return new MouthRigInfluenceData(
+                upperRootWeights,
+                lowerRootWeights,
+                toothWeights,
+                innerWeights,
+                exclusionWeights);
+        }
+
+        private static MouthSelectionWeights BuildWholeMouthSelection(
+            SkinnedMeshRenderer renderer,
+            Mesh mesh)
+        {
+            var influence = BuildMouthRigInfluenceData(renderer, mesh);
+            var vertices = mesh.vertices;
+            var candidateUpperWeights = new float[vertices.Length];
+            var candidateLowerWeights = new float[vertices.Length];
+            var candidateInnerUpperWeights = new float[vertices.Length];
+            var candidateInnerLowerWeights = new float[vertices.Length];
+            var upperWeights = new float[vertices.Length];
+            var lowerWeights = new float[vertices.Length];
+            var innerUpperWeights = new float[vertices.Length];
+            var innerLowerWeights = new float[vertices.Length];
+            var outerUpperWeights = new float[vertices.Length];
+            var outerLowerWeights = new float[vertices.Length];
+            var frontUpperWeights = new float[vertices.Length];
+            var frontLowerWeights = new float[vertices.Length];
+            for (var index = 0; index < vertices.Length; index++)
+            {
+                var vertex = vertices[index];
+                var upperRegion = influence.UpperRootWeights[index] > 0.02f && vertex.y >= 0.70f
+                    ? BandWeight(vertex.x, -0.62f, -0.54f, 0.54f, 0.62f) *
+                      BandWeight(vertex.y, 0.64f, 0.72f, 1.28f, 1.36f) *
+                      BandWeight(vertex.z, 0.48f, 0.58f, 1.36f, 1.44f)
+                    : 0f;
+                var lowerRegion = influence.LowerRootWeights[index] > 0.02f && vertex.y < 0.82f
+                    ? BandWeight(vertex.x, -0.62f, -0.54f, 0.54f, 0.62f) *
+                      BandWeight(vertex.y, 0.28f, 0.36f, 0.90f, 0.98f) *
+                      BandWeight(vertex.z, 0.44f, 0.54f, 1.36f, 1.44f)
+                    : 0f;
+                candidateInnerUpperWeights[index] = 0f;
+                candidateInnerLowerWeights[index] = 0f;
+                var rigidUpperTeeth = influence.ToothWeights[index] > 0.01f ? 1f : 0f;
+                candidateUpperWeights[index] = Mathf.Max(rigidUpperTeeth, upperRegion);
+                candidateLowerWeights[index] = lowerRegion;
+
+                if (candidateUpperWeights[index] > GeometryTolerance &&
+                    candidateLowerWeights[index] > GeometryTolerance)
+                {
+                    if (vertex.y >= 0.76f)
+                    {
+                        candidateLowerWeights[index] = 0f;
+                        candidateInnerLowerWeights[index] = 0f;
+                    }
+                    else
+                    {
+                        candidateUpperWeights[index] = 0f;
+                        candidateInnerUpperWeights[index] = 0f;
+                    }
+                }
+            }
+
+            AssignWholeMouthRegionWeights(
+                candidateUpperWeights,
+                candidateLowerWeights,
+                candidateInnerUpperWeights,
+                candidateInnerLowerWeights,
+                upperWeights,
+                lowerWeights,
+                innerUpperWeights,
+                innerLowerWeights);
+            for (var index = 0; index < vertices.Length; index++)
+            {
+                outerUpperWeights[index] = Mathf.Max(0f, upperWeights[index] - innerUpperWeights[index]);
+                outerLowerWeights[index] = Mathf.Max(0f, lowerWeights[index] - innerLowerWeights[index]);
+                if (vertices[index].z >= FrontMouthMinimumZ)
+                {
+                    frontUpperWeights[index] = upperWeights[index];
+                    frontLowerWeights[index] = lowerWeights[index];
+                }
+            }
+
+            if (upperWeights.All(weight => weight <= GeometryTolerance) ||
+                lowerWeights.All(weight => weight <= GeometryTolerance) ||
+                frontUpperWeights.All(weight => weight <= GeometryTolerance) ||
+                frontLowerWeights.All(weight => weight <= GeometryTolerance))
+            {
+                throw new InvalidOperationException("Parvum whole upper/lower mouth selection is incomplete.");
+            }
+
+            return new MouthSelectionWeights(
+                upperWeights,
+                lowerWeights,
+                innerUpperWeights,
+                innerLowerWeights,
+                outerUpperWeights,
+                outerLowerWeights,
+                frontUpperWeights,
+                frontLowerWeights,
+                influence.InnerWeights.Count(weight => weight > GeometryTolerance));
+        }
+
+        private static void AssignWholeMouthRegionWeights(
+            IReadOnlyList<float> candidateUpperWeights,
+            IReadOnlyList<float> candidateLowerWeights,
+            IReadOnlyList<float> candidateInnerUpperWeights,
+            IReadOnlyList<float> candidateInnerLowerWeights,
+            float[] upperWeights,
+            float[] lowerWeights,
+            float[] innerUpperWeights,
+            float[] innerLowerWeights)
+        {
+            // Keep the complete geometric mouth bands moving together while retaining only a narrow
+            // rear/side seam falloff. Promoting a touched triangle component to a full jaw also captures
+            // disconnected torso patches in this source mesh, so component-wide assignment is unsafe.
+            for (var index = 0; index < upperWeights.Length; index++)
+            {
+                upperWeights[index] = Mathf.Clamp01(candidateUpperWeights[index]);
+                lowerWeights[index] = Mathf.Clamp01(candidateLowerWeights[index]);
+                innerUpperWeights[index] = Mathf.Clamp01(candidateInnerUpperWeights[index]);
+                innerLowerWeights[index] = Mathf.Clamp01(candidateInnerLowerWeights[index]);
+            }
         }
 
         private static void AppendVertexGroup(
@@ -1096,6 +1016,7 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
 
         private static AnimationClip EnsureClip(
             Transform attackSlot,
+            Transform model,
             SkinnedMeshRenderer renderer)
         {
             var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(ClipPath);
@@ -1123,14 +1044,61 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 new Keyframe(BiteImpactTime, 100f),
                 new Keyframe(ImpactFollowThroughTime, 100f),
                 new Keyframe(RecoveryTime, 0f));
-            SetBlendShapeCurve(clip, rendererPath, BodyImpactBlendShapeName,
-                new Keyframe(0f, 0f),
-                new Keyframe(WideOpenTime, 0f),
-                new Keyframe(ForwardLeanTime, 0f),
-                new Keyframe(BiteSnapStartTime, 20f),
-                new Keyframe(BiteImpactTime, 100f),
-                new Keyframe(ImpactFollowThroughTime, 82f),
-                new Keyframe(RecoveryTime, 0f));
+            var restModelPosition = model.localPosition;
+            var restModelScale = model.localScale;
+            var modelPath = AnimationUtility.CalculateTransformPath(model, attackSlot);
+            SetVector3Curves(
+                clip,
+                modelPath,
+                new[]
+                {
+                    0f,
+                    WideOpenTime,
+                    ForwardLeanTime,
+                    BiteSnapStartTime,
+                    BiteImpactTime,
+                    ImpactFollowThroughTime,
+                    RecoveryTime
+                },
+                new[]
+                {
+                    restModelPosition,
+                    restModelPosition,
+                    restModelPosition + Vector3.forward * ModelForwardAnticipationDistance,
+                    restModelPosition + Vector3.forward * ModelForwardAnticipationDistance,
+                    restModelPosition + Vector3.forward * ModelForwardLungeDistance,
+                    restModelPosition + Vector3.forward * ModelForwardFollowThroughDistance,
+                    restModelPosition
+                });
+            SetScaleCurves(
+                clip,
+                modelPath,
+                new[]
+                {
+                    0f,
+                    WideOpenTime,
+                    ForwardLeanTime,
+                    BiteSnapStartTime,
+                    BiteImpactTime,
+                    ImpactFollowThroughTime,
+                    RecoveryTime
+                },
+                new[]
+                {
+                    restModelScale,
+                    restModelScale,
+                    restModelScale,
+                    restModelScale,
+                    Vector3.Scale(restModelScale, new Vector3(
+                        ModelImpactScaleXMultiplier,
+                        ModelImpactScaleYMultiplier,
+                        ModelImpactScaleZMultiplier)),
+                    Vector3.Scale(restModelScale, new Vector3(
+                        ModelFollowScaleXMultiplier,
+                        ModelFollowScaleYMultiplier,
+                        ModelFollowScaleZMultiplier)),
+                    restModelScale
+                });
 
             var settings = AnimationUtility.GetAnimationClipSettings(clip);
             settings.loopTime = true;
@@ -1198,6 +1166,27 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 AnimationUtility.SetEditorCurve(
                     clip,
                     EditorCurveBinding.FloatCurve(path, typeof(Transform), "m_LocalPosition." + components[component]),
+                    SmoothCurve(keys));
+            }
+        }
+
+        private static void SetScaleCurves(
+            AnimationClip clip,
+            string path,
+            IReadOnlyList<float> times,
+            IReadOnlyList<Vector3> scales)
+        {
+            var components = new[] { "x", "y", "z" };
+            for (var component = 0; component < components.Length; component++)
+            {
+                var keys = new Keyframe[times.Count];
+                for (var index = 0; index < times.Count; index++)
+                {
+                    keys[index] = new Keyframe(times[index], Vector3Component(scales[index], component));
+                }
+                AnimationUtility.SetEditorCurve(
+                    clip,
+                    EditorCurveBinding.FloatCurve(path, typeof(Transform), "m_LocalScale." + components[component]),
                     SmoothCurve(keys));
             }
         }
@@ -1272,23 +1261,17 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             }
 
             var mesh = renderer.sharedMesh;
-            if (mesh.blendShapeCount != 3 ||
+            if (mesh.blendShapeCount != 2 ||
                 mesh.GetBlendShapeIndex(OpenRootBlendShapeName) != 0 ||
-                mesh.GetBlendShapeIndex(BiteRootBlendShapeName) != 1 ||
-                mesh.GetBlendShapeIndex(BodyImpactBlendShapeName) != 2)
+                mesh.GetBlendShapeIndex(BiteRootBlendShapeName) != 1)
             {
                 throw new InvalidOperationException(
-                    "Parvum attack mesh must contain the two mouth-root BlendShapes and the front-body impact BlendShape.");
+                    "Parvum attack mesh must contain only the two whole-mouth BlendShapes.");
             }
 
             var rendererPath = AnimationUtility.CalculateTransformPath(renderer.transform, attackSlot);
             var openCurve = RequireCurve(clip, rendererPath, typeof(SkinnedMeshRenderer), "blendShape." + OpenRootBlendShapeName);
             var biteCurve = RequireCurve(clip, rendererPath, typeof(SkinnedMeshRenderer), "blendShape." + BiteRootBlendShapeName);
-            var bodyImpactCurve = RequireCurve(
-                clip,
-                rendererPath,
-                typeof(SkinnedMeshRenderer),
-                "blendShape." + BodyImpactBlendShapeName);
             RequireCurveValue(openCurve, WideOpenTime, 100f, "wide-open mouth roots");
             RequireCurveValue(openCurve, BiteSnapStartTime, 100f, "held-open mouth roots before impact");
             RequireCurveValue(openCurve, BiteImpactTime, 0f, "impact open roots");
@@ -1296,9 +1279,6 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             RequireCurveValue(biteCurve, BiteImpactTime, 100f, "bite mouth roots");
             RequireCurveValue(biteCurve, ImpactFollowThroughTime, 100f, "bite follow-through mouth roots");
             RequireCurveValue(biteCurve, RecoveryTime, 0f, "recovered mouth roots");
-            RequireCurveValue(bodyImpactCurve, WideOpenTime, 0f, "wide-open body impact");
-            RequireCurveValue(bodyImpactCurve, BiteImpactTime, 100f, "impact body expansion");
-            RequireCurveValue(bodyImpactCurve, RecoveryTime, 0f, "recovered body expansion");
             var upperMouthRoot = FindChildRecursive(model, UpperMouthRootBoneName) ??
                                  throw new InvalidOperationException("Parvum upper-mouth rig root is missing during inspection.");
             var lowerJaw = FindChildRecursive(model, LowerJawRootBoneName) ??
@@ -1314,14 +1294,49 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             if (AnimationUtility.GetCurveBindings(clip).Any(binding =>
                     binding.type == typeof(Transform) && fixedMouthPaths.Contains(binding.path)))
             {
-                throw new InvalidOperationException("Parvum lip-only attack must not rotate or translate the mouth rig bones.");
+                throw new InvalidOperationException("Parvum whole-mouth attack must not rotate or translate individual mouth rig bones.");
             }
-            if (AnimationUtility.GetCurveBindings(clip).Any(binding =>
-                    binding.type == typeof(Transform)))
+            var modelPath = AnimationUtility.CalculateTransformPath(model, attackSlot);
+            var transformBindings = AnimationUtility.GetCurveBindings(clip)
+                .Where(binding => binding.type == typeof(Transform))
+                .ToArray();
+            if (transformBindings.Any(binding => !string.Equals(binding.path, modelPath, StringComparison.Ordinal)))
             {
                 throw new InvalidOperationException(
-                    "Parvum attack must use only mouth and broad front-body BlendShapes, without Transform curves.");
+                    "Parvum attack Transform curves must be limited to visual-model lunge and expansion.");
             }
+            var modelXCurve = RequireCurve(clip, modelPath, typeof(Transform), "m_LocalPosition.x");
+            var modelYCurve = RequireCurve(clip, modelPath, typeof(Transform), "m_LocalPosition.y");
+            var modelZCurve = RequireCurve(clip, modelPath, typeof(Transform), "m_LocalPosition.z");
+            var modelScaleXCurve = RequireCurve(clip, modelPath, typeof(Transform), "m_LocalScale.x");
+            var modelScaleYCurve = RequireCurve(clip, modelPath, typeof(Transform), "m_LocalScale.y");
+            var modelScaleZCurve = RequireCurve(clip, modelPath, typeof(Transform), "m_LocalScale.z");
+            RequireCurveValue(modelXCurve, BiteImpactTime, model.localPosition.x, "impact model local X");
+            RequireCurveValue(modelYCurve, BiteImpactTime, model.localPosition.y, "impact model local Y");
+            RequireCurveValue(
+                modelZCurve,
+                BiteImpactTime,
+                model.localPosition.z + ModelForwardLungeDistance,
+                "impact visual-model forward lunge");
+            RequireCurveValue(modelZCurve, RecoveryTime, model.localPosition.z, "recovered visual-model local Z");
+            RequireCurveValue(
+                modelScaleXCurve,
+                BiteImpactTime,
+                model.localScale.x * ModelImpactScaleXMultiplier,
+                "impact visual-model scale X");
+            RequireCurveValue(
+                modelScaleYCurve,
+                BiteImpactTime,
+                model.localScale.y * ModelImpactScaleYMultiplier,
+                "impact visual-model scale Y");
+            RequireCurveValue(
+                modelScaleZCurve,
+                BiteImpactTime,
+                model.localScale.z * ModelImpactScaleZMultiplier,
+                "impact visual-model scale Z");
+            RequireCurveValue(modelScaleXCurve, RecoveryTime, model.localScale.x, "recovered visual-model scale X");
+            RequireCurveValue(modelScaleYCurve, RecoveryTime, model.localScale.y, "recovered visual-model scale Y");
+            RequireCurveValue(modelScaleZCurve, RecoveryTime, model.localScale.z, "recovered visual-model scale Z");
 
             RequireReviewPhysics(attackSlot, motionTarget);
             RequireOnlyAttackConfigured(parvumRoot, attackSlot, animator);
@@ -1335,8 +1350,8 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             var rootDeltas = BuildMouthRootDeltas(renderer, mesh, out var rootAnalysis);
             if (rootAnalysis.UpperVertexCount == 0 || rootAnalysis.LowerVertexCount == 0 ||
                 rootAnalysis.OuterUpperVertexCount == 0 || rootAnalysis.OuterLowerVertexCount == 0 ||
-                rootAnalysis.OpenPercent < MouthRootOpenRatio * 100f ||
-                rootAnalysis.BiteClosurePercent < MouthRootBiteRatio * 100f ||
+                rootAnalysis.OpenPercent + 0.01f < MouthRootOpenRatio * 100f ||
+                rootAnalysis.BiteClosurePercent + 0.01f < MouthRootBiteRatio * 100f ||
                 rootAnalysis.PuckerForwardDistance <= 0.03f)
             {
                 throw new InvalidOperationException("Parvum upper/lower mouth-root deformation is incomplete.");
@@ -1346,27 +1361,26 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             {
                 throw new InvalidOperationException("Parvum mouth-root attack deltas are empty.");
             }
-            RequireRigidFrontMouthGroup(
+            RequireWholeFrontMouthGroupMotion(
                 rootDeltas,
                 rootDeltas.RigidUpperFrontVertices,
+                true,
                 "upper front mouth and teeth");
-            RequireRigidFrontMouthGroup(
+            RequireWholeFrontMouthGroupMotion(
                 rootDeltas,
                 rootDeltas.RigidLowerFrontVertices,
+                false,
                 "lower front mouth and teeth");
-            var bodyImpactDeltas = BuildBodyImpactDeltas(renderer, mesh, rootDeltas, out var bodyImpactAnalysis);
-            if (bodyImpactAnalysis.AffectedVertexCount < mesh.vertexCount * 0.32f ||
+            var bodyImpactAnalysis = BuildBodyImpactAnalysis(mesh);
+            if (bodyImpactAnalysis.AffectedVertexCount != mesh.vertexCount ||
                 bodyImpactAnalysis.MaximumForwardDelta < 0.1f ||
-                bodyImpactAnalysis.MaximumSideDelta <= GeometryTolerance ||
-                bodyImpactAnalysis.MinimumAffectedHeightAboveGround <= GeometryTolerance ||
-                bodyImpactDeltas.All(delta => delta.sqrMagnitude <= GeometryTolerance * GeometryTolerance))
+                bodyImpactAnalysis.MaximumSideDelta <= GeometryTolerance)
             {
                 throw new InvalidOperationException(
-                    "Parvum grounded full-body impact expansion is incomplete. Vertices=" +
+                    "Parvum coherent full-model impact expansion is incomplete. Vertices=" +
                     bodyImpactAnalysis.AffectedVertexCount.ToString(CultureInfo.InvariantCulture) +
                     ", Forward=" + Num(bodyImpactAnalysis.MaximumForwardDelta) +
-                    ", Side=" + Num(bodyImpactAnalysis.MaximumSideDelta) +
-                    ", GroundClearance=" + Num(bodyImpactAnalysis.MinimumAffectedHeightAboveGround) + ".");
+                    ", Side=" + Num(bodyImpactAnalysis.MaximumSideDelta) + ".");
             }
 
             var groups = BuildMouthSkinGroups(renderer, lowerJaw, innerMouth);
@@ -1374,7 +1388,7 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             if (sample.WideOpenPercent < 55f ||
                 sample.BiteAperture <= GeometryTolerance ||
                 sample.BiteClosurePercent < 97f ||
-                sample.BiteClosurePercent > 99f)
+                sample.BiteClosurePercent > 99.7f)
             {
                 throw new InvalidOperationException(
                     "Parvum attack sampling did not produce a wide-open mouth followed by a non-crossing closed bite. " +
@@ -1415,15 +1429,15 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                     ", UpperDown=" + Num(sample.FrontUpperBiteDown) +
                     ", LowerUp=" + Num(sample.FrontLowerBiteUp) + ".");
             }
-            if (sample.ForwardLeanDistance <= 0.30f ||
-                sample.ImpactLungeDistance <= 0.25f ||
+            if (sample.ForwardLeanDistance <= 0.70f ||
+                sample.ImpactLungeDistance <= 0.45f ||
                 sample.ModelVerticalTravel > GeometryTolerance ||
                 sample.ModelLateralTravel > GeometryTolerance ||
                 sample.ModelRotationTravel > GeometryTolerance ||
-                sample.ModelForwardPositionTravel > GeometryTolerance)
+                Mathf.Abs(sample.ModelForwardPositionTravel - ModelForwardLungeDistance) > GeometryTolerance)
             {
                 throw new InvalidOperationException(
-                    "Parvum broad front-body mesh impact or fixed-model Transform requirement is invalid. Advance=" +
+                    "Parvum broad front-body impact or visual-model forward lunge is invalid. Advance=" +
                     Num(sample.ForwardLeanDistance) +
                     ", ImpactLunge=" + Num(sample.ImpactLungeDistance) +
                     ", ModelVerticalTravel=" + Num(sample.ModelVerticalTravel) +
@@ -1776,6 +1790,15 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 upperWeights[index] = Mathf.Max(innerUpperWeights[index], fullUpperMouth);
                 lowerWeights[index] = Mathf.Max(innerLowerWeights[index], fullLowerMouth);
             }
+            var wholeMouth = BuildWholeMouthSelection(renderer, mesh);
+            upperWeights = wholeMouth.UpperWeights;
+            lowerWeights = wholeMouth.LowerWeights;
+            innerUpperWeights = wholeMouth.InnerUpperWeights;
+            innerLowerWeights = wholeMouth.InnerLowerWeights;
+            outerUpperWeights = wholeMouth.OuterUpperWeights;
+            outerLowerWeights = wholeMouth.OuterLowerWeights;
+            frontUpperWeights = wholeMouth.FrontUpperWeights;
+            frontLowerWeights = wholeMouth.FrontLowerWeights;
             if (upperWeights.All(weight => weight <= GeometryTolerance) ||
                 lowerWeights.All(weight => weight <= GeometryTolerance) ||
                 frontUpperWeights.All(weight => weight <= GeometryTolerance) ||
@@ -1794,7 +1817,7 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 frontUpperWeights,
                 frontLowerWeights,
                 innerWeights,
-                innerAffected.Count(value => value));
+                wholeMouth.InnerAffectedVertexCount);
         }
 
         private static float MeasureMouthAperture(
@@ -1950,13 +1973,9 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                     ", CameraDistance=" + Num(distance));
                 var reviewRotation = Quaternion.LookRotation(viewDirection, Vector3.up);
                 var fullBodyCameraPosition = framingBounds.center - viewDirection * distance;
-                var mouthBounds = TransformLocalBoundsToWorld(
-                    renderer.transform,
-                    new Bounds(new Vector3(0f, 0.86f, 1.08f), new Vector3(1.04f, 1.02f, 0.82f)));
-                var mouthDistance = Mathf.Max(
-                    mouthBounds.extents.y / Mathf.Max(0.01f, Mathf.Tan(verticalRadians)),
-                    mouthBounds.extents.x / Mathf.Max(0.01f, Mathf.Tan(horizontalRadians))) * 1.12f;
-                var mouthCameraPosition = mouthBounds.center - viewDirection * mouthDistance;
+                var mouthLocalBounds = new Bounds(
+                    new Vector3(0f, 0.86f, 1.08f),
+                    new Vector3(1.04f, 1.02f, 0.82f));
                 reviewCamera.transform.SetPositionAndRotation(fullBodyCameraPosition, reviewRotation);
 
                 var light = lightObject.GetComponent<Light>();
@@ -1982,7 +2001,12 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                         CaptureHeight,
                         panelImage.GetPixels32());
 
-                    reviewCamera.transform.SetPositionAndRotation(mouthCameraPosition, reviewRotation);
+                    var sampledMouthBounds = TransformLocalBoundsToWorld(renderer.transform, mouthLocalBounds);
+                    var sampledMouthDistance = Mathf.Max(
+                        sampledMouthBounds.extents.y / Mathf.Max(0.01f, Mathf.Tan(verticalRadians)),
+                        sampledMouthBounds.extents.x / Mathf.Max(0.01f, Mathf.Tan(horizontalRadians))) * 1.12f;
+                    var sampledMouthCameraPosition = sampledMouthBounds.center - viewDirection * sampledMouthDistance;
+                    reviewCamera.transform.SetPositionAndRotation(sampledMouthCameraPosition, reviewRotation);
                     reviewCamera.Render();
                     panelImage.ReadPixels(new Rect(0, 0, PanelWidth, CaptureHeight), 0, 0);
                     panelImage.Apply();
@@ -2135,9 +2159,10 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             }
         }
 
-        private static void RequireRigidFrontMouthGroup(
+        private static void RequireWholeFrontMouthGroupMotion(
             MouthRootDeltas deltas,
             IReadOnlyList<bool> selectedVertices,
+            bool upperMouth,
             string label)
         {
             var selected = Enumerable.Range(0, selectedVertices.Count)
@@ -2150,17 +2175,21 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                     selected.Length.ToString(CultureInfo.InvariantCulture) + ".");
             }
 
-            var referenceOpen = deltas.OpenDeltas[selected[0]];
-            var referenceBite = deltas.BiteDeltas[selected[0]];
-            var maximumOpenDeviation = selected.Max(index =>
-                Vector3.Distance(referenceOpen, deltas.OpenDeltas[index]));
-            var maximumBiteDeviation = selected.Max(index =>
-                Vector3.Distance(referenceBite, deltas.BiteDeltas[index]));
-            if (maximumOpenDeviation > GeometryTolerance || maximumBiteDeviation > GeometryTolerance)
+            var incorrectMotionCount = selected.Count(index =>
+            {
+                var open = deltas.OpenDeltas[index];
+                var bite = deltas.BiteDeltas[index];
+                var openVertical = upperMouth ? open.y : -open.y;
+                var biteVertical = upperMouth ? -bite.y : bite.y;
+                return openVertical <= GeometryTolerance ||
+                       biteVertical <= GeometryTolerance ||
+                       bite.z <= GeometryTolerance;
+            });
+            if (incorrectMotionCount != 0)
             {
                 throw new InvalidOperationException(
-                    "Parvum " + label + " must move as one rigid mouth assembly. OpenDeviation=" +
-                    Num(maximumOpenDeviation) + ", BiteDeviation=" + Num(maximumBiteDeviation) + ".");
+                    "Parvum " + label + " must participate in the complete jaw opening and forward bite. " +
+                    "IncorrectVertices=" + incorrectMotionCount.ToString(CultureInfo.InvariantCulture) + ".");
             }
         }
 
@@ -2473,10 +2502,10 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 .AppendLine("Phases=Rest,WideOpen,AdvanceAnticipation,BiteSnapStart,ClosedBiteImpact,ImpactFollowThrough,Recovered")
                 .AppendLine("BiteSnapDurationSeconds=" + Num(BiteImpactTime - BiteSnapStartTime))
                 .AppendLine("LocalForward=+Z")
-                .AppendLine("ForwardAdvanceDriver=Grounded full-body visible-mesh expansion without Transform curves")
+                .AppendLine("ForwardAdvanceDriver=Coherent grounded visual-model scaling plus temporary forward lunge inside the unchanged physics root")
                 .AppendLine("MouthRootOpenBlendShape=" + OpenRootBlendShapeName)
                 .AppendLine("MouthRootBiteBlendShape=" + BiteRootBlendShapeName)
-                .AppendLine("BodyImpactBlendShape=" + BodyImpactBlendShapeName)
+                .AppendLine("BodyImpactDriver=VisualModelLocalScale")
                 .AppendLine("MouthRigRoot=" + LowerJawRootBoneName)
                 .AppendLine("UpperVisibleMouthSurfaceRigs=" + string.Join(",", UpperMouthSurfaceBoneNames))
                 .AppendLine("LowerVisibleMouthSurfaceRigs=" + string.Join(",", LowerMouthSurfaceBoneNames))
@@ -2496,10 +2525,8 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 .AppendLine("MouthRootOpenRatio=" + Num(MouthRootOpenRatio))
                 .AppendLine("MouthRootBiteRatio=" + Num(MouthRootBiteRatio))
                 .AppendLine("LipPuckerForwardGapRatio=" + Num(LipPuckerForwardGapRatio))
-                .AppendLine("OuterLipOpenBoost=" + Num(OuterLipOpenBoost))
-                .AppendLine("OuterUpperBiteBoost=" + Num(OuterUpperBiteBoost))
-                .AppendLine("OuterLowerBiteBoost=" + Num(OuterLowerBiteBoost))
-                .AppendLine("OuterLipPuckerBoost=" + Num(OuterLipPuckerBoost))
+                .AppendLine("WholeMouthMotion=Complete geometric upper and lower mouth bands use shared jaw translation and pivot rotation with rear/side seam falloff")
+                .AppendLine("FrontMouthBiteCloseRatio=" + Num(FrontMouthBiteCloseRatio))
                 .AppendLine("UpperLipOpenLift=" + Num(result.UpperLipOpenLift))
                 .AppendLine("LowerLipOpenDrop=" + Num(result.LowerLipOpenDrop))
                 .AppendLine("UpperLipBiteForward=" + Num(result.UpperLipBiteForward))
@@ -2513,13 +2540,12 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 .AppendLine("Image2FrontBiteClosurePercent=" + Num(result.FrontBiteClosurePercent))
                 .AppendLine("Image2FrontUpperBiteDown=" + Num(result.FrontUpperBiteDown))
                 .AppendLine("Image2FrontLowerBiteUp=" + Num(result.FrontLowerBiteUp))
-                .AppendLine("RigidFrontMouthAssemblies=True")
+                .AppendLine("CompleteFrontMouthAssemblies=True")
                 .AppendLine("BodyImpactAffectedVertices=" + result.BodyImpactVertexCount.ToString(CultureInfo.InvariantCulture))
-                .AppendLine("BodyImpactScope=Full grounded torso excluding separately animated mouth assemblies")
-                .AppendLine("BodyImpactForwardExpansionMaximum=" + Num(BodyImpactForwardExpansionMaximum))
-                .AppendLine("BodyImpactForwardExpansionRatio=" + Num(BodyImpactForwardExpansionRatio))
-                .AppendLine("BodyImpactSideExpansionRatio=" + Num(BodyImpactSideExpansionRatio))
-                .AppendLine("BodyImpactVerticalExpansionRatio=" + Num(BodyImpactVerticalExpansionRatio))
+                .AppendLine("BodyImpactScope=Entire visual model scaled coherently around the ground-level model origin")
+                .AppendLine("ModelImpactScaleXMultiplier=" + Num(ModelImpactScaleXMultiplier))
+                .AppendLine("ModelImpactScaleYMultiplier=" + Num(ModelImpactScaleYMultiplier))
+                .AppendLine("ModelImpactScaleZMultiplier=" + Num(ModelImpactScaleZMultiplier))
                 .AppendLine("BodyImpactForwardExpansion=" + Num(result.BodyImpactForwardExpansion))
                 .AppendLine("BodyImpactSideExpansion=" + Num(result.BodyImpactSideExpansion))
                 .AppendLine("ForwardAdvanceDistance=" + Num(result.ForwardLeanDistance))
@@ -2529,8 +2555,9 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 .AppendLine("ModelLateralTravel=" + Num(result.ModelLateralTravel))
                 .AppendLine("ModelRotationTravel=" + Num(result.ModelRotationTravel))
                 .AppendLine("ModelForwardPositionTravel=" + Num(result.ModelForwardPositionTravel))
+                .AppendLine("ModelForwardLungeDistance=" + Num(ModelForwardLungeDistance))
                 .AppendLine("MouthRigTransformCurves=False")
-                .AppendLine("ModelTransformCurves=False")
+                .AppendLine("ModelTransformCurves=ForwardLungeAndGroundedImpactScale")
                 .AppendLine("RootTransformCurves=False")
                 .AppendLine("RigidbodyColliderDriverPreserved=True")
                 .AppendLine("MotionTargetPath=" + result.MotionTargetPath)
@@ -2612,16 +2639,57 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             public MouthRigInfluenceData(
                 float[] upperRootWeights,
                 float[] lowerRootWeights,
+                float[] toothWeights,
+                float[] innerWeights,
                 float[] exclusionWeights)
             {
                 UpperRootWeights = upperRootWeights;
                 LowerRootWeights = lowerRootWeights;
+                ToothWeights = toothWeights;
+                InnerWeights = innerWeights;
                 ExclusionWeights = exclusionWeights;
             }
 
             public float[] UpperRootWeights { get; }
             public float[] LowerRootWeights { get; }
+            public float[] ToothWeights { get; }
+            public float[] InnerWeights { get; }
             public float[] ExclusionWeights { get; }
+        }
+
+        private sealed class MouthSelectionWeights
+        {
+            public MouthSelectionWeights(
+                float[] upperWeights,
+                float[] lowerWeights,
+                float[] innerUpperWeights,
+                float[] innerLowerWeights,
+                float[] outerUpperWeights,
+                float[] outerLowerWeights,
+                float[] frontUpperWeights,
+                float[] frontLowerWeights,
+                int innerAffectedVertexCount)
+            {
+                UpperWeights = upperWeights;
+                LowerWeights = lowerWeights;
+                InnerUpperWeights = innerUpperWeights;
+                InnerLowerWeights = innerLowerWeights;
+                OuterUpperWeights = outerUpperWeights;
+                OuterLowerWeights = outerLowerWeights;
+                FrontUpperWeights = frontUpperWeights;
+                FrontLowerWeights = frontLowerWeights;
+                InnerAffectedVertexCount = innerAffectedVertexCount;
+            }
+
+            public float[] UpperWeights { get; }
+            public float[] LowerWeights { get; }
+            public float[] InnerUpperWeights { get; }
+            public float[] InnerLowerWeights { get; }
+            public float[] OuterUpperWeights { get; }
+            public float[] OuterLowerWeights { get; }
+            public float[] FrontUpperWeights { get; }
+            public float[] FrontLowerWeights { get; }
+            public int InnerAffectedVertexCount { get; }
         }
 
         private readonly struct MouthRootAnalysis
