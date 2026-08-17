@@ -1,0 +1,20 @@
+Fuga Facing And Disconnected Legacy Animations Report
+Result=PASS
+SourceSha256=009430EB298B83C6EA48CD2AF7B9BE3DF075EA512DAF6978BBE41D5C917AF3AB
+SceneSlots=7
+ModelLocalYawDegrees=180
+LegacyAnimatorControllers=0
+EnabledLegacyAnimators=0
+LegacyPlaybackDrivers=0
+PhysicsReviewMotionLocked=True
+IdleRootCause=LegacyExecuteAlwaysPlaybackSampledFugaApprovedModelLocalYCurve
+IdleLegacyCurveMaximumY=0.14
+IdleLegacyCurveMinimumY=-0.084
+IdleModelLocalY=0
+MinimumPlayerFacingDot=0.752326
+PlayerChanged=False
+OtherSceneRootsChanged=False
+ExistingAnimationAssetsModified=False
+NewAnimationsCreated=False
+CaptureCreated=True
+HarnessValidationRun=False

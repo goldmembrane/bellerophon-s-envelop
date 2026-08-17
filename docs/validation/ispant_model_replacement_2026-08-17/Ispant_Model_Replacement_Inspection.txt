@@ -1,0 +1,21 @@
+Ispant model replacement inspection
+SourceSha256=EEAF6B319DBF561E562DB8C8CDF6C4797D7F659620EAC9491E3EDFA490649EED
+Material=Assets/_Project/Art/Enemies/Ispant/Models/Materials/Ispant_New_Model.mat
+Shader=Bellerophon/Ispant/ApprovedAppearance
+Slot=Ispant_01_Static|Mesh=Assets/_Project/Art/Enemies/Ispant/Models/Generated/Ispant_New_CustomRig_Mesh.asset|Bones=24|Bounds=(1.0703, 1.1817, 0.8153)
+Slot=Ispant_02_Idle|Mesh=Assets/_Project/Art/Enemies/Ispant/Models/Generated/Ispant_New_CustomRig_Mesh.asset|Bones=24|Bounds=(1.0703, 1.1817, 0.8153)
+Slot=Ispant_03_Move|Mesh=Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_MixamoRig.fbx|Bones=33|Bounds=(1.0274, 1.2662, 0.6507)
+Slot=Ispant_04_DrawSword|Mesh=Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_MixamoRig.fbx|Bones=33|Bounds=(0.8772, 1.3251, 0.9365)
+Slot=Ispant_05_RunningOneHandedSwordAttack|Mesh=Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_MixamoRig.fbx|Bones=33|Bounds=(1.1660, 1.3310, 0.7903)
+Slot=Ispant_06_SheathSwordDrawMusket|Mesh=Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_MixamoRig.fbx|Bones=33|Bounds=(0.9407, 1.2776, 1.0962)
+Slot=Ispant_07_BreakthroughMusketAimFire|Mesh=Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_MixamoRig.fbx|Bones=33|Bounds=(0.9407, 1.2776, 1.0962)
+Slot=Ispant_08_StowMusketDrawSword|Mesh=Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_MixamoRig.fbx|Bones=33|Bounds=(0.9407, 1.2776, 1.0962)
+Slot=Ispant_09_OneHandedSwordAttack|Mesh=Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_MixamoRig.fbx|Bones=33|Bounds=(1.1660, 1.3310, 0.7903)
+Slot=Ispant_10_Stop|Mesh=Assets/_Project/Art/Enemies/Ispant/Models/Generated/Ispant_New_CustomRig_Mesh.asset|Bones=24|Bounds=(1.0703, 1.1817, 0.8153)
+Slot=Ispant_11_HitReaction|Mesh=Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_MixamoRig.fbx|Bones=33|Bounds=(1.1660, 1.3310, 0.7903)
+Slot=Ispant_12_Death|Mesh=Assets/_Project/Art/Enemies/Ispant/Models/Generated/Ispant_New_DeathRig_Mesh.asset|Bones=33|Bounds=(1.0675, 1.2350, 0.7543)
+CustomRigSlots=3
+MixamoRigSlots=8
+DeathRigSlots=1
+DisabledOldAppearanceRenderers=24
+Result=PASS

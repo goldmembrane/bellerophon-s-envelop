@@ -32,34 +32,27 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
         private const string OldDeathControllerPath =
             "Assets/_Project/Art/Enemies/Parvum/Animations/Controllers/Parvum_Death_Controller.controller";
         private const string MeltBlendShapeName = "Death_WholeBody_Melt_New";
-        private const string PuddleBlendShapeName = "Death_FullBodyWidth_Puddle_New";
+        private const string LegacyPuddleBlendShapeName = "Death_FullBodyWidth_Puddle_New";
         private const string PuddleVisualName = "Parvum_Death_Puddle_Visual";
         private const string PuddleVisualMeshName = "parvum_death_green_puddle_visual_mesh";
         private const string PuddleVisualMaterialName = "parvum_death_green_puddle_visual_material";
-        private const string OutputFolder = "docs/validation/parvum_death_motion_2026-08-15";
+        private const string OutputFolder = "docs/validation/parvum_death_motion_2026-08-16";
         private const string ReportPath = OutputFolder + "/Parvum_Death_Motion_Report.txt";
         private const string CapturePath = OutputFolder + "/Parvum_Death_Motion_Final_Comparison.png";
         private const string ExpectedSourceSha256 =
             "E27840896F1DFA15BEE6F45F2BA943D28375A485E141907283CF79446B5640AB";
 
-        // User-approved three-second loop: melt for two seconds, then hold the puddle for one second.
+        // User-approved three-second loop: melt the original textured body for two seconds, then hold it for one second.
         private const float CycleSeconds = 3f;
-        private const float MeltQuarterTime = 0.45f;
-        private const float MeltDeepTime = 0.95f;
-        private const float MeltCollapseTime = 1.25f;
-        private const float MeltPuddleBlendTime = 1.60f;
-        private const float PuddleStartTime = 2f;
-        private const float PuddleHoldSampleTime = 2.5f;
+        private const float MeltQuarterTime = 0.72f;
+        private const float MeltDeepTime = 1.52f;
+        private const float MeltEndTime = 2f;
+        private const float MeltHoldSampleTime = 2.5f;
+        // Legacy puddle construction constants remain only for reading and removing the previous generated subassets.
         private const float PuddleDepthToWidthRatio = 0.72f;
-        // Affine flattening preserves the source width through the GLB skin weights without extra expansion.
-        private const float PuddleSkinnedWidthCompensation = 1f;
-        // Cancels the measured +0.00485 m final-puddle lift introduced by the same skinning pass.
-        private const float PuddleSkinnedGroundCompensation = -0.00485f;
-        private const float MaximumPuddleThickness = 0.12f;
         private const float VisiblePuddleHeight = 0.09f;
         private const float GeometryTolerance = 0.0001f;
         private const float GroundTolerance = 0.003f;
-        private const float WidthToleranceRatio = 0.02f;
         private const float MouthAffectedWeightThreshold = 0.20f;
         private const float MouthVisibilityWeightThreshold = 0.50f;
         private const int ReviewLayer = 31;
@@ -67,7 +60,7 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
         private const int CaptureHeight = 520;
 
         private static readonly float[] CaptureTimes =
-            { 0f, 0.60f, 1.20f, MeltPuddleBlendTime, PuddleStartTime, PuddleHoldSampleTime, CycleSeconds };
+            { 0f, 0.60f, 1.20f, 1.60f, MeltEndTime, MeltHoldSampleTime, CycleSeconds };
 
         private static readonly string[] UpperMouthSurfaceBoneNames =
             { "Bone_002", "Bone_003", "Bone_004", "Bone_005", "Bone_006" };
@@ -122,14 +115,13 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             var physicsBefore = PhysicsSignature(deathSlot);
             var materialsBefore = renderer.sharedMaterials.Select(AssetDatabase.GetAssetPath).ToArray();
 
+            RemoveLegacyPuddleVisual(model);
             var generatedMesh = CreateGeneratedMesh(sourceRenderer.sharedMesh, renderer);
             renderer.sharedMesh = generatedMesh;
             renderer.localBounds = generatedMesh.bounds;
             renderer.SetBlendShapeWeight(generatedMesh.GetBlendShapeIndex(MeltBlendShapeName), 0f);
-            renderer.SetBlendShapeWeight(generatedMesh.GetBlendShapeIndex(PuddleBlendShapeName), 0f);
             renderer.enabled = true;
-            var puddleRenderer = EnsurePuddleVisual(renderer, sourceRenderer.sharedMesh);
-            var clip = CreateClip(deathSlot, renderer, puddleRenderer);
+            var clip = CreateClip(deathSlot, renderer);
             var controller = CreateController(clip);
 
             var animator = deathSlot.GetComponent<Animator>();
@@ -154,7 +146,7 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             animator.enabled = true;
 
-            var result = InspectState(parvumRoot, deathSlot, model, renderer, puddleRenderer, animator, clip, controller);
+            var result = InspectState(parvumRoot, deathSlot, model, renderer, animator, clip, controller);
             if (!string.Equals(deathTransformBefore, TransformSignature(deathSlot), StringComparison.Ordinal) ||
                 !string.Equals(modelTransformBefore, TransformSignature(model), StringComparison.Ordinal))
             {
@@ -182,7 +174,6 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             }
 
             EditorUtility.SetDirty(renderer);
-            EditorUtility.SetDirty(puddleRenderer);
             EditorUtility.SetDirty(animator);
             EditorSceneManager.MarkSceneDirty(scene);
             if (!EditorSceneManager.SaveScene(scene))
@@ -197,11 +188,11 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 ", Target=" + ParvumRootName + "/" + DeathSlotName + "/" + ModelName +
                 ", CycleSeconds=" + Num(result.CycleSeconds) +
                 ", MeltSeconds=2" +
-                ", PuddleHoldSeconds=1" +
+                ", MeltedBodyHoldSeconds=1" +
                 ", MeltAffectedVertices=" + result.MeltAffectedVertexCount.ToString(CultureInfo.InvariantCulture) +
                 ", MouthAffectedVertices=" + result.MouthAffectedVertexCount.ToString(CultureInfo.InvariantCulture) +
-                ", FinalHeightRatio=" + Num(result.FinalHeightRatio) +
-                ", PuddleWidthRatio=" + Num(result.PuddleWidthRatio) +
+                ", FinalMeltHeightRatio=" + Num(result.FinalMeltHeightRatio) +
+                ", LegacyPuddleVisualRemoved=True" +
                 ", OldDeathAssetsAssigned=False" +
                 ", PhysicsPreserved=True" +
                 ", OtherParvumSlotsChanged=False" +
@@ -223,25 +214,24 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             var deathSlot = RequireDirectChild(parvumRoot, DeathSlotName);
             var model = RequireDirectChild(deathSlot, ModelName);
             var renderer = RequireSingleBodyRenderer(model);
-            var puddleRenderer = RequirePuddleRenderer(model);
+            RequireNoLegacyPuddle(model);
             var animator = deathSlot.GetComponent<Animator>() ??
                            throw new InvalidOperationException("Parvum death Animator is missing.");
             var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(ClipPath) ??
                        throw new InvalidOperationException("The new Parvum death clip is missing.");
             var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath) ??
                              throw new InvalidOperationException("The new Parvum death controller is missing.");
-            var result = InspectState(parvumRoot, deathSlot, model, renderer, puddleRenderer, animator, clip, controller);
+            var result = InspectState(parvumRoot, deathSlot, model, renderer, animator, clip, controller);
             WriteReport(result, File.Exists(Absolute(CapturePath)));
             Debug.Log(
                 "ParvumDeathMotionInspected Result=PASS" +
                 ", CycleSeconds=" + Num(result.CycleSeconds) +
                 ", MeltAffectedVertices=" + result.MeltAffectedVertexCount.ToString(CultureInfo.InvariantCulture) +
                 ", MouthAffectedVertices=" + result.MouthAffectedVertexCount.ToString(CultureInfo.InvariantCulture) +
-                ", MeltHeightRatio=" + Num(result.MeltHeightRatio) +
-                ", FinalHeightRatio=" + Num(result.FinalHeightRatio) +
-                ", PuddleWidthRatio=" + Num(result.PuddleWidthRatio) +
+                ", FinalMeltHeightRatio=" + Num(result.FinalMeltHeightRatio) +
                 ", MouthTopRatio=" + Num(result.MouthTopRatio) +
-                ", PuddleHoldStable=True" +
+                ", MeltedBodyHoldStable=True" +
+                ", LegacyPuddleVisualRemoved=True" +
                 ", GroundDelta=" + Num(result.WorldGroundDelta) +
                 ", RootTransformCurves=False" +
                 ", PhysicsPreserved=True.");
@@ -260,18 +250,18 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             var deathSlot = RequireDirectChild(parvumRoot, DeathSlotName);
             var model = RequireDirectChild(deathSlot, ModelName);
             var renderer = RequireSingleBodyRenderer(model);
-            var puddleRenderer = RequirePuddleRenderer(model);
+            RequireNoLegacyPuddle(model);
             var animator = deathSlot.GetComponent<Animator>() ??
                            throw new InvalidOperationException("Parvum death Animator is missing.");
             var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(ClipPath) ??
                        throw new InvalidOperationException("The new Parvum death clip is missing.");
             var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath) ??
                              throw new InvalidOperationException("The new Parvum death controller is missing.");
-            var result = InspectState(parvumRoot, deathSlot, model, renderer, puddleRenderer, animator, clip, controller);
+            var result = InspectState(parvumRoot, deathSlot, model, renderer, animator, clip, controller);
 
             Directory.CreateDirectory(Absolute(OutputFolder));
             var dirtyBefore = scene.isDirty;
-            CaptureComparison(deathSlot, renderer, puddleRenderer, animator, clip, Absolute(CapturePath));
+            CaptureComparison(deathSlot, renderer, animator, clip, Absolute(CapturePath));
             if (scene.isDirty != dirtyBefore)
             {
                 throw new InvalidOperationException("Final Parvum death capture unexpectedly dirtied CargoRunMvp.");
@@ -283,7 +273,7 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 "ParvumDeathMotionCaptured Result=PASS" +
                 ", Image=" + CapturePath +
                 ", Times=0,0.60,1.20,1.60,2,2.5,3" +
-                ", Phases=Rest,WholeBodySag,DeepMelt,PuddleTransition,PuddleStart,PuddleHold,LoopBoundary" +
+                ", Phases=Rest,WholeBodySag,DeepMelt,FinalCollapse,MeltComplete,MeltedBodyHold,LoopBoundary" +
                 ", SceneChanged=False.");
         }
 
@@ -298,14 +288,11 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             var generated = UnityEngine.Object.Instantiate(sourceMesh);
             generated.name = "parvum_death_melt_puddle_mesh";
             generated.ClearBlendShapes();
-            AddBlendShape(generated, sourceMesh, MeltBlendShapeName, deformation.MeltDeltas, false);
-            AddBlendShape(generated, sourceMesh, PuddleBlendShapeName, deformation.PuddleDeltas, true);
+            AddBlendShape(generated, sourceMesh, MeltBlendShapeName, deformation.MeltDeltas);
 
             var combinedBounds = sourceMesh.bounds;
             combinedBounds.Encapsulate(BoundsFromVertices(
                 sourceMesh.vertices.Select((vertex, index) => vertex + deformation.MeltDeltas[index]).ToArray()));
-            combinedBounds.Encapsulate(BoundsFromVertices(
-                sourceMesh.vertices.Select((vertex, index) => vertex + deformation.PuddleDeltas[index]).ToArray()));
             generated.bounds = combinedBounds;
 
             var existing = AssetDatabase.LoadAssetAtPath<Mesh>(GeneratedMeshPath);
@@ -321,8 +308,51 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 EditorUtility.SetDirty(existing);
             }
 
+            RemoveLegacyPuddleSubAssets(existing);
             AssetDatabase.SaveAssets();
             return existing;
+        }
+
+        private static void RemoveLegacyPuddleVisual(Transform model)
+        {
+            foreach (var visual in model.GetComponentsInChildren<Transform>(true)
+                         .Where(candidate => string.Equals(candidate.name, PuddleVisualName, StringComparison.Ordinal))
+                         .ToArray())
+            {
+                UnityEngine.Object.DestroyImmediate(visual.gameObject);
+            }
+        }
+
+        private static void RemoveLegacyPuddleSubAssets(Mesh generatedMesh)
+        {
+            var legacySubAssets = AssetDatabase.LoadAllAssetsAtPath(GeneratedMeshPath)
+                .Where(asset => asset != null && asset != generatedMesh &&
+                                (string.Equals(asset.name, PuddleVisualMeshName, StringComparison.Ordinal) ||
+                                 string.Equals(asset.name, PuddleVisualMaterialName, StringComparison.Ordinal)))
+                .ToArray();
+            foreach (var legacySubAsset in legacySubAssets)
+            {
+                AssetDatabase.RemoveObjectFromAsset(legacySubAsset);
+                UnityEngine.Object.DestroyImmediate(legacySubAsset, true);
+            }
+        }
+
+        private static void RequireNoLegacyPuddle(Transform model)
+        {
+            if (model.GetComponentsInChildren<Transform>(true)
+                .Any(candidate => string.Equals(candidate.name, PuddleVisualName, StringComparison.Ordinal)))
+            {
+                throw new InvalidOperationException("The removed Parvum death puddle visual still exists in the death slot.");
+            }
+
+            var legacySubAsset = AssetDatabase.LoadAllAssetsAtPath(GeneratedMeshPath)
+                .FirstOrDefault(asset => asset != null &&
+                                         (string.Equals(asset.name, PuddleVisualMeshName, StringComparison.Ordinal) ||
+                                          string.Equals(asset.name, PuddleVisualMaterialName, StringComparison.Ordinal)));
+            if (legacySubAsset != null)
+            {
+                throw new InvalidOperationException("A removed Parvum death puddle mesh or material subasset still exists.");
+            }
         }
 
         private static MeshRenderer EnsurePuddleVisual(SkinnedMeshRenderer bodyRenderer, Mesh sourceMesh)
@@ -578,14 +608,10 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             var bounds = BoundsFromVertices(vertices);
             var mouthWeights = BuildMouthWeights(sourceMesh, targetRenderer);
             var meltDeltas = new Vector3[vertices.Length];
-            var puddleDeltas = new Vector3[vertices.Length];
             var ground = bounds.min.y;
             var halfWidth = bounds.extents.x;
-            var compensatedPuddleHalfWidth = halfWidth * PuddleSkinnedWidthCompensation;
             var halfDepth = halfWidth * PuddleDepthToWidthRatio;
             var center = bounds.center;
-            var sourceHalfDepth = Mathf.Max(bounds.extents.z, GeometryTolerance);
-            var puddleDepthScale = halfDepth / sourceHalfDepth;
 
             for (var index = 0; index < vertices.Length; index++)
             {
@@ -616,35 +642,9 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 }
 
                 meltDeltas[index] = meltTarget - vertex;
-
-                // Preserve the source surface connectivity while flattening it into a body-width puddle.
-                // Re-sorting vertices by polar angle folds this mesh into a rectangular sheet.
-                var spreadX = relativeX * PuddleSkinnedWidthCompensation;
-                var spreadZ = relativeZ * puddleDepthScale;
-                var puddleRadius = Mathf.Clamp01(Mathf.Sqrt(
-                    spreadX * spreadX / Mathf.Max(
-                        compensatedPuddleHalfWidth * compensatedPuddleHalfWidth,
-                        GeometryTolerance) +
-                    spreadZ * spreadZ / Mathf.Max(halfDepth * halfDepth, GeometryTolerance)));
-                var puddleY = ground + PuddleSkinnedGroundCompensation +
-                              MaximumPuddleThickness *
-                              Mathf.Lerp(0.12f, 0.82f, height) *
-                              (1f - puddleRadius * 0.48f);
-                var puddleTarget = new Vector3(center.x + spreadX, puddleY, center.z + spreadZ);
-                if (mouth > GeometryTolerance)
-                {
-                    puddleTarget.x = Mathf.Lerp(puddleTarget.x, center.x, mouthVerticalCollapse);
-                    puddleTarget.z = Mathf.Lerp(puddleTarget.z, center.z, mouthVerticalCollapse);
-                    puddleTarget.y = Mathf.Lerp(
-                        puddleTarget.y,
-                        ground + PuddleSkinnedGroundCompensation + 0.002f,
-                        mouthVerticalCollapse);
-                }
-
-                puddleDeltas[index] = puddleTarget - vertex;
             }
 
-            return new DeformationData(meltDeltas, puddleDeltas, mouthWeights);
+            return new DeformationData(meltDeltas, mouthWeights);
         }
 
         private static float[] BuildMouthWeights(Mesh sourceMesh, SkinnedMeshRenderer targetRenderer)
@@ -753,8 +753,7 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             Mesh generated,
             Mesh source,
             string name,
-            Vector3[] deltas,
-            bool forceUpwardNormals)
+            Vector3[] deltas)
         {
             var targetMesh = UnityEngine.Object.Instantiate(source);
             try
@@ -798,8 +797,7 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
 
         private static AnimationClip CreateClip(
             Transform deathSlot,
-            SkinnedMeshRenderer renderer,
-            MeshRenderer puddleRenderer)
+            SkinnedMeshRenderer renderer)
         {
             var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(ClipPath);
             if (clip == null)
@@ -820,34 +818,9 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 new Keyframe(0f, 0f),
                 new Keyframe(MeltQuarterTime, 32f),
                 new Keyframe(MeltDeepTime, 78f),
-                new Keyframe(MeltCollapseTime, 100f),
-                new Keyframe(MeltPuddleBlendTime, 55f),
-                new Keyframe(PuddleStartTime, 0f),
-                new Keyframe(CycleSeconds, 0f));
-            SetBlendShapeCurve(
-                clip,
-                rendererPath,
-                PuddleBlendShapeName,
-                new Keyframe(0f, 0f),
-                new Keyframe(MeltCollapseTime, 0f),
-                new Keyframe(MeltPuddleBlendTime, 45f),
-                new Keyframe(PuddleStartTime, 100f),
-                new Keyframe(PuddleHoldSampleTime, 100f),
+                new Keyframe(MeltEndTime, 100f),
+                new Keyframe(MeltHoldSampleTime, 100f),
                 new Keyframe(CycleSeconds, 100f));
-            SetVisibilityCurve(
-                clip,
-                rendererPath,
-                new Keyframe(0f, 1f),
-                new Keyframe(PuddleStartTime - 1f / clip.frameRate, 1f),
-                new Keyframe(PuddleStartTime, 0f),
-                new Keyframe(CycleSeconds, 0f));
-            SetVisibilityCurve(
-                clip,
-                AnimationUtility.CalculateTransformPath(puddleRenderer.transform, deathSlot),
-                new Keyframe(0f, 0f),
-                new Keyframe(PuddleStartTime - 1f / clip.frameRate, 0f),
-                new Keyframe(PuddleStartTime, 1f),
-                new Keyframe(CycleSeconds, 1f));
 
             var settings = AnimationUtility.GetAnimationClipSettings(clip);
             settings.loopTime = true;
@@ -931,58 +904,38 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             Transform deathSlot,
             Transform model,
             SkinnedMeshRenderer renderer,
-            MeshRenderer puddleRenderer,
             Animator animator,
             AnimationClip clip,
             AnimatorController controller)
         {
             if (!string.Equals(AssetDatabase.GetAssetPath(renderer.sharedMesh), GeneratedMeshPath, StringComparison.Ordinal))
             {
-                throw new InvalidOperationException("Parvum death renderer is not using the new melt-puddle mesh.");
+                throw new InvalidOperationException("Parvum death renderer is not using the generated melt-hold mesh.");
             }
 
             var sourceRenderer = RequireSourceRenderer();
             var sourceMesh = sourceRenderer.sharedMesh;
             var mesh = renderer.sharedMesh;
-            var puddleFilter = puddleRenderer.GetComponent<MeshFilter>();
-            if (puddleFilter == null ||
-                !string.Equals(puddleFilter.sharedMesh.name, PuddleVisualMeshName, StringComparison.Ordinal) ||
-                !string.Equals(AssetDatabase.GetAssetPath(puddleFilter.sharedMesh), GeneratedMeshPath, StringComparison.Ordinal) ||
-                puddleRenderer.GetComponent<Collider>() != null || puddleRenderer.GetComponent<Rigidbody>() != null)
-            {
-                throw new InvalidOperationException("Parvum final puddle visual must use the generated green visual-only mesh.");
-            }
-
-            if (puddleRenderer.sharedMaterials.Length != 1 ||
-                !string.Equals(puddleRenderer.sharedMaterial.name, PuddleVisualMaterialName, StringComparison.Ordinal) ||
-                !string.Equals(AssetDatabase.GetAssetPath(puddleRenderer.sharedMaterial), GeneratedMeshPath, StringComparison.Ordinal) ||
-                puddleRenderer.sharedMaterial.shader != renderer.sharedMaterial.shader)
-            {
-                throw new InvalidOperationException(
-                    "Parvum final puddle must use only the generated green derivative of the body material.");
-            }
+            RequireNoLegacyPuddle(model);
             if (sourceMesh.vertexCount != mesh.vertexCount || sourceMesh.subMeshCount != mesh.subMeshCount)
             {
                 throw new InvalidOperationException("Generated Parvum death mesh changed source topology.");
             }
 
-            if (mesh.blendShapeCount != 2 ||
+            if (mesh.blendShapeCount != 1 ||
                 mesh.GetBlendShapeIndex(MeltBlendShapeName) != 0 ||
-                mesh.GetBlendShapeIndex(PuddleBlendShapeName) != 1)
+                mesh.GetBlendShapeIndex(LegacyPuddleBlendShapeName) >= 0)
             {
-                throw new InvalidOperationException("Generated Parvum death mesh must contain only two new BlendShapes.");
+                throw new InvalidOperationException("Generated Parvum death mesh must contain only the whole-body melt BlendShape.");
             }
 
             var expected = BuildDeformation(sourceMesh, renderer);
             var actualMelt = ReadBlendShapeDeltas(mesh, 0);
-            var actualPuddle = ReadBlendShapeDeltas(mesh, 1);
             var meltAffected = 0;
             var mouthAffected = 0;
             for (var index = 0; index < sourceMesh.vertexCount; index++)
             {
                 if ((actualMelt[index] - expected.MeltDeltas[index]).sqrMagnitude >
-                    GeometryTolerance * GeometryTolerance ||
-                    (actualPuddle[index] - expected.PuddleDeltas[index]).sqrMagnitude >
                     GeometryTolerance * GeometryTolerance)
                 {
                     throw new InvalidOperationException(
@@ -990,8 +943,7 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                         index.ToString(CultureInfo.InvariantCulture) + ".");
                 }
 
-                if (actualMelt[index].sqrMagnitude > GeometryTolerance * GeometryTolerance &&
-                    actualPuddle[index].sqrMagnitude > GeometryTolerance * GeometryTolerance)
+                if (actualMelt[index].sqrMagnitude > GeometryTolerance * GeometryTolerance)
                 {
                     meltAffected++;
                 }
@@ -1029,39 +981,27 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             }
 
             var rendererPath = AnimationUtility.CalculateTransformPath(renderer.transform, deathSlot);
-            var puddleRendererPath = AnimationUtility.CalculateTransformPath(puddleRenderer.transform, deathSlot);
             var bindings = AnimationUtility.GetCurveBindings(clip);
-            if (bindings.Length != 4 || bindings.Any(binding => binding.type == typeof(Transform)) ||
+            if (bindings.Length != 1 || bindings.Any(binding => binding.type == typeof(Transform) ||
+                                                         binding.propertyName == "m_Enabled") ||
                 bindings.Count(binding => binding.type == typeof(SkinnedMeshRenderer) &&
                                           string.Equals(binding.path, rendererPath, StringComparison.Ordinal) &&
-                                          binding.propertyName.StartsWith("blendShape.", StringComparison.Ordinal)) != 2)
+                                          string.Equals(
+                                              binding.propertyName,
+                                              "blendShape." + MeltBlendShapeName,
+                                              StringComparison.Ordinal)) != 1)
             {
                 throw new InvalidOperationException(
-                    "The new Parvum death clip must contain two BlendShape and two renderer-visibility curves only.");
+                    "The Parvum death clip must contain only the whole-body melt curve and no visibility swap.");
             }
 
             var meltCurve = RequireCurve(clip, rendererPath, MeltBlendShapeName);
-            var puddleCurve = RequireCurve(clip, rendererPath, PuddleBlendShapeName);
-            var bodyVisibilityCurve = RequireVisibilityCurve(clip, rendererPath);
-            var puddleVisibilityCurve = RequireVisibilityCurve(clip, puddleRendererPath);
             RequireCurveValue(meltCurve, 0f, 0f, "rest melt");
-            RequireCurveValue(meltCurve, MeltCollapseTime, 100f, "whole-body collapsed melt");
-            RequireCurveValue(meltCurve, MeltPuddleBlendTime, 55f, "melt-to-puddle transition");
-            RequireCurveValue(meltCurve, PuddleStartTime, 0f, "puddle-only start");
-            RequireCurveValue(meltCurve, CycleSeconds, 0f, "puddle hold end");
-            RequireCurveValue(puddleCurve, MeltCollapseTime, 0f, "pre-puddle melt");
-            RequireCurveValue(puddleCurve, MeltPuddleBlendTime, 45f, "puddle transition");
-            RequireCurveValue(puddleCurve, PuddleStartTime, 100f, "puddle start");
-            RequireCurveValue(puddleCurve, PuddleHoldSampleTime, 100f, "one-second puddle hold sample");
-            RequireCurveValue(puddleCurve, CycleSeconds, 100f, "puddle loop boundary");
-            RequireCurveValue(bodyVisibilityCurve, 0f, 1f, "body visible at rest");
-            RequireCurveValue(bodyVisibilityCurve, MeltPuddleBlendTime, 1f, "body visible during melt transition");
-            RequireCurveValue(bodyVisibilityCurve, PuddleStartTime, 0f, "body hidden at puddle start");
-            RequireCurveValue(bodyVisibilityCurve, CycleSeconds, 0f, "body hidden through puddle hold");
-            RequireCurveValue(puddleVisibilityCurve, 0f, 0f, "puddle hidden at rest");
-            RequireCurveValue(puddleVisibilityCurve, MeltPuddleBlendTime, 0f, "puddle hidden during melt transition");
-            RequireCurveValue(puddleVisibilityCurve, PuddleStartTime, 1f, "puddle visible at puddle start");
-            RequireCurveValue(puddleVisibilityCurve, CycleSeconds, 1f, "puddle visible through puddle hold");
+            RequireCurveValue(meltCurve, MeltQuarterTime, 32f, "early whole-body sag");
+            RequireCurveValue(meltCurve, MeltDeepTime, 78f, "deep whole-body melt");
+            RequireCurveValue(meltCurve, MeltEndTime, 100f, "whole-body melt completion");
+            RequireCurveValue(meltCurve, MeltHoldSampleTime, 100f, "one-second melted-body hold sample");
+            RequireCurveValue(meltCurve, CycleSeconds, 100f, "melted-body loop boundary");
 
             var settings = AnimationUtility.GetAnimationClipSettings(clip);
             if (Mathf.Abs(clip.length - CycleSeconds) > GeometryTolerance || !settings.loopTime || settings.loopBlend)
@@ -1071,48 +1011,25 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             }
 
             var rest = SampleGeometry(deathSlot, renderer, animator, clip, expected.MouthWeights, 0f);
-            var melt = SampleGeometry(deathSlot, renderer, animator, clip, expected.MouthWeights, MeltCollapseTime);
-            var hiddenBodyPuddle = SampleGeometry(
-                deathSlot,
-                renderer,
-                animator,
-                clip,
-                expected.MouthWeights,
-                PuddleStartTime);
-            var puddleStart = SamplePuddleBounds(deathSlot, renderer, puddleRenderer, animator, clip, PuddleStartTime);
-            var puddleMiddle = SamplePuddleBounds(deathSlot, renderer, puddleRenderer, animator, clip, PuddleHoldSampleTime);
-            var puddleEnd = SamplePuddleBounds(deathSlot, renderer, puddleRenderer, animator, clip, CycleSeconds);
-            var meltHeightRatio = melt.Bounds.size.y / Mathf.Max(rest.Bounds.size.y, GeometryTolerance);
-            var finalHeightRatio = puddleStart.size.y / Mathf.Max(rest.Bounds.size.y, GeometryTolerance);
-            var puddleWidthRatio = puddleStart.size.x / Mathf.Max(rest.Bounds.size.x, GeometryTolerance);
-            var mouthTopRatio = (hiddenBodyPuddle.MouthMaximumY - hiddenBodyPuddle.Bounds.min.y) /
-                                Mathf.Max(hiddenBodyPuddle.Bounds.size.y, GeometryTolerance);
+            var meltEnd = SampleGeometry(deathSlot, renderer, animator, clip, expected.MouthWeights, MeltEndTime);
+            var meltHold = SampleGeometry(deathSlot, renderer, animator, clip, expected.MouthWeights, MeltHoldSampleTime);
+            var loopBoundary = SampleGeometry(deathSlot, renderer, animator, clip, expected.MouthWeights, CycleSeconds);
+            var finalMeltHeightRatio = meltEnd.Bounds.size.y / Mathf.Max(rest.Bounds.size.y, GeometryTolerance);
+            var mouthTopRatio = (meltEnd.MouthMaximumY - meltEnd.Bounds.min.y) /
+                                Mathf.Max(meltEnd.Bounds.size.y, GeometryTolerance);
 
-            if (meltHeightRatio > 0.38f || finalHeightRatio > 0.08f)
+            if (finalMeltHeightRatio > 0.38f)
             {
                 throw new InvalidOperationException(
-                    "Parvum whole body did not collapse low enough. MeltRatio=" + Num(meltHeightRatio) +
-                    ", FinalRatio=" + Num(finalHeightRatio) + ".");
+                    "Parvum whole body did not retain the approved low melted shape. HeightRatio=" +
+                    Num(finalMeltHeightRatio) + ".");
             }
 
-            if (Mathf.Abs(puddleWidthRatio - 1f) > WidthToleranceRatio)
+            if (!meltEnd.NearlyEquals(meltHold, 0.001f) ||
+                !meltEnd.NearlyEquals(loopBoundary, 0.001f))
             {
                 throw new InvalidOperationException(
-                    "Parvum final puddle width must match the original body width. Ratio=" +
-                    Num(puddleWidthRatio) + ".");
-            }
-
-            if (mouthTopRatio > 0.52f)
-            {
-                throw new InvalidOperationException(
-                    "Parvum mouth or teeth remain visible above the puddle body. MouthTopRatio=" +
-                    Num(mouthTopRatio) + ".");
-            }
-
-            if (!BoundsNearlyEqual(puddleStart, puddleMiddle, 0.001f) ||
-                !BoundsNearlyEqual(puddleStart, puddleEnd, 0.001f))
-            {
-                throw new InvalidOperationException("Parvum final puddle is not held unchanged from two to three seconds.");
+                    "Parvum final melted body is not held unchanged from two to three seconds.");
             }
 
             var worldGroundDelta = MeasureWorldGroundDelta(
@@ -1122,13 +1039,6 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 clip,
                 out var maximumGroundDeltaTime,
                 out var signedGroundDelta);
-            var puddleGroundDelta = Mathf.Abs(puddleStart.min.y - rest.Bounds.min.y);
-            if (puddleGroundDelta > worldGroundDelta)
-            {
-                worldGroundDelta = puddleGroundDelta;
-                maximumGroundDeltaTime = PuddleStartTime;
-                signedGroundDelta = puddleStart.min.y - rest.Bounds.min.y;
-            }
             if (worldGroundDelta > GroundTolerance)
             {
                 throw new InvalidOperationException(
@@ -1145,11 +1055,9 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 mouthAffected,
                 CycleSeconds,
                 rest.Bounds.size.x,
-                puddleStart.size.x,
-                puddleStart.size.z,
-                meltHeightRatio,
-                finalHeightRatio,
-                puddleWidthRatio,
+                meltEnd.Bounds.size.x,
+                meltEnd.Bounds.size.z,
+                finalMeltHeightRatio,
                 mouthTopRatio,
                 worldGroundDelta,
                 rendererPath,
@@ -1400,7 +1308,6 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
         private static void CaptureComparison(
             Transform deathSlot,
             SkinnedMeshRenderer renderer,
-            MeshRenderer puddleRenderer,
             Animator animator,
             AnimationClip clip,
             string destination)
@@ -1414,7 +1321,6 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 .Select(renderer.GetBlendShapeWeight).ToArray();
             var animatorEnabled = animator.enabled;
             var rendererEnabled = renderer.enabled;
-            var puddleRendererEnabled = puddleRenderer.enabled;
             var updateWhenOffscreen = renderer.updateWhenOffscreen;
             var forceRecalculation = renderer.forceMatrixRecalculationPerRender;
             var localBounds = renderer.localBounds;
@@ -1446,7 +1352,12 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 foreach (var time in CaptureTimes)
                 {
                     clip.SampleAnimation(deathSlot.gameObject, time);
-                    var sampled = renderer.enabled ? BakedWorldBounds(renderer) : puddleRenderer.bounds;
+                    if (!renderer.enabled)
+                    {
+                        throw new InvalidOperationException("Parvum body renderer was disabled during the melt-hold capture.");
+                    }
+
+                    var sampled = BakedWorldBounds(renderer);
                     if (!hasBounds)
                     {
                         reviewBounds = sampled;
@@ -1505,7 +1416,6 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
 
                 RestoreSampleState(transforms, positions, rotations, scales, renderer, weights, animator, animatorEnabled);
                 renderer.enabled = rendererEnabled;
-                puddleRenderer.enabled = puddleRendererEnabled;
                 renderer.updateWhenOffscreen = updateWhenOffscreen;
                 renderer.forceMatrixRecalculationPerRender = forceRecalculation;
                 renderer.localBounds = localBounds;
@@ -1766,40 +1676,34 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 .AppendLine("OldDeathClipAssigned=False")
                 .AppendLine("OldDeathControllerAssigned=False")
                 .AppendLine("MeltBlendShape=" + MeltBlendShapeName)
-                .AppendLine("PuddleBlendShape=" + PuddleBlendShapeName)
-                .AppendLine("PuddleVisual=" + PuddleVisualName)
-                .AppendLine("PuddleVisualMeshSubAsset=" + PuddleVisualMeshName)
-                .AppendLine("PuddleVisualMaterialSubAsset=" + PuddleVisualMaterialName)
+                .AppendLine("LegacyPuddleBlendShapeRemoved=True")
+                .AppendLine("LegacyPuddleVisualRemoved=True")
+                .AppendLine("LegacyPuddleMeshSubAssetRemoved=True")
+                .AppendLine("LegacyPuddleMaterialSubAssetRemoved=True")
                 .AppendLine("OriginalBodyMaterialModified=False")
-                .AppendLine("PuddleVisualScope=GeneratedMeshAssetSubAssetsAndDeathSlotOnly")
                 .AppendLine("RendererPath=" + result.RendererPath)
                 .AppendLine("VertexCount=" + result.VertexCount.ToString(CultureInfo.InvariantCulture))
                 .AppendLine("MeltAffectedVertexCount=" + result.MeltAffectedVertexCount.ToString(CultureInfo.InvariantCulture))
                 .AppendLine("MouthAffectedVertexCount=" + result.MouthAffectedVertexCount.ToString(CultureInfo.InvariantCulture))
                 .AppendLine("CycleSeconds=" + Num(result.CycleSeconds))
                 .AppendLine("MeltDurationSeconds=2")
-                .AppendLine("PuddleHoldStartSeconds=2")
-                .AppendLine("PuddleHoldEndSeconds=3")
-                .AppendLine("PuddleHoldDurationSeconds=1")
+                .AppendLine("MeltedBodyHoldStartSeconds=2")
+                .AppendLine("MeltedBodyHoldEndSeconds=3")
+                .AppendLine("MeltedBodyHoldDurationSeconds=1")
                 .AppendLine("Loop=True")
                 .AppendLine("LoopBlend=False")
                 .AppendLine("LoopRestart=HardResetToOriginalBody")
                 .AppendLine("OriginalBodyWidth=" + Num(result.OriginalBodyWidth))
-                .AppendLine("FinalPuddleWidth=" + Num(result.FinalPuddleWidth))
-                .AppendLine("FinalPuddleDepth=" + Num(result.FinalPuddleDepth))
-                .AppendLine("PuddleWidthRatio=" + Num(result.PuddleWidthRatio))
-                .AppendLine("PuddleDepthToWidthTargetRatio=" + Num(PuddleDepthToWidthRatio))
-                .AppendLine("PuddleSkinnedWidthCompensation=" + Num(PuddleSkinnedWidthCompensation))
-                .AppendLine("PuddleSkinnedGroundCompensation=" + Num(PuddleSkinnedGroundCompensation))
-                .AppendLine("MeltHeightRatio=" + Num(result.MeltHeightRatio))
-                .AppendLine("FinalHeightRatio=" + Num(result.FinalHeightRatio))
+                .AppendLine("FinalMeltWidth=" + Num(result.FinalMeltWidth))
+                .AppendLine("FinalMeltDepth=" + Num(result.FinalMeltDepth))
+                .AppendLine("FinalMeltHeightRatio=" + Num(result.FinalMeltHeightRatio))
                 .AppendLine("MouthTopRatio=" + Num(result.MouthTopRatio))
-                .AppendLine("MouthTeethDisappearIntoPuddle=True")
-                .AppendLine("MouthCoreRadialCollapse=CompleteToPuddleCenter")
-                .AppendLine("PuddleHeldUnchangedFrom2To3=True")
-                .AppendLine("BodyToPuddleVisibilitySwapSeconds=2")
+                .AppendLine("MouthTeethIncludedInWholeBodyMelt=True")
+                .AppendLine("MeltedBodyHeldUnchangedFrom2To3=True")
+                .AppendLine("BodyRendererVisibleThroughout=True")
+                .AppendLine("RendererVisibilityCurves=False")
                 .AppendLine("FinalVisualReview=PASS")
-                .AppendLine("FinalVisualAppearance=GreenBodyWidthOvalPuddleWithoutMouthOrTeeth")
+                .AppendLine("FinalVisualAppearance=OriginalTexturedBodyHeldAtCompletedMeltShape")
                 .AppendLine("WorldGroundDelta=" + Num(result.WorldGroundDelta))
                 .AppendLine("RootTransformCurves=False")
                 .AppendLine("ModelTransformCurves=False")
@@ -1808,10 +1712,7 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 .AppendLine("OtherSceneRootsChanged=False")
                 .AppendLine("CaptureCreated=" + (captureCreated ? "True" : "False"))
                 .AppendLine("CapturePath=" + CapturePath)
-                .AppendLine("HarnessValidationRun=False")
-                .AppendLine("EditModeTestsRun=False")
-                .AppendLine("PlayModeTestsRun=False")
-                .AppendLine("WindowsBuildRun=False");
+                .AppendLine("HarnessValidationRun=False");
             Directory.CreateDirectory(Absolute(OutputFolder));
             File.WriteAllText(Absolute(ReportPath), report.ToString(), new UTF8Encoding(false));
         }
@@ -1840,15 +1741,13 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
 
         private readonly struct DeformationData
         {
-            public DeformationData(Vector3[] meltDeltas, Vector3[] puddleDeltas, float[] mouthWeights)
+            public DeformationData(Vector3[] meltDeltas, float[] mouthWeights)
             {
                 MeltDeltas = meltDeltas;
-                PuddleDeltas = puddleDeltas;
                 MouthWeights = mouthWeights;
             }
 
             public Vector3[] MeltDeltas { get; }
-            public Vector3[] PuddleDeltas { get; }
             public float[] MouthWeights { get; }
         }
 
@@ -1879,11 +1778,9 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 int mouthAffectedVertexCount,
                 float cycleSeconds,
                 float originalBodyWidth,
-                float finalPuddleWidth,
-                float finalPuddleDepth,
-                float meltHeightRatio,
-                float finalHeightRatio,
-                float puddleWidthRatio,
+                float finalMeltWidth,
+                float finalMeltDepth,
+                float finalMeltHeightRatio,
                 float mouthTopRatio,
                 float worldGroundDelta,
                 string rendererPath,
@@ -1894,11 +1791,9 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
                 MouthAffectedVertexCount = mouthAffectedVertexCount;
                 CycleSeconds = cycleSeconds;
                 OriginalBodyWidth = originalBodyWidth;
-                FinalPuddleWidth = finalPuddleWidth;
-                FinalPuddleDepth = finalPuddleDepth;
-                MeltHeightRatio = meltHeightRatio;
-                FinalHeightRatio = finalHeightRatio;
-                PuddleWidthRatio = puddleWidthRatio;
+                FinalMeltWidth = finalMeltWidth;
+                FinalMeltDepth = finalMeltDepth;
+                FinalMeltHeightRatio = finalMeltHeightRatio;
                 MouthTopRatio = mouthTopRatio;
                 WorldGroundDelta = worldGroundDelta;
                 RendererPath = rendererPath;
@@ -1910,11 +1805,9 @@ namespace Bellerophon.Editor.ParvumCargoRunScene
             public int MouthAffectedVertexCount { get; }
             public float CycleSeconds { get; }
             public float OriginalBodyWidth { get; }
-            public float FinalPuddleWidth { get; }
-            public float FinalPuddleDepth { get; }
-            public float MeltHeightRatio { get; }
-            public float FinalHeightRatio { get; }
-            public float PuddleWidthRatio { get; }
+            public float FinalMeltWidth { get; }
+            public float FinalMeltDepth { get; }
+            public float FinalMeltHeightRatio { get; }
             public float MouthTopRatio { get; }
             public float WorldGroundDelta { get; }
             public string RendererPath { get; }

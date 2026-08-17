@@ -1,0 +1,300 @@
+Fuga Consume Mouth Rig Inspection
+Result=PASS
+Scene=Assets/_Project/Scenes/CargoRunMvp.unity
+Target=Approved Fuga Enemy Placement/Fuga_06_Consume/Fuga_Model
+IdentificationSourceMesh=Assets/_Project/Art/Enemies/Fuga/Models/fuga.glb
+CurrentRendererMesh=Assets/_Project/Art/Enemies/Fuga/Models/fuga.glb
+SourceVertexOrderMatchesCurrent=True
+SourceTriangleTopologyMatchesCurrent=True
+VertexCount=3155
+BoneCount=28
+TargetCamera=Player Camera
+ModelLocalTargetFacingAxis=+Z
+IdentificationBasis=OriginalMeshCentralVCreaseTopologyAndDedicatedLipBoneSkinWeights
+CreaseVertexSurfaceClassification=ModelYRelativeToCentralVThenModelNormalYAtSharedCrease
+LeftLipCreaseModel=(-0.095581,0.740350,0.829804)
+CenterLipCreaseModel=(-0.007721,0.719717,0.934433)
+RightLipCreaseModel=(0.101562,0.737247,0.838944)
+LeftLipCreaseVertexIndices=557,574
+CenterLipCreaseVertexIndices=541,2052
+RightLipCreaseVertexIndices=2039,2059
+IdentifiedLipVertexCount=43
+UpperLipRegionVertexCount=32
+LowerLipRegionVertexCount=11
+UpperLipVertexIndices=537,540,541,542,543,552,553,554,556,557,558,572,573,574,583,1588,2037,2039,2044,2045,2047,2048,2052,2053,2054,2056,2061,2062,2063,2064,2065,2066
+LowerLipVertexIndices=539,545,549,575,587,2042,2043,2051,2055,2059,2088
+UpperLowerLipVertexOverlap=0
+UpperLipWingWeightedVertexCount=0
+LowerLipWingWeightedVertexCount=0
+MouthSplitModelY=0.719717
+UpperCandidateBone=Fuga_UpperLip
+UpperCandidatePath=Bone_000/Bone_001/Bone_003/Fuga_UpperLip
+LowerCandidateBone=Fuga_LowerLip
+LowerCandidatePath=Bone_000/Bone_001/Bone_003/Bone_002/Fuga_LowerLip
+LipBoneAssignmentBasis=EmbeddedFugaUpperLipAndFugaLowerLipBones
+BroadFrontVertexCount=108
+BroadFrontBoundaryVertexCount=101
+BroadFrontDuplicatePositionPairCount=85
+CurrentBlendShapeAffectedVertexCount=0
+CurrentBlendShapeWingWeightedVertexCount=0
+CurrentBlendShapeOutsideBroadFrontVertexCount=0
+CurrentBlendShapeOutsideIdentifiedLipVertexCount=0
+SceneChanged=False
+
+UpperLipVertex=557 Position=(-0.095581,0.740351,0.829804) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=574 Position=(-0.095581,0.740351,0.829804) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=554 Position=(-0.085877,0.741659,0.862129) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=556 Position=(-0.082611,0.742841,0.827362) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=573 Position=(-0.082611,0.742841,0.827362) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=558 Position=(-0.080811,0.804514,0.707794) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=583 Position=(-0.080811,0.804514,0.707794) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=537 Position=(-0.074097,0.770073,0.900032) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=572 Position=(-0.074097,0.770073,0.900032) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2056 Position=(-0.074097,0.770073,0.900032) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=553 Position=(-0.072968,0.745117,0.846054) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=540 Position=(-0.062226,0.743032,0.908463) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=552 Position=(-0.060272,0.747623,0.837006) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=543 Position=(-0.016907,0.757904,0.853416) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2053 Position=(-0.016907,0.757904,0.853416) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=541 Position=(-0.007721,0.719717,0.934433) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2052 Position=(-0.007721,0.719717,0.934433) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=542 Position=(-0.005890,0.755908,0.931229) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2054 Position=(-0.005890,0.755908,0.931229) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2048 Position=(0.045410,0.758080,0.846588) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2064 Position=(0.045410,0.758080,0.846588) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2065 Position=(0.051727,0.745535,0.913300) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2066 Position=(0.051727,0.745535,0.913300) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2044 Position=(0.062744,0.773659,0.742058) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2045 Position=(0.066070,0.766191,0.762764) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2063 Position=(0.066070,0.766191,0.762764) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=1588 Position=(0.069946,0.773084,0.905464) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2037 Position=(0.069946,0.773084,0.905464) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2061 Position=(0.069946,0.773084,0.905464) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2047 Position=(0.079101,0.741436,0.842354) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2062 Position=(0.079101,0.741436,0.842354) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+UpperLipVertex=2039 Position=(0.101562,0.737247,0.838944) Fuga_UpperLipWeight=1.000000 Fuga_LowerLipWeight=0.000000 DominantBone=Fuga_UpperLip
+LowerLipVertex=545 Position=(-0.114716,0.719757,0.846214) Fuga_UpperLipWeight=0.000000 Fuga_LowerLipWeight=1.000000 DominantBone=Fuga_LowerLip
+LowerLipVertex=575 Position=(-0.114716,0.719757,0.846214) Fuga_UpperLipWeight=0.000000 Fuga_LowerLipWeight=1.000000 DominantBone=Fuga_LowerLip
+LowerLipVertex=587 Position=(-0.114716,0.719757,0.846214) Fuga_UpperLipWeight=0.000000 Fuga_LowerLipWeight=1.000000 DominantBone=Fuga_LowerLip
+LowerLipVertex=549 Position=(-0.029633,0.618780,0.901177) Fuga_UpperLipWeight=0.000000 Fuga_LowerLipWeight=1.000000 DominantBone=Fuga_LowerLip
+LowerLipVertex=2055 Position=(-0.029633,0.618780,0.901177) Fuga_UpperLipWeight=0.000000 Fuga_LowerLipWeight=1.000000 DominantBone=Fuga_LowerLip
+LowerLipVertex=539 Position=(0.000061,0.705129,0.910896) Fuga_UpperLipWeight=0.000000 Fuga_LowerLipWeight=1.000000 DominantBone=Fuga_LowerLip
+LowerLipVertex=2051 Position=(0.000061,0.705129,0.910896) Fuga_UpperLipWeight=0.000000 Fuga_LowerLipWeight=1.000000 DominantBone=Fuga_LowerLip
+LowerLipVertex=2043 Position=(0.035400,0.606815,0.887367) Fuga_UpperLipWeight=0.000000 Fuga_LowerLipWeight=1.000000 DominantBone=Fuga_LowerLip
+LowerLipVertex=2059 Position=(0.101562,0.737247,0.838944) Fuga_UpperLipWeight=0.000000 Fuga_LowerLipWeight=1.000000 DominantBone=Fuga_LowerLip
+LowerLipVertex=2042 Position=(0.117981,0.619412,0.711029) Fuga_UpperLipWeight=0.000000 Fuga_LowerLipWeight=1.000000 DominantBone=Fuga_LowerLip
+LowerLipVertex=2088 Position=(0.117981,0.619412,0.711029) Fuga_UpperLipWeight=0.000000 Fuga_LowerLipWeight=1.000000 DominantBone=Fuga_LowerLip
+DuplicatePair=468:568@(-0.206360,0.893851,0.724991)
+DuplicatePair=469:508@(-0.295807,0.937861,0.612480)
+DuplicatePair=469:571@(-0.295807,0.937861,0.612480)
+DuplicatePair=469:596@(-0.295807,0.937861,0.612480)
+DuplicatePair=508:571@(-0.295807,0.937861,0.612480)
+DuplicatePair=508:596@(-0.295807,0.937861,0.612480)
+DuplicatePair=537:572@(-0.074097,0.770073,0.900032)
+DuplicatePair=537:2056@(-0.074097,0.770073,0.900032)
+DuplicatePair=539:2051@(0.000061,0.705129,0.910896)
+DuplicatePair=541:2052@(-0.007721,0.719717,0.934433)
+DuplicatePair=542:2054@(-0.005890,0.755908,0.931229)
+DuplicatePair=543:2053@(-0.016907,0.757904,0.853416)
+DuplicatePair=545:575@(-0.114716,0.719757,0.846214)
+DuplicatePair=545:587@(-0.114716,0.719757,0.846214)
+DuplicatePair=547:579@(0.009582,0.594825,0.750916)
+DuplicatePair=547:2049@(0.009582,0.594825,0.750916)
+DuplicatePair=548:582@(-0.128449,0.642006,0.762672)
+DuplicatePair=549:2055@(-0.029633,0.618780,0.901177)
+DuplicatePair=556:573@(-0.082611,0.742841,0.827362)
+DuplicatePair=557:574@(-0.095581,0.740351,0.829804)
+DuplicatePair=558:583@(-0.080811,0.804514,0.707794)
+DuplicatePair=559:576@(-0.182221,0.816260,0.733482)
+DuplicatePair=559:577@(-0.182221,0.816260,0.733482)
+DuplicatePair=559:589@(-0.182221,0.816260,0.733482)
+DuplicatePair=565:585@(-0.148010,0.803834,0.625824)
+DuplicatePair=566:584@(-0.210938,0.793089,0.676987)
+DuplicatePair=569:578@(-0.238861,0.796207,0.654404)
+DuplicatePair=569:590@(-0.238861,0.796207,0.654404)
+DuplicatePair=569:599@(-0.238861,0.796207,0.654404)
+DuplicatePair=571:596@(-0.295807,0.937861,0.612480)
+DuplicatePair=572:2056@(-0.074097,0.770073,0.900032)
+DuplicatePair=575:587@(-0.114716,0.719757,0.846214)
+DuplicatePair=576:577@(-0.182221,0.816260,0.733482)
+DuplicatePair=576:589@(-0.182221,0.816260,0.733482)
+DuplicatePair=577:589@(-0.182221,0.816260,0.733482)
+DuplicatePair=578:590@(-0.238861,0.796207,0.654404)
+DuplicatePair=578:599@(-0.238861,0.796207,0.654404)
+DuplicatePair=579:2049@(0.009582,0.594825,0.750916)
+DuplicatePair=580:794@(0.049438,0.586494,0.632683)
+DuplicatePair=580:2050@(0.049438,0.586494,0.632683)
+DuplicatePair=580:2089@(0.049438,0.586494,0.632683)
+DuplicatePair=581:793@(-0.098999,0.605643,0.602783)
+DuplicatePair=590:599@(-0.238861,0.796207,0.654404)
+DuplicatePair=792:2092@(0.005615,0.538436,0.633720)
+DuplicatePair=794:2050@(0.049438,0.586494,0.632683)
+DuplicatePair=794:2089@(0.049438,0.586494,0.632683)
+DuplicatePair=1582:1615@(0.204925,0.881661,0.723732)
+DuplicatePair=1583:1620@(0.181366,0.868951,0.717468)
+DuplicatePair=1583:2038@(0.181366,0.868951,0.717468)
+DuplicatePair=1585:2046@(0.075500,0.921385,0.838638)
+DuplicatePair=1588:2037@(0.069946,0.773084,0.905464)
+DuplicatePair=1588:2061@(0.069946,0.773084,0.905464)
+DuplicatePair=1613:2072@(0.249695,0.783272,0.643982)
+DuplicatePair=1616:2033@(0.183777,0.817229,0.733460)
+DuplicatePair=1616:2034@(0.183777,0.817229,0.733460)
+DuplicatePair=1616:2077@(0.183777,0.817229,0.733460)
+DuplicatePair=1620:2038@(0.181366,0.868951,0.717468)
+DuplicatePair=2031:2058@(0.211059,0.793592,0.678803)
+DuplicatePair=2031:2060@(0.211059,0.793592,0.678803)
+DuplicatePair=2031:2076@(0.211059,0.793592,0.678803)
+DuplicatePair=2031:2094@(0.211059,0.793592,0.678803)
+DuplicatePair=2032:2079@(0.204620,0.794584,0.669724)
+DuplicatePair=2033:2034@(0.183777,0.817229,0.733460)
+DuplicatePair=2033:2077@(0.183777,0.817229,0.733460)
+DuplicatePair=2034:2077@(0.183777,0.817229,0.733460)
+DuplicatePair=2035:2080@(0.197693,0.791892,0.661720)
+DuplicatePair=2036:2086@(0.189972,0.800675,0.651917)
+DuplicatePair=2037:2061@(0.069946,0.773084,0.905464)
+DuplicatePair=2039:2059@(0.101562,0.737247,0.838944)
+DuplicatePair=2040:2082@(0.102112,0.798693,0.662399)
+DuplicatePair=2040:2095@(0.102112,0.798693,0.662399)
+DuplicatePair=2041:2078@(0.182434,0.685692,0.673699)
+DuplicatePair=2042:2088@(0.117981,0.619412,0.711029)
+DuplicatePair=2045:2063@(0.066070,0.766191,0.762764)
+DuplicatePair=2047:2062@(0.079101,0.741436,0.842354)
+DuplicatePair=2048:2064@(0.045410,0.758080,0.846588)
+DuplicatePair=2050:2089@(0.049438,0.586494,0.632683)
+DuplicatePair=2058:2060@(0.211059,0.793592,0.678803)
+DuplicatePair=2058:2076@(0.211059,0.793592,0.678803)
+DuplicatePair=2058:2094@(0.211059,0.793592,0.678803)
+DuplicatePair=2060:2076@(0.211059,0.793592,0.678803)
+DuplicatePair=2060:2094@(0.211059,0.793592,0.678803)
+DuplicatePair=2065:2066@(0.051727,0.745535,0.913300)
+DuplicatePair=2076:2094@(0.211059,0.793592,0.678803)
+DuplicatePair=2082:2095@(0.102112,0.798693,0.662399)
+BoundaryVertex=2092 Position=(0.005615,0.538436,0.633720) Normal=(0.724797,-0.503198,0.470598) UV=(0.409797,0.496447)
+BoundaryVertex=792 Position=(0.005615,0.538436,0.633720) Normal=(-0.601178,-0.464183,0.650476) UV=(0.127472,0.770173)
+BoundaryVertex=2089 Position=(0.049438,0.586494,0.632683) Normal=(0.492611,-0.812817,0.310907) UV=(0.391086,0.500193)
+BoundaryVertex=2050 Position=(0.049438,0.586494,0.632683) Normal=(0.273691,-0.948569,0.159095) UV=(0.586179,0.052467)
+BoundaryVertex=794 Position=(0.049438,0.586494,0.632683) Normal=(-0.172194,0.177894,0.968867) UV=(0.134141,0.754008)
+BoundaryVertex=580 Position=(0.049438,0.586494,0.632683) Normal=(-0.132902,-0.990814,0.025000) UV=(0.778100,0.353559)
+BoundaryVertex=2049 Position=(0.009582,0.594825,0.750916) Normal=(0.152008,-0.983448,0.098605) UV=(0.614068,0.044667)
+BoundaryVertex=579 Position=(0.009582,0.594825,0.750916) Normal=(-0.230406,-0.968127,0.098203) UV=(0.773365,0.328377)
+BoundaryVertex=547 Position=(0.009582,0.594825,0.750916) Normal=(-0.317507,-0.945822,0.067902) UV=(0.249037,0.119539)
+BoundaryVertex=793 Position=(-0.098999,0.605643,0.602783) Normal=(-0.458790,-0.662886,0.591687) UV=(0.094771,0.762725)
+BoundaryVertex=581 Position=(-0.098999,0.605643,0.602783) Normal=(-0.366401,-0.918303,0.149901) UV=(0.746867,0.355196)
+BoundaryVertex=2043 Position=(0.035400,0.606815,0.887367) Normal=(0.532329,-0.733841,0.422023) UV=(0.648486,0.051959)
+BoundaryVertex=2055 Position=(-0.029633,0.618780,0.901177) Normal=(-0.031401,-0.823726,0.566118) UV=(0.656644,0.036262)
+BoundaryVertex=549 Position=(-0.029633,0.618780,0.901177) Normal=(-0.612888,-0.626987,0.480890) UV=(0.224939,0.099647)
+BoundaryVertex=2042 Position=(0.117981,0.619412,0.711029) Normal=(0.666578,-0.666778,0.333289) UV=(0.605047,0.073446)
+BoundaryVertex=2088 Position=(0.117981,0.619412,0.711029) Normal=(0.549513,-0.814219,0.187304) UV=(0.376200,0.529348)
+BoundaryVertex=582 Position=(-0.128449,0.642006,0.762672) Normal=(-0.585399,-0.782699,0.211400) UV=(0.744259,0.321159)
+BoundaryVertex=548 Position=(-0.128449,0.642006,0.762672) Normal=(-0.568217,-0.775423,0.275408) UV=(0.216706,0.124575)
+BoundaryVertex=2078 Position=(0.182434,0.685692,0.673699) Normal=(0.724482,-0.499987,0.474488) UV=(0.346051,0.527884)
+BoundaryVertex=2041 Position=(0.182434,0.685692,0.673699) Normal=(0.800408,-0.335903,0.496505) UV=(0.601387,0.099793)
+BoundaryVertex=2051 Position=(0.000061,0.705129,0.910896) Normal=(0.251198,-0.339098,0.906594) UV=(0.671891,0.062391)
+BoundaryVertex=539 Position=(0.000061,0.705129,0.910896) Normal=(-0.700298,0.126800,0.702498) UV=(0.212224,0.090508)
+BoundaryVertex=2052 Position=(-0.007721,0.719717,0.934433) Normal=(-0.223491,0.871664,0.436182) UV=(0.840661,0.163192)
+BoundaryVertex=541 Position=(-0.007721,0.719717,0.934433) Normal=(0.900781,0.216095,0.376692) UV=(0.203686,0.084324)
+BoundaryVertex=545 Position=(-0.114716,0.719757,0.846214) Normal=(-0.647614,-0.511011,0.565212) UV=(0.192888,0.107705)
+BoundaryVertex=587 Position=(-0.114716,0.719757,0.846214) Normal=(-0.852781,-0.321493,0.411591) UV=(0.737519,0.298589)
+BoundaryVertex=575 Position=(-0.114716,0.719757,0.846214) Normal=(-0.255597,0.837489,0.482994) UV=(0.983124,0.197658)
+BoundaryVertex=2039 Position=(0.101562,0.737247,0.838944) Normal=(0.011900,0.944364,0.328687) UV=(0.772371,0.904154)
+BoundaryVertex=2059 Position=(0.101562,0.737247,0.838944) Normal=(0.841910,-0.333904,0.423905) UV=(0.646230,0.089421)
+BoundaryVertex=557 Position=(-0.095581,0.740351,0.829804) Normal=(-0.058700,0.881404,0.468702) UV=(0.977265,0.196112)
+BoundaryVertex=574 Position=(-0.095581,0.740351,0.829804) Normal=(-0.197997,0.971083,0.133398) UV=(0.190125,0.111672)
+BoundaryVertex=2062 Position=(0.079101,0.741436,0.842354) Normal=(0.871720,0.489912,0.009500) UV=(0.018356,0.987690)
+BoundaryVertex=2047 Position=(0.079101,0.741436,0.842354) Normal=(-0.427295,-0.837991,0.339396) UV=(0.842206,0.124713)
+BoundaryVertex=554 Position=(-0.085877,0.741659,0.862129) Normal=(-0.856562,0.510477,0.075597) UV=(0.186297,0.104383)
+BoundaryVertex=556 Position=(-0.082611,0.742841,0.827362) Normal=(-0.255404,-0.857712,-0.446206) UV=(0.975280,0.194397)
+BoundaryVertex=573 Position=(-0.082611,0.742841,0.827362) Normal=(-0.602466,-0.793755,-0.083595) UV=(0.188117,0.110526)
+BoundaryVertex=540 Position=(-0.062226,0.743032,0.908463) Normal=(0.093597,0.969970,0.224493) UV=(0.198546,0.094847)
+BoundaryVertex=2065 Position=(0.051727,0.745535,0.913300) Normal=(0.453281,0.876264,0.163393) UV=(0.062242,0.954398)
+BoundaryVertex=2066 Position=(0.051727,0.745535,0.913300) Normal=(-0.122896,0.934567,0.333888) UV=(0.846865,0.144253)
+BoundaryVertex=2054 Position=(-0.005890,0.755908,0.931229) Normal=(0.368976,-0.682456,0.630960) UV=(0.808595,0.137321)
+BoundaryVertex=542 Position=(-0.005890,0.755908,0.931229) Normal=(-0.205011,-0.978752,0.003900) UV=(0.174090,0.083896)
+BoundaryVertex=2053 Position=(-0.016907,0.757904,0.853416) Normal=(0.047198,-0.203392,0.977959) UV=(0.827136,0.146535)
+BoundaryVertex=543 Position=(-0.016907,0.757904,0.853416) Normal=(0.032099,-0.246691,0.968563) UV=(0.188230,0.086997)
+BoundaryVertex=2048 Position=(0.045410,0.758080,0.846588) Normal=(-0.720667,-0.650271,-0.240389) UV=(0.062478,0.989171)
+BoundaryVertex=2064 Position=(0.045410,0.758080,0.846588) Normal=(-0.226200,-0.534401,0.814401) UV=(0.836667,0.130876)
+BoundaryVertex=2045 Position=(0.066070,0.766191,0.762764) Normal=(0.064602,0.942324,0.328408) UV=(0.750717,0.893416)
+BoundaryVertex=2056 Position=(-0.074097,0.770073,0.900032) Normal=(-0.041299,0.213494,0.976071) UV=(0.790128,0.132407)
+BoundaryVertex=537 Position=(-0.074097,0.770073,0.900032) Normal=(-0.760349,0.233115,0.606239) UV=(0.790707,0.764674)
+BoundaryVertex=572 Position=(-0.074097,0.770073,0.900032) Normal=(-0.510808,-0.753112,0.414606) UV=(0.181044,0.098160)
+BoundaryVertex=2037 Position=(0.069946,0.773084,0.905464) Normal=(0.752484,0.298294,0.587187) UV=(0.699613,0.905749)
+BoundaryVertex=2061 Position=(0.069946,0.773084,0.905464) Normal=(0.009300,-0.138503,0.990318) UV=(0.824141,0.120128)
+BoundaryVertex=1588 Position=(0.069946,0.773084,0.905464) Normal=(0.599995,0.121699,0.790693) UV=(0.690670,0.859093)
+BoundaryVertex=2044 Position=(0.062744,0.773659,0.742058) Normal=(0.160300,0.091700,-0.982800) UV=(0.746809,0.890071)
+BoundaryVertex=2072 Position=(0.249695,0.783272,0.643982) Normal=(0.866518,-0.331907,0.372808) UV=(0.313370,0.529741)
+BoundaryVertex=1613 Position=(0.249695,0.783272,0.643982) Normal=(0.850694,-0.274498,0.448297) UV=(0.601655,0.776661)
+BoundaryVertex=2080 Position=(0.197693,0.791892,0.661720) Normal=(0.049501,0.989319,-0.137103) UV=(0.541408,0.994289)
+BoundaryVertex=2035 Position=(0.197693,0.791892,0.661720) Normal=(-0.555395,-0.812093,0.178999) UV=(0.737606,0.845650)
+BoundaryVertex=584 Position=(-0.210938,0.793089,0.676987) Normal=(0.048300,0.716802,0.695602) UV=(0.022501,0.236494)
+BoundaryVertex=566 Position=(-0.210938,0.793089,0.676987) Normal=(-0.239599,0.789896,0.564497) UV=(0.971302,0.233371)
+BoundaryVertex=2076 Position=(0.211059,0.793592,0.678803) Normal=(0.576810,-0.342706,0.741513) UV=(0.318038,0.544230)
+BoundaryVertex=2031 Position=(0.211059,0.793592,0.678803) Normal=(-0.401895,-0.896389,0.186998) UV=(0.733269,0.846746)
+BoundaryVertex=2094 Position=(0.211059,0.793592,0.678803) Normal=(0.049401,0.989324,-0.137103) UV=(0.537078,0.989951)
+BoundaryVertex=2058 Position=(0.211059,0.793592,0.678803) Normal=(-0.005300,0.944417,0.328706) UV=(0.780682,0.859956)
+BoundaryVertex=2060 Position=(0.211059,0.793592,0.678803) Normal=(0.838324,-0.245407,0.486814) UV=(0.613211,0.124897)
+BoundaryVertex=2032 Position=(0.204620,0.794584,0.669724) Normal=(-0.216894,-0.940074,0.263093) UV=(0.735341,0.846241)
+BoundaryVertex=2079 Position=(0.204620,0.794584,0.669724) Normal=(-0.772011,0.267004,0.576808) UV=(0.538884,0.992530)
+BoundaryVertex=590 Position=(-0.238861,0.796207,0.654404) Normal=(-0.881816,-0.307206,0.357807) UV=(0.700707,0.331486)
+BoundaryVertex=569 Position=(-0.238861,0.796207,0.654404) Normal=(-0.342996,0.774991,0.530794) UV=(0.974052,0.239767)
+BoundaryVertex=599 Position=(-0.238861,0.796207,0.654404) Normal=(-0.508320,-0.674727,0.535121) UV=(0.029078,0.239851)
+BoundaryVertex=578 Position=(-0.238861,0.796207,0.654404) Normal=(-0.794608,-0.159102,0.585906) UV=(0.825708,0.716507)
+BoundaryVertex=2087 Position=(0.132172,0.797007,0.619057) Normal=(0.029600,-0.997801,0.059300) UV=(0.014584,0.655797)
+BoundaryVertex=2082 Position=(0.102112,0.798693,0.662399) Normal=(0.069096,0.985948,-0.152092) UV=(0.568159,0.990538)
+BoundaryVertex=2040 Position=(0.102112,0.798693,0.662399) Normal=(0.275712,0.706932,0.651329) UV=(0.754329,0.864463)
+BoundaryVertex=2095 Position=(0.102112,0.798693,0.662399) Normal=(0.029600,-0.997801,0.059300) UV=(0.000150,0.652201)
+BoundaryVertex=2036 Position=(0.189972,0.800675,0.651917) Normal=(-0.068301,-0.978719,0.193504) UV=(0.740818,0.846252)
+BoundaryVertex=2086 Position=(0.189972,0.800675,0.651917) Normal=(0.029600,-0.997801,0.059300) UV=(0.020694,0.638052)
+BoundaryVertex=585 Position=(-0.148010,0.803834,0.625824) Normal=(0.214504,0.869815,0.444308) UV=(0.022876,0.219732)
+BoundaryVertex=565 Position=(-0.148010,0.803834,0.625824) Normal=(-0.093401,-0.992011,0.084801) UV=(0.935533,0.209148)
+BoundaryVertex=558 Position=(-0.080811,0.804514,0.707794) Normal=(0.548489,-0.566089,0.615388) UV=(0.956980,0.212926)
+BoundaryVertex=583 Position=(-0.080811,0.804514,0.707794) Normal=(-0.105602,0.991321,0.078302) UV=(0.044592,0.220111)
+BoundaryVertex=559 Position=(-0.182221,0.816260,0.733482) Normal=(-0.698882,0.193795,0.688482) UV=(0.818238,0.730203)
+BoundaryVertex=576 Position=(-0.182221,0.816260,0.733482) Normal=(-0.170204,-0.957123,-0.234406) UV=(0.948223,0.197754)
+BoundaryVertex=577 Position=(-0.182221,0.816260,0.733482) Normal=(-0.797793,-0.527895,0.291297) UV=(0.159707,0.126069)
+BoundaryVertex=589 Position=(-0.182221,0.816260,0.733482) Normal=(0.172404,-0.939024,0.297508) UV=(0.008789,0.238277)
+BoundaryVertex=1616 Position=(0.183777,0.817229,0.733460) Normal=(0.698915,-0.174004,0.693715) UV=(0.573705,0.775437)
+BoundaryVertex=2077 Position=(0.183777,0.817229,0.733460) Normal=(0.192303,-0.862113,0.468807) UV=(0.312311,0.562157)
+BoundaryVertex=2033 Position=(0.183777,0.817229,0.733460) Normal=(0.085804,-0.992541,-0.086604) UV=(0.728112,0.862736)
+BoundaryVertex=2034 Position=(0.183777,0.817229,0.733460) Normal=(0.655397,0.211399,0.725097) UV=(0.728112,0.862736)
+BoundaryVertex=1620 Position=(0.181366,0.868951,0.717468) Normal=(-0.375578,0.257685,0.890247) UV=(0.567727,0.763746)
+BoundaryVertex=2038 Position=(0.181366,0.868951,0.717468) Normal=(0.782297,0.227699,0.579798) UV=(0.717102,0.856773)
+BoundaryVertex=1583 Position=(0.181366,0.868951,0.717468) Normal=(0.684718,0.234306,0.690118) UV=(0.688527,0.804086)
+BoundaryVertex=1615 Position=(0.204925,0.881661,0.723732) Normal=(0.564801,0.148800,0.811701) UV=(0.571632,0.757919)
+BoundaryVertex=1582 Position=(0.204925,0.881661,0.723732) Normal=(-0.092595,-0.296783,0.950445) UV=(0.688243,0.800756)
+BoundaryVertex=568 Position=(-0.206360,0.893851,0.724991) Normal=(-0.618419,-0.080403,0.781725) UV=(0.837768,0.736451)
+BoundaryVertex=468 Position=(-0.206360,0.893851,0.724991) Normal=(-0.863385,0.145897,0.482992) UV=(0.540405,0.754309)
+BoundaryVertex=1585 Position=(0.075500,0.921385,0.838638) Normal=(0.960815,0.036301,0.274804) UV=(0.666989,0.836118)
+BoundaryVertex=2046 Position=(0.075500,0.921385,0.838638) Normal=(0.780096,0.232399,0.580897) UV=(0.675343,0.873958)
+BoundaryVertex=571 Position=(-0.295807,0.937861,0.612480) Normal=(-0.801776,-0.151196,0.578183) UV=(0.842378,0.710943)
+BoundaryVertex=469 Position=(-0.295807,0.937861,0.612480) Normal=(-0.644026,0.383515,0.661927) UV=(0.505262,0.749032)
+BoundaryVertex=596 Position=(-0.295807,0.937861,0.612480) Normal=(-0.917486,-0.287396,0.274996) UV=(0.668773,0.325766)
+BoundaryVertex=508 Position=(-0.295807,0.937861,0.612480) Normal=(-0.991820,-0.077002,0.101802) UV=(0.798114,0.284968)
+Bone=Fuga_UpperLip Path=Bone_000/Bone_001/Bone_003/Fuga_UpperLip UpperWeight=32.000000 LowerWeight=0.000000 UpperVertices=32 LowerVertices=0 ModelPosition=(-0.007721,0.719717,0.660004)
+Bone=Fuga_LowerLip Path=Bone_000/Bone_001/Bone_003/Bone_002/Fuga_LowerLip UpperWeight=0.000000 LowerWeight=11.000000 UpperVertices=0 LowerVertices=11 ModelPosition=(-0.007721,0.719717,0.660004)
+Bone=Bone_000 Path=Bone_000 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.006592,0.806104,-0.032928)
+Bone=Bone_001 Path=Bone_000/Bone_001 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.006592,0.937815,0.335861)
+Bone=Bone_003 Path=Bone_000/Bone_001/Bone_003 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.006592,0.740248,0.717827)
+Bone=Bone_002 Path=Bone_000/Bone_001/Bone_003/Bone_002 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.006592,0.674393,0.810028)
+Bone=Bone_005 Path=Bone_000/Bone_001/Bone_005 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.006592,0.384627,0.204155)
+Bone=Bone_004 Path=Bone_000/Bone_001/Bone_005/Bone_004 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.006592,0.213402,0.204155)
+Bone=Bone_007 Path=Bone_000/Bone_001/Bone_007 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.256836,0.424141,0.177811)
+Bone=Bone_006 Path=Bone_000/Bone_001/Bone_007/Bone_006 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.388550,0.239744,0.190979)
+Bone=Bone_009 Path=Bone_000/Bone_001/Bone_009 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(0.243652,0.424141,0.177811)
+Bone=Bone_008 Path=Bone_000/Bone_001/Bone_009/Bone_008 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(0.375366,0.239745,0.190979)
+Bone=Bone_013 Path=Bone_000/Bone_001/Bone_013 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.217316,0.806104,0.032928)
+Bone=Bone_012 Path=Bone_000/Bone_001/Bone_013/Bone_012 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.599304,1.043184,-0.217324)
+Bone=Bone_011 Path=Bone_000/Bone_001/Bone_013/Bone_012/Bone_011 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.954895,1.293436,-0.217324)
+Bone=Bone_010 Path=Bone_000/Bone_001/Bone_013/Bone_012/Bone_011/Bone_010 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-1.310547,1.319778,-0.243668)
+Bone=Bone_017 Path=Bone_000/Bone_001/Bone_017 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(0.204163,0.806104,0.032929)
+Bone=Bone_016 Path=Bone_000/Bone_001/Bone_017/Bone_016 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(0.586121,1.043184,-0.217323)
+Bone=Bone_015 Path=Bone_000/Bone_001/Bone_017/Bone_016/Bone_015 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(0.941742,1.293436,-0.217323)
+Bone=Bone_014 Path=Bone_000/Bone_001/Bone_017/Bone_016/Bone_015/Bone_014 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(1.310547,1.319778,-0.243667)
+Bone=Bone_021 Path=Bone_000/Bone_001/Bone_021 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.006592,0.806104,-0.032928)
+Bone=Bone_020 Path=Bone_000/Bone_001/Bone_021/Bone_020 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.006592,0.674392,-0.362206)
+Bone=Bone_019 Path=Bone_000/Bone_001/Bone_021/Bone_020/Bone_019 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.006592,0.476825,-0.586113)
+Bone=Bone_018 Path=Bone_000/Bone_001/Bone_021/Bone_020/Bone_019/Bone_018 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.006592,0.226573,-0.783684)
+Bone=Bone_023 Path=Bone_000/Bone_001/Bone_021/Bone_020/Bone_019/Bone_018/Bone_023 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.138306,0.384627,-0.638802)
+Bone=Bone_022 Path=Bone_000/Bone_001/Bone_021/Bone_020/Bone_019/Bone_018/Bone_023/Bone_022 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(-0.256836,0.213402,-0.770516)
+Bone=Bone_025 Path=Bone_000/Bone_001/Bone_021/Bone_020/Bone_019/Bone_018/Bone_025 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(0.125122,0.384627,-0.638802)
+Bone=Bone_024 Path=Bone_000/Bone_001/Bone_021/Bone_020/Bone_019/Bone_018/Bone_025/Bone_024 UpperWeight=0.000000 LowerWeight=0.000000 UpperVertices=0 LowerVertices=0 ModelPosition=(0.243653,0.213402,-0.770515)

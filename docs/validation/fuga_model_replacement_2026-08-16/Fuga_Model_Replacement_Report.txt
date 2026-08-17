@@ -1,0 +1,18 @@
+Fuga GLB Replacement Report
+Result=PASS
+Source=D:/Bellerophon2/Bellerophon/enemies model/fuga.glb
+ImportedAsset=Assets/_Project/Art/Enemies/Fuga/Models/fuga.glb
+SourceSha256=009430EB298B83C6EA48CD2AF7B9BE3DF075EA512DAF6978BBE41D5C917AF3AB
+SceneSlots=7
+DirectGlbInstancesIncludingPrefab=8
+LineupBoundsCenter=(57.86037,1.286498,-30.56942)
+LineupBoundsSize=(15.5431,0.736376,0.740984)
+ModelGeometryModified=False
+GeneratedModelParts=False
+ExistingSlotTransformsPreserved=True
+ExistingSlotComponentsPreserved=True
+PlayerFacesFuga=True
+CompleteLineupVisible=True
+OtherSceneRootsChanged=False
+CaptureCreated=True
+HarnessValidationRun=False

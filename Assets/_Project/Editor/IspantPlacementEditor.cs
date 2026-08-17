@@ -24,6 +24,8 @@ namespace Bellerophon.Editor.IspantCargoRunScene
         private const string ModelPath = ModelFolder + "/Ispant_Armed.fbx";
         private const string PlacementRootName =
             "Approved Ispant Enemy Placement";
+        private const string AtaRootName =
+            "Approved Ata Enemy Placement";
         private const string KursaRootName =
             "Approved Kursa Enemy Placement";
         private const string LongaRootName =
@@ -46,6 +48,12 @@ namespace Bellerophon.Editor.IspantCargoRunScene
         private const string PlayerStartFinalReviewPath =
             PlayerStartValidationFolder +
             "/Ispant_PlayerStart_FinalReview.png";
+        private const string PlayerStartPlaybackInspectionPath =
+            "docs/validation/ispant_player_start_front_2026-08-17/" +
+            "Ispant_Player_Start_PlayMode_Inspection.txt";
+        private const string PlayerStartStoppedInspectionPath =
+            "docs/validation/ispant_player_start_front_2026-08-17/" +
+            "Ispant_Player_Start_Stopped_Inspection.txt";
         private const string ExpectedSourceSha256 =
             "62043F0A84221A74F0B106AEA90112E04205B4C53F043C9A3B4CD629606CA55B";
         private const int SlotCount = 12;
@@ -238,13 +246,90 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             }
 
             var player = RequirePlayer();
+            var camera =
+                player.GetComponentInChildren<Camera>(true) ??
+                throw new InvalidOperationException(
+                    "The Player camera is missing.");
+            var visibleSlots = VisibleSlotCount(root, camera);
             Debug.Log(
                 "IspantPlayerStartFramingApplied Result=PASS" +
                 ", Player=" + Vec(player.position) +
                 ", PlayerForward=" + Vec(player.forward) +
-                ", FullLineupVisible=True" +
+                ", VisibleIspantSlotCenters=" + visibleSlots +
+                ", AtaBehindCamera=True" +
                 ", ExistingSceneRootsUnchanged=True" +
                 ", SceneSaved=True.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Start Player Front Playback")]
+        public static void StartIspantPlayerFrontPlayback()
+        {
+            RequireCurrentScene();
+            if (!EditorApplication.isPlaying)
+            {
+                EditorApplication.EnterPlaymode();
+            }
+
+            Debug.Log("IspantPlayerFrontPlaybackStarted Result=PASS.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Inspect Player Front Playback")]
+        public static void InspectIspantPlayerFrontPlayback()
+        {
+            if (!EditorApplication.isPlaying)
+            {
+                throw new InvalidOperationException(
+                    "Unity is not in Play Mode for the Ispant Player-start inspection.");
+            }
+
+            InspectAndWritePlayerStart(
+                PlayerStartPlaybackInspectionPath,
+                "PlayMode");
+            Debug.Log(
+                "IspantPlayerFrontPlaybackInspected Result=PASS" +
+                ", ActualPlayMode=True" +
+                ", IspantVisible=True" +
+                ", AtaBehindCamera=True" +
+                ", PlayerFacesLineup=True.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Stop Player Front Playback")]
+        public static void StopIspantPlayerFrontPlayback()
+        {
+            if (EditorApplication.isPlaying)
+            {
+                EditorApplication.ExitPlaymode();
+            }
+
+            Debug.Log("IspantPlayerFrontPlaybackStopRequested Result=PASS.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Inspect Stopped Player Front")]
+        public static void InspectStoppedIspantPlayerFront()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Unity Play Mode has not stopped after the Ispant Player-start inspection.");
+            }
+
+            var scene = RequireCurrentScene();
+            var wasDirty = scene.isDirty;
+            InspectAndWritePlayerStart(
+                PlayerStartStoppedInspectionPath,
+                "StoppedEditMode");
+            if (scene.isDirty != wasDirty)
+            {
+                throw new InvalidOperationException(
+                    "The stopped Ispant Player-start inspection changed the scene dirty state.");
+            }
+
+            Debug.Log(
+                "IspantPlayerFrontStoppedInspected Result=PASS" +
+                ", PlayModeStopped=True" +
+                ", IspantVisible=True" +
+                ", AtaBehindCamera=True" +
+                ", SceneChanged=False.");
         }
 
         [MenuItem("Bellerophon/Enemies/Ispant/Capture Player Start Diagnostic")]
@@ -300,6 +385,10 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var bounds = BoundsOf(
                 root,
                 new Bounds(root.position, Vector3.one));
+            var ata = RequireRoot(AtaRootName).transform;
+            var ataBounds = BoundsOf(
+                ata,
+                new Bounds(ata.position, Vector3.one));
             var front = root.GetChild(0).forward;
             front.y = 0f;
             if (front.sqrMagnitude < 0.001f)
@@ -309,8 +398,21 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             }
 
             front.Normalize();
+            var nearestAtaDistance = Corners(ataBounds)
+                .Min(corner => Vector3.Dot(
+                    corner - bounds.center,
+                    front));
+            if (nearestAtaDistance <= MinimumPlayerDistance + CameraMargin)
+            {
+                throw new InvalidOperationException(
+                    "There is not enough clear space between Ispant and Ata for the Player camera.");
+            }
+
             var desiredCamera =
-                bounds.center + front * PlayerDistance(bounds, camera);
+                bounds.center + front *
+                Mathf.Max(
+                    MinimumPlayerDistance,
+                    nearestAtaDistance - CameraMargin);
             var yaw = YawToward(desiredCamera, bounds.center);
             var cameraOffsetLocal =
                 player.InverseTransformPoint(camera.transform.position);
@@ -330,6 +432,10 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var bounds = BoundsOf(
                 root,
                 new Bounds(root.position, Vector3.one));
+            var ata = RequireRoot(AtaRootName).transform;
+            var ataBounds = BoundsOf(
+                ata,
+                new Bounds(ata.position, Vector3.one));
             var fromFocus = camera.transform.position - bounds.center;
             fromFocus.y = 0f;
             var front = root.GetChild(0).forward;
@@ -351,33 +457,36 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                     "The Player camera is not centered in front of Ispant.");
             }
 
-            var fullLineupVisible = Corners(bounds).All(corner =>
+            var ataBehindCamera = Corners(ataBounds).All(corner =>
+            {
+                var view = camera.WorldToViewportPoint(corner);
+                return view.z < 0f;
+            });
+            if (!ataBehindCamera)
+            {
+                throw new InvalidOperationException(
+                    "Ata is still in front of the Player camera.");
+            }
+
+            var focusSlot = root.Cast<Transform>()
+                .OrderBy(slot => Mathf.Abs(
+                    BoundsOf(slot, new Bounds(slot.position, Vector3.one))
+                        .center.x - bounds.center.x))
+                .First();
+            var focusBounds = BoundsOf(
+                focusSlot,
+                new Bounds(focusSlot.position, Vector3.one));
+            var focusVisible = Corners(focusBounds).All(corner =>
             {
                 var view = camera.WorldToViewportPoint(corner);
                 return view.z > 0f &&
-                       view.x >= -0.02f && view.x <= 1.02f &&
-                       view.y >= -0.02f && view.y <= 1.02f;
+                       view.x >= 0f && view.x <= 1f &&
+                       view.y >= 0f && view.y <= 1f;
             });
-            if (!fullLineupVisible)
+            if (!focusVisible || VisibleSlotCount(root, camera) < 3)
             {
                 throw new InvalidOperationException(
-                    "The Player camera does not contain the complete Ispant lineup.");
-            }
-
-            foreach (Transform slot in root)
-            {
-                var slotBounds = BoundsOf(
-                    slot,
-                    new Bounds(slot.position, Vector3.one));
-                var view = camera.WorldToViewportPoint(slotBounds.center);
-                if (view.z <= 0f ||
-                    view.x < 0f || view.x > 1f ||
-                    view.y < 0f || view.y > 1f)
-                {
-                    throw new InvalidOperationException(
-                        slot.name +
-                        " center is outside the Player camera.");
-                }
+                    "The Player camera does not clearly contain the front of the central Ispant slots.");
             }
 
             var playerToCenter = bounds.center - player.position;
@@ -393,6 +502,72 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 throw new InvalidOperationException(
                     "The Player root does not face the Ispant lineup.");
             }
+        }
+
+        private static void InspectAndWritePlayerStart(
+            string reportPath,
+            string mode)
+        {
+            var root = RequireRoot(PlacementRootName).transform;
+            InspectPlayerStart(root);
+            var player = RequirePlayer();
+            var camera =
+                player.GetComponentInChildren<Camera>(true) ??
+                throw new InvalidOperationException(
+                    "The Player camera is missing.");
+            var bounds = BoundsOf(
+                root,
+                new Bounds(root.position, Vector3.one));
+            var views = Corners(bounds)
+                .Select(camera.WorldToViewportPoint)
+                .ToArray();
+            var ata = RequireRoot(AtaRootName).transform;
+            var ataBounds = BoundsOf(
+                ata,
+                new Bounds(ata.position, Vector3.one));
+            var visibleSlots = VisibleSlotCount(root, camera);
+            var absolute = Absolute(reportPath);
+            Directory.CreateDirectory(
+                Path.GetDirectoryName(absolute) ??
+                throw new InvalidOperationException(
+                    "The Player-start report directory is unavailable."));
+            File.WriteAllText(
+                absolute,
+                "Ispant Player-start front inspection\n" +
+                "Mode=" + mode + "\n" +
+                "PlayerPosition=" + Vec(player.position) + "\n" +
+                "PlayerForward=" + Vec(player.forward) + "\n" +
+                "CameraPosition=" + Vec(camera.transform.position) + "\n" +
+                "CameraForward=" + Vec(camera.transform.forward) + "\n" +
+                "LineupCenter=" + Vec(bounds.center) + "\n" +
+                "LineupBounds=" + Vec(bounds.size) + "\n" +
+                "ViewportMin=" + Vec(new Vector3(
+                    views.Min(value => value.x),
+                    views.Min(value => value.y),
+                    views.Min(value => value.z))) + "\n" +
+                "ViewportMax=" + Vec(new Vector3(
+                    views.Max(value => value.x),
+                    views.Max(value => value.y),
+                    views.Max(value => value.z))) + "\n" +
+                "VisibleIspantSlotCenters=" + visibleSlots + "\n" +
+                "AtaCenter=" + Vec(ataBounds.center) + "\n" +
+                "AtaBehindCamera=True\n" +
+                "PlayerFacesLineup=True\n",
+                new UTF8Encoding(false));
+        }
+
+        private static int VisibleSlotCount(Transform root, Camera camera)
+        {
+            return root.Cast<Transform>().Count(slot =>
+            {
+                var slotBounds = BoundsOf(
+                    slot,
+                    new Bounds(slot.position, Vector3.one));
+                var view = camera.WorldToViewportPoint(slotBounds.center);
+                return view.z > 0f &&
+                       view.x >= 0f && view.x <= 1f &&
+                       view.y >= 0f && view.y <= 1f;
+            });
         }
 
         private static float PlayerDistance(Bounds bounds, Camera camera)

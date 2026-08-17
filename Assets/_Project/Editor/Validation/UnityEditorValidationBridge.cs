@@ -1870,19 +1870,19 @@ namespace Bellerophon.Editor.Validation
                     RunSynchronous(
                         request,
                         Bellerophon.Editor.ParvumCargoRunScene.ParvumDeathMotionTool.ApplyParvumDeathMotion,
-                        "The new three-second whole-body melt and one-second puddle-hold death motion was applied only to Parvum_05_Death.");
+                        "The three-second whole-body melt and one-second melted-body hold motion was applied only to Parvum_05_Death, with the legacy puddle visual removed.");
                     break;
                 case "InspectParvumDeathMotion":
                     RunSynchronous(
                         request,
                         Bellerophon.Editor.ParvumCargoRunScene.ParvumDeathMotionTool.InspectParvumDeathMotion,
-                        "The new Parvum whole-body melt, mouth disappearance, full-width puddle, loop timing, physics, and scene scope were inspected.");
+                        "The Parvum whole-body melt, one-second melted-body hold, removed puddle visual, loop timing, physics, and scene scope were inspected.");
                     break;
                 case "CaptureParvumDeathMotionComparison":
                     RunSynchronous(
                         request,
                         Bellerophon.Editor.ParvumCargoRunScene.ParvumDeathMotionTool.CaptureParvumDeathMotionComparison,
-                        "The final seven-panel Parvum whole-body melt death comparison was captured without changing the scene.");
+                        "The final seven-panel Parvum whole-body melt and melted-body hold comparison was captured without changing the scene.");
                     break;
                 case "ApplyApprovedFugaToCurrentCargoRunScene":
                     RunSynchronous(
@@ -1895,6 +1895,354 @@ namespace Bellerophon.Editor.Validation
                         request,
                         Bellerophon.Editor.FugaCargoRunScene.FugaCargoRunSceneApplyAndReview.InspectAppliedSceneState,
                         "Approved Fuga CargoRunMvp scene state inspected.");
+                    break;
+                case "ApplyFugaModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.ApplyFugaModelReplacement,
+                        "The exact supplied Fuga GLB replaced every placed Fuga model and updated the Player start framing.");
+                    break;
+                case "InspectFugaModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.InspectFugaModelReplacement,
+                        "The exact supplied Fuga GLB instances, preserved slot contracts, prefab, and Player start were inspected.");
+                    break;
+                case "CaptureFugaModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.CaptureFugaModelReplacement,
+                        "The exact supplied Fuga GLB lineup was captured from the Player start camera.");
+                    break;
+                case "ApplyFugaFacingAndDisconnectLegacyAnimations":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.ApplyFugaFacingAndDisconnectLegacyAnimations,
+                        "Every placed Fuga model was rotated 180 degrees toward the Player start side and all legacy animation playback connections were removed.");
+                    break;
+                case "InspectFugaFacingAndDisconnectedAnimations":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.InspectFugaFacingAndDisconnectedAnimations,
+                        "The Fuga 180-degree facing, static local positions, disconnected legacy animation playback, and protected scene scope were inspected.");
+                    break;
+                case "CaptureFugaFacingAndDisconnectedAnimations":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.CaptureFugaFacingAndDisconnectedAnimations,
+                        "The final static Fuga front-facing lineup was captured from the unchanged Player start camera.");
+                    break;
+                case "InspectFugaRotationPivotAndPlacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.InspectFugaRotationPivotAndPlacement,
+                        "The Fuga placement root, named slots, model pivots, and rotation ownership were inspected.");
+                    break;
+                case "RestoreFugaPlacementAndApplyPerObject180Facing":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.RestoreFugaPlacementAndApplyPerObject180Facing,
+                        "Every Fuga model was reverted to identity and rotated 180 degrees around its own unchanged local pivot.");
+                    break;
+                case "InspectCorrectedFugaPerObjectFacing":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.InspectCorrectedFugaPerObjectFacing,
+                        "The corrected per-object Fuga facing and unchanged placement order were inspected.");
+                    break;
+                case "CaptureCorrectedFugaPerObjectFacing":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.CaptureCorrectedFugaPerObjectFacing,
+                        "The corrected per-object Fuga facing lineup was captured without changing placement or Player.");
+                    break;
+                case "ApplyFugaScreenLeftToRightOrder":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.ApplyFugaScreenLeftToRightOrder,
+                        "The seven Fuga slots were reordered left-to-right on the Player screen while preserving their state ownership.");
+                    break;
+                case "InspectFugaScreenLeftToRightOrder":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.InspectFugaScreenLeftToRightOrder,
+                        "The Fuga Player-screen order and protected slot state were inspected without changing the scene.");
+                    break;
+                case "CaptureFugaScreenLeftToRightOrder":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.CaptureFugaScreenLeftToRightOrder,
+                        "The final Fuga Player-screen left-to-right order was captured without changing the scene.");
+                    break;
+                case "ApplyFugaPerObjectFrontFacingPlayerAndOrder":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.ApplyFugaPerObjectFrontFacingPlayerAndOrder,
+                        "Each Fuga model was rotated 180 degrees on its own pivot, the Player was moved to the corrected front, and the state order was restored left-to-right.");
+                    break;
+                case "InspectFugaPerObjectFrontFacingPlayerAndOrder":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.InspectFugaPerObjectFrontFacingPlayerAndOrder,
+                        "The corrected per-object facing, Player start, and Player-screen state order were inspected.");
+                    break;
+                case "CaptureFugaPerObjectFrontFacingPlayerAndOrder":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaGlbReplacementTool.CaptureFugaPerObjectFrontFacingPlayerAndOrder,
+                        "The final corrected Fuga facing and ordered lineup were captured from the corrected Player start.");
+                    break;
+                case "InspectFugaIdleRigAndBirdReference":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaIdleMotionTool.InspectFugaIdleRigAndBirdReference,
+                        "The supplied Fuga rig, skin influences, and approved bird-reference parameters were inspected.");
+                    break;
+                case "InspectFugaConsumeMouthRig":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaConsumeMotionTool.InspectFugaConsumeMouthRig,
+                        "The current Fuga upper and lower mouth skin regions were identified before consume-motion implementation without changing the scene.");
+                    break;
+                case "ApplyFugaEmbeddedLipRigToAllModels":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaLipRigTool.ApplyFugaEmbeddedLipRigToAllModels,
+                        "The embedded upper and lower lip bones were connected to every approved Fuga model and the consume motion was assigned to those bones.");
+                    break;
+                case "InspectFugaEmbeddedLipRigOnAllModels":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaLipRigTool.InspectFugaEmbeddedLipRigOnAllModels,
+                        "Every approved Fuga model and prefab was inspected for the embedded upper and lower lip rig without changing the scene.");
+                    break;
+                case "ApplyFugaConsumeMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaConsumeMotionTool.ApplyFugaConsumeMotion,
+                        "The two-second looping Fuga consume motion with 0.7-Hz wings, 30-degree lean, 60-degree mouth opening, and 0.08-meter Rigidbody bite was applied only to Fuga_06_Consume.");
+                    break;
+                case "InspectFugaConsumeMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaConsumeMotionTool.InspectFugaConsumeMotion,
+                        "The Fuga consume mouth mapping, continuous wing cadence, body lean, Rigidbody bite, return, and loop configuration were inspected.");
+                    break;
+                case "StartFugaConsumeMotionReviewPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaConsumeMotionTool.StartFugaConsumeMotionReviewPlayback,
+                        "The live Unity Game View review started for the looping Fuga consume motion without creating a capture.");
+                    break;
+                case "StopFugaConsumeMotionReviewPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaConsumeMotionTool.StopFugaConsumeMotionReviewPlayback,
+                        "The live Fuga consume motion review completed the required loops and continuous wingbeats without creating a capture.");
+                    break;
+                case "ApplyFugaIdleMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaIdleMotionTool.ApplyFugaIdleMotion,
+                        "The new two-second Fuga wingbeat, breathing, and Rigidbody hover idle motion was applied.");
+                    break;
+                case "InspectFugaIdleMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaIdleMotionTool.InspectFugaIdleMotion,
+                        "The new Fuga idle motion assets, scene connection, and protected scope were inspected.");
+                    break;
+                case "CaptureFugaIdleMotionComparison":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaIdleMotionTool.CaptureFugaIdleMotionComparison,
+                        "The new Fuga idle motion phase comparison was captured without changing the scene.");
+                    break;
+                case "ApplyFugaIdleWingbeatAndHover1Hz":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaIdleMotionTool.ApplyFugaIdleWingbeatAndHover1Hz,
+                        "The Fuga idle wingbeat and Rigidbody hover cadence were synchronized to one cycle per second.");
+                    break;
+                case "InspectFugaIdleWingbeatAndHover1Hz":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaIdleMotionTool.InspectFugaIdleWingbeatAndHover1Hz,
+                        "The one-Hertz Fuga wingbeat, matching hover cadence, and preserved idle-motion scope were inspected.");
+                    break;
+                case "CaptureFugaIdleWingbeatAndHover1Hz":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaIdleMotionTool.CaptureFugaIdleWingbeatAndHover1Hz,
+                        "The final one-Hertz Fuga idle wingbeat phase comparison was captured without changing the scene.");
+                    break;
+                case "ApplyFugaMoveMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaMoveMotionTool.ApplyFugaMoveMotion,
+                        "The new stationary Fuga move flight motion and five-meter Player start were applied.");
+                    break;
+                case "InspectFugaMoveMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaMoveMotionTool.InspectFugaMoveMotion,
+                        "The Fuga move wingbeat, forward tilt, Rigidbody hover, stationary position, and Player distance were inspected.");
+                    break;
+                case "CaptureFugaMoveMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaMoveMotionTool.CaptureFugaMoveMotion,
+                        "The final Fuga move-motion phase comparison was captured without changing the scene.");
+                    break;
+                case "ApplyFugaMoveTilt15":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaMoveMotionTool.ApplyFugaMoveTilt15,
+                        "The Fuga move body tilt was reduced to 15 degrees while preserving the inherited wing tilt and flap curves.");
+                    break;
+                case "InspectFugaMoveTilt15":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaMoveMotionTool.InspectFugaMoveTilt15,
+                        "The 15-degree Fuga move body and inherited wing tilt were inspected without changing the scene or controller.");
+                    break;
+                case "CaptureFugaMoveTilt15":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaMoveMotionTool.CaptureFugaMoveTilt15,
+                        "The final 15-degree Fuga move-tilt comparison was captured without changing the scene.");
+                    break;
+                case "ApplyFugaAttackMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaAttackMotionTool.ApplyFugaAttackMotion,
+                        "The new one-second alternating-wing Fuga attack motion was applied with a uniform random starting wing.");
+                    break;
+                case "InspectFugaAttackMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaAttackMotionTool.InspectFugaAttackMotion,
+                        "The Fuga alternating attack cadence, 90-degree strikes, 20-degree body tilt, and fixed altitude were inspected.");
+                    break;
+                case "CaptureFugaAttackMotion":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaAttackMotionTool.CaptureFugaAttackMotion,
+                        "The final Fuga alternating-wing attack phase comparison was captured without changing the scene.");
+                    break;
+                case "ApplyFugaAttackBodyYaw90":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaAttackMotionTool.ApplyFugaAttackBodyYaw90,
+                        "The Fuga attack body yaw was set to 90 degrees with simultaneous inherited wing motion, and missing scene JiggleRig roots were repaired.");
+                    break;
+                case "InspectFugaAttackBodyYaw90":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaAttackMotionTool.InspectFugaAttackBodyYaw90,
+                        "The Fuga attack 90-degree body yaw, simultaneous wing motion, and scene JiggleRig roots were inspected.");
+                    break;
+                case "CaptureFugaAttackBodyYaw90":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaAttackMotionTool.CaptureFugaAttackBodyYaw90,
+                        "The final Fuga attack 90-degree body-yaw comparison was captured without changing the scene.");
+                    break;
+                case "ApplyFugaAttackJerkDrivenAcceleration":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaAttackMotionTool.ApplyFugaAttackJerkDrivenAcceleration,
+                        "Each Fuga impact now moves Fuga_Model and both child wings through a +0.1 to -0.1 meter vertical recoil and returns in 0.07 seconds without moving the Rigidbody root.");
+                    break;
+                case "InspectFugaAttackJerkDrivenAcceleration":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaAttackMotionTool.InspectFugaAttackJerkDrivenAcceleration,
+                        "Both Fuga impacts were inspected for exact +0.1 and -0.1 meter Fuga_Model recoil, 0.07-second return, child-wing inheritance, unchanged Rigidbody root, and preserved attack motion.");
+                    break;
+                case "StartFugaAttackLeftFirstMotionReviewPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaAttackMotionTool.StartFugaAttackLeftFirstMotionReviewPlayback,
+                        "The live Unity Game View review started for two complete left-first Fuga attack loops without creating a capture.");
+                    break;
+                case "StartFugaAttackRightFirstMotionReviewPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaAttackMotionTool.StartFugaAttackRightFirstMotionReviewPlayback,
+                        "The live Unity Game View review started for two complete right-first Fuga attack loops without creating a capture.");
+                    break;
+                case "StopFugaAttackMotionReviewPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaAttackMotionTool.StopFugaAttackMotionReviewPlayback,
+                        "The live Fuga attack motion review stopped and reported completed loop counts without creating a capture.");
+                    break;
+                case "CaptureFugaAttackJerkDrivenAcceleration":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaAttackMotionTool.CaptureFugaAttackJerkDrivenAcceleration,
+                        "The final jerk-driven Fuga acceleration comparison was captured without changing the scene.");
+                    break;
+                case "ApplyFugaDeathFallAndMelt":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaDeathMotionTool.ApplyFugaDeathFallAndMelt,
+                        "The Fuga death slot now stops wing flapping, falls by Rigidbody gravity, melts its body and both wings only after ground contact, holds for one second, and loops.");
+                    break;
+                case "InspectFugaDeathFallAndMelt":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaDeathMotionTool.InspectFugaDeathFallAndMelt,
+                        "The Fuga collision-driven fall, Parvum-matched melt curve, whole-body wing inclusion, hold, and loop reset were inspected.");
+                    break;
+                case "StartFugaDeathMotionReviewPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaDeathMotionTool.StartFugaDeathMotionReviewPlayback,
+                        "The live Unity Game View physics review started for the looping Fuga death motion without creating a capture.");
+                    break;
+                case "StopFugaDeathMotionReviewPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaDeathMotionTool.StopFugaDeathMotionReviewPlayback,
+                        "The live Fuga death motion review completed at least two full fall-impact-melt loops without creating a capture.");
+                    break;
+                case "ApplyFugaHitReaction":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaHitReactionMotionTool.ApplyFugaHitReaction,
+                        "The new random left/right Fuga hit reaction was applied without using the legacy hit animation.");
+                    break;
+                case "InspectFugaHitReaction":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaHitReactionMotionTool.InspectFugaHitReaction,
+                        "The Fuga hit roll, vertical recoil, 0.3-second return, wing inheritance, and 50:50 selection were inspected.");
+                    break;
+                case "CaptureFugaHitReaction":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaHitReactionMotionTool.CaptureFugaHitReaction,
+                        "The final left/right Fuga hit-reaction comparison was captured without changing the scene.");
+                    break;
+                case "InspectCurrentUnityConsoleErrorsForFugaAttack":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaAttackMotionTool.InspectCurrentUnityConsoleErrorsForFugaAttack,
+                        "The current Unity console counts and scene JiggleRig root state were inspected for the Fuga attack task.");
+                    break;
+                case "InspectFugaIdleDeathVisualIdentity":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaIdleMotionTool.InspectFugaIdleDeathVisualIdentity,
+                        "The Fuga Idle/Death ownership, screen positions, and labels were inspected without changing the scene.");
+                    break;
+                case "CaptureFugaIdleDeathIdentityComparison":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.FugaCargoRunScene.FugaIdleMotionTool.CaptureFugaIdleDeathIdentityComparison,
+                        "The Player-view Fuga Idle/Death identity comparison was captured without changing the scene.");
                     break;
                 case "ApplyApprovedLongaArmaToCurrentCargoRunScene":
                     RunSynchronous(
@@ -3420,6 +3768,54 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.InspectIspantArmedPlacement,
                         "Ispant source hash, twelve direct FBX instances, spacing, grounding, static state, and unchanged scene state inspected.");
                     break;
+                case "InspectIspantModelReplacementBaseline":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.InspectModelReplacementBaseline,
+                        "The current Ispant slot, renderer, rig, controller, physics, and motion-driver paths were recorded without changing the scene.");
+                    break;
+                case "InspectIspantGeneratedRiggedModels":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.InspectGeneratedRiggedModels,
+                        "The generated custom and Mixamo Ispant skin meshes, bone use, materials, and supplied vertex count were inspected.");
+                    break;
+                case "ApplyIspantNewModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.ApplyNewModelReplacement,
+                        "The supplied new Ispant model was skinned to both existing rig families and applied to all twelve placed Ispant objects while preserving controllers, weapon paths, physics, colliders, and motion drivers.");
+                    break;
+                case "InspectIspantNewModelReplacement":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.InspectNewModelReplacement,
+                        "All twelve Ispant body renderers use the supplied replacement model, both rig mappings are complete, old appearance renderers are disabled, and existing animation and weapon paths remain preserved.");
+                    break;
+                case "InspectIspantModelScaleDiagnostic":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.InspectModelScaleDiagnostic,
+                        "The original per-FBX body bounds and current placed renderer scales were recorded to correct custom and death-unit differences without changing the scene.");
+                    break;
+                case "StartIspantNewModelPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.StartNewModelPlayback,
+                        "Unity entered Play Mode for direct Ispant replacement animation playback.");
+                    break;
+                case "InspectIspantNewModelPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.InspectNewModelPlayback,
+                        "All eleven animated Ispant slots played active clips with finite baked skin meshes and valid live bounds.");
+                    break;
+                case "StopIspantNewModelPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.StopNewModelPlayback,
+                        "Unity Play Mode stop was requested immediately after the Ispant replacement playback inspection.");
+                    break;
                 case "ExportIspantStaticFbx":
                     RunSynchronous(
                         request,
@@ -3526,7 +3922,31 @@ namespace Bellerophon.Editor.Validation
                     RunSynchronous(
                         request,
                         Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.ApplyIspantPlayerStartFraming,
-                        "Player start moved to the centered front view of the complete twelve-model Ispant lineup without changing other scene roots.");
+                        "Player start moved between Ata and Ispant so the central Ispant motion objects are seen from the front while Ata remains behind the camera and other scene roots remain unchanged.");
+                    break;
+                case "StartIspantPlayerFrontPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.StartIspantPlayerFrontPlayback,
+                        "Unity entered Play Mode for direct inspection of the Ispant Player-start front view.");
+                    break;
+                case "InspectIspantPlayerFrontPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.InspectIspantPlayerFrontPlayback,
+                        "The actual Play Mode Player camera faced the central Ispant motion objects from the front with Ata behind the camera.");
+                    break;
+                case "StopIspantPlayerFrontPlayback":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.StopIspantPlayerFrontPlayback,
+                        "Unity Play Mode stop was requested immediately after the Ispant Player-start inspection.");
+                    break;
+                case "InspectStoppedIspantPlayerFront":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.InspectStoppedIspantPlayerFront,
+                        "Unity was stopped and the saved Player start still faced Ispant from between the Ispant and Ata placements without changing the scene.");
                     break;
                 case "CaptureIspantPlayerStartDiagnostic":
                     RunSynchronous(

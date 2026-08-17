@@ -1,0 +1,20 @@
+Fuga Player-Screen Left-To-Right Order Report
+Result=PASS
+Scene=Assets/_Project/Scenes/CargoRunMvp.unity
+PlacementRoot=Approved Fuga Enemy Placement
+PlayerScreenLeftToRight=Fuga_00_Static > Fuga_01_Idle > Fuga_02_Move > Fuga_03_Attack > Fuga_04_Hit > Fuga_05_Death > Fuga_06_Consume
+SlotNamesAndLocalX=Fuga_00_Static@7.349998 > Fuga_01_Idle@4.900002 > Fuga_02_Move@2.450001 > Fuga_03_Attack@0 > Fuga_04_Hit@-2.449997 > Fuga_05_Death@-4.899998 > Fuga_06_Consume@-7.349998
+ViewportXLeftToRight=0.074534 > 0.216107 > 0.357794 > 0.499424 > 0.641055 > 0.782685 > 0.924315
+SlotXOnlyChanged=True
+SlotYAndZPreserved=True
+SlotRotationsAndScalesPreserved=True
+SiblingIndicesPreserved=True
+ModelLocalTransformsPreserved=True
+AnimationConnectionsPreserved=True
+IdleHoverTargetRebased=True
+PlayerChanged=False
+OtherSceneRootsChanged=False
+OriginalGlbModified=False
+ArtSampleCreated=False
+CaptureCreated=True
+HarnessValidationRun=False

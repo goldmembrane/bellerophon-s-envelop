@@ -1,0 +1,14 @@
+Ispant Player-start front inspection
+Mode=StoppedEditMode
+PlayerPosition=71.2465744,0,-176.476761
+PlayerForward=0,0,1
+CameraPosition=71.2465744,1.62,-176.476761
+CameraForward=0,0,1
+LineupCenter=71.2465744,1.10565352,-170.64093
+LineupBounds=28.0805511,1.77749729,1.69134521
+ViewportMin=-0.8706117,0.2564975,4.990158
+ViewportMax=1.87061167,0.5649763,6.6815033
+VisibleIspantSlotCenters=4
+AtaCenter=71.4189148,1.31558633,-178.108353
+AtaBehindCamera=True
+PlayerFacesLineup=True

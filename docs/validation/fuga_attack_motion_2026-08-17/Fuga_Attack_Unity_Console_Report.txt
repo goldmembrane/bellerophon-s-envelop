@@ -1,0 +1,10 @@
+Fuga Attack Unity Console Report
+Scene=Assets/_Project/Scenes/CargoRunMvp.unity
+ConsoleErrorCount=0
+ConsoleWarningCount=0
+ConsoleLogCount=5
+SceneJiggleRigCount=6
+MissingJiggleRigRootCount=0
+RootCause=Parvum scene instances removed the nested prefab model referenced by JiggleRig.rootBone
+FugaAttackCodeCausedJiggleRigError=False
+HarnessValidationRun=False

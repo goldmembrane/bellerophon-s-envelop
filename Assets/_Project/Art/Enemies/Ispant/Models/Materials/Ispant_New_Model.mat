@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Ispant_New_Model
+  m_Shader: {fileID: 4800000, guid: 62d35afd51371e04b861d0d45c67d94a, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: d7b195160e20dcc4cb35e9dea2cc038c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicMap:
+        m_Texture: {fileID: 2800000, guid: da0549930a35990479f3621dea0c1cd1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: d89e96b61b8146b4f946e9bceac3ec2f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RoughnessMap:
+        m_Texture: {fileID: 2800000, guid: e7ccc70cf0327d745ab00eb96057366d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ApprovedYFlip: 0
+    - _CoatRoughness: 0.34
+    - _CoatWeight: 0
+    - _EyeDesaturation: 0
+    - _FeatureMode: 0
+    - _MetallicBias: 0
+    - _NormalStrength: 1
+    - _RoughnessBias: 0
+    - _UseMaps: 1
+    - _UseUv1: 0
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
