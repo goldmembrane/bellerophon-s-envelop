@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>이슈판트 장검 10K PBR 비교</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+      --bg: #080c12;
+      --panel: #101720;
+      --line: #263644;
+      --text: #edf3f6;
+      --muted: #9eafba;
+      --ice: #8bcbe2;
+      --steel: #c4d0d6;
+      --ok: #8ed1ae;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 78% 0%, rgba(75, 132, 160, 0.16), transparent 34rem),
+        linear-gradient(180deg, #0a1017 0%, var(--bg) 55%);
+    }
+    main { width: min(1480px, calc(100% - 40px)); margin: 0 auto; padding: 42px 0 64px; }
+    header { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; margin-bottom: 26px; }
+    .eyebrow { margin: 0 0 9px; color: var(--ice); font-size: 12px; font-weight: 800; letter-spacing: 0.18em; }
+    h1 { margin: 0; font-size: clamp(28px, 4vw, 52px); line-height: 1.08; letter-spacing: -0.035em; }
+    .intro { max-width: 880px; margin: 15px 0 0; color: var(--muted); line-height: 1.7; }
+    .status { padding: 10px 14px; border: 1px solid #365a50; border-radius: 999px; color: var(--ok); background: rgba(64, 120, 99, 0.13); white-space: nowrap; }
+    figure { margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: #0b1118; box-shadow: 0 24px 70px rgba(0,0,0,.25); }
+    figure img { width: 100%; height: auto; display: block; }
+    .placement-crop { overflow: hidden; }
+    .placement-crop img { width: 150%; max-width: none; transform: translateX(-33.333%); }
+    figcaption { padding: 14px 18px; color: var(--muted); border-top: 1px solid var(--line); line-height: 1.6; }
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 18px 0 28px; }
+    .metric { padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: rgba(16, 23, 32, .88); }
+    .metric span { display: block; color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+    .metric strong { color: var(--steel); font-size: 22px; }
+    .grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; }
+    section { padding: 22px; border: 1px solid var(--line); border-radius: 12px; background: rgba(16, 23, 32, .82); }
+    h2 { margin: 0 0 14px; font-size: 19px; }
+    p, li { color: var(--muted); line-height: 1.72; }
+    ul { margin: 0; padding-left: 20px; }
+    li + li { margin-top: 7px; }
+    .hashes { display: grid; gap: 9px; margin-top: 14px; }
+    .hash { padding: 11px 12px; border-radius: 8px; background: #0a1017; border: 1px solid #1d2a35; }
+    .hash b { display: block; margin-bottom: 5px; color: var(--steel); }
+    code { color: #b9dce8; font-size: 11px; overflow-wrap: anywhere; }
+    .links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    a { color: var(--ice); text-decoration: none; }
+    .links a { padding: 12px; border: 1px solid #2d4c5d; border-radius: 8px; background: #0b141c; }
+    .links a:hover { border-color: var(--ice); }
+    .wide { grid-column: 1 / -1; }
+    .note { margin: 16px 0 0; padding: 13px 15px; border-left: 3px solid var(--ice); background: rgba(76, 135, 160, .1); color: #c5d4da; }
+    @media (max-width: 900px) {
+      header, .grid { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .status { justify-self: start; }
+    }
+    @media (max-width: 540px) {
+      main { width: min(100% - 24px, 1480px); padding-top: 24px; }
+      .metrics, .links { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow">ISPANT // LONG SWORD EXTRACTION</p>
+        <h1>이슈판트 장검 10K PBR 비교</h1>
+        <p class="intro">분할 GLB의 장검 전체를 그대로 추출해 10K 이하로 감량하고, 사용자가 UV 원본으로 지정한 <code>išpant-new.fbx</code>와 제공된 네 PBR 텍스처를 이용해 표면 재질을 복원한 검토 샘플입니다.</p>
+      </div>
+      <div class="status">승인 완료 · Unity 12개 배치 적용</div>
+    </header>
+
+    <figure>
+      <img src="Ispant_LongSword_10K_Review.png" alt="원본 장검 세그먼트와 10K PBR 장검 정면 및 사선 비교">
+      <figcaption>왼쪽은 47,052정점 원본 세그먼트 실루엣, 가운데는 9,975정점 PBR 정면, 오른쪽은 동일 결과의 사선 재질 확인입니다.</figcaption>
+    </figure>
+
+    <figure style="margin-top:18px">
+      <div class="placement-crop">
+        <img src="Ispant_LongSword_10K_UnityPlacement_Review.png" alt="기존 이슈판트 장검 위치와 승인된 10K 장검의 왼쪽 허리 배치 비교">
+      </div>
+      <figcaption>왼쪽: 기존 저해상도 장검이 있던 원본 위치 · 오른쪽: 동일한 왼쪽 허리 중심과 세로 길이에 배치한 승인 10K 장검. 원본 렌더 객체가 한 번 중복된 캡처의 가운데·오른쪽 구간만 표시합니다.</figcaption>
+    </figure>
+
+    <div class="metrics" aria-label="핵심 수치">
+      <div class="metric"><span>원본 정점</span><strong>47,052</strong></div>
+      <div class="metric"><span>최종 정점</span><strong>9,975</strong></div>
+      <div class="metric"><span>최종 삼각면</span><strong>19,950</strong></div>
+      <div class="metric"><span>Unity 배치</span><strong>12개</strong></div>
+    </div>
+
+    <div class="grid">
+      <section>
+        <h2>형상과 UV 처리</h2>
+        <ul>
+          <li>대상은 <code>išpant-segment.glb</code>의 <code>mesh_10</code>이며 검신·가드·손잡이·폼멜 전체를 포함합니다.</li>
+          <li>Decimate 비율 <code>0.212</code>로 감량했고 장검의 단일 연결 요소와 원본 실루엣을 유지했습니다.</li>
+          <li>GLB에는 UV와 이미지 텍스처가 없어서, 사용자 지정 FBX 장검의 29개 UV 섬·242면을 정규화된 표면 대응 방식으로 전사했습니다.</li>
+          <li>UV 범위는 <code>(0.007336, 0.027650)–(0.986122, 0.979067)</code>이며 FBX 재가져오기에서도 정점 분할 없이 9,975정점을 유지했습니다.</li>
+          <li>기존 장검 242면과 승인 장검 전체 표면을 강체·균일 배율 정합해 배율 <code>12.345491599084</code>를 적용하고 기존 왼쪽 허리 경계 중심과 길이를 맞췄습니다.</li>
+          <li>승인 장검은 Armature 루트 아래의 별도 메시이며 버텍스 그룹, Armature modifier, 애니메이션은 연결하지 않았습니다.</li>
+        </ul>
+        <p class="note">새 색·무늬·형상을 AI로 생성하지 않았습니다. 제공된 텍스처는 픽셀 가공 없이 복사했고, 형상에는 감량과 원본 UV 표면 전사만 수행했습니다.</p>
+      </section>
+
+      <section>
+        <h2>제공 PBR 텍스처</h2>
+        <div class="hashes">
+          <div class="hash"><b>Base Color</b><code>7DE6705FB7BD60E2D347023EFE51E96598845D611631F40D01C64EACC5249570</code></div>
+          <div class="hash"><b>Metallic</b><code>674812FCDE6B2879D15E40BDCE0BDC1BB152C75D7B74AC3371B2C96BE478920D</code></div>
+          <div class="hash"><b>Normal</b><code>11F5A8254E2FA46BF5F7EC49426F1BAD8F49CA254264EFE9FA15A73731E50C07</code></div>
+          <div class="hash"><b>Roughness</b><code>45B468DCDC7E5624A0D74ED639F586759B682BB67DED3A0666C1104889689432</code></div>
+        </div>
+      </section>
+
+      <section class="wide">
+        <h2>산출물</h2>
+        <div class="links">
+          <a href="Ispant_LongSword_10K_Textured.fbx">FBX 모델 열기</a>
+          <a href="Ispant_LongSword_10K_Textured.blend">Blender 제작 파일 열기</a>
+          <a href="Ispant_LongSword_10K_UnityPlacement.fbx">Unity 배치 FBX 열기</a>
+          <a href="Ispant_LongSword_10K_UnityPlacement.blend">Unity 배치 Blender 파일 열기</a>
+          <a href="Ispant_LongSword_10K_UnityPlacement_Review.png">왼쪽 허리 배치 비교 이미지</a>
+          <a href="Ispant_LongSword_10K_BaseColor.png">Base Color 확인</a>
+          <a href="Ispant_LongSword_10K_Metallic.png">Metallic 확인</a>
+          <a href="Ispant_LongSword_10K_Normal.png">Normal 확인</a>
+          <a href="Ispant_LongSword_10K_Roughness.png">Roughness 확인</a>
+          <a href="README.md">제작·검증 기록 읽기</a>
+          <a href="build_long_sword_10k.py">재현 스크립트 열기</a>
+          <a href="deploy_approved_long_sword.py">Unity 배치 재현 스크립트</a>
+        </div>
+      </section>
+
+      <section class="wide">
+        <h2>검증 및 적용 상태</h2>
+        <ul>
+          <li>내보낸 FBX 재가져오기 결과: 9,975정점·19,950면·UV 레이어 1개.</li>
+          <li>최종 FBX SHA-256: <code>2A6ECA3E5CD74C2E40B03BA5B2D4FD51E2B1E73B7BA2431B7E9D4BE5C6579252</code>.</li>
+          <li>최종 재교체 FBX 재가져오기 최대 좌표 오차: 몸체 <code>0.000000238</code>, 장검 <code>0.000000179</code>. 토폴로지·면 방향·UV·웨이트·머티리얼은 동일합니다.</li>
+          <li>Unity 직접 FBX SHA-256: <code>5CE54F6117AF08F141BC18A0E46C823AD07877D815DA2906D59CA2967A4974FF</code>.</li>
+          <li>기존 장검 객체를 제거하고 승인 FBX에서 장검을 새로 임포트했으며, Unity 전용 <code>Ispant_LongSword_10K_PBR</code> 머티리얼과 장검 전용 <code>Bellerophon/Ispant/LongSwordApprovedPBR</code> 셰이더에 승인 Base Color·Metallic·Normal·Roughness를 각각 원본 해시 그대로 연결했습니다.</li>
+          <li>메시·UV·텍스처 픽셀과 채널은 바꾸지 않고 승인 Blender 스튜디오의 중립 금속 반사만 Unity 전용 셰이더에 보완했습니다. 사용자 제보 전 상태, 승인 배치본, 최종 Unity 특정 창 캡처를 나란히 직접 육안 대조했습니다.</li>
+          <li><code>CargoRunMvp.unity</code>의 기존 Ispant FBX 참조 12개에 적용했으며 FBX GUID, 씬, 배치 Transform은 변경하지 않았습니다.</li>
+          <li>하네스 검증, EditMode·PlayMode 테스트, Windows 빌드, Git 작업은 실행하지 않았습니다.</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

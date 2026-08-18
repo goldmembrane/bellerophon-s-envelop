@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>이슈판트 장검 분리 비교</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f1eee4;
+      --muted: #aaa89f;
+      --line: #3b3a35;
+      --panel: #171815;
+      --deep: #0c0d0b;
+      --accent: #d6a94f;
+      --ok: #98c58b;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px),
+        radial-gradient(circle at 78% 0%, #24251f 0, var(--deep) 42%);
+      background-size: 28px 28px, 28px 28px, auto;
+      color: var(--ink);
+    }
+
+    main { max-width: 1600px; margin: 0 auto; padding: 34px 28px 48px; }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 28px;
+      align-items: end;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    h1 { margin: 0; font-size: clamp(30px, 4vw, 56px); letter-spacing: -.045em; }
+    .lead { max-width: 920px; margin: 14px 0 0; color: var(--muted); line-height: 1.75; }
+
+    .status {
+      padding: 10px 14px;
+      border: 1px solid #496146;
+      background: #162016;
+      color: var(--ok);
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    figure {
+      margin: 28px 0 0;
+      padding: 14px;
+      background: rgba(23, 24, 21, .92);
+      border: 1px solid var(--line);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .32);
+    }
+
+    figure img { display: block; width: 100%; height: auto; background: #050604; }
+    figcaption { padding: 13px 4px 2px; color: var(--muted); line-height: 1.6; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    section { padding: 22px; background: rgba(23, 24, 21, .9); border: 1px solid var(--line); }
+    h2 { margin: 0 0 16px; font-size: 18px; color: var(--accent); }
+    ul { margin: 0; padding-left: 20px; color: #cbc8bd; line-height: 1.8; }
+    li + li { margin-top: 5px; }
+
+    .metrics { display: grid; grid-template-columns: 1fr auto; margin: 0; }
+    .metrics dt, .metrics dd { margin: 0; padding: 9px 0; border-bottom: 1px solid #2d2e29; }
+    .metrics dt { color: var(--muted); }
+    .metrics dd { color: var(--ink); font-variant-numeric: tabular-nums; text-align: right; }
+
+    .files { display: grid; gap: 10px; margin-top: 18px; }
+    .files a {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      text-decoration: none;
+      transition: border-color .18s ease, background .18s ease, transform .18s ease;
+    }
+
+    .files a::after { content: "열기 ↗"; color: var(--accent); white-space: nowrap; }
+    .files a:hover, .files a:focus-visible { transform: translateX(3px); border-color: var(--accent); background: #20211c; }
+
+    .note { margin: 18px 0 0; padding: 16px 18px; border-left: 3px solid var(--accent); background: #17150f; color: #d5d0c0; line-height: 1.7; }
+    code { color: #ead194; font-family: Consolas, monospace; overflow-wrap: anywhere; }
+
+    @media (max-width: 850px) {
+      main { padding: 24px 16px 36px; }
+      header, .grid { grid-template-columns: 1fr; }
+      .status { justify-self: start; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow">Art Sample / Geometry Separation</p>
+        <h1>이슈판트 장검 분리 비교</h1>
+        <p class="lead">사용자가 지정한 옆구리의 긴 장검을 원본 <code>išpant-new.fbx</code> 메시에서 분리하고, 장검 뒤에 원래 없던 왼쪽 허벅지 면은 오른쪽 다리 원본의 대칭 대응 영역으로 복구한 검토용 샘플입니다.</p>
+      </div>
+      <div class="status">왼쪽 다리 대칭 복구 완료 · Unity 적용</div>
+    </header>
+
+    <figure>
+      <img src="Ispant_LongSword_Separated_Review.png" alt="왼쪽 원본 이슈판트, 가운데 장검 분리 본체, 오른쪽 원본 면 그대로 분리한 장검 비교">
+      <figcaption>왼쪽: 원본 모델 · 가운데: 원본 신체 270면과 왼쪽 다리 대칭 패치 12면을 복구한 본체 · 오른쪽: 원본의 연속 장검 표면 242면</figcaption>
+    </figure>
+
+    <div class="grid">
+      <section>
+        <h2>분리 기준과 보존 범위</h2>
+        <ul>
+          <li>최초에 잘못 선택했던 머스켓 일부 17개 UV 섬·215면은 폐기하고, 사용자 재지정 이미지의 오른쪽 허벅지 옆 은색 검 부품을 다시 식별했습니다.</li>
+          <li>두 번째 19개 UV 섬·99면 결과는 검신만 포함하고 검자루가 빠진 불완전 결과였으므로 폐기했습니다.</li>
+          <li>세 번째 29개 UV 섬·242면은 하나로 이어지는 장검 표면으로 유지했습니다.</li>
+          <li>이후 칼자루로 추정해 추가했던 17개 UV 섬·270면은 실제 신체 면으로 확인되어 장검 선택에서 폐기했습니다.</li>
+          <li>16개 섬·242면은 왼쪽 허리·골반, <code>U530</code> 28면은 왼쪽 전완이며 원본 좌표·UV·웨이트 그대로 본체에 복구했습니다.</li>
+          <li>장검 뒤에 원본 왼쪽 다리 면이 없음을 확인하고, 오른쪽 다리를 본 대칭축 <code>X=-0.691260815</code>로 반전해 기존 왼쪽 다리와 2.5 이상 떨어진 유일한 연결 성분을 복구 대상으로 고정했습니다.</li>
+          <li>대칭 복구분은 오른쪽 다리 원본 13정점·12면이며, 오른쪽 본 이름만 대응하는 왼쪽 본으로 치환하고 UV·머티리얼 배정은 그대로 유지했습니다.</li>
+          <li>장검은 식별된 원본 242면을 그대로 분리했으며 장검 형태 보정, 덮개 면 또는 두께 보강은 하지 않았습니다.</li>
+          <li>원본의 모든 면 서명은 본체와 장검에 보존됐고 추가 서명은 대칭 복구 12면뿐입니다.</li>
+          <li>검토용 FBX 재임포트 후 본체 4,895정점·9,798면과 장검 143정점·242면을 다시 확인했습니다.</li>
+        </ul>
+        <p class="note">원본 신체 270면과 왼쪽 다리 대칭 패치 12면을 포함한 본체를 Unity 직접 원본 <code>Ispant_New_Direct_Source.fbx</code>에 적용했습니다. FBX의 기존 GUID와 <code>CargoRunMvp.unity</code> 배치 12개 및 Transform은 바꾸지 않았습니다.</p>
+      </section>
+
+      <section>
+        <h2>확인 수치</h2>
+        <dl class="metrics">
+          <dt>원본</dt><dd>4,980정점 / 10,028면</dd>
+          <dt>분리·복구 본체</dt><dd>4,895정점 / 9,798면</dd>
+          <dt>분리 장검</dt><dd>143정점 / 242면</dd>
+          <dt>원본 신체 복구</dt><dd>122정점 증가 / 270면</dd>
+          <dt>왼쪽 다리 대칭 복구</dt><dd>13정점 / 12면</dd>
+          <dt>다리 대칭축</dt><dd>X=-0.691260815</dd>
+          <dt>공유 경계</dt><dd>46에지 / 45정점</dd>
+          <dt>Unity 적용</dt><dd>완료 / 기존 GUID 유지</dd>
+        </dl>
+
+        <div class="files" aria-label="샘플 산출물">
+          <a href="Ispant_LongSword_Separated_Sample.blend">Blender 검토 파일</a>
+          <a href="Ispant_LongSword_Separated_Sample.fbx">FBX 검토 파일</a>
+          <a href="Ispant_LongSword_Separated_Review.png">원본 크기 비교 이미지</a>
+          <a href="../../../../Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_Direct_Source.fbx">Unity 적용 FBX</a>
+          <a href="README.md">상세 분리 기록</a>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

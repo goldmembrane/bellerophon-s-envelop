@@ -9,6 +9,13 @@
 - 사용자가 `artSample/`의 샘플을 검사하고 승인한 뒤에만 해당 아트/UI/애니메이션 결과물을 실제 게임에 연결한다.
 - 승인 전에는 해당 결과물을 실제 게임 씬, 프리팹, 런타임 자산, UI 흐름에 붙이지 않는다. 단, `artSample/` 생성을 위한 임시 파일과 미리보기 파일은 허용한다.
 
+## 아트 샘플 요약 HTML 필수 규칙 (2026-08-18)
+
+- 새 `artSample/` 샘플을 만들 때는 사용자가 결과를 한 페이지에서 확인할 수 있는 요약 또는 비교 HTML을 같은 샘플 폴더에 반드시 함께 만든다.
+- HTML 형식은 해당 작업과 가장 가까운 기존 비교 페이지를 따른다. 이슈판트 관련 작업은 `artSample/enemies/ispant_armed/Ispant_Reference_Comparison.html`의 한국어 설명, 비교 이미지, 핵심 변경 사항, 승인 및 Unity 적용 상태 구성을 기준으로 한다.
+- HTML에는 검토 이미지나 미디어를 상대 경로로 직접 표시하고, 주요 샘플 산출물로 이동할 수 있는 상대 링크를 제공한다. 원본 또는 목표, 수행 범위, 확인 수치나 검증 결과, 추론·생성 여부, Unity 적용 여부를 명확히 적는다.
+- 애니메이션은 아래 `Art Validation Rule Override (2026-06-12)`에 따라 별도 `artSample/` 제작 자체가 면제된다. 다만 사용자가 애니메이션 샘플 제작을 직접 요구해 실제로 `artSample/`을 만들면 그 샘플에도 요약 HTML을 포함한다.
+
 ## Art Validation Rule Override (2026-06-12)
 
 - This section has highest priority within this file and overrides earlier art/asset approval rules when they conflict.
@@ -32,4 +39,3 @@
 - 승인된 `artSample/` 모델을 Unity에 적용할 때도 샘플 승인과 런타임 씬 적용은 별도 작업으로 취급한다. 샘플 승인만으로 씬, 프리팹, 런타임 에셋을 변경하지 않는다.
 - 모델 교체 스크립트나 Unity 브리지 명령을 작성할 때는 씬 전체를 여는 패턴을 기본값으로 삼지 않는다. 먼저 모델 임포트, 프리팹 교체, 지정 루트 하위 교체처럼 더 좁은 범위의 적용 방법을 검토한다.
 - 기존 씬을 열어야만 하는 경우에는 `OpenSceneMode.Single` 사용 여부와 저장 여부를 승인 요청에 명시해야 하며, 승인받은 루트 외의 씬 오브젝트가 생성, 삭제, 복원, 이동, 이름 변경, 활성 상태 변경되지 않아야 한다.
-

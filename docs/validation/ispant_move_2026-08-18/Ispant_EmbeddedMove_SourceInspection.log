@@ -1,0 +1,7 @@
+Unity editor bridge request completed: 7a08401b5eb5407d8173a681a5ad73dc
+Unity editor bridge command: InspectIspantEmbeddedMoveSource
+Unity editor bridge mode: open editor
+The current direct Ispant FBX embedded clips and renderer separation were inspected without changing assets or the scene.
+
+Captured Unity log:
+Log: IspantEmbeddedMoveSourceInspected Result=PASS, ModelPath=Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_Direct_Source.fbx, ImportAnimation=False, DefaultClipCount=0, ImportedClipCount=0, DefaultClips=, ImportedClips=, RendererCount=2, Renderers=Armature/Ispant_Approved_LongSword_10K:MeshRenderer:Mesh=Ispant_Approved_LongSword_10K:Vertices=20409:Materials=Ispant_LongSword_10K_PBR|char1:SkinnedMeshRenderer:Mesh=char1:Vertices=8755:Materials=Material_1, SeparateWeaponRendererCount=1, SeparateWeaponRenderers=Ispant_Approved_LongSword_10K.

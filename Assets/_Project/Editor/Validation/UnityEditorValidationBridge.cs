@@ -591,26 +591,44 @@ namespace Bellerophon.Editor.Validation
                 case "ApplyIspantIdleAnimation":
                     RunSynchronous(
                         request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.IspantIdleAnimationTool.ApplyIspantIdleAnimation,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantVerticalIdleAnimationTool.ApplyIspantIdleAnimation,
                         "Ispant idle animation applied.");
                     break;
                 case "InspectIspantIdleAnimation":
                     RunSynchronous(
                         request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.IspantIdleAnimationTool.InspectIspantIdleAnimation,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantVerticalIdleAnimationTool.InspectIspantIdleAnimation,
                         "Ispant idle animation inspected.");
                     break;
                 case "CaptureIspantIdleAnimationDiagnostic":
                     RunSynchronous(
                         request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.IspantIdleAnimationTool.CaptureIspantIdleAnimationDiagnostic,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantVerticalIdleAnimationTool.CaptureIspantIdleAnimationDiagnostic,
                         "Ispant idle animation diagnostic captured.");
                     break;
                 case "CaptureIspantIdleAnimationFinalReview":
                     RunSynchronous(
                         request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.IspantIdleAnimationTool.CaptureIspantIdleAnimationFinalReview,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantVerticalIdleAnimationTool.CaptureIspantIdleAnimationFinalReview,
                         "Ispant idle animation final review captured.");
+                    break;
+                case "StartIspantIdleReviewPlayback":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantVerticalIdleAnimationTool.StartIspantIdleReviewPlayback,
+                        "The live Unity Scene View review started for the newly authored looping Ispant vertical idle motion.");
+                    break;
+                case "StopIspantIdleReviewPlayback":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantVerticalIdleAnimationTool.StopIspantIdleReviewPlayback,
+                        "The live Ispant vertical idle review completed at least two loops.");
+                    break;
+                case "InspectIspantEmbeddedMoveSource":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantEmbeddedMoveAnimationTool.InspectIspantEmbeddedMoveSource,
+                        "The current direct Ispant FBX embedded clips and renderer separation were inspected without changing assets or the scene.");
                     break;
                 case "ApplyIspantMoveModel":
                     RunSynchronous(
@@ -3768,53 +3786,23 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.IspantCargoRunScene.IspantPlacementEditor.InspectIspantArmedPlacement,
                         "Ispant source hash, twelve direct FBX instances, spacing, grounding, static state, and unchanged scene state inspected.");
                     break;
-                case "InspectIspantModelReplacementBaseline":
+                case "InspectIspantUnitySideAppearance":
                     RunSynchronous(
                         request,
-                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.InspectModelReplacementBaseline,
-                        "The current Ispant slot, renderer, rig, controller, physics, and motion-driver paths were recorded without changing the scene.");
+                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.InspectUnitySideAppearance,
+                        "The direct FBX importer, embedded material and texture bindings, scene renderer materials, and prefab material overrides were inspected without changing the scene.");
                     break;
-                case "InspectIspantGeneratedRiggedModels":
+                case "ApplyIspantUnitySideCleanup":
                     RunSynchronous(
                         request,
-                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.InspectGeneratedRiggedModels,
-                        "The generated custom and Mixamo Ispant skin meshes, bone use, materials, and supplied vertex count were inspected.");
+                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.ApplyUnitySideCleanup,
+                        "The wrong cross-enemy texture binding and prior derived Ispant model assets were removed, the FBX-packed texture was extracted exactly, and all twelve direct instances were rebuilt without animation connections.");
                     break;
-                case "ApplyIspantNewModelReplacement":
+                case "InspectIspantUnitySideCleanup":
                     RunSynchronous(
                         request,
-                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.ApplyNewModelReplacement,
-                        "The supplied new Ispant model was skinned to both existing rig families and applied to all twelve placed Ispant objects while preserving controllers, weapon paths, physics, colliders, and motion drivers.");
-                    break;
-                case "InspectIspantNewModelReplacement":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.InspectNewModelReplacement,
-                        "All twelve Ispant body renderers use the supplied replacement model, both rig mappings are complete, old appearance renderers are disabled, and existing animation and weapon paths remain preserved.");
-                    break;
-                case "InspectIspantModelScaleDiagnostic":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.InspectModelScaleDiagnostic,
-                        "The original per-FBX body bounds and current placed renderer scales were recorded to correct custom and death-unit differences without changing the scene.");
-                    break;
-                case "StartIspantNewModelPlayback":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.StartNewModelPlayback,
-                        "Unity entered Play Mode for direct Ispant replacement animation playback.");
-                    break;
-                case "InspectIspantNewModelPlayback":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.InspectNewModelPlayback,
-                        "All eleven animated Ispant slots played active clips with finite baked skin meshes and valid live bounds.");
-                    break;
-                case "StopIspantNewModelPlayback":
-                    RunSynchronous(
-                        request,
-                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.StopNewModelPlayback,
-                        "Unity Play Mode stop was requested immediately after the Ispant replacement playback inspection.");
+                        Bellerophon.Editor.IspantCargoRunScene.IspantModelReplacementTool.InspectUnitySideCleanup,
+                        "The exact FBX and packed texture hashes, source-local material binding, twelve direct instances, deleted derived assets, and absent animation connections were inspected without changing the scene.");
                     break;
                 case "ExportIspantStaticFbx":
                     RunSynchronous(

@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Security.Cryptography;
+using System.Text;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -14,713 +14,477 @@ namespace Bellerophon.Editor.IspantCargoRunScene
     {
         private const string ScenePath = "Assets/_Project/Scenes/CargoRunMvp.unity";
         private const string PlacementRootName = "Approved Ispant Enemy Placement";
-        private const string BaselinePath =
-            "docs/validation/ispant_model_replacement_2026-08-17/Ispant_Model_Replacement_Baseline.txt";
-        private const string CustomRigPath =
-            "Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_CustomRig.fbx";
-        private const string MixamoRigPath =
-            "Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_MixamoRig.fbx";
-        private const string DeathRigPath =
-            "Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_DeathRig.fbx";
-        private const string CustomReferencePath =
-            "Assets/_Project/Art/Enemies/Ispant/ApprovedLongSword/Models/Ispant_ApprovedLongSword_StaticMount.fbx";
-        private const string DeathReferencePath =
-            "Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_Death.fbx";
-        private const string CustomMappedMeshPath =
-            "Assets/_Project/Art/Enemies/Ispant/Models/Generated/Ispant_New_CustomRig_Mesh.asset";
-        private const string DeathMappedMeshPath =
-            "Assets/_Project/Art/Enemies/Ispant/Models/Generated/Ispant_New_DeathRig_Mesh.asset";
-        private const string GeneratedInspectionPath =
-            "docs/validation/ispant_model_replacement_2026-08-17/Ispant_New_Rigged_Models_Inspection.txt";
-        private const string SourceCopyPath =
-            "Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_Source.fbx";
-        private const string MaterialPath =
-            "Assets/_Project/Art/Enemies/Ispant/Models/Materials/Ispant_New_Model.mat";
-        private const string ShaderPath =
-            "Assets/_Project/Art/Enemies/Ispant/ApprovedAppearance/Shaders/IspantApprovedAppearance.shader";
-        private const string TextureRoot =
-            "Assets/_Project/Art/Enemies/Ispant/Models/Textures/";
-        private const string FinalInspectionPath =
-            "docs/validation/ispant_model_replacement_2026-08-17/Ispant_Model_Replacement_Inspection.txt";
-        private const string ScaleDiagnosticPath =
-            "docs/validation/ispant_model_replacement_2026-08-17/Ispant_Model_Scale_Diagnostic.txt";
-        private const string PlaybackInspectionPath =
-            "docs/validation/ispant_model_replacement_2026-08-17/Ispant_Model_Playback_Inspection.txt";
-        private const string ExpectedSourceSha256 =
-            "EEAF6B319DBF561E562DB8C8CDF6C4797D7F659620EAC9491E3EDFA490649EED";
+        private const string DirectSourcePath =
+            "Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_Direct_Source.fbx";
+        private const string DirectSourceSha256 =
+            "7B682C49CDB2F4A563B736857E544DD7FCCD7213A5C375DEB92F56CE3A2E51B7";
+        private const string DirectTextureFolder =
+            "Assets/_Project/Art/Enemies/Ispant/Models/Textures";
+        private const string DirectTextureExtractionFolder =
+            DirectTextureFolder + "/Ispant_New_Direct_Source_Extracted";
+        private const string DirectTexturePath =
+            DirectTextureFolder + "/Ispant_New_Direct_Source_BaseColor.png";
+        private const string DirectTextureSha256 =
+            "7DE6705FB7BD60E2D347023EFE51E96598845D611631F40D01C64EACC5249570";
+        private const string DirectInstanceName = "Ispant_New_Direct_Model";
+        private const string ValidationFolder =
+            "docs/validation/ispant_new_direct_replacement_2026-08-18";
+        private const string AppearanceDiagnosticPath =
+            ValidationFolder + "/Ispant_Unity_Appearance_Diagnostic.txt";
+        private const string CleanupInspectionPath =
+            ValidationFolder + "/Ispant_Unity_Side_Cleanup_Inspection.txt";
 
-        [MenuItem("Bellerophon/Enemies/Ispant/Apply New Model Replacement")]
-        public static void ApplyNewModelReplacement()
+        private static readonly string[] UnauthorizedAssetPaths =
+        {
+            "Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_Source.fbx",
+            "Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_CustomRig.fbx",
+            "Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_MixamoRig.fbx",
+            "Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_DeathRig.fbx",
+            "Assets/_Project/Art/Enemies/Ispant/Models/Generated/Ispant_New_CustomRig_Mesh.asset",
+            "Assets/_Project/Art/Enemies/Ispant/Models/Generated/Ispant_New_DeathRig_Mesh.asset",
+            "Assets/_Project/Art/Enemies/Ispant/Models/Materials/Ispant_New_Model.mat",
+            "Assets/_Project/Art/Enemies/Ispant/Models/Textures/Ispant_New_BaseColor.jpg",
+            "Assets/_Project/Art/Enemies/Ispant/Models/Textures/Ispant_New_Normal.jpg",
+            "Assets/_Project/Art/Enemies/Ispant/Models/Textures/Ispant_New_Metallic.png",
+            "Assets/_Project/Art/Enemies/Ispant/Models/Textures/Ispant_New_Roughness.png",
+        };
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Inspect Unity Side Appearance")]
+        public static void InspectUnitySideAppearance()
         {
             var scene = RequireScene();
+            var wasDirty = scene.isDirty;
+            var placement = RequirePlacement(scene);
+            var source = RequireSource();
+            WriteText(AppearanceDiagnosticPath, BuildAppearanceReport(scene, placement, source));
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException("Unity-side appearance inspection changed the scene dirty state.");
+            Debug.Log(
+                "IspantUnitySideAppearanceInspected Result=PASS, SceneChanged=False, Report=" +
+                AppearanceDiagnosticPath + ".");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Apply Unity Side Cleanup")]
+        public static void ApplyUnitySideCleanup()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException("Unity Play Mode must remain stopped for Ispant cleanup.");
+            var scene = RequireScene();
             if (scene.isDirty)
-                throw new InvalidOperationException("CargoRunMvp has unsaved changes before Ispant model replacement.");
-            RequireHash(SourceCopyPath, ExpectedSourceSha256);
-            var placement = GameObject.Find(PlacementRootName) ??
-                throw new InvalidOperationException("The Ispant placement root is missing.");
-            if (placement.transform.childCount != 12)
-                throw new InvalidOperationException("Expected 12 placed Ispant objects.");
+                throw new InvalidOperationException("CargoRunMvp has unsaved changes before Ispant cleanup.");
+            var placement = RequirePlacement(scene);
+            var otherRootsBefore = ProtectedRootSignatures(scene);
+            var preservedSlotsBefore = PreservedSlotContract(placement);
 
-            var protectedBefore = ProtectedContract(placement.transform);
-            var material = CreateOrUpdateMaterial();
-            var customSource = RequireGeneratedRenderer(CustomRigPath);
-            var mixamoSource = RequireGeneratedRenderer(MixamoRigPath);
-            var deathSource = RequireGeneratedRenderer(DeathRigPath);
-            var customMesh = CreateOrUpdateMappedBindposeMesh(
-                customSource,
-                CustomReferencePath,
-                CustomMappedMeshPath,
-                "Ispant_New_CustomRig_Mesh");
-            var deathMesh = CreateOrUpdateMappedBindposeMesh(
-                deathSource,
-                DeathReferencePath,
-                DeathMappedMeshPath,
-                "Ispant_New_DeathRig_Mesh");
-            var customCount = 0;
-            var mixamoCount = 0;
-            var deathCount = 0;
+            ConfigureSourceFaithfulImporter();
+            var source = RequireSource();
+            RequireSourceFaithfulMaterial(source);
 
+            Undo.IncrementCurrentGroup();
+            var undoGroup = Undo.GetCurrentGroup();
+            Undo.SetCurrentGroupName("Remove unauthorized Ispant Unity-side modifications");
             try
             {
-                foreach (Transform slot in placement.transform)
+                foreach (Transform slot in placement)
                 {
-                    var bodies = slot.GetComponentsInChildren<SkinnedMeshRenderer>(true)
-                        .Where(renderer => renderer.name == "Ispant_Armed_Body")
-                        .ToArray();
-                    if (bodies.Length != 1)
-                        throw new InvalidOperationException(slot.name + " does not contain one Ispant body renderer.");
-                    var body = bodies[0];
-                    var isMixamo = body.bones.Any(bone => bone != null && bone.name.StartsWith("mixamorig:", StringComparison.Ordinal));
-                    var isDeath = string.Equals(slot.name, "Ispant_12_Death", StringComparison.Ordinal);
-                    var source = isDeath ? deathSource : isMixamo ? mixamoSource : customSource;
-                    var mesh = isDeath ? deathMesh : isMixamo ? mixamoSource.sharedMesh : customMesh;
-                    ApplyBody(slot, body, source, mesh, material);
-                    if (isDeath)
-                        deathCount++;
-                    else if (isMixamo)
-                        mixamoCount++;
-                    else
-                        customCount++;
-
-                    foreach (var renderer in slot.GetComponentsInChildren<Renderer>(true))
-                    {
-                        if (renderer == body)
-                            continue;
-                        if (renderer.name == "Ispant_Crescent_Ornament" ||
-                            renderer.name == "Ispant_Reference_Eye_Slits")
-                        {
-                            renderer.enabled = false;
-                            EditorUtility.SetDirty(renderer);
-                        }
-                    }
+                    var visualRoots = VisualRoots(slot);
+                    if (visualRoots.Length != 1)
+                        throw new InvalidOperationException(slot.name + " must contain exactly one visual root before cleanup.");
+                    Undo.DestroyObjectImmediate(visualRoots[0].gameObject);
+                    var instance = PrefabUtility.InstantiatePrefab(source, scene) as GameObject ??
+                        throw new InvalidOperationException("The source-faithful Ispant FBX could not be instantiated.");
+                    Undo.RegisterCreatedObjectUndo(instance, "Place source-faithful Ispant FBX");
+                    instance.name = DirectInstanceName;
+                    instance.transform.SetParent(slot, false);
+                    instance.transform.localPosition = source.transform.localPosition;
+                    instance.transform.localRotation = source.transform.localRotation;
+                    instance.transform.localScale = source.transform.localScale;
+                    ConfigureStaticInstance(instance.transform);
+                    EditorUtility.SetDirty(instance);
+                    EditorUtility.SetDirty(slot);
                 }
 
-                var protectedAfter = ProtectedContract(placement.transform);
-                if (!protectedBefore.SequenceEqual(protectedAfter, StringComparer.Ordinal))
-                    throw new InvalidOperationException("An Animator, slot transform, weapon, physics, collider, or motion driver changed.");
-                var inspection = InspectReplacement(
-                    placement.transform,
-                    material,
-                    customMesh,
-                    mixamoSource.sharedMesh,
-                    deathMesh);
-                WriteText(FinalInspectionPath, inspection);
+                if (!otherRootsBefore.SequenceEqual(ProtectedRootSignatures(scene), StringComparer.Ordinal))
+                    throw new InvalidOperationException("A scene root outside the Ispant placement changed.");
+                if (!preservedSlotsBefore.SequenceEqual(PreservedSlotContract(placement), StringComparer.Ordinal))
+                    throw new InvalidOperationException("A preserved Ispant slot transform or non-visual component changed.");
+
                 EditorSceneManager.MarkSceneDirty(scene);
                 if (!EditorSceneManager.SaveScene(scene, ScenePath))
-                    throw new InvalidOperationException("CargoRunMvp could not be saved after Ispant model replacement.");
-                AssetDatabase.SaveAssets();
+                    throw new InvalidOperationException("CargoRunMvp could not be saved after Ispant cleanup.");
+                Undo.CollapseUndoOperations(undoGroup);
             }
             catch
             {
-                EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+                Undo.RevertAllDownToGroup(undoGroup);
                 throw;
             }
 
+            DeleteUnauthorizedAssets();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            source = RequireSource();
+            WriteText(CleanupInspectionPath, InspectCleanupState(scene, RequirePlacement(scene), source));
             Debug.Log(
-                "IspantNewModelReplacementApplied Result=PASS" +
-                ", Slots=12, CustomRigSlots=" + customCount + ", MixamoRigSlots=" + mixamoCount +
-                ", DeathRigSlots=" + deathCount +
-                ", SourceTriangles=10028, UsedBodyBones=22" +
-                ", ExistingAnimatorsPreserved=True, ExistingWeaponPathsPreserved=True" +
-                ", ExistingPhysicsPreserved=True, SceneSaved=True.");
+                "IspantUnitySideCleanupApplied Result=PASS, Slots=12, WrongAtaTextureReferences=0" +
+                ", SourcePackedTextureHashMatched=True, UnauthorizedDerivedAssets=0" +
+                ", AnimationConnections=0, OtherSceneRootsChanged=False, SceneSaved=True.");
         }
 
-        [MenuItem("Bellerophon/Enemies/Ispant/Inspect New Model Replacement")]
-        public static void InspectNewModelReplacement()
+        [MenuItem("Bellerophon/Enemies/Ispant/Inspect Unity Side Cleanup")]
+        public static void InspectUnitySideCleanup()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
-                throw new InvalidOperationException("Unity Play Mode has not stopped after Ispant playback inspection.");
+                throw new InvalidOperationException("Unity Play Mode must remain stopped for Ispant cleanup inspection.");
             var scene = RequireScene();
             var wasDirty = scene.isDirty;
-            var placement = GameObject.Find(PlacementRootName) ??
-                throw new InvalidOperationException("The Ispant placement root is missing.");
-            var material = AssetDatabase.LoadAssetAtPath<Material>(MaterialPath) ??
-                throw new InvalidOperationException("The Ispant replacement material is missing.");
-            var mixamo = RequireGeneratedRenderer(MixamoRigPath);
-            var customMesh = AssetDatabase.LoadAssetAtPath<Mesh>(CustomMappedMeshPath) ??
-                throw new InvalidOperationException("The mapped custom Ispant mesh is missing.");
-            var deathMesh = AssetDatabase.LoadAssetAtPath<Mesh>(DeathMappedMeshPath) ??
-                throw new InvalidOperationException("The mapped death Ispant mesh is missing.");
-            var inspection = InspectReplacement(
-                placement.transform,
-                material,
-                customMesh,
-                mixamo.sharedMesh,
-                deathMesh);
-            WriteText(FinalInspectionPath, inspection);
-            RequireHash(SourceCopyPath, ExpectedSourceSha256);
+            var placement = RequirePlacement(scene);
+            var source = RequireSource();
+            WriteText(CleanupInspectionPath, InspectCleanupState(scene, placement, source));
             if (scene.isDirty != wasDirty)
-                throw new InvalidOperationException("Ispant replacement inspection changed the scene dirty state.");
+                throw new InvalidOperationException("Ispant cleanup inspection changed the scene dirty state.");
             Debug.Log(
-                "IspantNewModelReplacementInspected Result=PASS" +
-                ", Slots=12, NewBodyMeshes=12, UsedBodyBones=22" +
-                ", OldAppearanceRenderersDisabled=24, ExistingAnimatorsPreserved=True" +
-                ", ExistingWeaponPathsPreserved=True, SceneChanged=False.");
+                "IspantUnitySideCleanupInspected Result=PASS, Slots=12, WrongAtaTextureReferences=0" +
+                ", SourcePackedTextureHashMatched=True, UnauthorizedDerivedAssets=0" +
+                ", AnimationConnections=0, SceneChanged=False.");
         }
 
-        [MenuItem("Bellerophon/Enemies/Ispant/Inspect Model Scale Diagnostic")]
-        public static void InspectModelScaleDiagnostic()
+        private static void ConfigureSourceFaithfulImporter()
         {
-            var scene = RequireScene();
-            var wasDirty = scene.isDirty;
-            var placement = GameObject.Find(PlacementRootName) ??
-                throw new InvalidOperationException("The Ispant placement root is missing.");
-            var references = new[]
-            {
-                "Assets/_Project/Art/Enemies/Ispant/ApprovedLongSword/Models/Ispant_ApprovedLongSword_StaticMount.fbx",
-                "Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_Move.fbx",
-                "Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_DrawSword.fbx",
-                "Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_RunningSwordAttack.fbx",
-                "Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_SheathSword.fbx",
-                "Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_Death.fbx",
-            };
-            var report = new StringBuilder();
-            report.AppendLine("Ispant model scale diagnostic");
-            foreach (var path in references)
-            {
-                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path) ??
-                    throw new InvalidOperationException("Reference FBX is missing: " + path);
-                var renderer = prefab.GetComponentsInChildren<SkinnedMeshRenderer>(true)
-                    .First(value => value.name == "Ispant_Armed_Body");
-                report.AppendLine(
-                    "Reference=" + path + "|MeshBounds=" + renderer.sharedMesh.bounds.size.ToString("F6") +
-                    "|RendererLocalScale=" + renderer.transform.localScale.ToString("F6") +
-                    "|RendererLossyScale=" + renderer.transform.lossyScale.ToString("F6"));
-            }
-            foreach (Transform slot in placement.transform)
-            {
-                var body = slot.GetComponentsInChildren<SkinnedMeshRenderer>(true)
-                    .Single(renderer => renderer.name == "Ispant_Armed_Body");
-                report.AppendLine(
-                    "Slot=" + slot.name + "|MeshBounds=" + body.sharedMesh.bounds.size.ToString("F6") +
-                    "|RendererLocalScale=" + body.transform.localScale.ToString("F6") +
-                    "|RendererLossyScale=" + body.transform.lossyScale.ToString("F6") +
-                    "|WorldBounds=" + body.bounds.size.ToString("F6"));
-            }
-            WriteText(ScaleDiagnosticPath, report.ToString());
-            if (scene.isDirty != wasDirty)
-                throw new InvalidOperationException("Scale diagnostic changed the scene dirty state.");
-            Debug.Log("IspantModelScaleDiagnosticInspected Result=PASS, SceneChanged=False, Report=" + ScaleDiagnosticPath + ".");
-        }
+            RequireHash(DirectSourcePath, DirectSourceSha256);
+            EnsureAssetFolder(DirectTextureFolder);
+            if (AssetDatabase.IsValidFolder(DirectTextureExtractionFolder) &&
+                !AssetDatabase.DeleteAsset(DirectTextureExtractionFolder))
+                throw new InvalidOperationException("The temporary source-texture extraction folder could not be cleared.");
+            if (AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(DirectTexturePath) != null &&
+                !AssetDatabase.DeleteAsset(DirectTexturePath))
+                throw new InvalidOperationException("The previous direct source texture could not be cleared.");
 
-        [MenuItem("Bellerophon/Enemies/Ispant/Start New Model Playback")]
-        public static void StartNewModelPlayback()
-        {
-            RequireScene();
-            if (!EditorApplication.isPlaying)
-                EditorApplication.EnterPlaymode();
-            Debug.Log("IspantNewModelPlaybackStarted Result=PASS.");
-        }
+            var importer = RequireImporter();
+            importer.materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
+            importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
+            importer.materialName = ModelImporterMaterialName.BasedOnMaterialName;
+            importer.materialSearch = ModelImporterMaterialSearch.Local;
+            importer.importAnimation = false;
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.SaveAndReimport();
 
-        [MenuItem("Bellerophon/Enemies/Ispant/Inspect New Model Playback")]
-        public static void InspectNewModelPlayback()
-        {
-            if (!EditorApplication.isPlaying)
-                throw new InvalidOperationException("Unity is not in Play Mode for Ispant playback inspection.");
-            var placement = GameObject.Find(PlacementRootName) ??
-                throw new InvalidOperationException("The Ispant placement root is missing in Play Mode.");
-            var report = new StringBuilder();
-            report.AppendLine("Ispant new model actual playback inspection");
-            var animatedSlots = 0;
-            var bakedMeshes = 0;
-            foreach (Transform slot in placement.transform)
-            {
-                var body = slot.GetComponentsInChildren<SkinnedMeshRenderer>(true)
-                    .Single(renderer => renderer.name == "Ispant_Armed_Body");
-                if (!body.enabled || body.sharedMesh == null || body.bones.Any(bone => bone == null))
-                    throw new InvalidOperationException(slot.name + " has an invalid replacement renderer during playback.");
-                var baked = new Mesh();
-                try
-                {
-                    body.BakeMesh(baked, true);
-                    if (baked.vertexCount != body.sharedMesh.vertexCount ||
-                        !Finite(baked.bounds.center) || !Finite(baked.bounds.size))
-                        throw new InvalidOperationException(slot.name + " produced an invalid skinned playback mesh.");
-                    bakedMeshes++;
-                }
-                finally
-                {
-                    UnityEngine.Object.DestroyImmediate(baked);
-                }
-                var worldSize = body.bounds.size;
-                if (!Finite(worldSize) || worldSize.x <= 0.2f || worldSize.y <= 0.2f || worldSize.z <= 0.1f ||
-                    worldSize.x >= 4f || worldSize.y >= 4f || worldSize.z >= 4f)
-                    throw new InvalidOperationException(slot.name + " playback bounds are invalid: " + worldSize + ".");
-                var animator = slot.GetComponentInChildren<Animator>(true);
-                if (animator != null)
-                {
-                    if (!animator.enabled || !animator.isInitialized || animator.layerCount < 1)
-                        throw new InvalidOperationException(slot.name + " Animator is not initialized during playback.");
-                    var state = animator.GetCurrentAnimatorStateInfo(0);
-                    if (state.length <= 0f || animator.GetCurrentAnimatorClipInfo(0).Length < 1)
-                        throw new InvalidOperationException(slot.name + " has no active animation clip during playback.");
-                    animatedSlots++;
-                    report.AppendLine(
-                        "Slot=" + slot.name + "|NormalizedTime=" + state.normalizedTime.ToString("F4") +
-                        "|Length=" + state.length.ToString("F4") + "|WorldBounds=" + worldSize.ToString("F4"));
-                }
-                else
-                {
-                    report.AppendLine("Slot=" + slot.name + "|Static=True|WorldBounds=" + worldSize.ToString("F4"));
-                }
-            }
-            if (animatedSlots != 11 || bakedMeshes != 12)
+            EnsureAssetFolder(DirectTextureExtractionFolder);
+            importer = RequireImporter();
+            if (!importer.ExtractTextures(DirectTextureExtractionFolder))
+                throw new InvalidOperationException("Unity could not extract the FBX-packed Ispant texture.");
+            AssetDatabase.Refresh();
+            var extracted = AssetDatabase.FindAssets("t:Texture2D", new[] { DirectTextureExtractionFolder })
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Where(path => !string.IsNullOrEmpty(path))
+                .ToArray();
+            if (extracted.Length != 1)
                 throw new InvalidOperationException(
-                    "Unexpected playback totals: animatedSlots=" + animatedSlots + ", bakedMeshes=" + bakedMeshes + ".");
-            var absolute = Path.GetFullPath(Path.Combine(Application.dataPath, "..", PlaybackInspectionPath));
-            Directory.CreateDirectory(Path.GetDirectoryName(absolute));
-            File.WriteAllText(absolute, report.ToString(), new UTF8Encoding(false));
-            Debug.Log(
-                "IspantNewModelPlaybackInspected Result=PASS" +
-                ", AnimatedSlots=11, BakedMeshes=12, FiniteSkinning=True, PlaybackBoundsValid=True.");
+                    "Expected one FBX-packed texture but extracted " + extracted.Length + ".");
+            RequireHash(extracted[0], DirectTextureSha256);
+            var moveError = AssetDatabase.MoveAsset(extracted[0], DirectTexturePath);
+            if (!string.IsNullOrEmpty(moveError))
+                throw new InvalidOperationException("The exact extracted Ispant texture could not be moved: " + moveError);
+            if (AssetDatabase.IsValidFolder(DirectTextureExtractionFolder) &&
+                !AssetDatabase.DeleteAsset(DirectTextureExtractionFolder))
+                throw new InvalidOperationException("The empty source-texture extraction folder could not be removed.");
+
+            importer = RequireImporter();
+            var importedSource = AssetDatabase.LoadAssetAtPath<GameObject>(DirectSourcePath) ??
+                throw new InvalidOperationException("The direct Ispant source could not be loaded for texture remapping.");
+            var importedMaterial = importedSource.GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                .Single().sharedMaterial ??
+                throw new InvalidOperationException("The direct Ispant source material is missing during texture remapping.");
+            var currentlyBoundTexture = importedMaterial.GetTexture("_BaseMap") ??
+                throw new InvalidOperationException("The imported Ispant material has no current base texture identifier.");
+            var exactPackedTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(DirectTexturePath) ??
+                throw new InvalidOperationException("The exact extracted Ispant texture could not be loaded.");
+            importer.AddRemap(
+                new AssetImporter.SourceAssetIdentifier(currentlyBoundTexture.GetType(), currentlyBoundTexture.name),
+                exactPackedTexture);
+            importer.SaveAndReimport();
+            RequireHash(DirectTexturePath, DirectTextureSha256);
         }
 
-        [MenuItem("Bellerophon/Enemies/Ispant/Stop New Model Playback")]
-        public static void StopNewModelPlayback()
+        private static void DeleteUnauthorizedAssets()
         {
-            if (EditorApplication.isPlaying)
-                EditorApplication.ExitPlaymode();
-            Debug.Log("IspantNewModelPlaybackStopRequested Result=PASS.");
-        }
-
-        private static bool Finite(Vector3 value)
-        {
-            return !float.IsNaN(value.x) && !float.IsInfinity(value.x) &&
-                   !float.IsNaN(value.y) && !float.IsInfinity(value.y) &&
-                   !float.IsNaN(value.z) && !float.IsInfinity(value.z);
-        }
-
-        [MenuItem("Bellerophon/Enemies/Ispant/Inspect Generated Rigged Models")]
-        public static void InspectGeneratedRiggedModels()
-        {
-            var report = new StringBuilder();
-            report.AppendLine("Ispant generated rigged model inspection");
-            AppendGeneratedModel(report, CustomRigPath, 22);
-            AppendGeneratedModel(report, MixamoRigPath, 22);
-            AppendGeneratedModel(report, DeathRigPath, 22);
-            var absolutePath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", GeneratedInspectionPath));
-            Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
-            File.WriteAllText(absolutePath, report.ToString(), new UTF8Encoding(false));
-            AssetDatabase.Refresh();
-            Debug.Log(
-                "IspantGeneratedRiggedModelsInspected Result=PASS" +
-                ", CustomUsedBones=22, MixamoUsedBones=22, DeathUsedBones=22, SourceVertices=4980" +
-                ", Report=" + GeneratedInspectionPath + ".");
-        }
-
-        [MenuItem("Bellerophon/Enemies/Ispant/Inspect Model Replacement Baseline")]
-        public static void InspectModelReplacementBaseline()
-        {
-            var scene = RequireScene();
-            var wasDirty = scene.isDirty;
-            var placement = GameObject.Find(PlacementRootName) ??
-                throw new InvalidOperationException("The Ispant placement root is missing.");
-            var report = new StringBuilder();
-            report.AppendLine("Ispant model replacement baseline");
-            report.AppendLine("Scene=" + scene.path);
-            report.AppendLine("Placement=" + PlacementRootName);
-            report.AppendLine("Slots=" + placement.transform.childCount);
-
-            for (var slotIndex = 0; slotIndex < placement.transform.childCount; slotIndex++)
+            foreach (var path in UnauthorizedAssetPaths)
             {
-                var slot = placement.transform.GetChild(slotIndex);
-                report.AppendLine();
-                report.AppendLine("[Slot " + slotIndex + "] " + slot.name);
-                report.AppendLine("SlotTransform=" + TransformValue(slot));
-                report.AppendLine("Prefab=" + PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(slot.gameObject));
+                if (AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path) != null && !AssetDatabase.DeleteAsset(path))
+                    throw new InvalidOperationException("Unauthorized Ispant asset could not be removed: " + path);
+            }
+            foreach (var folder in new[]
+                     {
+                         "Assets/_Project/Art/Enemies/Ispant/Models/Generated",
+                         "Assets/_Project/Art/Enemies/Ispant/Models/Materials",
+                     })
+            {
+                if (AssetDatabase.IsValidFolder(folder) && AssetDatabase.FindAssets(string.Empty, new[] { folder }).Length == 0 &&
+                    !AssetDatabase.DeleteAsset(folder))
+                    throw new InvalidOperationException("Empty unauthorized Ispant folder could not be removed: " + folder);
+            }
+        }
 
-                foreach (var animator in slot.GetComponentsInChildren<Animator>(true))
-                {
-                    report.AppendLine(
-                        "Animator=" + RelativePath(slot, animator.transform) +
-                        "|Controller=" + AssetDatabase.GetAssetPath(animator.runtimeAnimatorController) +
-                        "|Avatar=" + AssetDatabase.GetAssetPath(animator.avatar) +
-                        "|ApplyRootMotion=" + animator.applyRootMotion +
-                        "|Enabled=" + animator.enabled);
-                }
+        private static string InspectCleanupState(Scene scene, Transform placement, GameObject source)
+        {
+            RequireHash(DirectSourcePath, DirectSourceSha256);
+            RequireHash(DirectTexturePath, DirectTextureSha256);
+            var importer = RequireImporter();
+            if (importer.materialImportMode != ModelImporterMaterialImportMode.ImportViaMaterialDescription ||
+                importer.materialLocation != ModelImporterMaterialLocation.InPrefab ||
+                importer.materialName != ModelImporterMaterialName.BasedOnMaterialName ||
+                importer.materialSearch != ModelImporterMaterialSearch.Local || importer.importAnimation ||
+                importer.importCameras || importer.importLights)
+                throw new InvalidOperationException("The direct Ispant importer still contains non-source-faithful settings.");
+            foreach (var path in UnauthorizedAssetPaths)
+                if (AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path) != null)
+                    throw new InvalidOperationException("Unauthorized Ispant asset remains: " + path);
 
-                foreach (var renderer in slot.GetComponentsInChildren<Renderer>(true))
-                {
-                    var mesh = RendererMesh(renderer);
-                    report.AppendLine(
-                        "Renderer=" + RelativePath(slot, renderer.transform) +
-                        "|Type=" + renderer.GetType().Name +
-                        "|Enabled=" + renderer.enabled +
-                        "|Mesh=" + (mesh != null ? mesh.name : "<none>") +
-                        "|MeshAsset=" + AssetDatabase.GetAssetPath(mesh) +
-                        "|Vertices=" + (mesh != null ? mesh.vertexCount : 0) +
-                        "|Materials=" + string.Join(",", renderer.sharedMaterials.Select(MaterialValue)) +
-                        SkinnedValue(renderer as SkinnedMeshRenderer));
-                }
+            var sourceRenderer = source.GetComponentsInChildren<SkinnedMeshRenderer>(true).Single();
+            RequireSourceFaithfulMaterial(source);
+            var report = new StringBuilder();
+            report.AppendLine("Ispant Unity-side cleanup inspection");
+            report.AppendLine("Scene=" + scene.path);
+            report.AppendLine("SourcePath=" + DirectSourcePath);
+            report.AppendLine("SourceSha256=" + DirectSourceSha256);
+            report.AppendLine("ExtractedPackedTexture=" + DirectTexturePath);
+            report.AppendLine("ExtractedPackedTextureSha256=" + DirectTextureSha256);
+            report.AppendLine(
+                "Importer|MaterialImportMode=" + importer.materialImportMode +
+                "|MaterialLocation=" + importer.materialLocation +
+                "|MaterialName=" + importer.materialName +
+                "|MaterialSearch=" + importer.materialSearch +
+                "|ImportAnimation=" + importer.importAnimation +
+                "|ImportCameras=" + importer.importCameras +
+                "|ImportLights=" + importer.importLights);
 
-                foreach (var rigidbody in slot.GetComponentsInChildren<Rigidbody>(true))
-                {
-                    report.AppendLine(
-                        "Rigidbody=" + RelativePath(slot, rigidbody.transform) +
-                        "|Kinematic=" + rigidbody.isKinematic +
-                        "|UseGravity=" + rigidbody.useGravity);
-                }
+            var clipCount = AssetDatabase.LoadAllAssetsAtPath(DirectSourcePath).OfType<AnimationClip>()
+                .Count(clip => !clip.name.StartsWith("__preview__", StringComparison.Ordinal));
+            if (clipCount != 0)
+                throw new InvalidOperationException("The direct Ispant FBX still imports an animation clip.");
+            var instanceCount = 0;
+            foreach (Transform slot in placement)
+            {
+                var model = VisualRoots(slot).Single();
+                if (!string.Equals(model.name, DirectInstanceName, StringComparison.Ordinal) ||
+                    !string.Equals(PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(model.gameObject),
+                                   DirectSourcePath, StringComparison.Ordinal))
+                    throw new InvalidOperationException(slot.name + " does not directly instantiate the supplied FBX.");
+                var renderer = model.GetComponentsInChildren<SkinnedMeshRenderer>(true).Single();
+                if (renderer.sharedMesh == null ||
+                    !string.Equals(AssetDatabase.GetAssetPath(renderer.sharedMesh), DirectSourcePath, StringComparison.Ordinal) ||
+                    !renderer.sharedMaterials.SequenceEqual(sourceRenderer.sharedMaterials))
+                    throw new InvalidOperationException(slot.name + " has a derived mesh or material binding.");
+                var materialOverrides = (PrefabUtility.GetPropertyModifications(model.gameObject) ??
+                                         Array.Empty<PropertyModification>())
+                    .Count(modification => modification != null && modification.propertyPath != null &&
+                                           modification.propertyPath.IndexOf("material", StringComparison.OrdinalIgnoreCase) >= 0);
+                if (materialOverrides != 0)
+                    throw new InvalidOperationException(slot.name + " still has a material override.");
+                foreach (var animator in model.GetComponentsInChildren<Animator>(true))
+                    if (animator.enabled || animator.runtimeAnimatorController != null || animator.applyRootMotion)
+                        throw new InvalidOperationException(slot.name + " still has an animation connection.");
+                if (model.GetComponentsInChildren<Animation>(true).Any(animation => animation.enabled))
+                    throw new InvalidOperationException(slot.name + " still has an enabled legacy animation component.");
+                instanceCount++;
+                report.AppendLine(
+                    "Slot=" + slot.name + "|Prefab=" + DirectSourcePath +
+                    "|Mesh=" + AssetDatabase.GetAssetPath(renderer.sharedMesh) +
+                    "|Material=" + renderer.sharedMaterial.name + "@" +
+                    AssetDatabase.GetAssetPath(renderer.sharedMaterial) +
+                    "|MaterialOverrides=0|AnimationConnections=0");
+            }
+            if (instanceCount != 12)
+                throw new InvalidOperationException("Expected 12 direct Ispant instances.");
+            report.AppendLine("DirectInstances=12");
+            report.AppendLine("WrongAtaTextureReferences=0");
+            report.AppendLine("UnauthorizedDerivedAssets=0");
+            report.AppendLine("ImportedAnimationClips=0");
+            report.AppendLine("Result=PASS");
+            return report.ToString();
+        }
 
-                foreach (var collider in slot.GetComponentsInChildren<Collider>(true))
+        private static string BuildAppearanceReport(Scene scene, Transform placement, GameObject source)
+        {
+            var importer = RequireImporter();
+            var report = new StringBuilder();
+            report.AppendLine("Ispant Unity-side appearance diagnostic");
+            report.AppendLine("SourcePath=" + DirectSourcePath);
+            report.AppendLine("SourceSha256=" + DirectSourceSha256);
+            report.AppendLine(
+                "Importer|MaterialImportMode=" + importer.materialImportMode +
+                "|MaterialLocation=" + importer.materialLocation +
+                "|MaterialName=" + importer.materialName +
+                "|MaterialSearch=" + importer.materialSearch +
+                "|ImportAnimation=" + importer.importAnimation +
+                "|ImportCameras=" + importer.importCameras +
+                "|ImportLights=" + importer.importLights);
+            foreach (var mapping in importer.GetExternalObjectMap())
+                report.AppendLine(
+                    "ExternalObject|Type=" + mapping.Key.type + "|Name=" + mapping.Key.name +
+                    "|Asset=" + AssetDatabase.GetAssetPath(mapping.Value));
+            foreach (var material in AssetDatabase.LoadAllAssetsAtPath(DirectSourcePath).OfType<Material>())
+            {
+                report.AppendLine("Material|Name=" + material.name + "|Shader=" + material.shader.name);
+                foreach (var property in material.GetTexturePropertyNames())
                 {
-                    report.AppendLine(
-                        "Collider=" + RelativePath(slot, collider.transform) +
-                        "|Type=" + collider.GetType().Name +
-                        "|Enabled=" + collider.enabled +
-                        "|Trigger=" + collider.isTrigger);
-                }
-
-                foreach (var behaviour in slot.GetComponentsInChildren<MonoBehaviour>(true))
-                {
-                    if (behaviour == null)
-                        continue;
-                    report.AppendLine(
-                        "Behaviour=" + RelativePath(slot, behaviour.transform) +
-                        "|Type=" + behaviour.GetType().FullName +
-                        "|Enabled=" + behaviour.enabled);
+                    var texture = material.GetTexture(property);
+                    if (texture != null)
+                        report.AppendLine(
+                            "MaterialTexture|Property=" + property + "|Texture=" + texture.name +
+                            "|Asset=" + AssetDatabase.GetAssetPath(texture));
                 }
             }
+            var sourceRenderer = source.GetComponentsInChildren<SkinnedMeshRenderer>(true).Single();
+            foreach (Transform slot in placement)
+            {
+                var model = VisualRoots(slot).Single();
+                var renderer = model.GetComponentsInChildren<SkinnedMeshRenderer>(true).Single();
+                var materialOverrides = (PrefabUtility.GetPropertyModifications(model.gameObject) ??
+                                         Array.Empty<PropertyModification>())
+                    .Count(modification => modification != null && modification.propertyPath != null &&
+                                           modification.propertyPath.IndexOf("material", StringComparison.OrdinalIgnoreCase) >= 0);
+                report.AppendLine(
+                    "Slot=" + slot.name + "|Materials=" + string.Join(",", renderer.sharedMaterials.Select(material =>
+                        material.name + "@" + AssetDatabase.GetAssetPath(material))) +
+                    "|MatchesSourceMaterials=" + renderer.sharedMaterials.SequenceEqual(sourceRenderer.sharedMaterials) +
+                    "|MaterialOverrides=" + materialOverrides);
+            }
+            return report.ToString();
+        }
 
-            var absolutePath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", BaselinePath));
-            Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
-            File.WriteAllText(absolutePath, report.ToString(), new UTF8Encoding(false));
-            AssetDatabase.Refresh();
-            if (scene.isDirty != wasDirty)
-                throw new InvalidOperationException("Baseline inspection changed the scene dirty state.");
-            Debug.Log(
-                "IspantModelReplacementBaselineInspected Result=PASS" +
-                ", Slots=" + placement.transform.childCount +
-                ", SceneChanged=False, Report=" + BaselinePath + ".");
+        private static void RequireSourceFaithfulMaterial(GameObject source)
+        {
+            var renderer = source.GetComponentsInChildren<SkinnedMeshRenderer>(true).Single();
+            if (renderer.sharedMaterials.Length != 1 || renderer.sharedMaterial == null)
+                throw new InvalidOperationException("The direct Ispant source does not contain one material.");
+            var material = renderer.sharedMaterial;
+            var texturePaths = material.GetTexturePropertyNames()
+                .Select(property => material.GetTexture(property))
+                .Where(texture => texture != null)
+                .Select(AssetDatabase.GetAssetPath)
+                .Distinct(StringComparer.Ordinal)
+                .ToArray();
+            if (texturePaths.Length != 1 ||
+                !string.Equals(texturePaths[0], DirectTexturePath, StringComparison.Ordinal) ||
+                texturePaths.Any(path => path.IndexOf("/Ata/", StringComparison.OrdinalIgnoreCase) >= 0))
+                throw new InvalidOperationException("The direct Ispant material is not bound only to its packed texture.");
         }
 
         private static Scene RequireScene()
         {
-            var scene = SceneManager.GetActiveScene();
-            if (!string.Equals(scene.path, ScenePath, StringComparison.Ordinal))
-                scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var scene = SceneManager.GetSceneByPath(ScenePath);
+            if (!scene.IsValid() || !scene.isLoaded)
+                scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Additive);
             if (!scene.IsValid() || !scene.isLoaded)
                 throw new InvalidOperationException("CargoRunMvp is not loaded.");
             return scene;
         }
 
-        private static SkinnedMeshRenderer RequireGeneratedRenderer(string path)
+        private static Transform RequirePlacement(Scene scene)
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path) ??
-                throw new InvalidOperationException("Generated Ispant FBX is missing: " + path);
-            var renderers = prefab.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-            if (renderers.Length != 1 || renderers[0].sharedMesh == null)
-                throw new InvalidOperationException(path + " does not contain one generated skinned mesh.");
-            return renderers[0];
+            var matches = scene.GetRootGameObjects()
+                .Where(root => string.Equals(root.name, PlacementRootName, StringComparison.Ordinal))
+                .ToArray();
+            if (matches.Length != 1 || matches[0].transform.childCount != 12)
+                throw new InvalidOperationException("Expected one Ispant placement root with 12 slots.");
+            return matches[0].transform;
         }
 
-        private static void ApplyBody(
-            Transform slot,
-            SkinnedMeshRenderer target,
-            SkinnedMeshRenderer source,
-            Mesh mesh,
-            Material material)
+        private static GameObject RequireSource()
         {
-            var transforms = slot.GetComponentsInChildren<Transform>(true)
-                .GroupBy(value => value.name)
-                .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
-            var usedIndices = source.sharedMesh.boneWeights
-                .SelectMany(weight => new[] { weight.boneIndex0, weight.boneIndex1, weight.boneIndex2, weight.boneIndex3 })
-                .Distinct()
-                .ToHashSet();
-            var mapped = new Transform[source.bones.Length];
-            for (var index = 0; index < source.bones.Length; index++)
+            RequireHash(DirectSourcePath, DirectSourceSha256);
+            var source = AssetDatabase.LoadAssetAtPath<GameObject>(DirectSourcePath) ??
+                throw new InvalidOperationException("The direct Ispant source FBX is missing.");
+            var renderer = source.GetComponentsInChildren<SkinnedMeshRenderer>(true).SingleOrDefault();
+            if (renderer == null || renderer.sharedMesh == null || renderer.sharedMesh.triangles.Length / 3 != 10028 ||
+                renderer.rootBone == null || renderer.bones.Length != 24 || renderer.bones.Any(bone => bone == null))
+                throw new InvalidOperationException("The direct Ispant source mesh or 24-bone rig differs from the FBX.");
+            return source;
+        }
+
+        private static ModelImporter RequireImporter()
+        {
+            return AssetImporter.GetAtPath(DirectSourcePath) as ModelImporter ??
+                throw new InvalidOperationException("The direct Ispant FBX has no ModelImporter.");
+        }
+
+        private static Transform[] VisualRoots(Transform slot)
+        {
+            return Enumerable.Range(0, slot.childCount)
+                .Select(slot.GetChild)
+                .Where(child => child.GetComponentsInChildren<Renderer>(true).Length > 0)
+                .ToArray();
+        }
+
+        private static void ConfigureStaticInstance(Transform instance)
+        {
+            foreach (var animator in instance.GetComponentsInChildren<Animator>(true))
             {
-                var sourceBone = source.bones[index];
-                if (sourceBone != null && transforms.TryGetValue(sourceBone.name, out var targetBone))
-                    mapped[index] = targetBone;
-                else if (usedIndices.Contains(index))
-                    throw new InvalidOperationException(slot.name + " is missing used bone " + sourceBone?.name + ".");
-                else
-                    mapped[index] = target.rootBone;
+                animator.enabled = false;
+                animator.runtimeAnimatorController = null;
+                animator.applyRootMotion = false;
+                EditorUtility.SetDirty(animator);
             }
-            if (source.rootBone == null || !transforms.TryGetValue(source.rootBone.name, out var rootBone))
-                throw new InvalidOperationException(slot.name + " cannot map the generated root bone.");
-            target.sharedMesh = mesh;
-            target.bones = mapped;
-            target.rootBone = rootBone;
-            target.sharedMaterials = new[] { material };
-            target.localBounds = mesh.bounds;
-            target.enabled = true;
-            EditorUtility.SetDirty(target);
-        }
-
-        private static Mesh CreateOrUpdateMappedBindposeMesh(
-            SkinnedMeshRenderer source,
-            string referencePath,
-            string assetPath,
-            string meshName)
-        {
-            var referencePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(referencePath) ??
-                throw new InvalidOperationException("The Ispant bind-pose reference is missing: " + referencePath);
-            var reference = referencePrefab.GetComponentsInChildren<SkinnedMeshRenderer>(true)
-                .Single(renderer => renderer.name == "Ispant_Armed_Body");
-            var referenceByName = reference.bones
-                .Select((bone, index) => new { bone, index })
-                .Where(value => value.bone != null)
-                .ToDictionary(value => value.bone.name, value => value.index, StringComparer.Ordinal);
-            var usedIndices = source.sharedMesh.boneWeights
-                .SelectMany(weight => new[] { weight.boneIndex0, weight.boneIndex1, weight.boneIndex2, weight.boneIndex3 })
-                .Distinct()
-                .ToHashSet();
-            var sourceBindposes = source.sharedMesh.bindposes;
-            var referenceBindposes = reference.sharedMesh.bindposes;
-            var mappedBindposes = new Matrix4x4[source.bones.Length];
-            for (var index = 0; index < source.bones.Length; index++)
+            foreach (var animation in instance.GetComponentsInChildren<Animation>(true))
             {
-                var sourceBone = source.bones[index];
-                if (sourceBone != null && referenceByName.TryGetValue(sourceBone.name, out var referenceIndex))
-                    mappedBindposes[index] = referenceBindposes[referenceIndex];
-                else if (usedIndices.Contains(index))
-                    throw new InvalidOperationException(
-                        referencePath + " is missing used generated bone " + sourceBone?.name + ".");
-                else
-                    mappedBindposes[index] = index < sourceBindposes.Length ? sourceBindposes[index] : Matrix4x4.identity;
-            }
-
-            EnsureAssetFolder(Path.GetDirectoryName(assetPath).Replace('\\', '/'));
-            var target = AssetDatabase.LoadAssetAtPath<Mesh>(assetPath);
-            if (target == null)
-            {
-                target = new Mesh();
-                EditorUtility.CopySerialized(source.sharedMesh, target);
-                target.name = meshName;
-                target.bindposes = mappedBindposes;
-                AssetDatabase.CreateAsset(target, assetPath);
-            }
-            else
-            {
-                EditorUtility.CopySerialized(source.sharedMesh, target);
-                target.name = meshName;
-                target.bindposes = mappedBindposes;
-                EditorUtility.SetDirty(target);
-            }
-            return target;
-        }
-
-        private static Material CreateOrUpdateMaterial()
-        {
-            ConfigureTexture(TextureRoot + "Ispant_New_BaseColor.jpg", false, true);
-            ConfigureTexture(TextureRoot + "Ispant_New_Normal.jpg", true, false);
-            ConfigureTexture(TextureRoot + "Ispant_New_Metallic.png", false, false);
-            ConfigureTexture(TextureRoot + "Ispant_New_Roughness.png", false, false);
-            var shader = AssetDatabase.LoadAssetAtPath<Shader>(ShaderPath) ??
-                throw new InvalidOperationException("The approved Ispant shader is missing.");
-            EnsureAssetFolder("Assets/_Project/Art/Enemies/Ispant/Models/Materials");
-            var material = AssetDatabase.LoadAssetAtPath<Material>(MaterialPath);
-            if (material == null)
-            {
-                material = new Material(shader) { name = "Ispant_New_Model" };
-                AssetDatabase.CreateAsset(material, MaterialPath);
-            }
-            material.shader = shader;
-            material.SetTexture("_BaseMap", RequireTexture(TextureRoot + "Ispant_New_BaseColor.jpg"));
-            material.SetTexture("_NormalMap", RequireTexture(TextureRoot + "Ispant_New_Normal.jpg"));
-            material.SetTexture("_MetallicMap", RequireTexture(TextureRoot + "Ispant_New_Metallic.png"));
-            material.SetTexture("_RoughnessMap", RequireTexture(TextureRoot + "Ispant_New_Roughness.png"));
-            material.SetColor("_BaseColor", Color.white);
-            material.SetFloat("_NormalStrength", 1f);
-            material.SetFloat("_UseMaps", 1f);
-            material.SetFloat("_UseUv1", 0f);
-            material.SetFloat("_RoughnessBias", 0f);
-            material.SetFloat("_MetallicBias", 0f);
-            material.SetFloat("_CoatWeight", 0f);
-            material.SetFloat("_FeatureMode", 0f);
-            material.SetFloat("_ApprovedYFlip", 0f);
-            EditorUtility.SetDirty(material);
-            return material;
-        }
-
-        private static void ConfigureTexture(string path, bool normalMap, bool srgb)
-        {
-            var importer = AssetImporter.GetAtPath(path) as TextureImporter ??
-                throw new InvalidOperationException("Ispant replacement texture is missing: " + path);
-            var changed = importer.textureType != (normalMap ? TextureImporterType.NormalMap : TextureImporterType.Default) ||
-                          importer.sRGBTexture != srgb;
-            importer.textureType = normalMap ? TextureImporterType.NormalMap : TextureImporterType.Default;
-            importer.sRGBTexture = srgb;
-            importer.textureCompression = TextureImporterCompression.CompressedHQ;
-            if (changed)
-                importer.SaveAndReimport();
-        }
-
-        private static Texture2D RequireTexture(string path)
-        {
-            return AssetDatabase.LoadAssetAtPath<Texture2D>(path) ??
-                throw new InvalidOperationException("Ispant replacement texture could not be loaded: " + path);
-        }
-
-        private static void EnsureAssetFolder(string path)
-        {
-            var parts = path.Split('/');
-            var current = parts[0];
-            for (var index = 1; index < parts.Length; index++)
-            {
-                var next = current + "/" + parts[index];
-                if (!AssetDatabase.IsValidFolder(next))
-                    AssetDatabase.CreateFolder(current, parts[index]);
-                current = next;
+                animation.enabled = false;
+                EditorUtility.SetDirty(animation);
             }
         }
 
-        private static string[] ProtectedContract(Transform placement)
+        private static string[] ProtectedRootSignatures(Scene scene)
+        {
+            return scene.GetRootGameObjects()
+                .Where(root => !string.Equals(root.name, PlacementRootName, StringComparison.Ordinal))
+                .SelectMany(root => HierarchySignature(root.transform, root.transform))
+                .OrderBy(value => value, StringComparer.Ordinal)
+                .ToArray();
+        }
+
+        private static string[] PreservedSlotContract(Transform placement)
         {
             var values = new System.Collections.Generic.List<string>();
             foreach (Transform slot in placement)
             {
-                values.Add("Slot|" + slot.name + "|" + TransformValue(slot));
-                foreach (var animator in slot.GetComponentsInChildren<Animator>(true))
-                    values.Add("Animator|" + slot.name + "|" + RelativePath(slot, animator.transform) + "|" +
-                               AssetDatabase.GetAssetPath(animator.runtimeAnimatorController) + "|" +
-                               AssetDatabase.GetAssetPath(animator.avatar) + "|" + animator.applyRootMotion + "|" + animator.enabled);
-                foreach (var renderer in slot.GetComponentsInChildren<Renderer>(true))
+                var visualRoots = VisualRoots(slot);
+                foreach (var transform in slot.GetComponentsInChildren<Transform>(true))
                 {
-                    if (renderer.name == "Ispant_Armed_Body" || renderer.name == "Ispant_Crescent_Ornament" ||
-                        renderer.name == "Ispant_Reference_Eye_Slits")
+                    if (visualRoots.Any(root => transform == root || transform.IsChildOf(root)))
                         continue;
-                    values.Add("PreservedRenderer|" + slot.name + "|" + RelativePath(slot, renderer.transform) + "|" +
-                               renderer.enabled + "|" + AssetDatabase.GetAssetPath(RendererMesh(renderer)) + "|" +
-                               string.Join(",", renderer.sharedMaterials.Select(AssetDatabase.GetAssetPath)));
+                    values.Add("Transform|" + slot.name + "|" + RelativePath(slot, transform) + "|" +
+                               transform.gameObject.activeSelf + "|" + TransformValue(transform));
+                    foreach (var component in transform.GetComponents<Component>())
+                    {
+                        if (component == null || component is Transform || component is Animator || component is Animation)
+                            continue;
+                        values.Add("Component|" + slot.name + "|" + RelativePath(slot, transform) + "|" +
+                                   component.GetType().FullName + "|" + EditorJsonUtility.ToJson(component));
+                    }
                 }
-                foreach (var rigidbody in slot.GetComponentsInChildren<Rigidbody>(true))
-                    values.Add("Rigidbody|" + slot.name + "|" + RelativePath(slot, rigidbody.transform) + "|" +
-                               rigidbody.isKinematic + "|" + rigidbody.useGravity);
-                foreach (var collider in slot.GetComponentsInChildren<Collider>(true))
-                    values.Add("Collider|" + slot.name + "|" + RelativePath(slot, collider.transform) + "|" +
-                               collider.GetType().FullName + "|" + collider.enabled + "|" + collider.isTrigger);
-                foreach (var behaviour in slot.GetComponentsInChildren<MonoBehaviour>(true))
-                    if (behaviour != null)
-                        values.Add("Behaviour|" + slot.name + "|" + RelativePath(slot, behaviour.transform) + "|" +
-                                   behaviour.GetType().FullName + "|" + behaviour.enabled);
             }
             values.Sort(StringComparer.Ordinal);
             return values.ToArray();
         }
 
-        private static string InspectReplacement(
-            Transform placement,
-            Material material,
-            Mesh customMesh,
-            Mesh mixamoMesh,
-            Mesh deathMesh)
+        private static string[] HierarchySignature(Transform root, Transform current)
         {
-            if (placement.childCount != 12)
-                throw new InvalidOperationException("Expected 12 Ispant slots.");
-            var report = new StringBuilder();
-            report.AppendLine("Ispant model replacement inspection");
-            report.AppendLine("SourceSha256=" + ExpectedSourceSha256);
-            report.AppendLine("Material=" + AssetDatabase.GetAssetPath(material));
-            report.AppendLine("Shader=" + material.shader.name);
-            var customCount = 0;
-            var mixamoCount = 0;
-            var deathCount = 0;
-            var disabledOldAppearance = 0;
-            foreach (Transform slot in placement)
+            var values = new System.Collections.Generic.List<string>
             {
-                var body = slot.GetComponentsInChildren<SkinnedMeshRenderer>(true)
-                    .Single(renderer => renderer.name == "Ispant_Armed_Body");
-                var isDeath = string.Equals(slot.name, "Ispant_12_Death", StringComparison.Ordinal);
-                var expected = isDeath
-                    ? deathMesh
-                    : body.bones.Any(bone => bone != null && bone.name.StartsWith("mixamorig:", StringComparison.Ordinal))
-                        ? mixamoMesh
-                        : customMesh;
-                if (body.sharedMesh != expected || body.sharedMaterials.Length != 1 || body.sharedMaterial != material ||
-                    body.bones.Any(bone => bone == null))
-                    throw new InvalidOperationException(slot.name + " replacement skin contract failed.");
-                if (expected == deathMesh) deathCount++;
-                else if (expected == mixamoMesh) mixamoCount++;
-                else customCount++;
-                var worldSize = body.bounds.size;
-                if (worldSize.x <= 0.35f || worldSize.y <= 0.5f || worldSize.z <= 0.2f ||
-                    worldSize.x >= 3f || worldSize.y >= 3f || worldSize.z >= 3f)
-                    throw new InvalidOperationException(
-                        slot.name + " replacement world bounds are invalid: " + worldSize + ".");
-                var oldAppearance = slot.GetComponentsInChildren<Renderer>(true)
-                    .Where(renderer => renderer.name == "Ispant_Crescent_Ornament" ||
-                                       renderer.name == "Ispant_Reference_Eye_Slits")
-                    .ToArray();
-                if (oldAppearance.Any(renderer => renderer.enabled))
-                    throw new InvalidOperationException(slot.name + " still enables an old appearance renderer.");
-                disabledOldAppearance += oldAppearance.Length;
-                report.AppendLine(
-                    "Slot=" + slot.name + "|Mesh=" + AssetDatabase.GetAssetPath(body.sharedMesh) +
-                    "|Bones=" + body.bones.Length + "|Bounds=" + body.bounds.size.ToString("F4"));
+                "Transform|" + root.name + "|" + RelativePath(root, current) + "|" +
+                current.gameObject.activeSelf + "|" + TransformValue(current)
+            };
+            foreach (var component in current.GetComponents<Component>())
+            {
+                if (component == null || component is Transform)
+                    continue;
+                values.Add("Component|" + root.name + "|" + RelativePath(root, current) + "|" +
+                           component.GetType().FullName + "|" + EditorJsonUtility.ToJson(component));
             }
-            if (customCount != 3 || mixamoCount != 8 || deathCount != 1 || disabledOldAppearance != 24)
-                throw new InvalidOperationException(
-                    "Unexpected replacement totals: custom=" + customCount + ", mixamo=" + mixamoCount +
-                    ", death=" + deathCount + ", disabledOldAppearance=" + disabledOldAppearance + ".");
-            report.AppendLine("CustomRigSlots=" + customCount);
-            report.AppendLine("MixamoRigSlots=" + mixamoCount);
-            report.AppendLine("DeathRigSlots=" + deathCount);
-            report.AppendLine("DisabledOldAppearanceRenderers=" + disabledOldAppearance);
-            report.AppendLine("Result=PASS");
-            return report.ToString();
-        }
-
-        private static void RequireHash(string assetPath, string expected)
-        {
-            var absolute = Path.GetFullPath(Path.Combine(Application.dataPath, "..", assetPath));
-            using var stream = File.OpenRead(absolute);
-            using var sha = SHA256.Create();
-            var actual = BitConverter.ToString(sha.ComputeHash(stream)).Replace("-", string.Empty);
-            if (!string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase))
-                throw new InvalidOperationException(assetPath + " hash differs from the supplied FBX.");
-        }
-
-        private static void WriteText(string assetPath, string contents)
-        {
-            var absolute = Path.GetFullPath(Path.Combine(Application.dataPath, "..", assetPath));
-            Directory.CreateDirectory(Path.GetDirectoryName(absolute));
-            File.WriteAllText(absolute, contents, new UTF8Encoding(false));
-            AssetDatabase.Refresh();
-        }
-
-        private static Mesh RendererMesh(Renderer renderer)
-        {
-            if (renderer is SkinnedMeshRenderer skinned)
-                return skinned.sharedMesh;
-            return renderer.GetComponent<MeshFilter>()?.sharedMesh;
-        }
-
-        private static string SkinnedValue(SkinnedMeshRenderer renderer)
-        {
-            if (renderer == null)
-                return string.Empty;
-            return "|RootBone=" + (renderer.rootBone != null ? renderer.rootBone.name : "<none>") +
-                   "|Bones=" + string.Join(",", renderer.bones.Select(bone => bone != null ? bone.name : "<null>"));
-        }
-
-        private static string MaterialValue(Material material)
-        {
-            return material == null
-                ? "<null>"
-                : material.name + "@" + AssetDatabase.GetAssetPath(material);
+            foreach (Transform child in current)
+                values.AddRange(HierarchySignature(root, child));
+            return values.ToArray();
         }
 
         private static string RelativePath(Transform root, Transform target)
@@ -743,55 +507,35 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                    "|Scale=" + transform.localScale.ToString("F6");
         }
 
-        private static void AppendGeneratedModel(StringBuilder report, string path, int expectedBones)
+        private static void EnsureAssetFolder(string path)
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path) ??
-                throw new InvalidOperationException("Generated Ispant FBX is missing: " + path);
-            var renderers = prefab.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-            if (renderers.Length != 1)
-                throw new InvalidOperationException(path + " must contain exactly one skinned renderer.");
-            var renderer = renderers[0];
-            var mesh = renderer.sharedMesh ??
-                throw new InvalidOperationException(path + " has no shared mesh.");
-            if (mesh.vertexCount < 4980)
-                throw new InvalidOperationException(
-                    path + " has fewer Unity vertices than the supplied FBX: " + mesh.vertexCount + ".");
-            var triangleCount = mesh.triangles.Length / 3;
-            if (triangleCount != 10028)
-                throw new InvalidOperationException(
-                    path + " triangle count differs from the supplied FBX: " + triangleCount + ".");
-            var usedIndices = mesh.boneWeights
-                .SelectMany(weight => new[] { weight.boneIndex0, weight.boneIndex1, weight.boneIndex2, weight.boneIndex3 })
-                .Where(index => index >= 0 && index < renderer.bones.Length)
-                .Distinct()
-                .OrderBy(index => index)
-                .ToArray();
-            var usedBones = usedIndices.Length;
-            if (usedBones != expectedBones)
-                throw new InvalidOperationException(
-                    path + " uses " + usedBones + " bones instead of " + expectedBones + ".");
-            if (renderer.bones.Any(bone => bone == null))
-                throw new InvalidOperationException(path + " contains a null renderer bone.");
-            report.AppendLine();
-            report.AppendLine("Path=" + path);
-            report.AppendLine("Renderer=" + renderer.name);
-            report.AppendLine("Mesh=" + mesh.name);
-            report.AppendLine("Vertices=" + mesh.vertexCount);
-            report.AppendLine("Triangles=" + triangleCount);
-            report.AppendLine("RendererBones=" + renderer.bones.Length);
-            report.AppendLine("UsedBones=" + usedBones);
-            report.AppendLine("UsedBoneNames=" + string.Join(",", usedIndices.Select(index => renderer.bones[index].name)));
-            report.AppendLine("BoneNames=" + string.Join(",", renderer.bones.Select(bone => bone.name)));
-            report.AppendLine("Bounds=" + mesh.bounds);
-            report.AppendLine("Materials=" + string.Join(",", renderer.sharedMaterials.Select(MaterialValue)));
-            foreach (var material in renderer.sharedMaterials.Where(material => material != null))
+            var parts = path.Split('/');
+            var current = parts[0];
+            for (var index = 1; index < parts.Length; index++)
             {
-                report.AppendLine(
-                    "MaterialDetail=" + material.name +
-                    "|Shader=" + (material.shader != null ? material.shader.name : "<none>") +
-                    "|MainTexture=" + (material.mainTexture != null ? material.mainTexture.name : "<none>") +
-                    "|MainTextureAsset=" + AssetDatabase.GetAssetPath(material.mainTexture));
+                var next = current + "/" + parts[index];
+                if (!AssetDatabase.IsValidFolder(next))
+                    AssetDatabase.CreateFolder(current, parts[index]);
+                current = next;
             }
+        }
+
+        private static void RequireHash(string assetPath, string expected)
+        {
+            var absolute = Path.GetFullPath(Path.Combine(Application.dataPath, "..", assetPath));
+            using var stream = File.OpenRead(absolute);
+            using var sha = SHA256.Create();
+            var actual = BitConverter.ToString(sha.ComputeHash(stream)).Replace("-", string.Empty);
+            if (!string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException(assetPath + " hash differs from the exact supplied data.");
+        }
+
+        private static void WriteText(string path, string contents)
+        {
+            var absolute = Path.GetFullPath(Path.Combine(Application.dataPath, "..", path));
+            Directory.CreateDirectory(Path.GetDirectoryName(absolute));
+            File.WriteAllText(absolute, contents, new UTF8Encoding(false));
+            AssetDatabase.Refresh();
         }
     }
 }
