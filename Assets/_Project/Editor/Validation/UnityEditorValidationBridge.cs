@@ -630,6 +630,36 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.IspantCargoRunScene.IspantEmbeddedMoveAnimationTool.InspectIspantEmbeddedMoveSource,
                         "The current direct Ispant FBX embedded clips and renderer separation were inspected without changing assets or the scene.");
                     break;
+                case "InspectIspantNewWalkingSource":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantNewWalkingAnimationTool.InspectIspantNewWalkingSource,
+                        "The supplied Ispant walking FBX, its Mixamo take, both humanoid Avatars, and the current move target were inspected without changing the scene.");
+                    break;
+                case "ApplyIspantNewWalkingAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantNewWalkingAnimationTool.ApplyIspantNewWalkingAnimation,
+                        "The supplied Mixamo walking take was connected only to the current direct Ispant move object as an in-place loop.");
+                    break;
+                case "InspectIspantNewWalkingAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantNewWalkingAnimationTool.InspectIspantNewWalkingAnimation,
+                        "The applied Ispant Mixamo walking loop, target isolation, and weapon follow were inspected without changing the scene.");
+                    break;
+                case "StartIspantNewWalkingReviewPlayback":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantNewWalkingAnimationTool.StartIspantNewWalkingReviewPlayback,
+                        "The live Ispant Mixamo walking review started in Edit Mode.");
+                    break;
+                case "StopIspantNewWalkingReviewPlayback":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantNewWalkingAnimationTool.StopIspantNewWalkingReviewPlayback,
+                        "The live Ispant Mixamo walking review completed multiple loops and restored the scene.");
+                    break;
                 case "ApplyIspantMoveModel":
                     RunSynchronous(
                         request,
@@ -678,6 +708,48 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.IspantCargoRunScene.IspantDrawSwordAnimationTool.ApplyIspantDrawSwordAnimation,
                         "The supplied Ispant draw-sword model replaced only Ispant_04_DrawSword with exact static appearance, looping Mixamo animation, and its own sword rigidly attached to the right hand.");
                     break;
+                case "InspectIspantNewDrawSwordSource":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantNewDrawSwordAnimationTool.InspectIspantNewDrawSwordSource,
+                        "The supplied new Ispant draw-sword FBX, Mixamo take, exact 24-bone compatibility, current sword, and right palm were inspected without changing the scene.");
+                    break;
+                case "ApplyIspantNewDrawSwordAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantNewDrawSwordAnimationTool.ApplyIspantNewDrawSwordAnimation,
+                        "The supplied Mixamo draw-sword take was connected only to the current direct Ispant draw-sword object as a forward-only immediate-reset loop with real-time rigid right-arm sword follow.");
+                    break;
+                case "ApplyIspantNewDrawSwordLeftArmSkinningFix":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantNewDrawSwordAnimationTool.ApplyIspantNewDrawSwordLeftArmSkinningFix,
+                        "The slot-four mesh islands were separated into left-arm and body-leg skinning domains, removing all cross-domain influences while preserving geometry, transforms, and animation curves; the eight malformed isolated components remain removed.");
+                    break;
+                case "InspectIspantNewDrawSwordAnimation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantNewDrawSwordAnimationTool.InspectIspantNewDrawSwordAnimation,
+                        "The applied forward-only Ispant draw-sword loop, adjusted outward grip, whole-clip blade turn to visible upward, real-time rigid sword follow, and target isolation were inspected without changing the scene.");
+                    break;
+                case "CaptureIspantNewDrawSwordVisualReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantNewDrawSwordAnimationTool.CaptureIspantNewDrawSwordVisualReview,
+                        "Twenty-one isolated Ispant draw-sword poses, including frames 40, 60, and 62 in left-arm close views, were rendered after numeric inspection.");
+                    break;
+                case "StartIspantNewDrawSwordReviewPlayback":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantNewDrawSwordAnimationTool.StartIspantNewDrawSwordReviewPlayback,
+                        "The live Ispant Mixamo draw-sword review started in Edit Mode.");
+                    break;
+                case "StopIspantNewDrawSwordReviewPlayback":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantNewDrawSwordAnimationTool.StopIspantNewDrawSwordReviewPlayback,
+                        "The live Ispant Mixamo draw-sword review completed multiple loops and restored the scene.");
+                    break;
                 case "InspectIspantDrawSwordAnimation":
                     RunSynchronous(
                         request,
@@ -707,6 +779,180 @@ namespace Bellerophon.Editor.Validation
                         request,
                         global::Bellerophon.Editor.IspantCargoRunScene.IspantRunningSwordAttackAnimationTool.CaptureIspantRunningSwordAttackAnimationReview,
                         "A static-reference and five-phase slot-5 running sword attack review was captured after full-cycle inspection passed.");
+                    break;
+                case "InspectIspantSlashRunningSources":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.InspectIspantSlashRunningSources,
+                        "The supplied slash and running mixamo.com takes, Generic bone hierarchies, and current slot-5 direct-model target were inspected without changing the scene.");
+                    break;
+                case "DiagnoseIspantSlashRunningPresentation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.DiagnoseIspantSlashRunningPresentation,
+                        "The slot-5 face, left-arm body mesh, sword renderer, and missing/present right-hand follower were diagnosed without changing the scene.");
+                    break;
+                case "DiagnoseIspantSlashRunningRevision":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.DiagnoseIspantSlashRunningRevision,
+                        "The slot-5 upper-body lateral offset, blade angle range, forearm relationship, and intact-versus-corrected body mesh were diagnosed without changing the scene.");
+                    break;
+                case "DiagnoseIspant06LegacyMotionTransfer":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.DiagnoseIspant06LegacyMotionTransfer,
+                        "The current slot-6 model and the two legacy slot-6 source models were diagnosed without changing the scene.");
+                    break;
+                case "DiagnoseIspant06MusketComponents":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.DiagnoseIspant06MusketComponents,
+                        "The current slot-6 rigid LeftShoulder mesh components were diagnosed without changing the scene.");
+                    break;
+                case "DiagnoseIspant06LegacyRecoveryMotion":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.DiagnoseIspant06LegacyRecoveryMotion,
+                        "The finalized legacy slot-6 recovery object hierarchy was diagnosed without saving either scene.");
+                    break;
+                case "DiagnoseIspant06WeaponAlignment":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.DiagnoseIspant06WeaponAlignment,
+                        "The current and finalized legacy slot-6 hand, musket, and forward-axis alignment was diagnosed without saving either scene.");
+                    break;
+                case "CaptureIspant06MusketComponentGroups":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.CaptureIspant06MusketComponentGroups,
+                        "The current slot-6 upper-back component groups were isolated with the original material for direct diagnosis without saving the scene.");
+                    break;
+                case "CaptureIspant06WeaponIdentity":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.CaptureIspant06WeaponIdentity,
+                        "The current slot-6 back musket, hand musket, and sword were isolated at the same rifle phase without saving the scene.");
+                    break;
+                case "StopPlayModeForIspant06Inspection":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.StopPlayModeForIspant06Inspection,
+                        "Unity play mode was stopped for the approved slot-6 inspection.");
+                    break;
+                case "DiagnoseIspant06RetargetSamples":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.DiagnoseIspant06RetargetSamples,
+                        "The legacy and current slot-6 shoulder, arm, forearm, and hand samples were measured at matching clip phases without changing the scene.");
+                    break;
+                case "ApplyIspant06LegacyMotionTransfer":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.ApplyIspant06LegacyMotionTransfer,
+                        "The legacy slot-6 sheath, hold, bridge, and rifle-aim sequence was retargeted to the current direct model and saved only in slot 6.");
+                    break;
+                case "InspectIspant06LegacyMotionTransfer":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.InspectIspant06LegacyMotionTransfer,
+                        "The current slot-6 legacy-motion retarget, sword grip, intact mesh, controller sequence, and finite deformation were inspected without changing the scene.");
+                    break;
+                case "CaptureIspant06LegacyMotionComparison":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.CaptureIspant06LegacyMotionComparison,
+                        "The legacy final slot-6 sequence and the current retarget were captured once at the same 11 phases for direct visual comparison.");
+                    break;
+                case "ApplyIspantSlashRunningComposite":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.ApplyIspantSlashRunningComposite,
+                        "Only slot 5 received the centered whole upper body and right-hand radial outward forward-cut sword follow while preserving the looping slash/running composite and intact direct model.");
+                    break;
+                case "ApplyIspantLegacySwordRightHandGrip":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.ApplyIspantLegacySwordRightHandGrip,
+                        "Only the slot-5 sword right-hand grip point was moved into the closed fist while preserving the legacy trajectory.");
+                    break;
+                case "InspectIspantSlashRunningComposite":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.InspectIspantSlashRunningComposite,
+                        "The slot-5 composite source curves, upper/lower local poses, finite skinned mesh, controller layers, and scene isolation were inspected.");
+                    break;
+                case "StartIspantSlashRunningCompositeReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.StartIspantSlashRunningCompositeReview,
+                        "The live Edit Mode review started for the independent looping slash and lower-body running clips.");
+                    break;
+                case "StopIspantSlashRunningCompositeReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.StopIspantSlashRunningCompositeReview,
+                        "The live composite review completed two loops of both clips and restored the scene state.");
+                    break;
+                case "CaptureIspantSlashRunningSourceComparison":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.CaptureIspantSlashRunningSourceComparison,
+                        "A one-time direct comparison of supplied slash motion, supplied running motion, and the final slot-5 composite was captured at five matched phases.");
+                    break;
+                case "CaptureIspantSlashRunningFixComparison":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.CaptureIspantSlashRunningFixComparison,
+                        "A one-time direct comparison of the actual supplied source models and the centered outward-forward-slash slot-5 result was captured after the numeric and live reviews passed.");
+                    break;
+                case "CaptureIspantSlashGifTrajectoryComparison":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.CaptureIspantSlashGifTrajectoryComparison,
+                        "All 15 supplied GIF frames and the final slot-5 sword trajectory were captured side by side at matching normalized times after numeric and live review passed.");
+                    break;
+                case "CaptureIspantSlashGifTrajectoryRevisionComparison":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.CaptureIspantSlashGifTrajectoryRevisionComparison,
+                        "The revised slot-5 Model Cam screen-space sword trajectory and all 15 supplied GIF frames were captured side by side once after numeric and live review passed.");
+                    break;
+                case "CaptureIspantSlashGifUpwardTrajectoryComparison":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.CaptureIspantSlashGifUpwardTrajectoryComparison,
+                        "The stable front-view slot-5 upward sword trajectory and all 15 supplied GIF frames were captured side by side once after numeric and live review passed.");
+                    break;
+                case "CaptureIspantSlashGifActualTraceComparison":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.CaptureIspantSlashGifActualTraceComparison,
+                        "The slot-5 sword driven by measured GIF grip and tip pixels and all 15 supplied frames were captured side by side once after numeric and live review passed.");
+                    break;
+                case "CaptureIspantSlashGifActualTraceDiagnostic":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.CaptureIspantSlashGifActualTraceDiagnostic,
+                        "A temporary enlarged direct-review diagnostic captured the post-final body-relative side correction without changing the scene.");
+                    break;
+                case "CaptureIspantLegacySwordMotionComparison":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.CaptureIspantLegacySwordMotionComparison,
+                        "The pre-model-revision slot-5 sword motion and current slot-5 transfer were captured at matching times after inspection passed.");
+                    break;
+                case "InspectIspantLegacySwordRightHandGrip":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.InspectIspantLegacySwordRightHandGrip,
+                        "The slot-5 closed-fist sword grip and unchanged legacy blade and roll trajectories were inspected.");
+                    break;
+                case "CaptureIspantLegacySwordRightHandGripComparison":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.CaptureIspantLegacySwordRightHandGripComparison,
+                        "The supplied GIF and current slot-5 closed-fist sword grip were captured across all 15 matching times.");
                     break;
                 case "ApplyIspant09SlashReplacement":
                     RunSynchronous(

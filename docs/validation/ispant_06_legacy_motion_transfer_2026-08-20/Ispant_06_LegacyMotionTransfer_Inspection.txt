@@ -1,0 +1,12 @@
+Ispant06LegacyMotionTransferInspection Result=PASS
+Target=Approved Ispant Enemy Placement/Ispant_06_SheathSwordDrawMusket/Ispant_New_Direct_Model
+LegacyDurations=1.633333,0.5,0.8166667,3.516667
+RetargetDurations=1.633333,0.5,0.8166667,3.516667
+MappedBones=22
+MaximumSwordGripErrorMeters=0.00001706
+MaximumBakedVertexMagnitudeMeters=2.278827
+BodyMeshUnchanged=True
+MaterialsUnchanged=True
+RootMotion=False
+ControllerSequence=Sheath->Hold->Bridge->ChangeToRifle->ImmediateRepeat
+SceneChanged=False

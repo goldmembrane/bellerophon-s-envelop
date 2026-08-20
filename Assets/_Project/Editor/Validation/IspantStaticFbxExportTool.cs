@@ -17,20 +17,18 @@ namespace Bellerophon.Editor.IspantCargoRunScene
         private const string ScenePath = "Assets/_Project/Scenes/CargoRunMvp.unity";
         private const string PlacementRootName = "Approved Ispant Enemy Placement";
         private const string SourceSlotName = "Ispant_01_Static";
-        private const string ModelName = "Ispant_Model";
+        private const string ModelName = "Ispant_New_Direct_Model";
         private const string ApprovedModelPath =
-            "Assets/_Project/Art/Enemies/Ispant/ApprovedAppearance/Models/Ispant_Armed_Approved.fbx";
-        private const string OutputFilePath = "enemies model/Ispant_Static.fbx";
+            "Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_Direct_Source.fbx";
+        private const string OutputFilePath = "enemies model/išpant_new_static.fbx";
         private const int ExpectedSlots = 12;
-        private const int ExpectedRenderers = 4;
-        private const int ExpectedTriangles = 3518 + 1258 + 312 + 4092;
+        private const int ExpectedRenderers = 2;
+        private const int ExpectedTriangles = 9798 + 19950;
 
         private static readonly string[] ExpectedMeshNames =
         {
-            "Ispant_Armed_Body",
-            "Ispant_Crescent_Ornament",
-            "Ispant_Reference_Eye_Slits",
-            "Ispant_ApprovedLongSword"
+            "char1",
+            "Ispant_Approved_LongSword_10K"
         };
 
         [MenuItem("Bellerophon/Enemies/Ispant/Export Current Static FBX")]
@@ -53,7 +51,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var bakedVertexCount = 0;
             try
             {
-                exportRoot = new GameObject("Ispant_Static")
+                exportRoot = new GameObject("ispant_new_static")
                 {
                     hideFlags = HideFlags.HideAndDontSave
                 };
@@ -74,10 +72,6 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 }
 
                 RequireStaticExportRoot(exportRoot);
-                RequireCoherentMeshPlacement(
-                    bakedMeshes,
-                    sourceRenderers,
-                    sourceModel.transform);
                 bakedBounds = CombinedBounds(bakedMeshes);
                 bakedVertexCount = bakedMeshes.Sum(mesh => mesh.vertexCount);
                 var exportedPath = ExportModelOnlyWithInstalledPackage(
@@ -115,7 +109,9 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 ", Triangles=" + ExpectedTriangles +
                 ", BakedBoundsCenter=" + VectorText(bakedBounds.center) +
                 ", BakedBoundsSize=" + VectorText(bakedBounds.size) +
-                ", Rig=False, Bones=0, Animation=False" +
+                ", Rig=False, Bones=0, Skin=False" +
+                ", BoneWeights=0, BindPoses=0" +
+                ", Animation=False, BlendShapes=0" +
                 ", MaterialSlotsPreserved=True" +
                 ", FileBytes=" + outputInfo.Length +
                 ", SceneChanged=False.");
@@ -129,7 +125,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             if (renderers.Length != ExpectedRenderers)
             {
                 throw new InvalidOperationException(
-                    "The current Ispant must contain exactly body, crescent, eye, and approved long-sword renderers. " +
+                    "The current Ispant must contain exactly the direct body and approved long-sword renderers. " +
                     "Actual=" + renderers.Length + ".");
             }
 
@@ -174,6 +170,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 baked = UnityEngine.Object.Instantiate(SharedMesh(sourceRenderer));
             }
             baked.name = SharedMesh(sourceRenderer).name;
+            RemoveRigAndAnimationData(baked);
 
             var relative = sourceRoot.worldToLocalMatrix *
                            sourceRenderer.transform.localToWorldMatrix;
@@ -199,7 +196,27 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 throw new InvalidOperationException(
                     "The current Ispant renderer baked an empty mesh: " + sourceRenderer.name + ".");
             }
+            RequireStaticMeshData(baked);
             return baked;
+        }
+
+        private static void RemoveRigAndAnimationData(Mesh mesh)
+        {
+            mesh.bindposes = Array.Empty<Matrix4x4>();
+            mesh.boneWeights = Array.Empty<BoneWeight>();
+            mesh.ClearBlendShapes();
+        }
+
+        private static void RequireStaticMeshData(Mesh mesh)
+        {
+            if (mesh.bindposes.Length != 0 ||
+                mesh.boneWeights.Length != 0 ||
+                mesh.blendShapeCount != 0)
+            {
+                throw new InvalidOperationException(
+                    "The baked Ispant mesh still contains rig or animation data: " +
+                    mesh.name + ".");
+            }
         }
 
         private static void TransformMeshIntoRootSpace(Mesh mesh, Matrix4x4 matrix)
@@ -259,7 +276,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 exportRoot.GetComponentsInChildren<Animation>(true).Length != 0)
             {
                 throw new InvalidOperationException(
-                    "The Ispant export root is not a pure four-mesh static model.");
+                    "The Ispant export root is not a pure two-mesh static model.");
             }
             var triangles = exportRoot.GetComponentsInChildren<MeshFilter>(true)
                 .Sum(item => TriangleCount(item.sharedMesh));
@@ -268,53 +285,9 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 throw new InvalidOperationException(
                     "The baked Ispant triangle total differs. Triangles=" + triangles + ".");
             }
-        }
-
-        private static void RequireCoherentMeshPlacement(
-            IReadOnlyList<Mesh> meshes,
-            IReadOnlyList<Renderer> sourceRenderers,
-            Transform sourceRoot)
-        {
-            var body = meshes.Single(mesh => string.Equals(
-                mesh.name,
-                "Ispant_Armed_Body",
-                StringComparison.Ordinal));
-            var crescent = meshes.Single(mesh => string.Equals(
-                mesh.name,
-                "Ispant_Crescent_Ornament",
-                StringComparison.Ordinal));
-            var eyes = meshes.Single(mesh => string.Equals(
-                mesh.name,
-                "Ispant_Reference_Eye_Slits",
-                StringComparison.Ordinal));
-
-            if (eyes.bounds.center.y >= crescent.bounds.center.y ||
-                eyes.bounds.max.y > body.bounds.max.y)
+            foreach (var filter in exportRoot.GetComponentsInChildren<MeshFilter>(true))
             {
-                throw new InvalidOperationException(
-                    "The baked Ispant eye slits are displaced above the crescent or body. " +
-                    "Body=" + VectorText(body.bounds.center) + "/" +
-                    VectorText(body.bounds.size) +
-                    ", Crescent=" + VectorText(crescent.bounds.center) + "/" +
-                    VectorText(crescent.bounds.size) +
-                    ", Eyes=" + VectorText(eyes.bounds.center) + "/" +
-                    VectorText(eyes.bounds.size) +
-                    ", SourceRootLocalScale=" + VectorText(sourceRoot.localScale) +
-                    ", SourceRootLossyScale=" + VectorText(sourceRoot.lossyScale) +
-                    ", Renderers=" + string.Join(";", sourceRenderers.Select(item =>
-                        SharedMesh(item).name +
-                        "[Type=" + item.GetType().Name +
-                        ",LocalPosition=" + VectorText(item.transform.localPosition) +
-                        ",LocalScale=" + VectorText(item.transform.localScale) +
-                        ",LossyScale=" + VectorText(item.transform.lossyScale) +
-                        ",WorldBounds=" + VectorText(item.bounds.center) + "/" +
-                        VectorText(item.bounds.size) +
-                        (item is SkinnedMeshRenderer skinned
-                            ? ",RootBone=" + (skinned.rootBone != null
-                                ? skinned.rootBone.name
-                                : "null")
-                            : string.Empty) +
-                        "]")) + ".");
+                RequireStaticMeshData(filter.sharedMesh);
             }
         }
 
