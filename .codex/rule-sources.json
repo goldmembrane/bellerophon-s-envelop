@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "requiredRuleDocuments": [
+    "AGENTS.md",
+    "docs/DESIGN_RULES.md",
+    "docs/MODELING_RULES.md",
+    "docs/ANIMATION_RULES.md"
+  ],
+  "rulePathRegexes": [
+    "(^|/)AGENTS(?:\\.override)?\\.md$",
+    "^docs/(?:.*/)?[^/]*_RULES\\.md$",
+    "^docs/agent-rules/(?:.*/)?[^/]+\\.md$",
+    "^docs/(?:.*/)?RULES\\.md$",
+    "^\\.codex/rules/(?:.*/)?[^/]+\\.md$"
+  ],
+  "excludedPathPrefixes": [
+    ".git/",
+    ".codex/state/",
+    ".analysis-temp/",
+    "Backups/",
+    "Library/",
+    "Temp/",
+    "Logs/",
+    "UserSettings/",
+    "Builds/",
+    "TestResults/",
+    "artSample/"
+  ],
+  "protectedFiles": [
+    ".codex/rule-sources.json",
+    ".codex/hooks.json",
+    ".codex/config.toml",
+    "docs/HARNESS.md"
+  ],
+  "protectedDirectoryPrefixes": [
+    ".codex/hooks/"
+  ]
+}

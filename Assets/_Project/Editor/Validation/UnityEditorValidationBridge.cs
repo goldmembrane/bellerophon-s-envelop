@@ -876,6 +876,24 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.ApplyIspantLegacySwordRightHandGrip,
                         "Only the slot-5 sword right-hand grip point was moved into the closed fist while preserving the legacy trajectory.");
                     break;
+                case "PreviewIspant06MarkedHiltFragmentRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.PreviewIspant06MarkedHiltFragmentRemoval,
+                        "The script-selected 56-triangle lineage was previewed against the preserved 455-triangle leg-armour restoration; a direct visual verdict is still required.");
+                    break;
+                case "ApplyIspant06MarkedHiltFragmentRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06MarkedHiltFragmentRemoval,
+                        "The script-selected 56-triangle lineage was removed while preserving the 455-triangle leg armour and bind poses; this does not assert that the marked hilt is resolved.");
+                    break;
+                case "CaptureIspant06MarkedHiltFragmentRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06MarkedHiltFragmentRemoval,
+                        "The resulting slot-6 body was captured once for direct visual review without an automatic completion verdict.");
+                    break;
                 case "InspectIspantSlashRunningComposite":
                     RunSynchronous(
                         request,
