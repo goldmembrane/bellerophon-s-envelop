@@ -34,6 +34,14 @@
     tr:nth-child(even) { background: #f9fafb; }
     ul { padding: 16px 16px 16px 36px; border-radius: 6px; background: #ffffff; }
     p { margin: 12px 0; }
+    .completion-legend { color: #64748b; margin: 4px 0 18px; }
+    .completion-check { color: #16a34a; font-weight: 800; }
+    tr.animation-complete { background: #ecfdf5; }
+    tr.animation-complete td:nth-child(3)::before {
+      content: "☑ ";
+      color: #16a34a;
+      font-weight: 800;
+    }
     @media (max-width: 900px) {
       main { padding: 16px; overflow-x: auto; }
       table { min-width: 1200px; }
@@ -43,6 +51,7 @@
 <body>
 <main>
 <h1>수송자(플레이어) 애니메이션 개별 명세</h1>
+<p class="completion-legend"><span class="completion-check">☑ 완료</span> 표시는 Unity 구현과 직접 시각 검증까지 통과한 제작 키다.</p>
 <h2>1. 명세 기준</h2>
 <ul>
 <li>원본 근거는 `docs/GAME_DESIGN_SOURCE.txt`다.</li>
@@ -53,13 +62,19 @@
 <li>`기획 미확정` 행은 제작 대상 식별용이며 구체 동작을 임의로 만들지 않는다.</li>
 <li>취소 조건의 `없음`은 해당 클립 재생 중 정상 취소를 허용하지 않는다는 뜻이다.</li>
 </ul>
+<h3>시점별 플레이어 표시 기준</h3>
+<ul>
+<li>본인 플레이어 화면에는 1인칭용 양팔과 손만 표시한다.</li>
+<li>다른 플레이어가 직접 볼 때와 CCTV 화면으로 볼 때는 해당 플레이어의 전신 모델과 전신 애니메이션을 표시한다.</li>
+<li>같은 게임플레이 상태를 기준으로 본인 화면의 1인칭 팔&#183;손 표현과 외부 시점의 전신 표현을 동기화한다.</li>
+</ul>
 <h2>2. 기본 이동과 자세</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-LOC-001</td><td>P0</td><td>Player_Idle</td><td>서 있는 대기</td><td>전신</td><td>반복</td><td>이동 입력 없음</td><td>자체 유지</td><td>이동&#183;행동 입력</td><td>필수 파생</td><td>14~15행</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-LOC-002</td><td>P0</td><td>Player_Walk_Forward</td><td>전진 걷기 루프</td><td>전신 하체</td><td>반복</td><td>Shift 없이 W 입력</td><td>대기</td><td>입력 해제&#183;달리기&#183;점프&#183;앉기&#183;피격</td><td>명시</td><td>15행</td></tr>
 <tr>
 <td>PLR-LOC-003</td><td>P0</td><td>Player_Walk_Backward</td><td>후진 걷기 루프</td><td>전신 하체</td><td>반복</td><td>Shift 없이 S 입력</td><td>대기</td><td>입력 해제&#183;달리기&#183;점프&#183;앉기&#183;피격</td><td>필수 파생</td><td>15행</td></tr>
@@ -86,6 +101,11 @@
 <tr>
 <td>PLR-LOC-033</td><td>P0</td><td>Player_Crouch_Exit</td><td>일어서기</td><td>전신</td><td>1회</td><td>Ctrl 해제와 머리 공간 확보</td><td>서 있는 대기</td><td>피격</td><td>필수 파생</td><td>15행</td></tr>
 </tbody></table>
+<h3>Shift 달리기 기준</h3>
+<ul>
+<li>원본 15행의 <code>Shift</code> 달리기와 170행&#183;291행의 <code>Shift</code> 대시는 같은 기능을 뜻하며, 별도 대시 기능은 두지 않는다.</li>
+<li>탈진 상태에서는 <code>Shift</code> 달리기를 사용할 수 없다.</li>
+</ul>
 <h3>점프 통합 기준</h3>
 <ul>
 <li><code>Player_Jump</code> 한 클립에 도약, 상승, 하강, 일반 착지를 모두 포함한다.</li>
@@ -118,33 +138,19 @@
 <tr>
 <td>PLR-HND-001</td><td>P0</td><td>Hands_Empty_Idle</td><td>빈손 대기</td><td>상체&#183;손</td><td>반복</td><td>손에 물체 없음</td><td>자체 유지</td><td>집기&#183;상호작용</td><td>필수 파생</td><td>15~16행</td></tr>
 <tr>
-<td>PLR-HND-002</td><td>P0</td><td>Hands_Pickup_Floor</td><td>바닥 물체 집기</td><td>상체&#183;손</td><td>1회</td><td>바닥 물체에 F</td><td>한손 또는 양손 휴대</td><td>피격</td><td>명시</td><td>15행</td></tr>
-<tr>
-<td>PLR-HND-003</td><td>P0</td><td>Hands_Pickup_Shelf</td><td>선반 물체 집기</td><td>상체&#183;손</td><td>1회</td><td>선반 물체에 F</td><td>한손 또는 양손 휴대</td><td>피격</td><td>명시</td><td>15행</td></tr>
-<tr>
 <td>PLR-HND-004</td><td>P0</td><td>Hands_Carry_OneHand</td><td>한손 물체 대기</td><td>상체&#183;손</td><td>반복</td><td>한손 물체 소지</td><td>자체 유지</td><td>사용&#183;버리기</td><td>필수 파생</td><td>148행, 151~153행</td></tr>
 <tr>
 <td>PLR-HND-005</td><td>P0</td><td>Hands_Carry_TwoHand</td><td>양손 물체 대기</td><td>상체&#183;손</td><td>반복</td><td>양손 물체 소지</td><td>자체 유지</td><td>사용&#183;보관</td><td>필수 파생</td><td>148~150행</td></tr>
-<tr>
-<td>PLR-HND-006</td><td>P1</td><td>Hands_Draw_Pocket</td><td>주머니 장비 꺼내기</td><td>상체&#183;손</td><td>1회</td><td>주머니 장비 선택</td><td>장비 휴대</td><td>피격</td><td>필수 파생</td><td>148~153행</td></tr>
-<tr>
-<td>PLR-HND-007</td><td>P1</td><td>Hands_Stow_Pocket</td><td>주머니 장비 넣기</td><td>상체&#183;손</td><td>1회</td><td>다른 장비 선택</td><td>빈손 또는 다음 장비</td><td>피격</td><td>필수 파생</td><td>148~153행</td></tr>
 <tr>
 <td>PLR-HND-008</td><td>P1</td><td>Hands_Draw_Back</td><td>등 장비 꺼내기</td><td>상체&#183;손</td><td>1회</td><td>등 장비 선택</td><td>장비 휴대</td><td>피격</td><td>필수 파생</td><td>149~150행, 158행</td></tr>
 <tr>
 <td>PLR-HND-009</td><td>P1</td><td>Hands_Stow_Back</td><td>등 장비 넣기</td><td>상체&#183;손</td><td>1회</td><td>다른 장비 선택</td><td>빈손 또는 다음 장비</td><td>피격</td><td>필수 파생</td><td>149~150행, 158행</td></tr>
 <tr>
-<td>PLR-HND-010</td><td>P0</td><td>Hands_Drop_Item</td><td>손 물체 놓기</td><td>상체&#183;손</td><td>1회</td><td>B 입력</td><td>빈손 대기</td><td>없음</td><td>명시</td><td>15행</td></tr>
+<td>PLR-HND-011</td><td>P0</td><td>Hands_Throw_Ready</td><td>투척 준비</td><td>상체&#183;손</td><td>1회 후 자세 유지</td><td>우클릭 입력</td><td>자체 유지</td><td>좌클릭&#183;우클릭 해제&#183;피격</td><td>명시</td><td>15행, 18행</td></tr>
 <tr>
-<td>PLR-HND-011</td><td>P0</td><td>Hands_Throw_Enter</td><td>투척 준비 시작</td><td>상체&#183;손</td><td>1회</td><td>우클릭 입력</td><td>투척 조준 대기</td><td>피격</td><td>명시</td><td>15행</td></tr>
+<td>PLR-HND-013</td><td>P0</td><td>Hands_Throw_Release</td><td>물체 던지기</td><td>상체&#183;손</td><td>1회</td><td>투척 준비 중 좌클릭</td><td>빈손 대기</td><td>없음</td><td>명시</td><td>15행, 148행, 153행</td></tr>
 <tr>
-<td>PLR-HND-012</td><td>P0</td><td>Hands_Throw_Aim</td><td>투척 조준 대기</td><td>상체&#183;손</td><td>반복</td><td>우클릭 유지</td><td>자체 유지</td><td>우클릭 해제&#183;피격</td><td>명시</td><td>15행, 18행</td></tr>
-<tr>
-<td>PLR-HND-013</td><td>P0</td><td>Hands_Throw_Release</td><td>물체 던지기</td><td>상체&#183;손</td><td>1회</td><td>조준 중 좌클릭</td><td>빈손 대기</td><td>없음</td><td>명시</td><td>15행, 148행, 153행</td></tr>
-<tr>
-<td>PLR-HND-014</td><td>P0</td><td>Hands_Throw_Cancel</td><td>투척 취소</td><td>상체&#183;손</td><td>1회</td><td>조준 중 우클릭 해제</td><td>기존 휴대</td><td>피격</td><td>명시</td><td>148행, 153행</td></tr>
-<tr>
-<td>PLR-HND-015</td><td>P0</td><td>Hands_Use_Generic</td><td>범용 물체 사용</td><td>상체&#183;손</td><td>1회</td><td>사용 가능한 물체로 좌클릭</td><td>기존 휴대</td><td>피격</td><td>명시</td><td>15행</td></tr>
+<td>PLR-HND-014</td><td>P0</td><td>Hands_Throw_Cancel</td><td>투척 취소</td><td>상체&#183;손</td><td>1회</td><td>투척 준비 중 우클릭 해제</td><td>기존 휴대</td><td>피격</td><td>명시</td><td>148행, 153행</td></tr>
 </tbody></table>
 <h2>4. 막대기</h2>
 <table><thead><tr>
@@ -153,23 +159,17 @@
 <tr>
 <td>PLR-STK-001</td><td>P0</td><td>Stick_Carry</td><td>막대기 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>막대기 소지와 비공격 상태</td><td>자체 유지</td><td>공격&#183;투척</td><td>명시</td><td>148행</td></tr>
 <tr>
-<td>PLR-STK-002</td><td>P0</td><td>Stick_Grip_TwoHand</td><td>막대기 양손 전환</td><td>상체&#183;손</td><td>1회</td><td>좌클릭 공격 시작</td><td>머리 위 준비</td><td>피격</td><td>명시</td><td>148행</td></tr>
+<td>PLR-STK-002</td><td>P0</td><td>Stick_Grip_TwoHand</td><td>막대기 양손 전환</td><td>상체&#183;손</td><td>1회</td><td>좌클릭 공격 시작</td><td>전방 공격</td><td>피격</td><td>명시</td><td>148행</td></tr>
 <tr>
-<td>PLR-STK-003</td><td>P0</td><td>Stick_Windup_Overhead</td><td>막대기 머리 위 준비</td><td>상체&#183;손</td><td>1회</td><td>양손 전환 완료</td><td>내려찍기</td><td>피격</td><td>필수 파생</td><td>148행</td></tr>
+<td>PLR-STK-003</td><td>P0</td><td>Stick_Attack_Forward</td><td>막대기 전방 공격</td><td>상체&#183;손</td><td>1회</td><td>양손 전환 완료</td><td>한손 전환</td><td>피격</td><td>사용자 확정</td><td>148행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-STK-004</td><td>P0</td><td>Stick_Smash</td><td>막대기 내려찍기</td><td>상체&#183;손</td><td>1회</td><td>공격 프레임 도달</td><td>타격 회수</td><td>없음</td><td>명시</td><td>148행</td></tr>
+<td>PLR-STK-006</td><td>P0</td><td>Stick_Grip_OneHand</td><td>막대기 한손 전환</td><td>상체&#183;손</td><td>1회</td><td>전방 공격 완료</td><td>한손 대기</td><td>피격</td><td>명시</td><td>148행</td></tr>
 <tr>
-<td>PLR-STK-005</td><td>P0</td><td>Stick_Recover</td><td>막대기 타격 회수</td><td>상체&#183;손</td><td>1회</td><td>내려찍기 완료</td><td>한손 전환</td><td>피격</td><td>필수 파생</td><td>148행</td></tr>
+<td>PLR-STK-007</td><td>P0</td><td>Stick_Throw_Ready</td><td>막대기 투척 준비</td><td>상체&#183;손</td><td>1회 후 자세 유지</td><td>막대기 소지 중 우클릭</td><td>자체 유지</td><td>좌클릭&#183;우클릭 해제&#183;피격</td><td>명시</td><td>148행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-STK-006</td><td>P0</td><td>Stick_Grip_OneHand</td><td>막대기 한손 전환</td><td>상체&#183;손</td><td>1회</td><td>타격 회수 완료</td><td>한손 대기</td><td>피격</td><td>명시</td><td>148행</td></tr>
+<td>PLR-STK-009</td><td>P0</td><td>Stick_Throw_Release</td><td>막대기 던지기</td><td>상체&#183;손</td><td>1회</td><td>투척 준비 중 좌클릭</td><td>빈손 대기</td><td>없음</td><td>명시</td><td>148행</td></tr>
 <tr>
-<td>PLR-STK-007</td><td>P0</td><td>Stick_Throw_Enter</td><td>막대기 투척 준비</td><td>상체&#183;손</td><td>1회</td><td>막대기 소지 중 우클릭</td><td>막대기 투척 조준</td><td>피격</td><td>명시</td><td>148행</td></tr>
-<tr>
-<td>PLR-STK-008</td><td>P0</td><td>Stick_Throw_Aim</td><td>막대기 투척 조준</td><td>상체&#183;손</td><td>반복</td><td>우클릭 유지</td><td>자체 유지</td><td>우클릭 해제&#183;피격</td><td>명시</td><td>148행</td></tr>
-<tr>
-<td>PLR-STK-009</td><td>P0</td><td>Stick_Throw_Release</td><td>막대기 던지기</td><td>상체&#183;손</td><td>1회</td><td>조준 중 좌클릭</td><td>빈손 대기</td><td>없음</td><td>명시</td><td>148행</td></tr>
-<tr>
-<td>PLR-STK-010</td><td>P0</td><td>Stick_Throw_Cancel</td><td>막대기 투척 취소</td><td>상체&#183;손</td><td>1회</td><td>조준 중 우클릭 해제</td><td>한손 대기</td><td>피격</td><td>명시</td><td>148행</td></tr>
+<td>PLR-STK-010</td><td>P0</td><td>Stick_Throw_Cancel</td><td>막대기 투척 취소</td><td>상체&#183;손</td><td>1회</td><td>투척 준비 중 우클릭 해제</td><td>한손 대기</td><td>피격</td><td>명시</td><td>148행</td></tr>
 </tbody></table>
 <h2>5. 머스켓</h2>
 <table><thead><tr>
@@ -184,13 +184,11 @@
 <tr>
 <td>PLR-MUS-004</td><td>P1</td><td>Musket_HipFire</td><td>머스켓 비조준 발사</td><td>상체&#183;손</td><td>1회</td><td>비조준 상태에서 좌클릭</td><td>양손 대기</td><td>없음</td><td>명시</td><td>149행</td></tr>
 <tr>
-<td>PLR-MUS-005</td><td>P1</td><td>Musket_Aim_Enter</td><td>머스켓 조준 시작</td><td>상체&#183;손</td><td>1회</td><td>우클릭 입력</td><td>조준 대기</td><td>피격</td><td>명시</td><td>149행</td></tr>
+<td>PLR-MUS-005</td><td>P1</td><td>Musket_Aim</td><td>머스켓 조준</td><td>상체&#183;손</td><td>1회 후 자세 유지</td><td>우클릭 입력</td><td>자체 유지</td><td>좌클릭&#183;우클릭 해제&#183;피격</td><td>명시</td><td>149행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-MUS-006</td><td>P1</td><td>Musket_Aim_Idle</td><td>머스켓 조준 대기</td><td>상체&#183;손</td><td>반복</td><td>우클릭 유지</td><td>자체 유지</td><td>우클릭 해제&#183;피격</td><td>명시</td><td>149행</td></tr>
+<td>PLR-MUS-007</td><td>P1</td><td>Musket_Aim_Fire</td><td>머스켓 조준 발사</td><td>상체&#183;손</td><td>1회</td><td>머스켓 조준 중 좌클릭</td><td>머스켓 조준</td><td>없음</td><td>명시</td><td>149행</td></tr>
 <tr>
-<td>PLR-MUS-007</td><td>P1</td><td>Musket_Aim_Fire</td><td>머스켓 조준 발사</td><td>상체&#183;손</td><td>1회</td><td>조준 중 좌클릭</td><td>조준 대기</td><td>없음</td><td>명시</td><td>149행</td></tr>
-<tr>
-<td>PLR-MUS-008</td><td>P1</td><td>Musket_Aim_Exit</td><td>머스켓 조준 해제</td><td>상체&#183;손</td><td>1회</td><td>우클릭 해제</td><td>양손 대기</td><td>피격</td><td>필수 파생</td><td>149행</td></tr>
+<td>PLR-MUS-008</td><td>P1</td><td>Musket_Aim_Exit</td><td>머스켓 조준 해제</td><td>상체&#183;손</td><td>1회</td><td>머스켓 조준 중 우클릭 해제</td><td>양손 대기</td><td>피격</td><td>필수 파생</td><td>149행</td></tr>
 <tr>
 <td>PLR-MUS-009</td><td>P1</td><td>Musket_Reload</td><td>머스켓 재장전</td><td>상체&#183;손</td><td>1회</td><td>R 입력과 예비 탄창 존재</td><td>양손 대기</td><td>피격</td><td>명시</td><td>154행</td></tr>
 </tbody></table>
@@ -211,9 +209,7 @@
 <tr>
 <td>PLR-SHG-006</td><td>P1</td><td>Shotgun_ButtMode_Idle</td><td>개머리판 준비</td><td>상체&#183;손</td><td>반복</td><td>타격 모드 유지</td><td>자체 유지</td><td>우클릭&#183;피격</td><td>필수 파생</td><td>150행</td></tr>
 <tr>
-<td>PLR-SHG-007</td><td>P1</td><td>Shotgun_ButtStrike</td><td>개머리판 찍기</td><td>상체&#183;손</td><td>1회</td><td>타격 모드에서 좌클릭</td><td>개머리판 회수</td><td>없음</td><td>명시</td><td>150행</td></tr>
-<tr>
-<td>PLR-SHG-008</td><td>P1</td><td>Shotgun_ButtStrike_Recover</td><td>개머리판 회수</td><td>상체&#183;손</td><td>1회</td><td>찍기 완료</td><td>개머리판 준비</td><td>피격</td><td>필수 파생</td><td>150행</td></tr>
+<td>PLR-SHG-007</td><td>P1</td><td>Shotgun_ButtStrike</td><td>개머리판 찍기</td><td>상체&#183;손</td><td>1회</td><td>타격 모드에서 좌클릭</td><td>개머리판 준비</td><td>피격</td><td>명시</td><td>150행, 사용자 확정</td></tr>
 <tr>
 <td>PLR-SHG-009</td><td>P1</td><td>Shotgun_ButtMode_Exit</td><td>개머리판 모드 해제</td><td>상체&#183;손</td><td>1회</td><td>우클릭 입력</td><td>양손 대기</td><td>피격</td><td>명시</td><td>150행</td></tr>
 <tr>
@@ -226,59 +222,45 @@
 <tr>
 <td>PLR-FLM-001</td><td>P1</td><td>Flamethrower_Idle</td><td>화염방사기 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>화염방사기 소지</td><td>자체 유지</td><td>발사 또는 원격 모드</td><td>명시</td><td>151행</td></tr>
 <tr>
-<td>PLR-FLM-002</td><td>P1</td><td>Flamethrower_Valve_Open</td><td>화염방사기 밸브 열기</td><td>상체&#183;손</td><td>1회</td><td>좌클릭 입력</td><td>화염 방사</td><td>피격</td><td>명시</td><td>151행</td></tr>
+<td>PLR-FLM-003</td><td>P1</td><td>Flamethrower_Fire</td><td>화염 방사</td><td>상체&#183;손</td><td>개폐 포함 최대 10초</td><td>좌클릭 입력</td><td>밸브 닫기 후 한손 대기</td><td>좌클릭 해제&#183;10초 경과 시 닫기 구간, 피격 시 취소</td><td>명시</td><td>151행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-FLM-003</td><td>P1</td><td>Flamethrower_Fire</td><td>화염 방사</td><td>상체&#183;손</td><td>최대 10초 반복</td><td>좌클릭 유지</td><td>밸브 닫기</td><td>피격&#183;10초 경과</td><td>명시</td><td>151행</td></tr>
+<td>PLR-FLM-005</td><td>P1</td><td>Flamethrower_Remote_Mode</td><td>원격 폭탄 모드</td><td>상체&#183;손</td><td>1회 후 자세 유지</td><td>우클릭으로 원격 폭탄 모드 전환</td><td>폭파 장치를 든 자세 유지</td><td>연료 탱크 내려놓기&#183;피격</td><td>명시</td><td>151행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-FLM-004</td><td>P1</td><td>Flamethrower_Valve_Close</td><td>화염방사기 밸브 닫기</td><td>상체&#183;손</td><td>1회</td><td>좌클릭 해제 또는 10초 경과</td><td>한손 대기</td><td>피격</td><td>필수 파생</td><td>151행</td></tr>
-<tr>
-<td>PLR-FLM-005</td><td>P1</td><td>Flamethrower_Remote_Draw</td><td>폭파 장치 꺼내기</td><td>상체&#183;손</td><td>1회</td><td>우클릭 입력</td><td>폭파 장치 대기</td><td>피격</td><td>명시</td><td>151행</td></tr>
-<tr>
-<td>PLR-FLM-006</td><td>P1</td><td>Flamethrower_Remote_Idle</td><td>폭파 장치 대기</td><td>상체&#183;손</td><td>반복</td><td>원격 폭탄 모드</td><td>자체 유지</td><td>모드 해제&#183;피격</td><td>필수 파생</td><td>151행</td></tr>
-<tr>
-<td>PLR-FLM-007</td><td>P1</td><td>Flamethrower_Tank_Place</td><td>연료 탱크 내려놓기</td><td>전신&#183;손</td><td>1회</td><td>원격 모드에서 좌클릭</td><td>폭파 장치 대기</td><td>피격</td><td>명시</td><td>151행</td></tr>
+<td>PLR-FLM-007</td><td>P1</td><td>Flamethrower_Tank_Place</td><td>연료 탱크 내려놓기</td><td>전신&#183;손</td><td>1회</td><td>원격 폭탄 모드에서 좌클릭&#183;3인칭 전환 또는 자폭 모드에서 Q</td><td>탱크 설치 상태</td><td>피격</td><td>명시</td><td>151행, 156행, 사용자 확정</td></tr>
 <tr>
 <td>PLR-FLM-008</td><td>P1</td><td>Flamethrower_Remote_Detonate</td><td>폭파 장치 버튼 누르기</td><td>상체&#183;손</td><td>1회</td><td>설치 후 Q 입력</td><td>한손 대기</td><td>없음</td><td>명시</td><td>151행</td></tr>
 <tr>
 <td>PLR-FLM-009</td><td>P1</td><td>Flamethrower_Tank_Recover</td><td>연료 탱크 등에 올리기</td><td>전신&#183;손</td><td>1회</td><td>설치 탱크에 F</td><td>한손 대기</td><td>피격</td><td>명시</td><td>151행</td></tr>
-<tr>
-<td>PLR-FLM-010</td><td>P1</td><td>Flamethrower_Tank_EmergencyPlace</td><td>자폭 탱크 내려놓기</td><td>전신&#183;손</td><td>1회</td><td>자폭 모드에서 Q</td><td>폭발 회피 상태</td><td>피격</td><td>명시</td><td>156행</td></tr>
 </tbody></table>
 <h2>8. 전류봉</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
 <tr>
-<td>PLR-BAT-001</td><td>P1</td><td>Baton_Idle</td><td>전류봉 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>전류봉 소지</td><td>자체 유지</td><td>공격&#183;방전 모드</td><td>명시</td><td>152행</td></tr>
+<td>PLR-BAT-001</td><td>P1</td><td>Baton_Idle</td><td>전류봉 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>전류봉 소지</td><td>자체 유지</td><td>공격&#183;전류 방출 모드</td><td>명시</td><td>152행</td></tr>
 <tr>
 <td>PLR-BAT-002</td><td>P1</td><td>Baton_Swing_Right</td><td>전류봉 오른쪽 휘두르기</td><td>상체&#183;손</td><td>1회</td><td>좌클릭</td><td>한손 대기</td><td>없음</td><td>명시</td><td>152행</td></tr>
 <tr>
-<td>PLR-BAT-003</td><td>P1</td><td>Baton_Discharge_Enter</td><td>전류 방출 모드 시작</td><td>상체&#183;손</td><td>1회</td><td>우클릭</td><td>방전 준비</td><td>피격</td><td>명시</td><td>152행</td></tr>
+<td>PLR-BAT-003</td><td>P1</td><td>Baton_Discharge_Mode</td><td>전류 방출 모드</td><td>상체&#183;손</td><td>1회 후 자세 유지</td><td>우클릭 입력</td><td>자체 유지</td><td>좌클릭&#183;우클릭&#183;피격</td><td>명시</td><td>152행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-BAT-004</td><td>P1</td><td>Baton_Discharge_Idle</td><td>전류 방출 준비</td><td>상체&#183;손</td><td>반복</td><td>방전 모드 유지</td><td>자체 유지</td><td>우클릭&#183;피격</td><td>필수 파생</td><td>152행</td></tr>
+<td>PLR-BAT-005</td><td>P1</td><td>Baton_Discharge_Fire</td><td>전류 방출</td><td>상체&#183;손</td><td>1회</td><td>전류 방출 모드에서 좌클릭</td><td>전류 방출 모드</td><td>없음</td><td>명시</td><td>152행</td></tr>
 <tr>
-<td>PLR-BAT-005</td><td>P1</td><td>Baton_Discharge_Fire</td><td>전류 방출</td><td>상체&#183;손</td><td>1회</td><td>방전 모드에서 좌클릭</td><td>방전 준비</td><td>없음</td><td>명시</td><td>152행</td></tr>
-<tr>
-<td>PLR-BAT-006</td><td>P1</td><td>Baton_Discharge_Exit</td><td>전류 방출 모드 해제</td><td>상체&#183;손</td><td>1회</td><td>우클릭</td><td>한손 대기</td><td>피격</td><td>명시</td><td>152행</td></tr>
+<td>PLR-BAT-006</td><td>P1</td><td>Baton_Discharge_Exit</td><td>전류 방출 모드 해제</td><td>상체&#183;손</td><td>1회</td><td>전류 방출 모드에서 우클릭</td><td>한손 대기</td><td>피격</td><td>명시</td><td>152행</td></tr>
 </tbody></table>
 <h2>9. 단검</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
 <tr>
-<td>PLR-DAG-001</td><td>P1</td><td>Dagger_Idle</td><td>단검 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>단검 소지</td><td>자체 유지</td><td>공격&#183;투척</td><td>명시</td><td>153행</td></tr>
+<td>PLR-DAG-001</td><td>P1</td><td>Dagger_Idle</td><td>단검 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>단검 소지</td><td>자체 유지</td><td>공격&#183;투척 모드</td><td>명시</td><td>153행</td></tr>
 <tr>
-<td>PLR-DAG-002</td><td>P1</td><td>Dagger_Stab</td><td>단검 찌르기</td><td>상체&#183;손</td><td>1회</td><td>좌클릭</td><td>한손 대기</td><td>없음</td><td>명시</td><td>153행</td></tr>
+<td>PLR-DAG-002</td><td>P1</td><td>Dagger_Stab</td><td>단검 찌르기</td><td>상체&#183;손</td><td>1회 또는 홀드 반복&#183;4초간 재생 속도 증가(연사 딜레이 2초→1.5초)</td><td>좌클릭 입력 또는 유지</td><td>한손 대기</td><td>좌클릭 해제&#183;피격</td><td>명시</td><td>153행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-DAG-003</td><td>P1</td><td>Dagger_Stab_Rapid</td><td>단검 빠른 찌르기</td><td>상체&#183;손</td><td>조건 반복</td><td>좌클릭 4초 유지</td><td>한손 대기</td><td>좌클릭 해제&#183;피격</td><td>명시</td><td>153행</td></tr>
+<td>PLR-DAG-004</td><td>P1</td><td>Dagger_Throw_Mode</td><td>단검 투척 모드</td><td>상체&#183;손</td><td>1회 후 자세 유지</td><td>우클릭 입력</td><td>자체 유지</td><td>좌클릭&#183;우클릭 해제&#183;피격</td><td>명시</td><td>153행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-DAG-004</td><td>P1</td><td>Dagger_Throw_Enter</td><td>단검 투척 준비</td><td>상체&#183;손</td><td>1회</td><td>우클릭</td><td>단검 투척 조준</td><td>피격</td><td>명시</td><td>153행</td></tr>
+<td>PLR-DAG-006</td><td>P1</td><td>Dagger_Throw_Release</td><td>단검 던지기</td><td>상체&#183;손</td><td>1회</td><td>단검 투척 모드에서 좌클릭</td><td>빈손 대기</td><td>없음</td><td>명시</td><td>153행</td></tr>
 <tr>
-<td>PLR-DAG-005</td><td>P1</td><td>Dagger_Throw_Aim</td><td>단검 투척 조준</td><td>상체&#183;손</td><td>반복</td><td>우클릭 유지</td><td>자체 유지</td><td>우클릭 해제&#183;피격</td><td>명시</td><td>153행</td></tr>
-<tr>
-<td>PLR-DAG-006</td><td>P1</td><td>Dagger_Throw_Release</td><td>단검 던지기</td><td>상체&#183;손</td><td>1회</td><td>조준 중 좌클릭</td><td>빈손 대기</td><td>없음</td><td>명시</td><td>153행</td></tr>
-<tr>
-<td>PLR-DAG-007</td><td>P1</td><td>Dagger_Throw_Cancel</td><td>단검 투척 취소</td><td>상체&#183;손</td><td>1회</td><td>조준 중 우클릭 해제</td><td>한손 대기</td><td>피격</td><td>명시</td><td>153행</td></tr>
+<td>PLR-DAG-007</td><td>P1</td><td>Dagger_Throw_Cancel</td><td>단검 투척 취소</td><td>상체&#183;손</td><td>1회</td><td>단검 투척 모드에서 우클릭 해제</td><td>한손 대기</td><td>피격</td><td>명시</td><td>153행</td></tr>
 </tbody></table>
 <h2>10. 제압 방패</h2>
 <table><thead><tr>
@@ -291,48 +273,34 @@
 <tr>
 <td>PLR-SHD-003</td><td>P1</td><td>Shield_Stow</td><td>제압 방패 등에 넣기</td><td>상체&#183;손</td><td>0.5초</td><td>양손 장비 선택</td><td>다음 장비</td><td>피격</td><td>명시</td><td>158행</td></tr>
 <tr>
-<td>PLR-SHD-004</td><td>P1</td><td>Shield_Raise</td><td>제압 방패 올리기</td><td>상체&#183;손</td><td>1회</td><td>좌클릭 방어 입력</td><td>방어 대기</td><td>피격</td><td>명시</td><td>158행</td></tr>
+<td>PLR-SHD-004</td><td>P1</td><td>Shield_Raise</td><td>제압 방패 올리기</td><td>상체&#183;손</td><td>1회</td><td>방패를 내린 상태에서 좌클릭</td><td>방어 대기</td><td>피격</td><td>사용자 확정</td><td>158행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-SHD-005</td><td>P1</td><td>Shield_Block_Idle</td><td>제압 방패 방어 대기</td><td>상체&#183;손</td><td>반복</td><td>방어 입력 유지 또는 토글</td><td>자체 유지</td><td>방어 종료 또는 파손</td><td>필수 파생</td><td>158행</td></tr>
+<td>PLR-SHD-005</td><td>P1</td><td>Shield_Block_Idle</td><td>제압 방패 방어 대기</td><td>상체&#183;손</td><td>반복</td><td>방패 올리기 완료와 방어 토글 활성</td><td>자체 유지</td><td>좌클릭 토글 해제&#183;파손</td><td>사용자 확정</td><td>158행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-SHD-006</td><td>P1</td><td>Shield_Lower</td><td>제압 방패 내리기</td><td>상체&#183;손</td><td>1회</td><td>방어 종료 입력</td><td>한손 대기</td><td>피격</td><td>필수 파생</td><td>158행</td></tr>
+<td>PLR-SHD-006</td><td>P1</td><td>Shield_Lower</td><td>제압 방패 내리기</td><td>상체&#183;손</td><td>1회</td><td>방어 대기 중 좌클릭</td><td>한손 대기</td><td>피격</td><td>사용자 확정</td><td>158행, 사용자 확정</td></tr>
 <tr>
 <td>PLR-SHD-007</td><td>P1</td><td>Shield_Block_Impact</td><td>제압 방패 충격 반응</td><td>상체&#183;손</td><td>1회</td><td>방어 성공</td><td>방어 대기</td><td>방패 파손</td><td>필수 파생</td><td>158행</td></tr>
 <tr>
 <td>PLR-SHD-008</td><td>P1</td><td>Shield_Break_Reaction</td><td>제압 방패 파손 반응</td><td>상체&#183;손</td><td>1회</td><td>방패 내구도 0</td><td>빈손 대기</td><td>없음</td><td>필수 파생</td><td>158행</td></tr>
 </tbody></table>
+<ul>
+<li>제압 방패 방어는 좌클릭 토글 방식이다. 방패가 내려가 있을 때 좌클릭하면 올리고, 방어 대기 중 다시 좌클릭하면 내린다.</li>
+<li>방어 활성 여부는 자세와 함께 <code>PLR-LNK-014</code>의 VFX로 쉽게 구분한다.</li>
+</ul>
 <h2>11. 착용형 방호 장비</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
 <tr>
-<td>PLR-ARM-001</td><td>P2</td><td>Armor_Impact_Equip</td><td>타격 방호복 입기</td><td>전신&#183;손</td><td>미정</td><td>장착 입력</td><td>착용 상태</td><td>미정</td><td>기획 미확정</td><td>105행</td></tr>
+<td>PLR-ARM-001</td><td>P2</td><td>Armor_Protective_Idle</td><td>방호복 장착 정적 자세</td><td>전신</td><td>정적 유지</td><td>방호복 장착</td><td>자체 유지</td><td>장비 해제</td><td>사용자 확정</td><td>159행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-ARM-002</td><td>P2</td><td>Armor_Impact_Unequip</td><td>타격 방호복 벗기</td><td>전신&#183;손</td><td>미정</td><td>해제 입력</td><td>미착용 상태</td><td>미정</td><td>기획 미확정</td><td>105행</td></tr>
+<td>PLR-ARM-005</td><td>P2</td><td>Armor_Insulated_Idle</td><td>절연복 장착 정적 자세</td><td>전신</td><td>정적 유지</td><td>절연복 장착</td><td>자체 유지</td><td>장비 해제</td><td>사용자 확정</td><td>160행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-ARM-003</td><td>P2</td><td>Armor_Slash_Equip</td><td>참격 방호복 입기</td><td>전신&#183;손</td><td>미정</td><td>장착 입력</td><td>착용 상태</td><td>미정</td><td>기획 미확정</td><td>105행</td></tr>
+<td>PLR-ARM-007</td><td>P2</td><td>Armor_Fireproof_Idle</td><td>방염복 장착 정적 자세</td><td>전신</td><td>정적 유지</td><td>방염복 장착</td><td>자체 유지</td><td>장비 해제</td><td>사용자 확정</td><td>161행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-ARM-004</td><td>P2</td><td>Armor_Slash_Unequip</td><td>참격 방호복 벗기</td><td>전신&#183;손</td><td>미정</td><td>해제 입력</td><td>미착용 상태</td><td>미정</td><td>기획 미확정</td><td>105행</td></tr>
+<td>PLR-ARM-009</td><td>P2</td><td>Armor_Head_Idle</td><td>머리 보호대 장착 정적 자세</td><td>머리</td><td>정적 유지</td><td>머리 보호대 장착</td><td>자체 유지</td><td>장비 해제</td><td>사용자 확정</td><td>162행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-ARM-005</td><td>P2</td><td>Armor_Insulated_Equip</td><td>절연복 입기</td><td>전신&#183;손</td><td>미정</td><td>장착 입력</td><td>착용 상태</td><td>미정</td><td>기획 미확정</td><td>160행</td></tr>
-<tr>
-<td>PLR-ARM-006</td><td>P2</td><td>Armor_Insulated_Unequip</td><td>절연복 벗기</td><td>전신&#183;손</td><td>미정</td><td>해제 입력</td><td>미착용 상태</td><td>미정</td><td>기획 미확정</td><td>160행</td></tr>
-<tr>
-<td>PLR-ARM-007</td><td>P2</td><td>Armor_Fireproof_Equip</td><td>방염복 입기</td><td>전신&#183;손</td><td>미정</td><td>장착 입력</td><td>착용 상태</td><td>미정</td><td>기획 미확정</td><td>161행</td></tr>
-<tr>
-<td>PLR-ARM-008</td><td>P2</td><td>Armor_Fireproof_Unequip</td><td>방염복 벗기</td><td>전신&#183;손</td><td>미정</td><td>해제 입력</td><td>미착용 상태</td><td>미정</td><td>기획 미확정</td><td>161행</td></tr>
-<tr>
-<td>PLR-ARM-009</td><td>P2</td><td>Armor_Head_Equip</td><td>머리 보호대 쓰기</td><td>머리&#183;손</td><td>미정</td><td>장착 입력</td><td>착용 상태</td><td>미정</td><td>기획 미확정</td><td>162행</td></tr>
-<tr>
-<td>PLR-ARM-010</td><td>P2</td><td>Armor_Head_Unequip</td><td>머리 보호대 벗기</td><td>머리&#183;손</td><td>미정</td><td>해제 입력</td><td>미착용 상태</td><td>미정</td><td>기획 미확정</td><td>162행</td></tr>
-<tr>
-<td>PLR-ARM-011</td><td>P2</td><td>Armor_Ballistic_Equip</td><td>방탄 보호복 입기</td><td>전신&#183;손</td><td>미정</td><td>장착 입력</td><td>착용 상태</td><td>미정</td><td>기획 미확정</td><td>105행</td></tr>
-<tr>
-<td>PLR-ARM-012</td><td>P2</td><td>Armor_Ballistic_Unequip</td><td>방탄 보호복 벗기</td><td>전신&#183;손</td><td>미정</td><td>해제 입력</td><td>미착용 상태</td><td>미정</td><td>기획 미확정</td><td>105행</td></tr>
-<tr>
-<td>PLR-ARM-013</td><td>P2</td><td>Armor_Physical_Equip</td><td>물리 방호복 입기</td><td>전신&#183;손</td><td>미정</td><td>장착 입력</td><td>착용 상태</td><td>미정</td><td>기획 미확정</td><td>184행</td></tr>
-<tr>
-<td>PLR-ARM-014</td><td>P2</td><td>Armor_Physical_Unequip</td><td>물리 방호복 벗기</td><td>전신&#183;손</td><td>미정</td><td>해제 입력</td><td>미착용 상태</td><td>미정</td><td>기획 미확정</td><td>184행</td></tr>
+<td>PLR-ARM-013</td><td>P2</td><td>Armor_Physical_Idle</td><td>물리 방호복 장착 정적 자세</td><td>전신</td><td>정적 유지</td><td>물리 방호복 장착</td><td>자체 유지</td><td>장비 해제</td><td>사용자 확정</td><td>184행, 사용자 확정</td></tr>
 </tbody></table>
 <h2>12. 치료와 보호막 물품</h2>
 <table><thead><tr>
@@ -345,57 +313,41 @@
 <tr>
 <td>PLR-MED-003</td><td>P1</td><td>Bandage_Wrap</td><td>허리에 붕대 감기</td><td>상체&#183;손</td><td>총 과정 3초</td><td>지혈제 동작 완료</td><td>기존 휴대</td><td>피격</td><td>명시</td><td>165행</td></tr>
 <tr>
-<td>PLR-MED-004</td><td>P1</td><td>Battery_Aux_Plug</td><td>보조 배터리 팔 연결</td><td>상체&#183;손</td><td>1초</td><td>사용 입력</td><td>기존 휴대</td><td>피격</td><td>명시</td><td>166행</td></tr>
+<td>PLR-MED-004</td><td>P1</td><td>Battery_Aux_Plug</td><td>보조 배터리 팔 연결</td><td>상체&#183;손</td><td>1초</td><td>사용 입력</td><td>기존 휴대</td><td>피격</td><td>사용자 확정</td><td>166행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-MED-005</td><td>P1</td><td>Battery_Shield_Place</td><td>보호막 충전 배터리 내려놓기</td><td>전신&#183;손</td><td>1회</td><td>사용 입력</td><td>배터리 작동</td><td>피격</td><td>명시</td><td>167행</td></tr>
+<td>PLR-MED-007</td><td>P1</td><td>Converter_Shield_Plug</td><td>보호막 전환기 팔 연결</td><td>상체&#183;손</td><td>1초</td><td>사용 입력</td><td>기존 휴대 또는 사망</td><td>피격</td><td>사용자 확정</td><td>168행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-MED-006</td><td>P1</td><td>Battery_Shield_Activate</td><td>보호막 충전 배터리 작동</td><td>상체&#183;손</td><td>총 과정 3.5초</td><td>설치 완료</td><td>기존 휴대</td><td>피격</td><td>명시</td><td>167행</td></tr>
+<td>PLR-MED-009</td><td>P1</td><td>Buffer_Shield_Plug</td><td>급속 보호막 완충제 팔 연결</td><td>상체&#183;손</td><td>1회</td><td>사용 입력</td><td>기존 휴대</td><td>피격</td><td>사용자 확정</td><td>186행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-MED-007</td><td>P1</td><td>Converter_Shield_Plug</td><td>보호막 전환기 팔 연결</td><td>상체&#183;손</td><td>1초</td><td>사용 입력</td><td>기존 휴대 또는 사망</td><td>피격</td><td>명시</td><td>168행</td></tr>
-<tr>
-<td>PLR-MED-008</td><td>P1</td><td>Nanomachine_Inject</td><td>나노머신 주사기 팔 주입</td><td>상체&#183;손</td><td>1회</td><td>사용 입력</td><td>기존 휴대</td><td>피격</td><td>명시</td><td>185행</td></tr>
-<tr>
-<td>PLR-MED-009</td><td>P1</td><td>Buffer_Shield_Plug</td><td>급속 보호막 완충제 팔 연결</td><td>상체&#183;손</td><td>1회</td><td>사용 입력</td><td>기존 휴대</td><td>피격</td><td>명시</td><td>186행</td></tr>
+<td>PLR-MED-008</td><td>P1</td><td>Nanomachine_Inject</td><td>나노머신 주사기 팔 주입</td><td>상체&#183;손</td><td>1회</td><td>사용 입력</td><td>기존 휴대</td><td>피격</td><td>사용자 확정</td><td>185행, 사용자 확정</td></tr>
 </tbody></table>
+<h3>팔 연결 공용 모션 재사용</h3>
+<ul>
+<li><code>Battery_Aux_Plug</code>, <code>Converter_Shield_Plug</code>, <code>Buffer_Shield_Plug</code>, <code>Nanomachine_Inject</code>은 장비별 요구사항 행과 제작 키를 유지한다.</li>
+<li>네 항목은 동일한 상체&#183;손 모션을 재사용하고, 오른손에 들린 오브젝트만 해당 장비로 교체한다.</li>
+<li>보호막 충전 배터리 내려놓기와 작동은 별도 모션을 제작하지 않으며, 제거된 <code>PLR-MED-005</code>, <code>PLR-MED-006</code>과 후속 <code>PLR-MED</code> ID는 재번호하지 않는다.</li>
+</ul>
 <h2>13. 강화 물품</h2>
-<table><thead><tr>
-<th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
-</thead><tbody>
-<tr>
-<td>PLR-BST-001</td><td>P2</td><td>Booster_Speed_Use</td><td>이속 강화제 사용</td><td>상체&#183;손</td><td>미정</td><td>사용 입력</td><td>버프 상태</td><td>미정</td><td>기획 미확정</td><td>170행</td></tr>
-<tr>
-<td>PLR-BST-002</td><td>P2</td><td>Booster_Strength_Use</td><td>근력 강화제 사용</td><td>상체&#183;손</td><td>미정</td><td>사용 입력</td><td>버프 상태</td><td>미정</td><td>기획 미확정</td><td>171~172행</td></tr>
-<tr>
-<td>PLR-BST-003</td><td>P2</td><td>Booster_Defense_Use</td><td>방호 강화제 사용</td><td>상체&#183;손</td><td>미정</td><td>사용 입력</td><td>버프 상태</td><td>미정</td><td>기획 미확정</td><td>173행</td></tr>
-<tr>
-<td>PLR-BST-004</td><td>P2</td><td>Booster_Focus_Use</td><td>신경 집중 강화 사용</td><td>상체&#183;손</td><td>미정</td><td>사용 입력</td><td>버프 상태</td><td>미정</td><td>기획 미확정</td><td>174행</td></tr>
-<tr>
-<td>PLR-BST-005</td><td>P2</td><td>Booster_Weapon_Use</td><td>무기 증폭제 사용</td><td>상체&#183;손</td><td>미정</td><td>사용 입력</td><td>버프 상태</td><td>미정</td><td>기획 미확정</td><td>106행, 169행</td></tr>
-<tr>
-<td>PLR-BST-006</td><td>P2</td><td>Booster_ShieldOverdrive_Use</td><td>보호막 폭증 유도장치 사용</td><td>상체&#183;손</td><td>미정</td><td>사용 입력</td><td>버프 상태</td><td>미정</td><td>기획 미확정</td><td>175행</td></tr>
-</tbody></table>
+<ul>
+<li>이속 강화제, 근력 강화제, 방호 강화제, 신경 집중 강화, 무기 증폭제, 보호막 폭증 유도장치는 별도 사용 모션을 제작하지 않는다.</li>
+<li>강화 물품을 사용해도 기존 수송자 정적 자세를 유지하며, 사용한 강화 물품에 대응하는 VFX만 머리 위에 출력한다.</li>
+<li>VFX는 각 아이템 로직에서 정한 강화 효과 활성 시간 동안 유지하고 효과 종료와 함께 제거한다. 구체적인 VFX 외형은 이 문서에서 정하지 않는다.</li>
+<li>애니메이션 외 연계는 <code>PLR-LNK-009</code>에서 관리하며, 제거된 <code>PLR-BST-001~006</code>은 다른 동작에 재사용하지 않는다.</li>
+</ul>
 <h2>14. 기타 장비</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
 <tr>
-<td>PLR-OTH-001</td><td>P1</td><td>Vacuum_Idle</td><td>청소기 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>청소기 소지</td><td>자체 유지</td><td>흡입&#183;사출</td><td>필수 파생</td><td>177행</td></tr>
+<td>PLR-OTH-001</td><td>P1</td><td>Vacuum_Idle</td><td>청소기 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>청소기 소지</td><td>자체 유지</td><td>청소기 사용</td><td>필수 파생</td><td>177행</td></tr>
 <tr>
-<td>PLR-OTH-002</td><td>P1</td><td>Vacuum_Suction</td><td>청소기 흡입</td><td>상체&#183;손</td><td>반복</td><td>흡입 입력 유지</td><td>휴대 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>177행</td></tr>
+<td>PLR-OTH-002</td><td>P1</td><td>Vacuum_Use</td><td>청소기 사용</td><td>상체&#183;손</td><td>흡입 중 반복, 사출 시 1회</td><td>흡입 입력 유지 또는 저장 유기물 사출 입력</td><td>휴대 대기</td><td>흡입은 입력 해제&#183;피격, 사출은 없음</td><td>사용자 확정</td><td>177행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-OTH-003</td><td>P1</td><td>Vacuum_Eject</td><td>청소기 사출</td><td>상체&#183;손</td><td>1회</td><td>저장 유기물 사출 입력</td><td>휴대 대기</td><td>없음</td><td>필수 파생</td><td>177행</td></tr>
+<td>PLR-OTH-004</td><td>P1</td><td>Speaker_Idle</td><td>휴대용 스피커 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>스피커 소지</td><td>자체 유지</td><td>F 설치&#183;장비 해제</td><td>필수 파생</td><td>178행</td></tr>
 <tr>
-<td>PLR-OTH-004</td><td>P1</td><td>Speaker_Idle</td><td>휴대용 스피커 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>스피커 소지</td><td>자체 유지</td><td>설치</td><td>필수 파생</td><td>178행</td></tr>
+<td>PLR-OTH-006</td><td>P1</td><td>HoloSpray_Idle</td><td>홀로그램 스프레이 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>스프레이 소지</td><td>자체 유지</td><td>장비 해제</td><td>필수 파생</td><td>179행</td></tr>
 <tr>
-<td>PLR-OTH-005</td><td>P1</td><td>Speaker_Place</td><td>휴대용 스피커 내려놓기</td><td>전신&#183;손</td><td>1회</td><td>F 입력</td><td>빈손 대기</td><td>피격</td><td>명시</td><td>178행</td></tr>
-<tr>
-<td>PLR-OTH-006</td><td>P1</td><td>HoloSpray_Idle</td><td>홀로그램 스프레이 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>스프레이 소지</td><td>자체 유지</td><td>분사</td><td>필수 파생</td><td>179행</td></tr>
-<tr>
-<td>PLR-OTH-007</td><td>P1</td><td>HoloSpray_Spray</td><td>홀로그램 스프레이 분사</td><td>상체&#183;손</td><td>조건 반복</td><td>유효 표면을 향해 사용 입력</td><td>휴대 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>179행</td></tr>
-<tr>
-<td>PLR-OTH-008</td><td>P1</td><td>Flashbang_Idle</td><td>섬광탄 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>섬광탄 소지</td><td>자체 유지</td><td>투척 준비</td><td>필수 파생</td><td>180행</td></tr>
-<tr>
-<td>PLR-OTH-009</td><td>P1</td><td>Flashbang_Throw_Enter</td><td>섬광탄 투척 준비</td><td>상체&#183;손</td><td>1회</td><td>우클릭</td><td>투척 조준</td><td>피격</td><td>명시</td><td>180행</td></tr>
+<td>PLR-OTH-008</td><td>P1</td><td>Flashbang_Idle</td><td>섬광탄 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>섬광탄 소지</td><td>자체 유지</td><td>우클릭&#183;피격</td><td>필수 파생</td><td>180행</td></tr>
 <tr>
 <td>PLR-OTH-010</td><td>P1</td><td>Flashbang_Throw_Aim</td><td>섬광탄 투척 조준</td><td>상체&#183;손</td><td>반복</td><td>우클릭 유지</td><td>자체 유지</td><td>우클릭 해제&#183;피격</td><td>필수 파생</td><td>180행</td></tr>
 <tr>
@@ -403,284 +355,191 @@
 <tr>
 <td>PLR-OTH-012</td><td>P1</td><td>Flashbang_Throw_Cancel</td><td>섬광탄 투척 취소</td><td>상체&#183;손</td><td>1회</td><td>조준 중 우클릭 해제</td><td>휴대 대기</td><td>피격</td><td>필수 파생</td><td>180행</td></tr>
 <tr>
-<td>PLR-OTH-013</td><td>P1</td><td>Flashlight_Idle</td><td>손전등 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>손전등 소지</td><td>자체 유지</td><td>스위치&#183;충전&#183;주머니 이동</td><td>명시</td><td>181행</td></tr>
-<tr>
-<td>PLR-OTH-014</td><td>P2</td><td>Flashlight_Switch_On</td><td>손전등 켜기</td><td>상체&#183;손</td><td>미정</td><td>켜기 입력</td><td>한손 대기</td><td>미정</td><td>기획 미확정</td><td>181행</td></tr>
-<tr>
-<td>PLR-OTH-015</td><td>P2</td><td>Flashlight_Switch_Off</td><td>손전등 끄기</td><td>상체&#183;손</td><td>미정</td><td>끄기 입력</td><td>한손 대기</td><td>미정</td><td>기획 미확정</td><td>181행</td></tr>
+<td>PLR-OTH-013</td><td>P1</td><td>Flashlight_Idle</td><td>손전등 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>손전등 소지</td><td>자체 유지</td><td>충전 연결&#183;장비 해제&#183;막대기 공격</td><td>명시</td><td>181행</td></tr>
 <tr>
 <td>PLR-OTH-016</td><td>P1</td><td>Flashlight_Charge_Connect</td><td>손전등 충전 연결</td><td>상체&#183;손</td><td>1회</td><td>동력실 충전 지점에 F</td><td>충전 상태</td><td>피격</td><td>명시/필수 파생</td><td>181행</td></tr>
 <tr>
 <td>PLR-OTH-017</td><td>P1</td><td>Flashlight_Charge_Disconnect</td><td>손전등 충전 분리</td><td>상체&#183;손</td><td>1회</td><td>충전 완료 또는 중단</td><td>한손 대기</td><td>피격</td><td>필수 파생</td><td>181행</td></tr>
 <tr>
-<td>PLR-OTH-018</td><td>P1</td><td>Flashlight_Stow_ForStick</td><td>손전등 주머니 이동</td><td>상체&#183;손</td><td>1회</td><td>막대기 공격 시작</td><td>막대기 양손 전환</td><td>피격</td><td>명시</td><td>148행</td></tr>
-<tr>
-<td>PLR-OTH-019</td><td>P1</td><td>Flashlight_Restore_AfterStick</td><td>손전등 손 복귀</td><td>상체&#183;손</td><td>1회</td><td>막대기 공격 종료</td><td>손전등 한손 대기</td><td>피격</td><td>필수 파생</td><td>148행</td></tr>
-<tr>
 <td>PLR-OTH-020</td><td>P1</td><td>DoorOpener_Idle</td><td>임시 개방 장치 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>장치 소지</td><td>자체 유지</td><td>문 부착</td><td>필수 파생</td><td>182행</td></tr>
 <tr>
-<td>PLR-OTH-021</td><td>P1</td><td>DoorOpener_Attach</td><td>임시 개방 장치 문 부착</td><td>전신&#183;손</td><td>1회</td><td>폐쇄 문 앞에서 F</td><td>장치 작동</td><td>피격</td><td>명시</td><td>182행</td></tr>
-<tr>
-<td>PLR-OTH-022</td><td>P1</td><td>DoorOpener_Operate</td><td>임시 개방 장치 작동</td><td>전신&#183;손</td><td>7초 반복</td><td>부착 완료</td><td>문 개방 완료</td><td>피격&#183;이동</td><td>명시</td><td>182행</td></tr>
+<td>PLR-OTH-021</td><td>P1</td><td>DoorOpener_Attach</td><td>임시 개방 장치 문 부착</td><td>전신&#183;손</td><td>1회</td><td>폐쇄 문 앞에서 F</td><td>기존 수송자 자세의 7초 작동 진행</td><td>피격</td><td>명시</td><td>182행, 사용자 확정</td></tr>
 <tr>
 <td>PLR-OTH-023</td><td>P1</td><td>DoorOpener_Finish</td><td>임시 개방 장치 완료 반응</td><td>상체&#183;손</td><td>1회</td><td>7초 경과</td><td>빈손 대기</td><td>피격</td><td>필수 파생</td><td>182행</td></tr>
-<tr>
-<td>PLR-OTH-024</td><td>P2</td><td>EmergencyRepair_Use</td><td>긴급 수리 장치 사용</td><td>전신&#183;손</td><td>미정</td><td>사용 입력</td><td>미정</td><td>미정</td><td>기획 미확정</td><td>106행</td></tr>
-<tr>
-<td>PLR-OTH-025</td><td>P2</td><td>TemporaryHack_Use</td><td>임시 해킹 장치 사용</td><td>상체&#183;손</td><td>미정</td><td>사용 입력</td><td>미정</td><td>미정</td><td>기획 미확정</td><td>106행</td></tr>
 <tr>
 <td>PLR-OTH-026</td><td>P1</td><td>MarkerSpray_Idle</td><td>표식 스프레이 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>스프레이 소지</td><td>자체 유지</td><td>분사</td><td>필수 파생</td><td>188행</td></tr>
 <tr>
 <td>PLR-OTH-027</td><td>P1</td><td>MarkerSpray_Spray</td><td>표식 스프레이 분사</td><td>상체&#183;손</td><td>조건 반복</td><td>유효 표면을 향해 사용 입력</td><td>휴대 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>188행</td></tr>
 <tr>
-<td>PLR-OTH-028</td><td>P2</td><td>SmokeGrenade_Use</td><td>연막탄 사용</td><td>상체&#183;손</td><td>미정</td><td>사용 입력</td><td>미정</td><td>미정</td><td>기획 미확정</td><td>106행</td></tr>
+<td>PLR-OTH-028</td><td>P1</td><td>SmokeGrenade_Idle</td><td>연막탄 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>연막탄 소지</td><td>자체 유지</td><td>우클릭&#183;피격</td><td>사용자 확정</td><td>105행, 사용자 확정</td></tr>
+<tr>
+<td>PLR-OTH-029</td><td>P1</td><td>SmokeGrenade_Throw_Aim</td><td>연막탄 투척 조준</td><td>상체&#183;손</td><td>반복</td><td>우클릭 유지</td><td>자체 유지</td><td>우클릭 해제&#183;피격</td><td>사용자 확정</td><td>105행, 사용자 확정</td></tr>
+<tr>
+<td>PLR-OTH-030</td><td>P1</td><td>SmokeGrenade_Throw_Release</td><td>연막탄 던지기</td><td>상체&#183;손</td><td>1회</td><td>조준 중 좌클릭</td><td>빈손 대기</td><td>없음</td><td>사용자 확정</td><td>105행, 사용자 확정</td></tr>
+<tr>
+<td>PLR-OTH-031</td><td>P1</td><td>SmokeGrenade_Throw_Cancel</td><td>연막탄 투척 취소</td><td>상체&#183;손</td><td>1회</td><td>조준 중 우클릭 해제</td><td>휴대 대기</td><td>피격</td><td>사용자 확정</td><td>105행, 사용자 확정</td></tr>
 </tbody></table>
+<h3>기타 장비 비애니메이션 처리</h3>
+<ul>
+<li>휴대용 스피커 내려놓기, 홀로그램 스프레이 분사, 손전등 켜기&#183;끄기는 게임 로직과 오브젝트 상태만 변경하며 별도 모션을 제작하지 않는다.</li>
+<li>섬광탄은 별도 투척 준비 모션 없이 우클릭 유지로 <code>Flashbang_Throw_Aim</code>에 바로 진입한다.</li>
+<li>연막탄은 섬광탄과 같은 대기&#183;투척 조준&#183;던지기&#183;취소 모션을 재사용하고, 손에 든 오브젝트와 폭발 효과만 연막탄으로 교체한다. 별도 투척 준비 모션은 제작하지 않는다.</li>
+<li>막대기 공격 전후 손전등 주머니 이동과 손 복귀는 즉시 오브젝트 상태를 전환하며 별도 모션을 제작하지 않는다.</li>
+<li>임시 개방 장치는 문 부착 후 별도 작동 모션 없이 기존 수송자 자세로 7초 진행 시간을 유지한 뒤 완료 반응으로 이어진다.</li>
+<li>긴급 수리 장치는 사용 입력을 유지한 채 현재 구역 내 원하는 위치에 설치하면 해당 구역의 내구도를 회복한다. 별도 설치 모션 없이 기존 수송자 자세와 오브젝트 배치&#183;게임 로직으로 처리한다.</li>
+<li>최신 원본에 없는 임시 해킹 장치는 장비와 애니메이션 대상에서 제거한다.</li>
+<li>제거된 <code>PLR-OTH-003</code>, <code>PLR-OTH-005</code>, <code>PLR-OTH-007</code>, <code>PLR-OTH-009</code>, <code>PLR-OTH-014</code>, <code>PLR-OTH-015</code>, <code>PLR-OTH-018</code>, <code>PLR-OTH-019</code>, <code>PLR-OTH-022</code>, <code>PLR-OTH-024~025</code>와 후속 <code>PLR-OTH</code> ID는 재번호하지 않는다.</li>
+</ul>
 <h2>15. 수리 장치</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
 <tr>
-<td>PLR-RPR-001</td><td>P1</td><td>RepairDevice_Draw</td><td>수리 장치 꺼내기</td><td>상체&#183;손</td><td>1회</td><td>장치 선택</td><td>수리 준비</td><td>피격</td><td>명시</td><td>187행</td></tr>
-<tr>
-<td>PLR-RPR-002</td><td>P1</td><td>RepairDevice_Operate</td><td>수리 장치 작동</td><td>전신&#183;손</td><td>5초 반복</td><td>수리 대상에 사용 입력</td><td>수리 완료</td><td>피격&#183;이동</td><td>명시</td><td>187행</td></tr>
-<tr>
-<td>PLR-RPR-003</td><td>P1</td><td>RepairDevice_Finish</td><td>수리 장치 완료 반응</td><td>상체&#183;손</td><td>1회</td><td>5초 경과</td><td>장치 휴대</td><td>피격</td><td>필수 파생</td><td>187행</td></tr>
-<tr>
-<td>PLR-RPR-004</td><td>P1</td><td>RepairDevice_Cancel</td><td>수리 장치 중단 반응</td><td>상체&#183;손</td><td>1회</td><td>피격 또는 이동</td><td>장치 휴대</td><td>없음</td><td>필수 파생</td><td>187행</td></tr>
+<td>PLR-RPR-002</td><td>P1</td><td>RepairDevice_Operate</td><td>수리 장치 작동</td><td>전신&#183;손</td><td>5초 반복</td><td>수리 대상에 사용 입력</td><td>수리 완료</td><td>피격&#183;이동</td><td>사용자 확정</td><td>187행, 사용자 확정</td></tr>
 </tbody></table>
+<h3>수리 장치 단일 모션 기준</h3>
+<ul>
+<li>수리 장치는 <code>RepairDevice_Operate</code> 작동 모션만 제작한다.</li>
+<li>수리 장치 꺼내기, 완료 반응, 중단 반응은 별도 모션을 제작하지 않는다.</li>
+<li>제거된 <code>PLR-RPR-001</code>, <code>PLR-RPR-003</code>, <code>PLR-RPR-004</code>는 다른 동작에 재사용하거나 재번호하지 않는다.</li>
+</ul>
 <h2>16. 광선검</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
 <tr>
-<td>PLR-LGT-001</td><td>P1</td><td>Lightsaber_Off_Idle</td><td>꺼진 광선검 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>광선검 소지와 비공격 상태</td><td>자체 유지</td><td>공격&#183;찌르기 모드</td><td>명시</td><td>191행</td></tr>
+<td>PLR-LGT-001</td><td>P1</td><td>Lightsaber_Off_Idle</td><td>꺼진 광선검 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>광선검 소지와 비공격 상태</td><td>자체 유지</td><td>사선 베기&#183;찌르기 모드</td><td>명시</td><td>191행</td></tr>
 <tr>
-<td>PLR-LGT-002</td><td>P1</td><td>Lightsaber_Offhand_Stow</td><td>보조 장비 주머니 이동</td><td>상체&#183;손</td><td>1회</td><td>광선검 공격 시작</td><td>광선검 켜기</td><td>피격</td><td>명시</td><td>191행</td></tr>
+<td>PLR-LGT-005</td><td>P1</td><td>Lightsaber_DiagonalSlash</td><td>광선검 사선 베기</td><td>상체&#183;손</td><td>1회</td><td>좌클릭</td><td>광선검 한손 전환</td><td>피격</td><td>사용자 확정</td><td>191행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-LGT-003</td><td>P1</td><td>Lightsaber_Power_On</td><td>광선검 켜기</td><td>상체&#183;손</td><td>0.2초 내</td><td>좌클릭 공격 시작</td><td>양손 전환</td><td>피격</td><td>명시</td><td>191행</td></tr>
+<td>PLR-LGT-008</td><td>P1</td><td>Lightsaber_Grip_OneHand</td><td>광선검 한손 전환</td><td>상체&#183;손</td><td>1회</td><td>사선 베기 완료</td><td>꺼진 한손 대기</td><td>피격</td><td>필수 파생</td><td>191행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-LGT-004</td><td>P1</td><td>Lightsaber_Grip_TwoHand</td><td>광선검 양손 전환</td><td>상체&#183;손</td><td>1회</td><td>점등 시작</td><td>사선 베기</td><td>피격</td><td>명시</td><td>191행</td></tr>
+<td>PLR-LGT-010</td><td>P1</td><td>Lightsaber_ThrustMode_Enter</td><td>광선검 찌르기 모드 시작</td><td>상체&#183;손</td><td>1회</td><td>우클릭</td><td>찌르기 모드</td><td>피격</td><td>명시</td><td>191행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-LGT-005</td><td>P1</td><td>Lightsaber_DiagonalSlash</td><td>광선검 사선 베기</td><td>상체&#183;손</td><td>1회</td><td>양손 전환 완료</td><td>베기 회수</td><td>없음</td><td>명시</td><td>191행</td></tr>
-<tr>
-<td>PLR-LGT-006</td><td>P1</td><td>Lightsaber_Slash_Recover</td><td>광선검 베기 회수</td><td>상체&#183;손</td><td>1회</td><td>타격 완료</td><td>광선검 끄기</td><td>피격</td><td>필수 파생</td><td>191행</td></tr>
-<tr>
-<td>PLR-LGT-007</td><td>P1</td><td>Lightsaber_Power_Off</td><td>광선검 끄기</td><td>상체&#183;손</td><td>0.2초 내</td><td>베기 회수 완료</td><td>한손 전환</td><td>피격</td><td>명시/필수 파생</td><td>191행</td></tr>
-<tr>
-<td>PLR-LGT-008</td><td>P1</td><td>Lightsaber_Grip_OneHand</td><td>광선검 한손 전환</td><td>상체&#183;손</td><td>1회</td><td>소등 완료</td><td>꺼진 한손 대기</td><td>피격</td><td>필수 파생</td><td>191행</td></tr>
-<tr>
-<td>PLR-LGT-009</td><td>P1</td><td>Lightsaber_Offhand_Restore</td><td>보조 장비 손 복귀</td><td>상체&#183;손</td><td>1회</td><td>광선검 한손 전환 완료</td><td>보조 장비 휴대</td><td>피격</td><td>필수 파생</td><td>191행</td></tr>
-<tr>
-<td>PLR-LGT-010</td><td>P1</td><td>Lightsaber_ThrustMode_Enter</td><td>광선검 찌르기 모드 시작</td><td>상체&#183;손</td><td>1회</td><td>우클릭</td><td>찌르기 준비</td><td>피격</td><td>명시</td><td>191행</td></tr>
-<tr>
-<td>PLR-LGT-011</td><td>P1</td><td>Lightsaber_ThrustMode_Idle</td><td>광선검 찌르기 준비</td><td>상체&#183;손</td><td>반복</td><td>찌르기 모드 유지</td><td>자체 유지</td><td>우클릭&#183;피격</td><td>필수 파생</td><td>191행</td></tr>
-<tr>
-<td>PLR-LGT-012</td><td>P1</td><td>Lightsaber_Thrust</td><td>광선검 찌르기</td><td>상체&#183;손</td><td>1회</td><td>찌르기 모드에서 좌클릭</td><td>찌르기 회수</td><td>없음</td><td>명시</td><td>191행</td></tr>
-<tr>
-<td>PLR-LGT-013</td><td>P1</td><td>Lightsaber_Thrust_Recover</td><td>광선검 찌르기 회수</td><td>상체&#183;손</td><td>1회</td><td>공격 완료</td><td>찌르기 준비</td><td>피격</td><td>필수 파생</td><td>191행</td></tr>
+<td>PLR-LGT-012</td><td>P1</td><td>Lightsaber_Thrust</td><td>광선검 찌르기</td><td>상체&#183;손</td><td>1회</td><td>찌르기 모드에서 좌클릭</td><td>찌르기 모드</td><td>피격</td><td>사용자 확정</td><td>191행, 사용자 확정</td></tr>
 <tr>
 <td>PLR-LGT-014</td><td>P1</td><td>Lightsaber_ThrustMode_Exit</td><td>광선검 찌르기 모드 해제</td><td>상체&#183;손</td><td>1회</td><td>우클릭</td><td>꺼진 한손 대기</td><td>피격</td><td>명시</td><td>191행</td></tr>
 </tbody></table>
+<h3>광선검 통합 모션 기준</h3>
+<ul>
+<li><code>Lightsaber_DiagonalSlash</code>는 양손 전환, 오른쪽 위에서 왼쪽 아래로 사선 베기, 베기 회수를 한 동작에 포함하고 완료 후 <code>Lightsaber_Grip_OneHand</code>로 이어진다.</li>
+<li><code>Lightsaber_Thrust</code>는 찌르기 준비, 화면 중앙을 향한 찌르기, 찌르기 회수를 한 동작에 포함하고 완료 후 찌르기 모드로 돌아간다.</li>
+<li>보조 장비 주머니 이동&#183;손 복귀와 광선검 켜기&#183;끄기는 오브젝트 상태로 처리하며 별도 모션을 제작하지 않는다. 원본 기획의 점등&#183;소등 전환 시간 0.2초는 게임플레이 시간으로 유지한다.</li>
+<li>제거된 <code>PLR-LGT-002</code>, <code>PLR-LGT-003</code>, <code>PLR-LGT-004</code>, <code>PLR-LGT-006</code>, <code>PLR-LGT-007</code>, <code>PLR-LGT-009</code>, <code>PLR-LGT-011</code>, <code>PLR-LGT-013</code>과 후속 <code>PLR-LGT</code> ID는 재번호하지 않는다.</li>
+</ul>
 <h2>17. 특수 장비</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
 <tr>
-<td>PLR-SPC-001</td><td>P2</td><td>Detector_Attach</td><td>기척 감지기 부착</td><td>머리&#183;손</td><td>미정</td><td>머리 보호대 소지와 장착 입력</td><td>감지기 장착 상태</td><td>미정</td><td>필수 파생</td><td>190행</td></tr>
-<tr>
-<td>PLR-SPC-002</td><td>P2</td><td>Detector_Detach</td><td>기척 감지기 분리</td><td>머리&#183;손</td><td>미정</td><td>해제 입력</td><td>감지기 미장착 상태</td><td>미정</td><td>필수 파생</td><td>190행</td></tr>
+<td>PLR-SPC-001</td><td>P2</td><td>Detector_Attached_Static</td><td>기척 감지기 부착 상태 정적 모델링</td><td>머리 보호대</td><td>정적 유지</td><td>기척 감지기 장착 상태</td><td>자체 유지</td><td>감지기 해제</td><td>사용자 확정</td><td>190행, 사용자 확정</td></tr>
 <tr>
 <td>PLR-SPC-003</td><td>P1</td><td>ElectricMine_Idle</td><td>전류 지뢰 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>전류 지뢰 소지</td><td>자체 유지</td><td>활성화</td><td>필수 파생</td><td>192행</td></tr>
 <tr>
 <td>PLR-SPC-004</td><td>P1</td><td>ElectricMine_Activate</td><td>전류 지뢰 손가락 활성화</td><td>상체&#183;손</td><td>1회</td><td>첫 좌클릭</td><td>활성 지뢰 대기</td><td>피격</td><td>명시</td><td>192행</td></tr>
 <tr>
-<td>PLR-SPC-005</td><td>P1</td><td>ElectricMine_Armed_Idle</td><td>활성 전류 지뢰 대기</td><td>상체&#183;손</td><td>반복</td><td>지뢰 활성화 완료</td><td>자체 유지</td><td>설치 또는 피격</td><td>필수 파생</td><td>192행</td></tr>
+<td>PLR-SPC-005</td><td>P1</td><td>ElectricMine_Armed_Idle</td><td>활성 전류 지뢰 대기</td><td>상체&#183;손</td><td>반복</td><td>지뢰 활성화 완료</td><td>자체 유지</td><td>설치 또는 피격</td><td>필수 파생</td><td>192행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-SPC-006</td><td>P1</td><td>ElectricMine_Place_Floor</td><td>전류 지뢰 바닥 설치</td><td>전신&#183;손</td><td>1회</td><td>바닥 1m 안에서 두 번째 좌클릭</td><td>빈손 대기</td><td>피격</td><td>명시</td><td>192행</td></tr>
-<tr>
-<td>PLR-SPC-007</td><td>P1</td><td>ElectricMine_Place_Wall</td><td>전류 지뢰 벽 설치</td><td>전신&#183;손</td><td>1회</td><td>벽 1m 안에서 두 번째 좌클릭</td><td>빈손 대기</td><td>피격</td><td>명시</td><td>192행</td></tr>
-<tr>
-<td>PLR-SPC-008</td><td>P1</td><td>ElectricMine_Place_Security</td><td>전류 지뢰 방범 모드 설치</td><td>전신&#183;손</td><td>1회</td><td>특별 오브젝트에 F</td><td>빈손 대기</td><td>피격</td><td>명시</td><td>192행</td></tr>
-<tr>
-<td>PLR-SPC-009</td><td>P1</td><td>CorridorCleaner_Press</td><td>복도 정화 버튼 누르기</td><td>상체&#183;손</td><td>1회</td><td>통제실 화면에서 버튼 선택</td><td>화면 조작 대기</td><td>피격</td><td>명시</td><td>193행</td></tr>
-<tr>
-<td>PLR-SPC-010</td><td>P2</td><td>InfraredVisor_Equip</td><td>적외선 시야경 쓰기</td><td>머리&#183;손</td><td>미정</td><td>장착 입력</td><td>시야경 장착 상태</td><td>미정</td><td>기획 미확정</td><td>189행</td></tr>
-<tr>
-<td>PLR-SPC-011</td><td>P2</td><td>InfraredVisor_Idle</td><td>적외선 시야경 장착 대기</td><td>머리</td><td>반복 미정</td><td>시야경 장착</td><td>자체 유지</td><td>해제 입력</td><td>기획 미확정</td><td>189행</td></tr>
-<tr>
-<td>PLR-SPC-012</td><td>P2</td><td>InfraredVisor_Unequip</td><td>적외선 시야경 벗기</td><td>머리&#183;손</td><td>미정</td><td>해제 입력</td><td>시야경 미장착 상태</td><td>미정</td><td>기획 미확정</td><td>189행</td></tr>
+<td>PLR-SPC-011</td><td>P2</td><td>InfraredVisor_Worn_Static</td><td>적외선 시야경 착용 상태 정적 모델링</td><td>머리&#183;얼굴</td><td>정적 유지</td><td>적외선 시야경 장착 상태</td><td>자체 유지</td><td>시야경 해제</td><td>사용자 확정</td><td>189행, 사용자 확정</td></tr>
 </tbody></table>
+<h3>특수 장비 비애니메이션 처리</h3>
+<ul>
+<li>기척 감지기 부착&#183;분리와 적외선 시야경 쓰기&#183;벗기는 별도 모션을 제작하지 않고 <code>PLR-SPC-001</code>, <code>PLR-SPC-011</code>의 정적 모델링 행으로 관리한다.</li>
+<li><code>Detector_Attached_Static</code>, <code>InfraredVisor_Worn_Static</code>은 애니메이션 클립 키가 아니라 정적 모델링 식별 키이며, <code>PLR-LNK-010~011</code>에서 애니메이션 외 연계 대상으로도 기록한다.</li>
+<li>전류 지뢰의 바닥&#183;벽&#183;방범 모드 설치는 오브젝트 배치 상태만 변경하며 별도 모션을 제작하지 않는다.</li>
+<li>복도 정화 버튼은 화면 입력과 게임 로직으로 처리하며 별도 누르기 모션을 제작하지 않는다.</li>
+<li>제거된 <code>PLR-SPC-002</code>, <code>PLR-SPC-006~010</code>, <code>PLR-SPC-012</code>와 후속 <code>PLR-SPC</code> ID는 재번호하지 않는다.</li>
+</ul>
 <h2>18. 화물선 조종</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
 <tr>
-<td>PLR-HLM-001</td><td>P1</td><td>Helm_Enter</td><td>조종대 잡기</td><td>전신&#183;손</td><td>1회</td><td>조종대 앞에서 F</td><td>조종대 대기</td><td>피격</td><td>명시/필수 파생</td><td>116행</td></tr>
+<td>PLR-HLM-001</td><td>P1</td><td>Helm_Enter</td><td>조종대 잡기</td><td>전신&#183;손</td><td>1회 후 마지막 자세 유지</td><td>조종대 앞에서 F</td><td>조종대 조작 상태</td><td>피격</td><td>사용자 확정</td><td>116~119행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-HLM-002</td><td>P1</td><td>Helm_Idle</td><td>조종대 중립 대기</td><td>전신&#183;손</td><td>반복</td><td>수동 운행과 방향 입력 없음</td><td>자체 유지</td><td>방향&#183;Esc&#183;피격</td><td>필수 파생</td><td>116~117행</td></tr>
-<tr>
-<td>PLR-HLM-003</td><td>P1</td><td>Helm_Forward</td><td>조종대 전진 조작</td><td>상체&#183;손</td><td>반복</td><td>W 입력</td><td>중립 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>117행</td></tr>
-<tr>
-<td>PLR-HLM-004</td><td>P1</td><td>Helm_Backward</td><td>조종대 후진 조작</td><td>상체&#183;손</td><td>반복</td><td>S 입력</td><td>중립 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>117행</td></tr>
-<tr>
-<td>PLR-HLM-005</td><td>P1</td><td>Helm_Left</td><td>조종대 왼쪽 조작</td><td>상체&#183;손</td><td>반복</td><td>A 입력</td><td>중립 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>117행</td></tr>
-<tr>
-<td>PLR-HLM-006</td><td>P1</td><td>Helm_Right</td><td>조종대 오른쪽 조작</td><td>상체&#183;손</td><td>반복</td><td>D 입력</td><td>중립 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>117행</td></tr>
-<tr>
-<td>PLR-HLM-007</td><td>P1</td><td>Helm_ForwardLeft</td><td>조종대 왼쪽 대각선 전진 조작</td><td>상체&#183;손</td><td>반복</td><td>W+A 입력</td><td>중립 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>117행</td></tr>
-<tr>
-<td>PLR-HLM-008</td><td>P1</td><td>Helm_ForwardRight</td><td>조종대 오른쪽 대각선 전진 조작</td><td>상체&#183;손</td><td>반복</td><td>W+D 입력</td><td>중립 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>117행</td></tr>
-<tr>
-<td>PLR-HLM-009</td><td>P1</td><td>Helm_BackLeft</td><td>조종대 왼쪽 대각선 후진 조작</td><td>상체&#183;손</td><td>반복</td><td>S+A 입력</td><td>중립 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>117행</td></tr>
-<tr>
-<td>PLR-HLM-010</td><td>P1</td><td>Helm_BackRight</td><td>조종대 오른쪽 대각선 후진 조작</td><td>상체&#183;손</td><td>반복</td><td>S+D 입력</td><td>중립 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>117행</td></tr>
-<tr>
-<td>PLR-HLM-011</td><td>P1</td><td>Helm_Boost</td><td>조종대 부스터 조작</td><td>상체&#183;손</td><td>1회</td><td>수동 운행 중 부스터 입력</td><td>조종대 대기</td><td>피격</td><td>필수 파생</td><td>외부 위험 상황의 부스터 사용</td></tr>
-<tr>
-<td>PLR-HLM-012</td><td>P1</td><td>Helm_Exit</td><td>조종대 놓기</td><td>전신&#183;손</td><td>1회</td><td>Esc</td><td>자유 이동</td><td>피격</td><td>필수 파생</td><td>119행</td></tr>
+<td>PLR-HLM-012</td><td>P1</td><td>Helm_Exit</td><td>조종대 놓기</td><td>전신&#183;손</td><td>1회</td><td>Esc</td><td>자유 이동</td><td>피격</td><td>사용자 확정</td><td>116~119행, 사용자 확정</td></tr>
 </tbody></table>
+<ul>
+<li>조종대 잡기가 끝난 마지막 자세를 조종대 놓기 전까지 유지한다. 중립 대기, 전후좌우&#183;대각선 조작과 부스터 조작은 별도 플레이어 모션을 제작하지 않고 화물선 입력 및 게임 로직으로 처리한다.</li>
+<li>제거된 <code>PLR-HLM-002~011</code>과 후속 <code>PLR-HLM</code> ID는 재번호하거나 다른 동작에 재사용하지 않는다.</li>
+</ul>
 <h2>19. 포탑 조작</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
 <tr>
-<td>PLR-TUR-001</td><td>P1</td><td>Turret_Enter</td><td>포탑 손잡이 잡기</td><td>전신&#183;손</td><td>1회</td><td>포탑 앞에서 F</td><td>포탑 대기</td><td>피격</td><td>명시/필수 파생</td><td>130~132행</td></tr>
+<td>PLR-TUR-001</td><td>P1</td><td>Turret_Enter</td><td>포탑 손잡이 잡기</td><td>전신&#183;손</td><td>1회 후 마지막 자세 유지</td><td>포탑 앞에서 F</td><td>포탑 조작 상태</td><td>피격</td><td>사용자 확정</td><td>130~132행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-TUR-002</td><td>P1</td><td>Turret_Idle</td><td>포탑 중립 대기</td><td>전신&#183;손</td><td>반복</td><td>수동 포탑과 조준 입력 없음</td><td>자체 유지</td><td>조준, 발사 또는 이탈</td><td>필수 파생</td><td>132행</td></tr>
-<tr>
-<td>PLR-TUR-003</td><td>P1</td><td>Turret_Aim_Left</td><td>포탑 왼쪽 조준</td><td>전신&#183;손</td><td>반복</td><td>마우스 왼쪽 이동</td><td>포탑 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>132행</td></tr>
-<tr>
-<td>PLR-TUR-004</td><td>P1</td><td>Turret_Aim_Right</td><td>포탑 오른쪽 조준</td><td>전신&#183;손</td><td>반복</td><td>마우스 오른쪽 이동</td><td>포탑 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>132행</td></tr>
-<tr>
-<td>PLR-TUR-005</td><td>P1</td><td>Turret_Aim_Up</td><td>포탑 위쪽 조준</td><td>전신&#183;손</td><td>반복</td><td>마우스 위쪽 이동</td><td>포탑 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>132행</td></tr>
-<tr>
-<td>PLR-TUR-006</td><td>P1</td><td>Turret_Aim_Down</td><td>포탑 아래쪽 조준</td><td>전신&#183;손</td><td>반복</td><td>마우스 아래쪽 이동</td><td>포탑 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>132행</td></tr>
-<tr>
-<td>PLR-TUR-007</td><td>P1</td><td>Turret_Fire</td><td>포탑 일반탄 발사</td><td>전신&#183;손</td><td>1회 반복</td><td>좌클릭</td><td>포탑 대기</td><td>탄창 소진&#183;피격</td><td>명시</td><td>132행</td></tr>
-<tr>
-<td>PLR-TUR-008</td><td>P1</td><td>Turret_Plasma_Fire</td><td>포탑 플라즈마 발사</td><td>전신&#183;손</td><td>3초 유지</td><td>업그레이드 후 우클릭</td><td>포탑 대기</td><td>피격</td><td>명시</td><td>132행</td></tr>
-<tr>
-<td>PLR-TUR-009</td><td>P1</td><td>Turret_Reload</td><td>포탑 재장전</td><td>전신&#183;손</td><td>2초</td><td>탄창 소진</td><td>포탑 대기</td><td>피격</td><td>명시</td><td>132행</td></tr>
-<tr>
-<td>PLR-TUR-010</td><td>P1</td><td>Turret_Exit</td><td>포탑 손잡이 놓기</td><td>전신&#183;손</td><td>1회</td><td>조작 종료 입력</td><td>자유 이동</td><td>피격</td><td>필수 파생</td><td>130~132행</td></tr>
+<td>PLR-TUR-010</td><td>P1</td><td>Turret_Exit</td><td>포탑 손잡이 놓기</td><td>전신&#183;손</td><td>1회</td><td>조작 종료 입력</td><td>자유 이동</td><td>피격</td><td>사용자 확정</td><td>130~132행, 사용자 확정</td></tr>
 </tbody></table>
+<ul>
+<li>포탑 손잡이 잡기가 끝난 마지막 자세를 포탑 손잡이 놓기 전까지 유지한다. 중립 대기, 방향별 조준, 일반탄&#183;플라즈마 발사와 재장전은 별도 플레이어 모션을 제작하지 않고 포탑 오브젝트 및 게임 로직으로 처리한다.</li>
+<li>제거된 <code>PLR-TUR-002~009</code>와 후속 <code>PLR-TUR</code> ID는 재번호하거나 다른 동작에 재사용하지 않는다.</li>
+</ul>
 <h2>20. 화면과 단말기</h2>
-<table><thead><tr>
-<th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
-</thead><tbody>
-<tr>
-<td>PLR-SCR-001</td><td>P1</td><td>Screen_Enter</td><td>화면 조작 시작</td><td>상체&#183;손</td><td>1회</td><td>화면 앞에서 F</td><td>화면 대기</td><td>피격</td><td>필수 파생</td><td>123~138행</td></tr>
-<tr>
-<td>PLR-SCR-002</td><td>P1</td><td>Screen_Idle</td><td>화면 조작 대기</td><td>상체&#183;손</td><td>반복</td><td>화면 모드와 입력 없음</td><td>자체 유지</td><td>선택, 종료 또는 피격</td><td>필수 파생</td><td>123~138행</td></tr>
-<tr>
-<td>PLR-SCR-003</td><td>P1</td><td>Screen_Select</td><td>화면 항목 누르기</td><td>상체&#183;손</td><td>1회</td><td>항목 선택 입력</td><td>화면 대기</td><td>피격</td><td>명시</td><td>123~138행</td></tr>
-<tr>
-<td>PLR-SCR-004</td><td>P1</td><td>CCTV_Previous</td><td>이전 CCTV 선택</td><td>상체&#183;손</td><td>1회</td><td>CCTV에서 A</td><td>화면 대기</td><td>피격</td><td>명시</td><td>127행</td></tr>
-<tr>
-<td>PLR-SCR-005</td><td>P1</td><td>CCTV_Next</td><td>다음 CCTV 선택</td><td>상체&#183;손</td><td>1회</td><td>CCTV에서 D</td><td>화면 대기</td><td>피격</td><td>명시</td><td>127행</td></tr>
-<tr>
-<td>PLR-SCR-006</td><td>P1</td><td>Screen_ToVertical</td><td>세로 화면 전환 입력</td><td>상체&#183;손</td><td>1회</td><td>대형 화면에서 우클릭</td><td>화면 대기</td><td>피격</td><td>명시</td><td>128행</td></tr>
-<tr>
-<td>PLR-SCR-007</td><td>P1</td><td>Screen_Zone_Select</td><td>구역 선택</td><td>상체&#183;손</td><td>1회</td><td>세로 화면에서 구역 클릭</td><td>화면 대기</td><td>피격</td><td>명시</td><td>128행</td></tr>
-<tr>
-<td>PLR-SCR-008</td><td>P1</td><td>Screen_ToHorizontal</td><td>가로 화면 전환 입력</td><td>상체&#183;손</td><td>1회</td><td>세로 화면에서 우클릭</td><td>화면 대기</td><td>피격</td><td>명시</td><td>129행</td></tr>
-<tr>
-<td>PLR-SCR-009</td><td>P1</td><td>Screen_Ejector_Press</td><td>사출대 개폐 버튼 누르기</td><td>상체&#183;손</td><td>1회</td><td>사출대 단말기 선택</td><td>화면 대기</td><td>피격</td><td>명시</td><td>138행</td></tr>
-<tr>
-<td>PLR-SCR-010</td><td>P1</td><td>Screen_Overclock_Press</td><td>오버클럭 버튼 누르기</td><td>상체&#183;손</td><td>1회</td><td>동력실 화면에서 선택</td><td>화면 대기</td><td>피격</td><td>명시</td><td>123~124행</td></tr>
-<tr>
-<td>PLR-SCR-011</td><td>P1</td><td>Screen_Exit</td><td>화면 조작 종료</td><td>상체&#183;손</td><td>1회</td><td>종료 입력</td><td>자유 이동</td><td>피격</td><td>필수 파생</td><td>123~138행</td></tr>
-</tbody></table>
+<ul>
+<li>화면과 단말기의 조작 시작&#183;대기&#183;항목 선택&#183;화면 전환&#183;버튼 입력&#183;조작 종료에는 별도 플레이어 모션을 제작하지 않는다.</li>
+<li>화면과 단말기를 이용하는 동안 기존 수송자 자세를 유지하며, CCTV 전환, 구역 선택, 사출대 개폐와 오버클럭을 포함한 모든 조작 결과는 화면 UI와 게임 로직으로 처리한다.</li>
+<li>제거된 <code>PLR-SCR-001~011</code>은 다른 동작에 재사용하지 않는다.</li>
+</ul>
 <h2>21. 수리와 복구</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
 <tr>
-<td>PLR-INT-001</td><td>P1</td><td>ShipRepair_Enter</td><td>화물선 수리 시작</td><td>전신&#183;손</td><td>1회</td><td>수리 지점에서 사용 입력</td><td>화물선 수리</td><td>피격</td><td>필수 파생</td><td>31행</td></tr>
+<td>PLR-INT-002</td><td>P1</td><td>ShipRepair</td><td>화물선 수리</td><td>전신&#183;손</td><td>입력 유지 중 반복</td><td>수리 지점에서 사용 입력</td><td>수리 완료 후 자유 이동</td><td>입력 해제&#183;피격</td><td>사용자 확정</td><td>31행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-INT-002</td><td>P1</td><td>ShipRepair_Loop</td><td>화물선 수리</td><td>전신&#183;손</td><td>반복</td><td>수리 입력 유지</td><td>수리 완료</td><td>입력 해제&#183;피격</td><td>명시</td><td>31행</td></tr>
-<tr>
-<td>PLR-INT-003</td><td>P1</td><td>ShipRepair_Finish</td><td>화물선 수리 완료 반응</td><td>상체&#183;손</td><td>1회</td><td>수리 성공</td><td>자유 이동</td><td>피격</td><td>필수 파생</td><td>31행</td></tr>
-<tr>
-<td>PLR-INT-004</td><td>P1</td><td>ShipRepair_Cancel</td><td>화물선 수리 중단 반응</td><td>상체&#183;손</td><td>1회</td><td>입력 해제 또는 피격</td><td>자유 이동</td><td>없음</td><td>필수 파생</td><td>31행</td></tr>
-<tr>
-<td>PLR-INT-005</td><td>P1</td><td>SabotageRepair_Enter</td><td>사보타주 복구 시작</td><td>전신&#183;손</td><td>1회</td><td>복구 지점에서 F</td><td>사보타주 복구</td><td>피격</td><td>필수 파생</td><td>247행</td></tr>
-<tr>
-<td>PLR-INT-006</td><td>P1</td><td>SabotageRepair_Loop</td><td>사보타주 복구</td><td>전신&#183;손</td><td>10초 반복</td><td>F 유지</td><td>복구 완료</td><td>이동&#183;피격</td><td>명시</td><td>247행</td></tr>
-<tr>
-<td>PLR-INT-007</td><td>P1</td><td>SabotageRepair_Finish</td><td>사보타주 복구 완료 반응</td><td>상체&#183;손</td><td>1회</td><td>10초 경과</td><td>자유 이동</td><td>피격</td><td>필수 파생</td><td>247행</td></tr>
-<tr>
-<td>PLR-INT-008</td><td>P1</td><td>SabotageRepair_Cancel</td><td>사보타주 복구 중단 반응</td><td>상체&#183;손</td><td>1회</td><td>이동 또는 피격</td><td>자유 이동</td><td>없음</td><td>필수 파생</td><td>247행</td></tr>
-<tr>
-<td>PLR-INT-009</td><td>P1</td><td>Cargo_Return</td><td>회수 화물 내려놓기</td><td>전신&#183;손</td><td>1회</td><td>운송 화물 위치에서 F</td><td>빈손 대기</td><td>피격</td><td>명시</td><td>233행</td></tr>
-<tr>
-<td>PLR-INT-010</td><td>P0</td><td>Interaction_Reach</td><td>범용 상호작용 손 뻗기</td><td>상체&#183;손</td><td>1회</td><td>상호작용 대상에 F</td><td>상호작용 손 회수</td><td>피격</td><td>명시</td><td>15행</td></tr>
-<tr>
-<td>PLR-INT-011</td><td>P0</td><td>Interaction_Retract</td><td>범용 상호작용 손 회수</td><td>상체&#183;손</td><td>1회</td><td>단순 상호작용 완료</td><td>기존 상태</td><td>피격</td><td>필수 파생</td><td>15행</td></tr>
+<td>PLR-INT-006</td><td>P1</td><td>SabotageRepair</td><td>사보타주 복구</td><td>전신&#183;손</td><td>10초 반복</td><td>복구 지점에서 F 유지</td><td>복구 완료 후 자유 이동</td><td>F 해제&#183;이동&#183;피격</td><td>사용자 확정</td><td>247행, 사용자 확정</td></tr>
 </tbody></table>
+<ul>
+<li><code>ShipRepair</code>는 화물선 수리 시작과 반복 수리를 한 모션으로 포함한다. 완료&#183;중단 시 별도 반응 모션 없이 자유 이동 상태로 전환한다.</li>
+<li><code>SabotageRepair</code>는 사보타주 복구 시작과 10초 반복 복구를 한 모션으로 포함한다. 완료&#183;중단 시 별도 반응 모션 없이 자유 이동 상태로 전환한다.</li>
+<li>회수 화물 내려놓기와 범용 상호작용 손 뻗기&#183;손 회수는 별도 플레이어 모션을 제작하지 않으며, 기존 수송자 자세와 오브젝트&#183;게임 로직으로 처리한다.</li>
+<li>제거된 <code>PLR-INT-001</code>, <code>PLR-INT-003~005</code>, <code>PLR-INT-007~011</code>과 후속 <code>PLR-INT</code> ID는 재번호하거나 다른 동작에 재사용하지 않는다.</li>
+</ul>
 <h2>22. 피격과 사망</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
 <tr>
-<td>PLR-DMG-001</td><td>P0</td><td>Hit_Light</td><td>약한 피격 반응</td><td>전신&#183;상체</td><td>1회</td><td>일반 피해</td><td>기존 상태</td><td>사망</td><td>필수 파생</td><td>피해 전반</td></tr>
+<td>PLR-DMG-001</td><td>P0</td><td>Hit_Reaction</td><td>피격 반응</td><td>전신&#183;상체</td><td>1회</td><td>피격 판정 후 생존</td><td>기존 상태</td><td>넘어짐&#183;사망</td><td>사용자 확정</td><td>피해 전반, 사용자 확정</td></tr>
 <tr>
-<td>PLR-DMG-002</td><td>P1</td><td>Hit_Explosion</td><td>폭발 피격 반응</td><td>전신</td><td>1회</td><td>조종대&#183;포탑&#183;장비 폭발</td><td>넘어짐 또는 사망</td><td>사망</td><td>필수 파생</td><td>121행, 135행, 156행</td></tr>
-<tr>
-<td>PLR-DMG-003</td><td>P2</td><td>Hit_Front</td><td>전방 피격 반응</td><td>전신&#183;상체</td><td>1회</td><td>정면 피해</td><td>기존 상태</td><td>사망</td><td>필수 파생</td><td>피해 전반</td></tr>
-<tr>
-<td>PLR-DMG-004</td><td>P2</td><td>Hit_Back</td><td>후방 피격 반응</td><td>전신&#183;상체</td><td>1회</td><td>후면 피해</td><td>기존 상태</td><td>사망</td><td>필수 파생</td><td>피해 전반</td></tr>
-<tr>
-<td>PLR-DMG-005</td><td>P2</td><td>Hit_Left</td><td>좌측 피격 반응</td><td>전신&#183;상체</td><td>1회</td><td>왼쪽 피해</td><td>기존 상태</td><td>사망</td><td>필수 파생</td><td>피해 전반</td></tr>
-<tr>
-<td>PLR-DMG-006</td><td>P2</td><td>Hit_Right</td><td>우측 피격 반응</td><td>전신&#183;상체</td><td>1회</td><td>오른쪽 피해</td><td>기존 상태</td><td>사망</td><td>필수 파생</td><td>피해 전반</td></tr>
-<tr>
-<td>PLR-DMG-007</td><td>P1</td><td>Knockdown_Start</td><td>넘어짐 시작</td><td>전신</td><td>1회</td><td>폭발&#183;강한 넉백</td><td>넘어진 대기</td><td>사망</td><td>필수 파생</td><td>폭발&#183;넉백 피해</td></tr>
-<tr>
-<td>PLR-DMG-008</td><td>P1</td><td>Knockdown_Idle</td><td>넘어진 대기</td><td>전신</td><td>반복</td><td>지면에 쓰러짐</td><td>자체 유지</td><td>일어나기&#183;사망</td><td>필수 파생</td><td>폭발&#183;넉백 피해</td></tr>
+<td>PLR-DMG-007</td><td>P1</td><td>Knockdown</td><td>넘어짐 모션</td><td>전신</td><td>1회 후 마지막 자세 유지</td><td>폭발&#183;강한 넉백</td><td>넘어진 상태</td><td>일어나기&#183;사망</td><td>사용자 확정</td><td>폭발&#183;넉백 피해, 사용자 확정</td></tr>
 <tr>
 <td>PLR-DMG-009</td><td>P1</td><td>Knockdown_GetUp</td><td>일어나기</td><td>전신</td><td>1회</td><td>회복 가능</td><td>서 있는 대기</td><td>피격&#183;사망</td><td>필수 파생</td><td>폭발&#183;넉백 피해</td></tr>
 <tr>
-<td>PLR-DMG-010</td><td>P0</td><td>Death_Start</td><td>사망 시작</td><td>전신</td><td>1회</td><td>체력 0 또는 즉사</td><td>사망 대기</td><td>없음</td><td>필수 파생</td><td>29행, 260행, 267행</td></tr>
+<td>PLR-DMG-010</td><td>P0</td><td>Death</td><td>사망</td><td>전신&#183;물리</td><td>고정 사망 클립 1회 후 래그돌</td><td>체력 0 또는 특수 사망 외 즉사 판정</td><td>래그돌 사망 상태</td><td>없음</td><td>사용자 확정</td><td>29행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-DMG-011</td><td>P0</td><td>Death_Idle</td><td>사망 대기</td><td>전신 또는 래그돌</td><td>반복</td><td>사망 시작 완료</td><td>자체 유지</td><td>부활</td><td>필수 파생</td><td>29행, 260행, 267행</td></tr>
+<td>PLR-DMG-012</td><td>P0</td><td>Death_FullBodyLaunch</td><td>온몸이 날아가 사망</td><td>전신&#183;물리</td><td>고정 시작 구간 후 래그돌</td><td>전신이 날아가는 사망 판정</td><td>힘을 적용한 래그돌 사망 상태</td><td>없음</td><td>사용자 확정</td><td>사용자 확정</td></tr>
+<tr>
+<td>PLR-DMG-013</td><td>P0</td><td>Death_Tergo</td><td>테르고에게 당해서 사망</td><td>전신&#183;물리</td><td>테르고 사망 고정 클립 후 래그돌</td><td>테르고의 꿰뚫기 또는 후속 드릴 공격으로 사망</td><td>래그돌 사망 상태</td><td>없음</td><td>사용자 확정</td><td>208행, 사용자 확정</td></tr>
 </tbody></table>
+<ul>
+<li>약한&#183;폭발&#183;전방&#183;후방&#183;좌측&#183;우측 피격 반응은 <code>Hit_Reaction</code> 하나를 공용으로 사용한다.</li>
+<li><code>Knockdown</code>은 넘어짐 시작부터 넘어진 마지막 자세 유지까지 포함하며, 회복 가능 시 기존 <code>Knockdown_GetUp</code>으로 이어진다.</li>
+<li>사망은 일반 <code>Death</code>, 전신이 날아가는 <code>Death_FullBodyLaunch</code>, 테르고에게 당한 <code>Death_Tergo</code>의 세 원인별 모션으로 구분한다.</li>
+<li>세 사망 유형은 고정 클립의 핵심 연출 뒤 래그돌로 전환하는 혼합 방식을 사용한다.</li>
+<li><code>Death</code>는 짧은 고정 사망 클립이 끝날 때, <code>Death_FullBodyLaunch</code>는 전신이 날아가는 시점에 힘을 이어받으며, <code>Death_Tergo</code>는 테르고의 고정 사망 연출이 끝날 때 래그돌로 전환한다.</li>
+<li>제거된 <code>PLR-DMG-002~006</code>, <code>PLR-DMG-008</code>, <code>PLR-DMG-011</code>은 재번호하거나 다른 동작에 재사용하지 않는다.</li>
+</ul>
 <h2>23. 상태 이상과 물리 반응</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
 <tr>
-<td>PLR-STS-001</td><td>P1</td><td>Stun_Enter</td><td>감전 시작</td><td>전신</td><td>1회</td><td>정지 상태 부여</td><td>감전 대기</td><td>사망</td><td>명시</td><td>288행</td></tr>
+<td>PLR-STS-002</td><td>P1</td><td>Stun_Twist</td><td>감전 비틀림</td><td>전신</td><td>상태 지속 중 반복</td><td>정지 상태 부여</td><td>상태 종료 후 기존 상태</td><td>사망</td><td>사용자 확정</td><td>288행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-STS-002</td><td>P1</td><td>Stun_Loop</td><td>감전 비틀림</td><td>전신</td><td>반복</td><td>정지 상태 지속</td><td>자체 유지</td><td>상태 종료 또는 사망</td><td>명시</td><td>288행</td></tr>
-<tr>
-<td>PLR-STS-003</td><td>P1</td><td>Stun_Exit</td><td>감전 회복</td><td>전신</td><td>1회</td><td>정지 상태 종료</td><td>서 있는 대기</td><td>피격&#183;사망</td><td>필수 파생</td><td>288행</td></tr>
-<tr>
-<td>PLR-STS-004</td><td>P2</td><td>Burn_BodyReaction</td><td>화상 신체 반응</td><td>상체</td><td>조건 반복</td><td>화상 상태 지속</td><td>기존 상태</td><td>사망</td><td>필수 파생</td><td>289행</td></tr>
-<tr>
-<td>PLR-STS-005</td><td>P2</td><td>Bleed_BodyReaction</td><td>출혈 신체 반응</td><td>상체</td><td>조건 반복</td><td>출혈 상태 지속</td><td>기존 상태</td><td>사망</td><td>필수 파생</td><td>290행</td></tr>
-<tr>
-<td>PLR-STS-006</td><td>P1</td><td>Exhausted_Enter</td><td>탈진 시작</td><td>전신</td><td>1회</td><td>탈진 상태 부여</td><td>탈진 대기</td><td>사망</td><td>필수 파생</td><td>291행</td></tr>
-<tr>
-<td>PLR-STS-007</td><td>P1</td><td>Exhausted_Idle</td><td>탈진 대기</td><td>전신</td><td>반복</td><td>탈진 중 이동 입력 없음</td><td>자체 유지</td><td>이동&#183;상태 종료</td><td>명시</td><td>291행</td></tr>
+<td>PLR-STS-007</td><td>P1</td><td>Exhausted_Idle</td><td>탈진 대기</td><td>전신</td><td>반복</td><td>탈진 상태 부여와 이동 입력 없음</td><td>자체 유지</td><td>이동&#183;상태 종료&#183;사망</td><td>사용자 확정</td><td>291행, 사용자 확정</td></tr>
 <tr>
 <td>PLR-STS-008</td><td>P1</td><td>Exhausted_Walk_Forward</td><td>탈진 전진 걷기</td><td>전신</td><td>반복</td><td>탈진 중 W</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>명시</td><td>291행</td></tr>
 <tr>
 <td>PLR-STS-009</td><td>P1</td><td>Exhausted_Walk_Backward</td><td>탈진 후진 걷기</td><td>전신</td><td>반복</td><td>탈진 중 S</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>291행</td></tr>
 <tr>
-<td>PLR-STS-010</td><td>P1</td><td>Exhausted_Walk_Left</td><td>탈진 왼쪽 걷기</td><td>전신</td><td>반복</td><td>탈진 중 A</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>291행</td></tr>
+<td>PLR-STS-010</td><td>P1</td><td>Exhausted_Walk_Sidestep</td><td>탈진 옆걸음</td><td>전신</td><td>반복</td><td>탈진 중 A 또는 D</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>사용자 확정</td><td>291행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-STS-011</td><td>P1</td><td>Exhausted_Walk_Right</td><td>탈진 오른쪽 걷기</td><td>전신</td><td>반복</td><td>탈진 중 D</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>291행</td></tr>
+<td>PLR-STS-012</td><td>P1</td><td>Exhausted_Walk_Diagonal</td><td>탈진 대각선 걷기</td><td>전신</td><td>반복</td><td>탈진 중 W+A 또는 W+D</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>사용자 확정</td><td>291행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-STS-012</td><td>P1</td><td>Exhausted_Walk_ForwardLeft</td><td>탈진 왼쪽 대각선 전진</td><td>전신</td><td>반복</td><td>탈진 중 W+A</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>291행</td></tr>
-<tr>
-<td>PLR-STS-013</td><td>P1</td><td>Exhausted_Walk_ForwardRight</td><td>탈진 오른쪽 대각선 전진</td><td>전신</td><td>반복</td><td>탈진 중 W+D</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>291행</td></tr>
-<tr>
-<td>PLR-STS-014</td><td>P1</td><td>Exhausted_Walk_BackLeft</td><td>탈진 왼쪽 대각선 후진</td><td>전신</td><td>반복</td><td>탈진 중 S+A</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>291행</td></tr>
-<tr>
-<td>PLR-STS-015</td><td>P1</td><td>Exhausted_Walk_BackRight</td><td>탈진 오른쪽 대각선 후진</td><td>전신</td><td>반복</td><td>탈진 중 S+D</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>291행</td></tr>
-<tr>
-<td>PLR-STS-016</td><td>P1</td><td>Exhausted_Exit</td><td>탈진 회복</td><td>전신</td><td>1회</td><td>탈진 상태 종료</td><td>서 있는 대기</td><td>피격&#183;사망</td><td>필수 파생</td><td>291행</td></tr>
+<td>PLR-STS-014</td><td>P1</td><td>Exhausted_Walk_DiagonalBackward</td><td>탈진 대각선 후진</td><td>전신</td><td>반복</td><td>탈진 중 S+A 또는 S+D</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>사용자 확정</td><td>291행, 사용자 확정</td></tr>
 <tr>
 <td>PLR-STS-017</td><td>P1</td><td>Fatigue_HeadShake</td><td>피로 머리 흔들기</td><td>머리&#183;상체</td><td>1회 반복</td><td>피로 상태의 주기 이벤트</td><td>기존 상태</td><td>피격&#183;사망</td><td>명시</td><td>292행</td></tr>
 <tr>
@@ -688,40 +547,34 @@
 <tr>
 <td>PLR-STS-019</td><td>P1</td><td>Fatigue_Wall_Idle</td><td>피로 벽 짚기 대기</td><td>전신&#183;손</td><td>반복</td><td>피로 중 벽에 손 접촉</td><td>자체 유지</td><td>이동&#183;피격</td><td>명시</td><td>292행</td></tr>
 <tr>
-<td>PLR-STS-020</td><td>P1</td><td>Fatigue_Wall_Exit</td><td>피로 벽 짚기 해제</td><td>전신&#183;손</td><td>1회</td><td>이동 또는 상태 종료</td><td>서 있는 대기</td><td>피격</td><td>필수 파생</td><td>292행</td></tr>
-<tr>
 <td>PLR-STS-021</td><td>P1</td><td>Confused_Walk_Forward</td><td>혼란 전진 걷기</td><td>전신 하체</td><td>반복</td><td>혼란 중 W</td><td>혼란 정지</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>294행</td></tr>
 <tr>
 <td>PLR-STS-022</td><td>P1</td><td>Confused_Walk_Backward</td><td>혼란 후진 걷기</td><td>전신 하체</td><td>반복</td><td>혼란 중 S</td><td>혼란 정지</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>294행</td></tr>
 <tr>
-<td>PLR-STS-023</td><td>P1</td><td>Confused_Walk_Left</td><td>혼란 왼쪽 걷기</td><td>전신 하체</td><td>반복</td><td>혼란 중 A</td><td>혼란 정지</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>294행</td></tr>
+<td>PLR-STS-023</td><td>P1</td><td>Confused_Walk_Sidestep</td><td>혼란 옆걸음 걷기</td><td>전신 하체</td><td>반복</td><td>혼란 중 A 또는 D</td><td>혼란 정지</td><td>입력 해제&#183;사망</td><td>사용자 확정</td><td>294행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-STS-024</td><td>P1</td><td>Confused_Walk_Right</td><td>혼란 오른쪽 걷기</td><td>전신 하체</td><td>반복</td><td>혼란 중 D</td><td>혼란 정지</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>294행</td></tr>
-<tr>
-<td>PLR-STS-025</td><td>P2</td><td>Knockback_Start</td><td>넉백 시작 반응</td><td>전신&#183;물리</td><td>1회</td><td>강제 이동 판정</td><td>공중 물리 반응</td><td>사망</td><td>필수 파생</td><td>넉백 공격 전반</td></tr>
+<td>PLR-STS-025</td><td>P2</td><td>Knockback_Reaction</td><td>넉백 반응</td><td>전신&#183;물리</td><td>1회</td><td>강제 이동 판정</td><td>공중 물리 반응</td><td>사망</td><td>사용자 확정</td><td>넉백 공격 전반, 사용자 확정</td></tr>
 <tr>
 <td>PLR-STS-026</td><td>P2</td><td>Physics_Airborne</td><td>공중 물리 반응</td><td>전신&#183;물리</td><td>조건 반복</td><td>폭발&#183;사출&#183;강제 추락</td><td>물리 착지</td><td>사망</td><td>필수 파생</td><td>121행, 138행, 143행</td></tr>
 <tr>
-<td>PLR-STS-027</td><td>P2</td><td>Physics_Land</td><td>물리 착지 반응</td><td>전신&#183;물리</td><td>1회</td><td>물리 이동 후 접지</td><td>물리 회복</td><td>사망</td><td>필수 파생</td><td>폭발&#183;추락&#183;사출</td></tr>
+<td>PLR-STS-027</td><td>P2</td><td>Physics_Land</td><td>물리 착지 반응</td><td>전신&#183;물리</td><td>1회</td><td>물리 이동 후 접지</td><td>서 있는 대기</td><td>사망</td><td>사용자 확정</td><td>폭발&#183;추락&#183;사출, 사용자 확정</td></tr>
 <tr>
-<td>PLR-STS-028</td><td>P2</td><td>Physics_Recover</td><td>물리 회복</td><td>전신</td><td>1회</td><td>생존한 물리 착지</td><td>서 있는 대기</td><td>피격&#183;사망</td><td>필수 파생</td><td>폭발&#183;추락&#183;사출</td></tr>
+<td>PLR-STS-029</td><td>P1</td><td>PostureBreak</td><td>자세 무너짐</td><td>전신</td><td>1회 후 마지막 자세 유지</td><td>테르고 꿰뚫기 생존</td><td>자세 무너짐 상태</td><td>회복&#183;테르고 후속 공격&#183;사망</td><td>사용자 확정</td><td>208행, 사용자 확정</td></tr>
 <tr>
-<td>PLR-STS-029</td><td>P1</td><td>PostureBreak_Enter</td><td>자세 무너짐 시작</td><td>전신</td><td>1회</td><td>테르고 꿰뚫기 생존</td><td>자세 무너짐 대기</td><td>사망</td><td>명시/필수 파생</td><td>208행</td></tr>
-<tr>
-<td>PLR-STS-030</td><td>P1</td><td>PostureBreak_Idle</td><td>자세 무너짐 대기</td><td>전신</td><td>반복</td><td>자세 무너짐 지속</td><td>자체 유지</td><td>회복&#183;사망</td><td>필수 파생</td><td>208행</td></tr>
-<tr>
-<td>PLR-STS-031</td><td>P1</td><td>PostureBreak_Exit</td><td>자세 무너짐 회복</td><td>전신</td><td>1회</td><td>상태 종료</td><td>서 있는 대기</td><td>피격&#183;사망</td><td>필수 파생</td><td>208행</td></tr>
-<tr>
-<td>PLR-STS-032</td><td>P1</td><td>PostureBreak_Hit</td><td>넘어진 상태의 드릴 피격</td><td>전신</td><td>1회</td><td>테르고 후속 공격</td><td>자세 무너짐 대기 또는 사망</td><td>사망</td><td>필수 파생</td><td>208행</td></tr>
+<td>PLR-STS-032</td><td>P1</td><td>PostureBreak_Hit</td><td>넘어진 상태의 드릴 피격</td><td>전신</td><td>1회</td><td>테르고 후속 공격</td><td>자세 무너짐 또는 사망</td><td>사망</td><td>필수 파생</td><td>208행</td></tr>
 </tbody></table>
+<ul>
+<li><code>Stun_Twist</code>는 감전 시작&#183;비틀림&#183;회복을 한 상태 모션으로 통합한다.</li>
+<li>화상과 출혈은 별도 신체 모션을 제작하지 않고 <code>PLR-LNK-012~013</code>의 VFX로 표현한다.</li>
+<li><code>Exhausted_Idle</code>은 탈진 시작과 대기를 포함하며, 탈진 종료 시 별도 회복 모션 없이 기존 상태로 전환한다.</li>
+<li>피로 벽 짚기와 물리 착지의 종료에는 별도 해제&#183;회복 모션을 사용하지 않는다.</li>
+<li><code>PostureBreak</code>는 자세 무너짐 시작과 대기를 포함하며, 회복 시 <code>PLR-DMG-009 / Knockdown_GetUp</code>을 재사용한다.</li>
+<li>제거된 <code>PLR-STS-001</code>, <code>PLR-STS-003~006</code>, <code>PLR-STS-011</code>, <code>PLR-STS-013</code>, <code>PLR-STS-015~016</code>, <code>PLR-STS-020</code>, <code>PLR-STS-024</code>, <code>PLR-STS-028</code>, <code>PLR-STS-030~031</code>과 후속 <code>PLR-STS</code> ID는 재번호하거나 다른 동작에 재사용하지 않는다.</li>
+</ul>
 <h2>24. 애니메이션 외 연계</h2>
 <table><thead><tr>
 <th>ID</th><th>표현</th><th>담당</th><th>연결 상태</th><th>근거</th></tr>
 </thead><tbody>
-<tr>
-<td>PLR-LNK-001</td><td>화상 불꽃</td><td>VFX</td><td>PLR-STS-004</td><td>289행</td></tr>
-<tr>
-<td>PLR-LNK-002</td><td>출혈 분출</td><td>VFX</td><td>PLR-STS-005</td><td>290행</td></tr>
 <tr>
 <td>PLR-LNK-003</td><td>현기증 시야 흔들림</td><td>카메라</td><td>별도 전신 애니메이션 없음</td><td>293행</td></tr>
 <tr>
@@ -733,37 +586,24 @@
 <tr>
 <td>PLR-LNK-007</td><td>방패 파쇄</td><td>오브젝트 상태와 VFX</td><td>PLR-SHD-008</td><td>158행</td></tr>
 <tr>
-<td>PLR-LNK-008</td><td>강제 이동</td><td>Rigidbody와 Collider</td><td>PLR-STS-025~028</td><td>폭발&#183;추락&#183;사출</td></tr>
+<td>PLR-LNK-008</td><td>강제 이동</td><td>Rigidbody와 Collider</td><td>PLR-STS-025~027</td><td>폭발&#183;추락&#183;사출</td></tr>
+<tr>
+<td>PLR-LNK-009</td><td>강화 물품 머리 위 효과</td><td>VFX</td><td>별도 사용 애니메이션 없이 수송자 정적 자세 유지, 사용한 강화 물품에 대응하는 VFX를 효과 활성 시간 동안 머리 위에 표시</td><td>169~175행, 사용자 확정</td></tr>
+<tr>
+<td>PLR-LNK-010</td><td>기척 감지기 부착 상태</td><td>정적 모델링</td><td><code>PLR-SPC-001</code> 정적 모델링 행. 머리 보호대에 기척 감지기가 부착된 상태 모델, 별도 부착&#183;분리 애니메이션 없음</td><td>190행, 사용자 확정</td></tr>
+<tr>
+<td>PLR-LNK-011</td><td>적외선 시야경 착용 상태</td><td>정적 모델링</td><td><code>PLR-SPC-011</code> 정적 모델링 행. 적외선 시야경을 쓴 상태 모델, 별도 쓰기&#183;벗기 애니메이션 없음</td><td>189행, 사용자 확정</td></tr>
+<tr>
+<td>PLR-LNK-012</td><td>화상 소형 불꽃</td><td>VFX</td><td>별도 신체 모션 없이 화상 지속 동안 온몸 여러 곳에 소형 불 이펙트를 부착</td><td>289행, 사용자 확정</td></tr>
+<tr>
+<td>PLR-LNK-013</td><td>출혈 바닥 피</td><td>VFX</td><td>별도 신체 모션 없이 출혈 지속 동안 이동&#183;정지 위치의 바닥에 피가 묻어나오게 표시</td><td>290행, 사용자 확정</td></tr>
+<tr>
+<td>PLR-LNK-014</td><td>제압 방패 방어 상태 구분</td><td>VFX</td><td><code>PLR-SHD-004</code> 완료부터 방어 활성 이펙트를 표시하고 <code>PLR-SHD-006</code> 시작 또는 <code>PLR-SHD-008</code> 파손 시 종료해 올림&#183;내림 상태를 쉽게 구분</td><td>사용자 확정</td></tr>
+<tr>
+<td>PLR-LNK-015</td><td>긴급 수리 장치 설치와 구역 수리</td><td>오브젝트 상태와 게임 로직</td><td>별도 신체 모션 없이 사용 입력 유지 중 현재 구역의 원하는 위치에 장치를 설치하고 해당 구역 내구도를 회복</td><td>105행, 115행, 129행, 139행, 사용자 확정</td></tr>
 </tbody></table>
 <h2>25. 제작 전 확정 항목</h2>
-<table><thead><tr>
-<th>ID</th><th>미확정 내용</th><th>영향 범위</th></tr>
-</thead><tbody>
-<tr>
-<td>PLR-Q-001</td><td>1인칭 팔만 표시할지 전신도 표시할지</td><td>전신 명세 전체</td></tr>
-<tr>
-<td>PLR-Q-002</td><td>다른 플레이어와 CCTV에서 전신을 표시할지</td><td>전신 명세 전체</td></tr>
-<tr>
-<td>PLR-Q-003</td><td>걷기&#183;달리기&#183;앉은 이동을 제외한 방향 이동에서 원본 클립을 모두 제작할지 일부를 혼합할지</td><td>PLR-HLM, PLR-STS 방향 상태. 걷기는 전진&#183;후진 각각 1개, 좌우 옆걸음 공용 1개, 네 방향 대각선 공용 1개로 확정. 달리기는 전진 1개만 제작하고, 앉은 이동은 전진&#183;후진 각각 1개, 좌우 옆걸음 공용 1개, 네 방향 대각선 공용 1개로 확정</td></tr>
-<tr>
-<td>PLR-Q-004</td><td>Shift 달리기와 상태 설명의 Shift 대시가 같은 기능인지</td><td>PLR-LOC-010, PLR-STS-008~015</td></tr>
-<tr>
-<td>PLR-Q-005</td><td>제압 방패 좌클릭이 홀드인지 토글인지</td><td>PLR-SHD-004~006</td></tr>
-<tr>
-<td>PLR-Q-006</td><td>방호복을 런타임에서 직접 갈아입는지</td><td>PLR-ARM 전체</td></tr>
-<tr>
-<td>PLR-Q-007</td><td>강화 물품의 사용 방식</td><td>PLR-BST 전체</td></tr>
-<tr>
-<td>PLR-Q-008</td><td>손전등 스위치의 입력과 조작 방식</td><td>PLR-OTH-014~015</td></tr>
-<tr>
-<td>PLR-Q-009</td><td>긴급 수리 장치와 임시 해킹 장치의 사용 방식</td><td>PLR-OTH-024~025</td></tr>
-<tr>
-<td>PLR-Q-010</td><td>연막탄의 준비와 투척 방식</td><td>PLR-OTH-028</td></tr>
-<tr>
-<td>PLR-Q-011</td><td>적외선 시야경의 장착과 해제 방식</td><td>PLR-SPC-010~012</td></tr>
-<tr>
-<td>PLR-Q-012</td><td>사망을 고정 클립으로 끝낼지 래그돌로 전환할지</td><td>PLR-DMG-010~011</td></tr>
-</tbody></table>
+<p>현재 남은 제작 전 미확정 항목은 없다.</p>
 <h2>26. 구현 계층</h2>
 <table><thead><tr>
 <th>계층</th><th>담당 ID</th><th>구현 기준</th></tr>
@@ -773,11 +613,11 @@
 <tr>
 <td>Upper Body</td><td>PLR-HND, 무기, 물품</td><td>이동 중 공격과 사용을 허용하도록 Avatar Mask 적용</td></tr>
 <tr>
-<td>Interaction</td><td>PLR-HLM, PLR-TUR, PLR-SCR, PLR-INT</td><td>조작 앵커와 손 IK 사용</td></tr>
+<td>Interaction</td><td>PLR-HLM, PLR-TUR, PLR-INT</td><td>조작 앵커와 손 IK 사용</td></tr>
 <tr>
-<td>Physics</td><td>PLR-STS-025~032</td><td>강제 이동과 래그돌을 애니메이션 Transform과 중복 구동하지 않음</td></tr>
+<td>Physics</td><td>PLR-DMG-010, PLR-DMG-012~013, PLR-STS-025~027, PLR-STS-029, PLR-STS-032</td><td>사망 전환&#183;강제 이동&#183;래그돌을 애니메이션 Transform과 중복 구동하지 않음</td></tr>
 <tr>
-<td>Event</td><td>PLR-LNK</td><td>공격 판정과 VFX를 지정 프레임 이벤트에 연결</td></tr>
+<td>Event</td><td>PLR-LNK</td><td>공격 판정과 발사 VFX는 지정 프레임 이벤트에 연결하고, 상태 VFX는 효과 활성&#183;종료 시점에 연결</td></tr>
 </tbody></table>
 <p>이 문서의 행 수는 최종 파일 수와 같지 않을 수 있다. 서로 다른 명세가 동일 클립을 재사용할 수 있지만, 제작&#183;연결&#183;검토 시에는 각 행을 독립 요구사항으로 확인한다.</p>
 </main>
