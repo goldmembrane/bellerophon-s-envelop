@@ -44,6 +44,38 @@ namespace Bellerophon.Editor.Validation
         private static float maximumAbsoluteTorsoLean;
         private static float maximumRootDisplacement;
 
+        public static void CaptureReferenceMatchReview()
+        {
+            if (!EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                SessionState.EraseString(SessionSummaryKey);
+                SessionState.EraseInt(SessionFrameCountKey);
+                EnterPlayMode();
+                return;
+            }
+
+            if (!EditorApplication.isPlaying)
+            {
+                throw new InvalidOperationException(
+                    "Player walk reference review is waiting for Play Mode.");
+            }
+
+            var summary = SessionState.GetString(SessionSummaryKey, string.Empty);
+            if (string.IsNullOrWhiteSpace(summary))
+            {
+                Prepare();
+                return;
+            }
+
+            Finish();
+            ExitPlayMode();
+        }
+
+        public static void CaptureMeshyWalkingReview()
+        {
+            CaptureReferenceMatchReview();
+        }
+
         public static void EnterPlayMode()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)

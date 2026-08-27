@@ -1,0 +1,22 @@
+{
+    "target": "Player_Sidestep",
+    "state": "PlayerSidestep",
+    "sourceTake": "mixamo.com",
+    "framesCaptured": 61,
+    "loopsCaptured": 2,
+    "rootHorizontalDisplacementMax": 0.0,
+    "hipsHorizontalDisplacementMax": 0.0,
+    "leftFootHorizontalRange": 0.3132862448692322,
+    "rightFootHorizontalRange": 0.4207218289375305,
+    "leftHandHorizontalRange": 0.5131821632385254,
+    "rightHandHorizontalRange": 0.4176129996776581,
+    "leftForeArmMinimumLateralFromSpine": 0.1534423679113388,
+    "rightForeArmMinimumLateralFromSpine": 0.29719388484954836,
+    "leftHandMinimumLateralFromSpine": 0.08687945455312729,
+    "rightHandMinimumLateralFromSpine": 0.33487647771835329,
+    "loopPositionDifferenceMax": 0.0,
+    "loopRotationDifferenceDegreesMax": 0.0,
+    "applyRootMotion": false,
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+}

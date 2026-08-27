@@ -198,6 +198,479 @@ namespace Bellerophon.Editor.Validation
                         RefreshAssets,
                         "Unity assets refreshed.");
                     break;
+                case "ArrangePlayerAnimationLayout":
+                    RunSynchronous(
+                        request,
+                        PlayerAnimationLayoutTool.Arrange,
+                        "Player animation layout arranged.");
+                    break;
+                case "CapturePlayerAnimationLayout":
+                    RunSynchronous(
+                        request,
+                        () => PlayerAnimationLayoutTool.Capture(request.OutputPath),
+                        "Player animation layout captured.");
+                    break;
+                case "ApplyPlayerAnimationMaterials":
+                    RunSynchronous(
+                        request,
+                        PlayerAnimationLayoutTool.ApplyMaterials,
+                        "Player animation materials applied.");
+                    break;
+                case "CapturePlayerAnimationMaterials":
+                    RunSynchronous(
+                        request,
+                        () => PlayerAnimationLayoutTool.CaptureMaterials(request.OutputPath),
+                        "Player animation materials captured.");
+                    break;
+                case "ApplyPlayerIdleAnimation":
+                    RunSynchronous(
+                        request,
+                        PlayerAnimationLayoutTool.ApplyIdleAnimation,
+                        "Player idle animation applied.");
+                    break;
+                case "CapturePlayerIdleAnimation":
+                    RunSynchronous(
+                        request,
+                        () => PlayerAnimationLayoutTool.CaptureIdleAnimation(request.OutputPath),
+                        "Player idle animation captured.");
+                    break;
+                case "ApplyPlayerWalkForwardAnimation":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkForwardAnimationTool.Apply,
+                        "Player walk forward animation applied.");
+                    break;
+                case "ApplyPlayerWalkForwardReferenceMatch":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkForwardAnimationTool.ApplyReferenceMatch,
+                        "Player walk forward reference match applied.");
+                    break;
+                case "ApplyPlayerWalkForwardMeshyWalking":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkForwardAnimationTool.ApplyMeshyWalking,
+                        "Player walk forward Meshy walking applied.");
+                    break;
+                case "InspectPlayerEmbeddedAnimationClips":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkForwardAnimationTool.InspectEmbeddedSourceClips,
+                        "Player embedded animation clips inspected.");
+                    break;
+                case "CapturePlayerWalkForwardAnimation":
+                    RunSynchronous(
+                        request,
+                        () => PlayerWalkForwardAnimationTool.Capture(request.OutputPath),
+                        "Player walk forward animation captured.");
+                    break;
+                case "CapturePlayerWalkForwardReferenceMatchReview":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkForwardPlayModeReview.CaptureReferenceMatchReview,
+                        "Player walk forward reference match review advanced.");
+                    break;
+                case "CapturePlayerWalkForwardReferenceMatchFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkForwardAnimationTool.CaptureReferenceMatchFinal,
+                        "Player walk forward reference match final captured.");
+                    break;
+                case "CapturePlayerWalkForwardMeshyWalkingReview":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkForwardPlayModeReview.CaptureMeshyWalkingReview,
+                        "Player walk forward Meshy walking review advanced.");
+                    break;
+                case "CapturePlayerWalkForwardMeshyWalkingFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkForwardAnimationTool.CaptureMeshyWalkingFinal,
+                        "Player walk forward Meshy walking final captured.");
+                    break;
+                case "ApplyPlayerWalkBackwardMixamo":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkBackwardAnimationTool.Apply,
+                        "Player walk backward Mixamo animation applied.");
+                    break;
+                case "CapturePlayerWalkBackwardMixamoReview":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkBackwardPlayModeReview.CaptureReview,
+                        "Player walk backward Mixamo review advanced.");
+                    break;
+                case "CapturePlayerWalkBackwardMixamoFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkBackwardAnimationTool.CaptureFinal,
+                        "Player walk backward Mixamo final captured.");
+                    break;
+                case "ApplyPlayerWalkBackwardMeshyDirect":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkBackwardAnimationTool.ApplyMeshyDirect,
+                        "Player walk backward direct Meshy animation applied.");
+                    break;
+                case "CapturePlayerWalkBackwardMeshyDirectReview":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkBackwardPlayModeReview.CaptureReview,
+                        "Player walk backward direct Meshy review advanced.");
+                    break;
+                case "CapturePlayerWalkBackwardMeshyDirectFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkBackwardAnimationTool.CaptureMeshyDirectFinal,
+                        "Player walk backward direct Meshy final captured.");
+                    break;
+                case "ApplyPlayerWalkBackwardMeshyInPlace":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkBackwardAnimationTool.ApplyMeshyInPlace,
+                        "Player walk backward Meshy in-place animation applied.");
+                    break;
+                case "CapturePlayerWalkBackwardMeshyInPlaceReview":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkBackwardPlayModeReview.CaptureReview,
+                        "Player walk backward Meshy in-place review advanced.");
+                    break;
+                case "CapturePlayerWalkBackwardMeshyInPlaceFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkBackwardAnimationTool.CaptureMeshyInPlaceFinal,
+                        "Player walk backward Meshy in-place final captured.");
+                    break;
+                case "ApplyPlayerSidestepMixamoInPlace":
+                    RunSynchronous(
+                        request,
+                        PlayerSidestepAnimationTool.Apply,
+                        "Player sidestep exact Mixamo in-place animation applied.");
+                    break;
+                case "CapturePlayerSidestepMixamoInPlaceReview":
+                    RunSynchronous(
+                        request,
+                        PlayerSidestepPlayModeReview.CaptureReview,
+                        "Player sidestep exact Mixamo in-place review advanced.");
+                    break;
+                case "CapturePlayerSidestepMixamoInPlaceFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerSidestepAnimationTool.CaptureFinal,
+                        "Player sidestep exact Mixamo in-place final captured.");
+                    break;
+                case "ApplyPlayerWalkDiagonalForwardBlend":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkDiagonalBlendTreeTool.Apply,
+                        "Player walk diagonal forward 50:50 Blend Tree applied.");
+                    break;
+                case "CapturePlayerWalkDiagonalForwardBlendReview":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkDiagonalPlayModeReview.CaptureReview,
+                        "Player walk diagonal forward Blend Tree review advanced.");
+                    break;
+                case "CapturePlayerWalkDiagonalForwardBlendFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkDiagonalBlendTreeTool.CaptureFinal,
+                        "Player walk diagonal forward Blend Tree final captured.");
+                    break;
+                case "ApplyPlayerRunForwardEmbeddedAnimation":
+                    RunSynchronous(
+                        request,
+                        PlayerRunForwardAnimationTool.Apply,
+                        "Player run forward embedded animation applied.");
+                    break;
+                case "CapturePlayerRunForwardReview":
+                    RunSynchronous(
+                        request,
+                        PlayerRunForwardPlayModeReview.CaptureReview,
+                        "Player run forward Mixamo in-place review advanced.");
+                    break;
+                case "CapturePlayerRunForwardFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerRunForwardPlayModeReview.CaptureFinal,
+                        "Player run forward final captured.");
+                    break;
+                case "ApplyPlayerJumpEmbeddedAnimation":
+                    RunSynchronous(
+                        request,
+                        PlayerJumpAnimationTool.Apply,
+                        "Player jump embedded animation applied.");
+                    break;
+                case "CapturePlayerJumpReview":
+                    RunSynchronous(
+                        request,
+                        PlayerJumpPlayModeReview.CaptureReview,
+                        "Player jump direct two-loop review advanced.");
+                    break;
+                case "CapturePlayerJumpFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerJumpPlayModeReview.CaptureFinal,
+                        "Player jump final captured.");
+                    break;
+                case "ApplyPlayerCrouchEnterSourceAnimation":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchEnterAnimationTool.ApplySource,
+                        "Player crouch enter source animation applied.");
+                    break;
+                case "CapturePlayerCrouchEnterSourceReview":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchEnterPlayModeReview.CaptureSourceReview,
+                        "Player crouch enter source review advanced.");
+                    break;
+                case "ApplyPlayerCrouchEnterCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchEnterAnimationTool.ApplyCorrection,
+                        "Player crouch enter left-leg correction applied.");
+                    break;
+                case "ApplyPlayerCrouchEnterHalfSecondHold":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchEnterAnimationTool.ApplyHalfSecondHold,
+                        "Player crouch enter half-second hold applied.");
+                    break;
+                case "CapturePlayerCrouchEnterCorrectedReview":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchEnterPlayModeReview.CaptureCorrectedReview,
+                        "Player crouch enter corrected review advanced.");
+                    break;
+                case "CapturePlayerCrouchEnterHoldReview":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchEnterPlayModeReview.CaptureHoldReview,
+                        "Player crouch enter half-second hold review advanced.");
+                    break;
+                case "CapturePlayerCrouchEnterFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchEnterPlayModeReview.CaptureFinal,
+                        "Player crouch enter final captured.");
+                    break;
+                case "ApplyPlayerCrouchIdleFromEnter":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchIdleForwardAnimationTool.ApplyIdleFromEnter,
+                        "Player crouch idle copied from the Enter final hold.");
+                    break;
+                case "CapturePlayerCrouchIdleReview":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchIdleForwardPlayModeReview.CaptureIdleReview,
+                        "Player crouch idle review advanced.");
+                    break;
+                case "CapturePlayerCrouchIdleFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchIdleForwardPlayModeReview.CaptureIdleFinal,
+                        "Player crouch idle final captured.");
+                    break;
+                case "ApplyPlayerCrouchForwardMixamoInPlace":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchIdleForwardAnimationTool.ApplyForwardMixamoInPlace,
+                        "Player crouch forward exact Mixamo in-place animation applied.");
+                    break;
+                case "CapturePlayerCrouchForwardReview":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchIdleForwardPlayModeReview.CaptureForwardReview,
+                        "Player crouch forward review advanced.");
+                    break;
+                case "CapturePlayerCrouchForwardFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchIdleForwardPlayModeReview.CaptureForwardFinal,
+                        "Player crouch forward final captured.");
+                    break;
+                case "ApplyPlayerCrouchPoseAlignment":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchPoseAlignmentTool.ApplyQuaternionAlignment,
+                        "Player crouch pose alignment applied.");
+                    break;
+                case "ApplyPlayerCrouchForwardArmReach":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchPoseAlignmentTool.ApplyForwardArmReach,
+                        "Player crouch forward arm reach applied.");
+                    break;
+                case "ApplyPlayerCrouchForwardUpperBodyAndRightArmCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchPoseAlignmentTool
+                            .ApplyForwardUpperBodyAndRightArmCorrection,
+                        "Player crouch forward upper body and right arm corrected.");
+                    break;
+                case "ApplyPlayerCrouchForwardLeftArmAndHeadCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchPoseAlignmentTool
+                            .ApplyForwardLeftArmAndHeadCorrection,
+                        "Player crouch forward left arm and crouch heads corrected.");
+                    break;
+                case "ApplyPlayerCrouchForwardLeftArmStraightDown":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchPoseAlignmentTool
+                            .ApplyForwardLeftArmStraightDown,
+                        "Player crouch forward left arm straightened downward.");
+                    break;
+                case "ApplyPlayerCrouchBackwardAndSidestepAnimations":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchBackwardSidestepAnimationTool.Apply,
+                        "Player crouch backward and sidestep exact Mixamo in-place animations applied.");
+                    break;
+                case "ApplyPlayerCrouchBackwardAndSidestepIdleArmAlignment":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchBackwardSidestepAnimationTool
+                            .ApplyIdleArmAlignment,
+                        "Player crouch backward and sidestep arms aligned to Idle with swing preserved.");
+                    break;
+                case "ApplyPlayerCrouchBackwardAndSidestepArmClearance":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchBackwardSidestepAnimationTool
+                            .ApplyArmClearance,
+                        "Player crouch backward and sidestep arms moved outward with swing preserved.");
+                    break;
+                case "ApplyPlayerCrouchMovingKneeSideArmPose":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchBackwardSidestepAnimationTool
+                            .ApplyMovingKneeSideArmPose,
+                        "Player crouch moving arms gathered beside same-side knees with swing preserved.");
+                    break;
+                case "CapturePlayerCrouchMovingKneeSideArmReview":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchBackwardSidestepPlayModeReview.CaptureReview,
+                        "Player crouch moving knee-side arm review advanced.");
+                    break;
+                case "CapturePlayerCrouchMovingKneeSideArmFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchBackwardSidestepPlayModeReview.CaptureFinal,
+                        "Player crouch moving knee-side arm final captured.");
+                    break;
+                case "ApplyPlayerCrouchBackwardAndSidestepLeftArmsStraightDown":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchBackwardSidestepAnimationTool
+                            .ApplyLeftArmsStraightDown,
+                        "Player crouch backward and sidestep left arms straightened downward.");
+                    break;
+                case "CapturePlayerCrouchBackwardAndSidestepLeftArmsStraightDownReview":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchBackwardSidestepPlayModeReview
+                            .CaptureLeftArmsStraightDownReview,
+                        "Player crouch backward and sidestep left-arm straight-down review advanced.");
+                    break;
+                case "CapturePlayerCrouchBackwardAndSidestepLeftArmsStraightDownFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchBackwardSidestepPlayModeReview
+                            .CaptureLeftArmsStraightDownFinal,
+                        "Player crouch backward and sidestep left-arm straight-down final captured.");
+                    break;
+                case "CapturePlayerCrouchBackwardAndSidestepReview":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchBackwardSidestepPlayModeReview.CaptureReview,
+                        "Player crouch backward and sidestep review advanced.");
+                    break;
+                case "CapturePlayerCrouchBackwardAndSidestepFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchBackwardSidestepPlayModeReview.CaptureFinal,
+                        "Player crouch backward and sidestep final captured.");
+                    break;
+                case "CapturePlayerCrouchPoseAlignmentReview":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchPoseAlignmentPlayModeReview.CaptureActualReview,
+                        "Player crouch pose alignment review advanced.");
+                    break;
+                case "CapturePlayerCrouchPoseAlignmentFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchPoseAlignmentPlayModeReview.CaptureActualFinal,
+                        "Player crouch pose alignment final captured.");
+                    break;
+                case "CapturePlayerCrouchForwardLeftArmStraightDownReview":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchPoseAlignmentPlayModeReview
+                            .CaptureForwardLeftArmStraightDownReview,
+                        "Player crouch forward left-arm straight-down review advanced.");
+                    break;
+                case "CapturePlayerCrouchForwardLeftArmStraightDownFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchPoseAlignmentPlayModeReview
+                            .CaptureForwardLeftArmStraightDownFinal,
+                        "Player crouch forward left-arm straight-down final captured.");
+                    break;
+                case "EnterPlayerWalkForwardReviewPlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkForwardPlayModeReview.EnterPlayMode,
+                        "Player walk forward review Play Mode requested.");
+                    break;
+                case "PreparePlayerWalkForwardReview":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkForwardPlayModeReview.Prepare,
+                        "Player walk forward Play Mode review prepared.");
+                    break;
+                case "FinishPlayerWalkForwardReview":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkForwardPlayModeReview.Finish,
+                        "Player walk forward Play Mode review finished.");
+                    break;
+                case "ExitPlayerWalkForwardReviewPlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerWalkForwardPlayModeReview.ExitPlayMode,
+                        "Player walk forward Play Mode exit requested.");
+                    break;
+                case "ApplyPlayerStartView":
+                    RunSynchronous(
+                        request,
+                        PlayerAnimationLayoutTool.ApplyPlayerStartView,
+                        "Player start view applied.");
+                    break;
+                case "EnterPlayerStartViewPlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerAnimationLayoutTool.EnterPlayerStartViewPlayMode,
+                        "Player start view Play Mode requested.");
+                    break;
+                case "CapturePlayerStartView":
+                    RunSynchronous(
+                        request,
+                        () => PlayerAnimationLayoutTool.CapturePlayerStartView(request.OutputPath),
+                        "Player start view captured.");
+                    break;
+                case "ExitPlayerStartViewPlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerAnimationLayoutTool.ExitPlayerStartViewPlayMode,
+                        "Player start view Play Mode exit requested.");
+                    break;
                 case "StartAtaModelPerformanceProbe":
                     RunSynchronous(
                         request,

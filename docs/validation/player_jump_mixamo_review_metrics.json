@@ -1,0 +1,22 @@
+{
+    "target": "Player_Jump",
+    "state": "PlayerJump",
+    "sourceTake": "mixamo.com",
+    "clipDurationSeconds": 2.1666667461395265,
+    "clipFrameRate": 30.0,
+    "framesPerLoop": 65,
+    "framesSampled": 130,
+    "loopsSampled": 2,
+    "rootPositionDisplacementMax": 0.0,
+    "hipsVerticalRange": 0.485715389251709,
+    "hipsHorizontalDisplacementMax": 0.12899120151996613,
+    "leftFootVerticalRange": 0.709658145904541,
+    "rightFootVerticalRange": 0.639153003692627,
+    "loopPositionDifferenceMax": 6.38363019334065e-7,
+    "loopRotationDifferenceDegreesMax": 0.0,
+    "clipIsLooping": true,
+    "applyRootMotion": false,
+    "sourceClipDirect": true,
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+}

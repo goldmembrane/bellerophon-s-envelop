@@ -20,11 +20,25 @@ namespace Bellerophon.Editor.Validation
             "Assets/_Project/Art/Player/Animations/Player_Walk_Forward_Embedded.fbx";
         private const string SourcePath =
             "Assets/_Project/Art/Player/Animations/Player_Walk_Forward_Standard.fbx";
+        private const string ReferenceSourcePath =
+            "Assets/_Project/Art/Player/Animations/Player_Walk_Forward_Reference.fbx";
+        private const string MeshyWalkingSourcePath =
+            "Assets/_Project/Art/Player/Animations/Player_Walk_Forward_Meshy_Walking.fbx";
         private const string ClipPath =
             "Assets/_Project/Art/Player/Animations/Player_Walk_Forward.anim";
+        private const string MeshyWalkingClipPath =
+            "Assets/_Project/Art/Player/Animations/Player_Walk_Forward_Meshy_Walking.anim";
         private const string ControllerPath =
             "Assets/_Project/Art/Player/Animations/Player_Walk_Forward.controller";
         private const string SourceClipName = "Player_Walk_Forward_Mixamo_Source";
+        private const string ReferenceSourceClipName =
+            "Player_Walk_Forward_Reference_Source";
+        private const string MeshyWalkingSourceClipName =
+            "Player_Walk_Forward_Meshy_Walking_Source";
+        private const string ReferenceFinalCapturePath =
+            "docs/validation/player_walk_forward_reference_match_final.png";
+        private const string MeshyWalkingFinalCapturePath =
+            "docs/validation/player_walk_forward_meshy_walking_final.png";
         private const float FacingYaw = 180f;
         private const float PositionTolerance = 0.001f;
         private const float MinimumFootTravel = 0.08f;
@@ -185,6 +199,214 @@ namespace Bellerophon.Editor.Validation
                 ", SceneSaved=True.");
         }
 
+        public static void ApplyReferenceMatch()
+        {
+            var scene = RequireScene();
+            var wasDirty = scene.isDirty;
+            var layoutRoot = RequireRoot(LayoutRootName).transform;
+            var walkInstance = RequireDirectChild(layoutRoot, WalkKey);
+            var rootBefore = new TransformState(walkInstance);
+            var otherAnimationStates = OtherAnimationStates(layoutRoot, walkInstance);
+
+            var sourceClip = ConfigureAndLoadReferenceClip();
+            var clip = CreateReferenceMatchClip(sourceClip, walkInstance);
+            var controller = RequireReferenceController(clip);
+            var metrics = Inspect(clip, controller, false);
+
+            if (!rootBefore.Matches(walkInstance))
+            {
+                throw new InvalidOperationException(
+                    "Player_Walk_Forward root transform changed while applying reference match.");
+            }
+
+            RequireEqual(
+                otherAnimationStates,
+                OtherAnimationStates(layoutRoot, walkInstance),
+                "A player instance outside Player_Walk_Forward changed animation state.");
+            if (scene.isDirty != wasDirty)
+            {
+                throw new InvalidOperationException(
+                    "Player_Walk_Forward reference match changed the scene dirty state.");
+            }
+
+            Debug.Log(
+                "PlayerWalkForward reference match applied." +
+                " SourceClip=" + sourceClip.name +
+                ", Duration=" + Num(metrics.Duration) +
+                ", FrameRate=" + Num(metrics.FrameRate) +
+                ", PelvisLateralTravel=" + Num(metrics.PelvisLateralTravel) +
+                ", PelvisRollRange=" + Num(metrics.PelvisRollRangeDegrees) +
+                ", MaximumPelvisRoll=" + Num(metrics.MaximumPelvisRollDegrees) +
+                ", TorsoLeanRange=" + Num(metrics.TorsoLeanRangeDegrees) +
+                ", MaximumTorsoLean=" + Num(metrics.MaximumTorsoLeanDegrees) +
+                ", MeanTorsoLean=" + Num(metrics.MeanTorsoLeanDegrees) +
+                ", RemainingPlanarDrift=" + Num(metrics.RemainingPlanarDrift) +
+                ", RootPositionError=" + Num(metrics.RootPositionError) +
+                ", LeftFootTravel=" + Num(metrics.LeftFootTravel) +
+                ", RightFootTravel=" + Num(metrics.RightFootTravel) +
+                ", CurveBindings=" + metrics.CurveBindingCount.ToString(
+                    CultureInfo.InvariantCulture) +
+                ", Loop=True" +
+                ", ApplyRootMotion=False" +
+                ", PostCurveStabilization=False" +
+                ", OtherInstancesUnchanged=True" +
+                ", SceneChanged=False.");
+        }
+
+        public static void ApplyMeshyWalking()
+        {
+            var scene = RequireScene();
+            var wasDirty = scene.isDirty;
+            var layoutRoot = RequireRoot(LayoutRootName).transform;
+            var walkInstance = RequireDirectChild(layoutRoot, WalkKey);
+            var rootBefore = new TransformState(walkInstance);
+            var rendererAssetsBefore = RendererAssetStates(walkInstance);
+            var otherAnimationStates = OtherAnimationStates(layoutRoot, walkInstance);
+            var targetModelBefore = PrefabUtility.GetCorrespondingObjectFromOriginalSource(
+                                        walkInstance.gameObject) ??
+                                    throw new InvalidOperationException(
+                                        "Player_Walk_Forward has no original model prefab.");
+            var targetModelPathBefore = AssetDatabase.GetAssetPath(targetModelBefore);
+            var preservedClip = AssetDatabase.LoadAssetAtPath<AnimationClip>(ClipPath) ??
+                                throw new InvalidOperationException(
+                                    "The previous Player_Walk_Forward clip must remain available.");
+
+            var sourceClip = ConfigureAndLoadMeshyWalkingClip();
+            var clip = CreateMeshyWalkingClip(sourceClip, walkInstance);
+            var controller = RequireReferenceController(clip);
+            var metrics = Inspect(clip, controller, false);
+
+            if (!rootBefore.Matches(walkInstance))
+            {
+                throw new InvalidOperationException(
+                    "Player_Walk_Forward root transform changed while applying Meshy walking.");
+            }
+
+            RequireEqual(
+                rendererAssetsBefore,
+                RendererAssetStates(walkInstance),
+                "Player_Walk_Forward model, skin, or renderer assets changed.");
+            var targetModelAfter = PrefabUtility.GetCorrespondingObjectFromOriginalSource(
+                                       walkInstance.gameObject) ??
+                                   throw new InvalidOperationException(
+                                       "Player_Walk_Forward lost its original model prefab.");
+            if (!targetModelPathBefore.Equals(
+                    AssetDatabase.GetAssetPath(targetModelAfter),
+                    StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "Player_Walk_Forward model prefab connection changed.");
+            }
+
+            if (AssetDatabase.LoadAssetAtPath<AnimationClip>(ClipPath) != preservedClip)
+            {
+                throw new InvalidOperationException(
+                    "The previous Player_Walk_Forward animation asset changed.");
+            }
+
+            RequireEqual(
+                otherAnimationStates,
+                OtherAnimationStates(layoutRoot, walkInstance),
+                "A player instance outside Player_Walk_Forward changed animation state.");
+            if (scene.isDirty != wasDirty)
+            {
+                throw new InvalidOperationException(
+                    "Player_Walk_Forward Meshy walking apply changed the scene dirty state.");
+            }
+
+            Debug.Log(
+                "PlayerWalkForward Meshy walking applied." +
+                " SourceClip=" + sourceClip.name +
+                ", Duration=" + Num(metrics.Duration) +
+                ", FrameRate=" + Num(metrics.FrameRate) +
+                ", RemainingPlanarDrift=" + Num(metrics.RemainingPlanarDrift) +
+                ", RootPositionError=" + Num(metrics.RootPositionError) +
+                ", LeftFootTravel=" + Num(metrics.LeftFootTravel) +
+                ", RightFootTravel=" + Num(metrics.RightFootTravel) +
+                ", CurveBindings=" + metrics.CurveBindingCount.ToString(
+                    CultureInfo.InvariantCulture) +
+                ", Loop=True" +
+                ", ApplyRootMotion=False" +
+                ", ExistingModelPreserved=True" +
+                ", SourceSkinConnected=False" +
+                ", PreviousAnimationAssetPreserved=True" +
+                ", OtherInstancesUnchanged=True" +
+                ", SceneChanged=False.");
+        }
+
+        public static void CaptureReferenceMatchFinal()
+        {
+            var scene = RequireScene();
+            var wasDirty = scene.isDirty;
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(ClipPath) ??
+                       throw new InvalidOperationException(
+                           "Player_Walk_Forward clip is missing.");
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                                 ControllerPath) ??
+                             throw new InvalidOperationException(
+                                 "Player_Walk_Forward controller is missing.");
+            var metrics = Inspect(clip, controller, false);
+            var destination = Absolute(ReferenceFinalCapturePath);
+            Directory.CreateDirectory(
+                Path.GetDirectoryName(destination) ??
+                throw new InvalidOperationException(
+                    "The reference match final capture path has no directory."));
+
+            CapturePhaseStrip(clip, destination);
+            if (scene.isDirty != wasDirty)
+            {
+                throw new InvalidOperationException(
+                    "Player_Walk_Forward final capture changed the scene dirty state.");
+            }
+
+            Debug.Log(
+                "PlayerWalkForward reference match final captured." +
+                " Output=" + destination +
+                ", ReviewPhases=0,0.25,0.5,0.75" +
+                ", Duration=" + Num(metrics.Duration) +
+                ", RemainingPlanarDrift=" + Num(metrics.RemainingPlanarDrift) +
+                ", RootPositionError=" + Num(metrics.RootPositionError) +
+                ", DirectVisualReviewRequired=True" +
+                ", SceneChanged=False.");
+        }
+
+        public static void CaptureMeshyWalkingFinal()
+        {
+            var scene = RequireScene();
+            var wasDirty = scene.isDirty;
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                           MeshyWalkingClipPath) ??
+                       throw new InvalidOperationException(
+                           "Player_Walk_Forward Meshy walking clip is missing.");
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                                 ControllerPath) ??
+                             throw new InvalidOperationException(
+                                 "Player_Walk_Forward controller is missing.");
+            var metrics = Inspect(clip, controller, false);
+            var destination = Absolute(MeshyWalkingFinalCapturePath);
+            Directory.CreateDirectory(
+                Path.GetDirectoryName(destination) ??
+                throw new InvalidOperationException(
+                    "The Meshy walking final capture path has no directory."));
+
+            CapturePhaseStrip(clip, destination);
+            if (scene.isDirty != wasDirty)
+            {
+                throw new InvalidOperationException(
+                    "Player_Walk_Forward Meshy final capture changed the scene dirty state.");
+            }
+
+            Debug.Log(
+                "PlayerWalkForward Meshy walking final captured." +
+                " Output=" + destination +
+                ", ReviewPhases=0,0.25,0.5,0.75" +
+                ", Duration=" + Num(metrics.Duration) +
+                ", RemainingPlanarDrift=" + Num(metrics.RemainingPlanarDrift) +
+                ", RootPositionError=" + Num(metrics.RootPositionError) +
+                ", DirectVisualReviewRequired=True" +
+                ", SceneChanged=False.");
+        }
+
         public static void Capture(string outputPath)
         {
             if (string.IsNullOrWhiteSpace(outputPath))
@@ -286,6 +508,432 @@ namespace Bellerophon.Editor.Validation
             }
 
             return importedClips[0];
+        }
+
+        private static AnimationClip ConfigureAndLoadReferenceClip()
+        {
+            var importer = AssetImporter.GetAtPath(ReferenceSourcePath) as ModelImporter ??
+                           throw new InvalidOperationException(
+                               "Player_Walk_Forward reference FBX is not imported.");
+            importer.importAnimation = true;
+            importer.animationType = ModelImporterAnimationType.Generic;
+            var clips = importer.defaultClipAnimations;
+            if (clips == null || clips.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Player_Walk_Forward reference source must contain exactly one take. Count=" +
+                    (clips?.Length ?? 0).ToString(CultureInfo.InvariantCulture) + ".");
+            }
+
+            clips[0].name = ReferenceSourceClipName;
+            clips[0].loopTime = true;
+            clips[0].loopPose = true;
+            clips[0].lockRootRotation = true;
+            clips[0].lockRootHeightY = true;
+            clips[0].lockRootPositionXZ = true;
+            clips[0].keepOriginalOrientation = true;
+            clips[0].keepOriginalPositionY = true;
+            clips[0].keepOriginalPositionXZ = true;
+            importer.clipAnimations = clips;
+            importer.SaveAndReimport();
+
+            var importedClips = AssetDatabase.LoadAllAssetsAtPath(ReferenceSourcePath)
+                .OfType<AnimationClip>()
+                .Where(item => !item.name.StartsWith("__preview__", StringComparison.Ordinal))
+                .ToArray();
+            if (importedClips.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Player_Walk_Forward reference imported clip count differs. Count=" +
+                    importedClips.Length.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+
+            return importedClips[0];
+        }
+
+        private static AnimationClip ConfigureAndLoadMeshyWalkingClip()
+        {
+            var importer = AssetImporter.GetAtPath(MeshyWalkingSourcePath) as ModelImporter ??
+                           throw new InvalidOperationException(
+                               "Player_Walk_Forward Meshy walking FBX is not imported.");
+            importer.importAnimation = true;
+            importer.animationType = ModelImporterAnimationType.Generic;
+            var clips = importer.defaultClipAnimations;
+            if (clips == null || clips.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Player_Walk_Forward Meshy walking source must contain exactly one take. Count=" +
+                    (clips?.Length ?? 0).ToString(CultureInfo.InvariantCulture) + ".");
+            }
+
+            clips[0].name = MeshyWalkingSourceClipName;
+            clips[0].loopTime = true;
+            clips[0].loopPose = true;
+            clips[0].lockRootRotation = true;
+            clips[0].lockRootHeightY = true;
+            clips[0].lockRootPositionXZ = true;
+            clips[0].keepOriginalOrientation = true;
+            clips[0].keepOriginalPositionY = true;
+            clips[0].keepOriginalPositionXZ = true;
+            importer.clipAnimations = clips;
+            importer.SaveAndReimport();
+
+            var importedClips = AssetDatabase.LoadAllAssetsAtPath(MeshyWalkingSourcePath)
+                .OfType<AnimationClip>()
+                .Where(item => !item.name.StartsWith("__preview__", StringComparison.Ordinal))
+                .ToArray();
+            if (importedClips.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Player_Walk_Forward Meshy walking imported clip count differs. Count=" +
+                    importedClips.Length.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+
+            return importedClips[0];
+        }
+
+        private static AnimationClip CreateReferenceMatchClip(
+            AnimationClip sourceClip,
+            Transform targetRig)
+        {
+            var generated = BakeReferenceMatchToTargetRig(sourceClip, targetRig);
+            generated.name = WalkKey;
+            generated.legacy = false;
+            generated.wrapMode = WrapMode.Loop;
+            generated.EnsureQuaternionContinuity();
+            var settings = AnimationUtility.GetAnimationClipSettings(generated);
+            settings.loopTime = true;
+            settings.loopBlend = true;
+            settings.keepOriginalOrientation = true;
+            settings.keepOriginalPositionY = true;
+            settings.keepOriginalPositionXZ = true;
+            AnimationUtility.SetAnimationClipSettings(generated, settings);
+
+            var existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(ClipPath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(generated, ClipPath);
+            }
+            else
+            {
+                EditorUtility.CopySerialized(generated, existing);
+                existing.name = WalkKey;
+                existing.legacy = false;
+                existing.wrapMode = WrapMode.Loop;
+                EditorUtility.SetDirty(existing);
+                UnityEngine.Object.DestroyImmediate(generated);
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.ImportAsset(
+                ClipPath,
+                ImportAssetOptions.ForceSynchronousImport |
+                ImportAssetOptions.ForceUpdate);
+            return AssetDatabase.LoadAssetAtPath<AnimationClip>(ClipPath) ??
+                   throw new InvalidOperationException(
+                       "Player_Walk_Forward reference clip was not reloaded after saving.");
+        }
+
+        private static AnimationClip CreateMeshyWalkingClip(
+            AnimationClip sourceClip,
+            Transform targetRig)
+        {
+            var generated = BakeClipToTargetRig(
+                sourceClip,
+                targetRig,
+                MeshyWalkingSourcePath,
+                "MeshyWalking");
+            generated.name = WalkKey;
+            generated.legacy = false;
+            generated.wrapMode = WrapMode.Loop;
+            generated.EnsureQuaternionContinuity();
+            var settings = AnimationUtility.GetAnimationClipSettings(generated);
+            settings.loopTime = true;
+            settings.loopBlend = true;
+            settings.keepOriginalOrientation = true;
+            settings.keepOriginalPositionY = true;
+            settings.keepOriginalPositionXZ = true;
+            AnimationUtility.SetAnimationClipSettings(generated, settings);
+
+            var existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                MeshyWalkingClipPath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(generated, MeshyWalkingClipPath);
+            }
+            else
+            {
+                EditorUtility.CopySerialized(generated, existing);
+                existing.name = WalkKey;
+                existing.legacy = false;
+                existing.wrapMode = WrapMode.Loop;
+                EditorUtility.SetDirty(existing);
+                UnityEngine.Object.DestroyImmediate(generated);
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.ImportAsset(
+                MeshyWalkingClipPath,
+                ImportAssetOptions.ForceSynchronousImport |
+                ImportAssetOptions.ForceUpdate);
+            return AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                       MeshyWalkingClipPath) ??
+                   throw new InvalidOperationException(
+                       "Player_Walk_Forward Meshy walking clip was not reloaded after saving.");
+        }
+
+        private static AnimationClip BakeReferenceMatchToTargetRig(
+            AnimationClip sourceClip,
+            Transform targetRig)
+        {
+            return BakeClipToTargetRig(
+                sourceClip,
+                targetRig,
+                ReferenceSourcePath,
+                "Reference");
+        }
+
+        private static AnimationClip BakeClipToTargetRig(
+            AnimationClip sourceClip,
+            Transform targetRig,
+            string sourcePrefabPath,
+            string sampleLabel)
+        {
+            var sourcePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                                   sourcePrefabPath) ??
+                               throw new InvalidOperationException(
+                                   "Player_Walk_Forward animation source model is missing.");
+            var sourceSample = UnityEngine.Object.Instantiate(sourcePrefab);
+            var targetPrefab = PrefabUtility.GetCorrespondingObjectFromOriginalSource(
+                                   targetRig.gameObject) ??
+                               throw new InvalidOperationException(
+                                   "Player_Walk_Forward target has no original prefab Rest Pose.");
+            var targetSample = UnityEngine.Object.Instantiate(targetPrefab);
+            sourceSample.name = "PlayerWalkForward_" + sampleLabel + "SourceSample";
+            targetSample.name = "PlayerWalkForward_" + sampleLabel + "TargetSample";
+            sourceSample.hideFlags = HideFlags.HideAndDontSave;
+            targetSample.hideFlags = HideFlags.HideAndDontSave;
+            sourceSample.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            targetSample.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            sourceSample.transform.localScale = Vector3.one;
+            targetSample.transform.localScale = Vector3.one;
+
+            try
+            {
+                DisableAnimators(sourceSample);
+                DisableAnimators(targetSample);
+                var animatedPaths = AnimationUtility.GetCurveBindings(sourceClip)
+                    .Where(binding => binding.type == typeof(Transform))
+                    .Select(binding => binding.path)
+                    .Distinct(StringComparer.Ordinal)
+                    .OrderBy(PathDepth)
+                    .ThenBy(path => path, StringComparer.Ordinal)
+                    .ToArray();
+                if (animatedPaths.Length == 0)
+                {
+                    throw new InvalidOperationException(
+                        "Player_Walk_Forward animation source has no Transform curves.");
+                }
+
+                var hierarchyPaths = animatedPaths
+                    .SelectMany(PathAndAncestors)
+                    .Append(string.Empty)
+                    .Distinct(StringComparer.Ordinal)
+                    .OrderBy(PathDepth)
+                    .ThenBy(path => path, StringComparer.Ordinal)
+                    .ToArray();
+                var sourceTransforms = hierarchyPaths.ToDictionary(
+                    path => path,
+                    path => RequireTransformPath(sourceSample.transform, path),
+                    StringComparer.Ordinal);
+                var targetTransforms = hierarchyPaths.ToDictionary(
+                    path => path,
+                    path => RequireTransformPath(targetSample.transform, path),
+                    StringComparer.Ordinal);
+                var sourceRestWorld = sourceTransforms.ToDictionary(
+                    pair => pair.Key,
+                    pair => pair.Value.localToWorldMatrix,
+                    StringComparer.Ordinal);
+                var targetRestWorld = targetTransforms.ToDictionary(
+                    pair => pair.Key,
+                    pair => pair.Value.localToWorldMatrix,
+                    StringComparer.Ordinal);
+                var targetRestScale = targetTransforms.ToDictionary(
+                    pair => pair.Key,
+                    pair => pair.Value.localScale,
+                    StringComparer.Ordinal);
+
+                var frameRate = sourceClip.frameRate;
+                if (frameRate <= 0f)
+                {
+                    throw new InvalidOperationException(
+                        "Player_Walk_Forward animation source frame rate is invalid.");
+                }
+
+                var frameCount = Mathf.RoundToInt(sourceClip.length * frameRate);
+                if (frameCount < 1)
+                {
+                    throw new InvalidOperationException(
+                        "Player_Walk_Forward animation source has no complete frame interval.");
+                }
+
+                var times = Enumerable.Range(0, frameCount + 1)
+                    .Select(index => Mathf.Min(index / frameRate, sourceClip.length))
+                    .ToArray();
+                var positions = animatedPaths.ToDictionary(
+                    path => path,
+                    _ => new Vector3[times.Length],
+                    StringComparer.Ordinal);
+                var rotations = animatedPaths.ToDictionary(
+                    path => path,
+                    _ => new Quaternion[times.Length],
+                    StringComparer.Ordinal);
+                var scales = animatedPaths.ToDictionary(
+                    path => path,
+                    _ => new Vector3[times.Length],
+                    StringComparer.Ordinal);
+                for (var frame = 0; frame < times.Length; frame++)
+                {
+                    sourceClip.SampleAnimation(sourceSample, times[frame]);
+                    var desiredWorld = new Dictionary<string, Matrix4x4>(
+                        StringComparer.Ordinal)
+                    {
+                        [string.Empty] = targetRestWorld[string.Empty]
+                    };
+                    foreach (var path in hierarchyPaths)
+                    {
+                        if (string.IsNullOrEmpty(path))
+                        {
+                            continue;
+                        }
+
+                        var restAxisMap = sourceRestWorld[path].inverse *
+                                          targetRestWorld[path];
+                        var world = sourceTransforms[path].localToWorldMatrix *
+                                    restAxisMap;
+                        desiredWorld[path] = world;
+                        if (!positions.TryGetValue(path, out var pathPositions))
+                        {
+                            continue;
+                        }
+
+                        var parentPath = ParentPath(path);
+                        var local = desiredWorld[parentPath].inverse * world;
+                        pathPositions[frame] = local.GetPosition();
+                        var rotation = local.rotation;
+                        if (frame > 0 &&
+                            Quaternion.Dot(rotations[path][frame - 1], rotation) < 0f)
+                        {
+                            rotation = Negate(rotation);
+                        }
+
+                        rotations[path][frame] = rotation;
+                        scales[path][frame] = targetRestScale[path];
+                    }
+
+                    if (positions.TryGetValue(string.Empty, out var rootPositions))
+                    {
+                        rootPositions[frame] = targetSample.transform.localPosition;
+                        rotations[string.Empty][frame] =
+                            targetSample.transform.localRotation;
+                        scales[string.Empty][frame] = targetSample.transform.localScale;
+                    }
+                }
+
+                var generated = new AnimationClip
+                {
+                    frameRate = frameRate,
+                    legacy = false,
+                    wrapMode = WrapMode.Loop
+                };
+                foreach (var path in animatedPaths)
+                {
+                    SetVector3Curves(
+                        generated,
+                        path,
+                        "m_LocalPosition",
+                        times,
+                        positions[path]);
+                    SetQuaternionCurves(generated, path, times, rotations[path]);
+                    SetVector3Curves(
+                        generated,
+                        path,
+                        "m_LocalScale",
+                        times,
+                        scales[path]);
+                }
+
+                return generated;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceSample);
+                UnityEngine.Object.DestroyImmediate(targetSample);
+            }
+        }
+
+        private static void DisableAnimators(GameObject sample)
+        {
+            foreach (var animator in sample.GetComponentsInChildren<Animator>(true))
+            {
+                animator.enabled = false;
+                animator.runtimeAnimatorController = null;
+            }
+        }
+
+        private static Transform RequireTransformPath(Transform root, string path)
+        {
+            var transform = string.IsNullOrEmpty(path) ? root : root.Find(path);
+            return transform ?? throw new InvalidOperationException(
+                "Player_Walk_Forward rig path differs: " + path + ".");
+        }
+
+        private static IEnumerable<string> PathAndAncestors(string path)
+        {
+            for (var current = path;
+                 !string.IsNullOrEmpty(current);
+                 current = ParentPath(current))
+            {
+                yield return current;
+            }
+        }
+
+        private static string ParentPath(string path)
+        {
+            var separator = path.LastIndexOf('/');
+            return separator < 0 ? string.Empty : path.Substring(0, separator);
+        }
+
+        private static int PathDepth(string path)
+        {
+            return string.IsNullOrEmpty(path)
+                ? 0
+                : path.Count(character => character == '/') + 1;
+        }
+
+        private static AnimatorController RequireReferenceController(AnimationClip clip)
+        {
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                                 ControllerPath) ??
+                             throw new InvalidOperationException(
+                                 "Player_Walk_Forward controller is missing.");
+            if (controller.layers.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Player_Walk_Forward controller layer count differs.");
+            }
+
+            var state = controller.layers[0].stateMachine.defaultState ??
+                        throw new InvalidOperationException(
+                            "Player_Walk_Forward controller has no default state.");
+            if (state.motion != clip)
+            {
+                state.motion = clip;
+                EditorUtility.SetDirty(controller);
+                AssetDatabase.SaveAssets();
+            }
+
+            return controller;
         }
 
         private static AnimationClip CreateInPlaceClip(
@@ -1146,6 +1794,33 @@ namespace Bellerophon.Editor.Validation
                 rotations.Select(value => value.w).ToArray());
         }
 
+        private static void SetVector3Curves(
+            AnimationClip clip,
+            string path,
+            string propertyPrefix,
+            float[] times,
+            Vector3[] values)
+        {
+            SetSampledCurve(
+                clip,
+                path,
+                propertyPrefix + ".x",
+                times,
+                values.Select(value => value.x).ToArray());
+            SetSampledCurve(
+                clip,
+                path,
+                propertyPrefix + ".y",
+                times,
+                values.Select(value => value.y).ToArray());
+            SetSampledCurve(
+                clip,
+                path,
+                propertyPrefix + ".z",
+                times,
+                values.Select(value => value.z).ToArray());
+        }
+
         private static SwayMetrics MeasureSway(
             AnimationClip clip,
             Transform animationRoot)
@@ -1339,7 +2014,8 @@ namespace Bellerophon.Editor.Validation
 
         private static WalkMetrics Inspect(
             AnimationClip clip,
-            AnimatorController controller)
+            AnimatorController controller,
+            bool enforceStabilizedMotion = true)
         {
             RequireScene();
             var layoutRoot = RequireRoot(LayoutRootName).transform;
@@ -1414,11 +2090,12 @@ namespace Bellerophon.Editor.Validation
             }
 
             var sway = MeasureSway(clip, walkInstance);
-            if (sway.PelvisLateralTravel > MaximumPelvisLateralTravel ||
-                sway.PelvisRollRangeDegrees > MaximumPelvisRollRangeDegrees ||
-                sway.MaximumPelvisRollDegrees > MaximumPelvisRollDegrees ||
-                sway.TorsoLeanRangeDegrees > MaximumTorsoLeanRangeDegrees ||
-                sway.MaximumTorsoLeanDegrees > MaximumTorsoLeanDegrees)
+            if (enforceStabilizedMotion &&
+                (sway.PelvisLateralTravel > MaximumPelvisLateralTravel ||
+                 sway.PelvisRollRangeDegrees > MaximumPelvisRollRangeDegrees ||
+                 sway.MaximumPelvisRollDegrees > MaximumPelvisRollDegrees ||
+                 sway.TorsoLeanRangeDegrees > MaximumTorsoLeanRangeDegrees ||
+                 sway.MaximumTorsoLeanDegrees > MaximumTorsoLeanDegrees))
             {
                 throw new InvalidOperationException(
                     "Player_Walk_Forward remains too laterally unstable." +
@@ -1429,7 +2106,8 @@ namespace Bellerophon.Editor.Validation
                     ", MaximumTorsoLean=" + Num(sway.MaximumTorsoLeanDegrees) + ".");
             }
 
-            if (Mathf.Abs(sway.MeanTorsoLeanDegrees) >
+            if (enforceStabilizedMotion &&
+                Mathf.Abs(sway.MeanTorsoLeanDegrees) >
                 MaximumMeanTorsoLeanDegrees)
             {
                 throw new InvalidOperationException(
@@ -1437,7 +2115,10 @@ namespace Bellerophon.Editor.Validation
                     " MeanTorsoLean=" + Num(sway.MeanTorsoLeanDegrees) + ".");
             }
 
-            ValidateLegAlignment(MeasureLegAlignment(clip, walkInstance));
+            if (enforceStabilizedMotion)
+            {
+                ValidateLegAlignment(MeasureLegAlignment(clip, walkInstance));
+            }
 
             return new WalkMetrics(
                 clip.length,
@@ -1917,6 +2598,56 @@ namespace Bellerophon.Editor.Validation
                                 AssetDatabase.GetAssetPath(
                                     animator.runtimeAnimatorController) + "," +
                                 animator.applyRootMotion)))
+                .ToArray();
+        }
+
+        private static string[] RendererAssetStates(Transform root)
+        {
+            return root.GetComponentsInChildren<Renderer>(true)
+                .OrderBy(
+                    renderer => AnimationUtility.CalculateTransformPath(
+                        renderer.transform,
+                        root),
+                    StringComparer.Ordinal)
+                .Select(renderer =>
+                {
+                    var path = AnimationUtility.CalculateTransformPath(
+                        renderer.transform,
+                        root);
+                    var meshPath = string.Empty;
+                    var skeleton = string.Empty;
+                    if (renderer is SkinnedMeshRenderer skinned)
+                    {
+                        meshPath = AssetDatabase.GetAssetPath(skinned.sharedMesh);
+                        skeleton = string.Join(
+                            ",",
+                            skinned.bones.Select(bone =>
+                                bone == null
+                                    ? "<null>"
+                                    : AnimationUtility.CalculateTransformPath(bone, root)));
+                        skeleton += "|Root=" +
+                                    (skinned.rootBone == null
+                                        ? "<null>"
+                                        : AnimationUtility.CalculateTransformPath(
+                                            skinned.rootBone,
+                                            root));
+                    }
+                    else
+                    {
+                        var meshFilter = renderer.GetComponent<MeshFilter>();
+                        if (meshFilter != null)
+                        {
+                            meshPath = AssetDatabase.GetAssetPath(meshFilter.sharedMesh);
+                        }
+                    }
+
+                    var materials = string.Join(
+                        ",",
+                        renderer.sharedMaterials.Select(AssetDatabase.GetAssetPath));
+                    return path + "|" + renderer.GetType().FullName + "|" +
+                           renderer.enabled + "|Mesh=" + meshPath + "|Materials=" +
+                           materials + "|Skeleton=" + skeleton;
+                })
                 .ToArray();
         }
 
