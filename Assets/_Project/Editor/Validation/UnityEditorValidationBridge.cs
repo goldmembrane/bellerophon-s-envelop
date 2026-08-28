@@ -531,6 +531,470 @@ namespace Bellerophon.Editor.Validation
                         PlayerCrouchBackwardSidestepAnimationTool.Apply,
                         "Player crouch backward and sidestep exact Mixamo in-place animations applied.");
                     break;
+                case "ApplyPlayerCrouchDiagonalAndExit":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchDiagonalExitTools.Apply,
+                        "Player crouch diagonal Blend Tree and exact Mixamo exit applied.");
+                    break;
+                case "CapturePlayerCrouchDiagonalAndExitReview":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchDiagonalExitTools.CaptureReview,
+                        "Player crouch diagonal and exit review advanced.");
+                    break;
+                case "CapturePlayerCrouchDiagonalAndExitFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchDiagonalExitTools.CaptureFinal,
+                        "Player crouch diagonal and exit final images captured.");
+                    break;
+                case "ApplyPlayerCrouchExitIdleTransition":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchDiagonalExitTools.ApplyExitIdleTransition,
+                        "Player crouch exit transition to Idle first-frame pose applied.");
+                    break;
+                case "CapturePlayerCrouchExitIdleTransitionReview":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchDiagonalExitTools.CaptureExitIdleTransitionReview,
+                        "Player crouch exit transition to Idle review advanced.");
+                    break;
+                case "CapturePlayerCrouchExitIdleTransitionFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerCrouchDiagonalExitTools.CaptureExitIdleTransitionFinal,
+                        "Player crouch exit transition to Idle final image captured.");
+                    break;
+                case "ApplyPlayerHandsObjectAnimations":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.Apply,
+                        "Player Hands and Objects exact source animations applied.");
+                    break;
+                case "ApplyPlayerHandsCarryOneHandEmbeddedTakeExact":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyCarryOneHandEmbeddedTakeExact,
+                        "Player OneHand adjusted animation removed and exact embedded Take linked directly.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandEmbeddedTakeExactReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureCarryOneHandEmbeddedTakeExactReview,
+                        "Player OneHand exact embedded Take review advanced.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandEmbeddedTakeExactFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureCarryOneHandEmbeddedTakeExactFinal,
+                        "Player OneHand exact embedded Take final image captured.");
+                    break;
+                case "ApplyPlayerHandsCarryOneHandEmptyBodyPalmLeft":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyCarryOneHandEmptyBodyPalmLeft,
+                        "Player OneHand Empty Idle body, separated left arm, and character-left actual palm applied.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandEmptyBodyPalmLeftReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureCarryOneHandEmptyBodyPalmLeftReview,
+                        "Player OneHand Empty-body palm-left review advanced.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandEmptyBodyPalmLeftFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureCarryOneHandEmptyBodyPalmLeftFinal,
+                        "Player OneHand Empty-body palm-left final image captured.");
+                    break;
+                case "ApplyPlayerHandsDrawAndStowBackExactTakes":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyHandsDrawAndStowBackExactTakes,
+                        "Player Hands Draw/Stow Back exact embedded Takes applied.");
+                    break;
+                case "CapturePlayerHandsDrawAndStowBackExactReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureHandsDrawAndStowBackExactReview,
+                        "Player Hands Draw/Stow Back exact Take review advanced.");
+                    break;
+                case "CapturePlayerHandsDrawAndStowBackExactFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureHandsDrawAndStowBackExactFinal,
+                        "Player Hands Draw/Stow Back exact Take final images captured.");
+                    break;
+                case "ReconnectPlayerHandsDrawBackExactMixamo":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ReconnectPlayerHandsDrawBackExactMixamo,
+                        "Player Hands Draw Back exact embedded Mixamo Take reconnected.");
+                    break;
+                case "CapturePlayerHandsDrawBackExactMixamoReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsDrawBackExactMixamoReview,
+                        "Player Hands Draw Back exact Mixamo review advanced.");
+                    break;
+                case "CapturePlayerHandsDrawBackExactMixamoFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsDrawBackExactMixamoFinal,
+                        "Player Hands Draw Back exact Mixamo final image captured.");
+                    break;
+                case "ApplyPlayerHandsDrawBackForwardAngle":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyHandsDrawBackForwardAngle,
+                        "Player Hands Draw Back right-arm forward angle applied with timing preserved.");
+                    break;
+                case "CapturePlayerHandsDrawBackForwardAngleReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureHandsDrawBackForwardAngleReview,
+                        "Player Hands Draw Back forward-angle review advanced.");
+                    break;
+                case "CapturePlayerHandsDrawBackForwardAngleFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureHandsDrawBackForwardAngleFinal,
+                        "Player Hands Draw Back forward-angle final image captured.");
+                    break;
+                case "ApplyPlayerHandsDrawBackLowPalmLeftPose":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyHandsDrawBackLowPalmLeftPose,
+                        "Player Hands Draw Back solar-plexus-height, 30-degree elbow, palm-left pose applied with timing preserved.");
+                    break;
+                case "CapturePlayerHandsDrawBackLowPalmLeftPoseReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureHandsDrawBackLowPalmLeftPoseReview,
+                        "Player Hands Draw Back low palm-left pose review advanced.");
+                    break;
+                case "CapturePlayerHandsDrawBackLowPalmLeftPoseFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureHandsDrawBackLowPalmLeftPoseFinal,
+                        "Player Hands Draw Back low palm-left pose final image captured.");
+                    break;
+                case "ApplyPlayerHandsDrawBackOuterElbowPath":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyHandsDrawBackOuterElbowPath,
+                        "Player Hands Draw Back outward elbow extraction path applied with final pose and timing preserved.");
+                    break;
+                case "CapturePlayerHandsDrawBackOuterElbowPathReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureHandsDrawBackOuterElbowPathReview,
+                        "Player Hands Draw Back outer-elbow path review advanced.");
+                    break;
+                case "CapturePlayerHandsDrawBackOuterElbowPathFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureHandsDrawBackOuterElbowPathFinal,
+                        "Player Hands Draw Back outer-elbow path final image captured.");
+                    break;
+                case "ApplyPlayerTransporterPurpleFlagDrawBackClearanceAndStart":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyPlayerTransporterPurpleFlagDrawBackClearanceAndStart,
+                        "Shared transporter light-purple left-arm patch, Draw Back torso clearance, and Empty-facing start applied.");
+                    break;
+                case "CapturePlayerTransporterPurpleFlagDrawBackClearanceAndStartReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerTransporterPurpleFlagDrawBackClearanceAndStartReview,
+                        "Transporter purple-flag, Draw Back clearance, and start-position review advanced.");
+                    break;
+                case "CapturePlayerTransporterPurpleFlagDrawBackClearanceAndStartFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerTransporterPurpleFlagDrawBackClearanceAndStartFinal,
+                        "Transporter purple-flag, Draw Back clearance, and start-position final image captured.");
+                    break;
+                case "ApplyPlayerHandsDrawBackFrontSilhouetteClearance":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyPlayerHandsDrawBackFrontSilhouetteClearance,
+                        "Player Hands Draw Back right arm moved outside the torso and face front silhouette with timing preserved.");
+                    break;
+                case "CapturePlayerHandsDrawBackFrontSilhouetteClearanceReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsDrawBackFrontSilhouetteClearanceReview,
+                        "Player Hands Draw Back front-silhouette clearance review advanced.");
+                    break;
+                case "CapturePlayerHandsDrawBackFrontSilhouetteClearanceFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsDrawBackFrontSilhouetteClearanceFinal,
+                        "Player Hands Draw Back front-silhouette clearance final image captured.");
+                    break;
+                case "ApplyPlayerHandsDrawBackChestDeformationFix":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyPlayerHandsDrawBackChestDeformationFix,
+                        "Player Hands Draw Back right-chest deformation reduced with arm clearance, final pose, and timing preserved.");
+                    break;
+                case "CapturePlayerHandsDrawBackChestDeformationFixReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsDrawBackChestDeformationFixReview,
+                        "Player Hands Draw Back right-chest deformation review advanced.");
+                    break;
+                case "CapturePlayerHandsDrawBackChestDeformationFixFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsDrawBackChestDeformationFixFinal,
+                        "Player Hands Draw Back right-chest deformation final image captured.");
+                    break;
+                case "AnalyzePlayerHandsDrawBackRightChestDeformation":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .AnalyzePlayerHandsDrawBackRightChestDeformation,
+                        "Player Hands Draw Back right-chest skinned-mesh deformation analyzed.");
+                    break;
+                case "ApplyPlayerHandsDrawBackRightChestCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyPlayerHandsDrawBackRightChestCorrection,
+                        "Player Hands Draw Back state-only right-chest corrective BlendShape applied.");
+                    break;
+                case "CapturePlayerHandsDrawBackRightChestCorrectionReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsDrawBackRightChestCorrectionReview,
+                        "Player Hands Draw Back right-chest correction review advanced.");
+                    break;
+                case "CapturePlayerHandsDrawBackRightChestCorrectionFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsDrawBackRightChestCorrectionFinal,
+                        "Player Hands Draw Back right-chest correction final image captured.");
+                    break;
+                case "AnalyzePlayerHandsDrawBackRightChestVideoReference":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .AnalyzePlayerHandsDrawBackRightChestVideoReference,
+                        "Player Hands Draw Back video-reference right-chest deformation analyzed.");
+                    break;
+                case "ApplyPlayerHandsDrawBackRightChestVideoCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyPlayerHandsDrawBackRightChestVideoCorrection,
+                        "Player Hands Draw Back video-reference right-chest correction applied.");
+                    break;
+                case "CapturePlayerHandsDrawBackRightChestVideoCorrectionReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsDrawBackRightChestVideoCorrectionReview,
+                        "Player Hands Draw Back video-reference right-chest review advanced.");
+                    break;
+                case "CapturePlayerHandsDrawBackRightChestVideoCorrectionFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsDrawBackRightChestVideoCorrectionFinal,
+                        "Player Hands Draw Back video-reference right-chest final image captured.");
+                    break;
+                case "CapturePlayerHandsObjectAnimationsReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureReview,
+                        "Player Hands and Objects review advanced.");
+                    break;
+                case "CapturePlayerHandsObjectAnimationsFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureFinal,
+                        "Player Hands and Objects final images captured.");
+                    break;
+                case "ApplyPlayerHandsCarryBodyAlignment":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.ApplyCarryBodyAlignment,
+                        "Player carry bodies aligned to Empty Idle with exact arm subtrees preserved.");
+                    break;
+                case "CapturePlayerHandsCarryBodyAlignmentReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryBodyAlignmentReview,
+                        "Player carry body alignment review advanced.");
+                    break;
+                case "CapturePlayerHandsCarryBodyAlignmentFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryBodyAlignmentFinal,
+                        "Player carry body alignment final images captured.");
+                    break;
+                case "ApplyPlayerHandsCarryPoseAdjustment":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.ApplyCarryPoseAdjustment,
+                        "Player carry arm pose adjustments applied continuously.");
+                    break;
+                case "CapturePlayerHandsCarryPoseAdjustmentReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryPoseAdjustmentReview,
+                        "Player carry arm pose adjustment review advanced.");
+                    break;
+                case "CapturePlayerHandsCarryPoseAdjustmentFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryPoseAdjustmentFinal,
+                        "Player carry arm pose adjustment final images captured.");
+                    break;
+                case "ApplyPlayerHandsCarryOneHandGripClearance":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.ApplyCarryOneHandGripClearance,
+                        "Player OneHand left arm clearance and vertical grip applied.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandGripClearanceReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryOneHandGripClearanceReview,
+                        "Player OneHand grip clearance review advanced.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandGripClearanceFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryOneHandGripClearanceFinal,
+                        "Player OneHand grip clearance final image captured.");
+                    break;
+                case "ApplyPlayerHandsCarryOneHandWristGripCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.ApplyCarryOneHandWristGripCorrection,
+                        "Player OneHand wrist-only vertical grip correction applied.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandWristGripCorrectionReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryOneHandWristGripCorrectionReview,
+                        "Player OneHand wrist grip correction review advanced.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandWristGripCorrectionFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryOneHandWristGripCorrectionFinal,
+                        "Player OneHand wrist grip correction final image captured.");
+                    break;
+                case "ApplyPlayerHandsCarryOneHandWrist180Flip":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.ApplyCarryOneHandWrist180Flip,
+                        "Player OneHand wrist-only 180-degree vertical-axis flip applied.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandWrist180FlipReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryOneHandWrist180FlipReview,
+                        "Player OneHand wrist 180-degree flip review advanced.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandWrist180FlipFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryOneHandWrist180FlipFinal,
+                        "Player OneHand wrist 180-degree flip final image captured.");
+                    break;
+                case "ApplyPlayerHandsCarryOneHandNaturalVerticalGrip":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.ApplyCarryOneHandNaturalVerticalGrip,
+                        "Player OneHand natural right-arm vertical grip applied.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandNaturalVerticalGripReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryOneHandNaturalVerticalGripReview,
+                        "Player OneHand natural vertical grip review advanced.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandNaturalVerticalGripFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryOneHandNaturalVerticalGripFinal,
+                        "Player OneHand natural vertical grip final image captured.");
+                    break;
+                case "ApplyPlayerHandsCarryOneHandAnatomicalWristGrip":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.ApplyCarryOneHandAnatomicalWristGrip,
+                        "Player OneHand anatomical wrist grip applied.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandAnatomicalWristGripReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryOneHandAnatomicalWristGripReview,
+                        "Player OneHand anatomical wrist grip review advanced.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandAnatomicalWristGripFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryOneHandAnatomicalWristGripFinal,
+                        "Player OneHand anatomical wrist grip final image captured.");
+                    break;
+                case "ApplyPlayerHandsCarryOneHandActualPalmInwardGrip":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.ApplyCarryOneHandActualPalmInwardGrip,
+                        "Player OneHand actual-palm inward grip applied for direct review.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandActualPalmInwardGripReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryOneHandActualPalmInwardGripReview,
+                        "Player OneHand actual-palm inward direct review advanced.");
+                    break;
+                case "CapturePlayerHandsCarryOneHandActualPalmInwardGripFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.CaptureCarryOneHandActualPalmInwardGripFinal,
+                        "Player OneHand actual-palm inward final image captured.");
+                    break;
                 case "ApplyPlayerCrouchBackwardAndSidestepIdleArmAlignment":
                     RunSynchronous(
                         request,

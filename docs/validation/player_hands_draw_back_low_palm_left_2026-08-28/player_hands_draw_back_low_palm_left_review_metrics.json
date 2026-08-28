@@ -1,0 +1,22 @@
+{
+    "target": "Hands_Draw_Back",
+    "sourcePeakFrame": 66,
+    "adjustedPeakFrame": 66,
+    "framesPerLoop": 69,
+    "framesSampled": 138,
+    "loopsSampled": 2,
+    "rootPositionDisplacementMax": 0.0,
+    "runtimeAdjustedPosePositionDifferenceMax": 1.466884782530542e-7,
+    "runtimeAdjustedPoseRotationDifferenceDegreesMax": 0.0,
+    "unchangedPosePositionDifferenceMax": 0.0,
+    "unchangedPoseRotationDifferenceDegreesMax": 0.0,
+    "expectedElbowFlexDegrees": 30.0,
+    "adjustedPeakElbowFlexDegrees": 29.998123168945314,
+    "adjustedPeakHandSolarPlexusHeightDifferenceMeters": 0.0000029802322387695314,
+    "adjustedPeakHorizontalForwardAngleDegrees": 0.0,
+    "adjustedPeakPalmCharacterLeftAngleDegrees": 0.0,
+    "stateLoops": true,
+    "applyRootMotion": false,
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+}

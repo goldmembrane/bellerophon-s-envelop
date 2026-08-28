@@ -1,0 +1,59 @@
+{
+    "targetSet": "Hands_Carry_OneHand, Hands_Carry_TwoHand",
+    "emptyIdleHashBefore": "1C3901F1F2D5C0F75EA6C6D65FC5350F5637470A56A50297515AD59D97701D1E",
+    "emptyIdleHashAfter": "1C3901F1F2D5C0F75EA6C6D65FC5350F5637470A56A50297515AD59D97701D1E",
+    "oneHandFbxHashBefore": "90DFFCC45C58B5BF0876F6A3409026D9E6BC6BF5268068D12516803FBADC6E78",
+    "oneHandFbxHashAfter": "90DFFCC45C58B5BF0876F6A3409026D9E6BC6BF5268068D12516803FBADC6E78",
+    "twoHandFbxHashBefore": "2CB9CA6EBE34C22770FB2BB23FE026CDCA47EF481324D8D6097CA23E6048D752",
+    "twoHandFbxHashAfter": "2CB9CA6EBE34C22770FB2BB23FE026CDCA47EF481324D8D6097CA23E6048D752",
+    "oneHand": {
+        "target": "Hands_Carry_OneHand",
+        "adjustment": "왼팔 전체를 자연스럽게 아래로 유지",
+        "adjustedClipPath": "Assets/_Project/Art/Player/Animations/Hands_Carry_OneHand_ArmAdjusted.anim",
+        "sourceDurationSeconds": 2.5333333015441896,
+        "adjustedDurationSeconds": 2.5333333015441896,
+        "frameRate": 30.0,
+        "framesBaked": 77,
+        "adjustedCurveCount": 56,
+        "targetReachErrorMax": 0.000019400098608457483,
+        "rootLocalTranslation": {
+            "x": 0.01002504676580429,
+            "y": -0.2997474670410156,
+            "z": -0.25482177734375
+        },
+        "durationAndFrameRatePreserved": true,
+        "adjustedClipLoops": true,
+        "adjustedClipOnlyContainsArmCurves": true,
+        "controllerUsesAdjustedClip": true,
+        "applyRootMotion": false,
+        "passedNumericChecks": true
+    },
+    "twoHand": {
+        "target": "Hands_Carry_TwoHand",
+        "adjustment": "두 손 간격을 유지해 캐릭터 오른쪽 가슴으로 이동",
+        "adjustedClipPath": "Assets/_Project/Art/Player/Animations/Hands_Carry_TwoHand_ArmAdjusted.anim",
+        "sourceDurationSeconds": 4.766666889190674,
+        "adjustedDurationSeconds": 4.766666889190674,
+        "frameRate": 30.0,
+        "framesBaked": 144,
+        "adjustedCurveCount": 56,
+        "targetReachErrorMax": 0.000021817904780618846,
+        "rootLocalTranslation": {
+            "x": -0.09255978465080261,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "durationAndFrameRatePreserved": true,
+        "adjustedClipLoops": true,
+        "adjustedClipOnlyContainsArmCurves": true,
+        "controllerUsesAdjustedClip": true,
+        "applyRootMotion": false,
+        "passedNumericChecks": true
+    },
+    "inputAnimationsUnchanged": true,
+    "rootsUnchanged": true,
+    "otherAnimatorsUnchanged": true,
+    "animatorSettingsCorrect": true,
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+}

@@ -1,0 +1,19 @@
+{
+    "targetSet": "All shared player.fbx transporter instances, Hands_Draw_Back, runtime Player start",
+    "sharedPlayerModelInstanceCount": 144,
+    "transporterTargetsDirectlyCaptured": 4,
+    "drawBackFramesDirectlyCaptured": 8,
+    "drawBackFramesSampled": 138,
+    "drawBackLoopsSampled": 2,
+    "minimumRightArmTorsoClearanceMeters": 0.03998985141515732,
+    "minimumClearanceFrame": 21,
+    "runtimeAdjustedPosePositionDifferenceMax": 1.466884782530542e-7,
+    "runtimeAdjustedPoseRotationDifferenceDegreesMax": 0.0,
+    "startScreenHorizontalCenterErrorNormalized": 0.0,
+    "startScreenVerticalCenterErrorNormalized": 3.5762786865234377e-7,
+    "stateLoops": true,
+    "applyRootMotion": false,
+    "sharedTextureAppliedToAllTransporters": true,
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+}

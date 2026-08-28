@@ -1,0 +1,36 @@
+{
+    "target": "Hands_Draw_Back",
+    "rendererPath": "char1",
+    "sourceMeshName": "char1",
+    "sourceMeshAssetPath": "Assets/_Project/Art/Player/player.fbx",
+    "vertexCount": 8403,
+    "sourceBlendShapeCount": 0,
+    "framesPerLoop": 69,
+    "framesSampled": 69,
+    "maximumProtrusionFrame": 28,
+    "maximumProtrusionVertexIndex": 754,
+    "maximumForwardProtrusionMeters": 0.0035858198534697296,
+    "averageAffectedForwardProtrusionMeters": 0.002935795346274972,
+    "affectedVertexCount": 2,
+    "maximumVertexRightArmWeight": 0.624739408493042,
+    "maximumVertexRightShoulderWeight": 0.2631635069847107,
+    "maximumVertexTorsoWeight": 0.034385062754154208,
+    "maximumVertexOtherWeight": 0.07771202176809311,
+    "maximumVertexSourceWorldPosition": {
+        "x": 78.52764129638672,
+        "y": 1.3958830833435059,
+        "z": -200.3330078125
+    },
+    "maximumVertexAdjustedWorldPosition": {
+        "x": 78.47815704345703,
+        "y": 1.3766270875930787,
+        "z": -200.3365936279297
+    },
+    "diagnosedCause": "현재 파생 클립의 RightArm 회전이 오른쪽 가슴 정점에 포함된 RightArm/RightShoulder 혼합 스킨 가중치를 통해 정점을 캐릭터 전방으로 끌어내고 있다.",
+    "playerFbxHash": "E025F1CB33BE02D527312A25CCA2820F3F0155FF07BE1ABC7FFD54CC6074DA75",
+    "sourceAnimationFbxHash": "A4AD3D660627A34D47A38811E688C2B19416C57146580963279459F6D4EC396B",
+    "adjustedClipHash": "0683C10EB4322E2EA3FEEC8976CAB1721394663E842E1A83C1A64674384351EA",
+    "sourceMeshIsSharedPlayerAsset": true,
+    "diagnosisComplete": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+}
