@@ -1,0 +1,30 @@
+{
+    "target": "Hands_Throw_Cancel",
+    "phasesCaptured": 12,
+    "runtime": {
+        "target": "Hands_Throw_Cancel",
+        "state": "HandsThrowCancel",
+        "sourceTake": "Ready frame 19 hold 0.5s + linear Player_Idle frame 0 blend + Idle hold 0.5s",
+        "durationSeconds": 1.6333333253860474,
+        "framesPerLoop": 49,
+        "framesSampled": 98,
+        "loopsSampled": 2,
+        "rootPositionDisplacementMax": 0.0,
+        "sourcePosePositionDifferenceMax": 9.453727045638516e-8,
+        "sourcePoseRotationDifferenceDegreesMax": 0.0,
+        "stateLoops": true,
+        "applyRootMotion": false,
+        "passedNumericChecks": true
+    },
+    "holdPositionDifferenceMax": 0.0,
+    "holdRotationDifferenceDegreesMax": 0.0,
+    "expectedReversePositionDifferenceMax": 2.2660056941958829e-8,
+    "expectedReverseRotationDifferenceDegreesMax": 0.0,
+    "finalIdlePositionDifferenceMax": 0.0,
+    "finalIdleRotationDifferenceDegreesMax": 0.0,
+    "finalHoldPositionDifferenceMax": 0.0,
+    "finalHoldRotationDifferenceDegreesMax": 0.0,
+    "hasNoBlendShapeCurves": true,
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+}

@@ -25,11 +25,17 @@ namespace Bellerophon.Editor
         private const string TwoHandTargetName = "Hands_Carry_TwoHand";
         private const string DrawBackTargetName = "Hands_Draw_Back";
         private const string StowBackTargetName = "Hands_Stow_Back";
+        private const string ThrowReadyTargetName = "Hands_Throw_Ready";
+        private const string ThrowReleaseTargetName = "Hands_Throw_Release";
+        private const string ThrowCancelTargetName = "Hands_Throw_Cancel";
         private const string EmptyStateName = "HandsEmptyIdle";
         private const string OneHandStateName = "HandsCarryOneHand";
         private const string TwoHandStateName = "HandsCarryTwoHand";
         private const string DrawBackStateName = "HandsDrawBack";
         private const string StowBackStateName = "HandsStowBack";
+        private const string ThrowReadyStateName = "HandsThrowReady";
+        private const string ThrowReleaseStateName = "HandsThrowRelease";
+        private const string ThrowCancelStateName = "HandsThrowCancel";
         private const float PositionTolerance = 0.0001f;
         private const float RotationTolerance = 0.01f;
         private const int CaptureWidth = 400;
@@ -44,6 +50,8 @@ namespace Bellerophon.Editor
             "A4AD3D660627A34D47A38811E688C2B19416C57146580963279459F6D4EC396B";
         private const string StowBackSourceHash =
             "ECAA2FCE857BD9E5275ECDDDFFA220F26C3AA802354A36C9980B51D1026A01D9";
+        private const string ThrowSourceHash =
+            "AF4F841C549ABFD62D5FC0E349CC744BD6A0837E578E9078F515F8A55DDB7BF5";
 
         private const string IdleClipPath =
             "Assets/_Project/Art/Player/Animations/Player_Idle.anim";
@@ -77,6 +85,59 @@ namespace Bellerophon.Editor
             "Assets/_Project/Art/Player/Animations/Hands_Stow_Back_Mixamo.fbx";
         private const string StowBackControllerPath =
             "Assets/_Project/Art/Player/Animations/Hands_Stow_Back.controller";
+        private const string ThrowOriginalPath =
+            "player model/transfer throwing.fbx";
+        private const string ThrowSourcePath =
+            "Assets/_Project/Art/Player/Animations/Hands_Throw_Mixamo.fbx";
+        private const string PlayerModelPath =
+            "Assets/_Project/Art/Player/player.fbx";
+        private const string ThrowReadyBaseClipPath =
+            "Assets/_Project/Art/Player/Animations/Hands_Throw_Ready_MixamoHeadHeightHold.anim";
+        private const string ThrowReadyPeakClipPath =
+            "Assets/_Project/Art/Player/Animations/Hands_Throw_Ready_MixamoPeakHold.anim";
+        private const string ThrowReadyClipPath =
+            "Assets/_Project/Art/Player/Animations/Hands_Throw_Ready_MixamoHeadHeightBreathing.anim";
+        private const string ThrowReadyBreathingMeshPath =
+            "Assets/_Project/Art/Player/Animations/Hands_Throw_Ready_Breathing.asset";
+        private const string ThrowReadyBreathingBlendShapeName = "Breathing";
+        private const string ThrowReadyControllerPath =
+            "Assets/_Project/Art/Player/Animations/Hands_Throw_Ready.controller";
+        private const string ThrowReleaseControllerPath =
+            "Assets/_Project/Art/Player/Animations/Hands_Throw_Release.controller";
+        private const string ThrowCancelClipPath =
+            "Assets/_Project/Art/Player/Animations/Hands_Throw_Cancel_MixamoReverse.anim";
+        private const string ThrowCancelControllerPath =
+            "Assets/_Project/Art/Player/Animations/Hands_Throw_Cancel.controller";
+        private const string ThrowSourceValidationDirectory =
+            "docs/validation/player_hands_throw_mixamo_2026-08-29";
+        private const string ThrowValidationDirectory =
+            "docs/validation/player_hands_throw_ready_breathing_2026-08-29";
+        private const string ThrowSourceDiagnosticMetricsPath =
+            ThrowSourceValidationDirectory + "/source_diagnostic_metrics.json";
+        private const string ThrowSourceDiagnosticPath =
+            ThrowSourceValidationDirectory + "/source_all_frames_front_side.png";
+        private const string ThrowApplyMetricsPath =
+            ThrowValidationDirectory + "/apply_metrics.json";
+        private const string ThrowReviewMetricsPath =
+            ThrowValidationDirectory + "/review_metrics.json";
+        private const string ThrowReviewPath =
+            ThrowValidationDirectory + "/direct_review_contact_sheet.png";
+        private const string ThrowFinalPath =
+            ThrowValidationDirectory + "/final.png";
+        private const string ThrowReviewStageKey =
+            "Bellerophon.PlayerHandsThrowReadyBreathing.Review.Stage";
+        private const string ThrowCancelValidationDirectory =
+            "docs/validation/player_hands_throw_cancel_2026-08-29";
+        private const string ThrowCancelApplyMetricsPath =
+            ThrowCancelValidationDirectory + "/apply_metrics.json";
+        private const string ThrowCancelReviewMetricsPath =
+            ThrowCancelValidationDirectory + "/review_metrics.json";
+        private const string ThrowCancelReviewPath =
+            ThrowCancelValidationDirectory + "/direct_review_contact_sheet.png";
+        private const string ThrowCancelFinalPath =
+            ThrowCancelValidationDirectory + "/final.png";
+        private const string ThrowCancelReviewStageKey =
+            "Bellerophon.PlayerHandsThrowCancel.Review.Stage";
 
         private const string ValidationDirectory =
             "docs/validation/player_hands_objects_2026-08-28";
@@ -154,6 +215,30 @@ namespace Bellerophon.Editor
             DrawBackExactReconnectValidationDirectory + "/final.png";
         private const string DrawBackExactReconnectReviewStageKey =
             "Bellerophon.PlayerHandsDrawBackExactReconnect.Review.Stage";
+        // These paths isolate the approved common-mesh gate and forward-draw review
+        // from the legacy state-only chest-correction validation artifacts.
+        private const string DrawBackCommonMeshForwardValidationDirectory =
+            "docs/validation/player_hands_draw_back_common_mesh_forward_2026-08-29";
+        private const string DrawBackFaceClearanceValidationDirectory =
+            "docs/validation/player_hands_draw_back_face_clearance_2026-08-29";
+        private const string DrawBackCommonMeshApplyMetricsPath =
+            DrawBackCommonMeshForwardValidationDirectory + "/common_mesh_apply_metrics.json";
+        private const string DrawBackCommonMeshReviewMetricsPath =
+            DrawBackCommonMeshForwardValidationDirectory + "/common_mesh_review_metrics.json";
+        private const string DrawBackCommonMeshReviewPath =
+            DrawBackCommonMeshForwardValidationDirectory + "/common_mesh_direct_review_contact_sheet.png";
+        private const string DrawBackCommonMeshForwardApplyMetricsPath =
+            DrawBackFaceClearanceValidationDirectory + "/forward_apply_metrics.json";
+        private const string DrawBackCommonMeshForwardReviewMetricsPath =
+            DrawBackFaceClearanceValidationDirectory + "/forward_review_metrics.json";
+        private const string DrawBackCommonMeshForwardReviewPath =
+            DrawBackFaceClearanceValidationDirectory + "/forward_direct_review_contact_sheet.png";
+        private const string DrawBackCommonMeshForwardFinalPath =
+            DrawBackFaceClearanceValidationDirectory + "/final.png";
+        private const string DrawBackCommonMeshReviewStageKey =
+            "Bellerophon.PlayerHandsDrawBackCommonMesh.Review.Stage";
+        private const string DrawBackCommonMeshForwardReviewStageKey =
+            "Bellerophon.PlayerHandsDrawBackCommonMeshForward.Review.Stage";
         private const string DrawBackForwardValidationDirectory =
             "docs/validation/player_hands_draw_back_forward_angle_2026-08-28";
         private const string DrawBackForwardApplyMetricsPath =
@@ -396,6 +481,13 @@ namespace Bellerophon.Editor
         private const string RightArmPath = RightShoulderPath + "/RightArm";
         private const string RightForeArmPath = RightArmPath + "/RightForeArm";
         private const string RightHandPath = RightForeArmPath + "/RightHand";
+        private const string HeadPath = SpinePath + "/neck/Head";
+        private const string LeftUpLegPath = HipsPath + "/LeftUpLeg";
+        private const string LeftLegPath = LeftUpLegPath + "/LeftLeg";
+        private const string LeftFootPath = LeftLegPath + "/LeftFoot";
+        private const string RightUpLegPath = HipsPath + "/RightUpLeg";
+        private const string RightLegPath = RightUpLegPath + "/RightLeg";
+        private const string RightFootPath = RightLegPath + "/RightFoot";
 
         [Serializable]
         private sealed class TargetApplyMetrics
@@ -555,6 +647,335 @@ namespace Bellerophon.Editor
             public TargetReviewMetrics drawBack;
             public bool passedNumericChecks;
             public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class DrawBackCommonMeshApplyMetrics
+        {
+            public string target;
+            public string emptyReference;
+            public string rendererPath;
+            public string correctedMeshPathBefore;
+            public string sharedMeshPathAfter;
+            public string emptySharedMeshPath;
+            public float[] correctedBlendShapeWeightsBefore;
+            public string playerFbxHashBefore;
+            public string playerFbxHashAfter;
+            public string correctedMeshHashBefore;
+            public string correctedMeshHashAfter;
+            public string sourceOriginalHash;
+            public string sourceUnityHashBefore;
+            public string sourceUnityHashAfter;
+            public string drawControllerHashBefore;
+            public string drawControllerHashAfter;
+            public string stowControllerHashBefore;
+            public string stowControllerHashAfter;
+            public bool rendererPathsMatch;
+            public bool meshOverrideRemoved;
+            public bool blendShapeOverridesRemoved;
+            public bool rendererConfigurationMatchesEmpty;
+            public bool correctedMeshUnreferencedByScene;
+            public bool sourceAssetsUnchanged;
+            public bool rootUnchanged;
+            public bool otherAnimatorsUnchanged;
+            public bool otherRendererMeshesUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class DrawBackCommonMeshReviewMetrics
+        {
+            public string target;
+            public string emptyReference;
+            public int phasesCaptured;
+            public TargetReviewMetrics drawBack;
+            public bool rendererConfigurationMatchesEmpty;
+            public bool correctedMeshUnreferencedByScene;
+            public bool correctedMeshAssetUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class DrawBackCommonMeshForwardApplyMetrics
+        {
+            public string target;
+            public string sourceOriginalHash;
+            public string sourceUnityHashBefore;
+            public string sourceUnityHashAfter;
+            public string playerFbxHashBefore;
+            public string playerFbxHashAfter;
+            public string correctedMeshHashBefore;
+            public string correctedMeshHashAfter;
+            public string stowControllerHashBefore;
+            public string stowControllerHashAfter;
+            public float sourceDurationSeconds;
+            public float adjustedDurationSeconds;
+            public float frameRate;
+            public int framesBaked;
+            public int sourcePeakFrame;
+            public int adjustedPeakFrame;
+            public int extractionStartFrame;
+            public int outerPathFrame;
+            public float adjustedPeakElbowFlexDegrees;
+            public float adjustedPeakHandSolarPlexusHeightDifferenceMeters;
+            public float adjustedPeakHorizontalForwardAngleDegrees;
+            public float adjustedPeakPalmCharacterLeftAngleDegrees;
+            public float adjustedOuterElbowLateralMeters;
+            public float adjustedOuterHandLateralMeters;
+            public float torsoOuterBoundaryLateralMeters;
+            public float minimumFrontSilhouetteGapMeters;
+            public int minimumFrontSilhouetteGapFrame;
+            public Quaternion rightHandBindLocalRotation;
+            public bool durationAndFrameRatePreserved;
+            public bool sourceFbxExactAndUnchanged;
+            public bool nonRightArmCurvesAndEventsUnchanged;
+            public bool hasOnlyApprovedRightArmReplacementCurves;
+            public bool hasNoBlendShapeCurves;
+            public bool correctedMeshAssetUnchanged;
+            public bool stowBackUnchanged;
+            public bool controllerUsesAdjustedClip;
+            public bool adjustedClipLoops;
+            public bool rendererConfigurationMatchesEmpty;
+            public bool correctedMeshUnreferencedByScene;
+            public bool rootUnchanged;
+            public bool otherAnimatorsUnchanged;
+            public bool animatorSettingsCorrect;
+            public bool applyRootMotion;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class DrawBackCommonMeshForwardReviewMetrics
+        {
+            public string target;
+            public int phasesCaptured;
+            public DrawBackOuterElbowReviewMetrics motion;
+            public bool rendererConfigurationMatchesEmpty;
+            public bool correctedMeshUnreferencedByScene;
+            public bool correctedMeshAssetUnchanged;
+            public bool hasNoBlendShapeCurves;
+            public float minimumFrontSilhouetteGapMeters;
+            public int minimumFrontSilhouetteGapFrame;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class ThrowSourceDiagnosticMetrics
+        {
+            public string sourceClipName;
+            public float sourceDurationSeconds;
+            public float frameRate;
+            public int frameIntervals;
+            public int framesCaptured;
+            public int peakRightHandFrame;
+            public float peakRightHandTimeSeconds;
+            public float peakRightHandHeightMeters;
+            public int peakCandidateCount;
+            public bool uniquePeakCandidate;
+            public string sourceOriginalHash;
+            public string sourceUnityHash;
+            public bool sourceCopyExact;
+            public bool sceneUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class ThrowApplyMetrics
+        {
+            public string sourceClipName;
+            public float sourceDurationSeconds;
+            public float frameRate;
+            public int sourceFrameIntervals;
+            public int sourcePeakFrame;
+            public int readyEndFrame;
+            public float readyEndTimeSeconds;
+            public float previousRightHandMinusHeadHeightMeters;
+            public float rightHandHeightMeters;
+            public float headHeightMeters;
+            public float rightHandMinusHeadHeightMeters;
+            public float holdDurationSeconds;
+            public float breathingFrequencyHertz;
+            public int breathingCycleCount;
+            public float breathingMaximumWeight;
+            public float requestedChestExpansionMeters;
+            public float measuredChestExpansionMeters;
+            public float requestedBodyDropMeters;
+            public float measuredBodyDropMeters;
+            public float maximumFootDisplacementMeters;
+            public float minimumKneeFlexIncreaseDegrees;
+            public float readyDurationSeconds;
+            public float releaseDurationSeconds;
+            public string rendererPath;
+            public string commonMeshPathBefore;
+            public string breathingMeshPathAfter;
+            public string breathingBlendShapeName;
+            public int breathingBlendShapeIndex;
+            public int breathingAffectedVertexCount;
+            public int breathingFrontVertexCount;
+            public int breathingLeftSideVertexCount;
+            public int breathingRightSideVertexCount;
+            public int sourceFloatCurveCount;
+            public int readyFloatCurveCount;
+            public int sourceObjectCurveCount;
+            public int readyObjectCurveCount;
+            public float readyPrefixPositionDifferenceMax;
+            public float readyPrefixRotationDifferenceDegreesMax;
+            public string sourceOriginalHash;
+            public string sourceUnityHash;
+            public string playerModelHashBefore;
+            public string playerModelHashAfter;
+            public string baseClipHashBefore;
+            public string baseClipHashAfter;
+            public string peakClipHashBefore;
+            public string peakClipHashAfter;
+            public string releaseControllerHashBefore;
+            public string releaseControllerHashAfter;
+            public bool sourceCopyExact;
+            public bool firstHeadHeightFrame;
+            public bool readyEndBeforeSourcePeak;
+            public bool readySourcePrefixPreserved;
+            public bool breathingBlendShapeBound;
+            public bool breathingMeshAppliedOnlyToReady;
+            public bool otherRendererMeshesUnchanged;
+            public bool releaseUsesExactEmbeddedTake;
+            public bool releaseControllerUnchanged;
+            public bool sourceAssetsUnchanged;
+            public bool previousReadyClipsUnchanged;
+            public bool readyControllerUsesClip;
+            public bool releaseControllerUsesClip;
+            public bool readyLoops;
+            public bool releaseLoops;
+            public bool readyRootUnchanged;
+            public bool releaseRootUnchanged;
+            public bool otherAnimatorsUnchanged;
+            public bool readyAnimatorSettingsCorrect;
+            public bool releaseAnimatorSettingsCorrect;
+            public bool readyApplyRootMotion;
+            public bool releaseApplyRootMotion;
+            public bool sceneSavedClean;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class ThrowBreathingRuntimeMetrics
+        {
+            public float maximumBlendShapeWeight;
+            public float measuredBodyDropMeters;
+            public float maximumLeftFootDisplacementMeters;
+            public float maximumRightFootDisplacementMeters;
+            public int detectedBreathingPeaks;
+            public bool blendShapeCurveApplied;
+            public bool passedNumericChecks;
+        }
+
+        [Serializable]
+        private sealed class ThrowReviewMetrics
+        {
+            public string targetSet;
+            public int phasesCapturedPerComparison;
+            public TargetReviewMetrics ready;
+            public TargetReviewMetrics release;
+            public float readyPrefixPositionDifferenceMax;
+            public float readyPrefixRotationDifferenceDegreesMax;
+            public ThrowBreathingRuntimeMetrics breathing;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class ThrowCancelApplyMetrics
+        {
+            public string target;
+            public string state;
+            public string sourceReadyClipPath;
+            public string idleClipPath;
+            public string cancelClipPath;
+            public int readyEndFrame;
+            public float frameRate;
+            public float readyEndTimeSeconds;
+            public float initialHoldDurationSeconds;
+            public float reverseDurationSeconds;
+            public float finalIdleHoldDurationSeconds;
+            public float totalDurationSeconds;
+            public int floatCurveCount;
+            public int objectCurveCount;
+            public int eventCount;
+            public float holdPositionDifferenceMax;
+            public float holdRotationDifferenceDegreesMax;
+            public float reversePositionDifferenceMax;
+            public float reverseRotationDifferenceDegreesMax;
+            public float finalIdlePositionDifferenceMax;
+            public float finalIdleRotationDifferenceDegreesMax;
+            public float finalHoldPositionDifferenceMax;
+            public float finalHoldRotationDifferenceDegreesMax;
+            public string idleClipHashBefore;
+            public string idleClipHashAfter;
+            public string readyClipHashBefore;
+            public string readyClipHashAfter;
+            public string readyControllerHashBefore;
+            public string readyControllerHashAfter;
+            public string releaseControllerHashBefore;
+            public string releaseControllerHashAfter;
+            public string targetMeshPathBefore;
+            public string targetMeshPathAfter;
+            public bool hasNoBlendShapeCurves;
+            public bool controllerUsesCancelClip;
+            public bool clipLoops;
+            public bool rootUnchanged;
+            public bool targetMeshUnchanged;
+            public bool otherAnimatorsUnchanged;
+            public bool otherRendererMeshesUnchanged;
+            public bool animatorSettingsCorrect;
+            public bool applyRootMotion;
+            public bool sceneSavedClean;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class ThrowCancelReviewMetrics
+        {
+            public string target;
+            public int phasesCaptured;
+            public TargetReviewMetrics runtime;
+            public float holdPositionDifferenceMax;
+            public float holdRotationDifferenceDegreesMax;
+            public float expectedReversePositionDifferenceMax;
+            public float expectedReverseRotationDifferenceDegreesMax;
+            public float finalIdlePositionDifferenceMax;
+            public float finalIdleRotationDifferenceDegreesMax;
+            public float finalHoldPositionDifferenceMax;
+            public float finalHoldRotationDifferenceDegreesMax;
+            public bool hasNoBlendShapeCurves;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        private sealed class ThrowBreathingMeshBuildResult
+        {
+            internal Mesh Mesh;
+            internal string RendererPath;
+            internal int BlendShapeIndex;
+            internal int AffectedVertexCount;
+            internal int FrontVertexCount;
+            internal int LeftSideVertexCount;
+            internal int RightSideVertexCount;
+            internal float MaximumExpansionAtThirtyPercentMeters;
+        }
+
+        private sealed class ThrowBreathingMotionBuildResult
+        {
+            internal int BreathingCycleCount;
+            internal int CurveKeyCount;
+            internal float MaximumBodyDropMeters;
+            internal float MaximumFootDisplacementMeters;
+            internal float MinimumKneeFlexIncreaseDegrees;
         }
 
         [Serializable]
@@ -2546,6 +2967,1595 @@ namespace Bellerophon.Editor
             Debug.Log(
                 "[PlayerHandsDrawBackExactReconnect] Final image copied once from directly reviewed Play Mode frames. " +
                 "DrawBack=" + Path.GetFullPath(DrawBackExactReconnectFinalPath) +
+                ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Hands Draw Back Common Mesh")]
+        internal static void ApplyPlayerHandsDrawBackCommonMesh()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                SessionState.EraseInt(DrawBackCommonMeshReviewStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerHandsDrawBackCommonMesh] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before the Hands Draw Back common-mesh apply.");
+            }
+
+            RequireHash(
+                DrawBackOriginalPath,
+                DrawBackSourceHash,
+                "hands draw back original FBX");
+            RequireHash(
+                DrawBackSourcePath,
+                DrawBackSourceHash,
+                "hands draw back Unity FBX");
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, DrawBackTargetName);
+            Transform emptyReference = RequireTarget(layout, EmptyTargetName);
+            SkinnedMeshRenderer renderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(target);
+            SkinnedMeshRenderer emptyRenderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(emptyReference);
+            string rendererPath = AnimationUtility.CalculateTransformPath(
+                renderer.transform,
+                target);
+            string emptyRendererPath = AnimationUtility.CalculateTransformPath(
+                emptyRenderer.transform,
+                emptyReference);
+            if (!string.Equals(rendererPath, emptyRendererPath, StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "Hands_Draw_Back and Hands_Empty_Idle primary renderer paths differ.");
+            }
+
+            string correctedMeshPathBefore = AssetDatabase.GetAssetPath(
+                renderer.sharedMesh);
+            if (!string.Equals(
+                    correctedMeshPathBefore,
+                    DrawBackRightChestCorrectedMeshPath,
+                    StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "Hands_Draw_Back does not use the documented state-only corrected mesh before the common-mesh gate.");
+            }
+
+            float[] correctedWeightsBefore = CaptureBlendShapeWeights(renderer);
+            string playerFbxHashBefore = HashFile(
+                "Assets/_Project/Art/Player/player.fbx");
+            string correctedMeshHashBefore = HashFile(
+                DrawBackRightChestCorrectedMeshPath);
+            string sourceUnityHashBefore = HashFile(DrawBackSourcePath);
+            string drawControllerHashBefore = HashFile(DrawBackControllerPath);
+            string stowControllerHashBefore = HashFile(StowBackControllerPath);
+            RootPose rootBefore = new RootPose(target);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTarget(layout, DrawBackTargetName);
+            Dictionary<string, string> otherRendererMeshesBefore =
+                CapturePrimaryRendererMeshPathsExceptTarget(
+                    layout,
+                    DrawBackTargetName);
+
+            RevertDrawBackRendererToPrefabSource(renderer);
+            EditorUtility.SetDirty(renderer);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+
+            string sharedMeshPathAfter = AssetDatabase.GetAssetPath(
+                renderer.sharedMesh);
+            string emptySharedMeshPath = AssetDatabase.GetAssetPath(
+                emptyRenderer.sharedMesh);
+            bool meshOverrideRemoved =
+                !HasPrefabPropertyOverride(renderer, "m_Mesh");
+            bool blendShapeOverridesRemoved =
+                !HasPrefabPropertyOverride(renderer, "m_BlendShapeWeights");
+            bool rendererConfigurationMatchesEmpty =
+                RendererConfigurationMatches(
+                    renderer,
+                    target,
+                    emptyRenderer,
+                    emptyReference);
+            bool correctedMeshUnreferencedByScene =
+                !SceneDependsOnAsset(DrawBackRightChestCorrectedMeshPath);
+            string playerFbxHashAfter = HashFile(
+                "Assets/_Project/Art/Player/player.fbx");
+            string correctedMeshHashAfter = HashFile(
+                DrawBackRightChestCorrectedMeshPath);
+            string sourceUnityHashAfter = HashFile(DrawBackSourcePath);
+            string drawControllerHashAfter = HashFile(DrawBackControllerPath);
+            string stowControllerHashAfter = HashFile(StowBackControllerPath);
+            bool sourceAssetsUnchanged =
+                string.Equals(
+                    HashFile(DrawBackOriginalPath),
+                    DrawBackSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    sourceUnityHashBefore,
+                    sourceUnityHashAfter,
+                    StringComparison.Ordinal) &&
+                string.Equals(
+                    playerFbxHashBefore,
+                    playerFbxHashAfter,
+                    StringComparison.Ordinal) &&
+                string.Equals(
+                    correctedMeshHashBefore,
+                    correctedMeshHashAfter,
+                    StringComparison.Ordinal) &&
+                string.Equals(
+                    drawControllerHashBefore,
+                    drawControllerHashAfter,
+                    StringComparison.Ordinal) &&
+                string.Equals(
+                    stowControllerHashBefore,
+                    stowControllerHashAfter,
+                    StringComparison.Ordinal);
+            bool otherRendererMeshesUnchanged = DictionariesEqual(
+                otherRendererMeshesBefore,
+                CapturePrimaryRendererMeshPathsExceptTarget(
+                    layout,
+                    DrawBackTargetName));
+            DrawBackCommonMeshApplyMetrics metrics =
+                new DrawBackCommonMeshApplyMetrics
+                {
+                    target = DrawBackTargetName,
+                    emptyReference = EmptyTargetName,
+                    rendererPath = rendererPath,
+                    correctedMeshPathBefore = correctedMeshPathBefore,
+                    sharedMeshPathAfter = sharedMeshPathAfter,
+                    emptySharedMeshPath = emptySharedMeshPath,
+                    correctedBlendShapeWeightsBefore = correctedWeightsBefore,
+                    playerFbxHashBefore = playerFbxHashBefore,
+                    playerFbxHashAfter = playerFbxHashAfter,
+                    correctedMeshHashBefore = correctedMeshHashBefore,
+                    correctedMeshHashAfter = correctedMeshHashAfter,
+                    sourceOriginalHash = HashFile(DrawBackOriginalPath),
+                    sourceUnityHashBefore = sourceUnityHashBefore,
+                    sourceUnityHashAfter = sourceUnityHashAfter,
+                    drawControllerHashBefore = drawControllerHashBefore,
+                    drawControllerHashAfter = drawControllerHashAfter,
+                    stowControllerHashBefore = stowControllerHashBefore,
+                    stowControllerHashAfter = stowControllerHashAfter,
+                    rendererPathsMatch = true,
+                    meshOverrideRemoved = meshOverrideRemoved,
+                    blendShapeOverridesRemoved = blendShapeOverridesRemoved,
+                    rendererConfigurationMatchesEmpty =
+                        rendererConfigurationMatchesEmpty,
+                    correctedMeshUnreferencedByScene =
+                        correctedMeshUnreferencedByScene,
+                    sourceAssetsUnchanged = sourceAssetsUnchanged,
+                    rootUnchanged = RootMatches(target, rootBefore),
+                    otherAnimatorsUnchanged = DictionariesEqual(
+                        otherAnimatorsBefore,
+                        CaptureAnimatorsExceptTarget(
+                            layout,
+                            DrawBackTargetName)),
+                    otherRendererMeshesUnchanged =
+                        otherRendererMeshesUnchanged,
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                string.Equals(
+                    metrics.sharedMeshPathAfter,
+                    metrics.emptySharedMeshPath,
+                    StringComparison.Ordinal) &&
+                metrics.rendererPathsMatch &&
+                metrics.meshOverrideRemoved &&
+                metrics.blendShapeOverridesRemoved &&
+                metrics.rendererConfigurationMatchesEmpty &&
+                metrics.correctedMeshUnreferencedByScene &&
+                metrics.sourceAssetsUnchanged &&
+                metrics.rootUnchanged &&
+                metrics.otherAnimatorsUnchanged &&
+                metrics.otherRendererMeshesUnchanged;
+            WriteJson(DrawBackCommonMeshApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Draw Back common-mesh support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            SessionState.EraseInt(DrawBackCommonMeshReviewStageKey);
+            Debug.Log(
+                "[PlayerHandsDrawBackCommonMesh] Reverted Draw Back to the shared player mesh inherited by Hands_Empty_Idle. " +
+                "Renderer=" + rendererPath +
+                ", SharedMesh=" + sharedMeshPathAfter +
+                ", CorrectedMeshReferenced=False, AnimatorChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Hands Draw Back Common Mesh Review")]
+        internal static void CapturePlayerHandsDrawBackCommonMeshReview()
+        {
+            int stage = SessionState.GetInt(
+                DrawBackCommonMeshReviewStageKey,
+                0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Draw Back common-mesh review must start in Edit Mode.");
+                    }
+
+                    DrawBackCommonMeshApplyMetrics apply =
+                        ReadJson<DrawBackCommonMeshApplyMetrics>(
+                            DrawBackCommonMeshApplyMetricsPath);
+                    if (!apply.passedNumericChecks)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Draw Back common-mesh apply metrics did not pass.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before the common-mesh review.");
+                    }
+
+                    SessionState.SetInt(DrawBackCommonMeshReviewStageKey, 1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[PlayerHandsDrawBackCommonMesh] Entering Play Mode for the direct common-mesh gate.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Draw Back common-mesh capture requires Play Mode.");
+                    }
+
+                    CapturePlayerHandsDrawBackCommonMeshActualReview();
+                    SessionState.SetInt(DrawBackCommonMeshReviewStageKey, 2);
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Draw Back common-mesh review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(DrawBackCommonMeshReviewStageKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[PlayerHandsDrawBackCommonMesh] Exiting Play Mode after the direct common-mesh gate.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Hands Draw Back common-mesh review stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(DrawBackCommonMeshReviewStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Hands Draw Back Common Mesh Forward")]
+        internal static void ApplyPlayerHandsDrawBackCommonMeshForward()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                SessionState.EraseInt(DrawBackCommonMeshForwardReviewStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerHandsDrawBackCommonMeshForward] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            DrawBackCommonMeshReviewMetrics commonMeshReview =
+                ReadJson<DrawBackCommonMeshReviewMetrics>(
+                    DrawBackCommonMeshReviewMetricsPath);
+            if (!commonMeshReview.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "The Hands Draw Back common-mesh gate must pass before forward adjustment.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before the common-mesh forward apply.");
+            }
+
+            RequireHash(
+                DrawBackOriginalPath,
+                DrawBackSourceHash,
+                "hands draw back original FBX");
+            RequireHash(
+                DrawBackSourcePath,
+                DrawBackSourceHash,
+                "hands draw back Unity FBX");
+            string sourceUnityHashBefore = HashFile(DrawBackSourcePath);
+            string playerFbxHashBefore = HashFile(
+                "Assets/_Project/Art/Player/player.fbx");
+            string correctedMeshHashBefore = HashFile(
+                DrawBackRightChestCorrectedMeshPath);
+            string stowControllerHashBefore = HashFile(StowBackControllerPath);
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, DrawBackTargetName);
+            Transform emptyReference = RequireTarget(layout, EmptyTargetName);
+            SkinnedMeshRenderer renderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(target);
+            SkinnedMeshRenderer emptyRenderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(emptyReference);
+            if (!RendererConfigurationMatches(
+                    renderer,
+                    target,
+                    emptyRenderer,
+                    emptyReference) ||
+                SceneDependsOnAsset(DrawBackRightChestCorrectedMeshPath))
+            {
+                throw new InvalidOperationException(
+                    "Hands Draw Back no longer matches the approved common-mesh gate.");
+            }
+
+            AnimationClip source = LoadSingleEmbeddedClip(
+                DrawBackSourcePath,
+                "hands draw back");
+            Quaternion rightHandBindLocalRotation =
+                FindRequired(target, RightHandPath).localRotation;
+            RootPose rootBefore = new RootPose(target);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTarget(layout, DrawBackTargetName);
+            DrawBackLowPalmLeftBakeResult bake =
+                CreateOrUpdateDrawBackLowPalmLeftAdjustedClip(
+                    target,
+                    source,
+                    true,
+                    true,
+                    true);
+            AnimatorController controller =
+                CreateOrUpdateExactEmbeddedTakeController(
+                    DrawBackControllerPath,
+                    DrawBackStateName,
+                    bake.Clip);
+            Animator animator = ConfigureAnimator(target, controller);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+
+            string sourceUnityHashAfter = HashFile(DrawBackSourcePath);
+            string playerFbxHashAfter = HashFile(
+                "Assets/_Project/Art/Player/player.fbx");
+            string correctedMeshHashAfter = HashFile(
+                DrawBackRightChestCorrectedMeshPath);
+            string stowControllerHashAfter = HashFile(StowBackControllerPath);
+            bool durationAndRate =
+                Mathf.Abs(source.length - bake.Clip.length) <= 0.0001f &&
+                Mathf.Abs(source.frameRate - bake.Clip.frameRate) <= 0.0001f;
+            bool sourceExact =
+                HashMatches(
+                    DrawBackOriginalPath,
+                    DrawBackSourcePath,
+                    DrawBackSourceHash) &&
+                string.Equals(
+                    sourceUnityHashBefore,
+                    sourceUnityHashAfter,
+                    StringComparison.Ordinal);
+            bool nonRightArmUnchanged =
+                AnimationMatchesExceptDrawBackRightArmRotations(
+                    source,
+                    bake.Clip);
+            bool noBlendShapeCurves =
+                HasNoBlendShapeCurves(bake.Clip);
+            bool correctedMeshUnreferencedByScene =
+                !SceneDependsOnAsset(DrawBackRightChestCorrectedMeshPath);
+            bool controllerUsesAdjusted =
+                controller.layers.Length == 1 &&
+                LayerStateUsesClip(
+                    controller.layers[0],
+                    DrawBackStateName,
+                    bake.Clip);
+            bool loops =
+                AnimationUtility.GetAnimationClipSettings(bake.Clip).loopTime;
+            DrawBackCommonMeshForwardApplyMetrics metrics =
+                new DrawBackCommonMeshForwardApplyMetrics
+                {
+                    target = DrawBackTargetName,
+                    sourceOriginalHash = HashFile(DrawBackOriginalPath),
+                    sourceUnityHashBefore = sourceUnityHashBefore,
+                    sourceUnityHashAfter = sourceUnityHashAfter,
+                    playerFbxHashBefore = playerFbxHashBefore,
+                    playerFbxHashAfter = playerFbxHashAfter,
+                    correctedMeshHashBefore = correctedMeshHashBefore,
+                    correctedMeshHashAfter = correctedMeshHashAfter,
+                    stowControllerHashBefore = stowControllerHashBefore,
+                    stowControllerHashAfter = stowControllerHashAfter,
+                    sourceDurationSeconds = source.length,
+                    adjustedDurationSeconds = bake.Clip.length,
+                    frameRate = bake.Clip.frameRate,
+                    framesBaked = bake.FramesBaked,
+                    sourcePeakFrame = bake.SourcePeakFrame,
+                    adjustedPeakFrame = bake.AdjustedPeakFrame,
+                    extractionStartFrame = bake.ExtractionStartFrame,
+                    outerPathFrame = bake.OuterPathFrame,
+                    adjustedPeakElbowFlexDegrees =
+                        bake.AdjustedPeakElbowFlexDegrees,
+                    adjustedPeakHandSolarPlexusHeightDifferenceMeters =
+                        bake.AdjustedPeakHandSolarPlexusHeightDifferenceMeters,
+                    adjustedPeakHorizontalForwardAngleDegrees =
+                        bake.AdjustedPeakHorizontalForwardAngleDegrees,
+                    adjustedPeakPalmCharacterLeftAngleDegrees =
+                        bake.AdjustedPeakPalmCharacterLeftAngleDegrees,
+                    adjustedOuterElbowLateralMeters =
+                        bake.AdjustedOuterElbowLateralMeters,
+                    adjustedOuterHandLateralMeters =
+                        bake.AdjustedOuterHandLateralMeters,
+                    torsoOuterBoundaryLateralMeters =
+                        bake.TorsoOuterBoundaryLateralMeters,
+                    minimumFrontSilhouetteGapMeters =
+                        bake.MinimumFrontSilhouetteGapMeters,
+                    minimumFrontSilhouetteGapFrame =
+                        bake.MinimumFrontSilhouetteGapFrame,
+                    rightHandBindLocalRotation = rightHandBindLocalRotation,
+                    durationAndFrameRatePreserved = durationAndRate,
+                    sourceFbxExactAndUnchanged = sourceExact,
+                    nonRightArmCurvesAndEventsUnchanged =
+                        nonRightArmUnchanged,
+                    hasOnlyApprovedRightArmReplacementCurves =
+                        nonRightArmUnchanged,
+                    hasNoBlendShapeCurves = noBlendShapeCurves,
+                    correctedMeshAssetUnchanged = string.Equals(
+                        correctedMeshHashBefore,
+                        correctedMeshHashAfter,
+                        StringComparison.Ordinal),
+                    stowBackUnchanged = string.Equals(
+                        stowControllerHashBefore,
+                        stowControllerHashAfter,
+                        StringComparison.Ordinal),
+                    controllerUsesAdjustedClip = controllerUsesAdjusted,
+                    adjustedClipLoops = loops,
+                    rendererConfigurationMatchesEmpty =
+                        RendererConfigurationMatches(
+                            renderer,
+                            target,
+                            emptyRenderer,
+                            emptyReference),
+                    correctedMeshUnreferencedByScene =
+                        correctedMeshUnreferencedByScene,
+                    rootUnchanged = RootMatches(target, rootBefore),
+                    otherAnimatorsUnchanged = DictionariesEqual(
+                        otherAnimatorsBefore,
+                        CaptureAnimatorsExceptTarget(
+                            layout,
+                            DrawBackTargetName)),
+                    animatorSettingsCorrect =
+                        AnimatorMatches(animator, controller),
+                    applyRootMotion = animator.applyRootMotion,
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                metrics.durationAndFrameRatePreserved &&
+                Mathf.RoundToInt(
+                    metrics.sourceDurationSeconds * metrics.frameRate) == 69 &&
+                metrics.framesBaked == 70 &&
+                metrics.sourceFbxExactAndUnchanged &&
+                metrics.nonRightArmCurvesAndEventsUnchanged &&
+                metrics.hasOnlyApprovedRightArmReplacementCurves &&
+                metrics.hasNoBlendShapeCurves &&
+                metrics.correctedMeshAssetUnchanged &&
+                metrics.stowBackUnchanged &&
+                metrics.controllerUsesAdjustedClip &&
+                metrics.adjustedClipLoops &&
+                metrics.rendererConfigurationMatchesEmpty &&
+                metrics.correctedMeshUnreferencedByScene &&
+                metrics.minimumFrontSilhouetteGapMeters >= 0.005f &&
+                metrics.adjustedPeakHorizontalForwardAngleDegrees >= 5f &&
+                metrics.adjustedPeakHorizontalForwardAngleDegrees <= 45f &&
+                metrics.adjustedPeakHandSolarPlexusHeightDifferenceMeters <= 0.005f &&
+                Mathf.Abs(metrics.adjustedPeakElbowFlexDegrees - 30f) <= 0.5f &&
+                metrics.rootUnchanged &&
+                metrics.otherAnimatorsUnchanged &&
+                metrics.animatorSettingsCorrect &&
+                !metrics.applyRootMotion &&
+                string.Equals(
+                    metrics.playerFbxHashBefore,
+                    metrics.playerFbxHashAfter,
+                    StringComparison.Ordinal);
+            WriteJson(DrawBackCommonMeshForwardApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Draw Back common-mesh forward support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            SessionState.EraseInt(DrawBackCommonMeshForwardReviewStageKey);
+            Debug.Log(
+                "[PlayerHandsDrawBackCommonMeshForward] Rebuilt the adjusted clip from the exact source Take and replaced only RightArm/RightForeArm/RightHand rotations. " +
+                "Frames=" + bake.ExtractionStartFrame + "/" +
+                bake.OuterPathFrame + "/" + bake.SourcePeakFrame +
+                ", Forward=" +
+                Num(bake.AdjustedPeakHorizontalForwardAngleDegrees) +
+                ", Height=" +
+                Num(bake.AdjustedPeakHandSolarPlexusHeightDifferenceMeters) +
+                ", Elbow=" + Num(bake.AdjustedPeakElbowFlexDegrees) +
+                ", MinFaceGap=" +
+                Num(bake.MinimumFrontSilhouetteGapMeters) + "@" +
+                bake.MinimumFrontSilhouetteGapFrame +
+                ", SharedMesh=True, CorrectedMeshReferenced=False.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Hands Draw Back Common Mesh Forward Review")]
+        internal static void CapturePlayerHandsDrawBackCommonMeshForwardReview()
+        {
+            int stage = SessionState.GetInt(
+                DrawBackCommonMeshForwardReviewStageKey,
+                0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Draw Back common-mesh forward review must start in Edit Mode.");
+                    }
+
+                    DrawBackCommonMeshForwardApplyMetrics apply =
+                        ReadJson<DrawBackCommonMeshForwardApplyMetrics>(
+                            DrawBackCommonMeshForwardApplyMetricsPath);
+                    if (!apply.passedNumericChecks)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Draw Back common-mesh forward apply metrics did not pass.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before the common-mesh forward review.");
+                    }
+
+                    SessionState.SetInt(
+                        DrawBackCommonMeshForwardReviewStageKey,
+                        1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[PlayerHandsDrawBackCommonMeshForward] Entering Play Mode for the 12-phase direct review.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Draw Back common-mesh forward capture requires Play Mode.");
+                    }
+
+                    CapturePlayerHandsDrawBackCommonMeshForwardActualReview();
+                    SessionState.SetInt(
+                        DrawBackCommonMeshForwardReviewStageKey,
+                        2);
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Draw Back common-mesh forward review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(
+                        DrawBackCommonMeshForwardReviewStageKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[PlayerHandsDrawBackCommonMeshForward] Exiting Play Mode after the 12-phase direct review.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Hands Draw Back common-mesh forward review stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(DrawBackCommonMeshForwardReviewStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Hands Draw Back Common Mesh Forward Final")]
+        internal static void CapturePlayerHandsDrawBackCommonMeshForwardFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Hands Draw Back common-mesh forward final capture requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after the common-mesh forward direct review.");
+            }
+
+            DrawBackCommonMeshForwardReviewMetrics metrics =
+                ReadJson<DrawBackCommonMeshForwardReviewMetrics>(
+                    DrawBackCommonMeshForwardReviewMetricsPath);
+            if (!metrics.passedNumericChecks ||
+                metrics.motion == null ||
+                !metrics.motion.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Draw Back common-mesh forward review did not pass before final capture.");
+            }
+
+            CopyReviewedContact(
+                DrawBackCommonMeshForwardReviewPath,
+                DrawBackCommonMeshForwardFinalPath);
+            Debug.Log(
+                "[PlayerHandsDrawBackCommonMeshForward] Final image copied once from the directly reviewed Play Mode contact sheet. " +
+                "Path=" + Path.GetFullPath(DrawBackCommonMeshForwardFinalPath) +
+                ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Hands Throw Source Diagnostic")]
+        internal static void CapturePlayerHandsThrowSourceDiagnostic()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw source diagnostic requires Edit Mode.");
+            }
+
+            RequireHash(ThrowOriginalPath, ThrowSourceHash, "hands throw original FBX");
+            RequireHash(ThrowSourcePath, ThrowSourceHash, "hands throw Unity FBX");
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before the Hands Throw source diagnostic.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, ThrowReadyTargetName);
+            AnimationClip source = LoadSingleEmbeddedClip(
+                ThrowSourcePath,
+                "hands throw");
+            GameObject sourceObject = UnityEngine.Object.Instantiate(target.gameObject);
+            sourceObject.name = "HandsThrowExactSourceDiagnostic";
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            List<byte[]> frontFrames = new List<byte[]>();
+            List<byte[]> sideFrames = new List<byte[]>();
+            List<float> rightHandHeights = new List<float>();
+            try
+            {
+                int frameIntervals = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(source.length * source.frameRate));
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(sourceObject.transform))
+                {
+                    for (int frame = 0; frame <= frameIntervals; frame++)
+                    {
+                        float time = Mathf.Min(
+                            source.length,
+                            frame / source.frameRate);
+                        source.SampleAnimation(sourceObject, time);
+                        Transform rightHand = FindRequired(
+                            sourceObject.transform,
+                            RightHandPath);
+                        rightHandHeights.Add(Vector3.Dot(
+                            rightHand.position - sourceObject.transform.position,
+                            sourceObject.transform.up));
+                        environment.ConfigureView(
+                            sourceObject.transform,
+                            1.05f,
+                            1.35f);
+                        frontFrames.Add(environment.CaptureFront());
+                        sideFrames.Add(environment.CaptureSide());
+                    }
+                }
+
+                float peakHeight = rightHandHeights.Max();
+                int peakFrame = rightHandHeights.IndexOf(peakHeight);
+                int candidateCount = rightHandHeights.Count(height =>
+                    Mathf.Abs(height - peakHeight) <= PositionTolerance);
+                ComposePairedFrameGrid(
+                    frontFrames,
+                    sideFrames,
+                    10,
+                    ThrowSourceDiagnosticPath);
+                ThrowSourceDiagnosticMetrics metrics =
+                    new ThrowSourceDiagnosticMetrics
+                    {
+                        sourceClipName = source.name,
+                        sourceDurationSeconds = source.length,
+                        frameRate = source.frameRate,
+                        frameIntervals = frameIntervals,
+                        framesCaptured = frontFrames.Count,
+                        peakRightHandFrame = peakFrame,
+                        peakRightHandTimeSeconds = peakFrame / source.frameRate,
+                        peakRightHandHeightMeters = peakHeight,
+                        peakCandidateCount = candidateCount,
+                        uniquePeakCandidate = candidateCount == 1,
+                        sourceOriginalHash = HashFile(ThrowOriginalPath),
+                        sourceUnityHash = HashFile(ThrowSourcePath),
+                        sourceCopyExact = HashMatches(
+                            ThrowOriginalPath,
+                            ThrowSourcePath,
+                            ThrowSourceHash),
+                        sceneUnchanged = !scene.isDirty,
+                        validationPriority =
+                            "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                    };
+                metrics.passedNumericChecks =
+                    metrics.sourceCopyExact &&
+                    metrics.frameRate > 0f &&
+                    metrics.framesCaptured == metrics.frameIntervals + 1 &&
+                    metrics.sceneUnchanged;
+                WriteJson(ThrowSourceDiagnosticMetricsPath, metrics);
+                if (!metrics.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Hands Throw source diagnostic support checks failed. " +
+                        JsonUtility.ToJson(metrics));
+                }
+
+                Debug.Log(
+                    "[PlayerHandsThrow] Captured every exact source frame from the single embedded Take. " +
+                    "Clip=" + source.name +
+                    ", Frames=" + metrics.framesCaptured +
+                    ", PeakCandidate=" + metrics.peakRightHandFrame +
+                    "@" + Num(metrics.peakRightHandTimeSeconds) +
+                    ", CandidateCount=" + metrics.peakCandidateCount +
+                    ", SceneChanged=False.");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Hands Throw Mixamo")]
+        internal static void ApplyPlayerHandsThrowMixamo()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Mixamo apply requires Edit Mode.");
+            }
+
+            ThrowSourceDiagnosticMetrics diagnostic =
+                ReadJson<ThrowSourceDiagnosticMetrics>(
+                    ThrowSourceDiagnosticMetricsPath);
+            if (!diagnostic.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw source diagnostic must pass before the Ready head-height apply.");
+            }
+
+            RequireHash(ThrowOriginalPath, ThrowSourceHash, "hands throw original FBX");
+            RequireHash(ThrowSourcePath, ThrowSourceHash, "hands throw Unity FBX");
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before the Hands Throw Mixamo apply.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform readyTarget = RequireTarget(layout, ThrowReadyTargetName);
+            Transform releaseTarget = RequireTarget(layout, ThrowReleaseTargetName);
+            SkinnedMeshRenderer readyRenderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(readyTarget);
+            RootPose readyRootBefore = new RootPose(readyTarget);
+            RootPose releaseRootBefore = new RootPose(releaseTarget);
+            string commonMeshPathBefore = AssetDatabase.GetAssetPath(
+                readyRenderer.sharedMesh);
+            string playerModelHashBefore = HashFile(PlayerModelPath);
+            string baseClipHashBefore = HashFile(ThrowReadyBaseClipPath);
+            string peakClipHashBefore = HashFile(ThrowReadyPeakClipPath);
+            string releaseControllerHashBefore =
+                HashFile(ThrowReleaseControllerPath);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTargets(
+                    layout,
+                    ThrowReadyTargetName,
+                    ThrowReleaseTargetName);
+            Dictionary<string, string> otherRendererMeshesBefore =
+                CapturePrimaryRendererMeshPathsExceptTarget(
+                    layout,
+                    ThrowReadyTargetName);
+
+            AnimationClip source = LoadSingleEmbeddedClip(
+                ThrowSourcePath,
+                "hands throw");
+            AnimationClip baseClip = LoadClip(ThrowReadyBaseClipPath);
+            MeasureThrowSourceHeadHeightFrame(
+                readyTarget,
+                source,
+                out int sourceFrameIntervals,
+                out int readyEndFrame,
+                out float previousRightHandMinusHeadHeight,
+                out float rightHandHeight,
+                out float headHeight);
+
+            const float holdDuration = 3f;
+            const float breathingFrequency = 1f;
+            const float breathingMaximumWeight = 30f;
+            const float requestedChestExpansion = 0.01f;
+            const float requestedBodyDrop = 0.03f;
+            float readyEndTime = readyEndFrame / source.frameRate;
+            ThrowBreathingMeshBuildResult meshBuild =
+                CreateOrUpdateThrowReadyBreathingMesh(
+                    readyTarget,
+                    readyRenderer,
+                    baseClip,
+                    readyEndTime,
+                    requestedChestExpansion,
+                    breathingMaximumWeight);
+            readyRenderer.sharedMesh = meshBuild.Mesh;
+            readyRenderer.SetBlendShapeWeight(meshBuild.BlendShapeIndex, 0f);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(readyRenderer);
+            AnimationClip readyClip = CreateOrUpdateThrowReadyClip(
+                source,
+                readyTarget,
+                meshBuild.RendererPath,
+                readyEndTime,
+                holdDuration,
+                breathingFrequency,
+                breathingMaximumWeight,
+                requestedBodyDrop,
+                out ThrowBreathingMotionBuildResult motionBuild);
+            MeasureThrowReadyPrefixAndHold(
+                readyTarget,
+                source,
+                readyClip,
+                readyEndFrame,
+                0f,
+                out float prefixPositionDifference,
+                out float prefixRotationDifference,
+                out _,
+                out _);
+            AnimatorController readyController =
+                CreateOrUpdateExactEmbeddedTakeController(
+                    ThrowReadyControllerPath,
+                    ThrowReadyStateName,
+                    readyClip);
+            AnimatorController releaseController =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    ThrowReleaseControllerPath);
+            if (releaseController == null)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Release controller is missing.");
+            }
+
+            Animator readyAnimator = RequireAnimator(readyTarget);
+            Animator releaseAnimator = RequireAnimator(releaseTarget);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            string playerModelHashAfter = HashFile(PlayerModelPath);
+            string baseClipHashAfter = HashFile(ThrowReadyBaseClipPath);
+            string peakClipHashAfter = HashFile(ThrowReadyPeakClipPath);
+            string releaseControllerHashAfter =
+                HashFile(ThrowReleaseControllerPath);
+
+            int sourceFloatCurveCount =
+                AnimationUtility.GetCurveBindings(source).Length;
+            int readyFloatCurveCount =
+                AnimationUtility.GetCurveBindings(readyClip).Length;
+            int sourceObjectCurveCount =
+                AnimationUtility.GetObjectReferenceCurveBindings(source).Length;
+            int readyObjectCurveCount =
+                AnimationUtility.GetObjectReferenceCurveBindings(readyClip).Length;
+            EditorCurveBinding breathingBinding =
+                EditorCurveBinding.FloatCurve(
+                    meshBuild.RendererPath,
+                    typeof(SkinnedMeshRenderer),
+                    "blendShape." + ThrowReadyBreathingBlendShapeName);
+            bool breathingBlendShapeBound =
+                AnimationUtility.GetEditorCurve(
+                    readyClip,
+                    breathingBinding) != null;
+            bool readyPrefixPreserved =
+                sourceObjectCurveCount == readyObjectCurveCount &&
+                ThrowReadyEventsMatchSourcePrefix(
+                    source,
+                    readyClip,
+                    readyEndTime) &&
+                prefixPositionDifference <= PositionTolerance &&
+                prefixRotationDifference <= RotationTolerance;
+            string breathingMeshPathAfter = AssetDatabase.GetAssetPath(
+                readyRenderer.sharedMesh);
+            bool otherRendererMeshesUnchanged = DictionariesEqual(
+                otherRendererMeshesBefore,
+                CapturePrimaryRendererMeshPathsExceptTarget(
+                    layout,
+                    ThrowReadyTargetName));
+            ThrowApplyMetrics metrics = new ThrowApplyMetrics
+            {
+                sourceClipName = source.name,
+                sourceDurationSeconds = source.length,
+                frameRate = source.frameRate,
+                sourceFrameIntervals = sourceFrameIntervals,
+                sourcePeakFrame = diagnostic.peakRightHandFrame,
+                readyEndFrame = readyEndFrame,
+                readyEndTimeSeconds = readyEndTime,
+                previousRightHandMinusHeadHeightMeters =
+                    previousRightHandMinusHeadHeight,
+                rightHandHeightMeters = rightHandHeight,
+                headHeightMeters = headHeight,
+                rightHandMinusHeadHeightMeters = rightHandHeight - headHeight,
+                holdDurationSeconds = holdDuration,
+                breathingFrequencyHertz = breathingFrequency,
+                breathingCycleCount = motionBuild.BreathingCycleCount,
+                breathingMaximumWeight = breathingMaximumWeight,
+                requestedChestExpansionMeters = requestedChestExpansion,
+                measuredChestExpansionMeters =
+                    meshBuild.MaximumExpansionAtThirtyPercentMeters,
+                requestedBodyDropMeters = requestedBodyDrop,
+                measuredBodyDropMeters = motionBuild.MaximumBodyDropMeters,
+                maximumFootDisplacementMeters =
+                    motionBuild.MaximumFootDisplacementMeters,
+                minimumKneeFlexIncreaseDegrees =
+                    motionBuild.MinimumKneeFlexIncreaseDegrees,
+                readyDurationSeconds = readyClip.length,
+                releaseDurationSeconds = source.length,
+                rendererPath = meshBuild.RendererPath,
+                commonMeshPathBefore = commonMeshPathBefore,
+                breathingMeshPathAfter = breathingMeshPathAfter,
+                breathingBlendShapeName = ThrowReadyBreathingBlendShapeName,
+                breathingBlendShapeIndex = meshBuild.BlendShapeIndex,
+                breathingAffectedVertexCount = meshBuild.AffectedVertexCount,
+                breathingFrontVertexCount = meshBuild.FrontVertexCount,
+                breathingLeftSideVertexCount = meshBuild.LeftSideVertexCount,
+                breathingRightSideVertexCount = meshBuild.RightSideVertexCount,
+                sourceFloatCurveCount = sourceFloatCurveCount,
+                readyFloatCurveCount = readyFloatCurveCount,
+                sourceObjectCurveCount = sourceObjectCurveCount,
+                readyObjectCurveCount = readyObjectCurveCount,
+                readyPrefixPositionDifferenceMax = prefixPositionDifference,
+                readyPrefixRotationDifferenceDegreesMax = prefixRotationDifference,
+                sourceOriginalHash = HashFile(ThrowOriginalPath),
+                sourceUnityHash = HashFile(ThrowSourcePath),
+                playerModelHashBefore = playerModelHashBefore,
+                playerModelHashAfter = playerModelHashAfter,
+                baseClipHashBefore = baseClipHashBefore,
+                baseClipHashAfter = baseClipHashAfter,
+                peakClipHashBefore = peakClipHashBefore,
+                peakClipHashAfter = peakClipHashAfter,
+                releaseControllerHashBefore = releaseControllerHashBefore,
+                releaseControllerHashAfter = releaseControllerHashAfter,
+                sourceCopyExact = HashMatches(
+                    ThrowOriginalPath,
+                    ThrowSourcePath,
+                    ThrowSourceHash),
+                firstHeadHeightFrame =
+                    previousRightHandMinusHeadHeight < 0f &&
+                    rightHandHeight - headHeight >= 0f,
+                readyEndBeforeSourcePeak =
+                    readyEndFrame < diagnostic.peakRightHandFrame,
+                readySourcePrefixPreserved = readyPrefixPreserved,
+                breathingBlendShapeBound = breathingBlendShapeBound,
+                breathingMeshAppliedOnlyToReady =
+                    string.Equals(
+                        breathingMeshPathAfter,
+                        ThrowReadyBreathingMeshPath,
+                        StringComparison.Ordinal) &&
+                    otherRendererMeshesUnchanged,
+                otherRendererMeshesUnchanged = otherRendererMeshesUnchanged,
+                releaseUsesExactEmbeddedTake =
+                    StateUsesClip(
+                        releaseController,
+                        ThrowReleaseStateName,
+                        source),
+                releaseControllerUnchanged = string.Equals(
+                    releaseControllerHashBefore,
+                    releaseControllerHashAfter,
+                    StringComparison.Ordinal),
+                sourceAssetsUnchanged =
+                    string.Equals(
+                        playerModelHashBefore,
+                        playerModelHashAfter,
+                        StringComparison.Ordinal) &&
+                    HashMatches(
+                        ThrowOriginalPath,
+                        ThrowSourcePath,
+                        ThrowSourceHash),
+                previousReadyClipsUnchanged =
+                    string.Equals(
+                        baseClipHashBefore,
+                        baseClipHashAfter,
+                        StringComparison.Ordinal) &&
+                    string.Equals(
+                        peakClipHashBefore,
+                        peakClipHashAfter,
+                        StringComparison.Ordinal),
+                readyControllerUsesClip =
+                    StateUsesClip(
+                        readyController,
+                        ThrowReadyStateName,
+                        readyClip),
+                releaseControllerUsesClip =
+                    StateUsesClip(
+                        releaseController,
+                        ThrowReleaseStateName,
+                        source),
+                readyLoops =
+                    AnimationUtility.GetAnimationClipSettings(readyClip).loopTime,
+                releaseLoops =
+                    AnimationUtility.GetAnimationClipSettings(source).loopTime,
+                readyRootUnchanged = RootMatches(readyTarget, readyRootBefore),
+                releaseRootUnchanged = RootMatches(releaseTarget, releaseRootBefore),
+                otherAnimatorsUnchanged = DictionariesEqual(
+                    otherAnimatorsBefore,
+                    CaptureAnimatorsExceptTargets(
+                        layout,
+                        ThrowReadyTargetName,
+                        ThrowReleaseTargetName)),
+                readyAnimatorSettingsCorrect =
+                    AnimatorMatches(readyAnimator, readyController),
+                releaseAnimatorSettingsCorrect =
+                    AnimatorMatches(releaseAnimator, releaseController),
+                readyApplyRootMotion = readyAnimator.applyRootMotion,
+                releaseApplyRootMotion = releaseAnimator.applyRootMotion,
+                sceneSavedClean = !scene.isDirty,
+                validationPriority =
+                    "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+            };
+            metrics.passedNumericChecks =
+                metrics.sourceCopyExact &&
+                metrics.firstHeadHeightFrame &&
+                metrics.readyEndBeforeSourcePeak &&
+                Mathf.Abs(metrics.holdDurationSeconds - 3f) <= 0.00001f &&
+                Mathf.Abs(metrics.breathingFrequencyHertz - 1f) <= 0.00001f &&
+                metrics.breathingCycleCount == 3 &&
+                Mathf.Abs(metrics.breathingMaximumWeight - 30f) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.measuredChestExpansionMeters - 0.01f) <= 0.0005f &&
+                Mathf.Abs(
+                    metrics.measuredBodyDropMeters - 0.03f) <= 0.0005f &&
+                metrics.maximumFootDisplacementMeters <= 0.0005f &&
+                metrics.minimumKneeFlexIncreaseDegrees > 0.1f &&
+                metrics.breathingAffectedVertexCount > 0 &&
+                metrics.breathingFrontVertexCount > 0 &&
+                metrics.breathingLeftSideVertexCount > 0 &&
+                metrics.breathingRightSideVertexCount > 0 &&
+                Mathf.Abs(
+                    metrics.readyDurationSeconds -
+                    (metrics.readyEndTimeSeconds + 3f)) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.releaseDurationSeconds -
+                    metrics.sourceDurationSeconds) <= 0.0001f &&
+                metrics.readySourcePrefixPreserved &&
+                metrics.breathingBlendShapeBound &&
+                metrics.breathingMeshAppliedOnlyToReady &&
+                metrics.otherRendererMeshesUnchanged &&
+                metrics.releaseUsesExactEmbeddedTake &&
+                metrics.releaseControllerUnchanged &&
+                metrics.sourceAssetsUnchanged &&
+                metrics.previousReadyClipsUnchanged &&
+                metrics.readyControllerUsesClip &&
+                metrics.releaseControllerUsesClip &&
+                metrics.readyLoops &&
+                metrics.releaseLoops &&
+                metrics.readyRootUnchanged &&
+                metrics.releaseRootUnchanged &&
+                metrics.otherAnimatorsUnchanged &&
+                metrics.readyAnimatorSettingsCorrect &&
+                metrics.releaseAnimatorSettingsCorrect &&
+                !metrics.readyApplyRootMotion &&
+                !metrics.releaseApplyRootMotion &&
+                metrics.sceneSavedClean;
+            WriteJson(ThrowApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Mixamo apply support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            SessionState.EraseInt(ThrowReviewStageKey);
+            Debug.Log(
+                "[PlayerHandsThrow] Applied Ready head-height breathing hold. " +
+                "ReadyEnd=" + metrics.readyEndFrame +
+                "@" + Num(metrics.readyEndTimeSeconds) +
+                ", Hold=" + Num(metrics.holdDurationSeconds) +
+                ", Cycles=" + metrics.breathingCycleCount +
+                ", Chest=" + Num(metrics.measuredChestExpansionMeters) +
+                ", BodyDrop=" + Num(metrics.measuredBodyDropMeters) +
+                ", Feet=" + Num(metrics.maximumFootDisplacementMeters) +
+                ", ReadyLength=" + Num(metrics.readyDurationSeconds) +
+                ", ReleaseUnchanged=" + metrics.releaseControllerUnchanged +
+                ", SourceHashExact=True, SceneSaved=True.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Hands Throw Mixamo Review")]
+        internal static void CapturePlayerHandsThrowMixamoReview()
+        {
+            int stage = SessionState.GetInt(ThrowReviewStageKey, 0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Throw Mixamo review must start in Edit Mode.");
+                    }
+
+                    ThrowApplyMetrics apply = ReadJson<ThrowApplyMetrics>(
+                        ThrowApplyMetricsPath);
+                    if (!apply.passedNumericChecks)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Throw Mixamo apply metrics did not pass.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before the Hands Throw review.");
+                    }
+
+                    SessionState.SetInt(ThrowReviewStageKey, 1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[PlayerHandsThrow] Entering Play Mode for direct Ready and Release review.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Throw Mixamo capture requires Play Mode.");
+                    }
+
+                    CapturePlayerHandsThrowMixamoActualReview();
+                    SessionState.SetInt(ThrowReviewStageKey, 2);
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Throw Mixamo review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(ThrowReviewStageKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[PlayerHandsThrow] Exiting Play Mode after direct Ready and Release review.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Hands Throw Mixamo review stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(ThrowReviewStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Hands Throw Mixamo Final")]
+        internal static void CapturePlayerHandsThrowMixamoFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Mixamo final capture requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after the Hands Throw direct review.");
+            }
+
+            ThrowReviewMetrics metrics = ReadJson<ThrowReviewMetrics>(
+                ThrowReviewMetricsPath);
+            if (!metrics.passedNumericChecks ||
+                metrics.ready == null ||
+                metrics.release == null ||
+                !metrics.ready.passedNumericChecks ||
+                !metrics.release.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw direct review did not pass before final capture.");
+            }
+
+            CopyReviewedContact(ThrowReviewPath, ThrowFinalPath);
+            Debug.Log(
+                "[PlayerHandsThrow] Final image copied once from the directly reviewed Play Mode contact sheet. " +
+                "Path=" + Path.GetFullPath(ThrowFinalPath) +
+                ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Hands Throw Cancel")]
+        internal static void ApplyPlayerHandsThrowCancel()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Cancel apply requires Edit Mode.");
+            }
+
+            ThrowApplyMetrics readyApply = ReadJson<ThrowApplyMetrics>(
+                ThrowApplyMetricsPath);
+            if (!readyApply.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Ready apply metrics must pass before Cancel is copied.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before the Hands Throw Cancel apply.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform cancelTarget = RequireTarget(layout, ThrowCancelTargetName);
+            RootPose rootBefore = new RootPose(cancelTarget);
+            SkinnedMeshRenderer cancelRenderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(cancelTarget);
+            string targetMeshPathBefore = AssetDatabase.GetAssetPath(
+                cancelRenderer.sharedMesh);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTarget(layout, ThrowCancelTargetName);
+            Dictionary<string, string> otherRendererMeshesBefore =
+                CapturePrimaryRendererMeshPathsExceptTarget(
+                    layout,
+                    ThrowCancelTargetName);
+            string readyClipHashBefore = HashFile(ThrowReadyClipPath);
+            string idleClipHashBefore = HashFile(IdleClipPath);
+            string readyControllerHashBefore = HashFile(ThrowReadyControllerPath);
+            string releaseControllerHashBefore = HashFile(
+                ThrowReleaseControllerPath);
+            AnimationClip readyClip = LoadClip(ThrowReadyClipPath);
+            AnimationClip idleClip = LoadClip(IdleClipPath);
+            const float initialHoldDuration = 0.5f;
+            const float finalIdleHoldDuration = 0.5f;
+            float readyEndTime = readyApply.readyEndTimeSeconds;
+            AnimationClip cancelClip = CreateOrUpdateThrowCancelClip(
+                cancelTarget,
+                readyClip,
+                idleClip,
+                readyEndTime,
+                initialHoldDuration,
+                finalIdleHoldDuration);
+            MeasureThrowCancelClipExact(
+                cancelTarget,
+                readyClip,
+                idleClip,
+                cancelClip,
+                readyEndTime,
+                initialHoldDuration,
+                finalIdleHoldDuration,
+                out float holdPositionDifference,
+                out float holdRotationDifference,
+                out float reversePositionDifference,
+                out float reverseRotationDifference,
+                out float finalIdlePositionDifference,
+                out float finalIdleRotationDifference,
+                out float finalHoldPositionDifference,
+                out float finalHoldRotationDifference);
+            AnimatorController controller =
+                CreateOrUpdateExactEmbeddedTakeController(
+                    ThrowCancelControllerPath,
+                    ThrowCancelStateName,
+                    cancelClip);
+            Animator animator = ConfigureAnimator(cancelTarget, controller);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+
+            string readyClipHashAfter = HashFile(ThrowReadyClipPath);
+            string idleClipHashAfter = HashFile(IdleClipPath);
+            string readyControllerHashAfter = HashFile(ThrowReadyControllerPath);
+            string releaseControllerHashAfter = HashFile(
+                ThrowReleaseControllerPath);
+            string targetMeshPathAfter = AssetDatabase.GetAssetPath(
+                cancelRenderer.sharedMesh);
+            bool otherRendererMeshesUnchanged = DictionariesEqual(
+                otherRendererMeshesBefore,
+                CapturePrimaryRendererMeshPathsExceptTarget(
+                    layout,
+                    ThrowCancelTargetName));
+            ThrowCancelApplyMetrics metrics = new ThrowCancelApplyMetrics
+            {
+                target = ThrowCancelTargetName,
+                state = ThrowCancelStateName,
+                sourceReadyClipPath = ThrowReadyClipPath,
+                idleClipPath = IdleClipPath,
+                cancelClipPath = ThrowCancelClipPath,
+                readyEndFrame = readyApply.readyEndFrame,
+                frameRate = cancelClip.frameRate,
+                readyEndTimeSeconds = readyEndTime,
+                initialHoldDurationSeconds = initialHoldDuration,
+                reverseDurationSeconds = readyEndTime,
+                finalIdleHoldDurationSeconds = finalIdleHoldDuration,
+                totalDurationSeconds = cancelClip.length,
+                floatCurveCount =
+                    AnimationUtility.GetCurveBindings(cancelClip).Length,
+                objectCurveCount = AnimationUtility
+                    .GetObjectReferenceCurveBindings(cancelClip).Length,
+                eventCount = AnimationUtility.GetAnimationEvents(cancelClip).Length,
+                holdPositionDifferenceMax = holdPositionDifference,
+                holdRotationDifferenceDegreesMax = holdRotationDifference,
+                reversePositionDifferenceMax = reversePositionDifference,
+                reverseRotationDifferenceDegreesMax = reverseRotationDifference,
+                finalIdlePositionDifferenceMax = finalIdlePositionDifference,
+                finalIdleRotationDifferenceDegreesMax =
+                    finalIdleRotationDifference,
+                finalHoldPositionDifferenceMax = finalHoldPositionDifference,
+                finalHoldRotationDifferenceDegreesMax =
+                    finalHoldRotationDifference,
+                idleClipHashBefore = idleClipHashBefore,
+                idleClipHashAfter = idleClipHashAfter,
+                readyClipHashBefore = readyClipHashBefore,
+                readyClipHashAfter = readyClipHashAfter,
+                readyControllerHashBefore = readyControllerHashBefore,
+                readyControllerHashAfter = readyControllerHashAfter,
+                releaseControllerHashBefore = releaseControllerHashBefore,
+                releaseControllerHashAfter = releaseControllerHashAfter,
+                targetMeshPathBefore = targetMeshPathBefore,
+                targetMeshPathAfter = targetMeshPathAfter,
+                hasNoBlendShapeCurves = HasNoBlendShapeCurves(cancelClip),
+                controllerUsesCancelClip = StateUsesClip(
+                    controller,
+                    ThrowCancelStateName,
+                    cancelClip),
+                clipLoops = AnimationUtility
+                    .GetAnimationClipSettings(cancelClip).loopTime,
+                rootUnchanged = RootMatches(cancelTarget, rootBefore),
+                targetMeshUnchanged = string.Equals(
+                    targetMeshPathBefore,
+                    targetMeshPathAfter,
+                    StringComparison.Ordinal),
+                otherAnimatorsUnchanged = DictionariesEqual(
+                    otherAnimatorsBefore,
+                    CaptureAnimatorsExceptTarget(
+                        layout,
+                        ThrowCancelTargetName)),
+                otherRendererMeshesUnchanged = otherRendererMeshesUnchanged,
+                animatorSettingsCorrect = AnimatorMatches(animator, controller),
+                applyRootMotion = animator.applyRootMotion,
+                sceneSavedClean = !scene.isDirty,
+                validationPriority =
+                    "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+            };
+            metrics.passedNumericChecks =
+                metrics.readyEndFrame == 19 &&
+                Mathf.Abs(metrics.frameRate - 30f) <= 0.0001f &&
+                Mathf.Abs(metrics.initialHoldDurationSeconds - 0.5f) <= 0.00001f &&
+                Mathf.Abs(metrics.finalIdleHoldDurationSeconds - 0.5f) <= 0.00001f &&
+                Mathf.Abs(
+                    metrics.totalDurationSeconds -
+                    (metrics.initialHoldDurationSeconds +
+                     metrics.reverseDurationSeconds +
+                     metrics.finalIdleHoldDurationSeconds)) <= 0.0001f &&
+                metrics.holdPositionDifferenceMax <= PositionTolerance &&
+                metrics.holdRotationDifferenceDegreesMax <= RotationTolerance &&
+                metrics.reversePositionDifferenceMax <= PositionTolerance &&
+                metrics.reverseRotationDifferenceDegreesMax <= RotationTolerance &&
+                metrics.finalIdlePositionDifferenceMax <= PositionTolerance &&
+                metrics.finalIdleRotationDifferenceDegreesMax <= RotationTolerance &&
+                metrics.finalHoldPositionDifferenceMax <= PositionTolerance &&
+                metrics.finalHoldRotationDifferenceDegreesMax <= RotationTolerance &&
+                string.Equals(
+                    metrics.idleClipHashBefore,
+                    metrics.idleClipHashAfter,
+                    StringComparison.Ordinal) &&
+                string.Equals(
+                    metrics.readyClipHashBefore,
+                    metrics.readyClipHashAfter,
+                    StringComparison.Ordinal) &&
+                string.Equals(
+                    metrics.readyControllerHashBefore,
+                    metrics.readyControllerHashAfter,
+                    StringComparison.Ordinal) &&
+                string.Equals(
+                    metrics.releaseControllerHashBefore,
+                    metrics.releaseControllerHashAfter,
+                    StringComparison.Ordinal) &&
+                metrics.hasNoBlendShapeCurves &&
+                metrics.controllerUsesCancelClip &&
+                metrics.clipLoops &&
+                metrics.rootUnchanged &&
+                metrics.targetMeshUnchanged &&
+                metrics.otherAnimatorsUnchanged &&
+                metrics.otherRendererMeshesUnchanged &&
+                metrics.animatorSettingsCorrect &&
+                !metrics.applyRootMotion &&
+                metrics.sceneSavedClean;
+            WriteJson(ThrowCancelApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Cancel apply support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            SessionState.EraseInt(ThrowCancelReviewStageKey);
+            Debug.Log(
+                "[PlayerHandsThrowCancel] Applied Ready frame 19 hold, linear Idle blend, and final Idle hold loop. " +
+                "Hold=" + Num(metrics.initialHoldDurationSeconds) +
+                ", Reverse=" + Num(metrics.reverseDurationSeconds) +
+                ", IdleHold=" + Num(metrics.finalIdleHoldDurationSeconds) +
+                ", Length=" + Num(metrics.totalDurationSeconds) +
+                ", HoldPose=" + Num(metrics.holdPositionDifferenceMax) +
+                "/" + Num(metrics.holdRotationDifferenceDegreesMax) +
+                ", ReversePose=" + Num(metrics.reversePositionDifferenceMax) +
+                "/" + Num(metrics.reverseRotationDifferenceDegreesMax) +
+                ", FinalIdle=" + Num(metrics.finalIdlePositionDifferenceMax) +
+                "/" + Num(metrics.finalIdleRotationDifferenceDegreesMax) +
+                ", Breathing=False, SceneSaved=True.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Hands Throw Cancel Review")]
+        internal static void CapturePlayerHandsThrowCancelReview()
+        {
+            int stage = SessionState.GetInt(ThrowCancelReviewStageKey, 0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Throw Cancel review must start in Edit Mode.");
+                    }
+
+                    ThrowCancelApplyMetrics apply =
+                        ReadJson<ThrowCancelApplyMetrics>(
+                            ThrowCancelApplyMetricsPath);
+                    if (!apply.passedNumericChecks)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Throw Cancel apply metrics did not pass.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before the Hands Throw Cancel review.");
+                    }
+
+                    SessionState.SetInt(ThrowCancelReviewStageKey, 1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[PlayerHandsThrowCancel] Entering Play Mode for direct reverse-loop review.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Throw Cancel capture requires Play Mode.");
+                    }
+
+                    CapturePlayerHandsThrowCancelActualReview();
+                    SessionState.SetInt(ThrowCancelReviewStageKey, 2);
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Hands Throw Cancel review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(ThrowCancelReviewStageKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[PlayerHandsThrowCancel] Exiting Play Mode after direct reverse-loop review.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Hands Throw Cancel review stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(ThrowCancelReviewStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Hands Throw Cancel Final")]
+        internal static void CapturePlayerHandsThrowCancelFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Cancel final capture requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after the Hands Throw Cancel direct review.");
+            }
+
+            ThrowCancelReviewMetrics metrics =
+                ReadJson<ThrowCancelReviewMetrics>(
+                    ThrowCancelReviewMetricsPath);
+            if (!metrics.passedNumericChecks ||
+                metrics.runtime == null ||
+                !metrics.runtime.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Cancel direct review did not pass before final capture.");
+            }
+
+            CopyReviewedContact(ThrowCancelReviewPath, ThrowCancelFinalPath);
+            Debug.Log(
+                "[PlayerHandsThrowCancel] Final image copied once from the directly reviewed Play Mode contact sheet. " +
+                "Path=" + Path.GetFullPath(ThrowCancelFinalPath) +
                 ", SceneChanged=False.");
         }
 
@@ -10661,6 +12671,396 @@ namespace Bellerophon.Editor
                 ", LoopsPerTarget=2.");
         }
 
+        private static void CapturePlayerHandsDrawBackCommonMeshActualReview()
+        {
+            DrawBackCommonMeshApplyMetrics apply =
+                ReadJson<DrawBackCommonMeshApplyMetrics>(
+                    DrawBackCommonMeshApplyMetricsPath);
+            if (!apply.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Draw Back common-mesh apply metrics did not pass.");
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, DrawBackTargetName);
+            Transform emptyReference = RequireTarget(layout, EmptyTargetName);
+            AnimationClip source = LoadSingleEmbeddedClip(
+                DrawBackSourcePath,
+                "hands draw back");
+            CaptureDrawBackCommonMeshComparison(
+                target,
+                emptyReference,
+                source,
+                apply.correctedBlendShapeWeightsBefore,
+                DrawBackCommonMeshReviewPath);
+            TargetReviewMetrics drawBack = CaptureTargetMetrics(
+                target,
+                source,
+                DrawBackStateName,
+                source.name);
+            drawBack.passedNumericChecks = TargetReviewPassed(drawBack);
+            SkinnedMeshRenderer renderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(target);
+            SkinnedMeshRenderer emptyRenderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(emptyReference);
+            DrawBackCommonMeshReviewMetrics metrics =
+                new DrawBackCommonMeshReviewMetrics
+                {
+                    target = DrawBackTargetName,
+                    emptyReference = EmptyTargetName,
+                    phasesCaptured = 12,
+                    drawBack = drawBack,
+                    rendererConfigurationMatchesEmpty =
+                        RendererConfigurationMatches(
+                            renderer,
+                            target,
+                            emptyRenderer,
+                            emptyReference),
+                    correctedMeshUnreferencedByScene =
+                        !SceneDependsOnAsset(
+                            DrawBackRightChestCorrectedMeshPath),
+                    correctedMeshAssetUnchanged = string.Equals(
+                        HashFile(DrawBackRightChestCorrectedMeshPath),
+                        apply.correctedMeshHashAfter,
+                        StringComparison.Ordinal),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                metrics.phasesCaptured == 12 &&
+                metrics.drawBack.passedNumericChecks &&
+                metrics.rendererConfigurationMatchesEmpty &&
+                metrics.correctedMeshUnreferencedByScene &&
+                metrics.correctedMeshAssetUnchanged;
+            WriteJson(DrawBackCommonMeshReviewMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Draw Back common-mesh Play Mode support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[PlayerHandsDrawBackCommonMesh] Captured corrected-before, shared-mesh Draw Back, and Hands_Empty_Idle in the same 12 normalized phases. " +
+                "Frames=" + drawBack.framesSampled +
+                ", Root=" + Num(drawBack.rootPositionDisplacementMax) +
+                ", CommonRenderer=True, CorrectedMeshReferenced=False.");
+        }
+
+        private static void CapturePlayerHandsDrawBackCommonMeshForwardActualReview()
+        {
+            DrawBackCommonMeshForwardApplyMetrics apply =
+                ReadJson<DrawBackCommonMeshForwardApplyMetrics>(
+                    DrawBackCommonMeshForwardApplyMetricsPath);
+            if (!apply.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Draw Back common-mesh forward apply metrics did not pass.");
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, DrawBackTargetName);
+            Transform emptyReference = RequireTarget(layout, EmptyTargetName);
+            AnimationClip source = LoadSingleEmbeddedClip(
+                DrawBackSourcePath,
+                "hands draw back");
+            AnimationClip adjusted = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                DrawBackForwardAdjustedClipPath);
+            if (adjusted == null)
+            {
+                throw new InvalidOperationException(
+                    "Hands Draw Back common-mesh forward adjusted clip is missing.");
+            }
+
+            CaptureDrawBackCommonMeshForwardComparison(
+                target,
+                source,
+                DrawBackCommonMeshForwardReviewPath);
+            DrawBackOuterElbowReviewMetrics motion =
+                CaptureDrawBackOuterElbowMetrics(
+                    target,
+                    source,
+                    adjusted,
+                    apply.extractionStartFrame,
+                    apply.outerPathFrame,
+                    apply.sourcePeakFrame,
+                    apply.rightHandBindLocalRotation);
+            MeasureDrawBackClipFrontSilhouetteGap(
+                target,
+                adjusted,
+                out float minimumFrontSilhouetteGap,
+                out int minimumFrontSilhouetteGapFrame);
+            motion.validationPriority =
+                "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증";
+            motion.passedNumericChecks =
+                motion.framesPerLoop == 69 &&
+                motion.framesSampled == 138 &&
+                motion.loopsSampled == 2 &&
+                motion.rootPositionDisplacementMax <= PositionTolerance &&
+                motion.runtimeAdjustedPosePositionDifferenceMax <= PositionTolerance &&
+                motion.runtimeAdjustedPoseRotationDifferenceDegreesMax <= RotationTolerance &&
+                motion.unchangedPosePositionDifferenceMax <= PositionTolerance &&
+                motion.unchangedPoseRotationDifferenceDegreesMax <= RotationTolerance &&
+                motion.adjustedPeakHorizontalForwardAngleDegrees >= 5f &&
+                motion.adjustedPeakHorizontalForwardAngleDegrees <= 45f &&
+                motion.adjustedPeakHandSolarPlexusHeightDifferenceMeters <= 0.005f &&
+                Mathf.Abs(motion.adjustedPeakElbowFlexDegrees - 30f) <= 0.5f &&
+                motion.stateLoops &&
+                !motion.applyRootMotion;
+            SkinnedMeshRenderer renderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(target);
+            SkinnedMeshRenderer emptyRenderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(emptyReference);
+            DrawBackCommonMeshForwardReviewMetrics metrics =
+                new DrawBackCommonMeshForwardReviewMetrics
+                {
+                    target = DrawBackTargetName,
+                    phasesCaptured = 12,
+                    motion = motion,
+                    rendererConfigurationMatchesEmpty =
+                        RendererConfigurationMatches(
+                            renderer,
+                            target,
+                            emptyRenderer,
+                            emptyReference),
+                    correctedMeshUnreferencedByScene =
+                        !SceneDependsOnAsset(
+                            DrawBackRightChestCorrectedMeshPath),
+                    correctedMeshAssetUnchanged = string.Equals(
+                        HashFile(DrawBackRightChestCorrectedMeshPath),
+                        apply.correctedMeshHashAfter,
+                        StringComparison.Ordinal),
+                    hasNoBlendShapeCurves =
+                        HasNoBlendShapeCurves(adjusted),
+                    minimumFrontSilhouetteGapMeters =
+                        minimumFrontSilhouetteGap,
+                    minimumFrontSilhouetteGapFrame =
+                        minimumFrontSilhouetteGapFrame,
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                metrics.phasesCaptured == 12 &&
+                metrics.motion.passedNumericChecks &&
+                metrics.rendererConfigurationMatchesEmpty &&
+                metrics.correctedMeshUnreferencedByScene &&
+                metrics.correctedMeshAssetUnchanged &&
+                metrics.hasNoBlendShapeCurves &&
+                metrics.minimumFrontSilhouetteGapMeters >= 0.005f;
+            WriteJson(DrawBackCommonMeshForwardReviewMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Draw Back common-mesh forward Play Mode support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[PlayerHandsDrawBackCommonMeshForward] Captured the exact source and adjusted common-mesh result in 12 Play Mode phases. " +
+                "Frames=" + motion.framesSampled +
+                ", Forward=" +
+                Num(motion.adjustedPeakHorizontalForwardAngleDegrees) +
+                ", Height=" +
+                Num(motion.adjustedPeakHandSolarPlexusHeightDifferenceMeters) +
+                ", Elbow=" + Num(motion.adjustedPeakElbowFlexDegrees) +
+                ", MinFaceGap=" +
+                Num(metrics.minimumFrontSilhouetteGapMeters) + "@" +
+                metrics.minimumFrontSilhouetteGapFrame +
+                ", Root=" + Num(motion.rootPositionDisplacementMax) + ".");
+        }
+
+        private static void CaptureDrawBackCommonMeshComparison(
+            Transform target,
+            Transform emptyReference,
+            AnimationClip source,
+            float[] correctedBlendShapeWeightsBefore,
+            string outputPath)
+        {
+            GameObject correctedBeforeObject =
+                UnityEngine.Object.Instantiate(target.gameObject);
+            correctedBeforeObject.name =
+                target.name + "CorrectedMeshBeforeReference";
+            correctedBeforeObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(correctedBeforeObject);
+            SkinnedMeshRenderer correctedBeforeRenderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(
+                    correctedBeforeObject.transform);
+            Mesh correctedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(
+                DrawBackRightChestCorrectedMeshPath);
+            if (correctedMesh == null)
+            {
+                throw new InvalidOperationException(
+                    "Hands Draw Back state-only corrected mesh is missing for the before reference.");
+            }
+
+            correctedBeforeRenderer.sharedMesh = correctedMesh;
+            if (correctedBlendShapeWeightsBefore.Length !=
+                correctedMesh.blendShapeCount)
+            {
+                UnityEngine.Object.DestroyImmediate(correctedBeforeObject);
+                throw new InvalidOperationException(
+                    "Hands Draw Back recorded before-state BlendShape count changed.");
+            }
+
+            for (int index = 0;
+                 index < correctedBlendShapeWeightsBefore.Length;
+                 index++)
+            {
+                correctedBeforeRenderer.SetBlendShapeWeight(
+                    index,
+                    correctedBlendShapeWeightsBefore[index]);
+            }
+
+            Animator targetAnimator = RequireAnimator(target);
+            Animator emptyAnimator = RequireAnimator(emptyReference);
+            List<List<byte[]>> rows = Enumerable.Range(0, 9)
+                .Select(_ => new List<byte[]>())
+                .ToList();
+            try
+            {
+                CaptureDrawBackThreeViewRows(
+                    correctedBeforeObject.transform,
+                    phase => source.SampleAnimation(
+                        correctedBeforeObject,
+                        phase * source.length),
+                    rows,
+                    0);
+                CaptureDrawBackThreeViewRows(
+                    target,
+                    phase => SampleAnimator(
+                        targetAnimator,
+                        DrawBackStateName,
+                        phase),
+                    rows,
+                    3);
+                CaptureDrawBackThreeViewRows(
+                    emptyReference,
+                    phase => SampleAnimator(
+                        emptyAnimator,
+                        EmptyStateName,
+                        phase),
+                    rows,
+                    6);
+                ComposeRows(rows, outputPath);
+            }
+            finally
+            {
+                targetAnimator.Rebind();
+                targetAnimator.Update(0f);
+                emptyAnimator.Rebind();
+                emptyAnimator.Update(0f);
+                UnityEngine.Object.DestroyImmediate(correctedBeforeObject);
+            }
+        }
+
+        private static void CaptureDrawBackThreeViewRows(
+            Transform subject,
+            Action<float> sample,
+            IReadOnlyList<List<byte[]>> rows,
+            int rowOffset)
+        {
+            CaptureEnvironment environment = new CaptureEnvironment(subject);
+            try
+            {
+                for (int phaseIndex = 0; phaseIndex < 12; phaseIndex++)
+                {
+                    float phase = phaseIndex / 12f;
+                    sample(phase);
+                    environment.ConfigureView(subject, 1.05f, 1.35f);
+                    rows[rowOffset].Add(environment.CaptureFront());
+                    rows[rowOffset + 1].Add(environment.CaptureSide());
+                    Vector3 chestCenter =
+                        (FindRequired(subject, SolarPlexusPath).position +
+                         FindRequired(subject, RightShoulderPath).position) * 0.5f;
+                    environment.ConfigureView(subject, chestCenter, 0.48f);
+                    rows[rowOffset + 2].Add(environment.CaptureFront());
+                }
+            }
+            finally
+            {
+                environment.Dispose();
+            }
+        }
+
+        private static void CaptureDrawBackCommonMeshForwardComparison(
+            Transform target,
+            AnimationClip source,
+            string outputPath)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            sourceObject.name = target.name + "ExactSourceReference";
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            Animator animator = RequireAnimator(target);
+            List<List<byte[]>> rows = Enumerable.Range(0, 10)
+                .Select(_ => new List<byte[]>())
+                .ToList();
+            try
+            {
+                CaptureDrawBackFiveViewRows(
+                    sourceObject.transform,
+                    phase => source.SampleAnimation(
+                        sourceObject,
+                        phase * source.length),
+                    rows,
+                    0);
+                CaptureDrawBackFiveViewRows(
+                    target,
+                    phase => SampleAnimator(
+                        animator,
+                        DrawBackStateName,
+                        phase),
+                    rows,
+                    5);
+                ComposeRows(rows, outputPath);
+            }
+            finally
+            {
+                animator.Rebind();
+                animator.Update(0f);
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+            }
+        }
+
+        private static void CaptureDrawBackFiveViewRows(
+            Transform subject,
+            Action<float> sample,
+            IReadOnlyList<List<byte[]>> rows,
+            int rowOffset)
+        {
+            CaptureEnvironment environment = new CaptureEnvironment(subject);
+            try
+            {
+                for (int phaseIndex = 0; phaseIndex < 12; phaseIndex++)
+                {
+                    float phase = phaseIndex / 12f;
+                    sample(phase);
+                    environment.ConfigureView(subject, 1.05f, 1.35f);
+                    rows[rowOffset].Add(environment.CaptureFront());
+                    rows[rowOffset + 1].Add(environment.CaptureSide());
+                    Vector3 armCenter =
+                        (FindRequired(subject, RightArmPath).position +
+                         FindRequired(subject, RightHandPath).position) * 0.5f;
+                    environment.ConfigureView(subject, armCenter, 0.62f);
+                    rows[rowOffset + 2].Add(environment.CaptureFront());
+                    rows[rowOffset + 3].Add(environment.CaptureSide());
+                    Vector3 chestCenter =
+                        (FindRequired(subject, SolarPlexusPath).position +
+                         FindRequired(subject, RightShoulderPath).position) * 0.5f;
+                    environment.ConfigureView(subject, chestCenter, 0.48f);
+                    rows[rowOffset + 4].Add(environment.CaptureFront());
+                }
+            }
+            finally
+            {
+                environment.Dispose();
+            }
+        }
+
         private static void CapturePlayerHandsDrawBackExactMixamoActualReview()
         {
             DrawBackExactReconnectApplyMetrics apply =
@@ -14490,6 +16890,227 @@ namespace Bellerophon.Editor
             }
         }
 
+        private static float[] CaptureBlendShapeWeights(
+            SkinnedMeshRenderer renderer)
+        {
+            int count = renderer.sharedMesh != null
+                ? renderer.sharedMesh.blendShapeCount
+                : 0;
+            float[] weights = new float[count];
+            for (int index = 0; index < count; index++)
+            {
+                weights[index] = renderer.GetBlendShapeWeight(index);
+            }
+
+            return weights;
+        }
+
+        private static void RevertDrawBackRendererToPrefabSource(
+            SkinnedMeshRenderer renderer)
+        {
+            if (!PrefabUtility.IsPartOfPrefabInstance(renderer))
+            {
+                throw new InvalidOperationException(
+                    "Hands_Draw_Back primary renderer is not a prefab instance.");
+            }
+
+            SerializedObject serializedRenderer = new SerializedObject(renderer);
+            SerializedProperty meshProperty =
+                serializedRenderer.FindProperty("m_Mesh");
+            SerializedProperty blendShapeProperty =
+                serializedRenderer.FindProperty("m_BlendShapeWeights");
+            if (meshProperty == null || blendShapeProperty == null)
+            {
+                throw new InvalidOperationException(
+                    "Hands_Draw_Back renderer mesh properties are unavailable.");
+            }
+
+            if (meshProperty.prefabOverride)
+            {
+                PrefabUtility.RevertPropertyOverride(
+                    meshProperty,
+                    InteractionMode.AutomatedAction);
+            }
+
+            serializedRenderer.Update();
+            blendShapeProperty =
+                serializedRenderer.FindProperty("m_BlendShapeWeights");
+            if (blendShapeProperty.prefabOverride)
+            {
+                PrefabUtility.RevertPropertyOverride(
+                    blendShapeProperty,
+                    InteractionMode.AutomatedAction);
+            }
+
+            GameObject prefabRoot =
+                PrefabUtility.GetOutermostPrefabInstanceRoot(
+                    renderer.gameObject);
+            UnityEngine.Object sourceRenderer =
+                PrefabUtility.GetCorrespondingObjectFromSource(renderer);
+            if (prefabRoot == null || sourceRenderer == null)
+            {
+                throw new InvalidOperationException(
+                    "Hands_Draw_Back renderer prefab source is unavailable.");
+            }
+
+            PropertyModification[] modifications =
+                PrefabUtility.GetPropertyModifications(prefabRoot) ??
+                Array.Empty<PropertyModification>();
+            PropertyModification[] retained = modifications
+                .Where(modification =>
+                    modification.target != sourceRenderer ||
+                    (!string.Equals(
+                         modification.propertyPath,
+                         "m_Mesh",
+                         StringComparison.Ordinal) &&
+                     !modification.propertyPath.StartsWith(
+                         "m_BlendShapeWeights",
+                         StringComparison.Ordinal)))
+                .ToArray();
+            if (retained.Length != modifications.Length)
+            {
+                PrefabUtility.SetPropertyModifications(prefabRoot, retained);
+            }
+
+            serializedRenderer.Update();
+            if (HasPrefabPropertyOverride(renderer, "m_Mesh") ||
+                HasPrefabPropertyOverride(
+                    renderer,
+                    "m_BlendShapeWeights"))
+            {
+                throw new InvalidOperationException(
+                    "Hands_Draw_Back mesh or BlendShape prefab overrides remain after revert.");
+            }
+        }
+
+        private static bool HasPrefabPropertyOverride(
+            SkinnedMeshRenderer renderer,
+            string propertyPathPrefix)
+        {
+            GameObject prefabRoot =
+                PrefabUtility.GetOutermostPrefabInstanceRoot(
+                    renderer.gameObject);
+            UnityEngine.Object sourceRenderer =
+                PrefabUtility.GetCorrespondingObjectFromSource(renderer);
+            if (prefabRoot == null || sourceRenderer == null)
+            {
+                return false;
+            }
+
+            PropertyModification[] modifications =
+                PrefabUtility.GetPropertyModifications(prefabRoot);
+            return modifications != null &&
+                   modifications.Any(modification =>
+                       modification.target == sourceRenderer &&
+                       (string.Equals(
+                            modification.propertyPath,
+                            propertyPathPrefix,
+                            StringComparison.Ordinal) ||
+                        modification.propertyPath.StartsWith(
+                            propertyPathPrefix + ".",
+                            StringComparison.Ordinal)));
+        }
+
+        private static bool RendererConfigurationMatches(
+            SkinnedMeshRenderer first,
+            Transform firstRoot,
+            SkinnedMeshRenderer second,
+            Transform secondRoot)
+        {
+            if (first.sharedMesh == null ||
+                second.sharedMesh == null ||
+                first.sharedMesh != second.sharedMesh ||
+                !first.sharedMaterials.SequenceEqual(second.sharedMaterials) ||
+                first.bones.Length != second.bones.Length ||
+                first.quality != second.quality ||
+                first.updateWhenOffscreen != second.updateWhenOffscreen ||
+                first.skinnedMotionVectors != second.skinnedMotionVectors ||
+                first.enabled != second.enabled ||
+                first.shadowCastingMode != second.shadowCastingMode ||
+                first.receiveShadows != second.receiveShadows ||
+                Vector3.Distance(
+                    first.localBounds.center,
+                    second.localBounds.center) > PositionTolerance ||
+                Vector3.Distance(
+                    first.localBounds.extents,
+                    second.localBounds.extents) > PositionTolerance)
+            {
+                return false;
+            }
+
+            string firstRendererPath = AnimationUtility.CalculateTransformPath(
+                first.transform,
+                firstRoot);
+            string secondRendererPath = AnimationUtility.CalculateTransformPath(
+                second.transform,
+                secondRoot);
+            if (!string.Equals(
+                    firstRendererPath,
+                    secondRendererPath,
+                    StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            string firstRootBonePath = first.rootBone != null
+                ? AnimationUtility.CalculateTransformPath(
+                    first.rootBone,
+                    firstRoot)
+                : string.Empty;
+            string secondRootBonePath = second.rootBone != null
+                ? AnimationUtility.CalculateTransformPath(
+                    second.rootBone,
+                    secondRoot)
+                : string.Empty;
+            if (!string.Equals(
+                    firstRootBonePath,
+                    secondRootBonePath,
+                    StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            for (int index = 0; index < first.bones.Length; index++)
+            {
+                string firstBonePath = AnimationUtility.CalculateTransformPath(
+                    first.bones[index],
+                    firstRoot);
+                string secondBonePath = AnimationUtility.CalculateTransformPath(
+                    second.bones[index],
+                    secondRoot);
+                if (!string.Equals(
+                        firstBonePath,
+                        secondBonePath,
+                        StringComparison.Ordinal))
+                {
+                    return false;
+                }
+            }
+
+            return first.sharedMesh.vertexCount == second.sharedMesh.vertexCount &&
+                   first.sharedMesh.subMeshCount == second.sharedMesh.subMeshCount &&
+                   first.sharedMesh.bindposes.Length == second.sharedMesh.bindposes.Length &&
+                   first.sharedMesh.blendShapeCount == second.sharedMesh.blendShapeCount;
+        }
+
+        private static bool SceneDependsOnAsset(string assetPath)
+        {
+            return AssetDatabase.GetDependencies(ScenePath, true)
+                .Any(path => string.Equals(
+                    path,
+                    assetPath,
+                    StringComparison.Ordinal));
+        }
+
+        private static bool HasNoBlendShapeCurves(AnimationClip clip)
+        {
+            return AnimationUtility.GetCurveBindings(clip)
+                .All(binding =>
+                    !binding.propertyName.StartsWith(
+                        "blendShape.",
+                        StringComparison.Ordinal));
+        }
+
         private static void CaptureTargetComparison(
             Transform target,
             AnimationClip source,
@@ -14966,6 +17587,2146 @@ namespace Bellerophon.Editor
             camera.orthographicSize = orthographicSize;
         }
 
+        private static void MeasureThrowSourcePeak(
+            Transform template,
+            AnimationClip source,
+            out int frameIntervals,
+            out int peakFrame,
+            out int peakCandidateCount)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(template.gameObject);
+            sourceObject.name = "HandsThrowPeakMeasure";
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            try
+            {
+                frameIntervals = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(source.length * source.frameRate));
+                List<float> heights = new List<float>();
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = Mathf.Min(
+                        source.length,
+                        frame / source.frameRate);
+                    source.SampleAnimation(sourceObject, time);
+                    Transform rightHand = FindRequired(
+                        sourceObject.transform,
+                        RightHandPath);
+                    heights.Add(Vector3.Dot(
+                        rightHand.position - sourceObject.transform.position,
+                        sourceObject.transform.up));
+                }
+
+                float peakHeight = heights.Max();
+                peakFrame = heights.IndexOf(peakHeight);
+                peakCandidateCount = heights.Count(height =>
+                    Mathf.Abs(height - peakHeight) <= PositionTolerance);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+            }
+        }
+
+        private static void MeasureThrowSourceHeadHeightFrame(
+            Transform template,
+            AnimationClip source,
+            out int frameIntervals,
+            out int readyEndFrame,
+            out float previousRightHandMinusHeadHeight,
+            out float rightHandHeight,
+            out float headHeight)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(template.gameObject);
+            sourceObject.name = "HandsThrowHeadHeightMeasure";
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            try
+            {
+                frameIntervals = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(source.length * source.frameRate));
+                readyEndFrame = -1;
+                previousRightHandMinusHeadHeight = float.NaN;
+                rightHandHeight = float.NaN;
+                headHeight = float.NaN;
+                float previousDifference = float.NaN;
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = Mathf.Min(
+                        source.length,
+                        frame / source.frameRate);
+                    source.SampleAnimation(sourceObject, time);
+                    Transform rightHand = FindRequired(
+                        sourceObject.transform,
+                        RightHandPath);
+                    Transform head = FindRequired(
+                        sourceObject.transform,
+                        HeadPath);
+                    float sampledRightHandHeight = Vector3.Dot(
+                        rightHand.position - sourceObject.transform.position,
+                        sourceObject.transform.up);
+                    float sampledHeadHeight = Vector3.Dot(
+                        head.position - sourceObject.transform.position,
+                        sourceObject.transform.up);
+                    float difference =
+                        sampledRightHandHeight - sampledHeadHeight;
+                    if (frame > 0 &&
+                        previousDifference < 0f &&
+                        difference >= 0f)
+                    {
+                        readyEndFrame = frame;
+                        previousRightHandMinusHeadHeight = previousDifference;
+                        rightHandHeight = sampledRightHandHeight;
+                        headHeight = sampledHeadHeight;
+                        break;
+                    }
+
+                    previousDifference = difference;
+                }
+
+                if (readyEndFrame < 0)
+                {
+                    throw new InvalidOperationException(
+                        "Hands Throw source has no rising frame where the right hand first reaches Head height.");
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+            }
+        }
+
+        private static ThrowBreathingMeshBuildResult
+            CreateOrUpdateThrowReadyBreathingMesh(
+                Transform template,
+                SkinnedMeshRenderer templateRenderer,
+                AnimationClip baseClip,
+                float readyEndTime,
+                float expansionAtAnimatedWeight,
+                float animatedWeight)
+        {
+            Mesh originalMesh = AssetDatabase.LoadAllAssetsAtPath(PlayerModelPath)
+                .OfType<Mesh>()
+                .OrderByDescending(mesh => mesh.vertexCount)
+                .FirstOrDefault();
+            if (originalMesh == null || originalMesh.vertexCount == 0)
+            {
+                throw new InvalidOperationException(
+                    "Player FBX has no usable source mesh for Ready breathing.");
+            }
+
+            if (animatedWeight <= 0f || animatedWeight > 100f)
+            {
+                throw new InvalidOperationException(
+                    "Ready breathing animated BlendShape weight is invalid.");
+            }
+
+            string rendererPath = AnimationUtility.CalculateTransformPath(
+                templateRenderer.transform,
+                template);
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "HandsThrowReadyBreathingMeshBuild";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            Mesh baseBake = new Mesh { name = "HandsThrowReadyBreathingBaseBake" };
+            Mesh expandedBake = new Mesh { name = "HandsThrowReadyBreathingExpandedBake" };
+            try
+            {
+                SkinnedMeshRenderer renderer = RequireRelativeSkinnedMeshRenderer(
+                    workObject.transform,
+                    rendererPath);
+                renderer.sharedMesh = originalMesh;
+                baseClip.SampleAnimation(workObject, readyEndTime);
+                renderer.BakeMesh(baseBake, true);
+                Vector3[] bakedVertices = baseBake.vertices;
+                BoneWeight[] boneWeights = originalMesh.boneWeights;
+                Matrix4x4[] bindPoses = originalMesh.bindposes;
+                if (bakedVertices.Length != originalMesh.vertexCount ||
+                    boneWeights.Length != originalMesh.vertexCount ||
+                    bindPoses.Length != renderer.bones.Length)
+                {
+                    throw new InvalidOperationException(
+                        "Ready breathing source mesh skinning data is unsupported.");
+                }
+
+                Transform root = workObject.transform;
+                Transform spine = FindRequired(root, SpinePath);
+                Transform solar = FindRequired(root, SolarPlexusPath);
+                Transform leftShoulder = FindRequired(root, LeftShoulderPath);
+                Transform rightShoulder = FindRequired(root, RightShoulderPath);
+                float lowerHeight = Vector3.Dot(
+                    solar.position - root.position,
+                    root.up);
+                float upperHeight = Vector3.Dot(
+                    ((leftShoulder.position + rightShoulder.position) * 0.5f) -
+                    root.position,
+                    root.up);
+                if (upperHeight <= lowerHeight)
+                {
+                    throw new InvalidOperationException(
+                        "Ready breathing chest vertical range is invalid.");
+                }
+
+                Vector3[] worldDirections = new Vector3[originalMesh.vertexCount];
+                float[] rawFades = new float[originalMesh.vertexCount];
+                int[] regions = new int[originalMesh.vertexCount];
+                float maximumRawFade = 0f;
+                for (int vertex = 0; vertex < originalMesh.vertexCount; vertex++)
+                {
+                    string dominantBone = DominantBoneName(
+                        boneWeights[vertex],
+                        renderer.bones);
+                    if (!string.Equals(dominantBone, "Spine02", StringComparison.Ordinal) &&
+                        !string.Equals(dominantBone, "Spine01", StringComparison.Ordinal) &&
+                        !string.Equals(dominantBone, "Spine", StringComparison.Ordinal))
+                    {
+                        continue;
+                    }
+
+                    Vector3 world = renderer.transform.TransformPoint(
+                        bakedVertices[vertex]);
+                    float height = Vector3.Dot(
+                        world - root.position,
+                        root.up);
+                    if (height <= lowerHeight || height >= upperHeight)
+                    {
+                        continue;
+                    }
+
+                    Vector3 fromSpine = world - spine.position;
+                    float lateral = Vector3.Dot(fromSpine, root.right);
+                    float forward = Vector3.Dot(fromSpine, root.forward);
+                    if (forward < 0f)
+                    {
+                        continue;
+                    }
+
+                    Vector3 horizontal =
+                        root.right * lateral + root.forward * forward;
+                    if (horizontal.sqrMagnitude <= 0.0000001f)
+                    {
+                        continue;
+                    }
+
+                    float verticalPhase = Mathf.InverseLerp(
+                        lowerHeight,
+                        upperHeight,
+                        height);
+                    float fade = Mathf.Sin(verticalPhase * Mathf.PI);
+                    if (fade <= 0f)
+                    {
+                        continue;
+                    }
+
+                    worldDirections[vertex] = horizontal.normalized;
+                    rawFades[vertex] = fade;
+                    regions[vertex] = Mathf.Abs(lateral) <= Mathf.Abs(forward)
+                        ? 1
+                        : lateral < 0f
+                            ? 2
+                            : 3;
+                    maximumRawFade = Mathf.Max(maximumRawFade, fade);
+                }
+
+                if (maximumRawFade <= 0f)
+                {
+                    throw new InvalidOperationException(
+                        "Ready breathing mesh found no chest vertices.");
+                }
+
+                float fullWeightExpansion =
+                    expansionAtAnimatedWeight * 100f / animatedWeight;
+                Vector3[] deltaVertices = new Vector3[originalMesh.vertexCount];
+                bool[] affected = new bool[originalMesh.vertexCount];
+                int frontCount = 0;
+                int leftCount = 0;
+                int rightCount = 0;
+                for (int vertex = 0; vertex < originalMesh.vertexCount; vertex++)
+                {
+                    if (rawFades[vertex] <= 0f)
+                    {
+                        continue;
+                    }
+
+                    Vector3 desiredWorldDelta = worldDirections[vertex] *
+                        (fullWeightExpansion * rawFades[vertex] / maximumRawFade);
+                    Vector3 desiredRendererLocal =
+                        renderer.transform.InverseTransformVector(
+                            desiredWorldDelta);
+                    Matrix4x4 skinMatrix = CalculateWeightedSkinMatrix(
+                        renderer,
+                        bindPoses,
+                        boneWeights[vertex]);
+                    Vector3 bindDelta = skinMatrix.inverse.MultiplyVector(
+                        desiredRendererLocal);
+                    if (!IsFinite(bindDelta) || bindDelta.magnitude > 0.1f)
+                    {
+                        throw new InvalidOperationException(
+                            "Ready breathing mesh produced an invalid chest delta.");
+                    }
+
+                    deltaVertices[vertex] = bindDelta;
+                    affected[vertex] = true;
+                    switch (regions[vertex])
+                    {
+                        case 1:
+                            frontCount++;
+                            break;
+                        case 2:
+                            leftCount++;
+                            break;
+                        case 3:
+                            rightCount++;
+                            break;
+                    }
+                }
+
+                int affectedCount = affected.Count(value => value);
+                if (affectedCount == 0 ||
+                    frontCount == 0 ||
+                    leftCount == 0 ||
+                    rightCount == 0)
+                {
+                    throw new InvalidOperationException(
+                        "Ready breathing mesh does not cover the front and both chest sides.");
+                }
+
+                Mesh generated = UnityEngine.Object.Instantiate(originalMesh);
+                generated.name = "Hands_Throw_Ready_Breathing";
+                generated.AddBlendShapeFrame(
+                    ThrowReadyBreathingBlendShapeName,
+                    100f,
+                    deltaVertices,
+                    new Vector3[originalMesh.vertexCount],
+                    new Vector3[originalMesh.vertexCount]);
+                generated.RecalculateBounds();
+                Directory.CreateDirectory(Path.GetDirectoryName(
+                    ThrowReadyBreathingMeshPath));
+                Mesh breathingMesh = AssetDatabase.LoadAssetAtPath<Mesh>(
+                    ThrowReadyBreathingMeshPath);
+                if (breathingMesh == null)
+                {
+                    AssetDatabase.CreateAsset(
+                        generated,
+                        ThrowReadyBreathingMeshPath);
+                    breathingMesh = generated;
+                }
+                else
+                {
+                    EditorUtility.CopySerialized(generated, breathingMesh);
+                    UnityEngine.Object.DestroyImmediate(generated);
+                    breathingMesh.name = "Hands_Throw_Ready_Breathing";
+                    EditorUtility.SetDirty(breathingMesh);
+                }
+
+                AssetDatabase.SaveAssets();
+                int blendShapeIndex = breathingMesh.GetBlendShapeIndex(
+                    ThrowReadyBreathingBlendShapeName);
+                if (blendShapeIndex < 0)
+                {
+                    throw new InvalidOperationException(
+                        "Ready breathing mesh is missing its Breathing BlendShape.");
+                }
+
+                renderer.sharedMesh = breathingMesh;
+                baseClip.SampleAnimation(workObject, readyEndTime);
+                renderer.SetBlendShapeWeight(blendShapeIndex, 0f);
+                renderer.BakeMesh(baseBake, true);
+                renderer.SetBlendShapeWeight(blendShapeIndex, animatedWeight);
+                renderer.BakeMesh(expandedBake, true);
+                Vector3[] baseVertices = baseBake.vertices;
+                Vector3[] expandedVertices = expandedBake.vertices;
+                float maximumExpansion = 0f;
+                for (int vertex = 0; vertex < baseVertices.Length; vertex++)
+                {
+                    maximumExpansion = Mathf.Max(
+                        maximumExpansion,
+                        Vector3.Distance(
+                            renderer.transform.TransformPoint(baseVertices[vertex]),
+                            renderer.transform.TransformPoint(expandedVertices[vertex])));
+                }
+
+                return new ThrowBreathingMeshBuildResult
+                {
+                    Mesh = breathingMesh,
+                    RendererPath = rendererPath,
+                    BlendShapeIndex = blendShapeIndex,
+                    AffectedVertexCount = affectedCount,
+                    FrontVertexCount = frontCount,
+                    LeftSideVertexCount = leftCount,
+                    RightSideVertexCount = rightCount,
+                    MaximumExpansionAtThirtyPercentMeters = maximumExpansion
+                };
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(baseBake);
+                UnityEngine.Object.DestroyImmediate(expandedBake);
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static string DominantBoneName(
+            BoneWeight weight,
+            Transform[] bones)
+        {
+            int[] indices =
+            {
+                weight.boneIndex0,
+                weight.boneIndex1,
+                weight.boneIndex2,
+                weight.boneIndex3
+            };
+            float[] values =
+            {
+                weight.weight0,
+                weight.weight1,
+                weight.weight2,
+                weight.weight3
+            };
+            int best = 0;
+            for (int index = 1; index < values.Length; index++)
+            {
+                if (values[index] > values[best])
+                {
+                    best = index;
+                }
+            }
+
+            int boneIndex = indices[best];
+            return boneIndex >= 0 && boneIndex < bones.Length && bones[boneIndex] != null
+                ? bones[boneIndex].name
+                : string.Empty;
+        }
+
+        private static AnimationClip CreateOrUpdateThrowReadyClip(
+            AnimationClip source,
+            Transform template,
+            string rendererPath,
+            float readyEndTime,
+            float holdDuration,
+            float breathingFrequency,
+            float breathingMaximumWeight,
+            float requestedBodyDrop,
+            out ThrowBreathingMotionBuildResult motionBuild)
+        {
+            float holdEndTime = readyEndTime + holdDuration;
+            AnimationClip generated = new AnimationClip();
+            EditorUtility.CopySerialized(source, generated);
+            generated.name = "Hands_Throw_Ready_MixamoHeadHeightBreathing";
+            generated.frameRate = source.frameRate;
+            generated.wrapMode = WrapMode.Loop;
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetCurveBindings(source))
+            {
+                AnimationCurve sourceCurve =
+                    AnimationUtility.GetEditorCurve(source, binding);
+                AnimationCurve readyCurve = CreateThrowReadyCurve(
+                    sourceCurve,
+                    readyEndTime,
+                    holdEndTime,
+                    binding.path + "/" + binding.propertyName);
+                AnimationUtility.SetEditorCurve(generated, binding, readyCurve);
+            }
+
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetObjectReferenceCurveBindings(source))
+            {
+                ObjectReferenceKeyframe[] sourceKeys =
+                    AnimationUtility.GetObjectReferenceCurve(source, binding);
+                List<ObjectReferenceKeyframe> readyKeys = sourceKeys
+                    .Where(key => key.time <= readyEndTime + 0.0001f)
+                    .ToList();
+                ObjectReferenceKeyframe[] available = sourceKeys
+                    .Where(key => key.time <= readyEndTime + 0.0001f)
+                    .ToArray();
+                UnityEngine.Object readyEndValue = available.Length > 0
+                    ? available[available.Length - 1].value
+                    : sourceKeys.Length > 0
+                        ? sourceKeys[0].value
+                        : null;
+                if (!readyKeys.Any(key =>
+                        Mathf.Abs(key.time - readyEndTime) <= 0.0001f))
+                {
+                    readyKeys.Add(new ObjectReferenceKeyframe
+                    {
+                        time = readyEndTime,
+                        value = readyEndValue
+                    });
+                }
+
+                readyKeys.Add(new ObjectReferenceKeyframe
+                {
+                    time = holdEndTime,
+                    value = readyEndValue
+                });
+                AnimationUtility.SetObjectReferenceCurve(
+                    generated,
+                    binding,
+                    readyKeys.OrderBy(key => key.time).ToArray());
+            }
+
+            AnimationEvent[] readyEvents = AnimationUtility
+                .GetAnimationEvents(source)
+                .Where(animationEvent =>
+                    animationEvent.time <= readyEndTime + 0.0001f)
+                .ToArray();
+            AnimationUtility.SetAnimationEvents(generated, readyEvents);
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(source);
+            settings.startTime = 0f;
+            settings.stopTime = holdEndTime;
+            settings.loopTime = true;
+            settings.loopBlend = false;
+            AnimationUtility.SetAnimationClipSettings(generated, settings);
+            motionBuild = ApplyThrowReadyBreathingCurves(
+                template,
+                source,
+                generated,
+                rendererPath,
+                readyEndTime,
+                holdDuration,
+                breathingFrequency,
+                breathingMaximumWeight,
+                requestedBodyDrop);
+            AnimationClip existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                ThrowReadyClipPath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(generated, ThrowReadyClipPath);
+                existing = generated;
+            }
+            else
+            {
+                EditorUtility.CopySerialized(generated, existing);
+                UnityEngine.Object.DestroyImmediate(generated);
+                existing.name = "Hands_Throw_Ready_MixamoHeadHeightBreathing";
+                EditorUtility.SetDirty(existing);
+            }
+
+            AssetDatabase.SaveAssets();
+            return existing;
+        }
+
+        private static ThrowBreathingMotionBuildResult
+            ApplyThrowReadyBreathingCurves(
+                Transform template,
+                AnimationClip source,
+                AnimationClip generated,
+                string rendererPath,
+                float readyEndTime,
+                float holdDuration,
+                float breathingFrequency,
+                float breathingMaximumWeight,
+                float requestedBodyDrop)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "HandsThrowReadyBreathingMotionBuild";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                SkinnedMeshRenderer renderer = RequireRelativeSkinnedMeshRenderer(
+                    root,
+                    rendererPath);
+                int blendShapeIndex = renderer.sharedMesh != null
+                    ? renderer.sharedMesh.GetBlendShapeIndex(
+                        ThrowReadyBreathingBlendShapeName)
+                    : -1;
+                if (blendShapeIndex < 0)
+                {
+                    throw new InvalidOperationException(
+                        "Ready breathing motion build is missing its state mesh BlendShape.");
+                }
+
+                int readyEndFrame = Mathf.RoundToInt(
+                    readyEndTime * source.frameRate);
+                int totalFrames = Mathf.RoundToInt(
+                    (readyEndTime + holdDuration) * source.frameRate);
+                source.SampleAnimation(workObject, readyEndTime);
+                renderer.SetBlendShapeWeight(blendShapeIndex, 0f);
+                Transform hips = FindRequired(root, HipsPath);
+                Transform leftUpper = FindRequired(root, LeftUpLegPath);
+                Transform leftLower = FindRequired(root, LeftLegPath);
+                Transform leftFoot = FindRequired(root, LeftFootPath);
+                Transform rightUpper = FindRequired(root, RightUpLegPath);
+                Transform rightLower = FindRequired(root, RightLegPath);
+                Transform rightFoot = FindRequired(root, RightFootPath);
+                Vector3 baseHipsWorld = hips.position;
+                Vector3 baseLeftKneeWorld = leftLower.position;
+                Vector3 baseRightKneeWorld = rightLower.position;
+                Vector3 baseLeftFootWorld = leftFoot.position;
+                Vector3 baseRightFootWorld = rightFoot.position;
+                Quaternion baseLeftFootRotation = leftFoot.rotation;
+                Quaternion baseRightFootRotation = rightFoot.rotation;
+                float baseLeftFlex = MeasureKneeFlexDegrees(
+                    leftUpper,
+                    leftLower,
+                    leftFoot);
+                float baseRightFlex = MeasureKneeFlexDegrees(
+                    rightUpper,
+                    rightLower,
+                    rightFoot);
+
+                TransformCurveTrack hipsTrack = new TransformCurveTrack(HipsPath);
+                TransformCurveTrack leftUpperTrack =
+                    new TransformCurveTrack(LeftUpLegPath);
+                TransformCurveTrack leftLowerTrack =
+                    new TransformCurveTrack(LeftLegPath);
+                TransformCurveTrack leftFootTrack =
+                    new TransformCurveTrack(LeftFootPath);
+                TransformCurveTrack rightUpperTrack =
+                    new TransformCurveTrack(RightUpLegPath);
+                TransformCurveTrack rightLowerTrack =
+                    new TransformCurveTrack(RightLegPath);
+                TransformCurveTrack rightFootTrack =
+                    new TransformCurveTrack(RightFootPath);
+                List<Keyframe> breathingKeys = new List<Keyframe>();
+                float maximumBodyDrop = 0f;
+                float maximumFootDisplacement = 0f;
+                float maximumLeftFlexIncrease = 0f;
+                float maximumRightFlexIncrease = 0f;
+                for (int frame = 0; frame <= totalFrames; frame++)
+                {
+                    float time = frame / source.frameRate;
+                    float factor = 0f;
+                    if (frame <= readyEndFrame)
+                    {
+                        source.SampleAnimation(workObject, time);
+                    }
+                    else
+                    {
+                        source.SampleAnimation(workObject, readyEndTime);
+                        float holdTime = time - readyEndTime;
+                        factor = 0.5f - 0.5f * Mathf.Cos(
+                            2f * Mathf.PI * breathingFrequency * holdTime);
+                        hips.position = baseHipsWorld -
+                            root.up * (requestedBodyDrop * factor);
+                        float leftError = SolveTwoBoneLeg(
+                            root,
+                            leftUpper,
+                            leftLower,
+                            leftFoot,
+                            baseLeftFootWorld,
+                            baseLeftFootRotation,
+                            baseLeftKneeWorld);
+                        float rightError = SolveTwoBoneLeg(
+                            root,
+                            rightUpper,
+                            rightLower,
+                            rightFoot,
+                            baseRightFootWorld,
+                            baseRightFootRotation,
+                            baseRightKneeWorld);
+                        maximumFootDisplacement = Mathf.Max(
+                            maximumFootDisplacement,
+                            leftError,
+                            rightError);
+                        maximumBodyDrop = Mathf.Max(
+                            maximumBodyDrop,
+                            Vector3.Dot(
+                                baseHipsWorld - hips.position,
+                                root.up));
+                        maximumLeftFlexIncrease = Mathf.Max(
+                            maximumLeftFlexIncrease,
+                            MeasureKneeFlexDegrees(
+                                leftUpper,
+                                leftLower,
+                                leftFoot) - baseLeftFlex);
+                        maximumRightFlexIncrease = Mathf.Max(
+                            maximumRightFlexIncrease,
+                            MeasureKneeFlexDegrees(
+                                rightUpper,
+                                rightLower,
+                                rightFoot) - baseRightFlex);
+                    }
+
+                    renderer.SetBlendShapeWeight(
+                        blendShapeIndex,
+                        factor * breathingMaximumWeight);
+                    hipsTrack.Add(time, hips);
+                    leftUpperTrack.Add(time, leftUpper);
+                    leftLowerTrack.Add(time, leftLower);
+                    leftFootTrack.Add(time, leftFoot);
+                    rightUpperTrack.Add(time, rightUpper);
+                    rightLowerTrack.Add(time, rightLower);
+                    rightFootTrack.Add(time, rightFoot);
+                    breathingKeys.Add(new Keyframe(
+                        time,
+                        factor * breathingMaximumWeight));
+                }
+
+                RemoveThrowReadyBreathingTransformCurves(generated);
+                SetTransformTrackCurves(generated, hipsTrack);
+                SetRotationTrackCurves(generated, leftUpperTrack);
+                SetRotationTrackCurves(generated, leftLowerTrack);
+                SetRotationTrackCurves(generated, leftFootTrack);
+                SetRotationTrackCurves(generated, rightUpperTrack);
+                SetRotationTrackCurves(generated, rightLowerTrack);
+                SetRotationTrackCurves(generated, rightFootTrack);
+                AnimationCurve breathingCurve = new AnimationCurve(
+                    breathingKeys.ToArray());
+                for (int key = 0; key < breathingCurve.length; key++)
+                {
+                    AnimationUtility.SetKeyLeftTangentMode(
+                        breathingCurve,
+                        key,
+                        AnimationUtility.TangentMode.Linear);
+                    AnimationUtility.SetKeyRightTangentMode(
+                        breathingCurve,
+                        key,
+                        AnimationUtility.TangentMode.Linear);
+                }
+
+                AnimationUtility.SetEditorCurve(
+                    generated,
+                    EditorCurveBinding.FloatCurve(
+                        rendererPath,
+                        typeof(SkinnedMeshRenderer),
+                        "blendShape." + ThrowReadyBreathingBlendShapeName),
+                    breathingCurve);
+                int trackKeyCount =
+                    hipsTrack.PositionX.Count * 3 +
+                    (hipsTrack.RotationX.Count +
+                     leftUpperTrack.RotationX.Count +
+                     leftLowerTrack.RotationX.Count +
+                     leftFootTrack.RotationX.Count +
+                     rightUpperTrack.RotationX.Count +
+                     rightLowerTrack.RotationX.Count +
+                     rightFootTrack.RotationX.Count) * 4 +
+                    breathingCurve.length;
+                return new ThrowBreathingMotionBuildResult
+                {
+                    BreathingCycleCount = Mathf.RoundToInt(
+                        holdDuration * breathingFrequency),
+                    CurveKeyCount = trackKeyCount,
+                    MaximumBodyDropMeters = maximumBodyDrop,
+                    MaximumFootDisplacementMeters = maximumFootDisplacement,
+                    MinimumKneeFlexIncreaseDegrees = Mathf.Min(
+                        maximumLeftFlexIncrease,
+                        maximumRightFlexIncrease)
+                };
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static void RemoveThrowReadyBreathingTransformCurves(
+            AnimationClip clip)
+        {
+            HashSet<string> legPaths = new HashSet<string>(
+                new[]
+                {
+                    LeftUpLegPath,
+                    LeftLegPath,
+                    LeftFootPath,
+                    RightUpLegPath,
+                    RightLegPath,
+                    RightFootPath
+                },
+                StringComparer.Ordinal);
+            EditorCurveBinding[] bindings = AnimationUtility.GetCurveBindings(clip)
+                .Where(binding =>
+                    (string.Equals(binding.path, HipsPath, StringComparison.Ordinal) &&
+                     (binding.propertyName.StartsWith(
+                          "m_LocalPosition.",
+                          StringComparison.Ordinal) ||
+                      IsTransformRotationProperty(binding.propertyName))) ||
+                    (legPaths.Contains(binding.path) &&
+                     IsTransformRotationProperty(binding.propertyName)))
+                .ToArray();
+            foreach (EditorCurveBinding binding in bindings)
+            {
+                AnimationUtility.SetEditorCurve(clip, binding, null);
+            }
+        }
+
+        private static bool IsTransformRotationProperty(string property)
+        {
+            return property.StartsWith("m_LocalRotation.", StringComparison.Ordinal) ||
+                   property.IndexOf("Euler", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static float SolveTwoBoneLeg(
+            Transform characterRoot,
+            Transform upper,
+            Transform lower,
+            Transform foot,
+            Vector3 targetFootPosition,
+            Quaternion targetFootRotation,
+            Vector3 poleReference)
+        {
+            Vector3 hipPosition = upper.position;
+            float upperLength = Vector3.Distance(upper.position, lower.position);
+            float lowerLength = Vector3.Distance(lower.position, foot.position);
+            Vector3 toTarget = targetFootPosition - hipPosition;
+            float targetDistance = toTarget.magnitude;
+            if (upperLength <= 0.00001f ||
+                lowerLength <= 0.00001f ||
+                targetDistance <= 0.00001f)
+            {
+                throw new InvalidOperationException(
+                    "Ready breathing leg has invalid two-bone dimensions.");
+            }
+
+            Vector3 direction = toTarget / targetDistance;
+            float solvedDistance = Mathf.Clamp(
+                targetDistance,
+                Mathf.Abs(upperLength - lowerLength) + 0.00001f,
+                upperLength + lowerLength - 0.00001f);
+            float along =
+                (upperLength * upperLength - lowerLength * lowerLength +
+                 solvedDistance * solvedDistance) /
+                (2f * solvedDistance);
+            float height = Mathf.Sqrt(Mathf.Max(
+                0f,
+                upperLength * upperLength - along * along));
+            Vector3 linePoint = hipPosition + direction * Vector3.Dot(
+                poleReference - hipPosition,
+                direction);
+            Vector3 poleDirection = poleReference - linePoint;
+            if (poleDirection.sqrMagnitude <= 0.0000001f)
+            {
+                poleDirection = Vector3.ProjectOnPlane(
+                    characterRoot.forward,
+                    direction);
+            }
+
+            if (poleDirection.sqrMagnitude <= 0.0000001f)
+            {
+                poleDirection = Vector3.ProjectOnPlane(
+                    characterRoot.right,
+                    direction);
+            }
+
+            poleDirection.Normalize();
+            Vector3 desiredKnee =
+                hipPosition + direction * along + poleDirection * height;
+            Vector3 currentUpperDirection = lower.position - upper.position;
+            Vector3 desiredUpperDirection = desiredKnee - upper.position;
+            upper.rotation = Quaternion.FromToRotation(
+                currentUpperDirection,
+                desiredUpperDirection) * upper.rotation;
+            Vector3 currentLowerDirection = foot.position - lower.position;
+            Vector3 desiredLowerDirection = targetFootPosition - lower.position;
+            lower.rotation = Quaternion.FromToRotation(
+                currentLowerDirection,
+                desiredLowerDirection) * lower.rotation;
+            foot.rotation = targetFootRotation;
+            return Vector3.Distance(foot.position, targetFootPosition);
+        }
+
+        private static float MeasureKneeFlexDegrees(
+            Transform upper,
+            Transform lower,
+            Transform foot)
+        {
+            float jointAngle = Vector3.Angle(
+                upper.position - lower.position,
+                foot.position - lower.position);
+            return 180f - jointAngle;
+        }
+
+        private static AnimationCurve CreateThrowReadyCurve(
+            AnimationCurve source,
+            float readyEndTime,
+            float holdEndTime,
+            string label)
+        {
+            Keyframe[] sourceKeys = source.keys;
+            List<Keyframe> readyKeys = sourceKeys
+                .Where(key => key.time <= readyEndTime + 0.0001f)
+                .ToList();
+            int readyEndKeyIndex = readyKeys.FindIndex(key =>
+                Mathf.Abs(key.time - readyEndTime) <= 0.0001f);
+            if (readyEndKeyIndex < 0)
+            {
+                bool constantCurve = sourceKeys.Length <= 1 ||
+                    sourceKeys.All(key =>
+                        Mathf.Abs(key.value - sourceKeys[0].value) <= 0.000001f);
+                if (!constantCurve)
+                {
+                    throw new InvalidOperationException(
+                        "Hands Throw source curve has no exact key at the directly confirmed head-height frame: " +
+                        label + ".");
+                }
+
+                readyKeys.Add(new Keyframe(
+                    readyEndTime,
+                    source.Evaluate(readyEndTime),
+                    0f,
+                    0f));
+                readyEndKeyIndex = readyKeys.Count - 1;
+            }
+
+            Keyframe readyEndKey = readyKeys[readyEndKeyIndex];
+            readyEndKey.time = readyEndTime;
+            readyEndKey.outTangent = 0f;
+            readyEndKey.outWeight = 0f;
+            readyEndKey.weightedMode = (WeightedMode)(
+                (int)readyEndKey.weightedMode & (int)WeightedMode.In);
+            readyKeys[readyEndKeyIndex] = readyEndKey;
+            Keyframe holdKey = readyEndKey;
+            holdKey.time = holdEndTime;
+            holdKey.inTangent = 0f;
+            holdKey.outTangent = 0f;
+            holdKey.inWeight = 0f;
+            holdKey.outWeight = 0f;
+            holdKey.weightedMode = WeightedMode.None;
+            readyKeys.Add(holdKey);
+            AnimationCurve result = new AnimationCurve(
+                readyKeys.OrderBy(key => key.time).ToArray())
+            {
+                preWrapMode = source.preWrapMode,
+                postWrapMode = WrapMode.Loop
+            };
+            return result;
+        }
+
+        private static void MeasureThrowReadyPrefixAndHold(
+            Transform template,
+            AnimationClip source,
+            AnimationClip ready,
+            int readyEndFrame,
+            float holdDuration,
+            out float prefixPositionDifference,
+            out float prefixRotationDifference,
+            out float holdPositionDifference,
+            out float holdRotationDifference)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(template.gameObject);
+            GameObject readyObject = UnityEngine.Object.Instantiate(template.gameObject);
+            sourceObject.name = "HandsThrowReadyPrefixSource";
+            readyObject.name = "HandsThrowReadyPrefixResult";
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            readyObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            DisableAnimators(readyObject);
+            try
+            {
+                prefixPositionDifference = 0f;
+                prefixRotationDifference = 0f;
+                holdPositionDifference = 0f;
+                holdRotationDifference = 0f;
+                for (int frame = 0; frame <= readyEndFrame; frame++)
+                {
+                    float time = frame / source.frameRate;
+                    source.SampleAnimation(sourceObject, time);
+                    ready.SampleAnimation(readyObject, time);
+                    MeasureArmaturePoseDifference(
+                        CapturePose(sourceObject.transform),
+                        CapturePose(readyObject.transform),
+                        out float positionDifference,
+                        out float rotationDifference);
+                    prefixPositionDifference = Mathf.Max(
+                        prefixPositionDifference,
+                        positionDifference);
+                    prefixRotationDifference = Mathf.Max(
+                        prefixRotationDifference,
+                        rotationDifference);
+                }
+
+                float readyEndTime = readyEndFrame / source.frameRate;
+                source.SampleAnimation(sourceObject, readyEndTime);
+                PoseSnapshot readyEndPose = CapturePose(sourceObject.transform);
+                int holdIntervals = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(holdDuration * ready.frameRate));
+                for (int interval = 0; interval < holdIntervals; interval++)
+                {
+                    float time = readyEndTime +
+                        holdDuration * interval / holdIntervals;
+                    ready.SampleAnimation(readyObject, time);
+                    MeasureArmaturePoseDifference(
+                        readyEndPose,
+                        CapturePose(readyObject.transform),
+                        out float positionDifference,
+                        out float rotationDifference);
+                    holdPositionDifference = Mathf.Max(
+                        holdPositionDifference,
+                        positionDifference);
+                    holdRotationDifference = Mathf.Max(
+                        holdRotationDifference,
+                        rotationDifference);
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+                UnityEngine.Object.DestroyImmediate(readyObject);
+            }
+        }
+
+        private static bool ThrowReadyEventsMatchSourcePrefix(
+            AnimationClip source,
+            AnimationClip ready,
+            float readyEndTime)
+        {
+            AnimationEvent[] sourceEvents = AnimationUtility
+                .GetAnimationEvents(source)
+                .Where(animationEvent =>
+                    animationEvent.time <= readyEndTime + 0.0001f)
+                .ToArray();
+            AnimationEvent[] readyEvents = AnimationUtility.GetAnimationEvents(ready);
+            if (sourceEvents.Length != readyEvents.Length)
+            {
+                return false;
+            }
+
+            for (int index = 0; index < sourceEvents.Length; index++)
+            {
+                AnimationEvent first = sourceEvents[index];
+                AnimationEvent second = readyEvents[index];
+                if (Mathf.Abs(first.time - second.time) > 0.00001f ||
+                    !string.Equals(
+                        first.functionName,
+                        second.functionName,
+                        StringComparison.Ordinal) ||
+                    !string.Equals(
+                        first.stringParameter,
+                        second.stringParameter,
+                        StringComparison.Ordinal) ||
+                    Mathf.Abs(first.floatParameter - second.floatParameter) > 0.00001f ||
+                    first.intParameter != second.intParameter ||
+                    first.objectReferenceParameter != second.objectReferenceParameter)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static AnimationClip CreateOrUpdateThrowCancelClip(
+            Transform template,
+            AnimationClip readyClip,
+            AnimationClip idleClip,
+            float readyEndTime,
+            float initialHoldDuration,
+            float finalIdleHoldDuration)
+        {
+            AnimationClip generated = new AnimationClip
+            {
+                name = "Hands_Throw_Cancel_MixamoReverse",
+                frameRate = readyClip.frameRate,
+                wrapMode = WrapMode.Loop,
+                legacy = false
+            };
+            string[] transformPaths = AnimationUtility
+                .GetCurveBindings(readyClip)
+                .Concat(AnimationUtility.GetCurveBindings(idleClip))
+                .Where(binding => binding.type == typeof(Transform))
+                .Select(binding => binding.path)
+                .Distinct(StringComparer.Ordinal)
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+            if (transformPaths.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Ready has no Transform curves to copy into Cancel.");
+            }
+
+            GameObject readyObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject idleObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            readyObject.name = "HandsThrowCancelReadyFrameCopy";
+            idleObject.name = "HandsThrowCancelIdleFrameZero";
+            readyObject.hideFlags = HideFlags.HideAndDontSave;
+            idleObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(readyObject);
+            DisableAnimators(idleObject);
+            try
+            {
+                Transform readyRoot = readyObject.transform;
+                Transform idleRoot = idleObject.transform;
+                Dictionary<string, TransformCurveTrack> tracks = transformPaths
+                    .ToDictionary(
+                        path => path,
+                        path => new TransformCurveTrack(path),
+                        StringComparer.Ordinal);
+                int holdFrames = Mathf.RoundToInt(
+                    initialHoldDuration * readyClip.frameRate);
+                int reverseFrames = Mathf.RoundToInt(
+                    readyEndTime * readyClip.frameRate);
+                int finalHoldFrames = Mathf.RoundToInt(
+                    finalIdleHoldDuration * readyClip.frameRate);
+                idleClip.SampleAnimation(idleObject, 0f);
+                for (int frame = 0; frame <= holdFrames; frame++)
+                {
+                    float time = frame / readyClip.frameRate;
+                    readyClip.SampleAnimation(readyObject, readyEndTime);
+                    foreach (string path in transformPaths)
+                    {
+                        Transform value = string.IsNullOrEmpty(path)
+                            ? readyRoot
+                            : FindRequired(readyRoot, path);
+                        tracks[path].Add(time, value);
+                    }
+                }
+
+                for (int frame = 1; frame <= reverseFrames; frame++)
+                {
+                    float offset = frame / readyClip.frameRate;
+                    float time = initialHoldDuration + offset;
+                    readyClip.SampleAnimation(
+                        readyObject,
+                        readyEndTime - offset);
+                    BlendThrowCancelPoseTowardIdle(
+                        readyRoot,
+                        idleRoot,
+                        transformPaths,
+                        frame / (float)reverseFrames);
+                    foreach (string path in transformPaths)
+                    {
+                        Transform value = string.IsNullOrEmpty(path)
+                            ? readyRoot
+                            : FindRequired(readyRoot, path);
+                        tracks[path].Add(time, value);
+                    }
+                }
+
+                float finalHoldStart = initialHoldDuration + readyEndTime;
+                for (int frame = 1; frame <= finalHoldFrames; frame++)
+                {
+                    float time = finalHoldStart +
+                        frame / readyClip.frameRate;
+                    foreach (string path in transformPaths)
+                    {
+                        Transform value = string.IsNullOrEmpty(path)
+                            ? idleRoot
+                            : FindRequired(idleRoot, path);
+                        tracks[path].Add(time, value);
+                    }
+                }
+
+                foreach (TransformCurveTrack track in tracks.Values)
+                {
+                    SetTransformTrackCurves(generated, track);
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(readyObject);
+                UnityEngine.Object.DestroyImmediate(idleObject);
+            }
+
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetObjectReferenceCurveBindings(readyClip))
+            {
+                ObjectReferenceKeyframe[] sourceKeys =
+                    AnimationUtility.GetObjectReferenceCurve(
+                        readyClip,
+                        binding);
+                AnimationUtility.SetObjectReferenceCurve(
+                    generated,
+                    binding,
+                    CreateThrowCancelReverseObjectKeys(
+                        sourceKeys,
+                        readyEndTime,
+                        initialHoldDuration,
+                        binding.path + ":" + binding.propertyName));
+            }
+
+            AnimationEvent[] events = AnimationUtility
+                .GetAnimationEvents(readyClip)
+                .Where(animationEvent =>
+                    animationEvent.time <= readyEndTime + 0.0001f)
+                .Select(animationEvent =>
+                {
+                    AnimationEvent reversed = new AnimationEvent
+                    {
+                        time = initialHoldDuration +
+                            (readyEndTime - animationEvent.time),
+                        functionName = animationEvent.functionName,
+                        stringParameter = animationEvent.stringParameter,
+                        floatParameter = animationEvent.floatParameter,
+                        intParameter = animationEvent.intParameter,
+                        objectReferenceParameter =
+                            animationEvent.objectReferenceParameter,
+                        messageOptions = animationEvent.messageOptions
+                    };
+                    return reversed;
+                })
+                .OrderBy(animationEvent => animationEvent.time)
+                .ToArray();
+            AnimationUtility.SetAnimationEvents(generated, events);
+            generated.EnsureQuaternionContinuity();
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(readyClip);
+            settings.startTime = 0f;
+            settings.stopTime = initialHoldDuration + readyEndTime +
+                finalIdleHoldDuration;
+            settings.loopTime = true;
+            settings.loopBlend = false;
+            AnimationUtility.SetAnimationClipSettings(generated, settings);
+            AnimationClip existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                ThrowCancelClipPath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(generated, ThrowCancelClipPath);
+                existing = generated;
+            }
+            else
+            {
+                EditorUtility.CopySerialized(generated, existing);
+                UnityEngine.Object.DestroyImmediate(generated);
+                existing.name = "Hands_Throw_Cancel_MixamoReverse";
+                EditorUtility.SetDirty(existing);
+            }
+
+            AssetDatabase.SaveAssets();
+            return existing;
+        }
+
+        private static AnimationCurve CreateThrowCancelReverseCurve(
+            AnimationCurve source,
+            float readyEndTime,
+            float initialHoldDuration,
+            string label)
+        {
+            Keyframe[] sourceKeys = source.keys
+                .Where(key => key.time <= readyEndTime + 0.0001f)
+                .OrderBy(key => key.time)
+                .ToArray();
+            if (sourceKeys.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Cancel source curve has no Ready prefix keys: " +
+                    label + ".");
+            }
+
+            int endIndex = Array.FindLastIndex(
+                sourceKeys,
+                key => Mathf.Abs(key.time - readyEndTime) <= 0.0001f);
+            if (endIndex < 0)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Cancel source curve has no exact Ready frame 19 key: " +
+                    label + ".");
+            }
+
+            Keyframe endpoint = sourceKeys[endIndex];
+            Keyframe holdStart = endpoint;
+            holdStart.time = 0f;
+            holdStart.inTangent = 0f;
+            holdStart.outTangent = 0f;
+            holdStart.inWeight = 0f;
+            holdStart.outWeight = 0f;
+            holdStart.weightedMode = WeightedMode.None;
+            List<Keyframe> result = new List<Keyframe> { holdStart };
+            for (int index = endIndex; index >= 0; index--)
+            {
+                Keyframe sourceKey = sourceKeys[index];
+                Keyframe reversed = sourceKey;
+                reversed.time = initialHoldDuration +
+                    (readyEndTime - sourceKey.time);
+                reversed.inTangent = -sourceKey.outTangent;
+                reversed.outTangent = -sourceKey.inTangent;
+                reversed.inWeight = sourceKey.outWeight;
+                reversed.outWeight = sourceKey.inWeight;
+                reversed.weightedMode = ReverseWeightedMode(
+                    sourceKey.weightedMode);
+                if (index == endIndex)
+                {
+                    reversed.time = initialHoldDuration;
+                    reversed.inTangent = 0f;
+                    reversed.inWeight = 0f;
+                    reversed.weightedMode = (WeightedMode)(
+                        (int)reversed.weightedMode &
+                        ~(int)WeightedMode.In);
+                }
+
+                result.Add(reversed);
+            }
+
+            return new AnimationCurve(result.ToArray());
+        }
+
+        private static WeightedMode ReverseWeightedMode(WeightedMode source)
+        {
+            WeightedMode result = WeightedMode.None;
+            if (((int)source & (int)WeightedMode.In) != 0)
+            {
+                result = (WeightedMode)((int)result | (int)WeightedMode.Out);
+            }
+
+            if (((int)source & (int)WeightedMode.Out) != 0)
+            {
+                result = (WeightedMode)((int)result | (int)WeightedMode.In);
+            }
+
+            return result;
+        }
+
+        private static ObjectReferenceKeyframe[]
+            CreateThrowCancelReverseObjectKeys(
+                IReadOnlyList<ObjectReferenceKeyframe> sourceKeys,
+                float readyEndTime,
+                float initialHoldDuration,
+                string label)
+        {
+            ObjectReferenceKeyframe[] prefix = sourceKeys
+                .Where(key => key.time <= readyEndTime + 0.0001f)
+                .OrderBy(key => key.time)
+                .ToArray();
+            if (prefix.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Cancel object curve has no Ready prefix keys: " +
+                    label + ".");
+            }
+
+            UnityEngine.Object endpointValue = prefix[prefix.Length - 1].value;
+            List<ObjectReferenceKeyframe> result =
+                new List<ObjectReferenceKeyframe>
+                {
+                    new ObjectReferenceKeyframe
+                    {
+                        time = 0f,
+                        value = endpointValue
+                    },
+                    new ObjectReferenceKeyframe
+                    {
+                        time = initialHoldDuration,
+                        value = endpointValue
+                    }
+                };
+            for (int index = prefix.Length - 1; index >= 0; index--)
+            {
+                ObjectReferenceKeyframe key = prefix[index];
+                float reversedTime = initialHoldDuration +
+                    (readyEndTime - key.time);
+                if (Mathf.Abs(reversedTime - initialHoldDuration) <= 0.0001f)
+                {
+                    continue;
+                }
+
+                key.time = reversedTime;
+                result.Add(key);
+            }
+
+            return result.OrderBy(key => key.time).ToArray();
+        }
+
+        private static string[] GetThrowCancelTransformPaths(
+            AnimationClip readyClip,
+            AnimationClip idleClip)
+        {
+            return AnimationUtility.GetCurveBindings(readyClip)
+                .Concat(AnimationUtility.GetCurveBindings(idleClip))
+                .Where(binding => binding.type == typeof(Transform))
+                .Select(binding => binding.path)
+                .Distinct(StringComparer.Ordinal)
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+        }
+
+        private static void BlendThrowCancelPoseTowardIdle(
+            Transform readyRoot,
+            Transform idleRoot,
+            IReadOnlyList<string> transformPaths,
+            float idleWeight)
+        {
+            float weight = Mathf.Clamp01(idleWeight);
+            foreach (string path in transformPaths)
+            {
+                Transform readyValue = string.IsNullOrEmpty(path)
+                    ? readyRoot
+                    : FindRequired(readyRoot, path);
+                Transform idleValue = string.IsNullOrEmpty(path)
+                    ? idleRoot
+                    : FindRequired(idleRoot, path);
+                readyValue.localPosition = Vector3.Lerp(
+                    readyValue.localPosition,
+                    idleValue.localPosition,
+                    weight);
+                readyValue.localRotation = Quaternion.Slerp(
+                    readyValue.localRotation,
+                    idleValue.localRotation,
+                    weight);
+            }
+        }
+
+        private static void MeasureThrowCancelClipExact(
+            Transform template,
+            AnimationClip readyClip,
+            AnimationClip idleClip,
+            AnimationClip cancelClip,
+            float readyEndTime,
+            float initialHoldDuration,
+            float finalIdleHoldDuration,
+            out float holdPositionDifference,
+            out float holdRotationDifference,
+            out float reversePositionDifference,
+            out float reverseRotationDifference,
+            out float finalIdlePositionDifference,
+            out float finalIdleRotationDifference,
+            out float finalHoldPositionDifference,
+            out float finalHoldRotationDifference)
+        {
+            GameObject readyObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject idleObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject cancelObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            readyObject.name = "HandsThrowCancelReadyExpected";
+            idleObject.name = "HandsThrowCancelIdleExpected";
+            cancelObject.name = "HandsThrowCancelGenerated";
+            readyObject.hideFlags = HideFlags.HideAndDontSave;
+            idleObject.hideFlags = HideFlags.HideAndDontSave;
+            cancelObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(readyObject);
+            DisableAnimators(idleObject);
+            DisableAnimators(cancelObject);
+            try
+            {
+                string[] transformPaths = GetThrowCancelTransformPaths(
+                    readyClip,
+                    idleClip);
+                idleClip.SampleAnimation(idleObject, 0f);
+                cancelClip.SampleAnimation(cancelObject, 0f);
+                PoseSnapshot holdBaseline = CapturePose(cancelObject.transform);
+                holdPositionDifference = 0f;
+                holdRotationDifference = 0f;
+                int holdFrames = Mathf.RoundToInt(
+                    initialHoldDuration * cancelClip.frameRate);
+                for (int frame = 0; frame <= holdFrames; frame++)
+                {
+                    float time = frame / cancelClip.frameRate;
+                    cancelClip.SampleAnimation(cancelObject, time);
+                    MeasureArmaturePoseDifference(
+                        holdBaseline,
+                        CapturePose(cancelObject.transform),
+                        out float positionDifference,
+                        out float rotationDifference);
+                    holdPositionDifference = Mathf.Max(
+                        holdPositionDifference,
+                        positionDifference);
+                    holdRotationDifference = Mathf.Max(
+                        holdRotationDifference,
+                        rotationDifference);
+                }
+
+                reversePositionDifference = 0f;
+                reverseRotationDifference = 0f;
+                int reverseFrames = Mathf.RoundToInt(
+                    readyEndTime * cancelClip.frameRate);
+                for (int frame = 0; frame <= reverseFrames; frame++)
+                {
+                    float offset = frame / cancelClip.frameRate;
+                    readyClip.SampleAnimation(
+                        readyObject,
+                        readyEndTime - offset);
+                    BlendThrowCancelPoseTowardIdle(
+                        readyObject.transform,
+                        idleObject.transform,
+                        transformPaths,
+                        frame / (float)reverseFrames);
+                    cancelClip.SampleAnimation(
+                        cancelObject,
+                        initialHoldDuration + offset);
+                    MeasureArmaturePoseDifference(
+                        CapturePose(readyObject.transform),
+                        CapturePose(cancelObject.transform),
+                        out float positionDifference,
+                        out float rotationDifference);
+                    reversePositionDifference = Mathf.Max(
+                        reversePositionDifference,
+                        positionDifference);
+                    reverseRotationDifference = Mathf.Max(
+                        reverseRotationDifference,
+                        rotationDifference);
+                }
+
+                float finalHoldStart = initialHoldDuration + readyEndTime;
+                cancelClip.SampleAnimation(cancelObject, finalHoldStart);
+                PoseSnapshot idlePose = CapturePose(idleObject.transform);
+                PoseSnapshot finalPose = CapturePose(cancelObject.transform);
+                MeasureArmaturePoseDifference(
+                    idlePose,
+                    finalPose,
+                    out finalIdlePositionDifference,
+                    out finalIdleRotationDifference);
+                finalHoldPositionDifference = 0f;
+                finalHoldRotationDifference = 0f;
+                int finalHoldFrames = Mathf.RoundToInt(
+                    finalIdleHoldDuration * cancelClip.frameRate);
+                for (int frame = 0; frame < finalHoldFrames; frame++)
+                {
+                    cancelClip.SampleAnimation(
+                        cancelObject,
+                        finalHoldStart + frame / cancelClip.frameRate);
+                    MeasureArmaturePoseDifference(
+                        idlePose,
+                        CapturePose(cancelObject.transform),
+                        out float positionDifference,
+                        out float rotationDifference);
+                    finalHoldPositionDifference = Mathf.Max(
+                        finalHoldPositionDifference,
+                        positionDifference);
+                    finalHoldRotationDifference = Mathf.Max(
+                        finalHoldRotationDifference,
+                        rotationDifference);
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(readyObject);
+                UnityEngine.Object.DestroyImmediate(idleObject);
+                UnityEngine.Object.DestroyImmediate(cancelObject);
+            }
+        }
+
+        private static void CapturePlayerHandsThrowCancelActualReview()
+        {
+            ThrowCancelApplyMetrics apply =
+                ReadJson<ThrowCancelApplyMetrics>(
+                    ThrowCancelApplyMetricsPath);
+            if (!apply.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Cancel apply metrics did not pass.");
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, ThrowCancelTargetName);
+            Transform idleReference = RequireTarget(
+                layout,
+                IdleReferenceTargetName);
+            AnimationClip readyClip = LoadClip(ThrowReadyClipPath);
+            AnimationClip idleClip = LoadClip(IdleClipPath);
+            AnimationClip cancelClip = LoadClip(ThrowCancelClipPath);
+            CaptureThrowCancelComparison(
+                target,
+                idleReference,
+                readyClip,
+                idleClip,
+                cancelClip,
+                apply.readyEndTimeSeconds,
+                apply.initialHoldDurationSeconds,
+                ThrowCancelReviewPath);
+            TargetReviewMetrics runtime = CaptureTargetMetrics(
+                target,
+                cancelClip,
+                ThrowCancelStateName,
+                "Ready frame 19 hold 0.5s + linear Player_Idle frame 0 blend + Idle hold 0.5s");
+            runtime.passedNumericChecks = TargetReviewPassed(runtime);
+            MeasureThrowCancelRuntimeExpected(
+                target,
+                idleReference,
+                readyClip,
+                idleClip,
+                cancelClip,
+                apply.readyEndTimeSeconds,
+                apply.initialHoldDurationSeconds,
+                out float holdPositionDifference,
+                out float holdRotationDifference,
+                out float reversePositionDifference,
+                out float reverseRotationDifference,
+                out float finalIdlePositionDifference,
+                out float finalIdleRotationDifference,
+                out float finalHoldPositionDifference,
+                out float finalHoldRotationDifference);
+            ThrowCancelReviewMetrics metrics = new ThrowCancelReviewMetrics
+            {
+                target = ThrowCancelTargetName,
+                phasesCaptured = 12,
+                runtime = runtime,
+                holdPositionDifferenceMax = holdPositionDifference,
+                holdRotationDifferenceDegreesMax = holdRotationDifference,
+                expectedReversePositionDifferenceMax =
+                    reversePositionDifference,
+                expectedReverseRotationDifferenceDegreesMax =
+                    reverseRotationDifference,
+                finalIdlePositionDifferenceMax = finalIdlePositionDifference,
+                finalIdleRotationDifferenceDegreesMax =
+                    finalIdleRotationDifference,
+                finalHoldPositionDifferenceMax = finalHoldPositionDifference,
+                finalHoldRotationDifferenceDegreesMax =
+                    finalHoldRotationDifference,
+                hasNoBlendShapeCurves = HasNoBlendShapeCurves(cancelClip),
+                validationPriority =
+                    "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+            };
+            metrics.passedNumericChecks =
+                metrics.phasesCaptured == 12 &&
+                metrics.runtime.passedNumericChecks &&
+                metrics.holdPositionDifferenceMax <= PositionTolerance &&
+                metrics.holdRotationDifferenceDegreesMax <= RotationTolerance &&
+                metrics.expectedReversePositionDifferenceMax <= PositionTolerance &&
+                metrics.expectedReverseRotationDifferenceDegreesMax <= RotationTolerance &&
+                metrics.finalIdlePositionDifferenceMax <= PositionTolerance &&
+                metrics.finalIdleRotationDifferenceDegreesMax <= RotationTolerance &&
+                metrics.finalHoldPositionDifferenceMax <= PositionTolerance &&
+                metrics.finalHoldRotationDifferenceDegreesMax <= RotationTolerance &&
+                metrics.hasNoBlendShapeCurves;
+            WriteJson(ThrowCancelReviewMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Cancel Play Mode support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[PlayerHandsThrowCancel] Captured static Ready hold, linear Idle blend, and final Idle hold in Play Mode. " +
+                "Frames=" + runtime.framesSampled +
+                ", RuntimePose=" +
+                Num(runtime.sourcePosePositionDifferenceMax) + "/" +
+                Num(runtime.sourcePoseRotationDifferenceDegreesMax) +
+                ", Hold=" + Num(metrics.holdPositionDifferenceMax) +
+                "/" + Num(metrics.holdRotationDifferenceDegreesMax) +
+                ", Reverse=" +
+                Num(metrics.expectedReversePositionDifferenceMax) + "/" +
+                Num(metrics.expectedReverseRotationDifferenceDegreesMax) +
+                ", FinalIdle=" +
+                Num(metrics.finalIdlePositionDifferenceMax) + "/" +
+                Num(metrics.finalIdleRotationDifferenceDegreesMax) +
+                ", IdleHold=" +
+                Num(metrics.finalHoldPositionDifferenceMax) + "/" +
+                Num(metrics.finalHoldRotationDifferenceDegreesMax) +
+                ", Breathing=False, Loops=2.");
+        }
+
+        private static void CaptureThrowCancelComparison(
+            Transform target,
+            Transform idleReference,
+            AnimationClip readyClip,
+            AnimationClip idleClip,
+            AnimationClip cancelClip,
+            float readyEndTime,
+            float initialHoldDuration,
+            string outputPath)
+        {
+            Animator animator = RequireAnimator(target);
+            GameObject idleObject = UnityEngine.Object.Instantiate(
+                idleReference.gameObject);
+            idleObject.name = "HandsThrowCancelReviewIdleFrameZero";
+            idleObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(idleObject);
+            foreach (Renderer renderer in
+                     idleObject.GetComponentsInChildren<Renderer>(true))
+            {
+                renderer.enabled = false;
+            }
+
+            idleClip.SampleAnimation(idleObject, 0f);
+            string[] transformPaths = GetThrowCancelTransformPaths(
+                readyClip,
+                idleClip);
+            List<List<byte[]>> rows = Enumerable.Range(0, 4)
+                .Select(_ => new List<byte[]>())
+                .ToList();
+            try
+            {
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(target))
+                {
+                    for (int index = 0; index < 12; index++)
+                    {
+                        float cancelTime = cancelClip.length * index / 12f;
+                        ApplyExpectedThrowCancelPose(
+                            target.gameObject,
+                            idleObject.transform,
+                            readyClip,
+                            transformPaths,
+                            cancelTime,
+                            readyEndTime,
+                            initialHoldDuration);
+                        environment.ConfigureView(target, 1.05f, 1.35f);
+                        rows[0].Add(environment.CaptureFront());
+                        rows[1].Add(environment.CaptureSide());
+                        SampleAnimator(
+                            animator,
+                            ThrowCancelStateName,
+                            cancelTime / cancelClip.length);
+                        environment.ConfigureView(target, 1.05f, 1.35f);
+                        rows[2].Add(environment.CaptureFront());
+                        rows[3].Add(environment.CaptureSide());
+                    }
+                }
+
+                ComposeRows(rows, outputPath);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(idleObject);
+                animator.Rebind();
+                animator.Update(0f);
+            }
+        }
+
+        private static void MeasureThrowCancelRuntimeExpected(
+            Transform target,
+            Transform idleReference,
+            AnimationClip readyClip,
+            AnimationClip idleClip,
+            AnimationClip cancelClip,
+            float readyEndTime,
+            float initialHoldDuration,
+            out float holdPositionDifference,
+            out float holdRotationDifference,
+            out float reversePositionDifference,
+            out float reverseRotationDifference,
+            out float finalIdlePositionDifference,
+            out float finalIdleRotationDifference,
+            out float finalHoldPositionDifference,
+            out float finalHoldRotationDifference)
+        {
+            Animator animator = RequireAnimator(target);
+            GameObject expectedObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            GameObject idleObject = UnityEngine.Object.Instantiate(
+                idleReference.gameObject);
+            expectedObject.name = "HandsThrowCancelRuntimeExpected";
+            idleObject.name = "HandsThrowCancelRuntimeIdleFrameZero";
+            expectedObject.hideFlags = HideFlags.HideAndDontSave;
+            idleObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(expectedObject);
+            DisableAnimators(idleObject);
+            try
+            {
+                idleClip.SampleAnimation(idleObject, 0f);
+                string[] transformPaths = GetThrowCancelTransformPaths(
+                    readyClip,
+                    idleClip);
+                SampleAnimator(animator, ThrowCancelStateName, 0f);
+                PoseSnapshot holdBaseline = CapturePose(target);
+                holdPositionDifference = 0f;
+                holdRotationDifference = 0f;
+                reversePositionDifference = 0f;
+                reverseRotationDifference = 0f;
+                finalHoldPositionDifference = 0f;
+                finalHoldRotationDifference = 0f;
+                float finalHoldStart = initialHoldDuration + readyEndTime;
+                SampleAnimator(
+                    animator,
+                    ThrowCancelStateName,
+                    finalHoldStart / cancelClip.length);
+                MeasureArmaturePoseDifference(
+                    CapturePose(idleObject.transform),
+                    CapturePose(target),
+                    out finalIdlePositionDifference,
+                    out finalIdleRotationDifference);
+                int framesPerLoop = Mathf.CeilToInt(
+                    cancelClip.length * cancelClip.frameRate);
+                for (int frame = 0; frame < framesPerLoop; frame++)
+                {
+                    float time = frame / cancelClip.frameRate;
+                    ApplyExpectedThrowCancelPose(
+                        expectedObject,
+                        idleObject.transform,
+                        readyClip,
+                        transformPaths,
+                        time,
+                        readyEndTime,
+                        initialHoldDuration);
+                    SampleAnimator(
+                        animator,
+                        ThrowCancelStateName,
+                        time / cancelClip.length);
+                    PoseSnapshot actualPose = CapturePose(target);
+                    MeasureArmaturePoseDifference(
+                        CapturePose(expectedObject.transform),
+                        actualPose,
+                        out float positionDifference,
+                        out float rotationDifference);
+                    reversePositionDifference = Mathf.Max(
+                        reversePositionDifference,
+                        positionDifference);
+                    reverseRotationDifference = Mathf.Max(
+                        reverseRotationDifference,
+                        rotationDifference);
+                    if (time <= initialHoldDuration + 0.0001f)
+                    {
+                        MeasureArmaturePoseDifference(
+                            holdBaseline,
+                            actualPose,
+                            out float holdPosition,
+                            out float holdRotation);
+                        holdPositionDifference = Mathf.Max(
+                            holdPositionDifference,
+                            holdPosition);
+                        holdRotationDifference = Mathf.Max(
+                            holdRotationDifference,
+                            holdRotation);
+                    }
+
+                    if (time >= finalHoldStart - 0.0001f)
+                    {
+                        MeasureArmaturePoseDifference(
+                            CapturePose(idleObject.transform),
+                            actualPose,
+                            out float finalPosition,
+                            out float finalRotation);
+                        finalHoldPositionDifference = Mathf.Max(
+                            finalHoldPositionDifference,
+                            finalPosition);
+                        finalHoldRotationDifference = Mathf.Max(
+                            finalHoldRotationDifference,
+                            finalRotation);
+                    }
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(expectedObject);
+                UnityEngine.Object.DestroyImmediate(idleObject);
+                animator.Rebind();
+                animator.Update(0f);
+            }
+        }
+
+        private static void ApplyExpectedThrowCancelPose(
+            GameObject expectedObject,
+            Transform idleRoot,
+            AnimationClip readyClip,
+            IReadOnlyList<string> transformPaths,
+            float cancelTime,
+            float readyEndTime,
+            float initialHoldDuration)
+        {
+            if (cancelTime <= initialHoldDuration)
+            {
+                readyClip.SampleAnimation(expectedObject, readyEndTime);
+                return;
+            }
+
+            float reverseTime = cancelTime - initialHoldDuration;
+            readyClip.SampleAnimation(
+                expectedObject,
+                Mathf.Max(0f, readyEndTime - reverseTime));
+            BlendThrowCancelPoseTowardIdle(
+                expectedObject.transform,
+                idleRoot,
+                transformPaths,
+                reverseTime >= readyEndTime
+                    ? 1f
+                    : reverseTime / readyEndTime);
+        }
+
+        private static void CapturePlayerHandsThrowMixamoActualReview()
+        {
+            ThrowApplyMetrics apply = ReadJson<ThrowApplyMetrics>(
+                ThrowApplyMetricsPath);
+            if (!apply.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Mixamo apply metrics did not pass.");
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform readyTarget = RequireTarget(layout, ThrowReadyTargetName);
+            Transform releaseTarget = RequireTarget(layout, ThrowReleaseTargetName);
+            AnimationClip source = LoadSingleEmbeddedClip(
+                ThrowSourcePath,
+                "hands throw");
+            AnimationClip readyClip = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                ThrowReadyClipPath);
+            if (readyClip == null)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Ready head-height breathing clip is missing.");
+            }
+
+            CaptureThrowReviewComparison(
+                readyTarget,
+                readyClip,
+                apply.readyEndTimeSeconds,
+                apply.holdDurationSeconds,
+                ThrowReviewPath);
+            TargetReviewMetrics readyMetrics = CaptureTargetMetrics(
+                readyTarget,
+                readyClip,
+                ThrowReadyStateName,
+                source.name + " frames 0.." + apply.readyEndFrame +
+                " + 3s breathing hold");
+            TargetReviewMetrics releaseMetrics = CaptureTargetMetrics(
+                releaseTarget,
+                source,
+                ThrowReleaseStateName,
+                source.name + " full Take");
+            readyMetrics.passedNumericChecks = TargetReviewPassed(readyMetrics);
+            releaseMetrics.passedNumericChecks = TargetReviewPassed(releaseMetrics);
+            MeasureThrowReadyPrefixAndHold(
+                readyTarget,
+                source,
+                readyClip,
+                apply.readyEndFrame,
+                0f,
+                out float prefixPositionDifference,
+                out float prefixRotationDifference,
+                out _,
+                out _);
+            ThrowBreathingRuntimeMetrics breathing =
+                MeasureThrowBreathingRuntime(
+                    readyTarget,
+                    readyClip,
+                    apply);
+            ThrowReviewMetrics metrics = new ThrowReviewMetrics
+            {
+                targetSet = ThrowReadyTargetName + ", " + ThrowReleaseTargetName,
+                phasesCapturedPerComparison = 12,
+                ready = readyMetrics,
+                release = releaseMetrics,
+                readyPrefixPositionDifferenceMax = prefixPositionDifference,
+                readyPrefixRotationDifferenceDegreesMax = prefixRotationDifference,
+                breathing = breathing,
+                validationPriority =
+                    "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+            };
+            metrics.passedNumericChecks =
+                metrics.phasesCapturedPerComparison == 12 &&
+                metrics.ready.passedNumericChecks &&
+                metrics.release.passedNumericChecks &&
+                metrics.readyPrefixPositionDifferenceMax <= PositionTolerance &&
+                metrics.readyPrefixRotationDifferenceDegreesMax <= RotationTolerance &&
+                metrics.breathing.passedNumericChecks;
+            WriteJson(ThrowReviewMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Hands Throw Mixamo Play Mode support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[PlayerHandsThrow] Captured Ready 3-second breathing hold and unchanged Release in Play Mode. " +
+                "ReadyFrames=" + readyMetrics.framesSampled +
+                ", ReleaseFrames=" + releaseMetrics.framesSampled +
+                ", ReadyPose=" +
+                Num(readyMetrics.sourcePosePositionDifferenceMax) + "/" +
+                Num(readyMetrics.sourcePoseRotationDifferenceDegreesMax) +
+                ", Breath=" + Num(breathing.maximumBlendShapeWeight) +
+                ", Drop=" + Num(breathing.measuredBodyDropMeters) +
+                ", Feet=" + Num(Mathf.Max(
+                    breathing.maximumLeftFootDisplacementMeters,
+                    breathing.maximumRightFootDisplacementMeters)) +
+                ", ReleasePose=" +
+                Num(releaseMetrics.sourcePosePositionDifferenceMax) + "/" +
+                Num(releaseMetrics.sourcePoseRotationDifferenceDegreesMax) +
+                ", Loops=2.");
+        }
+
+        private static void CaptureThrowReviewComparison(
+            Transform readyTarget,
+            AnimationClip readyClip,
+            float readyEndTime,
+            float holdDuration,
+            string outputPath)
+        {
+            GameObject baselineObject = UnityEngine.Object.Instantiate(
+                readyTarget.gameObject);
+            baselineObject.name = "HandsThrowBreathingReviewBaseline";
+            baselineObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(baselineObject);
+            Animator readyAnimator = RequireAnimator(readyTarget);
+            List<List<byte[]>> rows = Enumerable.Range(0, 8)
+                .Select(_ => new List<byte[]>())
+                .ToList();
+            try
+            {
+                CaptureThrowBreathingFourViewRows(
+                    baselineObject.transform,
+                    _ => readyClip.SampleAnimation(
+                        baselineObject,
+                        readyEndTime),
+                    rows,
+                    0);
+                CaptureThrowBreathingFourViewRows(
+                    readyTarget,
+                    phase =>
+                    {
+                        float holdTime = phase * holdDuration;
+                        SampleAnimator(
+                            readyAnimator,
+                            ThrowReadyStateName,
+                            (readyEndTime + holdTime) / readyClip.length);
+                    },
+                    rows,
+                    4);
+                ComposeRows(rows, outputPath);
+            }
+            finally
+            {
+                readyAnimator.Rebind();
+                readyAnimator.Update(0f);
+                UnityEngine.Object.DestroyImmediate(baselineObject);
+            }
+        }
+
+        private static void CaptureThrowBreathingFourViewRows(
+            Transform subject,
+            Action<float> sample,
+            IReadOnlyList<List<byte[]>> rows,
+            int rowOffset)
+        {
+            using (CaptureEnvironment environment = new CaptureEnvironment(subject))
+            {
+                for (int phaseIndex = 0; phaseIndex < 12; phaseIndex++)
+                {
+                    float phase = phaseIndex / 12f;
+                    sample(phase);
+                    environment.ConfigureView(subject, 1.05f, 1.35f);
+                    rows[rowOffset].Add(environment.CaptureFront());
+                    rows[rowOffset + 1].Add(environment.CaptureSide());
+                    Vector3 chestCenter =
+                        (FindRequired(subject, SolarPlexusPath).position +
+                         FindRequired(subject, SpinePath).position) * 0.5f;
+                    environment.ConfigureView(subject, chestCenter, 0.48f);
+                    rows[rowOffset + 2].Add(environment.CaptureFront());
+                    Vector3 legCenter =
+                        (FindRequired(subject, HipsPath).position +
+                         FindRequired(subject, LeftFootPath).position +
+                         FindRequired(subject, RightFootPath).position) / 3f;
+                    environment.ConfigureView(subject, legCenter, 0.72f);
+                    rows[rowOffset + 3].Add(environment.CaptureSide());
+                }
+            }
+        }
+
+        private static ThrowBreathingRuntimeMetrics MeasureThrowBreathingRuntime(
+            Transform readyTarget,
+            AnimationClip readyClip,
+            ThrowApplyMetrics apply)
+        {
+            Animator animator = RequireAnimator(readyTarget);
+            SkinnedMeshRenderer renderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(readyTarget);
+            int blendShapeIndex = renderer.sharedMesh != null
+                ? renderer.sharedMesh.GetBlendShapeIndex(
+                    ThrowReadyBreathingBlendShapeName)
+                : -1;
+            if (blendShapeIndex < 0)
+            {
+                throw new InvalidOperationException(
+                    "Ready breathing runtime renderer is missing Breathing.");
+            }
+
+            SampleAnimator(
+                animator,
+                ThrowReadyStateName,
+                apply.readyEndTimeSeconds / readyClip.length);
+            Transform hips = FindRequired(readyTarget, HipsPath);
+            Transform leftFoot = FindRequired(readyTarget, LeftFootPath);
+            Transform rightFoot = FindRequired(readyTarget, RightFootPath);
+            Vector3 baseHips = hips.position;
+            Vector3 baseLeftFoot = leftFoot.position;
+            Vector3 baseRightFoot = rightFoot.position;
+            float maximumWeight = 0f;
+            float maximumDrop = 0f;
+            float maximumLeftFoot = 0f;
+            float maximumRightFoot = 0f;
+            int framesPerLoop = Mathf.RoundToInt(
+                readyClip.length * readyClip.frameRate);
+            // A looping Animator maps normalizedTime == 1 back to frame zero.
+            // That pose is the requested return to the start, not part of the
+            // three-second breathing hold whose foot contact is measured here.
+            for (int frame = 0; frame < framesPerLoop; frame++)
+            {
+                float time = frame / readyClip.frameRate;
+                if (time + 0.0001f < apply.readyEndTimeSeconds)
+                {
+                    continue;
+                }
+
+                SampleAnimator(
+                    animator,
+                    ThrowReadyStateName,
+                    time / readyClip.length);
+                maximumWeight = Mathf.Max(
+                    maximumWeight,
+                    renderer.GetBlendShapeWeight(blendShapeIndex));
+                maximumDrop = Mathf.Max(
+                    maximumDrop,
+                    Vector3.Dot(
+                        baseHips - hips.position,
+                        readyTarget.up));
+                maximumLeftFoot = Mathf.Max(
+                    maximumLeftFoot,
+                    Vector3.Distance(baseLeftFoot, leftFoot.position));
+                maximumRightFoot = Mathf.Max(
+                    maximumRightFoot,
+                    Vector3.Distance(baseRightFoot, rightFoot.position));
+            }
+
+            int detectedPeaks = 0;
+            for (int cycle = 0; cycle < 3; cycle++)
+            {
+                float peakTime =
+                    apply.readyEndTimeSeconds + cycle + 0.5f;
+                SampleAnimator(
+                    animator,
+                    ThrowReadyStateName,
+                    peakTime / readyClip.length);
+                if (Mathf.Abs(
+                        renderer.GetBlendShapeWeight(blendShapeIndex) - 30f) <= 0.01f &&
+                    Mathf.Abs(
+                        Vector3.Dot(
+                            baseHips - hips.position,
+                            readyTarget.up) - 0.03f) <= 0.0005f)
+                {
+                    detectedPeaks++;
+                }
+            }
+
+            ThrowBreathingRuntimeMetrics metrics =
+                new ThrowBreathingRuntimeMetrics
+                {
+                    maximumBlendShapeWeight = maximumWeight,
+                    measuredBodyDropMeters = maximumDrop,
+                    maximumLeftFootDisplacementMeters = maximumLeftFoot,
+                    maximumRightFootDisplacementMeters = maximumRightFoot,
+                    detectedBreathingPeaks = detectedPeaks,
+                    blendShapeCurveApplied = true
+                };
+            metrics.passedNumericChecks =
+                Mathf.Abs(metrics.maximumBlendShapeWeight - 30f) <= 0.01f &&
+                Mathf.Abs(metrics.measuredBodyDropMeters - 0.03f) <= 0.0005f &&
+                metrics.maximumLeftFootDisplacementMeters <= 0.0005f &&
+                metrics.maximumRightFootDisplacementMeters <= 0.0005f &&
+                metrics.detectedBreathingPeaks == 3 &&
+                metrics.blendShapeCurveApplied;
+            animator.Rebind();
+            animator.Update(0f);
+            return metrics;
+        }
+
+        private static void CaptureThrowThreeViewRows(
+            Transform subject,
+            Action<float> sample,
+            IReadOnlyList<List<byte[]>> rows,
+            int rowOffset)
+        {
+            using (CaptureEnvironment environment = new CaptureEnvironment(subject))
+            {
+                for (int phaseIndex = 0; phaseIndex < 12; phaseIndex++)
+                {
+                    float phase = phaseIndex / 12f;
+                    sample(phase);
+                    environment.ConfigureView(subject, 1.05f, 1.35f);
+                    rows[rowOffset].Add(environment.CaptureFront());
+                    rows[rowOffset + 1].Add(environment.CaptureSide());
+                    Vector3 armCenter =
+                        (FindRequired(subject, RightArmPath).position +
+                         FindRequired(subject, RightHandPath).position) * 0.5f;
+                    environment.ConfigureView(subject, armCenter, 0.62f);
+                    rows[rowOffset + 2].Add(environment.CaptureFront());
+                }
+            }
+        }
+
         private static void ComposeRows(
             IReadOnlyList<List<byte[]>> rows,
             string outputPath)
@@ -15026,6 +19787,98 @@ namespace Bellerophon.Editor
                 }
 
                 UnityEngine.Object.DestroyImmediate(composite);
+            }
+        }
+
+        private static void ComposePairedFrameGrid(
+            IReadOnlyList<byte[]> frontFrames,
+            IReadOnlyList<byte[]> sideFrames,
+            int columns,
+            string outputPath)
+        {
+            if (frontFrames.Count == 0 ||
+                frontFrames.Count != sideFrames.Count ||
+                columns <= 0)
+            {
+                throw new InvalidOperationException(
+                    "Player Hands paired frame grid input is invalid.");
+            }
+
+            int frameRows = Mathf.CeilToInt(frontFrames.Count / (float)columns);
+            int totalRows = frameRows * 2;
+            Texture2D composite = new Texture2D(
+                CaptureWidth * columns,
+                CaptureHeight * totalRows,
+                TextureFormat.RGB24,
+                false);
+            try
+            {
+                Color[] background = Enumerable.Repeat(
+                    new Color(0.055f, 0.065f, 0.08f, 1f),
+                    composite.width * composite.height).ToArray();
+                composite.SetPixels(background);
+                for (int frame = 0; frame < frontFrames.Count; frame++)
+                {
+                    int blockRow = frame / columns;
+                    int column = frame % columns;
+                    SetCompositePanel(
+                        composite,
+                        frontFrames[frame],
+                        column,
+                        blockRow * 2,
+                        totalRows);
+                    SetCompositePanel(
+                        composite,
+                        sideFrames[frame],
+                        column,
+                        blockRow * 2 + 1,
+                        totalRows);
+                }
+
+                composite.Apply(false, false);
+                string absoluteOutput = Path.GetFullPath(outputPath);
+                Directory.CreateDirectory(
+                    Path.GetDirectoryName(absoluteOutput) ??
+                    throw new InvalidOperationException(
+                        "Player Hands paired frame output directory is unavailable."));
+                File.WriteAllBytes(absoluteOutput, composite.EncodeToPNG());
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(composite);
+            }
+        }
+
+        private static void SetCompositePanel(
+            Texture2D composite,
+            byte[] encodedPanel,
+            int column,
+            int row,
+            int totalRows)
+        {
+            Texture2D panel = new Texture2D(
+                CaptureWidth,
+                CaptureHeight,
+                TextureFormat.RGB24,
+                false);
+            try
+            {
+                if (!panel.LoadImage(encodedPanel))
+                {
+                    throw new InvalidOperationException(
+                        "Player Hands paired frame could not be decoded.");
+                }
+
+                composite.SetPixels(
+                    column * CaptureWidth,
+                    (totalRows - row - 1) * CaptureHeight,
+                    CaptureWidth,
+                    CaptureHeight,
+                    panel.GetPixels());
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(panel);
             }
         }
 
