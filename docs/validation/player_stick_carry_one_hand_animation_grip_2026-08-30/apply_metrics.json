@@ -1,0 +1,42 @@
+{
+    "sourceTarget": "Hands_Carry_OneHand",
+    "target": "Stick_Carry",
+    "sourceControllerPath": "Assets/_Project/Art/Player/Animations/Hands_Carry_OneHand.controller",
+    "copiedControllerPath": "Assets/_Project/Art/Player/Animations/Stick_Carry_OneHand.controller",
+    "sourceClipPath": "Assets/_Project/Art/Player/Animations/Hands_Carry_OneHand_ArmAdjusted.anim",
+    "copiedClipPath": "Assets/_Project/Art/Player/Animations/Stick_Carry_OneHand.anim",
+    "sourceModelPath": "item model/stick.fbx",
+    "importedModelPath": "Assets/_Project/Art/Items/Stick/stick.fbx",
+    "sourceModelHash": "59FECA1C0AADE476A59ED907FED43C828EE43654E07CB04EDCA9DF4A5D8BA664",
+    "importedModelHash": "59FECA1C0AADE476A59ED907FED43C828EE43654E07CB04EDCA9DF4A5D8BA664",
+    "durationSeconds": 2.5333333015441896,
+    "frameRate": 30.0,
+    "framesSampled": 76,
+    "copiedClipPosePositionDifferenceMax": 0.0,
+    "copiedClipPoseRotationDifferenceDegreesMax": 0.0,
+    "copiedClipEventsExact": true,
+    "copiedClipLoops": true,
+    "controllerUsesCopiedClip": true,
+    "animatorSettingsCorrect": true,
+    "sourceAnimatorUnchanged": true,
+    "otherAnimatorsUnchanged": true,
+    "targetRootUnchanged": true,
+    "stickLongAxisLocal": "LocalZ",
+    "stickLengthMeters": 1.0547524690628052,
+    "gripFractionFromBottom": 0.125,
+    "gripPointDistanceMetersMax": 0.002882015658542514,
+    "forearmPerpendicularErrorDegreesMax": 2.4464569091796877,
+    "stickLocalPosition": {
+        "x": 0.057743139564991,
+        "y": -0.1172681674361229,
+        "z": -0.37971001863479617
+    },
+    "stickLocalRotation": {
+        "x": -0.9583187699317932,
+        "y": -0.16028203070163728,
+        "z": 6.705520405603238e-8,
+        "w": -0.23650531470775605
+    },
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+}

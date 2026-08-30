@@ -573,6 +573,48 @@ namespace Bellerophon.Editor.Validation
                         PlayerHandsObjectAnimationTools.Apply,
                         "Player Hands and Objects exact source animations applied.");
                     break;
+                case "ApplyPlayerStickCarryStartView":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyPlayerStickCarryStartView,
+                        "Player start moved to the existing front framing for Stick_Carry.");
+                    break;
+                case "CapturePlayerStickCarryStartViewReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerStickCarryStartViewReview,
+                        "Player Stick_Carry start-view review advanced.");
+                    break;
+                case "ApplyStickCarryOneHandAnimationAndStickGrip":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyStickCarryOneHandAnimationAndStickGrip,
+                        "Stick_Carry copied OneHand animation and lower-end right-hand stick grip applied.");
+                    break;
+                case "CaptureStickCarryCurrentRightHandLocalTransform":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickCarryCurrentRightHandLocalTransform,
+                        "Stick_Carry current RightHand-local stick transform captured without modification.");
+                    break;
+                case "CaptureStickCarryGripDiagnostic":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickCarryGripDiagnostic,
+                        "Stick_Carry weighted-hand grip diagnostic image captured.");
+                    break;
+                case "CaptureStickCarryOneHandAnimationAndStickGrip":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickCarryOneHandAnimationAndStickGrip,
+                        "Stick_Carry OneHand animation and stick grip final image captured.");
+                    break;
                 case "ApplyPlayerHandsCarryOneHandEmbeddedTakeExact":
                     RunSynchronous(
                         request,
@@ -740,6 +782,20 @@ namespace Bellerophon.Editor.Validation
                         PlayerHandsObjectAnimationTools
                             .CapturePlayerTransporterPurpleFlagDrawBackClearanceAndStartFinal,
                         "Transporter purple-flag, Draw Back clearance, and start-position final image captured.");
+                    break;
+                case "ApplyAllTransporterLeftArmFlagRectangleOpaque":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyAllTransporterLeftArmFlagRectangleOpaque,
+                        "All transporter left-arm United States flag bounds filled with one opaque light-purple rectangle.");
+                    break;
+                case "CaptureAllTransporterLeftArmFlagRectangleOpaque":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureAllTransporterLeftArmFlagRectangleOpaque,
+                        "All transporter left-arm opaque rectangle final image captured.");
                     break;
                 case "ApplyPlayerHandsDrawBackFrontSilhouetteClearance":
                     RunSynchronous(

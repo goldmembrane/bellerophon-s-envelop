@@ -1,0 +1,54 @@
+{
+    "sourceTarget": "Hands_Carry_OneHand",
+    "target": "Stick_Carry",
+    "framesCaptured": 8,
+    "sourcePosePositionDifferenceMax": 0.0,
+    "sourcePoseRotationDifferenceDegreesMax": 0.0,
+    "gripPointDistanceMetersMax": 0.03220633789896965,
+    "gripSurfaceTargetOffsetMeters": 0.047272346913814548,
+    "gripSurfaceContactErrorMetersMax": 0.07931128144264221,
+    "gripSurfacePenetrationMetersMax": 0.07920640707015991,
+    "gripSurfaceGapMetersMax": 0.0,
+    "forearmPerpendicularErrorDegreesMax": 2.2305526733398439,
+    "gripFractionFromBottom": 0.125,
+    "positionSource": "CapturedOpenUnitySceneRightHandLocalPosition",
+    "fixedRightHandLocalPosition": {
+        "x": 0.026000000536441804,
+        "y": -0.012000000104308129,
+        "z": -0.37400001287460329
+    },
+    "rightHandLocalPositionExact": true,
+    "palmCenterMethod": "SkinnedMeshRightHandWeightedVertices",
+    "rightHandWeightedBoneCount": 1,
+    "rightHandWeightedVertexCount": 272,
+    "wristToPalmCenterDistanceMeters": 0.1320343017578125,
+    "extractedMaterialCount": 1,
+    "extractedMaterialPaths": [
+        "Assets/_Project/Art/Items/Stick/Materials/Material.001.mat"
+    ],
+    "extractedTextureCount": 5,
+    "extractedTexturePaths": [
+        "Assets/_Project/Art/Items/Stick/Textures/base_color.jpg",
+        "Assets/_Project/Art/Items/Stick/Textures/normal.jpg",
+        "Assets/_Project/Art/Items/Stick/Textures/texture_0_metallic.png",
+        "Assets/_Project/Art/Items/Stick/Textures/texture_0_metallic_smoothness.png",
+        "Assets/_Project/Art/Items/Stick/Textures/texture_0_roughness.png"
+    ],
+    "rendererMaterialPaths": [
+        "Assets/_Project/Art/Items/Stick/Materials/Material.001.mat"
+    ],
+    "rendererTexturePaths": [
+        "Assets/_Project/Art/Items/Stick/Textures/base_color.jpg",
+        "Assets/_Project/Art/Items/Stick/Textures/normal.jpg",
+        "Assets/_Project/Art/Items/Stick/Textures/texture_0_metallic_smoothness.png"
+    ],
+    "allExpectedTexturesExtracted": true,
+    "allRendererMaterialsExternal": true,
+    "allExtractedTexturesReferenced": false,
+    "packedMetallicSmoothnessPath": "Assets/_Project/Art/Items/Stick/Textures/texture_0_metallic_smoothness.png",
+    "allPbrTextureChannelsApplied": true,
+    "stickRendererVisible": true,
+    "targetRootUnchanged": true,
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+}

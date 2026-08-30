@@ -21,6 +21,7 @@ namespace Bellerophon.Editor
         private const string LayoutRootName = "PlayerAnimationLayout";
         private const string IdleReferenceTargetName = "Player_Idle";
         private const string EmptyTargetName = "Hands_Empty_Idle";
+        private const string StickCarryTargetName = "Stick_Carry";
         private const string OneHandTargetName = "Hands_Carry_OneHand";
         private const string TwoHandTargetName = "Hands_Carry_TwoHand";
         private const string DrawBackTargetName = "Hands_Draw_Back";
@@ -293,6 +294,64 @@ namespace Bellerophon.Editor
             "Assets/_Project/Art/Player/player.fbm/texture_0.png";
         private const string TransporterPurpleFlagReviewStageKey =
             "Bellerophon.PlayerTransporterPurpleFlagDrawBackClearanceStart.Review.Stage";
+        private const string TransporterFlagRectangleValidationDirectory =
+            "docs/validation/player_transporter_left_arm_flag_rectangle_2026-08-30";
+        private const string TransporterFlagRectangleApplyMetricsPath =
+            TransporterFlagRectangleValidationDirectory + "/apply_metrics.json";
+        private const string TransporterFlagRectangleFinalPath =
+            TransporterFlagRectangleValidationDirectory + "/final.png";
+        private const string StickCarryStartViewValidationDirectory =
+            "docs/validation/player_stick_carry_start_view_2026-08-30";
+        private const string StickCarryStartViewApplyMetricsPath =
+            StickCarryStartViewValidationDirectory + "/apply_metrics.json";
+        private const string StickCarryStartViewReviewMetricsPath =
+            StickCarryStartViewValidationDirectory + "/review_metrics.json";
+        private const string StickCarryStartViewReviewPath =
+            StickCarryStartViewValidationDirectory + "/review.png";
+        private const string StickCarryStartViewReviewStageKey =
+            "Bellerophon.PlayerStickCarryStartView.Review.Stage";
+        private const string StickCarryStateName = "StickCarryOneHand";
+        private const string StickCarryClipPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Carry_OneHand.anim";
+        private const string StickCarryControllerPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Carry_OneHand.controller";
+        private const string StickSourceModelPath = "item model/stick.fbx";
+        private const string StickAssetPath =
+            "Assets/_Project/Art/Items/Stick/stick.fbx";
+        private const string StickMaterialFolder =
+            "Assets/_Project/Art/Items/Stick/Materials";
+        private const string StickTextureFolder =
+            "Assets/_Project/Art/Items/Stick/Textures";
+        private const string StickAutoTextureFolder =
+            "Assets/_Project/Art/Items/Stick/stick.fbm";
+        private const string StickPackedMetallicSmoothnessPath =
+            StickTextureFolder + "/texture_0_metallic_smoothness.png";
+        private const string StickInstanceName = "Stick_Carry_Item";
+        private const float StickPalmSurfaceOffsetMeters = 0.012f;
+        // Captured directly from the open CargoRunMvp scene on 2026-08-31.
+        private static readonly Vector3 StickCarryFixedRightHandLocalPosition =
+            new Vector3(0.026f, -0.012f, -0.374f);
+        private const string StickCarryGripValidationDirectory =
+            "docs/validation/player_stick_carry_grip_material_fix_2026-08-30";
+        private const string StickCarryGripApplyMetricsPath =
+            StickCarryGripValidationDirectory + "/apply_metrics.json";
+        private const string StickCarryGripReviewMetricsPath =
+            StickCarryGripValidationDirectory + "/review_metrics.json";
+        private const string StickCarryCurrentRightHandLocalTransformPath =
+            StickCarryGripValidationDirectory +
+            "/current_right_hand_local_transform.json";
+        private const string StickCarryGripDiagnosticPath =
+            StickCarryGripValidationDirectory + "/diagnostic.png";
+        private const string StickCarryGripFinalPath =
+            StickCarryGripValidationDirectory + "/final.png";
+        private const float RightHandVertexWeightThreshold = 0.5f;
+        private static readonly string[] StickExpectedTextureNames =
+        {
+            "base_color.jpg",
+            "normal.jpg",
+            "texture_0_roughness.png",
+            "texture_0_metallic.png"
+        };
         private const string DrawBackFrontSilhouetteValidationDirectory =
             "docs/validation/player_hands_draw_back_front_silhouette_clearance_2026-08-28";
         private const string DrawBackFrontSilhouetteApplyMetricsPath =
@@ -1258,6 +1317,200 @@ namespace Bellerophon.Editor
             public string validationPriority;
         }
 
+        [Serializable]
+        private sealed class TransporterFlagRectangleApplyMetrics
+        {
+            public string targetSet;
+            public string textureBaselineHash;
+            public string textureHashAfter;
+            public string duplicateTextureHashAfter;
+            public int sharedPlayerModelInstanceCount;
+            public int leftArmTrianglesScanned;
+            public int flagSeedTriangleCount;
+            public string surfaceAxisU;
+            public string surfaceAxisV;
+            public string surfaceDepthAxis;
+            public float surfaceRectangleWidthMeters;
+            public float surfaceRectangleHeightMeters;
+            public int recoloredTexturePixelCount;
+            public Color targetLightPurple;
+            public float targetAlpha;
+            public float transparencyPercent;
+            public bool recoloringRestrictedToLeftArmSurface;
+            public bool rectangleFilledWithTargetColor;
+            public bool rectangleFullyOpaque;
+            public bool bothTextureCopiesExact;
+            public bool sharedTextureAppliedToAllTransporters;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class StickCarryStartViewMetrics
+        {
+            public string target;
+            public Vector3 targetPosition;
+            public Quaternion targetRotation;
+            public Vector3 playerStartPosition;
+            public Quaternion playerStartRotation;
+            public Vector3 playerCameraPosition;
+            public Quaternion playerCameraRotation;
+            public float cameraPlanarDistanceMeters;
+            public float playerRootPlanarDistanceMeters;
+            public float screenHorizontalCenterErrorNormalized;
+            public float screenVerticalCenterErrorNormalized;
+            public float playerFacingErrorDegrees;
+            public bool playerStartsOnTargetFrontSide;
+            public bool playerCameraTargetsCenter;
+            public bool matchesAppliedStart;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class StickCarryCurrentRightHandLocalTransformMetrics
+        {
+            public string target;
+            public string parentPath;
+            public string instance;
+            public Vector3 localPosition;
+            public Quaternion localRotation;
+            public Vector3 localScale;
+            public bool parentIsRightHand;
+            public bool capturedFromOpenUnityScene;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class StickCarryGripApplyMetrics
+        {
+            public string sourceTarget;
+            public string target;
+            public string sourceControllerPath;
+            public string copiedControllerPath;
+            public string sourceClipPath;
+            public string copiedClipPath;
+            public string sourceModelPath;
+            public string importedModelPath;
+            public string sourceModelHash;
+            public string importedModelHash;
+            public float durationSeconds;
+            public float frameRate;
+            public int framesSampled;
+            public float copiedClipPosePositionDifferenceMax;
+            public float copiedClipPoseRotationDifferenceDegreesMax;
+            public bool copiedClipEventsExact;
+            public bool copiedClipLoops;
+            public bool controllerUsesCopiedClip;
+            public bool animatorSettingsCorrect;
+            public bool sourceAnimatorUnchanged;
+            public bool otherAnimatorsUnchanged;
+            public bool targetRootUnchanged;
+            public string stickLongAxisLocal;
+            public float stickLengthMeters;
+            public float gripFractionFromBottom;
+            public string palmCenterMethod;
+            public int rightHandWeightedBoneCount;
+            public int rightHandWeightedVertexCount;
+            public float wristToPalmCenterDistanceMeters;
+            public float gripPointDistanceMetersMax;
+            public float gripSurfaceTargetOffsetMeters;
+            public float gripSurfaceContactErrorMetersMax;
+            public float gripSurfacePenetrationMetersMax;
+            public float gripSurfaceGapMetersMax;
+            public float forearmPerpendicularErrorDegreesMax;
+            public float gripHeightChangeMeters;
+            public float stickRotationChangeDegrees;
+            public string positionSource;
+            public Vector3 capturedRightHandLocalPosition;
+            public Vector3 fixedRightHandLocalPosition;
+            public bool rightHandLocalPositionExact;
+            public int extractedMaterialCount;
+            public string[] extractedMaterialPaths;
+            public int extractedTextureCount;
+            public string[] extractedTexturePaths;
+            public string[] rendererMaterialPaths;
+            public string[] rendererTexturePaths;
+            public bool allExpectedTexturesExtracted;
+            public bool allRendererMaterialsExternal;
+            public bool allExtractedTexturesReferenced;
+            public string packedMetallicSmoothnessPath;
+            public bool allPbrTextureChannelsApplied;
+            public Vector3 stickLocalPosition;
+            public Quaternion stickLocalRotation;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class StickCarryGripReviewMetrics
+        {
+            public string sourceTarget;
+            public string target;
+            public int framesCaptured;
+            public float sourcePosePositionDifferenceMax;
+            public float sourcePoseRotationDifferenceDegreesMax;
+            public float gripPointDistanceMetersMax;
+            public float gripSurfaceTargetOffsetMeters;
+            public float gripSurfaceContactErrorMetersMax;
+            public float gripSurfacePenetrationMetersMax;
+            public float gripSurfaceGapMetersMax;
+            public float forearmPerpendicularErrorDegreesMax;
+            public float gripFractionFromBottom;
+            public string positionSource;
+            public Vector3 fixedRightHandLocalPosition;
+            public bool rightHandLocalPositionExact;
+            public string palmCenterMethod;
+            public int rightHandWeightedBoneCount;
+            public int rightHandWeightedVertexCount;
+            public float wristToPalmCenterDistanceMeters;
+            public int extractedMaterialCount;
+            public string[] extractedMaterialPaths;
+            public int extractedTextureCount;
+            public string[] extractedTexturePaths;
+            public string[] rendererMaterialPaths;
+            public string[] rendererTexturePaths;
+            public bool allExpectedTexturesExtracted;
+            public bool allRendererMaterialsExternal;
+            public bool allExtractedTexturesReferenced;
+            public string packedMetallicSmoothnessPath;
+            public bool allPbrTextureChannelsApplied;
+            public bool stickRendererVisible;
+            public bool targetRootUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        private sealed class StickGripPlacement
+        {
+            internal Transform Instance;
+            internal Vector3 LongLocalAxis;
+            internal Vector3 LocalGripPoint;
+            internal Bounds LocalBounds;
+            internal float LengthMeters;
+            internal float GripFractionFromBottom;
+        }
+
+        private sealed class RightHandPalmSample
+        {
+            internal Vector3 Center;
+            internal int WeightedBoneCount;
+            internal int WeightedVertexCount;
+        }
+
+        private sealed class StickMaterialState
+        {
+            internal string[] ExtractedMaterialPaths;
+            internal string[] ExtractedTexturePaths;
+            internal string[] RendererMaterialPaths;
+            internal string[] RendererTexturePaths;
+            internal bool AllExpectedTexturesExtracted;
+            internal bool AllRendererMaterialsExternal;
+            internal bool AllExtractedTexturesReferenced;
+            internal string PackedMetallicSmoothnessPath;
+            internal bool AllPbrTextureChannelsApplied;
+        }
+
         private sealed class TransporterTextureEditResult
         {
             internal int LeftArmTrianglesScanned;
@@ -1265,6 +1518,14 @@ namespace Bellerophon.Editor
             internal int FlagPatchTriangleCount;
             internal int RecoloredPixelCount;
             internal Color TargetLightPurple;
+            internal int SurfaceAxisU;
+            internal int SurfaceAxisV;
+            internal int SurfaceDepthAxis;
+            internal float SurfaceRectangleWidthMeters;
+            internal float SurfaceRectangleHeightMeters;
+            internal bool RecoloringRestrictedToLeftArmSurface;
+            internal bool RectangleFilledWithTargetColor;
+            internal bool RectangleFullyOpaque;
         }
 
         [Serializable]
@@ -5441,6 +5702,1960 @@ namespace Bellerophon.Editor
                 ", SceneChanged=False.");
         }
 
+        [MenuItem("Bellerophon/Player/Apply Stick Carry Start View")]
+        internal static void ApplyPlayerStickCarryStartView()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                SessionState.EraseInt(StickCarryStartViewReviewStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerStickCarryStartView] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Stick_Carry start-view apply.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform stickCarryTarget = RequireTarget(
+                layout,
+                StickCarryTargetName);
+            ConfigurePlayerStartFacingTarget(
+                scene,
+                stickCarryTarget,
+                StickCarryTargetName,
+                out Transform playerRoot,
+                out Transform playerCamera,
+                out Bounds targetBounds);
+            EditorSceneManager.SaveScene(scene);
+
+            StickCarryStartViewMetrics metrics =
+                MeasureStickCarryStartView(
+                    stickCarryTarget,
+                    playerRoot,
+                    playerCamera,
+                    targetBounds,
+                    null);
+            WriteJson(StickCarryStartViewApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry start-view apply support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            SessionState.EraseInt(StickCarryStartViewReviewStageKey);
+            Debug.Log(
+                "[PlayerStickCarryStartView] Applied existing Empty-start framing to Stick_Carry. " +
+                "Player=(" +
+                Num(playerRoot.position.x) + "," +
+                Num(playerRoot.position.y) + "," +
+                Num(playerRoot.position.z) + ")" +
+                ", CameraDistance=" + Num(metrics.cameraPlanarDistanceMeters) +
+                ", CenterError=" +
+                Num(metrics.screenHorizontalCenterErrorNormalized) + "/" +
+                Num(metrics.screenVerticalCenterErrorNormalized) + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Carry Start View Review")]
+        internal static void CapturePlayerStickCarryStartViewReview()
+        {
+            int stage = SessionState.GetInt(
+                StickCarryStartViewReviewStageKey,
+                0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Stick_Carry start-view review must start in Edit Mode.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before Stick_Carry start-view review.");
+                    }
+
+                    SessionState.SetInt(StickCarryStartViewReviewStageKey, 1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[PlayerStickCarryStartView] Entering Play Mode for direct review.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Stick_Carry start-view capture requires Play Mode.");
+                    }
+
+                    CapturePlayerStickCarryStartViewActualReview();
+                    SessionState.SetInt(StickCarryStartViewReviewStageKey, 2);
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Stick_Carry start-view review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(StickCarryStartViewReviewStageKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[PlayerStickCarryStartView] Exiting Play Mode after direct review.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Stick_Carry start-view review stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(StickCarryStartViewReviewStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+        private static void CapturePlayerStickCarryStartViewActualReview()
+        {
+            StickCarryStartViewMetrics applied =
+                ReadJson<StickCarryStartViewMetrics>(
+                    StickCarryStartViewApplyMetricsPath);
+            if (!applied.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry start-view apply metrics did not pass.");
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform stickCarryTarget = RequireTarget(
+                layout,
+                StickCarryTargetName);
+            Camera mainCamera = scene.GetRootGameObjects()
+                .SelectMany(root => root.GetComponentsInChildren<Camera>(true))
+                .Single(camera => camera.CompareTag("MainCamera"));
+            CharacterController controller =
+                mainCamera.GetComponentInParent<CharacterController>();
+            if (controller == null)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp runtime Player CharacterController is missing.");
+            }
+
+            Bounds targetBounds = CalculateVisibleBounds(stickCarryTarget);
+            byte[] review = CaptureCameraFrame(mainCamera);
+            string fullReviewPath = Path.GetFullPath(
+                StickCarryStartViewReviewPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(fullReviewPath));
+            File.WriteAllBytes(fullReviewPath, review);
+
+            StickCarryStartViewMetrics metrics =
+                MeasureStickCarryStartView(
+                    stickCarryTarget,
+                    controller.transform,
+                    mainCamera.transform,
+                    targetBounds,
+                    applied);
+            WriteJson(StickCarryStartViewReviewMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry start-view Play Mode support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[PlayerStickCarryStartView] Captured direct Play Mode start view. " +
+                "CameraDistance=" + Num(metrics.cameraPlanarDistanceMeters) +
+                ", PlayerDistance=" +
+                Num(metrics.playerRootPlanarDistanceMeters) +
+                ", CenterError=" +
+                Num(metrics.screenHorizontalCenterErrorNormalized) + "/" +
+                Num(metrics.screenVerticalCenterErrorNormalized) + ".");
+        }
+
+        private static StickCarryStartViewMetrics MeasureStickCarryStartView(
+            Transform target,
+            Transform playerRoot,
+            Transform playerCamera,
+            Bounds targetBounds,
+            StickCarryStartViewMetrics applied)
+        {
+            Camera camera = playerCamera.GetComponent<Camera>();
+            if (camera == null)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp runtime Player camera component is missing.");
+            }
+
+            Vector3 viewportCenter = camera.WorldToViewportPoint(
+                targetBounds.center);
+            float horizontalError = Mathf.Abs(viewportCenter.x - 0.5f);
+            float verticalError = Mathf.Abs(viewportCenter.y - 0.5f);
+            Vector3 cameraToCenter = targetBounds.center - playerCamera.position;
+            Vector3 playerToCenter = targetBounds.center - playerRoot.position;
+            float cameraPlanarDistance = Vector3.Distance(
+                Vector3.ProjectOnPlane(playerCamera.position, Vector3.up),
+                Vector3.ProjectOnPlane(targetBounds.center, Vector3.up));
+            float playerPlanarDistance = Vector3.Distance(
+                Vector3.ProjectOnPlane(playerRoot.position, Vector3.up),
+                Vector3.ProjectOnPlane(target.position, Vector3.up));
+            bool frontSide = Vector3.Dot(
+                playerCamera.position - targetBounds.center,
+                target.forward) > 0f;
+            bool cameraTargetsCenter = Vector3.Angle(
+                playerCamera.forward,
+                cameraToCenter) <= 0.1f;
+            float playerFacingError = Vector3.Angle(
+                playerRoot.forward,
+                Vector3.ProjectOnPlane(playerToCenter, Vector3.up));
+            bool matchesApplied = applied == null ||
+                (Vector3.Distance(
+                    playerRoot.position,
+                    applied.playerStartPosition) <= PositionTolerance &&
+                 Quaternion.Angle(
+                    playerRoot.rotation,
+                    applied.playerStartRotation) <= RotationTolerance);
+            StickCarryStartViewMetrics metrics =
+                new StickCarryStartViewMetrics
+                {
+                    target = StickCarryTargetName,
+                    targetPosition = target.position,
+                    targetRotation = target.rotation,
+                    playerStartPosition = playerRoot.position,
+                    playerStartRotation = playerRoot.rotation,
+                    playerCameraPosition = playerCamera.position,
+                    playerCameraRotation = playerCamera.rotation,
+                    cameraPlanarDistanceMeters = cameraPlanarDistance,
+                    playerRootPlanarDistanceMeters = playerPlanarDistance,
+                    screenHorizontalCenterErrorNormalized = horizontalError,
+                    screenVerticalCenterErrorNormalized = verticalError,
+                    playerFacingErrorDegrees = playerFacingError,
+                    playerStartsOnTargetFrontSide = frontSide,
+                    playerCameraTargetsCenter = cameraTargetsCenter,
+                    matchesAppliedStart = matchesApplied,
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                frontSide &&
+                cameraTargetsCenter &&
+                matchesApplied &&
+                Mathf.Abs(cameraPlanarDistance - 5.4f) <= 0.01f &&
+                horizontalError <= 0.01f &&
+                verticalError <= 0.01f &&
+                playerFacingError <= 0.1f;
+            return metrics;
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Carry Current RightHand Local Transform")]
+        internal static void CaptureStickCarryCurrentRightHandLocalTransform()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry current RightHand-local transform capture requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, StickCarryTargetName);
+            Transform hand = FindRequired(target, RightHandPath);
+            StickGripPlacement placement = DescribeExistingStickGrip(target);
+            StickCarryCurrentRightHandLocalTransformMetrics metrics =
+                new StickCarryCurrentRightHandLocalTransformMetrics
+                {
+                    target = StickCarryTargetName,
+                    parentPath = RightHandPath,
+                    instance = placement.Instance.name,
+                    localPosition = placement.Instance.localPosition,
+                    localRotation = placement.Instance.localRotation,
+                    localScale = placement.Instance.localScale,
+                    parentIsRightHand = placement.Instance.parent == hand,
+                    capturedFromOpenUnityScene = true,
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            WriteJson(
+                StickCarryCurrentRightHandLocalTransformPath,
+                metrics);
+            if (!metrics.parentIsRightHand)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry_Item is not parented directly to Stick_Carry RightHand.");
+            }
+
+            Debug.Log(
+                "[PlayerStickCarryGrip] Captured current open-scene RightHand-local transform without modifying it. " +
+                "Position=(" +
+                Num(metrics.localPosition.x) + "," +
+                Num(metrics.localPosition.y) + "," +
+                Num(metrics.localPosition.z) + "), Rotation=(" +
+                Num(metrics.localRotation.x) + "," +
+                Num(metrics.localRotation.y) + "," +
+                Num(metrics.localRotation.z) + "," +
+                Num(metrics.localRotation.w) + "), Scale=(" +
+                Num(metrics.localScale.x) + "," +
+                Num(metrics.localScale.y) + "," +
+                Num(metrics.localScale.z) + ").");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Stick Carry OneHand Animation And Stick Grip")]
+        internal static void ApplyStickCarryOneHandAnimationAndStickGrip()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerStickCarryGrip] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            ImportExactStickModelCopy();
+            Scene activeScene = RequireScene();
+            Transform layout = RequireLayout(activeScene);
+            Transform sourceTarget = RequireTarget(layout, OneHandTargetName);
+            Transform target = RequireTarget(layout, StickCarryTargetName);
+            StickCarryCurrentRightHandLocalTransformMetrics capturedTransform =
+                ReadJson<StickCarryCurrentRightHandLocalTransformMetrics>(
+                    StickCarryCurrentRightHandLocalTransformPath);
+            bool capturedPositionMatchesFixed =
+                capturedTransform.parentIsRightHand &&
+                capturedTransform.localPosition.x ==
+                    StickCarryFixedRightHandLocalPosition.x &&
+                capturedTransform.localPosition.y ==
+                    StickCarryFixedRightHandLocalPosition.y &&
+                capturedTransform.localPosition.z ==
+                    StickCarryFixedRightHandLocalPosition.z;
+            if (!capturedPositionMatchesFixed)
+            {
+                throw new InvalidOperationException(
+                    "The fixed Stick_Carry RightHand-local position does not exactly match the captured open-scene value.");
+            }
+
+            StickGripPlacement previousPlacement = DescribeExistingStickGrip(
+                target);
+            float previousGripHeight = Vector3.Dot(
+                previousPlacement.Instance.TransformPoint(
+                    previousPlacement.LocalGripPoint) - target.position,
+                target.up);
+            Quaternion previousStickLocalRotation =
+                previousPlacement.Instance.localRotation;
+            Animator sourceAnimator = RequireAnimator(sourceTarget);
+            AnimatorController sourceController =
+                sourceAnimator.runtimeAnimatorController as AnimatorController;
+            if (sourceController == null ||
+                !string.Equals(
+                    AssetDatabase.GetAssetPath(sourceController),
+                    OneHandControllerPath,
+                    StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "Hands_Carry_OneHand does not use the expected source controller.");
+            }
+
+            AnimationClip baseClip = RequireDefaultLayerClip(
+                sourceController,
+                0,
+                AlignmentBaseStateName);
+            AnimationClip sourceArmClip = RequireDefaultLayerClip(
+                sourceController,
+                1,
+                OneHandStateName);
+            string sourceArmClipPath = AssetDatabase.GetAssetPath(sourceArmClip);
+            string sourceArmClipHashBefore = HashFile(sourceArmClipPath);
+            AnimationClip copiedClip = CreateOrUpdateAnimationClipCopy(
+                sourceArmClip,
+                StickCarryClipPath,
+                "Stick_Carry_OneHand");
+            AvatarMask armsMask = sourceController.layers[1].avatarMask;
+            if (armsMask == null)
+            {
+                throw new InvalidOperationException(
+                    "Hands_Carry_OneHand carry layer has no arm AvatarMask.");
+            }
+
+            RootPose targetRootBefore = new RootPose(target);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTarget(layout, StickCarryTargetName);
+            AnimatorController copiedController =
+                CreateOrUpdateLayeredCarryController(
+                    StickCarryControllerPath,
+                    StickCarryStateName,
+                    baseClip,
+                    copiedClip,
+                    armsMask);
+            Animator targetAnimator = ConfigureAnimator(target, copiedController);
+            StickGripPlacement placement = AttachStickToRightHand(target, activeScene);
+            float gripHeightChange = Mathf.Abs(
+                Vector3.Dot(
+                    placement.Instance.TransformPoint(
+                        placement.LocalGripPoint) - target.position,
+                    target.up) - previousGripHeight);
+            float stickRotationChange = Quaternion.Angle(
+                previousStickLocalRotation,
+                placement.Instance.localRotation);
+            StickMaterialState materialState = InspectStickMaterialState(
+                placement.Instance);
+            EditorSceneManager.SaveScene(activeScene);
+            AssetDatabase.SaveAssets();
+
+            MeasureAnimationClipPoseDifference(
+                target,
+                sourceArmClip,
+                copiedClip,
+                out int copiedFramesSampled,
+                out float copiedPositionDifference,
+                out float copiedRotationDifference);
+            MeasureStickGripAcrossAnimation(
+                target,
+                targetAnimator,
+                baseClip,
+                copiedClip,
+                placement,
+                24,
+                out float gripDistanceMax,
+                out float surfaceTargetOffset,
+                out float surfaceContactErrorMax,
+                out float surfacePenetrationMax,
+                out float surfaceGapMax,
+                out float perpendicularErrorMax);
+            bool controllerUsesCopiedClip =
+                copiedController.layers.Length == 2 &&
+                LayerStateUsesClip(
+                    copiedController.layers[0],
+                    AlignmentBaseStateName,
+                    baseClip) &&
+                LayerStateUsesClip(
+                    copiedController.layers[1],
+                    StickCarryStateName,
+                    copiedClip);
+            bool sourceAnimatorUnchanged =
+                sourceAnimator.runtimeAnimatorController == sourceController &&
+                AnimatorMatches(sourceAnimator, sourceController) &&
+                string.Equals(
+                    sourceArmClipHashBefore,
+                    HashFile(sourceArmClipPath),
+                    StringComparison.Ordinal);
+            bool otherAnimatorsUnchanged = DictionariesEqual(
+                otherAnimatorsBefore,
+                CaptureAnimatorsExceptTarget(layout, StickCarryTargetName));
+            RightHandPalmSample palmSample = CalculateRightPalmSample(target);
+            StickCarryGripApplyMetrics metrics =
+                new StickCarryGripApplyMetrics
+                {
+                    sourceTarget = OneHandTargetName,
+                    target = StickCarryTargetName,
+                    sourceControllerPath = OneHandControllerPath,
+                    copiedControllerPath = StickCarryControllerPath,
+                    sourceClipPath = sourceArmClipPath,
+                    copiedClipPath = StickCarryClipPath,
+                    sourceModelPath = StickSourceModelPath,
+                    importedModelPath = StickAssetPath,
+                    sourceModelHash = HashFile(StickSourceModelPath),
+                    importedModelHash = HashFile(StickAssetPath),
+                    durationSeconds = copiedClip.length,
+                    frameRate = copiedClip.frameRate,
+                    framesSampled = copiedFramesSampled,
+                    copiedClipPosePositionDifferenceMax =
+                        copiedPositionDifference,
+                    copiedClipPoseRotationDifferenceDegreesMax =
+                        copiedRotationDifference,
+                    copiedClipEventsExact = AnimationEventsMatch(
+                        sourceArmClip,
+                        copiedClip),
+                    copiedClipLoops =
+                        AnimationUtility.GetAnimationClipSettings(copiedClip).loopTime,
+                    controllerUsesCopiedClip = controllerUsesCopiedClip,
+                    animatorSettingsCorrect =
+                        AnimatorMatches(targetAnimator, copiedController),
+                    sourceAnimatorUnchanged = sourceAnimatorUnchanged,
+                    otherAnimatorsUnchanged = otherAnimatorsUnchanged,
+                    targetRootUnchanged = RootMatches(target, targetRootBefore),
+                    stickLongAxisLocal = StickAxisName(placement.LongLocalAxis),
+                    stickLengthMeters = placement.LengthMeters,
+                    gripFractionFromBottom = placement.GripFractionFromBottom,
+                    palmCenterMethod = "SkinnedMeshRightHandWeightedVertices",
+                    rightHandWeightedBoneCount = palmSample.WeightedBoneCount,
+                    rightHandWeightedVertexCount = palmSample.WeightedVertexCount,
+                    wristToPalmCenterDistanceMeters =
+                        MeasureWristToPalmCenterDistance(target),
+                    gripPointDistanceMetersMax = gripDistanceMax,
+                    gripSurfaceTargetOffsetMeters = surfaceTargetOffset,
+                    gripSurfaceContactErrorMetersMax =
+                        surfaceContactErrorMax,
+                    gripSurfacePenetrationMetersMax =
+                        surfacePenetrationMax,
+                    gripSurfaceGapMetersMax = surfaceGapMax,
+                    forearmPerpendicularErrorDegreesMax =
+                        perpendicularErrorMax,
+                    gripHeightChangeMeters = gripHeightChange,
+                    stickRotationChangeDegrees = stickRotationChange,
+                    positionSource =
+                        "CapturedOpenUnitySceneRightHandLocalPosition",
+                    capturedRightHandLocalPosition =
+                        capturedTransform.localPosition,
+                    fixedRightHandLocalPosition =
+                        StickCarryFixedRightHandLocalPosition,
+                    rightHandLocalPositionExact =
+                        placement.Instance.localPosition.x ==
+                            StickCarryFixedRightHandLocalPosition.x &&
+                        placement.Instance.localPosition.y ==
+                            StickCarryFixedRightHandLocalPosition.y &&
+                        placement.Instance.localPosition.z ==
+                            StickCarryFixedRightHandLocalPosition.z,
+                    extractedMaterialCount =
+                        materialState.ExtractedMaterialPaths.Length,
+                    extractedMaterialPaths =
+                        materialState.ExtractedMaterialPaths,
+                    extractedTextureCount =
+                        materialState.ExtractedTexturePaths.Length,
+                    extractedTexturePaths = materialState.ExtractedTexturePaths,
+                    rendererMaterialPaths = materialState.RendererMaterialPaths,
+                    rendererTexturePaths = materialState.RendererTexturePaths,
+                    allExpectedTexturesExtracted =
+                        materialState.AllExpectedTexturesExtracted,
+                    allRendererMaterialsExternal =
+                        materialState.AllRendererMaterialsExternal,
+                    allExtractedTexturesReferenced =
+                        materialState.AllExtractedTexturesReferenced,
+                    packedMetallicSmoothnessPath =
+                        materialState.PackedMetallicSmoothnessPath,
+                    allPbrTextureChannelsApplied =
+                        materialState.AllPbrTextureChannelsApplied,
+                    stickLocalPosition = placement.Instance.localPosition,
+                    stickLocalRotation = placement.Instance.localRotation,
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                string.Equals(
+                    metrics.sourceModelHash,
+                    metrics.importedModelHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                metrics.framesSampled > 0 &&
+                metrics.copiedClipPosePositionDifferenceMax <= PositionTolerance &&
+                metrics.copiedClipPoseRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.copiedClipEventsExact &&
+                metrics.copiedClipLoops &&
+                metrics.controllerUsesCopiedClip &&
+                metrics.animatorSettingsCorrect &&
+                metrics.sourceAnimatorUnchanged &&
+                metrics.otherAnimatorsUnchanged &&
+                metrics.targetRootUnchanged &&
+                metrics.stickLengthMeters > 0.1f &&
+                Mathf.Abs(metrics.gripFractionFromBottom - 0.125f) <= 0.0001f &&
+                metrics.rightHandWeightedBoneCount > 0 &&
+                metrics.rightHandWeightedVertexCount > 0 &&
+                metrics.wristToPalmCenterDistanceMeters >= 0.04f &&
+                metrics.wristToPalmCenterDistanceMeters <= 0.2f &&
+                metrics.gripSurfaceTargetOffsetMeters > 0.025f &&
+                metrics.gripHeightChangeMeters <= PositionTolerance &&
+                metrics.stickRotationChangeDegrees <= RotationTolerance &&
+                metrics.rightHandLocalPositionExact &&
+                metrics.extractedMaterialCount > 0 &&
+                metrics.extractedTextureCount >=
+                    StickExpectedTextureNames.Length + 1 &&
+                metrics.allExpectedTexturesExtracted &&
+                metrics.allRendererMaterialsExternal &&
+                metrics.allPbrTextureChannelsApplied &&
+                metrics.forearmPerpendicularErrorDegreesMax <= 8f;
+            WriteJson(StickCarryGripApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry animation and grip support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[PlayerStickCarryGrip] Applied copied OneHand animation and lower-end right-hand stick grip. " +
+                "Length=" + Num(metrics.stickLengthMeters) +
+                "m, Grip=" + Num(metrics.gripFractionFromBottom) +
+                ", WeightedHandVertices=" +
+                metrics.rightHandWeightedVertexCount +
+                ", WristToPalm=" +
+                Num(metrics.wristToPalmCenterDistanceMeters) +
+                ", HeightChange=" +
+                Num(metrics.gripHeightChangeMeters) +
+                "m, RotationChange=" +
+                Num(metrics.stickRotationChangeDegrees) +
+                "deg, FixedRightHandLocalPosition=(" +
+                Num(metrics.fixedRightHandLocalPosition.x) + "," +
+                Num(metrics.fixedRightHandLocalPosition.y) + "," +
+                Num(metrics.fixedRightHandLocalPosition.z) + ")" +
+                ", GripDistance=" + Num(metrics.gripPointDistanceMetersMax) +
+                "m, SurfaceError=" +
+                Num(metrics.gripSurfaceContactErrorMetersMax) +
+                "m, Materials=" + metrics.extractedMaterialCount +
+                ", Textures=" + metrics.extractedTextureCount +
+                ", PerpendicularError=" +
+                Num(metrics.forearmPerpendicularErrorDegreesMax) + "deg.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Carry Grip Diagnostic")]
+        internal static void CaptureStickCarryGripDiagnostic()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry grip diagnostic requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after Stick_Carry grip apply.");
+            }
+
+            StickCarryGripApplyMetrics apply =
+                ReadJson<StickCarryGripApplyMetrics>(
+                    StickCarryGripApplyMetricsPath);
+            if (!apply.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry grip support checks did not pass before diagnostic capture.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, StickCarryTargetName);
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController;
+            if (controller == null)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry diagnostic controller is missing.");
+            }
+
+            AnimationClip baseClip = RequireDefaultLayerClip(
+                controller,
+                0,
+                AlignmentBaseStateName);
+            AnimationClip armClip = RequireDefaultLayerClip(
+                controller,
+                1,
+                StickCarryStateName);
+            StickGripPlacement placement = DescribeExistingStickGrip(target);
+            List<byte[]> frontPanels = new List<byte[]>();
+            List<byte[]> gripFrontPanels = new List<byte[]>();
+            List<byte[]> gripSidePanels = new List<byte[]>();
+            const int frames = 3;
+            using (CaptureEnvironment environment = new CaptureEnvironment(target))
+            {
+                for (int frame = 0; frame < frames; frame++)
+                {
+                    float phase = frame / (float)frames;
+                    SampleLayeredAnimator(
+                        animator,
+                        StickCarryStateName,
+                        phase * armClip.length,
+                        baseClip.length,
+                        armClip.length);
+                    environment.ConfigureView(target, 1.05f, 1.35f);
+                    frontPanels.Add(environment.CaptureFront());
+                    Vector3 palmCenter = CalculateRightPalmSample(target).Center;
+                    Vector3 gripPoint = placement.Instance.TransformPoint(
+                        placement.LocalGripPoint);
+                    Vector3 closeCenter = Vector3.Lerp(
+                        palmCenter,
+                        gripPoint,
+                        0.5f);
+                    environment.ConfigureView(target, closeCenter, 0.26f);
+                    gripFrontPanels.Add(environment.CaptureFront());
+                    gripSidePanels.Add(environment.CaptureSide());
+                }
+            }
+
+            ComposeRows(
+                new[] { frontPanels, gripFrontPanels, gripSidePanels },
+                StickCarryGripDiagnosticPath);
+            animator.Rebind();
+            animator.Update(0f);
+            RightHandPalmSample palmSample = CalculateRightPalmSample(target);
+            Debug.Log(
+                "[PlayerStickCarryGrip] Captured direct diagnostic views from actual weighted hand vertices. " +
+                "Frames=" + frames +
+                ", WeightedBones=" + palmSample.WeightedBoneCount +
+                ", WeightedVertices=" + palmSample.WeightedVertexCount +
+                ", WristToPalm=" +
+                Num(Vector3.Distance(
+                    FindRequired(target, RightHandPath).position,
+                    palmSample.Center)) + "m.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Carry OneHand Animation And Stick Grip")]
+        internal static void CaptureStickCarryOneHandAnimationAndStickGrip()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry animation and grip final capture requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after Stick_Carry animation and grip apply.");
+            }
+
+            StickCarryGripApplyMetrics apply =
+                ReadJson<StickCarryGripApplyMetrics>(
+                    StickCarryGripApplyMetricsPath);
+            if (!apply.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry animation and grip support checks did not pass before final capture.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform sourceTarget = RequireTarget(layout, OneHandTargetName);
+            Transform target = RequireTarget(layout, StickCarryTargetName);
+            Animator sourceAnimator = RequireAnimator(sourceTarget);
+            Animator targetAnimator = RequireAnimator(target);
+            AnimatorController sourceController =
+                sourceAnimator.runtimeAnimatorController as AnimatorController;
+            AnimatorController copiedController =
+                targetAnimator.runtimeAnimatorController as AnimatorController;
+            if (sourceController == null || copiedController == null)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry review controllers are missing.");
+            }
+
+            AnimationClip sourceBaseClip = RequireDefaultLayerClip(
+                sourceController,
+                0,
+                AlignmentBaseStateName);
+            AnimationClip sourceArmClip = RequireDefaultLayerClip(
+                sourceController,
+                1,
+                OneHandStateName);
+            AnimationClip copiedBaseClip = RequireDefaultLayerClip(
+                copiedController,
+                0,
+                AlignmentBaseStateName);
+            AnimationClip copiedArmClip = RequireDefaultLayerClip(
+                copiedController,
+                1,
+                StickCarryStateName);
+            StickGripPlacement placement = DescribeExistingStickGrip(target);
+            RootPose rootBefore = new RootPose(target);
+            float posePositionMax = 0f;
+            float poseRotationMax = 0f;
+            float gripDistanceMax = 0f;
+            float surfaceTargetOffsetMax = 0f;
+            float surfaceContactErrorMax = 0f;
+            float surfacePenetrationMax = 0f;
+            float surfaceGapMax = 0f;
+            float perpendicularErrorMax = 0f;
+            StickMaterialState materialState = InspectStickMaterialState(
+                placement.Instance);
+            RightHandPalmSample palmSample = CalculateRightPalmSample(target);
+            const int frames = 8;
+            for (int frame = 0; frame < frames; frame++)
+            {
+                float phase = frame / (float)frames;
+                float time = phase * copiedArmClip.length;
+                SampleLayeredAnimator(
+                    sourceAnimator,
+                    OneHandStateName,
+                    time,
+                    sourceBaseClip.length,
+                    sourceArmClip.length);
+                SampleLayeredAnimator(
+                    targetAnimator,
+                    StickCarryStateName,
+                    time,
+                    copiedBaseClip.length,
+                    copiedArmClip.length);
+                MeasureArmaturePoseDifference(
+                    CapturePose(sourceTarget),
+                    CapturePose(target),
+                    out float positionDifference,
+                    out float rotationDifference);
+                posePositionMax = Mathf.Max(
+                    posePositionMax,
+                    positionDifference);
+                poseRotationMax = Mathf.Max(
+                    poseRotationMax,
+                    rotationDifference);
+                MeasureCurrentStickGrip(
+                    target,
+                    placement,
+                    out float gripDistance,
+                    out float surfaceTargetOffset,
+                    out float surfaceContactError,
+                    out float surfacePenetration,
+                    out float surfaceGap,
+                    out float perpendicularError);
+                gripDistanceMax = Mathf.Max(gripDistanceMax, gripDistance);
+                surfaceTargetOffsetMax = Mathf.Max(
+                    surfaceTargetOffsetMax,
+                    surfaceTargetOffset);
+                surfaceContactErrorMax = Mathf.Max(
+                    surfaceContactErrorMax,
+                    surfaceContactError);
+                surfacePenetrationMax = Mathf.Max(
+                    surfacePenetrationMax,
+                    surfacePenetration);
+                surfaceGapMax = Mathf.Max(surfaceGapMax, surfaceGap);
+                perpendicularErrorMax = Mathf.Max(
+                    perpendicularErrorMax,
+                    perpendicularError);
+            }
+
+            StickCarryGripReviewMetrics metrics =
+                new StickCarryGripReviewMetrics
+                {
+                    sourceTarget = OneHandTargetName,
+                    target = StickCarryTargetName,
+                    framesCaptured = frames,
+                    sourcePosePositionDifferenceMax = posePositionMax,
+                    sourcePoseRotationDifferenceDegreesMax = poseRotationMax,
+                    gripPointDistanceMetersMax = gripDistanceMax,
+                    gripSurfaceTargetOffsetMeters = surfaceTargetOffsetMax,
+                    gripSurfaceContactErrorMetersMax =
+                        surfaceContactErrorMax,
+                    gripSurfacePenetrationMetersMax = surfacePenetrationMax,
+                    gripSurfaceGapMetersMax = surfaceGapMax,
+                    forearmPerpendicularErrorDegreesMax =
+                        perpendicularErrorMax,
+                    gripFractionFromBottom = placement.GripFractionFromBottom,
+                    positionSource =
+                        "CapturedOpenUnitySceneRightHandLocalPosition",
+                    fixedRightHandLocalPosition =
+                        StickCarryFixedRightHandLocalPosition,
+                    rightHandLocalPositionExact =
+                        placement.Instance.localPosition.x ==
+                            StickCarryFixedRightHandLocalPosition.x &&
+                        placement.Instance.localPosition.y ==
+                            StickCarryFixedRightHandLocalPosition.y &&
+                        placement.Instance.localPosition.z ==
+                            StickCarryFixedRightHandLocalPosition.z,
+                    palmCenterMethod = "SkinnedMeshRightHandWeightedVertices",
+                    rightHandWeightedBoneCount = palmSample.WeightedBoneCount,
+                    rightHandWeightedVertexCount = palmSample.WeightedVertexCount,
+                    wristToPalmCenterDistanceMeters =
+                        MeasureWristToPalmCenterDistance(target),
+                    extractedMaterialCount =
+                        materialState.ExtractedMaterialPaths.Length,
+                    extractedMaterialPaths =
+                        materialState.ExtractedMaterialPaths,
+                    extractedTextureCount =
+                        materialState.ExtractedTexturePaths.Length,
+                    extractedTexturePaths = materialState.ExtractedTexturePaths,
+                    rendererMaterialPaths = materialState.RendererMaterialPaths,
+                    rendererTexturePaths = materialState.RendererTexturePaths,
+                    allExpectedTexturesExtracted =
+                        materialState.AllExpectedTexturesExtracted,
+                    allRendererMaterialsExternal =
+                        materialState.AllRendererMaterialsExternal,
+                    allExtractedTexturesReferenced =
+                        materialState.AllExtractedTexturesReferenced,
+                    packedMetallicSmoothnessPath =
+                        materialState.PackedMetallicSmoothnessPath,
+                    allPbrTextureChannelsApplied =
+                        materialState.AllPbrTextureChannelsApplied,
+                    stickRendererVisible = placement.Instance
+                        .GetComponentsInChildren<Renderer>(true)
+                        .Any(renderer => renderer.enabled),
+                    targetRootUnchanged = RootMatches(target, rootBefore),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                metrics.framesCaptured == frames &&
+                metrics.sourcePosePositionDifferenceMax <= PositionTolerance &&
+                metrics.sourcePoseRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.gripSurfaceTargetOffsetMeters > 0.025f &&
+                metrics.forearmPerpendicularErrorDegreesMax <= 8f &&
+                Mathf.Abs(metrics.gripFractionFromBottom - 0.125f) <= 0.0001f &&
+                metrics.rightHandLocalPositionExact &&
+                metrics.rightHandWeightedBoneCount > 0 &&
+                metrics.rightHandWeightedVertexCount > 0 &&
+                metrics.wristToPalmCenterDistanceMeters >= 0.04f &&
+                metrics.wristToPalmCenterDistanceMeters <= 0.2f &&
+                metrics.extractedMaterialCount > 0 &&
+                metrics.extractedTextureCount >=
+                    StickExpectedTextureNames.Length + 1 &&
+                metrics.allExpectedTexturesExtracted &&
+                metrics.allRendererMaterialsExternal &&
+                metrics.allPbrTextureChannelsApplied &&
+                metrics.stickRendererVisible &&
+                metrics.targetRootUnchanged;
+            WriteJson(StickCarryGripReviewMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                sourceAnimator.Rebind();
+                sourceAnimator.Update(0f);
+                targetAnimator.Rebind();
+                targetAnimator.Update(0f);
+                throw new InvalidOperationException(
+                    "Stick_Carry animation and grip review support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            List<byte[]> frontPanels = new List<byte[]>();
+            List<byte[]> gripFrontPanels = new List<byte[]>();
+            List<byte[]> gripSidePanels = new List<byte[]>();
+            using (CaptureEnvironment environment = new CaptureEnvironment(target))
+            {
+                for (int frame = 0; frame < frames; frame++)
+                {
+                    float phase = frame / (float)frames;
+                    float time = phase * copiedArmClip.length;
+                    SampleLayeredAnimator(
+                        targetAnimator,
+                        StickCarryStateName,
+                        time,
+                        copiedBaseClip.length,
+                        copiedArmClip.length);
+                    environment.ConfigureView(target, 1.05f, 1.35f);
+                    frontPanels.Add(environment.CaptureFront());
+                    Transform hand = FindRequired(target, RightHandPath);
+                    Vector3 gripCenter = Vector3.Lerp(
+                        hand.position,
+                        placement.Instance.TransformPoint(
+                            placement.LocalGripPoint),
+                        0.5f);
+                    environment.ConfigureView(
+                        target,
+                        gripCenter,
+                        0.34f);
+                    gripFrontPanels.Add(environment.CaptureFront());
+                    gripSidePanels.Add(environment.CaptureSide());
+                }
+            }
+
+            ComposeRows(
+                new[] { frontPanels, gripFrontPanels, gripSidePanels },
+                StickCarryGripFinalPath);
+            sourceAnimator.Rebind();
+            sourceAnimator.Update(0f);
+            targetAnimator.Rebind();
+            targetAnimator.Update(0f);
+            Debug.Log(
+                "[PlayerStickCarryGrip] Captured one final direct-review contact sheet. " +
+                "Frames=" + frames +
+                ", Pose=" + Num(posePositionMax) + "/" +
+                Num(poseRotationMax) +
+                ", GripDistance=" + Num(gripDistanceMax) +
+                "m, SurfaceError=" + Num(surfaceContactErrorMax) +
+                "m, Materials=" + materialState.ExtractedMaterialPaths.Length +
+                ", Textures=" + materialState.ExtractedTexturePaths.Length +
+                ", PerpendicularError=" +
+                Num(perpendicularErrorMax) + "deg.");
+        }
+
+        private static void ImportExactStickModelCopy()
+        {
+            string sourceAbsolute = Path.GetFullPath(StickSourceModelPath);
+            if (!File.Exists(sourceAbsolute))
+            {
+                throw new FileNotFoundException(
+                    "Required stick source model is missing.",
+                    sourceAbsolute);
+            }
+
+            string destinationAbsolute = Path.GetFullPath(StickAssetPath);
+            Directory.CreateDirectory(
+                Path.GetDirectoryName(destinationAbsolute) ??
+                throw new InvalidOperationException(
+                    "Stick model destination directory is unavailable."));
+            File.Copy(sourceAbsolute, destinationAbsolute, true);
+            AssetDatabase.ImportAsset(
+                StickAssetPath,
+                ImportAssetOptions.ForceSynchronousImport |
+                ImportAssetOptions.ForceUpdate);
+            if (!string.Equals(
+                    HashFile(StickSourceModelPath),
+                    HashFile(StickAssetPath),
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "Imported stick model does not exactly match the source FBX.");
+            }
+
+            ExtractAndRemapStickMaterialsAndTextures();
+        }
+
+        private static void ExtractAndRemapStickMaterialsAndTextures()
+        {
+            EnsureStickAssetFolder(StickMaterialFolder);
+            EnsureStickAssetFolder(StickTextureFolder);
+            ModelImporter importer = AssetImporter.GetAtPath(StickAssetPath)
+                as ModelImporter ??
+                throw new InvalidOperationException(
+                    "Imported stick FBX does not have a ModelImporter.");
+            importer.ExtractTextures(StickTextureFolder);
+            AssetDatabase.Refresh(
+                ImportAssetOptions.ForceSynchronousImport |
+                ImportAssetOptions.ForceUpdate);
+            ConfigureStickTextureAssets();
+            CreateStickPackedMetallicSmoothnessTexture();
+
+            importer = AssetImporter.GetAtPath(StickAssetPath) as ModelImporter ??
+                throw new InvalidOperationException(
+                    "Stick FBX importer was lost after texture extraction.");
+            Material[] embeddedMaterials = AssetDatabase
+                .LoadAllAssetsAtPath(StickAssetPath)
+                .OfType<Material>()
+                .Where(material => string.Equals(
+                    AssetDatabase.GetAssetPath(material),
+                    StickAssetPath,
+                    StringComparison.Ordinal))
+                .OrderBy(material => material.name, StringComparer.Ordinal)
+                .ToArray();
+            if (embeddedMaterials.Length == 0)
+            {
+                Material[] externalMaterials = AssetDatabase.FindAssets(
+                        "t:Material",
+                        new[] { StickMaterialFolder })
+                    .Select(AssetDatabase.GUIDToAssetPath)
+                    .Select(AssetDatabase.LoadAssetAtPath<Material>)
+                    .Where(material => material != null)
+                    .OrderBy(material => material.name, StringComparer.Ordinal)
+                    .ToArray();
+                if (externalMaterials.Length == 0)
+                {
+                    throw new InvalidOperationException(
+                        "Stick FBX contains no embedded or extracted material.");
+                }
+
+                foreach (Material externalMaterial in externalMaterials)
+                {
+                    ConfigureExternalStickMaterial(externalMaterial);
+                    importer.AddRemap(
+                        new AssetImporter.SourceAssetIdentifier(
+                            typeof(Material),
+                            externalMaterial.name),
+                        externalMaterial);
+                }
+            }
+            else
+            {
+                foreach (Material sourceMaterial in embeddedMaterials)
+                {
+                    string materialPath = StickMaterialFolder + "/" +
+                        SanitizeStickAssetName(sourceMaterial.name) + ".mat";
+                    Material externalMaterial =
+                        AssetDatabase.LoadAssetAtPath<Material>(materialPath);
+                    if (externalMaterial == null)
+                    {
+                        externalMaterial = new Material(sourceMaterial)
+                        {
+                            name = sourceMaterial.name
+                        };
+                        AssetDatabase.CreateAsset(externalMaterial, materialPath);
+                    }
+                    else
+                    {
+                        EditorUtility.CopySerialized(
+                            sourceMaterial,
+                            externalMaterial);
+                        externalMaterial.name = sourceMaterial.name;
+                        EditorUtility.SetDirty(externalMaterial);
+                    }
+
+                    ConfigureExternalStickMaterial(externalMaterial);
+
+                    importer.AddRemap(
+                        new AssetImporter.SourceAssetIdentifier(
+                            typeof(Material),
+                            sourceMaterial.name),
+                        externalMaterial);
+                }
+            }
+
+            importer.materialLocation = ModelImporterMaterialLocation.External;
+            importer.materialName = ModelImporterMaterialName.BasedOnMaterialName;
+            importer.materialSearch = ModelImporterMaterialSearch.Local;
+            importer.SaveAndReimport();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(
+                ImportAssetOptions.ForceSynchronousImport |
+                ImportAssetOptions.ForceUpdate);
+            if (AssetDatabase.IsValidFolder(StickAutoTextureFolder))
+            {
+                AssetDatabase.DeleteAsset(StickAutoTextureFolder);
+                AssetDatabase.Refresh(
+                    ImportAssetOptions.ForceSynchronousImport |
+                    ImportAssetOptions.ForceUpdate);
+            }
+        }
+
+        private static void EnsureStickAssetFolder(string folderPath)
+        {
+            string[] segments = folderPath.Split('/');
+            string current = segments[0];
+            for (int index = 1; index < segments.Length; index++)
+            {
+                string next = current + "/" + segments[index];
+                if (!AssetDatabase.IsValidFolder(next))
+                {
+                    AssetDatabase.CreateFolder(current, segments[index]);
+                }
+
+                current = next;
+            }
+        }
+
+        private static void ConfigureStickTextureAssets()
+        {
+            foreach (string path in AssetDatabase.FindAssets(
+                         "t:Texture2D",
+                         new[] { StickTextureFolder })
+                     .Select(AssetDatabase.GUIDToAssetPath))
+            {
+                TextureImporter importer = AssetImporter.GetAtPath(path)
+                    as TextureImporter;
+                if (importer == null)
+                {
+                    continue;
+                }
+
+                string fileName = Path.GetFileNameWithoutExtension(path)
+                    .ToLowerInvariant();
+                bool isNormal = fileName.Contains("normal");
+                bool isLinear = isNormal ||
+                    fileName.Contains("roughness") ||
+                    fileName.Contains("metallic");
+                bool needsReadWrite = fileName.Contains("roughness") ||
+                    string.Equals(
+                        fileName,
+                        "texture_0_metallic",
+                        StringComparison.Ordinal);
+                TextureImporterType desiredType = isNormal
+                    ? TextureImporterType.NormalMap
+                    : TextureImporterType.Default;
+                if (importer.textureType == desiredType &&
+                    importer.sRGBTexture == !isLinear &&
+                    importer.isReadable == needsReadWrite)
+                {
+                    continue;
+                }
+
+                importer.textureType = desiredType;
+                importer.sRGBTexture = !isLinear;
+                importer.isReadable = needsReadWrite;
+                importer.SaveAndReimport();
+            }
+        }
+
+        private static void CreateStickPackedMetallicSmoothnessTexture()
+        {
+            const string metallicPath =
+                StickTextureFolder + "/texture_0_metallic.png";
+            const string roughnessPath =
+                StickTextureFolder + "/texture_0_roughness.png";
+            Texture2D metallic = AssetDatabase.LoadAssetAtPath<Texture2D>(
+                metallicPath);
+            Texture2D roughness = AssetDatabase.LoadAssetAtPath<Texture2D>(
+                roughnessPath);
+            if (metallic == null || roughness == null)
+            {
+                throw new InvalidOperationException(
+                    "Stick metallic or roughness texture is missing after extraction.");
+            }
+
+            if (metallic.width != roughness.width ||
+                metallic.height != roughness.height)
+            {
+                throw new InvalidOperationException(
+                    "Stick metallic and roughness texture dimensions do not match.");
+            }
+
+            Color32[] metallicPixels = metallic.GetPixels32();
+            Color32[] roughnessPixels = roughness.GetPixels32();
+            Color32[] packedPixels = new Color32[metallicPixels.Length];
+            for (int index = 0; index < packedPixels.Length; index++)
+            {
+                Color32 metal = metallicPixels[index];
+                byte smoothness = (byte)(255 - roughnessPixels[index].r);
+                packedPixels[index] = new Color32(
+                    metal.r,
+                    metal.g,
+                    metal.b,
+                    smoothness);
+            }
+
+            Texture2D packed = new Texture2D(
+                metallic.width,
+                metallic.height,
+                TextureFormat.RGBA32,
+                false,
+                true);
+            try
+            {
+                packed.SetPixels32(packedPixels);
+                packed.Apply(false, false);
+                File.WriteAllBytes(
+                    Path.GetFullPath(StickPackedMetallicSmoothnessPath),
+                    packed.EncodeToPNG());
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(packed);
+            }
+
+            AssetDatabase.ImportAsset(
+                StickPackedMetallicSmoothnessPath,
+                ImportAssetOptions.ForceSynchronousImport |
+                ImportAssetOptions.ForceUpdate);
+            TextureImporter packedImporter = AssetImporter.GetAtPath(
+                StickPackedMetallicSmoothnessPath) as TextureImporter ??
+                throw new InvalidOperationException(
+                    "Packed stick metallic-smoothness texture has no importer.");
+            packedImporter.textureType = TextureImporterType.Default;
+            packedImporter.sRGBTexture = false;
+            packedImporter.isReadable = false;
+            packedImporter.SaveAndReimport();
+        }
+
+        private static void ConfigureExternalStickMaterial(Material material)
+        {
+            Texture2D baseColor = AssetDatabase.LoadAssetAtPath<Texture2D>(
+                StickTextureFolder + "/base_color.jpg");
+            Texture2D normal = AssetDatabase.LoadAssetAtPath<Texture2D>(
+                StickTextureFolder + "/normal.jpg");
+            Texture2D metallicSmoothness =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    StickPackedMetallicSmoothnessPath);
+            if (baseColor == null || normal == null ||
+                metallicSmoothness == null)
+            {
+                throw new InvalidOperationException(
+                    "Stick PBR texture set is incomplete while configuring material.");
+            }
+
+            if (material.HasProperty("_BaseMap"))
+            {
+                material.SetTexture("_BaseMap", baseColor);
+            }
+
+            if (material.HasProperty("_MainTex"))
+            {
+                material.SetTexture("_MainTex", baseColor);
+            }
+
+            if (material.HasProperty("_BumpMap"))
+            {
+                material.SetTexture("_BumpMap", normal);
+                material.EnableKeyword("_NORMALMAP");
+            }
+
+            if (material.HasProperty("_MetallicGlossMap"))
+            {
+                material.SetTexture(
+                    "_MetallicGlossMap",
+                    metallicSmoothness);
+                material.EnableKeyword("_METALLICSPECGLOSSMAP");
+            }
+
+            if (material.HasProperty("_Metallic"))
+            {
+                material.SetFloat("_Metallic", 1f);
+            }
+
+            if (material.HasProperty("_Smoothness"))
+            {
+                material.SetFloat("_Smoothness", 1f);
+            }
+
+            EditorUtility.SetDirty(material);
+        }
+
+        private static string SanitizeStickAssetName(string value)
+        {
+            char[] invalid = Path.GetInvalidFileNameChars();
+            string result = new string(value
+                .Select(character => invalid.Contains(character)
+                    ? '_'
+                    : character)
+                .ToArray())
+                .Trim();
+            return string.IsNullOrEmpty(result) ? "StickMaterial" : result;
+        }
+
+        private static StickMaterialState InspectStickMaterialState(
+            Transform stick)
+        {
+            string[] extractedMaterials = AssetDatabase.FindAssets(
+                    "t:Material",
+                    new[] { StickMaterialFolder })
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+            string[] extractedTextures = AssetDatabase.FindAssets(
+                    "t:Texture2D",
+                    new[] { StickTextureFolder })
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+            Material[] rendererMaterials = stick
+                .GetComponentsInChildren<Renderer>(true)
+                .SelectMany(renderer => renderer.sharedMaterials)
+                .Where(material => material != null)
+                .Distinct()
+                .ToArray();
+            string[] rendererMaterialPaths = rendererMaterials
+                .Select(AssetDatabase.GetAssetPath)
+                .Distinct()
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+            string[] rendererTexturePaths = rendererMaterials
+                .SelectMany(material => material.GetTexturePropertyNames()
+                    .Select(material.GetTexture))
+                .Where(texture => texture != null)
+                .Select(AssetDatabase.GetAssetPath)
+                .Where(path => !string.IsNullOrEmpty(path))
+                .Distinct()
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+            bool allExpectedTexturesExtracted =
+                StickExpectedTextureNames.All(expected =>
+                    extractedTextures.Any(path => string.Equals(
+                        Path.GetFileName(path),
+                        expected,
+                        StringComparison.OrdinalIgnoreCase)));
+            bool allRendererMaterialsExternal =
+                rendererMaterialPaths.Length > 0 &&
+                rendererMaterialPaths.All(path => path.StartsWith(
+                    StickMaterialFolder + "/",
+                    StringComparison.Ordinal));
+            bool allExtractedTexturesReferenced =
+                extractedTextures.Length > 0 &&
+                extractedTextures.All(path => rendererTexturePaths.Contains(path));
+            bool allPbrTextureChannelsApplied =
+                rendererMaterials.Length > 0 &&
+                rendererMaterials.All(material =>
+                    MaterialUsesStickTexture(
+                        material,
+                        StickTextureFolder + "/base_color.jpg") &&
+                    MaterialUsesStickTexture(
+                        material,
+                        StickTextureFolder + "/normal.jpg") &&
+                    MaterialUsesStickTexture(
+                        material,
+                        StickPackedMetallicSmoothnessPath));
+            return new StickMaterialState
+            {
+                ExtractedMaterialPaths = extractedMaterials,
+                ExtractedTexturePaths = extractedTextures,
+                RendererMaterialPaths = rendererMaterialPaths,
+                RendererTexturePaths = rendererTexturePaths,
+                AllExpectedTexturesExtracted = allExpectedTexturesExtracted,
+                AllRendererMaterialsExternal = allRendererMaterialsExternal,
+                AllExtractedTexturesReferenced =
+                    allExtractedTexturesReferenced,
+                PackedMetallicSmoothnessPath =
+                    StickPackedMetallicSmoothnessPath,
+                AllPbrTextureChannelsApplied =
+                    allPbrTextureChannelsApplied
+            };
+        }
+
+        private static bool MaterialUsesStickTexture(
+            Material material,
+            string texturePath)
+        {
+            return material.GetTexturePropertyNames()
+                .Select(material.GetTexture)
+                .Where(texture => texture != null)
+                .Any(texture => string.Equals(
+                    AssetDatabase.GetAssetPath(texture),
+                    texturePath,
+                    StringComparison.Ordinal));
+        }
+
+        private static AnimationClip CreateOrUpdateAnimationClipCopy(
+            AnimationClip source,
+            string path,
+            string name)
+        {
+            AnimationClip copy = AssetDatabase.LoadAssetAtPath<AnimationClip>(path);
+            if (copy == null)
+            {
+                copy = UnityEngine.Object.Instantiate(source);
+                copy.name = name;
+                AssetDatabase.CreateAsset(copy, path);
+            }
+            else
+            {
+                EditorUtility.CopySerialized(source, copy);
+                copy.name = name;
+                EditorUtility.SetDirty(copy);
+            }
+
+            AssetDatabase.SaveAssets();
+            return copy;
+        }
+
+        private static AnimationClip RequireDefaultLayerClip(
+            AnimatorController controller,
+            int layerIndex,
+            string expectedStateName)
+        {
+            if (controller.layers.Length <= layerIndex)
+            {
+                throw new InvalidOperationException(
+                    controller.name + " has no layer " + layerIndex + ".");
+            }
+
+            AnimatorState state =
+                controller.layers[layerIndex].stateMachine.defaultState;
+            if (state == null ||
+                !string.Equals(
+                    state.name,
+                    expectedStateName,
+                    StringComparison.Ordinal) ||
+                !(state.motion is AnimationClip clip))
+            {
+                throw new InvalidOperationException(
+                    controller.name + " layer " + layerIndex +
+                    " does not use expected state " + expectedStateName + ".");
+            }
+
+            return clip;
+        }
+
+        private static StickGripPlacement AttachStickToRightHand(
+            Transform target,
+            Scene scene)
+        {
+            Transform hand = FindRequired(target, RightHandPath);
+            Transform existing = hand.Find(StickInstanceName);
+            if (existing != null)
+            {
+                UnityEngine.Object.DestroyImmediate(existing.gameObject);
+            }
+
+            GameObject stickAsset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                StickAssetPath);
+            if (stickAsset == null)
+            {
+                throw new InvalidOperationException(
+                    "Imported stick FBX root could not be loaded.");
+            }
+
+            GameObject stickObject = PrefabUtility.InstantiatePrefab(
+                stickAsset,
+                hand) as GameObject;
+            if (stickObject == null)
+            {
+                throw new InvalidOperationException(
+                    "Imported stick FBX could not be instantiated under RightHand.");
+            }
+
+            stickObject.name = StickInstanceName;
+            Transform stick = stickObject.transform;
+            stick.localPosition = Vector3.zero;
+            stick.localRotation = Quaternion.identity;
+            StickGripPlacement placement = DescribeExistingStickGrip(target);
+            Transform foreArm = FindRequired(target, RightForeArmPath);
+            Vector3 foreArmDirection = hand.position - foreArm.position;
+            Vector3 desiredLongDirection = Vector3.ProjectOnPlane(
+                target.up,
+                foreArmDirection);
+            if (desiredLongDirection.sqrMagnitude < 0.0000001f)
+            {
+                desiredLongDirection = Vector3.ProjectOnPlane(
+                    target.forward,
+                    foreArmDirection);
+            }
+
+            if (desiredLongDirection.sqrMagnitude < 0.0000001f)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry has no usable direction perpendicular to the right forearm.");
+            }
+
+            desiredLongDirection.Normalize();
+            stick.rotation = Quaternion.FromToRotation(
+                stick.TransformDirection(placement.LongLocalAxis),
+                desiredLongDirection) * stick.rotation;
+            stick.localPosition = StickCarryFixedRightHandLocalPosition;
+            placement.Instance = stick;
+            return placement;
+        }
+
+        private static StickGripPlacement DescribeExistingStickGrip(
+            Transform target)
+        {
+            Transform hand = FindRequired(target, RightHandPath);
+            Transform stick = hand.Find(StickInstanceName);
+            if (stick == null)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry right hand has no attached stick instance.");
+            }
+
+            Bounds localBounds = CalculateBoundsRelativeTo(stick);
+            int longestAxis = localBounds.size.x >= localBounds.size.y &&
+                              localBounds.size.x >= localBounds.size.z
+                ? 0
+                : localBounds.size.y >= localBounds.size.z ? 1 : 2;
+            Vector3 localAxis = longestAxis == 0
+                ? Vector3.right
+                : longestAxis == 1 ? Vector3.up : Vector3.forward;
+            float localLength = AxisComponent(localBounds.size, longestAxis);
+            const float gripFraction = 0.125f;
+            Vector3 localGripPoint = localBounds.center +
+                localAxis * (-localLength * 0.5f + localLength * gripFraction);
+            float worldLength = stick.TransformVector(
+                localAxis * localLength).magnitude;
+            return new StickGripPlacement
+            {
+                Instance = stick,
+                LongLocalAxis = localAxis,
+                LocalGripPoint = localGripPoint,
+                LocalBounds = localBounds,
+                LengthMeters = worldLength,
+                GripFractionFromBottom = gripFraction
+            };
+        }
+
+        private static Bounds CalculateBoundsRelativeTo(Transform root)
+        {
+            Renderer[] renderers = root.GetComponentsInChildren<Renderer>(true)
+                .Where(renderer => renderer.enabled)
+                .ToArray();
+            if (renderers.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    root.name + " has no visible stick renderer.");
+            }
+
+            bool initialized = false;
+            Bounds result = new Bounds();
+            foreach (Renderer renderer in renderers)
+            {
+                Bounds bounds;
+                if (renderer is SkinnedMeshRenderer skinned)
+                {
+                    bounds = skinned.localBounds;
+                }
+                else
+                {
+                    MeshFilter meshFilter = renderer.GetComponent<MeshFilter>();
+                    if (meshFilter == null || meshFilter.sharedMesh == null)
+                    {
+                        continue;
+                    }
+
+                    bounds = meshFilter.sharedMesh.bounds;
+                }
+
+                for (int x = -1; x <= 1; x += 2)
+                {
+                    for (int y = -1; y <= 1; y += 2)
+                    {
+                        for (int z = -1; z <= 1; z += 2)
+                        {
+                            Vector3 rendererLocalCorner = bounds.center + Vector3.Scale(
+                                bounds.extents,
+                                new Vector3(x, y, z));
+                            Vector3 local = root.InverseTransformPoint(
+                                renderer.transform.TransformPoint(
+                                    rendererLocalCorner));
+                            if (!initialized)
+                            {
+                                result = new Bounds(local, Vector3.zero);
+                                initialized = true;
+                            }
+                            else
+                            {
+                                result.Encapsulate(local);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!initialized)
+            {
+                throw new InvalidOperationException(
+                    root.name + " has no supported visible mesh bounds.");
+            }
+
+            return result;
+        }
+
+        private static RightHandPalmSample CalculateRightPalmSample(
+            Transform target)
+        {
+            Transform hand = FindRequired(target, RightHandPath);
+            Vector3 weightedPositionSum = Vector3.zero;
+            float totalWeight = 0f;
+            int weightedVertexCount = 0;
+            HashSet<Transform> weightedBones = new HashSet<Transform>();
+            foreach (SkinnedMeshRenderer renderer in target
+                         .GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                Mesh mesh = renderer.sharedMesh;
+                if (mesh == null)
+                {
+                    continue;
+                }
+
+                Transform[] bones = renderer.bones;
+                HashSet<int> rightHandBoneIndices = new HashSet<int>();
+                for (int index = 0; index < bones.Length; index++)
+                {
+                    Transform bone = bones[index];
+                    if (bone != null &&
+                        (bone == hand || bone.IsChildOf(hand)))
+                    {
+                        rightHandBoneIndices.Add(index);
+                        weightedBones.Add(bone);
+                    }
+                }
+
+                if (rightHandBoneIndices.Count == 0)
+                {
+                    continue;
+                }
+
+                BoneWeight[] boneWeights = mesh.boneWeights;
+                if (boneWeights.Length != mesh.vertexCount)
+                {
+                    throw new InvalidOperationException(
+                        renderer.name +
+                        " has no readable per-vertex bone weights for the right hand.");
+                }
+
+                Mesh bakedMesh = new Mesh
+                {
+                    name = renderer.name + "_RightHandPalmBake"
+                };
+                try
+                {
+                    renderer.BakeMesh(bakedMesh, true);
+                    Vector3[] vertices = bakedMesh.vertices;
+                    if (vertices.Length != boneWeights.Length)
+                    {
+                        throw new InvalidOperationException(
+                            renderer.name +
+                            " baked vertex count does not match its bone weights.");
+                    }
+
+                    for (int index = 0; index < vertices.Length; index++)
+                    {
+                        float rightHandWeight = BoneWeightForIndices(
+                            boneWeights[index],
+                            rightHandBoneIndices);
+                        if (rightHandWeight < RightHandVertexWeightThreshold)
+                        {
+                            continue;
+                        }
+
+                        Vector3 worldPosition = renderer.transform.TransformPoint(
+                            vertices[index]);
+                        weightedPositionSum += worldPosition * rightHandWeight;
+                        totalWeight += rightHandWeight;
+                        weightedVertexCount++;
+                    }
+                }
+                finally
+                {
+                    UnityEngine.Object.DestroyImmediate(bakedMesh);
+                }
+            }
+
+            if (weightedVertexCount == 0 || totalWeight <= 0f)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry has no visible vertices weighted to RightHand or its finger bones.");
+            }
+
+            return new RightHandPalmSample
+            {
+                Center = weightedPositionSum / totalWeight,
+                WeightedBoneCount = weightedBones.Count,
+                WeightedVertexCount = weightedVertexCount
+            };
+        }
+
+        private static float MeasureWristToPalmCenterDistance(Transform target)
+        {
+            Transform hand = FindRequired(target, RightHandPath);
+            return Vector3.Distance(
+                hand.position,
+                CalculateRightPalmSample(target).Center);
+        }
+
+        private static void MeasureAnimationClipPoseDifference(
+            Transform template,
+            AnimationClip source,
+            AnimationClip copy,
+            out int framesSampled,
+            out float positionDifferenceMax,
+            out float rotationDifferenceMax)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject copyObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            copyObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            DisableAnimators(copyObject);
+            try
+            {
+                framesSampled = Mathf.Max(
+                    4,
+                    Mathf.CeilToInt(source.length * source.frameRate));
+                positionDifferenceMax = 0f;
+                rotationDifferenceMax = 0f;
+                for (int frame = 0; frame < framesSampled; frame++)
+                {
+                    float phase = frame / (float)framesSampled;
+                    source.SampleAnimation(sourceObject, phase * source.length);
+                    copy.SampleAnimation(copyObject, phase * copy.length);
+                    MeasureArmaturePoseDifference(
+                        CapturePose(sourceObject.transform),
+                        CapturePose(copyObject.transform),
+                        out float positionDifference,
+                        out float rotationDifference);
+                    positionDifferenceMax = Mathf.Max(
+                        positionDifferenceMax,
+                        positionDifference);
+                    rotationDifferenceMax = Mathf.Max(
+                        rotationDifferenceMax,
+                        rotationDifference);
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+                UnityEngine.Object.DestroyImmediate(copyObject);
+            }
+        }
+
+        private static bool AnimationEventsMatch(
+            AnimationClip source,
+            AnimationClip copy)
+        {
+            AnimationEvent[] sourceEvents = AnimationUtility.GetAnimationEvents(source);
+            AnimationEvent[] copyEvents = AnimationUtility.GetAnimationEvents(copy);
+            return sourceEvents.Length == copyEvents.Length &&
+                sourceEvents.Zip(copyEvents, (first, second) =>
+                    Mathf.Abs(first.time - second.time) <= 0.000001f &&
+                    string.Equals(
+                        first.functionName,
+                        second.functionName,
+                        StringComparison.Ordinal) &&
+                    string.Equals(
+                        first.stringParameter,
+                        second.stringParameter,
+                        StringComparison.Ordinal) &&
+                    Mathf.Abs(first.floatParameter - second.floatParameter) <=
+                        0.000001f &&
+                    first.intParameter == second.intParameter &&
+                    first.objectReferenceParameter ==
+                        second.objectReferenceParameter)
+                .All(matches => matches);
+        }
+
+        private static void MeasureStickGripAcrossAnimation(
+            Transform target,
+            Animator animator,
+            AnimationClip baseClip,
+            AnimationClip armClip,
+            StickGripPlacement placement,
+            int frames,
+            out float gripDistanceMax,
+            out float surfaceTargetOffsetMax,
+            out float surfaceContactErrorMax,
+            out float surfacePenetrationMax,
+            out float surfaceGapMax,
+            out float perpendicularErrorMax)
+        {
+            gripDistanceMax = 0f;
+            surfaceTargetOffsetMax = 0f;
+            surfaceContactErrorMax = 0f;
+            surfacePenetrationMax = 0f;
+            surfaceGapMax = 0f;
+            perpendicularErrorMax = 0f;
+            for (int frame = 0; frame < frames; frame++)
+            {
+                float time = armClip.length * frame / frames;
+                SampleLayeredAnimator(
+                    animator,
+                    StickCarryStateName,
+                    time,
+                    baseClip.length,
+                    armClip.length);
+                MeasureCurrentStickGrip(
+                    target,
+                    placement,
+                    out float gripDistance,
+                    out float surfaceTargetOffset,
+                    out float surfaceContactError,
+                    out float surfacePenetration,
+                    out float surfaceGap,
+                    out float perpendicularError);
+                gripDistanceMax = Mathf.Max(gripDistanceMax, gripDistance);
+                surfaceTargetOffsetMax = Mathf.Max(
+                    surfaceTargetOffsetMax,
+                    surfaceTargetOffset);
+                surfaceContactErrorMax = Mathf.Max(
+                    surfaceContactErrorMax,
+                    surfaceContactError);
+                surfacePenetrationMax = Mathf.Max(
+                    surfacePenetrationMax,
+                    surfacePenetration);
+                surfaceGapMax = Mathf.Max(surfaceGapMax, surfaceGap);
+                perpendicularErrorMax = Mathf.Max(
+                    perpendicularErrorMax,
+                    perpendicularError);
+            }
+
+            animator.Rebind();
+            animator.Update(0f);
+        }
+
+        private static Vector3 CalculateStickGripClearanceDirection(
+            Transform target,
+            StickGripPlacement placement)
+        {
+            Vector3 stickDirection = placement.Instance.TransformDirection(
+                placement.LongLocalAxis);
+            Vector3 clearanceDirection = Vector3.ProjectOnPlane(
+                -target.forward,
+                stickDirection);
+            if (clearanceDirection.sqrMagnitude < 0.0000001f)
+            {
+                Transform hand = FindRequired(target, RightHandPath);
+                Transform torso = FindRequired(target, SpinePath);
+                clearanceDirection = Vector3.ProjectOnPlane(
+                    hand.position - torso.position,
+                    stickDirection);
+            }
+
+            if (clearanceDirection.sqrMagnitude < 0.0000001f)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry has no usable palm-surface clearance direction.");
+            }
+
+            return clearanceDirection.normalized;
+        }
+
+        private static float CalculateStickCrossSectionSupport(
+            StickGripPlacement placement,
+            Vector3 worldDirection)
+        {
+            float support = 0f;
+            Vector3 extents = placement.LocalBounds.extents;
+            for (int x = -1; x <= 1; x += 2)
+            {
+                for (int y = -1; y <= 1; y += 2)
+                {
+                    for (int z = -1; z <= 1; z += 2)
+                    {
+                        Vector3 localOffset = Vector3.Scale(
+                            extents,
+                            new Vector3(x, y, z));
+                        support = Mathf.Max(
+                            support,
+                            Mathf.Abs(Vector3.Dot(
+                                placement.Instance.TransformVector(localOffset),
+                                worldDirection)));
+                    }
+                }
+            }
+
+            return support;
+        }
+
+        private static void MeasureCurrentStickGrip(
+            Transform target,
+            StickGripPlacement placement,
+            out float gripDistance,
+            out float surfaceTargetOffset,
+            out float surfaceContactError,
+            out float surfacePenetration,
+            out float surfaceGap,
+            out float perpendicularError)
+        {
+            Transform hand = FindRequired(target, RightHandPath);
+            Transform foreArm = FindRequired(target, RightForeArmPath);
+            Vector3 palmCenter = CalculateRightPalmSample(target).Center;
+            Vector3 actualGripPoint = placement.Instance.TransformPoint(
+                placement.LocalGripPoint);
+            gripDistance = Vector3.Distance(palmCenter, actualGripPoint);
+            Vector3 clearanceDirection =
+                CalculateStickGripClearanceDirection(target, placement);
+            surfaceTargetOffset = CalculateStickCrossSectionSupport(
+                placement,
+                clearanceDirection) + StickPalmSurfaceOffsetMeters;
+            Vector3 expectedGripPoint = palmCenter +
+                clearanceDirection * surfaceTargetOffset;
+            surfaceContactError = Vector3.Distance(
+                expectedGripPoint,
+                actualGripPoint);
+            float projectedOffset = Vector3.Dot(
+                actualGripPoint - palmCenter,
+                clearanceDirection);
+            surfacePenetration = Mathf.Max(
+                0f,
+                surfaceTargetOffset - projectedOffset);
+            surfaceGap = Mathf.Max(
+                0f,
+                projectedOffset - surfaceTargetOffset);
+            Vector3 foreArmDirection = hand.position - foreArm.position;
+            Vector3 stickDirection = placement.Instance.TransformDirection(
+                placement.LongLocalAxis);
+            perpendicularError = Mathf.Abs(
+                90f - Vector3.Angle(foreArmDirection, stickDirection));
+        }
+
+        private static string StickAxisName(Vector3 axis)
+        {
+            if (axis == Vector3.right)
+            {
+                return "LocalX";
+            }
+
+            return axis == Vector3.up ? "LocalY" : "LocalZ";
+        }
+
         [MenuItem("Bellerophon/Player/Apply Transporter Purple Flag Draw Back Clearance And Start")]
         internal static void ApplyPlayerTransporterPurpleFlagDrawBackClearanceAndStart()
         {
@@ -5721,6 +7936,178 @@ namespace Bellerophon.Editor
             Debug.Log(
                 "[PlayerTransporterPurpleFlag] Final image copied once from the directly reviewed Play Mode contact sheet. " +
                 "Path=" + Path.GetFullPath(TransporterPurpleFlagFinalPath) +
+                ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply All Transporter Left Arm Flag Rectangle Opaque")]
+        internal static void ApplyAllTransporterLeftArmFlagRectangleOpaque()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerTransporterFlagRectangle] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before transporter flag rectangle apply.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform referenceTarget = RequireTarget(layout, EmptyTargetName);
+            TransporterTextureEditResult textureEdit =
+                ApplySharedTransporterLeftArmFlagTexture(referenceTarget);
+            AssetDatabase.SaveAssets();
+
+            int instanceCount = CountSharedPlayerModelInstances(scene);
+            string textureHash = HashFile(TransporterTexturePath);
+            string duplicateHash = HashFile(TransporterTextureDuplicatePath);
+            TransporterFlagRectangleApplyMetrics metrics =
+                new TransporterFlagRectangleApplyMetrics
+                {
+                    targetSet = "All shared player.fbx transporter instances",
+                    textureBaselineHash = HashFile(TransporterTextureBaselinePath),
+                    textureHashAfter = textureHash,
+                    duplicateTextureHashAfter = duplicateHash,
+                    sharedPlayerModelInstanceCount = instanceCount,
+                    leftArmTrianglesScanned = textureEdit.LeftArmTrianglesScanned,
+                    flagSeedTriangleCount = textureEdit.FlagSeedTriangleCount,
+                    surfaceAxisU = AxisName(textureEdit.SurfaceAxisU),
+                    surfaceAxisV = AxisName(textureEdit.SurfaceAxisV),
+                    surfaceDepthAxis = AxisName(textureEdit.SurfaceDepthAxis),
+                    surfaceRectangleWidthMeters =
+                        textureEdit.SurfaceRectangleWidthMeters,
+                    surfaceRectangleHeightMeters =
+                        textureEdit.SurfaceRectangleHeightMeters,
+                    recoloredTexturePixelCount = textureEdit.RecoloredPixelCount,
+                    targetLightPurple = textureEdit.TargetLightPurple,
+                    targetAlpha = 1f,
+                    transparencyPercent = 0f,
+                    recoloringRestrictedToLeftArmSurface =
+                        textureEdit.RecoloringRestrictedToLeftArmSurface,
+                    rectangleFilledWithTargetColor =
+                        textureEdit.RectangleFilledWithTargetColor,
+                    rectangleFullyOpaque = textureEdit.RectangleFullyOpaque,
+                    bothTextureCopiesExact = string.Equals(
+                        textureHash,
+                        duplicateHash,
+                        StringComparison.Ordinal),
+                    sharedTextureAppliedToAllTransporters =
+                        AllSharedPlayerInstancesUseTransporterTexture(scene),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                metrics.sharedPlayerModelInstanceCount > 0 &&
+                metrics.flagSeedTriangleCount > 0 &&
+                metrics.surfaceRectangleWidthMeters > 0f &&
+                metrics.surfaceRectangleHeightMeters > 0f &&
+                metrics.recoloredTexturePixelCount > 0 &&
+                metrics.recoloringRestrictedToLeftArmSurface &&
+                metrics.rectangleFilledWithTargetColor &&
+                metrics.rectangleFullyOpaque &&
+                metrics.bothTextureCopiesExact &&
+                metrics.sharedTextureAppliedToAllTransporters;
+            WriteJson(TransporterFlagRectangleApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Transporter flag rectangle support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[PlayerTransporterFlagRectangle] Applied one fully opaque light-purple rectangle over the complete left-arm United States flag bounds. " +
+                "Instances=" + instanceCount +
+                ", SurfaceRectangle=" +
+                Num(metrics.surfaceRectangleWidthMeters) + "x" +
+                Num(metrics.surfaceRectangleHeightMeters) + "m" +
+                ", Pixels=" + metrics.recoloredTexturePixelCount +
+                ", Alpha=" + Num(metrics.targetAlpha) + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture All Transporter Left Arm Flag Rectangle Opaque")]
+        internal static void CaptureAllTransporterLeftArmFlagRectangleOpaque()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Transporter flag rectangle final capture requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after transporter flag rectangle apply.");
+            }
+
+            TransporterFlagRectangleApplyMetrics metrics =
+                ReadJson<TransporterFlagRectangleApplyMetrics>(
+                    TransporterFlagRectangleApplyMetricsPath);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Transporter flag rectangle support checks did not pass before final capture.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            string[] targets =
+            {
+                IdleReferenceTargetName,
+                EmptyTargetName,
+                StickCarryTargetName,
+                OneHandTargetName,
+                TwoHandTargetName,
+                DrawBackTargetName,
+                StowBackTargetName,
+                ThrowReadyTargetName,
+                ThrowReleaseTargetName,
+                ThrowCancelTargetName
+            };
+            List<byte[]> frontPanels = new List<byte[]>();
+            List<byte[]> sidePanels = new List<byte[]>();
+            foreach (string targetName in targets)
+            {
+                Transform target = RequireTarget(layout, targetName);
+                Animator animator = target.GetComponent<Animator>();
+                if (animator != null)
+                {
+                    animator.Update(0f);
+                }
+
+                using (CaptureEnvironment environment = new CaptureEnvironment(target))
+                {
+                    Vector3 armCenter =
+                        (FindRequired(target, LeftArmPath).position +
+                         FindRequired(target, LeftForeArmPath).position) * 0.5f;
+                    environment.ConfigureView(target, armCenter, 0.34f);
+                    frontPanels.Add(environment.CaptureFront());
+                    sidePanels.Add(environment.CaptureSide());
+                }
+            }
+
+            ComposeRows(
+                new[]
+                {
+                    frontPanels.Take(5).ToList(),
+                    frontPanels.Skip(5).Take(5).ToList(),
+                    sidePanels.Take(5).ToList(),
+                    sidePanels.Skip(5).Take(5).ToList()
+                },
+                TransporterFlagRectangleFinalPath);
+            Debug.Log(
+                "[PlayerTransporterFlagRectangle] Captured one final direct-review contact sheet for all transporter model states. " +
+                "Targets=" + targets.Length +
+                ", Path=" + Path.GetFullPath(TransporterFlagRectangleFinalPath) +
                 ", SceneChanged=False.");
         }
 
@@ -8404,6 +10791,23 @@ namespace Bellerophon.Editor
             out Transform playerCamera,
             out Bounds emptyBounds)
         {
+            ConfigurePlayerStartFacingTarget(
+                scene,
+                emptyTarget,
+                EmptyTargetName,
+                out playerRoot,
+                out playerCamera,
+                out emptyBounds);
+        }
+
+        private static void ConfigurePlayerStartFacingTarget(
+            Scene scene,
+            Transform target,
+            string targetName,
+            out Transform playerRoot,
+            out Transform playerCamera,
+            out Bounds targetBounds)
+        {
             Camera[] mainCameras = scene.GetRootGameObjects()
                 .SelectMany(root => root.GetComponentsInChildren<Camera>(true))
                 .Where(camera => camera.CompareTag("MainCamera"))
@@ -8425,44 +10829,46 @@ namespace Bellerophon.Editor
             }
 
             playerRoot = controller.transform;
-            Renderer[] renderers = emptyTarget
+            Renderer[] renderers = target
                 .GetComponentsInChildren<Renderer>(true)
                 .Where(renderer => renderer.enabled)
                 .ToArray();
             if (renderers.Length == 0)
             {
                 throw new InvalidOperationException(
-                    "Hands_Empty_Idle has no visible bounds for Player start alignment.");
+                    targetName +
+                    " has no visible bounds for Player start alignment.");
             }
 
-            emptyBounds = renderers[0].bounds;
+            targetBounds = renderers[0].bounds;
             foreach (Renderer renderer in renderers.Skip(1))
             {
-                emptyBounds.Encapsulate(renderer.bounds);
+                targetBounds.Encapsulate(renderer.bounds);
             }
 
             Vector3 frontDirection = Vector3.ProjectOnPlane(
-                emptyTarget.forward,
+                target.forward,
                 Vector3.up).normalized;
             if (frontDirection.sqrMagnitude < 0.99f)
             {
                 throw new InvalidOperationException(
-                    "Hands_Empty_Idle has no usable horizontal front direction.");
+                    targetName +
+                    " has no usable horizontal front direction.");
             }
 
             const float viewDistance = 5.4f;
             Vector3 desiredCameraPlanar =
-                emptyBounds.center + frontDirection * viewDistance;
+                targetBounds.center + frontDirection * viewDistance;
             Vector3 currentCameraOffset = playerCamera.position - playerRoot.position;
             playerRoot.position = new Vector3(
                 desiredCameraPlanar.x - currentCameraOffset.x,
-                emptyTarget.position.y,
+                target.position.y,
                 desiredCameraPlanar.z - currentCameraOffset.z);
             playerRoot.rotation = Quaternion.LookRotation(
                 -frontDirection,
                 Vector3.up);
             Quaternion desiredCameraWorldRotation = Quaternion.LookRotation(
-                emptyBounds.center - playerCamera.position,
+                targetBounds.center - playerCamera.position,
                 Vector3.up);
             playerCamera.localRotation =
                 Quaternion.Inverse(playerRoot.rotation) * desiredCameraWorldRotation;
@@ -8617,6 +11023,10 @@ namespace Bellerophon.Editor
                 TextureFormat.RGBA32,
                 false,
                 false);
+            Mesh bakedMesh = new Mesh
+            {
+                name = "TransporterLeftArmFlagRectangleBake"
+            };
             if (!texture.LoadImage(baselineBytes, false))
             {
                 UnityEngine.Object.DestroyImmediate(texture);
@@ -8651,6 +11061,8 @@ namespace Bellerophon.Editor
                 }
 
                 Mesh mesh = renderer.sharedMesh;
+                renderer.BakeMesh(bakedMesh);
+                Vector3[] posedVertices = bakedMesh.vertices;
                 Vector2[] uvs = mesh.uv;
                 BoneWeight[] boneWeights = mesh.boneWeights;
                 int[] triangleIndices = mesh.triangles;
@@ -8744,68 +11156,176 @@ namespace Bellerophon.Editor
                         "No United States flag-colored UV triangles were found on LeftArm.");
                 }
 
-                HashSet<int> firstRing = new HashSet<int>();
-                for (int index = 0; index < triangles.Count; index++)
-                {
-                    if (!triangles[index].Seed)
-                    {
-                        continue;
-                    }
-
-                    AddAdjacentTriangleIndices(
-                        triangles[index],
-                        trianglesByVertex,
-                        firstRing);
-                }
-
-                foreach (int index in firstRing)
-                {
-                    triangles[index].Selected = true;
-                }
-
-                HashSet<int> secondRing = new HashSet<int>();
-                foreach (int index in firstRing)
-                {
-                    AddAdjacentTriangleIndices(
-                        triangles[index],
-                        trianglesByVertex,
-                        secondRing);
-                }
-
-                foreach (int index in secondRing)
-                {
-                    LeftArmUvTriangle triangle = triangles[index];
-                    float flagLightRatio = triangle.PixelCount <= 0
-                        ? 0f
-                        : (triangle.RedCount + triangle.WhiteCount) /
-                          (float)triangle.PixelCount;
-                    if (flagLightRatio >= 0.12f)
-                    {
-                        triangle.Selected = true;
-                    }
-                }
-
-                HashSet<int> recoloredPixels = new HashSet<int>();
-                Color targetLightPurple = Color.HSVToRGB(0.76f, 0.3f, 0.78f);
+                List<Vector3> flagSurfacePoints = new List<Vector3>();
                 foreach (LeftArmUvTriangle triangle in
-                         triangles.Where(candidate => candidate.Selected))
+                         triangles.Where(candidate => candidate.Seed))
                 {
-                    RasterizeUvTriangle(
+                    RasterizeUvTriangleWithBarycentric(
                         triangle,
                         texture.width,
                         texture.height,
-                        pixelIndex => recoloredPixels.Add(pixelIndex));
+                        (pixelIndex, barycentric) =>
+                        {
+                            if (IsFlagRed(pixels[pixelIndex]))
+                            {
+                                flagSurfacePoints.Add(
+                                    InterpolateLeftArmSurfacePoint(
+                                        renderer,
+                                        leftArm,
+                                        posedVertices,
+                                        triangle,
+                                        barycentric));
+                            }
+                        });
                 }
 
+                if (flagSurfacePoints.Count == 0)
+                {
+                    throw new InvalidOperationException(
+                        "No United States flag red-stripe pixels were found on LeftArm.");
+                }
+
+                float[] surfaceMins =
+                {
+                    flagSurfacePoints.Min(point => point.x),
+                    flagSurfacePoints.Min(point => point.y),
+                    flagSurfacePoints.Min(point => point.z)
+                };
+                float[] surfaceMaxes =
+                {
+                    flagSurfacePoints.Max(point => point.x),
+                    flagSurfacePoints.Max(point => point.y),
+                    flagSurfacePoints.Max(point => point.z)
+                };
+                int[] orderedAxes = Enumerable.Range(0, 3)
+                    .OrderByDescending(axis => surfaceMaxes[axis] - surfaceMins[axis])
+                    .ToArray();
+                int surfaceAxisU = orderedAxes[0];
+                int surfaceAxisV = orderedAxes[1];
+                int surfaceDepthAxis = orderedAxes[2];
+                float nearbyPaddingU = Mathf.Max(
+                    0.01f,
+                    (surfaceMaxes[surfaceAxisU] - surfaceMins[surfaceAxisU]) * 0.25f);
+                float nearbyPaddingV = Mathf.Max(
+                    0.01f,
+                    (surfaceMaxes[surfaceAxisV] - surfaceMins[surfaceAxisV]) * 0.25f);
+                float nearbyDepthPadding = 0.01f;
+                List<Vector3> expandedFlagSurfacePoints =
+                    new List<Vector3>(flagSurfacePoints);
+                foreach (LeftArmUvTriangle triangle in triangles)
+                {
+                    RasterizeUvTriangleWithBarycentric(
+                        triangle,
+                        texture.width,
+                        texture.height,
+                        (pixelIndex, barycentric) =>
+                        {
+                            if (!IsFlagRed(pixels[pixelIndex]))
+                            {
+                                return;
+                            }
+
+                            Vector3 point = InterpolateLeftArmSurfacePoint(
+                                renderer,
+                                leftArm,
+                                posedVertices,
+                                triangle,
+                                barycentric);
+                            float u = AxisComponent(point, surfaceAxisU);
+                            float v = AxisComponent(point, surfaceAxisV);
+                            float depth = AxisComponent(point, surfaceDepthAxis);
+                            if (u >= surfaceMins[surfaceAxisU] - nearbyPaddingU &&
+                                u <= surfaceMaxes[surfaceAxisU] + nearbyPaddingU &&
+                                v >= surfaceMins[surfaceAxisV] - nearbyPaddingV &&
+                                v <= surfaceMaxes[surfaceAxisV] + nearbyPaddingV &&
+                                depth >= surfaceMins[surfaceDepthAxis] - nearbyDepthPadding &&
+                                depth <= surfaceMaxes[surfaceDepthAxis] + nearbyDepthPadding)
+                            {
+                                expandedFlagSurfacePoints.Add(point);
+                            }
+                        });
+                }
+
+                surfaceMins[surfaceAxisU] = expandedFlagSurfacePoints.Min(
+                    point => AxisComponent(point, surfaceAxisU));
+                surfaceMaxes[surfaceAxisU] = expandedFlagSurfacePoints.Max(
+                    point => AxisComponent(point, surfaceAxisU));
+                surfaceMins[surfaceAxisV] = expandedFlagSurfacePoints.Min(
+                    point => AxisComponent(point, surfaceAxisV));
+                surfaceMaxes[surfaceAxisV] = expandedFlagSurfacePoints.Max(
+                    point => AxisComponent(point, surfaceAxisV));
+                surfaceMins[surfaceDepthAxis] = expandedFlagSurfacePoints.Min(
+                    point => AxisComponent(point, surfaceDepthAxis));
+                surfaceMaxes[surfaceDepthAxis] = expandedFlagSurfacePoints.Max(
+                    point => AxisComponent(point, surfaceDepthAxis));
+                float edgePaddingU = Mathf.Max(
+                    0.0005f,
+                    (surfaceMaxes[surfaceAxisU] - surfaceMins[surfaceAxisU]) * 0.01f);
+                float edgePaddingV = Mathf.Max(
+                    0.0005f,
+                    (surfaceMaxes[surfaceAxisV] - surfaceMins[surfaceAxisV]) * 0.01f);
+                surfaceMins[surfaceAxisU] -= edgePaddingU;
+                surfaceMaxes[surfaceAxisU] += edgePaddingU;
+                surfaceMins[surfaceAxisV] -= edgePaddingV;
+                surfaceMaxes[surfaceAxisV] += edgePaddingV;
+                float depthSpan =
+                    surfaceMaxes[surfaceDepthAxis] - surfaceMins[surfaceDepthAxis];
+                float depthPadding = Mathf.Max(0.0025f, depthSpan * 0.25f);
+
+                HashSet<int> recoloredPixels = new HashSet<int>();
+                foreach (LeftArmUvTriangle triangle in triangles)
+                {
+                    RasterizeUvTriangleWithBarycentric(
+                        triangle,
+                        texture.width,
+                        texture.height,
+                        (pixelIndex, barycentric) =>
+                        {
+                            Vector3 point = InterpolateLeftArmSurfacePoint(
+                                renderer,
+                                leftArm,
+                                posedVertices,
+                                triangle,
+                                barycentric);
+                            float u = AxisComponent(point, surfaceAxisU);
+                            float v = AxisComponent(point, surfaceAxisV);
+                            float depth = AxisComponent(point, surfaceDepthAxis);
+                            if (u >= surfaceMins[surfaceAxisU] &&
+                                u <= surfaceMaxes[surfaceAxisU] &&
+                                v >= surfaceMins[surfaceAxisV] &&
+                                v <= surfaceMaxes[surfaceAxisV] &&
+                                depth >= surfaceMins[surfaceDepthAxis] - depthPadding &&
+                                depth <= surfaceMaxes[surfaceDepthAxis] + depthPadding)
+                            {
+                                recoloredPixels.Add(pixelIndex);
+                            }
+                        });
+                }
+
+                if (recoloredPixels.Count == 0)
+                {
+                    throw new InvalidOperationException(
+                        "No LeftArm surface pixels fell inside the United States flag rectangle.");
+                }
+
+                Color targetLightPurple = Color.HSVToRGB(0.76f, 0.3f, 0.78f);
+                targetLightPurple.a = 1f;
+                Color32 opaqueLightPurple = targetLightPurple;
                 foreach (int pixelIndex in recoloredPixels)
                 {
-                    Color original = pixels[pixelIndex];
-                    Color.RGBToHSV(original, out _, out _, out float value);
-                    float preservedValue = Mathf.Clamp01(
-                        Mathf.Lerp(value, 0.78f, 0.38f));
-                    Color tinted = Color.HSVToRGB(0.76f, 0.3f, preservedValue);
-                    tinted.a = original.a;
-                    pixels[pixelIndex] = tinted;
+                    pixels[pixelIndex] = opaqueLightPurple;
+                }
+
+                bool rectangleFilledWithTargetColor = true;
+                bool rectangleFullyOpaque = true;
+                foreach (int pixelIndex in recoloredPixels)
+                {
+                    Color32 pixel = pixels[pixelIndex];
+                    rectangleFilledWithTargetColor &=
+                        pixel.r == opaqueLightPurple.r &&
+                        pixel.g == opaqueLightPurple.g &&
+                        pixel.b == opaqueLightPurple.b;
+                    rectangleFullyOpaque &= pixel.a == byte.MaxValue;
                 }
 
                 texture.SetPixels32(pixels);
@@ -8827,16 +11347,107 @@ namespace Bellerophon.Editor
                 {
                     LeftArmTrianglesScanned = triangles.Count,
                     FlagSeedTriangleCount = seedCount,
-                    FlagPatchTriangleCount = triangles.Count(
-                        triangle => triangle.Selected),
+                    FlagPatchTriangleCount = triangles.Count,
                     RecoloredPixelCount = recoloredPixels.Count,
-                    TargetLightPurple = targetLightPurple
+                    TargetLightPurple = targetLightPurple,
+                    SurfaceAxisU = surfaceAxisU,
+                    SurfaceAxisV = surfaceAxisV,
+                    SurfaceDepthAxis = surfaceDepthAxis,
+                    SurfaceRectangleWidthMeters =
+                        surfaceMaxes[surfaceAxisU] - surfaceMins[surfaceAxisU],
+                    SurfaceRectangleHeightMeters =
+                        surfaceMaxes[surfaceAxisV] - surfaceMins[surfaceAxisV],
+                    RecoloringRestrictedToLeftArmSurface = true,
+                    RectangleFilledWithTargetColor = rectangleFilledWithTargetColor,
+                    RectangleFullyOpaque = rectangleFullyOpaque
                 };
             }
             finally
             {
+                UnityEngine.Object.DestroyImmediate(bakedMesh);
                 UnityEngine.Object.DestroyImmediate(texture);
             }
+        }
+
+        private static void RasterizeUvTriangleWithBarycentric(
+            LeftArmUvTriangle triangle,
+            int width,
+            int height,
+            Action<int, Vector3> visit)
+        {
+            Vector2 a = new Vector2(
+                triangle.UvA.x * (width - 1),
+                triangle.UvA.y * (height - 1));
+            Vector2 b = new Vector2(
+                triangle.UvB.x * (width - 1),
+                triangle.UvB.y * (height - 1));
+            Vector2 c = new Vector2(
+                triangle.UvC.x * (width - 1),
+                triangle.UvC.y * (height - 1));
+            int minX = Mathf.Clamp(
+                Mathf.FloorToInt(Mathf.Min(a.x, Mathf.Min(b.x, c.x))),
+                0,
+                width - 1);
+            int maxX = Mathf.Clamp(
+                Mathf.CeilToInt(Mathf.Max(a.x, Mathf.Max(b.x, c.x))),
+                0,
+                width - 1);
+            int minY = Mathf.Clamp(
+                Mathf.FloorToInt(Mathf.Min(a.y, Mathf.Min(b.y, c.y))),
+                0,
+                height - 1);
+            int maxY = Mathf.Clamp(
+                Mathf.CeilToInt(Mathf.Max(a.y, Mathf.Max(b.y, c.y))),
+                0,
+                height - 1);
+            float area = Cross2D(b - a, c - a);
+            if (Mathf.Abs(area) <= 0.0001f)
+            {
+                return;
+            }
+
+            for (int y = minY; y <= maxY; y++)
+            {
+                for (int x = minX; x <= maxX; x++)
+                {
+                    Vector2 point = new Vector2(x + 0.5f, y + 0.5f);
+                    float weightB = Cross2D(point - a, c - a) / area;
+                    float weightC = Cross2D(b - a, point - a) / area;
+                    float weightA = 1f - weightB - weightC;
+                    if (weightA >= 0f && weightB >= 0f && weightC >= 0f)
+                    {
+                        visit(
+                            y * width + x,
+                            new Vector3(weightA, weightB, weightC));
+                    }
+                }
+            }
+        }
+
+        private static Vector3 InterpolateLeftArmSurfacePoint(
+            SkinnedMeshRenderer renderer,
+            Transform leftArm,
+            IReadOnlyList<Vector3> posedVertices,
+            LeftArmUvTriangle triangle,
+            Vector3 barycentric)
+        {
+            Vector3 rendererLocal =
+                posedVertices[triangle.A] * barycentric.x +
+                posedVertices[triangle.B] * barycentric.y +
+                posedVertices[triangle.C] * barycentric.z;
+            return leftArm.InverseTransformPoint(
+                renderer.transform.TransformPoint(rendererLocal));
+        }
+
+        private static float AxisComponent(Vector3 point, int axis)
+        {
+            return axis == 0 ? point.x : axis == 1 ? point.y : point.z;
+        }
+
+        private static string AxisName(int axis)
+        {
+            return axis == 0 ? "LeftArmLocalX" :
+                axis == 1 ? "LeftArmLocalY" : "LeftArmLocalZ";
         }
 
         private static float BoneWeightForIndex(BoneWeight weight, int boneIndex)
@@ -8860,6 +11471,34 @@ namespace Bellerophon.Editor
             if (weight.boneIndex3 == boneIndex)
             {
                 result = Mathf.Max(result, weight.weight3);
+            }
+
+            return result;
+        }
+
+        private static float BoneWeightForIndices(
+            BoneWeight weight,
+            HashSet<int> boneIndices)
+        {
+            float result = 0f;
+            if (boneIndices.Contains(weight.boneIndex0))
+            {
+                result += weight.weight0;
+            }
+
+            if (boneIndices.Contains(weight.boneIndex1))
+            {
+                result += weight.weight1;
+            }
+
+            if (boneIndices.Contains(weight.boneIndex2))
+            {
+                result += weight.weight2;
+            }
+
+            if (boneIndices.Contains(weight.boneIndex3))
+            {
+                result += weight.weight3;
             }
 
             return result;

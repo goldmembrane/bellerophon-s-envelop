@@ -1,0 +1,89 @@
+{
+    "sourceTarget": "Hands_Carry_OneHand",
+    "target": "Stick_Carry",
+    "sourceControllerPath": "Assets/_Project/Art/Player/Animations/Hands_Carry_OneHand.controller",
+    "copiedControllerPath": "Assets/_Project/Art/Player/Animations/Stick_Carry_OneHand.controller",
+    "sourceClipPath": "Assets/_Project/Art/Player/Animations/Hands_Carry_OneHand_ArmAdjusted.anim",
+    "copiedClipPath": "Assets/_Project/Art/Player/Animations/Stick_Carry_OneHand.anim",
+    "sourceModelPath": "item model/stick.fbx",
+    "importedModelPath": "Assets/_Project/Art/Items/Stick/stick.fbx",
+    "sourceModelHash": "59FECA1C0AADE476A59ED907FED43C828EE43654E07CB04EDCA9DF4A5D8BA664",
+    "importedModelHash": "59FECA1C0AADE476A59ED907FED43C828EE43654E07CB04EDCA9DF4A5D8BA664",
+    "durationSeconds": 2.5333333015441896,
+    "frameRate": 30.0,
+    "framesSampled": 76,
+    "copiedClipPosePositionDifferenceMax": 0.0,
+    "copiedClipPoseRotationDifferenceDegreesMax": 0.0,
+    "copiedClipEventsExact": true,
+    "copiedClipLoops": true,
+    "controllerUsesCopiedClip": true,
+    "animatorSettingsCorrect": true,
+    "sourceAnimatorUnchanged": true,
+    "otherAnimatorsUnchanged": true,
+    "targetRootUnchanged": true,
+    "stickLongAxisLocal": "LocalZ",
+    "stickLengthMeters": 0.9999971389770508,
+    "gripFractionFromBottom": 0.125,
+    "palmCenterMethod": "SkinnedMeshRightHandWeightedVertices",
+    "rightHandWeightedBoneCount": 1,
+    "rightHandWeightedVertexCount": 272,
+    "wristToPalmCenterDistanceMeters": 0.13198377192020417,
+    "gripPointDistanceMetersMax": 0.032217349857091907,
+    "gripSurfaceTargetOffsetMeters": 0.04727485030889511,
+    "gripSurfaceContactErrorMetersMax": 0.07931000739336014,
+    "gripSurfacePenetrationMetersMax": 0.07920242846012116,
+    "gripSurfaceGapMetersMax": 0.0,
+    "forearmPerpendicularErrorDegreesMax": 2.4464569091796877,
+    "gripHeightChangeMeters": 0.000003039836883544922,
+    "stickRotationChangeDegrees": 0.0,
+    "positionSource": "CapturedOpenUnitySceneRightHandLocalPosition",
+    "capturedRightHandLocalPosition": {
+        "x": 0.026000000536441804,
+        "y": -0.012000000104308129,
+        "z": -0.37400001287460329
+    },
+    "fixedRightHandLocalPosition": {
+        "x": 0.026000000536441804,
+        "y": -0.012000000104308129,
+        "z": -0.37400001287460329
+    },
+    "rightHandLocalPositionExact": true,
+    "extractedMaterialCount": 1,
+    "extractedMaterialPaths": [
+        "Assets/_Project/Art/Items/Stick/Materials/Material.001.mat"
+    ],
+    "extractedTextureCount": 5,
+    "extractedTexturePaths": [
+        "Assets/_Project/Art/Items/Stick/Textures/base_color.jpg",
+        "Assets/_Project/Art/Items/Stick/Textures/normal.jpg",
+        "Assets/_Project/Art/Items/Stick/Textures/texture_0_metallic.png",
+        "Assets/_Project/Art/Items/Stick/Textures/texture_0_metallic_smoothness.png",
+        "Assets/_Project/Art/Items/Stick/Textures/texture_0_roughness.png"
+    ],
+    "rendererMaterialPaths": [
+        "Assets/_Project/Art/Items/Stick/Materials/Material.001.mat"
+    ],
+    "rendererTexturePaths": [
+        "Assets/_Project/Art/Items/Stick/Textures/base_color.jpg",
+        "Assets/_Project/Art/Items/Stick/Textures/normal.jpg",
+        "Assets/_Project/Art/Items/Stick/Textures/texture_0_metallic_smoothness.png"
+    ],
+    "allExpectedTexturesExtracted": true,
+    "allRendererMaterialsExternal": true,
+    "allExtractedTexturesReferenced": false,
+    "packedMetallicSmoothnessPath": "Assets/_Project/Art/Items/Stick/Textures/texture_0_metallic_smoothness.png",
+    "allPbrTextureChannelsApplied": true,
+    "stickLocalPosition": {
+        "x": 0.026000000536441804,
+        "y": -0.012000000104308129,
+        "z": -0.37400001287460329
+    },
+    "stickLocalRotation": {
+        "x": -0.9583187699317932,
+        "y": -0.16028203070163728,
+        "z": 6.705520405603238e-8,
+        "w": -0.23650531470775605
+    },
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+}

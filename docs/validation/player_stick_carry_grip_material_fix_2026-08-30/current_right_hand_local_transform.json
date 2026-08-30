@@ -1,0 +1,24 @@
+{
+    "target": "Stick_Carry",
+    "parentPath": "Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm/RightForeArm/RightHand",
+    "instance": "Stick_Carry_Item",
+    "localPosition": {
+        "x": 0.026000000536441804,
+        "y": -0.012000000104308129,
+        "z": -0.37400001287460329
+    },
+    "localRotation": {
+        "x": -0.9583187699317932,
+        "y": -0.16028203070163728,
+        "z": 6.705520405603238e-8,
+        "w": -0.23650531470775605
+    },
+    "localScale": {
+        "x": 100.0,
+        "y": 100.0,
+        "z": 100.0
+    },
+    "parentIsRightHand": true,
+    "capturedFromOpenUnityScene": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+}

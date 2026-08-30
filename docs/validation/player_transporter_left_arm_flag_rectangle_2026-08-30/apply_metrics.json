@@ -1,0 +1,30 @@
+{
+    "targetSet": "All shared player.fbx transporter instances",
+    "textureBaselineHash": "9929FE983E1798C2623B1B9AFEBFD41BE46549EF1B92A905411513962B4BCD21",
+    "textureHashAfter": "8218D8A4623FAF6B811F84B42F628BCF02C285CBEB7DA92152ECA64BD8B2A110",
+    "duplicateTextureHashAfter": "8218D8A4623FAF6B811F84B42F628BCF02C285CBEB7DA92152ECA64BD8B2A110",
+    "sharedPlayerModelInstanceCount": 143,
+    "leftArmTrianglesScanned": 558,
+    "flagSeedTriangleCount": 16,
+    "surfaceAxisU": "LeftArmLocalZ",
+    "surfaceAxisV": "LeftArmLocalY",
+    "surfaceDepthAxis": "LeftArmLocalX",
+    "surfaceRectangleWidthMeters": 0.10742960870265961,
+    "surfaceRectangleHeightMeters": 0.08525069057941437,
+    "recoloredTexturePixelCount": 4647,
+    "targetLightPurple": {
+        "r": 0.6770399808883667,
+        "g": 0.5459999442100525,
+        "b": 0.7799999713897705,
+        "a": 1.0
+    },
+    "targetAlpha": 1.0,
+    "transparencyPercent": 0.0,
+    "recoloringRestrictedToLeftArmSurface": true,
+    "rectangleFilledWithTargetColor": true,
+    "rectangleFullyOpaque": true,
+    "bothTextureCopiesExact": true,
+    "sharedTextureAppliedToAllTransporters": true,
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+}
