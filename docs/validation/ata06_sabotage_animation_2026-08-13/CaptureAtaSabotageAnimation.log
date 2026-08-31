@@ -1,7 +1,0 @@
-Unity editor bridge request completed: 519413fcac1b4e75934194fbf1c1b1e4
-Unity editor bridge command: CaptureAtaSabotageAnimation
-Unity editor bridge mode: open editor
-Ata sabotage animation captured.
-
-Captured Unity log:
-Log: AtaSabotageAnimationCaptured Result=PASS, Path=docs/validation/ata06_sabotage_animation_2026-08-13/Ata_06_Sabotage_TwoLoopReview.png, Samples=16, Views=FrontThreeQuarter,Side, Loops=2, Loop=True, RootMotion=False, MaximumModelRootError=0, MaximumStandingLowerBodyPositionError=0, MaximumStandingLowerBodyRotationError=0, SceneChanged=False.

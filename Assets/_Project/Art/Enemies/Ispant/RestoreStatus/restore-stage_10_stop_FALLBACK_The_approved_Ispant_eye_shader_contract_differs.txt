@@ -1,0 +1,4 @@
+System.InvalidOperationException: The approved Ispant eye shader contract differs.
+  at Bellerophon.Editor.IspantCargoRunScene.IspantStopAnimationTool.RequireEyeShader (UnityEngine.Renderer eyes) [0x00065] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantStopAnimationTool.cs:609 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantStopAnimationTool.ApplyIspant10StopAnimation () [0x001c5] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantStopAnimationTool.cs:100 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17RestoreTool.RunHistoricalStage (System.String stageName, System.Int32 slotIndex, System.Action action) [0x00000] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\IspantPreAugust17RestoreTool.cs:487 

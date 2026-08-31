@@ -1,7 +1,0 @@
-Unity editor bridge request completed: a7f570c9830448c192318d2ec9d67a40
-Unity editor bridge command: ApplyAtaHitStaticArms
-Unity editor bridge mode: open editor
-Ata hit static arms applied.
-
-Captured Unity log:
-Log: AtaHitStaticArmsApplied Result=PASS, SourceClip=mixamo.com, AppliedClip=Ata_08_Hit_StaticArms, Duration=1.333333, StateSpeed=1, Loop=True, RootMotion=False, StaticArmBones=8, RemovedArmCurves=24, BakedArmCurves=80, PreservedBodyCurves=55, MaximumStaticArmPositionError=0, MaximumStaticArmRotationError=0, ExistingCorrectedMeshPreserved=True, RemainingRightArmStretchComponents=0, MaximumRightArmStretchRatio=1.939449, OtherAtaSlotsUnchanged=True, SceneChanged=False.

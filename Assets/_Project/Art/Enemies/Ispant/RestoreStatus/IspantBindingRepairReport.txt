@@ -1,0 +1,14 @@
+IspantBindingRepair=pre-August-17 appearance on historical animation rigs
+IspantApprovedModel=Assets/_Project/Art/Enemies/Ispant/ApprovedAppearance/Models/Ispant_Armed_Approved.fbx
+IspantSlot=Ispant_01_Static Controller=none AppearanceMaterials=3 ScaleRatio=1.0000 MaterialsRestored=3
+IspantSlot=Ispant_02_Idle Controller=Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_02_Idle.controller AppearanceMaterials=3 ScaleRatio=1.0000 MaterialsRestored=3
+IspantSlot=Ispant_03_Move Controller=Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_03_Move.controller AppearanceMaterials=3 ScaleRatio=1.0000 MaterialsRestored=3
+IspantSlot=Ispant_04_DrawSword Controller=Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_04_DrawSword.controller AppearanceMaterials=3 ScaleRatio=1.0000 MaterialsRestored=3
+IspantSlot=Ispant_05_RunningOneHandedSwordAttack Controller=Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_05_RunningSwordAttack.controller AppearanceMaterials=3 ScaleRatio=1.0000 MaterialsRestored=3
+IspantSlot=Ispant_06_SheathSwordDrawMusket Controller=Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_06_SheathSword.controller AppearanceMaterials=3 ScaleRatio=1.0000 MaterialsRestored=3
+IspantSlot=Ispant_07_BreakthroughMusketAimFire Controller=Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_07_Firing.controller AppearanceMaterials=3 ScaleRatio=1.0000 MaterialsRestored=3
+IspantSlot=Ispant_08_StowMusketDrawSword Controller=Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_08_ChangingToSword.controller AppearanceMaterials=3 ScaleRatio=1.0000 MaterialsRestored=3
+IspantSlot=Ispant_09_OneHandedSwordAttack Controller=Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_09_OneHandedSwordAttack.controller AppearanceMaterials=3 ScaleRatio=1.0000 MaterialsRestored=3
+IspantSlot=Ispant_10_Stop Controller=Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_10_Stop.controller AppearanceMaterials=3 ScaleRatio=1.0000 MaterialsRestored=3
+IspantSlot=Ispant_11_HitReaction Controller=Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_11_HitReaction.controller AppearanceMaterials=3 ScaleRatio=1.0000 MaterialsRestored=3
+IspantSlot=Ispant_12_Death Controller=Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_12_Death.controller AppearanceMaterials=3 ScaleRatio=1.0000 MaterialsRestored=3

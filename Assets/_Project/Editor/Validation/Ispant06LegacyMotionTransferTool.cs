@@ -15,6 +15,8 @@ namespace Bellerophon.Editor.IspantCargoRunScene
     {
         private const string SlotName = "Ispant_06_SheathSwordDrawMusket";
         private const string CurrentModelName = "Ispant_New_Direct_Model";
+        private const string StaticSlotName = "Ispant_01_Static";
+        private const string StaticModelName = "Ispant_New_Direct_Model";
         private const string SheathSourcePath = "Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_SheathSword.fbx";
         private const string RifleSourcePath = "Assets/_Project/Art/Enemies/Ispant/Animations/Ispant_ChangeToRifle.fbx";
         private const string ScenePath = "Assets/_Project/Scenes/CargoRunMvp.unity";
@@ -38,14 +40,31 @@ namespace Bellerophon.Editor.IspantCargoRunScene
         private const string BackMusketName = "Ispant_06_BackMusket";
         private const string HandMusketRootName = "Ispant_06_HandMusket";
         private const string HandMusketRendererName = "Ispant_06_HandMusket_Renderer";
+        private const string LegacyHandSwordName = "Ispant_ApprovedLongSword_Renderer";
+        private const string LegacyWaistSwordName =
+            "Ispant_ApprovedLongSword_LeftWaist_Renderer";
+        private const string CurrentHandSwordName = "Ispant_06_LegacyHandSword";
+        private const string CurrentWaistSwordName = "Ispant_06_LegacyWaistSword";
+        // 모델링 수정 전 장검의 길이와 손잡이 기준점을 현재 메시 인스턴스에 재현할 때만 사용합니다.
+        private const float LegacySwordExpectedLength = 1.4374533f;
+        private static readonly Vector3 LegacySwordGripCenter = new Vector3(0f, 0f, -0.103f);
+        // 같은 현재 장식 장검을 잡는 4번에서 직접 시각 승인된 메시 내부 칼자루 중심입니다.
+        private static readonly Vector3 ApprovedCurrentSwordGripLocal =
+            new Vector3(0.00006910856f, -0.00027568708f, 0.000027271457f);
         private const string InspectionPath =
             "docs/validation/ispant_06_weapon_split_2026-08-21/Ispant_06_WeaponSplit_Inspection.txt";
         private const string LegacyReviewPath =
             "docs/validation/ispant_sheath_to_rifle_final_aim_arm_lift_revision_2026-08-09/" +
             "Ispant_06_SheathToRifle_FinalAimArmLift_FinalReview.png";
         private const string CapturePath =
-            "docs/validation/ispant_06_weapon_split_2026-08-21/" +
-            "Ispant_06_WeaponSplit_Comparison.png";
+            "docs/validation/ispant_06_legacy_sword_control_2026-08-21/" +
+            "Ispant_06_LegacySwordControl_Comparison.png";
+        private const string SwordGripReviewPath =
+            "docs/validation/ispant_06_legacy_sword_control_2026-08-21/" +
+            "Ispant_06_RightHandSwordGrip_Review.png";
+        private const string SheathLeftArmReviewPath =
+            "docs/validation/ispant_06_left_arm_static_pose_2026-08-21/" +
+            "Ispant_06_SheathLeftArm_StaticPose_Review.png";
         private const string ComponentDiagnosticPath =
             "docs/validation/ispant_06_weapon_split_2026-08-21/" +
             "Ispant_06_MusketComponentGroups.png";
@@ -63,6 +82,10 @@ namespace Bellerophon.Editor.IspantCargoRunScene
         };
         private static readonly Quaternion LegacyHandSwordLocalRotation =
             new Quaternion(-0.46924952f, -0.2680889f, -0.43365252f, 0.7210261f);
+        private static readonly string[] StaticLeftArmBoneNames =
+        {
+            "LeftShoulder", "LeftArm", "LeftForeArm", "LeftHand"
+        };
         private static readonly BonePair[] BonePairs =
         {
             new BonePair("mixamorig:Hips", "Hips"),
@@ -673,6 +696,9 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 ConfigureMusketAnimation(
                     model.transform, body, backMusket, newSheath, newHold, newBridge,
                     newRifle, legacyRifle);
+                ConfigureLegacySwordControl(
+                    model.transform, body, newSheath, newHold, newBridge, newRifle,
+                    legacySheath, legacyHold);
             }
             finally
             {
@@ -696,12 +722,391 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             AssetDatabase.SaveAssets();
             Selection.activeGameObject = slot;
             Debug.Log(
-                "Ispant06LegacyMotionTransferApplied Result=PASS" +
+                "Ispant06LegacyMotionTransferAppliedForVisualReview" +
                 ", Sequence=LegacySheath->LegacyHold->LegacyBridge->LegacyChangeToRifle->Repeat" +
                 ", CurrentModelPreserved=True, OriginalBodyMeshChanged=False, MaterialsChanged=False" +
                 ", DerivedBodyWithoutBackMusket=True, RigidBackAndHandMusket=True" +
-                ", Sword=CurrentRightHandFollowThenWaistHold, Musket=LegacyTrajectory, RootMotion=False" +
-                ", OtherSlotsChanged=False, SceneSaved=True.");
+                ", Sword=LegacyRightHandMountThenWaistMount, Musket=LegacyTrajectory, RootMotion=False" +
+                ", OtherSlotsChanged=False, SceneSaved=True, VisualVerdict=PendingUserReview.");
+        }
+
+        [MenuItem("Bellerophon/Scenes/Optimize CargoRun MVP Shadow Lights")]
+        public static void OptimizeCargoRunMvpShadowLights()
+        {
+            var scene = RequireScene(true);
+            var changed = scene.GetRootGameObjects()
+                .SelectMany(root => root.GetComponentsInChildren<Light>(true))
+                .Where(light => light.shadows != LightShadows.None)
+                .ToArray();
+            foreach (var light in changed)
+            {
+                light.shadows = LightShadows.None;
+                EditorUtility.SetDirty(light);
+            }
+            if (changed.Length > 0)
+            {
+                EditorSceneManager.MarkSceneDirty(scene);
+                if (!EditorSceneManager.SaveScene(scene, ScenePath))
+                    throw new InvalidOperationException(
+                        "CargoRunMvp could not be saved after shadow-light optimization.");
+            }
+            Debug.Log(
+                "CargoRunMvpShadowLightsOptimizedForEditorReview" +
+                ", RealtimeShadowLightsDisabled=" + changed.Length +
+                ", LightNames=" + string.Join("|", changed.Select(light => light.name)) +
+                ", LightBrightnessColorAndRangePreserved=True, VisualVerdict=PendingUserReview.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Apply Slot 06 Sword Grip Only")]
+        public static void ApplyIspant06SwordGripOnly()
+        {
+            var scene = RequireScene(true);
+            var model = RequireCurrentModel(RequireSlot(scene)).transform;
+            var rightHand = RequireBone(model, "RightHand");
+            var handSword = model.GetComponentsInChildren<MeshRenderer>(true)
+                .Single(item => item.name == CurrentHandSwordName);
+            if (handSword.transform.parent != rightHand)
+                throw new InvalidOperationException(
+                    "The current slot-6 hand sword is not parented to RightHand.");
+            var sheath = RequireAsset<AnimationClip>(NewSheathPath);
+            var handPath = Path(model, handSword.transform);
+            ClearTransformCurves(sheath, handPath);
+            var gripLocal = PalmAnchorLocal(RequireBody(model), rightHand);
+            var swordGripLocal = CalculateGripCenter(
+                handSword.GetComponent<MeshFilter>().sharedMesh);
+            handSword.transform.localPosition = gripLocal -
+                                                handSword.transform.localRotation * Vector3.Scale(
+                                                    swordGripLocal,
+                                                    handSword.transform.localScale);
+            BakeRightHandSwordGripPositionCurves(
+                model, RequireBody(model), sheath, handSword.transform, rightHand, handPath);
+            EditorUtility.SetDirty(sheath);
+            EditorUtility.SetDirty(handSword);
+            EditorSceneManager.MarkSceneDirty(scene);
+            AssetDatabase.SaveAssets();
+            if (!EditorSceneManager.SaveScene(scene, ScenePath))
+                throw new InvalidOperationException(
+                    "CargoRunMvp could not be saved after the slot-6 sword-grip-only update.");
+            Debug.Log(
+                "Ispant06SwordGripOnlyAppliedForVisualReview" +
+                ", FullMotionRetargetRegenerated=False, NumericGripVerdictUsed=False" +
+                ", SceneSaved=True, VisualVerdict=PendingUserReview.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Apply Slot 06 Sheath Left Arm Static Pose")]
+        public static void ApplyIspant06SheathLeftArmStaticPose()
+        {
+            var scene = RequireScene(true);
+            var model = RequireCurrentModel(RequireSlot(scene)).transform;
+            var staticModel = RequireStaticModel(scene);
+            var sheath = RequireAsset<AnimationClip>(NewSheathPath);
+            var pose = RetargetStaticLeftArmPose(staticModel, model);
+
+            foreach (var name in StaticLeftArmBoneNames)
+            {
+                var bone = RequireBone(model, name);
+                var path = Path(model, bone);
+                var position = new VectorCurves();
+                var rotation = new QuaternionCurves();
+                position.Add(0f, pose[name].LocalPosition);
+                position.Add(sheath.length, pose[name].LocalPosition);
+                rotation.Add(0f, pose[name].LocalRotation);
+                rotation.Add(sheath.length, pose[name].LocalRotation);
+                position.Write(sheath, path);
+                rotation.Write(sheath, path);
+            }
+
+            EditorUtility.SetDirty(sheath);
+            AssetDatabase.SaveAssets();
+            Debug.Log(
+                "Ispant06SheathLeftArmStaticPoseAppliedForVisualReview" +
+                ", Clip=Ispant_06_New_SheathSword" +
+                ", Bones=LeftShoulder|LeftArm|LeftForeArm|LeftHand" +
+                ", RightArmAndSwordCurvesChanged=False" +
+                ", VisualVerdict=PendingUserReview.");
+        }
+
+        private static void ConfigureLegacySwordControl(
+            Transform model,
+            SkinnedMeshRenderer body,
+            AnimationClip sheath,
+            AnimationClip hold,
+            AnimationClip bridge,
+            AnimationClip rifle,
+            AnimationClip legacySheath,
+            AnimationClip legacyHold)
+        {
+            var currentScene = model.gameObject.scene;
+            var recovery = EditorSceneManager.OpenScene(
+                LegacyRecoveryScenePath, OpenSceneMode.Additive);
+            try
+            {
+                var legacySlot = recovery.GetRootGameObjects()
+                    .SelectMany(root => root.GetComponentsInChildren<Transform>(true))
+                    .Single(item => item.name == SlotName);
+                if (legacySlot.childCount != 1)
+                    throw new InvalidOperationException(
+                        "The finalized legacy recovery slot-6 model differs.");
+                var legacyModel = legacySlot.GetChild(0);
+                var legacyHandSword = legacyModel.GetComponentsInChildren<MeshRenderer>(true)
+                    .Single(item => item.name == LegacyHandSwordName);
+                var legacyWaistSword = legacyModel.GetComponentsInChildren<MeshRenderer>(true)
+                    .Single(item => item.name == LegacyWaistSwordName);
+                var originalSword = RequireSword(model);
+                _ = originalSword.GetComponent<MeshFilter>() ??
+                    throw new InvalidOperationException("The current slot-6 sword mesh is missing.");
+                var handSwordGrip = CalculateGripCenter(
+                    originalSword.GetComponent<MeshFilter>().sharedMesh);
+                var waistSwordGrip = ApprovedCurrentSwordGripLocal;
+                var rightHand = RequireBone(model, "RightHand");
+                var hips = RequireBone(model, "Hips");
+                var sourceBones = BonePairs.ToDictionary(
+                    item => item.Target,
+                    item => RequireBone(legacyModel, item.Source), StringComparer.Ordinal);
+                var targetBones = BonePairs.ToDictionary(
+                    item => item.Target,
+                    item => RequireBone(model, item.Target), StringComparer.Ordinal);
+                var sourceBody = legacyModel.GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                    .Single(item => item.name == "Ispant_Armed_Body");
+                var sourceBind = sourceBones.ToDictionary(
+                    item => item.Key,
+                    item => BindModelMatrix(legacyModel, sourceBody, item.Value),
+                    StringComparer.Ordinal);
+                var targetBind = targetBones.ToDictionary(
+                    item => item.Key,
+                    item => BindModelMatrix(model, body, item.Value),
+                    StringComparer.Ordinal);
+                var sourceHeight = Vector3.Distance(
+                    sourceBind["Hips"].GetPosition(), sourceBind["Head"].GetPosition());
+                var targetHeight = Vector3.Distance(
+                    targetBind["Hips"].GetPosition(), targetBind["Head"].GetPosition());
+                var scale = targetHeight / sourceHeight;
+                var frameMap = CharacterFrame(targetBind) *
+                               Quaternion.Inverse(CharacterFrame(sourceBind));
+                var sourceStates = legacyModel.GetComponentsInChildren<Transform>(true)
+                    .Select(item => new TransformState(item)).ToArray();
+                var targetStates = model.GetComponentsInChildren<Transform>(true)
+                    .Select(item => new TransformState(item)).ToArray();
+                Vector3 handGripLocal;
+                Quaternion handLocalRotation;
+                Vector3 waistPosition;
+                Quaternion waistRotation;
+                try
+                {
+                    AnimationMode.StartAnimationMode();
+
+                    Restore(sourceStates);
+                    Restore(targetStates);
+                    AnimationMode.SampleAnimationClip(
+                        legacyModel.gameObject, legacySheath, 0f);
+                    AnimationMode.SampleAnimationClip(model.gameObject, sheath, 0f);
+                    var handWorldRotation = MapLegacySwordRotation(
+                        legacyModel, model, legacyHandSword.transform, frameMap);
+                    handLocalRotation =
+                        Quaternion.Inverse(rightHand.rotation) * handWorldRotation;
+                    handGripLocal = PalmAnchorLocal(body, rightHand);
+
+                    Restore(sourceStates);
+                    Restore(targetStates);
+                    AnimationMode.SampleAnimationClip(
+                        legacyModel.gameObject, legacyHold, 0f);
+                    AnimationMode.SampleAnimationClip(model.gameObject, hold, 0f);
+                    waistRotation = MapLegacySwordRotation(
+                        legacyModel, model, legacyWaistSword.transform, frameMap);
+                    var sourceGrip = LegacySwordGripCenter *
+                                     (legacyWaistSword.GetComponent<MeshFilter>().sharedMesh.bounds.size.z /
+                                      LegacySwordExpectedLength);
+                    var sourceGripModel = legacyModel.InverseTransformPoint(
+                        legacyWaistSword.transform.TransformPoint(sourceGrip));
+                    var sourceHipsModel = ModelPosition(legacyModel, sourceBones["Hips"]);
+                    var targetHipsModel = ModelPosition(model, targetBones["Hips"]);
+                    var targetGripModel = targetHipsModel +
+                                          frameMap * (sourceGripModel - sourceHipsModel) * scale;
+                    var targetGripWorld = model.TransformPoint(targetGripModel);
+                    waistPosition = targetGripWorld - waistRotation * Vector3.Scale(
+                        waistSwordGrip, originalSword.transform.lossyScale);
+                }
+                finally
+                {
+                    if (AnimationMode.InAnimationMode()) AnimationMode.StopAnimationMode();
+                    Restore(sourceStates);
+                    Restore(targetStates);
+                }
+
+                RemoveExistingSwordClone(model, CurrentHandSwordName);
+                RemoveExistingSwordClone(model, CurrentWaistSwordName);
+                var handSword = CreateCurrentHandSwordClone(
+                    CurrentHandSwordName, rightHand, originalSword, body,
+                    handGripLocal, handSwordGrip, handLocalRotation, true);
+                foreach (var swordFollower in model.GetComponents<
+                             Bellerophon.Enemies.Ispant.IspantRigidSwordFollower>())
+                    UnityEngine.Object.DestroyImmediate(swordFollower);
+                var waistSword = CreateCurrentSwordClone(
+                    CurrentWaistSwordName, hips, originalSword, body,
+                    waistPosition, waistRotation, false);
+                originalSword.enabled = false;
+                EditorUtility.SetDirty(originalSword);
+
+                var originalPath = Path(model, originalSword.transform);
+                foreach (var clip in new[] { sheath, hold, bridge, rifle })
+                {
+                    foreach (var binding in AnimationUtility.GetCurveBindings(clip)
+                                 .Where(item => item.path == originalPath &&
+                                                item.type == typeof(Transform)).ToArray())
+                        AnimationUtility.SetEditorCurve(clip, binding, null);
+                }
+
+                var handPath = Path(model, handSword.transform);
+                var waistPath = Path(model, waistSword.transform);
+                ClearTransformCurves(sheath, handPath);
+                BakeRightHandSwordGripPositionCurves(
+                    model, body, sheath, handSword.transform, rightHand, handPath);
+                SetConstantRendererEnabledCurve(sheath, handPath, true, sheath.length);
+                SetConstantRendererEnabledCurve(sheath, waistPath, false, sheath.length);
+                foreach (var clip in new[] { hold, bridge, rifle })
+                {
+                    SetConstantRendererEnabledCurve(clip, handPath, false, clip.length);
+                    SetConstantRendererEnabledCurve(clip, waistPath, true, clip.length);
+                    EditorUtility.SetDirty(clip);
+                }
+                EditorUtility.SetDirty(sheath);
+                EditorUtility.SetDirty(handSword);
+                EditorUtility.SetDirty(waistSword);
+                AssetDatabase.SaveAssets();
+            }
+            finally
+            {
+                EditorSceneManager.CloseScene(recovery, true);
+                SceneManager.SetActiveScene(currentScene);
+            }
+        }
+
+        private static void ClearTransformCurves(AnimationClip clip, string path)
+        {
+            foreach (var binding in AnimationUtility.GetCurveBindings(clip)
+                         .Where(item => item.path == path && item.type == typeof(Transform))
+                         .ToArray())
+                AnimationUtility.SetEditorCurve(clip, binding, null);
+        }
+
+        private static void BakeRightHandSwordGripPositionCurves(
+            Transform model,
+            SkinnedMeshRenderer body,
+            AnimationClip sheath,
+            Transform handSword,
+            Transform rightHand,
+            string handPath)
+        {
+            var transforms = model.GetComponentsInChildren<Transform>(true)
+                .Select(item => new TransformState(item)).ToArray();
+            var position = new VectorCurves();
+            var swordGripLocal = CalculateGripCenter(
+                handSword.GetComponent<MeshFilter>().sharedMesh);
+            try
+            {
+                AnimationMode.StartAnimationMode();
+                var frameCount = Mathf.RoundToInt(sheath.length * sheath.frameRate);
+                for (var frame = 0; frame <= frameCount; frame++)
+                {
+                    Restore(transforms);
+                    var time = frame / sheath.frameRate;
+                    AnimationMode.SampleAnimationClip(model.gameObject, sheath, time);
+                    var visiblePalm = rightHand.TransformPoint(PalmAnchorLocal(body, rightHand));
+                    handSword.position = visiblePalm - handSword.TransformVector(swordGripLocal);
+                    position.Add(time, handSword.localPosition);
+                }
+            }
+            finally
+            {
+                if (AnimationMode.InAnimationMode()) AnimationMode.StopAnimationMode();
+                Restore(transforms);
+            }
+            position.Write(sheath, handPath);
+            EditorUtility.SetDirty(sheath);
+        }
+
+        private static Quaternion MapLegacySwordRotation(
+            Transform legacyModel,
+            Transform model,
+            Transform legacySword,
+            Quaternion frameMap)
+        {
+            var sourceBladeModel = legacyModel.InverseTransformDirection(
+                legacySword.TransformDirection(Vector3.forward)).normalized;
+            var sourceRollModel = legacyModel.InverseTransformDirection(
+                legacySword.TransformDirection(Vector3.up)).normalized;
+            var bladeWorld = model.TransformDirection(frameMap * sourceBladeModel).normalized;
+            var rollWorld = Vector3.ProjectOnPlane(
+                model.TransformDirection(frameMap * sourceRollModel), bladeWorld).normalized;
+            var localBasis = Quaternion.LookRotation(Vector3.right, Vector3.up);
+            var worldBasis = Quaternion.LookRotation(bladeWorld, rollWorld);
+            return worldBasis * Quaternion.Inverse(localBasis);
+        }
+
+        private static MeshRenderer CreateCurrentSwordClone(
+            string name,
+            Transform parent,
+            MeshRenderer source,
+            Renderer settingsSource,
+            Vector3 position,
+            Quaternion rotation,
+            bool enabled)
+        {
+            var item = new GameObject(name);
+            item.transform.SetParent(parent, false);
+            item.transform.SetPositionAndRotation(position, rotation);
+            var parentScale = parent.lossyScale;
+            var sourceScale = source.transform.lossyScale;
+            item.transform.localScale = new Vector3(
+                sourceScale.x / parentScale.x,
+                sourceScale.y / parentScale.y,
+                sourceScale.z / parentScale.z);
+            var filter = item.AddComponent<MeshFilter>();
+            var renderer = item.AddComponent<MeshRenderer>();
+            filter.sharedMesh = source.GetComponent<MeshFilter>().sharedMesh;
+            renderer.sharedMaterials = source.sharedMaterials;
+            renderer.enabled = enabled;
+            CopyRendererSettings(settingsSource, renderer);
+            return renderer;
+        }
+
+        private static MeshRenderer CreateCurrentHandSwordClone(
+            string name,
+            Transform parent,
+            MeshRenderer source,
+            Renderer settingsSource,
+            Vector3 handGripLocal,
+            Vector3 swordGripLocal,
+            Quaternion localRotation,
+            bool enabled)
+        {
+            var item = new GameObject(name);
+            item.transform.SetParent(parent, false);
+            item.transform.localRotation = localRotation;
+            var parentScale = parent.lossyScale;
+            var sourceScale = source.transform.lossyScale;
+            item.transform.localScale = new Vector3(
+                sourceScale.x / parentScale.x,
+                sourceScale.y / parentScale.y,
+                sourceScale.z / parentScale.z);
+            item.transform.localPosition = handGripLocal -
+                                           localRotation * Vector3.Scale(
+                                               swordGripLocal, item.transform.localScale);
+            var filter = item.AddComponent<MeshFilter>();
+            var renderer = item.AddComponent<MeshRenderer>();
+            filter.sharedMesh = source.GetComponent<MeshFilter>().sharedMesh;
+            renderer.sharedMaterials = source.sharedMaterials;
+            renderer.enabled = enabled;
+            CopyRendererSettings(settingsSource, renderer);
+            return renderer;
+        }
+
+        private static void RemoveExistingSwordClone(Transform model, string name)
+        {
+            var existing = model.GetComponentsInChildren<Transform>(true)
+                .SingleOrDefault(item => item.name == name);
+            if (existing != null)
+                UnityEngine.Object.DestroyImmediate(existing.gameObject);
         }
 
         [MenuItem("Bellerophon/Enemies/Ispant/Inspect Slot 06 Legacy Motion Transfer")]
@@ -818,7 +1223,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 model, body, backMusket, handMusket, clips, legacy[3]);
             var report = new[]
             {
-                "Ispant06WeaponSplitInspection Result=PASS",
+                "Ispant06WeaponSplitInspection InternalDiagnosticsCompleted=True, VisualVerdict=NotEvaluated",
                 "Target=" + PlacementName + "/" + SlotName + "/" + CurrentModelName,
                 "LegacyDurations=" + string.Join(",", legacy.Select(item => Num(item.length))),
                 "RetargetDurations=" + string.Join(",", clips.Select(item => Num(item.length))),
@@ -1067,9 +1472,228 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             if (scene.isDirty != wasDirty)
                 throw new InvalidOperationException("The slot-6 comparison changed the scene dirty state.");
             Debug.Log(
-                "Ispant06LegacyMotionComparisonCaptured Result=PASS" +
+                "Ispant06LegacyMotionComparisonCaptured" +
                 ", Top=LegacyFinal11Phases, Bottom=CurrentRetargetSame11Phases" +
-                ", Image=" + CapturePath + ", SceneChanged=False.");
+                ", Image=" + CapturePath +
+                ", SceneChanged=False, VisualVerdict=PendingUserReview.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Capture Slot 06 Right-Hand Sword Grip Review")]
+        public static void CaptureIspant06SwordGripReview()
+        {
+            var scene = RequireScene(true);
+            var wasDirty = scene.isDirty;
+            var model = RequireCurrentModel(RequireSlot(scene)).transform;
+            var body = RequireBody(model);
+            var rightHand = RequireBone(model, "RightHand");
+            var handSword = model.GetComponentsInChildren<MeshRenderer>(true)
+                .Single(item => item.name == CurrentHandSwordName);
+            var sheath = RequireAsset<AnimationClip>(NewSheathPath);
+            var destination = Absolute(SwordGripReviewPath);
+            const int panelSize = 768;
+            const int panelCount = 4;
+            var targetTexture = new RenderTexture(
+                panelSize, panelSize, 24, RenderTextureFormat.ARGB32);
+            var panel = new Texture2D(panelSize, panelSize, TextureFormat.RGB24, false);
+            var strip = new Texture2D(
+                panelSize * panelCount, panelSize, TextureFormat.RGB24, false);
+            var cameraObject = new GameObject("Ispant06SwordGripReviewCamera");
+            var camera = cameraObject.AddComponent<Camera>();
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(0.075f, 0.085f, 0.1f, 1f);
+            camera.fieldOfView = 24f;
+            camera.nearClipPlane = 0.01f;
+            camera.farClipPlane = 100f;
+            camera.targetTexture = targetTexture;
+            const int gripCaptureLayer = 30;
+            camera.cullingMask = 1 << gripCaptureLayer;
+            var oldActive = RenderTexture.active;
+            var transforms = model.GetComponentsInChildren<Transform>(true)
+                .Select(item => new TransformState(item)).ToArray();
+            var layerStates = model.GetComponentsInChildren<Transform>(true)
+                .ToDictionary(item => item, item => item.gameObject.layer);
+            foreach (var item in layerStates.Keys)
+                item.gameObject.layer = gripCaptureLayer;
+            var renderers = model.GetComponentsInChildren<Renderer>(true)
+                .Select(item => new RendererState(item)).ToArray();
+            try
+            {
+                AnimationMode.StartAnimationMode();
+                var samples = new[]
+                {
+                    sheath.length * 0.2f,
+                    sheath.length * 0.45f,
+                    sheath.length * 0.7f,
+                    sheath.length * 0.95f
+                };
+                for (var index = 0; index < samples.Length; index++)
+                {
+                    Restore(transforms);
+                    AnimationMode.SampleAnimationClip(
+                        model.gameObject, sheath, samples[index]);
+                    var palm = rightHand.TransformPoint(PalmAnchorLocal(body, rightHand));
+                    FrameSwordGripCamera(camera, palm, body.bounds.size.y * 0.28f);
+                    camera.Render();
+                    RenderTexture.active = targetTexture;
+                    panel.ReadPixels(new Rect(0f, 0f, panelSize, panelSize), 0, 0);
+                    panel.Apply();
+                    strip.SetPixels32(
+                        index * panelSize, 0, panelSize, panelSize, panel.GetPixels32());
+                }
+                strip.Apply();
+                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(destination));
+                File.WriteAllBytes(destination, strip.EncodeToPNG());
+            }
+            finally
+            {
+                RenderTexture.active = oldActive;
+                camera.targetTexture = null;
+                if (AnimationMode.InAnimationMode()) AnimationMode.StopAnimationMode();
+                Restore(transforms);
+                foreach (var item in layerStates)
+                    item.Key.gameObject.layer = item.Value;
+                foreach (var renderer in renderers) renderer.Restore();
+                UnityEngine.Object.DestroyImmediate(panel);
+                UnityEngine.Object.DestroyImmediate(strip);
+                targetTexture.Release();
+                UnityEngine.Object.DestroyImmediate(targetTexture);
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+            }
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException(
+                    "The slot-6 sword-grip review capture changed the scene dirty state.");
+            Debug.Log(
+                "Ispant06SwordGripReviewCaptured" +
+                ", Image=" + SwordGripReviewPath + ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Capture Slot 06 Sheath Left Arm Static Pose Review")]
+        public static void CaptureIspant06SheathLeftArmReview()
+        {
+            var scene = RequireScene(true);
+            var wasDirty = scene.isDirty;
+            var model = RequireCurrentModel(RequireSlot(scene)).transform;
+            var staticModel = RequireStaticModel(scene);
+            var body = RequireBody(model);
+            var staticBody = RequireBody(staticModel);
+            var sheath = RequireAsset<AnimationClip>(NewSheathPath);
+            var destination = Absolute(SheathLeftArmReviewPath);
+            const int panelWidth = 512;
+            const int panelHeight = 640;
+            const int panelCount = 4;
+            const int captureLayer = 30;
+            var targetTexture = new RenderTexture(
+                panelWidth, panelHeight, 24, RenderTextureFormat.ARGB32);
+            var panel = new Texture2D(panelWidth, panelHeight, TextureFormat.RGB24, false);
+            var comparison = new Texture2D(
+                panelWidth * panelCount, panelHeight * 2, TextureFormat.RGB24, false);
+            var cameraObject = new GameObject("Ispant06SheathLeftArmReviewCamera");
+            var camera = cameraObject.AddComponent<Camera>();
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(0.075f, 0.085f, 0.1f, 1f);
+            camera.fieldOfView = 28f;
+            camera.nearClipPlane = 0.01f;
+            camera.farClipPlane = 100f;
+            camera.targetTexture = targetTexture;
+            camera.cullingMask = 1 << captureLayer;
+            var oldActive = RenderTexture.active;
+            var modelStates = model.GetComponentsInChildren<Transform>(true)
+                .Select(item => new TransformState(item)).ToArray();
+            var layerStates = staticModel.GetComponentsInChildren<Transform>(true)
+                .Concat(model.GetComponentsInChildren<Transform>(true))
+                .Distinct()
+                .ToDictionary(item => item, item => item.gameObject.layer);
+            foreach (var item in layerStates.Keys)
+                item.gameObject.layer = 29;
+            try
+            {
+                AnimationMode.StartAnimationMode();
+                foreach (var item in staticModel.GetComponentsInChildren<Transform>(true))
+                    item.gameObject.layer = captureLayer;
+                FrameLeftArmCamera(camera, staticBody.bounds);
+                camera.Render();
+                RenderTexture.active = targetTexture;
+                panel.ReadPixels(new Rect(0f, 0f, panelWidth, panelHeight), 0, 0);
+                panel.Apply();
+                var staticPixels = panel.GetPixels32();
+                for (var index = 0; index < panelCount; index++)
+                    comparison.SetPixels32(
+                        index * panelWidth, panelHeight,
+                        panelWidth, panelHeight, staticPixels);
+
+                foreach (var item in staticModel.GetComponentsInChildren<Transform>(true))
+                    item.gameObject.layer = 29;
+                foreach (var item in model.GetComponentsInChildren<Transform>(true))
+                    item.gameObject.layer = captureLayer;
+                var samples = new[]
+                {
+                    sheath.length * 0.15f,
+                    sheath.length * 0.4f,
+                    sheath.length * 0.65f,
+                    sheath.length * 0.9f
+                };
+                for (var index = 0; index < samples.Length; index++)
+                {
+                    Restore(modelStates);
+                    AnimationMode.SampleAnimationClip(model.gameObject, sheath, samples[index]);
+                    FrameLeftArmCamera(camera, body.bounds);
+                    camera.Render();
+                    RenderTexture.active = targetTexture;
+                    panel.ReadPixels(new Rect(0f, 0f, panelWidth, panelHeight), 0, 0);
+                    panel.Apply();
+                    comparison.SetPixels32(
+                        index * panelWidth, 0,
+                        panelWidth, panelHeight, panel.GetPixels32());
+                }
+                comparison.Apply();
+                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(destination));
+                File.WriteAllBytes(destination, comparison.EncodeToPNG());
+            }
+            finally
+            {
+                RenderTexture.active = oldActive;
+                camera.targetTexture = null;
+                if (AnimationMode.InAnimationMode()) AnimationMode.StopAnimationMode();
+                Restore(modelStates);
+                foreach (var item in layerStates)
+                    item.Key.gameObject.layer = item.Value;
+                UnityEngine.Object.DestroyImmediate(panel);
+                UnityEngine.Object.DestroyImmediate(comparison);
+                targetTexture.Release();
+                UnityEngine.Object.DestroyImmediate(targetTexture);
+                UnityEngine.Object.DestroyImmediate(cameraObject);
+            }
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException(
+                    "The slot-6 sheath left-arm review capture changed the scene dirty state.");
+            Debug.Log(
+                "Ispant06SheathLeftArmReviewCaptured" +
+                ", Top=Ispant_01_StaticLeftArm" +
+                ", Bottom=Slot06SheathFourPhases" +
+                ", Image=" + SheathLeftArmReviewPath +
+                ", SceneChanged=False, VisualVerdict=PendingUserReview.");
+        }
+
+        private static void FrameSwordGripCamera(Camera camera, Vector3 center, float height)
+        {
+            camera.aspect = 1f;
+            var vertical = (height * 0.5f) /
+                           Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f);
+            camera.transform.position = center + Vector3.back * vertical * 1.1f;
+            camera.transform.rotation = Quaternion.LookRotation(
+                center - camera.transform.position, Vector3.up);
+        }
+
+        private static void FrameLeftArmCamera(Camera camera, Bounds bounds)
+        {
+            camera.aspect = 4f / 5f;
+            var height = bounds.size.y * 0.82f;
+            var center = bounds.center + Vector3.up * bounds.size.y * 0.08f;
+            var vertical = (height * 0.5f) /
+                           Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f);
+            camera.transform.position = center + Vector3.back * vertical * 1.12f;
+            camera.transform.rotation = Quaternion.LookRotation(
+                center - camera.transform.position, Vector3.up);
         }
 
         private static MeshPartition CreateOrUpdateMusketMeshPartition(
@@ -2327,6 +2951,32 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             return slot.transform.GetChild(0).gameObject;
         }
 
+        private static Transform RequireStaticModel(Scene scene)
+        {
+            var placement = scene.GetRootGameObjects().Single(item => item.name == PlacementName);
+            var slot = placement.GetComponentsInChildren<Transform>(true)
+                .Single(item => item.name == StaticSlotName);
+            if (slot.childCount != 1 || slot.GetChild(0).name != StaticModelName)
+                throw new InvalidOperationException(
+                    "Ispant_01_Static does not contain the expected static model.");
+            return slot.GetChild(0);
+        }
+
+        private static IReadOnlyDictionary<string, StaticLeftArmPose> RetargetStaticLeftArmPose(
+            Transform source,
+            Transform target)
+        {
+            var result = new Dictionary<string, StaticLeftArmPose>(StringComparer.Ordinal);
+            foreach (var name in StaticLeftArmBoneNames)
+            {
+                var sourceBone = RequireBone(source, name);
+                _ = RequireBone(target, name);
+                result[name] = new StaticLeftArmPose(
+                    sourceBone.localPosition, sourceBone.localRotation);
+            }
+            return result;
+        }
+
         private static T RequireAsset<T>(string path) where T : UnityEngine.Object =>
             AssetDatabase.LoadAssetAtPath<T>(path) ??
             throw new InvalidOperationException("Required asset is missing: " + path + ".");
@@ -2379,11 +3029,87 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var values = HandWeightedWorldVertices(body, hand).Select(hand.InverseTransformPoint).ToArray();
             var minimum = values.Min(item => item.y);
             var maximum = values.Max(item => item.y);
-            var start = Mathf.Lerp(minimum, maximum, GripHandLongitudinalStartRatio);
-            var fist = values.Where(item => item.y >= start).ToArray();
+            var end = Mathf.Lerp(minimum, maximum, 1f - GripHandLongitudinalStartRatio);
+            var fist = values.Where(item => item.y <= end).ToArray();
             if (fist.Length < 16)
                 throw new InvalidOperationException("Too few current right-hand fist vertices were found.");
             return fist.Aggregate(Vector3.zero, (sum, value) => sum + value) / fist.Length;
+        }
+
+        private static Vector3 BakedNearestVerticesCenterWorld(
+            SkinnedMeshRenderer body,
+            Vector3 referenceWorld,
+            int vertexCount)
+        {
+            var baked = new Mesh();
+            try
+            {
+                body.BakeMesh(baked);
+                var nearest = baked.vertices
+                    .Select(body.transform.TransformPoint)
+                    .OrderBy(vertex => (vertex - referenceWorld).sqrMagnitude)
+                    .Take(vertexCount)
+                    .ToArray();
+                return nearest.Aggregate(Vector3.zero, (sum, vertex) => sum + vertex) /
+                       nearest.Length;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(baked);
+            }
+        }
+
+        private static int[] FindNearestVertexIndicesWorld(
+            SkinnedMeshRenderer body,
+            Vector3 referenceWorld,
+            int vertexCount)
+        {
+            var baked = new Mesh();
+            try
+            {
+                body.BakeMesh(baked);
+                return Enumerable.Range(0, baked.vertexCount)
+                    .OrderBy(index =>
+                    {
+                        var world = body.transform.TransformPoint(baked.vertices[index]);
+                        return (world - referenceWorld).sqrMagnitude;
+                    })
+                    .Take(vertexCount)
+                    .ToArray();
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(baked);
+            }
+        }
+
+        private static Vector3 VisibleRightHandReference(SkinnedMeshRenderer body)
+        {
+            var bounds = body.bounds;
+            return new Vector3(
+                bounds.min.x + bounds.size.x * 0.12f,
+                bounds.min.y + bounds.size.y * 0.43f,
+                bounds.center.z);
+        }
+
+        private static Vector3 BakedVertexCenterWorld(
+            SkinnedMeshRenderer body,
+            IReadOnlyCollection<int> vertexIndices)
+        {
+            var baked = new Mesh();
+            try
+            {
+                body.BakeMesh(baked);
+                var vertices = baked.vertices;
+                return vertexIndices.Aggregate(
+                           Vector3.zero,
+                           (sum, index) => sum + body.transform.TransformPoint(vertices[index])) /
+                       vertexIndices.Count;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(baked);
+            }
         }
 
         private static Vector3[] HandWeightedWorldVertices(SkinnedMeshRenderer body, Transform hand)
@@ -3100,6 +3826,18 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             {
                 Clip = clip;
                 Time = time;
+            }
+        }
+
+        private readonly struct StaticLeftArmPose
+        {
+            public readonly Vector3 LocalPosition;
+            public readonly Quaternion LocalRotation;
+
+            public StaticLeftArmPose(Vector3 localPosition, Quaternion localRotation)
+            {
+                LocalPosition = localPosition;
+                LocalRotation = localRotation;
             }
         }
     }

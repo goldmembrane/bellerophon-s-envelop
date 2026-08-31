@@ -1,1 +1,0 @@
-Target=Grave_04_Hit_Recoil/Grave_Model, Duration=1.1, LoopTime=True, LoopBlend=True, CurveCount=20, BodyBack=0.103388, HeadBack=0.16323, TorsoLean=22.29972, PeakTime=0.18, LowerBodyRotationError=0, ScaleError=0, GroundPenetration=0, ReturnPoseError=0, ReturnPositionError=0, ModelRootMotion=0, SlotRootMotion=0

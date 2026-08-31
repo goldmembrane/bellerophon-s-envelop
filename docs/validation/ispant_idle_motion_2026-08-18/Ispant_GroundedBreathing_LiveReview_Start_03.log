@@ -1,7 +1,0 @@
-Unity editor bridge request completed: 3d8611e41c8046e7a765ea57f876aa94
-Unity editor bridge command: StartIspantIdleReviewPlayback
-Unity editor bridge mode: open editor
-The live Unity Scene View review started for the newly authored looping Ispant vertical idle motion.
-
-Captured Unity log:
-Log: IspantGroundedBreathingIdleReviewStarted Result=PASS, RequiredLoops=2, FeetLocked=True, KneesArticulated=True, ExistingIdleClipReferenced=False, LiveSceneView=True, UnityAnimationMode=True, CaptureCreated=False.

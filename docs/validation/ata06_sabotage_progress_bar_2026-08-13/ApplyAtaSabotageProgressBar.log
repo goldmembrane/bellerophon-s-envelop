@@ -1,7 +1,0 @@
-Unity editor bridge request completed: 4a9b679a4af54e5995d59c254299b4e3
-Unity editor bridge command: ApplyAtaSabotageProgressBar
-Unity editor bridge mode: open editor
-Ata sabotage progress bar applied.
-
-Captured Unity log:
-Log: AtaSabotageProgressBarApplied Result=PASS, Slot=Ata_06_Sabotage, ParentBone=Head, DurationSeconds=35, WidthMeters=0.62, HeightMeters=0.055, HeadClearanceMeters=0.18, BarCenterOffsetMeters=0.623654, RuntimeText=False, SceneSaved=True.

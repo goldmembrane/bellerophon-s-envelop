@@ -1,7 +1,0 @@
-Unity editor bridge request completed: 5aa8c9bd511747c088ec386a3858f11e
-Unity editor bridge command: CaptureAtaHitStaticArms
-Unity editor bridge mode: open editor
-Ata hit static arms captured.
-
-Captured Unity log:
-Log: AtaHitStaticArmsCaptured Result=PASS, Path=docs/validation/ata08_hit_static_arms_2026-08-13/Ata_08_Hit_StaticArms_TwoLoopReview.png, StaticArmBones=8, MaximumStaticArmPositionError=0, MaximumStaticArmRotationError=0, MaximumLoopPairPositionError=0, MaximumLoopPairRotationError=0, RemainingRightArmStretchComponents=0, ExistingCorrectedMeshPreserved=True, SceneChanged=False.

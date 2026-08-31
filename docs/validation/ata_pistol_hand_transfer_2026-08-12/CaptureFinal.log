@@ -1,7 +1,0 @@
-Unity editor bridge request completed: 0cca83c1a98f40b3bfb61e5cbea25f18
-Unity editor bridge command: CaptureAtaPistolAimFireAnimationFinal
-Unity editor bridge mode: open editor
-Ata pistol aim and fire animation final captured.
-
-Captured Unity log:
-Log: AtaPistolHandTransferFinalCaptured Result=PASS, MixamoClip=mixamo.com, Duration=2, Samples=12, MaximumSlotPositionError=0, Image=docs/validation/ata_pistol_hand_transfer_2026-08-12/Ata_04_PistolHandTransfer_Final.png, SceneChanged=False.

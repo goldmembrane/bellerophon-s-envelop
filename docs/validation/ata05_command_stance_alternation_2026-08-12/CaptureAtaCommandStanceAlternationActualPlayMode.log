@@ -1,9 +1,0 @@
-Unity editor bridge request completed: 0395de79b348403d993dbe5f1971bcf1
-Unity editor bridge command: CaptureAtaCommandStanceAlternationThreeLoops
-Unity editor bridge mode: open editor
-Ata command actual Play Mode three-loop capture completed. ActualPlayMode=True, IsolatedAtaSlot5=True, Loops=3, CapturedFrames=117, GuardianVisibleFrames=79, BreakthroughVisibleFrames=38, SimultaneousVisibleFrames=0, InvisibleFrames=0, Order=Guardian,Breakthrough,Guardian, Video=D:\Bellerophon2\Bellerophon\docs\validation\ata05_command_stance_alternation_2026-08-12\actual_playmode_motion\Ata_05_CommandStanceAlternation_ThreeLoops.mp4, Metrics=D:\Bellerophon2\Bellerophon\docs\validation\ata05_command_stance_alternation_2026-08-12\actual_playmode_motion\Ata_05_CommandStanceAlternation_Frames.csv
-
-Captured Unity log:
-Resuming Ata command stance alternation actual Play Mode capture after Play Mode transition.
-Warning: Game object with animator is inactive
-Warning: Can't call Animator.Update on inactive object

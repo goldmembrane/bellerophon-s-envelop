@@ -1,0 +1,12 @@
+IspantRuntimeScaleReference=1.2829
+IspantSlot=Ispant_02_Idle Before=1.2829 Ratio=1.0000 After=1.2829
+IspantSlot=Ispant_03_Move Before=0.5081 Ratio=2.5249 After=1.2829
+IspantSlot=Ispant_04_DrawSword Before=0.5661 Ratio=2.2660 After=1.2829
+IspantSlot=Ispant_05_RunningOneHandedSwordAttack Before=0.5517 Ratio=2.3251 After=1.2829
+IspantSlot=Ispant_06_SheathSwordDrawMusket Before=0.5115 Ratio=2.5082 After=1.2829
+IspantSlot=Ispant_07_BreakthroughMusketAimFire Before=0.5630 Ratio=2.2786 After=1.2829
+IspantSlot=Ispant_08_StowMusketDrawSword Before=0.5813 Ratio=2.2070 After=1.2829
+IspantSlot=Ispant_09_OneHandedSwordAttack Before=0.5517 Ratio=2.3251 After=1.2829
+IspantSlot=Ispant_10_Stop Before=1.2829 Ratio=1.0000 After=1.2829
+IspantSlot=Ispant_11_HitReaction Before=0.5378 Ratio=2.3856 After=1.2829
+IspantSlot=Ispant_12_Death Before=0.5694 Ratio=2.2531 After=1.2829

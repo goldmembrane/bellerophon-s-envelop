@@ -1,0 +1,7 @@
+System.InvalidOperationException: Ispant move asset hash differs: enemies model/Ispant_Static.fbx.
+  at Bellerophon.Editor.IspantCargoRunScene.IspantMoveAnimationTool.RequireHash (System.String path, System.String expected) [0x00036] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantMoveAnimationTool.cs:1021 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantMoveAnimationTool.RequireHashes () [0x0001e] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantMoveAnimationTool.cs:1011 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantMoveAnimationTool.ApplyIspantMoveRevision () [0x00000] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantMoveAnimationTool.cs:78 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantMoveAnimationTool.ApplyIspantMoveModel () [0x00000] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantMoveAnimationTool.cs:66 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17RestoreTool+<>c.<ApplyHistoricalAnimationConstructionSequence>b__22_0 () [0x00000] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\IspantPreAugust17RestoreTool.cs:444 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17RestoreTool.RunHistoricalStage (System.String stageName, System.Int32 slotIndex, System.Action action) [0x00000] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\IspantPreAugust17RestoreTool.cs:487 

@@ -1,9 +1,0 @@
-Unity editor bridge request completed: 7abe40dc75f245589a4f1b9fd9ee4b58
-Unity editor bridge command: CaptureAtaPistolTriggerFollowTwoLoops
-Unity editor bridge mode: open editor
-Ata pistol actual Play Mode two-loop capture completed. ActualPlayMode=True, IsolatedAtaSlot4=True, ContinuousAnimator=True, Sequences=2, CapturedFrames=156, MaximumHeldPivotDistance=0, MaximumHeldPivotAngle=0, MaximumFlashMuzzleToAtaGazeAngle=0, MaximumFlashToMuzzleAngle=0, MaximumShootingFrameRotationDelta=0, MuzzleFlashEvents=4, MuzzleFlashVisibleFrames=6, Video=D:\Bellerophon2\Bellerophon\docs\validation\ata_pistol_shooting_sequence_2026-08-12\actual_playmode_motion\Ata_04_PistolShootingSequence_TwoLoops.mp4, Metrics=D:\Bellerophon2\Bellerophon\docs\validation\ata_pistol_shooting_sequence_2026-08-12\actual_playmode_motion\Ata_04_PistolShootingSequence_Frames.csv
-
-Captured Unity log:
-Resuming Ata pistol actual Play Mode two-loop capture after Play Mode transition.
-Warning: Game object with animator is inactive
-Warning: Can't call Animator.Update on inactive object

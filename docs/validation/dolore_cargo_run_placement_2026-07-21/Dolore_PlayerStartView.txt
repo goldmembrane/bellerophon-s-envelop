@@ -1,9 +1,0 @@
-Result=PASS
-Scene=Assets/_Project/Scenes/CargoRunMvp.unity
-Camera=Player
-PlayerPosition=(65.25806, 0, -128.8872)
-PlayerForward=(0, 0, 1)
-LineupBoundsCenter=(65.25806, 0.9, -119.5618)
-LineupBoundsSize=(16.06393, 1.8, 2.453247)
-AllDoloreVisible=True
-Image=docs/validation/dolore_cargo_run_placement_2026-07-21/Dolore_PlayerStartView.png

@@ -1,7 +1,0 @@
-Unity editor bridge request completed: 91b929b252034b139d92261ac5e06694
-Unity editor bridge command: ApplyAtaBombInstallTiming
-Unity editor bridge mode: open editor
-Ata bomb-install timing applied.
-
-Captured Unity log:
-Log: AtaBombInstallTimingApplied Result=PASS, ClipDurationSeconds=8.366667, StateSpeed=0.334667, EffectiveCycleSeconds=25, ProgressBarSeconds=25, FirstRestartAtProgressComplete=True, OriginalClipPreserved=True, SkinnedMeshesPreserved=True, SceneChanged=False.

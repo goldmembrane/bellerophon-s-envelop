@@ -1,7 +1,0 @@
-﻿Accelerando forward mace strike physics validation
-Clip=Assets/_Project/Art/Enemies/Accelerando/Animations/Accelerando_Antenna_Strike_Attack.anim
-DirectAnimationBindings=Bone_008,007,006,011,010,009 only
-ChainAndMaceTransformCurves=0
-Side=Left, Samples=180, AntennaForwardRange=0.756, MaceForwardRange=1.313, MaxAntennaForwardOffset=0.347, MaxMaceForwardOffset=0.577, Amplification=1.737, MaxVisualProxySeparation=0.
-Side=Right, Samples=180, AntennaForwardRange=0.79, MaceForwardRange=2.217, MaxAntennaForwardOffset=0.398, MaxMaceForwardOffset=0.978, Amplification=2.807, MaxVisualProxySeparation=0.
-Result=PASS

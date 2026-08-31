@@ -1,7 +1,0 @@
-Unity editor bridge request completed: 670ab6a43b154e69b27fda24118dccc8
-Unity editor bridge command: StopIspantIdleReviewPlayback
-Unity editor bridge mode: open editor
-The live Ispant vertical idle review completed at least two loops.
-
-Captured Unity log:
-Log: IspantGroundedBreathingIdleReviewStopped Result=PASS, CompletedLoops=12, MaximumFootPositionErrorMeters=2.14576721E-06, LeftKneeMotionDegrees=0.899609566, RightKneeMotionDegrees=2.11516857, ExistingIdleClipReferenced=False, LiveSceneView=True, UnityAnimationMode=True, CaptureCreated=False.

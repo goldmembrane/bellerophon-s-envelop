@@ -1,0 +1,5 @@
+System.InvalidOperationException: Required Ispant renderer is missing: Ispant_ChangeToRifle_HandMusket_Renderer.
+  at Bellerophon.Editor.IspantCargoRunScene.IspantFiringAnimationTool.RequireRenderer[T] (UnityEngine.Transform model, System.String name) [0x0000d] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantFiringAnimationTool.cs:2697 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantFiringAnimationTool.PrepareExactStaticAppearanceClone (UnityEngine.Transform model) [0x0002e] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantFiringAnimationTool.cs:764 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantFiringAnimationTool.ApplyIspant07FiringReplacement () [0x001a6] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantFiringAnimationTool.cs:166 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17RestoreTool.RunHistoricalStage (System.String stageName, System.Int32 slotIndex, System.Action action) [0x00000] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\IspantPreAugust17RestoreTool.cs:487 

@@ -1,7 +1,0 @@
-Unity editor bridge request completed: 24e83fefaf8c4e3c9957583065b99753
-Unity editor bridge command: ApplyIspantIdleAnimation
-Unity editor bridge mode: open editor
-Ispant idle animation applied.
-
-Captured Unity log:
-Log: IspantGroundedBreathingIdleApplied Result=PASS, Target=Approved Ispant Enemy Placement/Ispant_02_Idle, DurationSeconds=2, TotalVerticalTravelMeters=0.015, AnimatedBone=Hips, FootIKConstraints=2, ExistingIdleClipCopied=False, ApplyRootMotion=False, LoopTime=True, SceneSaved=True.

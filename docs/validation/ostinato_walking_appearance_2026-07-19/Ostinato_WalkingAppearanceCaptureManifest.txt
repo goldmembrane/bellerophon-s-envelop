@@ -1,9 +1,0 @@
-Capture=Ostinato_WalkingAppearanceSync_Comparison.png
-Rows=Front;Side;Back
-Columns=ApprovedBlenderSample;UnityStaticReference;UnityWalkingAppearanceSynced
-SharedMesh=Assets/_Project/Art/Enemies/Ostinato/Models/Ostinato_WalkingAppearanceSynced.fbx
-SharedMaterials=Assets/_Project/Art/Enemies/Ostinato/ApprovedSample/Materials/Ostinato_Approved_Chitin.mat|Assets/_Project/Art/Enemies/Ostinato/ApprovedSample/Materials/Ostinato_Approved_SoftTissue.mat|Assets/_Project/Art/Enemies/Ostinato/ApprovedSample/Materials/Ostinato_Approved_HookBlade.mat|Assets/_Project/Art/Enemies/Ostinato/ApprovedSample/Materials/Ostinato_Approved_CompoundEye.mat
-AnimationChanged=False
-SceneViewFocused=False
-SceneSaved=False
-SelectionCleared=True

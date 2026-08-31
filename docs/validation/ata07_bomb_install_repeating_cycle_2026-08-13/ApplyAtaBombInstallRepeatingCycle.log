@@ -1,8 +1,0 @@
-Unity editor bridge request completed: 2e01188a41e948ec88c54e542c2f4fc6
-Unity editor bridge command: ApplyAtaBombInstallSeatedLoop
-Unity editor bridge mode: open editor
-Unity editor bridge failed.
-System.InvalidOperationException: Ata bomb-install segment clips differ from the analyzed seated-loop timing.
-  at Bellerophon.Editor.AtaCargoRunScene.AtaBombInstallAnimationTool.RequireAppliedState (UnityEngine.Transform model, UnityEngine.Animator animator, UnityEngine.AnimationClip clip, UnityEditor.Animations.AnimatorController controller, System.Boolean requireSynchronizedTiming) [0x002cb] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\AtaBombInstallAnimationTool.cs:1655 
-  at Bellerophon.Editor.AtaCargoRunScene.AtaBombInstallAnimationTool.ApplyAtaBombInstallSeatedLoop () [0x00103] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\AtaBombInstallAnimationTool.cs:486 
-  at Bellerophon.Editor.Validation.UnityEditorValidationBridge.RunSynchronous (Bellerophon.Editor.Validation.UnityEditorValidationBridge+BridgeRequest request, System.Action action, System.String successMarker) [0x0001e] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\UnityEditorValidationBridge.cs:5795 

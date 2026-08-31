@@ -1,7 +1,0 @@
-Unity editor bridge request completed: 6f05607e93aa45dcb8910b50af7d5698
-Unity editor bridge command: ApplyAtaDeathPreFallStaticArms
-Unity editor bridge mode: open editor
-Ata death pre-fall static arms applied.
-
-Captured Unity log:
-Log: AtaDeathPreFallStaticArmsApplied Result=PASS, SourceClip=mixamo.com, AppliedClip=Ata_09_Death_PreFallStaticArms, Duration=3.7, FallOnsetFrame=11, FallOnsetSeconds=0.183333, StaticHoldThroughFrame=10, StaticHoldThroughSeconds=0.166667, PelvisDropAtOnset=0.026201, TorsoTiltAtOnset=12.78154, TorsoBone=Spine02, StaticArmBones=8, RemovedArmCurves=24, BakedArmCurves=80, PreservedNonArmCurves=55, MaximumPreFallStaticPositionError=0, MaximumPreFallStaticRotationError=0, MaximumPostFallSourcePositionError=0, MaximumPostFallSourceRotationError=0, SourceRightArmStretchComponents=0, SourceMaximumRightArmStretchRatio=2.390408, DerivedRightArmBoundaryReviewed=True, OtherAtaSlotsUnchanged=True, SceneSaved=True.

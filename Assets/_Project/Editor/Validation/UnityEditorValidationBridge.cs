@@ -27,6 +27,20 @@ namespace Bellerophon.Editor.Validation
             "CaptureAtaPistolTriggerFollowTwoLoops";
         private const string AtaCommandStanceAlternationCaptureCommand =
             "CaptureAtaCommandStanceAlternationThreeLoops";
+        private const string StickAttackForwardAttackingCorrectionsPlayModeCommand =
+            "CaptureStickAttackForwardAttackingCorrectionsPlayModeVideo";
+        private const string StickAttackForwardAttackingCorrectionsFinalCommand =
+            "CaptureStickAttackForwardAttackingCorrectionsFinal";
+        private const string StickAttackForwardLeftPalmRightPlayModeCommand =
+            "CaptureStickAttackForwardLeftHandPalmContactPlayMode";
+        private const string StickAttackForwardGifWeaponPlayModeCommand =
+            "CaptureStickAttackForwardGifWeaponMotionPlayMode";
+        private const string StickThrowReadyReleaseCancelPlayModeCommand =
+            "CaptureStickThrowReadyReleaseCancelPlayMode";
+        private const string MusketBackCarryPlayModeCommand =
+            "CaptureMusketBackCarryModelsPlayMode";
+        private const string StickThrowReleasePhysicsArcPlayModeCommand =
+            "CaptureStickThrowReleasePhysicsArcPlayMode";
         private const string Dolore05ExecutionOpeningDiagnosticCommand = "CaptureDolore05ExecutionOpeningDiagnostic";
         private const string RebellionMoveVisualReviewCommand =
             "CaptureRebellionMoveVisualReview";
@@ -159,6 +173,11 @@ namespace Bellerophon.Editor.Validation
                 request.Command != Ispant08ContinuousMotionCaptureCommand &&
                 request.Command != AtaPistolTriggerFollowCaptureCommand &&
                 request.Command != AtaCommandStanceAlternationCaptureCommand &&
+                request.Command != StickAttackForwardAttackingCorrectionsPlayModeCommand &&
+                request.Command != StickAttackForwardLeftPalmRightPlayModeCommand &&
+                request.Command != StickAttackForwardGifWeaponPlayModeCommand &&
+                request.Command != StickThrowReadyReleaseCancelPlayModeCommand &&
+                request.Command != StickThrowReleasePhysicsArcPlayModeCommand &&
                 request.Command != Dolore05ExecutionOpeningDiagnosticCommand &&
                 request.Command != RebellionAttackTransitionVisualReviewCommand &&
                 request.Command != RebellionForwardScanVisualReviewCommand &&
@@ -587,6 +606,67 @@ namespace Bellerophon.Editor.Validation
                             .CapturePlayerStickCarryStartViewReview,
                         "Player Stick_Carry start-view review advanced.");
                     break;
+                case "ApplyMusketDrawStartView":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.ApplyMusketDrawStartView,
+                        "Player start moved to the Stick_Carry-equivalent front framing for Musket_Draw.");
+                    break;
+                case "CaptureMusketDrawStartViewPlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureMusketDrawStartViewPlayMode,
+                        "Player Musket_Draw start-view Play Mode review advanced.");
+                    break;
+                case "CaptureMusketDrawStartViewFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureMusketDrawStartViewFinal,
+                        "Player Musket_Draw start-view final image copied from the reviewed Play Mode frame.");
+                    break;
+                case "ApplyMusketBackCarryModels":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyMusketBackCarryModels,
+                        "Exact musket FBX attached diagonally to all eight Musket target Spine bones.");
+                    break;
+                case MusketBackCarryPlayModeCommand:
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureMusketBackCarryModelsPlayMode,
+                        "Musket back-carry Play Mode review advanced.");
+                    break;
+                case "CaptureMusketBackCarryModelsFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureMusketBackCarryModelsFinal,
+                        "Musket back-carry overview finalized from directly reviewed Play Mode frames.");
+                    break;
+                case "ApplyMusketAnimationSet":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.ApplyMusketAnimationSet,
+                        "Eight exact embedded Musket Mixamo Takes and item-state bindings applied.");
+                    break;
+                case "CaptureMusketAnimationSetPlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureMusketAnimationSetPlayMode,
+                        "Musket animation set actual Play Mode review advanced.");
+                    break;
+                case "CaptureMusketAnimationSetFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureMusketAnimationSetFinal,
+                        "Musket animation set final overview copied from directly reviewed Play Mode frames.");
+                    break;
                 case "ApplyStickCarryOneHandAnimationAndStickGrip":
                     RunSynchronous(
                         request,
@@ -614,6 +694,180 @@ namespace Bellerophon.Editor.Validation
                         PlayerHandsObjectAnimationTools
                             .CaptureStickCarryOneHandAnimationAndStickGrip,
                         "Stick_Carry OneHand animation and stick grip final image captured.");
+                    break;
+                case "ApplyStickGripTwoHandSequence":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyStickGripTwoHandSequence,
+                        "Stick_Grip_TwoHand two-second carry, transition, and exact Mixamo sequence applied.");
+                    break;
+                case "CaptureStickGripTwoHandSequenceReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickGripTwoHandSequenceReview,
+                        "Stick_Grip_TwoHand direct review contact sheet captured.");
+                    break;
+                case "CaptureStickGripTwoHandSequenceFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickGripTwoHandSequenceFinal,
+                        "Stick_Grip_TwoHand reviewed contact sheet finalized after support checks.");
+                    break;
+                case "ApplyStickAttackForwardAndGripOneHand":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyStickAttackForwardAndGripOneHand,
+                        "Stick_Attack_Forward exact Mixamo loop and Stick_Grip_OneHand exact reversed two-second sequence applied.");
+                    break;
+                case "CaptureStickAttackForwardAndGripOneHandReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickAttackForwardAndGripOneHandReview,
+                        "Stick attack and reverse sequence direct review contact sheet captured.");
+                    break;
+                case "CaptureStickAttackForwardAndGripOneHandFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickAttackForwardAndGripOneHandFinal,
+                        "Stick attack and reverse sequence reviewed contact sheet finalized after support checks.");
+                    break;
+                case "ApplyStickAttackForwardTrimAndStickMotion":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyStickAttackForwardTrimAndStickMotion,
+                        "Stick_Attack_Forward trimmed at the approved below-abdomen frame with right-hand-relative stick motion.");
+                    break;
+                case "CaptureStickAttackForwardTrimAndStickMotionReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickAttackForwardTrimAndStickMotionReview,
+                        "Stick_Attack_Forward trim and stick motion direct review contact sheet captured.");
+                    break;
+                case "CaptureStickAttackForwardTrimAndStickMotionFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickAttackForwardTrimAndStickMotionFinal,
+                        "Stick_Attack_Forward trim and stick motion reviewed contact sheet finalized after support checks.");
+                    break;
+                case "CaptureStickAttackForwardAttackingSourceDiagnostic":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickAttackForwardAttackingSourceDiagnostic,
+                        "Stick_Attack_Forward attacking exact embedded source diagnostic captured.");
+                    break;
+                case "ApplyStickAttackForwardAttackingMixamoWithStickMotion":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyStickAttackForwardAttackingMixamoWithStickMotion,
+                        "Stick_Attack_Forward attacking exact Mixamo body, dynamic stick transform, and final 0.5-second hold applied.");
+                    break;
+                case "CaptureStickAttackForwardAttackingReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickAttackForwardAttackingReview,
+                        "Stick_Attack_Forward attacking direct review contact sheet captured.");
+                    break;
+                case "CaptureStickAttackForwardAttackingFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickAttackForwardAttackingFinal,
+                        "Stick_Attack_Forward attacking reviewed contact sheet finalized after support checks.");
+                    break;
+                case "ApplyStickAttackForwardAttackingCorrections":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyStickAttackForwardAttackingCorrections,
+                        "Stick_Attack_Forward attacking corrections applied.");
+                    break;
+                case StickAttackForwardAttackingCorrectionsPlayModeCommand:
+                    RunStickAttackForwardAttackingCorrectionsPlayModeCapture(
+                        request);
+                    break;
+                case StickAttackForwardAttackingCorrectionsFinalCommand:
+                    RunStickAttackForwardAttackingCorrectionsFinal(request);
+                    break;
+                case "ApplyStickAttackForwardLeftHandPalmContact":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyStickAttackForwardLeftPalmRightRestore,
+                        "Stick_Attack_Forward left hand moved to character-left for palm contact without crossing either arm or changing stick curves.");
+                    break;
+                case StickAttackForwardLeftPalmRightPlayModeCommand:
+                    RunStickAttackForwardLeftPalmRightPlayModeCapture(
+                        request);
+                    break;
+                case "CaptureStickAttackForwardLeftHandPalmContactFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickAttackForwardLeftPalmRightFinal,
+                        "Stick_Attack_Forward left-hand palm-contact correction finalized without changing stick curves.");
+                    break;
+                case "ApplyStickAttackForwardGifWeaponMotion":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyStickAttackForwardGifWeaponMotion,
+                        "Stick_Attack_Forward GIF weapon motion applied without changing its fixed timing.");
+                    break;
+                case StickAttackForwardGifWeaponPlayModeCommand:
+                    RunStickAttackForwardGifWeaponPlayModeCapture(request);
+                    break;
+                case "CaptureStickAttackForwardGifWeaponMotionFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickAttackForwardGifWeaponMotionFinal,
+                        "Stick_Attack_Forward GIF weapon motion finalized.");
+                    break;
+                case "ApplyStickThrowReadyReleaseCancel":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyStickThrowReadyReleaseCancel,
+                        "Stick Throw Ready/Release/Cancel copied animations and exact stick behavior applied.");
+                    break;
+                case StickThrowReadyReleaseCancelPlayModeCommand:
+                    RunStickThrowReadyReleaseCancelPlayModeCapture(request);
+                    break;
+                case "CaptureStickThrowReadyReleaseCancelFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickThrowReadyReleaseCancelFinal,
+                        "Stick Throw Ready/Release/Cancel finalized after direct Play Mode review.");
+                    break;
+                case "ApplyStickThrowReleasePhysicsArc":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyStickThrowReleasePhysicsArc,
+                        "Stick_Throw_Release physical parabola and velocity-following stick rotation applied without changing Ready/Cancel.");
+                    break;
+                case StickThrowReleasePhysicsArcPlayModeCommand:
+                    RunStickThrowReadyReleaseCancelPlayModeCapture(request);
+                    break;
+                case "CaptureStickThrowReleasePhysicsArcFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickThrowReleasePhysicsArcFinal,
+                        "Stick_Throw_Release physical parabola finalized after direct Play Mode review.");
                     break;
                 case "ApplyPlayerHandsCarryOneHandEmbeddedTakeExact":
                     RunSynchronous(
@@ -698,6 +952,90 @@ namespace Bellerophon.Editor.Validation
                         PlayerHandsObjectAnimationTools
                             .CapturePlayerHandsDrawBackExactMixamoFinal,
                         "Player Hands Draw Back exact Mixamo final image captured.");
+                    break;
+                case "ApplyPlayerHandsDrawBackCommonMesh":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyPlayerHandsDrawBackCommonMesh,
+                        "Player Hands Draw Back reverted to the shared Hands Empty Idle player mesh.");
+                    break;
+                case "CapturePlayerHandsDrawBackCommonMeshReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsDrawBackCommonMeshReview,
+                        "Player Hands Draw Back common-mesh direct review advanced.");
+                    break;
+                case "ApplyPlayerHandsDrawBackCommonMeshForward":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyPlayerHandsDrawBackCommonMeshForward,
+                        "Player Hands Draw Back forward extraction rebuilt on the shared player mesh.");
+                    break;
+                case "CapturePlayerHandsDrawBackCommonMeshForwardReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsDrawBackCommonMeshForwardReview,
+                        "Player Hands Draw Back common-mesh forward direct review advanced.");
+                    break;
+                case "CapturePlayerHandsDrawBackCommonMeshForwardFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsDrawBackCommonMeshForwardFinal,
+                        "Player Hands Draw Back common-mesh forward final image captured.");
+                    break;
+                case "CapturePlayerHandsThrowSourceDiagnostic":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsThrowSourceDiagnostic,
+                        "Player Hands Throw exact source all-frame diagnostic captured.");
+                    break;
+                case "ApplyPlayerHandsThrowMixamo":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyPlayerHandsThrowMixamo,
+                        "Player Hands Throw Ready peak-hold and full Release Mixamo takes applied.");
+                    break;
+                case "CapturePlayerHandsThrowMixamoReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsThrowMixamoReview,
+                        "Player Hands Throw Ready and Release direct review advanced.");
+                    break;
+                case "CapturePlayerHandsThrowMixamoFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsThrowMixamoFinal,
+                        "Player Hands Throw Ready and Release final image captured.");
+                    break;
+                case "ApplyPlayerHandsThrowCancel":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyPlayerHandsThrowCancel,
+                        "Player Hands Throw Cancel exact Ready reverse loop applied.");
+                    break;
+                case "CapturePlayerHandsThrowCancelReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsThrowCancelReview,
+                        "Player Hands Throw Cancel direct review advanced.");
+                    break;
+                case "CapturePlayerHandsThrowCancelFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CapturePlayerHandsThrowCancelFinal,
+                        "Player Hands Throw Cancel final image captured.");
                     break;
                 case "ApplyPlayerHandsDrawBackForwardAngle":
                     RunSynchronous(
@@ -1845,6 +2183,24 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.ApplyIspant06LegacyMotionTransfer,
                         "The legacy slot-6 sheath, hold, bridge, and rifle-aim sequence was retargeted to the current direct model and saved only in slot 6.");
                     break;
+                case "OptimizeCargoRunMvpShadowLights":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.OptimizeCargoRunMvpShadowLights,
+                        "Realtime shadow casting was disabled on the current CargoRunMvp scene lights while preserving their brightness, color, and range for direct visual review.");
+                    break;
+                case "ApplyIspant06SwordGripOnly":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.ApplyIspant06SwordGripOnly,
+                        "Only the current slot-6 hand-sword grip was restored without regenerating the four motion clips; the visual verdict remains pending user review.");
+                    break;
+                case "ApplyIspant06SheathLeftArmStaticPose":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.ApplyIspant06SheathLeftArmStaticPose,
+                        "Only the current slot-6 sheath clip left shoulder, arm, forearm, and hand were matched to the static-model pose while preserving the approved right-hand sword grip and sword motion.");
+                    break;
                 case "InspectIspant06LegacyMotionTransfer":
                     RunSynchronous(
                         request,
@@ -1857,6 +2213,360 @@ namespace Bellerophon.Editor.Validation
                         global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.CaptureIspant06LegacyMotionComparison,
                         "The legacy final slot-6 sequence and the current retarget were captured once at the same 11 phases for direct visual comparison.");
                     break;
+                case "CaptureIspant06SwordGripReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.CaptureIspant06SwordGripReview,
+                        "Four close views of the current slot-6 right hand and sword hilt were captured for direct visual review without an automatic motion verdict.");
+                    break;
+                case "CaptureIspant06SheathLeftArmReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.CaptureIspant06SheathLeftArmReview,
+                        "The static left arm and four slot-6 sheath phases were captured for direct visual review; the visual verdict remains pending user review.");
+                    break;
+                case "InspectIspant06EmbeddedSheathingSource":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.InspectIspant06EmbeddedSheathingSource,
+                        "The user-supplied slot-6 FBX clip paths and current direct-model paths were inspected before replacing the Animator connection.");
+                    break;
+                case "ApplyIspant06EmbeddedSheathingLoop":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06EmbeddedSheathingLoop,
+                        "The previous slot-6 four-state Animator connection was replaced by the user-supplied mixamo.com clip in one looping state while preserving the current model.");
+                    break;
+                case "CaptureIspant06EmbeddedSheathingLoopReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06EmbeddedSheathingLoopReview,
+                        "Six phases of the new slot-6 embedded Mixamo sheathing loop were captured for direct visual review without an automatic verdict.");
+                    break;
+                case "ApplyIspant06EmbeddedLoopSwordGrip":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06EmbeddedLoopSwordGrip,
+                        "The slot-6 long-sword hilt was attached to the visible right glove and its blade direction was made to follow the right forearm throughout the approved Mixamo loop.");
+                    break;
+                case "CaptureIspant06EmbeddedLoopSwordGripReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06EmbeddedLoopSwordGripReview,
+                        "Six full-body and six right-hand close views of the slot-6 sword grip were captured for direct visual review without an automatic verdict.");
+                    break;
+                case "ApplyIspant06EmbeddedLoopSwordSheathPath":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06EmbeddedLoopSwordSheathPath,
+                        "The slot-6 long sword now follows the actual right-hand position and rotation through the motion and transitions into the Ispant_01_Static left-waist sword pose at the end.");
+                    break;
+                case "CaptureIspant06EmbeddedLoopSwordSheathReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06EmbeddedLoopSwordSheathReview,
+                        "The static left-waist sword reference and eight slot-6 motion phases were captured for direct visual review without an automatic verdict.");
+                    break;
+                case "ApplyIspant06EmbeddedLoopArmAndMusketFix":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06EmbeddedLoopArmAndMusketFix,
+                        "The slot-6 right upper-arm and forearm now use the source full rotation delta in the current model rest basis, the hand keeps the current forearm-relative rest offset, and the rigid back musket remains separated under Spine.");
+                    break;
+                case "InspectIspant06EmbeddedLoopArmAxisFix":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.InspectIspant06EmbeddedLoopArmAxisFix,
+                        "The slot-6 right-arm rest-basis transfer, fixed hand offset, quaternion continuity, loop settings, and untouched source curves were inspected without an automatic visual verdict.");
+                    break;
+                case "ApplyIspant06LeftArmStretchRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06LeftArmStretchRemoval,
+                        "The stretching left-arm-driven triangles and the vertices left unused by them were removed from the slot-6 body mesh.");
+                    break;
+                case "ApplyIspant06WaistRemnantRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06WaistRemnantRemoval,
+                        "The leftover sheathed hilt pieces on the Ispant left hip were removed from the slot-6 body mesh.");
+                    break;
+                case "InspectIspant06Renderers":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.InspectIspant06Renderers,
+                        "Every renderer under slot 6 was listed with its enabled flag and mesh without changing the scene.");
+                    break;
+                case "ApplyIspant06RestoreWeaponVisibility":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06RestoreWeaponVisibility,
+                        "The slot-6 weapon renderers were put back to the intended visibility.");
+                    break;
+                case "CaptureIspant06PickedPartHighlight":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06PickedPartHighlight,
+                        "A ray pick through the marked pixel selected one part and painted it red for comparison, without changing the mesh.");
+                    break;
+                case "ApplyIspant06PickedPartRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06PickedPartRemoval,
+                        "The part selected by the ray pick was removed from the slot-6 body mesh.");
+                    break;
+                case "CaptureIspant06SelectionHighlight":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06SelectionHighlight,
+                        "Candidate selections were painted red over the posed body and rendered for direct comparison, without changing the mesh.");
+                    break;
+                case "InspectIspant06HipAsymmetry":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.InspectIspant06HipAsymmetry,
+                        "Hip geometry with no mirrored counterpart on the other side was listed without changing the scene.");
+                    break;
+                case "ApplyIspant06HipAsymmetryRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06HipAsymmetryRemoval,
+                        "The unmatched hip geometry on the Ispant left side was removed from the slot-6 body mesh.");
+                    break;
+                case "CaptureIspant06LeftHipCloseup":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06LeftHipCloseup,
+                        "The Ispant left hip was rendered close up from four angles without changing the scene.");
+                    break;
+                case "CaptureIspant06FloatingHiltComparison":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06FloatingHiltComparison,
+                        "The left hip was rendered with props visible and body only from one camera, so leftover geometry can be told apart from the sword.");
+                    break;
+                case "CaptureIspant06FloatingHiltHighlight":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06FloatingHiltHighlight,
+                        "The flakes the ray pick found beside the left belt were painted red and rendered from four angles, without changing the mesh.");
+                    break;
+                case "CaptureIspant06FloatingHiltRemovalPreview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06FloatingHiltRemovalPreview,
+                        "The hip was rendered as it stands and as it would look after the removal, without changing the scene.");
+                    break;
+                case "ApplyIspant06FloatingHiltRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06FloatingHiltRemoval,
+                        "The floating hilt flakes beside the Ispant left belt were removed from the slot-6 body mesh.");
+                    break;
+                case "CaptureIspant06LeftThighRestorePreview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06LeftThighRestorePreview,
+                        "The body was rendered as it stands and with the chosen clusters put back, without changing the scene.");
+                    break;
+                case "ApplyIspant06LeftThighRestore":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06LeftThighRestore,
+                        "The wrongly removed left thigh geometry was put back into the slot-6 body mesh.");
+                    break;
+                case "CaptureIspant06RestoredClusterRemovalPreview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06RestoredClusterRemovalPreview,
+                        "The body was rendered as it stands and with the chosen restored clusters dropped, without changing the scene.");
+                    break;
+                case "ApplyIspant06RestoredClusterRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06RestoredClusterRemoval,
+                        "The arm driven waist debris clusters were taken back out of the slot-6 body mesh.");
+                    break;
+                case "CaptureIspant06RestoredClusterAtlas":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06RestoredClusterAtlas,
+                        "Each restored cluster was painted red on the current body so the leg armour can be told apart from the sword flakes, without changing the scene.");
+                    break;
+                case "CaptureIspant06MissingClusterAtlas":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06MissingClusterAtlas,
+                        "Each removed cluster was painted red on the bind-pose shell so it can be matched to the hole it left, without changing the scene.");
+                    break;
+                case "InspectIspant06MissingGeometry":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.InspectIspant06MissingGeometry,
+                        "Every triangle cut away from the slot-6 body since the untouched export was listed and measured, without changing the scene.");
+                    break;
+                case "InspectIspant06RemainingIslands":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.InspectIspant06RemainingIslands,
+                        "Every connected piece of the slot-6 body except the main shell was listed with its size and position without changing the scene.");
+                    break;
+                case "ApplyIspant06ArmTorsoBridgeRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06ArmTorsoBridgeRemoval,
+                        "Only the triangles welding the left arm surface to the torso were removed; triangles that sit entirely on the arm were kept.");
+                    break;
+                case "ApplyIspant06LeftArmRegionWeightClean":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06LeftArmRegionWeightClean,
+                        "The whole connected left arm surface kept only left arm influences, with no vertex duplicated or deleted.");
+                    break;
+                case "InspectIspant06SeamGap":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.InspectIspant06SeamGap,
+                        "The widest separation between vertices that share a bind position was measured without changing the scene.");
+                    break;
+                case "ApplyIspant06LeftArmSeamSplit":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06LeftArmSeamSplit,
+                        "Every stretching triangle received its own rigid copies of its corners, so the seam opens instead of the mesh smearing, and no geometry was removed.");
+                    break;
+                case "ApplyIspant06LeftArmWeightFix":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06LeftArmWeightFix,
+                        "The stretching vertices kept only the influences of their dominant bone and its immediate neighbours, so the modelled shape is preserved and nothing was deleted.");
+                    break;
+                case "RestoreIspant06BodyBeforeStretchRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.RestoreIspant06BodyBeforeStretchRemoval,
+                        "The slot-6 body mesh was restored to the version that still contains the left arm geometry.");
+                    break;
+                case "InspectIspant06StretchTriangles":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.InspectIspant06StretchTriangles,
+                        "The stretching triangles were broken down vertex by vertex without changing the scene.");
+                    break;
+                case "InspectIspant06LeftArmStretch":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.InspectIspant06LeftArmStretch,
+                        "The slot-6 body vertices that are skinned to the left arm but sit far away from it were listed without changing the scene.");
+                    break;
+                case "ApplyIspant06StaticReturnTail":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06StaticReturnTail,
+                        "A 0.4 second tail was appended in which every animated bone eases to the static model pose while the sword stays on the left waist.");
+                    break;
+                case "InspectIspant06StaticReturnBoundary":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.InspectIspant06StaticReturnBoundary,
+                        "The slot-6 loop start and loop end poses were compared against the static model pose without changing the scene.");
+                    break;
+                case "ApplyIspant06WaistHiltSeparation":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06WaistHiltSeparation,
+                        "The leftover waist hilt island was rebound from LeftShoulder to Hips so the left arm mesh is no longer dragged by it.");
+                    break;
+                case "ApplyIspant06WaistHiltRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06WaistHiltRemoval,
+                        "The separated waist hilt geometry was removed from the slot-6 body mesh while the remaining vertices, weights, and bind poses stayed intact.");
+                    break;
+                case "InspectIspant06WaistHilt":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.InspectIspant06WaistHilt,
+                        "The slot-6 body mesh islands, their model-space centres, their driving bones, and their left-arm weighting were listed without changing the scene.");
+                    break;
+                case "ApplyIspant06HandSwordGripAndWaist":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06HandSwordGripAndWaist,
+                        "The existing approved long sword now follows the corrected right hand with one rigid grip mount and returns to the left waist mount at the end of the loop.");
+                    break;
+                case "InspectIspant06HandSwordClearance":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.InspectIspant06HandSwordClearance,
+                        "The hand sword grip rigidity, hilt to palm distance, blade clearance from the torso and right arm, and the left waist mount at the loop end were measured without changing the scene.");
+                    break;
+                case "CaptureIspant06HandSwordGripReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06HandSwordGripReview,
+                        "One review image with the full body and the right-hand grip close-up was captured without changing the scene.");
+                    break;
+                case "CaptureIspant06RightArmRollCorrectionReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06RightArmRollCorrectionReview,
+                        "One review image with the raw source arm, the corrected arm, and the corrected full body was captured without changing the scene.");
+                    break;
+                case "ApplyIspant06RightArmRollCorrection":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.ApplyIspant06RightArmRollCorrection,
+                        "Only the excess axial roll on the slot-6 right upper arm was removed while every right arm joint kept its exact model-space direction, and the hand returned to the raw source curve.");
+                    break;
+                case "InspectIspant06RightArmRestBasisDiff":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.InspectIspant06RightArmRestBasisDiff,
+                        "The slot-6 right arm chain rest orientations, raw source curve identity, and limb direction trajectories were compared against the source rig without changing the scene.");
+                    break;
+                case "InspectIspant01StaticStandingPose":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant01StaticStandingPoseTool.InspectIspant01StaticStandingPose,
+                        "The slot-1 static model's torso, leg, foot, toe, and weighted sole heights were inspected without changing the scene.");
+                    break;
+                case "ApplyIspant01StaticStandingPose":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant01StaticStandingPoseTool.ApplyIspant01StaticStandingPose,
+                        "Only the slot-1 static model's hips and lower body were aligned upright with both weighted soles on the ground while preserving both arms and hands.");
+                    break;
+                case "CaptureIspant01StaticStandingPoseReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant01StaticStandingPoseTool.CaptureIspant01StaticStandingPoseReview,
+                        "One final front and three-quarter review image was captured for the slot-1 static standing pose without changing the scene.");
+                    break;
+                case "ApplyIspant01StaticRightArmCorrection":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant01StaticStandingPoseTool.ApplyIspant01StaticRightArmCorrection,
+                        "Only the slot-1 static model's right shoulder, upper arm, forearm, and hand rotations were mirrored from the intact left arm while preserving the standing pose.");
+                    break;
+                case "InspectIspant01StaticRightArmCorrection":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant01StaticStandingPoseTool.InspectIspant01StaticRightArmCorrection,
+                        "The corrected right-arm mirror basis, untouched left arm and fingers, upright torso, and grounded feet were inspected without changing the scene.");
+                    break;
+                case "CaptureIspant01StaticRightArmCorrectionReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant01StaticStandingPoseTool.CaptureIspant01StaticRightArmCorrectionReview,
+                        "One final front, right-front, and right-arm-close review image was captured without changing the scene.");
+                    break;
+                case "CaptureIspant06EmbeddedLoopArmAndMusketReview":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06EmbeddedSheathingLoopTool.CaptureIspant06EmbeddedLoopArmAndMusketReview,
+                        "Eight full-body and eight close arm-and-musket views were captured for direct visual review without an automatic verdict.");
+                    break;
                 case "ApplyIspantSlashRunningComposite":
                     RunSynchronous(
                         request,
@@ -1868,6 +2578,74 @@ namespace Bellerophon.Editor.Validation
                         request,
                         global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.ApplyIspantLegacySwordRightHandGrip,
                         "Only the slot-5 sword right-hand grip point was moved into the closed fist while preserving the legacy trajectory.");
+                    break;
+                case "RestoreIspantPreAugust17ModelAndOriginalAnimations":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17RestoreTool.RestoreIspantPreAugust17ModelAndOriginalAnimations,
+                        "The exact pre-August-17 Ispant placement root was restored from the historical Git LFS scene with its original model, Animator, Avatar, controller, weapon, and physics connections.");
+                    break;
+                case "CapturePlacedIspantPreAugust17RestoreInspection":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17RestoreTool.CapturePlacedIspantPreAugust17RestoreInspection,
+                        "The actual placed pre-August-17 Ispant models and running animations were captured without manipulating the targets.");
+                    break;
+                case "InspectIspantPreAugust17RestoreResult":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17RestoreTool.InspectIspantPreAugust17RestoreResult,
+                        "The restored Ispant placement matches the historical scene contract and uses eleven historical animation connections.");
+                    break;
+                case "CaptureIspantPreAugust17RestoreFinal":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17RestoreTool.CaptureIspantPreAugust17RestoreFinal,
+                        "The one-time final image was created from the directly inspected actual Play Mode capture.");
+                    break;
+                case "InspectAllIspantHiltFragmentRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantAllHiltFragmentRemovalTool.InspectAllIspantHiltFragmentRemoval,
+                        "All twelve placed Ispant body meshes and their exact waist-hilt reference-triangle matches were inspected without changing the scene.");
+                    break;
+                case "InspectAllIspantLeftWaistHiltCorrection":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantLeftWaistHiltCorrectionTool.InspectAllIspantLeftWaistHiltCorrection,
+                        "The three pre-error Ispant body sources were inspected separately for left-waist component topology, reference proximity, UV correspondence, and dominant bone influence without changing the scene.");
+                    break;
+                case "ApplyAllIspantLeftWaistHiltCorrection":
+                    global::Bellerophon.Editor.IspantCargoRunScene
+                        .IspantLeftWaistHiltCorrectionTool.SetBridgeOperation("Apply");
+                    goto case "PreviewAllIspantLeftWaistHiltCorrection";
+                case "CaptureAllIspantLeftWaistHiltCorrection":
+                    global::Bellerophon.Editor.IspantCargoRunScene
+                        .IspantLeftWaistHiltCorrectionTool.SetBridgeOperation("Capture");
+                    goto case "PreviewAllIspantLeftWaistHiltCorrection";
+                case "PreviewAllIspantLeftWaistHiltCorrection":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantLeftWaistHiltCorrectionTool.PreviewAllIspantLeftWaistHiltCorrection,
+                        "The non-slot-6 waist sword and embedded body targets plus the slot-6 gray-fragment candidate were captured as before, red target, and after panels without changing the scene.");
+                    break;
+                case "PreviewAllIspantHiltFragmentRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantAllHiltFragmentRemovalTool.PreviewAllIspantHiltFragmentRemoval,
+                        "All twelve placed Ispant waist-hilt selections were captured as before, red-highlight, and removal-preview closeups for direct review.");
+                    break;
+                case "ApplyAllIspantHiltFragmentRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantAllHiltFragmentRemovalTool.ApplyAllIspantHiltFragmentRemoval,
+                        "Only the reference-matched waist-hilt triangles were removed from every placed Ispant body while preserving animation, bones, materials, and other scene roots.");
+                    break;
+                case "CaptureAllIspantHiltFragmentRemoval":
+                    RunSynchronous(
+                        request,
+                        global::Bellerophon.Editor.IspantCargoRunScene.IspantAllHiltFragmentRemovalTool.CaptureAllIspantHiltFragmentRemoval,
+                        "One final twelve-slot closeup sheet was captured after all reference-matched waist-hilt triangles were absent.");
                     break;
                 case "PreviewIspant06MarkedHiltFragmentRemoval":
                     RunSynchronous(
@@ -5067,6 +5845,18 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.IspantCargoRunScene.IspantStaticFbxExportTool.ExportIspantStaticFbx,
                         "One currently placed approved Ispant was baked and exported as a pure static four-mesh FBX without rig, bones, animation, or scene changes.");
                     break;
+                case "ExportIspant01StaticForMixamo":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantStaticFbxExportTool.ExportIspant01StaticForMixamo,
+                        "The current slot-1 standing pose was baked to the requested static binary FBX for Mixamo auto-rig upload without changing the Unity scene.");
+                    break;
+                case "InspectIspant01StaticMixamoFbx":
+                    RunSynchronous(
+                        request,
+                        Bellerophon.Editor.IspantCargoRunScene.IspantStaticFbxExportTool.InspectIspant01StaticMixamoFbx,
+                        "The requested slot-1 static Mixamo FBX header, mesh tokens, finite source data, excluded rig and animation data, and unchanged scene were inspected.");
+                    break;
                 case "ApplyApprovedIspantAppearance":
                     RunSynchronous(
                         request,
@@ -7562,6 +8352,18 @@ namespace Bellerophon.Editor.Validation
                         ClearUnityConsole,
                         "Unity console cleared.");
                     break;
+                case "InspectUnityConsoleErrors":
+                    RunSynchronous(
+                        request,
+                        UnityConsoleDiagnostics.InspectCurrentErrors,
+                        "Unity console errors inspected.");
+                    break;
+                case "AssertNoUnityConsoleErrors":
+                    RunSynchronous(
+                        request,
+                        UnityConsoleDiagnostics.AssertNoErrors,
+                        "Unity console contains no errors.");
+                    break;
                 default:
                     RunSynchronous(
                         request,
@@ -7639,10 +8441,10 @@ namespace Bellerophon.Editor.Validation
                 // RefreshAssets is the recovery path that imports a corrected script after a
                 // previous compilation failure. Checking the stale failure flag before the
                 // refresh would permanently prevent that corrected source from compiling.
-                if (!string.Equals(request.Command, "RefreshAssets", StringComparison.Ordinal))
-                {
-                    RequireScriptsCompiled();
-                }
+            if (!string.Equals(request.Command, "RefreshAssets", StringComparison.Ordinal))
+            {
+                RequireScriptsCompiled();
+            }
                 action();
                 CompleteRequest(successMarker);
             }
@@ -7759,6 +8561,202 @@ namespace Bellerophon.Editor.Validation
                         TryDelete(ActiveRequestPath);
                         FailRequest(request, exception);
                     });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunStickAttackForwardAttackingCorrectionsPlayModeCapture(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                PlayerHandsObjectAnimationTools
+                    .StickAttackForwardAttackingCorrectionsPlayModeCapture.Start(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunStickAttackForwardLeftPalmRightPlayModeCapture(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                PlayerHandsObjectAnimationTools
+                    .StickAttackForwardAttackingCorrectionsPlayModeCapture
+                    .StartLeftPalmRight(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunStickAttackForwardAttackingCorrectionsFinal(
+            BridgeRequest request)
+        {
+            if (!EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                RunSynchronous(
+                    request,
+                    PlayerHandsObjectAnimationTools
+                        .CaptureStickAttackForwardAttackingCorrectionsFinal,
+                    "Stick_Attack_Forward attacking corrections finalized.");
+                return;
+            }
+
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<PlayModeStateChange> handler = null;
+                handler = state =>
+                {
+                    if (state != PlayModeStateChange.EnteredEditMode)
+                    {
+                        return;
+                    }
+
+                    EditorApplication.playModeStateChanged -= handler;
+                    try
+                    {
+                        PlayerHandsObjectAnimationTools
+                            .CaptureStickAttackForwardAttackingCorrectionsFinal();
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(
+                            request,
+                            "Stick_Attack_Forward attacking corrections finalized.");
+                    }
+                    catch (Exception exception)
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    }
+                };
+                EditorApplication.playModeStateChanged += handler;
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunStickAttackForwardGifWeaponPlayModeCapture(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                PlayerHandsObjectAnimationTools
+                    .StickAttackForwardGifWeaponMotionPlayModeCapture.Start(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunMusketBackCarryPlayModeCapture(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                PlayerHandsObjectAnimationTools
+                    .MusketBackCarryPlayModeCapture.Start(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunStickThrowReadyReleaseCancelPlayModeCapture(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                PlayerHandsObjectAnimationTools
+                    .StickThrowReadyReleaseCancelPlayModeCapture.Start(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
             }
             catch (Exception exception)
             {
@@ -8552,6 +9550,12 @@ namespace Bellerophon.Editor.Validation
                 request.Command == Ispant08ContinuousMotionCaptureCommand ||
                 request.Command == AtaPistolTriggerFollowCaptureCommand ||
                 request.Command == AtaCommandStanceAlternationCaptureCommand ||
+                request.Command == StickAttackForwardAttackingCorrectionsPlayModeCommand ||
+                request.Command == StickAttackForwardAttackingCorrectionsFinalCommand ||
+                request.Command == StickAttackForwardLeftPalmRightPlayModeCommand ||
+                request.Command == StickAttackForwardGifWeaponPlayModeCommand ||
+                request.Command == StickThrowReadyReleaseCancelPlayModeCommand ||
+                request.Command == StickThrowReleasePhysicsArcPlayModeCommand ||
                 request.Command == Dolore05ExecutionOpeningDiagnosticCommand ||
                 request.Command == RebellionMoveVisualReviewCommand ||
                 request.Command == RebellionFrontArtifactVisualReviewCommand ||
@@ -8702,6 +9706,117 @@ namespace Bellerophon.Editor.Validation
                         TryDelete(ActiveRequestPath);
                         FailRequest(request, exception);
                     });
+                return true;
+            }
+
+            if (request.Command ==
+                StickAttackForwardAttackingCorrectionsPlayModeCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Stick_Attack_Forward correction actual Play Mode Animator capture after Play Mode transition.");
+                PlayerHandsObjectAnimationTools
+                    .StickAttackForwardAttackingCorrectionsPlayModeCapture.Resume(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command ==
+                StickAttackForwardAttackingCorrectionsFinalCommand)
+            {
+                RunStickAttackForwardAttackingCorrectionsFinal(request);
+                return true;
+            }
+
+            if (request.Command ==
+                StickAttackForwardLeftPalmRightPlayModeCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Stick_Attack_Forward left-palm-right actual Play Mode capture after Play Mode transition.");
+                PlayerHandsObjectAnimationTools
+                    .StickAttackForwardAttackingCorrectionsPlayModeCapture
+                    .ResumeLeftPalmRight(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command == StickAttackForwardGifWeaponPlayModeCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Stick_Attack_Forward GIF weapon actual Play Mode capture after Play Mode transition.");
+                PlayerHandsObjectAnimationTools
+                    .StickAttackForwardGifWeaponMotionPlayModeCapture.Resume(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command == MusketBackCarryPlayModeCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Musket back-carry actual Play Mode capture after Play Mode transition.");
+                PlayerHandsObjectAnimationTools
+                    .MusketBackCarryPlayModeCapture.Resume(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command == StickThrowReadyReleaseCancelPlayModeCommand ||
+                request.Command == StickThrowReleasePhysicsArcPlayModeCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Stick Throw actual Play Mode capture after Play Mode transition.");
+                PlayerHandsObjectAnimationTools
+                    .StickThrowReadyReleaseCancelPlayModeCapture.Resume(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
                 return true;
             }
 

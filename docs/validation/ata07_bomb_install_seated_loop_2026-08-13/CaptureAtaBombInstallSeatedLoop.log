@@ -1,7 +1,0 @@
-Unity editor bridge request completed: f47f5e0c6a2845879389b588c6636bac
-Unity editor bridge command: CaptureAtaBombInstallSeatedLoop
-Unity editor bridge mode: open editor
-Ata bomb-install seated loop captured.
-
-Captured Unity log:
-Log: AtaBombInstallSeatedLoopCaptured Result=PASS, EnterClipDurationSeconds=6.633333, SeatedLoopDurationSeconds=1, EnterStateSpeed=1, SeatedLoopStateSpeed=1, StartPoseDifferenceAt24.99Seconds=36.22897, ReturnsToStandingStartBeforeCompletion=False, SceneChanged=False.

@@ -1,0 +1,8 @@
+System.InvalidOperationException: No exact static Ispant material matches Ispant_Leather_Approved.
+  at Bellerophon.Editor.IspantCargoRunScene.IspantHitReactionAnimationTool+<>c__DisplayClass45_0.<ApplyExactStaticMaterials>b__5 (UnityEngine.Material material) [0x00020] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantHitReactionAnimationTool.cs:392 
+  at System.Linq.Enumerable+SelectArrayIterator`2[TSource,TResult].ToArray () [0x00012] in <80564d689e48448fa2a7101993ee7201>:0 
+  at System.Linq.Enumerable.ToArray[TSource] (System.Collections.Generic.IEnumerable`1[T] source) [0x0001f] in <80564d689e48448fa2a7101993ee7201>:0 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantHitReactionAnimationTool.ApplyExactStaticMaterials (UnityEngine.Transform staticModel, UnityEngine.Transform model) [0x000ec] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantHitReactionAnimationTool.cs:387 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantHitReactionAnimationTool.ApplyIspant11HitReplacement () [0x00195] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantHitReactionAnimationTool.cs:102 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17RestoreTool+<>c.<ApplyHistoricalAnimationConstructionSequence>b__22_2 () [0x00000] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\IspantPreAugust17RestoreTool.cs:471 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17RestoreTool.RunHistoricalStage (System.String stageName, System.Int32 slotIndex, System.Action action) [0x00000] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\IspantPreAugust17RestoreTool.cs:487 

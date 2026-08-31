@@ -1,7 +1,0 @@
-Unity editor bridge request completed: 044e5a29f8584af890b10b4304df91c1
-Unity editor bridge command: CaptureAtaSabotageRepeatingCycle
-Unity editor bridge mode: open editor
-Ata sabotage repeating cycle captured.
-
-Captured Unity log:
-Log: AtaSabotageRepeatingCycleCaptured Result=PASS, StateSpeed=1, StartPoseDifferenceAt34.99Seconds=3.896522, StartPoseDifferenceAt35Seconds=0, ReturnsToStartAt35Seconds=True, ProgressBarAt35Seconds=0, SecondCycleReviewed=True, SceneChanged=False.

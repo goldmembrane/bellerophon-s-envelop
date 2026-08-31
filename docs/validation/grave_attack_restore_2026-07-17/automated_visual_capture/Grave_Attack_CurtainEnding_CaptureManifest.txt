@@ -1,6 +1,0 @@
-1.58|Grave_Attack_CurtainEnding_t1_58.png
-2.15|Grave_Attack_CurtainEnding_t2_15.png
-2.25|Grave_Attack_CurtainEnding_t2_25.png
-2.35|Grave_Attack_CurtainEnding_t2_35.png
-2.65|Grave_Attack_CurtainEnding_t2_65.png
-3.00|Grave_Attack_CurtainEnding_t3_00.png

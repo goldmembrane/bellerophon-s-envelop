@@ -1,7 +1,0 @@
-Unity editor bridge request completed: 32a0870b826849c4b950b18c41330783
-Unity editor bridge command: CaptureAtaDeathPreFallStaticArms
-Unity editor bridge mode: open editor
-Ata death pre-fall static arms captured.
-
-Captured Unity log:
-Log: AtaDeathPreFallStaticArmsCaptured Result=PASS, Path=docs/validation/ata09_death_prefall_static_arms_2026-08-13/Ata_09_Death_PreFallStaticArms_TwoLoopReview.png, FallOnsetFrame=11, StaticHoldThroughFrame=10, MaximumPreFallStaticPositionError=0, MaximumPreFallStaticRotationError=0, MaximumPostFallSourcePositionError=0, MaximumPostFallSourceRotationError=0, MaximumLoopPairPositionError=0, MaximumLoopPairRotationError=0, SourceRightArmStretchComponents=0, SceneChanged=False.

@@ -1,8 +1,0 @@
-Unity editor bridge request completed: aee33f21f6484f94b4a915ee1cc1b307
-Unity editor bridge command: CaptureAtaBombInstallSourceAnalysis
-Unity editor bridge mode: open editor
-Ata bomb-install source motion analyzed.
-
-Captured Unity log:
-Log: Reduced additional punctual light shadows resolution by 4 to make 24 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
-Log: AtaBombInstallSourceAnalysisCaptured Result=PASS, ClipDurationSeconds=8.366667, PlaybackSpeed=1, Panels=24, MatchedSeatedLoopStartSeconds=6.633333, MatchedSeatedLoopEndSeconds=7.633333, MatchedSeatedLoopPoseError=2.091619, SceneChanged=False.

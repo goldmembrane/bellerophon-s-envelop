@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -20,7 +21,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
         private const string ModelName = "Ispant_New_Direct_Model";
         private const string ApprovedModelPath =
             "Assets/_Project/Art/Enemies/Ispant/Models/Ispant_New_Direct_Source.fbx";
-        private const string OutputFilePath = "enemies model/išpant_new_static.fbx";
+        private const string OutputFilePath = "enemies model/išpant-new_static.fbx";
         private const int ExpectedSlots = 12;
         private const int ExpectedRenderers = 2;
         private const int ExpectedTriangles = 9798 + 19950;
@@ -51,7 +52,7 @@ namespace Bellerophon.Editor.IspantCargoRunScene
             var bakedVertexCount = 0;
             try
             {
-                exportRoot = new GameObject("ispant_new_static")
+                exportRoot = new GameObject("ispant-new_static")
                 {
                     hideFlags = HideFlags.HideAndDontSave
                 };
@@ -115,6 +116,120 @@ namespace Bellerophon.Editor.IspantCargoRunScene
                 ", MaterialSlotsPreserved=True" +
                 ", FileBytes=" + outputInfo.Length +
                 ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Export Slot 01 Static FBX For Mixamo")]
+        public static void ExportIspant01StaticForMixamo()
+        {
+            ExportIspantStaticFbx();
+        }
+
+        [MenuItem("Bellerophon/Enemies/Ispant/Inspect Slot 01 Static Mixamo FBX")]
+        public static void InspectIspant01StaticMixamoFbx()
+        {
+            RequireFbxPackage();
+            var scene = RequireCurrentScene();
+            var wasDirty = scene.isDirty;
+            var sourceModel = RequireSourceModel(scene);
+            var sourceRenderers = RequireCurrentRenderers(sourceModel);
+            foreach (var renderer in sourceRenderers)
+                RequireFiniteSourceMesh(renderer);
+
+            var outputAbsolutePath = ProjectAbsolutePath(OutputFilePath);
+            if (!File.Exists(outputAbsolutePath))
+                throw new FileNotFoundException("The Mixamo FBX output is missing.", outputAbsolutePath);
+            var fileBytes = File.ReadAllBytes(outputAbsolutePath);
+            var binaryHeader = Encoding.ASCII.GetBytes("Kaydara FBX Binary");
+            if (fileBytes.Length < 1024 || !ContainsBytes(fileBytes, binaryHeader))
+                throw new InvalidOperationException("The exported file is not a non-empty binary FBX.");
+
+            var expectedTokens = new[]
+            {
+                "ispant-new_static", "char1", "Ispant_Approved_LongSword_10K"
+            };
+            foreach (var token in expectedTokens)
+            {
+                if (!ContainsBytes(fileBytes, Encoding.UTF8.GetBytes(token)))
+                    throw new InvalidOperationException(
+                        "The exported FBX is missing the expected object token: " + token + ".");
+            }
+            foreach (var forbiddenToken in new[] { "LimbNode", "AnimationStack", "AnimationCurve" })
+            {
+                if (ContainsBytes(fileBytes, Encoding.ASCII.GetBytes(forbiddenToken)))
+                    throw new InvalidOperationException(
+                        "The static Mixamo FBX unexpectedly contains " + forbiddenToken + ".");
+            }
+
+            if (scene.isDirty != wasDirty)
+                throw new InvalidOperationException(
+                    "The Mixamo FBX inspection changed the CargoRunMvp scene dirty state.");
+
+            Debug.Log(
+                "Ispant01StaticMixamoFbxInspected Result=PASS" +
+                ", File=" + OutputFilePath +
+                ", Format=BinaryFBX" +
+                ", Meshes=" + ExpectedRenderers +
+                ", Triangles=" + ExpectedTriangles +
+                ", Rig=False, Bones=0, Skin=False, Animation=False" +
+                ", FiniteSourceMeshData=True" +
+                ", MaterialSlotsPreserved=True" +
+                ", FileBytes=" + fileBytes.Length +
+                ", SceneChanged=False.");
+        }
+
+        private static void RequireFiniteSourceMesh(Renderer renderer)
+        {
+            var skinned = renderer as SkinnedMeshRenderer;
+            var temporary = skinned != null ? new Mesh() : null;
+            try
+            {
+                var mesh = temporary ?? SharedMesh(renderer);
+                if (skinned != null)
+                    skinned.BakeMesh(mesh, false);
+                if (mesh.vertexCount == 0 || mesh.vertices.Any(vertex => !IsFinite(vertex)))
+                    throw new InvalidOperationException(
+                        "The current Ispant contains empty or non-finite vertices: " + renderer.name + ".");
+                if (mesh.normals.Any(normal => !IsFinite(normal)) ||
+                    mesh.tangents.Any(tangent =>
+                        float.IsNaN(tangent.x) || float.IsInfinity(tangent.x) ||
+                        float.IsNaN(tangent.y) || float.IsInfinity(tangent.y) ||
+                        float.IsNaN(tangent.z) || float.IsInfinity(tangent.z) ||
+                        float.IsNaN(tangent.w) || float.IsInfinity(tangent.w)))
+                {
+                    throw new InvalidOperationException(
+                        "The current Ispant contains non-finite normals or tangents: " + renderer.name + ".");
+                }
+            }
+            finally
+            {
+                if (temporary != null)
+                    UnityEngine.Object.DestroyImmediate(temporary);
+            }
+        }
+
+        private static bool IsFinite(Vector3 value) =>
+            !float.IsNaN(value.x) && !float.IsInfinity(value.x) &&
+            !float.IsNaN(value.y) && !float.IsInfinity(value.y) &&
+            !float.IsNaN(value.z) && !float.IsInfinity(value.z);
+
+        private static bool ContainsBytes(byte[] source, byte[] pattern)
+        {
+            if (pattern.Length == 0 || pattern.Length > source.Length)
+                return false;
+            for (var start = 0; start <= source.Length - pattern.Length; start++)
+            {
+                var matches = true;
+                for (var index = 0; index < pattern.Length; index++)
+                {
+                    if (source[start + index] == pattern[index])
+                        continue;
+                    matches = false;
+                    break;
+                }
+                if (matches)
+                    return true;
+            }
+            return false;
         }
 
         private static Renderer[] RequireCurrentRenderers(GameObject sourceModel)

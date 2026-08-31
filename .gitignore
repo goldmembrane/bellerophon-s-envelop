@@ -53,3 +53,24 @@ Desktop.ini
 # Local logs
 unity-create-project.log
 *.log
+
+# Rule harness runtime state
+/.claude/state/
+
+# Local source/reference assets and working data
+/enemies model/
+/item model/
+/image/
+/player model/
+/analysis-tep/
+/.analysis-temp/
+/.claude/
+/.codex/
+/.scripts/
+/docs/
+
+# Progress and repository rule documents
+PROGRESS_*.md
+AGENTS.md
+AGENTS.override.md
+*_RULES.md

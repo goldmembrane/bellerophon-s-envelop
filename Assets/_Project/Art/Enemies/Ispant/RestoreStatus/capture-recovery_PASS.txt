@@ -1,0 +1,1 @@
+Stale Ispant direct-capture state cleared without changing scene targets.

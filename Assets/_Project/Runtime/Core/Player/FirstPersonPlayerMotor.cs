@@ -43,6 +43,7 @@ namespace Bellerophon.Core.Player
             input = playerInput;
             playerStatus = GetComponent<FirstPersonPlayerStatus>();
             playerCamera = cameraTransform;
+            InitializePitchFromAuthoredCameraRotation();
             ApplyBodySettings(false, true);
         }
 
@@ -59,7 +60,27 @@ namespace Bellerophon.Core.Player
                 playerStatus = GetComponent<FirstPersonPlayerStatus>();
             }
 
+            InitializePitchFromAuthoredCameraRotation();
             ApplyBodySettings(false, true);
+        }
+
+        private void InitializePitchFromAuthoredCameraRotation()
+        {
+            if (playerCamera == null)
+            {
+                pitch = 0f;
+                return;
+            }
+
+            var authoredPitch = playerCamera.localEulerAngles.x;
+            if (authoredPitch > 180f)
+            {
+                authoredPitch -= 360f;
+            }
+
+            pitch = settings == null
+                ? authoredPitch
+                : Mathf.Clamp(authoredPitch, settings.MinPitch, settings.MaxPitch);
         }
 
         private void Update()

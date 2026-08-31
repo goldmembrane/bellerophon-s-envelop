@@ -1,8 +1,0 @@
-Unity editor bridge request completed: a317bc62fc3d4bd0818fd2aed2ce96c8
-Unity editor bridge command: ApplyAtaHitAnimation
-Unity editor bridge mode: open editor
-Ata hit animation applied.
-
-Captured Unity log:
-Log: AtaRightArmModelCorrection Slot=Ata_08_Hit, StretchComponents=3, ComponentTriangles=1,88,6, MaximumRatio=4.033011, Changed=True
-Log: AtaHitAnimationApplied Result=PASS, Slot=Ata_08_Hit, Source=Assets/_Project/Art/Enemies/Ata/Animations/Sources/Ata_Hit.fbx, EmbeddedClip=mixamo.com, Duration=1.333333, Loop=True, StateSpeed=1, RootMotion=False, RightArmBefore={StretchComponents=3, ComponentTriangles=1,88,6, MaximumRatio=4.033011}, CorrectedRightArmComponents=3, RemainingRightArmComponents=0, MaximumRightArmStretchRatioAfter=4.033011, SlotTransformFixed=True, OtherAtaSlotsUnchanged=True, OtherSceneRootsUnchanged=True, SceneSaved=True.

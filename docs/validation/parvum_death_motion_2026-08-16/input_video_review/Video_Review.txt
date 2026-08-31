@@ -1,9 +1,0 @@
-Parvum Death Motion Input Video Review
-Source=C:/Users/gus68/Videos/Captures/Bellerophon - CargoRunMvp - Windows, Mac, Linux - Unity 6.3 LTS (6000.3.16f1) _DX12_ 2026-08-16 17-42-45.mp4
-DurationSeconds=5.631233
-Resolution=1920x1000
-ReviewTarget=Keep the whole-body melt, remove the shrinking solid-color puddle transition, hold the final melted body for one second, then loop.
-ObservedWholeBodyMelt=The original textured Parvum body visibly collapses before the final transition.
-ObservedRejectedTransition=The melted body shrinks and is replaced by a flat solid-green oval puddle.
-RequiredFinalTiming=Whole-body melt from 0 to 2 seconds, unchanged melted-body hold from 2 to 3 seconds, hard loop reset at 3 seconds.
-ContactSheet=Parvum_Death_Input_ContactSheet.png

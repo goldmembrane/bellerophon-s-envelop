@@ -1,7 +1,0 @@
-Unity editor bridge request completed: a99688f3173141ac9a0ef6e1cb5d3e7d
-Unity editor bridge command: InspectIspantIdleAnimation
-Unity editor bridge mode: open editor
-Ispant idle animation inspected.
-
-Captured Unity log:
-Log: IspantGroundedBreathingIdleInspected Result=PASS, DurationSeconds=2, TorsoVerticalTravelMeters=0.0149999857, MaximumFootPositionErrorMeters=2.14576721E-06, LeftKneeMotionDegrees=0.899609566, RightKneeMotionDegrees=2.11516857, AnimatedBone=Hips, FootIKConstraints=2, ExistingIdleClipReferenced=False, SlotRootUnchanged=True, LoopTime=True, SceneChanged=False.

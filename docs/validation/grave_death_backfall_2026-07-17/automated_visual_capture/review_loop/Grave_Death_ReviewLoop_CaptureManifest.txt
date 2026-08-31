@@ -1,6 +1,0 @@
-ControllerSide|0.00|Normalized=0.000|Grave_Death_ReviewLoop_t0_00.png
-ControllerSide|0.80|Normalized=0.615|Grave_Death_ReviewLoop_t0_80.png
-ControllerSide|1.29|Normalized=0.992|Grave_Death_ReviewLoop_t1_29.png
-ControllerSide|1.31|Normalized=0.008|Grave_Death_ReviewLoop_t1_31.png
-ControllerSide|2.10|Normalized=0.615|Grave_Death_ReviewLoop_t2_10.png
-ControllerSide|2.59|Normalized=0.992|Grave_Death_ReviewLoop_t2_59.png

@@ -1,0 +1,7 @@
+System.InvalidOperationException: No exact static Ispant material matches Ispant_Leather_Approved.
+  at Bellerophon.Editor.IspantCargoRunScene.IspantRunningSwordAttackAnimationTool+<>c__DisplayClass72_0.<ApplyStaticAppearance>b__5 (UnityEngine.Material material) [0x00020] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantRunningSwordAttackAnimationTool.cs:432 
+  at System.Linq.Enumerable+SelectArrayIterator`2[TSource,TResult].ToArray () [0x00012] in <80564d689e48448fa2a7101993ee7201>:0 
+  at System.Linq.Enumerable.ToArray[TSource] (System.Collections.Generic.IEnumerable`1[T] source) [0x0001f] in <80564d689e48448fa2a7101993ee7201>:0 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantRunningSwordAttackAnimationTool.ApplyStaticAppearance (UnityEngine.Transform staticModel, UnityEngine.Transform model) [0x000ec] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantRunningSwordAttackAnimationTool.cs:427 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantRunningSwordAttackAnimationTool.ApplyIspantRunningSwordAttackAnimation () [0x001a6] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\Validation\IspantRunningSwordAttackAnimationTool.cs:135 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17RestoreTool.RunHistoricalStage (System.String stageName, System.Int32 slotIndex, System.Action action) [0x00000] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\IspantPreAugust17RestoreTool.cs:487 

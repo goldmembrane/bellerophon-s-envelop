@@ -1,0 +1,3 @@
+IspantBindingRepairError=System.InvalidOperationException: Approved Ispant model is missing an appearance renderer.
+  at Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17BindingRepairRunner.ApplyBindingRepair () [0x00561] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\IspantPreAugust17RestoreTool.cs:280 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17BindingRepairRunner.PollRepair () [0x00054] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\IspantPreAugust17RestoreTool.cs:63 

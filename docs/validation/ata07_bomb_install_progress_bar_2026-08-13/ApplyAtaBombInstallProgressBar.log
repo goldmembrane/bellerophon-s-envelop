@@ -1,7 +1,0 @@
-Unity editor bridge request completed: b41e07dc258041f7bb2c36ba6e5288ff
-Unity editor bridge command: ApplyAtaBombInstallProgressBar
-Unity editor bridge mode: open editor
-Ata bomb-install progress bar applied.
-
-Captured Unity log:
-Log: AtaBombInstallProgressBarApplied Result=PASS, Slot=Ata_07_BombInstall, ParentBone=Head, DurationSeconds=25, WidthMeters=0.62, HeightMeters=0.055, HeadClearanceMeters=0.18, BarCenterOffsetMeters=0.623654, ApprovedSabotageVisual=True, BombAnimationPreserved=True, SkinnedMeshesPreserved=True, RuntimeText=False, SceneSaved=True.

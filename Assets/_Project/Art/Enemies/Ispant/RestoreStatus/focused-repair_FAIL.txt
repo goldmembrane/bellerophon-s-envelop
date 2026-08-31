@@ -1,0 +1,4 @@
+System.InvalidOperationException: Historical Ispant musket material source is missing.
+  at Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17FocusedRepairRunner.RestoreIspantHistoricalWeaponMaterials (UnityEngine.Transform[] slots) [0x0012a] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\IspantPreAugust17RestoreTool.cs:1250 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17FocusedRepairRunner.ApplyIspantFocusedRepair () [0x002d5] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\IspantPreAugust17RestoreTool.cs:997 
+  at Bellerophon.Editor.IspantCargoRunScene.IspantPreAugust17FocusedRepairRunner.PollIspantFocusedRepair () [0x00060] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\IspantPreAugust17RestoreTool.cs:907 

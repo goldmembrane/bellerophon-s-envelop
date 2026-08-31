@@ -22,6 +22,18 @@ namespace Bellerophon.Editor
         private const string IdleReferenceTargetName = "Player_Idle";
         private const string EmptyTargetName = "Hands_Empty_Idle";
         private const string StickCarryTargetName = "Stick_Carry";
+        private const string MusketDrawTargetName = "Musket_Draw";
+        private const string MusketIdleTargetName = "Musket_Idle";
+        private const string MusketStowTargetName = "Musket_Stow";
+        private const string MusketHipFireTargetName = "Musket_HipFire";
+        private const string MusketAimTargetName = "Musket_Aim";
+        private const string MusketAimFireTargetName = "Musket_Aim_Fire";
+        private const string MusketAimExitTargetName = "Musket_Aim_Exit";
+        private const string MusketReloadTargetName = "Musket_Reload";
+        private const string StickGripTwoHandTargetName = "Stick_Grip_TwoHand";
+        private const string StickAttackForwardTargetName =
+            "Stick_Attack_Forward";
+        private const string StickGripOneHandTargetName = "Stick_Grip_OneHand";
         private const string OneHandTargetName = "Hands_Carry_OneHand";
         private const string TwoHandTargetName = "Hands_Carry_TwoHand";
         private const string DrawBackTargetName = "Hands_Draw_Back";
@@ -29,6 +41,9 @@ namespace Bellerophon.Editor
         private const string ThrowReadyTargetName = "Hands_Throw_Ready";
         private const string ThrowReleaseTargetName = "Hands_Throw_Release";
         private const string ThrowCancelTargetName = "Hands_Throw_Cancel";
+        private const string StickThrowReadyTargetName = "Stick_Throw_Ready";
+        private const string StickThrowReleaseTargetName = "Stick_Throw_Release";
+        private const string StickThrowCancelTargetName = "Stick_Throw_Cancel";
         private const string EmptyStateName = "HandsEmptyIdle";
         private const string OneHandStateName = "HandsCarryOneHand";
         private const string TwoHandStateName = "HandsCarryTwoHand";
@@ -37,6 +52,9 @@ namespace Bellerophon.Editor
         private const string ThrowReadyStateName = "HandsThrowReady";
         private const string ThrowReleaseStateName = "HandsThrowRelease";
         private const string ThrowCancelStateName = "HandsThrowCancel";
+        private const string StickThrowReadyStateName = "StickThrowReady";
+        private const string StickThrowReleaseStateName = "StickThrowRelease";
+        private const string StickThrowCancelStateName = "StickThrowCancel";
         private const float PositionTolerance = 0.0001f;
         private const float RotationTolerance = 0.01f;
         private const int CaptureWidth = 400;
@@ -109,6 +127,41 @@ namespace Bellerophon.Editor
             "Assets/_Project/Art/Player/Animations/Hands_Throw_Cancel_MixamoReverse.anim";
         private const string ThrowCancelControllerPath =
             "Assets/_Project/Art/Player/Animations/Hands_Throw_Cancel.controller";
+        private const string StickThrowReadyClipPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Throw_Ready.anim";
+        private const string StickThrowReleaseClipPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Throw_Release.anim";
+        private const string StickThrowCancelClipPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Throw_Cancel.anim";
+        private const string StickThrowReadyControllerPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Throw_Ready.controller";
+        private const string StickThrowReleaseControllerPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Throw_Release.controller";
+        private const string StickThrowCancelControllerPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Throw_Cancel.controller";
+        private const string StickThrowValidationDirectory =
+            "docs/validation/player_stick_throw_release_physics_arc_2026-08-31";
+        private const string StickThrowApplyMetricsPath =
+            StickThrowValidationDirectory + "/apply.json";
+        private const string StickThrowFramesDirectory =
+            StickThrowValidationDirectory + "/playmode_frames";
+        private const string StickThrowRuntimeSamplesPath =
+            StickThrowValidationDirectory + "/actual_playmode_runtime_samples.csv";
+        private const string StickThrowVideoPath =
+            StickThrowValidationDirectory + "/actual_playmode_two_loops.mp4";
+        private const string StickThrowOverviewPath =
+            StickThrowValidationDirectory + "/actual_playmode_two_loops_overview.png";
+        private const string StickThrowMetricsPath =
+            StickThrowValidationDirectory + "/metrics.json";
+        private const string StickThrowCaptureStageKey =
+            "Bellerophon.PlayerStickThrowReleasePhysicsArc.Capture.Stage";
+        private const string StickThrowCaptureErrorKey =
+            "Bellerophon.PlayerStickThrowReleasePhysicsArc.Capture.Error";
+        private const float StickThrowFlightDistanceMeters = 4.5f;
+        private const float StickThrowGravityMetersPerSecondSquared = 9.81f;
+        private const float StickThrowJavelinElevationDegrees = 37f;
+        private const float StickThrowWeaponCurveSampleRate = 240f;
+        private const float StickThrowAngleToleranceDegrees = 0.5f;
         private const string ThrowSourceValidationDirectory =
             "docs/validation/player_hands_throw_mixamo_2026-08-29";
         private const string ThrowValidationDirectory =
@@ -310,12 +363,275 @@ namespace Bellerophon.Editor
             StickCarryStartViewValidationDirectory + "/review.png";
         private const string StickCarryStartViewReviewStageKey =
             "Bellerophon.PlayerStickCarryStartView.Review.Stage";
+        private const string MusketDrawStartViewValidationDirectory =
+            "docs/validation/player_start_musket_draw_view_2026-08-31";
+        private const string MusketDrawStartViewApplyMetricsPath =
+            MusketDrawStartViewValidationDirectory + "/apply_metrics.json";
+        private const string MusketDrawStartViewReviewMetricsPath =
+            MusketDrawStartViewValidationDirectory + "/review_metrics.json";
+        private const string MusketDrawStartViewPlayModePath =
+            MusketDrawStartViewValidationDirectory + "/playmode.png";
+        private const string MusketDrawStartViewFinalPath =
+            MusketDrawStartViewValidationDirectory + "/final.png";
+        private const string MusketDrawStartViewReviewStageKey =
+            "Bellerophon.PlayerMusketDrawStartView.Review.Stage";
+        private const string MusketAssetPath =
+            "Assets/_Project/Art/Items/Musket/musket.fbx";
+        private const string MusketSourcePath = "item model/musket.fbx";
+        private const string MusketSourceHash =
+            "45373D55D3563EC3DBEE161C05CC28CCF97B3318D6FE7318EC560855BC6340E1";
+        private const string MusketBackInstanceName = "Musket_Back_Item";
+        private const float MusketDesignLengthMeters = 1.12f;
+        private const float MusketBackDiagonalDegrees = 45f;
+        private const float MusketBackSurfaceInsetMeters = 0.052f;
+        private const string MusketBackCarryValidationDirectory =
+            "docs/validation/player_musket_back_carry_scale_spacing_fix_2026-08-31";
+        private const string MusketBackCarryApplyMetricsPath =
+            MusketBackCarryValidationDirectory + "/apply_metrics.json";
+        private const string MusketBackCarryReviewMetricsPath =
+            MusketBackCarryValidationDirectory + "/review_metrics.json";
+        private const string MusketBackCarryFramesDirectory =
+            MusketBackCarryValidationDirectory + "/playmode_frames";
+        private const string MusketBackCarryOverviewPath =
+            MusketBackCarryValidationDirectory + "/playmode_back_overview.png";
+        private const string MusketBackCarryFinalPath =
+            MusketBackCarryValidationDirectory + "/final.png";
+        private const string MusketBackCarryCaptureStageKey =
+            "Bellerophon.PlayerMusketBackCarry.Capture.Stage";
+        private const string MusketBackCarryCaptureErrorKey =
+            "Bellerophon.PlayerMusketBackCarry.Capture.Error";
+        private const string MusketHandInstanceName = "Musket_Hand_Item";
+        private const string MusketAnimationDirectory =
+            "Assets/_Project/Art/Player/Animations/Musket";
+        private const string MusketAnimationValidationDirectory =
+            "docs/validation/player_musket_animation_set_2026-08-31";
+        private const string MusketAnimationApplyMetricsPath =
+            MusketAnimationValidationDirectory + "/apply_metrics.json";
+        private const string MusketAnimationReviewMetricsPath =
+            MusketAnimationValidationDirectory + "/review_metrics.json";
+        private const string MusketAnimationFramesDirectory =
+            MusketAnimationValidationDirectory + "/playmode_frames";
+        private const string MusketAnimationOverviewPath =
+            MusketAnimationValidationDirectory + "/playmode_overview.png";
+        private const string MusketAnimationFinalPath =
+            MusketAnimationValidationDirectory + "/final.png";
+        private const string MusketAnimationCaptureStatusPath =
+            MusketAnimationValidationDirectory + "/capture_status.txt";
+        private const string MusketAnimationCaptureStageKey =
+            "Bellerophon.PlayerMusketAnimationSet.Capture.Stage";
+        private const float MusketAnimationCaptureFrameRate = 6f;
         private const string StickCarryStateName = "StickCarryOneHand";
         private const string StickCarryClipPath =
             "Assets/_Project/Art/Player/Animations/Stick_Carry_OneHand.anim";
         private const string StickCarryControllerPath =
             "Assets/_Project/Art/Player/Animations/Stick_Carry_OneHand.controller";
+        private const string StickGripTwoHandCarryStateName =
+            "StickGripTwoHandCarry";
+        private const string StickGripTwoHandTransitionStateName =
+            "StickGripTwoHandTransition";
+        private const string StickGripTwoHandAttackReadyStateName =
+            "StickGripTwoHandAttackReady";
+        private const string StickGripTwoHandOriginalPath =
+            "player model/transfer stick attack ready.fbx";
+        private const string StickGripTwoHandSourcePath =
+            "Assets/_Project/Art/Player/Animations/Stick_Grip_TwoHand_AttackReady_Mixamo.fbx";
+        private const string StickGripTwoHandSourceHash =
+            "19D90613E9D461D16B8F7A4BA809FA6B13B26D64B2D3BD90C9FA55B7E773DA62";
+        private const string StickGripTwoHandCarryClipPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Grip_TwoHand_StickCarry.anim";
+        private const string StickGripTwoHandAdjustedAttackReadyClipPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Grip_TwoHand_AttackReady_LeftHandForward.anim";
+        private const string StickGripTwoHandTransitionClipPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Grip_TwoHand_Transition.anim";
+        private const string StickGripTwoHandControllerPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Grip_TwoHand.controller";
+        private const float StickGripTwoHandCarryDurationSeconds = 0.5f;
+        private const float StickGripTwoHandTransitionDurationSeconds = 0.5f;
+        private const float StickGripTwoHandAttackReadyDurationSeconds = 1f;
+        private const float StickGripTwoHandSequenceDurationSeconds = 2f;
+        private const string StickAttackForwardStateName =
+            "StickAttackForwardMixamo";
+        private const string StickAttackForwardOriginalPath =
+            "player model/transfer stick attack.fbx";
+        private const string StickAttackForwardSourcePath =
+            "Assets/_Project/Art/Player/Animations/Stick_Attack_Forward_Mixamo.fbx";
+        private const string StickAttackForwardSourceHash =
+            "192AC4E1EC23A5EC96BA2D2245CEF0108A26484A2B635988EE478676E84006E7";
+        private const string StickAttackForwardControllerPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Attack_Forward.controller";
+        private const string StickAttackForwardTrimmedStateName =
+            "StickAttackForwardTrimmedWithStickMotion";
+        private const string StickAttackForwardTrimmedClipPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Attack_Forward_TrimmedWithStickMotion.anim";
+        private const int StickAttackForwardStopFrame = 58;
+        private const float StickAttackForwardFrameRate = 30f;
+        private const float StickAttackForwardStopTime =
+            StickAttackForwardStopFrame / StickAttackForwardFrameRate;
+        private const float StickAttackForwardPeakForwardTiltDegrees = 24f;
+        private const string StickAttackForwardTrimValidationDirectory =
+            "docs/validation/player_stick_attack_forward_trim_stick_motion_2026-08-31";
+        private const string StickAttackForwardTrimReviewPath =
+            StickAttackForwardTrimValidationDirectory +
+            "/direct_review_contact_sheet.png";
+        private const string StickAttackForwardTrimFinalPath =
+            StickAttackForwardTrimValidationDirectory + "/final.png";
+        private const string StickAttackForwardTrimMetricsPath =
+            StickAttackForwardTrimValidationDirectory + "/metrics.json";
+        private const string StickAttackForwardAttackingStateName =
+            "StickAttackForwardAttackingWithStickMotion";
+        private const string StickAttackForwardAttackingOriginalPath =
+            "player model/transfer stick attacking.fbx";
+        private const string StickAttackForwardAttackingSourcePath =
+            "Assets/_Project/Art/Player/Animations/Stick_Attack_Forward_Attacking_Mixamo.fbx";
+        private const string StickAttackForwardAttackingSourceHash =
+            "9AFC28384E95528E1E7051350F5F5EDA354FCFBE6AF60FC3C94ECF22E8C46A27";
+        private const string StickAttackForwardAttackingClipPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Attack_Forward_AttackingWithStickMotion.anim";
+        private const float StickAttackForwardAttackingEndHoldSeconds = 0.5f;
+        private const float StickAttackForwardAttackingFinalForwardTiltDegrees =
+            15f;
+        private const float StickAttackForwardAttackingPeakForwardTiltDegrees =
+            45f;
+        private const int StickAttackForwardAttackingFinalAlignmentLeadFrames =
+            2;
+        private const int StickAttackForwardAttackingMinimumSettleFrames =
+            4;
+        private const string StickAttackForwardAttackingValidationDirectory =
+            "docs/validation/player_stick_attack_forward_attacking_2026-08-31";
+        private const string StickAttackForwardAttackingSourceDiagnosticPath =
+            StickAttackForwardAttackingValidationDirectory +
+            "/source_diagnostic.png";
+        private const string StickAttackForwardAttackingReviewPath =
+            StickAttackForwardAttackingValidationDirectory +
+            "/direct_review_contact_sheet.png";
+        private const string StickAttackForwardAttackingFinalPath =
+            StickAttackForwardAttackingValidationDirectory + "/final.png";
+        private const string StickAttackForwardAttackingMetricsPath =
+            StickAttackForwardAttackingValidationDirectory + "/metrics.json";
+        private const string StickAttackForwardAttackingCorrectionsValidationDirectory =
+            "docs/validation/player_stick_attack_forward_attacking_corrections_2026-08-31";
+        private const string StickAttackForwardAttackingCorrectionsFramesDirectory =
+            StickAttackForwardAttackingCorrectionsValidationDirectory +
+            "/playmode_frames";
+        private const string StickAttackForwardAttackingCorrectionsRuntimeSamplesPath =
+            StickAttackForwardAttackingCorrectionsValidationDirectory +
+            "/actual_playmode_runtime_samples.csv";
+        private const string StickAttackForwardAttackingCorrectionsVideoPath =
+            StickAttackForwardAttackingCorrectionsValidationDirectory +
+            "/actual_playmode_two_loops.mp4";
+        private const string StickAttackForwardAttackingCorrectionsOverviewPath =
+            StickAttackForwardAttackingCorrectionsValidationDirectory +
+            "/actual_playmode_two_loops_overview.png";
+        private const string StickAttackForwardAttackingCorrectionsMetricsPath =
+            StickAttackForwardAttackingCorrectionsValidationDirectory +
+            "/metrics.json";
+        private const string StickAttackForwardAttackingCorrectionsCaptureStageKey =
+            "Bellerophon.PlayerStickAttackForwardAttackingCorrections.Capture.Stage";
+        private const string StickAttackForwardAttackingCorrectionsCaptureErrorKey =
+            "Bellerophon.PlayerStickAttackForwardAttackingCorrections.Capture.Error";
+        private const string StickAttackForwardLeftPalmRightValidationDirectory =
+            "docs/validation/player_stick_attack_forward_left_hand_palm_contact_2026-08-31";
+        private const string StickAttackForwardLeftPalmRightApplyPath =
+            StickAttackForwardLeftPalmRightValidationDirectory + "/apply.json";
+        private const string StickAttackForwardLeftPalmRightFramesDirectory =
+            StickAttackForwardLeftPalmRightValidationDirectory +
+            "/playmode_frames";
+        private const string StickAttackForwardLeftPalmRightRuntimeSamplesPath =
+            StickAttackForwardLeftPalmRightValidationDirectory +
+            "/actual_playmode_runtime_samples.csv";
+        private const string StickAttackForwardLeftPalmRightVideoPath =
+            StickAttackForwardLeftPalmRightValidationDirectory +
+            "/actual_playmode_two_loops.mp4";
+        private const string StickAttackForwardLeftPalmRightOverviewPath =
+            StickAttackForwardLeftPalmRightValidationDirectory +
+            "/actual_playmode_two_loops_overview.png";
+        private const string StickAttackForwardLeftPalmRightMetricsPath =
+            StickAttackForwardLeftPalmRightValidationDirectory +
+            "/metrics.json";
+        private const string StickAttackForwardLeftPalmRightCaptureStageKey =
+            "Bellerophon.PlayerStickAttackForwardLeftHandPalmContact.Capture.Stage";
+        private const string StickAttackForwardLeftPalmRightCaptureErrorKey =
+            "Bellerophon.PlayerStickAttackForwardLeftHandPalmContact.Capture.Error";
+        private const float StickAttackForwardLeftHandPalmContactOffsetMeters =
+            0.035f;
+        private const string StickAttackForwardGifWeaponReferencePath =
+            "C:/Users/gus68/OneDrive/바탕 화면/1111.gif";
+        private const string StickAttackForwardGifWeaponReferenceHash =
+            "1BA1B65D4C737690E4F72A3035D074EFA4CABCB840BE02F9985311C8DEE39C7C";
+        private const float StickAttackForwardGifWeaponReferenceDurationSeconds =
+            4.8f;
+        private const float StickAttackForwardGifWeaponReferenceFrameRate =
+            10f;
+        private const int StickAttackForwardGifWeaponReferenceFrameCount = 48;
+        private const int StickAttackForwardGifWeaponRaiseEndFrame = 5;
+        private const int StickAttackForwardGifWeaponStrikeStartFrame = 20;
+        private const int StickAttackForwardGifWeaponImpactFrame = 24;
+        private const int StickAttackForwardGifWeaponImpactHoldEndFrame = 32;
+        private const float
+            StickAttackForwardGifWeaponPreviousFinalDegreesFromVertical = 100f;
+        private const float StickAttackForwardGifWeaponFinalRaiseDegrees = 20f;
+        private const float
+            StickAttackForwardGifWeaponRaisedFinalDegreesFromVertical =
+                StickAttackForwardGifWeaponPreviousFinalDegreesFromVertical -
+                StickAttackForwardGifWeaponFinalRaiseDegrees;
+        private const string StickAttackForwardGifWeaponValidationDirectory =
+            "docs/validation/player_stick_attack_forward_end_angle_raise_20_2026-08-31";
+        private const string StickAttackForwardGifWeaponAnalysisPath =
+            StickAttackForwardGifWeaponValidationDirectory + "/mapping.json";
+        private const string StickAttackForwardGifWeaponFramesDirectory =
+            StickAttackForwardGifWeaponValidationDirectory + "/playmode_frames";
+        private const string StickAttackForwardGifWeaponRuntimeSamplesPath =
+            StickAttackForwardGifWeaponValidationDirectory +
+            "/actual_playmode_runtime_samples.csv";
+        private const string StickAttackForwardGifWeaponVideoPath =
+            StickAttackForwardGifWeaponValidationDirectory +
+            "/actual_playmode_two_loops.mp4";
+        private const string StickAttackForwardGifWeaponOverviewPath =
+            StickAttackForwardGifWeaponValidationDirectory +
+            "/actual_playmode_two_loops_overview.png";
+        private const string StickAttackForwardGifWeaponMetricsPath =
+            StickAttackForwardGifWeaponValidationDirectory + "/metrics.json";
+        private const string StickAttackForwardGifWeaponCaptureStageKey =
+            "Bellerophon.PlayerStickAttackForwardGifWeaponMotion.Capture.Stage";
+        private const string StickAttackForwardGifWeaponCaptureErrorKey =
+            "Bellerophon.PlayerStickAttackForwardGifWeaponMotion.Capture.Error";
+        private const string StickGripOneHandAttackReadyReverseStateName =
+            "StickGripOneHandAttackReadyReverse";
+        private const string StickGripOneHandTransitionReverseStateName =
+            "StickGripOneHandTransitionReverse";
+        private const string StickGripOneHandCarryReverseStateName =
+            "StickGripOneHandCarryReverse";
+        private const string StickGripOneHandAttackReadyReverseClipPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Grip_OneHand_AttackReady_Reverse.anim";
+        private const string StickGripOneHandTransitionReverseClipPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Grip_OneHand_Transition_Reverse.anim";
+        private const string StickGripOneHandCarryReverseClipPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Grip_OneHand_Carry_Reverse.anim";
+        private const string StickGripOneHandControllerPath =
+            "Assets/_Project/Art/Player/Animations/Stick_Grip_OneHand.controller";
+        private const string StickAttackForwardGripOneHandValidationDirectory =
+            "docs/validation/player_stick_attack_forward_grip_onehand_2026-08-31";
+        private const string StickAttackForwardGripOneHandReviewPath =
+            StickAttackForwardGripOneHandValidationDirectory +
+            "/direct_review_contact_sheet.png";
+        private const string StickAttackForwardGripOneHandFinalPath =
+            StickAttackForwardGripOneHandValidationDirectory + "/final.png";
+        private const string StickAttackForwardGripOneHandMetricsPath =
+            StickAttackForwardGripOneHandValidationDirectory + "/metrics.json";
+        // Minimal palm-center lead used only when the original hands would overlap;
+        // the approved same-view direct comparison remains the completion authority.
+        private const float StickGripTwoHandLeftHandForwardClearanceMeters = 0.04f;
+        private const string StickGripTwoHandValidationDirectory =
+            "docs/validation/player_stick_grip_two_hand_wrist_fix_2026-08-31";
+        private const string StickGripTwoHandReviewPath =
+            StickGripTwoHandValidationDirectory + "/direct_review_contact_sheet.png";
+        private const string StickGripTwoHandFinalPath =
+            StickGripTwoHandValidationDirectory + "/final.png";
+        private const string StickGripTwoHandMetricsPath =
+            StickGripTwoHandValidationDirectory + "/metrics.json";
         private const string StickSourceModelPath = "item model/stick.fbx";
+        private const string StickSourceHash =
+            "59FECA1C0AADE476A59ED907FED43C828EE43654E07CB04EDCA9DF4A5D8BA664";
         private const string StickAssetPath =
             "Assets/_Project/Art/Items/Stick/stick.fbx";
         private const string StickMaterialFolder =
@@ -1368,6 +1684,237 @@ namespace Bellerophon.Editor
         }
 
         [Serializable]
+        private sealed class MusketDrawStartViewMetrics
+        {
+            public string target;
+            public Vector3 targetPosition;
+            public Quaternion targetRotation;
+            public Vector3 targetLocalScale;
+            public Vector3 playerStartPosition;
+            public Quaternion playerStartRotation;
+            public Vector3 playerCameraPosition;
+            public Quaternion playerCameraRotation;
+            public float cameraPlanarDistanceMeters;
+            public float playerRootPlanarDistanceMeters;
+            public float screenHorizontalCenterErrorNormalized;
+            public float screenVerticalCenterErrorNormalized;
+            public float playerFacingErrorDegrees;
+            public bool playerStartsOnTargetFrontSide;
+            public bool playerCameraTargetsCenter;
+            public bool targetTransformUnchanged;
+            public bool matchesAppliedStart;
+            public bool matchesStickCarryFraming;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class MusketBackCarryTargetMetrics
+        {
+            public string target;
+            public string parentPath;
+            public Vector3 targetLocalPosition;
+            public Quaternion targetLocalRotation;
+            public Vector3 targetLocalScale;
+            public Vector3 musketLocalPosition;
+            public Quaternion musketLocalRotation;
+            public Vector3 musketLocalScale;
+            public float musketLengthMeters;
+            public float angleBelowLeftHorizontalDegrees;
+            public float directionErrorDegrees;
+            public float maximumLocalPositionDifferenceMeters;
+            public float maximumLocalRotationDifferenceDegrees;
+            public float maximumLocalScaleDifference;
+            public int playModeFramesCaptured;
+            public bool stockUpperRightMuzzleLowerLeft;
+            public bool targetRootUnchanged;
+            public bool animatorUnchanged;
+            public bool parentedToSpine;
+            public bool sameRelativeTransform;
+            public bool passedNumericChecks;
+        }
+
+        [Serializable]
+        private sealed class MusketBackCarryApplyMetrics
+        {
+            public string sourceModelPath;
+            public string importedModelPath;
+            public string sourceModelHash;
+            public string importedModelHash;
+            public Vector3 detectedSourceStockToMuzzleAxis;
+            public Vector3 detectedSourceThicknessAxis;
+            public float detectedSourceLength;
+            public float detectedMuzzleEndRadius;
+            public float detectedStockEndRadius;
+            public float configuredLengthMeters;
+            public float configuredDiagonalDegrees;
+            public int targetCount;
+            public MusketBackCarryTargetMetrics[] targets;
+            public bool sourceAndImportedModelsExact;
+            public bool allTargetsUseSameRelativeTransform;
+            public bool allTargetRootsAndAnimatorsUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class MusketBackCarryReviewMetrics
+        {
+            public string targetSet;
+            public int captureFrameRate;
+            public float secondsCapturedPerTarget;
+            public int targetCount;
+            public MusketBackCarryTargetMetrics[] targets;
+            public bool existingTargetStatesObserved;
+            public bool allTargetsRemainAttachedToSpine;
+            public bool allDirectionsRemainCorrect;
+            public bool allRelativeTransformsRemainExact;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        private sealed class MusketAnimationSpec
+        {
+            internal string TargetName;
+            internal string Label;
+            internal string OriginalPath;
+            internal string AssetPath;
+            internal string ExpectedHash;
+            internal string GeneratedClipPath;
+            internal string ControllerPath;
+            internal string StateName;
+            internal string ItemMode;
+        }
+
+        private sealed class MusketGripBinding
+        {
+            internal Vector3 LocalPosition;
+            internal Quaternion LocalRotation;
+            internal Vector3 LocalScale;
+            internal Vector3 DrawBackLocalPosition;
+            internal Quaternion DrawBackLocalRotation;
+            internal Vector3 DrawBackLocalScale;
+            internal Vector3 StowBackLocalPosition;
+            internal Quaternion StowBackLocalRotation;
+            internal Vector3 StowBackLocalScale;
+            internal int DrawSwitchFrame;
+            internal float DrawSwitchTime;
+            internal float DrawContactDistanceMeters;
+            internal int StowSwitchFrame;
+            internal float StowSwitchTime;
+            internal float StowPositionDifferenceMeters;
+            internal float StowRotationDifferenceDegrees;
+        }
+
+        [Serializable]
+        private sealed class MusketAnimationTargetApplyMetrics
+        {
+            public string target;
+            public string originalSourcePath;
+            public string unitySourcePath;
+            public string originalHash;
+            public string unityHash;
+            public string embeddedTake;
+            public string generatedClipPath;
+            public string controllerPath;
+            public string itemMode;
+            public float durationSeconds;
+            public float frameRate;
+            public int sourceFloatCurveCount;
+            public int generatedFloatCurveCount;
+            public float itemSwitchTime;
+            public int itemSwitchFrame;
+            public Vector3 handItemLocalPosition;
+            public Quaternion handItemLocalRotation;
+            public Vector3 handItemLocalScale;
+            public bool sourceCopyExact;
+            public bool sourceBodyCurvesExact;
+            public bool sourceEventsExact;
+            public bool clipLoops;
+            public bool controllerUsesGeneratedClipAtSpeedOne;
+            public bool animatorSettingsCorrect;
+            public bool targetRootUnchanged;
+            public bool backItemTransformUnchanged;
+            public bool handItemUsesCommonGrip;
+            public bool passedNumericChecks;
+        }
+
+        [Serializable]
+        private sealed class MusketAnimationApplyMetrics
+        {
+            public string targetSet;
+            public string musketAssetPath;
+            public string musketAssetHash;
+            public float configuredMusketLengthMeters;
+            public int drawSwitchFrame;
+            public float drawSwitchTime;
+            public float drawContactDistanceMeters;
+            public int stowSwitchFrame;
+            public float stowSwitchTime;
+            public float stowPositionDifferenceMeters;
+            public float stowRotationDifferenceDegrees;
+            public Vector3 commonHandGripLocalPosition;
+            public Quaternion commonHandGripLocalRotation;
+            public Vector3 commonHandGripLocalScale;
+            public MusketAnimationTargetApplyMetrics[] targets;
+            public bool allSourceCopiesExact;
+            public bool allSourceBodyCurvesExact;
+            public bool allTargetsUseCommonGrip;
+            public bool allTargetRootsAndBackItemsUnchanged;
+            public bool otherAnimatorsUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class MusketAnimationTargetReviewMetrics
+        {
+            public string target;
+            public string itemMode;
+            public float clipDurationSeconds;
+            public float captureDurationSeconds;
+            public int framesCaptured;
+            public float loopsObserved;
+            public bool observedBackVisible;
+            public bool observedHandVisible;
+            public bool exactlyOneItemVisibleThroughout;
+            public float maximumTargetRootPositionDifferenceMeters;
+            public float maximumTargetRootRotationDifferenceDegrees;
+            public float maximumHandItemLocalPositionDifferenceMeters;
+            public float maximumHandItemLocalRotationDifferenceDegrees;
+            public float maximumHandItemLocalScaleDifference;
+            public bool contactSheetExists;
+            public bool passedNumericChecks;
+        }
+
+        [Serializable]
+        private sealed class MusketAnimationReviewMetrics
+        {
+            public string targetSet;
+            public float captureFrameRate;
+            public MusketAnimationTargetReviewMetrics[] targets;
+            public bool actualPlayModeObserved;
+            public bool everyTargetObservedForTwoLoops;
+            public bool everyTargetKeptExactlyOneVisibleMusket;
+            public bool allTargetRootsAndHandGripTransformsUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        private sealed class MusketGeometryAnalysis
+        {
+            internal Vector3 LocalCenter;
+            internal Vector3 LocalStockPoint;
+            internal Vector3 LocalMuzzlePoint;
+            internal Vector3 StockToMuzzleAxis;
+            internal Vector3 ThicknessAxis;
+            internal float SourceLength;
+            internal float SourceThickness;
+            internal float MuzzleEndRadius;
+            internal float StockEndRadius;
+        }
+
+        [Serializable]
         private sealed class StickCarryCurrentRightHandLocalTransformMetrics
         {
             public string target;
@@ -1481,6 +2028,420 @@ namespace Bellerophon.Editor
             public string validationPriority;
         }
 
+        [Serializable]
+        private sealed class StickGripTwoHandMetrics
+        {
+            public string sourceTarget;
+            public string target;
+            public string stickSourcePath;
+            public string stickAssetPath;
+            public string stickSourceHash;
+            public string stickAssetHash;
+            public string attackReadyOriginalPath;
+            public string attackReadySourcePath;
+            public string attackReadyOriginalHash;
+            public string attackReadySourceHash;
+            public string embeddedTake;
+            public float embeddedTakeDurationSeconds;
+            public float embeddedTakeFrameRate;
+            public float carryDurationSeconds;
+            public float transitionDurationSeconds;
+            public float attackReadySegmentDurationSeconds;
+            public float totalSequenceDurationSeconds;
+            public float carryPosePositionDifferenceMax;
+            public float carryPoseRotationDifferenceDegreesMax;
+            public float transitionStartPositionDifferenceMax;
+            public float transitionStartRotationDifferenceDegreesMax;
+            public float transitionEndPositionDifferenceMax;
+            public float transitionEndRotationDifferenceDegreesMax;
+            public string adjustedAttackReadyClipPath;
+            public float minimumLeftHandForwardSeparationMeters;
+            public float maximumLeftHandReachErrorMeters;
+            public string[] modifiedTransformPaths;
+            public bool onlyLeftArmAndForeArmRotationCurvesChanged;
+            public bool leftShoulderCurvesExact;
+            public bool leftHandCurvesExact;
+            public bool nonLeftPoseExact;
+            public float nonLeftPosePositionDifferenceMax;
+            public float nonLeftPoseRotationDifferenceDegreesMax;
+            public bool controllerUsesAdjustedAttackReadyClip;
+            public bool controllerSequenceExact;
+            public bool animatorSettingsCorrect;
+            public string stickParentPath;
+            public Vector3 sourceStickLocalPosition;
+            public Quaternion sourceStickLocalRotation;
+            public Vector3 sourceStickLocalScale;
+            public Vector3 targetStickLocalPosition;
+            public Quaternion targetStickLocalRotation;
+            public Vector3 targetStickLocalScale;
+            public bool stickParentAndLocalTransformExact;
+            public bool reviewContactSheetExists;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class StickAttackForwardGripOneHandMetrics
+        {
+            public string stickSourceHash;
+            public string stickAssetHash;
+            public string attackOriginalHash;
+            public string attackSourceHash;
+            public string attackEmbeddedTake;
+            public float attackDurationSeconds;
+            public float attackFrameRate;
+            public bool attackControllerUsesExactEmbeddedTake;
+            public bool attackEmbeddedTakeLoops;
+            public float attackPosePositionDifferenceMax;
+            public float attackPoseRotationDifferenceDegreesMax;
+            public float reversedAttackDurationSeconds;
+            public float reversedTransitionDurationSeconds;
+            public float reversedCarryDurationSeconds;
+            public float reversedSequenceDurationSeconds;
+            public float reversePosePositionDifferenceMax;
+            public float reversePoseRotationDifferenceDegreesMax;
+            public string reverseMaximumRotationPath;
+            public float reverseMaximumRotationTimeSeconds;
+            public bool reverseControllerSequenceExact;
+            public bool attackAnimatorSettingsCorrect;
+            public bool reverseAnimatorSettingsCorrect;
+            public bool attackStickTransformExact;
+            public bool reverseStickTransformExact;
+            public bool reviewContactSheetExists;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class StickAttackForwardTrimMetrics
+        {
+            public string attackOriginalHash;
+            public string attackSourceHash;
+            public string sourceEmbeddedTake;
+            public float sourceDurationSeconds;
+            public float sourceFrameRate;
+            public int stopFrame;
+            public float stopTimeSeconds;
+            public float removedDurationSeconds;
+            public float trimmedDurationSeconds;
+            public float trimmedFrameRate;
+            public int rightHandDescentStartFrame;
+            public float configuredPeakForwardTiltDegrees;
+            public float measuredPeakStickRotationFromCarryDegrees;
+            public float startStickRotationFromCarryDegrees;
+            public float stopStickRotationFromCarryDegrees;
+            public float sourceBodyPosePositionDifferenceMax;
+            public float sourceBodyPoseRotationDifferenceDegreesMax;
+            public int stickRotationCurveCount;
+            public bool onlyStickRotationCurvesAdded;
+            public bool noKeysAfterStopTime;
+            public bool controllerUsesTrimmedClip;
+            public bool trimmedClipLoops;
+            public bool animatorSettingsCorrect;
+            public bool reviewContactSheetExists;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class StickAttackForwardAttackingMetrics
+        {
+            public string attackOriginalHash;
+            public string attackSourceHash;
+            public string stickSourceHash;
+            public string stickAssetHash;
+            public string sourceEmbeddedTake;
+            public float sourceDurationSeconds;
+            public float sourceFrameRate;
+            public float endHoldDurationSeconds;
+            public float generatedDurationSeconds;
+            public float generatedFrameRate;
+            public float configuredFinalForwardTiltDegrees;
+            public float measuredFinalForwardTiltDegrees;
+            public bool finalStickTiltsForward;
+            public float sourceBodyPosePositionDifferenceMax;
+            public float sourceBodyPoseRotationDifferenceDegreesMax;
+            public float holdBodyPositionDifferenceMax;
+            public float holdBodyRotationDifferenceDegreesMax;
+            public float endHoldStickPositionDifferenceMax;
+            public float endHoldStickRotationDifferenceDegreesMax;
+            public float finalRightHandToShaftMeters;
+            public float finalLeftHandToShaftMeters;
+            public int stickPositionCurveCount;
+            public int stickRotationCurveCount;
+            public bool onlyStickTransformCurvesAdded;
+            public bool sourceEventsUnchanged;
+            public bool controllerUsesGeneratedClip;
+            public bool generatedClipLoops;
+            public bool animatorSettingsCorrect;
+            public bool reviewContactSheetExists;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class StickAttackForwardAttackingCorrectionsMetrics
+        {
+            public string attackOriginalHash;
+            public string attackSourceHash;
+            public string stickSourceHash;
+            public string stickAssetHash;
+            public string sourceEmbeddedTake;
+            public float sourceDurationSeconds;
+            public float sourceFrameRate;
+            public float generatedDurationSeconds;
+            public float endHoldDurationSeconds;
+            public int finalAlignmentStartFrame;
+            public int peakForwardTiltFrame;
+            public int finalAlignmentCompleteFrame;
+            public float configuredPeakForwardTiltDegrees;
+            public float measuredPeakForwardTiltDegrees;
+            public float configuredFinalForwardTiltDegrees;
+            public float measuredFinalForwardTiltDegrees;
+            public float maximumLeftPalmCharacterRightAngleDegrees;
+            public float maximumStickAxisDirectionStepDegrees;
+            public float stickAxisDirectionCumulativeTravelDegrees;
+            public float nonCorrectedBodyPositionDifferenceMax;
+            public float nonCorrectedBodyRotationDifferenceDegreesMax;
+            public float endHoldBodyPositionDifferenceMax;
+            public float endHoldBodyRotationDifferenceDegreesMax;
+            public float endHoldStickPositionDifferenceMax;
+            public float endHoldStickRotationDifferenceDegreesMax;
+            public bool finalStickTiltsForward;
+            public bool leftForeArmCorrectionAndSourceLeftHandPosePreserved;
+            public bool sourceEventsUnchanged;
+            public bool controllerUsesGeneratedClip;
+            public bool generatedClipLoops;
+            public bool animatorSettingsCorrect;
+            public bool actualPlayModeVideoExists;
+            public bool actualPlayModeOverviewExists;
+            public bool actualPlayModeRuntimeSamplesExist;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class StickAttackForwardLeftPalmRightApplyRecord
+        {
+            public string target;
+            public float durationSeconds;
+            public float frameRate;
+            public string[] modifiedTransformPaths;
+            public string stickCurvesHashBefore;
+            public string stickCurvesHashAfter;
+            public bool stickCurvesExactAndUnchanged;
+            public bool controllerAndAnimatorTimingUnchanged;
+            public bool sceneUnchanged;
+        }
+
+        [Serializable]
+        private sealed class StickAttackForwardLeftPalmRightMetrics
+        {
+            public string attackOriginalHash;
+            public string attackSourceHash;
+            public float sourceDurationSeconds;
+            public float generatedDurationSeconds;
+            public float endHoldDurationSeconds;
+            public float sourceFrameRate;
+            public string[] modifiedTransformPaths;
+            public float nonApprovedBodyPositionDifferenceMax;
+            public float nonApprovedBodyRotationDifferenceDegreesMax;
+            public string stickCurvesHashBeforeRestore;
+            public string stickCurvesHashAfterRestore;
+            public string stickCurvesHashCurrent;
+            public bool stickCurvesExactAndUnchanged;
+            public bool onlyApprovedLeftArmPathsChanged;
+            public bool sourceEventsUnchanged;
+            public bool controllerAndAnimatorTimingUnchanged;
+            public bool generatedClipLoops;
+            public bool actualPlayModeVideoExists;
+            public bool actualPlayModeOverviewExists;
+            public bool actualPlayModeRuntimeSamplesExist;
+            public bool passedNumericChecks;
+            public string validationPriority;
+            public string postureJudgement;
+        }
+
+        [Serializable]
+        private sealed class StickAttackForwardGifWeaponMappingRecord
+        {
+            public string referencePath;
+            public string referenceHash;
+            public float referenceDurationSeconds;
+            public float referenceFrameRate;
+            public int referenceFrameCount;
+            public float sourceDurationSeconds;
+            public float preservedGeneratedDurationSeconds;
+            public float sourceFrameRate;
+            public int currentRaiseEndFrame;
+            public int currentStrikeStartFrame;
+            public int currentImpactFrame;
+            public int currentImpactHoldEndFrame;
+            public int referenceRaiseEndFrame;
+            public int referenceStrikeStartFrame;
+            public int referenceImpactFrame;
+            public int referenceImpactHoldEndFrame;
+            public float previousFinalDegreesFromVertical;
+            public float configuredFinalRaiseDegrees;
+            public float configuredRaisedFinalDegreesFromVertical;
+            public string timingMethod;
+            public string positionMethod;
+        }
+
+        [Serializable]
+        private sealed class StickAttackForwardGifWeaponMetrics
+        {
+            public string referenceHash;
+            public string attackOriginalHash;
+            public string attackSourceHash;
+            public string sourceEmbeddedTake;
+            public float referenceDurationSeconds;
+            public float referenceFrameRate;
+            public int referenceFrameCount;
+            public float sourceDurationSeconds;
+            public float generatedDurationSeconds;
+            public float preservedDurationDifferenceSeconds;
+            public float sourceFrameRate;
+            public float endHoldDurationSeconds;
+            public int currentRaiseEndFrame;
+            public int currentStrikeStartFrame;
+            public int currentImpactFrame;
+            public int currentImpactHoldEndFrame;
+            public int referenceRaiseEndFrame;
+            public int referenceStrikeStartFrame;
+            public int referenceImpactFrame;
+            public int referenceImpactHoldEndFrame;
+            public float configuredFinalRaiseDegrees;
+            public float configuredRaisedFinalDegreesFromVertical;
+            public float measuredFinalDegreesFromVertical;
+            public float measuredFinalRaiseDegrees;
+            public float maximumGripAnchorErrorMeters;
+            public float maximumStickAxisDirectionStepDegrees;
+            public int maximumStickAxisDirectionStepFrame;
+            public float bodyPositionDifferenceMax;
+            public float bodyRotationDifferenceDegreesMax;
+            public bool onlyStickTransformCurvesDifferFromHeldSource;
+            public bool sourceEventsUnchanged;
+            public bool controllerAndAnimatorTimingUnchanged;
+            public bool generatedClipLoops;
+            public bool actualPlayModeVideoExists;
+            public bool actualPlayModeOverviewExists;
+            public bool actualPlayModeRuntimeSamplesExist;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        private sealed class StickAttackForwardGifWeaponTimeMapping
+        {
+            internal int CurrentRaiseEndFrame;
+            internal int CurrentStrikeStartFrame;
+            internal int CurrentImpactFrame;
+            internal int CurrentImpactHoldEndFrame;
+        }
+
+        [Serializable]
+        private sealed class StickThrowReadyReleaseCancelApplyMetrics
+        {
+            public string stickSourceHash;
+            public string stickAssetHash;
+            public string readySourceClipPath;
+            public string releaseSourceClipPath;
+            public string cancelSourceClipPath;
+            public float readyDurationSeconds;
+            public float releaseDurationSeconds;
+            public float cancelDurationSeconds;
+            public float frameRate;
+            public int releaseFrame;
+            public float releaseTimeSeconds;
+            public float flightDistanceMeters;
+            public float launchElevationDegrees;
+            public float launchSpeedMetersPerSecond;
+            public float gravityMetersPerSecondSquared;
+            public float flightDurationSeconds;
+            public float landingTimeSeconds;
+            public float apexTimeAfterReleaseSeconds;
+            public float apexHeightAboveReleaseMeters;
+            public float readyBodyPositionDifferenceMax;
+            public float readyBodyRotationDifferenceDegreesMax;
+            public float releaseBodyPositionDifferenceMax;
+            public float releaseBodyRotationDifferenceDegreesMax;
+            public float cancelBodyPositionDifferenceMax;
+            public float cancelBodyRotationDifferenceDegreesMax;
+            public float readyHeldAngleErrorDegreesMax;
+            public float cancelHeldAngleErrorDegreesMax;
+            public float releaseJavelinAngleErrorDegrees;
+            public float releaseTrajectoryPositionErrorMetersMax;
+            public float releaseVelocityAlignmentErrorDegreesMax;
+            public float releaseLandingBottomHeightMeters;
+            public bool readyMeshMatchesSource;
+            public bool releaseMeshMatchesSource;
+            public bool cancelMeshMatchesSource;
+            public bool allStickParentsAndInitialLocalTransformsMatchCarry;
+            public bool allControllersUseCopiedLoopingClips;
+            public bool allAnimatorSettingsCorrect;
+            public bool sourceControllersAndClipsUnchanged;
+            public bool readyAndCancelMatchReferenceJavelinAngle;
+            public bool releaseStartsAtReferenceJavelinAngle;
+            public bool releaseFollowsPhysicalParabola;
+            public bool releaseAxisFollowsVelocity;
+            public bool releaseStickLandsAtConfiguredDistance;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class StickThrowReadyReleaseCancelFinalMetrics
+        {
+            public StickThrowReadyReleaseCancelApplyMetrics apply;
+            public bool actualPlayModeVideoExists;
+            public bool actualPlayModeOverviewExists;
+            public bool actualPlayModeRuntimeSamplesExist;
+            public bool currentControllersAndClipsStillExact;
+            public bool currentStickParentsAndInitialLocalTransformsMatchCarry;
+            public bool passedNumericChecks;
+            public string validationPriority;
+            public string postureJudgement;
+        }
+
+        private readonly struct StickAttackForwardGifWeaponAngleKey
+        {
+            internal readonly int Frame;
+            internal readonly float DegreesFromVertical;
+
+            internal StickAttackForwardGifWeaponAngleKey(
+                int frame,
+                float degreesFromVertical)
+            {
+                Frame = frame;
+                DegreesFromVertical = degreesFromVertical;
+            }
+        }
+
+        // Directly transcribed from the supplied 10 fps front-oblique GIF.
+        // Positive angles lean from character-up toward character-forward.
+        private static readonly StickAttackForwardGifWeaponAngleKey[]
+            StickAttackForwardGifWeaponAngleKeys =
+            {
+                new StickAttackForwardGifWeaponAngleKey(0, 27f),
+                new StickAttackForwardGifWeaponAngleKey(2, 0f),
+                new StickAttackForwardGifWeaponAngleKey(4, -18f),
+                new StickAttackForwardGifWeaponAngleKey(5, -15f),
+                new StickAttackForwardGifWeaponAngleKey(13, -15f),
+                new StickAttackForwardGifWeaponAngleKey(14, -90f),
+                new StickAttackForwardGifWeaponAngleKey(16, -132f),
+                new StickAttackForwardGifWeaponAngleKey(18, -155f),
+                new StickAttackForwardGifWeaponAngleKey(20, -90f),
+                new StickAttackForwardGifWeaponAngleKey(21, -50f),
+                new StickAttackForwardGifWeaponAngleKey(22, 15f),
+                new StickAttackForwardGifWeaponAngleKey(23, 15f),
+                new StickAttackForwardGifWeaponAngleKey(
+                    24,
+                    StickAttackForwardGifWeaponRaisedFinalDegreesFromVertical),
+                new StickAttackForwardGifWeaponAngleKey(
+                    32,
+                    StickAttackForwardGifWeaponRaisedFinalDegreesFromVertical)
+            };
+
         private sealed class StickGripPlacement
         {
             internal Transform Instance;
@@ -1489,6 +2450,13 @@ namespace Bellerophon.Editor
             internal Bounds LocalBounds;
             internal float LengthMeters;
             internal float GripFractionFromBottom;
+        }
+
+        private sealed class StickGripTwoHandAdjustedClipResult
+        {
+            internal AnimationClip Clip;
+            internal float MinimumForwardSeparationMeters;
+            internal float MaximumReachErrorMeters;
         }
 
         private sealed class RightHandPalmSample
@@ -2091,8 +3059,15 @@ namespace Bellerophon.Editor
 
             internal void Add(float time, Transform value)
             {
-                Vector3 position = value.localPosition;
-                Quaternion rotation = value.localRotation.normalized;
+                Add(time, value.localPosition, value.localRotation);
+            }
+
+            internal void Add(
+                float time,
+                Vector3 position,
+                Quaternion localRotation)
+            {
+                Quaternion rotation = localRotation.normalized;
                 if (hasPreviousRotation && Quaternion.Dot(previousRotation, rotation) < 0f)
                 {
                     rotation = new Quaternion(
@@ -5973,6 +6948,837 @@ namespace Bellerophon.Editor
             return metrics;
         }
 
+        [MenuItem("Bellerophon/Player/Apply Musket Draw Start View")]
+        internal static void ApplyMusketDrawStartView()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                SessionState.EraseInt(MusketDrawStartViewReviewStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerMusketDrawStartView] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Musket_Draw start-view apply.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform musketDrawTarget = RequireTarget(
+                layout,
+                MusketDrawTargetName);
+            Vector3 targetPositionBefore = musketDrawTarget.position;
+            Quaternion targetRotationBefore = musketDrawTarget.rotation;
+            Vector3 targetLocalScaleBefore = musketDrawTarget.localScale;
+            ConfigurePlayerStartFacingTarget(
+                scene,
+                musketDrawTarget,
+                MusketDrawTargetName,
+                out Transform playerRoot,
+                out Transform playerCamera,
+                out Bounds targetBounds);
+            bool targetTransformUnchanged =
+                Vector3.Distance(
+                    targetPositionBefore,
+                    musketDrawTarget.position) <= PositionTolerance &&
+                Quaternion.Angle(
+                    targetRotationBefore,
+                    musketDrawTarget.rotation) <= RotationTolerance &&
+                Vector3.Distance(
+                    targetLocalScaleBefore,
+                    musketDrawTarget.localScale) <= PositionTolerance;
+            if (!targetTransformUnchanged)
+            {
+                throw new InvalidOperationException(
+                    "Musket_Draw Transform changed while applying the Player start view.");
+            }
+
+            EditorSceneManager.SaveScene(scene);
+            MusketDrawStartViewMetrics metrics = MeasureMusketDrawStartView(
+                musketDrawTarget,
+                playerRoot,
+                playerCamera,
+                targetBounds,
+                targetTransformUnchanged,
+                null);
+            WriteJson(MusketDrawStartViewApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Musket_Draw start-view apply support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            SessionState.EraseInt(MusketDrawStartViewReviewStageKey);
+            Debug.Log(
+                "[PlayerMusketDrawStartView] Applied Stick_Carry-equivalent front framing to Musket_Draw. " +
+                "Player=(" +
+                Num(playerRoot.position.x) + "," +
+                Num(playerRoot.position.y) + "," +
+                Num(playerRoot.position.z) + ")" +
+                ", CameraDistance=" + Num(metrics.cameraPlanarDistanceMeters) +
+                ", TargetTransformUnchanged=" +
+                metrics.targetTransformUnchanged + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Musket Draw Start View Play Mode")]
+        internal static void CaptureMusketDrawStartViewPlayMode()
+        {
+            int stage = SessionState.GetInt(
+                MusketDrawStartViewReviewStageKey,
+                0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket_Draw start-view review must start in Edit Mode.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before Musket_Draw start-view review.");
+                    }
+
+                    SessionState.SetInt(MusketDrawStartViewReviewStageKey, 1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[PlayerMusketDrawStartView] Entering Play Mode for direct review.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket_Draw start-view capture requires Play Mode.");
+                    }
+
+                    CaptureMusketDrawStartViewActualPlayMode();
+                    SessionState.SetInt(MusketDrawStartViewReviewStageKey, 2);
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket_Draw start-view review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(MusketDrawStartViewReviewStageKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[PlayerMusketDrawStartView] Exiting Play Mode after direct review.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Musket_Draw start-view review stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(MusketDrawStartViewReviewStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+        private static void CaptureMusketDrawStartViewActualPlayMode()
+        {
+            MusketDrawStartViewMetrics applied =
+                ReadJson<MusketDrawStartViewMetrics>(
+                    MusketDrawStartViewApplyMetricsPath);
+            if (!applied.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Musket_Draw start-view apply metrics did not pass.");
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform musketDrawTarget = RequireTarget(
+                layout,
+                MusketDrawTargetName);
+            Camera mainCamera = scene.GetRootGameObjects()
+                .SelectMany(root => root.GetComponentsInChildren<Camera>(true))
+                .Single(camera => camera.CompareTag("MainCamera"));
+            CharacterController controller =
+                mainCamera.GetComponentInParent<CharacterController>();
+            if (controller == null)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp runtime Player CharacterController is missing.");
+            }
+
+            Bounds targetBounds = CalculateVisibleBounds(musketDrawTarget);
+            byte[] playModeFrame = CaptureCameraFrame(mainCamera);
+            string fullPlayModePath = Path.GetFullPath(
+                MusketDrawStartViewPlayModePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPlayModePath));
+            File.WriteAllBytes(fullPlayModePath, playModeFrame);
+
+            bool targetTransformUnchanged =
+                Vector3.Distance(
+                    musketDrawTarget.position,
+                    applied.targetPosition) <= PositionTolerance &&
+                Quaternion.Angle(
+                    musketDrawTarget.rotation,
+                    applied.targetRotation) <= RotationTolerance &&
+                Vector3.Distance(
+                    musketDrawTarget.localScale,
+                    applied.targetLocalScale) <= PositionTolerance;
+            MusketDrawStartViewMetrics metrics = MeasureMusketDrawStartView(
+                musketDrawTarget,
+                controller.transform,
+                mainCamera.transform,
+                targetBounds,
+                targetTransformUnchanged,
+                applied);
+            WriteJson(MusketDrawStartViewReviewMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Musket_Draw start-view Play Mode support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[PlayerMusketDrawStartView] Captured direct Play Mode start view. " +
+                "CameraDistance=" + Num(metrics.cameraPlanarDistanceMeters) +
+                ", CenterError=" +
+                Num(metrics.screenHorizontalCenterErrorNormalized) + "/" +
+                Num(metrics.screenVerticalCenterErrorNormalized) +
+                ", TargetTransformUnchanged=" +
+                metrics.targetTransformUnchanged + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Musket Draw Start View Final")]
+        internal static void CaptureMusketDrawStartViewFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Musket_Draw start-view finalization requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after Musket_Draw direct review.");
+            }
+
+            MusketDrawStartViewMetrics metrics =
+                ReadJson<MusketDrawStartViewMetrics>(
+                    MusketDrawStartViewReviewMetricsPath);
+            metrics.matchesStickCarryFraming =
+                Mathf.Abs(metrics.cameraPlanarDistanceMeters - 5.4f) <= 0.01f &&
+                metrics.screenHorizontalCenterErrorNormalized <= 0.01f &&
+                metrics.screenVerticalCenterErrorNormalized <= 0.01f;
+            metrics.passedNumericChecks =
+                metrics.playerStartsOnTargetFrontSide &&
+                metrics.targetTransformUnchanged &&
+                metrics.matchesStickCarryFraming;
+            WriteJson(MusketDrawStartViewReviewMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Musket_Draw start-view review did not pass before finalization.");
+            }
+
+            CopyReviewedContact(
+                MusketDrawStartViewPlayModePath,
+                MusketDrawStartViewFinalPath);
+            Debug.Log(
+                "[PlayerMusketDrawStartView] Final image copied once from the directly reviewed Play Mode frame. " +
+                "Path=" + Path.GetFullPath(MusketDrawStartViewFinalPath) +
+                ", SceneChanged=False.");
+        }
+
+        private static MusketDrawStartViewMetrics MeasureMusketDrawStartView(
+            Transform target,
+            Transform playerRoot,
+            Transform playerCamera,
+            Bounds targetBounds,
+            bool targetTransformUnchanged,
+            MusketDrawStartViewMetrics applied)
+        {
+            Camera camera = playerCamera.GetComponent<Camera>();
+            if (camera == null)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp runtime Player camera component is missing.");
+            }
+
+            Vector3 viewportCenter = camera.WorldToViewportPoint(
+                targetBounds.center);
+            float horizontalError = Mathf.Abs(viewportCenter.x - 0.5f);
+            float verticalError = Mathf.Abs(viewportCenter.y - 0.5f);
+            Vector3 cameraToCenter = targetBounds.center - playerCamera.position;
+            Vector3 playerToCenter = targetBounds.center - playerRoot.position;
+            float cameraPlanarDistance = Vector3.Distance(
+                Vector3.ProjectOnPlane(playerCamera.position, Vector3.up),
+                Vector3.ProjectOnPlane(targetBounds.center, Vector3.up));
+            float playerPlanarDistance = Vector3.Distance(
+                Vector3.ProjectOnPlane(playerRoot.position, Vector3.up),
+                Vector3.ProjectOnPlane(target.position, Vector3.up));
+            bool frontSide = Vector3.Dot(
+                playerCamera.position - targetBounds.center,
+                target.forward) > 0f;
+            bool cameraTargetsCenter = Vector3.Angle(
+                playerCamera.forward,
+                cameraToCenter) <= 0.1f;
+            float playerFacingError = Vector3.Angle(
+                playerRoot.forward,
+                Vector3.ProjectOnPlane(playerToCenter, Vector3.up));
+            bool matchesApplied = applied == null ||
+                (Vector3.Distance(
+                    playerRoot.position,
+                    applied.playerStartPosition) <= PositionTolerance &&
+                 Quaternion.Angle(
+                    playerRoot.rotation,
+                    applied.playerStartRotation) <= RotationTolerance &&
+                 Vector3.Distance(
+                    playerCamera.position,
+                    applied.playerCameraPosition) <= PositionTolerance &&
+                 Quaternion.Angle(
+                    playerCamera.rotation,
+                    applied.playerCameraRotation) <= RotationTolerance);
+            bool matchesStickCarryFraming =
+                Mathf.Abs(cameraPlanarDistance - 5.4f) <= 0.01f &&
+                horizontalError <= 0.01f &&
+                verticalError <= 0.01f;
+            MusketDrawStartViewMetrics metrics =
+                new MusketDrawStartViewMetrics
+                {
+                    target = MusketDrawTargetName,
+                    targetPosition = target.position,
+                    targetRotation = target.rotation,
+                    targetLocalScale = target.localScale,
+                    playerStartPosition = playerRoot.position,
+                    playerStartRotation = playerRoot.rotation,
+                    playerCameraPosition = playerCamera.position,
+                    playerCameraRotation = playerCamera.rotation,
+                    cameraPlanarDistanceMeters = cameraPlanarDistance,
+                    playerRootPlanarDistanceMeters = playerPlanarDistance,
+                    screenHorizontalCenterErrorNormalized = horizontalError,
+                    screenVerticalCenterErrorNormalized = verticalError,
+                    playerFacingErrorDegrees = playerFacingError,
+                    playerStartsOnTargetFrontSide = frontSide,
+                    playerCameraTargetsCenter = cameraTargetsCenter,
+                    targetTransformUnchanged = targetTransformUnchanged,
+                    matchesAppliedStart = matchesApplied,
+                    matchesStickCarryFraming = matchesStickCarryFraming,
+                    validationPriority =
+                        "1순위 직접 Unity Game 화면 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                frontSide &&
+                targetTransformUnchanged &&
+                matchesStickCarryFraming;
+            return metrics;
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Stick Throw Ready Release Cancel")]
+        internal static void ApplyStickThrowReadyReleaseCancel()
+        {
+            ApplyStickThrowReadyReleaseCancelInternal(true);
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Stick Throw Release Physics Arc")]
+        internal static void ApplyStickThrowReleasePhysicsArc()
+        {
+            ApplyStickThrowReadyReleaseCancelInternal(false);
+        }
+
+        private static void ApplyStickThrowReadyReleaseCancelInternal(
+            bool rebuildReadyAndCancel)
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick Throw Ready/Release/Cancel apply requires Edit Mode.");
+            }
+
+            RequireHash(StickSourceModelPath, StickSourceHash, "stick source FBX");
+            RequireHash(StickAssetPath, StickSourceHash, "Unity stick FBX");
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Stick Throw apply.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform carryTarget = RequireTarget(layout, StickCarryTargetName);
+            Transform readySourceTarget = RequireTarget(layout, ThrowReadyTargetName);
+            Transform releaseSourceTarget = RequireTarget(layout, ThrowReleaseTargetName);
+            Transform cancelSourceTarget = RequireTarget(layout, ThrowCancelTargetName);
+            Transform readyTarget = RequireTarget(layout, StickThrowReadyTargetName);
+            Transform releaseTarget = RequireTarget(layout, StickThrowReleaseTargetName);
+            Transform cancelTarget = RequireTarget(layout, StickThrowCancelTargetName);
+
+            AnimatorController readySourceController =
+                RequireAnimatorControllerAtPath(
+                    readySourceTarget,
+                    ThrowReadyControllerPath);
+            AnimatorController releaseSourceController =
+                RequireAnimatorControllerAtPath(
+                    releaseSourceTarget,
+                    ThrowReleaseControllerPath);
+            AnimatorController cancelSourceController =
+                RequireAnimatorControllerAtPath(
+                    cancelSourceTarget,
+                    ThrowCancelControllerPath);
+            AnimationClip readySourceClip = RequireDefaultLayerClip(
+                readySourceController,
+                0,
+                ThrowReadyStateName);
+            AnimationClip releaseSourceClip = RequireDefaultLayerClip(
+                releaseSourceController,
+                0,
+                ThrowReleaseStateName);
+            AnimationClip cancelSourceClip = RequireDefaultLayerClip(
+                cancelSourceController,
+                0,
+                ThrowCancelStateName);
+            string[] protectedSourcePaths =
+            {
+                ThrowReadyClipPath,
+                ThrowCancelClipPath,
+                ThrowSourcePath,
+                ThrowReadyControllerPath,
+                ThrowReleaseControllerPath,
+                ThrowCancelControllerPath
+            };
+            if (!rebuildReadyAndCancel)
+            {
+                protectedSourcePaths = protectedSourcePaths.Concat(new[]
+                {
+                    StickThrowReadyClipPath,
+                    StickThrowReadyControllerPath,
+                    StickThrowCancelClipPath,
+                    StickThrowCancelControllerPath,
+                    ScenePath
+                }).ToArray();
+            }
+            Dictionary<string, string> protectedSourceHashes =
+                protectedSourcePaths.ToDictionary(
+                    path => path,
+                    HashFile,
+                    StringComparer.Ordinal);
+
+            AnimationClip readyClip;
+            AnimationClip cancelClip;
+            if (rebuildReadyAndCancel)
+            {
+                CopyPrimaryPlayerMesh(readySourceTarget, readyTarget);
+                CopyPrimaryPlayerMesh(releaseSourceTarget, releaseTarget);
+                CopyPrimaryPlayerMesh(cancelSourceTarget, cancelTarget);
+                CopyStickCarryItemToTarget(carryTarget, readyTarget);
+                CopyStickCarryItemToTarget(carryTarget, releaseTarget);
+                CopyStickCarryItemToTarget(carryTarget, cancelTarget);
+                readyClip = CreateOrUpdateStickThrowHeldAngleClip(
+                    readyTarget,
+                    readySourceClip,
+                    StickThrowReadyClipPath,
+                    "Stick_Throw_Ready");
+                cancelClip = CreateOrUpdateStickThrowHeldAngleClip(
+                    cancelTarget,
+                    cancelSourceClip,
+                    StickThrowCancelClipPath,
+                    "Stick_Throw_Cancel");
+            }
+            else
+            {
+                readyClip = LoadClip(StickThrowReadyClipPath);
+                cancelClip = LoadClip(StickThrowCancelClipPath);
+            }
+            AnimationClip releaseClip = CreateOrUpdateStickThrowReleaseClip(
+                releaseTarget,
+                releaseSourceClip,
+                out int releaseFrame,
+                out float launchSpeed,
+                out float flightDuration,
+                out float landingTime,
+                out float apexTimeAfterRelease,
+                out float apexHeightAboveRelease);
+
+            AnimatorController readyController;
+            AnimatorController releaseController;
+            AnimatorController cancelController;
+            Animator readyAnimator;
+            Animator releaseAnimator;
+            Animator cancelAnimator;
+            if (rebuildReadyAndCancel)
+            {
+                readyController = CreateOrUpdateExactEmbeddedTakeController(
+                    StickThrowReadyControllerPath,
+                    StickThrowReadyStateName,
+                    readyClip);
+                releaseController = CreateOrUpdateExactEmbeddedTakeController(
+                    StickThrowReleaseControllerPath,
+                    StickThrowReleaseStateName,
+                    releaseClip);
+                cancelController = CreateOrUpdateExactEmbeddedTakeController(
+                    StickThrowCancelControllerPath,
+                    StickThrowCancelStateName,
+                    cancelClip);
+                readyAnimator = ConfigureAnimator(readyTarget, readyController);
+                releaseAnimator = ConfigureAnimator(
+                    releaseTarget,
+                    releaseController);
+                cancelAnimator = ConfigureAnimator(
+                    cancelTarget,
+                    cancelController);
+                EditorSceneManager.SaveScene(scene);
+            }
+            else
+            {
+                readyController = RequireAnimatorControllerAtPath(
+                    readyTarget,
+                    StickThrowReadyControllerPath);
+                releaseController = RequireAnimatorControllerAtPath(
+                    releaseTarget,
+                    StickThrowReleaseControllerPath);
+                cancelController = RequireAnimatorControllerAtPath(
+                    cancelTarget,
+                    StickThrowCancelControllerPath);
+                readyAnimator = RequireAnimator(readyTarget);
+                releaseAnimator = RequireAnimator(releaseTarget);
+                cancelAnimator = RequireAnimator(cancelTarget);
+            }
+            AssetDatabase.SaveAssets();
+
+            MeasureAnimationClipPoseDifferenceIgnoringStick(
+                readyTarget,
+                readySourceClip,
+                readyClip,
+                out _,
+                out float readyPositionDifference,
+                out float readyRotationDifference);
+            MeasureAnimationClipPoseDifferenceIgnoringStick(
+                releaseTarget,
+                releaseSourceClip,
+                releaseClip,
+                out _,
+                out float releasePositionDifference,
+                out float releaseRotationDifference);
+            MeasureAnimationClipPoseDifferenceIgnoringStick(
+                cancelTarget,
+                cancelSourceClip,
+                cancelClip,
+                out _,
+                out float cancelPositionDifference,
+                out float cancelRotationDifference);
+            MeasureStickThrowReleasePhysics(
+                releaseTarget,
+                releaseClip,
+                releaseFrame,
+                launchSpeed,
+                flightDuration,
+                out float measuredDistance,
+                out float trajectoryPositionError,
+                out float velocityAlignmentError,
+                out float landingBottomHeight);
+            MeasureStickThrowHeldAngle(
+                readyTarget,
+                readyClip,
+                out float readyHeldAngleError);
+            MeasureStickThrowHeldAngle(
+                cancelTarget,
+                cancelClip,
+                out float cancelHeldAngleError);
+            float releaseJavelinAngleError =
+                MeasureStickThrowReleaseJavelinAngleError(
+                    releaseTarget,
+                    releaseClip,
+                    releaseFrame);
+
+            bool sourceUnchanged = protectedSourceHashes.All(pair =>
+                string.Equals(
+                    pair.Value,
+                    HashFile(pair.Key),
+                    StringComparison.Ordinal));
+            bool sticksMatch =
+                StickInitialTransformMatchesCarry(carryTarget, readyTarget) &&
+                StickInitialTransformMatchesCarry(carryTarget, releaseTarget) &&
+                StickInitialTransformMatchesCarry(carryTarget, cancelTarget);
+            bool controllersCorrect =
+                StateUsesClip(
+                    readyController,
+                    StickThrowReadyStateName,
+                    readyClip) &&
+                StateUsesClip(
+                    releaseController,
+                    StickThrowReleaseStateName,
+                    releaseClip) &&
+                StateUsesClip(
+                    cancelController,
+                    StickThrowCancelStateName,
+                    cancelClip) &&
+                AnimationUtility.GetAnimationClipSettings(readyClip).loopTime &&
+                AnimationUtility.GetAnimationClipSettings(releaseClip).loopTime &&
+                AnimationUtility.GetAnimationClipSettings(cancelClip).loopTime;
+            bool animatorSettingsCorrect =
+                AnimatorMatches(readyAnimator, readyController) &&
+                AnimatorMatches(releaseAnimator, releaseController) &&
+                AnimatorMatches(cancelAnimator, cancelController);
+            StickThrowReadyReleaseCancelApplyMetrics metrics =
+                new StickThrowReadyReleaseCancelApplyMetrics
+                {
+                    stickSourceHash = HashFile(StickSourceModelPath),
+                    stickAssetHash = HashFile(StickAssetPath),
+                    readySourceClipPath = AssetDatabase.GetAssetPath(
+                        readySourceClip),
+                    releaseSourceClipPath = AssetDatabase.GetAssetPath(
+                        releaseSourceClip),
+                    cancelSourceClipPath = AssetDatabase.GetAssetPath(
+                        cancelSourceClip),
+                    readyDurationSeconds = readyClip.length,
+                    releaseDurationSeconds = releaseClip.length,
+                    cancelDurationSeconds = cancelClip.length,
+                    frameRate = releaseClip.frameRate,
+                    releaseFrame = releaseFrame,
+                    releaseTimeSeconds = releaseFrame / releaseClip.frameRate,
+                    flightDistanceMeters = measuredDistance,
+                    launchElevationDegrees =
+                        StickThrowJavelinElevationDegrees,
+                    launchSpeedMetersPerSecond = launchSpeed,
+                    gravityMetersPerSecondSquared =
+                        StickThrowGravityMetersPerSecondSquared,
+                    flightDurationSeconds = flightDuration,
+                    landingTimeSeconds = landingTime,
+                    apexTimeAfterReleaseSeconds = apexTimeAfterRelease,
+                    apexHeightAboveReleaseMeters = apexHeightAboveRelease,
+                    readyBodyPositionDifferenceMax = readyPositionDifference,
+                    readyBodyRotationDifferenceDegreesMax =
+                        readyRotationDifference,
+                    releaseBodyPositionDifferenceMax =
+                        releasePositionDifference,
+                    releaseBodyRotationDifferenceDegreesMax =
+                        releaseRotationDifference,
+                    cancelBodyPositionDifferenceMax = cancelPositionDifference,
+                    cancelBodyRotationDifferenceDegreesMax =
+                        cancelRotationDifference,
+                    readyHeldAngleErrorDegreesMax = readyHeldAngleError,
+                    cancelHeldAngleErrorDegreesMax = cancelHeldAngleError,
+                    releaseJavelinAngleErrorDegrees =
+                        releaseJavelinAngleError,
+                    releaseTrajectoryPositionErrorMetersMax =
+                        trajectoryPositionError,
+                    releaseVelocityAlignmentErrorDegreesMax =
+                        velocityAlignmentError,
+                    releaseLandingBottomHeightMeters = landingBottomHeight,
+                    readyMeshMatchesSource = PrimaryPlayerMeshesMatch(
+                        readySourceTarget,
+                        readyTarget),
+                    releaseMeshMatchesSource = PrimaryPlayerMeshesMatch(
+                        releaseSourceTarget,
+                        releaseTarget),
+                    cancelMeshMatchesSource = PrimaryPlayerMeshesMatch(
+                        cancelSourceTarget,
+                        cancelTarget),
+                    allStickParentsAndInitialLocalTransformsMatchCarry =
+                        sticksMatch,
+                    allControllersUseCopiedLoopingClips = controllersCorrect,
+                    allAnimatorSettingsCorrect = animatorSettingsCorrect,
+                    sourceControllersAndClipsUnchanged = sourceUnchanged,
+                    readyAndCancelMatchReferenceJavelinAngle =
+                        readyHeldAngleError <=
+                            StickThrowAngleToleranceDegrees &&
+                        cancelHeldAngleError <=
+                            StickThrowAngleToleranceDegrees,
+                    releaseStartsAtReferenceJavelinAngle =
+                        releaseJavelinAngleError <=
+                            StickThrowAngleToleranceDegrees,
+                    releaseFollowsPhysicalParabola =
+                        trajectoryPositionError <= 0.01f &&
+                        apexTimeAfterRelease > 0f &&
+                        apexTimeAfterRelease < flightDuration,
+                    releaseAxisFollowsVelocity =
+                        velocityAlignmentError <=
+                            StickThrowAngleToleranceDegrees,
+                    releaseStickLandsAtConfiguredDistance =
+                        Mathf.Abs(
+                            measuredDistance -
+                            StickThrowFlightDistanceMeters) <= 0.01f &&
+                        Mathf.Abs(landingBottomHeight) <= 0.01f,
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                string.Equals(
+                    metrics.stickSourceHash,
+                    metrics.stickAssetHash,
+                    StringComparison.Ordinal) &&
+                metrics.readyBodyPositionDifferenceMax <= PositionTolerance &&
+                metrics.readyBodyRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.releaseBodyPositionDifferenceMax <=
+                    PositionTolerance &&
+                metrics.releaseBodyRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.cancelBodyPositionDifferenceMax <= PositionTolerance &&
+                metrics.cancelBodyRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.readyMeshMatchesSource &&
+                metrics.releaseMeshMatchesSource &&
+                metrics.cancelMeshMatchesSource &&
+                metrics.allStickParentsAndInitialLocalTransformsMatchCarry &&
+                metrics.allControllersUseCopiedLoopingClips &&
+                metrics.allAnimatorSettingsCorrect &&
+                metrics.sourceControllersAndClipsUnchanged &&
+                metrics.readyAndCancelMatchReferenceJavelinAngle &&
+                metrics.releaseStartsAtReferenceJavelinAngle &&
+                metrics.releaseFollowsPhysicalParabola &&
+                metrics.releaseAxisFollowsVelocity &&
+                metrics.releaseStickLandsAtConfiguredDistance &&
+                !scene.isDirty;
+            WriteJson(StickThrowApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick Throw Ready/Release/Cancel support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            SessionState.EraseInt(StickThrowCaptureStageKey);
+            SessionState.EraseString(StickThrowCaptureErrorKey);
+            Debug.Log(
+                "[PlayerStickThrow] Applied a gravity-driven 4.5m Release parabola whose stick axis follows velocity. ReleaseFrame=" +
+                releaseFrame.ToString(CultureInfo.InvariantCulture) +
+                ", LaunchSpeed=" + Num(launchSpeed) +
+                "m/s, ApexTime=" + Num(apexTimeAfterRelease) +
+                "s, FlightDuration=" + Num(flightDuration) + "s.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Throw Ready Release Cancel Final")]
+        internal static void CaptureStickThrowReadyReleaseCancelFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick Throw finalization requires Edit Mode.");
+            }
+
+            StickThrowReadyReleaseCancelApplyMetrics apply =
+                ReadJson<StickThrowReadyReleaseCancelApplyMetrics>(
+                    StickThrowApplyMetricsPath);
+            if (!apply.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick Throw apply checks did not pass before finalization.");
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform carryTarget = RequireTarget(layout, StickCarryTargetName);
+            Transform readyTarget = RequireTarget(layout, StickThrowReadyTargetName);
+            Transform releaseTarget = RequireTarget(
+                layout,
+                StickThrowReleaseTargetName);
+            Transform cancelTarget = RequireTarget(layout, StickThrowCancelTargetName);
+            AnimationClip readyClip = LoadClip(StickThrowReadyClipPath);
+            AnimationClip releaseClip = LoadClip(StickThrowReleaseClipPath);
+            AnimationClip cancelClip = LoadClip(StickThrowCancelClipPath);
+            AnimatorController readyController =
+                RequireAnimatorControllerAtPath(
+                    readyTarget,
+                    StickThrowReadyControllerPath);
+            AnimatorController releaseController =
+                RequireAnimatorControllerAtPath(
+                    releaseTarget,
+                    StickThrowReleaseControllerPath);
+            AnimatorController cancelController =
+                RequireAnimatorControllerAtPath(
+                    cancelTarget,
+                    StickThrowCancelControllerPath);
+            bool controllersExact =
+                StateUsesClip(
+                    readyController,
+                    StickThrowReadyStateName,
+                    readyClip) &&
+                StateUsesClip(
+                    releaseController,
+                    StickThrowReleaseStateName,
+                    releaseClip) &&
+                StateUsesClip(
+                    cancelController,
+                    StickThrowCancelStateName,
+                    cancelClip) &&
+                AnimationUtility.GetAnimationClipSettings(readyClip).loopTime &&
+                AnimationUtility.GetAnimationClipSettings(releaseClip).loopTime &&
+                AnimationUtility.GetAnimationClipSettings(cancelClip).loopTime;
+            bool sticksExact =
+                StickInitialTransformMatchesCarry(carryTarget, readyTarget) &&
+                StickInitialTransformMatchesCarry(carryTarget, releaseTarget) &&
+                StickInitialTransformMatchesCarry(carryTarget, cancelTarget);
+            StickThrowReadyReleaseCancelFinalMetrics metrics =
+                new StickThrowReadyReleaseCancelFinalMetrics
+                {
+                    apply = apply,
+                    actualPlayModeVideoExists = File.Exists(
+                        Path.GetFullPath(StickThrowVideoPath)),
+                    actualPlayModeOverviewExists = File.Exists(
+                        Path.GetFullPath(StickThrowOverviewPath)),
+                    actualPlayModeRuntimeSamplesExist = File.Exists(
+                        Path.GetFullPath(StickThrowRuntimeSamplesPath)),
+                    currentControllersAndClipsStillExact = controllersExact,
+                    currentStickParentsAndInitialLocalTransformsMatchCarry =
+                        sticksExact,
+                    validationPriority =
+                        "1순위 실제 Unity Play Mode 애니메이션 직접 확인, 2순위 비대상 무결성 보조 확인",
+                    postureJudgement =
+                        "실제 Unity Play Mode 두 반복의 전신·손·막대기·Release 비행 화면을 직접 확인해 판정"
+                };
+            metrics.passedNumericChecks =
+                metrics.apply.passedNumericChecks &&
+                metrics.actualPlayModeVideoExists &&
+                metrics.actualPlayModeOverviewExists &&
+                metrics.actualPlayModeRuntimeSamplesExist &&
+                metrics.currentControllersAndClipsStillExact &&
+                metrics.currentStickParentsAndInitialLocalTransformsMatchCarry &&
+                !scene.isDirty;
+            WriteJson(StickThrowMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick Throw final support checks failed after direct Play Mode review. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[PlayerStickThrow] Finalized after direct Unity Play Mode review of the Release rise, apex, fall, and velocity-following stick rotation. Distance=" +
+                Num(apply.flightDistanceMeters) + "m.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Throw Release Physics Arc Final")]
+        internal static void CaptureStickThrowReleasePhysicsArcFinal()
+        {
+            CaptureStickThrowReadyReleaseCancelFinal();
+        }
+
         [MenuItem("Bellerophon/Player/Capture Stick Carry Current RightHand Local Transform")]
         internal static void CaptureStickCarryCurrentRightHandLocalTransform()
         {
@@ -6322,6 +8128,5312 @@ namespace Bellerophon.Editor
                 ", Textures=" + metrics.extractedTextureCount +
                 ", PerpendicularError=" +
                 Num(metrics.forearmPerpendicularErrorDegreesMax) + "deg.");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Stick Grip TwoHand Sequence")]
+        internal static void ApplyStickGripTwoHandSequence()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerStickGripTwoHand] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Stick_Grip_TwoHand apply.");
+            }
+
+            EnsureExactSourceCopy(
+                StickGripTwoHandOriginalPath,
+                StickGripTwoHandSourcePath,
+                StickGripTwoHandSourceHash,
+                "stick two-hand attack-ready");
+            ConfigureSourceImporter(
+                StickGripTwoHandSourcePath,
+                "stick two-hand attack-ready");
+            AnimationClip attackReadyClip = LoadSingleEmbeddedClip(
+                StickGripTwoHandSourcePath,
+                "stick two-hand attack-ready");
+            if (attackReadyClip.length + 0.0001f <
+                StickGripTwoHandAttackReadyDurationSeconds)
+            {
+                throw new InvalidOperationException(
+                    "The exact embedded Mixamo Take is shorter than the requested one-second source segment.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform stickCarryTarget = RequireTarget(
+                layout,
+                StickCarryTargetName);
+            Transform target = RequireTarget(
+                layout,
+                StickGripTwoHandTargetName);
+            Animator stickCarryAnimator = RequireAnimator(stickCarryTarget);
+            AnimatorController stickCarryController =
+                stickCarryAnimator.runtimeAnimatorController as AnimatorController;
+            if (stickCarryController == null ||
+                !string.Equals(
+                    AssetDatabase.GetAssetPath(stickCarryController),
+                    StickCarryControllerPath,
+                    StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "Stick_Carry does not use the expected copied OneHand controller.");
+            }
+
+            AnimationClip baseClip = RequireDefaultLayerClip(
+                stickCarryController,
+                0,
+                AlignmentBaseStateName);
+            AnimationClip armClip = RequireDefaultLayerClip(
+                stickCarryController,
+                1,
+                StickCarryStateName);
+            RootPose targetRootBefore = new RootPose(target);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTarget(
+                    layout,
+                    StickGripTwoHandTargetName);
+
+            AnimationClip carryClip =
+                CreateOrUpdateStickGripTwoHandCarryClip(
+                    stickCarryTarget,
+                    stickCarryAnimator,
+                    baseClip,
+                    armClip);
+            StickGripTwoHandAdjustedClipResult adjustedAttackReady =
+                CreateOrUpdateStickGripTwoHandLeftHandForwardClip(
+                    target,
+                    attackReadyClip);
+            AnimationClip transitionClip =
+                CreateOrUpdateStickGripTwoHandTransitionClip(
+                    target,
+                    carryClip,
+                    adjustedAttackReady.Clip);
+            AnimatorController controller =
+                CreateOrUpdateStickGripTwoHandController(
+                    carryClip,
+                    transitionClip,
+                    adjustedAttackReady.Clip);
+            Animator targetAnimator = ConfigureAnimator(target, controller);
+            CopyStickCarryItemToTarget(stickCarryTarget, target);
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            if (!RootMatches(target, targetRootBefore))
+            {
+                throw new InvalidOperationException(
+                    "Stick_Grip_TwoHand root changed during the approved apply.");
+            }
+
+            if (!DictionariesEqual(
+                    otherAnimatorsBefore,
+                    CaptureAnimatorsExceptTarget(
+                        layout,
+                        StickGripTwoHandTargetName)))
+            {
+                throw new InvalidOperationException(
+                    "An Animator outside Stick_Grip_TwoHand changed during apply.");
+            }
+
+            if (!AnimatorMatches(targetAnimator, controller))
+            {
+                throw new InvalidOperationException(
+                    "Stick_Grip_TwoHand Animator settings differ after apply.");
+            }
+
+            Debug.Log(
+                "[PlayerStickGripTwoHand] Applied 0.5s copied Stick_Carry, 0.5s full-body Smoothstep transition, and the source-speed first 1.0s with only LeftArm and LeftForeArm rotations adjusted forward; LeftShoulder and LeftHand curves remain exact source curves. Take=" +
+                attackReadyClip.name + ", SourceLength=" +
+                Num(attackReadyClip.length) +
+                "s, MinimumLeftLead=" +
+                Num(adjustedAttackReady.MinimumForwardSeparationMeters) +
+                "m, MaxReachError=" +
+                Num(adjustedAttackReady.MaximumReachErrorMeters) +
+                "m, Sequence=2s loop.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Grip TwoHand Sequence Review")]
+        internal static void CaptureStickGripTwoHandSequenceReview()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Grip_TwoHand direct review capture requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after Stick_Grip_TwoHand apply.");
+            }
+
+            CaptureStickGripTwoHandDirectReview();
+            Debug.Log(
+                "[PlayerStickGripTwoHand] Captured the 0.5s-2.0s sequence at 30fps in ordered front and side hand close-ups for direct motion review.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Grip TwoHand Sequence Final")]
+        internal static void CaptureStickGripTwoHandSequenceFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Grip_TwoHand final capture requires Edit Mode.");
+            }
+
+            if (!File.Exists(Path.GetFullPath(StickGripTwoHandReviewPath)))
+            {
+                throw new FileNotFoundException(
+                    "The directly reviewed Stick_Grip_TwoHand contact sheet is missing.",
+                    Path.GetFullPath(StickGripTwoHandReviewPath));
+            }
+
+            StickGripTwoHandMetrics metrics =
+                MeasureStickGripTwoHandSequenceMetrics();
+            WriteJson(StickGripTwoHandMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Grip_TwoHand support checks failed after direct review. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            CopyReviewedContact(
+                StickGripTwoHandReviewPath,
+                StickGripTwoHandFinalPath);
+            Debug.Log(
+                "[PlayerStickGripTwoHand] Finalized the directly reviewed contact sheet after support checks. CarryPose=" +
+                Num(metrics.carryPosePositionDifferenceMax) + "/" +
+                Num(metrics.carryPoseRotationDifferenceDegreesMax) +
+                ", TransitionEndpoints=" +
+                Num(Mathf.Max(
+                    metrics.transitionStartPositionDifferenceMax,
+                    metrics.transitionEndPositionDifferenceMax)) + "/" +
+                Num(Mathf.Max(
+                    metrics.transitionStartRotationDifferenceDegreesMax,
+                    metrics.transitionEndRotationDifferenceDegreesMax)) +
+                ", AdjustedClip=" +
+                metrics.controllerUsesAdjustedAttackReadyClip +
+                ", MinimumLeftLead=" +
+                Num(metrics.minimumLeftHandForwardSeparationMeters) +
+                ", StickTransform=" + metrics.stickParentAndLocalTransformExact + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Stick Attack Forward And Grip OneHand")]
+        internal static void ApplyStickAttackForwardAndGripOneHand()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerStickAttackForwardGripOneHand] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Stick_Attack_Forward and Stick_Grip_OneHand apply.");
+            }
+
+            EnsureExactSourceCopy(
+                StickAttackForwardOriginalPath,
+                StickAttackForwardSourcePath,
+                StickAttackForwardSourceHash,
+                "stick forward attack");
+            ConfigureSourceImporter(
+                StickAttackForwardSourcePath,
+                "stick forward attack");
+            AnimationClip attackClip = LoadSingleEmbeddedClip(
+                StickAttackForwardSourcePath,
+                "stick forward attack");
+            AnimationClip twoHandAttackReady = LoadClip(
+                StickGripTwoHandAdjustedAttackReadyClipPath);
+            AnimationClip twoHandTransition = LoadClip(
+                StickGripTwoHandTransitionClipPath);
+            AnimationClip twoHandCarry = LoadClip(
+                StickGripTwoHandCarryClipPath);
+            if (twoHandAttackReady.length + 0.0001f <
+                StickGripTwoHandAttackReadyDurationSeconds ||
+                Mathf.Abs(
+                    twoHandTransition.length -
+                    StickGripTwoHandTransitionDurationSeconds) > 0.0001f ||
+                Mathf.Abs(
+                    twoHandCarry.length -
+                    StickGripTwoHandCarryDurationSeconds) > 0.0001f)
+            {
+                throw new InvalidOperationException(
+                    "The current Stick_Grip_TwoHand clips no longer form the approved 1.0s/0.5s/0.5s reverse source.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform stickCarryTarget = RequireTarget(
+                layout,
+                StickCarryTargetName);
+            Transform attackTarget = RequireTarget(
+                layout,
+                StickAttackForwardTargetName);
+            Transform oneHandTarget = RequireTarget(
+                layout,
+                StickGripOneHandTargetName);
+            RootPose attackRootBefore = new RootPose(attackTarget);
+            RootPose oneHandRootBefore = new RootPose(oneHandTarget);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTargets(
+                    layout,
+                    StickAttackForwardTargetName,
+                    StickGripOneHandTargetName);
+
+            AnimationClip reversedAttack = CreateOrUpdateExactReversedClip(
+                twoHandAttackReady,
+                0f,
+                StickGripTwoHandAttackReadyDurationSeconds,
+                StickGripOneHandAttackReadyReverseClipPath,
+                "Stick_Grip_OneHand_AttackReady_Reverse");
+            AnimationClip reversedTransition = CreateOrUpdateExactReversedClip(
+                twoHandTransition,
+                0f,
+                StickGripTwoHandTransitionDurationSeconds,
+                StickGripOneHandTransitionReverseClipPath,
+                "Stick_Grip_OneHand_Transition_Reverse");
+            AnimationClip reversedCarry = CreateOrUpdateExactReversedClip(
+                twoHandCarry,
+                0f,
+                StickGripTwoHandCarryDurationSeconds,
+                StickGripOneHandCarryReverseClipPath,
+                "Stick_Grip_OneHand_Carry_Reverse");
+            AnimatorController attackController =
+                CreateOrUpdateExactEmbeddedTakeController(
+                    StickAttackForwardControllerPath,
+                    StickAttackForwardStateName,
+                    attackClip);
+            AnimatorController reverseController =
+                CreateOrUpdateStickGripOneHandReverseController(
+                    reversedAttack,
+                    reversedTransition,
+                    reversedCarry);
+            Animator attackAnimator = ConfigureAnimator(
+                attackTarget,
+                attackController);
+            Animator oneHandAnimator = ConfigureAnimator(
+                oneHandTarget,
+                reverseController);
+            CopyStickCarryItemToTarget(stickCarryTarget, attackTarget);
+            CopyStickCarryItemToTarget(stickCarryTarget, oneHandTarget);
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            if (!RootMatches(attackTarget, attackRootBefore) ||
+                !RootMatches(oneHandTarget, oneHandRootBefore))
+            {
+                throw new InvalidOperationException(
+                    "A target root changed during the approved stick apply.");
+            }
+
+            if (!DictionariesEqual(
+                    otherAnimatorsBefore,
+                    CaptureAnimatorsExceptTargets(
+                        layout,
+                        StickAttackForwardTargetName,
+                        StickGripOneHandTargetName)))
+            {
+                throw new InvalidOperationException(
+                    "An Animator outside Stick_Attack_Forward and Stick_Grip_OneHand changed during apply.");
+            }
+
+            if (!AnimatorMatches(attackAnimator, attackController) ||
+                !AnimatorMatches(oneHandAnimator, reverseController))
+            {
+                throw new InvalidOperationException(
+                    "A target Animator setting differs after the approved stick apply.");
+            }
+
+            Debug.Log(
+                "[PlayerStickAttackForwardGripOneHand] Applied exact embedded forward-attack Take at source speed in a loop, plus the exact current two-second Stick_Grip_TwoHand sequence in reverse clip order and reverse key time. AttackTake=" +
+                attackClip.name + ", AttackLength=" + Num(attackClip.length) +
+                "s, ReverseSequence=2s loop.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Attack Forward And Grip OneHand Review")]
+        internal static void CaptureStickAttackForwardAndGripOneHandReview()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick attack and one-hand reverse direct review requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after the stick attack and reverse apply.");
+            }
+
+            CaptureStickAttackForwardAndGripOneHandDirectReview();
+            Debug.Log(
+                "[PlayerStickAttackForwardGripOneHand] Captured source/applied forward attack and current/reversed two-second sequence at 30fps in matching front and side views.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Attack Forward And Grip OneHand Final")]
+        internal static void CaptureStickAttackForwardAndGripOneHandFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick attack and one-hand reverse finalization requires Edit Mode.");
+            }
+
+            if (!File.Exists(Path.GetFullPath(
+                    StickAttackForwardGripOneHandReviewPath)))
+            {
+                throw new FileNotFoundException(
+                    "The directly reviewed stick attack and reverse contact sheet is missing.",
+                    Path.GetFullPath(StickAttackForwardGripOneHandReviewPath));
+            }
+
+            StickAttackForwardGripOneHandMetrics metrics =
+                MeasureStickAttackForwardAndGripOneHandMetrics();
+            WriteJson(StickAttackForwardGripOneHandMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick attack and one-hand reverse support checks failed after direct review. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            CopyReviewedContact(
+                StickAttackForwardGripOneHandReviewPath,
+                StickAttackForwardGripOneHandFinalPath);
+            Debug.Log(
+                "[PlayerStickAttackForwardGripOneHand] Finalized the directly reviewed contact sheet after support checks. AttackPose=" +
+                Num(metrics.attackPosePositionDifferenceMax) + "/" +
+                Num(metrics.attackPoseRotationDifferenceDegreesMax) +
+                ", ReversePose=" +
+                Num(metrics.reversePosePositionDifferenceMax) + "/" +
+                Num(metrics.reversePoseRotationDifferenceDegreesMax) +
+                ", StickTransforms=" +
+                (metrics.attackStickTransformExact &&
+                 metrics.reverseStickTransformExact) + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Stick Attack Forward Trim And Stick Motion")]
+        internal static void ApplyStickAttackForwardTrimAndStickMotion()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerStickAttackForwardTrim] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before the Stick_Attack_Forward trim apply.");
+            }
+
+            RequireHash(
+                StickAttackForwardOriginalPath,
+                StickAttackForwardSourceHash,
+                "stick forward attack original FBX");
+            RequireHash(
+                StickAttackForwardSourcePath,
+                StickAttackForwardSourceHash,
+                "stick forward attack Unity FBX");
+            AnimationClip source = LoadSingleEmbeddedClip(
+                StickAttackForwardSourcePath,
+                "stick forward attack");
+            if (Mathf.Abs(source.frameRate - StickAttackForwardFrameRate) >
+                0.0001f ||
+                source.length + 0.0001f < StickAttackForwardStopTime)
+            {
+                throw new InvalidOperationException(
+                    "The approved stop frame is outside the exact 30fps Mixamo Take.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(
+                layout,
+                StickAttackForwardTargetName);
+            RootPose rootBefore = new RootPose(target);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTarget(
+                    layout,
+                    StickAttackForwardTargetName);
+            AnimationClip trimmed =
+                CreateOrUpdateStickAttackForwardTrimmedClip(target, source);
+            AnimatorController controller =
+                CreateOrUpdateExactEmbeddedTakeController(
+                    StickAttackForwardControllerPath,
+                    StickAttackForwardTrimmedStateName,
+                    trimmed);
+            Animator animator = ConfigureAnimator(target, controller);
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            if (!RootMatches(target, rootBefore))
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward root changed during the approved trim apply.");
+            }
+
+            if (!DictionariesEqual(
+                    otherAnimatorsBefore,
+                    CaptureAnimatorsExceptTarget(
+                        layout,
+                        StickAttackForwardTargetName)))
+            {
+                throw new InvalidOperationException(
+                    "An Animator outside Stick_Attack_Forward changed during the trim apply.");
+            }
+
+            if (!AnimatorMatches(animator, controller))
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward Animator settings differ after the trim apply.");
+            }
+
+            Debug.Log(
+                "[PlayerStickAttackForwardTrim] Preserved the exact source body through frame " +
+                StickAttackForwardStopFrame.ToString(CultureInfo.InvariantCulture) +
+                " (" + Num(StickAttackForwardStopTime) +
+                "s), removed the later source segment, and added only RightHand-child stick rotation during the downward strike. LoopLength=" +
+                Num(trimmed.length) + "s.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Attack Forward Trim And Stick Motion Review")]
+        internal static void CaptureStickAttackForwardTrimAndStickMotionReview()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward trim direct review requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after the Stick_Attack_Forward trim apply.");
+            }
+
+            CaptureStickAttackForwardTrimDirectReview();
+            Debug.Log(
+                "[PlayerStickAttackForwardTrim] Captured the exact source and trimmed result at 30fps in matching front/side full-body views, plus the downward-strike hand/stick close-up and loop boundary.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Attack Forward Trim And Stick Motion Final")]
+        internal static void CaptureStickAttackForwardTrimAndStickMotionFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward trim finalization requires Edit Mode.");
+            }
+
+            if (!File.Exists(Path.GetFullPath(
+                    StickAttackForwardTrimReviewPath)))
+            {
+                throw new FileNotFoundException(
+                    "The directly reviewed Stick_Attack_Forward trim contact sheet is missing.",
+                    Path.GetFullPath(StickAttackForwardTrimReviewPath));
+            }
+
+            StickAttackForwardTrimMetrics metrics =
+                MeasureStickAttackForwardTrimMetrics();
+            WriteJson(StickAttackForwardTrimMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward trim support checks failed after direct review. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            CopyReviewedContact(
+                StickAttackForwardTrimReviewPath,
+                StickAttackForwardTrimFinalPath);
+            Debug.Log(
+                "[PlayerStickAttackForwardTrim] Finalized the directly reviewed trim after support checks. Stop=" +
+                Num(metrics.stopTimeSeconds) + "s, BodyPose=" +
+                Num(metrics.sourceBodyPosePositionDifferenceMax) + "/" +
+                Num(metrics.sourceBodyPoseRotationDifferenceDegreesMax) +
+                ", StickStartStop=" +
+                Num(metrics.startStickRotationFromCarryDegrees) + "/" +
+                Num(metrics.stopStickRotationFromCarryDegrees) + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Attack Forward Attacking Source Diagnostic")]
+        internal static void CaptureStickAttackForwardAttackingSourceDiagnostic()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward attacking source diagnostic requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before the attacking source diagnostic.");
+            }
+
+            EnsureExactSourceCopy(
+                StickAttackForwardAttackingOriginalPath,
+                StickAttackForwardAttackingSourcePath,
+                StickAttackForwardAttackingSourceHash,
+                "stick attacking");
+            ConfigureSourceImporter(
+                StickAttackForwardAttackingSourcePath,
+                "stick attacking");
+            AnimationClip source = LoadSingleEmbeddedClip(
+                StickAttackForwardAttackingSourcePath,
+                "stick attacking");
+            Transform target = RequireTarget(
+                RequireLayout(scene),
+                StickAttackForwardTargetName);
+            CaptureStickAttackForwardAttackingSourceDirectDiagnostic(
+                target,
+                source);
+            Debug.Log(
+                "[PlayerStickAttackForwardAttacking] Captured the exact embedded source Take at its source frame rate in full-body front/side sequence and final 0.5-second two-hand close-up. Take=" +
+                source.name + ", Length=" + Num(source.length) +
+                "s, FrameRate=" + Num(source.frameRate) + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Stick Attack Forward Attacking Mixamo With Stick Motion")]
+        internal static void ApplyStickAttackForwardAttackingMixamoWithStickMotion()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerStickAttackForwardAttacking] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before the attacking Mixamo apply.");
+            }
+
+            EnsureExactSourceCopy(
+                StickAttackForwardAttackingOriginalPath,
+                StickAttackForwardAttackingSourcePath,
+                StickAttackForwardAttackingSourceHash,
+                "stick attacking");
+            ConfigureSourceImporter(
+                StickAttackForwardAttackingSourcePath,
+                "stick attacking");
+            AnimationClip source = LoadSingleEmbeddedClip(
+                StickAttackForwardAttackingSourcePath,
+                "stick attacking");
+            Transform layout = RequireLayout(scene);
+            Transform stickCarryTarget = RequireTarget(
+                layout,
+                StickCarryTargetName);
+            Transform target = RequireTarget(
+                layout,
+                StickAttackForwardTargetName);
+            RootPose rootBefore = new RootPose(target);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTarget(
+                    layout,
+                    StickAttackForwardTargetName);
+            CopyStickCarryItemToTarget(stickCarryTarget, target);
+            AnimationClip generated =
+                CreateOrUpdateStickAttackForwardAttackingClip(
+                    target,
+                    source,
+                    out _);
+            AnimatorController controller =
+                CreateOrUpdateExactEmbeddedTakeController(
+                    StickAttackForwardControllerPath,
+                    StickAttackForwardAttackingStateName,
+                    generated);
+            Animator animator = ConfigureAnimator(target, controller);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            if (!RootMatches(target, rootBefore))
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward root changed during the attacking Mixamo apply.");
+            }
+
+            if (!DictionariesEqual(
+                    otherAnimatorsBefore,
+                    CaptureAnimatorsExceptTarget(
+                        layout,
+                        StickAttackForwardTargetName)))
+            {
+                throw new InvalidOperationException(
+                    "An Animator outside Stick_Attack_Forward changed during the attacking Mixamo apply.");
+            }
+
+            if (!AnimatorMatches(animator, controller))
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward Animator settings differ after the attacking Mixamo apply.");
+            }
+
+            Debug.Log(
+                "[PlayerStickAttackForwardAttacking] Replaced the previous state with the exact 2.3-second embedded Mixamo body, preserved the source left-hand local wrist rotation while correcting the palm direction with the left forearm, generated a continuous RightHand-anchored stick track without an axis sign flip, reached 45 degrees during the measured downward strike, settled to 15 degrees before the source motion ended, and appended the approved 0.5-second hold. LoopLength=" +
+                Num(generated.length) + "s.");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Stick Attack Forward Attacking Corrections")]
+        internal static void ApplyStickAttackForwardAttackingCorrections()
+        {
+            ApplyStickAttackForwardAttackingMixamoWithStickMotion();
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Stick Attack Forward Left Hand Palm Contact")]
+        internal static void ApplyStickAttackForwardLeftPalmRightRestore()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward left-palm restore requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must remain clean for the left-palm-only restore.");
+            }
+
+            Transform target = RequireTarget(
+                RequireLayout(scene),
+                StickAttackForwardTargetName);
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController ??
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward controller is missing before the left-palm-only restore.");
+            AnimationClip existing = LoadClip(
+                StickAttackForwardAttackingClipPath);
+            AnimationClip source = LoadSingleEmbeddedClip(
+                StickAttackForwardAttackingSourcePath,
+                "stick attacking");
+            float durationBefore = existing.length;
+            float frameRateBefore = existing.frameRate;
+            if (!StickAttackForwardAttackingControllerIsExact(
+                    controller,
+                    existing) ||
+                !AnimatorMatches(animator, controller) ||
+                Mathf.Abs(animator.speed - 1f) > 0.0001f)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward timing differs before the left-palm-only restore.");
+            }
+
+            string stickPath = RightHandPath + "/" + StickInstanceName;
+            Dictionary<EditorCurveBinding, AnimationCurve> stickCurvesBefore =
+                CaptureTransformCurvesForPath(existing, stickPath);
+            string stickHashBefore = HashAnimationCurves(stickCurvesBefore);
+            AnimationClip beforeRestore = UnityEngine.Object.Instantiate(existing);
+            beforeRestore.name = "StickAttackForwardBeforeLeftPalmRestore";
+            beforeRestore.hideFlags = HideFlags.HideAndDontSave;
+            try
+            {
+                CreateStickAttackForwardLeftPalmRightTracks(
+                    target,
+                    source,
+                    beforeRestore.length,
+                    out TransformCurveTrack leftArmTrack,
+                    out TransformCurveTrack leftForeArmTrack,
+                    out TransformCurveTrack leftHandTrack);
+                string[] adjustedPaths =
+                {
+                    LeftArmPath,
+                    LeftForeArmPath,
+                    LeftHandPath
+                };
+                foreach (EditorCurveBinding binding in AnimationUtility
+                             .GetCurveBindings(existing)
+                             .Where(binding =>
+                                 adjustedPaths.Contains(
+                                     binding.path,
+                                     StringComparer.Ordinal) &&
+                                 IsTransformRotationProperty(
+                                     binding.propertyName))
+                             .ToArray())
+                {
+                    AnimationUtility.SetEditorCurve(existing, binding, null);
+                }
+
+                SetRotationTrackCurves(existing, leftArmTrack);
+                SetRotationTrackCurves(existing, leftForeArmTrack);
+                SetRotationTrackCurves(existing, leftHandTrack);
+                EditorUtility.SetDirty(existing);
+                AssetDatabase.SaveAssets();
+
+                Dictionary<EditorCurveBinding, AnimationCurve>
+                    stickCurvesAfter = CaptureTransformCurvesForPath(
+                        existing,
+                        stickPath);
+                string stickHashAfter = HashAnimationCurves(stickCurvesAfter);
+                bool stickExact = AnimationCurveDictionariesExact(
+                    stickCurvesBefore,
+                    stickCurvesAfter);
+                string[] modifiedPaths =
+                    GetStickGripTwoHandModifiedTransformPaths(
+                        beforeRestore,
+                        existing);
+                HashSet<string> approvedPaths = new HashSet<string>(
+                    new[]
+                    {
+                        LeftArmPath,
+                        LeftForeArmPath,
+                        LeftHandPath
+                    },
+                    StringComparer.Ordinal);
+                if (!stickExact ||
+                    !string.Equals(
+                        stickHashBefore,
+                        stickHashAfter,
+                        StringComparison.Ordinal) ||
+                    modifiedPaths.Length == 0 ||
+                    modifiedPaths.Any(path => !approvedPaths.Contains(path)) ||
+                    Mathf.Abs(existing.length - durationBefore) > 0.0001f ||
+                    Mathf.Abs(existing.frameRate - frameRateBefore) > 0.0001f ||
+                    !AnimationEventsExact(beforeRestore, existing) ||
+                    !StickAttackForwardAttackingControllerIsExact(
+                        controller,
+                        existing) ||
+                    !AnimatorMatches(animator, controller) ||
+                    Mathf.Abs(animator.speed - 1f) > 0.0001f ||
+                    scene.isDirty)
+                {
+                    throw new InvalidOperationException(
+                        "The left-palm-only restore changed the stick, timing, events, scene, controller, Animator, or a non-approved body path.");
+                }
+
+                WriteJson(
+                    StickAttackForwardLeftPalmRightApplyPath,
+                    new StickAttackForwardLeftPalmRightApplyRecord
+                    {
+                        target = StickAttackForwardTargetName,
+                        durationSeconds = existing.length,
+                        frameRate = existing.frameRate,
+                        modifiedTransformPaths = modifiedPaths,
+                        stickCurvesHashBefore = stickHashBefore,
+                        stickCurvesHashAfter = stickHashAfter,
+                        stickCurvesExactAndUnchanged = stickExact,
+                        controllerAndAnimatorTimingUnchanged = true,
+                        sceneUnchanged = true
+                    });
+                Debug.Log(
+                    "[PlayerStickAttackForwardLeftPalmRight] Moved the left hand close to the right hand throughout the clip while retaining the directly reviewed natural palm-right arm correction. StickCurves=" +
+                    stickHashAfter + ", Duration=" +
+                    Num(existing.length) + "s.");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(beforeRestore);
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Stick Attack Forward GIF Weapon Motion")]
+        internal static void ApplyStickAttackForwardGifWeaponMotion()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerStickAttackForwardGifWeaponMotion] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must remain clean for the GIF weapon-only apply.");
+            }
+
+            string referenceHash = HashFile(
+                StickAttackForwardGifWeaponReferencePath);
+            if (!string.Equals(
+                    referenceHash,
+                    StickAttackForwardGifWeaponReferenceHash,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "The approved Stick_Attack_Forward GIF reference changed before apply.");
+            }
+
+            if (!string.Equals(
+                    HashFile(StickAttackForwardAttackingOriginalPath),
+                    StickAttackForwardAttackingSourceHash,
+                    StringComparison.OrdinalIgnoreCase) ||
+                !string.Equals(
+                    HashFile(StickAttackForwardAttackingSourcePath),
+                    StickAttackForwardAttackingSourceHash,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "The exact Stick_Attack_Forward source FBX changed before the GIF weapon-only apply.");
+            }
+
+            Transform target = RequireTarget(
+                RequireLayout(scene),
+                StickAttackForwardTargetName);
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController ??
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward controller is missing before the GIF weapon-only apply.");
+            AnimationClip existing = LoadClip(
+                StickAttackForwardAttackingClipPath);
+            float preservedDuration = existing.length;
+            if (!StickAttackForwardAttackingControllerIsExact(
+                    controller,
+                    existing) ||
+                !AnimatorMatches(animator, controller))
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward controller or Animator timing differs before the GIF weapon-only apply.");
+            }
+
+            AnimationClip source = LoadSingleEmbeddedClip(
+                StickAttackForwardAttackingSourcePath,
+                "stick attacking");
+            AnimationClip generated =
+                CreateOrUpdateStickAttackForwardAttackingClip(
+                    target,
+                    source,
+                    out StickAttackForwardGifWeaponTimeMapping mapping);
+            if (Mathf.Abs(generated.length - preservedDuration) > 0.0001f ||
+                Mathf.Abs(animator.speed - 1f) > 0.0001f ||
+                scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "The GIF weapon-only apply changed the fixed Stick_Attack_Forward duration, Animator speed, or scene.");
+            }
+
+            WriteJson(
+                StickAttackForwardGifWeaponAnalysisPath,
+                new StickAttackForwardGifWeaponMappingRecord
+                {
+                    referencePath = StickAttackForwardGifWeaponReferencePath,
+                    referenceHash = referenceHash,
+                    referenceDurationSeconds =
+                        StickAttackForwardGifWeaponReferenceDurationSeconds,
+                    referenceFrameRate =
+                        StickAttackForwardGifWeaponReferenceFrameRate,
+                    referenceFrameCount =
+                        StickAttackForwardGifWeaponReferenceFrameCount,
+                    sourceDurationSeconds = source.length,
+                    preservedGeneratedDurationSeconds = generated.length,
+                    sourceFrameRate = source.frameRate,
+                    currentRaiseEndFrame = mapping.CurrentRaiseEndFrame,
+                    currentStrikeStartFrame = mapping.CurrentStrikeStartFrame,
+                    currentImpactFrame = mapping.CurrentImpactFrame,
+                    currentImpactHoldEndFrame =
+                        mapping.CurrentImpactHoldEndFrame,
+                    referenceRaiseEndFrame =
+                        StickAttackForwardGifWeaponRaiseEndFrame,
+                    referenceStrikeStartFrame =
+                        StickAttackForwardGifWeaponStrikeStartFrame,
+                    referenceImpactFrame =
+                        StickAttackForwardGifWeaponImpactFrame,
+                    referenceImpactHoldEndFrame =
+                        StickAttackForwardGifWeaponImpactHoldEndFrame,
+                    previousFinalDegreesFromVertical =
+                        StickAttackForwardGifWeaponPreviousFinalDegreesFromVertical,
+                    configuredFinalRaiseDegrees =
+                        StickAttackForwardGifWeaponFinalRaiseDegrees,
+                    configuredRaisedFinalDegreesFromVertical =
+                        StickAttackForwardGifWeaponRaisedFinalDegreesFromVertical,
+                    timingMethod =
+                        "Both timelines remain independently mapped; the unchanged current strike-start frame transitions naturally to a final angle raised by 20 degrees at impact without changing the current clip duration.",
+                    positionMethod =
+                        "The stick grip point remains coincident with the animated right-palm center; the stick center position follows from rotating the reference shaft direction around that fixed grip."
+                });
+            Debug.Log(
+                "[PlayerStickAttackForwardGifWeaponMotion] Applied the supplied 4.8-second GIF weapon trajectory to the fixed " +
+                Num(generated.length) +
+                "-second Stick_Attack_Forward timeline without changing body curves, controller, scene, or Animator speed. CurrentFrames=" +
+                mapping.CurrentRaiseEndFrame.ToString(
+                    CultureInfo.InvariantCulture) + "/" +
+                mapping.CurrentStrikeStartFrame.ToString(
+                    CultureInfo.InvariantCulture) + "/" +
+                mapping.CurrentImpactFrame.ToString(
+                    CultureInfo.InvariantCulture) + "/" +
+                mapping.CurrentImpactHoldEndFrame.ToString(
+                    CultureInfo.InvariantCulture) +
+                ", FinalRaise=" +
+                Num(StickAttackForwardGifWeaponFinalRaiseDegrees) +
+                "deg, FinalAngle=" +
+                Num(StickAttackForwardGifWeaponRaisedFinalDegreesFromVertical) +
+                "degFromVertical.");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Musket Back Carry Models")]
+        internal static void ApplyMusketBackCarryModels()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                SessionState.EraseInt(MusketBackCarryCaptureStageKey);
+                SessionState.EraseString(MusketBackCarryCaptureErrorKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerMusketBackCarry] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            RequireHash(MusketSourcePath, MusketSourceHash, "musket source FBX");
+            RequireHash(MusketAssetPath, MusketSourceHash, "Unity musket FBX");
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Musket back-carry apply.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            string[] targetNames = GetMusketBackCarryTargetNames();
+            Transform[] targets = targetNames
+                .Select(name => RequireTarget(layout, name))
+                .ToArray();
+            RootPose[] rootBefore = targets
+                .Select(target => new RootPose(target))
+                .ToArray();
+            string[] animatorBefore = targets
+                .Select(DescribeAnimatorConfiguration)
+                .ToArray();
+            GameObject musketAsset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MusketAssetPath);
+            if (musketAsset == null)
+            {
+                throw new InvalidOperationException(
+                    "The exact imported musket FBX root could not be loaded.");
+            }
+
+            MusketGeometryAnalysis analysis = AnalyzeMusketGeometry(musketAsset);
+            int referenceIndex = Array.IndexOf(targetNames, MusketIdleTargetName);
+            if (referenceIndex < 0)
+            {
+                throw new InvalidOperationException(
+                    "Musket_Idle is missing from the back-carry target set.");
+            }
+
+            Transform referenceTarget = targets[referenceIndex];
+            Transform referenceMusket = InstantiateMusketUnderSpine(
+                referenceTarget,
+                musketAsset);
+            ConfigureReferenceMusketBackPlacement(
+                referenceTarget,
+                referenceMusket,
+                analysis);
+            RootPose sharedPlacement = new RootPose(referenceMusket);
+            for (int index = 0; index < targets.Length; index++)
+            {
+                if (index == referenceIndex)
+                {
+                    continue;
+                }
+
+                Transform musket = InstantiateMusketUnderSpine(
+                    targets[index],
+                    musketAsset);
+                musket.localPosition = sharedPlacement.LocalPosition;
+                musket.localRotation = sharedPlacement.LocalRotation;
+                musket.localScale = sharedPlacement.LocalScale;
+                EditorUtility.SetDirty(musket.gameObject);
+            }
+
+            MusketBackCarryTargetMetrics[] targetMetrics = targets
+                .Select((target, index) => MeasureMusketBackCarryTarget(
+                    target,
+                    analysis,
+                    rootBefore[index],
+                    animatorBefore[index],
+                    sharedPlacement,
+                    0,
+                    0f,
+                    0f,
+                    0f))
+                .ToArray();
+            bool sameRelativeTransform = targetMetrics.All(metrics =>
+                metrics.sameRelativeTransform);
+            bool rootsAndAnimatorsUnchanged = targetMetrics.All(metrics =>
+                metrics.targetRootUnchanged && metrics.animatorUnchanged);
+            MusketBackCarryApplyMetrics metrics =
+                new MusketBackCarryApplyMetrics
+                {
+                    sourceModelPath = MusketSourcePath,
+                    importedModelPath = MusketAssetPath,
+                    sourceModelHash = HashFile(MusketSourcePath),
+                    importedModelHash = HashFile(MusketAssetPath),
+                    detectedSourceStockToMuzzleAxis =
+                        analysis.StockToMuzzleAxis,
+                    detectedSourceThicknessAxis = analysis.ThicknessAxis,
+                    detectedSourceLength = analysis.SourceLength,
+                    detectedMuzzleEndRadius = analysis.MuzzleEndRadius,
+                    detectedStockEndRadius = analysis.StockEndRadius,
+                    configuredLengthMeters = MusketDesignLengthMeters,
+                    configuredDiagonalDegrees = MusketBackDiagonalDegrees,
+                    targetCount = targets.Length,
+                    targets = targetMetrics,
+                    sourceAndImportedModelsExact =
+                        string.Equals(
+                            HashFile(MusketSourcePath),
+                            HashFile(MusketAssetPath),
+                            StringComparison.OrdinalIgnoreCase),
+                    allTargetsUseSameRelativeTransform = sameRelativeTransform,
+                    allTargetRootsAndAnimatorsUnchanged =
+                        rootsAndAnimatorsUnchanged,
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                metrics.sourceAndImportedModelsExact &&
+                metrics.targetCount == targetNames.Length &&
+                metrics.allTargetsUseSameRelativeTransform &&
+                metrics.allTargetRootsAndAnimatorsUnchanged &&
+                metrics.targets.All(target => target.passedNumericChecks);
+            WriteJson(MusketBackCarryApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Musket back-carry apply support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            EditorSceneManager.SaveScene(scene);
+            SessionState.EraseInt(MusketBackCarryCaptureStageKey);
+            SessionState.EraseString(MusketBackCarryCaptureErrorKey);
+            Debug.Log(
+                "[PlayerMusketBackCarry] Attached the exact musket FBX to all eight Spine bones. " +
+                "Length=" + Num(metrics.configuredLengthMeters) +
+                "m, Diagonal=" + Num(metrics.configuredDiagonalDegrees) +
+                "deg, SourceAxis=" + analysis.StockToMuzzleAxis +
+                ", SharedRelativeTransform=True, TargetRootsAndAnimatorsUnchanged=True.");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Musket Animation Set")]
+        internal static void ApplyMusketAnimationSet()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                SessionState.EraseInt(MusketAnimationCaptureStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerMusketAnimationSet] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            RequireHash(MusketAssetPath, MusketSourceHash, "Unity musket FBX");
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Musket animation apply.");
+            }
+
+            MusketAnimationSpec[] specs = GetMusketAnimationSpecs();
+            foreach (MusketAnimationSpec spec in specs)
+            {
+                EnsureExactSourceCopy(
+                    spec.OriginalPath,
+                    spec.AssetPath,
+                    spec.ExpectedHash,
+                    spec.TargetName);
+                ConfigureSourceImporter(spec.AssetPath, spec.TargetName);
+            }
+
+            AnimationClip[] sources = specs
+                .Select(spec => LoadSingleEmbeddedClip(
+                    spec.AssetPath,
+                    spec.TargetName))
+                .ToArray();
+            Transform layout = RequireLayout(scene);
+            Transform[] targets = specs
+                .Select(spec => RequireTarget(layout, spec.TargetName))
+                .ToArray();
+            RootPose[] targetRootsBefore = targets
+                .Select(target => new RootPose(target))
+                .ToArray();
+            RootPose[] backItemsBefore = targets
+                .Select(target => new RootPose(RequireMusketBackItem(target)))
+                .ToArray();
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTargets(
+                    layout,
+                    specs.Select(spec => spec.TargetName).ToArray());
+            GameObject musketAsset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MusketAssetPath) ??
+                throw new FileNotFoundException(
+                    "Unity musket asset is missing.",
+                    Path.GetFullPath(MusketAssetPath));
+            MusketGeometryAnalysis analysis = AnalyzeMusketGeometry(musketAsset);
+            int drawIndex = Array.FindIndex(
+                specs,
+                spec => string.Equals(spec.ItemMode, "Draw", StringComparison.Ordinal));
+            int stowIndex = Array.FindIndex(
+                specs,
+                spec => string.Equals(spec.ItemMode, "Stow", StringComparison.Ordinal));
+            int aimIndex = Array.FindIndex(
+                specs,
+                spec => string.Equals(
+                    spec.TargetName,
+                    MusketAimTargetName,
+                    StringComparison.Ordinal));
+            if (drawIndex < 0 || stowIndex < 0 || aimIndex < 0)
+            {
+                throw new InvalidOperationException(
+                    "Musket Draw/Stow/Aim animation specifications are missing.");
+            }
+
+            MusketGripBinding grip = AnalyzeMusketGripBinding(
+                targets[drawIndex],
+                sources[drawIndex],
+                targets[stowIndex],
+                sources[stowIndex],
+                targets[aimIndex],
+                sources[aimIndex],
+                musketAsset,
+                analysis);
+            AnimationClip[] generatedClips = new AnimationClip[specs.Length];
+            AnimatorController[] controllers =
+                new AnimatorController[specs.Length];
+            Animator[] animators = new Animator[specs.Length];
+            for (int index = 0; index < specs.Length; index++)
+            {
+                Transform handItem = InstantiateMusketHandItem(
+                    targets[index],
+                    musketAsset,
+                    grip);
+                generatedClips[index] = CreateOrUpdateMusketAnimationClip(
+                    specs[index],
+                    sources[index],
+                    targets[index],
+                    grip);
+                controllers[index] =
+                    CreateOrUpdateExactEmbeddedTakeController(
+                        specs[index].ControllerPath,
+                        specs[index].StateName,
+                        generatedClips[index]);
+                animators[index] = ConfigureAnimator(
+                    targets[index],
+                    controllers[index]);
+                animators[index].speed = 1f;
+                EditorUtility.SetDirty(animators[index]);
+                EditorUtility.SetDirty(handItem.gameObject);
+            }
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+
+            MusketAnimationTargetApplyMetrics[] targetMetrics =
+                new MusketAnimationTargetApplyMetrics[specs.Length];
+            for (int index = 0; index < specs.Length; index++)
+            {
+                MusketAnimationSpec spec = specs[index];
+                AnimationClip source = sources[index];
+                AnimationClip generated = generatedClips[index];
+                Transform target = targets[index];
+                Transform handItem = FindRequired(
+                    target,
+                    RightHandPath + "/" + MusketHandInstanceName);
+                Transform backItem = RequireMusketBackItem(target);
+                bool commonGrip = MusketHandItemMatchesGrip(handItem, grip);
+                bool bodyExact = MusketSourceCurvesPreserved(
+                    source,
+                    generated);
+                bool rootUnchanged = RootMatches(
+                    target,
+                    targetRootsBefore[index]);
+                bool backUnchanged = RootMatches(
+                    backItem,
+                    backItemsBefore[index]);
+                float switchTime = string.Equals(
+                    spec.ItemMode,
+                    "Draw",
+                    StringComparison.Ordinal)
+                    ? grip.DrawSwitchTime
+                    : string.Equals(
+                        spec.ItemMode,
+                        "Stow",
+                        StringComparison.Ordinal)
+                        ? grip.StowSwitchTime
+                        : -1f;
+                int switchFrame = string.Equals(
+                    spec.ItemMode,
+                    "Draw",
+                    StringComparison.Ordinal)
+                    ? grip.DrawSwitchFrame
+                    : string.Equals(
+                        spec.ItemMode,
+                        "Stow",
+                        StringComparison.Ordinal)
+                        ? grip.StowSwitchFrame
+                        : -1;
+                AnimationClipSettings settings =
+                    AnimationUtility.GetAnimationClipSettings(generated);
+                bool controllerExact = StateUsesClip(
+                    controllers[index],
+                    spec.StateName,
+                    generated);
+                bool animatorExact = AnimatorMatches(
+                    animators[index],
+                    controllers[index]) &&
+                    Mathf.Abs(animators[index].speed - 1f) <= 0.0001f;
+                MusketAnimationTargetApplyMetrics metrics =
+                    new MusketAnimationTargetApplyMetrics
+                    {
+                        target = spec.TargetName,
+                        originalSourcePath = spec.OriginalPath,
+                        unitySourcePath = spec.AssetPath,
+                        originalHash = HashFile(spec.OriginalPath),
+                        unityHash = HashFile(spec.AssetPath),
+                        embeddedTake = source.name,
+                        generatedClipPath = spec.GeneratedClipPath,
+                        controllerPath = spec.ControllerPath,
+                        itemMode = spec.ItemMode,
+                        durationSeconds = source.length,
+                        frameRate = source.frameRate,
+                        sourceFloatCurveCount =
+                            AnimationUtility.GetCurveBindings(source).Length,
+                        generatedFloatCurveCount =
+                            AnimationUtility.GetCurveBindings(generated).Length,
+                        itemSwitchTime = switchTime,
+                        itemSwitchFrame = switchFrame,
+                        handItemLocalPosition = handItem.localPosition,
+                        handItemLocalRotation = handItem.localRotation,
+                        handItemLocalScale = handItem.localScale,
+                        sourceCopyExact = HashMatches(
+                            spec.OriginalPath,
+                            spec.AssetPath,
+                            spec.ExpectedHash),
+                        sourceBodyCurvesExact = bodyExact,
+                        sourceEventsExact = AnimationEventsExact(
+                            source,
+                            generated),
+                        clipLoops = settings.loopTime,
+                        controllerUsesGeneratedClipAtSpeedOne =
+                            controllerExact,
+                        animatorSettingsCorrect = animatorExact,
+                        targetRootUnchanged = rootUnchanged,
+                        backItemTransformUnchanged = backUnchanged,
+                        handItemUsesCommonGrip = commonGrip
+                    };
+                metrics.passedNumericChecks =
+                    metrics.sourceCopyExact &&
+                    metrics.sourceBodyCurvesExact &&
+                    metrics.sourceEventsExact &&
+                    metrics.clipLoops &&
+                    metrics.controllerUsesGeneratedClipAtSpeedOne &&
+                    metrics.animatorSettingsCorrect &&
+                    metrics.targetRootUnchanged &&
+                    metrics.backItemTransformUnchanged &&
+                    metrics.handItemUsesCommonGrip &&
+                    Mathf.Abs(generated.length - source.length) <= 0.0001f &&
+                    Mathf.Abs(generated.frameRate - source.frameRate) <= 0.0001f;
+                targetMetrics[index] = metrics;
+            }
+
+            bool otherAnimatorsUnchanged = DictionariesEqual(
+                otherAnimatorsBefore,
+                CaptureAnimatorsExceptTargets(
+                    layout,
+                    specs.Select(spec => spec.TargetName).ToArray()));
+            MusketAnimationApplyMetrics applyMetrics =
+                new MusketAnimationApplyMetrics
+                {
+                    targetSet = string.Join(
+                        ", ",
+                        specs.Select(spec => spec.TargetName)),
+                    musketAssetPath = MusketAssetPath,
+                    musketAssetHash = HashFile(MusketAssetPath),
+                    configuredMusketLengthMeters =
+                        MusketDesignLengthMeters,
+                    drawSwitchFrame = grip.DrawSwitchFrame,
+                    drawSwitchTime = grip.DrawSwitchTime,
+                    drawContactDistanceMeters =
+                        grip.DrawContactDistanceMeters,
+                    stowSwitchFrame = grip.StowSwitchFrame,
+                    stowSwitchTime = grip.StowSwitchTime,
+                    stowPositionDifferenceMeters =
+                        grip.StowPositionDifferenceMeters,
+                    stowRotationDifferenceDegrees =
+                        grip.StowRotationDifferenceDegrees,
+                    commonHandGripLocalPosition = grip.LocalPosition,
+                    commonHandGripLocalRotation = grip.LocalRotation,
+                    commonHandGripLocalScale = grip.LocalScale,
+                    targets = targetMetrics,
+                    allSourceCopiesExact = targetMetrics.All(
+                        metrics => metrics.sourceCopyExact),
+                    allSourceBodyCurvesExact = targetMetrics.All(
+                        metrics => metrics.sourceBodyCurvesExact &&
+                                   metrics.sourceEventsExact),
+                    allTargetsUseCommonGrip = targetMetrics.All(
+                        metrics => metrics.handItemUsesCommonGrip),
+                    allTargetRootsAndBackItemsUnchanged = targetMetrics.All(
+                        metrics => metrics.targetRootUnchanged &&
+                                   metrics.backItemTransformUnchanged),
+                    otherAnimatorsUnchanged = otherAnimatorsUnchanged,
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            applyMetrics.passedNumericChecks =
+                applyMetrics.musketAssetHash == MusketSourceHash &&
+                applyMetrics.targets.Length == specs.Length &&
+                applyMetrics.targets.All(
+                    metrics => metrics.passedNumericChecks) &&
+                applyMetrics.allSourceCopiesExact &&
+                applyMetrics.allSourceBodyCurvesExact &&
+                applyMetrics.allTargetsUseCommonGrip &&
+                applyMetrics.allTargetRootsAndBackItemsUnchanged &&
+                applyMetrics.otherAnimatorsUnchanged;
+            WriteJson(MusketAnimationApplyMetricsPath, applyMetrics);
+            if (!applyMetrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Musket animation apply support checks failed. " +
+                    JsonUtility.ToJson(applyMetrics));
+            }
+
+            SessionState.EraseInt(MusketAnimationCaptureStageKey);
+            Debug.Log(
+                "[PlayerMusketAnimationSet] Applied eight exact embedded Mixamo body Takes at speed 1 with a shared RightHand grip. DrawSwitch=" +
+                grip.DrawSwitchFrame.ToString(CultureInfo.InvariantCulture) +
+                " (" + Num(grip.DrawSwitchTime) + "s), StowSwitch=" +
+                grip.StowSwitchFrame.ToString(CultureInfo.InvariantCulture) +
+                " (" + Num(grip.StowSwitchTime) +
+                "s), BodyCurvesExact=True, RootsAndBackItemsUnchanged=True.");
+        }
+
+        private static MusketAnimationSpec[] GetMusketAnimationSpecs()
+        {
+            return new[]
+            {
+                CreateMusketAnimationSpec(
+                    MusketDrawTargetName,
+                    "draw",
+                    "player model/transfer grab from behind.fbx",
+                    "A4AD3D660627A34D47A38811E688C2B19416C57146580963279459F6D4EC396B",
+                    "Draw"),
+                CreateMusketAnimationSpec(
+                    MusketIdleTargetName,
+                    "idle",
+                    "player model/transfer muscket.fbx",
+                    "598AFF5790569051E8D27A7ED056BD1F2967B3D81FA2353D3540B11B085C4113",
+                    "Held"),
+                CreateMusketAnimationSpec(
+                    MusketStowTargetName,
+                    "stow",
+                    "player model/transfer put back.fbx",
+                    "ECAA2FCE857BD9E5275ECDDDFFA220F26C3AA802354A36C9980B51D1026A01D9",
+                    "Stow"),
+                CreateMusketAnimationSpec(
+                    MusketHipFireTargetName,
+                    "hip_fire",
+                    "player model/transfer muscket firing.fbx",
+                    "9D888ADB2C749F190C7838DD41C0B4599D105F76C7B1E24CBAADEB43B5E20D99",
+                    "Held"),
+                CreateMusketAnimationSpec(
+                    MusketAimTargetName,
+                    "aim",
+                    "player model/transfer muscket aiming.fbx",
+                    "01E3ABBF86BF3EC1A4BB375727FA3FD2A68EEE113395768B1C3F578CEE81A0A7",
+                    "Held"),
+                CreateMusketAnimationSpec(
+                    MusketAimFireTargetName,
+                    "aim_fire",
+                    "player model/transfer muscket aim firing.fbx",
+                    "9DD65B6B8AD20D0318890BBCD79C0D0B90B9002C931CD5F47D5079662F66F111",
+                    "Held"),
+                CreateMusketAnimationSpec(
+                    MusketAimExitTargetName,
+                    "aim_exit",
+                    "player model/transfer muscket aim to down.fbx",
+                    "25763D8D7ACE19B3F47E53616D12E1833BF38578DCD54338B70E1F7DDD2254BF",
+                    "Held"),
+                CreateMusketAnimationSpec(
+                    MusketReloadTargetName,
+                    "reload",
+                    "player model/transfer muscket reloading.fbx",
+                    "40F336AD550EAB25D19EEDEDFDA39CA32F9B7CBFBB2A4A1761778E0B836B276D",
+                    "Held")
+            };
+        }
+
+        private static MusketAnimationSpec CreateMusketAnimationSpec(
+            string targetName,
+            string label,
+            string originalPath,
+            string expectedHash,
+            string itemMode)
+        {
+            string assetBase = MusketAnimationDirectory + "/" + targetName;
+            return new MusketAnimationSpec
+            {
+                TargetName = targetName,
+                Label = label,
+                OriginalPath = originalPath,
+                AssetPath = assetBase + "_Mixamo.fbx",
+                ExpectedHash = expectedHash,
+                GeneratedClipPath =
+                    assetBase + "_ExactWithMusketVisibility.anim",
+                ControllerPath = assetBase + ".controller",
+                StateName = targetName + "Loop",
+                ItemMode = itemMode
+            };
+        }
+
+        private static MusketGripBinding AnalyzeMusketGripBinding(
+            Transform drawTarget,
+            AnimationClip drawSource,
+            Transform stowTarget,
+            AnimationClip stowSource,
+            Transform aimTarget,
+            AnimationClip aimSource,
+            GameObject musketAsset,
+            MusketGeometryAnalysis analysis)
+        {
+            GameObject drawClone = UnityEngine.Object.Instantiate(
+                drawTarget.gameObject);
+            drawClone.name = "MusketDrawGripAnalysis";
+            drawClone.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(drawClone);
+            try
+            {
+                Transform cloneRoot = drawClone.transform;
+                Transform rightHand = FindRequired(cloneRoot, RightHandPath);
+                Transform backItem = RequireMusketBackItem(cloneRoot);
+                int frameCount = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(drawSource.length * drawSource.frameRate));
+                float bestDistance = float.PositiveInfinity;
+                int bestFrame = 0;
+                for (int frame = 0; frame <= frameCount; frame++)
+                {
+                    float time = Mathf.Min(
+                        drawSource.length,
+                        frame / drawSource.frameRate);
+                    drawSource.SampleAnimation(drawClone, time);
+                    Vector3 stock = backItem.TransformPoint(
+                        analysis.LocalStockPoint);
+                    Vector3 muzzle = backItem.TransformPoint(
+                        analysis.LocalMuzzlePoint);
+                    float distance = DistanceToSegment(
+                        rightHand.position,
+                        stock,
+                        muzzle);
+                    if (distance < bestDistance)
+                    {
+                        bestDistance = distance;
+                        bestFrame = frame;
+                    }
+                }
+
+                float drawTime = Mathf.Min(
+                    drawSource.length,
+                    bestFrame / drawSource.frameRate);
+                MusketGripBinding grip =
+                    AnalyzeMusketHeldGripFromAim(
+                        aimTarget,
+                        aimSource,
+                        analysis);
+                grip.DrawSwitchFrame = bestFrame;
+                grip.DrawSwitchTime = drawTime;
+                grip.DrawContactDistanceMeters = bestDistance;
+                drawSource.SampleAnimation(drawClone, drawTime);
+                grip.DrawBackLocalPosition =
+                    rightHand.InverseTransformPoint(backItem.position);
+                grip.DrawBackLocalRotation =
+                    Quaternion.Inverse(rightHand.rotation) * backItem.rotation;
+                grip.DrawBackLocalScale = DivideMusketScale(
+                    backItem.lossyScale,
+                    rightHand.lossyScale);
+                AnalyzeMusketStowSwitch(
+                    stowTarget,
+                    stowSource,
+                    musketAsset,
+                    analysis,
+                    grip);
+                return grip;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(drawClone);
+            }
+        }
+
+        private static MusketGripBinding AnalyzeMusketHeldGripFromAim(
+            Transform aimTarget,
+            AnimationClip aimSource,
+            MusketGeometryAnalysis analysis)
+        {
+            GameObject clone = UnityEngine.Object.Instantiate(
+                aimTarget.gameObject);
+            clone.name = "MusketAimGripAnalysis";
+            clone.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(clone);
+            try
+            {
+                Transform root = clone.transform;
+                Transform rightHand = FindRequired(root, RightHandPath);
+                Transform leftHand = FindRequired(root, LeftHandPath);
+                int frameCount = Mathf.Max(
+                    3,
+                    Mathf.RoundToInt(aimSource.length * aimSource.frameRate));
+                Vector3[] rightPositions = new Vector3[frameCount + 1];
+                Vector3[] leftPositions = new Vector3[frameCount + 1];
+                for (int frame = 0; frame <= frameCount; frame++)
+                {
+                    float time = Mathf.Min(
+                        aimSource.length,
+                        frame / aimSource.frameRate);
+                    aimSource.SampleAnimation(clone, time);
+                    rightPositions[frame] = rightHand.position;
+                    leftPositions[frame] = leftHand.position;
+                }
+
+                float bestMotion = float.PositiveInfinity;
+                int bestFrame = Mathf.Clamp(frameCount / 2, 1, frameCount - 1);
+                int startFrame = Mathf.Max(1, Mathf.RoundToInt(frameCount * 0.1f));
+                int endFrame = Mathf.Min(
+                    frameCount - 1,
+                    Mathf.RoundToInt(frameCount * 0.9f));
+                for (int frame = startFrame; frame <= endFrame; frame++)
+                {
+                    float separation = Vector3.Distance(
+                        rightPositions[frame],
+                        leftPositions[frame]);
+                    if (separation < 0.15f)
+                    {
+                        continue;
+                    }
+
+                    float motion = Vector3.Distance(
+                                       rightPositions[frame - 1],
+                                       rightPositions[frame + 1]) +
+                                   Vector3.Distance(
+                                       leftPositions[frame - 1],
+                                       leftPositions[frame + 1]);
+                    if (motion < bestMotion)
+                    {
+                        bestMotion = motion;
+                        bestFrame = frame;
+                    }
+                }
+
+                float bestTime = Mathf.Min(
+                    aimSource.length,
+                    bestFrame / aimSource.frameRate);
+                aimSource.SampleAnimation(clone, bestTime);
+                Vector3 desiredStockToMuzzle =
+                    (leftHand.position - rightHand.position).normalized;
+                if (desiredStockToMuzzle.sqrMagnitude < 0.99f)
+                {
+                    throw new InvalidOperationException(
+                        "Musket_Aim hands do not define a usable weapon axis.");
+                }
+
+                Quaternion worldRotation = Quaternion.FromToRotation(
+                    analysis.StockToMuzzleAxis,
+                    desiredStockToMuzzle);
+                Vector3 rotatedThickness =
+                    worldRotation * analysis.ThicknessAxis;
+                Vector3 desiredThickness = Vector3.ProjectOnPlane(
+                    aimTarget.up,
+                    desiredStockToMuzzle).normalized;
+                if (desiredThickness.sqrMagnitude < 0.99f)
+                {
+                    desiredThickness = Vector3.ProjectOnPlane(
+                        aimTarget.forward,
+                        desiredStockToMuzzle).normalized;
+                }
+
+                float roll = Vector3.SignedAngle(
+                    rotatedThickness,
+                    desiredThickness,
+                    desiredStockToMuzzle);
+                worldRotation =
+                    Quaternion.AngleAxis(roll, desiredStockToMuzzle) *
+                    worldRotation;
+                float uniformWorldScale =
+                    MusketDesignLengthMeters / analysis.SourceLength;
+                Vector3 desiredCenter =
+                    (rightHand.position + leftHand.position) * 0.5f;
+                Vector3 worldPosition = desiredCenter -
+                    worldRotation *
+                    Vector3.Scale(
+                        analysis.LocalCenter,
+                        Vector3.one * uniformWorldScale);
+                return new MusketGripBinding
+                {
+                    LocalPosition = rightHand.InverseTransformPoint(
+                        worldPosition),
+                    LocalRotation = Quaternion.Inverse(rightHand.rotation) *
+                                    worldRotation,
+                    LocalScale = DivideMusketScale(
+                        Vector3.one * uniformWorldScale,
+                        rightHand.lossyScale)
+                };
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(clone);
+            }
+        }
+
+        private static void AnalyzeMusketStowSwitch(
+            Transform stowTarget,
+            AnimationClip stowSource,
+            GameObject musketAsset,
+            MusketGeometryAnalysis analysis,
+            MusketGripBinding grip)
+        {
+            GameObject clone = UnityEngine.Object.Instantiate(
+                stowTarget.gameObject);
+            clone.name = "MusketStowSwitchAnalysis";
+            clone.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(clone);
+            try
+            {
+                Transform root = clone.transform;
+                Transform rightHand = FindRequired(root, RightHandPath);
+                Transform backItem = RequireMusketBackItem(root);
+                GameObject handObject = UnityEngine.Object.Instantiate(
+                    musketAsset,
+                    rightHand);
+                handObject.name = MusketHandInstanceName;
+                Transform handItem = handObject.transform;
+                handItem.localPosition = grip.LocalPosition;
+                handItem.localRotation = grip.LocalRotation;
+                handItem.localScale = grip.LocalScale;
+                int frameCount = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(stowSource.length * stowSource.frameRate));
+                float bestHandDistance = float.PositiveInfinity;
+                int bestFrame = Mathf.RoundToInt(frameCount * 0.35f);
+                float bestPosition = float.PositiveInfinity;
+                float bestRotation = float.PositiveInfinity;
+                for (int frame = bestFrame; frame <= frameCount; frame++)
+                {
+                    float time = Mathf.Min(
+                        stowSource.length,
+                        frame / stowSource.frameRate);
+                    stowSource.SampleAnimation(clone, time);
+                    float handDistance = DistanceToSegment(
+                        rightHand.position,
+                        backItem.TransformPoint(analysis.LocalStockPoint),
+                        backItem.TransformPoint(analysis.LocalMuzzlePoint));
+                    float positionDifference = Vector3.Distance(
+                        handItem.TransformPoint(analysis.LocalCenter),
+                        backItem.TransformPoint(analysis.LocalCenter));
+                    float rotationDifference = Quaternion.Angle(
+                        handItem.rotation,
+                        backItem.rotation);
+                    if (handDistance < bestHandDistance)
+                    {
+                        bestHandDistance = handDistance;
+                        bestFrame = frame;
+                        bestPosition = positionDifference;
+                        bestRotation = rotationDifference;
+                    }
+                }
+
+                grip.StowSwitchFrame = bestFrame;
+                grip.StowSwitchTime = Mathf.Min(
+                    stowSource.length,
+                    bestFrame / stowSource.frameRate);
+                grip.StowPositionDifferenceMeters = bestPosition;
+                grip.StowRotationDifferenceDegrees = bestRotation;
+                stowSource.SampleAnimation(clone, grip.StowSwitchTime);
+                grip.StowBackLocalPosition =
+                    rightHand.InverseTransformPoint(backItem.position);
+                grip.StowBackLocalRotation =
+                    Quaternion.Inverse(rightHand.rotation) * backItem.rotation;
+                grip.StowBackLocalScale = DivideMusketScale(
+                    backItem.lossyScale,
+                    rightHand.lossyScale);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(clone);
+            }
+        }
+
+        private static Transform InstantiateMusketHandItem(
+            Transform target,
+            GameObject musketAsset,
+            MusketGripBinding grip)
+        {
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform existing = rightHand.Find(MusketHandInstanceName);
+            if (existing != null)
+            {
+                UnityEngine.Object.DestroyImmediate(existing.gameObject);
+            }
+
+            GameObject instance = PrefabUtility.InstantiatePrefab(
+                musketAsset,
+                rightHand) as GameObject;
+            if (instance == null)
+            {
+                throw new InvalidOperationException(
+                    target.name + " hand-held musket could not be instantiated.");
+            }
+
+            instance.name = MusketHandInstanceName;
+            instance.transform.localPosition = grip.LocalPosition;
+            instance.transform.localRotation = grip.LocalRotation;
+            instance.transform.localScale = grip.LocalScale;
+            EditorUtility.SetDirty(instance);
+            return instance.transform;
+        }
+
+        private static AnimationClip CreateOrUpdateMusketAnimationClip(
+            MusketAnimationSpec spec,
+            AnimationClip source,
+            Transform target,
+            MusketGripBinding grip)
+        {
+            Transform backItem = RequireMusketBackItem(target);
+            Transform handItem = FindRequired(
+                target,
+                RightHandPath + "/" + MusketHandInstanceName);
+            AnimationClip generated = new AnimationClip();
+            EditorUtility.CopySerialized(source, generated);
+            generated.name = spec.TargetName + "_ExactWithMusketVisibility";
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(generated);
+            settings.loopTime = true;
+            settings.loopBlend = false;
+            AnimationUtility.SetAnimationClipSettings(generated, settings);
+
+            float switchTime = -1f;
+            bool backStartsVisible;
+            bool backEndsVisible;
+            bool handStartsVisible;
+            bool handEndsVisible;
+            if (string.Equals(spec.ItemMode, "Draw", StringComparison.Ordinal))
+            {
+                switchTime = grip.DrawSwitchTime;
+                backStartsVisible = true;
+                backEndsVisible = false;
+                handStartsVisible = false;
+                handEndsVisible = true;
+            }
+            else if (string.Equals(
+                         spec.ItemMode,
+                         "Stow",
+                         StringComparison.Ordinal))
+            {
+                switchTime = grip.StowSwitchTime;
+                backStartsVisible = false;
+                backEndsVisible = true;
+                handStartsVisible = true;
+                handEndsVisible = false;
+            }
+            else
+            {
+                backStartsVisible = false;
+                backEndsVisible = false;
+                handStartsVisible = true;
+                handEndsVisible = true;
+            }
+
+            SetMusketScaleVisibilityCurves(
+                generated,
+                SpinePath + "/" + MusketBackInstanceName,
+                backItem.localScale,
+                backStartsVisible,
+                backEndsVisible,
+                switchTime);
+            SetMusketScaleVisibilityCurves(
+                generated,
+                RightHandPath + "/" + MusketHandInstanceName,
+                handItem.localScale,
+                handStartsVisible,
+                handEndsVisible,
+                switchTime);
+            SetMusketHandTransferCurves(generated, spec, grip);
+            generated.EnsureQuaternionContinuity();
+
+            AnimationClip existing =
+                AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                    spec.GeneratedClipPath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(generated, spec.GeneratedClipPath);
+                existing = generated;
+            }
+            else
+            {
+                EditorUtility.CopySerialized(generated, existing);
+                UnityEngine.Object.DestroyImmediate(generated);
+                existing.name =
+                    spec.TargetName + "_ExactWithMusketVisibility";
+                EditorUtility.SetDirty(existing);
+            }
+
+            AssetDatabase.SaveAssets();
+            return existing;
+        }
+
+        private static void SetMusketHandTransferCurves(
+            AnimationClip clip,
+            MusketAnimationSpec spec,
+            MusketGripBinding grip)
+        {
+            bool isDraw = string.Equals(
+                spec.ItemMode,
+                "Draw",
+                StringComparison.Ordinal);
+            bool isStow = string.Equals(
+                spec.ItemMode,
+                "Stow",
+                StringComparison.Ordinal);
+            if (!isDraw && !isStow)
+            {
+                return;
+            }
+
+            float transitionStart = isDraw ? grip.DrawSwitchTime : 0f;
+            float transitionEnd = isDraw
+                ? clip.length
+                : grip.StowSwitchTime;
+            Vector3 startPosition = isDraw
+                ? grip.DrawBackLocalPosition
+                : grip.LocalPosition;
+            Quaternion startRotation = isDraw
+                ? grip.DrawBackLocalRotation
+                : grip.LocalRotation;
+            Vector3 endPosition = isDraw
+                ? grip.LocalPosition
+                : grip.StowBackLocalPosition;
+            Quaternion endRotation = isDraw
+                ? grip.LocalRotation
+                : grip.StowBackLocalRotation;
+            int frameIntervals = Mathf.Max(
+                1,
+                Mathf.CeilToInt(
+                    clip.length * Mathf.Max(1f, clip.frameRate)));
+            TransformCurveTrack track = new TransformCurveTrack(
+                RightHandPath + "/" + MusketHandInstanceName);
+            for (int frame = 0; frame <= frameIntervals; frame++)
+            {
+                float time = Mathf.Min(
+                    clip.length,
+                    frame / Mathf.Max(1f, clip.frameRate));
+                float progress = transitionEnd <= transitionStart + 0.000001f
+                    ? (time >= transitionEnd ? 1f : 0f)
+                    : Mathf.InverseLerp(
+                        transitionStart,
+                        transitionEnd,
+                        time);
+                progress = Mathf.SmoothStep(0f, 1f, progress);
+                track.Add(
+                    time,
+                    Vector3.Lerp(startPosition, endPosition, progress),
+                    Quaternion.Slerp(startRotation, endRotation, progress));
+            }
+
+            SetTransformTrackCurves(clip, track);
+        }
+
+        private static void SetMusketScaleVisibilityCurves(
+            AnimationClip clip,
+            string path,
+            Vector3 visibleScale,
+            bool startsVisible,
+            bool endsVisible,
+            float switchTime)
+        {
+            string[] properties =
+            {
+                "m_LocalScale.x",
+                "m_LocalScale.y",
+                "m_LocalScale.z"
+            };
+            float[] values =
+            {
+                visibleScale.x,
+                visibleScale.y,
+                visibleScale.z
+            };
+            for (int axis = 0; axis < properties.Length; axis++)
+            {
+                AnimationCurve curve = CreateMusketVisibilityStepCurve(
+                    clip.length,
+                    clip.frameRate,
+                    startsVisible ? values[axis] : 0f,
+                    endsVisible ? values[axis] : 0f,
+                    switchTime);
+                AnimationUtility.SetEditorCurve(
+                    clip,
+                    EditorCurveBinding.FloatCurve(
+                        path,
+                        typeof(Transform),
+                        properties[axis]),
+                    curve);
+            }
+        }
+
+        private static AnimationCurve CreateMusketVisibilityStepCurve(
+            float duration,
+            float frameRate,
+            float startValue,
+            float endValue,
+            float switchTime)
+        {
+            List<Keyframe> keys = new List<Keyframe>
+            {
+                new Keyframe(0f, startValue)
+            };
+            if (Mathf.Abs(startValue - endValue) > 0.000001f)
+            {
+                float previousTime = Mathf.Max(
+                    0f,
+                    switchTime - 1f / Mathf.Max(1f, frameRate));
+                if (previousTime > 0.000001f)
+                {
+                    keys.Add(new Keyframe(previousTime, startValue));
+                }
+
+                keys.Add(new Keyframe(switchTime, endValue));
+            }
+
+            if (duration > keys[keys.Count - 1].time + 0.000001f)
+            {
+                keys.Add(new Keyframe(duration, endValue));
+            }
+
+            AnimationCurve curve = new AnimationCurve(keys.ToArray())
+            {
+                preWrapMode = WrapMode.ClampForever,
+                postWrapMode = WrapMode.ClampForever
+            };
+            for (int index = 0; index < curve.length; index++)
+            {
+                AnimationUtility.SetKeyLeftTangentMode(
+                    curve,
+                    index,
+                    AnimationUtility.TangentMode.Constant);
+                AnimationUtility.SetKeyRightTangentMode(
+                    curve,
+                    index,
+                    AnimationUtility.TangentMode.Constant);
+            }
+
+            return curve;
+        }
+
+        private static Transform RequireMusketBackItem(Transform target)
+        {
+            Transform backItem = FindRequired(target, SpinePath)
+                .Find(MusketBackInstanceName);
+            if (backItem == null)
+            {
+                throw new InvalidOperationException(
+                    target.name + " is missing Musket_Back_Item under Spine.");
+            }
+
+            return backItem;
+        }
+
+        private static bool MusketHandItemMatchesGrip(
+            Transform handItem,
+            MusketGripBinding grip)
+        {
+            return Vector3.Distance(
+                       handItem.localPosition,
+                       grip.LocalPosition) <= PositionTolerance &&
+                   Quaternion.Angle(
+                       handItem.localRotation,
+                       grip.LocalRotation) <= RotationTolerance &&
+                   Vector3.Distance(
+                       handItem.localScale,
+                       grip.LocalScale) <= PositionTolerance;
+        }
+
+        private static bool MusketSourceCurvesPreserved(
+            AnimationClip source,
+            AnimationClip generated)
+        {
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetCurveBindings(source))
+            {
+                AnimationCurve sourceCurve =
+                    AnimationUtility.GetEditorCurve(source, binding);
+                AnimationCurve generatedCurve =
+                    AnimationUtility.GetEditorCurve(generated, binding);
+                if (sourceCurve == null || generatedCurve == null ||
+                    !AnimationCurvesEqual(sourceCurve, generatedCurve))
+                {
+                    return false;
+                }
+            }
+
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetObjectReferenceCurveBindings(source))
+            {
+                ObjectReferenceKeyframe[] sourceKeys =
+                    AnimationUtility.GetObjectReferenceCurve(source, binding);
+                ObjectReferenceKeyframe[] generatedKeys =
+                    AnimationUtility.GetObjectReferenceCurve(generated, binding);
+                if (sourceKeys.Length != generatedKeys.Length)
+                {
+                    return false;
+                }
+
+                for (int index = 0; index < sourceKeys.Length; index++)
+                {
+                    if (Mathf.Abs(
+                            sourceKeys[index].time -
+                            generatedKeys[index].time) > 0.00001f ||
+                        sourceKeys[index].value != generatedKeys[index].value)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return Mathf.Abs(source.length - generated.length) <= 0.0001f &&
+                   Mathf.Abs(source.frameRate - generated.frameRate) <= 0.0001f;
+        }
+
+        private static float DistanceToSegment(
+            Vector3 point,
+            Vector3 start,
+            Vector3 end)
+        {
+            Vector3 segment = end - start;
+            float denominator = segment.sqrMagnitude;
+            if (denominator <= 0.0000001f)
+            {
+                return Vector3.Distance(point, start);
+            }
+
+            float amount = Mathf.Clamp01(
+                Vector3.Dot(point - start, segment) / denominator);
+            return Vector3.Distance(point, start + segment * amount);
+        }
+
+        private static Vector3 DivideMusketScale(
+            Vector3 worldScale,
+            Vector3 parentWorldScale)
+        {
+            return new Vector3(
+                worldScale.x / Mathf.Max(0.000001f, Mathf.Abs(parentWorldScale.x)),
+                worldScale.y / Mathf.Max(0.000001f, Mathf.Abs(parentWorldScale.y)),
+                worldScale.z / Mathf.Max(0.000001f, Mathf.Abs(parentWorldScale.z)));
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Musket Back Carry Models Play Mode")]
+        internal static void CaptureMusketBackCarryModelsPlayMode()
+        {
+            int stage = SessionState.GetInt(
+                MusketBackCarryCaptureStageKey,
+                0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket back-carry review must start in Edit Mode.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before Musket back-carry review.");
+                    }
+
+                    SessionState.SetInt(MusketBackCarryCaptureStageKey, 1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[PlayerMusketBackCarry] Entering Play Mode for direct static-state review.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket back-carry review capture requires Play Mode.");
+                    }
+
+                    CaptureMusketBackCarryActualPlayMode();
+                    SessionState.SetInt(MusketBackCarryCaptureStageKey, 2);
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket back-carry review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(MusketBackCarryCaptureStageKey);
+                    SessionState.EraseString(MusketBackCarryCaptureErrorKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[PlayerMusketBackCarry] Exiting Play Mode after direct static-state review.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Musket back-carry review stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(MusketBackCarryCaptureStageKey);
+                SessionState.EraseString(MusketBackCarryCaptureErrorKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+        private static void CaptureMusketBackCarryActualPlayMode()
+        {
+            MusketBackCarryApplyMetrics apply =
+                ReadJson<MusketBackCarryApplyMetrics>(
+                    MusketBackCarryApplyMetricsPath);
+            if (!apply.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Musket back-carry apply metrics did not pass.");
+            }
+
+            GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MusketAssetPath);
+            if (asset == null)
+            {
+                throw new InvalidOperationException(
+                    "Imported musket asset is missing before Play Mode review.");
+            }
+
+            MusketGeometryAnalysis analysis = AnalyzeMusketGeometry(asset);
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            string[] targetNames = GetMusketBackCarryTargetNames();
+            List<byte[]> backFrames = new List<byte[]>();
+            List<byte[]> sideFrames = new List<byte[]>();
+            List<MusketBackCarryTargetMetrics> targetMetrics =
+                new List<MusketBackCarryTargetMetrics>();
+            string[] labels =
+            {
+                "draw",
+                "idle",
+                "stow",
+                "hip_fire",
+                "aim",
+                "aim_fire",
+                "aim_exit",
+                "reload"
+            };
+            for (int index = 0; index < targetNames.Length; index++)
+            {
+                Transform target = RequireTarget(layout, targetNames[index]);
+                Transform spine = FindRequired(target, SpinePath);
+                Transform musket = spine.Find(MusketBackInstanceName) ??
+                    throw new InvalidOperationException(
+                        target.name + " Musket_Back_Item is missing in Play Mode.");
+                byte[] back;
+                byte[] side;
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(target))
+                {
+                    environment.ConfigureBackView(target, 1.05f, 1.45f);
+                    back = environment.CaptureFront();
+                    side = environment.CaptureSide();
+                }
+
+                backFrames.Add(back);
+                sideFrames.Add(side);
+                ComposeRows(
+                    new[]
+                    {
+                        new List<byte[]> { back, side }
+                    },
+                    Path.Combine(
+                        MusketBackCarryValidationDirectory,
+                        labels[index] + "_playmode_contact_sheet.png"));
+                MusketBackCarryTargetMetrics expected =
+                    apply.targets.Single(metrics =>
+                        string.Equals(
+                            metrics.target,
+                            target.name,
+                            StringComparison.Ordinal));
+                RootPose currentRoot = new RootPose(target);
+                RootPose currentMusket = new RootPose(musket);
+                MusketBackCarryTargetMetrics metrics =
+                    MeasureMusketBackCarryTarget(
+                        target,
+                        analysis,
+                        currentRoot,
+                        DescribeAnimatorConfiguration(target),
+                        currentMusket,
+                        1,
+                        0f,
+                        0f,
+                        0f);
+                metrics.targetRootUnchanged =
+                    Vector3.Distance(
+                        target.localPosition,
+                        expected.targetLocalPosition) <= PositionTolerance &&
+                    Quaternion.Angle(
+                        target.localRotation,
+                        expected.targetLocalRotation) <= RotationTolerance &&
+                    Vector3.Distance(
+                        target.localScale,
+                        expected.targetLocalScale) <= PositionTolerance;
+                metrics.animatorUnchanged =
+                    string.Equals(
+                        DescribeAnimatorConfiguration(target),
+                        "<none>",
+                        StringComparison.Ordinal);
+                metrics.sameRelativeTransform =
+                    Vector3.Distance(
+                        musket.localPosition,
+                        expected.musketLocalPosition) <= PositionTolerance &&
+                    Quaternion.Angle(
+                        musket.localRotation,
+                        expected.musketLocalRotation) <= RotationTolerance &&
+                    Vector3.Distance(
+                        musket.localScale,
+                        expected.musketLocalScale) <= PositionTolerance;
+                metrics.passedNumericChecks =
+                    metrics.parentedToSpine &&
+                    metrics.sameRelativeTransform &&
+                    metrics.stockUpperRightMuzzleLowerLeft &&
+                    metrics.targetRootUnchanged &&
+                    metrics.animatorUnchanged;
+                targetMetrics.Add(metrics);
+            }
+
+            ComposeRows(
+                new[] { backFrames, sideFrames },
+                MusketBackCarryOverviewPath);
+            MusketBackCarryReviewMetrics review =
+                new MusketBackCarryReviewMetrics
+                {
+                    targetSet = string.Join(", ", targetNames),
+                    captureFrameRate = 0,
+                    secondsCapturedPerTarget = 0f,
+                    targetCount = targetMetrics.Count,
+                    targets = targetMetrics.ToArray(),
+                    existingTargetStatesObserved = true,
+                    allTargetsRemainAttachedToSpine =
+                        targetMetrics.All(metrics =>
+                            metrics.parentedToSpine),
+                    allDirectionsRemainCorrect =
+                        targetMetrics.All(metrics =>
+                            metrics.stockUpperRightMuzzleLowerLeft),
+                    allRelativeTransformsRemainExact =
+                        targetMetrics.All(metrics =>
+                            metrics.sameRelativeTransform),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            review.passedNumericChecks =
+                review.targetCount == targetNames.Length &&
+                review.existingTargetStatesObserved &&
+                review.allTargetsRemainAttachedToSpine &&
+                review.allDirectionsRemainCorrect &&
+                review.allRelativeTransformsRemainExact &&
+                review.targets.All(metrics =>
+                    metrics.passedNumericChecks);
+            WriteJson(MusketBackCarryReviewMetricsPath, review);
+            if (!review.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Musket back-carry Play Mode support checks failed. " +
+                    JsonUtility.ToJson(review));
+            }
+
+            Debug.Log(
+                "[PlayerMusketBackCarry] Captured all eight unchanged Play Mode target states from the back and side. " +
+                "TargetCount=" + review.targetCount +
+                ", TargetRootsUnchanged=True, AnimatorAbsenceUnchanged=True.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Musket Back Carry Models Final")]
+        internal static void CaptureMusketBackCarryModelsFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Musket back-carry finalization requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after Musket back-carry direct review.");
+            }
+
+            MusketBackCarryReviewMetrics review =
+                ReadJson<MusketBackCarryReviewMetrics>(
+                    MusketBackCarryReviewMetricsPath);
+            if (!review.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Musket back-carry Play Mode review did not pass before finalization.");
+            }
+
+            CopyReviewedContact(
+                MusketBackCarryOverviewPath,
+                MusketBackCarryFinalPath);
+            Debug.Log(
+                "[PlayerMusketBackCarry] Final overview copied once from directly reviewed Play Mode frames. " +
+                "Path=" + Path.GetFullPath(MusketBackCarryFinalPath) +
+                ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Musket Animation Set Play Mode")]
+        internal static void CaptureMusketAnimationSetPlayMode()
+        {
+            int stage = SessionState.GetInt(
+                MusketAnimationCaptureStageKey,
+                0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket animation review must start in Edit Mode.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before Musket animation review.");
+                    }
+
+                    MusketAnimationApplyMetrics apply =
+                        ReadJson<MusketAnimationApplyMetrics>(
+                            MusketAnimationApplyMetricsPath);
+                    if (!apply.passedNumericChecks)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket animation apply metrics did not pass.");
+                    }
+
+                    SessionState.SetInt(MusketAnimationCaptureStageKey, 1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[PlayerMusketAnimationSet] Entering Play Mode for unchanged original-speed animation review.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket animation capture start requires Play Mode.");
+                    }
+
+                    MusketAnimationSetPlayModeCapture.Start();
+                    SessionState.SetInt(MusketAnimationCaptureStageKey, 2);
+                    Debug.Log(
+                        "[PlayerMusketAnimationSet] Began sequential actual Play Mode capture for two natural loops of every target.");
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket animation capture polling requires Play Mode.");
+                    }
+
+                    if (MusketAnimationSetPlayModeCapture.Failure != null)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket animation Play Mode capture failed.",
+                            MusketAnimationSetPlayModeCapture.Failure);
+                    }
+
+                    if (!MusketAnimationSetPlayModeCapture.IsComplete)
+                    {
+                        Debug.Log(
+                            "[PlayerMusketAnimationSet] Actual Play Mode capture is still running. " +
+                            MusketAnimationSetPlayModeCapture.Status);
+                        return;
+                    }
+
+                    SessionState.SetInt(MusketAnimationCaptureStageKey, 3);
+                    Debug.Log(
+                        "[PlayerMusketAnimationSet] Actual Play Mode capture completed for all eight targets; run once more to exit Play Mode.");
+                    return;
+                }
+
+                if (stage == 3)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket animation review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(MusketAnimationCaptureStageKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[PlayerMusketAnimationSet] Exiting Play Mode after direct two-loop review capture.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Musket animation capture stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(MusketAnimationCaptureStageKey);
+                MusketAnimationSetPlayModeCapture.Stop();
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Musket Animation Set Final")]
+        internal static void CaptureMusketAnimationSetFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Musket animation finalization requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after Musket animation direct review.");
+            }
+
+            MusketAnimationReviewMetrics review =
+                ReadJson<MusketAnimationReviewMetrics>(
+                    MusketAnimationReviewMetricsPath);
+            if (!review.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Musket animation Play Mode review did not pass before finalization.");
+            }
+
+            CopyReviewedContact(
+                MusketAnimationOverviewPath,
+                MusketAnimationFinalPath);
+            Debug.Log(
+                "[PlayerMusketAnimationSet] Final overview copied once from directly reviewed actual Play Mode frames. Path=" +
+                Path.GetFullPath(MusketAnimationFinalPath) +
+                ", SceneChanged=False.");
+        }
+
+        private static string[] GetMusketBackCarryTargetNames()
+        {
+            return new[]
+            {
+                MusketDrawTargetName,
+                MusketIdleTargetName,
+                MusketStowTargetName,
+                MusketHipFireTargetName,
+                MusketAimTargetName,
+                MusketAimFireTargetName,
+                MusketAimExitTargetName,
+                MusketReloadTargetName
+            };
+        }
+
+        private static string DescribeAnimatorConfiguration(Transform target)
+        {
+            Animator animator = target.GetComponent<Animator>();
+            if (animator == null)
+            {
+                return "<none>";
+            }
+
+            return string.Join(
+                "|",
+                AssetDatabase.GetAssetPath(animator.runtimeAnimatorController),
+                animator.enabled,
+                animator.applyRootMotion,
+                animator.cullingMode,
+                animator.updateMode,
+                animator.speed.ToString("R", CultureInfo.InvariantCulture));
+        }
+
+        private static Transform InstantiateMusketUnderSpine(
+            Transform target,
+            GameObject musketAsset)
+        {
+            Transform spine = FindRequired(target, SpinePath);
+            Transform existing = spine.Find(MusketBackInstanceName);
+            if (existing != null)
+            {
+                UnityEngine.Object.DestroyImmediate(existing.gameObject);
+            }
+
+            GameObject instance = PrefabUtility.InstantiatePrefab(
+                musketAsset,
+                spine) as GameObject;
+            if (instance == null)
+            {
+                throw new InvalidOperationException(
+                    "The exact musket FBX could not be instantiated under " +
+                    target.name + " Spine.");
+            }
+
+            instance.name = MusketBackInstanceName;
+            EditorUtility.SetDirty(instance);
+            return instance.transform;
+        }
+
+        private static void ConfigureReferenceMusketBackPlacement(
+            Transform target,
+            Transform musket,
+            MusketGeometryAnalysis analysis)
+        {
+            Vector3 desiredStockToMuzzle =
+                (-target.right - target.up).normalized;
+            Quaternion worldRotation = Quaternion.FromToRotation(
+                analysis.StockToMuzzleAxis,
+                desiredStockToMuzzle);
+            Vector3 rotatedThickness =
+                worldRotation * analysis.ThicknessAxis;
+            Vector3 desiredThickness = Vector3.ProjectOnPlane(
+                target.forward,
+                desiredStockToMuzzle).normalized;
+            float roll = Vector3.SignedAngle(
+                rotatedThickness,
+                desiredThickness,
+                desiredStockToMuzzle);
+            worldRotation =
+                Quaternion.AngleAxis(roll, desiredStockToMuzzle) *
+                worldRotation;
+
+            musket.localPosition = Vector3.zero;
+            musket.localRotation = Quaternion.identity;
+            musket.localScale = Vector3.one;
+            musket.rotation = worldRotation;
+            float unscaledWorldLength = Vector3.Distance(
+                musket.TransformPoint(analysis.LocalStockPoint),
+                musket.TransformPoint(analysis.LocalMuzzlePoint));
+            if (unscaledWorldLength <= 0.000001f)
+            {
+                throw new InvalidOperationException(
+                    "The imported musket has no measurable world length.");
+            }
+
+            float scale = MusketDesignLengthMeters / unscaledWorldLength;
+            musket.localScale = Vector3.one * scale;
+            Vector3 chestCenter =
+                (FindRequired(target, SolarPlexusPath).position +
+                 FindRequired(target, SpinePath).position) * 0.5f;
+            float backSurface = MeasureBackSurfaceProjection(
+                target,
+                chestCenter);
+            float musketHalfDepth = Vector3.Distance(
+                musket.TransformPoint(
+                    analysis.LocalCenter +
+                    analysis.ThicknessAxis *
+                    (analysis.SourceThickness * 0.5f)),
+                musket.TransformPoint(analysis.LocalCenter));
+            Vector3 desiredCenter = chestCenter +
+                target.forward *
+                (backSurface - musketHalfDepth +
+                 MusketBackSurfaceInsetMeters);
+            Vector3 currentCenter = musket.TransformPoint(
+                analysis.LocalCenter);
+            musket.position += desiredCenter - currentCenter;
+            EditorUtility.SetDirty(musket.gameObject);
+        }
+
+        private static float MeasureBackSurfaceProjection(
+            Transform target,
+            Vector3 chestCenter)
+        {
+            SkinnedMeshRenderer renderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(target);
+            Mesh baked = new Mesh
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            try
+            {
+                renderer.BakeMesh(baked);
+                float back = float.PositiveInfinity;
+                int candidateCount = 0;
+                foreach (Vector3 localVertex in baked.vertices)
+                {
+                    Vector3 world = renderer.transform.TransformPoint(localVertex);
+                    Vector3 offset = world - chestCenter;
+                    if (Mathf.Abs(Vector3.Dot(offset, target.right)) > 0.32f ||
+                        Mathf.Abs(Vector3.Dot(offset, target.up)) > 0.38f)
+                    {
+                        continue;
+                    }
+
+                    back = Mathf.Min(back, Vector3.Dot(offset, target.forward));
+                    candidateCount++;
+                }
+
+                return candidateCount > 0 && !float.IsInfinity(back)
+                    ? back
+                    : -0.16f;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(baked);
+            }
+        }
+
+        private static MusketGeometryAnalysis AnalyzeMusketGeometry(
+            GameObject musketAsset)
+        {
+            GameObject instance = UnityEngine.Object.Instantiate(musketAsset);
+            instance.name = "MusketGeometryAnalysis";
+            instance.hideFlags = HideFlags.HideAndDontSave;
+            instance.transform.position = Vector3.zero;
+            instance.transform.rotation = Quaternion.identity;
+            instance.transform.localScale = Vector3.one;
+            try
+            {
+                List<Vector3> vertices = new List<Vector3>();
+                foreach (MeshFilter filter in
+                         instance.GetComponentsInChildren<MeshFilter>(true))
+                {
+                    Mesh mesh = filter.sharedMesh;
+                    if (mesh == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (Vector3 vertex in mesh.vertices)
+                    {
+                        vertices.Add(instance.transform.InverseTransformPoint(
+                            filter.transform.TransformPoint(vertex)));
+                    }
+                }
+
+                if (vertices.Count < 8)
+                {
+                    throw new InvalidOperationException(
+                        "The imported musket has insufficient readable mesh vertices.");
+                }
+
+                Vector3 minimum = new Vector3(
+                    vertices.Min(vertex => vertex.x),
+                    vertices.Min(vertex => vertex.y),
+                    vertices.Min(vertex => vertex.z));
+                Vector3 maximum = new Vector3(
+                    vertices.Max(vertex => vertex.x),
+                    vertices.Max(vertex => vertex.y),
+                    vertices.Max(vertex => vertex.z));
+                Vector3 size = maximum - minimum;
+                float[] ranges = { size.x, size.y, size.z };
+                int longAxisIndex = Enumerable.Range(0, 3)
+                    .OrderByDescending(index => ranges[index])
+                    .First();
+                int thicknessAxisIndex = Enumerable.Range(0, 3)
+                    .Where(index => index != longAxisIndex)
+                    .OrderBy(index => ranges[index])
+                    .First();
+                Vector3 longAxis = AxisVector(longAxisIndex);
+                Vector3 thicknessAxis = AxisVector(thicknessAxisIndex);
+                float lowRadius = MeasureMusketEndRadius(
+                    vertices,
+                    longAxisIndex,
+                    minimum[longAxisIndex],
+                    maximum[longAxisIndex],
+                    false);
+                float highRadius = MeasureMusketEndRadius(
+                    vertices,
+                    longAxisIndex,
+                    minimum[longAxisIndex],
+                    maximum[longAxisIndex],
+                    true);
+                bool lowEndIsMuzzle = lowRadius <= highRadius;
+                Vector3 stockToMuzzle = lowEndIsMuzzle
+                    ? -longAxis
+                    : longAxis;
+                Vector3 center = (minimum + maximum) * 0.5f;
+                float length = ranges[longAxisIndex];
+                MusketGeometryAnalysis analysis =
+                    new MusketGeometryAnalysis
+                    {
+                        LocalCenter = center,
+                        StockToMuzzleAxis = stockToMuzzle,
+                        ThicknessAxis = thicknessAxis,
+                        SourceLength = length,
+                        SourceThickness = ranges[thicknessAxisIndex],
+                        LocalStockPoint =
+                            center - stockToMuzzle * (length * 0.5f),
+                        LocalMuzzlePoint =
+                            center + stockToMuzzle * (length * 0.5f),
+                        MuzzleEndRadius = lowEndIsMuzzle
+                            ? lowRadius
+                            : highRadius,
+                        StockEndRadius = lowEndIsMuzzle
+                            ? highRadius
+                            : lowRadius
+                    };
+                if (analysis.MuzzleEndRadius >= analysis.StockEndRadius)
+                {
+                    throw new InvalidOperationException(
+                        "Musket muzzle/stock end classification was not geometrically distinct.");
+                }
+
+                return analysis;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(instance);
+            }
+        }
+
+        private static Vector3 AxisVector(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return Vector3.right;
+                case 1:
+                    return Vector3.up;
+                default:
+                    return Vector3.forward;
+            }
+        }
+
+        private static float MeasureMusketEndRadius(
+            IReadOnlyList<Vector3> vertices,
+            int longAxisIndex,
+            float minimum,
+            float maximum,
+            bool highEnd)
+        {
+            float threshold = Mathf.Lerp(
+                minimum,
+                maximum,
+                highEnd ? 0.82f : 0.18f);
+            Vector3 sliceMinimum = new Vector3(
+                float.PositiveInfinity,
+                float.PositiveInfinity,
+                float.PositiveInfinity);
+            Vector3 sliceMaximum = new Vector3(
+                float.NegativeInfinity,
+                float.NegativeInfinity,
+                float.NegativeInfinity);
+            int count = 0;
+            foreach (Vector3 vertex in vertices)
+            {
+                float value = vertex[longAxisIndex];
+                if ((highEnd && value < threshold) ||
+                    (!highEnd && value > threshold))
+                {
+                    continue;
+                }
+
+                sliceMinimum = Vector3.Min(sliceMinimum, vertex);
+                sliceMaximum = Vector3.Max(sliceMaximum, vertex);
+                count++;
+            }
+
+            if (count == 0)
+            {
+                throw new InvalidOperationException(
+                    "Musket end slice has no vertices.");
+            }
+
+            Vector3 size = sliceMaximum - sliceMinimum;
+            List<float> radialRanges = new List<float>();
+            for (int axis = 0; axis < 3; axis++)
+            {
+                if (axis != longAxisIndex)
+                {
+                    radialRanges.Add(size[axis]);
+                }
+            }
+
+            return 0.5f * Mathf.Sqrt(
+                radialRanges[0] * radialRanges[0] +
+                radialRanges[1] * radialRanges[1]);
+        }
+
+        private static MusketBackCarryTargetMetrics MeasureMusketBackCarryTarget(
+            Transform target,
+            MusketGeometryAnalysis analysis,
+            RootPose expectedRoot,
+            string expectedAnimator,
+            RootPose expectedMusket,
+            int framesCaptured,
+            float maximumPositionDifference,
+            float maximumRotationDifference,
+            float maximumScaleDifference)
+        {
+            Transform spine = FindRequired(target, SpinePath);
+            Transform musket = spine.Find(MusketBackInstanceName) ??
+                throw new InvalidOperationException(
+                    target.name + " Musket_Back_Item is missing from Spine.");
+            Vector3 stock = musket.TransformPoint(analysis.LocalStockPoint);
+            Vector3 muzzle = musket.TransformPoint(analysis.LocalMuzzlePoint);
+            Vector3 direction = (muzzle - stock).normalized;
+            Vector3 desiredDirection = (-target.right - target.up).normalized;
+            float right = Vector3.Dot(direction, target.right);
+            float up = Vector3.Dot(direction, target.up);
+            float forward = Vector3.Dot(direction, target.forward);
+            float angle = Mathf.Atan2(-up, -right) * Mathf.Rad2Deg;
+            float length = Vector3.Distance(stock, muzzle);
+            bool sameRelativeTransform =
+                Vector3.Distance(
+                    musket.localPosition,
+                    expectedMusket.LocalPosition) <= PositionTolerance &&
+                Quaternion.Angle(
+                    musket.localRotation,
+                    expectedMusket.LocalRotation) <= RotationTolerance &&
+                Vector3.Distance(
+                    musket.localScale,
+                    expectedMusket.LocalScale) <= PositionTolerance;
+            MusketBackCarryTargetMetrics metrics =
+                new MusketBackCarryTargetMetrics
+                {
+                    target = target.name,
+                    parentPath = AnimationUtility.CalculateTransformPath(
+                        musket.parent,
+                        target),
+                    targetLocalPosition = target.localPosition,
+                    targetLocalRotation = target.localRotation,
+                    targetLocalScale = target.localScale,
+                    musketLocalPosition = musket.localPosition,
+                    musketLocalRotation = musket.localRotation,
+                    musketLocalScale = musket.localScale,
+                    musketLengthMeters = length,
+                    angleBelowLeftHorizontalDegrees = angle,
+                    directionErrorDegrees = Vector3.Angle(
+                        direction,
+                        desiredDirection),
+                    maximumLocalPositionDifferenceMeters =
+                        maximumPositionDifference,
+                    maximumLocalRotationDifferenceDegrees =
+                        maximumRotationDifference,
+                    maximumLocalScaleDifference = maximumScaleDifference,
+                    playModeFramesCaptured = framesCaptured,
+                    stockUpperRightMuzzleLowerLeft =
+                        right < -0.5f && up < -0.5f &&
+                        Mathf.Abs(forward) <= 0.05f,
+                    targetRootUnchanged = RootMatches(target, expectedRoot),
+                    animatorUnchanged = string.Equals(
+                        DescribeAnimatorConfiguration(target),
+                        expectedAnimator,
+                        StringComparison.Ordinal),
+                    parentedToSpine = string.Equals(
+                        AnimationUtility.CalculateTransformPath(
+                            musket.parent,
+                            target),
+                        SpinePath,
+                        StringComparison.Ordinal),
+                    sameRelativeTransform = sameRelativeTransform
+                };
+            metrics.passedNumericChecks =
+                metrics.parentedToSpine &&
+                metrics.sameRelativeTransform &&
+                metrics.stockUpperRightMuzzleLowerLeft &&
+                Mathf.Abs(metrics.musketLengthMeters -
+                          MusketDesignLengthMeters) <= 0.005f &&
+                Mathf.Abs(metrics.angleBelowLeftHorizontalDegrees -
+                          MusketBackDiagonalDegrees) <= 0.1f &&
+                metrics.directionErrorDegrees <= 0.1f &&
+                metrics.targetRootUnchanged &&
+                metrics.animatorUnchanged;
+            return metrics;
+        }
+
+        internal static class MusketAnimationSetPlayModeCapture
+        {
+            private static MusketAnimationSpec[] specs;
+            private static MusketAnimationApplyMetrics apply;
+            private static readonly List<MusketAnimationTargetReviewMetrics>
+                TargetMetrics =
+                    new List<MusketAnimationTargetReviewMetrics>();
+            private static readonly List<byte[]> OverviewFront =
+                new List<byte[]>();
+            private static readonly List<byte[]> OverviewSide =
+                new List<byte[]>();
+            private static readonly List<byte[]> FrontFrames =
+                new List<byte[]>();
+            private static readonly List<byte[]> SideFrames =
+                new List<byte[]>();
+            private static readonly List<float> NormalizedFrames =
+                new List<float>();
+            private static int targetIndex;
+            private static int frameIndex;
+            private static Transform target;
+            private static Transform backItem;
+            private static Transform handItem;
+            private static Animator animator;
+            private static CaptureEnvironment environment;
+            private static MusketAnimationTargetApplyMetrics expected;
+            private static RootPose initialRoot;
+            private static float captureStartNormalized;
+            private static float lastNormalized;
+            private static double captureStartEditorTime;
+            private static double nextCaptureEditorTime;
+            private static float currentCaptureFrameRate;
+            private static float maximumRootPositionDifference;
+            private static float maximumRootRotationDifference;
+            private static float maximumHandPositionDifference;
+            private static float maximumHandRotationDifference;
+            private static float maximumHandScaleDifference;
+            private static bool observedBackVisible;
+            private static bool observedHandVisible;
+            private static bool exactlyOneVisible;
+            private static bool waitingForLoopBoundary;
+            private static bool isRunning;
+
+            internal static bool IsComplete { get; private set; }
+
+            internal static Exception Failure { get; private set; }
+
+            internal static string Status { get; private set; }
+
+            internal static void Start()
+            {
+                if (isRunning)
+                {
+                    throw new InvalidOperationException(
+                        "Musket animation capture is already running.");
+                }
+
+                if (!EditorApplication.isPlaying)
+                {
+                    throw new InvalidOperationException(
+                        "Musket animation capture requires Play Mode.");
+                }
+
+                specs = GetMusketAnimationSpecs();
+                apply = ReadJson<MusketAnimationApplyMetrics>(
+                    MusketAnimationApplyMetricsPath);
+                if (!apply.passedNumericChecks ||
+                    apply.targets.Length != specs.Length)
+                {
+                    throw new InvalidOperationException(
+                        "Musket animation apply metrics are unavailable for capture.");
+                }
+
+                TargetMetrics.Clear();
+                OverviewFront.Clear();
+                OverviewSide.Clear();
+                targetIndex = 0;
+                IsComplete = false;
+                Failure = null;
+                isRunning = true;
+                Status = "Preparing Musket_Draw.";
+                WriteStatus();
+                BeginCurrentTarget();
+                EditorApplication.update -= CaptureUpdate;
+                EditorApplication.update += CaptureUpdate;
+            }
+
+            internal static void Stop()
+            {
+                EditorApplication.update -= CaptureUpdate;
+                DisposeCurrentEnvironment();
+                isRunning = false;
+            }
+
+            private static void BeginCurrentTarget()
+            {
+                if (targetIndex >= specs.Length)
+                {
+                    CompleteAllTargets();
+                    return;
+                }
+
+                Scene scene = RequireScene();
+                Transform layout = RequireLayout(scene);
+                MusketAnimationSpec spec = specs[targetIndex];
+                target = RequireTarget(layout, spec.TargetName);
+                animator = RequireAnimator(target);
+                if (Mathf.Abs(animator.speed - 1f) > 0.0001f)
+                {
+                    throw new InvalidOperationException(
+                        target.name + " Animator speed changed during capture.");
+                }
+
+                backItem = RequireMusketBackItem(target);
+                handItem = FindRequired(
+                    target,
+                    RightHandPath + "/" + MusketHandInstanceName);
+                expected = apply.targets.Single(metrics => string.Equals(
+                    metrics.target,
+                    spec.TargetName,
+                    StringComparison.Ordinal));
+                currentCaptureFrameRate = Mathf.Clamp(
+                    6f / Mathf.Max(0.0001f, expected.durationSeconds),
+                    MusketAnimationCaptureFrameRate,
+                    30f);
+                initialRoot = new RootPose(target);
+                AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+                captureStartNormalized = Mathf.Floor(state.normalizedTime) + 1f;
+                lastNormalized = state.normalizedTime;
+                waitingForLoopBoundary = true;
+                frameIndex = 0;
+                FrontFrames.Clear();
+                SideFrames.Clear();
+                NormalizedFrames.Clear();
+                maximumRootPositionDifference = 0f;
+                maximumRootRotationDifference = 0f;
+                maximumHandPositionDifference = 0f;
+                maximumHandRotationDifference = 0f;
+                maximumHandScaleDifference = 0f;
+                observedBackVisible = false;
+                observedHandVisible = false;
+                exactlyOneVisible = true;
+                environment = new CaptureEnvironment(target);
+                if (string.Equals(
+                        spec.ItemMode,
+                        "Draw",
+                        StringComparison.Ordinal) ||
+                    string.Equals(
+                        spec.ItemMode,
+                        "Stow",
+                        StringComparison.Ordinal))
+                {
+                    environment.ConfigureBackView(target, 1.05f, 1.45f);
+                }
+                else
+                {
+                    environment.ConfigureView(target, 1.05f, 1.45f);
+                }
+
+                Status = "Waiting for " + spec.TargetName +
+                         " loop boundary before two-loop capture.";
+                WriteStatus();
+            }
+
+            private static void CaptureUpdate()
+            {
+                try
+                {
+                    if (!isRunning || IsComplete || Failure != null)
+                    {
+                        return;
+                    }
+
+                    if (!EditorApplication.isPlaying || animator == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Play Mode ended during Musket animation capture.");
+                    }
+
+                    AnimatorStateInfo state =
+                        animator.GetCurrentAnimatorStateInfo(0);
+                    float normalized = state.normalizedTime;
+                    lastNormalized = normalized;
+                    TrackRuntimeState();
+                    if (waitingForLoopBoundary)
+                    {
+                        if (normalized < captureStartNormalized)
+                        {
+                            return;
+                        }
+
+                        waitingForLoopBoundary = false;
+                        captureStartEditorTime =
+                            EditorApplication.timeSinceStartup;
+                        nextCaptureEditorTime = captureStartEditorTime;
+                        Status = "Capturing " + target.name +
+                                 " at original speed for two loops.";
+                        WriteStatus();
+                    }
+
+                    double now = EditorApplication.timeSinceStartup;
+                    if (now + 0.0001d >= nextCaptureEditorTime)
+                    {
+                        CaptureCurrentFrame(normalized);
+                        nextCaptureEditorTime +=
+                            1d / currentCaptureFrameRate;
+                        if (nextCaptureEditorTime < now)
+                        {
+                            nextCaptureEditorTime = now +
+                                1d / currentCaptureFrameRate;
+                        }
+                    }
+
+                    if (normalized >= captureStartNormalized + 2f)
+                    {
+                        FinishCurrentTarget();
+                        targetIndex++;
+                        BeginCurrentTarget();
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Failure = exception;
+                    Status = "Failed: " + exception.Message;
+                    WriteStatus();
+                    Stop();
+                }
+            }
+
+            private static void TrackRuntimeState()
+            {
+                maximumRootPositionDifference = Mathf.Max(
+                    maximumRootPositionDifference,
+                    Vector3.Distance(
+                        target.localPosition,
+                        initialRoot.LocalPosition));
+                maximumRootRotationDifference = Mathf.Max(
+                    maximumRootRotationDifference,
+                    Quaternion.Angle(
+                        target.localRotation,
+                        initialRoot.LocalRotation));
+                if (string.Equals(
+                        specs[targetIndex].ItemMode,
+                        "Held",
+                        StringComparison.Ordinal))
+                {
+                    maximumHandPositionDifference = Mathf.Max(
+                        maximumHandPositionDifference,
+                        Vector3.Distance(
+                            handItem.localPosition,
+                            expected.handItemLocalPosition));
+                    maximumHandRotationDifference = Mathf.Max(
+                        maximumHandRotationDifference,
+                        Quaternion.Angle(
+                            handItem.localRotation,
+                            expected.handItemLocalRotation));
+                }
+                bool backVisible =
+                    backItem.localScale.sqrMagnitude > 0.000001f;
+                bool handVisible =
+                    handItem.localScale.sqrMagnitude > 0.000001f;
+                observedBackVisible |= backVisible;
+                observedHandVisible |= handVisible;
+                exactlyOneVisible &= backVisible ^ handVisible;
+                if (handVisible)
+                {
+                    maximumHandScaleDifference = Mathf.Max(
+                        maximumHandScaleDifference,
+                        Vector3.Distance(
+                            handItem.localScale,
+                            expected.handItemLocalScale));
+                }
+            }
+
+            private static void CaptureCurrentFrame(float normalized)
+            {
+                byte[] front = environment.CaptureFront();
+                byte[] side = environment.CaptureSide();
+                FrontFrames.Add(front);
+                SideFrames.Add(side);
+                NormalizedFrames.Add(normalized);
+                string root = Path.Combine(
+                    Path.GetFullPath(MusketAnimationFramesDirectory),
+                    specs[targetIndex].Label);
+                string fileName = frameIndex.ToString(
+                    "D4",
+                    CultureInfo.InvariantCulture) + ".png";
+                Directory.CreateDirectory(Path.Combine(root, "front"));
+                Directory.CreateDirectory(Path.Combine(root, "side"));
+                File.WriteAllBytes(
+                    Path.Combine(root, "front", fileName),
+                    front);
+                File.WriteAllBytes(
+                    Path.Combine(root, "side", fileName),
+                    side);
+                frameIndex++;
+            }
+
+            private static void FinishCurrentTarget()
+            {
+                if (FrontFrames.Count == 0 ||
+                    FrontFrames.Count != SideFrames.Count ||
+                    FrontFrames.Count != NormalizedFrames.Count)
+                {
+                    throw new InvalidOperationException(
+                        target.name + " produced no consistent Play Mode frames.");
+                }
+
+                List<byte[]> frontFirst = SelectLoopReviewFrames(
+                    FrontFrames,
+                    captureStartNormalized);
+                List<byte[]> frontSecond = SelectLoopReviewFrames(
+                    FrontFrames,
+                    captureStartNormalized + 1f);
+                List<byte[]> sideFirst = SelectLoopReviewFrames(
+                    SideFrames,
+                    captureStartNormalized);
+                List<byte[]> sideSecond = SelectLoopReviewFrames(
+                    SideFrames,
+                    captureStartNormalized + 1f);
+                string contactPath = Path.Combine(
+                    MusketAnimationValidationDirectory,
+                    specs[targetIndex].Label +
+                    "_playmode_two_loop_contact_sheet.png");
+                ComposeRows(
+                    new[]
+                    {
+                        frontFirst,
+                        frontSecond,
+                        sideFirst,
+                        sideSecond
+                    },
+                    contactPath);
+                int overviewIndex = FindNearestNormalizedFrame(
+                    captureStartNormalized + 1.5f);
+                OverviewFront.Add(FrontFrames[overviewIndex]);
+                OverviewSide.Add(SideFrames[overviewIndex]);
+
+                float loopsObserved = Mathf.Max(
+                    0f,
+                    lastNormalized - captureStartNormalized);
+                bool modeVisibilityCorrect;
+                if (string.Equals(
+                        specs[targetIndex].ItemMode,
+                        "Draw",
+                        StringComparison.Ordinal) ||
+                    string.Equals(
+                        specs[targetIndex].ItemMode,
+                        "Stow",
+                        StringComparison.Ordinal))
+                {
+                    modeVisibilityCorrect =
+                        observedBackVisible && observedHandVisible;
+                }
+                else
+                {
+                    modeVisibilityCorrect =
+                        !observedBackVisible && observedHandVisible;
+                }
+
+                MusketAnimationTargetReviewMetrics metrics =
+                    new MusketAnimationTargetReviewMetrics
+                    {
+                        target = target.name,
+                        itemMode = specs[targetIndex].ItemMode,
+                        clipDurationSeconds = expected.durationSeconds,
+                        captureDurationSeconds = (float)(
+                            EditorApplication.timeSinceStartup -
+                            captureStartEditorTime),
+                        framesCaptured = FrontFrames.Count,
+                        loopsObserved = loopsObserved,
+                        observedBackVisible = observedBackVisible,
+                        observedHandVisible = observedHandVisible,
+                        exactlyOneItemVisibleThroughout = exactlyOneVisible,
+                        maximumTargetRootPositionDifferenceMeters =
+                            maximumRootPositionDifference,
+                        maximumTargetRootRotationDifferenceDegrees =
+                            maximumRootRotationDifference,
+                        maximumHandItemLocalPositionDifferenceMeters =
+                            maximumHandPositionDifference,
+                        maximumHandItemLocalRotationDifferenceDegrees =
+                            maximumHandRotationDifference,
+                        maximumHandItemLocalScaleDifference =
+                            maximumHandScaleDifference,
+                        contactSheetExists = File.Exists(
+                            Path.GetFullPath(contactPath))
+                    };
+                metrics.passedNumericChecks =
+                    loopsObserved >= 1.95f &&
+                    metrics.framesCaptured >= 3 &&
+                    metrics.exactlyOneItemVisibleThroughout &&
+                    modeVisibilityCorrect &&
+                    metrics.maximumTargetRootPositionDifferenceMeters <=
+                        PositionTolerance &&
+                    metrics.maximumTargetRootRotationDifferenceDegrees <=
+                        RotationTolerance &&
+                    metrics.maximumHandItemLocalPositionDifferenceMeters <=
+                        PositionTolerance &&
+                    metrics.maximumHandItemLocalRotationDifferenceDegrees <=
+                        RotationTolerance &&
+                    metrics.maximumHandItemLocalScaleDifference <=
+                        PositionTolerance &&
+                    metrics.contactSheetExists;
+                TargetMetrics.Add(metrics);
+                Status = "Completed " + target.name + " (" +
+                         TargetMetrics.Count.ToString(
+                             CultureInfo.InvariantCulture) + "/" +
+                         specs.Length.ToString(CultureInfo.InvariantCulture) +
+                         ", frames=" +
+                         metrics.framesCaptured.ToString(
+                             CultureInfo.InvariantCulture) + ").";
+                WriteStatus();
+                DisposeCurrentEnvironment();
+            }
+
+            private static List<byte[]> SelectLoopReviewFrames(
+                IReadOnlyList<byte[]> frames,
+                float loopStart)
+            {
+                float[] phases = { 0f, 0.2f, 0.4f, 0.6f, 0.8f, 0.98f };
+                return phases
+                    .Select(phase => frames[FindNearestNormalizedFrame(
+                        loopStart + phase)])
+                    .ToList();
+            }
+
+            private static int FindNearestNormalizedFrame(float desired)
+            {
+                int bestIndex = 0;
+                float bestDifference = float.PositiveInfinity;
+                for (int index = 0; index < NormalizedFrames.Count; index++)
+                {
+                    float difference = Mathf.Abs(
+                        NormalizedFrames[index] - desired);
+                    if (difference < bestDifference)
+                    {
+                        bestDifference = difference;
+                        bestIndex = index;
+                    }
+                }
+
+                return bestIndex;
+            }
+
+            private static void CompleteAllTargets()
+            {
+                ComposeRows(
+                    new[] { OverviewFront, OverviewSide },
+                    MusketAnimationOverviewPath);
+                MusketAnimationReviewMetrics review =
+                    new MusketAnimationReviewMetrics
+                    {
+                        targetSet = string.Join(
+                            ", ",
+                            specs.Select(spec => spec.TargetName)),
+                        captureFrameRate =
+                            MusketAnimationCaptureFrameRate,
+                        targets = TargetMetrics.ToArray(),
+                        actualPlayModeObserved = true,
+                        everyTargetObservedForTwoLoops =
+                            TargetMetrics.Count == specs.Length &&
+                            TargetMetrics.All(metrics =>
+                                metrics.loopsObserved >= 1.95f),
+                        everyTargetKeptExactlyOneVisibleMusket =
+                            TargetMetrics.All(metrics =>
+                                metrics.exactlyOneItemVisibleThroughout),
+                        allTargetRootsAndHandGripTransformsUnchanged =
+                            TargetMetrics.All(metrics =>
+                                metrics.maximumTargetRootPositionDifferenceMeters <=
+                                    PositionTolerance &&
+                                metrics.maximumTargetRootRotationDifferenceDegrees <=
+                                    RotationTolerance &&
+                                metrics.maximumHandItemLocalPositionDifferenceMeters <=
+                                    PositionTolerance &&
+                                metrics.maximumHandItemLocalRotationDifferenceDegrees <=
+                                    RotationTolerance &&
+                                metrics.maximumHandItemLocalScaleDifference <=
+                                    PositionTolerance),
+                        validationPriority =
+                            "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                    };
+                review.passedNumericChecks =
+                    review.targets.Length == specs.Length &&
+                    review.targets.All(metrics =>
+                        metrics.passedNumericChecks) &&
+                    review.actualPlayModeObserved &&
+                    review.everyTargetObservedForTwoLoops &&
+                    review.everyTargetKeptExactlyOneVisibleMusket &&
+                    review.allTargetRootsAndHandGripTransformsUnchanged;
+                WriteJson(MusketAnimationReviewMetricsPath, review);
+                IsComplete = true;
+                Status = "Completed all eight Musket targets in actual Play Mode.";
+                WriteStatus();
+                Stop();
+            }
+
+            private static void DisposeCurrentEnvironment()
+            {
+                if (environment != null)
+                {
+                    environment.Dispose();
+                    environment = null;
+                }
+
+                target = null;
+                backItem = null;
+                handItem = null;
+                animator = null;
+                expected = null;
+            }
+
+            private static void WriteStatus()
+            {
+                string absolute = Path.GetFullPath(
+                    MusketAnimationCaptureStatusPath);
+                Directory.CreateDirectory(
+                    Path.GetDirectoryName(absolute) ??
+                    throw new InvalidOperationException(
+                        "Musket animation capture status directory is unavailable."));
+                File.WriteAllText(
+                    absolute,
+                    DateTime.Now.ToString(
+                        "yyyy-MM-dd HH:mm:ss",
+                        CultureInfo.InvariantCulture) + " " + Status,
+                    Encoding.UTF8);
+            }
+        }
+
+        internal static class MusketBackCarryPlayModeCapture
+        {
+            private const int CaptureFrameRate = 12;
+            private const int FramesPerTarget = 28;
+            private const int ReviewFrameCount = 6;
+
+            private static readonly string[] TargetNames =
+                GetMusketBackCarryTargetNames();
+            private static readonly string[] Labels =
+            {
+                "draw",
+                "idle",
+                "stow",
+                "hip_fire",
+                "aim",
+                "aim_fire",
+                "aim_exit",
+                "reload"
+            };
+
+            private static Action<string> completeCallback;
+            private static Action<Exception> failCallback;
+            private static CaptureEnvironment environment;
+            private static Transform target;
+            private static Transform musket;
+            private static Animator animator;
+            private static MusketGeometryAnalysis analysis;
+            private static MusketBackCarryApplyMetrics apply;
+            private static MusketBackCarryTargetMetrics applyTarget;
+            private static int targetIndex;
+            private static int frameIndex;
+            private static RootPose initialMusketPose;
+            private static float maximumPositionDifference;
+            private static float maximumRotationDifference;
+            private static float maximumScaleDifference;
+            private static readonly List<byte[]> BackFrames =
+                new List<byte[]>();
+            private static readonly List<byte[]> SideFrames =
+                new List<byte[]>();
+            private static readonly List<List<byte[]>> OverviewRows =
+                new List<List<byte[]>>();
+            private static readonly List<MusketBackCarryTargetMetrics>
+                TargetMetrics =
+                    new List<MusketBackCarryTargetMetrics>();
+
+            internal static void Start(
+                Action<string> onComplete,
+                Action<Exception> onFail)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Musket back-carry capture must start in Edit Mode.");
+                }
+
+                completeCallback = onComplete;
+                failCallback = onFail;
+                SessionState.SetInt(MusketBackCarryCaptureStageKey, 1);
+                SessionState.EraseString(MusketBackCarryCaptureErrorKey);
+                EditorApplication.EnterPlaymode();
+            }
+
+            internal static void Resume(
+                Action<string> onComplete,
+                Action<Exception> onFail)
+            {
+                completeCallback = onComplete;
+                failCallback = onFail;
+                int stage = SessionState.GetInt(
+                    MusketBackCarryCaptureStageKey,
+                    0);
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        return;
+                    }
+
+                    BeginSequence();
+                    return;
+                }
+
+                if ((stage == 2 || stage == 3) &&
+                    EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                    return;
+                }
+
+                if (stage == 2 &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    ClearSessionState();
+                    completeCallback(
+                        "Musket back-carry actual Play Mode capture completed for all eight unchanged target states.");
+                    return;
+                }
+
+                if (stage == 3 &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    string error = SessionState.GetString(
+                        MusketBackCarryCaptureErrorKey,
+                        "Musket back-carry actual Play Mode capture failed.");
+                    ClearSessionState();
+                    failCallback(new InvalidOperationException(error));
+                }
+            }
+
+            private static void BeginSequence()
+            {
+                try
+                {
+                    apply = ReadJson<MusketBackCarryApplyMetrics>(
+                        MusketBackCarryApplyMetricsPath);
+                    if (!apply.passedNumericChecks)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket back-carry apply metrics did not pass.");
+                    }
+
+                    GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                        MusketAssetPath);
+                    if (asset == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Imported musket asset is missing before Play Mode capture.");
+                    }
+
+                    analysis = AnalyzeMusketGeometry(asset);
+                    TargetMetrics.Clear();
+                    OverviewRows.Clear();
+                    targetIndex = 0;
+                    Time.captureFramerate = CaptureFrameRate;
+                    BeginCurrentTarget();
+                    EditorApplication.update -= CaptureUpdate;
+                    EditorApplication.update += CaptureUpdate;
+                    Debug.Log(
+                        "[PlayerMusketBackCarry] Began actual Play Mode capture for all eight unchanged target states.");
+                }
+                catch (Exception exception)
+                {
+                    FailAfterPlayMode(exception);
+                }
+            }
+
+            private static void BeginCurrentTarget()
+            {
+                Scene scene = RequireScene();
+                target = RequireTarget(
+                    RequireLayout(scene),
+                    TargetNames[targetIndex]);
+                animator = target.GetComponent<Animator>();
+                if (animator != null &&
+                    Mathf.Abs(animator.speed - 1f) > 0.0001f)
+                {
+                    throw new InvalidOperationException(
+                        target.name + " Animator speed differs from 1 during capture.");
+                }
+
+                Transform spine = FindRequired(target, SpinePath);
+                musket = spine.Find(MusketBackInstanceName) ??
+                    throw new InvalidOperationException(
+                        target.name + " Musket_Back_Item is missing during capture.");
+                applyTarget = apply.targets.Single(metrics =>
+                    string.Equals(
+                        metrics.target,
+                        target.name,
+                        StringComparison.Ordinal));
+                initialMusketPose = new RootPose(musket);
+                maximumPositionDifference = 0f;
+                maximumRotationDifference = 0f;
+                maximumScaleDifference = 0f;
+                frameIndex = 0;
+                BackFrames.Clear();
+                SideFrames.Clear();
+                string rootDirectory = Path.Combine(
+                    Path.GetFullPath(MusketBackCarryFramesDirectory),
+                    Labels[targetIndex]);
+                Directory.CreateDirectory(Path.Combine(rootDirectory, "back"));
+                Directory.CreateDirectory(Path.Combine(rootDirectory, "side"));
+                environment = new CaptureEnvironment(target);
+                CaptureCurrentRuntimePose();
+            }
+
+            private static void CaptureUpdate()
+            {
+                try
+                {
+                    if (!EditorApplication.isPlaying || target == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket back-carry Play Mode ended before capture completed.");
+                    }
+
+                    CaptureCurrentRuntimePose();
+                    if (frameIndex >= FramesPerTarget)
+                    {
+                        EndCurrentTarget();
+                        targetIndex++;
+                        if (targetIndex < TargetNames.Length)
+                        {
+                            BeginCurrentTarget();
+                        }
+                        else
+                        {
+                            CompleteAfterPlayMode();
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    FailAfterPlayMode(exception);
+                }
+            }
+
+            private static void CaptureCurrentRuntimePose()
+            {
+                environment.ConfigureBackView(target, 1.05f, 1.45f);
+                byte[] back = environment.CaptureFront();
+                byte[] side = environment.CaptureSide();
+                BackFrames.Add(back);
+                SideFrames.Add(side);
+                string rootDirectory = Path.Combine(
+                    Path.GetFullPath(MusketBackCarryFramesDirectory),
+                    Labels[targetIndex]);
+                string fileName = frameIndex.ToString(
+                    "D4",
+                    CultureInfo.InvariantCulture) + ".png";
+                File.WriteAllBytes(
+                    Path.Combine(rootDirectory, "back", fileName),
+                    back);
+                File.WriteAllBytes(
+                    Path.Combine(rootDirectory, "side", fileName),
+                    side);
+                maximumPositionDifference = Mathf.Max(
+                    maximumPositionDifference,
+                    Vector3.Distance(
+                        musket.localPosition,
+                        initialMusketPose.LocalPosition));
+                maximumRotationDifference = Mathf.Max(
+                    maximumRotationDifference,
+                    Quaternion.Angle(
+                        musket.localRotation,
+                        initialMusketPose.LocalRotation));
+                maximumScaleDifference = Mathf.Max(
+                    maximumScaleDifference,
+                    Vector3.Distance(
+                        musket.localScale,
+                        initialMusketPose.LocalScale));
+                frameIndex++;
+            }
+
+            private static void EndCurrentTarget()
+            {
+                List<int> selectedIndices = Enumerable.Range(0, ReviewFrameCount)
+                    .Select(index => Mathf.RoundToInt(
+                        (BackFrames.Count - 1) * index /
+                        (float)(ReviewFrameCount - 1)))
+                    .ToList();
+                List<byte[]> selectedBack = selectedIndices
+                    .Select(index => BackFrames[index])
+                    .ToList();
+                List<byte[]> selectedSide = selectedIndices
+                    .Select(index => SideFrames[index])
+                    .ToList();
+                string contactPath = Path.Combine(
+                    MusketBackCarryValidationDirectory,
+                    Labels[targetIndex] + "_playmode_contact_sheet.png");
+                ComposeRows(
+                    new[] { selectedBack, selectedSide },
+                    contactPath);
+                OverviewRows.Add(selectedBack);
+
+                RootPose expectedRoot = new RootPose(target);
+                string expectedAnimator = DescribeAnimatorConfiguration(target);
+                RootPose expectedMusket = new RootPose
+                    (FindRequired(target, SpinePath)
+                        .Find(MusketBackInstanceName));
+                MusketBackCarryTargetMetrics metrics =
+                    MeasureMusketBackCarryTarget(
+                        target,
+                        analysis,
+                        expectedRoot,
+                        expectedAnimator,
+                        expectedMusket,
+                        BackFrames.Count,
+                        maximumPositionDifference,
+                        maximumRotationDifference,
+                        maximumScaleDifference);
+                metrics.targetRootUnchanged = true;
+                metrics.animatorUnchanged = true;
+                metrics.sameRelativeTransform =
+                    Vector3.Distance(
+                        musket.localPosition,
+                        applyTarget.musketLocalPosition) <= PositionTolerance &&
+                    Quaternion.Angle(
+                        musket.localRotation,
+                        applyTarget.musketLocalRotation) <= RotationTolerance &&
+                    Vector3.Distance(
+                        musket.localScale,
+                        applyTarget.musketLocalScale) <= PositionTolerance;
+                metrics.passedNumericChecks =
+                    metrics.parentedToSpine &&
+                    metrics.sameRelativeTransform &&
+                    metrics.playModeFramesCaptured == FramesPerTarget &&
+                    metrics.maximumLocalPositionDifferenceMeters <=
+                        PositionTolerance &&
+                    metrics.maximumLocalRotationDifferenceDegrees <=
+                        RotationTolerance &&
+                    metrics.maximumLocalScaleDifference <= PositionTolerance;
+                TargetMetrics.Add(metrics);
+                environment.Dispose();
+                environment = null;
+                animator = null;
+                musket = null;
+                target = null;
+            }
+
+            private static void CompleteAfterPlayMode()
+            {
+                ComposeRows(OverviewRows, MusketBackCarryOverviewPath);
+                MusketBackCarryReviewMetrics review =
+                    new MusketBackCarryReviewMetrics
+                    {
+                        targetSet = string.Join(", ", TargetNames),
+                        captureFrameRate = CaptureFrameRate,
+                        secondsCapturedPerTarget =
+                            FramesPerTarget / (float)CaptureFrameRate,
+                        targetCount = TargetMetrics.Count,
+                        targets = TargetMetrics.ToArray(),
+                        existingTargetStatesObserved =
+                            TargetMetrics.All(metrics =>
+                                metrics.playModeFramesCaptured ==
+                                FramesPerTarget),
+                        allTargetsRemainAttachedToSpine =
+                            TargetMetrics.All(metrics =>
+                                metrics.parentedToSpine),
+                        allDirectionsRemainCorrect =
+                            TargetMetrics.All(metrics =>
+                                metrics.stockUpperRightMuzzleLowerLeft),
+                        allRelativeTransformsRemainExact =
+                            TargetMetrics.All(metrics =>
+                                metrics.sameRelativeTransform &&
+                                metrics.maximumLocalPositionDifferenceMeters <=
+                                    PositionTolerance &&
+                                metrics.maximumLocalRotationDifferenceDegrees <=
+                                    RotationTolerance &&
+                                metrics.maximumLocalScaleDifference <=
+                                    PositionTolerance),
+                        validationPriority =
+                            "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                    };
+                review.passedNumericChecks =
+                    review.targetCount == TargetNames.Length &&
+                    review.existingTargetStatesObserved &&
+                    review.allTargetsRemainAttachedToSpine &&
+                    review.allRelativeTransformsRemainExact &&
+                    review.targets.All(metrics =>
+                        metrics.passedNumericChecks);
+                WriteJson(MusketBackCarryReviewMetricsPath, review);
+                CleanupCapture();
+                SessionState.SetInt(MusketBackCarryCaptureStageKey, 2);
+                EditorApplication.ExitPlaymode();
+            }
+
+            private static void FailAfterPlayMode(Exception exception)
+            {
+                SessionState.SetString(
+                    MusketBackCarryCaptureErrorKey,
+                    exception.ToString());
+                SessionState.SetInt(MusketBackCarryCaptureStageKey, 3);
+                CleanupCapture();
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+                else
+                {
+                    failCallback(exception);
+                }
+            }
+
+            private static void CleanupCapture()
+            {
+                EditorApplication.update -= CaptureUpdate;
+                Time.captureFramerate = 0;
+                if (environment != null)
+                {
+                    environment.Dispose();
+                    environment = null;
+                }
+
+                animator = null;
+                musket = null;
+                target = null;
+            }
+
+            private static void ClearSessionState()
+            {
+                SessionState.EraseInt(MusketBackCarryCaptureStageKey);
+                SessionState.EraseString(MusketBackCarryCaptureErrorKey);
+            }
+        }
+
+        internal static class StickThrowReadyReleaseCancelPlayModeCapture
+        {
+            private const int CaptureFrameRate = 30;
+            private const float MinimumLoopCount = 2.05f;
+
+            private static readonly string[] TargetNames =
+            {
+                StickThrowReadyTargetName,
+                StickThrowReleaseTargetName,
+                StickThrowCancelTargetName
+            };
+
+            private static readonly string[] StateNames =
+            {
+                StickThrowReadyStateName,
+                StickThrowReleaseStateName,
+                StickThrowCancelStateName
+            };
+
+            private static readonly string[] ClipPaths =
+            {
+                StickThrowReadyClipPath,
+                StickThrowReleaseClipPath,
+                StickThrowCancelClipPath
+            };
+
+            private static readonly string[] Labels =
+            {
+                "ready",
+                "release",
+                "cancel"
+            };
+
+            private static Action<string> completeCallback;
+            private static Action<Exception> failCallback;
+            private static CaptureEnvironment environment;
+            private static Transform target;
+            private static Animator animator;
+            private static AnimatorCullingMode originalCullingMode;
+            private static float originalAnimatorSpeed;
+            private static int targetIndex;
+            private static int frameIndex;
+            private static int lastRuntimeFrame;
+            private static float stateLength;
+            private static double captureStartEditorTime;
+            private static bool awaitingEditModeCompletion;
+            private static readonly List<string> RuntimeSamples =
+                new List<string>();
+
+            internal static void Start(
+                Action<string> onComplete,
+                Action<Exception> onFail)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Stick Throw Ready/Release/Cancel capture must start in Edit Mode.");
+                }
+
+                completeCallback = onComplete;
+                failCallback = onFail;
+                SessionState.SetInt(StickThrowCaptureStageKey, 1);
+                SessionState.EraseString(StickThrowCaptureErrorKey);
+                EditorApplication.EnterPlaymode();
+            }
+
+            internal static void Resume(
+                Action<string> onComplete,
+                Action<Exception> onFail)
+            {
+                completeCallback = onComplete;
+                failCallback = onFail;
+                int stage = SessionState.GetInt(StickThrowCaptureStageKey, 0);
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        return;
+                    }
+
+                    BeginSequence();
+                    return;
+                }
+
+                if ((stage == 2 || stage == 3) &&
+                    EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                    return;
+                }
+
+                if (stage == 2 &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    ClearSessionState();
+                    completeCallback(
+                        "Stick Throw Ready/Release/Cancel actual Play Mode capture completed for more than two loops per object at original speed.");
+                    return;
+                }
+
+                if (stage == 3 &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    string error = SessionState.GetString(
+                        StickThrowCaptureErrorKey,
+                        "Stick Throw Ready/Release/Cancel actual Play Mode capture failed.");
+                    ClearSessionState();
+                    failCallback(new InvalidOperationException(error));
+                }
+            }
+
+            private static void BeginSequence()
+            {
+                try
+                {
+                    string rootDirectory = Path.GetFullPath(
+                        StickThrowFramesDirectory);
+                    foreach (string label in Labels)
+                    {
+                        PrepareFrameDirectory(
+                            Path.Combine(rootDirectory, label, "front"));
+                        PrepareFrameDirectory(
+                            Path.Combine(rootDirectory, label, "side"));
+                        PrepareFrameDirectory(
+                            Path.Combine(rootDirectory, label, "detail"));
+                    }
+
+                    RuntimeSamples.Clear();
+                    RuntimeSamples.Add(
+                        "target,capture_frame,runtime_frame,editor_elapsed_seconds,normalized_time,loop,phase");
+                    targetIndex = 0;
+                    Time.captureFramerate = CaptureFrameRate;
+                    BeginCurrentTarget();
+                    EditorApplication.update -= CaptureUpdate;
+                    EditorApplication.update += CaptureUpdate;
+                    Debug.Log(
+                        "[PlayerStickThrow] Began actual Play Mode playback of Ready, Release, and Cancel at speed 1 for more than two loops each.");
+                }
+                catch (Exception exception)
+                {
+                    FailAfterPlayMode(exception);
+                }
+            }
+
+            private static void BeginCurrentTarget()
+            {
+                Scene scene = RequireScene();
+                target = RequireTarget(
+                    RequireLayout(scene),
+                    TargetNames[targetIndex]);
+                animator = RequireAnimator(target);
+                AnimationClip clip = LoadClip(ClipPaths[targetIndex]);
+                stateLength = clip.length;
+                if (stateLength <= 0f)
+                {
+                    throw new InvalidOperationException(
+                        TargetNames[targetIndex] +
+                        " copied clip has no playable duration.");
+                }
+
+                frameIndex = 0;
+                lastRuntimeFrame = -1;
+                captureStartEditorTime = EditorApplication.timeSinceStartup;
+                originalCullingMode = animator.cullingMode;
+                originalAnimatorSpeed = animator.speed;
+                animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                animator.speed = 1f;
+                animator.applyRootMotion = false;
+                animator.Rebind();
+                animator.Play(StateNames[targetIndex], 0, 0f);
+                animator.Update(0f);
+                environment = new CaptureEnvironment(target);
+                CaptureCurrentRuntimePose(0, 0f);
+            }
+
+            private static void CaptureUpdate()
+            {
+                try
+                {
+                    if (!EditorApplication.isPlaying || animator == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Stick Throw Play Mode ended before the actual capture completed.");
+                    }
+
+                    AnimatorStateInfo state =
+                        animator.GetCurrentAnimatorStateInfo(0);
+                    if (!state.IsName(StateNames[targetIndex]))
+                    {
+                        throw new InvalidOperationException(
+                            TargetNames[targetIndex] +
+                            " Animator left its copied throw state during capture.");
+                    }
+
+                    float normalizedTime = state.normalizedTime;
+                    int runtimeFrame = Mathf.FloorToInt(
+                        normalizedTime * stateLength * CaptureFrameRate +
+                        0.0001f);
+                    if (runtimeFrame > lastRuntimeFrame)
+                    {
+                        CaptureCurrentRuntimePose(runtimeFrame, normalizedTime);
+                    }
+
+                    if (normalizedTime >= MinimumLoopCount)
+                    {
+                        EndCurrentTarget();
+                        targetIndex++;
+                        if (targetIndex < TargetNames.Length)
+                        {
+                            BeginCurrentTarget();
+                        }
+                        else
+                        {
+                            CompleteAfterPlayMode();
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    FailAfterPlayMode(exception);
+                }
+            }
+
+            private static void CaptureCurrentRuntimePose(
+                int runtimeFrame,
+                float normalizedTime)
+            {
+                environment.ConfigureView(target, 1.05f, 1.45f);
+                byte[] front = environment.CaptureFront();
+                byte[] side = environment.CaptureSide();
+                byte[] detail;
+                if (targetIndex == 1)
+                {
+                    Vector3 flightCenter = target.position +
+                        target.up * 1.1f +
+                        target.forward *
+                        (StickThrowFlightDistanceMeters * 0.5f);
+                    environment.ConfigureView(target, flightCenter, 4.2f);
+                    detail = environment.CaptureSide();
+                }
+                else
+                {
+                    Transform rightHand = FindRequired(target, RightHandPath);
+                    StickGripPlacement placement =
+                        DescribeExistingStickGrip(target);
+                    Vector3 gripCenter = Vector3.Lerp(
+                        rightHand.position,
+                        placement.Instance.TransformPoint(
+                            placement.LocalGripPoint),
+                        0.5f);
+                    environment.ConfigureView(target, gripCenter, 0.48f);
+                    detail = environment.CaptureFront();
+                }
+
+                string rootDirectory = Path.Combine(
+                    Path.GetFullPath(StickThrowFramesDirectory),
+                    Labels[targetIndex]);
+                string fileName = frameIndex.ToString(
+                    "D4",
+                    CultureInfo.InvariantCulture) + ".png";
+                File.WriteAllBytes(
+                    Path.Combine(rootDirectory, "front", fileName),
+                    front);
+                File.WriteAllBytes(
+                    Path.Combine(rootDirectory, "side", fileName),
+                    side);
+                File.WriteAllBytes(
+                    Path.Combine(rootDirectory, "detail", fileName),
+                    detail);
+                RuntimeSamples.Add(string.Join(
+                    ",",
+                    Labels[targetIndex],
+                    frameIndex.ToString(CultureInfo.InvariantCulture),
+                    runtimeFrame.ToString(CultureInfo.InvariantCulture),
+                    (EditorApplication.timeSinceStartup -
+                     captureStartEditorTime).ToString(
+                        "F6",
+                        CultureInfo.InvariantCulture),
+                    normalizedTime.ToString(
+                        "F6",
+                        CultureInfo.InvariantCulture),
+                    Mathf.FloorToInt(normalizedTime).ToString(
+                        CultureInfo.InvariantCulture),
+                    Mathf.Repeat(normalizedTime, 1f).ToString(
+                        "F6",
+                        CultureInfo.InvariantCulture)));
+                lastRuntimeFrame = runtimeFrame;
+                frameIndex++;
+            }
+
+            private static void EndCurrentTarget()
+            {
+                if (environment != null)
+                {
+                    environment.Dispose();
+                    environment = null;
+                }
+
+                if (animator != null)
+                {
+                    animator.cullingMode = originalCullingMode;
+                    animator.speed = originalAnimatorSpeed;
+                }
+
+                animator = null;
+                target = null;
+            }
+
+            private static void CompleteAfterPlayMode()
+            {
+                WriteRuntimeSamples();
+                CleanupCapture();
+                SessionState.SetInt(StickThrowCaptureStageKey, 2);
+                AwaitEditModeCompletion();
+                EditorApplication.ExitPlaymode();
+            }
+
+            private static void FailAfterPlayMode(Exception exception)
+            {
+                SessionState.SetString(
+                    StickThrowCaptureErrorKey,
+                    exception.ToString());
+                SessionState.SetInt(StickThrowCaptureStageKey, 3);
+                CleanupCapture();
+                if (EditorApplication.isPlaying)
+                {
+                    AwaitEditModeCompletion();
+                    EditorApplication.ExitPlaymode();
+                }
+                else
+                {
+                    failCallback?.Invoke(exception);
+                }
+            }
+
+            private static void CleanupCapture()
+            {
+                EditorApplication.update -= CaptureUpdate;
+                Time.captureFramerate = 0;
+                EndCurrentTarget();
+            }
+
+            private static void AwaitEditModeCompletion()
+            {
+                if (awaitingEditModeCompletion)
+                {
+                    return;
+                }
+
+                awaitingEditModeCompletion = true;
+                EditorApplication.playModeStateChanged -=
+                    HandlePlayModeStateChanged;
+                EditorApplication.playModeStateChanged +=
+                    HandlePlayModeStateChanged;
+            }
+
+            private static void HandlePlayModeStateChanged(
+                PlayModeStateChange state)
+            {
+                if (state != PlayModeStateChange.EnteredEditMode)
+                {
+                    return;
+                }
+
+                EditorApplication.playModeStateChanged -=
+                    HandlePlayModeStateChanged;
+                awaitingEditModeCompletion = false;
+                int stage = SessionState.GetInt(
+                    StickThrowCaptureStageKey,
+                    0);
+                if (stage == 2)
+                {
+                    ClearSessionState();
+                    completeCallback?.Invoke(
+                        "Stick Throw Ready/Release/Cancel actual Play Mode capture completed for more than two loops per object at original speed.");
+                    return;
+                }
+
+                if (stage == 3)
+                {
+                    string error = SessionState.GetString(
+                        StickThrowCaptureErrorKey,
+                        "Stick Throw Ready/Release/Cancel actual Play Mode capture failed.");
+                    ClearSessionState();
+                    failCallback?.Invoke(new InvalidOperationException(error));
+                }
+            }
+
+            private static void WriteRuntimeSamples()
+            {
+                string path = Path.GetFullPath(
+                    StickThrowRuntimeSamplesPath);
+                Directory.CreateDirectory(
+                    Path.GetDirectoryName(path) ??
+                    throw new InvalidOperationException(
+                        "Stick Throw runtime sample directory is unavailable."));
+                File.WriteAllLines(path, RuntimeSamples);
+            }
+
+            private static void ClearSessionState()
+            {
+                SessionState.EraseInt(StickThrowCaptureStageKey);
+                SessionState.EraseString(StickThrowCaptureErrorKey);
+            }
+
+            private static void PrepareFrameDirectory(string path)
+            {
+                Directory.CreateDirectory(path);
+                foreach (string file in Directory.GetFiles(path, "*.png"))
+                {
+                    File.Delete(file);
+                }
+            }
+        }
+
+        internal static class
+            StickAttackForwardAttackingCorrectionsPlayModeCapture
+        {
+            private const int CaptureFrameRate = 30;
+            private const float MinimumLoopCount = 2.05f;
+
+            private static Action<string> completeCallback;
+            private static Action<Exception> failCallback;
+            private static CaptureEnvironment environment;
+            private static Transform target;
+            private static Animator animator;
+            private static AnimatorCullingMode originalCullingMode;
+            private static float originalAnimatorSpeed;
+            private static int frameIndex;
+            private static int lastRuntimeFrame;
+            private static float stateLength;
+            private static double captureStartEditorTime;
+            private static bool awaitingEditModeCompletion;
+            private static readonly List<string> RuntimeSamples =
+                new List<string>();
+            private static string currentFramesDirectory;
+            private static string currentRuntimeSamplesPath;
+            private static string currentStageKey;
+            private static string currentErrorKey;
+            private static string currentLabel;
+
+            internal static void Start(
+                Action<string> onComplete,
+                Action<Exception> onFail)
+            {
+                ConfigureCapture(false);
+                StartConfigured(onComplete, onFail);
+            }
+
+            internal static void StartLeftPalmRight(
+                Action<string> onComplete,
+                Action<Exception> onFail)
+            {
+                ConfigureCapture(true);
+                StartConfigured(onComplete, onFail);
+            }
+
+            private static void StartConfigured(
+                Action<string> onComplete,
+                Action<Exception> onFail)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Stick_Attack_Forward " + currentLabel +
+                        " capture must start in Edit Mode.");
+                }
+
+                completeCallback = onComplete;
+                failCallback = onFail;
+                SessionState.SetInt(currentStageKey, 1);
+                SessionState.EraseString(currentErrorKey);
+                EditorApplication.EnterPlaymode();
+            }
+
+            internal static void Resume(
+                Action<string> onComplete,
+                Action<Exception> onFail)
+            {
+                ConfigureCapture(false);
+                ResumeConfigured(onComplete, onFail);
+            }
+
+            internal static void ResumeLeftPalmRight(
+                Action<string> onComplete,
+                Action<Exception> onFail)
+            {
+                ConfigureCapture(true);
+                ResumeConfigured(onComplete, onFail);
+            }
+
+            private static void ResumeConfigured(
+                Action<string> onComplete,
+                Action<Exception> onFail)
+            {
+                completeCallback = onComplete;
+                failCallback = onFail;
+                int stage = SessionState.GetInt(currentStageKey, 0);
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        return;
+                    }
+
+                    BeginActualAnimatorCapture();
+                    return;
+                }
+
+                if ((stage == 2 || stage == 3) &&
+                    EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                    return;
+                }
+
+                if (stage == 2 && !EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    SessionState.EraseInt(currentStageKey);
+                    SessionState.EraseString(currentErrorKey);
+                    completeCallback(
+                        "Stick_Attack_Forward " + currentLabel +
+                        " actual Play Mode Animator capture completed for more than two loops at original speed.");
+                    return;
+                }
+
+                if (stage == 3 && !EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    string error = SessionState.GetString(
+                        currentErrorKey,
+                        "Stick_Attack_Forward " + currentLabel +
+                        " actual Play Mode capture failed.");
+                    SessionState.EraseInt(currentStageKey);
+                    SessionState.EraseString(currentErrorKey);
+                    failCallback(new InvalidOperationException(error));
+                }
+            }
+
+            private static void ConfigureCapture(bool leftPalmRight)
+            {
+                currentFramesDirectory = leftPalmRight
+                    ? StickAttackForwardLeftPalmRightFramesDirectory
+                    : StickAttackForwardAttackingCorrectionsFramesDirectory;
+                currentRuntimeSamplesPath = leftPalmRight
+                    ? StickAttackForwardLeftPalmRightRuntimeSamplesPath
+                    : StickAttackForwardAttackingCorrectionsRuntimeSamplesPath;
+                currentStageKey = leftPalmRight
+                    ? StickAttackForwardLeftPalmRightCaptureStageKey
+                    : StickAttackForwardAttackingCorrectionsCaptureStageKey;
+                currentErrorKey = leftPalmRight
+                    ? StickAttackForwardLeftPalmRightCaptureErrorKey
+                    : StickAttackForwardAttackingCorrectionsCaptureErrorKey;
+                currentLabel = leftPalmRight
+                    ? "left-hand-palm-contact correction"
+                    : "attacking correction";
+            }
+
+            private static void BeginActualAnimatorCapture()
+            {
+                try
+                {
+                    Scene scene = RequireScene();
+                    target = RequireTarget(
+                        RequireLayout(scene),
+                        StickAttackForwardTargetName);
+                    animator = RequireAnimator(target);
+                    AnimationClip clip = LoadClip(
+                        StickAttackForwardAttackingClipPath);
+                    stateLength = clip.length;
+                    if (stateLength <= 0f)
+                    {
+                        throw new InvalidOperationException(
+                            "Stick_Attack_Forward corrected clip has no playable duration.");
+                    }
+
+                    string rootDirectory = Path.GetFullPath(
+                        currentFramesDirectory);
+                    PrepareFrameDirectory(Path.Combine(rootDirectory, "front"));
+                    PrepareFrameDirectory(Path.Combine(rootDirectory, "side"));
+                    PrepareFrameDirectory(Path.Combine(rootDirectory, "left_palm"));
+                    PrepareFrameDirectory(Path.Combine(rootDirectory, "hands_close"));
+                    RuntimeSamples.Clear();
+                    RuntimeSamples.Add(
+                        "capture_frame,runtime_frame,editor_elapsed_seconds,normalized_time,loop,phase");
+                    frameIndex = 0;
+                    lastRuntimeFrame = -1;
+                    captureStartEditorTime = EditorApplication.timeSinceStartup;
+                    originalCullingMode = animator.cullingMode;
+                    originalAnimatorSpeed = animator.speed;
+                    animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                    animator.speed = 1f;
+                    animator.applyRootMotion = false;
+                    animator.Rebind();
+                    animator.Play(
+                        StickAttackForwardAttackingStateName,
+                        0,
+                        0f);
+                    animator.Update(0f);
+                    Time.captureFramerate = CaptureFrameRate;
+                    environment = new CaptureEnvironment(target);
+                    CaptureCurrentRuntimePose(0, 0f);
+                    EditorApplication.update -= CaptureUpdate;
+                    EditorApplication.update += CaptureUpdate;
+                    Debug.Log(
+                        "[PlayerStickAttackForwardAttackingCorrections] Began " +
+                        currentLabel +
+                        " actual Play Mode Animator playback at speed 1 for more than two loops.");
+                }
+                catch (Exception exception)
+                {
+                    FailAfterPlayMode(exception);
+                }
+            }
+
+            private static void CaptureUpdate()
+            {
+                try
+                {
+                    if (!EditorApplication.isPlaying || animator == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Stick_Attack_Forward Play Mode ended before the actual capture completed.");
+                    }
+
+                    AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+                    if (!state.IsName(StickAttackForwardAttackingStateName))
+                    {
+                        throw new InvalidOperationException(
+                            "Stick_Attack_Forward Animator left the approved correction state during capture.");
+                    }
+
+                    float normalizedTime = state.normalizedTime;
+                    int runtimeFrame = Mathf.FloorToInt(
+                        normalizedTime * stateLength * CaptureFrameRate +
+                        0.0001f);
+                    if (runtimeFrame > lastRuntimeFrame)
+                    {
+                        CaptureCurrentRuntimePose(runtimeFrame, normalizedTime);
+                    }
+
+                    if (normalizedTime >= MinimumLoopCount)
+                    {
+                        CompleteAfterPlayMode();
+                    }
+                }
+                catch (Exception exception)
+                {
+                    FailAfterPlayMode(exception);
+                }
+            }
+
+            private static void CaptureCurrentRuntimePose(
+                int runtimeFrame,
+                float normalizedTime)
+            {
+                environment.ConfigureView(target, 1.05f, 1.35f);
+                Transform leftHand = FindRequired(target, LeftHandPath);
+                Transform rightHand = FindRequired(target, RightHandPath);
+                environment.ConfigurePalmView(
+                    target,
+                    leftHand.position,
+                    target.right,
+                    0.42f);
+                byte[] front = environment.CaptureFront();
+                byte[] side = environment.CaptureSide();
+                byte[] leftPalm = environment.CapturePalmFromTorso();
+                environment.ConfigureView(
+                    target,
+                    Vector3.Lerp(leftHand.position, rightHand.position, 0.5f),
+                    0.34f);
+                byte[] handsClose = environment.CaptureFront();
+                string rootDirectory = Path.GetFullPath(
+                    currentFramesDirectory);
+                string fileName = frameIndex.ToString(
+                    "D4",
+                    CultureInfo.InvariantCulture) + ".png";
+                File.WriteAllBytes(
+                    Path.Combine(rootDirectory, "front", fileName),
+                    front);
+                File.WriteAllBytes(
+                    Path.Combine(rootDirectory, "side", fileName),
+                    side);
+                File.WriteAllBytes(
+                    Path.Combine(rootDirectory, "left_palm", fileName),
+                    leftPalm);
+                File.WriteAllBytes(
+                    Path.Combine(rootDirectory, "hands_close", fileName),
+                    handsClose);
+                RuntimeSamples.Add(string.Join(
+                    ",",
+                    frameIndex.ToString(CultureInfo.InvariantCulture),
+                    runtimeFrame.ToString(CultureInfo.InvariantCulture),
+                    (EditorApplication.timeSinceStartup - captureStartEditorTime)
+                        .ToString("F6", CultureInfo.InvariantCulture),
+                    normalizedTime.ToString("F6", CultureInfo.InvariantCulture),
+                    Mathf.FloorToInt(normalizedTime)
+                        .ToString(CultureInfo.InvariantCulture),
+                    Mathf.Repeat(normalizedTime, 1f)
+                        .ToString("F6", CultureInfo.InvariantCulture)));
+                lastRuntimeFrame = runtimeFrame;
+                frameIndex++;
+            }
+
+            private static void CompleteAfterPlayMode()
+            {
+                WriteRuntimeSamples();
+                CleanupCapture();
+                SessionState.SetInt(currentStageKey, 2);
+                AwaitEditModeCompletion();
+                EditorApplication.ExitPlaymode();
+            }
+
+            private static void FailAfterPlayMode(Exception exception)
+            {
+                SessionState.SetString(
+                    currentErrorKey,
+                    exception.ToString());
+                SessionState.SetInt(currentStageKey, 3);
+                CleanupCapture();
+                if (EditorApplication.isPlaying)
+                {
+                    AwaitEditModeCompletion();
+                    EditorApplication.ExitPlaymode();
+                }
+                else
+                {
+                    failCallback(exception);
+                }
+            }
+
+            private static void CleanupCapture()
+            {
+                EditorApplication.update -= CaptureUpdate;
+                Time.captureFramerate = 0;
+                if (environment != null)
+                {
+                    try
+                    {
+                        environment.Dispose();
+                    }
+                    catch (Exception exception)
+                    {
+                        Debug.LogException(exception);
+                    }
+                    finally
+                    {
+                        environment = null;
+                    }
+                }
+
+                if (animator != null)
+                {
+                    animator.cullingMode = originalCullingMode;
+                    animator.speed = originalAnimatorSpeed;
+                }
+
+                animator = null;
+                target = null;
+            }
+
+            private static void AwaitEditModeCompletion()
+            {
+                if (awaitingEditModeCompletion)
+                {
+                    return;
+                }
+
+                awaitingEditModeCompletion = true;
+                EditorApplication.playModeStateChanged -=
+                    HandlePlayModeStateChanged;
+                EditorApplication.playModeStateChanged +=
+                    HandlePlayModeStateChanged;
+            }
+
+            private static void HandlePlayModeStateChanged(
+                PlayModeStateChange state)
+            {
+                if (state != PlayModeStateChange.EnteredEditMode)
+                {
+                    return;
+                }
+
+                EditorApplication.playModeStateChanged -=
+                    HandlePlayModeStateChanged;
+                awaitingEditModeCompletion = false;
+                int stage = SessionState.GetInt(currentStageKey, 0);
+                if (stage == 2)
+                {
+                    SessionState.EraseInt(currentStageKey);
+                    SessionState.EraseString(currentErrorKey);
+                    completeCallback?.Invoke(
+                        "Stick_Attack_Forward " + currentLabel +
+                        " actual Play Mode Animator capture completed for more than two loops at original speed.");
+                    return;
+                }
+
+                if (stage == 3)
+                {
+                    string error = SessionState.GetString(
+                        currentErrorKey,
+                        "Stick_Attack_Forward " + currentLabel +
+                        " actual Play Mode capture failed.");
+                    SessionState.EraseInt(currentStageKey);
+                    SessionState.EraseString(currentErrorKey);
+                    failCallback?.Invoke(new InvalidOperationException(error));
+                }
+            }
+
+            private static void WriteRuntimeSamples()
+            {
+                string path = Path.GetFullPath(
+                    currentRuntimeSamplesPath);
+                Directory.CreateDirectory(
+                    Path.GetDirectoryName(path) ??
+                    throw new InvalidOperationException(
+                        "Stick_Attack_Forward runtime sample directory is unavailable."));
+                File.WriteAllLines(path, RuntimeSamples);
+            }
+
+            private static void PrepareFrameDirectory(string path)
+            {
+                Directory.CreateDirectory(path);
+                foreach (string file in Directory.GetFiles(path, "*.png"))
+                {
+                    File.Delete(file);
+                }
+            }
+        }
+
+        internal static class StickAttackForwardGifWeaponMotionPlayModeCapture
+        {
+            private const int CaptureFrameRate = 30;
+            private const float MinimumLoopCount = 2.05f;
+
+            private static Action<string> completeCallback;
+            private static Action<Exception> failCallback;
+            private static CaptureEnvironment environment;
+            private static Transform target;
+            private static Animator animator;
+            private static AnimatorCullingMode originalCullingMode;
+            private static float originalAnimatorSpeed;
+            private static int frameIndex;
+            private static int lastRuntimeFrame;
+            private static float stateLength;
+            private static double captureStartEditorTime;
+            private static bool awaitingEditModeCompletion;
+            private static readonly List<string> RuntimeSamples =
+                new List<string>();
+
+            internal static void Start(
+                Action<string> onComplete,
+                Action<Exception> onFail)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Stick_Attack_Forward GIF weapon capture must start in Edit Mode.");
+                }
+
+                completeCallback = onComplete;
+                failCallback = onFail;
+                SessionState.SetInt(
+                    StickAttackForwardGifWeaponCaptureStageKey,
+                    1);
+                SessionState.EraseString(
+                    StickAttackForwardGifWeaponCaptureErrorKey);
+                EditorApplication.EnterPlaymode();
+            }
+
+            internal static void Resume(
+                Action<string> onComplete,
+                Action<Exception> onFail)
+            {
+                completeCallback = onComplete;
+                failCallback = onFail;
+                int stage = SessionState.GetInt(
+                    StickAttackForwardGifWeaponCaptureStageKey,
+                    0);
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        return;
+                    }
+
+                    BeginActualAnimatorCapture();
+                    return;
+                }
+
+                if ((stage == 2 || stage == 3) &&
+                    EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                    return;
+                }
+
+                if (stage == 2 &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    SessionState.EraseInt(
+                        StickAttackForwardGifWeaponCaptureStageKey);
+                    SessionState.EraseString(
+                        StickAttackForwardGifWeaponCaptureErrorKey);
+                    completeCallback(
+                        "Stick_Attack_Forward GIF weapon actual Play Mode capture completed for more than two fixed-duration loops at speed 1.");
+                    return;
+                }
+
+                if (stage == 3 &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    string error = SessionState.GetString(
+                        StickAttackForwardGifWeaponCaptureErrorKey,
+                        "Stick_Attack_Forward GIF weapon actual Play Mode capture failed.");
+                    SessionState.EraseInt(
+                        StickAttackForwardGifWeaponCaptureStageKey);
+                    SessionState.EraseString(
+                        StickAttackForwardGifWeaponCaptureErrorKey);
+                    failCallback(new InvalidOperationException(error));
+                }
+            }
+
+            private static void BeginActualAnimatorCapture()
+            {
+                try
+                {
+                    Scene scene = RequireScene();
+                    target = RequireTarget(
+                        RequireLayout(scene),
+                        StickAttackForwardTargetName);
+                    animator = RequireAnimator(target);
+                    AnimationClip clip = LoadClip(
+                        StickAttackForwardAttackingClipPath);
+                    stateLength = clip.length;
+                    if (Mathf.Abs(
+                            stateLength -
+                            (LoadSingleEmbeddedClip(
+                                 StickAttackForwardAttackingSourcePath,
+                                 "stick attacking").length +
+                             StickAttackForwardAttackingEndHoldSeconds)) >
+                        0.0001f)
+                    {
+                        throw new InvalidOperationException(
+                            "Stick_Attack_Forward duration changed before GIF weapon capture.");
+                    }
+
+                    string rootDirectory = Path.GetFullPath(
+                        StickAttackForwardGifWeaponFramesDirectory);
+                    PrepareFrameDirectory(Path.Combine(rootDirectory, "front"));
+                    PrepareFrameDirectory(Path.Combine(rootDirectory, "side"));
+                    PrepareFrameDirectory(Path.Combine(rootDirectory, "grip"));
+                    RuntimeSamples.Clear();
+                    RuntimeSamples.Add(
+                        "capture_frame,runtime_frame,editor_elapsed_seconds,normalized_time,loop,phase");
+                    frameIndex = 0;
+                    lastRuntimeFrame = -1;
+                    captureStartEditorTime = EditorApplication.timeSinceStartup;
+                    originalCullingMode = animator.cullingMode;
+                    originalAnimatorSpeed = animator.speed;
+                    animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                    animator.speed = 1f;
+                    animator.applyRootMotion = false;
+                    animator.Rebind();
+                    animator.Play(
+                        StickAttackForwardAttackingStateName,
+                        0,
+                        0f);
+                    animator.Update(0f);
+                    Time.captureFramerate = CaptureFrameRate;
+                    environment = new CaptureEnvironment(target);
+                    CaptureCurrentRuntimePose(0, 0f);
+                    EditorApplication.update -= CaptureUpdate;
+                    EditorApplication.update += CaptureUpdate;
+                    Debug.Log(
+                        "[PlayerStickAttackForwardGifWeaponMotion] Began actual Play Mode playback at unchanged speed 1 for more than two loops.");
+                }
+                catch (Exception exception)
+                {
+                    FailAfterPlayMode(exception);
+                }
+            }
+
+            private static void CaptureUpdate()
+            {
+                try
+                {
+                    if (!EditorApplication.isPlaying || animator == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Stick_Attack_Forward Play Mode ended before GIF weapon capture completed.");
+                    }
+
+                    AnimatorStateInfo state =
+                        animator.GetCurrentAnimatorStateInfo(0);
+                    if (!state.IsName(StickAttackForwardAttackingStateName))
+                    {
+                        throw new InvalidOperationException(
+                            "Stick_Attack_Forward Animator left its unchanged state during GIF weapon capture.");
+                    }
+
+                    float normalizedTime = state.normalizedTime;
+                    int runtimeFrame = Mathf.FloorToInt(
+                        normalizedTime * stateLength * CaptureFrameRate +
+                        0.0001f);
+                    if (runtimeFrame > lastRuntimeFrame)
+                    {
+                        CaptureCurrentRuntimePose(runtimeFrame, normalizedTime);
+                    }
+
+                    if (normalizedTime >= MinimumLoopCount)
+                    {
+                        CompleteAfterPlayMode();
+                    }
+                }
+                catch (Exception exception)
+                {
+                    FailAfterPlayMode(exception);
+                }
+            }
+
+            private static void CaptureCurrentRuntimePose(
+                int runtimeFrame,
+                float normalizedTime)
+            {
+                environment.ConfigureView(target, 1.05f, 1.45f);
+                Transform rightHand = FindRequired(target, RightHandPath);
+                environment.ConfigurePalmView(
+                    target,
+                    rightHand.position,
+                    target.right,
+                    0.52f);
+                string rootDirectory = Path.GetFullPath(
+                    StickAttackForwardGifWeaponFramesDirectory);
+                string fileName = frameIndex.ToString(
+                    "D4",
+                    CultureInfo.InvariantCulture) + ".png";
+                File.WriteAllBytes(
+                    Path.Combine(rootDirectory, "front", fileName),
+                    environment.CaptureFront());
+                File.WriteAllBytes(
+                    Path.Combine(rootDirectory, "side", fileName),
+                    environment.CaptureSide());
+                File.WriteAllBytes(
+                    Path.Combine(rootDirectory, "grip", fileName),
+                    environment.CapturePalmFromTorso());
+                RuntimeSamples.Add(string.Join(
+                    ",",
+                    frameIndex.ToString(CultureInfo.InvariantCulture),
+                    runtimeFrame.ToString(CultureInfo.InvariantCulture),
+                    (EditorApplication.timeSinceStartup - captureStartEditorTime)
+                        .ToString("F6", CultureInfo.InvariantCulture),
+                    normalizedTime.ToString("F6", CultureInfo.InvariantCulture),
+                    Mathf.FloorToInt(normalizedTime)
+                        .ToString(CultureInfo.InvariantCulture),
+                    Mathf.Repeat(normalizedTime, 1f)
+                        .ToString("F6", CultureInfo.InvariantCulture)));
+                lastRuntimeFrame = runtimeFrame;
+                frameIndex++;
+            }
+
+            private static void CompleteAfterPlayMode()
+            {
+                WriteRuntimeSamples();
+                CleanupCapture();
+                SessionState.SetInt(
+                    StickAttackForwardGifWeaponCaptureStageKey,
+                    2);
+                AwaitEditModeCompletion();
+                EditorApplication.ExitPlaymode();
+            }
+
+            private static void FailAfterPlayMode(Exception exception)
+            {
+                SessionState.SetString(
+                    StickAttackForwardGifWeaponCaptureErrorKey,
+                    exception.ToString());
+                SessionState.SetInt(
+                    StickAttackForwardGifWeaponCaptureStageKey,
+                    3);
+                CleanupCapture();
+                if (EditorApplication.isPlaying)
+                {
+                    AwaitEditModeCompletion();
+                    EditorApplication.ExitPlaymode();
+                }
+                else
+                {
+                    failCallback(exception);
+                }
+            }
+
+            private static void CleanupCapture()
+            {
+                EditorApplication.update -= CaptureUpdate;
+                Time.captureFramerate = 0;
+                if (environment != null)
+                {
+                    try
+                    {
+                        environment.Dispose();
+                    }
+                    catch (Exception exception)
+                    {
+                        Debug.LogException(exception);
+                    }
+                    finally
+                    {
+                        environment = null;
+                    }
+                }
+
+                if (animator != null)
+                {
+                    animator.cullingMode = originalCullingMode;
+                    animator.speed = originalAnimatorSpeed;
+                }
+
+                animator = null;
+                target = null;
+            }
+
+            private static void AwaitEditModeCompletion()
+            {
+                if (awaitingEditModeCompletion)
+                {
+                    return;
+                }
+
+                awaitingEditModeCompletion = true;
+                EditorApplication.playModeStateChanged -=
+                    HandlePlayModeStateChanged;
+                EditorApplication.playModeStateChanged +=
+                    HandlePlayModeStateChanged;
+            }
+
+            private static void HandlePlayModeStateChanged(
+                PlayModeStateChange state)
+            {
+                if (state != PlayModeStateChange.EnteredEditMode)
+                {
+                    return;
+                }
+
+                EditorApplication.playModeStateChanged -=
+                    HandlePlayModeStateChanged;
+                awaitingEditModeCompletion = false;
+                int stage = SessionState.GetInt(
+                    StickAttackForwardGifWeaponCaptureStageKey,
+                    0);
+                if (stage == 2)
+                {
+                    SessionState.EraseInt(
+                        StickAttackForwardGifWeaponCaptureStageKey);
+                    SessionState.EraseString(
+                        StickAttackForwardGifWeaponCaptureErrorKey);
+                    completeCallback?.Invoke(
+                        "Stick_Attack_Forward GIF weapon actual Play Mode capture completed for more than two fixed-duration loops at speed 1.");
+                    return;
+                }
+
+                if (stage == 3)
+                {
+                    string error = SessionState.GetString(
+                        StickAttackForwardGifWeaponCaptureErrorKey,
+                        "Stick_Attack_Forward GIF weapon actual Play Mode capture failed.");
+                    SessionState.EraseInt(
+                        StickAttackForwardGifWeaponCaptureStageKey);
+                    SessionState.EraseString(
+                        StickAttackForwardGifWeaponCaptureErrorKey);
+                    failCallback?.Invoke(new InvalidOperationException(error));
+                }
+            }
+
+            private static void WriteRuntimeSamples()
+            {
+                string path = Path.GetFullPath(
+                    StickAttackForwardGifWeaponRuntimeSamplesPath);
+                Directory.CreateDirectory(
+                    Path.GetDirectoryName(path) ??
+                    throw new InvalidOperationException(
+                        "Stick_Attack_Forward GIF runtime sample directory is unavailable."));
+                File.WriteAllLines(path, RuntimeSamples);
+            }
+
+            private static void PrepareFrameDirectory(string path)
+            {
+                Directory.CreateDirectory(path);
+                foreach (string file in Directory.GetFiles(path, "*.png"))
+                {
+                    File.Delete(file);
+                }
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Attack Forward Attacking Review")]
+        internal static void CaptureStickAttackForwardAttackingReview()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward attacking direct review requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after the attacking Mixamo apply.");
+            }
+
+            CaptureStickAttackForwardAttackingDirectReview();
+            Debug.Log(
+                "[PlayerStickAttackForwardAttacking] Captured source/applied 30fps full-body front/side comparison, final source-to-hold two-hand stick close-up, and loop boundary.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Attack Forward Attacking Final")]
+        internal static void CaptureStickAttackForwardAttackingFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward attacking finalization requires Edit Mode.");
+            }
+
+            if (!File.Exists(Path.GetFullPath(
+                    StickAttackForwardAttackingReviewPath)))
+            {
+                throw new FileNotFoundException(
+                    "The directly reviewed attacking contact sheet is missing.",
+                    Path.GetFullPath(
+                        StickAttackForwardAttackingReviewPath));
+            }
+
+            StickAttackForwardAttackingMetrics metrics =
+                MeasureStickAttackForwardAttackingMetrics();
+            WriteJson(
+                StickAttackForwardAttackingMetricsPath,
+                metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward attacking support checks failed after direct review. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            CopyReviewedContact(
+                StickAttackForwardAttackingReviewPath,
+                StickAttackForwardAttackingFinalPath);
+            Debug.Log(
+                "[PlayerStickAttackForwardAttacking] Finalized the directly reviewed attacking sequence after support checks. BodyPose=" +
+                Num(metrics.sourceBodyPosePositionDifferenceMax) + "/" +
+                Num(metrics.sourceBodyPoseRotationDifferenceDegreesMax) +
+                ", Hold=" + Num(metrics.endHoldDurationSeconds) +
+                "s, FinalTilt=" +
+                Num(metrics.measuredFinalForwardTiltDegrees) +
+                "deg, HandToShaft=" +
+                Num(metrics.finalRightHandToShaftMeters) + "/" +
+                Num(metrics.finalLeftHandToShaftMeters) + "m.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Attack Forward Attacking Corrections Final")]
+        internal static void CaptureStickAttackForwardAttackingCorrectionsFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward correction finalization requires Edit Mode.");
+            }
+
+            if (!File.Exists(Path.GetFullPath(
+                    StickAttackForwardAttackingCorrectionsVideoPath)) ||
+                !File.Exists(Path.GetFullPath(
+                    StickAttackForwardAttackingCorrectionsOverviewPath)))
+            {
+                throw new FileNotFoundException(
+                    "The directly reviewed actual Play Mode correction video or its overview is missing.");
+            }
+
+            StickAttackForwardAttackingCorrectionsMetrics metrics =
+                MeasureStickAttackForwardAttackingCorrectionsMetrics();
+            WriteJson(
+                StickAttackForwardAttackingCorrectionsMetricsPath,
+                metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward correction support checks failed after actual Play Mode direct review. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[PlayerStickAttackForwardAttackingCorrections] Finalized after actual Play Mode two-loop direct review. PalmRightMax=" +
+                Num(metrics.maximumLeftPalmCharacterRightAngleDegrees) +
+                "deg, StickStepMax=" +
+                Num(metrics.maximumStickAxisDirectionStepDegrees) +
+                "deg, PeakTilt=" +
+                Num(metrics.measuredPeakForwardTiltDegrees) +
+                "deg, AlignmentFrames=" +
+                metrics.finalAlignmentStartFrame.ToString(
+                    CultureInfo.InvariantCulture) + "-" +
+                metrics.peakForwardTiltFrame.ToString(
+                    CultureInfo.InvariantCulture) + "-" +
+                metrics.finalAlignmentCompleteFrame.ToString(
+                    CultureInfo.InvariantCulture) + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Attack Forward Left Hand Palm Contact Final")]
+        internal static void CaptureStickAttackForwardLeftPalmRightFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward left-palm finalization requires Edit Mode.");
+            }
+
+            if (!File.Exists(Path.GetFullPath(
+                    StickAttackForwardLeftPalmRightVideoPath)) ||
+                !File.Exists(Path.GetFullPath(
+                    StickAttackForwardLeftPalmRightOverviewPath)))
+            {
+                throw new FileNotFoundException(
+                    "The directly reviewed left-palm Play Mode video or overview is missing.");
+            }
+
+            StickAttackForwardLeftPalmRightMetrics metrics =
+                MeasureStickAttackForwardLeftPalmRightMetrics();
+            WriteJson(
+                StickAttackForwardLeftPalmRightMetricsPath,
+                metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward left-palm support checks failed after actual Play Mode direct review. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[PlayerStickAttackForwardLeftPalmRight] Finalized after actual Play Mode two-loop direct review of the non-crossing arms and palm-to-palm contact. StickCurves=" +
+                metrics.stickCurvesHashCurrent + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stick Attack Forward GIF Weapon Motion Final")]
+        internal static void CaptureStickAttackForwardGifWeaponMotionFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward GIF weapon finalization requires Edit Mode.");
+            }
+
+            if (!File.Exists(Path.GetFullPath(
+                    StickAttackForwardGifWeaponVideoPath)) ||
+                !File.Exists(Path.GetFullPath(
+                    StickAttackForwardGifWeaponOverviewPath)))
+            {
+                throw new FileNotFoundException(
+                    "The directly reviewed Stick_Attack_Forward GIF weapon Play Mode video or overview is missing.");
+            }
+
+            StickAttackForwardGifWeaponMetrics metrics =
+                MeasureStickAttackForwardGifWeaponMetrics();
+            WriteJson(StickAttackForwardGifWeaponMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward GIF weapon support checks failed after actual Play Mode direct review. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[PlayerStickAttackForwardGifWeaponMotion] Finalized after actual Play Mode direct review. FixedDuration=" +
+                Num(metrics.generatedDurationSeconds) +
+                "s, GripError=" +
+                Num(metrics.maximumGripAnchorErrorMeters) +
+                "m, StickStepMax=" +
+                Num(metrics.maximumStickAxisDirectionStepDegrees) +
+                "deg@" +
+                metrics.maximumStickAxisDirectionStepFrame.ToString(
+                    CultureInfo.InvariantCulture) +
+                ", FinalAngle=" +
+                Num(metrics.measuredFinalDegreesFromVertical) +
+                "degFromVertical, FinalRaise=" +
+                Num(metrics.measuredFinalRaiseDegrees) +
+                "deg" +
+                ", BodyDifference=" +
+                Num(metrics.bodyPositionDifferenceMax) + "/" +
+                Num(metrics.bodyRotationDifferenceDegreesMax) + ".");
         }
 
         [MenuItem("Bellerophon/Player/Capture Stick Carry Grip Diagnostic")]
@@ -7103,6 +14215,1337 @@ namespace Bellerophon.Editor
                     StringComparison.Ordinal));
         }
 
+        private static AnimationClip CreateOrUpdateStickGripTwoHandCarryClip(
+            Transform sourceTarget,
+            Animator sourceAnimator,
+            AnimationClip baseClip,
+            AnimationClip armClip)
+        {
+            string[] paths = GetStickGripTwoHandArmaturePaths(sourceTarget);
+            Dictionary<string, TransformCurveTrack> tracks = paths.ToDictionary(
+                path => path,
+                path => new TransformCurveTrack(path),
+                StringComparer.Ordinal);
+            float frameRate = Mathf.Max(baseClip.frameRate, armClip.frameRate);
+            int frameIntervals = Mathf.Max(
+                1,
+                Mathf.RoundToInt(
+                    StickGripTwoHandCarryDurationSeconds * frameRate));
+            try
+            {
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = StickGripTwoHandCarryDurationSeconds *
+                        frame / frameIntervals;
+                    SampleLayeredAnimator(
+                        sourceAnimator,
+                        StickCarryStateName,
+                        time,
+                        baseClip.length,
+                        armClip.length);
+                    foreach (string path in paths)
+                    {
+                        tracks[path].Add(
+                            time,
+                            FindRequired(sourceTarget, path));
+                    }
+                }
+            }
+            finally
+            {
+                sourceAnimator.Rebind();
+                sourceAnimator.Update(0f);
+            }
+
+            return CreateOrUpdateStickGripTwoHandTransformClip(
+                StickGripTwoHandCarryClipPath,
+                "Stick_Grip_TwoHand_StickCarry",
+                frameRate,
+                tracks.Values);
+        }
+
+        private static StickGripTwoHandAdjustedClipResult
+            CreateOrUpdateStickGripTwoHandLeftHandForwardClip(
+                Transform template,
+                AnimationClip sourceClip)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "StickGripTwoHandLeftHandForwardWork";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            string[] modifiedPaths =
+            {
+                LeftArmPath,
+                LeftForeArmPath
+            };
+            try
+            {
+                Dictionary<string, TransformCurveTrack> tracks =
+                    modifiedPaths.ToDictionary(
+                        path => path,
+                        path => new TransformCurveTrack(path),
+                        StringComparer.Ordinal);
+                int frameIntervals = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(
+                        StickGripTwoHandAttackReadyDurationSeconds *
+                        sourceClip.frameRate));
+                float minimumForwardSeparation = float.PositiveInfinity;
+                float maximumReachError = 0f;
+                Transform root = workObject.transform;
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = StickGripTwoHandAttackReadyDurationSeconds *
+                        frame / frameIntervals;
+                    sourceClip.SampleAnimation(workObject, time);
+                    Transform upper = FindRequired(root, LeftArmPath);
+                    Transform lower = FindRequired(root, LeftForeArmPath);
+                    Transform leftHand = FindRequired(root, LeftHandPath);
+                    Transform rightHand = FindRequired(root, RightHandPath);
+                    float forwardSeparation = Vector3.Dot(
+                        leftHand.position - rightHand.position,
+                        root.forward);
+                    float correction = Mathf.Max(
+                        0f,
+                        StickGripTwoHandLeftHandForwardClearanceMeters -
+                            forwardSeparation);
+                    if (correction > 0f)
+                    {
+                        Vector3 requestedTarget =
+                            leftHand.position + root.forward * correction;
+                        maximumReachError = Mathf.Max(
+                            maximumReachError,
+                            SolveTwoBoneIk(
+                                upper,
+                                lower,
+                                leftHand,
+                                requestedTarget,
+                                lower.position + root.up * 0.001f));
+                    }
+
+                    minimumForwardSeparation = Mathf.Min(
+                        minimumForwardSeparation,
+                        Vector3.Dot(
+                            leftHand.position - rightHand.position,
+                            root.forward));
+                    foreach (string path in modifiedPaths)
+                    {
+                        tracks[path].Add(time, FindRequired(root, path));
+                    }
+                }
+
+                AnimationClip generated = new AnimationClip();
+                EditorUtility.CopySerialized(sourceClip, generated);
+                generated.name =
+                    "Stick_Grip_TwoHand_AttackReady_LeftHandForward";
+                foreach (EditorCurveBinding binding in AnimationUtility
+                             .GetCurveBindings(generated)
+                             .Where(binding =>
+                                 IsStickGripTwoHandAdjustedArmRotationBinding(
+                                     binding))
+                             .ToArray())
+                {
+                    AnimationUtility.SetEditorCurve(generated, binding, null);
+                }
+
+                foreach (TransformCurveTrack track in tracks.Values)
+                {
+                    SetRotationTrackCurves(generated, track);
+                }
+
+                AnimationClip existing =
+                    AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                        StickGripTwoHandAdjustedAttackReadyClipPath);
+                if (existing == null)
+                {
+                    AssetDatabase.CreateAsset(
+                        generated,
+                        StickGripTwoHandAdjustedAttackReadyClipPath);
+                    existing = generated;
+                }
+                else
+                {
+                    EditorUtility.CopySerialized(generated, existing);
+                    UnityEngine.Object.DestroyImmediate(generated);
+                    existing.name =
+                        "Stick_Grip_TwoHand_AttackReady_LeftHandForward";
+                    EditorUtility.SetDirty(existing);
+                }
+
+                AssetDatabase.SaveAssets();
+                return new StickGripTwoHandAdjustedClipResult
+                {
+                    Clip = existing,
+                    MinimumForwardSeparationMeters = minimumForwardSeparation,
+                    MaximumReachErrorMeters = maximumReachError
+                };
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static bool IsStickGripTwoHandApprovedLeftChainPath(
+            string path)
+        {
+            return string.Equals(path, LeftShoulderPath, StringComparison.Ordinal) ||
+                string.Equals(path, LeftArmPath, StringComparison.Ordinal) ||
+                string.Equals(path, LeftForeArmPath, StringComparison.Ordinal) ||
+                string.Equals(path, LeftHandPath, StringComparison.Ordinal);
+        }
+
+        private static bool IsStickGripTwoHandAdjustedArmPath(string path)
+        {
+            return string.Equals(path, LeftArmPath, StringComparison.Ordinal) ||
+                string.Equals(path, LeftForeArmPath, StringComparison.Ordinal);
+        }
+
+        private static bool IsStickGripTwoHandAdjustedArmRotationBinding(
+            EditorCurveBinding binding)
+        {
+            return binding.type == typeof(Transform) &&
+                IsStickGripTwoHandAdjustedArmPath(binding.path) &&
+                (binding.propertyName.StartsWith(
+                     "m_LocalRotation.",
+                     StringComparison.Ordinal) ||
+                 binding.propertyName.StartsWith(
+                     "localEulerAnglesRaw.",
+                     StringComparison.Ordinal));
+        }
+
+        private static bool AnimationMatchesExceptStickGripTwoHandArmRotations(
+            AnimationClip source,
+            AnimationClip adjusted)
+        {
+            if (Mathf.Abs(source.length - adjusted.length) > 0.000001f ||
+                Mathf.Abs(source.frameRate - adjusted.frameRate) > 0.000001f)
+            {
+                return false;
+            }
+
+            EditorCurveBinding[] sourceBindings = AnimationUtility
+                .GetCurveBindings(source)
+                .Where(binding =>
+                    !IsStickGripTwoHandAdjustedArmRotationBinding(binding))
+                .ToArray();
+            EditorCurveBinding[] adjustedBindings = AnimationUtility
+                .GetCurveBindings(adjusted)
+                .Where(binding =>
+                    !IsStickGripTwoHandAdjustedArmRotationBinding(binding))
+                .ToArray();
+            if (sourceBindings.Length != adjustedBindings.Length ||
+                sourceBindings.Any(binding => !adjustedBindings.Contains(binding)))
+            {
+                return false;
+            }
+
+            foreach (EditorCurveBinding binding in sourceBindings)
+            {
+                if (!AnimationCurvesEqual(
+                        AnimationUtility.GetEditorCurve(source, binding),
+                        AnimationUtility.GetEditorCurve(adjusted, binding)))
+                {
+                    return false;
+                }
+            }
+
+            EditorCurveBinding[] sourceObjectBindings = AnimationUtility
+                .GetObjectReferenceCurveBindings(source);
+            EditorCurveBinding[] adjustedObjectBindings = AnimationUtility
+                .GetObjectReferenceCurveBindings(adjusted);
+            if (sourceObjectBindings.Length != adjustedObjectBindings.Length ||
+                sourceObjectBindings.Any(
+                    binding => !adjustedObjectBindings.Contains(binding)))
+            {
+                return false;
+            }
+
+            foreach (EditorCurveBinding binding in sourceObjectBindings)
+            {
+                ObjectReferenceKeyframe[] sourceKeys = AnimationUtility
+                    .GetObjectReferenceCurve(source, binding);
+                ObjectReferenceKeyframe[] adjustedKeys = AnimationUtility
+                    .GetObjectReferenceCurve(adjusted, binding);
+                if (sourceKeys.Length != adjustedKeys.Length)
+                {
+                    return false;
+                }
+
+                for (int index = 0; index < sourceKeys.Length; index++)
+                {
+                    if (Mathf.Abs(
+                            sourceKeys[index].time - adjustedKeys[index].time) >
+                        0.000001f ||
+                        sourceKeys[index].value != adjustedKeys[index].value)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return AnimationEventsMatch(source, adjusted);
+        }
+
+        private static bool StickGripTwoHandPathCurvesExact(
+            AnimationClip source,
+            AnimationClip adjusted,
+            string path)
+        {
+            EditorCurveBinding[] sourceBindings = AnimationUtility
+                .GetCurveBindings(source)
+                .Where(binding =>
+                    binding.type == typeof(Transform) &&
+                    string.Equals(binding.path, path, StringComparison.Ordinal))
+                .ToArray();
+            EditorCurveBinding[] adjustedBindings = AnimationUtility
+                .GetCurveBindings(adjusted)
+                .Where(binding =>
+                    binding.type == typeof(Transform) &&
+                    string.Equals(binding.path, path, StringComparison.Ordinal))
+                .ToArray();
+            return sourceBindings.Length == adjustedBindings.Length &&
+                sourceBindings.All(binding =>
+                    adjustedBindings.Contains(binding) &&
+                    AnimationCurvesEqual(
+                        AnimationUtility.GetEditorCurve(source, binding),
+                        AnimationUtility.GetEditorCurve(adjusted, binding)));
+        }
+
+        private static string[] GetStickGripTwoHandModifiedTransformPaths(
+            AnimationClip source,
+            AnimationClip adjusted)
+        {
+            EditorCurveBinding[] sourceBindings = AnimationUtility
+                .GetCurveBindings(source)
+                .Where(binding => binding.type == typeof(Transform))
+                .ToArray();
+            EditorCurveBinding[] adjustedBindings = AnimationUtility
+                .GetCurveBindings(adjusted)
+                .Where(binding => binding.type == typeof(Transform))
+                .ToArray();
+            HashSet<string> modifiedPaths = new HashSet<string>(
+                StringComparer.Ordinal);
+            foreach (EditorCurveBinding binding in sourceBindings)
+            {
+                if (!adjustedBindings.Contains(binding) ||
+                    !AnimationCurvesEqual(
+                        AnimationUtility.GetEditorCurve(source, binding),
+                        AnimationUtility.GetEditorCurve(adjusted, binding)))
+                {
+                    modifiedPaths.Add(binding.path);
+                }
+            }
+
+            foreach (EditorCurveBinding binding in adjustedBindings)
+            {
+                if (!sourceBindings.Contains(binding))
+                {
+                    modifiedPaths.Add(binding.path);
+                }
+            }
+
+            return modifiedPaths.OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+        }
+
+        private static AnimationClip CreateOrUpdateStickGripTwoHandTransitionClip(
+            Transform template,
+            AnimationClip carryClip,
+            AnimationClip attackReadyClip)
+        {
+            GameObject startObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject endObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            startObject.name = "StickGripTwoHandTransitionStart";
+            endObject.name = "StickGripTwoHandTransitionEnd";
+            workObject.name = "StickGripTwoHandTransitionWork";
+            startObject.hideFlags = HideFlags.HideAndDontSave;
+            endObject.hideFlags = HideFlags.HideAndDontSave;
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(startObject);
+            DisableAnimators(endObject);
+            DisableAnimators(workObject);
+            try
+            {
+                carryClip.SampleAnimation(
+                    startObject,
+                    StickGripTwoHandCarryDurationSeconds);
+                attackReadyClip.SampleAnimation(endObject, 0f);
+                PoseSnapshot startPose = CapturePose(startObject.transform);
+                PoseSnapshot endPose = CapturePose(endObject.transform);
+                string[] paths = GetStickGripTwoHandArmaturePaths(
+                    workObject.transform);
+                Dictionary<string, TransformCurveTrack> tracks =
+                    paths.ToDictionary(
+                        path => path,
+                        path => new TransformCurveTrack(path),
+                        StringComparer.Ordinal);
+                float frameRate = Mathf.Max(
+                    carryClip.frameRate,
+                    attackReadyClip.frameRate);
+                int frameIntervals = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(
+                        StickGripTwoHandTransitionDurationSeconds *
+                        frameRate));
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = StickGripTwoHandTransitionDurationSeconds *
+                        frame / frameIntervals;
+                    float weight = Mathf.SmoothStep(
+                        0f,
+                        1f,
+                        time / StickGripTwoHandTransitionDurationSeconds);
+                    foreach (string path in paths)
+                    {
+                        if (!startPose.Positions.TryGetValue(
+                                path,
+                                out Vector3 startPosition) ||
+                            !startPose.Rotations.TryGetValue(
+                                path,
+                                out Quaternion startRotation) ||
+                            !endPose.Positions.TryGetValue(
+                                path,
+                                out Vector3 endPosition) ||
+                            !endPose.Rotations.TryGetValue(
+                                path,
+                                out Quaternion endRotation))
+                        {
+                            throw new InvalidOperationException(
+                                "Stick_Grip_TwoHand transition hierarchy differs at " +
+                                path + ".");
+                        }
+
+                        Transform item = FindRequired(workObject.transform, path);
+                        item.localPosition = Vector3.LerpUnclamped(
+                            startPosition,
+                            endPosition,
+                            weight);
+                        item.localRotation = Quaternion.SlerpUnclamped(
+                            startRotation,
+                            endRotation,
+                            weight);
+                        tracks[path].Add(time, item);
+                    }
+                }
+
+                return CreateOrUpdateStickGripTwoHandTransformClip(
+                    StickGripTwoHandTransitionClipPath,
+                    "Stick_Grip_TwoHand_Transition",
+                    frameRate,
+                    tracks.Values);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(startObject);
+                UnityEngine.Object.DestroyImmediate(endObject);
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static AnimationClip CreateOrUpdateStickGripTwoHandTransformClip(
+            string assetPath,
+            string clipName,
+            float frameRate,
+            IEnumerable<TransformCurveTrack> tracks)
+        {
+            AnimationClip generated = new AnimationClip
+            {
+                name = clipName,
+                frameRate = frameRate,
+                wrapMode = WrapMode.Once,
+                legacy = false
+            };
+            foreach (TransformCurveTrack track in tracks)
+            {
+                SetTransformTrackCurves(generated, track);
+            }
+
+            generated.EnsureQuaternionContinuity();
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(generated);
+            settings.loopTime = false;
+            settings.loopBlend = false;
+            AnimationUtility.SetAnimationClipSettings(generated, settings);
+            AnimationClip existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                assetPath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(generated, assetPath);
+                existing = generated;
+            }
+            else
+            {
+                EditorUtility.CopySerialized(generated, existing);
+                UnityEngine.Object.DestroyImmediate(generated);
+                existing.name = clipName;
+                EditorUtility.SetDirty(existing);
+            }
+
+            AssetDatabase.SaveAssets();
+            return existing;
+        }
+
+        private static string[] GetStickGripTwoHandArmaturePaths(
+            Transform root)
+        {
+            string[] paths = root.GetComponentsInChildren<Transform>(true)
+                .Select(item =>
+                    AnimationUtility.CalculateTransformPath(item, root))
+                .Where(path =>
+                    string.Equals(path, "Armature", StringComparison.Ordinal) ||
+                    path.StartsWith("Armature/", StringComparison.Ordinal))
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+            if (paths.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    root.name + " has no Armature hierarchy for Stick_Grip_TwoHand.");
+            }
+
+            return paths;
+        }
+
+        private static StickGripPlacement CopyStickCarryItemToTarget(
+            Transform sourceTarget,
+            Transform target)
+        {
+            StickGripPlacement sourcePlacement = DescribeExistingStickGrip(
+                sourceTarget);
+            Transform targetHand = FindRequired(target, RightHandPath);
+            Transform existing = targetHand.Find(StickInstanceName);
+            if (existing != null)
+            {
+                UnityEngine.Object.DestroyImmediate(existing.gameObject);
+            }
+
+            GameObject stickAsset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                StickAssetPath);
+            if (stickAsset == null)
+            {
+                throw new InvalidOperationException(
+                    "The exact imported stick FBX root could not be loaded.");
+            }
+
+            GameObject stickObject = PrefabUtility.InstantiatePrefab(
+                stickAsset,
+                targetHand) as GameObject;
+            if (stickObject == null)
+            {
+                throw new InvalidOperationException(
+                    "The exact stick FBX could not be instantiated under Stick_Grip_TwoHand RightHand.");
+            }
+
+            stickObject.name = StickInstanceName;
+            Transform stick = stickObject.transform;
+            stick.localPosition = sourcePlacement.Instance.localPosition;
+            stick.localRotation = sourcePlacement.Instance.localRotation;
+            stick.localScale = sourcePlacement.Instance.localScale;
+            EditorUtility.SetDirty(stickObject);
+            return DescribeExistingStickGrip(target);
+        }
+
+        private static AnimatorController RequireAnimatorControllerAtPath(
+            Transform target,
+            string expectedPath)
+        {
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController;
+            if (controller == null ||
+                !string.Equals(
+                    AssetDatabase.GetAssetPath(controller),
+                    expectedPath,
+                    StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    target.name + " does not use expected controller " +
+                    expectedPath + ".");
+            }
+
+            return controller;
+        }
+
+        private static void CopyPrimaryPlayerMesh(
+            Transform source,
+            Transform target)
+        {
+            SkinnedMeshRenderer sourceRenderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(source);
+            SkinnedMeshRenderer targetRenderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(target);
+            targetRenderer.sharedMesh = sourceRenderer.sharedMesh;
+            targetRenderer.sharedMaterials = sourceRenderer.sharedMaterials;
+            targetRenderer.bones = sourceRenderer.bones
+                .Select(bone => MapRequiredTransform(
+                    source,
+                    target,
+                    bone,
+                    "skinned mesh bone"))
+                .ToArray();
+            targetRenderer.rootBone = sourceRenderer.rootBone != null
+                ? MapRequiredTransform(
+                    source,
+                    target,
+                    sourceRenderer.rootBone,
+                    "skinned mesh root bone")
+                : null;
+            targetRenderer.localBounds = sourceRenderer.localBounds;
+            targetRenderer.quality = sourceRenderer.quality;
+            targetRenderer.updateWhenOffscreen =
+                sourceRenderer.updateWhenOffscreen;
+            targetRenderer.skinnedMotionVectors =
+                sourceRenderer.skinnedMotionVectors;
+            EditorUtility.SetDirty(targetRenderer);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(
+                targetRenderer);
+        }
+
+        private static Transform MapRequiredTransform(
+            Transform sourceRoot,
+            Transform targetRoot,
+            Transform sourceTransform,
+            string label)
+        {
+            string path = AnimationUtility.CalculateTransformPath(
+                sourceTransform,
+                sourceRoot);
+            Transform mapped = string.IsNullOrEmpty(path)
+                ? targetRoot
+                : targetRoot.Find(path);
+            if (mapped == null)
+            {
+                throw new InvalidOperationException(
+                    targetRoot.name + " has no matching " + label +
+                    " at " + path + ".");
+            }
+
+            return mapped;
+        }
+
+        private static bool PrimaryPlayerMeshesMatch(
+            Transform source,
+            Transform target)
+        {
+            SkinnedMeshRenderer sourceRenderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(source);
+            SkinnedMeshRenderer targetRenderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(target);
+            string[] sourceBonePaths = sourceRenderer.bones
+                .Select(bone => AnimationUtility.CalculateTransformPath(
+                    bone,
+                    source))
+                .ToArray();
+            string[] targetBonePaths = targetRenderer.bones
+                .Select(bone => AnimationUtility.CalculateTransformPath(
+                    bone,
+                    target))
+                .ToArray();
+            string sourceRootBonePath = sourceRenderer.rootBone != null
+                ? AnimationUtility.CalculateTransformPath(
+                    sourceRenderer.rootBone,
+                    source)
+                : string.Empty;
+            string targetRootBonePath = targetRenderer.rootBone != null
+                ? AnimationUtility.CalculateTransformPath(
+                    targetRenderer.rootBone,
+                    target)
+                : string.Empty;
+            return sourceRenderer.sharedMesh == targetRenderer.sharedMesh &&
+                   sourceRenderer.sharedMaterials.SequenceEqual(
+                       targetRenderer.sharedMaterials) &&
+                   sourceBonePaths.SequenceEqual(
+                       targetBonePaths,
+                       StringComparer.Ordinal) &&
+                   string.Equals(
+                       sourceRootBonePath,
+                       targetRootBonePath,
+                       StringComparison.Ordinal);
+        }
+
+        private static bool StickInitialTransformMatchesCarry(
+            Transform carryTarget,
+            Transform target)
+        {
+            StickGripPlacement carry = DescribeExistingStickGrip(carryTarget);
+            StickGripPlacement candidate = DescribeExistingStickGrip(target);
+            Transform targetHand = FindRequired(target, RightHandPath);
+            return candidate.Instance.parent == targetHand &&
+                   Vector3.Distance(
+                       carry.Instance.localPosition,
+                       candidate.Instance.localPosition) <= 0.000001f &&
+                   Quaternion.Angle(
+                       carry.Instance.localRotation,
+                       candidate.Instance.localRotation) <= 0.0001f &&
+                   Vector3.Distance(
+                       carry.Instance.localScale,
+                       candidate.Instance.localScale) <= 0.000001f;
+        }
+
+        private static AnimationClip CreateOrUpdateStickThrowHeldAngleClip(
+            Transform template,
+            AnimationClip source,
+            string assetPath,
+            string clipName)
+        {
+            if (source.frameRate <= 0f)
+            {
+                throw new InvalidOperationException(
+                    clipName + " source has no usable frame rate.");
+            }
+
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = clipName + "HeldAngleBake";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                StickGripPlacement placement = DescribeExistingStickGrip(root);
+                Transform stick = placement.Instance;
+                Vector3 carryLocalPosition = stick.localPosition;
+                Quaternion carryLocalRotation = stick.localRotation;
+                Vector3 carryLocalScale = stick.localScale;
+                int totalIntervals = Mathf.Max(
+                    1,
+                    Mathf.CeilToInt(
+                        source.length * StickThrowWeaponCurveSampleRate));
+                TransformCurveTrack stickTrack = new TransformCurveTrack(
+                    RightHandPath + "/" + StickInstanceName);
+                for (int frame = 0; frame <= totalIntervals; frame++)
+                {
+                    float time = Mathf.Min(
+                        source.length,
+                        frame / StickThrowWeaponCurveSampleRate);
+                    source.SampleAnimation(workObject, time);
+                    stick.localPosition = carryLocalPosition;
+                    stick.localRotation = carryLocalRotation;
+                    stick.localScale = carryLocalScale;
+                    AlignStickToThrowDirection(root, placement);
+                    stickTrack.Add(time, stick);
+                }
+
+                AnimationClip generated = new AnimationClip();
+                EditorUtility.CopySerialized(source, generated);
+                generated.name = clipName;
+                generated.frameRate = source.frameRate;
+                generated.legacy = false;
+                SetTransformTrackCurves(generated, stickTrack);
+                generated.EnsureQuaternionContinuity();
+                AnimationClipSettings settings =
+                    AnimationUtility.GetAnimationClipSettings(source);
+                settings.startTime = 0f;
+                settings.stopTime = source.length;
+                settings.loopTime = true;
+                settings.loopBlend = false;
+                AnimationUtility.SetAnimationClipSettings(generated, settings);
+                generated.wrapMode = WrapMode.Loop;
+
+                AnimationClip existing =
+                    AssetDatabase.LoadAssetAtPath<AnimationClip>(assetPath);
+                if (existing == null)
+                {
+                    AssetDatabase.CreateAsset(generated, assetPath);
+                    existing = generated;
+                }
+                else
+                {
+                    EditorUtility.CopySerialized(generated, existing);
+                    UnityEngine.Object.DestroyImmediate(generated);
+                    existing.name = clipName;
+                    EditorUtility.SetDirty(existing);
+                }
+
+                AssetDatabase.SaveAssets();
+                return existing;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static Vector3 GetStickThrowHeldDirection(Transform root)
+        {
+            float radians =
+                StickThrowJavelinElevationDegrees * Mathf.Deg2Rad;
+            return (root.forward * Mathf.Cos(radians) +
+                    root.up * Mathf.Sin(radians)).normalized;
+        }
+
+        private static void AlignStickToThrowDirection(
+            Transform root,
+            StickGripPlacement placement)
+        {
+            Transform stick = placement.Instance;
+            Vector3 gripPoint = stick.TransformPoint(
+                placement.LocalGripPoint);
+            Vector3 currentAxis = stick.TransformDirection(
+                placement.LongLocalAxis).normalized;
+            stick.rotation = Quaternion.FromToRotation(
+                currentAxis,
+                GetStickThrowHeldDirection(root)) * stick.rotation;
+            stick.position += gripPoint -
+                stick.TransformPoint(placement.LocalGripPoint);
+        }
+
+        private static AnimationClip CreateOrUpdateStickThrowReleaseClip(
+            Transform template,
+            AnimationClip source,
+            out int releaseFrame,
+            out float launchSpeed,
+            out float flightDuration,
+            out float landingTime,
+            out float apexTimeAfterRelease,
+            out float apexHeightAboveRelease)
+        {
+            if (source.frameRate <= 0f)
+            {
+                throw new InvalidOperationException(
+                    "Hands_Throw_Release source has no usable frame rate.");
+            }
+
+            releaseFrame = FindStickThrowReleaseFrame(template, source);
+            float releaseTime = releaseFrame / source.frameRate;
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "StickThrowReleaseTrajectoryBake";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                StickGripPlacement placement = DescribeExistingStickGrip(root);
+                Transform stick = placement.Instance;
+                Vector3 carryLocalPosition = stick.localPosition;
+                Quaternion carryLocalRotation = stick.localRotation;
+                Vector3 carryLocalScale = stick.localScale;
+
+                source.SampleAnimation(workObject, releaseTime);
+                stick.localPosition = carryLocalPosition;
+                stick.localRotation = carryLocalRotation;
+                stick.localScale = carryLocalScale;
+                AlignStickToThrowDirection(root, placement);
+                Vector3 releaseStickPosition = stick.position;
+                Quaternion releaseStickRotation = stick.rotation;
+                Vector3 releaseStickAxis = stick.TransformDirection(
+                    placement.LongLocalAxis).normalized;
+                Vector3 releaseForward = root.forward.normalized;
+                Vector3 releaseUp = root.up.normalized;
+                Vector3 releaseGroundPoint = root.position;
+                float releaseBottomHeight = Vector3.Dot(
+                        releaseStickPosition - releaseGroundPoint,
+                        releaseUp) +
+                    CalculateVisibleBottomOffset(stick, releaseUp);
+                if (releaseBottomHeight <= 0.0001f)
+                {
+                    throw new InvalidOperationException(
+                        "Stick_Throw_Release pre-throw stick is not above the floor at release.");
+                }
+
+                flightDuration = SolveStickThrowPhysicsFlightDuration(
+                    stick,
+                    releaseStickPosition,
+                    releaseStickRotation,
+                    releaseStickAxis,
+                    releaseForward,
+                    releaseUp,
+                    releaseGroundPoint,
+                    source.length - releaseTime);
+                landingTime = releaseTime + flightDuration;
+                if (landingTime > source.length + 0.0001f)
+                {
+                    throw new InvalidOperationException(
+                        "Hands_Throw_Release ends before the 4.5m ballistic stick can land.");
+                }
+
+                float elevationRadians =
+                    StickThrowJavelinElevationDegrees * Mathf.Deg2Rad;
+                float horizontalSpeed =
+                    StickThrowFlightDistanceMeters / flightDuration;
+                float verticalSpeed =
+                    horizontalSpeed * Mathf.Tan(elevationRadians);
+                launchSpeed = Mathf.Sqrt(
+                    horizontalSpeed * horizontalSpeed +
+                    verticalSpeed * verticalSpeed);
+                Vector3 launchVelocity =
+                    releaseForward * horizontalSpeed +
+                    releaseUp * verticalSpeed;
+                apexTimeAfterRelease =
+                    verticalSpeed /
+                    StickThrowGravityMetersPerSecondSquared;
+                apexHeightAboveRelease =
+                    verticalSpeed * verticalSpeed /
+                    (2f * StickThrowGravityMetersPerSecondSquared);
+                if (apexTimeAfterRelease <= 0f ||
+                    apexTimeAfterRelease >= flightDuration)
+                {
+                    throw new InvalidOperationException(
+                        "Stick_Throw_Release physical arc has no visible apex before landing.");
+                }
+
+                int totalIntervals = Mathf.Max(
+                    1,
+                    Mathf.CeilToInt(
+                        source.length * StickThrowWeaponCurveSampleRate));
+                List<float> sampleTimes = Enumerable.Range(
+                        0,
+                        totalIntervals + 1)
+                    .Select(frame => Mathf.Min(
+                        source.length,
+                        frame / StickThrowWeaponCurveSampleRate))
+                    .Concat(new[]
+                    {
+                        releaseTime,
+                        releaseTime + apexTimeAfterRelease,
+                        landingTime,
+                        source.length
+                    })
+                    .OrderBy(time => time)
+                    .Aggregate(
+                        new List<float>(),
+                        (times, time) =>
+                        {
+                            if (times.Count == 0 ||
+                                Mathf.Abs(times[times.Count - 1] - time) >
+                                0.000001f)
+                            {
+                                times.Add(time);
+                            }
+
+                            return times;
+                        });
+                TransformCurveTrack stickTrack = new TransformCurveTrack(
+                    RightHandPath + "/" + StickInstanceName);
+                foreach (float time in sampleTimes)
+                {
+                    source.SampleAnimation(workObject, time);
+                    stick.localPosition = carryLocalPosition;
+                    stick.localRotation = carryLocalRotation;
+                    stick.localScale = carryLocalScale;
+                    if (time <= releaseTime)
+                    {
+                        AlignStickToThrowDirection(root, placement);
+                    }
+                    else
+                    {
+                        float elapsed = Mathf.Min(
+                            time - releaseTime,
+                            flightDuration);
+                        Vector3 velocity = launchVelocity -
+                            releaseUp *
+                            (StickThrowGravityMetersPerSecondSquared *
+                             elapsed);
+                        stick.rotation = Quaternion.FromToRotation(
+                            releaseStickAxis,
+                            velocity.normalized) * releaseStickRotation;
+                        stick.position = releaseStickPosition +
+                            launchVelocity * elapsed -
+                            releaseUp *
+                            (0.5f *
+                             StickThrowGravityMetersPerSecondSquared *
+                             elapsed * elapsed);
+                    }
+
+                    stickTrack.Add(time, stick);
+                }
+
+                AnimationClip generated = new AnimationClip();
+                EditorUtility.CopySerialized(source, generated);
+                generated.name = "Stick_Throw_Release";
+                generated.frameRate = source.frameRate;
+                generated.legacy = false;
+                SetTransformTrackCurves(generated, stickTrack);
+                generated.EnsureQuaternionContinuity();
+                AnimationClipSettings settings =
+                    AnimationUtility.GetAnimationClipSettings(source);
+                settings.startTime = 0f;
+                settings.stopTime = source.length;
+                settings.loopTime = true;
+                settings.loopBlend = false;
+                AnimationUtility.SetAnimationClipSettings(generated, settings);
+                generated.wrapMode = WrapMode.Loop;
+
+                AnimationClip existing =
+                    AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                        StickThrowReleaseClipPath);
+                if (existing == null)
+                {
+                    AssetDatabase.CreateAsset(
+                        generated,
+                        StickThrowReleaseClipPath);
+                    existing = generated;
+                }
+                else
+                {
+                    EditorUtility.CopySerialized(generated, existing);
+                    UnityEngine.Object.DestroyImmediate(generated);
+                    existing.name = "Stick_Throw_Release";
+                    EditorUtility.SetDirty(existing);
+                }
+
+                AssetDatabase.SaveAssets();
+                return existing;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static float SolveStickThrowPhysicsFlightDuration(
+            Transform stick,
+            Vector3 releasePosition,
+            Quaternion releaseRotation,
+            Vector3 releaseAxis,
+            Vector3 releaseForward,
+            Vector3 releaseUp,
+            Vector3 groundPoint,
+            float maximumDuration)
+        {
+            if (maximumDuration <= 0.01f)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Throw_Release has no time remaining for flight.");
+            }
+
+            const float minimumDuration = 0.01f;
+            float minimumBottomHeight =
+                EvaluateStickThrowLandingBottomHeight(
+                    stick,
+                    releasePosition,
+                    releaseRotation,
+                    releaseAxis,
+                    releaseForward,
+                    releaseUp,
+                    groundPoint,
+                    minimumDuration);
+            float maximumBottomHeight =
+                EvaluateStickThrowLandingBottomHeight(
+                    stick,
+                    releasePosition,
+                    releaseRotation,
+                    releaseAxis,
+                    releaseForward,
+                    releaseUp,
+                    groundPoint,
+                    maximumDuration);
+            if (minimumBottomHeight <= 0f || maximumBottomHeight > 0f)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Throw_Release cannot solve a 4.5m physical landing inside the unchanged clip duration.");
+            }
+
+            float lower = minimumDuration;
+            float upper = maximumDuration;
+            for (int iteration = 0; iteration < 64; iteration++)
+            {
+                float middle = (lower + upper) * 0.5f;
+                float bottomHeight = EvaluateStickThrowLandingBottomHeight(
+                    stick,
+                    releasePosition,
+                    releaseRotation,
+                    releaseAxis,
+                    releaseForward,
+                    releaseUp,
+                    groundPoint,
+                    middle);
+                if (bottomHeight > 0f)
+                {
+                    lower = middle;
+                }
+                else
+                {
+                    upper = middle;
+                }
+            }
+
+            return (lower + upper) * 0.5f;
+        }
+
+        private static float EvaluateStickThrowLandingBottomHeight(
+            Transform stick,
+            Vector3 releasePosition,
+            Quaternion releaseRotation,
+            Vector3 releaseAxis,
+            Vector3 releaseForward,
+            Vector3 releaseUp,
+            Vector3 groundPoint,
+            float flightDuration)
+        {
+            float elevationRadians =
+                StickThrowJavelinElevationDegrees * Mathf.Deg2Rad;
+            float horizontalSpeed =
+                StickThrowFlightDistanceMeters / flightDuration;
+            float verticalSpeed =
+                horizontalSpeed * Mathf.Tan(elevationRadians);
+            Vector3 landingVelocity =
+                releaseForward * horizontalSpeed +
+                releaseUp *
+                (verticalSpeed -
+                 StickThrowGravityMetersPerSecondSquared * flightDuration);
+            Quaternion savedRotation = stick.rotation;
+            stick.rotation = Quaternion.FromToRotation(
+                releaseAxis,
+                landingVelocity.normalized) * releaseRotation;
+            float bottomOffset = CalculateVisibleBottomOffset(
+                stick,
+                releaseUp);
+            stick.rotation = savedRotation;
+            float centerHeight = Vector3.Dot(
+                    releasePosition - groundPoint,
+                    releaseUp) +
+                verticalSpeed * flightDuration -
+                0.5f *
+                StickThrowGravityMetersPerSecondSquared *
+                flightDuration * flightDuration;
+            return centerHeight + bottomOffset;
+        }
+
+        private static int FindStickThrowReleaseFrame(
+            Transform template,
+            AnimationClip source)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "StickThrowReleaseFrameAnalysis";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                int frameIntervals = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(source.length * source.frameRate));
+                int selectedFrame = 0;
+                float maximumForwardReach = float.NegativeInfinity;
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = Mathf.Min(
+                        source.length,
+                        frame / source.frameRate);
+                    source.SampleAnimation(workObject, time);
+                    Transform shoulder = FindRequired(root, RightArmPath);
+                    Transform hand = FindRequired(root, RightHandPath);
+                    float forwardReach = Vector3.Dot(
+                        hand.position - shoulder.position,
+                        root.forward);
+                    if (forwardReach > maximumForwardReach)
+                    {
+                        maximumForwardReach = forwardReach;
+                        selectedFrame = frame;
+                    }
+                }
+
+                return selectedFrame;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static float CalculateVisibleBottomOffset(
+            Transform visibleRoot,
+            Vector3 worldUp)
+        {
+            float minimum = float.PositiveInfinity;
+            foreach (Renderer renderer in visibleRoot
+                         .GetComponentsInChildren<Renderer>(true)
+                         .Where(renderer => renderer.enabled))
+            {
+                Bounds bounds = renderer.bounds;
+                for (int x = -1; x <= 1; x += 2)
+                {
+                    for (int y = -1; y <= 1; y += 2)
+                    {
+                        for (int z = -1; z <= 1; z += 2)
+                        {
+                            Vector3 corner = bounds.center +
+                                Vector3.Scale(
+                                    bounds.extents,
+                                    new Vector3(x, y, z));
+                            minimum = Mathf.Min(
+                                minimum,
+                                Vector3.Dot(
+                                    corner - visibleRoot.position,
+                                    worldUp));
+                        }
+                    }
+                }
+            }
+
+            if (float.IsInfinity(minimum))
+            {
+                throw new InvalidOperationException(
+                    visibleRoot.name + " has no visible bounds.");
+            }
+
+            return minimum;
+        }
+
+        private static void MeasureStickThrowReleasePhysics(
+            Transform template,
+            AnimationClip clip,
+            int releaseFrame,
+            float launchSpeed,
+            float flightDuration,
+            out float measuredDistance,
+            out float maximumTrajectoryPositionError,
+            out float maximumVelocityAlignmentError,
+            out float landingBottomHeight)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "StickThrowReleaseTrajectoryMeasure";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                float releaseTime = releaseFrame / clip.frameRate;
+                float landingTime = Mathf.Min(
+                    clip.length,
+                    releaseTime + flightDuration);
+                clip.SampleAnimation(workObject, releaseTime);
+                StickGripPlacement placement = DescribeExistingStickGrip(root);
+                Vector3 releasePosition = placement.Instance.position;
+                Vector3 releaseForward = root.forward.normalized;
+                Vector3 releaseUp = root.up.normalized;
+                Vector3 launchVelocity =
+                    GetStickThrowHeldDirection(root) * launchSpeed;
+                maximumTrajectoryPositionError = 0f;
+                maximumVelocityAlignmentError = 0f;
+                int samples = Mathf.Max(
+                    1,
+                    Mathf.CeilToInt(
+                        flightDuration *
+                        StickThrowWeaponCurveSampleRate * 2f));
+                for (int sample = 0; sample <= samples; sample++)
+                {
+                    float time = Mathf.Lerp(
+                        releaseTime,
+                        landingTime,
+                        sample / (float)samples);
+                    float elapsed = time - releaseTime;
+                    clip.SampleAnimation(workObject, time);
+                    placement = DescribeExistingStickGrip(root);
+                    Vector3 expectedPosition = releasePosition +
+                        launchVelocity * elapsed -
+                        releaseUp *
+                        (0.5f *
+                         StickThrowGravityMetersPerSecondSquared *
+                         elapsed * elapsed);
+                    Vector3 expectedVelocity = launchVelocity -
+                        releaseUp *
+                        (StickThrowGravityMetersPerSecondSquared * elapsed);
+                    Vector3 actualAxis =
+                        placement.Instance.TransformDirection(
+                            placement.LongLocalAxis).normalized;
+                    maximumTrajectoryPositionError = Mathf.Max(
+                        maximumTrajectoryPositionError,
+                        Vector3.Distance(
+                            expectedPosition,
+                            placement.Instance.position));
+                    maximumVelocityAlignmentError = Mathf.Max(
+                        maximumVelocityAlignmentError,
+                        Vector3.Angle(
+                            actualAxis,
+                            expectedVelocity.normalized));
+                }
+
+                clip.SampleAnimation(workObject, landingTime);
+                placement = DescribeExistingStickGrip(root);
+                measuredDistance = Vector3.Dot(
+                    placement.Instance.position - releasePosition,
+                    releaseForward);
+                landingBottomHeight = Vector3.Dot(
+                        placement.Instance.position - root.position,
+                        releaseUp) +
+                    CalculateVisibleBottomOffset(
+                        placement.Instance,
+                        releaseUp);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static void MeasureStickThrowHeldAngle(
+            Transform template,
+            AnimationClip clip,
+            out float maximumAngleError)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "StickThrowHeldAngleMeasure";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                int samples = Mathf.Max(
+                    1,
+                    Mathf.CeilToInt(
+                        clip.length *
+                        StickThrowWeaponCurveSampleRate * 2f));
+                maximumAngleError = 0f;
+                for (int sample = 0; sample <= samples; sample++)
+                {
+                    float time = clip.length * sample / samples;
+                    clip.SampleAnimation(workObject, time);
+                    StickGripPlacement placement =
+                        DescribeExistingStickGrip(root);
+                    Vector3 axis = placement.Instance.TransformDirection(
+                        placement.LongLocalAxis).normalized;
+                    maximumAngleError = Mathf.Max(
+                        maximumAngleError,
+                        Vector3.Angle(
+                            axis,
+                            GetStickThrowHeldDirection(root)));
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static float MeasureStickThrowReleaseJavelinAngleError(
+                Transform template,
+                AnimationClip clip,
+                int releaseFrame)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "StickThrowReleaseJavelinAngleMeasure";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                float releaseTime = releaseFrame / clip.frameRate;
+                clip.SampleAnimation(workObject, releaseTime);
+                StickGripPlacement placement = DescribeExistingStickGrip(
+                    workObject.transform);
+                Vector3 axis = placement.Instance.TransformDirection(
+                    placement.LongLocalAxis).normalized;
+                return Vector3.Angle(
+                    axis,
+                    GetStickThrowHeldDirection(workObject.transform));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
         private static AnimationClip CreateOrUpdateAnimationClipCopy(
             AnimationClip source,
             string path,
@@ -7124,6 +15567,1429 @@ namespace Bellerophon.Editor
 
             AssetDatabase.SaveAssets();
             return copy;
+        }
+
+        private static AnimationClip CreateOrUpdateStickAttackForwardTrimmedClip(
+            Transform template,
+            AnimationClip source)
+        {
+            if (Mathf.Abs(source.frameRate - StickAttackForwardFrameRate) >
+                0.0001f)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward trim requires the exact 30fps source Take.");
+            }
+
+            AnimationClip generated = new AnimationClip();
+            EditorUtility.CopySerialized(source, generated);
+            generated.name = "Stick_Attack_Forward_TrimmedWithStickMotion";
+            generated.frameRate = source.frameRate;
+            generated.wrapMode = WrapMode.Loop;
+            generated.legacy = false;
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetCurveBindings(source))
+            {
+                AnimationCurve sourceCurve = AnimationUtility.GetEditorCurve(
+                    source,
+                    binding);
+                AnimationCurve trimmedCurve =
+                    CreateExactSourceCurveThroughStop(
+                        sourceCurve,
+                        StickAttackForwardStopTime,
+                        source.name + ":" + binding.path + ":" +
+                        binding.propertyName);
+                AnimationUtility.SetEditorCurve(
+                    generated,
+                    binding,
+                    trimmedCurve);
+            }
+
+            foreach (EditorCurveBinding binding in AnimationUtility
+                         .GetObjectReferenceCurveBindings(source))
+            {
+                ObjectReferenceKeyframe[] keys = AnimationUtility
+                    .GetObjectReferenceCurve(source, binding)
+                    .Where(key =>
+                        key.time <= StickAttackForwardStopTime + 0.0001f)
+                    .ToArray();
+                AnimationUtility.SetObjectReferenceCurve(
+                    generated,
+                    binding,
+                    keys);
+            }
+
+            AnimationUtility.SetAnimationEvents(
+                generated,
+                AnimationUtility.GetAnimationEvents(source)
+                    .Where(animationEvent =>
+                        animationEvent.time <=
+                        StickAttackForwardStopTime + 0.0001f)
+                    .ToArray());
+            TransformCurveTrack stickRotation =
+                CreateStickAttackForwardRotationTrack(
+                    template,
+                    source,
+                    out _);
+            SetRotationTrackCurves(generated, stickRotation);
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(source);
+            settings.startTime = 0f;
+            settings.stopTime = StickAttackForwardStopTime;
+            settings.loopTime = true;
+            settings.loopBlend = false;
+            AnimationUtility.SetAnimationClipSettings(generated, settings);
+
+            AnimationClip existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                StickAttackForwardTrimmedClipPath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(
+                    generated,
+                    StickAttackForwardTrimmedClipPath);
+                existing = generated;
+            }
+            else
+            {
+                EditorUtility.CopySerialized(generated, existing);
+                UnityEngine.Object.DestroyImmediate(generated);
+                existing.name =
+                    "Stick_Attack_Forward_TrimmedWithStickMotion";
+                EditorUtility.SetDirty(existing);
+            }
+
+            AssetDatabase.SaveAssets();
+            return existing;
+        }
+
+        private static AnimationClip CreateOrUpdateStickAttackForwardAttackingClip(
+            Transform template,
+            AnimationClip source,
+            out StickAttackForwardGifWeaponTimeMapping mapping)
+        {
+            AnimationClip existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                StickAttackForwardAttackingClipPath) ??
+                throw new FileNotFoundException(
+                    "The fixed-duration Stick_Attack_Forward generated clip is missing.",
+                    StickAttackForwardAttackingClipPath);
+            float totalDuration = existing.length;
+            if (Mathf.Abs(
+                    totalDuration - source.length -
+                    StickAttackForwardAttackingEndHoldSeconds) > 0.0001f)
+            {
+                throw new InvalidOperationException(
+                    "The existing Stick_Attack_Forward duration no longer equals its exact source plus the fixed hold.");
+            }
+
+            AnimationClip generated = new AnimationClip();
+            EditorUtility.CopySerialized(source, generated);
+            generated.name =
+                "Stick_Attack_Forward_AttackingWithStickMotion";
+            generated.frameRate = source.frameRate;
+            generated.wrapMode = WrapMode.Loop;
+            generated.legacy = false;
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetCurveBindings(source))
+            {
+                AnimationCurve sourceCurve = AnimationUtility.GetEditorCurve(
+                    source,
+                    binding);
+                AnimationCurve heldCurve =
+                    CreateExactSourceCurveWithFinalHold(
+                        sourceCurve,
+                        source.length,
+                        totalDuration,
+                        source.name + ":" + binding.path + ":" +
+                        binding.propertyName);
+                AnimationUtility.SetEditorCurve(
+                    generated,
+                    binding,
+                    heldCurve);
+            }
+
+            foreach (EditorCurveBinding binding in AnimationUtility
+                         .GetObjectReferenceCurveBindings(source))
+            {
+                AnimationUtility.SetObjectReferenceCurve(
+                    generated,
+                    binding,
+                    AnimationUtility.GetObjectReferenceCurve(
+                        source,
+                        binding));
+            }
+
+            AnimationUtility.SetAnimationEvents(
+                generated,
+                AnimationUtility.GetAnimationEvents(source));
+            TransformCurveTrack stickTrack =
+                CreateStickAttackForwardGifWeaponTrack(
+                    template,
+                    source,
+                    totalDuration,
+                    out mapping);
+            SetTransformTrackCurves(generated, stickTrack);
+            generated.EnsureQuaternionContinuity();
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(source);
+            settings.startTime = 0f;
+            settings.stopTime = totalDuration;
+            settings.loopTime = true;
+            settings.loopBlend = false;
+            AnimationUtility.SetAnimationClipSettings(generated, settings);
+
+            EditorUtility.CopySerialized(generated, existing);
+            UnityEngine.Object.DestroyImmediate(generated);
+            existing.name =
+                "Stick_Attack_Forward_AttackingWithStickMotion";
+            EditorUtility.SetDirty(existing);
+
+            AssetDatabase.SaveAssets();
+            return existing;
+        }
+
+        private static AnimationCurve CreateExactSourceCurveWithFinalHold(
+            AnimationCurve source,
+            float sourceDuration,
+            float totalDuration,
+            string label)
+        {
+            Keyframe[] sourceKeys = source.keys;
+            if (sourceKeys.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Stick attacking source curve has no keys: " + label + ".");
+            }
+
+            List<Keyframe> keys = sourceKeys
+                .OrderBy(key => key.time)
+                .ToList();
+            int sourceEndIndex = keys.FindLastIndex(key =>
+                Mathf.Abs(key.time - sourceDuration) <= 0.0001f);
+            bool constant = sourceKeys.Length <= 1 ||
+                sourceKeys.All(key =>
+                    Mathf.Abs(key.value - sourceKeys[0].value) <=
+                    0.000001f &&
+                    Mathf.Abs(key.inTangent) <= 0.000001f &&
+                    Mathf.Abs(key.outTangent) <= 0.000001f);
+            if (sourceEndIndex < 0 && !constant)
+            {
+                throw new InvalidOperationException(
+                    "The exact attacking source has no final key for " +
+                    label + "; no final body pose will be inferred.");
+            }
+
+            if (sourceEndIndex < 0)
+            {
+                keys.Add(new Keyframe(
+                    sourceDuration,
+                    source.Evaluate(sourceDuration),
+                    0f,
+                    0f));
+                sourceEndIndex = keys.Count - 1;
+            }
+
+            Keyframe sourceEnd = keys[sourceEndIndex];
+            sourceEnd.outTangent = 0f;
+            sourceEnd.outWeight = 0f;
+            sourceEnd.weightedMode = RemoveOutgoingWeight(
+                sourceEnd.weightedMode);
+            keys[sourceEndIndex] = sourceEnd;
+            keys.Add(new Keyframe(
+                totalDuration,
+                sourceEnd.value,
+                0f,
+                0f));
+            AnimationCurve result = new AnimationCurve(
+                keys.OrderBy(key => key.time).ToArray())
+            {
+                preWrapMode = source.preWrapMode,
+                postWrapMode = source.postWrapMode
+            };
+            return result;
+        }
+
+        private static WeightedMode RemoveOutgoingWeight(WeightedMode mode)
+        {
+            if (mode == WeightedMode.Both)
+            {
+                return WeightedMode.In;
+            }
+
+            return mode == WeightedMode.Out
+                ? WeightedMode.None
+                : mode;
+        }
+
+        private static TransformCurveTrack
+            CreateStickAttackForwardGifWeaponTrack(
+                Transform template,
+                AnimationClip source,
+                float totalDuration,
+                out StickAttackForwardGifWeaponTimeMapping mapping)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "StickAttackForwardGifWeaponBake";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                StickGripPlacement placement = DescribeExistingStickGrip(root);
+                Transform stick = placement.Instance;
+                Vector3 carryLocalPosition = stick.localPosition;
+                Quaternion carryLocalRotation = stick.localRotation;
+                mapping = AnalyzeStickAttackForwardGifWeaponTimeMapping(
+                    workObject,
+                    source,
+                    totalDuration);
+                TransformCurveTrack track = new TransformCurveTrack(
+                    RightHandPath + "/" + StickInstanceName);
+                bool hasPreviousDirection = false;
+                Vector3 previousDirection = Vector3.zero;
+                Quaternion previousWorldRotation = Quaternion.identity;
+                int totalIntervals = mapping.CurrentImpactHoldEndFrame;
+                for (int frame = 0; frame <= totalIntervals; frame++)
+                {
+                    float time = Mathf.Min(
+                        totalDuration,
+                        frame / source.frameRate);
+                    source.SampleAnimation(
+                        workObject,
+                        Mathf.Min(source.length, time));
+                    stick.localPosition = carryLocalPosition;
+                    stick.localRotation = carryLocalRotation;
+                    float referenceFrame =
+                        MapCurrentFrameToGifWeaponReferenceFrame(
+                            frame,
+                            mapping);
+                    float angleDegrees =
+                        EvaluateStickAttackForwardGifWeaponAngle(
+                            referenceFrame);
+                    Vector3 desiredDirection =
+                        (Quaternion.AngleAxis(angleDegrees, root.right) *
+                         root.up).normalized;
+                    Vector3 currentDirection = stick.TransformDirection(
+                        placement.LongLocalAxis).normalized;
+                    if (!hasPreviousDirection)
+                    {
+                        stick.rotation = Quaternion.FromToRotation(
+                            currentDirection,
+                            desiredDirection) * stick.rotation;
+                    }
+                    else
+                    {
+                        stick.rotation = Quaternion.FromToRotation(
+                            previousDirection,
+                            desiredDirection) * previousWorldRotation;
+                    }
+
+                    Vector3 rightPalm = CalculateRightPalmSample(root).Center;
+                    Vector3 gripOffset =
+                        stick.TransformPoint(placement.LocalGripPoint) -
+                        stick.position;
+                    stick.position = rightPalm - gripOffset;
+                    track.Add(time, stick);
+                    previousDirection = desiredDirection;
+                    previousWorldRotation = stick.rotation;
+                    hasPreviousDirection = true;
+                }
+
+                return track;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static StickAttackForwardGifWeaponTimeMapping
+            AnalyzeStickAttackForwardGifWeaponTimeMapping(
+                GameObject workObject,
+                AnimationClip source,
+                float totalDuration)
+        {
+            Transform root = workObject.transform;
+            Transform rightHand = FindRequired(root, RightHandPath);
+            int sourceIntervals = Mathf.RoundToInt(
+                source.length * source.frameRate);
+            float[] heights = new float[sourceIntervals + 1];
+            int raiseEndFrame = 0;
+            float highestHeight = float.NegativeInfinity;
+            for (int frame = 0; frame <= sourceIntervals; frame++)
+            {
+                source.SampleAnimation(
+                    workObject,
+                    Mathf.Min(source.length, frame / source.frameRate));
+                float height = Vector3.Dot(
+                    rightHand.position - root.position,
+                    root.up);
+                heights[frame] = height;
+                if (height >= highestHeight)
+                {
+                    highestHeight = height;
+                    raiseEndFrame = frame;
+                }
+            }
+
+            int peakDescentFrame = raiseEndFrame + 1;
+            float peakDescent = float.NegativeInfinity;
+            float[] descents = new float[sourceIntervals + 1];
+            for (int frame = 1; frame <= sourceIntervals; frame++)
+            {
+                descents[frame] = heights[frame - 1] - heights[frame];
+                if (frame > raiseEndFrame &&
+                    descents[frame] > peakDescent)
+                {
+                    peakDescent = descents[frame];
+                    peakDescentFrame = frame;
+                }
+            }
+
+            if (raiseEndFrame <= 0 ||
+                peakDescentFrame <= raiseEndFrame ||
+                peakDescent <= 0f)
+            {
+                throw new InvalidOperationException(
+                    "The fixed Stick_Attack_Forward source has no analyzable raise and strike timing.");
+            }
+
+            int strikeSearchStart = Mathf.Max(
+                raiseEndFrame + 1,
+                peakDescentFrame - Mathf.RoundToInt(
+                    source.frameRate * 0.4f));
+            int strikeStartFrame = peakDescentFrame;
+            float strikeThreshold = peakDescent * 0.1f;
+            for (int frame = strikeSearchStart;
+                 frame <= peakDescentFrame;
+                 frame++)
+            {
+                if (descents[frame] >= strikeThreshold)
+                {
+                    strikeStartFrame = frame;
+                    break;
+                }
+            }
+
+            return new StickAttackForwardGifWeaponTimeMapping
+            {
+                CurrentRaiseEndFrame = raiseEndFrame,
+                CurrentStrikeStartFrame = strikeStartFrame,
+                CurrentImpactFrame = sourceIntervals,
+                CurrentImpactHoldEndFrame = Mathf.RoundToInt(
+                    totalDuration * source.frameRate)
+            };
+        }
+
+        private static float MapCurrentFrameToGifWeaponReferenceFrame(
+            int currentFrame,
+            StickAttackForwardGifWeaponTimeMapping mapping)
+        {
+            if (currentFrame <= mapping.CurrentRaiseEndFrame)
+            {
+                return Mathf.Lerp(
+                    0f,
+                    StickAttackForwardGifWeaponRaiseEndFrame,
+                    currentFrame /
+                    (float)mapping.CurrentRaiseEndFrame);
+            }
+
+            if (currentFrame <= mapping.CurrentStrikeStartFrame)
+            {
+                return Mathf.Lerp(
+                    StickAttackForwardGifWeaponRaiseEndFrame,
+                    StickAttackForwardGifWeaponStrikeStartFrame,
+                    (currentFrame - mapping.CurrentRaiseEndFrame) /
+                    (float)(mapping.CurrentStrikeStartFrame -
+                            mapping.CurrentRaiseEndFrame));
+            }
+
+            if (currentFrame <= mapping.CurrentImpactFrame)
+            {
+                return Mathf.Lerp(
+                    StickAttackForwardGifWeaponStrikeStartFrame,
+                    StickAttackForwardGifWeaponImpactFrame,
+                    (currentFrame - mapping.CurrentStrikeStartFrame) /
+                    (float)(mapping.CurrentImpactFrame -
+                            mapping.CurrentStrikeStartFrame));
+            }
+
+            return Mathf.Lerp(
+                StickAttackForwardGifWeaponImpactFrame,
+                StickAttackForwardGifWeaponImpactHoldEndFrame,
+                (currentFrame - mapping.CurrentImpactFrame) /
+                (float)(mapping.CurrentImpactHoldEndFrame -
+                        mapping.CurrentImpactFrame));
+        }
+
+        private static float EvaluateStickAttackForwardGifWeaponAngle(
+            float referenceFrame)
+        {
+            if (referenceFrame <=
+                StickAttackForwardGifWeaponAngleKeys[0].Frame)
+            {
+                return StickAttackForwardGifWeaponAngleKeys[0]
+                    .DegreesFromVertical;
+            }
+
+            for (int index = 1;
+                 index < StickAttackForwardGifWeaponAngleKeys.Length;
+                 index++)
+            {
+                StickAttackForwardGifWeaponAngleKey previous =
+                    StickAttackForwardGifWeaponAngleKeys[index - 1];
+                StickAttackForwardGifWeaponAngleKey current =
+                    StickAttackForwardGifWeaponAngleKeys[index];
+                if (referenceFrame <= current.Frame)
+                {
+                    return Mathf.Lerp(
+                        previous.DegreesFromVertical,
+                        current.DegreesFromVertical,
+                        Mathf.InverseLerp(
+                            previous.Frame,
+                            current.Frame,
+                            referenceFrame));
+                }
+            }
+
+            return StickAttackForwardGifWeaponAngleKeys[
+                    StickAttackForwardGifWeaponAngleKeys.Length - 1]
+                .DegreesFromVertical;
+        }
+
+        private static void CreateStickAttackForwardLeftPalmRightTracks(
+            Transform template,
+            AnimationClip sourceClip,
+            float generatedDuration,
+            out TransformCurveTrack leftArmTrack,
+            out TransformCurveTrack leftForeArmTrack,
+            out TransformCurveTrack leftHandTrack)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "StickAttackForwardLeftPalmRightBake";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                leftArmTrack = new TransformCurveTrack(LeftArmPath);
+                leftForeArmTrack = new TransformCurveTrack(LeftForeArmPath);
+                leftHandTrack = new TransformCurveTrack(LeftHandPath);
+                int frameIntervals = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(
+                        generatedDuration * sourceClip.frameRate));
+                float previousUpperRoll = 0f;
+                float previousForeArmTwist = 0f;
+                bool hasPreviousSolution = false;
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = Mathf.Min(
+                        generatedDuration,
+                        frame / sourceClip.frameRate);
+                    sourceClip.SampleAnimation(
+                        workObject,
+                        Mathf.Min(sourceClip.length, time));
+                    Transform upper = FindRequired(root, LeftArmPath);
+                    Transform lower = FindRequired(root, LeftForeArmPath);
+                    Transform leftHand = FindRequired(root, LeftHandPath);
+                    Vector3 characterLeft = -root.right.normalized;
+                    Vector3 rightPalm = CalculateRightPalmSample(root).Center;
+                    Vector3 leftPalm = CalculateLeftPalmSample(root).Center;
+                    Vector3 requestedLeftPalm = rightPalm +
+                        characterLeft *
+                        StickAttackForwardLeftHandPalmContactOffsetMeters;
+                    Vector3 overlapTarget = leftHand.position +
+                        (requestedLeftPalm - leftPalm);
+                    float armLength =
+                        Vector3.Distance(upper.position, lower.position) +
+                        Vector3.Distance(lower.position, leftHand.position);
+                    Vector3 outwardElbowPole = upper.position +
+                        characterLeft * armLength;
+                    SolveTwoBoneIk(
+                        upper,
+                        lower,
+                        leftHand,
+                        overlapTarget,
+                        outwardElbowPole);
+                    AdjustLeftArmAndHandForNaturalPalmFacingCharacterRight(
+                        root,
+                        hasPreviousSolution,
+                        previousUpperRoll,
+                        previousForeArmTwist,
+                        out previousUpperRoll,
+                        out previousForeArmTwist);
+                    leftArmTrack.Add(
+                        time,
+                        FindRequired(root, LeftArmPath));
+                    leftForeArmTrack.Add(
+                        time,
+                        FindRequired(root, LeftForeArmPath));
+                    leftHandTrack.Add(
+                        time,
+                        FindRequired(root, LeftHandPath));
+                    hasPreviousSolution = true;
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static void AdjustLeftArmAndHandForNaturalPalmFacingCharacterRight(
+            Transform characterRoot,
+            bool hasPreviousSolution,
+            float previousUpperRollDegrees,
+            float previousForeArmTwistDegrees,
+            out float selectedUpperRollDegrees,
+            out float selectedForeArmTwistDegrees)
+        {
+            Transform upper = FindRequired(characterRoot, LeftArmPath);
+            Transform lower = FindRequired(characterRoot, LeftForeArmPath);
+            Transform hand = FindRequired(characterRoot, LeftHandPath);
+            Vector3 requestedHandPosition = hand.position;
+            Quaternion sourceUpperLocalRotation = upper.localRotation;
+            Quaternion sourceLowerLocalRotation = lower.localRotation;
+            Quaternion sourceHandLocalRotation = hand.localRotation;
+            Quaternion sourceUpperWorldRotation = upper.rotation;
+            Vector3 desiredPalmDirection = characterRoot.right.normalized;
+            Vector3 desiredElbowSide = -characterRoot.right.normalized;
+            Vector3 armSwivelAxis = requestedHandPosition - upper.position;
+            if (armSwivelAxis.sqrMagnitude < 0.0000001f)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward left arm has no usable natural shoulder-to-hand swivel axis.");
+            }
+
+            armSwivelAxis.Normalize();
+            float bestScore = float.PositiveInfinity;
+            Quaternion bestUpperLocalRotation = sourceUpperLocalRotation;
+            Quaternion bestLowerLocalRotation = sourceLowerLocalRotation;
+            Quaternion bestHandLocalRotation = sourceHandLocalRotation;
+            selectedUpperRollDegrees = 0f;
+            selectedForeArmTwistDegrees = 0f;
+            for (int upperSample = 0; upperSample <= 60; upperSample++)
+            {
+                float upperRollDegrees = -120f + upperSample * 4f;
+                upper.localRotation = sourceUpperLocalRotation;
+                lower.localRotation = sourceLowerLocalRotation;
+                hand.localRotation = sourceHandLocalRotation;
+                upper.rotation = Quaternion.AngleAxis(
+                    upperRollDegrees,
+                    armSwivelAxis) * sourceUpperWorldRotation;
+                Vector3 currentForeArmDirection =
+                    hand.position - lower.position;
+                Vector3 requestedForeArmDirection =
+                    requestedHandPosition - lower.position;
+                if (currentForeArmDirection.sqrMagnitude < 0.0000001f ||
+                    requestedForeArmDirection.sqrMagnitude < 0.0000001f)
+                {
+                    continue;
+                }
+
+                lower.rotation = Quaternion.FromToRotation(
+                    currentForeArmDirection,
+                    requestedForeArmDirection) * lower.rotation;
+                Vector3 foreArmAxis = hand.position - lower.position;
+                if (foreArmAxis.sqrMagnitude < 0.0000001f)
+                {
+                    continue;
+                }
+
+                foreArmAxis.Normalize();
+                float foreArmTwistDegrees = Mathf.Clamp(
+                    SignedProjectedAngle(
+                        hand.right,
+                        desiredPalmDirection,
+                        foreArmAxis),
+                    -120f,
+                    120f);
+                lower.rotation = Quaternion.AngleAxis(
+                    foreArmTwistDegrees,
+                    foreArmAxis) * lower.rotation;
+                float wristTwistDegrees = Mathf.Clamp(
+                    SignedProjectedAngle(
+                        hand.right,
+                        desiredPalmDirection,
+                        foreArmAxis),
+                    -15f,
+                    15f);
+                hand.rotation = Quaternion.AngleAxis(
+                    wristTwistDegrees,
+                    foreArmAxis) * hand.rotation;
+                float upperDifference = Quaternion.Angle(
+                    sourceUpperLocalRotation,
+                    upper.localRotation);
+                float lowerDifference = Quaternion.Angle(
+                    sourceLowerLocalRotation,
+                    lower.localRotation);
+                float handDifference = Quaternion.Angle(
+                    sourceHandLocalRotation,
+                    hand.localRotation);
+                float palmFacingDifference = Vector3.Angle(
+                    hand.right,
+                    desiredPalmDirection);
+                float elbowSideDistance = Vector3.Dot(
+                    lower.position - upper.position,
+                    desiredElbowSide);
+                if (elbowSideDistance <= 0f)
+                {
+                    continue;
+                }
+
+                float elbowSidePenalty = Mathf.Max(
+                    0f,
+                    0.08f - elbowSideDistance) * 2000f;
+                float continuityPenalty = hasPreviousSolution
+                    ? (Mathf.Abs(Mathf.DeltaAngle(
+                           previousUpperRollDegrees,
+                           upperRollDegrees)) +
+                       Mathf.Abs(Mathf.DeltaAngle(
+                           previousForeArmTwistDegrees,
+                           foreArmTwistDegrees))) * 1.5f
+                    : 0f;
+                float score = palmFacingDifference * 12f +
+                    Mathf.Max(
+                        upperDifference,
+                        Mathf.Max(lowerDifference, handDifference)) * 0.4f +
+                    (upperDifference + lowerDifference + handDifference) *
+                    0.1f + elbowSidePenalty + continuityPenalty;
+                if (score < bestScore)
+                {
+                    bestScore = score;
+                    bestUpperLocalRotation = upper.localRotation;
+                    bestLowerLocalRotation = lower.localRotation;
+                    bestHandLocalRotation = hand.localRotation;
+                    selectedUpperRollDegrees = upperRollDegrees;
+                    selectedForeArmTwistDegrees = foreArmTwistDegrees;
+                }
+            }
+
+            upper.localRotation = bestUpperLocalRotation;
+            lower.localRotation = bestLowerLocalRotation;
+            hand.localRotation = bestHandLocalRotation;
+            if (Vector3.Distance(hand.position, requestedHandPosition) > 0.0001f)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward natural left-arm correction moved the approved hand grip position.");
+            }
+        }
+
+        private static float SignedProjectedAngle(
+            Vector3 fromDirection,
+            Vector3 toDirection,
+            Vector3 axis)
+        {
+            Vector3 fromProjected = Vector3.ProjectOnPlane(
+                fromDirection,
+                axis);
+            Vector3 toProjected = Vector3.ProjectOnPlane(
+                toDirection,
+                axis);
+            if (fromProjected.sqrMagnitude < 0.0000001f ||
+                toProjected.sqrMagnitude < 0.0000001f)
+            {
+                return 0f;
+            }
+
+            return Vector3.SignedAngle(
+                fromProjected,
+                toProjected,
+                axis);
+        }
+
+        private static TransformCurveTrack
+            CreateStickAttackForwardAttackingCorrectionTracks(
+                Transform template,
+                AnimationClip source,
+                out TransformCurveTrack leftForeArmTrack,
+                out int finalAlignmentStartFrame,
+                out int peakForwardTiltFrame,
+                out int finalAlignmentCompleteFrame)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "StickAttackForwardAttackingStickBake";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                StickGripPlacement placement = DescribeExistingStickGrip(root);
+                Transform stick = placement.Instance;
+                Vector3 carryLocalPosition = stick.localPosition;
+                Quaternion carryLocalRotation = stick.localRotation;
+                int frameIntervals = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(source.length * source.frameRate));
+                finalAlignmentCompleteFrame = Mathf.Max(
+                    1,
+                    frameIntervals -
+                    StickAttackForwardAttackingFinalAlignmentLeadFrames);
+                finalAlignmentStartFrame =
+                    FindStickAttackForwardAttackingDescentStartFrame(
+                        workObject,
+                        source,
+                        finalAlignmentCompleteFrame);
+                peakForwardTiltFrame =
+                    FindStickAttackForwardAttackingPeakDescentFrame(
+                        workObject,
+                        source,
+                        finalAlignmentStartFrame,
+                        finalAlignmentCompleteFrame);
+                TransformCurveTrack track = new TransformCurveTrack(
+                    RightHandPath + "/" + StickInstanceName);
+                leftForeArmTrack = new TransformCurveTrack(LeftForeArmPath);
+                bool hasPreviousStickDirection = false;
+                Vector3 previousStickDirection = Vector3.zero;
+                Quaternion previousStickWorldRotation = Quaternion.identity;
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = Mathf.Min(
+                        source.length,
+                        frame / source.frameRate);
+                    source.SampleAnimation(workObject, time);
+                    RotateLeftForeArmForPalmFacingCharacterRight(root);
+                    Transform leftForeArm = FindRequired(
+                        root,
+                        LeftForeArmPath);
+                    leftForeArmTrack.Add(time, leftForeArm);
+                    stick.localPosition = carryLocalPosition;
+                    stick.localRotation = carryLocalRotation;
+                    Vector3 rightPalm = CalculateRightPalmSample(root).Center;
+                    Vector3 leftPalm = CalculateLeftPalmSample(root).Center;
+                    Vector3 finalDirection =
+                        (Quaternion.AngleAxis(
+                            StickAttackForwardAttackingFinalForwardTiltDegrees,
+                            root.right) * root.up).normalized;
+                    Vector3 peakDirection =
+                        (Quaternion.AngleAxis(
+                            StickAttackForwardAttackingPeakForwardTiltDegrees,
+                            root.right) * root.up).normalized;
+                    Vector3 handDirection = leftPalm - rightPalm;
+                    if (handDirection.sqrMagnitude < 0.000001f)
+                    {
+                        handDirection = finalDirection;
+                    }
+                    else
+                    {
+                        handDirection.Normalize();
+                    }
+
+                    Vector3 carryDirection = stick.TransformDirection(
+                        placement.LongLocalAxis).normalized;
+                    Vector3 continuityReference = hasPreviousStickDirection
+                        ? previousStickDirection
+                        : carryDirection;
+                    if (Vector3.Dot(handDirection, continuityReference) < 0f)
+                    {
+                        handDirection = -handDirection;
+                    }
+
+                    Vector3 desiredDirection;
+                    if (frame <= finalAlignmentStartFrame)
+                    {
+                        desiredDirection = handDirection;
+                    }
+                    else if (frame <= peakForwardTiltFrame)
+                    {
+                        float peakWeight = Mathf.SmoothStep(
+                            0f,
+                            1f,
+                            (frame - finalAlignmentStartFrame) /
+                            (float)(peakForwardTiltFrame -
+                                    finalAlignmentStartFrame));
+                        desiredDirection = Vector3.Slerp(
+                            handDirection,
+                            peakDirection,
+                            peakWeight).normalized;
+                    }
+                    else if (frame < finalAlignmentCompleteFrame)
+                    {
+                        float settleWeight = Mathf.SmoothStep(
+                            0f,
+                            1f,
+                            (frame - peakForwardTiltFrame) /
+                            (float)(finalAlignmentCompleteFrame -
+                                    peakForwardTiltFrame));
+                        desiredDirection = Vector3.Slerp(
+                            peakDirection,
+                            finalDirection,
+                            settleWeight).normalized;
+                    }
+                    else
+                    {
+                        desiredDirection = finalDirection;
+                    }
+                    if (!hasPreviousStickDirection)
+                    {
+                        stick.rotation = Quaternion.FromToRotation(
+                            carryDirection,
+                            desiredDirection) * stick.rotation;
+                    }
+                    else
+                    {
+                        stick.rotation = Quaternion.FromToRotation(
+                            previousStickDirection,
+                            desiredDirection) *
+                            previousStickWorldRotation;
+                    }
+
+                    Vector3 gripOffset =
+                        stick.TransformPoint(placement.LocalGripPoint) -
+                        stick.position;
+                    stick.position = rightPalm - gripOffset;
+                    track.Add(time, stick);
+                    previousStickDirection = desiredDirection;
+                    previousStickWorldRotation = stick.rotation;
+                    hasPreviousStickDirection = true;
+                }
+
+                float totalDuration = source.length +
+                    StickAttackForwardAttackingEndHoldSeconds;
+                track.Add(totalDuration, stick);
+                leftForeArmTrack.Add(
+                    totalDuration,
+                    FindRequired(root, LeftForeArmPath));
+                return track;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static int FindStickAttackForwardAttackingDescentStartFrame(
+            GameObject workObject,
+            AnimationClip source,
+            int finalAlignmentCompleteFrame)
+        {
+            Transform root = workObject.transform;
+            Transform rightHand = FindRequired(root, RightHandPath);
+            int highestFrame = 0;
+            float highestHeight = float.NegativeInfinity;
+            for (int frame = 0; frame <= finalAlignmentCompleteFrame; frame++)
+            {
+                source.SampleAnimation(
+                    workObject,
+                    Mathf.Min(source.length, frame / source.frameRate));
+                float height = Vector3.Dot(
+                    rightHand.position - root.position,
+                    root.up);
+                if (height >= highestHeight)
+                {
+                    highestHeight = height;
+                    highestFrame = frame;
+                }
+            }
+
+            if (highestFrame >= finalAlignmentCompleteFrame)
+            {
+                throw new InvalidOperationException(
+                    "The exact stick attacking Take has no right-hand descent before its final pose.");
+            }
+
+            return highestFrame;
+        }
+
+        private static int FindStickAttackForwardAttackingPeakDescentFrame(
+            GameObject workObject,
+            AnimationClip source,
+            int descentStartFrame,
+            int finalAlignmentCompleteFrame)
+        {
+            Transform root = workObject.transform;
+            Transform rightHand = FindRequired(root, RightHandPath);
+            source.SampleAnimation(
+                workObject,
+                descentStartFrame / source.frameRate);
+            float previousHeight = Vector3.Dot(
+                rightHand.position - root.position,
+                root.up);
+            int peakDescentFrame = descentStartFrame + 1;
+            float greatestFrameDescent = float.NegativeInfinity;
+            for (int frame = descentStartFrame + 1;
+                 frame < finalAlignmentCompleteFrame;
+                 frame++)
+            {
+                source.SampleAnimation(
+                    workObject,
+                    Mathf.Min(source.length, frame / source.frameRate));
+                float height = Vector3.Dot(
+                    rightHand.position - root.position,
+                    root.up);
+                float frameDescent = previousHeight - height;
+                if (frameDescent > greatestFrameDescent)
+                {
+                    greatestFrameDescent = frameDescent;
+                    peakDescentFrame = frame;
+                }
+
+                previousHeight = height;
+            }
+
+            if (peakDescentFrame <= descentStartFrame ||
+                peakDescentFrame >= finalAlignmentCompleteFrame)
+            {
+                throw new InvalidOperationException(
+                    "The exact stick attacking Take has no measurable peak downward-strike frame.");
+            }
+
+            int latestNaturalPeakFrame =
+                finalAlignmentCompleteFrame -
+                StickAttackForwardAttackingMinimumSettleFrames;
+            if (latestNaturalPeakFrame <= descentStartFrame)
+            {
+                throw new InvalidOperationException(
+                    "The exact stick attacking Take has no room for the approved natural 45-to-15-degree settle.");
+            }
+
+            return Mathf.Min(peakDescentFrame, latestNaturalPeakFrame);
+        }
+
+        private static float RotateLeftForeArmForPalmFacingCharacterRight(
+            Transform characterRoot)
+        {
+            Transform lower = FindRequired(characterRoot, LeftForeArmPath);
+            Transform hand = FindRequired(characterRoot, LeftHandPath);
+            Vector3 requestedHandPosition = hand.position;
+            Vector3 desiredPalmDirection = characterRoot.right.normalized;
+            Vector3 actualPalmDirection = hand.right.normalized;
+            Vector3 foreArmAxis = hand.position - lower.position;
+            if (foreArmAxis.sqrMagnitude < 0.0000001f)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward left forearm has no usable palm-right twist axis.");
+            }
+
+            foreArmAxis.Normalize();
+            Vector3 actualProjected = Vector3.ProjectOnPlane(
+                actualPalmDirection,
+                foreArmAxis);
+            Vector3 desiredProjected = Vector3.ProjectOnPlane(
+                desiredPalmDirection,
+                foreArmAxis);
+            if (actualProjected.sqrMagnitude < 0.0000001f ||
+                desiredProjected.sqrMagnitude < 0.0000001f)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward left forearm cannot project its palm toward character right.");
+            }
+
+            float foreArmTwistDegrees = Vector3.SignedAngle(
+                actualProjected,
+                desiredProjected,
+                foreArmAxis);
+            lower.rotation = Quaternion.AngleAxis(
+                foreArmTwistDegrees,
+                foreArmAxis) * lower.rotation;
+            return Vector3.Distance(hand.position, requestedHandPosition);
+        }
+
+        private static AnimationCurve CreateExactSourceCurveThroughStop(
+            AnimationCurve source,
+            float stopTime,
+            string label)
+        {
+            Keyframe[] sourceKeys = source.keys;
+            List<Keyframe> trimmed = sourceKeys
+                .Where(key => key.time <= stopTime + 0.0001f)
+                .OrderBy(key => key.time)
+                .ToList();
+            if (trimmed.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward source curve has no key before the approved stop: " +
+                    label + ".");
+            }
+
+            bool hasExactStopKey = trimmed.Any(key =>
+                Mathf.Abs(key.time - stopTime) <= 0.0001f);
+            bool constant = sourceKeys.Length <= 1 ||
+                sourceKeys.All(key =>
+                    Mathf.Abs(key.value - sourceKeys[0].value) <=
+                    0.000001f &&
+                    Mathf.Abs(key.inTangent) <= 0.000001f &&
+                    Mathf.Abs(key.outTangent) <= 0.000001f);
+            if (!hasExactStopKey && !constant)
+            {
+                throw new InvalidOperationException(
+                    "The approved trim point is not an existing exact source key for " +
+                    label + "; no body pose will be inferred.");
+            }
+
+            AnimationCurve result = new AnimationCurve(trimmed.ToArray())
+            {
+                preWrapMode = source.preWrapMode,
+                postWrapMode = source.postWrapMode
+            };
+            return result;
+        }
+
+        private static TransformCurveTrack CreateStickAttackForwardRotationTrack(
+            Transform template,
+            AnimationClip source,
+            out int descentStartFrame)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "StickAttackForwardStickMotionBake";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                Transform hand = FindRequired(root, RightHandPath);
+                StickGripPlacement placement = DescribeExistingStickGrip(root);
+                Transform stick = placement.Instance;
+                Quaternion carryLocalRotation = stick.localRotation;
+                descentStartFrame = FindStickAttackForwardDescentStartFrame(
+                    root,
+                    source);
+                TransformCurveTrack track = new TransformCurveTrack(
+                    RightHandPath + "/" + StickInstanceName);
+                for (int frame = 0;
+                     frame <= StickAttackForwardStopFrame;
+                     frame++)
+                {
+                    float time = frame / StickAttackForwardFrameRate;
+                    source.SampleAnimation(workObject, time);
+                    stick.localRotation = carryLocalRotation;
+                    if (frame > descentStartFrame &&
+                        frame < StickAttackForwardStopFrame)
+                    {
+                        float phase = (frame - descentStartFrame) /
+                            (float)(StickAttackForwardStopFrame -
+                                    descentStartFrame);
+                        float tiltDegrees =
+                            Mathf.Sin(phase * Mathf.PI) *
+                            StickAttackForwardPeakForwardTiltDegrees;
+                        Quaternion tiltedWorldRotation =
+                            Quaternion.AngleAxis(tiltDegrees, root.right) *
+                            stick.rotation;
+                        stick.localRotation =
+                            Quaternion.Inverse(hand.rotation) *
+                            tiltedWorldRotation;
+                    }
+
+                    track.Add(time, stick);
+                }
+
+                return track;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static int FindStickAttackForwardDescentStartFrame(
+            Transform root,
+            AnimationClip source)
+        {
+            Transform rightHand = FindRequired(root, RightHandPath);
+            int highestFrame = 0;
+            float highestHeight = float.NegativeInfinity;
+            for (int frame = 0;
+                 frame <= StickAttackForwardStopFrame;
+                 frame++)
+            {
+                float time = frame / StickAttackForwardFrameRate;
+                source.SampleAnimation(root.gameObject, time);
+                float height = Vector3.Dot(
+                    rightHand.position - root.position,
+                    root.up);
+                if (height >= highestHeight)
+                {
+                    highestHeight = height;
+                    highestFrame = frame;
+                }
+            }
+
+            if (highestFrame >= StickAttackForwardStopFrame - 1)
+            {
+                throw new InvalidOperationException(
+                    "The exact source has no measurable right-hand descent before the approved stop frame.");
+            }
+
+            return highestFrame;
+        }
+
+        private static AnimationClip CreateOrUpdateExactReversedClip(
+            AnimationClip source,
+            float sourceStartTime,
+            float duration,
+            string assetPath,
+            string clipName)
+        {
+            float sourceEndTime = sourceStartTime + duration;
+            if (sourceStartTime < -0.000001f ||
+                duration <= 0f ||
+                sourceEndTime > source.length + 0.0001f)
+            {
+                throw new InvalidOperationException(
+                    "The requested exact reverse segment is outside " +
+                    source.name + ".");
+            }
+
+            AnimationClip generated = new AnimationClip();
+            EditorUtility.CopySerialized(source, generated);
+            generated.name = clipName;
+            generated.frameRate = source.frameRate;
+            generated.wrapMode = WrapMode.Once;
+            generated.legacy = false;
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetCurveBindings(source))
+            {
+                AnimationCurve sourceCurve = AnimationUtility.GetEditorCurve(
+                    source,
+                    binding);
+                AnimationCurve reversed = CreateExactReversedCurveSegment(
+                    sourceCurve,
+                    sourceStartTime,
+                    duration,
+                    source.name + ":" + binding.path + ":" +
+                    binding.propertyName);
+                AnimationUtility.SetEditorCurve(generated, binding, reversed);
+            }
+
+            foreach (EditorCurveBinding binding in AnimationUtility
+                         .GetObjectReferenceCurveBindings(source))
+            {
+                ObjectReferenceKeyframe[] reversed =
+                    CreateExactReversedObjectCurveSegment(
+                        AnimationUtility.GetObjectReferenceCurve(source, binding),
+                        sourceStartTime,
+                        duration);
+                AnimationUtility.SetObjectReferenceCurve(
+                    generated,
+                    binding,
+                    reversed);
+            }
+
+            AnimationEvent[] reversedEvents = AnimationUtility
+                .GetAnimationEvents(source)
+                .Where(animationEvent =>
+                    animationEvent.time >= sourceStartTime - 0.0001f &&
+                    animationEvent.time <= sourceEndTime + 0.0001f)
+                .Select(animationEvent => new AnimationEvent
+                {
+                    time = duration -
+                        (animationEvent.time - sourceStartTime),
+                    functionName = animationEvent.functionName,
+                    stringParameter = animationEvent.stringParameter,
+                    floatParameter = animationEvent.floatParameter,
+                    intParameter = animationEvent.intParameter,
+                    objectReferenceParameter =
+                        animationEvent.objectReferenceParameter,
+                    messageOptions = animationEvent.messageOptions
+                })
+                .OrderBy(animationEvent => animationEvent.time)
+                .ToArray();
+            AnimationUtility.SetAnimationEvents(generated, reversedEvents);
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(source);
+            settings.startTime = 0f;
+            settings.stopTime = duration;
+            settings.loopTime = false;
+            settings.loopBlend = false;
+            AnimationUtility.SetAnimationClipSettings(generated, settings);
+
+            AnimationClip existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                assetPath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(generated, assetPath);
+                existing = generated;
+            }
+            else
+            {
+                EditorUtility.CopySerialized(generated, existing);
+                UnityEngine.Object.DestroyImmediate(generated);
+                existing.name = clipName;
+                EditorUtility.SetDirty(existing);
+            }
+
+            AssetDatabase.SaveAssets();
+            return existing;
+        }
+
+        private static AnimationCurve CreateExactReversedCurveSegment(
+            AnimationCurve source,
+            float sourceStartTime,
+            float duration,
+            string label)
+        {
+            float sourceEndTime = sourceStartTime + duration;
+            List<Keyframe> segment = source.keys
+                .Where(key =>
+                    key.time >= sourceStartTime - 0.0001f &&
+                    key.time <= sourceEndTime + 0.0001f)
+                .OrderBy(key => key.time)
+                .ToList();
+            EnsureExactReverseBoundaryKey(
+                source,
+                segment,
+                sourceStartTime,
+                label + " start");
+            EnsureExactReverseBoundaryKey(
+                source,
+                segment,
+                sourceEndTime,
+                label + " end");
+            Keyframe[] reversedKeys = segment
+                .Where(key =>
+                    key.time >= sourceStartTime - 0.0001f &&
+                    key.time <= sourceEndTime + 0.0001f)
+                .Select(sourceKey =>
+                {
+                    Keyframe reversed = sourceKey;
+                    reversed.time = duration -
+                        (sourceKey.time - sourceStartTime);
+                    reversed.inTangent = -sourceKey.outTangent;
+                    reversed.outTangent = -sourceKey.inTangent;
+                    reversed.inWeight = sourceKey.outWeight;
+                    reversed.outWeight = sourceKey.inWeight;
+                    reversed.weightedMode = ReverseWeightedMode(
+                        sourceKey.weightedMode);
+                    return reversed;
+                })
+                .OrderBy(key => key.time)
+                .ToArray();
+            AnimationCurve result = new AnimationCurve(reversedKeys)
+            {
+                preWrapMode = source.postWrapMode,
+                postWrapMode = source.preWrapMode
+            };
+            return result;
+        }
+
+        private static void EnsureExactReverseBoundaryKey(
+            AnimationCurve source,
+            ICollection<Keyframe> segment,
+            float boundaryTime,
+            string label)
+        {
+            if (segment.Any(key =>
+                    Mathf.Abs(key.time - boundaryTime) <= 0.0001f))
+            {
+                return;
+            }
+
+            Keyframe[] allKeys = source.keys;
+            bool constant = allKeys.Length <= 1 ||
+                allKeys.All(key =>
+                    Mathf.Abs(key.value - allKeys[0].value) <= 0.000001f &&
+                    Mathf.Abs(key.inTangent) <= 0.000001f &&
+                    Mathf.Abs(key.outTangent) <= 0.000001f);
+            if (!constant)
+            {
+                throw new InvalidOperationException(
+                    "Exact reverse requires an existing boundary key for " +
+                    label + "; no pose or tangent will be inferred.");
+            }
+
+            segment.Add(new Keyframe(
+                boundaryTime,
+                source.Evaluate(boundaryTime),
+                0f,
+                0f));
+        }
+
+        private static ObjectReferenceKeyframe[]
+            CreateExactReversedObjectCurveSegment(
+                IReadOnlyList<ObjectReferenceKeyframe> source,
+                float sourceStartTime,
+                float duration)
+        {
+            float sourceEndTime = sourceStartTime + duration;
+            return source
+                .Where(key =>
+                    key.time >= sourceStartTime - 0.0001f &&
+                    key.time <= sourceEndTime + 0.0001f)
+                .Select(key => new ObjectReferenceKeyframe
+                {
+                    time = duration - (key.time - sourceStartTime),
+                    value = key.value
+                })
+                .OrderBy(key => key.time)
+                .ToArray();
+        }
+
+        private static AnimatorController
+            CreateOrUpdateStickGripOneHandReverseController(
+                AnimationClip attackReverseClip,
+                AnimationClip transitionReverseClip,
+                AnimationClip carryReverseClip)
+        {
+            AnimatorController controller =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    StickGripOneHandControllerPath);
+            if (controller == null)
+            {
+                controller = AnimatorController.CreateAnimatorControllerAtPath(
+                    StickGripOneHandControllerPath);
+            }
+
+            while (controller.layers.Length > 1)
+            {
+                controller.RemoveLayer(controller.layers.Length - 1);
+            }
+
+            if (controller.layers.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Grip_OneHand controller must contain exactly one layer.");
+            }
+
+            controller.parameters = Array.Empty<AnimatorControllerParameter>();
+            foreach (BlendTree tree in AssetDatabase
+                         .LoadAllAssetsAtPath(StickGripOneHandControllerPath)
+                         .OfType<BlendTree>()
+                         .ToArray())
+            {
+                UnityEngine.Object.DestroyImmediate(tree, true);
+            }
+
+            AnimatorControllerLayer[] layers = controller.layers;
+            AnimatorStateMachine stateMachine = layers[0].stateMachine;
+            ClearStateMachine(stateMachine);
+            AnimatorState attackReverseState = stateMachine.AddState(
+                StickGripOneHandAttackReadyReverseStateName);
+            AnimatorState transitionReverseState = stateMachine.AddState(
+                StickGripOneHandTransitionReverseStateName);
+            AnimatorState carryReverseState = stateMachine.AddState(
+                StickGripOneHandCarryReverseStateName);
+            ConfigureStickGripTwoHandState(
+                attackReverseState,
+                attackReverseClip);
+            ConfigureStickGripTwoHandState(
+                transitionReverseState,
+                transitionReverseClip);
+            ConfigureStickGripTwoHandState(carryReverseState, carryReverseClip);
+            ConfigureStickGripTwoHandTransition(
+                attackReverseState.AddTransition(transitionReverseState),
+                1f);
+            ConfigureStickGripTwoHandTransition(
+                transitionReverseState.AddTransition(carryReverseState),
+                1f);
+            ConfigureStickGripTwoHandTransition(
+                carryReverseState.AddTransition(attackReverseState),
+                1f);
+            stateMachine.defaultState = attackReverseState;
+            layers[0].name = "Base Layer";
+            layers[0].avatarMask = null;
+            layers[0].blendingMode = AnimatorLayerBlendingMode.Override;
+            layers[0].defaultWeight = 1f;
+            controller.layers = layers;
+            EditorUtility.SetDirty(attackReverseState);
+            EditorUtility.SetDirty(transitionReverseState);
+            EditorUtility.SetDirty(carryReverseState);
+            EditorUtility.SetDirty(stateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
         }
 
         private static AnimationClip RequireDefaultLayerClip(
@@ -7319,7 +17185,27 @@ namespace Bellerophon.Editor
         private static RightHandPalmSample CalculateRightPalmSample(
             Transform target)
         {
-            Transform hand = FindRequired(target, RightHandPath);
+            return CalculateHandPalmSample(
+                target,
+                RightHandPath,
+                "RightHand");
+        }
+
+        private static RightHandPalmSample CalculateLeftPalmSample(
+            Transform target)
+        {
+            return CalculateHandPalmSample(
+                target,
+                LeftHandPath,
+                "LeftHand");
+        }
+
+        private static RightHandPalmSample CalculateHandPalmSample(
+            Transform target,
+            string handPath,
+            string handLabel)
+        {
+            Transform hand = FindRequired(target, handPath);
             Vector3 weightedPositionSum = Vector3.zero;
             float totalWeight = 0f;
             int weightedVertexCount = 0;
@@ -7334,19 +17220,19 @@ namespace Bellerophon.Editor
                 }
 
                 Transform[] bones = renderer.bones;
-                HashSet<int> rightHandBoneIndices = new HashSet<int>();
+                HashSet<int> handBoneIndices = new HashSet<int>();
                 for (int index = 0; index < bones.Length; index++)
                 {
                     Transform bone = bones[index];
                     if (bone != null &&
                         (bone == hand || bone.IsChildOf(hand)))
                     {
-                        rightHandBoneIndices.Add(index);
+                        handBoneIndices.Add(index);
                         weightedBones.Add(bone);
                     }
                 }
 
-                if (rightHandBoneIndices.Count == 0)
+                if (handBoneIndices.Count == 0)
                 {
                     continue;
                 }
@@ -7356,12 +17242,13 @@ namespace Bellerophon.Editor
                 {
                     throw new InvalidOperationException(
                         renderer.name +
-                        " has no readable per-vertex bone weights for the right hand.");
+                        " has no readable per-vertex bone weights for " +
+                        handLabel + ".");
                 }
 
                 Mesh bakedMesh = new Mesh
                 {
-                    name = renderer.name + "_RightHandPalmBake"
+                    name = renderer.name + "_" + handLabel + "PalmBake"
                 };
                 try
                 {
@@ -7376,18 +17263,18 @@ namespace Bellerophon.Editor
 
                     for (int index = 0; index < vertices.Length; index++)
                     {
-                        float rightHandWeight = BoneWeightForIndices(
+                        float handWeight = BoneWeightForIndices(
                             boneWeights[index],
-                            rightHandBoneIndices);
-                        if (rightHandWeight < RightHandVertexWeightThreshold)
+                            handBoneIndices);
+                        if (handWeight < RightHandVertexWeightThreshold)
                         {
                             continue;
                         }
 
                         Vector3 worldPosition = renderer.transform.TransformPoint(
                             vertices[index]);
-                        weightedPositionSum += worldPosition * rightHandWeight;
-                        totalWeight += rightHandWeight;
+                        weightedPositionSum += worldPosition * handWeight;
+                        totalWeight += handWeight;
                         weightedVertexCount++;
                     }
                 }
@@ -7400,7 +17287,9 @@ namespace Bellerophon.Editor
             if (weightedVertexCount == 0 || totalWeight <= 0f)
             {
                 throw new InvalidOperationException(
-                    "Stick_Carry has no visible vertices weighted to RightHand or its finger bones.");
+                    target.name +
+                    " has no visible vertices weighted to " +
+                    handLabel + " or its finger bones.");
             }
 
             return new RightHandPalmSample
@@ -7450,6 +17339,77 @@ namespace Bellerophon.Editor
                     MeasureArmaturePoseDifference(
                         CapturePose(sourceObject.transform),
                         CapturePose(copyObject.transform),
+                        out float positionDifference,
+                        out float rotationDifference);
+                    positionDifferenceMax = Mathf.Max(
+                        positionDifferenceMax,
+                        positionDifference);
+                    rotationDifferenceMax = Mathf.Max(
+                        rotationDifferenceMax,
+                        rotationDifference);
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+                UnityEngine.Object.DestroyImmediate(copyObject);
+            }
+        }
+
+        private static void MeasureAnimationClipPoseDifferenceIgnoringStick(
+            Transform template,
+            AnimationClip source,
+            AnimationClip copy,
+            out int framesSampled,
+            out float positionDifferenceMax,
+            out float rotationDifferenceMax)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject copyObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            copyObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            DisableAnimators(copyObject);
+            string stickPath = RightHandPath + "/" + StickInstanceName;
+            string[] bodyPaths = sourceObject
+                .GetComponentsInChildren<Transform>(true)
+                .Select(item => AnimationUtility.CalculateTransformPath(
+                    item,
+                    sourceObject.transform))
+                .Where(path =>
+                    (string.Equals(
+                         path,
+                         "Armature",
+                         StringComparison.Ordinal) ||
+                     path.StartsWith(
+                         "Armature/",
+                         StringComparison.Ordinal)) &&
+                    !string.Equals(
+                        path,
+                        stickPath,
+                        StringComparison.Ordinal) &&
+                    !path.StartsWith(
+                        stickPath + "/",
+                        StringComparison.Ordinal))
+                .ToArray();
+            try
+            {
+                framesSampled = Mathf.Max(
+                    4,
+                    Mathf.CeilToInt(source.length * source.frameRate));
+                positionDifferenceMax = 0f;
+                rotationDifferenceMax = 0f;
+                for (int frame = 0; frame < framesSampled; frame++)
+                {
+                    float phase = frame / (float)framesSampled;
+                    source.SampleAnimation(sourceObject, phase * source.length);
+                    copy.SampleAnimation(copyObject, phase * copy.length);
+                    MeasurePoseDifferenceForPaths(
+                        CapturePose(sourceObject.transform),
+                        CapturePose(copyObject.transform),
+                        bodyPaths,
                         out float positionDifference,
                         out float rotationDifference);
                     positionDifferenceMax = Mathf.Max(
@@ -15993,6 +25953,103 @@ namespace Bellerophon.Editor
             return existing;
         }
 
+        private static AnimatorController CreateOrUpdateStickGripTwoHandController(
+            AnimationClip carryClip,
+            AnimationClip transitionClip,
+            AnimationClip attackReadyClip)
+        {
+            AnimatorController controller =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    StickGripTwoHandControllerPath);
+            if (controller == null)
+            {
+                controller = AnimatorController.CreateAnimatorControllerAtPath(
+                    StickGripTwoHandControllerPath);
+            }
+
+            while (controller.layers.Length > 1)
+            {
+                controller.RemoveLayer(controller.layers.Length - 1);
+            }
+
+            if (controller.layers.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Grip_TwoHand controller must contain exactly one layer.");
+            }
+
+            controller.parameters = Array.Empty<AnimatorControllerParameter>();
+            foreach (BlendTree tree in AssetDatabase
+                         .LoadAllAssetsAtPath(StickGripTwoHandControllerPath)
+                         .OfType<BlendTree>()
+                         .ToArray())
+            {
+                UnityEngine.Object.DestroyImmediate(tree, true);
+            }
+
+            AnimatorControllerLayer[] layers = controller.layers;
+            AnimatorStateMachine stateMachine = layers[0].stateMachine;
+            ClearStateMachine(stateMachine);
+            AnimatorState carryState = stateMachine.AddState(
+                StickGripTwoHandCarryStateName);
+            AnimatorState transitionState = stateMachine.AddState(
+                StickGripTwoHandTransitionStateName);
+            AnimatorState attackReadyState = stateMachine.AddState(
+                StickGripTwoHandAttackReadyStateName);
+            ConfigureStickGripTwoHandState(carryState, carryClip);
+            ConfigureStickGripTwoHandState(transitionState, transitionClip);
+            ConfigureStickGripTwoHandState(attackReadyState, attackReadyClip);
+            ConfigureStickGripTwoHandTransition(
+                carryState.AddTransition(transitionState),
+                1f);
+            ConfigureStickGripTwoHandTransition(
+                transitionState.AddTransition(attackReadyState),
+                1f);
+            ConfigureStickGripTwoHandTransition(
+                attackReadyState.AddTransition(carryState),
+                StickGripTwoHandAttackReadyDurationSeconds /
+                    attackReadyClip.length);
+            stateMachine.defaultState = carryState;
+            layers[0].name = "Base Layer";
+            layers[0].avatarMask = null;
+            layers[0].blendingMode = AnimatorLayerBlendingMode.Override;
+            layers[0].defaultWeight = 1f;
+            controller.layers = layers;
+            EditorUtility.SetDirty(carryState);
+            EditorUtility.SetDirty(transitionState);
+            EditorUtility.SetDirty(attackReadyState);
+            EditorUtility.SetDirty(stateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static void ConfigureStickGripTwoHandState(
+            AnimatorState state,
+            AnimationClip clip)
+        {
+            state.motion = clip;
+            state.speed = 1f;
+            state.mirror = false;
+            state.cycleOffset = 0f;
+            state.writeDefaultValues = false;
+        }
+
+        private static void ConfigureStickGripTwoHandTransition(
+            AnimatorStateTransition transition,
+            float exitTime)
+        {
+            transition.hasExitTime = true;
+            transition.exitTime = exitTime;
+            transition.hasFixedDuration = true;
+            transition.duration = 0f;
+            transition.offset = 0f;
+            transition.interruptionSource = TransitionInterruptionSource.None;
+            transition.orderedInterruption = true;
+            transition.canTransitionToSelf = false;
+            EditorUtility.SetDirty(transition);
+        }
+
         private static AnimatorController CreateOrUpdateExactEmbeddedTakeController(
             string path,
             string stateName,
@@ -17902,6 +27959,104 @@ namespace Bellerophon.Editor
             return true;
         }
 
+        private static Dictionary<EditorCurveBinding, AnimationCurve>
+            CaptureTransformCurvesForPath(
+                AnimationClip clip,
+                string path)
+        {
+            Dictionary<EditorCurveBinding, AnimationCurve> curves =
+                new Dictionary<EditorCurveBinding, AnimationCurve>();
+            foreach (EditorCurveBinding binding in AnimationUtility
+                         .GetCurveBindings(clip)
+                         .Where(binding =>
+                             binding.type == typeof(Transform) &&
+                             string.Equals(
+                                 binding.path,
+                                 path,
+                                 StringComparison.Ordinal)))
+            {
+                AnimationCurve source = AnimationUtility.GetEditorCurve(
+                    clip,
+                    binding);
+                AnimationCurve copy = new AnimationCurve(source.keys)
+                {
+                    preWrapMode = source.preWrapMode,
+                    postWrapMode = source.postWrapMode
+                };
+                curves.Add(binding, copy);
+            }
+
+            return curves;
+        }
+
+        private static bool AnimationCurveDictionariesExact(
+            IReadOnlyDictionary<EditorCurveBinding, AnimationCurve> first,
+            IReadOnlyDictionary<EditorCurveBinding, AnimationCurve> second)
+        {
+            return first.Count == second.Count &&
+                first.All(item =>
+                    second.TryGetValue(
+                        item.Key,
+                        out AnimationCurve secondCurve) &&
+                    AnimationCurvesEqual(item.Value, secondCurve));
+        }
+
+        private static string HashAnimationCurves(
+            IReadOnlyDictionary<EditorCurveBinding, AnimationCurve> curves)
+        {
+            StringBuilder data = new StringBuilder();
+            foreach (KeyValuePair<EditorCurveBinding, AnimationCurve> item in
+                     curves.OrderBy(
+                         item => item.Key.path,
+                         StringComparer.Ordinal)
+                         .ThenBy(
+                             item => item.Key.propertyName,
+                             StringComparer.Ordinal)
+                         .ThenBy(
+                             item => item.Key.type.FullName,
+                             StringComparer.Ordinal))
+            {
+                EditorCurveBinding binding = item.Key;
+                AnimationCurve curve = item.Value;
+                data.Append(binding.path).Append('|')
+                    .Append(binding.propertyName).Append('|')
+                    .Append(binding.type.FullName).Append('|')
+                    .Append((int)curve.preWrapMode).Append('|')
+                    .Append((int)curve.postWrapMode).Append('|')
+                    .Append(curve.length).AppendLine();
+                foreach (Keyframe key in curve.keys)
+                {
+                    data.Append(key.time.ToString(
+                            "R",
+                            CultureInfo.InvariantCulture)).Append('|')
+                        .Append(key.value.ToString(
+                            "R",
+                            CultureInfo.InvariantCulture)).Append('|')
+                        .Append(key.inTangent.ToString(
+                            "R",
+                            CultureInfo.InvariantCulture)).Append('|')
+                        .Append(key.outTangent.ToString(
+                            "R",
+                            CultureInfo.InvariantCulture)).Append('|')
+                        .Append(key.inWeight.ToString(
+                            "R",
+                            CultureInfo.InvariantCulture)).Append('|')
+                        .Append(key.outWeight.ToString(
+                            "R",
+                            CultureInfo.InvariantCulture)).Append('|')
+                        .Append((int)key.weightedMode).AppendLine();
+                }
+            }
+
+            using (SHA256 sha = SHA256.Create())
+            {
+                return BitConverter.ToString(
+                        sha.ComputeHash(
+                            Encoding.UTF8.GetBytes(data.ToString())))
+                    .Replace("-", string.Empty);
+            }
+        }
+
         private static BakedArmClipResult CreateOrUpdateAdjustedArmClip(
             Transform template,
             AnimationClip emptyClip,
@@ -19457,6 +29612,8 @@ namespace Bellerophon.Editor
             float baseDuration,
             float armDuration)
         {
+            animator.Rebind();
+            animator.Update(0f);
             if (animator.layerCount != 2)
             {
                 throw new InvalidOperationException(
@@ -19465,8 +29622,6 @@ namespace Bellerophon.Editor
 
             int baseHash = Animator.StringToHash(AlignmentBaseStateName);
             int armHash = Animator.StringToHash(armStateName);
-            animator.Rebind();
-            animator.Update(0f);
             animator.SetLayerWeight(1, 1f);
             animator.Play(
                 baseHash,
@@ -19936,6 +30091,3965 @@ namespace Bellerophon.Editor
             }
         }
 
+        private static void MeasurePoseDifferenceForPaths(
+            PoseSnapshot first,
+            PoseSnapshot second,
+            IEnumerable<string> requestedPaths,
+            out float positionMax,
+            out float rotationMax)
+        {
+            positionMax = 0f;
+            rotationMax = 0f;
+            string[] paths = requestedPaths
+                .Distinct(StringComparer.Ordinal)
+                .ToArray();
+            if (paths.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "The exact embedded Mixamo Take has no Transform paths to compare.");
+            }
+
+            foreach (string path in paths)
+            {
+                if (!first.Positions.TryGetValue(path, out Vector3 firstPosition) ||
+                    !second.Positions.TryGetValue(path, out Vector3 secondPosition) ||
+                    !first.Rotations.TryGetValue(path, out Quaternion firstRotation) ||
+                    !second.Rotations.TryGetValue(path, out Quaternion secondRotation))
+                {
+                    throw new InvalidOperationException(
+                        "Stick_Grip_TwoHand comparison hierarchy differs at " +
+                        path + ".");
+                }
+
+                positionMax = Mathf.Max(
+                    positionMax,
+                    Vector3.Distance(firstPosition, secondPosition));
+                rotationMax = Mathf.Max(
+                    rotationMax,
+                    Quaternion.Angle(firstRotation, secondRotation));
+            }
+        }
+
+        private static void CaptureStickAttackForwardAttackingSourceDirectDiagnostic(
+            Transform template,
+            AnimationClip source)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            sourceObject.name = "StickAttackForwardAttackingSourceDiagnostic";
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            const int columns = 30;
+            int frameIntervals = Mathf.Max(
+                1,
+                Mathf.RoundToInt(source.length * source.frameRate));
+            int endCloseStart = Mathf.Max(
+                0,
+                frameIntervals - Mathf.RoundToInt(
+                    StickAttackForwardAttackingEndHoldSeconds *
+                    source.frameRate));
+            List<List<byte[]>> rows = new List<List<byte[]>>();
+            try
+            {
+                List<byte[]> fullFront = new List<byte[]>();
+                List<byte[]> fullSide = new List<byte[]>();
+                CaptureStickAttackForwardAttackingSourceFrames(
+                    sourceObject.transform,
+                    source,
+                    0,
+                    frameIntervals,
+                    false,
+                    fullFront,
+                    fullSide);
+                int pageCount = Mathf.CeilToInt(
+                    fullFront.Count / (float)columns);
+                for (int page = 0; page < pageCount; page++)
+                {
+                    int start = page * columns;
+                    rows.Add(CreatePaddedFrameRow(
+                        fullFront,
+                        start,
+                        columns));
+                    rows.Add(CreatePaddedFrameRow(
+                        fullSide,
+                        start,
+                        columns));
+                }
+
+                List<byte[]> closeFront = new List<byte[]>();
+                List<byte[]> closeSide = new List<byte[]>();
+                CaptureStickAttackForwardAttackingSourceFrames(
+                    sourceObject.transform,
+                    source,
+                    endCloseStart,
+                    frameIntervals,
+                    true,
+                    closeFront,
+                    closeSide);
+                rows.Add(CreatePaddedFrameRow(
+                    closeFront,
+                    0,
+                    columns));
+                rows.Add(CreatePaddedFrameRow(
+                    closeSide,
+                    0,
+                    columns));
+                ComposeScaledRows(
+                    rows,
+                    StickAttackForwardAttackingSourceDiagnosticPath,
+                    160,
+                    200);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+            }
+        }
+
+        private static void CaptureStickAttackForwardAttackingSourceFrames(
+            Transform subject,
+            AnimationClip source,
+            int startFrame,
+            int endFrame,
+            bool closeView,
+            ICollection<byte[]> frontFrames,
+            ICollection<byte[]> sideFrames)
+        {
+            using (CaptureEnvironment environment =
+                   new CaptureEnvironment(subject))
+            {
+                for (int frame = startFrame; frame <= endFrame; frame++)
+                {
+                    float time = Mathf.Min(
+                        source.length,
+                        frame / source.frameRate);
+                    source.SampleAnimation(subject.gameObject, time);
+                    if (closeView)
+                    {
+                        Transform rightHand = FindRequired(
+                            subject,
+                            RightHandPath);
+                        Transform leftHand = FindRequired(
+                            subject,
+                            LeftHandPath);
+                        Vector3 center =
+                            (rightHand.position + leftHand.position) * 0.5f;
+                        environment.ConfigureView(subject, center, 0.72f);
+                    }
+                    else
+                    {
+                        environment.ConfigureView(subject, 1.05f, 1.35f);
+                    }
+
+                    frontFrames.Add(environment.CaptureFront());
+                    sideFrames.Add(environment.CaptureSide());
+                }
+            }
+        }
+
+        private static void CaptureStickAttackForwardAttackingDirectReview()
+        {
+            Scene scene = RequireScene();
+            Transform target = RequireTarget(
+                RequireLayout(scene),
+                StickAttackForwardTargetName);
+            AnimationClip source = LoadSingleEmbeddedClip(
+                StickAttackForwardAttackingSourcePath,
+                "stick attacking");
+            AnimationClip generated = LoadClip(
+                StickAttackForwardAttackingClipPath);
+            int sourceIntervals = Mathf.RoundToInt(
+                source.length * source.frameRate);
+            int totalIntervals = Mathf.RoundToInt(
+                generated.length * generated.frameRate);
+            int closeStart = Mathf.Max(
+                0,
+                sourceIntervals - Mathf.RoundToInt(
+                    StickAttackForwardAttackingEndHoldSeconds *
+                    source.frameRate));
+            const int columns = 30;
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            GameObject appliedObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            sourceObject.name = "StickAttackForwardAttackingSourceReview";
+            appliedObject.name = "StickAttackForwardAttackingAppliedReview";
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            appliedObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            DisableAnimators(appliedObject);
+            List<List<byte[]>> rows = new List<List<byte[]>>();
+            try
+            {
+                List<byte[]> sourceFront = new List<byte[]>();
+                List<byte[]> sourceSide = new List<byte[]>();
+                List<byte[]> appliedFront = new List<byte[]>();
+                List<byte[]> appliedSide = new List<byte[]>();
+                CaptureStickAttackForwardAttackingSourceFrames(
+                    sourceObject.transform,
+                    source,
+                    0,
+                    sourceIntervals,
+                    false,
+                    sourceFront,
+                    sourceSide);
+                CaptureStickAttackForwardAttackingSourceFrames(
+                    appliedObject.transform,
+                    generated,
+                    0,
+                    sourceIntervals,
+                    false,
+                    appliedFront,
+                    appliedSide);
+                AppendExactComparisonRows(
+                    rows,
+                    sourceFront,
+                    appliedFront,
+                    sourceSide,
+                    appliedSide,
+                    columns);
+
+                List<byte[]> sourceCloseFront = new List<byte[]>();
+                List<byte[]> sourceCloseSide = new List<byte[]>();
+                List<byte[]> appliedCloseFront = new List<byte[]>();
+                List<byte[]> appliedCloseSide = new List<byte[]>();
+                CaptureStickAttackForwardAttackingSourceFrames(
+                    sourceObject.transform,
+                    source,
+                    closeStart,
+                    sourceIntervals,
+                    true,
+                    sourceCloseFront,
+                    sourceCloseSide);
+                CaptureStickAttackForwardAttackingSourceFrames(
+                    appliedObject.transform,
+                    generated,
+                    closeStart,
+                    sourceIntervals,
+                    true,
+                    appliedCloseFront,
+                    appliedCloseSide);
+                rows.Add(CreatePaddedFrameRow(
+                    sourceCloseFront,
+                    0,
+                    columns));
+                rows.Add(CreatePaddedFrameRow(
+                    appliedCloseFront,
+                    0,
+                    columns));
+                rows.Add(CreatePaddedFrameRow(
+                    sourceCloseSide,
+                    0,
+                    columns));
+                rows.Add(CreatePaddedFrameRow(
+                    appliedCloseSide,
+                    0,
+                    columns));
+
+                List<byte[]> referenceHoldFront = new List<byte[]>();
+                List<byte[]> referenceHoldSide = new List<byte[]>();
+                List<byte[]> appliedHoldFront = new List<byte[]>();
+                List<byte[]> appliedHoldSide = new List<byte[]>();
+                CaptureStickAttackForwardAttackingFinalReferenceFrames(
+                    sourceObject.transform,
+                    source,
+                    totalIntervals - sourceIntervals + 1,
+                    referenceHoldFront,
+                    referenceHoldSide);
+                CaptureStickAttackForwardAttackingSourceFrames(
+                    appliedObject.transform,
+                    generated,
+                    sourceIntervals,
+                    totalIntervals,
+                    true,
+                    appliedHoldFront,
+                    appliedHoldSide);
+                rows.Add(CreatePaddedFrameRow(
+                    referenceHoldFront,
+                    0,
+                    columns));
+                rows.Add(CreatePaddedFrameRow(
+                    appliedHoldFront,
+                    0,
+                    columns));
+                rows.Add(CreatePaddedFrameRow(
+                    referenceHoldSide,
+                    0,
+                    columns));
+                rows.Add(CreatePaddedFrameRow(
+                    appliedHoldSide,
+                    0,
+                    columns));
+
+                int[] loopFrames =
+                {
+                    totalIntervals - 2,
+                    totalIntervals - 1,
+                    totalIntervals,
+                    0,
+                    1,
+                    2
+                };
+                List<byte[]> loopFront = new List<byte[]>();
+                List<byte[]> loopSide = new List<byte[]>();
+                CaptureStickAttackForwardAttackingSelectedFrames(
+                    appliedObject.transform,
+                    generated,
+                    loopFrames,
+                    loopFront,
+                    loopSide);
+                rows.Add(CreatePaddedFrameRow(loopFront, 0, columns));
+                rows.Add(CreatePaddedFrameRow(loopSide, 0, columns));
+                ComposeScaledRows(
+                    rows,
+                    StickAttackForwardAttackingReviewPath,
+                    160,
+                    200);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+                UnityEngine.Object.DestroyImmediate(appliedObject);
+            }
+        }
+
+        private static void CaptureStickAttackForwardAttackingFinalReferenceFrames(
+            Transform subject,
+            AnimationClip source,
+            int count,
+            ICollection<byte[]> frontFrames,
+            ICollection<byte[]> sideFrames)
+        {
+            using (CaptureEnvironment environment =
+                   new CaptureEnvironment(subject))
+            {
+                for (int frame = 0; frame < count; frame++)
+                {
+                    source.SampleAnimation(subject.gameObject, source.length);
+                    Transform rightHand = FindRequired(subject, RightHandPath);
+                    Transform leftHand = FindRequired(subject, LeftHandPath);
+                    Vector3 center =
+                        (rightHand.position + leftHand.position) * 0.5f;
+                    environment.ConfigureView(subject, center, 0.72f);
+                    frontFrames.Add(environment.CaptureFront());
+                    sideFrames.Add(environment.CaptureSide());
+                }
+            }
+        }
+
+        private static void CaptureStickAttackForwardAttackingSelectedFrames(
+            Transform subject,
+            AnimationClip clip,
+            IEnumerable<int> frames,
+            ICollection<byte[]> frontFrames,
+            ICollection<byte[]> sideFrames)
+        {
+            using (CaptureEnvironment environment =
+                   new CaptureEnvironment(subject))
+            {
+                foreach (int frame in frames)
+                {
+                    clip.SampleAnimation(
+                        subject.gameObject,
+                        Mathf.Clamp(
+                            frame / clip.frameRate,
+                            0f,
+                            clip.length));
+                    environment.ConfigureView(subject, 1.05f, 1.35f);
+                    frontFrames.Add(environment.CaptureFront());
+                    sideFrames.Add(environment.CaptureSide());
+                }
+            }
+        }
+
+        private static StickAttackForwardGifWeaponMetrics
+            MeasureStickAttackForwardGifWeaponMetrics()
+        {
+            Scene scene = RequireScene();
+            Transform target = RequireTarget(
+                RequireLayout(scene),
+                StickAttackForwardTargetName);
+            AnimationClip source = LoadSingleEmbeddedClip(
+                StickAttackForwardAttackingSourcePath,
+                "stick attacking");
+            AnimationClip generated = LoadClip(
+                StickAttackForwardAttackingClipPath);
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController ??
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward controller is missing for GIF weapon metrics.");
+            MeasureStickAttackForwardGifWeaponMotion(
+                target,
+                source,
+                generated,
+                out StickAttackForwardGifWeaponTimeMapping mapping,
+                out float gripError,
+                out float stickStepMax,
+                out int stickStepFrame,
+                out float bodyPositionDifference,
+                out float bodyRotationDifference,
+                out float finalDegreesFromVertical);
+            string stickPath = RightHandPath + "/" + StickInstanceName;
+            HashSet<EditorCurveBinding> sourceBindings =
+                new HashSet<EditorCurveBinding>(
+                    AnimationUtility.GetCurveBindings(source));
+            EditorCurveBinding[] addedBindings = AnimationUtility
+                .GetCurveBindings(generated)
+                .Where(binding => !sourceBindings.Contains(binding))
+                .ToArray();
+            bool onlyStickCurvesAdded =
+                addedBindings.Length == 7 &&
+                addedBindings.All(binding =>
+                    binding.type == typeof(Transform) &&
+                    string.Equals(
+                        binding.path,
+                        stickPath,
+                        StringComparison.Ordinal) &&
+                    (binding.propertyName.StartsWith(
+                         "m_LocalPosition.",
+                         StringComparison.Ordinal) ||
+                     binding.propertyName.StartsWith(
+                         "m_LocalRotation.",
+                         StringComparison.Ordinal)));
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(generated);
+            StickAttackForwardGifWeaponMetrics metrics =
+                new StickAttackForwardGifWeaponMetrics
+                {
+                    referenceHash = HashFile(
+                        StickAttackForwardGifWeaponReferencePath),
+                    attackOriginalHash = HashFile(
+                        StickAttackForwardAttackingOriginalPath),
+                    attackSourceHash = HashFile(
+                        StickAttackForwardAttackingSourcePath),
+                    sourceEmbeddedTake = source.name,
+                    referenceDurationSeconds =
+                        StickAttackForwardGifWeaponReferenceDurationSeconds,
+                    referenceFrameRate =
+                        StickAttackForwardGifWeaponReferenceFrameRate,
+                    referenceFrameCount =
+                        StickAttackForwardGifWeaponReferenceFrameCount,
+                    sourceDurationSeconds = source.length,
+                    generatedDurationSeconds = generated.length,
+                    preservedDurationDifferenceSeconds =
+                        generated.length - source.length -
+                        StickAttackForwardAttackingEndHoldSeconds,
+                    sourceFrameRate = source.frameRate,
+                    endHoldDurationSeconds =
+                        generated.length - source.length,
+                    currentRaiseEndFrame = mapping.CurrentRaiseEndFrame,
+                    currentStrikeStartFrame = mapping.CurrentStrikeStartFrame,
+                    currentImpactFrame = mapping.CurrentImpactFrame,
+                    currentImpactHoldEndFrame =
+                        mapping.CurrentImpactHoldEndFrame,
+                    referenceRaiseEndFrame =
+                        StickAttackForwardGifWeaponRaiseEndFrame,
+                    referenceStrikeStartFrame =
+                        StickAttackForwardGifWeaponStrikeStartFrame,
+                    referenceImpactFrame =
+                        StickAttackForwardGifWeaponImpactFrame,
+                    referenceImpactHoldEndFrame =
+                        StickAttackForwardGifWeaponImpactHoldEndFrame,
+                    configuredFinalRaiseDegrees =
+                        StickAttackForwardGifWeaponFinalRaiseDegrees,
+                    configuredRaisedFinalDegreesFromVertical =
+                        StickAttackForwardGifWeaponRaisedFinalDegreesFromVertical,
+                    measuredFinalDegreesFromVertical =
+                        finalDegreesFromVertical,
+                    measuredFinalRaiseDegrees =
+                        StickAttackForwardGifWeaponPreviousFinalDegreesFromVertical -
+                        finalDegreesFromVertical,
+                    maximumGripAnchorErrorMeters = gripError,
+                    maximumStickAxisDirectionStepDegrees = stickStepMax,
+                    maximumStickAxisDirectionStepFrame = stickStepFrame,
+                    bodyPositionDifferenceMax = bodyPositionDifference,
+                    bodyRotationDifferenceDegreesMax =
+                        bodyRotationDifference,
+                    onlyStickTransformCurvesDifferFromHeldSource =
+                        onlyStickCurvesAdded,
+                    sourceEventsUnchanged = AnimationEventsExact(
+                        source,
+                        generated),
+                    controllerAndAnimatorTimingUnchanged =
+                        StickAttackForwardAttackingControllerIsExact(
+                            controller,
+                            generated) &&
+                        AnimatorMatches(animator, controller) &&
+                        Mathf.Abs(animator.speed - 1f) <= 0.0001f,
+                    generatedClipLoops = settings.loopTime,
+                    actualPlayModeVideoExists = File.Exists(Path.GetFullPath(
+                        StickAttackForwardGifWeaponVideoPath)),
+                    actualPlayModeOverviewExists = File.Exists(Path.GetFullPath(
+                        StickAttackForwardGifWeaponOverviewPath)),
+                    actualPlayModeRuntimeSamplesExist = File.Exists(
+                        Path.GetFullPath(
+                            StickAttackForwardGifWeaponRuntimeSamplesPath)),
+                    validationPriority =
+                        "1순위 실제 Unity Play Mode 애니메이션 직접 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                string.Equals(
+                    metrics.referenceHash,
+                    StickAttackForwardGifWeaponReferenceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.attackOriginalHash,
+                    StickAttackForwardAttackingSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.attackSourceHash,
+                    StickAttackForwardAttackingSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.sourceEmbeddedTake,
+                    "mixamo.com",
+                    StringComparison.Ordinal) &&
+                Mathf.Abs(
+                    metrics.referenceDurationSeconds - 4.8f) <= 0.0001f &&
+                Mathf.Abs(metrics.referenceFrameRate - 10f) <= 0.0001f &&
+                metrics.referenceFrameCount == 48 &&
+                Mathf.Abs(metrics.sourceFrameRate - 30f) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.preservedDurationDifferenceSeconds) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.endHoldDurationSeconds -
+                    StickAttackForwardAttackingEndHoldSeconds) <= 0.0001f &&
+                metrics.currentRaiseEndFrame <
+                    metrics.currentStrikeStartFrame &&
+                metrics.currentStrikeStartFrame <
+                    metrics.currentImpactFrame &&
+                metrics.currentImpactFrame <
+                    metrics.currentImpactHoldEndFrame &&
+                Mathf.Abs(
+                    metrics.measuredFinalDegreesFromVertical -
+                    StickAttackForwardGifWeaponRaisedFinalDegreesFromVertical) <=
+                    0.05f &&
+                Mathf.Abs(
+                    metrics.measuredFinalRaiseDegrees -
+                    StickAttackForwardGifWeaponFinalRaiseDegrees) <= 0.05f &&
+                metrics.maximumGripAnchorErrorMeters <= 0.0001f &&
+                metrics.maximumStickAxisDirectionStepDegrees < 90f &&
+                metrics.bodyPositionDifferenceMax <= PositionTolerance &&
+                metrics.bodyRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.onlyStickTransformCurvesDifferFromHeldSource &&
+                metrics.sourceEventsUnchanged &&
+                metrics.controllerAndAnimatorTimingUnchanged &&
+                metrics.generatedClipLoops &&
+                metrics.actualPlayModeVideoExists &&
+                metrics.actualPlayModeOverviewExists &&
+                metrics.actualPlayModeRuntimeSamplesExist;
+            return metrics;
+        }
+
+        private static void MeasureStickAttackForwardGifWeaponMotion(
+            Transform template,
+            AnimationClip source,
+            AnimationClip generated,
+            out StickAttackForwardGifWeaponTimeMapping mapping,
+            out float gripErrorMax,
+            out float stickDirectionStepMax,
+            out int stickDirectionStepFrame,
+            out float bodyPositionDifferenceMax,
+            out float bodyRotationDifferenceMax,
+            out float finalDegreesFromVertical)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject generatedObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            generatedObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            DisableAnimators(generatedObject);
+            try
+            {
+                Transform sourceRoot = sourceObject.transform;
+                Transform generatedRoot = generatedObject.transform;
+                string stickPath = RightHandPath + "/" + StickInstanceName;
+                string[] bodyPaths = sourceRoot
+                    .GetComponentsInChildren<Transform>(true)
+                    .Select(item => AnimationUtility.CalculateTransformPath(
+                        item,
+                        sourceRoot))
+                    .Where(path =>
+                        (string.Equals(
+                             path,
+                             "Armature",
+                             StringComparison.Ordinal) ||
+                         path.StartsWith(
+                             "Armature/",
+                             StringComparison.Ordinal)) &&
+                        !string.Equals(
+                            path,
+                            stickPath,
+                            StringComparison.Ordinal) &&
+                        !path.StartsWith(
+                            stickPath + "/",
+                            StringComparison.Ordinal))
+                    .ToArray();
+                mapping = AnalyzeStickAttackForwardGifWeaponTimeMapping(
+                    sourceObject,
+                    source,
+                    generated.length);
+                int totalIntervals = mapping.CurrentImpactHoldEndFrame;
+                gripErrorMax = 0f;
+                stickDirectionStepMax = 0f;
+                stickDirectionStepFrame = 0;
+                bodyPositionDifferenceMax = 0f;
+                bodyRotationDifferenceMax = 0f;
+                finalDegreesFromVertical = 0f;
+                Vector3 previousDirection = Vector3.zero;
+                bool hasPreviousDirection = false;
+                for (int frame = 0; frame <= totalIntervals; frame++)
+                {
+                    float time = Mathf.Min(
+                        generated.length,
+                        frame / generated.frameRate);
+                    source.SampleAnimation(
+                        sourceObject,
+                        Mathf.Min(source.length, time));
+                    generated.SampleAnimation(generatedObject, time);
+                    MeasurePoseDifferenceForPaths(
+                        CapturePose(sourceRoot),
+                        CapturePose(generatedRoot),
+                        bodyPaths,
+                        out float positionDifference,
+                        out float rotationDifference);
+                    bodyPositionDifferenceMax = Mathf.Max(
+                        bodyPositionDifferenceMax,
+                        positionDifference);
+                    bodyRotationDifferenceMax = Mathf.Max(
+                        bodyRotationDifferenceMax,
+                        rotationDifference);
+                    StickGripPlacement placement =
+                        DescribeExistingStickGrip(generatedRoot);
+                    Vector3 rightPalm =
+                        CalculateRightPalmSample(generatedRoot).Center;
+                    gripErrorMax = Mathf.Max(
+                        gripErrorMax,
+                        Vector3.Distance(
+                            rightPalm,
+                            placement.Instance.TransformPoint(
+                                placement.LocalGripPoint)));
+                    Vector3 direction = placement.Instance
+                        .TransformDirection(placement.LongLocalAxis)
+                        .normalized;
+                    if (frame == totalIntervals)
+                    {
+                        finalDegreesFromVertical = Vector3.SignedAngle(
+                            generatedRoot.up,
+                            direction,
+                            generatedRoot.right);
+                    }
+                    if (hasPreviousDirection)
+                    {
+                        float step = Vector3.Angle(
+                            previousDirection,
+                            direction);
+                        if (step > stickDirectionStepMax)
+                        {
+                            stickDirectionStepMax = step;
+                            stickDirectionStepFrame = frame;
+                        }
+                    }
+
+                    previousDirection = direction;
+                    hasPreviousDirection = true;
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+                UnityEngine.Object.DestroyImmediate(generatedObject);
+            }
+        }
+
+        private static StickAttackForwardLeftPalmRightMetrics
+            MeasureStickAttackForwardLeftPalmRightMetrics()
+        {
+            Scene scene = RequireScene();
+            Transform target = RequireTarget(
+                RequireLayout(scene),
+                StickAttackForwardTargetName);
+            AnimationClip source = LoadSingleEmbeddedClip(
+                StickAttackForwardAttackingSourcePath,
+                "stick attacking");
+            AnimationClip generated = LoadClip(
+                StickAttackForwardAttackingClipPath);
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController ??
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward controller is missing for left-palm metrics.");
+            StickAttackForwardLeftPalmRightApplyRecord apply =
+                ReadJson<StickAttackForwardLeftPalmRightApplyRecord>(
+                    StickAttackForwardLeftPalmRightApplyPath);
+            MeasureStickAttackForwardLeftPalmRightNonApprovedBody(
+                target,
+                source,
+                generated,
+                out float nonApprovedPositionDifferenceMax,
+                out float nonApprovedRotationDifferenceMax);
+            string stickPath = RightHandPath + "/" + StickInstanceName;
+            string currentStickHash = HashAnimationCurves(
+                CaptureTransformCurvesForPath(generated, stickPath));
+            HashSet<string> approvedPaths = new HashSet<string>(
+                new[]
+                {
+                    LeftArmPath,
+                    LeftForeArmPath,
+                    LeftHandPath
+                },
+                StringComparer.Ordinal);
+            string[] modifiedPaths = apply.modifiedTransformPaths ??
+                Array.Empty<string>();
+            bool onlyApprovedPaths = modifiedPaths.Length > 0 &&
+                modifiedPaths.All(approvedPaths.Contains);
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(generated);
+            bool stickExact =
+                apply.stickCurvesExactAndUnchanged &&
+                string.Equals(
+                    apply.stickCurvesHashBefore,
+                    apply.stickCurvesHashAfter,
+                    StringComparison.Ordinal) &&
+                string.Equals(
+                    apply.stickCurvesHashAfter,
+                    currentStickHash,
+                    StringComparison.Ordinal);
+            StickAttackForwardLeftPalmRightMetrics metrics =
+                new StickAttackForwardLeftPalmRightMetrics
+                {
+                    attackOriginalHash = HashFile(
+                        StickAttackForwardAttackingOriginalPath),
+                    attackSourceHash = HashFile(
+                        StickAttackForwardAttackingSourcePath),
+                    sourceDurationSeconds = source.length,
+                    generatedDurationSeconds = generated.length,
+                    endHoldDurationSeconds =
+                        generated.length - source.length,
+                    sourceFrameRate = source.frameRate,
+                    modifiedTransformPaths = modifiedPaths,
+                    nonApprovedBodyPositionDifferenceMax =
+                        nonApprovedPositionDifferenceMax,
+                    nonApprovedBodyRotationDifferenceDegreesMax =
+                        nonApprovedRotationDifferenceMax,
+                    stickCurvesHashBeforeRestore =
+                        apply.stickCurvesHashBefore,
+                    stickCurvesHashAfterRestore =
+                        apply.stickCurvesHashAfter,
+                    stickCurvesHashCurrent = currentStickHash,
+                    stickCurvesExactAndUnchanged = stickExact,
+                    onlyApprovedLeftArmPathsChanged = onlyApprovedPaths,
+                    sourceEventsUnchanged = AnimationEventsExact(
+                        source,
+                        generated),
+                    controllerAndAnimatorTimingUnchanged =
+                        StickAttackForwardAttackingControllerIsExact(
+                            controller,
+                            generated) &&
+                        AnimatorMatches(animator, controller) &&
+                        Mathf.Abs(animator.speed - 1f) <= 0.0001f &&
+                        apply.controllerAndAnimatorTimingUnchanged &&
+                        apply.sceneUnchanged,
+                    generatedClipLoops = settings.loopTime,
+                    actualPlayModeVideoExists = File.Exists(Path.GetFullPath(
+                        StickAttackForwardLeftPalmRightVideoPath)),
+                    actualPlayModeOverviewExists = File.Exists(
+                        Path.GetFullPath(
+                            StickAttackForwardLeftPalmRightOverviewPath)),
+                    actualPlayModeRuntimeSamplesExist = File.Exists(
+                        Path.GetFullPath(
+                            StickAttackForwardLeftPalmRightRuntimeSamplesPath)),
+                    validationPriority =
+                        "1순위 실제 Unity Play Mode 애니메이션 직접 확인, 2순위 비대상 무결성 보조 확인",
+                    postureJudgement =
+                        "실제 Unity Play Mode 전체 동작과 양손 확대 화면에서 포개짐 및 관절 연결을 직접 확인해 판정"
+                };
+            metrics.passedNumericChecks =
+                string.Equals(
+                    metrics.attackOriginalHash,
+                    StickAttackForwardAttackingSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.attackSourceHash,
+                    StickAttackForwardAttackingSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                Mathf.Abs(metrics.sourceFrameRate - 30f) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.generatedDurationSeconds - 2.8f) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.endHoldDurationSeconds -
+                    StickAttackForwardAttackingEndHoldSeconds) <= 0.0001f &&
+                metrics.nonApprovedBodyPositionDifferenceMax <=
+                    PositionTolerance &&
+                metrics.nonApprovedBodyRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.stickCurvesExactAndUnchanged &&
+                metrics.onlyApprovedLeftArmPathsChanged &&
+                metrics.sourceEventsUnchanged &&
+                metrics.controllerAndAnimatorTimingUnchanged &&
+                metrics.generatedClipLoops &&
+                metrics.actualPlayModeVideoExists &&
+                metrics.actualPlayModeOverviewExists &&
+                metrics.actualPlayModeRuntimeSamplesExist;
+            return metrics;
+        }
+
+        private static void MeasureStickAttackForwardLeftPalmRightNonApprovedBody(
+            Transform template,
+            AnimationClip source,
+            AnimationClip generated,
+            out float nonApprovedPositionDifferenceMax,
+            out float nonApprovedRotationDifferenceMax)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject generatedObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            generatedObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            DisableAnimators(generatedObject);
+            try
+            {
+                Transform sourceRoot = sourceObject.transform;
+                Transform generatedRoot = generatedObject.transform;
+                string stickPath = RightHandPath + "/" + StickInstanceName;
+                HashSet<string> adjustedPaths = new HashSet<string>(
+                    new[]
+                    {
+                        LeftArmPath,
+                        LeftForeArmPath,
+                        LeftHandPath
+                    },
+                    StringComparer.Ordinal);
+                string[] nonApprovedPaths = sourceRoot
+                    .GetComponentsInChildren<Transform>(true)
+                    .Select(item => AnimationUtility.CalculateTransformPath(
+                        item,
+                        sourceRoot))
+                    .Where(path =>
+                        (string.Equals(
+                             path,
+                             "Armature",
+                             StringComparison.Ordinal) ||
+                         path.StartsWith(
+                             "Armature/",
+                             StringComparison.Ordinal)) &&
+                        !adjustedPaths.Contains(path) &&
+                        !string.Equals(
+                            path,
+                            stickPath,
+                            StringComparison.Ordinal) &&
+                        !path.StartsWith(
+                            stickPath + "/",
+                            StringComparison.Ordinal))
+                    .ToArray();
+                nonApprovedPositionDifferenceMax = 0f;
+                nonApprovedRotationDifferenceMax = 0f;
+                int frameIntervals = Mathf.RoundToInt(
+                    generated.length * generated.frameRate);
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = Mathf.Min(
+                        generated.length,
+                        frame / generated.frameRate);
+                    source.SampleAnimation(
+                        sourceObject,
+                        Mathf.Min(source.length, time));
+                    generated.SampleAnimation(generatedObject, time);
+                    MeasurePoseDifferenceForPaths(
+                        CapturePose(sourceRoot),
+                        CapturePose(generatedRoot),
+                        nonApprovedPaths,
+                        out float positionDifference,
+                        out float rotationDifference);
+                    nonApprovedPositionDifferenceMax = Mathf.Max(
+                        nonApprovedPositionDifferenceMax,
+                        positionDifference);
+                    nonApprovedRotationDifferenceMax = Mathf.Max(
+                        nonApprovedRotationDifferenceMax,
+                        rotationDifference);
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+                UnityEngine.Object.DestroyImmediate(generatedObject);
+            }
+        }
+
+        private static StickAttackForwardAttackingCorrectionsMetrics
+            MeasureStickAttackForwardAttackingCorrectionsMetrics()
+        {
+            Scene scene = RequireScene();
+            Transform target = RequireTarget(
+                RequireLayout(scene),
+                StickAttackForwardTargetName);
+            AnimationClip source = LoadSingleEmbeddedClip(
+                StickAttackForwardAttackingSourcePath,
+                "stick attacking");
+            AnimationClip generated = LoadClip(
+                StickAttackForwardAttackingClipPath);
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController ??
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward correction controller is missing.");
+
+            MeasureStickAttackForwardAttackingCorrectionMotion(
+                target,
+                source,
+                generated,
+                out float leftPalmAngleMax,
+                out float stickRotationStepMax,
+                out float stickRotationCumulativeTravel,
+                out float nonCorrectedPositionDifference,
+                out float nonCorrectedRotationDifference,
+                out float holdBodyPositionDifference,
+                out float holdBodyRotationDifference,
+                out float holdStickPositionDifference,
+                out float holdStickRotationDifference,
+                out int alignmentStartFrame,
+                out int peakForwardTiltFrame,
+                out int alignmentCompleteFrame);
+            float measuredPeakTilt =
+                MeasureStickAttackForwardAttackingStickTiltAtFrame(
+                    target,
+                    generated,
+                    peakForwardTiltFrame);
+            MeasureStickAttackForwardAttackingFinalStick(
+                target,
+                source,
+                generated,
+                out float measuredTilt,
+                out bool tiltsForward,
+                out _,
+                out _,
+                out _,
+                out _);
+
+            bool correctionCurvesPresent =
+                CountTransformRotationCurves(generated, LeftForeArmPath) == 4;
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(generated);
+            StickAttackForwardAttackingCorrectionsMetrics metrics =
+                new StickAttackForwardAttackingCorrectionsMetrics
+                {
+                    attackOriginalHash = HashFile(
+                        StickAttackForwardAttackingOriginalPath),
+                    attackSourceHash = HashFile(
+                        StickAttackForwardAttackingSourcePath),
+                    stickSourceHash = HashFile(StickSourceModelPath),
+                    stickAssetHash = HashFile(StickAssetPath),
+                    sourceEmbeddedTake = source.name,
+                    sourceDurationSeconds = source.length,
+                    sourceFrameRate = source.frameRate,
+                    generatedDurationSeconds = generated.length,
+                    endHoldDurationSeconds = generated.length - source.length,
+                    finalAlignmentStartFrame = alignmentStartFrame,
+                    peakForwardTiltFrame = peakForwardTiltFrame,
+                    finalAlignmentCompleteFrame = alignmentCompleteFrame,
+                    configuredPeakForwardTiltDegrees =
+                        StickAttackForwardAttackingPeakForwardTiltDegrees,
+                    measuredPeakForwardTiltDegrees = measuredPeakTilt,
+                    configuredFinalForwardTiltDegrees =
+                        StickAttackForwardAttackingFinalForwardTiltDegrees,
+                    measuredFinalForwardTiltDegrees = measuredTilt,
+                    maximumLeftPalmCharacterRightAngleDegrees =
+                        leftPalmAngleMax,
+                    maximumStickAxisDirectionStepDegrees =
+                        stickRotationStepMax,
+                    stickAxisDirectionCumulativeTravelDegrees =
+                        stickRotationCumulativeTravel,
+                    nonCorrectedBodyPositionDifferenceMax =
+                        nonCorrectedPositionDifference,
+                    nonCorrectedBodyRotationDifferenceDegreesMax =
+                        nonCorrectedRotationDifference,
+                    endHoldBodyPositionDifferenceMax =
+                        holdBodyPositionDifference,
+                    endHoldBodyRotationDifferenceDegreesMax =
+                        holdBodyRotationDifference,
+                    endHoldStickPositionDifferenceMax =
+                        holdStickPositionDifference,
+                    endHoldStickRotationDifferenceDegreesMax =
+                        holdStickRotationDifference,
+                    finalStickTiltsForward = tiltsForward,
+                    leftForeArmCorrectionAndSourceLeftHandPosePreserved =
+                        correctionCurvesPresent,
+                    sourceEventsUnchanged = AnimationEventsExact(
+                        source,
+                        generated),
+                    controllerUsesGeneratedClip =
+                        StickAttackForwardAttackingControllerIsExact(
+                            controller,
+                            generated),
+                    generatedClipLoops = settings.loopTime,
+                    animatorSettingsCorrect = AnimatorMatches(
+                        animator,
+                        controller),
+                    actualPlayModeVideoExists = File.Exists(Path.GetFullPath(
+                        StickAttackForwardAttackingCorrectionsVideoPath)),
+                    actualPlayModeOverviewExists = File.Exists(Path.GetFullPath(
+                        StickAttackForwardAttackingCorrectionsOverviewPath)),
+                    actualPlayModeRuntimeSamplesExist = File.Exists(
+                        Path.GetFullPath(
+                            StickAttackForwardAttackingCorrectionsRuntimeSamplesPath)),
+                    validationPriority =
+                        "1순위 실제 Unity Play Mode Animator 연속 재생 직접 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            int expectedCompleteFrame = Mathf.RoundToInt(
+                source.length * source.frameRate) -
+                StickAttackForwardAttackingFinalAlignmentLeadFrames;
+            metrics.passedNumericChecks =
+                string.Equals(
+                    metrics.attackOriginalHash,
+                    StickAttackForwardAttackingSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.attackOriginalHash,
+                    metrics.attackSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.stickSourceHash,
+                    metrics.stickAssetHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.sourceEmbeddedTake,
+                    "mixamo.com",
+                    StringComparison.Ordinal) &&
+                Mathf.Abs(metrics.sourceFrameRate - 30f) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.endHoldDurationSeconds -
+                    StickAttackForwardAttackingEndHoldSeconds) <= 0.0001f &&
+                metrics.finalAlignmentStartFrame <
+                    metrics.peakForwardTiltFrame &&
+                metrics.peakForwardTiltFrame <
+                    metrics.finalAlignmentCompleteFrame &&
+                metrics.finalAlignmentCompleteFrame == expectedCompleteFrame &&
+                Mathf.Abs(
+                    metrics.measuredPeakForwardTiltDegrees -
+                    StickAttackForwardAttackingPeakForwardTiltDegrees) <= 0.1f &&
+                Mathf.Abs(
+                    metrics.measuredFinalForwardTiltDegrees -
+                    StickAttackForwardAttackingFinalForwardTiltDegrees) <= 0.1f &&
+                metrics.finalStickTiltsForward &&
+                metrics.maximumLeftPalmCharacterRightAngleDegrees <= 0.5f &&
+                metrics.maximumStickAxisDirectionStepDegrees <= 45f &&
+                metrics.nonCorrectedBodyPositionDifferenceMax <=
+                    PositionTolerance &&
+                metrics.nonCorrectedBodyRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.endHoldBodyPositionDifferenceMax <=
+                    PositionTolerance &&
+                metrics.endHoldBodyRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.endHoldStickPositionDifferenceMax <= 0.000001f &&
+                metrics.endHoldStickRotationDifferenceDegreesMax <= 0.001f &&
+                metrics.leftForeArmCorrectionAndSourceLeftHandPosePreserved &&
+                metrics.sourceEventsUnchanged &&
+                metrics.controllerUsesGeneratedClip &&
+                metrics.generatedClipLoops &&
+                metrics.animatorSettingsCorrect &&
+                metrics.actualPlayModeVideoExists &&
+                metrics.actualPlayModeOverviewExists &&
+                metrics.actualPlayModeRuntimeSamplesExist;
+            return metrics;
+        }
+
+        private static void
+            MeasureStickAttackForwardAttackingCorrectionMotion(
+                Transform template,
+                AnimationClip source,
+                AnimationClip generated,
+                out float leftPalmAngleMax,
+                out float stickRotationStepMax,
+                out float stickRotationCumulativeTravel,
+                out float nonCorrectedPositionDifferenceMax,
+                out float nonCorrectedRotationDifferenceMax,
+                out float holdBodyPositionDifferenceMax,
+                out float holdBodyRotationDifferenceMax,
+                out float holdStickPositionDifferenceMax,
+                out float holdStickRotationDifferenceMax,
+                out int alignmentStartFrame,
+                out int peakForwardTiltFrame,
+                out int alignmentCompleteFrame)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject generatedObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            generatedObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            DisableAnimators(generatedObject);
+            try
+            {
+                Transform sourceRoot = sourceObject.transform;
+                Transform generatedRoot = generatedObject.transform;
+                string stickPath = RightHandPath + "/" + StickInstanceName;
+                string[] nonCorrectedPaths = sourceRoot
+                    .GetComponentsInChildren<Transform>(true)
+                    .Select(item => AnimationUtility.CalculateTransformPath(
+                        item,
+                        sourceRoot))
+                    .Where(path =>
+                        (string.Equals(path, "Armature", StringComparison.Ordinal) ||
+                         path.StartsWith("Armature/", StringComparison.Ordinal)) &&
+                        !string.Equals(path, LeftForeArmPath, StringComparison.Ordinal) &&
+                        !string.Equals(path, stickPath, StringComparison.Ordinal) &&
+                        !path.StartsWith(stickPath + "/", StringComparison.Ordinal))
+                    .ToArray();
+                int sourceIntervals = Mathf.RoundToInt(
+                    source.length * source.frameRate);
+                alignmentCompleteFrame = Mathf.Max(
+                    1,
+                    sourceIntervals -
+                    StickAttackForwardAttackingFinalAlignmentLeadFrames);
+                alignmentStartFrame =
+                    FindStickAttackForwardAttackingDescentStartFrame(
+                        sourceObject,
+                        source,
+                        alignmentCompleteFrame);
+                peakForwardTiltFrame =
+                    FindStickAttackForwardAttackingPeakDescentFrame(
+                        sourceObject,
+                        source,
+                        alignmentStartFrame,
+                        alignmentCompleteFrame);
+                leftPalmAngleMax = 0f;
+                stickRotationStepMax = 0f;
+                stickRotationCumulativeTravel = 0f;
+                nonCorrectedPositionDifferenceMax = 0f;
+                nonCorrectedRotationDifferenceMax = 0f;
+                StickGripPlacement stickPlacement =
+                    DescribeExistingStickGrip(generatedRoot);
+                Vector3 previousStickAxisDirection = Vector3.zero;
+                bool hasPreviousStickAxisDirection = false;
+                for (int frame = 0; frame <= sourceIntervals; frame++)
+                {
+                    float time = Mathf.Min(
+                        source.length,
+                        frame / source.frameRate);
+                    source.SampleAnimation(sourceObject, time);
+                    generated.SampleAnimation(generatedObject, time);
+                    MeasurePoseDifferenceForPaths(
+                        CapturePose(sourceRoot),
+                        CapturePose(generatedRoot),
+                        nonCorrectedPaths,
+                        out float positionDifference,
+                        out float rotationDifference);
+                    nonCorrectedPositionDifferenceMax = Mathf.Max(
+                        nonCorrectedPositionDifferenceMax,
+                        positionDifference);
+                    nonCorrectedRotationDifferenceMax = Mathf.Max(
+                        nonCorrectedRotationDifferenceMax,
+                        rotationDifference);
+                    Transform leftHand = FindRequired(
+                        generatedRoot,
+                        LeftHandPath);
+                    Transform leftForeArm = FindRequired(
+                        generatedRoot,
+                        LeftForeArmPath);
+                    Vector3 foreArmAxis =
+                        (leftHand.position - leftForeArm.position).normalized;
+                    Vector3 palmProjected = Vector3.ProjectOnPlane(
+                        leftHand.right,
+                        foreArmAxis);
+                    Vector3 requestedProjected = Vector3.ProjectOnPlane(
+                        generatedRoot.right,
+                        foreArmAxis);
+                    if (palmProjected.sqrMagnitude < 0.0000001f ||
+                        requestedProjected.sqrMagnitude < 0.0000001f)
+                    {
+                        throw new InvalidOperationException(
+                            "Stick_Attack_Forward left palm-right validation projection is degenerate.");
+                    }
+                    leftPalmAngleMax = Mathf.Max(
+                        leftPalmAngleMax,
+                        Vector3.Angle(
+                            palmProjected,
+                            requestedProjected));
+                    Transform stick = FindRequired(generatedRoot, stickPath);
+                    Vector3 stickAxisDirection = stick.TransformDirection(
+                        stickPlacement.LongLocalAxis).normalized;
+                    if (hasPreviousStickAxisDirection &&
+                        Vector3.Dot(
+                            stickAxisDirection,
+                            previousStickAxisDirection) < 0f)
+                    {
+                        stickAxisDirection = -stickAxisDirection;
+                    }
+
+                    if (hasPreviousStickAxisDirection)
+                    {
+                        float step = Vector3.Angle(
+                            previousStickAxisDirection,
+                            stickAxisDirection);
+                        stickRotationStepMax = Mathf.Max(
+                            stickRotationStepMax,
+                            step);
+                        stickRotationCumulativeTravel += step;
+                    }
+
+                    previousStickAxisDirection = stickAxisDirection;
+                    hasPreviousStickAxisDirection = true;
+                }
+
+                MeasureArmatureTransformCurveHold(
+                    generated,
+                    stickPath,
+                    source.length,
+                    generated.length,
+                    out holdBodyPositionDifferenceMax,
+                    out holdBodyRotationDifferenceMax);
+                MeasureTransformCurveHold(
+                    generated,
+                    stickPath,
+                    source.length,
+                    generated.length,
+                    out holdStickPositionDifferenceMax,
+                    out holdStickRotationDifferenceMax);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+                UnityEngine.Object.DestroyImmediate(generatedObject);
+            }
+        }
+
+        private static int CountTransformRotationCurves(
+            AnimationClip clip,
+            string path)
+        {
+            return AnimationUtility.GetCurveBindings(clip).Count(binding =>
+                binding.type == typeof(Transform) &&
+                string.Equals(binding.path, path, StringComparison.Ordinal) &&
+                binding.propertyName.StartsWith(
+                    "m_LocalRotation.",
+                    StringComparison.Ordinal));
+        }
+
+        private static float
+            MeasureStickAttackForwardAttackingStickTiltAtFrame(
+                Transform template,
+                AnimationClip generated,
+                int frame)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                StickGripPlacement placement = DescribeExistingStickGrip(root);
+                generated.SampleAnimation(
+                    workObject,
+                    Mathf.Clamp(
+                        frame / generated.frameRate,
+                        0f,
+                        generated.length));
+                Vector3 direction = placement.Instance.TransformDirection(
+                    placement.LongLocalAxis).normalized;
+                if (Vector3.Dot(direction, root.up) < 0f)
+                {
+                    direction = -direction;
+                }
+
+                return Vector3.Angle(root.up, direction);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static void MeasureArmatureTransformCurveHold(
+            AnimationClip clip,
+            string excludedRootPath,
+            float holdStartTime,
+            float holdEndTime,
+            out float positionDifferenceMax,
+            out float rotationDifferenceMax)
+        {
+            positionDifferenceMax = 0f;
+            rotationDifferenceMax = 0f;
+            string[] paths = AnimationUtility.GetCurveBindings(clip)
+                .Where(binding =>
+                    binding.type == typeof(Transform) &&
+                    (string.Equals(
+                         binding.path,
+                         "Armature",
+                         StringComparison.Ordinal) ||
+                     binding.path.StartsWith(
+                         "Armature/",
+                         StringComparison.Ordinal)) &&
+                    !string.Equals(
+                        binding.path,
+                        excludedRootPath,
+                        StringComparison.Ordinal) &&
+                    !binding.path.StartsWith(
+                        excludedRootPath + "/",
+                        StringComparison.Ordinal))
+                .Select(binding => binding.path)
+                .Distinct()
+                .ToArray();
+            bool measuredAny = false;
+            foreach (string path in paths)
+            {
+                AnimationCurve[] positionCurves =
+                {
+                    FindTransformCurve(clip, path, "m_LocalPosition.x"),
+                    FindTransformCurve(clip, path, "m_LocalPosition.y"),
+                    FindTransformCurve(clip, path, "m_LocalPosition.z")
+                };
+                if (positionCurves.All(curve => curve != null))
+                {
+                    measuredAny = true;
+                    Vector3 start = new Vector3(
+                        positionCurves[0].Evaluate(holdStartTime),
+                        positionCurves[1].Evaluate(holdStartTime),
+                        positionCurves[2].Evaluate(holdStartTime));
+                    for (int frame = 1;
+                         frame <= Mathf.Max(
+                             1,
+                             Mathf.RoundToInt(
+                                 (holdEndTime - holdStartTime) *
+                                 clip.frameRate));
+                         frame++)
+                    {
+                        float time = Mathf.Lerp(
+                            holdStartTime,
+                            holdEndTime,
+                            frame / (float)Mathf.Max(
+                                1,
+                                Mathf.RoundToInt(
+                                    (holdEndTime - holdStartTime) *
+                                    clip.frameRate)));
+                        Vector3 current = new Vector3(
+                            positionCurves[0].Evaluate(time),
+                            positionCurves[1].Evaluate(time),
+                            positionCurves[2].Evaluate(time));
+                        positionDifferenceMax = Mathf.Max(
+                            positionDifferenceMax,
+                            Vector3.Distance(start, current));
+                    }
+                }
+
+                AnimationCurve[] rotationCurves =
+                {
+                    FindTransformCurve(clip, path, "m_LocalRotation.x"),
+                    FindTransformCurve(clip, path, "m_LocalRotation.y"),
+                    FindTransformCurve(clip, path, "m_LocalRotation.z"),
+                    FindTransformCurve(clip, path, "m_LocalRotation.w")
+                };
+                if (rotationCurves.All(curve => curve != null))
+                {
+                    measuredAny = true;
+                    Quaternion start = new Quaternion(
+                        rotationCurves[0].Evaluate(holdStartTime),
+                        rotationCurves[1].Evaluate(holdStartTime),
+                        rotationCurves[2].Evaluate(holdStartTime),
+                        rotationCurves[3].Evaluate(holdStartTime)).normalized;
+                    int intervals = Mathf.Max(
+                        1,
+                        Mathf.RoundToInt(
+                            (holdEndTime - holdStartTime) * clip.frameRate));
+                    for (int frame = 1; frame <= intervals; frame++)
+                    {
+                        float time = Mathf.Lerp(
+                            holdStartTime,
+                            holdEndTime,
+                            frame / (float)intervals);
+                        Quaternion current = new Quaternion(
+                            rotationCurves[0].Evaluate(time),
+                            rotationCurves[1].Evaluate(time),
+                            rotationCurves[2].Evaluate(time),
+                            rotationCurves[3].Evaluate(time)).normalized;
+                        rotationDifferenceMax = Mathf.Max(
+                            rotationDifferenceMax,
+                            Quaternion.Angle(start, current));
+                    }
+                }
+            }
+
+            if (!measuredAny)
+            {
+                throw new InvalidOperationException(
+                    "No Armature transform curves were available for the Stick_Attack_Forward hold check.");
+            }
+        }
+
+        private static AnimationCurve FindTransformCurve(
+            AnimationClip clip,
+            string path,
+            string propertyName)
+        {
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetCurveBindings(clip))
+            {
+                if (binding.type == typeof(Transform) &&
+                    string.Equals(
+                        binding.path,
+                        path,
+                        StringComparison.Ordinal) &&
+                    string.Equals(
+                        binding.propertyName,
+                        propertyName,
+                        StringComparison.Ordinal))
+                {
+                    return AnimationUtility.GetEditorCurve(clip, binding);
+                }
+            }
+
+            return null;
+        }
+
+        private static void MeasureTransformCurveHold(
+            AnimationClip clip,
+            string path,
+            float holdStartTime,
+            float holdEndTime,
+            out float positionDifferenceMax,
+            out float rotationDifferenceMax)
+        {
+            AnimationCurve positionX = RequireTransformCurve(
+                clip,
+                path,
+                "m_LocalPosition.x");
+            AnimationCurve positionY = RequireTransformCurve(
+                clip,
+                path,
+                "m_LocalPosition.y");
+            AnimationCurve positionZ = RequireTransformCurve(
+                clip,
+                path,
+                "m_LocalPosition.z");
+            AnimationCurve rotationX = RequireTransformCurve(
+                clip,
+                path,
+                "m_LocalRotation.x");
+            AnimationCurve rotationY = RequireTransformCurve(
+                clip,
+                path,
+                "m_LocalRotation.y");
+            AnimationCurve rotationZ = RequireTransformCurve(
+                clip,
+                path,
+                "m_LocalRotation.z");
+            AnimationCurve rotationW = RequireTransformCurve(
+                clip,
+                path,
+                "m_LocalRotation.w");
+            Vector3 startPosition = new Vector3(
+                positionX.Evaluate(holdStartTime),
+                positionY.Evaluate(holdStartTime),
+                positionZ.Evaluate(holdStartTime));
+            Quaternion startRotation = new Quaternion(
+                rotationX.Evaluate(holdStartTime),
+                rotationY.Evaluate(holdStartTime),
+                rotationZ.Evaluate(holdStartTime),
+                rotationW.Evaluate(holdStartTime)).normalized;
+            positionDifferenceMax = 0f;
+            rotationDifferenceMax = 0f;
+            int intervals = Mathf.Max(
+                1,
+                Mathf.RoundToInt(
+                    (holdEndTime - holdStartTime) * clip.frameRate));
+            for (int frame = 1; frame <= intervals; frame++)
+            {
+                float time = Mathf.Lerp(
+                    holdStartTime,
+                    holdEndTime,
+                    frame / (float)intervals);
+                Vector3 position = new Vector3(
+                    positionX.Evaluate(time),
+                    positionY.Evaluate(time),
+                    positionZ.Evaluate(time));
+                Quaternion rotation = new Quaternion(
+                    rotationX.Evaluate(time),
+                    rotationY.Evaluate(time),
+                    rotationZ.Evaluate(time),
+                    rotationW.Evaluate(time)).normalized;
+                positionDifferenceMax = Mathf.Max(
+                    positionDifferenceMax,
+                    Vector3.Distance(startPosition, position));
+                rotationDifferenceMax = Mathf.Max(
+                    rotationDifferenceMax,
+                    Quaternion.Angle(startRotation, rotation));
+            }
+        }
+
+        private static AnimationCurve RequireTransformCurve(
+            AnimationClip clip,
+            string path,
+            string propertyName)
+        {
+            EditorCurveBinding binding = AnimationUtility
+                .GetCurveBindings(clip)
+                .FirstOrDefault(candidate =>
+                    candidate.type == typeof(Transform) &&
+                    string.Equals(
+                        candidate.path,
+                        path,
+                        StringComparison.Ordinal) &&
+                    string.Equals(
+                        candidate.propertyName,
+                        propertyName,
+                        StringComparison.Ordinal));
+            AnimationCurve curve = AnimationUtility.GetEditorCurve(
+                clip,
+                binding);
+            if (curve == null)
+            {
+                throw new InvalidOperationException(
+                    "Required Stick_Attack_Forward correction curve is missing: " +
+                    path + ":" + propertyName + ".");
+            }
+
+            return curve;
+        }
+
+        private static StickAttackForwardAttackingMetrics
+            MeasureStickAttackForwardAttackingMetrics()
+        {
+            Scene scene = RequireScene();
+            Transform target = RequireTarget(
+                RequireLayout(scene),
+                StickAttackForwardTargetName);
+            AnimationClip source = LoadSingleEmbeddedClip(
+                StickAttackForwardAttackingSourcePath,
+                "stick attacking");
+            AnimationClip generated = LoadClip(
+                StickAttackForwardAttackingClipPath);
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController;
+            if (controller == null)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward attacking controller is missing.");
+            }
+
+            MeasureStickAttackForwardAttackingBodyDifference(
+                target,
+                source,
+                generated,
+                out float sourcePositionDifference,
+                out float sourceRotationDifference,
+                out float holdPositionDifference,
+                out float holdRotationDifference);
+            MeasureStickAttackForwardAttackingFinalStick(
+                target,
+                source,
+                generated,
+                out float measuredTilt,
+                out bool tiltsForward,
+                out float rightHandToShaft,
+                out float leftHandToShaft,
+                out float holdStickPositionDifference,
+                out float holdStickRotationDifference);
+            string stickPath = RightHandPath + "/" + StickInstanceName;
+            EditorCurveBinding[] generatedBindings =
+                AnimationUtility.GetCurveBindings(generated);
+            EditorCurveBinding[] stickPositionBindings = generatedBindings
+                .Where(binding =>
+                    string.Equals(
+                        binding.path,
+                        stickPath,
+                        StringComparison.Ordinal) &&
+                    binding.propertyName.StartsWith(
+                        "m_LocalPosition.",
+                        StringComparison.Ordinal))
+                .ToArray();
+            EditorCurveBinding[] stickRotationBindings = generatedBindings
+                .Where(binding =>
+                    string.Equals(
+                        binding.path,
+                        stickPath,
+                        StringComparison.Ordinal) &&
+                    binding.propertyName.StartsWith(
+                        "m_LocalRotation.",
+                        StringComparison.Ordinal))
+                .ToArray();
+            HashSet<EditorCurveBinding> sourceBindings =
+                new HashSet<EditorCurveBinding>(
+                    AnimationUtility.GetCurveBindings(source));
+            EditorCurveBinding[] addedBindings = generatedBindings
+                .Where(binding => !sourceBindings.Contains(binding))
+                .ToArray();
+            bool onlyStickTransformCurvesAdded =
+                addedBindings.Length == 7 &&
+                addedBindings.All(binding =>
+                    string.Equals(
+                        binding.path,
+                        stickPath,
+                        StringComparison.Ordinal) &&
+                    (binding.propertyName.StartsWith(
+                         "m_LocalPosition.",
+                         StringComparison.Ordinal) ||
+                     binding.propertyName.StartsWith(
+                         "m_LocalRotation.",
+                         StringComparison.Ordinal)));
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(generated);
+            StickAttackForwardAttackingMetrics metrics =
+                new StickAttackForwardAttackingMetrics
+                {
+                    attackOriginalHash = HashFile(
+                        StickAttackForwardAttackingOriginalPath),
+                    attackSourceHash = HashFile(
+                        StickAttackForwardAttackingSourcePath),
+                    stickSourceHash = HashFile(StickSourceModelPath),
+                    stickAssetHash = HashFile(StickAssetPath),
+                    sourceEmbeddedTake = source.name,
+                    sourceDurationSeconds = source.length,
+                    sourceFrameRate = source.frameRate,
+                    endHoldDurationSeconds = generated.length -
+                        source.length,
+                    generatedDurationSeconds = generated.length,
+                    generatedFrameRate = generated.frameRate,
+                    configuredFinalForwardTiltDegrees =
+                        StickAttackForwardAttackingFinalForwardTiltDegrees,
+                    measuredFinalForwardTiltDegrees = measuredTilt,
+                    finalStickTiltsForward = tiltsForward,
+                    sourceBodyPosePositionDifferenceMax =
+                        sourcePositionDifference,
+                    sourceBodyPoseRotationDifferenceDegreesMax =
+                        sourceRotationDifference,
+                    holdBodyPositionDifferenceMax = holdPositionDifference,
+                    holdBodyRotationDifferenceDegreesMax =
+                        holdRotationDifference,
+                    endHoldStickPositionDifferenceMax =
+                        holdStickPositionDifference,
+                    endHoldStickRotationDifferenceDegreesMax =
+                        holdStickRotationDifference,
+                    finalRightHandToShaftMeters = rightHandToShaft,
+                    finalLeftHandToShaftMeters = leftHandToShaft,
+                    stickPositionCurveCount =
+                        stickPositionBindings.Length,
+                    stickRotationCurveCount =
+                        stickRotationBindings.Length,
+                    onlyStickTransformCurvesAdded =
+                        onlyStickTransformCurvesAdded,
+                    sourceEventsUnchanged = AnimationEventsExact(
+                        source,
+                        generated),
+                    controllerUsesGeneratedClip =
+                        StickAttackForwardAttackingControllerIsExact(
+                            controller,
+                            generated),
+                    generatedClipLoops = settings.loopTime,
+                    animatorSettingsCorrect = AnimatorMatches(
+                        animator,
+                        controller),
+                    reviewContactSheetExists = File.Exists(
+                        Path.GetFullPath(
+                            StickAttackForwardAttackingReviewPath)),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                string.Equals(
+                    metrics.attackOriginalHash,
+                    StickAttackForwardAttackingSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.attackOriginalHash,
+                    metrics.attackSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.stickSourceHash,
+                    metrics.stickAssetHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.sourceEmbeddedTake,
+                    "mixamo.com",
+                    StringComparison.Ordinal) &&
+                Mathf.Abs(metrics.sourceFrameRate - 30f) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.endHoldDurationSeconds -
+                    StickAttackForwardAttackingEndHoldSeconds) <=
+                    0.0001f &&
+                Mathf.Abs(
+                    metrics.generatedDurationSeconds -
+                    (metrics.sourceDurationSeconds +
+                     StickAttackForwardAttackingEndHoldSeconds)) <=
+                    0.0001f &&
+                Mathf.Abs(
+                    metrics.generatedFrameRate -
+                    metrics.sourceFrameRate) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.measuredFinalForwardTiltDegrees -
+                    StickAttackForwardAttackingFinalForwardTiltDegrees) <=
+                    0.1f &&
+                metrics.finalStickTiltsForward &&
+                metrics.sourceBodyPosePositionDifferenceMax <=
+                    PositionTolerance &&
+                metrics.sourceBodyPoseRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.holdBodyPositionDifferenceMax <=
+                    PositionTolerance &&
+                metrics.holdBodyRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.endHoldStickPositionDifferenceMax <= 0.000001f &&
+                metrics.endHoldStickRotationDifferenceDegreesMax <= 0.001f &&
+                metrics.finalRightHandToShaftMeters <= 0.06f &&
+                metrics.finalLeftHandToShaftMeters <= 0.06f &&
+                metrics.stickPositionCurveCount == 3 &&
+                metrics.stickRotationCurveCount == 4 &&
+                metrics.onlyStickTransformCurvesAdded &&
+                metrics.sourceEventsUnchanged &&
+                metrics.controllerUsesGeneratedClip &&
+                metrics.generatedClipLoops &&
+                metrics.animatorSettingsCorrect &&
+                metrics.reviewContactSheetExists;
+            return metrics;
+        }
+
+        private static void MeasureStickAttackForwardAttackingBodyDifference(
+            Transform template,
+            AnimationClip source,
+            AnimationClip generated,
+            out float sourcePositionDifferenceMax,
+            out float sourceRotationDifferenceMax,
+            out float holdPositionDifferenceMax,
+            out float holdRotationDifferenceMax)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject generatedObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            generatedObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            DisableAnimators(generatedObject);
+            string stickPath = RightHandPath + "/" + StickInstanceName;
+            string[] paths = GetStickGripTwoHandArmaturePaths(
+                    sourceObject.transform)
+                .Where(path =>
+                    !string.Equals(
+                        path,
+                        stickPath,
+                        StringComparison.Ordinal) &&
+                    !path.StartsWith(
+                        stickPath + "/",
+                        StringComparison.Ordinal))
+                .ToArray();
+            sourcePositionDifferenceMax = 0f;
+            sourceRotationDifferenceMax = 0f;
+            holdPositionDifferenceMax = 0f;
+            holdRotationDifferenceMax = 0f;
+            try
+            {
+                int sourceIntervals = Mathf.RoundToInt(
+                    source.length * source.frameRate);
+                for (int frame = 0; frame <= sourceIntervals; frame++)
+                {
+                    float time = Mathf.Min(
+                        source.length,
+                        frame / source.frameRate);
+                    source.SampleAnimation(sourceObject, time);
+                    generated.SampleAnimation(generatedObject, time);
+                    MeasurePoseDifferenceForPaths(
+                        CapturePose(sourceObject.transform),
+                        CapturePose(generatedObject.transform),
+                        paths,
+                        out float positionDifference,
+                        out float rotationDifference);
+                    sourcePositionDifferenceMax = Mathf.Max(
+                        sourcePositionDifferenceMax,
+                        positionDifference);
+                    sourceRotationDifferenceMax = Mathf.Max(
+                        sourceRotationDifferenceMax,
+                        rotationDifference);
+                }
+
+                source.SampleAnimation(sourceObject, source.length);
+                PoseSnapshot finalSourcePose = CapturePose(
+                    sourceObject.transform);
+                int holdIntervals = Mathf.RoundToInt(
+                    StickAttackForwardAttackingEndHoldSeconds *
+                    generated.frameRate);
+                for (int frame = 0; frame <= holdIntervals; frame++)
+                {
+                    float time = source.length +
+                        frame / generated.frameRate;
+                    generated.SampleAnimation(
+                        generatedObject,
+                        Mathf.Min(generated.length, time));
+                    MeasurePoseDifferenceForPaths(
+                        finalSourcePose,
+                        CapturePose(generatedObject.transform),
+                        paths,
+                        out float positionDifference,
+                        out float rotationDifference);
+                    holdPositionDifferenceMax = Mathf.Max(
+                        holdPositionDifferenceMax,
+                        positionDifference);
+                    holdRotationDifferenceMax = Mathf.Max(
+                        holdRotationDifferenceMax,
+                        rotationDifference);
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+                UnityEngine.Object.DestroyImmediate(generatedObject);
+            }
+        }
+
+        private static void MeasureStickAttackForwardAttackingFinalStick(
+            Transform template,
+            AnimationClip source,
+            AnimationClip generated,
+            out float measuredTiltDegrees,
+            out bool tiltsForward,
+            out float rightHandToShaft,
+            out float leftHandToShaft,
+            out float holdPositionDifferenceMax,
+            out float holdRotationDifferenceMax)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                generated.SampleAnimation(workObject, source.length);
+                StickGripPlacement placement = DescribeExistingStickGrip(root);
+                Transform stick = placement.Instance;
+                Vector3 holdLocalPosition = stick.localPosition;
+                Quaternion holdLocalRotation = stick.localRotation;
+                Vector3 direction = stick.TransformDirection(
+                    placement.LongLocalAxis).normalized;
+                if (Vector3.Dot(direction, root.up) < 0f)
+                {
+                    direction = -direction;
+                }
+
+                measuredTiltDegrees = Vector3.Angle(root.up, direction);
+                tiltsForward = Vector3.Dot(direction, root.forward) > 0f;
+                Vector3 shaftPoint = stick.TransformPoint(
+                    placement.LocalGripPoint);
+                Vector3 rightPalm = CalculateRightPalmSample(root).Center;
+                Vector3 leftPalm = CalculateLeftPalmSample(root).Center;
+                rightHandToShaft = DistancePointToLine(
+                    rightPalm,
+                    shaftPoint,
+                    direction);
+                leftHandToShaft = DistancePointToLine(
+                    leftPalm,
+                    shaftPoint,
+                    direction);
+                holdPositionDifferenceMax = 0f;
+                holdRotationDifferenceMax = 0f;
+                int holdIntervals = Mathf.RoundToInt(
+                    StickAttackForwardAttackingEndHoldSeconds *
+                    generated.frameRate);
+                for (int frame = 1; frame <= holdIntervals; frame++)
+                {
+                    generated.SampleAnimation(
+                        workObject,
+                        source.length + frame / generated.frameRate);
+                    stick = DescribeExistingStickGrip(root).Instance;
+                    holdPositionDifferenceMax = Mathf.Max(
+                        holdPositionDifferenceMax,
+                        Vector3.Distance(
+                            holdLocalPosition,
+                            stick.localPosition));
+                    holdRotationDifferenceMax = Mathf.Max(
+                        holdRotationDifferenceMax,
+                        Quaternion.Angle(
+                            holdLocalRotation,
+                            stick.localRotation));
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static float DistancePointToLine(
+            Vector3 point,
+            Vector3 linePoint,
+            Vector3 lineDirection)
+        {
+            return Vector3.Cross(
+                point - linePoint,
+                lineDirection.normalized).magnitude;
+        }
+
+        private static bool AnimationEventsExact(
+            AnimationClip source,
+            AnimationClip generated)
+        {
+            AnimationEvent[] sourceEvents =
+                AnimationUtility.GetAnimationEvents(source);
+            AnimationEvent[] generatedEvents =
+                AnimationUtility.GetAnimationEvents(generated);
+            if (sourceEvents.Length != generatedEvents.Length)
+            {
+                return false;
+            }
+
+            for (int index = 0; index < sourceEvents.Length; index++)
+            {
+                AnimationEvent first = sourceEvents[index];
+                AnimationEvent second = generatedEvents[index];
+                if (Mathf.Abs(first.time - second.time) > 0.000001f ||
+                    !string.Equals(
+                        first.functionName,
+                        second.functionName,
+                        StringComparison.Ordinal) ||
+                    !string.Equals(
+                        first.stringParameter,
+                        second.stringParameter,
+                        StringComparison.Ordinal) ||
+                    Mathf.Abs(
+                        first.floatParameter -
+                        second.floatParameter) > 0.000001f ||
+                    first.intParameter != second.intParameter ||
+                    first.objectReferenceParameter !=
+                    second.objectReferenceParameter ||
+                    first.messageOptions != second.messageOptions)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool StickAttackForwardAttackingControllerIsExact(
+            AnimatorController controller,
+            AnimationClip clip)
+        {
+            if (controller.layers.Length != 1)
+            {
+                return false;
+            }
+
+            AnimatorStateMachine stateMachine =
+                controller.layers[0].stateMachine;
+            AnimatorState[] states = stateMachine.states
+                .Select(child => child.state)
+                .ToArray();
+            return states.Length == 1 &&
+                string.Equals(
+                    states[0].name,
+                    StickAttackForwardAttackingStateName,
+                    StringComparison.Ordinal) &&
+                stateMachine.defaultState == states[0] &&
+                states[0].motion == clip &&
+                Mathf.Abs(states[0].speed - 1f) <= 0.0001f &&
+                !states[0].mirror &&
+                Mathf.Abs(states[0].cycleOffset) <= 0.0001f;
+        }
+
+        private static void CaptureStickAttackForwardTrimDirectReview()
+        {
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(
+                layout,
+                StickAttackForwardTargetName);
+            AnimationClip source = LoadSingleEmbeddedClip(
+                StickAttackForwardSourcePath,
+                "stick forward attack");
+            AnimationClip trimmed = LoadClip(
+                StickAttackForwardTrimmedClipPath);
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            GameObject appliedObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            sourceObject.name = "StickAttackForwardSourceTrimReview";
+            appliedObject.name = "StickAttackForwardAppliedTrimReview";
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            appliedObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            DisableAnimators(appliedObject);
+            const int columns = 30;
+            List<List<byte[]>> rows = new List<List<byte[]>>();
+            try
+            {
+                List<byte[]> sourceFront = new List<byte[]>();
+                List<byte[]> sourceSide = new List<byte[]>();
+                List<byte[]> appliedFront = new List<byte[]>();
+                List<byte[]> appliedSide = new List<byte[]>();
+                CaptureStickAttackForwardFrameRange(
+                    sourceObject.transform,
+                    source,
+                    0,
+                    StickAttackForwardStopFrame,
+                    false,
+                    sourceFront,
+                    sourceSide);
+                CaptureStickAttackForwardFrameRange(
+                    appliedObject.transform,
+                    trimmed,
+                    0,
+                    StickAttackForwardStopFrame,
+                    false,
+                    appliedFront,
+                    appliedSide);
+                AppendExactComparisonRows(
+                    rows,
+                    sourceFront,
+                    appliedFront,
+                    sourceSide,
+                    appliedSide,
+                    columns);
+
+                int descentStart =
+                    FindStickAttackForwardDescentStartFrame(
+                        sourceObject.transform,
+                        source);
+                List<byte[]> sourceCloseFront = new List<byte[]>();
+                List<byte[]> sourceCloseSide = new List<byte[]>();
+                List<byte[]> appliedCloseFront = new List<byte[]>();
+                List<byte[]> appliedCloseSide = new List<byte[]>();
+                CaptureStickAttackForwardFrameRange(
+                    sourceObject.transform,
+                    source,
+                    descentStart,
+                    StickAttackForwardStopFrame,
+                    true,
+                    sourceCloseFront,
+                    sourceCloseSide);
+                CaptureStickAttackForwardFrameRange(
+                    appliedObject.transform,
+                    trimmed,
+                    descentStart,
+                    StickAttackForwardStopFrame,
+                    true,
+                    appliedCloseFront,
+                    appliedCloseSide);
+                rows.Add(CreatePaddedFrameRow(
+                    sourceCloseFront,
+                    0,
+                    columns));
+                rows.Add(CreatePaddedFrameRow(
+                    appliedCloseFront,
+                    0,
+                    columns));
+                rows.Add(CreatePaddedFrameRow(
+                    sourceCloseSide,
+                    0,
+                    columns));
+                rows.Add(CreatePaddedFrameRow(
+                    appliedCloseSide,
+                    0,
+                    columns));
+
+                int[] loopFrames =
+                {
+                    StickAttackForwardStopFrame - 2,
+                    StickAttackForwardStopFrame - 1,
+                    StickAttackForwardStopFrame,
+                    0,
+                    1,
+                    2
+                };
+                List<byte[]> loopFront = new List<byte[]>();
+                List<byte[]> loopSide = new List<byte[]>();
+                CaptureStickAttackForwardSelectedFrames(
+                    appliedObject.transform,
+                    trimmed,
+                    loopFrames,
+                    loopFront,
+                    loopSide);
+                rows.Add(CreatePaddedFrameRow(loopFront, 0, columns));
+                rows.Add(CreatePaddedFrameRow(loopSide, 0, columns));
+                ComposeScaledRows(
+                    rows,
+                    StickAttackForwardTrimReviewPath,
+                    160,
+                    200);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+                UnityEngine.Object.DestroyImmediate(appliedObject);
+            }
+        }
+
+        private static void CaptureStickAttackForwardFrameRange(
+            Transform subject,
+            AnimationClip clip,
+            int startFrame,
+            int endFrame,
+            bool closeView,
+            ICollection<byte[]> frontFrames,
+            ICollection<byte[]> sideFrames)
+        {
+            using (CaptureEnvironment environment =
+                   new CaptureEnvironment(subject))
+            {
+                for (int frame = startFrame; frame <= endFrame; frame++)
+                {
+                    float time = Mathf.Min(
+                        StickAttackForwardStopTime,
+                        frame / StickAttackForwardFrameRate);
+                    clip.SampleAnimation(subject.gameObject, time);
+                    if (closeView)
+                    {
+                        Transform hand = FindRequired(subject, RightHandPath);
+                        StickGripPlacement stick = DescribeExistingStickGrip(
+                            subject);
+                        Vector3 center = Vector3.Lerp(
+                            hand.position,
+                            stick.Instance.TransformPoint(
+                                stick.LocalBounds.center),
+                            0.55f);
+                        environment.ConfigureView(subject, center, 0.82f);
+                    }
+                    else
+                    {
+                        environment.ConfigureView(subject, 1.05f, 1.35f);
+                    }
+
+                    frontFrames.Add(environment.CaptureFront());
+                    sideFrames.Add(environment.CaptureSide());
+                }
+            }
+        }
+
+        private static void CaptureStickAttackForwardSelectedFrames(
+            Transform subject,
+            AnimationClip clip,
+            IEnumerable<int> frames,
+            ICollection<byte[]> frontFrames,
+            ICollection<byte[]> sideFrames)
+        {
+            using (CaptureEnvironment environment =
+                   new CaptureEnvironment(subject))
+            {
+                foreach (int frame in frames)
+                {
+                    float time = Mathf.Clamp(
+                        frame / StickAttackForwardFrameRate,
+                        0f,
+                        StickAttackForwardStopTime);
+                    clip.SampleAnimation(subject.gameObject, time);
+                    environment.ConfigureView(subject, 1.05f, 1.35f);
+                    frontFrames.Add(environment.CaptureFront());
+                    sideFrames.Add(environment.CaptureSide());
+                }
+            }
+        }
+
+        private static StickAttackForwardTrimMetrics
+            MeasureStickAttackForwardTrimMetrics()
+        {
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(
+                layout,
+                StickAttackForwardTargetName);
+            Transform carryTarget = RequireTarget(
+                layout,
+                StickCarryTargetName);
+            AnimationClip source = LoadSingleEmbeddedClip(
+                StickAttackForwardSourcePath,
+                "stick forward attack");
+            AnimationClip trimmed = LoadClip(
+                StickAttackForwardTrimmedClipPath);
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController;
+            if (controller == null)
+            {
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward trimmed controller is missing.");
+            }
+
+            MeasureStickAttackForwardTrimBodyPoseDifference(
+                target,
+                source,
+                trimmed,
+                out float bodyPositionDifference,
+                out float bodyRotationDifference);
+            Quaternion carryRotation = DescribeExistingStickGrip(carryTarget)
+                .Instance.localRotation;
+            string stickPath = RightHandPath + "/" + StickInstanceName;
+            EditorCurveBinding[] stickRotationBindings = AnimationUtility
+                .GetCurveBindings(trimmed)
+                .Where(binding =>
+                    string.Equals(
+                        binding.path,
+                        stickPath,
+                        StringComparison.Ordinal) &&
+                    binding.propertyName.StartsWith(
+                        "m_LocalRotation.",
+                        StringComparison.Ordinal))
+                .ToArray();
+            Quaternion startRotation = EvaluateStickLocalRotation(
+                trimmed,
+                stickPath,
+                0f,
+                carryRotation);
+            Quaternion stopRotation = EvaluateStickLocalRotation(
+                trimmed,
+                stickPath,
+                StickAttackForwardStopTime,
+                carryRotation);
+            float peakRotation = 0f;
+            for (int frame = 0;
+                 frame <= StickAttackForwardStopFrame;
+                 frame++)
+            {
+                Quaternion rotation = EvaluateStickLocalRotation(
+                    trimmed,
+                    stickPath,
+                    frame / StickAttackForwardFrameRate,
+                    carryRotation);
+                peakRotation = Mathf.Max(
+                    peakRotation,
+                    Quaternion.Angle(carryRotation, rotation));
+            }
+
+            HashSet<EditorCurveBinding> sourceBindings =
+                new HashSet<EditorCurveBinding>(
+                    AnimationUtility.GetCurveBindings(source));
+            EditorCurveBinding[] addedBindings = AnimationUtility
+                .GetCurveBindings(trimmed)
+                .Where(binding => !sourceBindings.Contains(binding))
+                .ToArray();
+            bool onlyStickRotationCurvesAdded =
+                addedBindings.Length == 4 &&
+                addedBindings.All(binding =>
+                    string.Equals(
+                        binding.path,
+                        stickPath,
+                        StringComparison.Ordinal) &&
+                    binding.propertyName.StartsWith(
+                        "m_LocalRotation.",
+                        StringComparison.Ordinal));
+            bool noKeysAfterStop = AnimationUtility
+                .GetCurveBindings(trimmed)
+                .All(binding => AnimationUtility.GetEditorCurve(trimmed, binding)
+                    .keys.All(key =>
+                        key.time <= StickAttackForwardStopTime + 0.0001f)) &&
+                AnimationUtility.GetObjectReferenceCurveBindings(trimmed)
+                    .All(binding => AnimationUtility
+                        .GetObjectReferenceCurve(trimmed, binding)
+                        .All(key =>
+                            key.time <=
+                            StickAttackForwardStopTime + 0.0001f)) &&
+                AnimationUtility.GetAnimationEvents(trimmed)
+                    .All(animationEvent =>
+                        animationEvent.time <=
+                        StickAttackForwardStopTime + 0.0001f);
+            int descentStart = MeasureStickAttackForwardDescentStartFrame(
+                target,
+                source);
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(trimmed);
+            StickAttackForwardTrimMetrics metrics =
+                new StickAttackForwardTrimMetrics
+                {
+                    attackOriginalHash = HashFile(
+                        StickAttackForwardOriginalPath),
+                    attackSourceHash = HashFile(
+                        StickAttackForwardSourcePath),
+                    sourceEmbeddedTake = source.name,
+                    sourceDurationSeconds = source.length,
+                    sourceFrameRate = source.frameRate,
+                    stopFrame = StickAttackForwardStopFrame,
+                    stopTimeSeconds = StickAttackForwardStopTime,
+                    removedDurationSeconds = source.length -
+                        StickAttackForwardStopTime,
+                    trimmedDurationSeconds = trimmed.length,
+                    trimmedFrameRate = trimmed.frameRate,
+                    rightHandDescentStartFrame = descentStart,
+                    configuredPeakForwardTiltDegrees =
+                        StickAttackForwardPeakForwardTiltDegrees,
+                    measuredPeakStickRotationFromCarryDegrees = peakRotation,
+                    startStickRotationFromCarryDegrees = Quaternion.Angle(
+                        carryRotation,
+                        startRotation),
+                    stopStickRotationFromCarryDegrees = Quaternion.Angle(
+                        carryRotation,
+                        stopRotation),
+                    sourceBodyPosePositionDifferenceMax =
+                        bodyPositionDifference,
+                    sourceBodyPoseRotationDifferenceDegreesMax =
+                        bodyRotationDifference,
+                    stickRotationCurveCount = stickRotationBindings.Length,
+                    onlyStickRotationCurvesAdded =
+                        onlyStickRotationCurvesAdded,
+                    noKeysAfterStopTime = noKeysAfterStop,
+                    controllerUsesTrimmedClip =
+                        StickAttackForwardTrimControllerIsExact(
+                            controller,
+                            trimmed),
+                    trimmedClipLoops = settings.loopTime,
+                    animatorSettingsCorrect = AnimatorMatches(
+                        animator,
+                        controller),
+                    reviewContactSheetExists = File.Exists(
+                        Path.GetFullPath(
+                            StickAttackForwardTrimReviewPath)),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                string.Equals(
+                    metrics.attackOriginalHash,
+                    StickAttackForwardSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.attackOriginalHash,
+                    metrics.attackSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.sourceEmbeddedTake,
+                    "mixamo.com",
+                    StringComparison.Ordinal) &&
+                Mathf.Abs(
+                    metrics.sourceFrameRate -
+                    StickAttackForwardFrameRate) <= 0.0001f &&
+                metrics.stopFrame == StickAttackForwardStopFrame &&
+                Mathf.Abs(
+                    metrics.trimmedDurationSeconds -
+                    StickAttackForwardStopTime) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.trimmedFrameRate -
+                    StickAttackForwardFrameRate) <= 0.0001f &&
+                metrics.rightHandDescentStartFrame <
+                    StickAttackForwardStopFrame - 1 &&
+                metrics.sourceBodyPosePositionDifferenceMax <=
+                    PositionTolerance &&
+                metrics.sourceBodyPoseRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.stickRotationCurveCount == 4 &&
+                metrics.onlyStickRotationCurvesAdded &&
+                metrics.noKeysAfterStopTime &&
+                metrics.measuredPeakStickRotationFromCarryDegrees >= 20f &&
+                metrics.measuredPeakStickRotationFromCarryDegrees <= 25f &&
+                metrics.startStickRotationFromCarryDegrees <= 0.01f &&
+                metrics.stopStickRotationFromCarryDegrees <= 0.01f &&
+                metrics.controllerUsesTrimmedClip &&
+                metrics.trimmedClipLoops &&
+                metrics.animatorSettingsCorrect &&
+                metrics.reviewContactSheetExists;
+            return metrics;
+        }
+
+        private static int MeasureStickAttackForwardDescentStartFrame(
+            Transform template,
+            AnimationClip source)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                return FindStickAttackForwardDescentStartFrame(
+                    workObject.transform,
+                    source);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static void MeasureStickAttackForwardTrimBodyPoseDifference(
+            Transform template,
+            AnimationClip source,
+            AnimationClip trimmed,
+            out float positionDifferenceMax,
+            out float rotationDifferenceMax)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject trimmedObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            trimmedObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            DisableAnimators(trimmedObject);
+            string stickPath = RightHandPath + "/" + StickInstanceName;
+            string[] paths = GetStickGripTwoHandArmaturePaths(
+                    sourceObject.transform)
+                .Where(path =>
+                    !string.Equals(
+                        path,
+                        stickPath,
+                        StringComparison.Ordinal) &&
+                    !path.StartsWith(
+                        stickPath + "/",
+                        StringComparison.Ordinal))
+                .ToArray();
+            positionDifferenceMax = 0f;
+            rotationDifferenceMax = 0f;
+            try
+            {
+                for (int frame = 0;
+                     frame <= StickAttackForwardStopFrame;
+                     frame++)
+                {
+                    float time = frame / StickAttackForwardFrameRate;
+                    source.SampleAnimation(sourceObject, time);
+                    trimmed.SampleAnimation(trimmedObject, time);
+                    MeasurePoseDifferenceForPaths(
+                        CapturePose(sourceObject.transform),
+                        CapturePose(trimmedObject.transform),
+                        paths,
+                        out float positionDifference,
+                        out float rotationDifference);
+                    positionDifferenceMax = Mathf.Max(
+                        positionDifferenceMax,
+                        positionDifference);
+                    rotationDifferenceMax = Mathf.Max(
+                        rotationDifferenceMax,
+                        rotationDifference);
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+                UnityEngine.Object.DestroyImmediate(trimmedObject);
+            }
+        }
+
+        private static Quaternion EvaluateStickLocalRotation(
+            AnimationClip clip,
+            string path,
+            float time,
+            Quaternion fallback)
+        {
+            AnimationCurve x = AnimationUtility.GetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(
+                    path,
+                    typeof(Transform),
+                    "m_LocalRotation.x"));
+            AnimationCurve y = AnimationUtility.GetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(
+                    path,
+                    typeof(Transform),
+                    "m_LocalRotation.y"));
+            AnimationCurve z = AnimationUtility.GetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(
+                    path,
+                    typeof(Transform),
+                    "m_LocalRotation.z"));
+            AnimationCurve w = AnimationUtility.GetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(
+                    path,
+                    typeof(Transform),
+                    "m_LocalRotation.w"));
+            if (x == null || y == null || z == null || w == null)
+            {
+                return fallback;
+            }
+
+            return new Quaternion(
+                x.Evaluate(time),
+                y.Evaluate(time),
+                z.Evaluate(time),
+                w.Evaluate(time)).normalized;
+        }
+
+        private static bool StickAttackForwardTrimControllerIsExact(
+            AnimatorController controller,
+            AnimationClip clip)
+        {
+            if (controller.layers.Length != 1)
+            {
+                return false;
+            }
+
+            AnimatorStateMachine stateMachine =
+                controller.layers[0].stateMachine;
+            AnimatorState[] states = stateMachine.states
+                .Select(child => child.state)
+                .ToArray();
+            return states.Length == 1 &&
+                string.Equals(
+                    states[0].name,
+                    StickAttackForwardTrimmedStateName,
+                    StringComparison.Ordinal) &&
+                stateMachine.defaultState == states[0] &&
+                states[0].motion == clip &&
+                Mathf.Abs(states[0].speed - 1f) <= 0.0001f &&
+                !states[0].mirror &&
+                Mathf.Abs(states[0].cycleOffset) <= 0.0001f;
+        }
+
+        private static void CaptureStickAttackForwardAndGripOneHandDirectReview()
+        {
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform attackTarget = RequireTarget(
+                layout,
+                StickAttackForwardTargetName);
+            Transform oneHandTarget = RequireTarget(
+                layout,
+                StickGripOneHandTargetName);
+            Animator attackAnimator = RequireAnimator(attackTarget);
+            Animator oneHandAnimator = RequireAnimator(oneHandTarget);
+            AnimationClip attackClip = LoadSingleEmbeddedClip(
+                StickAttackForwardSourcePath,
+                "stick forward attack");
+            AnimationClip twoHandAttackReady = LoadClip(
+                StickGripTwoHandAdjustedAttackReadyClipPath);
+            AnimationClip twoHandTransition = LoadClip(
+                StickGripTwoHandTransitionClipPath);
+            AnimationClip twoHandCarry = LoadClip(
+                StickGripTwoHandCarryClipPath);
+            const int columns = 40;
+            const float reviewFrameRate = 30f;
+            int attackIntervals = Mathf.Max(
+                1,
+                Mathf.CeilToInt(attackClip.length * reviewFrameRate));
+            int reverseIntervals = Mathf.RoundToInt(
+                StickGripTwoHandSequenceDurationSeconds * reviewFrameRate);
+            GameObject attackSourceObject = UnityEngine.Object.Instantiate(
+                attackTarget.gameObject);
+            GameObject reverseSourceObject = UnityEngine.Object.Instantiate(
+                oneHandTarget.gameObject);
+            attackSourceObject.name = "StickAttackForwardExactSourceReview";
+            reverseSourceObject.name = "StickGripOneHandReverseSourceReview";
+            attackSourceObject.hideFlags = HideFlags.HideAndDontSave;
+            reverseSourceObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(attackSourceObject);
+            DisableAnimators(reverseSourceObject);
+            List<List<byte[]>> rows = new List<List<byte[]>>();
+            try
+            {
+                List<byte[]> attackSourceFront = new List<byte[]>();
+                List<byte[]> attackSourceSide = new List<byte[]>();
+                List<byte[]> attackAppliedFront = new List<byte[]>();
+                List<byte[]> attackAppliedSide = new List<byte[]>();
+                CaptureExactSequenceFrames(
+                    attackSourceObject.transform,
+                    attackIntervals,
+                    attackClip.length,
+                    time => attackClip.SampleAnimation(
+                        attackSourceObject,
+                        time),
+                    attackSourceFront,
+                    attackSourceSide);
+                CaptureExactSequenceFrames(
+                    attackTarget,
+                    attackIntervals,
+                    attackClip.length,
+                    time => SampleAnimator(
+                        attackAnimator,
+                        StickAttackForwardStateName,
+                        attackClip.length <= 0f
+                            ? 0f
+                            : time / attackClip.length),
+                    attackAppliedFront,
+                    attackAppliedSide);
+                AppendExactComparisonRows(
+                    rows,
+                    attackSourceFront,
+                    attackAppliedFront,
+                    attackSourceSide,
+                    attackAppliedSide,
+                    columns);
+
+                List<byte[]> reverseSourceFront = new List<byte[]>();
+                List<byte[]> reverseSourceSide = new List<byte[]>();
+                List<byte[]> reverseAppliedFront = new List<byte[]>();
+                List<byte[]> reverseAppliedSide = new List<byte[]>();
+                CaptureExactSequenceFrames(
+                    reverseSourceObject.transform,
+                    reverseIntervals,
+                    StickGripTwoHandSequenceDurationSeconds,
+                    time => SampleCurrentStickGripTwoHandClipsExact(
+                        reverseSourceObject,
+                        twoHandCarry,
+                        twoHandTransition,
+                        twoHandAttackReady,
+                        StickGripTwoHandSequenceDurationSeconds - time),
+                    reverseSourceFront,
+                    reverseSourceSide);
+                CaptureExactSequenceFrames(
+                    oneHandTarget,
+                    reverseIntervals,
+                    StickGripTwoHandSequenceDurationSeconds,
+                    time => SampleStickGripOneHandReverseSequence(
+                        oneHandAnimator,
+                        time),
+                    reverseAppliedFront,
+                    reverseAppliedSide);
+                AppendExactComparisonRows(
+                    rows,
+                    reverseSourceFront,
+                    reverseAppliedFront,
+                    reverseSourceSide,
+                    reverseAppliedSide,
+                    columns);
+                ComposeScaledRows(
+                    rows,
+                    StickAttackForwardGripOneHandReviewPath,
+                    200,
+                    250);
+            }
+            finally
+            {
+                attackAnimator.Rebind();
+                attackAnimator.Update(0f);
+                oneHandAnimator.Rebind();
+                oneHandAnimator.Update(0f);
+                UnityEngine.Object.DestroyImmediate(attackSourceObject);
+                UnityEngine.Object.DestroyImmediate(reverseSourceObject);
+            }
+        }
+
+        private static void CaptureExactSequenceFrames(
+            Transform subject,
+            int frameIntervals,
+            float duration,
+            Action<float> sample,
+            ICollection<byte[]> frontFrames,
+            ICollection<byte[]> sideFrames)
+        {
+            using (CaptureEnvironment environment =
+                   new CaptureEnvironment(subject))
+            {
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = Mathf.Min(
+                        duration,
+                        frame / 30f);
+                    sample(time);
+                    environment.ConfigureView(subject, 1.05f, 1.35f);
+                    frontFrames.Add(environment.CaptureFront());
+                    sideFrames.Add(environment.CaptureSide());
+                }
+            }
+        }
+
+        private static void AppendExactComparisonRows(
+            ICollection<List<byte[]>> outputRows,
+            IReadOnlyList<byte[]> referenceFront,
+            IReadOnlyList<byte[]> appliedFront,
+            IReadOnlyList<byte[]> referenceSide,
+            IReadOnlyList<byte[]> appliedSide,
+            int columns)
+        {
+            if (referenceFront.Count == 0 ||
+                referenceFront.Count != appliedFront.Count ||
+                referenceFront.Count != referenceSide.Count ||
+                referenceFront.Count != appliedSide.Count)
+            {
+                throw new InvalidOperationException(
+                    "Exact stick comparison frame counts differ.");
+            }
+
+            int pageCount = Mathf.CeilToInt(
+                referenceFront.Count / (float)columns);
+            for (int page = 0; page < pageCount; page++)
+            {
+                int start = page * columns;
+                outputRows.Add(CreatePaddedFrameRow(
+                    referenceFront,
+                    start,
+                    columns));
+                outputRows.Add(CreatePaddedFrameRow(
+                    appliedFront,
+                    start,
+                    columns));
+                outputRows.Add(CreatePaddedFrameRow(
+                    referenceSide,
+                    start,
+                    columns));
+                outputRows.Add(CreatePaddedFrameRow(
+                    appliedSide,
+                    start,
+                    columns));
+            }
+        }
+
+        private static List<byte[]> CreatePaddedFrameRow(
+            IReadOnlyList<byte[]> frames,
+            int start,
+            int columns)
+        {
+            List<byte[]> row = frames
+                .Skip(start)
+                .Take(columns)
+                .ToList();
+            while (row.Count < columns)
+            {
+                row.Add(row[row.Count - 1]);
+            }
+
+            return row;
+        }
+
+        private static void ComposeScaledRows(
+            IReadOnlyList<List<byte[]>> rows,
+            string outputPath,
+            int panelWidth,
+            int panelHeight)
+        {
+            if (rows.Count == 0 ||
+                rows.Any(row => row.Count != rows[0].Count) ||
+                panelWidth <= 0 ||
+                panelHeight <= 0)
+            {
+                throw new InvalidOperationException(
+                    "Scaled stick comparison rows are invalid.");
+            }
+
+            int columns = rows[0].Count;
+            Texture2D composite = new Texture2D(
+                panelWidth * columns,
+                panelHeight * rows.Count,
+                TextureFormat.RGB24,
+                false);
+            RenderTexture previousActive = RenderTexture.active;
+            try
+            {
+                for (int row = 0; row < rows.Count; row++)
+                {
+                    for (int column = 0; column < columns; column++)
+                    {
+                        Texture2D source = new Texture2D(
+                            CaptureWidth,
+                            CaptureHeight,
+                            TextureFormat.RGB24,
+                            false);
+                        RenderTexture scaled = RenderTexture.GetTemporary(
+                            panelWidth,
+                            panelHeight,
+                            0,
+                            RenderTextureFormat.ARGB32);
+                        Texture2D panel = new Texture2D(
+                            panelWidth,
+                            panelHeight,
+                            TextureFormat.RGB24,
+                            false);
+                        try
+                        {
+                            if (!source.LoadImage(rows[row][column]))
+                            {
+                                throw new InvalidOperationException(
+                                    "Scaled stick comparison frame could not be decoded.");
+                            }
+
+                            scaled.filterMode = FilterMode.Bilinear;
+                            Graphics.Blit(source, scaled);
+                            RenderTexture.active = scaled;
+                            panel.ReadPixels(
+                                new Rect(0f, 0f, panelWidth, panelHeight),
+                                0,
+                                0,
+                                false);
+                            panel.Apply(false, false);
+                            composite.SetPixels(
+                                column * panelWidth,
+                                (rows.Count - row - 1) * panelHeight,
+                                panelWidth,
+                                panelHeight,
+                                panel.GetPixels());
+                        }
+                        finally
+                        {
+                            UnityEngine.Object.DestroyImmediate(source);
+                            UnityEngine.Object.DestroyImmediate(panel);
+                            RenderTexture.ReleaseTemporary(scaled);
+                        }
+                    }
+                }
+
+                composite.Apply(false, false);
+                string absoluteOutput = Path.GetFullPath(outputPath);
+                Directory.CreateDirectory(
+                    Path.GetDirectoryName(absoluteOutput) ??
+                    throw new InvalidOperationException(
+                        "Scaled stick comparison output directory is unavailable."));
+                File.WriteAllBytes(absoluteOutput, composite.EncodeToPNG());
+            }
+            finally
+            {
+                RenderTexture.active = previousActive;
+                UnityEngine.Object.DestroyImmediate(composite);
+            }
+        }
+
+        private static void SampleCurrentStickGripTwoHandClipsExact(
+            GameObject target,
+            AnimationClip carryClip,
+            AnimationClip transitionClip,
+            AnimationClip attackReadyClip,
+            float sequenceTime)
+        {
+            float time = Mathf.Clamp(
+                sequenceTime,
+                0f,
+                StickGripTwoHandSequenceDurationSeconds);
+            if (time < StickGripTwoHandCarryDurationSeconds)
+            {
+                carryClip.SampleAnimation(target, time);
+                return;
+            }
+
+            if (time <
+                StickGripTwoHandCarryDurationSeconds +
+                StickGripTwoHandTransitionDurationSeconds)
+            {
+                transitionClip.SampleAnimation(
+                    target,
+                    time - StickGripTwoHandCarryDurationSeconds);
+                return;
+            }
+
+            attackReadyClip.SampleAnimation(
+                target,
+                time - StickGripTwoHandCarryDurationSeconds -
+                StickGripTwoHandTransitionDurationSeconds);
+        }
+
+        private static void SampleStickGripOneHandReverseSequence(
+            Animator animator,
+            float sequenceTime)
+        {
+            float time = Mathf.Clamp(
+                sequenceTime,
+                0f,
+                StickGripTwoHandSequenceDurationSeconds);
+            if (time <= StickGripTwoHandAttackReadyDurationSeconds)
+            {
+                SampleAnimator(
+                    animator,
+                    StickGripOneHandAttackReadyReverseStateName,
+                    time / StickGripTwoHandAttackReadyDurationSeconds);
+                return;
+            }
+
+            time -= StickGripTwoHandAttackReadyDurationSeconds;
+            if (time <= StickGripTwoHandTransitionDurationSeconds)
+            {
+                SampleAnimator(
+                    animator,
+                    StickGripOneHandTransitionReverseStateName,
+                    time / StickGripTwoHandTransitionDurationSeconds);
+                return;
+            }
+
+            time -= StickGripTwoHandTransitionDurationSeconds;
+            SampleAnimator(
+                animator,
+                StickGripOneHandCarryReverseStateName,
+                time / StickGripTwoHandCarryDurationSeconds);
+        }
+
+        private static StickAttackForwardGripOneHandMetrics
+            MeasureStickAttackForwardAndGripOneHandMetrics()
+        {
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after the stick attack and reverse apply.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform stickCarryTarget = RequireTarget(
+                layout,
+                StickCarryTargetName);
+            Transform attackTarget = RequireTarget(
+                layout,
+                StickAttackForwardTargetName);
+            Transform oneHandTarget = RequireTarget(
+                layout,
+                StickGripOneHandTargetName);
+            Animator attackAnimator = RequireAnimator(attackTarget);
+            Animator reverseAnimator = RequireAnimator(oneHandTarget);
+            AnimationClip attackClip = LoadSingleEmbeddedClip(
+                StickAttackForwardSourcePath,
+                "stick forward attack");
+            AnimationClip twoHandAttackReady = LoadClip(
+                StickGripTwoHandAdjustedAttackReadyClipPath);
+            AnimationClip twoHandTransition = LoadClip(
+                StickGripTwoHandTransitionClipPath);
+            AnimationClip twoHandCarry = LoadClip(
+                StickGripTwoHandCarryClipPath);
+            AnimationClip reversedAttack = LoadClip(
+                StickGripOneHandAttackReadyReverseClipPath);
+            AnimationClip reversedTransition = LoadClip(
+                StickGripOneHandTransitionReverseClipPath);
+            AnimationClip reversedCarry = LoadClip(
+                StickGripOneHandCarryReverseClipPath);
+            AnimatorController attackController =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    StickAttackForwardControllerPath) ??
+                throw new InvalidOperationException(
+                    "Stick_Attack_Forward controller is missing.");
+            AnimatorController reverseController =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    StickGripOneHandControllerPath) ??
+                throw new InvalidOperationException(
+                    "Stick_Grip_OneHand controller is missing.");
+
+            MeasureStickAttackForwardPoseDifference(
+                attackTarget,
+                attackController,
+                attackClip,
+                out float attackPositionDifference,
+                out float attackRotationDifference);
+            MeasureStickGripOneHandReversePoseDifference(
+                oneHandTarget,
+                twoHandCarry,
+                twoHandTransition,
+                twoHandAttackReady,
+                reversedAttack,
+                reversedTransition,
+                reversedCarry,
+                out float reversePositionDifference,
+                out float reverseRotationDifference,
+                out string reverseMaximumRotationPath,
+                out float reverseMaximumRotationTime);
+            StickAttackForwardGripOneHandMetrics metrics =
+                new StickAttackForwardGripOneHandMetrics
+                {
+                    stickSourceHash = HashFile(StickSourceModelPath),
+                    stickAssetHash = HashFile(StickAssetPath),
+                    attackOriginalHash = HashFile(
+                        StickAttackForwardOriginalPath),
+                    attackSourceHash = HashFile(
+                        StickAttackForwardSourcePath),
+                    attackEmbeddedTake = attackClip.name,
+                    attackDurationSeconds = attackClip.length,
+                    attackFrameRate = attackClip.frameRate,
+                    attackControllerUsesExactEmbeddedTake = StateUsesClip(
+                        attackController,
+                        StickAttackForwardStateName,
+                        attackClip),
+                    attackEmbeddedTakeLoops = AnimationUtility
+                        .GetAnimationClipSettings(attackClip).loopTime,
+                    attackPosePositionDifferenceMax =
+                        attackPositionDifference,
+                    attackPoseRotationDifferenceDegreesMax =
+                        attackRotationDifference,
+                    reversedAttackDurationSeconds = reversedAttack.length,
+                    reversedTransitionDurationSeconds =
+                        reversedTransition.length,
+                    reversedCarryDurationSeconds = reversedCarry.length,
+                    reversedSequenceDurationSeconds =
+                        reversedAttack.length + reversedTransition.length +
+                        reversedCarry.length,
+                    reversePosePositionDifferenceMax =
+                        reversePositionDifference,
+                    reversePoseRotationDifferenceDegreesMax =
+                        reverseRotationDifference,
+                    reverseMaximumRotationPath =
+                        reverseMaximumRotationPath,
+                    reverseMaximumRotationTimeSeconds =
+                        reverseMaximumRotationTime,
+                    reverseControllerSequenceExact =
+                        StickGripOneHandControllerIsExact(
+                            reverseController,
+                            reversedAttack,
+                            reversedTransition,
+                            reversedCarry),
+                    attackAnimatorSettingsCorrect = AnimatorMatches(
+                        attackAnimator,
+                        attackController),
+                    reverseAnimatorSettingsCorrect = AnimatorMatches(
+                        reverseAnimator,
+                        reverseController),
+                    attackStickTransformExact = StickTransformMatchesCarry(
+                        stickCarryTarget,
+                        attackTarget),
+                    reverseStickTransformExact = StickTransformMatchesCarry(
+                        stickCarryTarget,
+                        oneHandTarget),
+                    reviewContactSheetExists = File.Exists(
+                        Path.GetFullPath(
+                            StickAttackForwardGripOneHandReviewPath)),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                string.Equals(
+                    metrics.stickSourceHash,
+                    metrics.stickAssetHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.attackOriginalHash,
+                    StickAttackForwardSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.attackOriginalHash,
+                    metrics.attackSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                metrics.attackControllerUsesExactEmbeddedTake &&
+                metrics.attackEmbeddedTakeLoops &&
+                metrics.attackPosePositionDifferenceMax <=
+                    PositionTolerance &&
+                metrics.attackPoseRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                Mathf.Abs(
+                    metrics.reversedAttackDurationSeconds -
+                    StickGripTwoHandAttackReadyDurationSeconds) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.reversedTransitionDurationSeconds -
+                    StickGripTwoHandTransitionDurationSeconds) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.reversedCarryDurationSeconds -
+                    StickGripTwoHandCarryDurationSeconds) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.reversedSequenceDurationSeconds -
+                    StickGripTwoHandSequenceDurationSeconds) <= 0.0001f &&
+                metrics.reversePosePositionDifferenceMax <=
+                    PositionTolerance &&
+                metrics.reversePoseRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.reverseControllerSequenceExact &&
+                metrics.attackAnimatorSettingsCorrect &&
+                metrics.reverseAnimatorSettingsCorrect &&
+                metrics.attackStickTransformExact &&
+                metrics.reverseStickTransformExact &&
+                metrics.reviewContactSheetExists;
+            return metrics;
+        }
+
+        private static void MeasureStickAttackForwardPoseDifference(
+            Transform template,
+            AnimatorController controller,
+            AnimationClip source,
+            out float positionDifferenceMax,
+            out float rotationDifferenceMax)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject appliedObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            appliedObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            Animator appliedAnimator = RequireAnimator(
+                appliedObject.transform);
+            appliedAnimator.runtimeAnimatorController = controller;
+            string[] paths = GetStickGripTwoHandArmaturePaths(
+                sourceObject.transform);
+            positionDifferenceMax = 0f;
+            rotationDifferenceMax = 0f;
+            try
+            {
+                int frameIntervals = Mathf.Max(
+                    1,
+                    Mathf.CeilToInt(source.length * 30f));
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = Mathf.Min(source.length, frame / 30f);
+                    source.SampleAnimation(sourceObject, time);
+                    SampleAnimator(
+                        appliedAnimator,
+                        StickAttackForwardStateName,
+                        source.length <= 0f ? 0f : time / source.length);
+                    MeasurePoseDifferenceForPaths(
+                        CapturePose(sourceObject.transform),
+                        CapturePose(appliedObject.transform),
+                        paths,
+                        out float positionDifference,
+                        out float rotationDifference);
+                    positionDifferenceMax = Mathf.Max(
+                        positionDifferenceMax,
+                        positionDifference);
+                    rotationDifferenceMax = Mathf.Max(
+                        rotationDifferenceMax,
+                        rotationDifference);
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+                UnityEngine.Object.DestroyImmediate(appliedObject);
+            }
+        }
+
+        private static void MeasureStickGripOneHandReversePoseDifference(
+            Transform template,
+            AnimationClip sourceCarry,
+            AnimationClip sourceTransition,
+            AnimationClip sourceAttackReady,
+            AnimationClip reversedAttackReady,
+            AnimationClip reversedTransition,
+            AnimationClip reversedCarry,
+            out float positionDifferenceMax,
+            out float rotationDifferenceMax,
+            out string maximumRotationPath,
+            out float maximumRotationTime)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject reversedObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            reversedObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            DisableAnimators(reversedObject);
+            string[] paths = GetStickGripTwoHandArmaturePaths(
+                sourceObject.transform);
+            positionDifferenceMax = 0f;
+            rotationDifferenceMax = 0f;
+            maximumRotationPath = string.Empty;
+            maximumRotationTime = 0f;
+            try
+            {
+                int frameIntervals = Mathf.RoundToInt(
+                    StickGripTwoHandSequenceDurationSeconds * 30f);
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float reversedTime = frame / 30f;
+                    SampleCurrentStickGripTwoHandClipsExact(
+                        sourceObject,
+                        sourceCarry,
+                        sourceTransition,
+                        sourceAttackReady,
+                        StickGripTwoHandSequenceDurationSeconds -
+                            reversedTime);
+                    SampleStickGripOneHandReversedClipsExact(
+                        reversedObject,
+                        reversedAttackReady,
+                        reversedTransition,
+                        reversedCarry,
+                        reversedTime);
+                    PoseSnapshot sourcePose = CapturePose(
+                        sourceObject.transform);
+                    PoseSnapshot reversedPose = CapturePose(
+                        reversedObject.transform);
+                    foreach (string path in paths)
+                    {
+                        float positionDifference = Vector3.Distance(
+                            sourcePose.Positions[path],
+                            reversedPose.Positions[path]);
+                        float rotationDifference = Quaternion.Angle(
+                            sourcePose.Rotations[path],
+                            reversedPose.Rotations[path]);
+                        positionDifferenceMax = Mathf.Max(
+                            positionDifferenceMax,
+                            positionDifference);
+                        if (rotationDifference > rotationDifferenceMax)
+                        {
+                            rotationDifferenceMax = rotationDifference;
+                            maximumRotationPath = path;
+                            maximumRotationTime = reversedTime;
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+                UnityEngine.Object.DestroyImmediate(reversedObject);
+            }
+        }
+
+        private static void SampleStickGripOneHandReversedClipsExact(
+            GameObject target,
+            AnimationClip attackReverse,
+            AnimationClip transitionReverse,
+            AnimationClip carryReverse,
+            float sequenceTime)
+        {
+            float time = Mathf.Clamp(
+                sequenceTime,
+                0f,
+                StickGripTwoHandSequenceDurationSeconds);
+            if (time <= StickGripTwoHandAttackReadyDurationSeconds)
+            {
+                attackReverse.SampleAnimation(target, time);
+                return;
+            }
+
+            time -= StickGripTwoHandAttackReadyDurationSeconds;
+            if (time <= StickGripTwoHandTransitionDurationSeconds)
+            {
+                transitionReverse.SampleAnimation(target, time);
+                return;
+            }
+
+            time -= StickGripTwoHandTransitionDurationSeconds;
+            carryReverse.SampleAnimation(target, time);
+        }
+
+        private static bool StickTransformMatchesCarry(
+            Transform stickCarryTarget,
+            Transform target)
+        {
+            StickGripPlacement source = DescribeExistingStickGrip(
+                stickCarryTarget);
+            StickGripPlacement applied = DescribeExistingStickGrip(target);
+            return applied.Instance.parent == FindRequired(target, RightHandPath) &&
+                Vector3.Distance(
+                    source.Instance.localPosition,
+                    applied.Instance.localPosition) <= 0.000001f &&
+                Quaternion.Angle(
+                    source.Instance.localRotation,
+                    applied.Instance.localRotation) <= 0.0001f &&
+                Vector3.Distance(
+                    source.Instance.localScale,
+                    applied.Instance.localScale) <= 0.000001f;
+        }
+
+        private static bool StickGripOneHandControllerIsExact(
+            AnimatorController controller,
+            AnimationClip attackReverse,
+            AnimationClip transitionReverse,
+            AnimationClip carryReverse)
+        {
+            if (controller.layers.Length != 1)
+            {
+                return false;
+            }
+
+            AnimatorStateMachine stateMachine =
+                controller.layers[0].stateMachine;
+            Dictionary<string, AnimatorState> states = stateMachine.states
+                .Select(child => child.state)
+                .ToDictionary(state => state.name, StringComparer.Ordinal);
+            if (states.Count != 3 ||
+                !states.TryGetValue(
+                    StickGripOneHandAttackReadyReverseStateName,
+                    out AnimatorState attackState) ||
+                !states.TryGetValue(
+                    StickGripOneHandTransitionReverseStateName,
+                    out AnimatorState transitionState) ||
+                !states.TryGetValue(
+                    StickGripOneHandCarryReverseStateName,
+                    out AnimatorState carryState))
+            {
+                return false;
+            }
+
+            return stateMachine.defaultState == attackState &&
+                StickGripTwoHandStateIsExact(
+                    attackState,
+                    attackReverse) &&
+                StickGripTwoHandStateIsExact(
+                    transitionState,
+                    transitionReverse) &&
+                StickGripTwoHandStateIsExact(carryState, carryReverse) &&
+                StickGripTwoHandTransitionIsExact(
+                    attackState,
+                    transitionState,
+                    1f) &&
+                StickGripTwoHandTransitionIsExact(
+                    transitionState,
+                    carryState,
+                    1f) &&
+                StickGripTwoHandTransitionIsExact(
+                    carryState,
+                    attackState,
+                    1f);
+        }
+
+        private static void CaptureStickGripTwoHandDirectReview()
+        {
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, StickGripTwoHandTargetName);
+            Animator targetAnimator = RequireAnimator(target);
+            AnimatorController controller =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    StickGripTwoHandControllerPath) ??
+                throw new InvalidOperationException(
+                    "Stick_Grip_TwoHand controller is missing for direct review.");
+            if (!AnimatorMatches(targetAnimator, controller))
+            {
+                throw new InvalidOperationException(
+                    "Stick_Grip_TwoHand does not use the applied controller.");
+            }
+
+            AnimationClip adjustedAttackReadyClip = LoadClip(
+                StickGripTwoHandAdjustedAttackReadyClipPath);
+            const int sequenceFrames = 45;
+            const int columns = 10;
+            int pageCount = Mathf.CeilToInt(sequenceFrames / (float)columns);
+            List<List<byte[]>> rows = Enumerable.Range(0, pageCount * 2)
+                .Select(_ => new List<byte[]>())
+                .ToList();
+            try
+            {
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(target))
+                {
+                    for (int frame = 0; frame < sequenceFrames; frame++)
+                    {
+                        float sequenceTime =
+                            StickGripTwoHandCarryDurationSeconds +
+                            frame / 30f;
+                        SampleStickGripTwoHandSequence(
+                            targetAnimator,
+                            adjustedAttackReadyClip,
+                            sequenceTime);
+                        Transform rightHand = FindRequired(
+                            target,
+                            RightHandPath);
+                        Transform leftHand = FindRequired(
+                            target,
+                            LeftHandPath);
+                        Vector3 center =
+                            (rightHand.position + leftHand.position) * 0.5f;
+                        environment.ConfigureView(target, center, 0.72f);
+                        int rowOffset = frame / columns * 2;
+                        rows[rowOffset].Add(environment.CaptureFront());
+                        rows[rowOffset + 1].Add(environment.CaptureSide());
+                    }
+                }
+
+                foreach (List<byte[]> row in rows)
+                {
+                    while (row.Count < columns)
+                    {
+                        row.Add(row[row.Count - 1]);
+                    }
+                }
+
+                ComposeRows(rows, StickGripTwoHandReviewPath);
+            }
+            finally
+            {
+                targetAnimator.Rebind();
+                targetAnimator.Update(0f);
+            }
+        }
+
+        private static void CaptureStickGripTwoHandTwoViewRows(
+            Transform subject,
+            Action<float> sample,
+            IReadOnlyList<List<byte[]>> rows,
+            int rowOffset)
+        {
+            using (CaptureEnvironment environment = new CaptureEnvironment(subject))
+            {
+                const int phases = 8;
+                for (int phaseIndex = 0; phaseIndex < phases; phaseIndex++)
+                {
+                    float phase = phaseIndex / (float)(phases - 1);
+                    sample(phase);
+                    environment.ConfigureView(subject, 1.05f, 1.35f);
+                    rows[rowOffset].Add(environment.CaptureFront());
+                    rows[rowOffset + 1].Add(environment.CaptureSide());
+                }
+            }
+        }
+
+        private static void CaptureStickGripTwoHandHandRows(
+            Transform subject,
+            Action<float> sample,
+            IReadOnlyList<List<byte[]>> rows,
+            int rowOffset)
+        {
+            using (CaptureEnvironment environment = new CaptureEnvironment(subject))
+            {
+                const int phases = 8;
+                for (int phaseIndex = 0; phaseIndex < phases; phaseIndex++)
+                {
+                    float phase = phaseIndex / (float)(phases - 1);
+                    sample(phase);
+                    Transform rightHand = FindRequired(subject, RightHandPath);
+                    Transform leftHand = FindRequired(subject, LeftHandPath);
+                    Vector3 center = (rightHand.position + leftHand.position) * 0.5f;
+                    environment.ConfigureView(subject, center, 0.72f);
+                    rows[rowOffset].Add(environment.CaptureFront());
+                    rows[rowOffset + 1].Add(environment.CaptureSide());
+                }
+            }
+        }
+
+        private static void SampleStickGripTwoHandSequence(
+            Animator animator,
+            AnimationClip attackReadyClip,
+            float sequenceTime)
+        {
+            float time = Mathf.Repeat(
+                sequenceTime,
+                StickGripTwoHandSequenceDurationSeconds);
+            if (time < StickGripTwoHandCarryDurationSeconds)
+            {
+                SampleAnimator(
+                    animator,
+                    StickGripTwoHandCarryStateName,
+                    time / StickGripTwoHandCarryDurationSeconds);
+                return;
+            }
+
+            time -= StickGripTwoHandCarryDurationSeconds;
+            if (time < StickGripTwoHandTransitionDurationSeconds)
+            {
+                SampleAnimator(
+                    animator,
+                    StickGripTwoHandTransitionStateName,
+                    time / StickGripTwoHandTransitionDurationSeconds);
+                return;
+            }
+
+            time -= StickGripTwoHandTransitionDurationSeconds;
+            SampleAnimator(
+                animator,
+                StickGripTwoHandAttackReadyStateName,
+                time / attackReadyClip.length);
+        }
+
+        private static StickGripTwoHandMetrics
+            MeasureStickGripTwoHandSequenceMetrics()
+        {
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after Stick_Grip_TwoHand apply.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform sourceTarget = RequireTarget(layout, StickCarryTargetName);
+            Transform target = RequireTarget(layout, StickGripTwoHandTargetName);
+            Animator sourceAnimator = RequireAnimator(sourceTarget);
+            Animator targetAnimator = RequireAnimator(target);
+            AnimatorController sourceController =
+                sourceAnimator.runtimeAnimatorController as AnimatorController ??
+                throw new InvalidOperationException(
+                    "Stick_Carry controller is unavailable for support checks.");
+            AnimatorController controller =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    StickGripTwoHandControllerPath) ??
+                throw new InvalidOperationException(
+                    "Stick_Grip_TwoHand controller is missing.");
+            AnimationClip baseClip = RequireDefaultLayerClip(
+                sourceController,
+                0,
+                AlignmentBaseStateName);
+            AnimationClip armClip = RequireDefaultLayerClip(
+                sourceController,
+                1,
+                StickCarryStateName);
+            AnimationClip carryClip = LoadClip(StickGripTwoHandCarryClipPath);
+            AnimationClip transitionClip = LoadClip(
+                StickGripTwoHandTransitionClipPath);
+            AnimationClip attackReadyClip = LoadSingleEmbeddedClip(
+                StickGripTwoHandSourcePath,
+                "stick two-hand attack-ready");
+            AnimationClip adjustedAttackReadyClip = LoadClip(
+                StickGripTwoHandAdjustedAttackReadyClipPath);
+
+            MeasureStickGripTwoHandCarryPoseDifference(
+                target,
+                sourceTarget,
+                sourceAnimator,
+                baseClip,
+                armClip,
+                carryClip,
+                out float carryPositionDifference,
+                out float carryRotationDifference);
+            MeasureStickGripTwoHandTransitionEndpoints(
+                target,
+                carryClip,
+                transitionClip,
+                adjustedAttackReadyClip,
+                out float transitionStartPositionDifference,
+                out float transitionStartRotationDifference,
+                out float transitionEndPositionDifference,
+                out float transitionEndRotationDifference);
+
+            MeasureStickGripTwoHandAdjustedAttackReady(
+                target,
+                attackReadyClip,
+                adjustedAttackReadyClip,
+                out float minimumLeftHandForwardSeparation,
+                out float maximumLeftHandReachError,
+                out float nonLeftPosePositionDifference,
+                out float nonLeftPoseRotationDifference);
+            string[] modifiedTransformPaths =
+                GetStickGripTwoHandModifiedTransformPaths(
+                    attackReadyClip,
+                    adjustedAttackReadyClip);
+            bool onlyLeftArmAndForeArmRotationCurvesChanged =
+                AnimationMatchesExceptStickGripTwoHandArmRotations(
+                    attackReadyClip,
+                    adjustedAttackReadyClip) &&
+                modifiedTransformPaths.Length > 0 &&
+                modifiedTransformPaths.All(
+                    IsStickGripTwoHandAdjustedArmPath);
+            bool leftShoulderCurvesExact = StickGripTwoHandPathCurvesExact(
+                attackReadyClip,
+                adjustedAttackReadyClip,
+                LeftShoulderPath);
+            bool leftHandCurvesExact = StickGripTwoHandPathCurvesExact(
+                attackReadyClip,
+                adjustedAttackReadyClip,
+                LeftHandPath);
+            bool nonLeftPoseExact =
+                nonLeftPosePositionDifference <= PositionTolerance &&
+                nonLeftPoseRotationDifference <= RotationTolerance;
+
+            bool controllerSequenceExact = StickGripTwoHandControllerIsExact(
+                controller,
+                carryClip,
+                transitionClip,
+                adjustedAttackReadyClip,
+                out bool controllerUsesAdjustedAttackReadyClip);
+            StickGripPlacement sourceStick = DescribeExistingStickGrip(
+                sourceTarget);
+            StickGripPlacement targetStick = DescribeExistingStickGrip(target);
+            Transform targetHand = FindRequired(target, RightHandPath);
+            bool stickTransformExact =
+                targetStick.Instance.parent == targetHand &&
+                Vector3.Distance(
+                    sourceStick.Instance.localPosition,
+                    targetStick.Instance.localPosition) <= 0.000001f &&
+                Quaternion.Angle(
+                    sourceStick.Instance.localRotation,
+                    targetStick.Instance.localRotation) <= 0.0001f &&
+                Vector3.Distance(
+                    sourceStick.Instance.localScale,
+                    targetStick.Instance.localScale) <= 0.000001f;
+            StickGripTwoHandMetrics metrics = new StickGripTwoHandMetrics
+            {
+                sourceTarget = StickCarryTargetName,
+                target = StickGripTwoHandTargetName,
+                stickSourcePath = StickSourceModelPath,
+                stickAssetPath = StickAssetPath,
+                stickSourceHash = HashFile(StickSourceModelPath),
+                stickAssetHash = HashFile(StickAssetPath),
+                attackReadyOriginalPath = StickGripTwoHandOriginalPath,
+                attackReadySourcePath = StickGripTwoHandSourcePath,
+                attackReadyOriginalHash = HashFile(
+                    StickGripTwoHandOriginalPath),
+                attackReadySourceHash = HashFile(
+                    StickGripTwoHandSourcePath),
+                embeddedTake = attackReadyClip.name,
+                embeddedTakeDurationSeconds = attackReadyClip.length,
+                embeddedTakeFrameRate = attackReadyClip.frameRate,
+                carryDurationSeconds = carryClip.length,
+                transitionDurationSeconds = transitionClip.length,
+                attackReadySegmentDurationSeconds =
+                    StickGripTwoHandAttackReadyDurationSeconds,
+                totalSequenceDurationSeconds =
+                    StickGripTwoHandSequenceDurationSeconds,
+                carryPosePositionDifferenceMax = carryPositionDifference,
+                carryPoseRotationDifferenceDegreesMax = carryRotationDifference,
+                transitionStartPositionDifferenceMax =
+                    transitionStartPositionDifference,
+                transitionStartRotationDifferenceDegreesMax =
+                    transitionStartRotationDifference,
+                transitionEndPositionDifferenceMax =
+                    transitionEndPositionDifference,
+                transitionEndRotationDifferenceDegreesMax =
+                    transitionEndRotationDifference,
+                adjustedAttackReadyClipPath =
+                    StickGripTwoHandAdjustedAttackReadyClipPath,
+                minimumLeftHandForwardSeparationMeters =
+                    minimumLeftHandForwardSeparation,
+                maximumLeftHandReachErrorMeters =
+                    maximumLeftHandReachError,
+                modifiedTransformPaths = modifiedTransformPaths,
+                onlyLeftArmAndForeArmRotationCurvesChanged =
+                    onlyLeftArmAndForeArmRotationCurvesChanged,
+                leftShoulderCurvesExact = leftShoulderCurvesExact,
+                leftHandCurvesExact = leftHandCurvesExact,
+                nonLeftPoseExact = nonLeftPoseExact,
+                nonLeftPosePositionDifferenceMax =
+                    nonLeftPosePositionDifference,
+                nonLeftPoseRotationDifferenceDegreesMax =
+                    nonLeftPoseRotationDifference,
+                controllerUsesAdjustedAttackReadyClip =
+                    controllerUsesAdjustedAttackReadyClip,
+                controllerSequenceExact = controllerSequenceExact,
+                animatorSettingsCorrect = AnimatorMatches(
+                    targetAnimator,
+                    controller),
+                stickParentPath = RightHandPath,
+                sourceStickLocalPosition = sourceStick.Instance.localPosition,
+                sourceStickLocalRotation = sourceStick.Instance.localRotation,
+                sourceStickLocalScale = sourceStick.Instance.localScale,
+                targetStickLocalPosition = targetStick.Instance.localPosition,
+                targetStickLocalRotation = targetStick.Instance.localRotation,
+                targetStickLocalScale = targetStick.Instance.localScale,
+                stickParentAndLocalTransformExact = stickTransformExact,
+                reviewContactSheetExists = File.Exists(
+                    Path.GetFullPath(StickGripTwoHandReviewPath)),
+                validationPriority =
+                    "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+            };
+            metrics.passedNumericChecks =
+                string.Equals(
+                    metrics.stickSourceHash,
+                    metrics.stickAssetHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.attackReadyOriginalHash,
+                    StickGripTwoHandSourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.attackReadyOriginalHash,
+                    metrics.attackReadySourceHash,
+                    StringComparison.OrdinalIgnoreCase) &&
+                metrics.embeddedTakeDurationSeconds + 0.0001f >=
+                    StickGripTwoHandAttackReadyDurationSeconds &&
+                Mathf.Abs(
+                    metrics.carryDurationSeconds -
+                    StickGripTwoHandCarryDurationSeconds) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.transitionDurationSeconds -
+                    StickGripTwoHandTransitionDurationSeconds) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.totalSequenceDurationSeconds - 2f) <= 0.0001f &&
+                metrics.carryPosePositionDifferenceMax <= PositionTolerance &&
+                metrics.carryPoseRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.transitionStartPositionDifferenceMax <=
+                    PositionTolerance &&
+                metrics.transitionStartRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.transitionEndPositionDifferenceMax <=
+                    PositionTolerance &&
+                metrics.transitionEndRotationDifferenceDegreesMax <=
+                    RotationTolerance &&
+                metrics.minimumLeftHandForwardSeparationMeters + 0.0001f >=
+                    StickGripTwoHandLeftHandForwardClearanceMeters &&
+                metrics.maximumLeftHandReachErrorMeters <= PositionTolerance &&
+                metrics.onlyLeftArmAndForeArmRotationCurvesChanged &&
+                metrics.leftShoulderCurvesExact &&
+                metrics.leftHandCurvesExact &&
+                metrics.nonLeftPoseExact &&
+                metrics.controllerUsesAdjustedAttackReadyClip &&
+                metrics.controllerSequenceExact &&
+                metrics.animatorSettingsCorrect &&
+                metrics.stickParentAndLocalTransformExact &&
+                metrics.reviewContactSheetExists;
+            return metrics;
+        }
+
+        private static void MeasureStickGripTwoHandAdjustedAttackReady(
+            Transform target,
+            AnimationClip sourceClip,
+            AnimationClip adjustedClip,
+            out float minimumLeftHandForwardSeparation,
+            out float maximumLeftHandReachError,
+            out float nonLeftPosePositionDifferenceMax,
+            out float nonLeftPoseRotationDifferenceMax)
+        {
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            GameObject adjustedObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            sourceObject.name = "StickGripTwoHandSourceAttackReadyMeasure";
+            adjustedObject.name = "StickGripTwoHandAdjustedAttackReadyMeasure";
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            adjustedObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            DisableAnimators(adjustedObject);
+            minimumLeftHandForwardSeparation = float.PositiveInfinity;
+            maximumLeftHandReachError = 0f;
+            nonLeftPosePositionDifferenceMax = 0f;
+            nonLeftPoseRotationDifferenceMax = 0f;
+            int frameIntervals = Mathf.Max(
+                1,
+                Mathf.RoundToInt(
+                    StickGripTwoHandAttackReadyDurationSeconds *
+                    adjustedClip.frameRate));
+            try
+            {
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = StickGripTwoHandAttackReadyDurationSeconds *
+                        frame / frameIntervals;
+                    sourceClip.SampleAnimation(sourceObject, time);
+                    adjustedClip.SampleAnimation(adjustedObject, time);
+                    Transform sourceRoot = sourceObject.transform;
+                    Transform adjustedRoot = adjustedObject.transform;
+                    Transform sourceLeftHand = FindRequired(
+                        sourceRoot,
+                        LeftHandPath);
+                    Transform sourceRightHand = FindRequired(
+                        sourceRoot,
+                        RightHandPath);
+                    Transform adjustedLeftHand = FindRequired(
+                        adjustedRoot,
+                        LeftHandPath);
+                    Transform adjustedRightHand = FindRequired(
+                        adjustedRoot,
+                        RightHandPath);
+                    float sourceSeparation = Vector3.Dot(
+                        sourceLeftHand.position - sourceRightHand.position,
+                        sourceRoot.forward);
+                    Vector3 requestedLeftHandPosition =
+                        sourceLeftHand.position +
+                        sourceRoot.forward * Mathf.Max(
+                            0f,
+                            StickGripTwoHandLeftHandForwardClearanceMeters -
+                                sourceSeparation);
+                    minimumLeftHandForwardSeparation = Mathf.Min(
+                        minimumLeftHandForwardSeparation,
+                        Vector3.Dot(
+                            adjustedLeftHand.position - adjustedRightHand.position,
+                            adjustedRoot.forward));
+                    maximumLeftHandReachError = Mathf.Max(
+                        maximumLeftHandReachError,
+                        Vector3.Distance(
+                            requestedLeftHandPosition,
+                            adjustedLeftHand.position));
+
+                    PoseSnapshot sourcePose = CapturePose(sourceRoot);
+                    PoseSnapshot adjustedPose = CapturePose(adjustedRoot);
+                    string[] nonLeftPaths = sourcePose.Positions.Keys
+                        .Where(path =>
+                            (string.Equals(
+                                 path,
+                                 "Armature",
+                                 StringComparison.Ordinal) ||
+                             path.StartsWith(
+                                 "Armature/",
+                                 StringComparison.Ordinal)) &&
+                            !IsStickGripTwoHandApprovedLeftChainPath(path))
+                        .ToArray();
+                    MeasurePoseDifferenceForPaths(
+                        sourcePose,
+                        adjustedPose,
+                        nonLeftPaths,
+                        out float positionDifference,
+                        out float rotationDifference);
+                    nonLeftPosePositionDifferenceMax = Mathf.Max(
+                        nonLeftPosePositionDifferenceMax,
+                        positionDifference);
+                    nonLeftPoseRotationDifferenceMax = Mathf.Max(
+                        nonLeftPoseRotationDifferenceMax,
+                        rotationDifference);
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(sourceObject);
+                UnityEngine.Object.DestroyImmediate(adjustedObject);
+            }
+        }
+
+        private static void MeasureStickGripTwoHandCarryPoseDifference(
+            Transform target,
+            Transform sourceTarget,
+            Animator sourceAnimator,
+            AnimationClip baseClip,
+            AnimationClip armClip,
+            AnimationClip carryClip,
+            out float positionDifferenceMax,
+            out float rotationDifferenceMax)
+        {
+            GameObject actualObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            actualObject.name = "StickGripTwoHandCarryMeasure";
+            actualObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(actualObject);
+            positionDifferenceMax = 0f;
+            rotationDifferenceMax = 0f;
+            int frameIntervals = Mathf.Max(
+                1,
+                Mathf.RoundToInt(
+                    StickGripTwoHandCarryDurationSeconds *
+                    carryClip.frameRate));
+            try
+            {
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = StickGripTwoHandCarryDurationSeconds *
+                        frame / frameIntervals;
+                    SampleLayeredAnimator(
+                        sourceAnimator,
+                        StickCarryStateName,
+                        time,
+                        baseClip.length,
+                        armClip.length);
+                    carryClip.SampleAnimation(actualObject, time);
+                    MeasureArmaturePoseDifference(
+                        CapturePose(sourceTarget),
+                        CapturePose(actualObject.transform),
+                        out float positionDifference,
+                        out float rotationDifference);
+                    positionDifferenceMax = Mathf.Max(
+                        positionDifferenceMax,
+                        positionDifference);
+                    rotationDifferenceMax = Mathf.Max(
+                        rotationDifferenceMax,
+                        rotationDifference);
+                }
+            }
+            finally
+            {
+                sourceAnimator.Rebind();
+                sourceAnimator.Update(0f);
+                UnityEngine.Object.DestroyImmediate(actualObject);
+            }
+        }
+
+        private static void MeasureStickGripTwoHandTransitionEndpoints(
+            Transform target,
+            AnimationClip carryClip,
+            AnimationClip transitionClip,
+            AnimationClip attackReadyClip,
+            out float startPositionDifference,
+            out float startRotationDifference,
+            out float endPositionDifference,
+            out float endRotationDifference)
+        {
+            GameObject carryObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            GameObject transitionStartObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            GameObject transitionEndObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            GameObject attackReadyObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            carryObject.hideFlags = HideFlags.HideAndDontSave;
+            transitionStartObject.hideFlags = HideFlags.HideAndDontSave;
+            transitionEndObject.hideFlags = HideFlags.HideAndDontSave;
+            attackReadyObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(carryObject);
+            DisableAnimators(transitionStartObject);
+            DisableAnimators(transitionEndObject);
+            DisableAnimators(attackReadyObject);
+            try
+            {
+                carryClip.SampleAnimation(
+                    carryObject,
+                    StickGripTwoHandCarryDurationSeconds);
+                transitionClip.SampleAnimation(transitionStartObject, 0f);
+                transitionClip.SampleAnimation(
+                    transitionEndObject,
+                    StickGripTwoHandTransitionDurationSeconds);
+                attackReadyClip.SampleAnimation(attackReadyObject, 0f);
+                MeasureArmaturePoseDifference(
+                    CapturePose(carryObject.transform),
+                    CapturePose(transitionStartObject.transform),
+                    out startPositionDifference,
+                    out startRotationDifference);
+                string[] sourceDrivenPaths = AnimationUtility
+                    .GetCurveBindings(attackReadyClip)
+                    .Where(binding =>
+                        binding.type == typeof(Transform) &&
+                        (binding.propertyName.StartsWith(
+                             "m_LocalPosition.",
+                             StringComparison.Ordinal) ||
+                         binding.propertyName.StartsWith(
+                             "m_LocalRotation.",
+                             StringComparison.Ordinal)))
+                    .Select(binding => binding.path)
+                    .ToArray();
+                MeasurePoseDifferenceForPaths(
+                    CapturePose(transitionEndObject.transform),
+                    CapturePose(attackReadyObject.transform),
+                    sourceDrivenPaths,
+                    out endPositionDifference,
+                    out endRotationDifference);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(carryObject);
+                UnityEngine.Object.DestroyImmediate(transitionStartObject);
+                UnityEngine.Object.DestroyImmediate(transitionEndObject);
+                UnityEngine.Object.DestroyImmediate(attackReadyObject);
+            }
+        }
+
+        private static bool StickGripTwoHandControllerIsExact(
+            AnimatorController controller,
+            AnimationClip carryClip,
+            AnimationClip transitionClip,
+            AnimationClip attackReadyClip,
+            out bool usesAdjustedAttackReadyClip)
+        {
+            usesAdjustedAttackReadyClip = false;
+            if (controller.layers.Length != 1)
+            {
+                return false;
+            }
+
+            AnimatorStateMachine stateMachine =
+                controller.layers[0].stateMachine;
+            Dictionary<string, AnimatorState> states = stateMachine.states
+                .Select(child => child.state)
+                .ToDictionary(state => state.name, StringComparer.Ordinal);
+            if (states.Count != 3 ||
+                !states.TryGetValue(
+                    StickGripTwoHandCarryStateName,
+                    out AnimatorState carryState) ||
+                !states.TryGetValue(
+                    StickGripTwoHandTransitionStateName,
+                    out AnimatorState transitionState) ||
+                !states.TryGetValue(
+                    StickGripTwoHandAttackReadyStateName,
+                    out AnimatorState attackReadyState))
+            {
+                return false;
+            }
+
+            usesAdjustedAttackReadyClip =
+                attackReadyState.motion == attackReadyClip &&
+                Mathf.Abs(attackReadyState.speed - 1f) <= 0.0001f;
+            return stateMachine.defaultState == carryState &&
+                StickGripTwoHandStateIsExact(carryState, carryClip) &&
+                StickGripTwoHandStateIsExact(
+                    transitionState,
+                    transitionClip) &&
+                StickGripTwoHandStateIsExact(
+                    attackReadyState,
+                    attackReadyClip) &&
+                StickGripTwoHandTransitionIsExact(
+                    carryState,
+                    transitionState,
+                    1f) &&
+                StickGripTwoHandTransitionIsExact(
+                    transitionState,
+                    attackReadyState,
+                    1f) &&
+                StickGripTwoHandTransitionIsExact(
+                    attackReadyState,
+                    carryState,
+                    StickGripTwoHandAttackReadyDurationSeconds /
+                        attackReadyClip.length);
+        }
+
+        private static bool StickGripTwoHandStateIsExact(
+            AnimatorState state,
+            AnimationClip clip)
+        {
+            return state.motion == clip &&
+                Mathf.Abs(state.speed - 1f) <= 0.0001f &&
+                !state.mirror &&
+                Mathf.Abs(state.cycleOffset) <= 0.0001f;
+        }
+
+        private static bool StickGripTwoHandTransitionIsExact(
+            AnimatorState source,
+            AnimatorState destination,
+            float exitTime)
+        {
+            AnimatorStateTransition[] transitions = source.transitions;
+            if (transitions.Length != 1)
+            {
+                return false;
+            }
+
+            AnimatorStateTransition transition = transitions[0];
+            return transition.destinationState == destination &&
+                transition.hasExitTime &&
+                Mathf.Abs(transition.exitTime - exitTime) <= 0.0001f &&
+                transition.hasFixedDuration &&
+                Mathf.Abs(transition.duration) <= 0.0001f &&
+                Mathf.Abs(transition.offset) <= 0.0001f;
+        }
+
         private sealed class AnimationClipPoseSampler : IDisposable
         {
             private readonly Animator animator;
@@ -19985,7 +34099,9 @@ namespace Bellerophon.Editor
 
         private sealed class CaptureEnvironment : IDisposable
         {
-            private readonly RendererState[] hiddenRenderers;
+            private readonly List<RendererState> hiddenRenderers;
+            private readonly HashSet<Renderer> hiddenRendererSet;
+            private readonly HashSet<Renderer> targetRenderers;
             private readonly GameObject frontCameraObject;
             private readonly GameObject sideCameraObject;
             private readonly GameObject palmCameraObject;
@@ -20006,19 +34122,11 @@ namespace Bellerophon.Editor
                         target.name + " has no enabled renderer.");
                 }
 
-                HashSet<Renderer> targetSet = new HashSet<Renderer>(targetRenderers);
-                hiddenRenderers = Resources.FindObjectsOfTypeAll<Renderer>()
-                    .Where(renderer =>
-                        renderer != null &&
-                        renderer.enabled &&
-                        renderer.gameObject.scene.IsValid() &&
-                        !targetSet.Contains(renderer))
-                    .Select(renderer => new RendererState(renderer))
-                    .ToArray();
-                foreach (RendererState state in hiddenRenderers)
-                {
-                    state.Hide();
-                }
+                this.targetRenderers =
+                    new HashSet<Renderer>(targetRenderers);
+                hiddenRenderers = new List<RendererState>();
+                hiddenRendererSet = new HashSet<Renderer>();
+                HideNonTargetRenderers();
 
                 frontCameraObject = CreateCameraObject(target.name + "FrontCamera");
                 sideCameraObject = CreateCameraObject(target.name + "SideCamera");
@@ -20116,6 +34224,26 @@ namespace Bellerophon.Editor
                     orthographicSize);
             }
 
+            internal void ConfigureBackView(
+                Transform target,
+                float centerHeight,
+                float orthographicSize)
+            {
+                Vector3 center = target.position + target.up * centerHeight;
+                ConfigureFixedCamera(
+                    frontCameraObject.GetComponent<Camera>(),
+                    target,
+                    center,
+                    -target.forward,
+                    orthographicSize);
+                ConfigureFixedCamera(
+                    sideCameraObject.GetComponent<Camera>(),
+                    target,
+                    center,
+                    target.right,
+                    orthographicSize);
+            }
+
             internal void ConfigureElevatedView(
                 Transform target,
                 Vector3 center,
@@ -20137,6 +34265,7 @@ namespace Bellerophon.Editor
 
             private byte[] CaptureFrame(Camera camera)
             {
+                HideNonTargetRenderers();
                 camera.targetTexture = renderTexture;
                 camera.Render();
                 RenderTexture.active = renderTexture;
@@ -20149,6 +34278,28 @@ namespace Bellerophon.Editor
                 byte[] png = frameTexture.EncodeToPNG();
                 camera.targetTexture = null;
                 return png;
+            }
+
+            private void HideNonTargetRenderers()
+            {
+                foreach (Renderer renderer in
+                         Resources.FindObjectsOfTypeAll<Renderer>())
+                {
+                    if (renderer == null ||
+                        !renderer.enabled ||
+                        !renderer.gameObject.scene.IsValid() ||
+                        targetRenderers.Contains(renderer))
+                    {
+                        continue;
+                    }
+
+                    if (hiddenRendererSet.Add(renderer))
+                    {
+                        hiddenRenderers.Add(new RendererState(renderer));
+                    }
+
+                    renderer.enabled = false;
+                }
             }
 
             public void Dispose()

@@ -1,4 +1,0 @@
-Player=(66.77488,0,-117.163), Camera=(66.77488,1.62,-117.163), CameraForward=(-0.034762,0,0.999396), Target=(66.32657,1.247604,-104.2744), Distance=12.89647, VerticalFov=60, HorizontalFov=91.493, CameraIsPlayerChild=True
-MainCameraRender=True
-SceneViewFocused=False
-SelectionCleared=True

@@ -1,5 +1,0 @@
-Ispant06MarkedHiltFragmentPreview
-CurrentMesh=Assets/_Project/Art/Enemies/Ispant/Models/Ispant_06_BodyWaistDebrisRemoved.asset, ClusterTriangles=455|17|15|14|7|3, SelectedClusters=1|2|3|4|5, ArmourTrianglesKept=455, HiltTrianglesSelected=56, SharedVerticesOutsideSelection=0, SelectedVertices=74
-TopRow=AsItStands
-BottomRow=AfterRemoval
-SceneChanged=False

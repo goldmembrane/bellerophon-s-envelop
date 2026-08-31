@@ -1,0 +1,6 @@
+IspantFocusedRepair=pre-August-17 slot 08 scale and historical weapon materials
+IspantSlot08BeforeHeight=1.2829
+IspantSlot08ReferenceHeight=1.2829
+IspantSlot08AfterHeight=1.2829
+IspantSlot08NormalizedRootTransformCurves=6
+IspantOtherSceneRootsPreserved=true

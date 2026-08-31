@@ -1,7 +1,0 @@
-Unity editor bridge request completed: 616c2e8ee3af4107b290f4514b6e2cbc
-Unity editor bridge command: CaptureAtaCommandShieldReview
-Unity editor bridge mode: open editor
-Ata command shield review captured.
-
-Captured Unity log:
-Log: AtaCommandShieldReviewCaptured Result=PASS, Path=docs/validation/ata05_command_shield_2026-08-12/Ata_05_CommandShield_TwoLoops.png, Samples=8, Loops=2, ShieldInstances=1, ShieldVisibleAtAllSamples=True, SceneChanged=False.
