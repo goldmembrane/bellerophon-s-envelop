@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>머스켓 총구 발사 VFX 승인 샘플</title>
+  <style>
+    :root { color-scheme: dark; --bg: #0a0e11; --panel: #141b20; --line: #3e4e56; --text: #edf2ef; --muted: #a9b7b5; --cyan: #4ddbe2; --gold: #ffcd67; --success: #245f4a; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: radial-gradient(circle at top, #172127 0, var(--bg) 48rem); color: var(--text); font-family: "Malgun Gothic", Arial, sans-serif; }
+    main { max-width: 1480px; margin: 0 auto; padding: 32px 24px 56px; }
+    header { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start; margin-bottom: 24px; }
+    h1 { margin: 0 0 10px; font-size: clamp(28px, 4vw, 46px); letter-spacing: -0.04em; }
+    h2 { margin: 32px 0 14px; font-size: 24px; }
+    p, li, td, th { line-height: 1.65; }
+    .lead { margin: 0; max-width: 920px; color: #c4cfcc; font-size: 17px; }
+    .status { padding: 10px 16px; border: 1px solid #55b58d; border-radius: 999px; background: var(--success); color: #edfff6; font-weight: 700; white-space: nowrap; }
+    .notice { border-left: 4px solid var(--gold); background: #211d15; padding: 16px 18px; color: #eadfc7; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    figure { margin: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--panel); }
+    figure img { width: 100%; display: block; background: #070b0d; }
+    figcaption { padding: 13px 15px 16px; color: #d9e1de; }
+    .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .card { padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+    .card strong { display: block; margin-bottom: 7px; color: var(--gold); }
+    table { width: 100%; border-collapse: collapse; overflow: hidden; border: 1px solid var(--line); background: var(--panel); }
+    th, td { padding: 12px 14px; border-bottom: 1px solid #2d3a40; text-align: left; vertical-align: top; }
+    th { width: 220px; color: var(--cyan); background: #10171b; }
+    code { color: #9ee8ec; }
+    a { color: #8ce7eb; }
+    .footer { margin-top: 32px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); }
+    @media (max-width: 920px) { header, .grid, .cards { grid-template-columns: 1fr; } .status { justify-self: start; } th { width: 145px; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>머스켓 총구 발사 VFX</h1>
+      <p class="lead">단일 효과 평면 대신 겹친 소프트 파티클의 황백색 연소체와 난류형 체적 연기가 총구 전방·상방으로 팽창하는 3D VFX 재승인 샘플입니다.</p>
+    </div>
+    <div class="status">승인됨 · Unity 적용 완료</div>
+  </header>
+
+  <p class="notice">사용자가 이 3D 방향을 승인했습니다. 화염·내부 가스·연기는 3D 공간에 분포한 소프트 파티클 군집으로, 작은 불티만 메시로 <code>Musket_HipFire</code>와 <code>Musket_Aim_Fire</code>에 적용하고 실제 Play Mode 자연 발사 루프로 직접 확인했습니다.</p>
+
+  <h2>검토 이미지</h2>
+  <section class="grid">
+    <figure>
+      <a href="renders/01_volumetric_multiview.png"><img src="renders/01_volumetric_multiview.png" alt="머스켓 체적형 발사 VFX의 측면, 정면, 사선, 상단 시점"></a>
+      <figcaption>01 · 같은 체적형 효과를 여러 시점에서 확인: 섬광 두께, 연기 깊이, 자체 음영 유지</figcaption>
+    </figure>
+    <figure>
+      <a href="renders/02_first_person_gameplay.png"><img src="renders/02_first_person_gameplay.png" alt="3D 복도에서 머스켓 체적형 발사 VFX가 표시된 1인칭 예상 화면"></a>
+      <figcaption>02 · 1인칭 3D 화면 예상: 총구 부착, 주변 광 반사, 약 6% 화면 점유</figcaption>
+    </figure>
+  </section>
+
+  <h2>승인 샘플과 실제 Unity 적용 비교</h2>
+  <section class="grid">
+    <figure>
+      <a href="renders/02_first_person_gameplay.png"><img src="renders/02_first_person_gameplay.png" alt="승인된 1인칭 3D 머스켓 총구 VFX 콘셉트"></a>
+      <figcaption>승인 기준 · 황백색 체적 코어, 전방으로 팽창하는 짙은 흑색화약 연기, 단일 평면 효과 미사용</figcaption>
+    </figure>
+    <figure>
+      <a href="../../docs/validation/musket_muzzle_flash_vfx_2026-09-01/final.png"><img src="../../docs/validation/musket_muzzle_flash_vfx_2026-09-01/final.png" alt="Musket HipFire와 AimFire에서 직접 캡처한 Unity 3D 총구 VFX 결과"></a>
+      <figcaption>Unity 직접 확인 · HipFire/AimFire 각 두 자연 루프, 전체·측면·정면·근접 구도에서 총구 부착과 입체 실루엣 확인</figcaption>
+    </figure>
+  </section>
+
+  <h2>시간 구성</h2>
+  <section class="cards">
+    <div class="card"><strong>0–20ms · 점화</strong>총구 중심에 작은 백색 핵과 황색 불꽃이 시작됩니다.</div>
+    <div class="card"><strong>20–60ms · 최대 섬광</strong>황백색 핵과 황금색 외곽을 가진 짧은 3D 연소체가 총구에서 약 0.45m까지 뻗습니다.</div>
+    <div class="card"><strong>60–220ms · 연기 팽창</strong>섬광은 사라지고 깊이·자체 음영이 있는 짙은 회백색 난류 덩어리가 전방·상방으로 퍼집니다.</div>
+    <div class="card"><strong>220–650ms · 잔류</strong>카메라를 향한 단일 판이 아니라 3D 공간의 연기 입자군이 월드 공간에 남았다가 사라집니다.</div>
+  </section>
+
+  <h2>Unity 적용 결과</h2>
+  <table>
+    <tr><th>적용 상태</th><td><code>Musket_HipFireLoop</code>, <code>Musket_Aim_FireLoop</code> 정규화 시간 0.08에 한 번씩 표시</td></tr>
+    <tr><th>앵커</th><td>현재 머스켓 총구 구멍의 실제 끝점. 임의 전방 오프셋 없이 방향은 머스켓의 stock→muzzle 로컬 전방축을 사용</td></tr>
+    <tr><th>3D 구성</th><td>네 가지 소프트 불꽃 마스크의 밝은 화염 핵 3개와 금빛 내부 가스 최대 6개, 네 가지 다엽형 마스크를 서로 다른 위치·크기·회전으로 겹친 소프트 연기 최대 14개, 메시 불티 최대 12개의 네 계층으로 구성. 고정 화염 메시와 단일 평면 효과는 사용하지 않음</td></tr>
+    <tr><th>파티클 예산</th><td>대상별 설정 상한 35개, 두 자연 발사 루프에서 실제 최대 34개. 연기 효과 동시 6개, 짧은 무그림자 라이트 동시 4개로 제한</td></tr>
+    <tr><th>공간·축척</th><td>모든 계통은 총구 로컬 시뮬레이션과 로컬 스케일을 사용해 FBX 부모의 큰 상속 스케일로 확대되지 않음. 실제 검토에서 위치·회전 앵커 오차와 총구 표면 간격 모두 0</td></tr>
+    <tr><th>카메라</th><td>HipFire에는 조준선을 추가하지 않음. AimFire의 기존 조준 UI는 유지하고 VFX만 같은 총구 앵커에서 표시</td></tr>
+    <tr><th>최적화</th><td>128×128 공유 불꽃·연기 아틀라스 각 하나와 공유 머티리얼 3개, 프리팹의 비루프 파티클 4계통을 계속 재사용하며 발사별 생성·삭제 없음. 레이마칭·파티클 그림자·모션 벡터·노이즈·동적 라이트 그림자 없음</td></tr>
+    <tr><th>오류 수정</th><td>연기 Velocity over Lifetime의 X/Y/Z를 같은 두 상수 모드로 통일해 반복 발사 시 곡선 모드 오류가 더 생성되지 않음</td></tr>
+    <tr><th>자산 경로</th><td><code>Assets/_Project/Art/VFX/MusketMuzzleFlash/</code> 및 <code>Assets/_Project/Scripts/VFX/</code></td></tr>
+  </table>
+
+  <h2>원본·추론·생성 여부</h2>
+  <p>원본 기획서에서 가져온 기준은 1인칭 3D 게임, 양손 머스켓, 화면 중앙 발사, HipFire 조준선 없음과 정밀 조준 모드의 조준 UI입니다. 황백색 체적 섬광, 난류형 짙은 회백색 연기, 지속 시간과 구체적인 효과 크기는 사용자 피드백과 현재 Unity 머스켓 모델을 바탕으로 만든 신규 제안입니다. 두 승인 이미지는 OpenAI 내장 이미지 생성 도구로 제작한 3D 콘셉트 렌더이며 실제 게임 렌더가 아닙니다. 오른쪽 Unity 결과는 승인 후 실제 대상 두 상태를 자연 재생해 캡처한 직접 확인 자료입니다.</p>
+
+  <p class="footer">생성 파일: <a href="README.md">README.md</a> · <a href="APPROVAL_STATUS.json">APPROVAL_STATUS.json</a> · <a href="../../docs/validation/musket_muzzle_flash_vfx_2026-09-01/final.png">Unity 최종 직접 확인</a> · <a href="Generate-MuzzleFlashSample.ps1">샘플 이미지 검증 도구</a></p>
+</main>
+</body>
+</html>

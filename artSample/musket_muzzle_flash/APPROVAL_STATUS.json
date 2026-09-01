@@ -1,0 +1,17 @@
+{
+  "sample": "musket_muzzle_flash",
+  "approvalState": "승인됨",
+  "unityApplicationAllowed": true,
+  "requiresUserApprovalBeforeUnity": false,
+  "unityApplied": true,
+  "targetStatesApplied": [
+    "Musket_HipFire",
+    "Musket_Aim_Fire"
+  ],
+  "visualDirection": "깊이 있는 짧은 황백색 연소체와 총구 전방·상방으로 퍼지는 자체 음영의 짙은 회백색 체적 흑색화약 연기",
+  "dimensionality": "3D-distributed soft flame, hot-gas, and smoke particle clusters; only embers use a mesh and no single flat effect plane is used",
+  "generatedWith": "OpenAI built-in image generation tool",
+  "unityPrefab": "Assets/_Project/Art/VFX/MusketMuzzleFlash/MusketMuzzleFlash.prefab",
+  "finalUnityReview": "docs/validation/musket_muzzle_flash_vfx_2026-09-01/final.png",
+  "note": "사용자 승인 후 4종 소프트 불꽃 마스크의 백황색 화염 핵·금빛 내부 가스, 3D 공간에 분포한 4종 소프트 연기 파티클, 메시 불티의 최적화된 4계층 효과로 두 발사 상태에 적용했습니다. 실제 총구 구멍 끝점에 표면 간격 0m로 고정하고 Play Mode 두 루프를 직접 확인했습니다."
+}

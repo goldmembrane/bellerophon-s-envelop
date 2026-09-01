@@ -667,6 +667,27 @@ namespace Bellerophon.Editor.Validation
                             .CaptureMusketAnimationSetFinal,
                         "Musket animation set final overview copied from directly reviewed Play Mode frames.");
                     break;
+                case "ApplyMusketMuzzleFlashVfx":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyMusketMuzzleFlashVfx,
+                        "Approved optimized Musket muzzle flash VFX applied to HipFire and AimFire.");
+                    break;
+                case "CaptureMusketMuzzleFlashVfxReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureMusketMuzzleFlashVfxReview,
+                        "Musket muzzle flash VFX actual Play Mode review advanced.");
+                    break;
+                case "CaptureMusketMuzzleFlashVfxFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureMusketMuzzleFlashVfxFinal,
+                        "Musket muzzle flash VFX final overview copied from directly reviewed Play Mode frames.");
+                    break;
                 case "ApplyStickCarryOneHandAnimationAndStickGrip":
                     RunSynchronous(
                         request,

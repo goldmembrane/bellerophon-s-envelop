@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEditor;
@@ -11,6 +12,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 namespace Bellerophon.Editor
@@ -377,6 +379,10 @@ namespace Bellerophon.Editor
             "Bellerophon.PlayerMusketDrawStartView.Review.Stage";
         private const string MusketAssetPath =
             "Assets/_Project/Art/Items/Musket/musket.fbx";
+        private const string MusketBoreAssetPath =
+            "Assets/_Project/Art/Items/Musket/musket_20mm_bore.fbx";
+        private const string MusketBoreAssetHash =
+            "DAC2F0C69BBEF0596152D439C0169EC8D08FDF94618B242AD02B87DA430AFABA";
         private const string MusketSourcePath = "item model/musket.fbx";
         private const string MusketSourceHash =
             "45373D55D3563EC3DBEE161C05CC28CCF97B3318D6FE7318EC560855BC6340E1";
@@ -401,10 +407,53 @@ namespace Bellerophon.Editor
         private const string MusketBackCarryCaptureErrorKey =
             "Bellerophon.PlayerMusketBackCarry.Capture.Error";
         private const string MusketHandInstanceName = "Musket_Hand_Item";
+        private const string MusketMuzzleFlashRootName =
+            "Musket_MuzzleFlash_VFX";
+        private const string MusketMuzzleFlashDirectory =
+            "Assets/_Project/Art/VFX/MusketMuzzleFlash";
+        private const string MusketMuzzleFlashPrefabPath =
+            MusketMuzzleFlashDirectory + "/MusketMuzzleFlash.prefab";
+        private const string MusketMuzzleFlashMeshPath =
+            MusketMuzzleFlashDirectory + "/MusketMuzzleFlash.mesh";
+        private const string MusketMuzzleSmokeMeshPath =
+            MusketMuzzleFlashDirectory + "/MusketMuzzleSmoke.mesh";
+        private const string MusketMuzzleSmokeTexturePath =
+            MusketMuzzleFlashDirectory + "/MusketMuzzleSmokeMask.asset";
+        private const string MusketMuzzleFlameTexturePath =
+            MusketMuzzleFlashDirectory + "/MusketMuzzleFlameMask.asset";
+        private const string MusketMuzzleFlashMaterialPath =
+            MusketMuzzleFlashDirectory + "/MusketMuzzleFlash.mat";
+        private const string MusketMuzzleHotGasMaterialPath =
+            MusketMuzzleFlashDirectory + "/MusketMuzzleHotGas.mat";
+        private const string MusketMuzzleSmokeMaterialPath =
+            MusketMuzzleFlashDirectory + "/MusketMuzzleSmoke.mat";
+        private const string MusketMuzzleFlashValidationDirectory =
+            "docs/validation/musket_muzzle_flash_vfx_2026-09-01";
+        private const string MusketMuzzleFlashApplyMetricsPath =
+            MusketMuzzleFlashValidationDirectory + "/apply_metrics.json";
+        private const string MusketMuzzleFlashReviewMetricsPath =
+            MusketMuzzleFlashValidationDirectory + "/review_metrics.json";
+        private const string MusketMuzzleFlashReviewPath =
+            MusketMuzzleFlashValidationDirectory +
+            "/review_contact_sheet.png";
+        private const string MusketMuzzleFlashFinalPath =
+            MusketMuzzleFlashValidationDirectory + "/final.png";
+        private const string MusketMuzzleFlashCaptureStageKey =
+            "Bellerophon.PlayerMusketMuzzleFlash.Capture.Stage";
+        private const float MusketMuzzleFlashTriggerNormalizedTime = 0.08f;
+        private const float MusketMuzzleFlashMaximumDurationSeconds = 0.65f;
+        private const int MusketMuzzleFlashSystemCount = 4;
+        private const int MusketMuzzleFlashMaximumParticleCapacity = 35;
+        private const int MusketMuzzleFlashConcurrentSmokeLimit = 6;
+        private const int MusketMuzzleFlashConcurrentLightLimit = 4;
+        private const string MusketMuzzleFlashRuntimeTypeName =
+            "Bellerophon.Vfx.MusketMuzzleFlashVfx, Bellerophon.Vfx";
+        private const string MusketMuzzleFlashBehaviourTypeName =
+            "Bellerophon.Vfx.MusketMuzzleFlashStateBehaviour, Bellerophon.Vfx";
         private const string MusketAnimationDirectory =
             "Assets/_Project/Art/Player/Animations/Musket";
         private const string MusketAnimationValidationDirectory =
-            "docs/validation/player_musket_animation_set_2026-08-31";
+            "docs/validation/player_musket_animation_corrections_2026-09-01";
         private const string MusketAnimationApplyMetricsPath =
             MusketAnimationValidationDirectory + "/apply_metrics.json";
         private const string MusketAnimationReviewMetricsPath =
@@ -420,6 +469,26 @@ namespace Bellerophon.Editor
         private const string MusketAnimationCaptureStageKey =
             "Bellerophon.PlayerMusketAnimationSet.Capture.Stage";
         private const float MusketAnimationCaptureFrameRate = 6f;
+        private const float MusketDrawToIdleTransitionSeconds = 0.3f;
+        private const float MusketDrawIdlePlaybackSeconds = 0.5f;
+        private const float MusketIdleToAimTransitionSeconds = 0.3f;
+        private const float MusketDrawRightFootCorrectionLeadSeconds = 0.25f;
+        private const float MusketRightGripRatio = 0.30f;
+        private const float MusketRightPalmSurfaceOffsetMeters = 0.018f;
+        private const float MusketLeftPalmSurfaceOffsetMeters = 0f;
+        private const float MusketCrossSectionWindowRatio = 0.035f;
+        private const float MusketFingerTipMinimumReachMeters = 0.12f;
+        private const float MusketFingerTipMaximumReachMeters = 0.16f;
+        private const float MusketLeftForeGripRatio = 0.44f;
+        private const float MusketStowLeftReleaseStartRatio = 0.14f;
+        private const float MusketStowLeftReleaseEndRatio = 0.28f;
+        // Reload keeps the previously approved pre/post interaction support point.
+        private const float MusketReloadForeGripRatio = 0.42f;
+        private const float MusketReloadInteractionRatio = 0.28f;
+        private const float MusketReloadPullDistanceMeters = 0.09f;
+        private const float MusketReloadFingerSurfaceClearanceMeters = 0.002f;
+        private const float MusketReloadMaximumElbowPoleStepDegrees = 5f;
+        private const float MusketStowToEmptyTransitionSeconds = 0.25f;
         private const string StickCarryStateName = "StickCarryOneHand";
         private const string StickCarryClipPath =
             "Assets/_Project/Art/Player/Animations/Stick_Carry_OneHand.anim";
@@ -1830,6 +1899,8 @@ namespace Bellerophon.Editor
             public bool sourceCopyExact;
             public bool sourceBodyCurvesExact;
             public bool sourceEventsExact;
+            public bool torsoAndLowerBodySourceSegmentPreserved;
+            public bool onlyApprovedArmAndMusketCurvesChanged;
             public bool clipLoops;
             public bool controllerUsesGeneratedClipAtSpeedOne;
             public bool animatorSettingsCorrect;
@@ -1883,6 +1954,13 @@ namespace Bellerophon.Editor
             public float maximumHandItemLocalPositionDifferenceMeters;
             public float maximumHandItemLocalRotationDifferenceDegrees;
             public float maximumHandItemLocalScaleDifference;
+            public float maximumMuzzleForwardErrorDegrees;
+            public float maximumTriggerDownErrorDegrees;
+            public float maximumRightPalmTriggerDistanceMeters;
+            public float maximumLeftHandContactDistanceMeters;
+            public float maximumReloadChamberPullDistanceMeters;
+            public bool rightIndexFingerAvailable;
+            public string rightHandPlacementMode;
             public bool contactSheetExists;
             public bool passedNumericChecks;
         }
@@ -1903,15 +1981,108 @@ namespace Bellerophon.Editor
 
         private sealed class MusketGeometryAnalysis
         {
+            internal Vector3[] LocalVertices;
             internal Vector3 LocalCenter;
             internal Vector3 LocalStockPoint;
             internal Vector3 LocalMuzzlePoint;
             internal Vector3 StockToMuzzleAxis;
             internal Vector3 ThicknessAxis;
+            internal Vector3 TriggerDirectionAxis;
             internal float SourceLength;
             internal float SourceThickness;
+            internal float SourceHeight;
             internal float MuzzleEndRadius;
             internal float StockEndRadius;
+        }
+
+        [Serializable]
+        private sealed class MusketMuzzleFlashTargetApplyMetrics
+        {
+            public string target;
+            public string state;
+            public string effectPath;
+            public Vector3 localPosition;
+            public Vector3 localForward;
+            public float muzzleAnchorErrorMeters;
+            public float muzzleSurfaceGapMeters;
+            public float muzzleDirectionErrorDegrees;
+            public float normalizedTriggerTime;
+            public int particleSystemCount;
+            public int maximumParticleCapacity;
+            public int uniqueMaterialCount;
+            public int uniqueMeshCount;
+            public int stateBehaviourCount;
+            public bool persistentSystemsReused;
+            public bool allSystemsNonLooping;
+            public bool allSystemsDisablePlayOnAwake;
+            public bool allSystemsUseLocalSimulation;
+            public bool allParticleShadowsDisabled;
+            public bool allParticleMotionVectorsDisabled;
+            public bool allNoiseModulesDisabled;
+            public bool flashUsesSoftBillboardTexture;
+            public bool hotGasUsesSoftBillboardTexture;
+            public bool smokeUsesSoftBillboardTexture;
+            public bool lightUsesNoShadows;
+            public bool passedNumericChecks;
+        }
+
+        [Serializable]
+        private sealed class MusketMuzzleFlashApplyMetrics
+        {
+            public string targetSet;
+            public string approvedSample;
+            public string implementation;
+            public string prefabPath;
+            public string flameTexturePath;
+            public string smokeTexturePath;
+            public string hotGasMaterialPath;
+            public int targetCount;
+            public int maximumConcurrentSmokeEffects;
+            public int maximumConcurrentLights;
+            public MusketMuzzleFlashTargetApplyMetrics[] targets;
+            public bool usesRaymarchedVolumetrics;
+            public bool usesDynamicShadows;
+            public bool createsObjectsPerShot;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class MusketMuzzleFlashTargetReviewMetrics
+        {
+            public string target;
+            public string state;
+            public int naturalLoopsObserved;
+            public int emissionsObserved;
+            public int framesCaptured;
+            public int maximumActiveParticles;
+            public int maximumFlashParticles;
+            public int maximumHotGasParticles;
+            public int maximumSmokeParticles;
+            public int maximumEmberParticles;
+            public float maximumAnchorPositionDifferenceMeters;
+            public float maximumAnchorRotationDifferenceDegrees;
+            public bool flashObserved;
+            public bool hotGasObserved;
+            public bool smokeObserved;
+            public bool embersObserved;
+            public bool effectRemainedAtMuzzle;
+            public bool passedNumericChecks;
+        }
+
+        [Serializable]
+        private sealed class MusketMuzzleFlashReviewMetrics
+        {
+            public string targetSet;
+            public float[] capturedEffectAgesSeconds;
+            public int targetCount;
+            public MusketMuzzleFlashTargetReviewMetrics[] targets;
+            public bool bothTargetsObservedForTwoNaturalLoops;
+            public bool allEffectsStayedWithinParticleBudget;
+            public bool allEffectsStayedAttachedToMuzzle;
+            public bool contactSheetExists;
+            public bool passedNumericChecks;
+            public string validationPriority;
         }
 
         [Serializable]
@@ -2462,6 +2633,7 @@ namespace Bellerophon.Editor
         private sealed class RightHandPalmSample
         {
             internal Vector3 Center;
+            internal Vector3 DistalPoint;
             internal int WeightedBoneCount;
             internal int WeightedVertexCount;
         }
@@ -9272,6 +9444,10 @@ namespace Bellerophon.Editor
             }
 
             RequireHash(MusketAssetPath, MusketSourceHash, "Unity musket FBX");
+            RequireHash(
+                MusketBoreAssetPath,
+                MusketBoreAssetHash,
+                "Unity musket 20mm bore FBX");
             Scene scene = RequireScene();
             if (scene.isDirty)
             {
@@ -9299,6 +9475,30 @@ namespace Bellerophon.Editor
             Transform[] targets = specs
                 .Select(spec => RequireTarget(layout, spec.TargetName))
                 .ToArray();
+            Mesh originalPlayerMesh = AssetDatabase
+                .LoadAllAssetsAtPath(PlayerModelPath)
+                .OfType<Mesh>()
+                .OrderByDescending(mesh => mesh.vertexCount)
+                .FirstOrDefault();
+            if (originalPlayerMesh == null)
+            {
+                throw new FileNotFoundException(
+                    "Original Unity player mesh is missing.",
+                    Path.GetFullPath(PlayerModelPath));
+            }
+
+            foreach (Transform target in targets)
+            {
+                SkinnedMeshRenderer renderer =
+                    RequirePrimaryPlayerSkinnedMeshRenderer(target);
+                renderer.sharedMesh = originalPlayerMesh;
+                renderer.localBounds = originalPlayerMesh.bounds;
+                EditorUtility.SetDirty(renderer);
+            }
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
             RootPose[] targetRootsBefore = targets
                 .Select(target => new RootPose(target))
                 .ToArray();
@@ -9309,12 +9509,23 @@ namespace Bellerophon.Editor
                 CaptureAnimatorsExceptTargets(
                     layout,
                     specs.Select(spec => spec.TargetName).ToArray());
-            GameObject musketAsset = AssetDatabase.LoadAssetAtPath<GameObject>(
+            GameObject musketReferenceAsset =
+                AssetDatabase.LoadAssetAtPath<GameObject>(
                 MusketAssetPath) ??
                 throw new FileNotFoundException(
                     "Unity musket asset is missing.",
                     Path.GetFullPath(MusketAssetPath));
-            MusketGeometryAnalysis analysis = AnalyzeMusketGeometry(musketAsset);
+            GameObject musketAsset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MusketBoreAssetPath) ??
+                throw new FileNotFoundException(
+                    "Unity musket 20mm bore asset is missing.",
+                    Path.GetFullPath(MusketBoreAssetPath));
+            MusketGeometryAnalysis analysis = AnalyzeMusketGeometry(
+                musketReferenceAsset);
+            foreach (Transform target in targets)
+            {
+                ReplaceMusketBackItemPreservingTransform(target, musketAsset);
+            }
             int drawIndex = Array.FindIndex(
                 specs,
                 spec => string.Equals(spec.ItemMode, "Draw", StringComparison.Ordinal));
@@ -9327,10 +9538,17 @@ namespace Bellerophon.Editor
                     spec.TargetName,
                     MusketAimTargetName,
                     StringComparison.Ordinal));
-            if (drawIndex < 0 || stowIndex < 0 || aimIndex < 0)
+            int idleIndex = Array.FindIndex(
+                specs,
+                spec => string.Equals(
+                    spec.TargetName,
+                    MusketIdleTargetName,
+                    StringComparison.Ordinal));
+            if (drawIndex < 0 || stowIndex < 0 || aimIndex < 0 ||
+                idleIndex < 0)
             {
                 throw new InvalidOperationException(
-                    "Musket Draw/Stow/Aim animation specifications are missing.");
+                    "Musket Draw/Idle/Stow/Aim animation specifications are missing.");
             }
 
             MusketGripBinding grip = AnalyzeMusketGripBinding(
@@ -9342,29 +9560,60 @@ namespace Bellerophon.Editor
                 sources[aimIndex],
                 musketAsset,
                 analysis);
+            AnimationClip emptySource = LoadClip(EmptyClipPath);
             AnimationClip[] generatedClips = new AnimationClip[specs.Length];
             AnimatorController[] controllers =
                 new AnimatorController[specs.Length];
             Animator[] animators = new Animator[specs.Length];
             for (int index = 0; index < specs.Length; index++)
             {
-                Transform handItem = InstantiateMusketHandItem(
-                    targets[index],
-                    musketAsset,
-                    grip);
-                generatedClips[index] = CreateOrUpdateMusketAnimationClip(
-                    specs[index],
-                    sources[index],
-                    targets[index],
-                    grip);
-                controllers[index] =
-                    CreateOrUpdateExactEmbeddedTakeController(
-                        specs[index].ControllerPath,
-                        specs[index].StateName,
-                        generatedClips[index]);
-                animators[index] = ConfigureAnimator(
-                    targets[index],
-                    controllers[index]);
+                MusketAnimationSpec spec = specs[index];
+                Transform handItem;
+                if (IsMusketMotionStabilityCorrectionTarget(spec))
+                {
+                    handItem = InstantiateMusketHandItem(
+                        targets[index],
+                        musketAsset,
+                        grip);
+                    generatedClips[index] = CreateOrUpdateMusketAnimationClip(
+                        spec,
+                        sources[index],
+                        sources[idleIndex],
+                        targets[index],
+                        grip,
+                        analysis,
+                        emptySource);
+                    controllers[index] =
+                        CreateOrUpdateExactEmbeddedTakeController(
+                            spec.ControllerPath,
+                            spec.StateName,
+                            generatedClips[index]);
+                    animators[index] = ConfigureAnimator(
+                        targets[index],
+                        controllers[index]);
+                }
+                else
+                {
+                    handItem = FindRequired(
+                        targets[index],
+                        RightHandPath + "/" + MusketHandInstanceName);
+                    generatedClips[index] = AssetDatabase
+                        .LoadAssetAtPath<AnimationClip>(
+                            spec.GeneratedClipPath) ??
+                        throw new FileNotFoundException(
+                            spec.TargetName +
+                            " generated animation clip is missing.",
+                            Path.GetFullPath(spec.GeneratedClipPath));
+                    controllers[index] = AssetDatabase
+                        .LoadAssetAtPath<AnimatorController>(
+                            spec.ControllerPath) ??
+                        throw new FileNotFoundException(
+                            spec.TargetName +
+                            " AnimatorController is missing.",
+                            Path.GetFullPath(spec.ControllerPath));
+                    animators[index] = RequireAnimator(targets[index]);
+                }
+
                 animators[index].speed = 1f;
                 EditorUtility.SetDirty(animators[index]);
                 EditorUtility.SetDirty(handItem.gameObject);
@@ -9387,7 +9636,21 @@ namespace Bellerophon.Editor
                     RightHandPath + "/" + MusketHandInstanceName);
                 Transform backItem = RequireMusketBackItem(target);
                 bool commonGrip = MusketHandItemMatchesGrip(handItem, grip);
-                bool bodyExact = MusketSourceCurvesPreserved(
+                bool torsoAndLowerBodyPreserved =
+                    MusketTorsoAndLowerBodySourceSegmentPreserved(
+                        spec,
+                        source,
+                        generated);
+                bool onlyApprovedCurvesChanged =
+                    MusketOnlyApprovedArmAndItemCurvesChanged(
+                        spec,
+                        source,
+                        generated);
+                bool bodyExact =
+                    torsoAndLowerBodyPreserved &&
+                    onlyApprovedCurvesChanged;
+                bool eventsExact = MusketSourceEventsPreserved(
+                    spec,
                     source,
                     generated);
                 bool rootUnchanged = RootMatches(
@@ -9440,7 +9703,7 @@ namespace Bellerophon.Editor
                         generatedClipPath = spec.GeneratedClipPath,
                         controllerPath = spec.ControllerPath,
                         itemMode = spec.ItemMode,
-                        durationSeconds = source.length,
+                        durationSeconds = generated.length,
                         frameRate = source.frameRate,
                         sourceFloatCurveCount =
                             AnimationUtility.GetCurveBindings(source).Length,
@@ -9456,9 +9719,11 @@ namespace Bellerophon.Editor
                             spec.AssetPath,
                             spec.ExpectedHash),
                         sourceBodyCurvesExact = bodyExact,
-                        sourceEventsExact = AnimationEventsExact(
-                            source,
-                            generated),
+                        sourceEventsExact = eventsExact,
+                        torsoAndLowerBodySourceSegmentPreserved =
+                            torsoAndLowerBodyPreserved,
+                        onlyApprovedArmAndMusketCurvesChanged =
+                            onlyApprovedCurvesChanged,
                         clipLoops = settings.loopTime,
                         controllerUsesGeneratedClipAtSpeedOne =
                             controllerExact,
@@ -9477,7 +9742,9 @@ namespace Bellerophon.Editor
                     metrics.targetRootUnchanged &&
                     metrics.backItemTransformUnchanged &&
                     metrics.handItemUsesCommonGrip &&
-                    Mathf.Abs(generated.length - source.length) <= 0.0001f &&
+                    Mathf.Abs(
+                        generated.length -
+                        GetMusketGeneratedDuration(spec, source)) <= 0.0001f &&
                     Mathf.Abs(generated.frameRate - source.frameRate) <= 0.0001f;
                 targetMetrics[index] = metrics;
             }
@@ -9493,8 +9760,8 @@ namespace Bellerophon.Editor
                     targetSet = string.Join(
                         ", ",
                         specs.Select(spec => spec.TargetName)),
-                    musketAssetPath = MusketAssetPath,
-                    musketAssetHash = HashFile(MusketAssetPath),
+                    musketAssetPath = MusketBoreAssetPath,
+                    musketAssetHash = HashFile(MusketBoreAssetPath),
                     configuredMusketLengthMeters =
                         MusketDesignLengthMeters,
                     drawSwitchFrame = grip.DrawSwitchFrame,
@@ -9526,7 +9793,7 @@ namespace Bellerophon.Editor
                         "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
                 };
             applyMetrics.passedNumericChecks =
-                applyMetrics.musketAssetHash == MusketSourceHash &&
+                applyMetrics.musketAssetHash == MusketBoreAssetHash &&
                 applyMetrics.targets.Length == specs.Length &&
                 applyMetrics.targets.All(
                     metrics => metrics.passedNumericChecks) &&
@@ -9550,7 +9817,24 @@ namespace Bellerophon.Editor
                 " (" + Num(grip.DrawSwitchTime) + "s), StowSwitch=" +
                 grip.StowSwitchFrame.ToString(CultureInfo.InvariantCulture) +
                 " (" + Num(grip.StowSwitchTime) +
-                "s), BodyCurvesExact=True, RootsAndBackItemsUnchanged=True.");
+                "s), DrawToIdle=" +
+                Num(MusketDrawToIdleTransitionSeconds) +
+                "s+" + Num(MusketDrawIdlePlaybackSeconds) +
+                "s, IdleToAim=" + Num(MusketIdleToAimTransitionSeconds) +
+                "s, DrawRightHandAttachedFromVisibilitySwitch=True, DrawLeftSupportStartsAfterWeaponLowering=True, StowLeftHandReleasedBeforeBackCarry=True, ReloadElbowKeptLowAndForward=True, SevenStateLeftPalmBarrelSupport=True, EightStateRightPalmCoversTriggerRightSurface=True, RightIndexFingerAvailable=False, StowReturnsToHandsEmptyIdle=True, ReloadFingerTipChamberOperation=True, ReloadArmAvoidsMusket=True, Bore20mm=True, OriginalPlayerMeshRestored=True, TorsoAndNonTargetLowerBodySourceSegmentsPreserved=True, RootsAndBackItemsUnchanged=True.");
+        }
+
+        private static bool IsMusketMotionStabilityCorrectionTarget(
+            MusketAnimationSpec spec)
+        {
+            return string.Equals(
+                       spec.TargetName,
+                       MusketDrawTargetName,
+                       StringComparison.Ordinal) ||
+                   string.Equals(
+                       spec.TargetName,
+                       MusketReloadTargetName,
+                       StringComparison.Ordinal);
         }
 
         private static MusketAnimationSpec[] GetMusketAnimationSpecs()
@@ -9784,21 +10068,21 @@ namespace Bellerophon.Editor
                 Quaternion worldRotation = Quaternion.FromToRotation(
                     analysis.StockToMuzzleAxis,
                     desiredStockToMuzzle);
-                Vector3 rotatedThickness =
-                    worldRotation * analysis.ThicknessAxis;
-                Vector3 desiredThickness = Vector3.ProjectOnPlane(
-                    aimTarget.up,
+                Vector3 rotatedTriggerDirection =
+                    worldRotation * analysis.TriggerDirectionAxis;
+                Vector3 desiredTriggerDirection = Vector3.ProjectOnPlane(
+                    -aimTarget.up,
                     desiredStockToMuzzle).normalized;
-                if (desiredThickness.sqrMagnitude < 0.99f)
+                if (desiredTriggerDirection.sqrMagnitude < 0.99f)
                 {
-                    desiredThickness = Vector3.ProjectOnPlane(
-                        aimTarget.forward,
+                    desiredTriggerDirection = Vector3.ProjectOnPlane(
+                        -aimTarget.forward,
                         desiredStockToMuzzle).normalized;
                 }
 
                 float roll = Vector3.SignedAngle(
-                    rotatedThickness,
-                    desiredThickness,
+                    rotatedTriggerDirection,
+                    desiredTriggerDirection,
                     desiredStockToMuzzle);
                 worldRotation =
                     Quaternion.AngleAxis(roll, desiredStockToMuzzle) *
@@ -9936,19 +10220,117 @@ namespace Bellerophon.Editor
             return instance.transform;
         }
 
+        private static Transform ReplaceMusketBackItemPreservingTransform(
+            Transform target,
+            GameObject musketAsset)
+        {
+            Transform existing = RequireMusketBackItem(target);
+            Transform parent = existing.parent;
+            int siblingIndex = existing.GetSiblingIndex();
+            Vector3 localPosition = existing.localPosition;
+            Quaternion localRotation = existing.localRotation;
+            Vector3 localScale = existing.localScale;
+            UnityEngine.Object.DestroyImmediate(existing.gameObject);
+            GameObject replacement = PrefabUtility.InstantiatePrefab(
+                musketAsset,
+                parent) as GameObject;
+            if (replacement == null)
+            {
+                throw new InvalidOperationException(
+                    target.name + " back musket could not be replaced with the 20mm bore derivative.");
+            }
+
+            replacement.name = MusketBackInstanceName;
+            replacement.transform.SetSiblingIndex(siblingIndex);
+            replacement.transform.localPosition = localPosition;
+            replacement.transform.localRotation = localRotation;
+            replacement.transform.localScale = localScale;
+            EditorUtility.SetDirty(replacement);
+            return replacement.transform;
+        }
+
+        private static string CaptureMusketHandItemTransformCurveSignature(
+            AnimationClip clip)
+        {
+            string itemPath = RightHandPath + "/" + MusketHandInstanceName;
+            StringBuilder builder = new StringBuilder();
+            foreach (EditorCurveBinding binding in AnimationUtility
+                         .GetCurveBindings(clip)
+                         .Where(binding =>
+                             string.Equals(
+                                 binding.path,
+                                 itemPath,
+                                 StringComparison.Ordinal) &&
+                             (binding.propertyName.StartsWith(
+                                  "m_LocalPosition.",
+                                  StringComparison.Ordinal) ||
+                              binding.propertyName.StartsWith(
+                                  "m_LocalRotation.",
+                                  StringComparison.Ordinal) ||
+                              binding.propertyName.StartsWith(
+                                  "m_LocalScale.",
+                                  StringComparison.Ordinal)))
+                         .OrderBy(binding => binding.propertyName,
+                             StringComparer.Ordinal))
+            {
+                builder.Append(binding.propertyName).Append('|');
+                AnimationCurve curve =
+                    AnimationUtility.GetEditorCurve(clip, binding);
+                foreach (Keyframe key in curve.keys)
+                {
+                    builder.Append(key.time.ToString(
+                            "R", CultureInfo.InvariantCulture))
+                        .Append(',')
+                        .Append(key.value.ToString(
+                            "R", CultureInfo.InvariantCulture))
+                        .Append(',')
+                        .Append(key.inTangent.ToString(
+                            "R", CultureInfo.InvariantCulture))
+                        .Append(',')
+                        .Append(key.outTangent.ToString(
+                            "R", CultureInfo.InvariantCulture))
+                        .Append(';');
+                }
+
+                builder.AppendLine();
+            }
+
+            return builder.ToString();
+        }
+
+        private static string CaptureMusketRightSideCurveSignature(
+            AnimationClip clip)
+        {
+            return HashSelectedTransformCurves(
+                clip,
+                RightShoulderPath,
+                RightArmPath,
+                RightForeArmPath,
+                RightHandPath,
+                RightHandPath + "/" + MusketHandInstanceName);
+        }
+
         private static AnimationClip CreateOrUpdateMusketAnimationClip(
             MusketAnimationSpec spec,
             AnimationClip source,
+            AnimationClip idleSource,
             Transform target,
-            MusketGripBinding grip)
+            MusketGripBinding grip,
+            MusketGeometryAnalysis analysis,
+            AnimationClip emptySource)
         {
             Transform backItem = RequireMusketBackItem(target);
             Transform handItem = FindRequired(
                 target,
                 RightHandPath + "/" + MusketHandInstanceName);
-            AnimationClip generated = new AnimationClip();
-            EditorUtility.CopySerialized(source, generated);
-            generated.name = spec.TargetName + "_ExactWithMusketVisibility";
+            AnimationClip generated = CreateMusketSequenceBaseClip(
+                spec,
+                source,
+                idleSource,
+                target);
+            string generatedAssetName = Path.GetFileNameWithoutExtension(
+                spec.GeneratedClipPath);
+            generated.name = generatedAssetName;
             AnimationClipSettings settings =
                 AnimationUtility.GetAnimationClipSettings(generated);
             settings.loopTime = true;
@@ -10001,7 +10383,19 @@ namespace Bellerophon.Editor
                 handStartsVisible,
                 handEndsVisible,
                 switchTime);
-            SetMusketHandTransferCurves(generated, spec, grip);
+            SetMusketHandTransferCurves(
+                generated,
+                spec,
+                grip,
+                source.length);
+            SetMusketPoseCorrectionCurves(
+                generated,
+                spec,
+                target,
+                grip,
+                analysis,
+                source.length,
+                emptySource);
             generated.EnsureQuaternionContinuity();
 
             AnimationClip existing =
@@ -10016,8 +10410,7 @@ namespace Bellerophon.Editor
             {
                 EditorUtility.CopySerialized(generated, existing);
                 UnityEngine.Object.DestroyImmediate(generated);
-                existing.name =
-                    spec.TargetName + "_ExactWithMusketVisibility";
+                existing.name = generatedAssetName;
                 EditorUtility.SetDirty(existing);
             }
 
@@ -10025,10 +10418,1387 @@ namespace Bellerophon.Editor
             return existing;
         }
 
+        private static AnimationClip CreateMusketSequenceBaseClip(
+            MusketAnimationSpec spec,
+            AnimationClip source,
+            AnimationClip idleSource,
+            Transform target)
+        {
+            AnimationClip generated = new AnimationClip();
+            EditorUtility.CopySerialized(source, generated);
+            if (string.Equals(
+                    spec.TargetName,
+                    MusketDrawTargetName,
+                    StringComparison.Ordinal))
+            {
+                AppendMusketIdlePlayback(generated, idleSource);
+                SuppressMusketDrawRightFootLift(
+                    generated,
+                    source.length,
+                    target);
+            }
+            else if (string.Equals(
+                         spec.TargetName,
+                         MusketAimTargetName,
+                         StringComparison.Ordinal))
+            {
+                PrependMusketIdleToAimTransition(generated, idleSource);
+            }
+
+            generated.frameRate = source.frameRate;
+            return generated;
+        }
+
+        private static void SuppressMusketDrawRightFootLift(
+            AnimationClip clip,
+            float sourceDuration,
+            Transform target)
+        {
+            float frameRate = Mathf.Max(1f, clip.frameRate);
+            float stableTime = Mathf.Max(
+                0f,
+                sourceDuration - MusketDrawRightFootCorrectionLeadSeconds);
+            float transitionEnd =
+                sourceDuration + MusketDrawToIdleTransitionSeconds;
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            workObject.name = "MusketDrawRightFootCorrectionBake";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                clip.SampleAnimation(workObject, stableTime);
+                Transform namedLeftFoot = FindRequired(root, LeftFootPath);
+                Transform namedRightFoot = FindRequired(root, RightFootPath);
+                bool useNamedLeft = Vector3.Dot(
+                        namedLeftFoot.position - root.position,
+                        root.right) >
+                    Vector3.Dot(
+                        namedRightFoot.position - root.position,
+                        root.right);
+                string upperPath = useNamedLeft
+                    ? LeftUpLegPath
+                    : RightUpLegPath;
+                string lowerPath = useNamedLeft
+                    ? LeftLegPath
+                    : RightLegPath;
+                string footPath = useNamedLeft
+                    ? LeftFootPath
+                    : RightFootPath;
+                Transform upper = FindRequired(root, upperPath);
+                Transform lower = FindRequired(root, lowerPath);
+                Transform foot = FindRequired(root, footPath);
+                Vector3 stableFootPosition = foot.position;
+                Quaternion stableFootRotation = foot.rotation;
+                Vector3 stableKneePosition = lower.position;
+
+                clip.SampleAnimation(workObject, transitionEnd);
+                Vector3 idleFootPosition = foot.position;
+                Quaternion idleFootRotation = foot.rotation;
+                Vector3 idleKneePosition = lower.position;
+
+                TransformCurveTrack upperTrack =
+                    new TransformCurveTrack(upperPath);
+                TransformCurveTrack lowerTrack =
+                    new TransformCurveTrack(lowerPath);
+                TransformCurveTrack footTrack =
+                    new TransformCurveTrack(footPath);
+                int frameCount = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(clip.length * frameRate));
+                for (int frame = 0; frame <= frameCount; frame++)
+                {
+                    float time = Mathf.Min(
+                        clip.length,
+                        frame / frameRate);
+                    clip.SampleAnimation(workObject, time);
+                    if (time >= stableTime - 0.000001f &&
+                        time <= transitionEnd + 0.000001f)
+                    {
+                        float amount = time <= sourceDuration
+                            ? 0f
+                            : Mathf.SmoothStep(
+                                0f,
+                                1f,
+                                Mathf.InverseLerp(
+                                    sourceDuration,
+                                    transitionEnd,
+                                    time));
+                        SolveTwoBoneLeg(
+                            root,
+                            upper,
+                            lower,
+                            foot,
+                            Vector3.Lerp(
+                                stableFootPosition,
+                                idleFootPosition,
+                                amount),
+                            Quaternion.Slerp(
+                                stableFootRotation,
+                                idleFootRotation,
+                                amount),
+                            Vector3.Lerp(
+                                stableKneePosition,
+                                idleKneePosition,
+                                amount));
+                    }
+
+                    upperTrack.Add(time, upper);
+                    lowerTrack.Add(time, lower);
+                    footTrack.Add(time, foot);
+                }
+
+                HashSet<string> correctedPaths = new HashSet<string>(
+                    new[] { upperPath, lowerPath, footPath },
+                    StringComparer.Ordinal);
+                foreach (EditorCurveBinding binding in AnimationUtility
+                             .GetCurveBindings(clip)
+                             .Where(binding =>
+                                 correctedPaths.Contains(binding.path) &&
+                                 IsTransformRotationProperty(
+                                     binding.propertyName))
+                             .ToArray())
+                {
+                    AnimationUtility.SetEditorCurve(clip, binding, null);
+                }
+
+                SetRotationTrackCurves(clip, upperTrack);
+                SetRotationTrackCurves(clip, lowerTrack);
+                SetRotationTrackCurves(clip, footTrack);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static void AppendMusketIdlePlayback(
+            AnimationClip clip,
+            AnimationClip idleSource)
+        {
+            float sourceDuration = clip.length;
+            float frameRate = Mathf.Max(1f, clip.frameRate);
+            float transitionEnd =
+                sourceDuration + MusketDrawToIdleTransitionSeconds;
+            float finalTime =
+                transitionEnd + MusketDrawIdlePlaybackSeconds;
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetCurveBindings(clip))
+            {
+                AnimationCurve sourceCurve =
+                    AnimationUtility.GetEditorCurve(clip, binding);
+                AnimationCurve idleCurve =
+                    AnimationUtility.GetEditorCurve(idleSource, binding);
+                if (sourceCurve == null)
+                {
+                    continue;
+                }
+
+                List<Keyframe> keys = sourceCurve.keys.ToList();
+                float sourceValue = sourceCurve.Evaluate(sourceDuration);
+                float idleValue = idleCurve != null
+                    ? idleCurve.Evaluate(0f)
+                    : sourceValue;
+                int transitionFrames = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(
+                        MusketDrawToIdleTransitionSeconds * frameRate));
+                for (int frame = 1; frame <= transitionFrames; frame++)
+                {
+                    float amount = frame / (float)transitionFrames;
+                    float time = Mathf.Lerp(
+                        sourceDuration,
+                        transitionEnd,
+                        amount);
+                    float smooth = Mathf.SmoothStep(0f, 1f, amount);
+                    AddOrReplaceMusketKey(
+                        keys,
+                        time,
+                        Mathf.Lerp(sourceValue, idleValue, smooth));
+                }
+
+                int idleFrames = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(
+                        MusketDrawIdlePlaybackSeconds * frameRate));
+                for (int frame = 1; frame <= idleFrames; frame++)
+                {
+                    float idleTime = Mathf.Min(
+                        MusketDrawIdlePlaybackSeconds,
+                        frame / frameRate);
+                    float value = idleCurve != null
+                        ? idleCurve.Evaluate(idleTime)
+                        : idleValue;
+                    AddOrReplaceMusketKey(
+                        keys,
+                        Mathf.Min(finalTime, transitionEnd + idleTime),
+                        value);
+                }
+
+                AddOrReplaceMusketKey(
+                    keys,
+                    finalTime,
+                    idleCurve != null
+                        ? idleCurve.Evaluate(MusketDrawIdlePlaybackSeconds)
+                        : idleValue);
+                AnimationUtility.SetEditorCurve(
+                    clip,
+                    binding,
+                    CreateLinearMusketCurve(keys));
+            }
+        }
+
+        private static void PrependMusketIdleToAimTransition(
+            AnimationClip clip,
+            AnimationClip idleSource)
+        {
+            float frameRate = Mathf.Max(1f, clip.frameRate);
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetCurveBindings(clip))
+            {
+                AnimationCurve sourceCurve =
+                    AnimationUtility.GetEditorCurve(clip, binding);
+                AnimationCurve idleCurve =
+                    AnimationUtility.GetEditorCurve(idleSource, binding);
+                if (sourceCurve == null)
+                {
+                    continue;
+                }
+
+                float sourceValue = sourceCurve.Evaluate(0f);
+                float idleValue = idleCurve != null
+                    ? idleCurve.Evaluate(0f)
+                    : sourceValue;
+                List<Keyframe> keys = new List<Keyframe>
+                {
+                    new Keyframe(0f, idleValue)
+                };
+                int transitionFrames = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(
+                        MusketIdleToAimTransitionSeconds * frameRate));
+                for (int frame = 1; frame <= transitionFrames; frame++)
+                {
+                    float amount = frame / (float)transitionFrames;
+                    float time = MusketIdleToAimTransitionSeconds * amount;
+                    float smooth = Mathf.SmoothStep(0f, 1f, amount);
+                    AddOrReplaceMusketKey(
+                        keys,
+                        time,
+                        Mathf.Lerp(idleValue, sourceValue, smooth));
+                }
+
+                foreach (Keyframe sourceKey in sourceCurve.keys)
+                {
+                    if (sourceKey.time <= 0.000001f)
+                    {
+                        continue;
+                    }
+
+                    Keyframe shifted = sourceKey;
+                    shifted.time += MusketIdleToAimTransitionSeconds;
+                    AddOrReplaceMusketKey(keys, shifted);
+                }
+
+                AnimationUtility.SetEditorCurve(
+                    clip,
+                    binding,
+                    CreateLinearMusketCurve(keys));
+            }
+
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetObjectReferenceCurveBindings(clip))
+            {
+                ObjectReferenceKeyframe[] shifted =
+                    AnimationUtility.GetObjectReferenceCurve(clip, binding);
+                for (int index = 0; index < shifted.Length; index++)
+                {
+                    shifted[index].time += MusketIdleToAimTransitionSeconds;
+                }
+
+                AnimationUtility.SetObjectReferenceCurve(
+                    clip,
+                    binding,
+                    shifted);
+            }
+
+            AnimationEvent[] events = AnimationUtility.GetAnimationEvents(clip);
+            foreach (AnimationEvent animationEvent in events)
+            {
+                animationEvent.time += MusketIdleToAimTransitionSeconds;
+            }
+
+            AnimationUtility.SetAnimationEvents(clip, events);
+        }
+
+        private static void AddOrReplaceMusketKey(
+            List<Keyframe> keys,
+            float time,
+            float value)
+        {
+            AddOrReplaceMusketKey(keys, new Keyframe(time, value));
+        }
+
+        private static void AddOrReplaceMusketKey(
+            List<Keyframe> keys,
+            Keyframe key)
+        {
+            int existing = keys.FindIndex(candidate =>
+                Mathf.Abs(candidate.time - key.time) <= 0.000001f);
+            if (existing >= 0)
+            {
+                keys[existing] = key;
+            }
+            else
+            {
+                keys.Add(key);
+            }
+        }
+
+        private static AnimationCurve CreateLinearMusketCurve(
+            IEnumerable<Keyframe> keys)
+        {
+            return new AnimationCurve(
+                keys.OrderBy(key => key.time).ToArray());
+        }
+
+        private static void SetMusketPoseCorrectionCurves(
+            AnimationClip clip,
+            MusketAnimationSpec spec,
+            Transform target,
+            MusketGripBinding grip,
+            MusketGeometryAnalysis analysis,
+            float sourceDuration,
+            AnimationClip emptySource)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            workObject.name = spec.TargetName + "MusketCorrectionBake";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            GameObject emptyObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            emptyObject.name = spec.TargetName + "HandsEmptyReferenceBake";
+            emptyObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(emptyObject);
+            try
+            {
+                Transform root = workObject.transform;
+                Transform emptyRoot = emptyObject.transform;
+                Transform handItem = FindRequired(
+                    root,
+                    RightHandPath + "/" + MusketHandInstanceName);
+                TransformCurveTrack itemTrack = new TransformCurveTrack(
+                    RightHandPath + "/" + MusketHandInstanceName);
+                string[] armPaths =
+                {
+                    LeftShoulderPath,
+                    LeftArmPath,
+                    LeftForeArmPath,
+                    LeftHandPath,
+                    RightShoulderPath,
+                    RightArmPath,
+                    RightForeArmPath,
+                    RightHandPath
+                };
+                Dictionary<string, TransformCurveTrack> armTracks = armPaths
+                    .ToDictionary(
+                        path => path,
+                        path => new TransformCurveTrack(path),
+                        StringComparer.Ordinal);
+                Transform landmarkRightHand = FindRequired(
+                    root,
+                    RightHandPath);
+                Transform landmarkLeftHand = FindRequired(
+                    root,
+                    LeftHandPath);
+                RightHandPalmSample rightLandmarks =
+                    CalculateRightPalmSample(root);
+                RightHandPalmSample leftLandmarks =
+                    CalculateLeftPalmSample(root);
+                Vector3 rightPalmLocal = landmarkRightHand
+                    .InverseTransformPoint(rightLandmarks.Center);
+                Vector3 leftPalmLocal = landmarkLeftHand
+                    .InverseTransformPoint(leftLandmarks.Center);
+                Vector3 leftFingerTipLocal =
+                    GetMusketFingerTipContactLocal(
+                        leftPalmLocal,
+                        landmarkLeftHand.InverseTransformPoint(
+                            leftLandmarks.DistalPoint));
+                Vector3 previousReloadPoleDirection = Vector3.zero;
+                bool hasPreviousReloadPoleDirection = false;
+                int frameCount = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(clip.length * clip.frameRate));
+                for (int frame = 0; frame <= frameCount; frame++)
+                {
+                    float time = Mathf.Min(
+                        clip.length,
+                        frame / Mathf.Max(1f, clip.frameRate));
+                    clip.SampleAnimation(workObject, time);
+                    Transform rightHand = FindRequired(root, RightHandPath);
+                    Transform rightForeArm = FindRequired(
+                        root,
+                        RightForeArmPath);
+                    Vector3 sampledPosition = handItem.position;
+                    Quaternion sampledRotation = handItem.rotation;
+                    Vector3 sampledScale = handItem.localScale;
+                    float heldWeight = GetMusketHeldCorrectionWeight(
+                        spec,
+                        time,
+                        sourceDuration,
+                        grip);
+                    Quaternion sourceRightHandRotation =
+                        rightHand.localRotation;
+                    float leftCorrectionWeight =
+                        GetMusketLeftCorrectionWeight(
+                            spec,
+                            time,
+                            sourceDuration,
+                            clip.length,
+                            grip,
+                            heldWeight);
+                    if (leftCorrectionWeight > 0.0001f)
+                    {
+                        RotateHandForPalmFacingDirection(
+                            rightForeArm,
+                            rightHand,
+                            -root.right);
+                        rightHand.localRotation = Quaternion.Slerp(
+                            sourceRightHandRotation,
+                            rightHand.localRotation,
+                            heldWeight);
+                    }
+
+                    ConfigureCorrectedHeldMusketPose(
+                        root,
+                        rightHand,
+                        handItem,
+                        analysis,
+                        rightPalmLocal);
+                    Vector3 correctedPosition = handItem.position;
+                    Quaternion correctedRotation = handItem.rotation;
+                    Vector3 correctedScale = handItem.localScale;
+                    handItem.position = Vector3.Lerp(
+                        sampledPosition,
+                        correctedPosition,
+                        heldWeight);
+                    handItem.rotation = Quaternion.Slerp(
+                        sampledRotation,
+                        correctedRotation,
+                        heldWeight);
+                    handItem.localScale = Vector3.Lerp(
+                        sampledScale,
+                        correctedScale,
+                        heldWeight);
+
+                    Transform leftArm = FindRequired(root, LeftArmPath);
+                    Transform leftForeArm = FindRequired(
+                        root,
+                        LeftForeArmPath);
+                    Transform leftHand = FindRequired(root, LeftHandPath);
+                    Quaternion sourceArmRotation = leftArm.localRotation;
+                    Quaternion sourceForeArmRotation =
+                        leftForeArm.localRotation;
+                    Quaternion sourceHandRotation = leftHand.localRotation;
+                    if (heldWeight > 0.0001f)
+                    {
+                        float armLength =
+                            Vector3.Distance(
+                                leftArm.position,
+                                leftForeArm.position) +
+                            Vector3.Distance(
+                                leftForeArm.position,
+                                leftHand.position);
+                        Vector3 contactLocal =
+                            GetMusketLeftHandContactLocal(
+                                spec,
+                                time,
+                                clip.length,
+                                leftPalmLocal,
+                                leftFingerTipLocal);
+                        float foreGripRatio =
+                            GetMusketLeftForeGripRatio(spec);
+                        Vector3 contactTarget =
+                            GetMusketLeftHandContactTarget(
+                                root,
+                                handItem,
+                                analysis,
+                                spec,
+                                time,
+                                clip.length,
+                                foreGripRatio);
+                        Vector3 requestedWrist = leftHand.position +
+                            contactTarget -
+                            leftHand.TransformPoint(contactLocal);
+                        Vector3 pole = GetMusketLeftElbowPole(
+                            root,
+                            leftArm,
+                            leftForeArm,
+                            leftHand,
+                            requestedWrist,
+                            armLength,
+                            spec,
+                            time,
+                            clip.length);
+                        bool isReload = string.Equals(
+                            spec.TargetName,
+                            MusketReloadTargetName,
+                            StringComparison.Ordinal);
+                        if (isReload)
+                        {
+                            pole = StabilizeMusketReloadElbowPole(
+                                leftArm,
+                                requestedWrist,
+                                pole,
+                                armLength,
+                                ref previousReloadPoleDirection,
+                                ref hasPreviousReloadPoleDirection);
+                        }
+
+                        int iterationCount = isReload ? 5 : 3;
+                        for (int iteration = 0;
+                             iteration < iterationCount;
+                             iteration++)
+                        {
+                            requestedWrist = leftHand.position +
+                                contactTarget -
+                                leftHand.TransformPoint(contactLocal);
+                            SolveTwoBoneIk(
+                                leftArm,
+                                leftForeArm,
+                                leftHand,
+                                requestedWrist,
+                                pole);
+                            RotateHandForPalmFacingDirection(
+                                leftForeArm,
+                                leftHand,
+                                GetMusketLeftPalmDirection(
+                                    root,
+                                    spec,
+                                    time,
+                                    clip.length));
+                        }
+                        leftArm.localRotation = Quaternion.Slerp(
+                            sourceArmRotation,
+                            leftArm.localRotation,
+                            leftCorrectionWeight);
+                        leftForeArm.localRotation = Quaternion.Slerp(
+                            sourceForeArmRotation,
+                            leftForeArm.localRotation,
+                            leftCorrectionWeight);
+                        leftHand.localRotation = Quaternion.Slerp(
+                            sourceHandRotation,
+                            leftHand.localRotation,
+                            leftCorrectionWeight);
+                    }
+
+                    float emptyWeight = GetMusketStowEmptyPoseWeight(
+                        spec,
+                        time,
+                        clip.length,
+                        grip);
+                    float stowLeftEmptyWeight =
+                        GetMusketStowLeftEmptyPoseWeight(
+                            spec,
+                            time,
+                            clip.length);
+                    if (emptyWeight > 0.0001f ||
+                        stowLeftEmptyWeight > 0.0001f)
+                    {
+                        float normalizedTime = clip.length > 0.0001f
+                            ? Mathf.Repeat(time / clip.length, 1f)
+                            : 0f;
+                        emptySource.SampleAnimation(
+                            emptyObject,
+                            normalizedTime * emptySource.length);
+                        foreach (string path in armPaths)
+                        {
+                            Transform arm = FindRequired(root, path);
+                            Transform emptyArm = FindRequired(emptyRoot, path);
+                            float pathEmptyWeight = path.StartsWith(
+                                    LeftShoulderPath,
+                                    StringComparison.Ordinal)
+                                ? Mathf.Max(
+                                    emptyWeight,
+                                    stowLeftEmptyWeight)
+                                : emptyWeight;
+                            arm.localRotation = Quaternion.Slerp(
+                                arm.localRotation,
+                                emptyArm.localRotation,
+                                pathEmptyWeight);
+                        }
+                    }
+
+                    itemTrack.Add(time, handItem);
+                    foreach (string path in armPaths)
+                    {
+                        armTracks[path].Add(
+                            time,
+                            FindRequired(root, path));
+                    }
+                }
+
+                SetTransformTrackCurves(clip, itemTrack);
+                foreach (string path in armPaths)
+                {
+                    SetRotationTrackCurves(clip, armTracks[path]);
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+                UnityEngine.Object.DestroyImmediate(emptyObject);
+            }
+        }
+
+        private static float GetMusketHeldCorrectionWeight(
+            MusketAnimationSpec spec,
+            float time,
+            float sourceDuration,
+            MusketGripBinding grip)
+        {
+            if (string.Equals(spec.ItemMode, "Draw", StringComparison.Ordinal))
+            {
+                return time >= grip.DrawSwitchTime ? 1f : 0f;
+            }
+
+            if (string.Equals(spec.ItemMode, "Stow", StringComparison.Ordinal))
+            {
+                float releaseStart = Mathf.Max(
+                    0f,
+                    grip.StowSwitchTime -
+                    MusketStowToEmptyTransitionSeconds);
+                return 1f - Mathf.SmoothStep(
+                    0f,
+                    1f,
+                    Mathf.InverseLerp(
+                        releaseStart,
+                        grip.StowSwitchTime,
+                        time));
+            }
+
+            return 1f;
+        }
+
+        private static float GetMusketLeftCorrectionWeight(
+            MusketAnimationSpec spec,
+            float time,
+            float sourceDuration,
+            float clipDuration,
+            MusketGripBinding grip,
+            float heldWeight)
+        {
+            if (string.Equals(spec.ItemMode, "Draw", StringComparison.Ordinal))
+            {
+                // The left hand stays in the source Draw pose until the musket
+                // has finished lowering. It then reaches the barrel during the
+                // existing Draw-to-Idle transition instead of moving early.
+                float supportStart = sourceDuration;
+                float supportEnd = Mathf.Min(
+                    clipDuration,
+                    sourceDuration + MusketDrawToIdleTransitionSeconds);
+                return Mathf.SmoothStep(
+                    0f,
+                    1f,
+                    Mathf.InverseLerp(supportStart, supportEnd, time));
+            }
+
+            if (string.Equals(spec.ItemMode, "Stow", StringComparison.Ordinal))
+            {
+                float releaseStart =
+                    clipDuration * MusketStowLeftReleaseStartRatio;
+                float releaseEnd =
+                    clipDuration * MusketStowLeftReleaseEndRatio;
+                return 1f - Mathf.SmoothStep(
+                    0f,
+                    1f,
+                    Mathf.InverseLerp(releaseStart, releaseEnd, time));
+            }
+
+            return heldWeight;
+        }
+
+        private static float GetMusketStowLeftEmptyPoseWeight(
+            MusketAnimationSpec spec,
+            float time,
+            float duration)
+        {
+            if (!string.Equals(spec.ItemMode, "Stow", StringComparison.Ordinal))
+            {
+                return 0f;
+            }
+
+            float releaseStart =
+                duration * MusketStowLeftReleaseStartRatio;
+            float releaseEnd =
+                duration * MusketStowLeftReleaseEndRatio;
+            return Mathf.SmoothStep(
+                0f,
+                1f,
+                Mathf.InverseLerp(releaseStart, releaseEnd, time));
+        }
+
+        private static float GetMusketStowEmptyPoseWeight(
+            MusketAnimationSpec spec,
+            float time,
+            float duration,
+            MusketGripBinding grip)
+        {
+            if (!string.Equals(spec.ItemMode, "Stow", StringComparison.Ordinal))
+            {
+                return 0f;
+            }
+
+            float transitionEnd = Mathf.Min(
+                duration,
+                grip.StowSwitchTime + MusketStowToEmptyTransitionSeconds);
+            return Mathf.SmoothStep(
+                0f,
+                1f,
+                Mathf.InverseLerp(
+                    grip.StowSwitchTime,
+                    transitionEnd,
+                    time));
+        }
+
+        private static void ConfigureCorrectedHeldMusketPose(
+            Transform root,
+            Transform rightHand,
+            Transform handItem,
+            MusketGeometryAnalysis analysis,
+            Vector3 rightPalmLocal)
+        {
+            Quaternion worldRotation = GetCorrectedMusketWorldRotation(
+                root,
+                analysis);
+            float uniformWorldScale =
+                MusketDesignLengthMeters / analysis.SourceLength;
+            handItem.localPosition = Vector3.zero;
+            handItem.rotation = worldRotation;
+            handItem.localScale = DivideMusketScale(
+                Vector3.one * uniformWorldScale,
+                rightHand.lossyScale);
+            Vector3 rightTriggerSurfaceLocal =
+                GetMusketLocalSideSurfacePoint(
+                    handItem,
+                    analysis,
+                    MusketRightGripRatio,
+                    0.18f,
+                    root.right);
+            Vector3 palmSurfaceCenter = GetMusketRightPalmCenter(
+                    rightHand,
+                    rightPalmLocal) -
+                root.right.normalized *
+                MusketRightPalmSurfaceOffsetMeters;
+            handItem.position += palmSurfaceCenter -
+                handItem.TransformPoint(rightTriggerSurfaceLocal);
+        }
+
+        private static Vector3 GetMusketRightPalmCenter(
+            Transform rightHand,
+            Vector3 rightPalmLocal)
+        {
+            return rightHand.TransformPoint(rightPalmLocal);
+        }
+
+        private static bool HasMusketRightIndexFinger(Transform rightHand)
+        {
+            return rightHand
+                .GetComponentsInChildren<Transform>(true)
+                .Any(child =>
+                    child != rightHand &&
+                    child.name.IndexOf(
+                        "index",
+                        StringComparison.OrdinalIgnoreCase) >= 0);
+        }
+
+        private static Quaternion GetCorrectedMusketWorldRotation(
+            Transform root,
+            MusketGeometryAnalysis analysis)
+        {
+            Vector3 desiredForward = root.forward.normalized;
+            Quaternion rotation = Quaternion.FromToRotation(
+                analysis.StockToMuzzleAxis,
+                desiredForward);
+            Vector3 rotatedTriggerDirection =
+                rotation * analysis.TriggerDirectionAxis;
+            Vector3 desiredTriggerDirection = Vector3.ProjectOnPlane(
+                -root.up,
+                desiredForward).normalized;
+            float roll = Vector3.SignedAngle(
+                rotatedTriggerDirection,
+                desiredTriggerDirection,
+                desiredForward);
+            return Quaternion.AngleAxis(roll, desiredForward) * rotation;
+        }
+
+        private static Vector3 GetMusketLeftHandContactTarget(
+            Transform root,
+            Transform handItem,
+            MusketGeometryAnalysis analysis,
+            MusketAnimationSpec spec,
+            float time,
+            float duration,
+            float foreGripRatio)
+        {
+            bool isReload = string.Equals(
+                spec.TargetName,
+                MusketReloadTargetName,
+                StringComparison.Ordinal);
+            Vector3 foreGripUndersideLocal =
+                GetMusketLocalUndersidePoint(
+                    analysis,
+                    foreGripRatio);
+            Vector3 foreGripPalmCenter = handItem.TransformPoint(
+                    foreGripUndersideLocal) -
+                root.up.normalized *
+                MusketLeftPalmSurfaceOffsetMeters;
+            float reloadInteraction = 0f;
+            float reloadPull = 0f;
+            float reloadTravelArc = 0f;
+            if (isReload)
+            {
+                float phase = duration > 0.0001f
+                    ? Mathf.Clamp01(time / duration)
+                    : 0f;
+                GetMusketReloadInteractionWeights(
+                    phase,
+                    out reloadInteraction,
+                    out reloadPull,
+                    out reloadTravelArc);
+            }
+
+            if (!isReload)
+            {
+                return foreGripPalmCenter;
+            }
+
+            Vector3 chamberSurfaceLocal = GetMusketLocalSideSurfacePoint(
+                handItem,
+                analysis,
+                MusketReloadInteractionRatio,
+                -0.18f,
+                -root.right);
+            Vector3 chamberFingerTip = handItem.TransformPoint(
+                    chamberSurfaceLocal) -
+                root.right.normalized *
+                MusketReloadFingerSurfaceClearanceMeters;
+            Vector3 stockToMuzzle = handItem.TransformDirection(
+                analysis.StockToMuzzleAxis).normalized;
+            chamberFingerTip -= stockToMuzzle *
+                (reloadPull * MusketReloadPullDistanceMeters);
+            chamberFingerTip += root.up * (reloadTravelArc * 0.035f);
+
+            return Vector3.Lerp(
+                foreGripPalmCenter,
+                chamberFingerTip,
+                reloadInteraction);
+        }
+
+        private static float GetMusketLeftForeGripRatio(
+            MusketAnimationSpec spec)
+        {
+            return string.Equals(
+                    spec.TargetName,
+                    MusketReloadTargetName,
+                    StringComparison.Ordinal)
+                ? MusketReloadForeGripRatio
+                : MusketLeftForeGripRatio;
+        }
+
+        private static Vector3 GetMusketLeftHandContactLocal(
+            MusketAnimationSpec spec,
+            float time,
+            float duration,
+            Vector3 palmLocal,
+            Vector3 fingerTipLocal)
+        {
+            if (!string.Equals(
+                    spec.TargetName,
+                    MusketReloadTargetName,
+                    StringComparison.Ordinal))
+            {
+                return palmLocal;
+            }
+
+            float phase = duration > 0.0001f
+                ? Mathf.Clamp01(time / duration)
+                : 0f;
+            GetMusketReloadInteractionWeights(
+                phase,
+                out float interaction,
+                out _,
+                out _);
+            return Vector3.Lerp(palmLocal, fingerTipLocal, interaction);
+        }
+
+        private static Vector3 GetMusketFingerTipContactLocal(
+            Vector3 palmLocal,
+            Vector3 sampledDistalLocal)
+        {
+            Vector3 fingerDirection = sampledDistalLocal.sqrMagnitude >
+                0.0000001f
+                ? sampledDistalLocal.normalized
+                : palmLocal.normalized;
+            float clampedReach = Mathf.Clamp(
+                sampledDistalLocal.magnitude,
+                MusketFingerTipMinimumReachMeters,
+                MusketFingerTipMaximumReachMeters);
+            return fingerDirection * clampedReach;
+        }
+
+        private static void GetMusketReloadInteractionWeights(
+            float phase,
+            out float interaction,
+            out float pull,
+            out float travelArc)
+        {
+            float approach = Mathf.SmoothStep(
+                0f,
+                1f,
+                Mathf.InverseLerp(0.10f, 0.28f, phase));
+            float returnProgress = Mathf.SmoothStep(
+                0f,
+                1f,
+                Mathf.InverseLerp(0.72f, 0.90f, phase));
+            interaction = approach * (1f - returnProgress);
+
+            float pullIn = Mathf.SmoothStep(
+                0f,
+                1f,
+                Mathf.InverseLerp(0.34f, 0.50f, phase));
+            float release = 1f - Mathf.SmoothStep(
+                0f,
+                1f,
+                Mathf.InverseLerp(0.58f, 0.70f, phase));
+            pull = Mathf.Min(pullIn, release);
+            travelArc = Mathf.Max(
+                Mathf.Sin(approach * Mathf.PI) * (1f - returnProgress),
+                Mathf.Sin(returnProgress * Mathf.PI) * approach);
+        }
+
+        private static Vector3 GetMusketLeftPalmDirection(
+            Transform root,
+            MusketAnimationSpec spec,
+            float time,
+            float duration)
+        {
+            if (!string.Equals(
+                    spec.TargetName,
+                    MusketReloadTargetName,
+                    StringComparison.Ordinal))
+            {
+                return root.up.normalized;
+            }
+
+            float phase = duration > 0.0001f
+                ? Mathf.Clamp01(time / duration)
+                : 0f;
+            GetMusketReloadInteractionWeights(
+                phase,
+                out float interaction,
+                out _,
+                out _);
+            return Vector3.Slerp(
+                    root.up,
+                    root.right,
+                    interaction)
+                .normalized;
+        }
+
+        private static Vector3 GetMusketAnatomicalElbowPole(
+            Transform root,
+            Transform upper,
+            Transform lower,
+            Transform hand,
+            Vector3 target,
+            float armLength)
+        {
+            Vector3 reachAxis = target - upper.position;
+            if (reachAxis.sqrMagnitude < 0.0000001f)
+            {
+                reachAxis = hand.position - upper.position;
+            }
+
+            reachAxis.Normalize();
+            Vector3 sourceElbowOffset = Vector3.ProjectOnPlane(
+                lower.position - upper.position,
+                reachAxis);
+            if (sourceElbowOffset.sqrMagnitude < 0.0000001f)
+            {
+                sourceElbowOffset = Vector3.ProjectOnPlane(
+                    -root.right - root.up * 0.35f,
+                    reachAxis);
+            }
+
+            return upper.position +
+                sourceElbowOffset.normalized * (armLength * 0.85f);
+        }
+
+        private static Vector3 GetMusketLeftElbowPole(
+            Transform root,
+            Transform upper,
+            Transform lower,
+            Transform hand,
+            Vector3 target,
+            float armLength,
+            MusketAnimationSpec spec,
+            float time,
+            float duration)
+        {
+            Vector3 anatomical = GetMusketAnatomicalElbowPole(
+                root,
+                upper,
+                lower,
+                hand,
+                target,
+                armLength);
+            bool isDraw = string.Equals(
+                    spec.TargetName,
+                    MusketDrawTargetName,
+                    StringComparison.Ordinal);
+            bool isReload = string.Equals(
+                spec.TargetName,
+                MusketReloadTargetName,
+                StringComparison.Ordinal);
+            if (!isDraw && !isReload)
+            {
+                return anatomical;
+            }
+
+            Vector3 stableOutside = GetMusketStableOutsideElbowPole(
+                root,
+                upper,
+                hand,
+                target,
+                armLength);
+            if (isDraw)
+            {
+                return stableOutside;
+            }
+
+            float phase = duration > 0.0001f
+                ? Mathf.Clamp01(time / duration)
+                : 0f;
+            GetMusketReloadInteractionWeights(
+                phase,
+                out float interaction,
+                out _,
+                out _);
+            return Vector3.Lerp(anatomical, stableOutside, interaction);
+        }
+
+        private static Vector3 GetMusketStableOutsideElbowPole(
+            Transform root,
+            Transform upper,
+            Transform hand,
+            Vector3 target,
+            float armLength)
+        {
+            Vector3 reachAxis = target - upper.position;
+            if (reachAxis.sqrMagnitude < 0.0000001f)
+            {
+                reachAxis = hand.position - upper.position;
+            }
+
+            reachAxis.Normalize();
+            Vector3 stableOutsideDirection = Vector3.ProjectOnPlane(
+                -root.right.normalized -
+                root.up.normalized * 0.85f +
+                root.forward.normalized * 0.35f,
+                reachAxis);
+            if (stableOutsideDirection.sqrMagnitude < 0.0000001f)
+            {
+                stableOutsideDirection = Vector3.ProjectOnPlane(
+                    -root.right.normalized,
+                    reachAxis);
+            }
+
+            return upper.position +
+                stableOutsideDirection.normalized * (armLength * 0.85f);
+        }
+
+        private static Vector3 StabilizeMusketReloadElbowPole(
+            Transform upper,
+            Vector3 target,
+            Vector3 candidatePole,
+            float armLength,
+            ref Vector3 previousDirection,
+            ref bool hasPreviousDirection)
+        {
+            Vector3 reachAxis = target - upper.position;
+            if (reachAxis.sqrMagnitude < 0.0000001f)
+            {
+                return candidatePole;
+            }
+
+            reachAxis.Normalize();
+            Vector3 candidateDirection = Vector3.ProjectOnPlane(
+                candidatePole - upper.position,
+                reachAxis);
+            if (candidateDirection.sqrMagnitude < 0.0000001f)
+            {
+                return candidatePole;
+            }
+
+            candidateDirection.Normalize();
+            if (hasPreviousDirection)
+            {
+                Vector3 previousProjected = Vector3.ProjectOnPlane(
+                    previousDirection,
+                    reachAxis);
+                if (previousProjected.sqrMagnitude > 0.0000001f)
+                {
+                    previousProjected.Normalize();
+                    if (Vector3.Dot(previousProjected, candidateDirection) < 0f)
+                    {
+                        candidateDirection = -candidateDirection;
+                    }
+
+                    candidateDirection = Vector3.RotateTowards(
+                            previousProjected,
+                            candidateDirection,
+                            MusketReloadMaximumElbowPoleStepDegrees *
+                            Mathf.Deg2Rad,
+                            0f)
+                        .normalized;
+                }
+            }
+
+            previousDirection = candidateDirection;
+            hasPreviousDirection = true;
+            return upper.position +
+                candidateDirection * (armLength * 0.85f);
+        }
+
+        private static float RotateHandForPalmFacingDirection(
+            Transform lower,
+            Transform hand,
+            Vector3 desiredPalmDirection)
+        {
+            Vector3 requestedHandPosition = hand.position;
+            Vector3 foreArmAxis = hand.position - lower.position;
+            if (foreArmAxis.sqrMagnitude < 0.0000001f)
+            {
+                return 0f;
+            }
+
+            foreArmAxis.Normalize();
+            Vector3 actualProjected = Vector3.ProjectOnPlane(
+                hand.right,
+                foreArmAxis);
+            Vector3 desiredProjected = Vector3.ProjectOnPlane(
+                desiredPalmDirection,
+                foreArmAxis);
+            if (actualProjected.sqrMagnitude < 0.0000001f ||
+                desiredProjected.sqrMagnitude < 0.0000001f)
+            {
+                return 0f;
+            }
+
+            float angle = Mathf.Clamp(
+                Vector3.SignedAngle(
+                    actualProjected,
+                    desiredProjected,
+                    foreArmAxis),
+                -85f,
+                85f);
+            hand.rotation = Quaternion.AngleAxis(
+                angle,
+                foreArmAxis) * hand.rotation;
+            return Vector3.Distance(hand.position, requestedHandPosition);
+        }
+
+        private static Vector3 GetMusketLocalContactPoint(
+            MusketGeometryAnalysis analysis,
+            float lengthRatio,
+            float heightRatio)
+        {
+            return analysis.LocalStockPoint +
+                analysis.StockToMuzzleAxis *
+                (analysis.SourceLength * lengthRatio) +
+                analysis.TriggerDirectionAxis *
+                (analysis.SourceHeight * heightRatio);
+        }
+
+        private static Vector3 GetMusketLocalUndersidePoint(
+            MusketGeometryAnalysis analysis,
+            float lengthRatio)
+        {
+            Vector3[] section = GetMusketLocalCrossSectionVertices(
+                analysis,
+                lengthRatio);
+            float longitudinal = GetMusketLongitudinalCoordinate(
+                analysis,
+                lengthRatio);
+            float underside = section.Max(vertex => Vector3.Dot(
+                vertex,
+                analysis.TriggerDirectionAxis));
+            float thicknessMinimum = section.Min(vertex => Vector3.Dot(
+                vertex,
+                analysis.ThicknessAxis));
+            float thicknessMaximum = section.Max(vertex => Vector3.Dot(
+                vertex,
+                analysis.ThicknessAxis));
+            return analysis.StockToMuzzleAxis * longitudinal +
+                analysis.TriggerDirectionAxis * underside +
+                analysis.ThicknessAxis *
+                ((thicknessMinimum + thicknessMaximum) * 0.5f);
+        }
+
+        private static Vector3 GetMusketLocalSideSurfacePoint(
+            Transform handItem,
+            MusketGeometryAnalysis analysis,
+            float lengthRatio,
+            float heightRatio,
+            Vector3 desiredWorldSide)
+        {
+            Vector3[] section = GetMusketLocalCrossSectionVertices(
+                analysis,
+                lengthRatio);
+            float longitudinal = GetMusketLongitudinalCoordinate(
+                analysis,
+                lengthRatio);
+            float height = Vector3.Dot(
+                    analysis.LocalCenter,
+                    analysis.TriggerDirectionAxis) +
+                analysis.SourceHeight * heightRatio;
+            Vector3 worldThickness = handItem.TransformDirection(
+                analysis.ThicknessAxis).normalized;
+            bool positiveSide = Vector3.Dot(
+                    worldThickness,
+                    desiredWorldSide.normalized) >= 0f;
+            float thickness = positiveSide
+                ? section.Max(vertex => Vector3.Dot(
+                    vertex,
+                    analysis.ThicknessAxis))
+                : section.Min(vertex => Vector3.Dot(
+                    vertex,
+                    analysis.ThicknessAxis));
+            return analysis.StockToMuzzleAxis * longitudinal +
+                analysis.TriggerDirectionAxis * height +
+                analysis.ThicknessAxis * thickness;
+        }
+
+        private static Vector3[] GetMusketLocalCrossSectionVertices(
+            MusketGeometryAnalysis analysis,
+            float lengthRatio)
+        {
+            float longitudinal = GetMusketLongitudinalCoordinate(
+                analysis,
+                lengthRatio);
+            float halfWindow = analysis.SourceLength *
+                MusketCrossSectionWindowRatio;
+            Vector3[] section = analysis.LocalVertices
+                .Where(vertex => Mathf.Abs(
+                    Vector3.Dot(
+                        vertex,
+                        analysis.StockToMuzzleAxis) -
+                    longitudinal) <= halfWindow)
+                .ToArray();
+            if (section.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Musket cross-section contains no mesh vertices at ratio " +
+                    Num(lengthRatio) + ".");
+            }
+
+            return section;
+        }
+
+        private static float GetMusketLongitudinalCoordinate(
+            MusketGeometryAnalysis analysis,
+            float lengthRatio)
+        {
+            return Vector3.Dot(
+                    analysis.LocalStockPoint,
+                    analysis.StockToMuzzleAxis) +
+                analysis.SourceLength * Mathf.Clamp01(lengthRatio);
+        }
+
+        private static List<Vector3> GetMusketUndersideWorldSurfacePoints(
+            Transform handItem,
+            MusketGeometryAnalysis analysis,
+            float minimumRatio,
+            float maximumRatio)
+        {
+            const int intervals = 12;
+            List<Vector3> points = new List<Vector3>(intervals + 1);
+            for (int index = 0; index <= intervals; index++)
+            {
+                float ratio = Mathf.Lerp(
+                    minimumRatio,
+                    maximumRatio,
+                    index / (float)intervals);
+                points.Add(handItem.TransformPoint(
+                    GetMusketLocalUndersidePoint(analysis, ratio)));
+            }
+
+            return points;
+        }
+
+        private static List<Vector3> GetMusketChamberWorldSurfacePoints(
+            Transform root,
+            Transform handItem,
+            MusketGeometryAnalysis analysis)
+        {
+            const int lengthIntervals = 10;
+            float[] heightRatios = { -0.25f, -0.10f, 0.05f };
+            List<Vector3> points = new List<Vector3>(
+                (lengthIntervals + 1) * heightRatios.Length);
+            for (int index = 0; index <= lengthIntervals; index++)
+            {
+                float lengthRatio = Mathf.Lerp(
+                    0.20f,
+                    0.34f,
+                    index / (float)lengthIntervals);
+                foreach (float heightRatio in heightRatios)
+                {
+                    points.Add(handItem.TransformPoint(
+                        GetMusketLocalSideSurfacePoint(
+                            handItem,
+                            analysis,
+                            lengthRatio,
+                            heightRatio,
+                            -root.right)));
+                }
+            }
+
+            return points;
+        }
+
+        private static float GetMusketGeneratedDuration(
+            MusketAnimationSpec spec,
+            AnimationClip source)
+        {
+            if (string.Equals(
+                    spec.TargetName,
+                    MusketDrawTargetName,
+                    StringComparison.Ordinal))
+            {
+                return source.length +
+                    MusketDrawToIdleTransitionSeconds +
+                    MusketDrawIdlePlaybackSeconds;
+            }
+
+            if (string.Equals(
+                    spec.TargetName,
+                    MusketAimTargetName,
+                    StringComparison.Ordinal))
+            {
+                return source.length + MusketIdleToAimTransitionSeconds;
+            }
+
+            return source.length;
+        }
+
         private static void SetMusketHandTransferCurves(
             AnimationClip clip,
             MusketAnimationSpec spec,
-            MusketGripBinding grip)
+            MusketGripBinding grip,
+            float sourceDuration)
         {
             bool isDraw = string.Equals(
                 spec.ItemMode,
@@ -10045,7 +11815,7 @@ namespace Bellerophon.Editor
 
             float transitionStart = isDraw ? grip.DrawSwitchTime : 0f;
             float transitionEnd = isDraw
-                ? clip.length
+                ? sourceDuration
                 : grip.StowSwitchTime;
             Vector3 startPosition = isDraw
                 ? grip.DrawBackLocalPosition
@@ -10199,6 +11969,169 @@ namespace Bellerophon.Editor
                    Vector3.Distance(
                        handItem.localScale,
                        grip.LocalScale) <= PositionTolerance;
+        }
+
+        private static bool MusketTorsoAndLowerBodySourceSegmentPreserved(
+            MusketAnimationSpec spec,
+            AnimationClip source,
+            AnimationClip generated)
+        {
+            float timeOffset = string.Equals(
+                spec.TargetName,
+                MusketAimTargetName,
+                StringComparison.Ordinal)
+                ? MusketIdleToAimTransitionSeconds
+                : 0f;
+            int frameCount = Mathf.Max(
+                1,
+                Mathf.RoundToInt(source.length * source.frameRate));
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetCurveBindings(source))
+            {
+                if (IsArmTransformPath(binding.path) ||
+                    IsMusketItemAnimationPath(binding.path) ||
+                    (string.Equals(
+                         spec.TargetName,
+                         MusketDrawTargetName,
+                         StringComparison.Ordinal) &&
+                     IsMusketDrawLegCorrectionPath(binding.path)))
+                {
+                    continue;
+                }
+
+                AnimationCurve sourceCurve =
+                    AnimationUtility.GetEditorCurve(source, binding);
+                AnimationCurve generatedCurve =
+                    AnimationUtility.GetEditorCurve(generated, binding);
+                if (sourceCurve == null || generatedCurve == null)
+                {
+                    return false;
+                }
+
+                for (int frame = 0; frame <= frameCount; frame++)
+                {
+                    float sourceTime = Mathf.Min(
+                        source.length,
+                        frame / Mathf.Max(1f, source.frameRate));
+                    if (Mathf.Abs(
+                            sourceCurve.Evaluate(sourceTime) -
+                            generatedCurve.Evaluate(
+                                sourceTime + timeOffset)) > 0.001f)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private static bool MusketOnlyApprovedArmAndItemCurvesChanged(
+            MusketAnimationSpec spec,
+            AnimationClip source,
+            AnimationClip generated)
+        {
+            HashSet<string> sourceBindings = new HashSet<string>(
+                AnimationUtility.GetCurveBindings(source).Select(binding =>
+                    binding.path + "|" + binding.propertyName),
+                StringComparer.Ordinal);
+            foreach (EditorCurveBinding binding in
+                     AnimationUtility.GetCurveBindings(generated))
+            {
+                string key = binding.path + "|" + binding.propertyName;
+                if (sourceBindings.Contains(key))
+                {
+                    continue;
+                }
+
+                bool approvedDrawLegCorrection = string.Equals(
+                        spec.TargetName,
+                        MusketDrawTargetName,
+                        StringComparison.Ordinal) &&
+                    IsMusketDrawLegCorrectionPath(binding.path);
+                if (!IsArmTransformPath(binding.path) &&
+                    !IsMusketItemAnimationPath(binding.path) &&
+                    !approvedDrawLegCorrection)
+                {
+                    return false;
+                }
+            }
+
+            return MusketTorsoAndLowerBodySourceSegmentPreserved(
+                spec,
+                source,
+                generated);
+        }
+
+        private static bool IsMusketDrawLegCorrectionPath(string path)
+        {
+            return path.StartsWith(
+                       LeftUpLegPath,
+                       StringComparison.Ordinal) ||
+                   path.StartsWith(
+                       RightUpLegPath,
+                       StringComparison.Ordinal);
+        }
+
+        private static bool IsMusketItemAnimationPath(string path)
+        {
+            return string.Equals(
+                       path,
+                       SpinePath + "/" + MusketBackInstanceName,
+                       StringComparison.Ordinal) ||
+                   string.Equals(
+                       path,
+                       RightHandPath + "/" + MusketHandInstanceName,
+                       StringComparison.Ordinal);
+        }
+
+        private static bool MusketSourceEventsPreserved(
+            MusketAnimationSpec spec,
+            AnimationClip source,
+            AnimationClip generated)
+        {
+            AnimationEvent[] sourceEvents =
+                AnimationUtility.GetAnimationEvents(source);
+            AnimationEvent[] generatedEvents =
+                AnimationUtility.GetAnimationEvents(generated);
+            if (sourceEvents.Length != generatedEvents.Length)
+            {
+                return false;
+            }
+
+            float timeOffset = string.Equals(
+                spec.TargetName,
+                MusketAimTargetName,
+                StringComparison.Ordinal)
+                ? MusketIdleToAimTransitionSeconds
+                : 0f;
+            for (int index = 0; index < sourceEvents.Length; index++)
+            {
+                AnimationEvent expected = sourceEvents[index];
+                AnimationEvent actual = generatedEvents[index];
+                if (Mathf.Abs(
+                        expected.time + timeOffset - actual.time) > 0.0001f ||
+                    !string.Equals(
+                        expected.functionName,
+                        actual.functionName,
+                        StringComparison.Ordinal) ||
+                    !string.Equals(
+                        expected.stringParameter,
+                        actual.stringParameter,
+                        StringComparison.Ordinal) ||
+                    Mathf.Abs(
+                        expected.floatParameter -
+                        actual.floatParameter) > 0.0001f ||
+                    expected.intParameter != actual.intParameter ||
+                    expected.objectReferenceParameter !=
+                        actual.objectReferenceParameter ||
+                    expected.messageOptions != actual.messageOptions)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private static bool MusketSourceCurvesPreserved(
@@ -10682,10 +12615,21 @@ namespace Bellerophon.Editor
             MusketAnimationReviewMetrics review =
                 ReadJson<MusketAnimationReviewMetrics>(
                     MusketAnimationReviewMetricsPath);
-            if (!review.passedNumericChecks)
+            bool supportChecksPassed =
+                review.actualPlayModeObserved &&
+                review.everyTargetObservedForTwoLoops &&
+                review.everyTargetKeptExactlyOneVisibleMusket &&
+                review.allTargetRootsAndHandGripTransformsUnchanged &&
+                review.targets != null &&
+                review.targets.Length == GetMusketAnimationSpecs().Length &&
+                review.targets.All(metrics =>
+                    metrics.contactSheetExists &&
+                    metrics.maximumMuzzleForwardErrorDegrees <= 3f &&
+                    metrics.maximumTriggerDownErrorDegrees <= 3f);
+            if (!supportChecksPassed)
             {
                 throw new InvalidOperationException(
-                    "Musket animation Play Mode review did not pass before finalization.");
+                    "Musket animation Play Mode support checks did not pass before finalization.");
             }
 
             CopyReviewedContact(
@@ -10695,6 +12639,1659 @@ namespace Bellerophon.Editor
                 "[PlayerMusketAnimationSet] Final overview copied once from directly reviewed actual Play Mode frames. Path=" +
                 Path.GetFullPath(MusketAnimationFinalPath) +
                 ", SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Musket Muzzle Flash VFX")]
+        internal static void ApplyMusketMuzzleFlashVfx()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Musket muzzle flash VFX apply requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Musket muzzle flash VFX apply.");
+            }
+
+            CreateOrUpdateMusketMuzzleFlashAssets();
+            RequireHash(
+                MusketBoreAssetPath,
+                MusketBoreAssetHash,
+                "Unity musket 20mm bore FBX for muzzle placement");
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MusketMuzzleFlashPrefabPath) ??
+                throw new FileNotFoundException(
+                    "Musket muzzle flash prefab is missing after creation.",
+                    Path.GetFullPath(MusketMuzzleFlashPrefabPath));
+            GameObject musketAsset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MusketBoreAssetPath) ??
+                throw new FileNotFoundException(
+                    "Unity 20mm bore musket asset is missing for muzzle placement.",
+                    Path.GetFullPath(MusketBoreAssetPath));
+            MusketGeometryAnalysis analysis = AnalyzeMusketGeometry(musketAsset);
+            Vector3 localForward = analysis.StockToMuzzleAxis.normalized;
+            Vector3 localPosition = analysis.LocalMuzzlePoint;
+
+            Scene activeScene = RequireScene();
+            Transform layout = RequireLayout(activeScene);
+            MusketAnimationSpec[] specs = GetMusketAnimationSpecs()
+                .Where(spec =>
+                    string.Equals(
+                        spec.TargetName,
+                        MusketHipFireTargetName,
+                        StringComparison.Ordinal) ||
+                    string.Equals(
+                        spec.TargetName,
+                        MusketAimFireTargetName,
+                        StringComparison.Ordinal))
+                .ToArray();
+            List<MusketMuzzleFlashTargetApplyMetrics> targetMetrics =
+                new List<MusketMuzzleFlashTargetApplyMetrics>();
+            foreach (MusketAnimationSpec spec in specs)
+            {
+                Transform target = RequireTarget(layout, spec.TargetName);
+                Transform handItem = FindRequired(
+                    target,
+                    RightHandPath + "/" + MusketHandInstanceName);
+                Transform existing = handItem.Find(MusketMuzzleFlashRootName);
+                if (existing != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(existing.gameObject);
+                }
+
+                GameObject instance = PrefabUtility.InstantiatePrefab(
+                    prefab,
+                    handItem) as GameObject;
+                if (instance == null)
+                {
+                    throw new InvalidOperationException(
+                        spec.TargetName +
+                        " muzzle flash prefab could not be instantiated.");
+                }
+
+                instance.name = MusketMuzzleFlashRootName;
+                instance.transform.localPosition = localPosition;
+                instance.transform.localRotation = Quaternion.FromToRotation(
+                    Vector3.forward,
+                    localForward);
+                instance.transform.localScale = Vector3.one;
+                PrefabUtility.RecordPrefabInstancePropertyModifications(
+                    instance.transform);
+                MonoBehaviour effect = RequireMusketMuzzleFlashComponent(
+                    instance.transform);
+                ConfigureMusketMuzzleFlashStateBehaviour(spec);
+                targetMetrics.Add(CreateMusketMuzzleFlashApplyMetrics(
+                    target,
+                    spec,
+                    effect,
+                    localPosition,
+                    localForward));
+                EditorUtility.SetDirty(instance);
+            }
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+
+            MusketMuzzleFlashApplyMetrics metrics =
+                new MusketMuzzleFlashApplyMetrics
+                {
+                    targetSet = string.Join(", ", specs.Select(
+                        spec => spec.TargetName)),
+                    approvedSample =
+                        "artSample/musket_muzzle_flash/index.html",
+                    implementation =
+                        "Persistent layered particles with shared four-variant soft flame and smoke atlases distributed in 3D space, capped concurrency, and an unshadowed short light pulse",
+                    prefabPath = MusketMuzzleFlashPrefabPath,
+                    flameTexturePath = MusketMuzzleFlameTexturePath,
+                    smokeTexturePath = MusketMuzzleSmokeTexturePath,
+                    hotGasMaterialPath = MusketMuzzleHotGasMaterialPath,
+                    targetCount = targetMetrics.Count,
+                    maximumConcurrentSmokeEffects =
+                        MusketMuzzleFlashConcurrentSmokeLimit,
+                    maximumConcurrentLights =
+                        MusketMuzzleFlashConcurrentLightLimit,
+                    targets = targetMetrics.ToArray(),
+                    usesRaymarchedVolumetrics = false,
+                    usesDynamicShadows = false,
+                    createsObjectsPerShot = false,
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션·VFX 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                metrics.targetCount == 2 &&
+                metrics.targets.All(targetMetric =>
+                    targetMetric.passedNumericChecks) &&
+                !metrics.usesRaymarchedVolumetrics &&
+                !metrics.usesDynamicShadows &&
+                !metrics.createsObjectsPerShot;
+            WriteJson(MusketMuzzleFlashApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Musket muzzle flash VFX apply support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            SessionState.EraseInt(MusketMuzzleFlashCaptureStageKey);
+            Debug.Log(
+                "[PlayerMusketMuzzleFlash] Applied approved 3D muzzle VFX to HipFire and AimFire. " +
+                "SystemsPerTarget=" + MusketMuzzleFlashSystemCount +
+                ", ParticleCapacityPerTarget=" +
+                MusketMuzzleFlashMaximumParticleCapacity +
+                ", Raymarch=False, Shadows=False, PerShotInstantiation=False.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Musket Muzzle Flash VFX Review")]
+        internal static void CaptureMusketMuzzleFlashVfxReview()
+        {
+            int stage = SessionState.GetInt(
+                MusketMuzzleFlashCaptureStageKey,
+                0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket muzzle flash review must start in Edit Mode.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before muzzle flash review.");
+                    }
+
+                    MusketMuzzleFlashApplyMetrics apply =
+                        ReadJson<MusketMuzzleFlashApplyMetrics>(
+                            MusketMuzzleFlashApplyMetricsPath);
+                    if (!apply.passedNumericChecks)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket muzzle flash apply metrics did not pass.");
+                    }
+
+                    SessionState.SetInt(MusketMuzzleFlashCaptureStageKey, 1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[PlayerMusketMuzzleFlash] Entering Play Mode for natural two-loop VFX review.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket muzzle flash capture start requires Play Mode.");
+                    }
+
+                    MusketMuzzleFlashPlayModeCapture.Start();
+                    SessionState.SetInt(MusketMuzzleFlashCaptureStageKey, 2);
+                    Debug.Log(
+                        "[PlayerMusketMuzzleFlash] Began natural two-loop HipFire/AimFire VFX capture.");
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket muzzle flash capture polling requires Play Mode.");
+                    }
+
+                    if (MusketMuzzleFlashPlayModeCapture.Failure != null)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket muzzle flash Play Mode capture failed.",
+                            MusketMuzzleFlashPlayModeCapture.Failure);
+                    }
+
+                    if (!MusketMuzzleFlashPlayModeCapture.IsComplete)
+                    {
+                        Debug.Log(
+                            "[PlayerMusketMuzzleFlash] Capture is still running. " +
+                            MusketMuzzleFlashPlayModeCapture.Status);
+                        return;
+                    }
+
+                    SessionState.SetInt(MusketMuzzleFlashCaptureStageKey, 3);
+                    Debug.Log(
+                        "[PlayerMusketMuzzleFlash] Review capture completed; run once more to exit Play Mode.");
+                    return;
+                }
+
+                if (stage == 3)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Musket muzzle flash review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(MusketMuzzleFlashCaptureStageKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[PlayerMusketMuzzleFlash] Exiting Play Mode after direct VFX review capture.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Musket muzzle flash capture stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(MusketMuzzleFlashCaptureStageKey);
+                MusketMuzzleFlashPlayModeCapture.Stop();
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Musket Muzzle Flash VFX Final")]
+        internal static void CaptureMusketMuzzleFlashVfxFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Musket muzzle flash finalization requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after muzzle flash direct review.");
+            }
+
+            MusketMuzzleFlashReviewMetrics review =
+                ReadJson<MusketMuzzleFlashReviewMetrics>(
+                    MusketMuzzleFlashReviewMetricsPath);
+            if (!review.passedNumericChecks ||
+                !review.contactSheetExists ||
+                !review.bothTargetsObservedForTwoNaturalLoops)
+            {
+                throw new InvalidOperationException(
+                    "Musket muzzle flash review did not pass before finalization.");
+            }
+
+            CopyReviewedContact(
+                MusketMuzzleFlashReviewPath,
+                MusketMuzzleFlashFinalPath);
+            Debug.Log(
+                "[PlayerMusketMuzzleFlash] Final overview copied once from directly reviewed natural Play Mode frames. Path=" +
+                Path.GetFullPath(MusketMuzzleFlashFinalPath) +
+                ", SceneChanged=False.");
+        }
+
+        private static void CreateOrUpdateMusketMuzzleFlashAssets()
+        {
+            Directory.CreateDirectory(Path.GetFullPath(
+                MusketMuzzleFlashDirectory));
+            AssetDatabase.Refresh();
+
+            Mesh flashMesh = CreateOrUpdateMusketMuzzleMesh(
+                MusketMuzzleFlashMeshPath,
+                CreateMusketMuzzleFlashMesh());
+            Mesh smokeMesh = CreateOrUpdateMusketMuzzleMesh(
+                MusketMuzzleSmokeMeshPath,
+                CreateMusketMuzzleSmokeMesh());
+            Texture2D smokeTexture =
+                CreateOrUpdateMusketMuzzleSmokeTexture();
+            Texture2D flameTexture =
+                CreateOrUpdateMusketMuzzleFlameTexture();
+            Material flashMaterial = CreateOrUpdateMusketMuzzleMaterial(
+                MusketMuzzleFlashMaterialPath,
+                false,
+                flameTexture,
+                new Color(1.8f, 1.8f, 1.8f, 1f));
+            Material hotGasMaterial = CreateOrUpdateMusketMuzzleMaterial(
+                MusketMuzzleHotGasMaterialPath,
+                true,
+                flameTexture,
+                new Color(4.0f, 1.25f, 0.16f, 1f),
+                new Color(8f, 2.2f, 0.16f, 1f));
+            Material smokeMaterial = CreateOrUpdateMusketMuzzleMaterial(
+                MusketMuzzleSmokeMaterialPath,
+                false,
+                smokeTexture);
+
+            GameObject root = new GameObject(MusketMuzzleFlashRootName);
+            try
+            {
+                Type controllerType = RequireMusketMuzzleFlashRuntimeType(
+                    MusketMuzzleFlashRuntimeTypeName);
+                MonoBehaviour controller = root.AddComponent(controllerType)
+                    as MonoBehaviour ??
+                    throw new InvalidOperationException(
+                        "Musket muzzle flash runtime controller could not be added.");
+                ParticleSystem flash = CreateMusketMuzzleFlashSystem(
+                    root.transform,
+                    flashMesh,
+                    flashMaterial);
+                ParticleSystem hotGas = CreateMusketMuzzleHotGasSystem(
+                    root.transform,
+                    smokeMesh,
+                    hotGasMaterial);
+                ParticleSystem smoke = CreateMusketMuzzleSmokeSystem(
+                    root.transform,
+                    smokeMesh,
+                    smokeMaterial);
+                ParticleSystem embers = CreateMusketMuzzleEmberSystem(
+                    root.transform,
+                    flashMesh,
+                    hotGasMaterial);
+                GameObject lightObject = new GameObject("MuzzleLight");
+                lightObject.transform.SetParent(root.transform, false);
+                lightObject.transform.localPosition =
+                    Vector3.forward * 0.055f;
+                Light muzzleLight = lightObject.AddComponent<Light>();
+                muzzleLight.type = LightType.Point;
+                muzzleLight.color = new Color(1f, 0.58f, 0.22f, 1f);
+                muzzleLight.range = 2.1f;
+                muzzleLight.intensity = 0f;
+                muzzleLight.shadows = LightShadows.None;
+                muzzleLight.renderMode = LightRenderMode.Auto;
+                muzzleLight.enabled = false;
+                InvokeMusketMuzzleFlashMethod(
+                    controller,
+                    "Configure",
+                    flash,
+                    hotGas,
+                    smoke,
+                    embers,
+                    muzzleLight,
+                    0.055f,
+                    3.25f);
+                PrefabUtility.SaveAsPrefabAsset(
+                    root,
+                    MusketMuzzleFlashPrefabPath);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(root);
+            }
+
+            AssetDatabase.SaveAssets();
+        }
+
+        private static Mesh CreateOrUpdateMusketMuzzleMesh(
+            string path,
+            Mesh generated)
+        {
+            Mesh existing = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(generated, path);
+                return generated;
+            }
+
+            EditorUtility.CopySerialized(generated, existing);
+            UnityEngine.Object.DestroyImmediate(generated);
+            EditorUtility.SetDirty(existing);
+            return existing;
+        }
+
+        private static Mesh CreateMusketMuzzleFlashMesh()
+        {
+            const int sides = 12;
+            List<Vector3> vertices = new List<Vector3>
+            {
+                new Vector3(0f, 0f, -0.018f)
+            };
+            float[] ringZ = { 0.018f, 0.075f, 0.17f, 0.285f, 0.39f };
+            float[] ringRadius = { 0.034f, 0.070f, 0.094f, 0.058f, 0.020f };
+            for (int ring = 0; ring < ringZ.Length; ring++)
+            {
+                for (int side = 0; side < sides; side++)
+                {
+                    float angle = side * Mathf.PI * 2f / sides;
+                    float irregular = 1f +
+                        0.10f * Mathf.Sin(side * 2.3f + ring * 1.7f) +
+                        0.06f * Mathf.Cos(side * 3.7f - ring * 0.9f);
+                    vertices.Add(new Vector3(
+                        Mathf.Cos(angle) * ringRadius[ring] * irregular,
+                        Mathf.Sin(angle) * ringRadius[ring] * irregular,
+                        ringZ[ring]));
+                }
+            }
+
+            int tipIndex = vertices.Count;
+            vertices.Add(new Vector3(0f, 0f, 0.48f));
+            List<int> triangles = new List<int>();
+            for (int side = 0; side < sides; side++)
+            {
+                int next = (side + 1) % sides;
+                triangles.Add(0);
+                triangles.Add(1 + next);
+                triangles.Add(1 + side);
+                for (int ring = 0; ring < ringZ.Length - 1; ring++)
+                {
+                    int current = 1 + ring * sides + side;
+                    int currentNext = 1 + ring * sides + next;
+                    int following = current + sides;
+                    int followingNext = currentNext + sides;
+                    triangles.Add(current);
+                    triangles.Add(currentNext);
+                    triangles.Add(followingNext);
+                    triangles.Add(current);
+                    triangles.Add(followingNext);
+                    triangles.Add(following);
+                }
+
+                int last = 1 + (ringZ.Length - 1) * sides + side;
+                int lastNext = 1 + (ringZ.Length - 1) * sides + next;
+                triangles.Add(last);
+                triangles.Add(lastNext);
+                triangles.Add(tipIndex);
+            }
+
+            Mesh mesh = new Mesh
+            {
+                name = "MusketMuzzleFlash"
+            };
+            mesh.SetVertices(vertices);
+            mesh.SetTriangles(triangles, 0);
+            mesh.SetUVs(
+                0,
+                Enumerable.Repeat(
+                    new Vector2(0.25f, 0.25f),
+                    vertices.Count).ToList());
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
+        private static Texture2D CreateOrUpdateMusketMuzzleFlameTexture()
+        {
+            Texture2D generated = CreateMusketMuzzleFlameTexture();
+            Texture2D existing =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    MusketMuzzleFlameTexturePath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(
+                    generated,
+                    MusketMuzzleFlameTexturePath);
+                return generated;
+            }
+
+            EditorUtility.CopySerialized(generated, existing);
+            UnityEngine.Object.DestroyImmediate(generated);
+            EditorUtility.SetDirty(existing);
+            return existing;
+        }
+
+        private static Texture2D CreateMusketMuzzleFlameTexture()
+        {
+            const int tilesPerAxis = 2;
+            const int tileSize = 64;
+            const int textureSize = tilesPerAxis * tileSize;
+            Texture2D texture = new Texture2D(
+                textureSize,
+                textureSize,
+                TextureFormat.RGBA32,
+                true,
+                true)
+            {
+                name = "MusketMuzzleFlameMask",
+                wrapMode = TextureWrapMode.Clamp,
+                filterMode = FilterMode.Bilinear,
+                anisoLevel = 0
+            };
+            Color[] pixels = new Color[textureSize * textureSize];
+            for (int tileY = 0; tileY < tilesPerAxis; tileY++)
+            {
+                for (int tileX = 0; tileX < tilesPerAxis; tileX++)
+                {
+                    int variant = tileY * tilesPerAxis + tileX;
+                    float variantRotation =
+                        (variant - 1.5f) * Mathf.Deg2Rad * 8f;
+                    float cosine = Mathf.Cos(variantRotation);
+                    float sine = Mathf.Sin(variantRotation);
+                    for (int y = 0; y < tileSize; y++)
+                    {
+                        for (int x = 0; x < tileSize; x++)
+                        {
+                            float horizontal =
+                                ((x + 0.5f) / tileSize) * 2f - 1f;
+                            float vertical =
+                                ((y + 0.5f) / tileSize) * 2f - 1f;
+                            float rotatedX =
+                                horizontal * cosine - vertical * sine;
+                            float rotatedY =
+                                horizontal * sine + vertical * cosine;
+                            float scaledX = rotatedX /
+                                (0.88f + variant * 0.025f);
+                            float scaledY = rotatedY /
+                                (0.72f + (3 - variant) * 0.028f);
+                            float radius = Mathf.Sqrt(
+                                scaledX * scaledX + scaledY * scaledY);
+                            float density = Mathf.Exp(
+                                -radius * radius * 2.0f);
+                            for (int lobe = 0; lobe < 4; lobe++)
+                            {
+                                float phase = variant * 0.61f +
+                                    lobe * Mathf.PI * 0.5f;
+                                float centerX = 0.34f * Mathf.Cos(phase);
+                                float centerY = 0.30f * Mathf.Sin(phase);
+                                float offsetX =
+                                    (scaledX - centerX) / 0.34f;
+                                float offsetY =
+                                    (scaledY - centerY) / 0.30f;
+                                float lobeDensity = Mathf.Exp(-(
+                                    offsetX * offsetX +
+                                    offsetY * offsetY) * 1.45f) * 0.86f;
+                                density = Mathf.Max(
+                                    density,
+                                    lobeDensity);
+                            }
+
+                            float envelope = 1f - Mathf.SmoothStep(
+                                0.82f,
+                                1.08f,
+                                radius);
+                            float core = 1f - Mathf.SmoothStep(
+                                0.05f,
+                                0.58f,
+                                radius);
+                            float turbulence = Mathf.Clamp01(
+                                0.56f +
+                                0.22f * Mathf.Sin(
+                                    rotatedX * 7.4f +
+                                    rotatedY * 4.2f + variant * 1.8f) +
+                                0.16f * Mathf.Cos(
+                                    rotatedX * 3.6f -
+                                    rotatedY * 8.2f - variant * 1.3f));
+                            float alpha = Mathf.Clamp01(
+                                Mathf.SmoothStep(0.035f, 0.72f, density) *
+                                envelope * (0.72f + turbulence * 0.20f));
+                            alpha = Mathf.Pow(alpha, 1.10f);
+                            float luminance = Mathf.Clamp01(
+                                0.70f + core * 0.30f);
+                            int pixelX = tileX * tileSize + x;
+                            int pixelY = tileY * tileSize + y;
+                            pixels[pixelY * textureSize + pixelX] =
+                                new Color(
+                                    luminance,
+                                    luminance,
+                                    luminance,
+                                    alpha);
+                        }
+                    }
+                }
+            }
+
+            texture.SetPixels(pixels);
+            texture.Apply(true, false);
+            return texture;
+        }
+
+        private static Texture2D CreateOrUpdateMusketMuzzleSmokeTexture()
+        {
+            Texture2D generated = CreateMusketMuzzleSmokeTexture();
+            Texture2D existing =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    MusketMuzzleSmokeTexturePath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(
+                    generated,
+                    MusketMuzzleSmokeTexturePath);
+                return generated;
+            }
+
+            EditorUtility.CopySerialized(generated, existing);
+            UnityEngine.Object.DestroyImmediate(generated);
+            EditorUtility.SetDirty(existing);
+            return existing;
+        }
+
+        private static Texture2D CreateMusketMuzzleSmokeTexture()
+        {
+            const int tilesPerAxis = 2;
+            const int tileSize = 64;
+            const int textureSize = tilesPerAxis * tileSize;
+            Texture2D texture = new Texture2D(
+                textureSize,
+                textureSize,
+                TextureFormat.RGBA32,
+                true,
+                true)
+            {
+                name = "MusketMuzzleSmokeMask",
+                wrapMode = TextureWrapMode.Clamp,
+                filterMode = FilterMode.Bilinear,
+                anisoLevel = 0
+            };
+            Color[] pixels = new Color[textureSize * textureSize];
+            for (int tileY = 0; tileY < tilesPerAxis; tileY++)
+            {
+                for (int tileX = 0; tileX < tilesPerAxis; tileX++)
+                {
+                    int variant = tileY * tilesPerAxis + tileX;
+                    for (int y = 0; y < tileSize; y++)
+                    {
+                        for (int x = 0; x < tileSize; x++)
+                        {
+                            float horizontal =
+                                ((x + 0.5f) / tileSize) * 2f - 1f;
+                            float vertical =
+                                ((y + 0.5f) / tileSize) * 2f - 1f;
+                            float radius = Mathf.Sqrt(
+                                horizontal * horizontal +
+                                vertical * vertical);
+                            float centerOffsetX =
+                                0.06f * Mathf.Sin(variant * 1.8f);
+                            float centerOffsetY =
+                                0.05f * Mathf.Cos(variant * 1.4f);
+                            float centerDistanceX =
+                                (horizontal - centerOffsetX) / 0.42f;
+                            float centerDistanceY =
+                                (vertical - centerOffsetY) / 0.38f;
+                            float density = Mathf.Exp(-(
+                                centerDistanceX * centerDistanceX +
+                                centerDistanceY * centerDistanceY) * 1.35f) *
+                                0.88f;
+                            for (int lobe = 0; lobe < 5; lobe++)
+                            {
+                                float phase = variant * 0.73f +
+                                    lobe * Mathf.PI * 0.4f;
+                                float centerX =
+                                    0.39f * Mathf.Cos(phase) +
+                                    0.04f * Mathf.Sin(phase * 2.3f);
+                                float centerY =
+                                    0.35f * Mathf.Sin(phase) +
+                                    0.04f * Mathf.Cos(phase * 1.9f);
+                                float radiusX = 0.27f +
+                                    0.045f * Mathf.Sin(phase * 1.7f);
+                                float radiusY = 0.26f +
+                                    0.042f * Mathf.Cos(phase * 1.4f);
+                                float offsetX =
+                                    (horizontal - centerX) / radiusX;
+                                float offsetY =
+                                    (vertical - centerY) / radiusY;
+                                float lobeDistance =
+                                    offsetX * offsetX + offsetY * offsetY;
+                                float lobeDensity = Mathf.Exp(
+                                    -lobeDistance * 1.28f) *
+                                    (0.72f + 0.04f * lobe);
+                                density = Mathf.Max(density, lobeDensity);
+                            }
+
+                            float envelope = 1f - Mathf.SmoothStep(
+                                0.88f,
+                                1.12f,
+                                radius);
+                            float cellular = Mathf.Clamp01(
+                                0.52f +
+                                0.19f * Mathf.Sin(
+                                    horizontal * 8.3f +
+                                    vertical * 4.1f + variant * 2.1f) +
+                                0.15f * Mathf.Cos(
+                                    horizontal * 4.6f -
+                                    vertical * 7.7f - variant * 1.4f));
+                            float alpha = Mathf.Clamp01(
+                                Mathf.SmoothStep(0.045f, 0.72f, density) *
+                                envelope * (0.74f + cellular * 0.24f));
+                            alpha = Mathf.Pow(alpha, 0.90f) * 0.94f;
+                            float luminance = Mathf.Clamp(
+                                0.57f + cellular * 0.32f + density * 0.07f,
+                                0.52f,
+                                0.97f);
+                            int pixelX = tileX * tileSize + x;
+                            int pixelY = tileY * tileSize + y;
+                            pixels[pixelY * textureSize + pixelX] =
+                                new Color(
+                                    luminance,
+                                    luminance,
+                                    luminance,
+                                    alpha);
+                        }
+                    }
+                }
+            }
+
+            texture.SetPixels(pixels);
+            texture.Apply(true, false);
+            return texture;
+        }
+
+        private static Mesh CreateMusketMuzzleSmokeMesh()
+        {
+            float t = (1f + Mathf.Sqrt(5f)) * 0.5f;
+            List<Vector3> vertices = new[]
+            {
+                new Vector3(-1f, t, 0f), new Vector3(1f, t, 0f),
+                new Vector3(-1f, -t, 0f), new Vector3(1f, -t, 0f),
+                new Vector3(0f, -1f, t), new Vector3(0f, 1f, t),
+                new Vector3(0f, -1f, -t), new Vector3(0f, 1f, -t),
+                new Vector3(t, 0f, -1f), new Vector3(t, 0f, 1f),
+                new Vector3(-t, 0f, -1f), new Vector3(-t, 0f, 1f)
+            }.Select(vertex => vertex.normalized).ToList();
+            int[] sourceTriangles =
+            {
+                0, 11, 5, 0, 5, 1, 0, 1, 7, 0, 7, 10, 0, 10, 11,
+                1, 5, 9, 5, 11, 4, 11, 10, 2, 10, 7, 6, 7, 1, 8,
+                3, 9, 4, 3, 4, 2, 3, 2, 6, 3, 6, 8, 3, 8, 9,
+                4, 9, 5, 2, 4, 11, 6, 2, 10, 8, 6, 7, 9, 8, 1
+            };
+            Dictionary<long, int> midpointCache =
+                new Dictionary<long, int>();
+            List<int> subdividedTriangles = new List<int>();
+            for (int index = 0; index < sourceTriangles.Length; index += 3)
+            {
+                int a = sourceTriangles[index];
+                int b = sourceTriangles[index + 1];
+                int c = sourceTriangles[index + 2];
+                int ab = GetOrCreateMusketMuzzleMidpoint(
+                    vertices,
+                    midpointCache,
+                    a,
+                    b);
+                int bc = GetOrCreateMusketMuzzleMidpoint(
+                    vertices,
+                    midpointCache,
+                    b,
+                    c);
+                int ca = GetOrCreateMusketMuzzleMidpoint(
+                    vertices,
+                    midpointCache,
+                    c,
+                    a);
+                subdividedTriangles.AddRange(new[]
+                {
+                    a, ab, ca,
+                    b, bc, ab,
+                    c, ca, bc,
+                    ab, bc, ca
+                });
+            }
+
+            Vector3[] shapedVertices = vertices
+                .Select((vertex, index) =>
+                {
+                    float radius = 0.053f +
+                        0.009f * Mathf.Sin(index * 2.17f) +
+                        0.004f * Mathf.Cos(index * 4.31f);
+                    Vector3 normalized = vertex.normalized * radius;
+                    return new Vector3(
+                        normalized.x * 1.04f,
+                        normalized.y * 0.84f,
+                        normalized.z * 1.20f);
+                })
+                .ToArray();
+            List<Vector3> flatVertices = new List<Vector3>();
+            List<int> flatTriangles = new List<int>();
+            for (int index = 0; index < subdividedTriangles.Count; index++)
+            {
+                flatVertices.Add(shapedVertices[subdividedTriangles[index]]);
+                flatTriangles.Add(index);
+            }
+
+            Mesh mesh = new Mesh
+            {
+                name = "MusketMuzzleSmoke"
+            };
+            mesh.SetVertices(flatVertices);
+            mesh.SetTriangles(flatTriangles, 0);
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
+        private static int GetOrCreateMusketMuzzleMidpoint(
+            List<Vector3> vertices,
+            IDictionary<long, int> cache,
+            int first,
+            int second)
+        {
+            int low = Mathf.Min(first, second);
+            int high = Mathf.Max(first, second);
+            long key = ((long)low << 32) | (uint)high;
+            if (cache.TryGetValue(key, out int existing))
+            {
+                return existing;
+            }
+
+            int midpoint = vertices.Count;
+            vertices.Add((vertices[first] + vertices[second]).normalized);
+            cache.Add(key, midpoint);
+            return midpoint;
+        }
+
+        private static Material CreateOrUpdateMusketMuzzleMaterial(
+            string path,
+            bool additive,
+            Texture baseTexture = null,
+            Color? additiveColor = null,
+            Color? additiveEmission = null)
+        {
+            Shader shader =
+                Shader.Find("Universal Render Pipeline/Particles/Unlit") ??
+                Shader.Find("Particles/Standard Unlit") ??
+                Shader.Find("Unlit/Color");
+            if (shader == null)
+            {
+                throw new InvalidOperationException(
+                    "No compatible shader is available for Musket muzzle VFX.");
+            }
+
+            Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                material = new Material(shader);
+                AssetDatabase.CreateAsset(material, path);
+            }
+            else
+            {
+                material.shader = shader;
+            }
+
+            Color color = additive
+                ? additiveColor ?? new Color(3.6f, 2.7f, 1.2f, 1f)
+                : additiveColor ?? new Color(1f, 1f, 1f, 1f);
+            if (material.HasProperty("_BaseColor"))
+            {
+                material.SetColor("_BaseColor", color);
+            }
+
+            if (material.HasProperty("_Color"))
+            {
+                material.SetColor("_Color", color);
+            }
+
+            if (baseTexture != null && material.HasProperty("_BaseMap"))
+            {
+                material.SetTexture("_BaseMap", baseTexture);
+            }
+
+            if (baseTexture != null && material.HasProperty("_MainTex"))
+            {
+                material.SetTexture("_MainTex", baseTexture);
+            }
+
+            if (material.HasProperty("_Surface"))
+            {
+                material.SetFloat("_Surface", 1f);
+            }
+
+            if (material.HasProperty("_Blend"))
+            {
+                material.SetFloat("_Blend", additive ? 2f : 0f);
+            }
+
+            if (material.HasProperty("_SrcBlend"))
+            {
+                material.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
+            }
+
+            if (material.HasProperty("_DstBlend"))
+            {
+                material.SetFloat(
+                    "_DstBlend",
+                    (float)(additive ? BlendMode.One :
+                        BlendMode.OneMinusSrcAlpha));
+            }
+
+            if (material.HasProperty("_ZWrite"))
+            {
+                material.SetFloat("_ZWrite", 0f);
+            }
+
+            if (material.HasProperty("_Cull"))
+            {
+                material.SetFloat("_Cull", (float)CullMode.Off);
+            }
+
+            if (material.HasProperty("_Metallic"))
+            {
+                material.SetFloat("_Metallic", 0f);
+            }
+
+            if (material.HasProperty("_Smoothness"))
+            {
+                material.SetFloat("_Smoothness", additive ? 0f : 0.18f);
+            }
+
+            if (additive && material.HasProperty("_EmissionColor"))
+            {
+                material.SetColor(
+                    "_EmissionColor",
+                    additiveEmission ?? new Color(7f, 3.8f, 0.8f, 1f));
+                material.EnableKeyword("_EMISSION");
+            }
+            else if (material.HasProperty("_EmissionColor"))
+            {
+                material.SetColor("_EmissionColor", Color.black);
+                material.DisableKeyword("_EMISSION");
+            }
+
+            if (!additive && material.HasProperty("_SoftParticlesEnabled"))
+            {
+                material.SetFloat("_SoftParticlesEnabled", 1f);
+                material.SetFloat("_SoftParticlesNearFadeDistance", 0f);
+                material.SetFloat("_SoftParticlesFarFadeDistance", 0.16f);
+                material.EnableKeyword("_SOFTPARTICLES_ON");
+            }
+
+            material.SetOverrideTag("RenderType", "Transparent");
+            material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            material.DisableKeyword("_ALPHAMODULATE_ON");
+            material.SetShaderPassEnabled("ShadowCaster", false);
+            material.SetShaderPassEnabled("DepthOnly", false);
+            material.renderQueue = (int)RenderQueue.Transparent;
+            material.enableInstancing = true;
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        private static ParticleSystem CreateMusketMuzzleFlashSystem(
+            Transform parent,
+            Mesh mesh,
+            Material material)
+        {
+            ParticleSystem system = CreateMusketMuzzleParticleSystem(
+                parent,
+                "FlashCore",
+                mesh,
+                material);
+            ParticleSystem.MainModule main = system.main;
+            main.duration = 0.1f;
+            main.maxParticles = 3;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(0.072f, 0.105f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.05f, 0.18f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.20f, 0.30f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(
+                0f,
+                Mathf.PI * 2f);
+            main.startColor = new ParticleSystem.MinMaxGradient(
+                new Color(1f, 1f, 1f, 1f),
+                new Color(1f, 0.98f, 0.90f, 1f));
+            ParticleSystem.ShapeModule shape = system.shape;
+            shape.enabled = true;
+            shape.shapeType = ParticleSystemShapeType.Cone;
+            shape.angle = 16f;
+            shape.radius = 0.015f;
+            shape.length = 0.020f;
+            ParticleSystem.SizeOverLifetimeModule size =
+                system.sizeOverLifetime;
+            size.enabled = true;
+            size.size = new ParticleSystem.MinMaxCurve(
+                1f,
+                new AnimationCurve(
+                    new Keyframe(0f, 0.65f),
+                    new Keyframe(0.32f, 1.40f),
+                    new Keyframe(1f, 0.24f)));
+            ConfigureMusketMuzzleFourTileSheet(system);
+            SetMusketMuzzleBurst(system, 3);
+            ConfigureMusketMuzzleFlashColor(system);
+            system.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            return system;
+        }
+
+        private static ParticleSystem CreateMusketMuzzleHotGasSystem(
+            Transform parent,
+            Mesh mesh,
+            Material material)
+        {
+            ParticleSystem system = CreateMusketMuzzleParticleSystem(
+                parent,
+                "HotGasVolume",
+                mesh,
+                material);
+            ParticleSystem.MainModule main = system.main;
+            main.duration = 0.18f;
+            main.maxParticles = 6;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(0.11f, 0.18f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.90f, 1.70f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.09f, 0.15f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(
+                0f,
+                Mathf.PI * 2f);
+            main.startColor = new ParticleSystem.MinMaxGradient(
+                new Color(1f, 1f, 0.82f, 0.94f),
+                new Color(1f, 0.62f, 0.12f, 0.78f));
+            ParticleSystem.ShapeModule shape = system.shape;
+            shape.enabled = true;
+            shape.shapeType = ParticleSystemShapeType.Cone;
+            shape.angle = 18f;
+            shape.radius = 0.012f;
+            shape.length = 0.030f;
+            ParticleSystem.SizeOverLifetimeModule size =
+                system.sizeOverLifetime;
+            size.enabled = true;
+            size.size = new ParticleSystem.MinMaxCurve(
+                1f,
+                new AnimationCurve(
+                    new Keyframe(0f, 0.72f),
+                    new Keyframe(0.42f, 1.50f),
+                    new Keyframe(1f, 0.30f)));
+            ConfigureMusketMuzzleFourTileSheet(system);
+            SetMusketMuzzleBurst(system, 5);
+            ConfigureParticleFade(
+                system,
+                new Color(1f, 0.98f, 0.76f, 0.94f),
+                new Color(1f, 0.52f, 0.10f, 0f));
+            system.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            return system;
+        }
+
+        private static ParticleSystem CreateMusketMuzzleSmokeSystem(
+            Transform parent,
+            Mesh mesh,
+            Material material)
+        {
+            ParticleSystem system = CreateMusketMuzzleParticleSystem(
+                parent,
+                "SmokeVolume",
+                mesh,
+                material);
+            ParticleSystem.MainModule main = system.main;
+            main.duration = MusketMuzzleFlashMaximumDurationSeconds;
+            main.maxParticles = 14;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(0.50f, 0.68f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.55f, 1.10f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.11f, 0.18f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(
+                0f,
+                Mathf.PI * 2f);
+            main.startColor = new ParticleSystem.MinMaxGradient(
+                new Color(1f, 0.96f, 0.90f, 0.95f),
+                new Color(0.90f, 0.93f, 1f, 0.72f));
+            ParticleSystem.ShapeModule shape = system.shape;
+            shape.enabled = true;
+            shape.shapeType = ParticleSystemShapeType.Cone;
+            shape.angle = 26f;
+            shape.radius = 0.055f;
+            shape.length = 0.11f;
+            ParticleSystem.VelocityOverLifetimeModule velocity =
+                system.velocityOverLifetime;
+            velocity.enabled = true;
+            velocity.space = ParticleSystemSimulationSpace.World;
+            velocity.x = new ParticleSystem.MinMaxCurve(0f, 0f);
+            velocity.y = new ParticleSystem.MinMaxCurve(0.10f, 0.24f);
+            velocity.z = new ParticleSystem.MinMaxCurve(0f, 0f);
+            ParticleSystem.SizeOverLifetimeModule size =
+                system.sizeOverLifetime;
+            size.enabled = true;
+            size.size = new ParticleSystem.MinMaxCurve(
+                1f,
+                new AnimationCurve(
+                    new Keyframe(0f, 0.80f),
+                    new Keyframe(0.30f, 1.75f),
+                    new Keyframe(1f, 2.85f)));
+            ParticleSystem.RotationOverLifetimeModule rotation =
+                system.rotationOverLifetime;
+            rotation.enabled = true;
+            rotation.separateAxes = false;
+            rotation.z = new ParticleSystem.MinMaxCurve(-1.25f, 1.25f);
+            ConfigureMusketMuzzleFourTileSheet(system);
+            SetMusketMuzzleBurst(system, 14);
+            ConfigureMusketMuzzleSmokeColor(system);
+            system.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            return system;
+        }
+
+        private static ParticleSystem CreateMusketMuzzleEmberSystem(
+            Transform parent,
+            Mesh mesh,
+            Material material)
+        {
+            ParticleSystem system = CreateMusketMuzzleParticleSystem(
+                parent,
+                "PowderEmbers",
+                mesh,
+                material);
+            ParticleSystem.MainModule main = system.main;
+            main.duration = 0.32f;
+            main.maxParticles = 12;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(0.14f, 0.28f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(1.35f, 2.75f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.025f, 0.055f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(
+                0f,
+                Mathf.PI * 2f);
+            main.startColor = new ParticleSystem.MinMaxGradient(
+                new Color(1f, 0.78f, 0.25f, 1f),
+                new Color(1f, 0.22f, 0.03f, 0.9f));
+            main.gravityModifier = new ParticleSystem.MinMaxCurve(0.18f);
+            ParticleSystem.ShapeModule shape = system.shape;
+            shape.enabled = true;
+            shape.shapeType = ParticleSystemShapeType.Cone;
+            shape.angle = 22f;
+            shape.radius = 0.012f;
+            shape.length = 0.02f;
+            SetMusketMuzzleBurst(system, 12);
+            ConfigureParticleFade(
+                system,
+                new Color(1f, 0.82f, 0.24f, 1f),
+                new Color(1f, 0.12f, 0.01f, 0f));
+            system.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            return system;
+        }
+
+        private static ParticleSystem CreateMusketMuzzleParticleSystem(
+            Transform parent,
+            string name,
+            Mesh mesh,
+            Material material)
+        {
+            GameObject item = new GameObject(name);
+            item.transform.SetParent(parent, false);
+            ParticleSystem system = item.AddComponent<ParticleSystem>();
+            ParticleSystem.MainModule main = system.main;
+            main.loop = false;
+            main.playOnAwake = false;
+            main.simulationSpace = ParticleSystemSimulationSpace.Local;
+            main.scalingMode = ParticleSystemScalingMode.Local;
+            ParticleSystem.EmissionModule emission = system.emission;
+            emission.enabled = true;
+            emission.rateOverTime = 0f;
+            ParticleSystem.NoiseModule noise = system.noise;
+            noise.enabled = false;
+            ParticleSystemRenderer renderer =
+                item.GetComponent<ParticleSystemRenderer>();
+            bool usesSoftFlashBillboards = string.Equals(
+                name,
+                "FlashCore",
+                StringComparison.Ordinal);
+            bool usesSoftHotGasBillboards = string.Equals(
+                name,
+                "HotGasVolume",
+                StringComparison.Ordinal);
+            bool usesSoftSmokeBillboards = string.Equals(
+                name,
+                "SmokeVolume",
+                StringComparison.Ordinal);
+            bool usesEffectBillboards = usesSoftFlashBillboards ||
+                usesSoftHotGasBillboards || usesSoftSmokeBillboards;
+            renderer.renderMode = usesEffectBillboards
+                ? ParticleSystemRenderMode.Billboard
+                : ParticleSystemRenderMode.Mesh;
+            renderer.alignment = usesEffectBillboards
+                ? ParticleSystemRenderSpace.View
+                : ParticleSystemRenderSpace.Local;
+            renderer.mesh = usesEffectBillboards ? null : mesh;
+            renderer.sharedMaterial = material;
+            renderer.sortMode = usesEffectBillboards
+                ? ParticleSystemSortMode.Distance
+                : ParticleSystemSortMode.None;
+            renderer.normalDirection = usesEffectBillboards ? 0.55f : 1f;
+            renderer.cameraVelocityScale = 0f;
+            renderer.velocityScale = 0f;
+            renderer.lengthScale = 1f;
+            renderer.minParticleSize = 0f;
+            renderer.maxParticleSize = 0.42f;
+            renderer.sortingOrder = string.Equals(
+                    name,
+                    "PowderEmbers",
+                    StringComparison.Ordinal)
+                ? 4
+                : string.Equals(
+                    name,
+                    "FlashCore",
+                    StringComparison.Ordinal)
+                    ? 3
+                    : string.Equals(
+                        name,
+                        "HotGasVolume",
+                        StringComparison.Ordinal)
+                        ? 2
+                        : 1;
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            renderer.motionVectorGenerationMode =
+                MotionVectorGenerationMode.ForceNoMotion;
+            renderer.lightProbeUsage = LightProbeUsage.Off;
+            renderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
+            renderer.allowOcclusionWhenDynamic = false;
+            return system;
+        }
+
+        private static void ConfigureMusketMuzzleFourTileSheet(
+            ParticleSystem system)
+        {
+            ParticleSystem.TextureSheetAnimationModule textureSheet =
+                system.textureSheetAnimation;
+            textureSheet.enabled = true;
+            textureSheet.mode = ParticleSystemAnimationMode.Grid;
+            textureSheet.numTilesX = 2;
+            textureSheet.numTilesY = 2;
+            textureSheet.animation = ParticleSystemAnimationType.WholeSheet;
+            textureSheet.frameOverTime = new ParticleSystem.MinMaxCurve(0f);
+            textureSheet.startFrame =
+                new ParticleSystem.MinMaxCurve(0f, 0.999f);
+            textureSheet.cycleCount = 1;
+        }
+
+        private static void SetMusketMuzzleBurst(
+            ParticleSystem system,
+            short count)
+        {
+            ParticleSystem.EmissionModule emission = system.emission;
+            emission.SetBursts(new[]
+            {
+                new ParticleSystem.Burst(0f, count)
+            });
+        }
+
+        private static void ConfigureMusketMuzzleSmokeColor(
+            ParticleSystem system)
+        {
+            Gradient gradient = new Gradient();
+            gradient.SetKeys(
+                new[]
+                {
+                    new GradientColorKey(
+                        new Color(0.72f, 0.64f, 0.55f),
+                        0f),
+                    new GradientColorKey(
+                        new Color(0.46f, 0.47f, 0.50f),
+                        0.34f),
+                    new GradientColorKey(
+                        new Color(0.30f, 0.32f, 0.36f),
+                        1f)
+                },
+                new[]
+                {
+                    new GradientAlphaKey(0f, 0f),
+                    new GradientAlphaKey(0.96f, 0.06f),
+                    new GradientAlphaKey(0.72f, 0.58f),
+                    new GradientAlphaKey(0f, 1f)
+                });
+            ParticleSystem.ColorOverLifetimeModule color =
+                system.colorOverLifetime;
+            color.enabled = true;
+            color.color = new ParticleSystem.MinMaxGradient(gradient);
+        }
+
+        private static void ConfigureMusketMuzzleFlashColor(
+            ParticleSystem system)
+        {
+            Gradient gradient = new Gradient();
+            gradient.SetKeys(
+                new[]
+                {
+                    new GradientColorKey(Color.white, 0f),
+                    new GradientColorKey(
+                        new Color(1f, 0.98f, 0.88f),
+                        0.55f),
+                    new GradientColorKey(
+                        new Color(1f, 0.70f, 0.18f),
+                        1f)
+                },
+                new[]
+                {
+                    new GradientAlphaKey(1f, 0f),
+                    new GradientAlphaKey(0.96f, 0.55f),
+                    new GradientAlphaKey(0f, 1f)
+                });
+            ParticleSystem.ColorOverLifetimeModule color =
+                system.colorOverLifetime;
+            color.enabled = true;
+            color.color = new ParticleSystem.MinMaxGradient(gradient);
+        }
+
+        private static void ConfigureParticleFade(
+            ParticleSystem system,
+            Color start,
+            Color end)
+        {
+            Gradient gradient = new Gradient();
+            gradient.SetKeys(
+                new[]
+                {
+                    new GradientColorKey(start, 0f),
+                    new GradientColorKey(end, 1f)
+                },
+                new[]
+                {
+                    new GradientAlphaKey(start.a, 0f),
+                    new GradientAlphaKey(end.a, 1f)
+                });
+            ParticleSystem.ColorOverLifetimeModule color =
+                system.colorOverLifetime;
+            color.enabled = true;
+            color.color = new ParticleSystem.MinMaxGradient(gradient);
+        }
+
+        private static Type RequireMusketMuzzleFlashRuntimeType(
+            string assemblyQualifiedName)
+        {
+            Type type = Type.GetType(assemblyQualifiedName, false);
+            if (type == null)
+            {
+                string fullName = assemblyQualifiedName.Split(',')[0].Trim();
+                type = AppDomain.CurrentDomain.GetAssemblies()
+                    .Select(assembly => assembly.GetType(fullName, false))
+                    .FirstOrDefault(candidate => candidate != null);
+            }
+
+            return type ?? throw new InvalidOperationException(
+                "Musket muzzle flash runtime type is unavailable: " +
+                assemblyQualifiedName + ".");
+        }
+
+        private static MonoBehaviour RequireMusketMuzzleFlashComponent(
+            Transform root)
+        {
+            Type type = RequireMusketMuzzleFlashRuntimeType(
+                MusketMuzzleFlashRuntimeTypeName);
+            MonoBehaviour[] matches = root
+                .GetComponentsInChildren(type, true)
+                .OfType<MonoBehaviour>()
+                .ToArray();
+            if (matches.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    root.name + " muzzle flash runtime component count differs; " +
+                    "actual=" + matches.Length + ".");
+            }
+
+            return matches[0];
+        }
+
+        private static void InvokeMusketMuzzleFlashMethod(
+            UnityEngine.Object instance,
+            string methodName,
+            params object[] arguments)
+        {
+            MethodInfo method = instance.GetType()
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                .SingleOrDefault(candidate =>
+                    string.Equals(
+                        candidate.Name,
+                        methodName,
+                        StringComparison.Ordinal) &&
+                    candidate.GetParameters().Length == arguments.Length);
+            if (method == null)
+            {
+                throw new InvalidOperationException(
+                    instance.GetType().FullName + "." + methodName +
+                    " is unavailable for Editor VFX setup.");
+            }
+
+            method.Invoke(instance, arguments);
+        }
+
+        private static T ReadMusketMuzzleFlashProperty<T>(
+            UnityEngine.Object instance,
+            string propertyName)
+        {
+            PropertyInfo property = instance.GetType().GetProperty(
+                propertyName,
+                BindingFlags.Instance | BindingFlags.Public);
+            if (property == null)
+            {
+                throw new InvalidOperationException(
+                    instance.GetType().FullName + "." + propertyName +
+                    " is unavailable for Editor VFX review.");
+            }
+
+            object value = property.GetValue(instance);
+            if (value is T result)
+            {
+                return result;
+            }
+
+            throw new InvalidOperationException(
+                instance.GetType().FullName + "." + propertyName +
+                " returned an incompatible value.");
+        }
+
+        private static void ConfigureMusketMuzzleFlashStateBehaviour(
+            MusketAnimationSpec spec)
+        {
+            AnimatorController controller =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    spec.ControllerPath) ??
+                throw new FileNotFoundException(
+                    spec.TargetName + " AnimatorController is missing.",
+                    Path.GetFullPath(spec.ControllerPath));
+            AnimatorState state = RequireControllerState(controller, spec.StateName);
+            Type behaviourType = RequireMusketMuzzleFlashRuntimeType(
+                MusketMuzzleFlashBehaviourTypeName);
+            StateMachineBehaviour[] behaviours = state.behaviours
+                .Where(behaviour =>
+                    behaviour != null &&
+                    behaviourType.IsInstanceOfType(behaviour))
+                .ToArray();
+            StateMachineBehaviour behaviour = behaviours.FirstOrDefault();
+            if (behaviour == null)
+            {
+                behaviour = state.AddStateMachineBehaviour(behaviourType);
+            }
+
+            foreach (StateMachineBehaviour duplicate in behaviours.Skip(1))
+            {
+                UnityEngine.Object.DestroyImmediate(duplicate, true);
+            }
+
+            InvokeMusketMuzzleFlashMethod(
+                behaviour,
+                "Configure",
+                MusketMuzzleFlashTriggerNormalizedTime);
+            EditorUtility.SetDirty(behaviour);
+            EditorUtility.SetDirty(state);
+            EditorUtility.SetDirty(controller);
+        }
+
+        private static AnimatorState RequireControllerState(
+            AnimatorController controller,
+            string stateName)
+        {
+            AnimatorState[] matches = controller.layers
+                .SelectMany(layer => layer.stateMachine.states)
+                .Select(child => child.state)
+                .Where(state => string.Equals(
+                    state.name,
+                    stateName,
+                    StringComparison.Ordinal))
+                .ToArray();
+            if (matches.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    controller.name + " state count differs for " + stateName +
+                    "; actual=" + matches.Length + ".");
+            }
+
+            return matches[0];
+        }
+
+        private static MusketMuzzleFlashTargetApplyMetrics
+            CreateMusketMuzzleFlashApplyMetrics(
+                Transform target,
+                MusketAnimationSpec spec,
+                MonoBehaviour effect,
+                Vector3 expectedLocalPosition,
+                Vector3 expectedLocalForward)
+        {
+            ParticleSystem[] systems =
+                effect.GetComponentsInChildren<ParticleSystem>(true);
+            ParticleSystemRenderer[] renderers = effect
+                .GetComponentsInChildren<ParticleSystemRenderer>(true);
+            ParticleSystemRenderer flashRenderer = renderers
+                .SingleOrDefault(renderer => string.Equals(
+                    renderer.gameObject.name,
+                    "FlashCore",
+                    StringComparison.Ordinal));
+            ParticleSystemRenderer hotGasRenderer = renderers
+                .SingleOrDefault(renderer => string.Equals(
+                    renderer.gameObject.name,
+                    "HotGasVolume",
+                    StringComparison.Ordinal));
+            ParticleSystemRenderer smokeRenderer = renderers
+                .SingleOrDefault(renderer => string.Equals(
+                    renderer.gameObject.name,
+                    "SmokeVolume",
+                    StringComparison.Ordinal));
+            Material smokeMaterial = smokeRenderer != null
+                ? smokeRenderer.sharedMaterial
+                : null;
+            Texture smokeTexture = smokeMaterial != null &&
+                                   smokeMaterial.HasProperty("_BaseMap")
+                ? smokeMaterial.GetTexture("_BaseMap")
+                : smokeMaterial != null &&
+                  smokeMaterial.HasProperty("_MainTex")
+                    ? smokeMaterial.GetTexture("_MainTex")
+                    : null;
+            Material flameMaterial = flashRenderer != null
+                ? flashRenderer.sharedMaterial
+                : null;
+            Texture flameTexture = flameMaterial != null &&
+                                   flameMaterial.HasProperty("_BaseMap")
+                ? flameMaterial.GetTexture("_BaseMap")
+                : flameMaterial != null &&
+                  flameMaterial.HasProperty("_MainTex")
+                    ? flameMaterial.GetTexture("_MainTex")
+                    : null;
+            Material hotGasMaterial = hotGasRenderer != null
+                ? hotGasRenderer.sharedMaterial
+                : null;
+            Texture hotGasTexture = hotGasMaterial != null &&
+                                    hotGasMaterial.HasProperty("_BaseMap")
+                ? hotGasMaterial.GetTexture("_BaseMap")
+                : hotGasMaterial != null &&
+                  hotGasMaterial.HasProperty("_MainTex")
+                    ? hotGasMaterial.GetTexture("_MainTex")
+                    : null;
+            AnimatorController controller =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    spec.ControllerPath) ??
+                throw new FileNotFoundException(
+                    spec.ControllerPath,
+                    Path.GetFullPath(spec.ControllerPath));
+            AnimatorState state = RequireControllerState(controller, spec.StateName);
+            Type behaviourType = RequireMusketMuzzleFlashRuntimeType(
+                MusketMuzzleFlashBehaviourTypeName);
+            StateMachineBehaviour[] behaviours = state.behaviours
+                .Where(behaviour =>
+                    behaviour != null &&
+                    behaviourType.IsInstanceOfType(behaviour))
+                .ToArray();
+            float triggerTime = behaviours.Length == 1
+                ? ReadMusketMuzzleFlashProperty<float>(
+                    behaviours[0],
+                    "NormalizedTriggerTime")
+                : -1f;
+            Light muzzleLight = ReadMusketMuzzleFlashProperty<Light>(
+                effect,
+                "MuzzleLight");
+            MusketMuzzleFlashTargetApplyMetrics metrics =
+                new MusketMuzzleFlashTargetApplyMetrics
+                {
+                    target = target.name,
+                    state = spec.StateName,
+                    effectPath = AnimationUtility.CalculateTransformPath(
+                        effect.transform,
+                        target),
+                    localPosition = effect.transform.localPosition,
+                    localForward = effect.transform.localRotation *
+                        Vector3.forward,
+                    muzzleAnchorErrorMeters = Vector3.Distance(
+                        effect.transform.localPosition,
+                        expectedLocalPosition),
+                    muzzleSurfaceGapMeters = Vector3.Distance(
+                        effect.transform.position,
+                        effect.transform.parent.TransformPoint(
+                            expectedLocalPosition)),
+                    muzzleDirectionErrorDegrees = Vector3.Angle(
+                        effect.transform.localRotation * Vector3.forward,
+                        expectedLocalForward),
+                    normalizedTriggerTime = triggerTime,
+                    particleSystemCount = systems.Length,
+                    maximumParticleCapacity = systems.Sum(system =>
+                        system.main.maxParticles),
+                    uniqueMaterialCount = renderers
+                        .Select(renderer => renderer.sharedMaterial)
+                        .Where(material => material != null)
+                        .Distinct()
+                        .Count(),
+                    uniqueMeshCount = renderers
+                        .Select(renderer => renderer.mesh)
+                        .Where(mesh => mesh != null)
+                        .Distinct()
+                        .Count(),
+                    stateBehaviourCount = behaviours.Length,
+                    persistentSystemsReused = true,
+                    allSystemsNonLooping = systems.All(system =>
+                        !system.main.loop),
+                    allSystemsDisablePlayOnAwake = systems.All(system =>
+                        !system.main.playOnAwake),
+                    allSystemsUseLocalSimulation = systems.All(system =>
+                        system.main.simulationSpace ==
+                        ParticleSystemSimulationSpace.Local),
+                    allParticleShadowsDisabled = renderers.All(renderer =>
+                        renderer.shadowCastingMode == ShadowCastingMode.Off &&
+                        !renderer.receiveShadows),
+                    allParticleMotionVectorsDisabled = renderers.All(renderer =>
+                        renderer.motionVectorGenerationMode ==
+                        MotionVectorGenerationMode.ForceNoMotion),
+                    allNoiseModulesDisabled = systems.All(system =>
+                        !system.noise.enabled),
+                    flashUsesSoftBillboardTexture =
+                        flashRenderer != null &&
+                        flashRenderer.renderMode ==
+                        ParticleSystemRenderMode.Billboard &&
+                        flameTexture != null,
+                    hotGasUsesSoftBillboardTexture =
+                        hotGasRenderer != null &&
+                        hotGasRenderer.renderMode ==
+                        ParticleSystemRenderMode.Billboard &&
+                        hotGasMaterial != flameMaterial &&
+                        hotGasTexture == flameTexture &&
+                        hotGasTexture != null,
+                    smokeUsesSoftBillboardTexture =
+                        smokeRenderer != null &&
+                        smokeRenderer.renderMode ==
+                        ParticleSystemRenderMode.Billboard &&
+                        smokeTexture != null,
+                    lightUsesNoShadows = muzzleLight != null &&
+                        muzzleLight.shadows == LightShadows.None
+                };
+            metrics.passedNumericChecks =
+                metrics.effectPath.EndsWith(
+                    "/" + MusketMuzzleFlashRootName,
+                    StringComparison.Ordinal) &&
+                metrics.muzzleAnchorErrorMeters <= PositionTolerance &&
+                metrics.muzzleSurfaceGapMeters <= PositionTolerance &&
+                metrics.muzzleDirectionErrorDegrees <= RotationTolerance &&
+                Mathf.Abs(metrics.normalizedTriggerTime -
+                          MusketMuzzleFlashTriggerNormalizedTime) <= 0.0001f &&
+                metrics.particleSystemCount ==
+                    MusketMuzzleFlashSystemCount &&
+                metrics.maximumParticleCapacity <=
+                    MusketMuzzleFlashMaximumParticleCapacity &&
+                metrics.uniqueMaterialCount == 3 &&
+                metrics.uniqueMeshCount == 1 &&
+                metrics.stateBehaviourCount == 1 &&
+                metrics.persistentSystemsReused &&
+                metrics.allSystemsNonLooping &&
+                metrics.allSystemsDisablePlayOnAwake &&
+                metrics.allSystemsUseLocalSimulation &&
+                metrics.allParticleShadowsDisabled &&
+                metrics.allParticleMotionVectorsDisabled &&
+                metrics.allNoiseModulesDisabled &&
+                metrics.flashUsesSoftBillboardTexture &&
+                metrics.hotGasUsesSoftBillboardTexture &&
+                metrics.smokeUsesSoftBillboardTexture &&
+                metrics.lightUsesNoShadows;
+            return metrics;
         }
 
         private static string[] GetMusketBackCarryTargetNames()
@@ -10906,8 +14503,13 @@ namespace Bellerophon.Editor
                     .Where(index => index != longAxisIndex)
                     .OrderBy(index => ranges[index])
                     .First();
+                int heightAxisIndex = Enumerable.Range(0, 3)
+                    .Single(index =>
+                        index != longAxisIndex &&
+                        index != thicknessAxisIndex);
                 Vector3 longAxis = AxisVector(longAxisIndex);
                 Vector3 thicknessAxis = AxisVector(thicknessAxisIndex);
+                Vector3 heightAxis = AxisVector(heightAxisIndex);
                 float lowRadius = MeasureMusketEndRadius(
                     vertices,
                     longAxisIndex,
@@ -10929,11 +14531,16 @@ namespace Bellerophon.Editor
                 MusketGeometryAnalysis analysis =
                     new MusketGeometryAnalysis
                     {
+                        LocalVertices = vertices.ToArray(),
                         LocalCenter = center,
                         StockToMuzzleAxis = stockToMuzzle,
                         ThicknessAxis = thicknessAxis,
+                        // Direct mesh review identifies the trigger guard on
+                        // the positive model-height side of this FBX.
+                        TriggerDirectionAxis = heightAxis,
                         SourceLength = length,
                         SourceThickness = ranges[thicknessAxisIndex],
+                        SourceHeight = ranges[heightAxisIndex],
                         LocalStockPoint =
                             center - stockToMuzzle * (length * 0.5f),
                         LocalMuzzlePoint =
@@ -11115,6 +14722,417 @@ namespace Bellerophon.Editor
             return metrics;
         }
 
+        internal static class MusketMuzzleFlashPlayModeCapture
+        {
+            private static readonly float[] ReviewAgesSeconds =
+            {
+                0.03f,
+                0.07f,
+                0.12f
+            };
+            private static readonly List<MusketMuzzleFlashTargetReviewMetrics>
+                TargetMetrics =
+                    new List<MusketMuzzleFlashTargetReviewMetrics>();
+            private static readonly List<List<byte[]>> Rows =
+                Enumerable.Range(0, 8)
+                    .Select(_ => new List<byte[]>())
+                    .ToList();
+            private static MusketAnimationSpec[] specs;
+            private static int targetIndex;
+            private static Transform target;
+            private static Animator animator;
+            private static MonoBehaviour effect;
+            private static CaptureEnvironment environment;
+            private static Vector3 initialEffectLocalPosition;
+            private static Quaternion initialEffectLocalRotation;
+            private static float captureStartNormalized;
+            private static int baselinePlayCount;
+            private static int lastPlayCount;
+            private static int emissionIndex;
+            private static int ageIndex;
+            private static int capturedFrameCount;
+            private static int maximumActiveParticles;
+            private static int maximumFlashParticles;
+            private static int maximumHotGasParticles;
+            private static int maximumSmokeParticles;
+            private static int maximumEmberParticles;
+            private static float maximumAnchorPositionDifference;
+            private static float maximumAnchorRotationDifference;
+            private static bool waitingForLoopBoundary;
+            private static bool isRunning;
+
+            internal static bool IsComplete { get; private set; }
+
+            internal static Exception Failure { get; private set; }
+
+            internal static string Status { get; private set; }
+
+            internal static void Start()
+            {
+                if (isRunning)
+                {
+                    throw new InvalidOperationException(
+                        "Musket muzzle flash capture is already running.");
+                }
+
+                if (!EditorApplication.isPlaying)
+                {
+                    throw new InvalidOperationException(
+                        "Musket muzzle flash capture requires Play Mode.");
+                }
+
+                specs = GetMusketAnimationSpecs()
+                    .Where(spec =>
+                        string.Equals(
+                            spec.TargetName,
+                            MusketHipFireTargetName,
+                            StringComparison.Ordinal) ||
+                        string.Equals(
+                            spec.TargetName,
+                            MusketAimFireTargetName,
+                            StringComparison.Ordinal))
+                    .ToArray();
+                if (specs.Length != 2)
+                {
+                    throw new InvalidOperationException(
+                        "HipFire/AimFire specifications are unavailable for VFX review.");
+                }
+
+                TargetMetrics.Clear();
+                foreach (List<byte[]> row in Rows)
+                {
+                    row.Clear();
+                }
+
+                targetIndex = 0;
+                IsComplete = false;
+                Failure = null;
+                isRunning = true;
+                BeginCurrentTarget();
+                EditorApplication.update -= CaptureUpdate;
+                EditorApplication.update += CaptureUpdate;
+            }
+
+            internal static void Stop()
+            {
+                EditorApplication.update -= CaptureUpdate;
+                DisposeEnvironment();
+                isRunning = false;
+            }
+
+            private static void BeginCurrentTarget()
+            {
+                if (targetIndex >= specs.Length)
+                {
+                    CompleteAllTargets();
+                    return;
+                }
+
+                Scene scene = RequireScene();
+                Transform layout = RequireLayout(scene);
+                MusketAnimationSpec spec = specs[targetIndex];
+                target = RequireTarget(layout, spec.TargetName);
+                animator = RequireAnimator(target);
+                if (Mathf.Abs(animator.speed - 1f) > 0.0001f)
+                {
+                    throw new InvalidOperationException(
+                        target.name + " Animator speed changed during VFX capture.");
+                }
+
+                effect = RequireMusketMuzzleFlashComponent(target);
+
+                initialEffectLocalPosition = effect.transform.localPosition;
+                initialEffectLocalRotation = effect.transform.localRotation;
+                AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+                captureStartNormalized = Mathf.Floor(state.normalizedTime) + 1f;
+                waitingForLoopBoundary = true;
+                baselinePlayCount = ReadMusketMuzzleFlashProperty<int>(
+                    effect,
+                    "PlayCount");
+                lastPlayCount = baselinePlayCount;
+                emissionIndex = 0;
+                ageIndex = 0;
+                capturedFrameCount = 0;
+                maximumActiveParticles = 0;
+                maximumFlashParticles = 0;
+                maximumHotGasParticles = 0;
+                maximumSmokeParticles = 0;
+                maximumEmberParticles = 0;
+                maximumAnchorPositionDifference = 0f;
+                maximumAnchorRotationDifference = 0f;
+                environment = new CaptureEnvironment(target);
+                Status = "Waiting for " + target.name +
+                    " loop boundary before two natural firing loops.";
+            }
+
+            private static void CaptureUpdate()
+            {
+                try
+                {
+                    if (!isRunning || IsComplete || Failure != null)
+                    {
+                        return;
+                    }
+
+                    if (!EditorApplication.isPlaying || animator == null ||
+                        effect == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Play Mode ended during muzzle flash capture.");
+                    }
+
+                    AnimatorStateInfo state =
+                        animator.GetCurrentAnimatorStateInfo(0);
+                    float normalized = state.normalizedTime;
+                    TrackRuntimeState();
+                    int playCount = ReadMusketMuzzleFlashProperty<int>(
+                        effect,
+                        "PlayCount");
+                    if (waitingForLoopBoundary)
+                    {
+                        if (normalized < captureStartNormalized)
+                        {
+                            baselinePlayCount = playCount;
+                            lastPlayCount = playCount;
+                            return;
+                        }
+
+                        waitingForLoopBoundary = false;
+                        Status = "Capturing " + target.name +
+                            " for two natural firing loops.";
+                    }
+
+                    if (playCount != lastPlayCount)
+                    {
+                        int newEmissions = playCount - lastPlayCount;
+                        emissionIndex += Mathf.Max(1, newEmissions);
+                        lastPlayCount = playCount;
+                        ageIndex = emissionIndex <= 2
+                            ? 0
+                            : capturedFrameCount % ReviewAgesSeconds.Length;
+                    }
+
+                    if (emissionIndex >= 1 &&
+                        capturedFrameCount < ReviewAgesSeconds.Length * 2 &&
+                        ageIndex < ReviewAgesSeconds.Length &&
+                        ReadMusketMuzzleFlashProperty<float>(
+                            effect,
+                            "EffectAgeSeconds") >= ReviewAgesSeconds[ageIndex])
+                    {
+                        CaptureCurrentFrame();
+                        ageIndex++;
+                    }
+
+                    if (emissionIndex >= 2 &&
+                        capturedFrameCount == ReviewAgesSeconds.Length * 2)
+                    {
+                        FinishCurrentTarget();
+                        targetIndex++;
+                        BeginCurrentTarget();
+                        return;
+                    }
+
+                    if (normalized >= captureStartNormalized + 3f)
+                    {
+                        throw new InvalidOperationException(
+                            target.name +
+                            " did not expose two complete natural VFX emissions " +
+                            "within one recovery loop. Emissions=" +
+                            emissionIndex + ", Frames=" + capturedFrameCount +
+                            ".");
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Failure = exception;
+                    Status = "Failed: " + exception.Message;
+                    Stop();
+                }
+            }
+
+            private static void TrackRuntimeState()
+            {
+                maximumActiveParticles = Mathf.Max(
+                    maximumActiveParticles,
+                    ReadMusketMuzzleFlashProperty<int>(
+                        effect,
+                        "ActiveParticleCount"));
+                maximumFlashParticles = Mathf.Max(
+                    maximumFlashParticles,
+                    ReadMusketMuzzleFlashProperty<int>(
+                        effect,
+                        "FlashParticleCount"));
+                maximumHotGasParticles = Mathf.Max(
+                    maximumHotGasParticles,
+                    ReadMusketMuzzleFlashProperty<int>(
+                        effect,
+                        "HotGasParticleCount"));
+                maximumSmokeParticles = Mathf.Max(
+                    maximumSmokeParticles,
+                    ReadMusketMuzzleFlashProperty<int>(
+                        effect,
+                        "SmokeParticleCount"));
+                maximumEmberParticles = Mathf.Max(
+                    maximumEmberParticles,
+                    ReadMusketMuzzleFlashProperty<int>(
+                        effect,
+                        "EmberParticleCount"));
+                maximumAnchorPositionDifference = Mathf.Max(
+                    maximumAnchorPositionDifference,
+                    Vector3.Distance(
+                        effect.transform.localPosition,
+                        initialEffectLocalPosition));
+                maximumAnchorRotationDifference = Mathf.Max(
+                    maximumAnchorRotationDifference,
+                    Quaternion.Angle(
+                        effect.transform.localRotation,
+                        initialEffectLocalRotation));
+            }
+
+            private static void CaptureCurrentFrame()
+            {
+                int rowOffset = targetIndex * 4;
+                Vector3 muzzle = effect.transform.position;
+                Vector3 forward = effect.transform.forward;
+                Vector3 fullCenter = Vector3.Lerp(
+                    target.position + target.up * 1.05f,
+                    muzzle + forward * 0.10f,
+                    0.30f);
+                environment.ConfigureView(target, fullCenter, 1.48f);
+                Rows[rowOffset].Add(environment.CaptureSide());
+
+                Vector3 closeCenter = muzzle + forward * 0.10f;
+                environment.ConfigureView(target, closeCenter, 0.45f);
+                Rows[rowOffset + 1].Add(environment.CaptureSide());
+                Rows[rowOffset + 2].Add(environment.CaptureFront());
+
+                Vector3 cameraPosition =
+                    FindRequired(target, HeadPath).position +
+                    target.forward * 0.28f + target.up * 0.03f;
+                environment.ConfigureFirstPersonView(
+                    cameraPosition,
+                    muzzle + forward * 0.42f,
+                    target.up,
+                    64f);
+                Rows[rowOffset + 3].Add(
+                    environment.CapturePalmFromTorso());
+                capturedFrameCount++;
+            }
+
+            private static void FinishCurrentTarget()
+            {
+                MusketAnimationSpec spec = specs[targetIndex];
+                MusketMuzzleFlashTargetReviewMetrics metrics =
+                    new MusketMuzzleFlashTargetReviewMetrics
+                    {
+                        target = target.name,
+                        state = spec.StateName,
+                        naturalLoopsObserved = 2,
+                        emissionsObserved =
+                            ReadMusketMuzzleFlashProperty<int>(
+                                effect,
+                                "PlayCount") - baselinePlayCount,
+                        framesCaptured = capturedFrameCount,
+                        maximumActiveParticles = maximumActiveParticles,
+                        maximumFlashParticles = maximumFlashParticles,
+                        maximumHotGasParticles = maximumHotGasParticles,
+                        maximumSmokeParticles = maximumSmokeParticles,
+                        maximumEmberParticles = maximumEmberParticles,
+                        maximumAnchorPositionDifferenceMeters =
+                            maximumAnchorPositionDifference,
+                        maximumAnchorRotationDifferenceDegrees =
+                            maximumAnchorRotationDifference,
+                        flashObserved = maximumFlashParticles > 0,
+                        hotGasObserved = maximumHotGasParticles > 0,
+                        smokeObserved = maximumSmokeParticles > 0,
+                        embersObserved = maximumEmberParticles > 0,
+                        effectRemainedAtMuzzle =
+                            maximumAnchorPositionDifference <=
+                                PositionTolerance &&
+                            maximumAnchorRotationDifference <=
+                                RotationTolerance
+                    };
+                metrics.passedNumericChecks =
+                    metrics.naturalLoopsObserved == 2 &&
+                    metrics.emissionsObserved >= 2 &&
+                    metrics.framesCaptured == ReviewAgesSeconds.Length * 2 &&
+                    metrics.maximumActiveParticles <=
+                        MusketMuzzleFlashMaximumParticleCapacity &&
+                    metrics.flashObserved &&
+                    metrics.hotGasObserved &&
+                    metrics.smokeObserved &&
+                    metrics.embersObserved &&
+                    metrics.effectRemainedAtMuzzle;
+                TargetMetrics.Add(metrics);
+                DisposeEnvironment();
+            }
+
+            private static void CompleteAllTargets()
+            {
+                ComposeRows(Rows, MusketMuzzleFlashReviewPath);
+                MusketMuzzleFlashReviewMetrics review =
+                    new MusketMuzzleFlashReviewMetrics
+                    {
+                        targetSet = string.Join(", ", specs.Select(
+                            spec => spec.TargetName)),
+                        capturedEffectAgesSeconds = ReviewAgesSeconds,
+                        targetCount = TargetMetrics.Count,
+                        targets = TargetMetrics.ToArray(),
+                        bothTargetsObservedForTwoNaturalLoops =
+                            TargetMetrics.Count == 2 &&
+                            TargetMetrics.All(metrics =>
+                                metrics.naturalLoopsObserved == 2 &&
+                                metrics.emissionsObserved >= 2),
+                        allEffectsStayedWithinParticleBudget =
+                            TargetMetrics.All(metrics =>
+                                metrics.maximumActiveParticles <=
+                                MusketMuzzleFlashMaximumParticleCapacity),
+                        allEffectsStayedAttachedToMuzzle =
+                            TargetMetrics.All(metrics =>
+                                metrics.effectRemainedAtMuzzle),
+                        contactSheetExists = File.Exists(
+                            Path.GetFullPath(MusketMuzzleFlashReviewPath)),
+                        validationPriority =
+                            "1순위 직접 모델링·애니메이션·VFX 확인, 2순위 수치·스크립트 보조 검증"
+                    };
+                review.passedNumericChecks =
+                    review.targetCount == 2 &&
+                    review.targets.All(metrics =>
+                        metrics.passedNumericChecks) &&
+                    review.bothTargetsObservedForTwoNaturalLoops &&
+                    review.allEffectsStayedWithinParticleBudget &&
+                    review.allEffectsStayedAttachedToMuzzle &&
+                    review.contactSheetExists;
+                WriteJson(MusketMuzzleFlashReviewMetricsPath, review);
+                if (!review.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Musket muzzle flash Play Mode support checks failed. " +
+                        JsonUtility.ToJson(review));
+                }
+
+                IsComplete = true;
+                Status = "Completed natural two-loop HipFire/AimFire VFX capture.";
+                Stop();
+                Debug.Log(
+                    "[PlayerMusketMuzzleFlash] Captured HipFire and AimFire for two natural loops. " +
+                    "ParticleBudget<=" +
+                    MusketMuzzleFlashMaximumParticleCapacity +
+                    ", MuzzleAnchorStable=True, Views=Side/CloseSide/CloseFront/FirstPerson.");
+            }
+
+            private static void DisposeEnvironment()
+            {
+                if (environment == null)
+                {
+                    return;
+                }
+
+                environment.Dispose();
+                environment = null;
+            }
+        }
+
         internal static class MusketAnimationSetPlayModeCapture
         {
             private static MusketAnimationSpec[] specs;
@@ -11130,6 +15148,12 @@ namespace Bellerophon.Editor
                 new List<byte[]>();
             private static readonly List<byte[]> SideFrames =
                 new List<byte[]>();
+            private static readonly List<byte[]> CloseFrontFrames =
+                new List<byte[]>();
+            private static readonly List<byte[]> CloseSideFrames =
+                new List<byte[]>();
+            private static readonly List<byte[]> CloseOppositeSideFrames =
+                new List<byte[]>();
             private static readonly List<float> NormalizedFrames =
                 new List<float>();
             private static int targetIndex;
@@ -11140,6 +15164,10 @@ namespace Bellerophon.Editor
             private static Animator animator;
             private static CaptureEnvironment environment;
             private static MusketAnimationTargetApplyMetrics expected;
+            private static MusketGeometryAnalysis analysis;
+            private static Vector3 rightPalmLocal;
+            private static Vector3 leftPalmLocal;
+            private static Vector3 leftFingerTipLocal;
             private static RootPose initialRoot;
             private static float captureStartNormalized;
             private static float lastNormalized;
@@ -11151,6 +15179,13 @@ namespace Bellerophon.Editor
             private static float maximumHandPositionDifference;
             private static float maximumHandRotationDifference;
             private static float maximumHandScaleDifference;
+            private static float maximumMuzzleForwardError;
+            private static float maximumTriggerDownError;
+            private static float maximumRightPalmTriggerDistance;
+            private static float maximumLeftHandContactDistance;
+            private static float maximumReloadChamberPullDistance;
+            private static float reloadHandLongitudinalMinimum;
+            private static float reloadHandLongitudinalMaximum;
             private static bool observedBackVisible;
             private static bool observedHandVisible;
             private static bool exactlyOneVisible;
@@ -11186,6 +15221,13 @@ namespace Bellerophon.Editor
                     throw new InvalidOperationException(
                         "Musket animation apply metrics are unavailable for capture.");
                 }
+
+                GameObject musketAsset =
+                    AssetDatabase.LoadAssetAtPath<GameObject>(MusketAssetPath) ??
+                    throw new FileNotFoundException(
+                        "Unity musket asset is missing for capture.",
+                        Path.GetFullPath(MusketAssetPath));
+                analysis = AnalyzeMusketGeometry(musketAsset);
 
                 TargetMetrics.Clear();
                 OverviewFront.Clear();
@@ -11231,6 +15273,20 @@ namespace Bellerophon.Editor
                 handItem = FindRequired(
                     target,
                     RightHandPath + "/" + MusketHandInstanceName);
+                Transform rightHand = FindRequired(target, RightHandPath);
+                Transform leftHand = FindRequired(target, LeftHandPath);
+                RightHandPalmSample rightLandmarks =
+                    CalculateRightPalmSample(target);
+                RightHandPalmSample leftLandmarks =
+                    CalculateLeftPalmSample(target);
+                rightPalmLocal = rightHand.InverseTransformPoint(
+                    rightLandmarks.Center);
+                leftPalmLocal = leftHand.InverseTransformPoint(
+                    leftLandmarks.Center);
+                leftFingerTipLocal = GetMusketFingerTipContactLocal(
+                    leftPalmLocal,
+                    leftHand.InverseTransformPoint(
+                        leftLandmarks.DistalPoint));
                 expected = apply.targets.Single(metrics => string.Equals(
                     metrics.target,
                     spec.TargetName,
@@ -11247,12 +15303,22 @@ namespace Bellerophon.Editor
                 frameIndex = 0;
                 FrontFrames.Clear();
                 SideFrames.Clear();
+                CloseFrontFrames.Clear();
+                CloseSideFrames.Clear();
+                CloseOppositeSideFrames.Clear();
                 NormalizedFrames.Clear();
                 maximumRootPositionDifference = 0f;
                 maximumRootRotationDifference = 0f;
                 maximumHandPositionDifference = 0f;
                 maximumHandRotationDifference = 0f;
                 maximumHandScaleDifference = 0f;
+                maximumMuzzleForwardError = 0f;
+                maximumTriggerDownError = 0f;
+                maximumRightPalmTriggerDistance = 0f;
+                maximumLeftHandContactDistance = 0f;
+                maximumReloadChamberPullDistance = 0f;
+                reloadHandLongitudinalMinimum = float.PositiveInfinity;
+                reloadHandLongitudinalMaximum = float.NegativeInfinity;
                 observedBackVisible = false;
                 observedHandVisible = false;
                 exactlyOneVisible = true;
@@ -11386,14 +15452,203 @@ namespace Bellerophon.Editor
                             handItem.localScale,
                             expected.handItemLocalScale));
                 }
+
+                if (handVisible && string.Equals(
+                        specs[targetIndex].ItemMode,
+                        "Held",
+                        StringComparison.Ordinal))
+                {
+                    Vector3 stock = handItem.TransformPoint(
+                        analysis.LocalStockPoint);
+                    Vector3 muzzle = handItem.TransformPoint(
+                        analysis.LocalMuzzlePoint);
+                    maximumMuzzleForwardError = Mathf.Max(
+                        maximumMuzzleForwardError,
+                        Vector3.Angle(
+                            muzzle - stock,
+                            target.forward));
+                    maximumTriggerDownError = Mathf.Max(
+                        maximumTriggerDownError,
+                        Vector3.Angle(
+                            handItem.TransformDirection(
+                                analysis.TriggerDirectionAxis),
+                            -target.up));
+                    Vector3 rightTrigger = handItem.TransformPoint(
+                        GetMusketLocalSideSurfacePoint(
+                            handItem,
+                            analysis,
+                            MusketRightGripRatio,
+                            0.18f,
+                            target.right));
+                    maximumRightPalmTriggerDistance = Mathf.Max(
+                        maximumRightPalmTriggerDistance,
+                        MeasureHandMeshDistanceToPoint(
+                            target,
+                            RightHandPath,
+                            "RightHand",
+                            rightTrigger));
+                    float phaseTime = Mathf.Repeat(lastNormalized, 1f) *
+                        expected.durationSeconds;
+                    Transform leftHand = FindRequired(target, LeftHandPath);
+                    bool isReload = string.Equals(
+                        specs[targetIndex].TargetName,
+                        MusketReloadTargetName,
+                        StringComparison.Ordinal);
+                    float reloadInteraction = 0f;
+                    if (isReload)
+                    {
+                        float phase = expected.durationSeconds > 0.0001f
+                            ? Mathf.Clamp01(
+                                phaseTime / expected.durationSeconds)
+                            : 0f;
+                        GetMusketReloadInteractionWeights(
+                            phase,
+                            out reloadInteraction,
+                            out _,
+                            out _);
+                    }
+
+                    IReadOnlyList<Vector3> leftContactSurface = null;
+                    if (!isReload)
+                    {
+                        leftContactSurface =
+                            GetMusketUndersideWorldSurfacePoints(
+                                handItem,
+                                analysis,
+                                0.40f,
+                                0.50f);
+                    }
+                    else if (reloadInteraction <= 0.05f)
+                    {
+                        leftContactSurface =
+                            GetMusketUndersideWorldSurfacePoints(
+                                handItem,
+                                analysis,
+                                0.38f,
+                                0.46f);
+                    }
+                    else if (reloadInteraction >= 0.95f)
+                    {
+                        leftContactSurface =
+                            GetMusketChamberWorldSurfacePoints(
+                                target,
+                                handItem,
+                                analysis);
+                    }
+
+                    if (leftContactSurface != null)
+                    {
+                        maximumLeftHandContactDistance = Mathf.Max(
+                            maximumLeftHandContactDistance,
+                            MeasureHandMeshDistanceToPoints(
+                                target,
+                                LeftHandPath,
+                                "LeftHand",
+                                leftContactSurface));
+                    }
+
+                    if (isReload && reloadInteraction >= 0.95f)
+                    {
+                        Vector3 stockToMuzzle = handItem
+                            .TransformDirection(
+                                analysis.StockToMuzzleAxis)
+                            .normalized;
+                        float handLongitudinal = Vector3.Dot(
+                            leftHand.position,
+                            stockToMuzzle);
+                        reloadHandLongitudinalMinimum = Mathf.Min(
+                            reloadHandLongitudinalMinimum,
+                            handLongitudinal);
+                        reloadHandLongitudinalMaximum = Mathf.Max(
+                            reloadHandLongitudinalMaximum,
+                            handLongitudinal);
+                        if (!float.IsPositiveInfinity(
+                                reloadHandLongitudinalMinimum) &&
+                            !float.IsNegativeInfinity(
+                                reloadHandLongitudinalMaximum))
+                        {
+                            maximumReloadChamberPullDistance =
+                                reloadHandLongitudinalMaximum -
+                                reloadHandLongitudinalMinimum;
+                        }
+                    }
+                }
             }
 
             private static void CaptureCurrentFrame(float normalized)
             {
+                if (string.Equals(
+                        specs[targetIndex].ItemMode,
+                        "Draw",
+                        StringComparison.Ordinal) ||
+                    string.Equals(
+                        specs[targetIndex].ItemMode,
+                        "Stow",
+                        StringComparison.Ordinal))
+                {
+                    environment.ConfigureBackView(target, 1.05f, 1.45f);
+                }
+                else
+                {
+                    environment.ConfigureView(target, 1.05f, 1.45f);
+                }
+
                 byte[] front = environment.CaptureFront();
                 byte[] side = environment.CaptureSide();
+                Transform rightHand = FindRequired(target, RightHandPath);
+                Transform rightForeArm = FindRequired(
+                    target,
+                    RightForeArmPath);
+                float phaseTime = Mathf.Repeat(normalized, 1f) *
+                    expected.durationSeconds;
+                bool reviewStowedHands = string.Equals(
+                        specs[targetIndex].ItemMode,
+                        "Stow",
+                        StringComparison.Ordinal) &&
+                    phaseTime >= expected.itemSwitchTime;
+                Vector3 closeCenter;
+                float closeDistance;
+                if (reviewStowedHands)
+                {
+                    closeCenter = (
+                        FindRequired(target, LeftHandPath).position +
+                        rightHand.position +
+                        target.position + target.up * 1.05f) / 3f;
+                    closeDistance = 0.78f;
+                }
+                else
+                {
+                    Vector3 rightTrigger = handItem.TransformPoint(
+                        GetMusketLocalSideSurfacePoint(
+                            handItem,
+                            analysis,
+                            MusketRightGripRatio,
+                            0.18f,
+                            target.right));
+                    closeCenter = (
+                        FindRequired(target, LeftHandPath).position +
+                        GetMusketRightPalmCenter(
+                            rightHand,
+                            rightPalmLocal) +
+                        rightTrigger) / 3f;
+                    closeDistance = 0.45f;
+                }
+
+                environment.ConfigureView(
+                    target,
+                    closeCenter,
+                    closeDistance);
+                byte[] closeFront = environment.CaptureFront();
+                byte[] closeSide = environment.CaptureSide();
+                byte[] closeOppositeSide = environment.CaptureOppositeSide(
+                    target,
+                    closeCenter,
+                    closeDistance);
                 FrontFrames.Add(front);
                 SideFrames.Add(side);
+                CloseFrontFrames.Add(closeFront);
+                CloseSideFrames.Add(closeSide);
+                CloseOppositeSideFrames.Add(closeOppositeSide);
                 NormalizedFrames.Add(normalized);
                 string root = Path.Combine(
                     Path.GetFullPath(MusketAnimationFramesDirectory),
@@ -11403,12 +15658,26 @@ namespace Bellerophon.Editor
                     CultureInfo.InvariantCulture) + ".png";
                 Directory.CreateDirectory(Path.Combine(root, "front"));
                 Directory.CreateDirectory(Path.Combine(root, "side"));
+                Directory.CreateDirectory(Path.Combine(root, "close_front"));
+                Directory.CreateDirectory(Path.Combine(root, "close_side"));
+                Directory.CreateDirectory(Path.Combine(
+                    root,
+                    "close_opposite_side"));
                 File.WriteAllBytes(
                     Path.Combine(root, "front", fileName),
                     front);
                 File.WriteAllBytes(
                     Path.Combine(root, "side", fileName),
                     side);
+                File.WriteAllBytes(
+                    Path.Combine(root, "close_front", fileName),
+                    closeFront);
+                File.WriteAllBytes(
+                    Path.Combine(root, "close_side", fileName),
+                    closeSide);
+                File.WriteAllBytes(
+                    Path.Combine(root, "close_opposite_side", fileName),
+                    closeOppositeSide);
                 frameIndex++;
             }
 
@@ -11416,6 +15685,9 @@ namespace Bellerophon.Editor
             {
                 if (FrontFrames.Count == 0 ||
                     FrontFrames.Count != SideFrames.Count ||
+                    FrontFrames.Count != CloseFrontFrames.Count ||
+                    FrontFrames.Count != CloseSideFrames.Count ||
+                    FrontFrames.Count != CloseOppositeSideFrames.Count ||
                     FrontFrames.Count != NormalizedFrames.Count)
                 {
                     throw new InvalidOperationException(
@@ -11434,6 +15706,24 @@ namespace Bellerophon.Editor
                 List<byte[]> sideSecond = SelectLoopReviewFrames(
                     SideFrames,
                     captureStartNormalized + 1f);
+                List<byte[]> closeFrontFirst = SelectLoopReviewFrames(
+                    CloseFrontFrames,
+                    captureStartNormalized);
+                List<byte[]> closeFrontSecond = SelectLoopReviewFrames(
+                    CloseFrontFrames,
+                    captureStartNormalized + 1f);
+                List<byte[]> closeSideFirst = SelectLoopReviewFrames(
+                    CloseSideFrames,
+                    captureStartNormalized);
+                List<byte[]> closeSideSecond = SelectLoopReviewFrames(
+                    CloseSideFrames,
+                    captureStartNormalized + 1f);
+                List<byte[]> closeOppositeSideFirst = SelectLoopReviewFrames(
+                    CloseOppositeSideFrames,
+                    captureStartNormalized);
+                List<byte[]> closeOppositeSideSecond = SelectLoopReviewFrames(
+                    CloseOppositeSideFrames,
+                    captureStartNormalized + 1f);
                 string contactPath = Path.Combine(
                     MusketAnimationValidationDirectory,
                     specs[targetIndex].Label +
@@ -11444,7 +15734,13 @@ namespace Bellerophon.Editor
                         frontFirst,
                         frontSecond,
                         sideFirst,
-                        sideSecond
+                        sideSecond,
+                        closeFrontFirst,
+                        closeFrontSecond,
+                        closeSideFirst,
+                        closeSideSecond,
+                        closeOppositeSideFirst,
+                        closeOppositeSideSecond
                     },
                     contactPath);
                 int overviewIndex = FindNearestNormalizedFrame(
@@ -11498,9 +15794,41 @@ namespace Bellerophon.Editor
                             maximumHandRotationDifference,
                         maximumHandItemLocalScaleDifference =
                             maximumHandScaleDifference,
+                        maximumMuzzleForwardErrorDegrees =
+                            maximumMuzzleForwardError,
+                        maximumTriggerDownErrorDegrees =
+                            maximumTriggerDownError,
+                        maximumRightPalmTriggerDistanceMeters =
+                            maximumRightPalmTriggerDistance,
+                        maximumLeftHandContactDistanceMeters =
+                            maximumLeftHandContactDistance,
+                        maximumReloadChamberPullDistanceMeters =
+                            maximumReloadChamberPullDistance,
+                        rightIndexFingerAvailable =
+                            HasMusketRightIndexFinger(
+                                FindRequired(target, RightHandPath)),
+                        rightHandPlacementMode =
+                            HasMusketRightIndexFinger(
+                                FindRequired(target, RightHandPath))
+                                ? "IndexFingerOnTrigger"
+                                : "PalmCoversTriggerRightSurface",
                         contactSheetExists = File.Exists(
                             Path.GetFullPath(contactPath))
                     };
+                bool isReload = string.Equals(
+                    specs[targetIndex].TargetName,
+                    MusketReloadTargetName,
+                    StringComparison.Ordinal);
+                bool heldPoseMetricsPass = !string.Equals(
+                        specs[targetIndex].ItemMode,
+                        "Held",
+                        StringComparison.Ordinal) ||
+                    (metrics.maximumMuzzleForwardErrorDegrees <= 3f &&
+                     metrics.maximumTriggerDownErrorDegrees <= 3f &&
+                     metrics.maximumRightPalmTriggerDistanceMeters <= 0.03f &&
+                     metrics.maximumLeftHandContactDistanceMeters <= 0.04f);
+                bool reloadMetricsPass = !isReload ||
+                    metrics.maximumReloadChamberPullDistanceMeters >= 0.065f;
                 metrics.passedNumericChecks =
                     loopsObserved >= 1.95f &&
                     metrics.framesCaptured >= 3 &&
@@ -11510,12 +15838,10 @@ namespace Bellerophon.Editor
                         PositionTolerance &&
                     metrics.maximumTargetRootRotationDifferenceDegrees <=
                         RotationTolerance &&
-                    metrics.maximumHandItemLocalPositionDifferenceMeters <=
-                        PositionTolerance &&
-                    metrics.maximumHandItemLocalRotationDifferenceDegrees <=
-                        RotationTolerance &&
                     metrics.maximumHandItemLocalScaleDifference <=
                         PositionTolerance &&
+                    heldPoseMetricsPass &&
+                    reloadMetricsPass &&
                     metrics.contactSheetExists;
                 TargetMetrics.Add(metrics);
                 Status = "Completed " + target.name + " (" +
@@ -11585,10 +15911,6 @@ namespace Bellerophon.Editor
                                 metrics.maximumTargetRootPositionDifferenceMeters <=
                                     PositionTolerance &&
                                 metrics.maximumTargetRootRotationDifferenceDegrees <=
-                                    RotationTolerance &&
-                                metrics.maximumHandItemLocalPositionDifferenceMeters <=
-                                    PositionTolerance &&
-                                metrics.maximumHandItemLocalRotationDifferenceDegrees <=
                                     RotationTolerance &&
                                 metrics.maximumHandItemLocalScaleDifference <=
                                     PositionTolerance),
@@ -17209,6 +21531,17 @@ namespace Bellerophon.Editor
             Vector3 weightedPositionSum = Vector3.zero;
             float totalWeight = 0f;
             int weightedVertexCount = 0;
+            Vector3 distalAxis = hand.parent != null
+                ? hand.position - hand.parent.position
+                : hand.forward;
+            if (distalAxis.sqrMagnitude < 0.0000001f)
+            {
+                distalAxis = hand.forward;
+            }
+
+            distalAxis.Normalize();
+            float distalProjection = float.NegativeInfinity;
+            Vector3 distalPoint = hand.position;
             HashSet<Transform> weightedBones = new HashSet<Transform>();
             foreach (SkinnedMeshRenderer renderer in target
                          .GetComponentsInChildren<SkinnedMeshRenderer>(true))
@@ -17276,6 +21609,14 @@ namespace Bellerophon.Editor
                         weightedPositionSum += worldPosition * handWeight;
                         totalWeight += handWeight;
                         weightedVertexCount++;
+                        float projection = Vector3.Dot(
+                            worldPosition - hand.position,
+                            distalAxis);
+                        if (projection > distalProjection)
+                        {
+                            distalProjection = projection;
+                            distalPoint = worldPosition;
+                        }
                     }
                 }
                 finally
@@ -17295,9 +21636,123 @@ namespace Bellerophon.Editor
             return new RightHandPalmSample
             {
                 Center = weightedPositionSum / totalWeight,
+                DistalPoint = distalPoint,
                 WeightedBoneCount = weightedBones.Count,
                 WeightedVertexCount = weightedVertexCount
             };
+        }
+
+        private static float MeasureHandMeshDistanceToPoint(
+            Transform target,
+            string handPath,
+            string handLabel,
+            Vector3 worldPoint)
+        {
+            return MeasureHandMeshDistanceToPoints(
+                target,
+                handPath,
+                handLabel,
+                new[] { worldPoint });
+        }
+
+        private static float MeasureHandMeshDistanceToPoints(
+            Transform target,
+            string handPath,
+            string handLabel,
+            IReadOnlyList<Vector3> worldPoints)
+        {
+            if (worldPoints == null || worldPoints.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    handLabel + " contact measurement has no surface points.");
+            }
+
+            Transform hand = FindRequired(target, handPath);
+            float minimumDistance = float.PositiveInfinity;
+            int weightedVertexCount = 0;
+            foreach (SkinnedMeshRenderer renderer in target
+                         .GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                Mesh mesh = renderer.sharedMesh;
+                if (mesh == null)
+                {
+                    continue;
+                }
+
+                Transform[] bones = renderer.bones;
+                HashSet<int> handBoneIndices = new HashSet<int>();
+                for (int index = 0; index < bones.Length; index++)
+                {
+                    Transform bone = bones[index];
+                    if (bone != null &&
+                        (bone == hand || bone.IsChildOf(hand)))
+                    {
+                        handBoneIndices.Add(index);
+                    }
+                }
+
+                if (handBoneIndices.Count == 0)
+                {
+                    continue;
+                }
+
+                BoneWeight[] boneWeights = mesh.boneWeights;
+                Mesh bakedMesh = new Mesh
+                {
+                    name = renderer.name + "_" + handLabel +
+                        "ContactDistanceBake"
+                };
+                try
+                {
+                    renderer.BakeMesh(bakedMesh, true);
+                    Vector3[] vertices = bakedMesh.vertices;
+                    if (vertices.Length != boneWeights.Length)
+                    {
+                        throw new InvalidOperationException(
+                            renderer.name +
+                            " baked vertex count does not match its bone weights.");
+                    }
+
+                    for (int index = 0; index < vertices.Length; index++)
+                    {
+                        if (BoneWeightForIndices(
+                                boneWeights[index],
+                                handBoneIndices) <
+                            RightHandVertexWeightThreshold)
+                        {
+                            continue;
+                        }
+
+                        Vector3 worldPosition = renderer.transform
+                            .TransformPoint(vertices[index]);
+                        for (int pointIndex = 0;
+                             pointIndex < worldPoints.Count;
+                             pointIndex++)
+                        {
+                            minimumDistance = Mathf.Min(
+                                minimumDistance,
+                                Vector3.Distance(
+                                    worldPosition,
+                                    worldPoints[pointIndex]));
+                        }
+                        weightedVertexCount++;
+                    }
+                }
+                finally
+                {
+                    UnityEngine.Object.DestroyImmediate(bakedMesh);
+                }
+            }
+
+            if (weightedVertexCount == 0 ||
+                float.IsPositiveInfinity(minimumDistance))
+            {
+                throw new InvalidOperationException(
+                    target.name + " has no visible vertices weighted to " +
+                    handLabel + " for contact measurement.");
+            }
+
+            return minimumDistance;
         }
 
         private static float MeasureWristToPalmCenterDistance(Transform target)
@@ -34173,6 +38628,20 @@ namespace Bellerophon.Editor
                 return CaptureFrame(palmCameraObject.GetComponent<Camera>());
             }
 
+            internal byte[] CaptureOppositeSide(
+                Transform target,
+                Vector3 center,
+                float orthographicSize)
+            {
+                ConfigureFixedCamera(
+                    palmCameraObject.GetComponent<Camera>(),
+                    target,
+                    center,
+                    -target.right,
+                    orthographicSize);
+                return CaptureFrame(palmCameraObject.GetComponent<Camera>());
+            }
+
             internal void ConfigurePalmView(
                 Transform target,
                 Vector3 center,
@@ -34194,6 +38663,21 @@ namespace Bellerophon.Editor
                 camera.orthographicSize = orthographicSize;
                 camera.nearClipPlane = 0.005f;
                 camera.farClipPlane = 4f;
+            }
+
+            internal void ConfigureFirstPersonView(
+                Vector3 cameraPosition,
+                Vector3 lookTarget,
+                Vector3 up,
+                float fieldOfView)
+            {
+                Camera camera = palmCameraObject.GetComponent<Camera>();
+                camera.orthographic = false;
+                camera.transform.position = cameraPosition;
+                camera.transform.LookAt(lookTarget, up);
+                camera.fieldOfView = fieldOfView;
+                camera.nearClipPlane = 0.015f;
+                camera.farClipPlane = 12f;
             }
 
             internal void ConfigureView(

@@ -1,0 +1,91 @@
+{
+    "targetSet": "Musket_HipFire, Musket_Aim_Fire",
+    "approvedSample": "artSample/musket_muzzle_flash/index.html",
+    "implementation": "Persistent layered particles with shared four-variant soft flame and smoke atlases distributed in 3D space, capped concurrency, and an unshadowed short light pulse",
+    "prefabPath": "Assets/_Project/Art/VFX/MusketMuzzleFlash/MusketMuzzleFlash.prefab",
+    "flameTexturePath": "Assets/_Project/Art/VFX/MusketMuzzleFlash/MusketMuzzleFlameMask.asset",
+    "smokeTexturePath": "Assets/_Project/Art/VFX/MusketMuzzleFlash/MusketMuzzleSmokeMask.asset",
+    "hotGasMaterialPath": "Assets/_Project/Art/VFX/MusketMuzzleFlash/MusketMuzzleHotGas.mat",
+    "targetCount": 2,
+    "maximumConcurrentSmokeEffects": 6,
+    "maximumConcurrentLights": 4,
+    "targets": [
+        {
+            "target": "Musket_HipFire",
+            "state": "Musket_HipFireLoop",
+            "effectPath": "Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm/RightForeArm/RightHand/Musket_Hand_Item/Musket_MuzzleFlash_VFX",
+            "localPosition": {
+                "x": 0.000012204982340335846,
+                "y": 0.0,
+                "z": 0.004999999888241291
+            },
+            "localForward": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 1.0
+            },
+            "muzzleAnchorErrorMeters": 0.0,
+            "muzzleSurfaceGapMeters": 0.0,
+            "muzzleDirectionErrorDegrees": 0.0,
+            "normalizedTriggerTime": 0.07999999821186066,
+            "particleSystemCount": 4,
+            "maximumParticleCapacity": 35,
+            "uniqueMaterialCount": 3,
+            "uniqueMeshCount": 1,
+            "stateBehaviourCount": 1,
+            "persistentSystemsReused": true,
+            "allSystemsNonLooping": true,
+            "allSystemsDisablePlayOnAwake": true,
+            "allSystemsUseLocalSimulation": true,
+            "allParticleShadowsDisabled": true,
+            "allParticleMotionVectorsDisabled": true,
+            "allNoiseModulesDisabled": true,
+            "flashUsesSoftBillboardTexture": true,
+            "hotGasUsesSoftBillboardTexture": true,
+            "smokeUsesSoftBillboardTexture": true,
+            "lightUsesNoShadows": true,
+            "passedNumericChecks": true
+        },
+        {
+            "target": "Musket_Aim_Fire",
+            "state": "Musket_Aim_FireLoop",
+            "effectPath": "Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm/RightForeArm/RightHand/Musket_Hand_Item/Musket_MuzzleFlash_VFX",
+            "localPosition": {
+                "x": 0.000012204982340335846,
+                "y": 0.0,
+                "z": 0.004999999888241291
+            },
+            "localForward": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 1.0
+            },
+            "muzzleAnchorErrorMeters": 0.0,
+            "muzzleSurfaceGapMeters": 0.0,
+            "muzzleDirectionErrorDegrees": 0.0,
+            "normalizedTriggerTime": 0.07999999821186066,
+            "particleSystemCount": 4,
+            "maximumParticleCapacity": 35,
+            "uniqueMaterialCount": 3,
+            "uniqueMeshCount": 1,
+            "stateBehaviourCount": 1,
+            "persistentSystemsReused": true,
+            "allSystemsNonLooping": true,
+            "allSystemsDisablePlayOnAwake": true,
+            "allSystemsUseLocalSimulation": true,
+            "allParticleShadowsDisabled": true,
+            "allParticleMotionVectorsDisabled": true,
+            "allNoiseModulesDisabled": true,
+            "flashUsesSoftBillboardTexture": true,
+            "hotGasUsesSoftBillboardTexture": true,
+            "smokeUsesSoftBillboardTexture": true,
+            "lightUsesNoShadows": true,
+            "passedNumericChecks": true
+        }
+    ],
+    "usesRaymarchedVolumetrics": false,
+    "usesDynamicShadows": false,
+    "createsObjectsPerShot": false,
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션·VFX 확인, 2순위 수치·스크립트 보조 검증"
+}

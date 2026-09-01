@@ -1,0 +1,57 @@
+{
+    "targetSet": "Musket_HipFire, Musket_Aim_Fire",
+    "capturedEffectAgesSeconds": [
+        0.029999999329447748,
+        0.07000000029802323,
+        0.11999999731779099
+    ],
+    "targetCount": 2,
+    "targets": [
+        {
+            "target": "Musket_HipFire",
+            "state": "Musket_HipFireLoop",
+            "naturalLoopsObserved": 2,
+            "emissionsObserved": 2,
+            "framesCaptured": 6,
+            "maximumActiveParticles": 34,
+            "maximumFlashParticles": 3,
+            "maximumHotGasParticles": 5,
+            "maximumSmokeParticles": 14,
+            "maximumEmberParticles": 12,
+            "maximumAnchorPositionDifferenceMeters": 0.0,
+            "maximumAnchorRotationDifferenceDegrees": 0.0,
+            "flashObserved": true,
+            "hotGasObserved": true,
+            "smokeObserved": true,
+            "embersObserved": true,
+            "effectRemainedAtMuzzle": true,
+            "passedNumericChecks": true
+        },
+        {
+            "target": "Musket_Aim_Fire",
+            "state": "Musket_Aim_FireLoop",
+            "naturalLoopsObserved": 2,
+            "emissionsObserved": 2,
+            "framesCaptured": 6,
+            "maximumActiveParticles": 34,
+            "maximumFlashParticles": 3,
+            "maximumHotGasParticles": 5,
+            "maximumSmokeParticles": 14,
+            "maximumEmberParticles": 12,
+            "maximumAnchorPositionDifferenceMeters": 0.0,
+            "maximumAnchorRotationDifferenceDegrees": 0.0,
+            "flashObserved": true,
+            "hotGasObserved": true,
+            "smokeObserved": true,
+            "embersObserved": true,
+            "effectRemainedAtMuzzle": true,
+            "passedNumericChecks": true
+        }
+    ],
+    "bothTargetsObservedForTwoNaturalLoops": true,
+    "allEffectsStayedWithinParticleBudget": true,
+    "allEffectsStayedAttachedToMuzzle": true,
+    "contactSheetExists": true,
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션·VFX 확인, 2순위 수치·스크립트 보조 검증"
+}
