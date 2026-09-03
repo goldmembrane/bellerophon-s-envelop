@@ -68,7 +68,7 @@ namespace Bellerophon.Editor.Validation
             "CaptureNegatifFleeVisualReview";
         private const string NegatifDeathVisualReviewCommand =
             "CaptureNegatifDeathVisualReview";
-        private const double PollIntervalSeconds = 0.5d;
+        private const double PollIntervalSeconds = 0.1d;
         private const double TestRunnerStaleTimeoutSeconds = 120d;
 
         private static double nextPollTime;
@@ -626,6 +626,26 @@ namespace Bellerophon.Editor.Validation
                             .CaptureMusketDrawStartViewFinal,
                         "Player Musket_Draw start-view final image copied from the reviewed Play Mode frame.");
                     break;
+                case "ApplyShotgunDrawStartView":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.ApplyShotgunDrawStartView,
+                        "Player start moved to the Stick_Carry-equivalent front framing for Shotgun_Draw.");
+                    break;
+                case "CaptureShotgunDrawStartViewPlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunDrawStartViewPlayMode,
+                        "Player Shotgun_Draw start-view Play Mode review advanced.");
+                    break;
+                case "CaptureShotgunDrawStartViewFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunDrawStartViewFinal,
+                        "Player Shotgun_Draw start-view final image copied from the reviewed Play Mode frame.");
+                    break;
                 case "ApplyMusketBackCarryModels":
                     RunSynchronous(
                         request,
@@ -666,6 +686,257 @@ namespace Bellerophon.Editor.Validation
                         PlayerHandsObjectAnimationTools
                             .CaptureMusketAnimationSetFinal,
                         "Musket animation set final overview copied from directly reviewed Play Mode frames.");
+                    break;
+                case "ApplyShotgunAnimationSet":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.ApplyShotgunAnimationSet,
+                        "Nine Shotgun models, exact requested animations, and approved ButtMode transitions applied.");
+                    break;
+                case "CaptureShotgunAnimationSetPlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunAnimationSetPlayMode,
+                        "Shotgun animation set actual Play Mode review advanced.");
+                    break;
+                case "CaptureShotgunAnimationSetFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunAnimationSetFinal,
+                        "Shotgun animation set final overview copied from directly reviewed Play Mode frames.");
+                    break;
+                case "CaptureShotgunRuntimePerformancePlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunRuntimePerformancePlayMode,
+                        "Shotgun runtime performance isolation capture advanced.");
+                    break;
+                case "ApplyShotgunFireMuzzleFlashAndThreeSecondCycle":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunFireMuzzleFlashAndThreeSecondCycle,
+                        "Approved Shotgun muzzle flash and uniformly retimed three-second Shotgun_Fire cycle applied.");
+                    break;
+                case "ApplyShotgunFireVolumetricMuzzleFlash":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunFireVolumetricMuzzleFlash,
+                        "Shotgun_Fire volumetric 2.5x muzzle flash with a 0.15-second trigger applied without animation changes.");
+                    break;
+                case "CaptureShotgunFireMuzzleFlashPerformanceReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunFireMuzzleFlashPerformanceReview,
+                        "Shotgun_Fire natural-loop direct VFX and inactive/active performance review advanced.");
+                    break;
+                case "CaptureShotgunFireVolumetricMuzzleFlashReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunFireVolumetricMuzzleFlashReview,
+                        "Shotgun_Fire volumetric muzzle flash direct multi-angle and inactive/active performance review advanced.");
+                    break;
+                case "BuildShotgunMuzzleFlashV4Preview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .BuildShotgunMuzzleFlashV4Preview,
+                        "Unity-native Shotgun muzzle flash V4 preview prefab and assets built without scene linkage.");
+                    break;
+                case "CaptureShotgunMuzzleFlashV4Preview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunMuzzleFlashV4Preview,
+                        "Exact Shotgun muzzle flash V4 prefab captured once at the current Shotgun_Fire muzzle anchor without scene linkage.");
+                    break;
+                case "ApplyShotgunMuzzleFlashV4ToShotgunFire":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunMuzzleFlashV4ToShotgunFire,
+                        "Approved exact Shotgun muzzle flash V4 prefab linked to Shotgun_Fire at the existing muzzle anchor and 0.15-second trigger.");
+                    break;
+                case "CaptureShotgunMuzzleFlashV4AppliedReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunMuzzleFlashV4AppliedReview,
+                        "Applied Shotgun_Fire V4 scene object captured once beside its approved Unity reference.");
+                    break;
+                case "ApplyShotgunAnimationCorrections":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunAnimationCorrections,
+                        "Shotgun scale, grip, ButtMode, reload, orientation, and confirmed performance corrections applied.");
+                    break;
+                case "ApplyShotgunRightArmGripCorrections":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunRightArmGripCorrections,
+                        "Nine Shotgun right-arm grip corrections applied without changing non-Shotgun scene settings.");
+                    break;
+                case "CaptureShotgunRightArmGripFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunRightArmGripFinal,
+                        "Nine Shotgun right-arm grip poses passed support checks and were captured once.");
+                    break;
+                case "ApplyShotgunRightHandEdgeCorrectionsExcludingReload":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunRightHandEdgeCorrectionsExcludingReload,
+                        "Eight requested Shotgun right-hand edge corrections applied without rebuilding Shotgun_Reload.");
+                    break;
+                case "CaptureShotgunRightHandEdgeFinalExcludingReload":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunRightHandEdgeFinalExcludingReload,
+                        "Eight requested Shotgun right-hand edge poses passed direct and support checks and were captured once.");
+                    break;
+                case "ApplyShotgunButtModeBodySideGripCorrections":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunButtModeBodySideGripCorrections,
+                        "Four Shotgun ButtMode right hands were pulled toward the muzzle-side body grip without rebuilding other Shotgun clips.");
+                    break;
+                case "CaptureShotgunButtModeHandSpacingFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunButtModeHandSpacingFinal,
+                        "Four Shotgun ButtMode hand-spacing poses passed support checks and were captured once.");
+                    break;
+                case "ApplyShotgunReloadSupportHoldAndButtStrikeLeftHandCorrections":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunReloadSupportHoldAndButtStrikeLeftHandCorrections,
+                        "Only Shotgun_Reload and Shotgun_ButtStrike left-hand attachment corrections were applied.");
+                    break;
+                case "CaptureShotgunReloadSupportHoldAndButtStrikeLeftHandFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunReloadSupportHoldAndButtStrikeLeftHandFinal,
+                        "Shotgun_Reload support hold and Shotgun_ButtStrike handle attachment passed direct and support checks and were captured once.");
+                    break;
+                case "ApplyShotgunButtStrikeStockForwardCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunButtStrikeStockForwardCorrection,
+                        "Only Shotgun_ButtStrike was rebuilt with fixed shotgun direction, stock-forward impact, and preserved hand contacts.");
+                    break;
+                case "CaptureShotgunButtStrikeStockForwardFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunButtStrikeStockForwardFinal,
+                        "Shotgun_ButtStrike fixed direction, stock-forward impact, downward travel, and hand contacts passed support checks and were captured once.");
+                    break;
+                case "ApplyShotgunButtStrikeStraightThrustCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunButtStrikeStraightThrustCorrection,
+                        "Only Shotgun_ButtStrike was rebuilt as a straight stock thrust from its stable two-hand ButtMode pose without lateral arm swing.");
+                    break;
+                case "CaptureShotgunButtStrikeStraightThrustFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunButtStrikeStraightThrustFinal,
+                        "Shotgun_ButtStrike straight stock thrust, fixed grips, fixed direction, return, and lateral stability passed support checks and were captured once.");
+                    break;
+                case "ApplyShotgunButtStrikeMixamoGripLockedCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunButtStrikeMixamoGripLockedCorrection,
+                        "Shotgun_ButtStrike restored the original Mixamo body, timing, and forward attack travel while both current shotgun grip contacts remained locked without arm position or scale changes.");
+                    break;
+                case "CaptureShotgunButtStrikeMixamoGripLockedFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunButtStrikeMixamoGripLockedFinal,
+                        "Shotgun_ButtStrike original Mixamo motion, stock-forward impact, fixed grip contacts, and unchanged arm position/scale curves passed support checks and were captured once.");
+                    break;
+                case "CaptureShotgunButtStrikeExactSourcePlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunButtStrikeExactSourcePlayMode,
+                        "Shotgun_ButtStrike exact embedded mixamo.com Take Play Mode review advanced.");
+                    break;
+                case "ApplyShotgunButtStrikeWeaponGripOnly":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunButtStrikeWeaponGripOnly,
+                        "Shotgun_ButtStrike kept the exact Mixamo body Take and added only Shotgun position/rotation curves for two-hand contact.");
+                    break;
+                case "CaptureShotgunButtStrikeWeaponGripOnlyPlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunButtStrikeWeaponGripOnlyPlayMode,
+                        "Shotgun_ButtStrike weapon-only two-hand grip Play Mode review advanced.");
+                    break;
+                case "ApplyShotgunReloadTopPullToIdleCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunReloadTopPullToIdleCorrection,
+                        "Shotgun_Reload now reaches the upper action, pulls once, returns once to the exact Shotgun_Idle left support, and holds without lateral arc motion.");
+                    break;
+                case "CaptureShotgunReloadTopPullToIdleFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunReloadTopPullToIdleFinal,
+                        "Shotgun_Reload upper pull, exact Idle support return and hold, right trigger grip, and unchanged arm position/scale curves passed support checks and were captured once.");
+                    break;
+                case "ApplyShotgunReloadWristDetachReturn":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyShotgunReloadWristDetachReturn,
+                        "Shotgun_Reload keeps the left wrist at its skinned bind-local orientation, restores palm facing through forearm roll, and writes one left-chain quaternion track for the approved path and 0.5-second return.");
+                    break;
+                case "CaptureShotgunReloadWristDetachReturnPlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunReloadWristDetachReturnPlayMode,
+                        "Shotgun_Reload neutral-seam left-wrist and unchanged 0.5-second support-return direct Play Mode review advanced.");
+                    break;
+                case "CaptureShotgunAnimationCorrectionsPlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunAnimationCorrectionsPlayMode,
+                        "Shotgun correction direct Play Mode review advanced.");
+                    break;
+                case "CaptureShotgunAnimationCorrectionsFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureShotgunAnimationCorrectionsFinal,
+                        "Shotgun correction final image copied from directly reviewed Play Mode frames.");
                     break;
                 case "ApplyMusketMuzzleFlashVfx":
                     RunSynchronous(

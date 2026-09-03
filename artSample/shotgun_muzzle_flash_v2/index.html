@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shotgun Muzzle Flash V2 검토</title>
+  <style>
+    :root { color-scheme: dark; --bg:#090c10; --card:#121821; --line:#2b3645; --text:#edf3fa; --muted:#9cabbc; --hot:#ffb23e; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:radial-gradient(circle at 20% 0%, #202a35 0, var(--bg) 42%); color:var(--text); font:16px/1.6 system-ui, sans-serif; }
+    main { width:min(1180px, calc(100% - 40px)); margin:0 auto; padding:48px 0 64px; }
+    header { margin-bottom:28px; }
+    h1 { margin:0 0 8px; font-size:clamp(28px, 4vw, 52px); letter-spacing:-.04em; }
+    h2 { margin:0 0 12px; font-size:20px; }
+    p { margin:0; color:var(--muted); }
+    .status { display:inline-block; margin-top:16px; padding:6px 10px; border:1px solid #785721; border-radius:999px; color:#ffd184; background:#2b2112; font-size:13px; }
+    .preview { overflow:hidden; border:1px solid var(--line); border-radius:18px; background-color:#d7d7d7; background-image:linear-gradient(45deg,#eee 25%,transparent 25%),linear-gradient(-45deg,#eee 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#eee 75%),linear-gradient(-45deg,transparent 75%,#eee 75%); background-size:32px 32px; background-position:0 0,0 16px,16px -16px,-16px 0; }
+    .preview img { display:block; width:100%; height:auto; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin-top:18px; }
+    .card { padding:22px; border:1px solid var(--line); border-radius:14px; background:color-mix(in srgb,var(--card) 94%,transparent); }
+    ul { margin:0; padding-left:20px; color:var(--muted); }
+    li + li { margin-top:6px; }
+    strong { color:var(--text); }
+    a { color:var(--hot); }
+    @media (max-width:760px) { .grid { grid-template-columns:1fr; } main { width:min(100% - 24px,1180px); padding-top:28px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Shotgun Muzzle Flash V2</h1>
+      <p>기존 효과보다 강한 순간 압력감과 불규칙한 화염 실루엣을 목표로 한 실사형 산탄총 총구 이펙트입니다.</p>
+      <span class="status">사용자 승인 완료 · 머스켓 방식 Unity 적용</span>
+    </header>
+
+    <figure class="preview">
+      <img src="renders/01_realistic_shotgun_muzzle_flash_v2.png" alt="왼쪽 총구 원점에서 오른쪽으로 폭발하는 실사형 산탄총 총구 섬광 V2">
+    </figure>
+
+    <section class="grid">
+      <article class="card">
+        <h2>핵심 변경</h2>
+        <ul>
+          <li><strong>중심:</strong> 더 크고 강한 백색 고온 섬광</li>
+          <li><strong>형태:</strong> 위·아래로 갈라지는 불규칙한 화염</li>
+          <li><strong>입자:</strong> 전방으로 퍼지는 불티와 화약 파편</li>
+          <li><strong>마무리:</strong> 짧고 조밀한 회백색 연기 충격파</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2>Unity 적용 결과</h2>
+        <ul>
+          <li><code>CargoRunMvp/PlayerAnimationLayout/Shotgun_Fire</code></li>
+          <li>샷건 총구 중심을 왼쪽 원점에 연결</li>
+          <li>3초 동작 시작 후 0.15초에 표시</li>
+          <li>머스켓과 같은 4계층 소프트 파티클을 샷건용 넓은 원뿔로 분산</li>
+          <li>단일 지배 카드 없이 최대 59개 입자와 짧은 제한형 무그림자 광원 사용</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2>범위와 상태</h2>
+        <p>AI 편집 원본은 변경하지 않고 보존했습니다. 사용자가 지적한 평면 메시 느낌을 제거하기 위해 Unity 런타임은 승인 이미지를 큰 카드로 표시하지 않고, 실제 머스켓 효과의 FlashCore·HotGas·Smoke·Embers 레이어 방식으로 재구성했습니다. 기존 애니메이션 동작과 3초 길이는 변경하지 않았습니다.</p>
+      </article>
+      <article class="card">
+        <h2>관련 파일</h2>
+        <p><a href="renders/01_realistic_shotgun_muzzle_flash_v2.png">원본 PNG 열기</a><br><a href="../../Assets/_Project/Art/VFX/ShotgunMuzzleFlash/Shotgun_Fire_MuzzleFlash_V2_FinalReview.png">Unity 최종 비교 시트</a><br><a href="APPLICATION_METRICS.json">적용·성능 수치</a><br><a href="README.md">설명 문서</a><br><a href="APPROVAL_STATUS.json">승인 상태</a></p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

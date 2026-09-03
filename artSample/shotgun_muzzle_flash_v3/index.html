@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shotgun Muzzle Flash V3 검토</title>
+  <style>
+    :root { color-scheme:dark; --bg:#080b0f; --card:#121820; --line:#2b3746; --text:#eff5fb; --muted:#a4b0bf; --hot:#ffb02e; --ok:#ffd985; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(circle at 28% 0%,#252e38 0,var(--bg) 42%); color:var(--text); font:16px/1.65 system-ui,sans-serif; }
+    main { width:min(1240px,calc(100% - 40px)); margin:auto; padding:44px 0 68px; }
+    h1 { margin:0 0 8px; font-size:clamp(30px,4vw,54px); letter-spacing:-.04em; }
+    h2 { margin:0 0 12px; font-size:20px; }
+    p { margin:0; color:var(--muted); }
+    .status { display:inline-block; margin-top:15px; padding:7px 11px; border:1px solid #7f5c21; border-radius:999px; background:#302311; color:var(--ok); font-size:13px; }
+    .hero { margin:28px 0 18px; overflow:hidden; border:1px solid var(--line); border-radius:18px; background:#f5f5f3; }
+    .hero img,.compare img,.revision img { display:block; width:100%; height:auto; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+    .card { padding:22px; border:1px solid var(--line); border-radius:14px; background:color-mix(in srgb,var(--card) 95%,transparent); }
+    .wide { grid-column:1/-1; }
+    .compare { margin-top:14px; overflow:auto; border:1px solid var(--line); border-radius:10px; background:#0d1116; }
+    .revision { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:14px; }
+    .revision figure { margin:0; overflow:hidden; border:1px solid var(--line); border-radius:10px; background:#f5f5f3; }
+    .revision figcaption { padding:9px 12px; background:#111821; color:var(--muted); font-size:13px; }
+    ul { margin:0; padding-left:20px; color:var(--muted); }
+    li+li { margin-top:6px; }
+    strong { color:var(--text); }
+    code { color:#ffd58b; }
+    a { color:var(--hot); }
+    .warning { margin-top:10px; color:#dfc497; }
+    @media (max-width:760px) { .grid,.revision { grid-template-columns:1fr; } main { width:min(100% - 24px,1240px); padding-top:26px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Shotgun Muzzle Flash V3</h1>
+      <p>현재 머스켓식 입체 파티클 방식은 유지하면서, 샷건에 맞는 크기·광량·압력감·화염·연기·불티 밀도를 크게 보강한 V3 실사형 시각 기준입니다.</p>
+      <span class="status">사용자 승인 대기 · Unity 미적용</span>
+    </header>
+
+    <figure class="hero">
+      <img src="renders/03_spectacular_dense_shotgun_muzzle_flash_v3.png" alt="확산 규모와 화염, 연기, 불티 밀도를 보강한 실사형 Shotgun Muzzle Flash V3">
+    </figure>
+
+    <section class="grid">
+      <article class="card">
+        <h2>강화한 부분</h2>
+        <ul>
+          <li><strong>점화:</strong> 크고 선명한 백색 고온 코어</li>
+          <li><strong>압력:</strong> 짧은 거리에서 위·아래로 크게 벌어지는 비대칭 방사형 부채</li>
+          <li><strong>깊이:</strong> 서로 다른 위치와 크기의 얇은 고온 가스·화염층</li>
+          <li><strong>잔류:</strong> 고밀도 불티와 넓게 말리는 회백색 화약 연기</li>
+          <li><strong>색채:</strong> 흰색 코어·금색·호박색·주황색 화염과 짙은 연기의 강한 명암 분리</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2>Unity 재현 원칙</h2>
+        <ul>
+          <li><code>Shotgun_Fire</code>의 현재 총구 원점과 `0.15초` 시점 유지</li>
+          <li>FlashCore·HotGas·Smoke·Embers를 별도 파티클로 분해</li>
+          <li>머스켓보다 넓고 밝되 1인칭 화면 전체를 가리는 독립 폭발은 피함</li>
+          <li>전체 PNG를 단일·교차 카드로 표시하지 않음</li>
+        </ul>
+      </article>
+      <article class="card wide">
+        <h2>색채 수정 전후 직접 비교</h2>
+        <p>총구 원점, 전체 부채꼴 윤곽, 화염 분기, 연기와 불티 배치는 유지하고 색상 포화도와 국부 대비만 강화했습니다.</p>
+        <div class="revision">
+          <figure><img src="renders/01_realistic_shotgun_muzzle_flash_v3.png" alt="색채 수정 전 V3 원본"><figcaption>수정 전 · 원본 보존</figcaption></figure>
+          <figure><img src="renders/02_intense_color_shotgun_muzzle_flash_v3.png" alt="색채와 명암을 강화한 V3 수정본"><figcaption>수정 후 · V3 색채 강화 단계</figcaption></figure>
+        </div>
+      </article>
+      <article class="card wide">
+        <h2>V3 규모·밀도 보강 전후</h2>
+        <p>V4를 만든 것이 아니라 V3의 총구 원점과 색채 구조를 유지하면서 백색 코어, 부채꼴 확산 폭, 화염·연기·불티의 가시 질량을 키웠습니다.</p>
+        <div class="revision">
+          <figure><img src="renders/02_intense_color_shotgun_muzzle_flash_v3.png" alt="규모와 밀도 보강 전 V3"><figcaption>보강 전 · V3 색채 강화본</figcaption></figure>
+          <figure><img src="renders/03_spectacular_dense_shotgun_muzzle_flash_v3.png" alt="규모와 밀도 보강 후 V3"><figcaption>보강 후 · 현재 V3 승인 검토 대상</figcaption></figure>
+        </div>
+      </article>
+      <article class="card wide">
+        <h2>Unity 적용 전 예상 비교</h2>
+        <p>Unity를 변경하기 전에 기존 캡처 자료를 참고해 만든 합성 시각화입니다. 가운데는 기존 Unity 캡처 참고 재구성, 오른쪽은 V3 적용 예상 합성이며 실제 Unity 적용본이나 새 캡처가 아닙니다.</p>
+        <div class="compare"><img src="previsualization/02_v3_unity_previsualization_comparison.png" alt="V3 아트 샘플, 현재 Unity 참고 재구성, 적용 전 예상 이미지 비교"></div>
+        <p class="warning">이 이미지는 예상 크기·방향·밀도를 검토하기 위한 사전 시각화입니다. 실제 구현 결과는 승인 후 Unity에서 같은 기준 구도로 별도 검증해야 합니다.</p>
+      </article>
+      <article class="card wide">
+        <h2>현재 Unity 결과 비교</h2>
+        <p>아래 이미지는 현재 적용된 머스켓 방식 Shotgun_Fire입니다. V3는 이 방식의 입체감은 유지하면서 발사 순간의 백색 코어, 확산 폭, 화염 가지와 불티 밀도를 강화하는 목표입니다.</p>
+        <div class="compare"><img src="../../Assets/_Project/Art/VFX/ShotgunMuzzleFlash/Shotgun_Fire_MuzzleFlash_V2_FinalReview.png" alt="현재 Unity Shotgun 발사 이펙트 직접 비교 시트"></div>
+      </article>
+      <article class="card">
+        <h2>파일 상태</h2>
+        <p>Codex 내장 imagegen으로 기존 V3의 방향과 실사형 색채를 유지하고 규모와 밀도를 보강한 `1536×1024` RGB 검토 이미지입니다. 사용자 승인 전에는 Unity 에셋·씬·프리팹에 연결하지 않습니다.</p>
+        <p class="warning">생성기가 실제 투명 알파 대신 밝은 체크 배경을 포함했습니다. 따라서 현재 PNG는 시각 승인용이며, 승인 후 레이어별 투명 마스크를 별도로 준비해야 합니다.</p>
+      </article>
+      <article class="card">
+        <h2>관련 파일</h2>
+        <p><a href="previsualization/02_v3_unity_previsualization_comparison.png">V3 Unity 적용 전 비교 이미지</a><br><a href="previsualization/01_v3_unity_mockup.png">V3 Unity 적용 예상 단일 이미지</a><br><a href="renders/03_spectacular_dense_shotgun_muzzle_flash_v3.png">V3 규모·밀도 보강 PNG · 현재 검토본</a><br><a href="renders/02_intense_color_shotgun_muzzle_flash_v3.png">V3 색채 강화 PNG · 보존본</a><br><a href="renders/01_realistic_shotgun_muzzle_flash_v3.png">V3 최초 PNG · 보존본</a><br><a href="README.md">설명 문서</a><br><a href="APPROVAL_STATUS.json">승인 상태·생성 정보</a><br><a href="../shotgun_muzzle_flash_v2/renders/01_realistic_shotgun_muzzle_flash_v2.png">이전 V2 샘플</a></p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

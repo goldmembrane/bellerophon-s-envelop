@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shotgun Muzzle Flash V4 — Unity Runtime Prefab Review</title>
+  <style>
+    :root { color-scheme: dark; background: #080b10; color: #f5eee4; font-family: Inter, "Noto Sans KR", sans-serif; }
+    body { margin: 0; padding: 32px; }
+    main { max-width: 1500px; margin: 0 auto; }
+    h1 { margin: 0 0 10px; font-size: clamp(28px, 4vw, 54px); }
+    p { max-width: 900px; color: #bfc5ce; line-height: 1.6; }
+    .badge { display: inline-block; margin: 12px 0 22px; padding: 7px 11px; border: 1px solid #ff8c35; color: #ffd2a5; border-radius: 999px; }
+    .comparison { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    figure { margin: 0; }
+    figcaption { padding: 9px 2px; color: #ffd2a5; }
+    img { display: block; width: 100%; height: auto; border: 1px solid #2a313d; background: #0e131b; box-shadow: 0 22px 70px #000a; }
+    dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 18px; margin-top: 24px; }
+    dt { color: #ffad63; } dd { margin: 0; color: #c8cdd4; }
+    @media (max-width: 900px) { .comparison { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Shotgun Muzzle Flash V4</h1>
+    <p>별도 콘셉트 이미지를 재현한 화면이 아니라, 최종 적용 후보 Unity 프리팹을 Shotgun_Fire의 현재 총구 앵커에 임시 배치해 직접 렌더링한 시각 검토본입니다. 현재 검토본은 총구 중심의 4mm 방출 반경을 꼭짓점으로 삼고, 압력 화염 52개를 단일 46° 입체 원뿔 안에 연속 분포시켜 전방으로 갈수록 폭이 넓어집니다.</p>
+    <span class="badge">Actual Unity prefab capture · not yet linked to Shotgun_Fire</span>
+    <div class="comparison">
+      <figure>
+        <figcaption>기존 V4</figcaption>
+        <img src="renders/01_unity_runtime_preview.png" alt="강화 전 Shotgun Muzzle Flash V4 Unity 렌더">
+      </figure>
+      <figure>
+        <figcaption>전방 전개형 4방향 부채 — 원뿔 요청으로 대체</figcaption>
+        <img src="renders/04_forward_only_fan_unity_runtime_preview.png" alt="전방으로 전개되지만 분리된 네 방향 덩어리가 남은 Shotgun Muzzle Flash V4 Unity 렌더">
+      </figure>
+      <figure>
+        <figcaption>총구 꼭짓점 입체 원뿔 V4 — 현재 승인 대상</figcaption>
+        <img src="renders/05_muzzle_apex_cone_unity_runtime_preview.png" alt="총구를 꼭짓점으로 전방에서 넓어지는 입체 원뿔 Shotgun Muzzle Flash V4 Unity 렌더">
+      </figure>
+    </div>
+    <dl>
+      <dt>구조</dt><dd>3D 화염 볼륨 + 압력 화염 + 점화 코어 + 화약 연기 + 고온 파편</dd>
+      <dt>열</dt><dd>왼쪽부터 발화 후 0.018 / 0.045 / 0.085 / 0.145 / 0.32 / 0.62초</dd>
+      <dt>행</dt><dd>위부터 총구 근접 정면 / 측면 / 사선 / Shotgun_Fire 전체 구도</dd>
+      <dt>현재 형상</dt><dd>압력 화염 52개를 단일 46° 입체 원뿔에 연속 분포, 총구 시작 반경 4mm·길이 6mm, 전체 최대 입자 118 유지</dd>
+      <dt>전방 제한</dt><dd>확산 계층은 90° 미만 전방 원뿔, 속도 정렬 입자는 꼬리 고정 및 길이 보정, 3D 화염 메시의 후방 좌표는 0m</dd>
+      <dt>비교 축척</dt><dd>기존 V4와 현재 검토본의 근접 카메라를 모두 0.66으로 고정</dd>
+      <dt>장면 반영</dt><dd>미반영 — 사용자 승인 뒤 기존 Shotgun_Fire 효과와 교체</dd>
+      <dt>측정값</dt><dd><a href="METRICS.json">METRICS.json</a></dd>
+    </dl>
+  </main>
+</body>
+</html>

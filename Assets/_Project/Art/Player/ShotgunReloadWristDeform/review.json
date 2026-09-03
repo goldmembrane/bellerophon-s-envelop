@@ -1,0 +1,15 @@
+{
+    "target": "Shotgun_Reload",
+    "contactSheetPath": "Assets/_Project/Art/Player/ShotgunReloadWristDeform/Shotgun_Reload_LeftWristDeform_FinalReview.png",
+    "sampledIntervals": 8,
+    "loopStartRepeatedAsFinalColumn": true,
+    "maximumExistingBonePositionDifferenceMeters": 0.0,
+    "maximumExistingBoneRotationDifferenceDegrees": 0.0,
+    "maximumExistingBoneScaleDifference": 0.0,
+    "reloadClipHash": "EFC2646445B10FB1D7FCA8EEF8A51605941A2E047042477DED6E882CE8AE76B3",
+    "controllerHash": "B403AD291D20DFC215C5C9EB865E80EB0ED92870B1868B3B35712DB0E8C07517",
+    "clipAndControllerMatchApplyRecord": true,
+    "componentWritesOnlyHelperBone": true,
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+}

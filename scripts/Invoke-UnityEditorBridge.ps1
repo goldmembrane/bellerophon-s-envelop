@@ -75,7 +75,7 @@ while ((Get-Date) -lt $deadline) {
     }
   }
 
-  Start-Sleep -Milliseconds 250
+  Start-Sleep -Milliseconds 50
 }
 
 Clear-OwnActiveRequest

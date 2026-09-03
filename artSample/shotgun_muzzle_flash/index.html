@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shotgun Muzzle Flash — 실사형 아트 샘플</title>
+  <style>
+    :root { color-scheme: dark; --ink:#eef5f8; --muted:#9aabb3; --line:#314148; --amber:#ffb64d; --panel:#111a1f; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter,"Noto Sans KR",system-ui,sans-serif; color:var(--ink); background:radial-gradient(circle at 72% 18%,#25333a 0,#0b1115 44%,#070a0c 100%); }
+    main { width:min(1180px,calc(100% - 40px)); margin:0 auto; padding:54px 0 72px; }
+    header { display:grid; grid-template-columns:1fr auto; gap:28px; align-items:end; border-bottom:1px solid var(--line); padding-bottom:24px; }
+    .eyebrow { color:var(--amber); letter-spacing:.16em; text-transform:uppercase; font-size:12px; font-weight:700; }
+    h1 { margin:10px 0 0; font-size:clamp(32px,5vw,66px); line-height:.95; letter-spacing:-.045em; }
+    .status { color:#ffd08b; border:1px solid #71552b; background:#291f13; padding:9px 13px; border-radius:999px; font-size:13px; white-space:nowrap; }
+    .hero { margin-top:30px; position:relative; min-height:520px; overflow:hidden; border:1px solid var(--line); border-radius:18px; background:linear-gradient(105deg,#050708 0%,#10181d 55%,#17232a 100%); box-shadow:0 28px 80px #0009; display:grid; place-items:center; }
+    .hero::before { content:"MUZZLE ORIGIN"; position:absolute; left:26px; top:22px; color:#82939b; font-size:11px; letter-spacing:.15em; }
+    .origin { position:absolute; left:9%; top:50%; width:1px; height:72%; transform:translateY(-50%); background:linear-gradient(transparent,#728891,transparent); }
+    .origin::after { content:""; position:absolute; width:9px; height:9px; border:1px solid var(--amber); border-radius:50%; left:-4px; top:calc(50% - 4px); box-shadow:0 0 22px var(--amber); }
+    .hero img { width:88%; height:auto; display:block; filter:drop-shadow(0 0 26px #ff9d2c55); }
+    .grid { display:grid; grid-template-columns:1.2fr .8fr; gap:18px; margin-top:18px; }
+    section { background:color-mix(in srgb,var(--panel) 92%,transparent); border:1px solid var(--line); border-radius:16px; padding:24px; }
+    h2 { margin:0 0 18px; font-size:18px; }
+    dl { display:grid; grid-template-columns:150px 1fr; gap:12px 18px; margin:0; }
+    dt { color:var(--muted); }
+    dd { margin:0; }
+    .timeline { display:grid; grid-template-columns:60px 1fr; gap:14px; align-items:center; margin:15px 0; }
+    .bar { height:8px; border-radius:99px; background:#26343a; overflow:hidden; }
+    .bar span { display:block; height:100%; background:linear-gradient(90deg,#fff8cf,#ffb13f,#727c81); }
+    .note { margin:18px 0 0; color:var(--muted); line-height:1.65; font-size:14px; }
+    footer { color:#75868e; font-size:12px; margin-top:20px; }
+    @media (max-width:760px) { header,.grid { grid-template-columns:1fr; } .hero { min-height:340px; } dl { grid-template-columns:1fr; gap:4px; } dd { margin-bottom:10px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div><div class="eyebrow">Bellerophon · VFX art sample</div><h1>Shotgun<br>Muzzle Flash</h1></div>
+      <div class="status">승인 대기 · Unity 미적용</div>
+    </header>
+
+    <div class="hero" aria-label="실사형 산탄총 총구 화염 샘플">
+      <div class="origin" aria-hidden="true"></div>
+      <img src="renders/01_realistic_shotgun_muzzle_flash.png" alt="투명 배경의 실사형 산탄총 총구 화염, 불꽃과 연기">
+    </div>
+
+    <div class="grid">
+      <section>
+        <h2>향후 Unity 적용 기준</h2>
+        <dl>
+          <dt>씬 / 대상</dt><dd>CargoRunMvp · PlayerAnimationLayout/Shotgun_Fire</dd>
+          <dt>앵커</dt><dd>샷건 총열의 실제 총구 중심, 이미지 왼쪽 원점을 총열 진행 방향에 정렬</dd>
+          <dt>카메라</dt><dd>1인칭 게임플레이 시점</dd>
+          <dt>표시 상태</dt><dd>유효한 단발 발사 순간에만 활성</dd>
+          <dt>가시성</dt><dd>어두운 선내에서 화염핵은 즉시 판독, 잔류 연기는 조준 시야를 장시간 가리지 않음</dd>
+        </dl>
+      </section>
+      <section>
+        <h2>제안 타이밍</h2>
+        <div class="timeline"><span>0–0.06s</span><div class="bar"><span style="width:18%"></span></div></div>
+        <div class="timeline"><span>0.06–0.35s</span><div class="bar"><span style="width:100%"></span></div></div>
+        <p class="note">첫 구간은 백색·황색 고온 화염과 불꽃, 두 번째 구간은 밝기가 급격히 사라지는 회백색 가스·연기입니다. 수치는 승인 후 실제 총구 크기와 발사 애니메이션에 맞춰 구현 단계에서 확정합니다.</p>
+      </section>
+    </div>
+
+    <footer>AI-generated concept sample · Codex built-in imagegen default mode · 2026-09-03</footer>
+  </main>
+</body>
+</html>
