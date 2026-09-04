@@ -1,0 +1,1584 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>연료탱크 폭발 VFX 아트 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #07090b;
+      --panel: #101419;
+      --panel-2: #171c21;
+      --line: #313940;
+      --muted: #9aa4a8;
+      --paper: #f0eee5;
+      --amber: #ffb000;
+      --orange: #ff5a0a;
+      --red: #d52514;
+      --cyan: #56e6ff;
+      --green: #9ddf70;
+      --danger: #ff4b32;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--ink); }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(circle at 14% -20%, rgba(255, 90, 10, .18), transparent 35%),
+        linear-gradient(115deg, transparent 0 49.6%, rgba(255,255,255,.025) 49.8% 50.2%, transparent 50.4%),
+        #07090b;
+      color: var(--paper);
+      font-family: "Bahnschrift", "Noto Sans KR", "Malgun Gothic", sans-serif;
+      letter-spacing: -.01em;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      content: "";
+      pointer-events: none;
+      opacity: .14;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: linear-gradient(to bottom, #000, transparent 75%);
+    }
+
+    .page {
+      width: min(1740px, 100%);
+      margin: 0 auto;
+      padding: clamp(20px, 3vw, 52px);
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 28px;
+      padding: 4px 0 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      color: var(--amber);
+      font-family: "Bahnschrift Condensed", "Noto Sans KR", sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 42px;
+      height: 3px;
+      content: "";
+      background: repeating-linear-gradient(90deg, var(--amber) 0 6px, transparent 6px 9px);
+    }
+
+    h1 {
+      max-width: 1040px;
+      margin: 0;
+      font-family: "Agency FB", "Bahnschrift Condensed", "Noto Sans KR", sans-serif;
+      font-size: clamp(42px, 6vw, 94px);
+      font-stretch: condensed;
+      font-weight: 700;
+      letter-spacing: -.045em;
+      line-height: .86;
+      text-transform: uppercase;
+    }
+
+    h1 em {
+      display: block;
+      color: var(--orange);
+      font-style: normal;
+    }
+
+    .status-block {
+      display: grid;
+      gap: 8px;
+      min-width: 240px;
+      padding: 16px 18px;
+      border: 1px solid #684125;
+      background: rgba(49, 28, 14, .52);
+      clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+    }
+
+    .status-block small,
+    .micro-label {
+      color: var(--muted);
+      font-family: "Bahnschrift Condensed", sans-serif;
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .status-block strong { color: #ffce78; font-size: 15px; }
+
+    .lead {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+      gap: 28px;
+      padding: 22px 0 28px;
+    }
+
+    .lead p {
+      max-width: 880px;
+      margin: 0;
+      color: #bcc4c6;
+      font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+      font-size: clamp(15px, 1.4vw, 18px);
+      line-height: 1.8;
+    }
+
+    .lead-note {
+      align-self: start;
+      padding: 12px 14px;
+      border-left: 3px solid var(--cyan);
+      background: rgba(86, 230, 255, .055);
+      color: #b9d8dd;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .console {
+      overflow: hidden;
+      position: relative;
+      border: 1px solid #3b4247;
+      background: #0a0d10;
+      box-shadow: 0 28px 70px rgba(0,0,0,.38);
+      clip-path: polygon(0 0, calc(100% - 34px) 0, 100% 34px, 100% 100%, 34px 100%, 0 calc(100% - 34px));
+    }
+
+    .console::before,
+    .console::after {
+      position: absolute;
+      z-index: 4;
+      content: "";
+      pointer-events: none;
+    }
+
+    .console::before {
+      top: 0;
+      left: 34%;
+      width: 24%;
+      height: 4px;
+      background: var(--orange);
+      box-shadow: 0 0 24px rgba(255,90,10,.65);
+    }
+
+    .console::after {
+      inset: 0;
+      opacity: .15;
+      background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.035) 3px 4px);
+      mix-blend-mode: overlay;
+    }
+
+    .stage-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 48px;
+      padding: 10px 18px;
+      border-bottom: 1px solid #333a3f;
+      background: #13171a;
+      font-family: "Bahnschrift Condensed", sans-serif;
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .stage-head .live {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #ffb96a;
+    }
+
+    .live::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      content: "";
+      background: var(--orange);
+      box-shadow: 0 0 12px var(--orange);
+    }
+
+    .stage-wrap {
+      position: relative;
+      aspect-ratio: 16 / 8.7;
+      min-height: 430px;
+      background: #11171b;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .hud {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .mode-readout {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      display: grid;
+      gap: 4px;
+      padding-left: 12px;
+      border-left: 2px solid var(--amber);
+      text-shadow: 0 2px 8px #000;
+    }
+
+    .mode-readout strong {
+      font-family: "Agency FB", "Bahnschrift Condensed", sans-serif;
+      font-size: clamp(26px, 3vw, 48px);
+      letter-spacing: .02em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .mode-readout span {
+      color: #e6c79a;
+      font-size: 12px;
+      letter-spacing: .14em;
+    }
+
+    .range-readout {
+      position: absolute;
+      right: 24px;
+      bottom: 24px;
+      text-align: right;
+      text-shadow: 0 2px 10px #000;
+    }
+
+    .range-readout b {
+      display: block;
+      color: var(--amber);
+      font-family: "Agency FB", "Bahnschrift Condensed", sans-serif;
+      font-size: clamp(38px, 5vw, 72px);
+      line-height: .9;
+    }
+
+    .range-readout span {
+      color: #c6ced0;
+      font-size: 11px;
+      letter-spacing: .1em;
+    }
+
+    .phase-readout {
+      position: absolute;
+      right: 24px;
+      top: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #d9e1e3;
+      font-family: "Bahnschrift Condensed", sans-serif;
+      font-size: 12px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .phase-readout::before {
+      width: 26px;
+      height: 1px;
+      content: "";
+      background: currentColor;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: auto auto minmax(180px, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 18px 18px;
+      border-top: 1px solid #333a3f;
+      background: #121619;
+    }
+
+    .segmented {
+      display: flex;
+      padding: 3px;
+      border: 1px solid #394147;
+      background: #090c0e;
+    }
+
+    button {
+      min-height: 38px;
+      border: 1px solid #414a50;
+      background: #1a2024;
+      color: #e8e9e5;
+      font: 700 12px/1 "Bahnschrift Condensed", "Noto Sans KR", sans-serif;
+      letter-spacing: .07em;
+      cursor: pointer;
+      transition: background .15s ease, color .15s ease, border-color .15s ease, transform .15s ease;
+    }
+
+    button:hover { border-color: #778187; transform: translateY(-1px); }
+    button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+    .segmented button {
+      min-width: 112px;
+      border: 0;
+      background: transparent;
+      color: #8e999e;
+    }
+
+    .segmented button[aria-pressed="true"] {
+      background: var(--amber);
+      color: #171006;
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,.22);
+    }
+
+    .transport { display: flex; gap: 7px; }
+    .transport button { min-width: 76px; padding: 0 14px; }
+
+    .timeline {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .timeline-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #8f9aa0;
+      font-family: "Bahnschrift Condensed", monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 4px;
+      margin: 0;
+      accent-color: var(--orange);
+      cursor: ew-resize;
+    }
+
+    .loop-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #aeb8bb;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .still-frame {
+      margin: 22px 0 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: #0d1114;
+    }
+
+    .still-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid #282f34;
+      background: #10171b;
+    }
+
+    .still-frame figcaption {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 13px 2px 1px;
+      color: #8f999e;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .still-frame figcaption strong { color: #ffc268; }
+
+    .render-checks {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .render-checks figure {
+      margin: 0;
+      padding: 12px;
+      background: #0d1114;
+    }
+
+    .render-checks img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid #282f34;
+    }
+
+    .render-checks figcaption {
+      padding: 11px 2px 2px;
+      color: #9aa5a9;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .render-checks strong { color: #ffc268; }
+
+    .spec {
+      min-height: 138px;
+      padding: 18px;
+      background: #111519;
+    }
+
+    .spec .number {
+      display: block;
+      margin: 12px 0 4px;
+      color: var(--paper);
+      font-family: "Agency FB", "Bahnschrift Condensed", sans-serif;
+      font-size: clamp(36px, 4vw, 58px);
+      letter-spacing: -.02em;
+      line-height: .9;
+    }
+
+    .spec .number i { color: var(--orange); font-size: .48em; font-style: normal; }
+    .spec p { margin: 0; color: #8f999e; font-size: 12px; line-height: 1.5; }
+
+    .sections {
+      display: grid;
+      grid-template-columns: 1.12fr .88fr;
+      gap: 22px;
+      margin-top: 22px;
+    }
+
+    .sheet {
+      position: relative;
+      padding: clamp(20px, 2.5vw, 34px);
+      border: 1px solid var(--line);
+      background: linear-gradient(145deg, rgba(255,255,255,.025), transparent 38%), #101418;
+    }
+
+    .sheet h2 {
+      margin: 0 0 20px;
+      font-family: "Agency FB", "Bahnschrift Condensed", "Noto Sans KR", sans-serif;
+      font-size: 31px;
+      letter-spacing: .01em;
+      text-transform: uppercase;
+    }
+
+    .layer-list {
+      display: grid;
+      gap: 0;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: layer;
+    }
+
+    .layer-list li {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      padding: 13px 0;
+      border-top: 1px solid #2a3035;
+      color: #b8c1c4;
+      font-size: 14px;
+      line-height: 1.55;
+      counter-increment: layer;
+    }
+
+    .layer-list li::before {
+      content: "0" counter(layer);
+      color: var(--orange);
+      font-family: "Agency FB", "Bahnschrift Condensed", sans-serif;
+      font-size: 21px;
+    }
+
+    .facts {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+    }
+
+    .fact {
+      display: grid;
+      grid-template-columns: 126px 1fr;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #2a3035;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .fact dt { color: #7f898e; }
+    .fact dd { margin: 0; color: #c9d0d2; }
+    .fact strong { color: #ffcb73; }
+
+    .warning {
+      margin-top: 20px;
+      padding: 16px;
+      border: 1px solid #663522;
+      background: repeating-linear-gradient(-45deg, rgba(255,90,10,.06) 0 8px, transparent 8px 16px), #17120f;
+      color: #d9bca6;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .warning strong { color: #ff9d55; }
+
+    .asset-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      color: var(--cyan);
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .asset-link::after { content: "↗"; }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: #6f797e;
+      font: 11px/1.6 "Bahnschrift Condensed", sans-serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    body.capture-mode { overflow: hidden; background: #10171b; }
+    body.capture-mode .page { width: 100%; max-width: none; padding: 0; }
+    body.capture-mode header,
+    body.capture-mode .lead,
+    body.capture-mode .still-frame,
+    body.capture-mode .spec-grid,
+    body.capture-mode .sections,
+    body.capture-mode footer,
+    body.capture-mode .stage-head,
+    body.capture-mode .controls { display: none; }
+    body.capture-mode .console {
+      width: 100vw;
+      height: 100vh;
+      border: 0;
+      box-shadow: none;
+      clip-path: none;
+    }
+    body.capture-mode .stage-wrap {
+      width: 100vw;
+      height: 100vh;
+      min-height: 0;
+      aspect-ratio: auto;
+    }
+
+    @media (max-width: 980px) {
+      header, .lead, .sections { grid-template-columns: 1fr; }
+      .render-checks { grid-template-columns: 1fr; }
+      .status-block { min-width: 0; }
+      .spec-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .controls { grid-template-columns: 1fr 1fr; }
+      .timeline { grid-column: 1 / -1; grid-row: 2; }
+      .stage-wrap { min-height: 360px; }
+    }
+
+    @media (max-width: 600px) {
+      .page { padding: 16px; }
+      h1 { font-size: 48px; }
+      .stage-wrap { min-height: 420px; aspect-ratio: 3 / 4; }
+      .mode-readout { top: 16px; left: 16px; }
+      .phase-readout { top: 16px; right: 16px; }
+      .range-readout { right: 16px; bottom: 16px; }
+      .controls { grid-template-columns: 1fr; }
+      .segmented, .transport { width: 100%; }
+      .segmented button, .transport button { flex: 1; min-width: 0; }
+      .timeline { grid-column: auto; grid-row: auto; }
+      .spec-grid { grid-template-columns: 1fr 1fr; }
+      .spec { min-height: 124px; padding: 15px; }
+      .fact { grid-template-columns: 96px 1fr; }
+      footer { display: block; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      button { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div>
+        <div class="eyebrow">Bellerophon / VFX Approval Sample 01</div>
+        <h1>Fuel Tank <em>Rupture</em></h1>
+      </div>
+      <div class="status-block">
+        <small>Integration status</small>
+        <strong>사용자 승인 대기 · Unity 미적용</strong>
+      </div>
+    </header>
+
+    <section class="lead" aria-labelledby="sample-summary">
+      <p id="sample-summary">바닥에 설치된 미니 화염방사기 연료탱크가 파열되는 순간을 위한 동적 VFX 시안입니다. 승인된 머스켓 발사 계열의 짧고 강한 백열 플래시와 빠르게 주도권을 넘겨받는 짙은 화약 연기를 시각 기준으로 삼되, 총구 방향의 원뿔이 아니라 탱크 중심에서 360도로 갈라지는 황금·주황 화염과 압력파로 확장했습니다. 시각 범위는 수평과 상방이 같은 구형 반경이며 원격 폭파는 6m, 자폭은 15m 높이까지 전개됩니다. 거리 원·상반구·눈금은 효과가 아니라 범위를 확인하기 위한 검토용 안내선입니다.</p>
+      <div class="lead-note"><strong>구현 방식 고정: 폭발 본체는 메시를 사용하지 않습니다.</strong><br>백열 코어·화염·압력파·불티·연기·잔불은 Unity Particle System 또는 VFX Graph의 파티클 효과로만 구성합니다. 메시 사용은 폭발로 튀는 작은 금속 파편에만 허용합니다.</div>
+    </section>
+
+    <section class="console" aria-label="연료탱크 폭발 동적 미리보기">
+      <div class="stage-head">
+        <span>VFX simulation viewport / scale reference enabled</span>
+        <span class="live">procedural preview</span>
+      </div>
+      <div class="stage-wrap" id="stageWrap">
+        <canvas id="fxCanvas" aria-label="연료탱크에서 수평과 상방으로 같은 반경만큼 퍼지는 구형 화염과 압력파 애니메이션"></canvas>
+        <div class="hud" aria-hidden="true">
+          <div class="mode-readout">
+            <strong id="modeTitle">REMOTE / 6M</strong>
+            <span id="modeSubtitle">Q 입력 즉시 기폭</span>
+          </div>
+          <div class="phase-readout" id="phaseReadout">대기</div>
+          <div class="range-readout">
+            <b id="rangeValue">R 6M</b>
+            <span>수평·상방 동일 반경 · 검토용 표시</span>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="segmented" role="group" aria-label="폭발 모드">
+          <button type="button" id="remoteMode" aria-pressed="true">원격 폭파 6m</button>
+          <button type="button" id="selfMode" aria-pressed="false">자폭 15m</button>
+        </div>
+        <div class="transport">
+          <button type="button" id="playPause">일시정지</button>
+          <button type="button" id="restart">다시 보기</button>
+        </div>
+        <label class="timeline">
+          <span class="timeline-meta"><span id="timeLabel">00.00 s</span><span id="durationLabel">01.80 s</span></span>
+          <input id="scrubber" type="range" min="0" max="1000" value="0" aria-label="효과 시간 이동">
+        </label>
+        <label class="loop-check"><input id="loopToggle" type="checkbox" checked> 반복 재생</label>
+      </div>
+    </section>
+
+    <section class="render-checks" aria-label="머스켓 기준과 수평·상방 반경을 표시한 모드별 동적 렌더 직접 비교">
+      <figure>
+        <img src="../musket_muzzle_flash/renders/01_volumetric_multiview.png" alt="백열 점화와 황금색 화염 뒤로 짙은 화약 연기가 팽창하는 승인된 머스켓 발사 이펙트 기준 이미지">
+        <figcaption><strong>시각 기준 · 머스켓 발사 계열</strong><br>짧은 백열 플래시, 황금·주황 고온부, 빠르게 커지는 짙은 화약 연기의 재질과 시간 리듬을 참조합니다.</figcaption>
+      </figure>
+      <figure>
+        <img src="preview_dynamic_remote_6m.png" alt="탱크 중심에서 수평과 상방 6m까지 팽창하는 원격 폭파 동적 렌더 대표 프레임">
+        <figcaption><strong>원격 폭파 · 수평/상방 6m</strong><br>백열 중심에서 시작한 화염·연기가 상반구 상단까지 연결되는 최대 체적 구간입니다.</figcaption>
+      </figure>
+      <figure>
+        <img src="preview_dynamic_self_15m.png" alt="탱크 중심에서 수평과 상방 15m까지 강화되어 팽창하는 내구도 0 자폭 동적 렌더 대표 프레임">
+        <figcaption><strong>내구도 0 자폭 · 수평/상방 15m</strong><br>4초 지연 뒤 강화된 화염·연기가 15m 상반구 상단까지 전개되는 최대 체적 구간입니다.</figcaption>
+      </figure>
+    </section>
+
+    <section class="spec-grid" aria-label="현재 모드 기획 수치">
+      <article class="spec">
+        <span class="micro-label">Damage radius</span>
+        <strong class="number" id="specRadius">6<i> m</i></strong>
+        <p>탱크 중심 기준 수평·상방 동일</p>
+      </article>
+      <article class="spec">
+        <span class="micro-label">Base damage</span>
+        <strong class="number" id="specDamage">300</strong>
+        <p id="damageNote">피아식별 없이 동일 범위 판정</p>
+      </article>
+      <article class="spec">
+        <span class="micro-label">Player penalty</span>
+        <strong class="number" id="specPlayer">−70<i>% HP</i></strong>
+        <p>보호막 피해 2배 적용</p>
+      </article>
+      <article class="spec">
+        <span class="micro-label">Detonation delay</span>
+        <strong class="number" id="specDelay">0<i> s</i></strong>
+        <p id="delayNote">Q 입력 시 즉시 폭파</p>
+      </article>
+    </section>
+
+    <section class="sections">
+      <article class="sheet">
+        <span class="micro-label">Visual construction</span>
+        <h2>폭발 레이어 구성</h2>
+        <ol class="layer-list">
+          <li><span><strong>머스켓 계열 백열 점화 코어 · 이펙트</strong><br>탱크 두 연료통 사이에서 0.3초 이내로 번쩍이고 사라지는 짧고 강한 파티클 섬광. 폭발 코어 메시를 만들지 않음</span></li>
+          <li><span><strong>구형 방사 화염 갈래 · 이펙트</strong><br>머스켓의 뾰족한 황금·주황 플래시 실루엣을 탱크 중심에서 수평·상방 동일 반경으로 확장한 파티클 갈래. 방향성 총구 원뿔을 그대로 복사하지 않음</span></li>
+          <li><span><strong>압력파와 열 왜곡 · 이펙트</strong><br>파티클 링과 왜곡 효과로 피해 반경까지 전개. 원형 충격파 메시 사용 금지</span></li>
+          <li><span><strong>불티 · 이펙트 / 금속 파편 · 메시 허용</strong><br>불티는 파티클로 처리하고, 폭발로 튀는 작은 금속 파편에만 개별 소형 메시 사용 허용</span></li>
+          <li><span><strong>짙은 화약 연기 난류 · 이펙트</strong><br>섬광 직후부터 서로 겹친 회갈색·암회색 빌보드가 덩어리로 팽창하는 머스켓 계열 연기. 고립된 검은 구체처럼 보이지 않도록 연속 난류로 구성</span></li>
+          <li><span><strong>지면 잔불 · 이펙트</strong><br>폭심 주변에 짧게 남는 낮은 파티클 화염과 불씨로 폭발 종료를 연결</span></li>
+        </ol>
+      </article>
+
+      <aside class="sheet">
+        <span class="micro-label">Source / proposal boundary</span>
+        <h2>기획 근거와 생성 범위</h2>
+        <dl class="facts">
+          <div class="fact"><dt>원본 근거</dt><dd><strong>docs/GAME_DESIGN_SOURCE.txt 151행·156행</strong></dd></div>
+          <div class="fact"><dt>원격 폭파</dt><dd>반경 6m, 피해 300, 피아식별 없음, 사용자 체력 70% 감소</dd></div>
+          <div class="fact"><dt>내구도 자폭</dt><dd>활성화 4초 뒤 반경 15m, 피해 500, 사용자 체력 90% 감소</dd></div>
+          <div class="fact"><dt>공통 판정</dt><dd>사용자가 보호막으로 피격되면 피해를 2배로 적용</dd></div>
+          <div class="fact"><dt>상방 범위</dt><dd>수평 반경과 동일 — 원격 6m, 내구도 자폭 15m 높이까지 전개</dd></div>
+          <div class="fact"><dt>시각 기준</dt><dd><strong>artSample/musket_muzzle_flash</strong>의 승인된 백열 플래시·황금 화염·짙은 화약 연기 계열</dd></div>
+          <div class="fact"><dt>시각 제안</dt><dd>1.8초 효과 길이, 360도 방사 전개, 입자 수, 화염·연기 비율과 압력파 형태는 본 샘플에서 생성</dd></div>
+          <div class="fact"><dt>폭발 본체</dt><dd><strong>메시 사용 금지</strong> — Particle System 또는 VFX Graph의 파티클·빌보드·노이즈 효과로만 구성</dd></div>
+          <div class="fact"><dt>메시 예외</dt><dd>폭발로 튀는 작은 금속 파편만 허용. 파편 메시가 화염·연기·압력파를 대신할 수 없음</dd></div>
+          <div class="fact"><dt>모델 범위</dt><dd>화면의 탱크는 폭심 위치를 알리는 단순 대리 실루엣이며 모델 디자인 기준이 아님</dd></div>
+          <div class="fact"><dt>Unity 상태</dt><dd><strong>미적용</strong> — 사용자 승인 전 씬·프리팹·런타임 자산에 연결하지 않음</dd></div>
+        </dl>
+        <div class="warning"><strong>이펙트 전용 구현 기준</strong><br>점선 피해 반경, 바닥 거리 눈금, 모드명, 수치 HUD는 실제 게임 이펙트에 포함하지 않습니다. 폭발 본체는 임포트 메시, 생성 메시, MeshRenderer, SkinnedMeshRenderer 또는 VFX Graph의 Mesh Output을 사용하지 않습니다. 작은 금속 파편만 메시 예외입니다.</div>
+        <a class="asset-link" href="SPEC.json">구조화된 수치·생성 범위 열기</a>
+      </aside>
+    </section>
+
+    <footer>
+      <span>Bellerophon art sample / flamethrower tank explosion</span>
+      <span>Generated preview · no Unity asset modified</span>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById('fxCanvas');
+      const wrap = document.getElementById('stageWrap');
+      const ctx = canvas.getContext('2d');
+      const remoteButton = document.getElementById('remoteMode');
+      const selfButton = document.getElementById('selfMode');
+      const playPause = document.getElementById('playPause');
+      const restart = document.getElementById('restart');
+      const scrubber = document.getElementById('scrubber');
+      const loopToggle = document.getElementById('loopToggle');
+      const timeLabel = document.getElementById('timeLabel');
+      const durationLabel = document.getElementById('durationLabel');
+      const phaseReadout = document.getElementById('phaseReadout');
+      const modeTitle = document.getElementById('modeTitle');
+      const modeSubtitle = document.getElementById('modeSubtitle');
+      const rangeValue = document.getElementById('rangeValue');
+      const specRadius = document.getElementById('specRadius');
+      const specDamage = document.getElementById('specDamage');
+      const specPlayer = document.getElementById('specPlayer');
+      const specDelay = document.getElementById('specDelay');
+      const damageNote = document.getElementById('damageNote');
+      const delayNote = document.getElementById('delayNote');
+
+      const modes = {
+        remote: {
+          label: 'REMOTE / 6M', subtitle: 'Q 입력 즉시 기폭', radius: 6, damage: 300,
+          player: 70, delay: 0, total: 1.8, seed: 71931, intensity: 1,
+          damageNote: '피아식별 없이 동일 범위 판정', delayNote: 'Q 입력 시 즉시 폭파'
+        },
+        self: {
+          label: 'RUPTURE / 15M', subtitle: '내구도 0 · 4초 후 자폭', radius: 15, damage: 500,
+          player: 90, delay: 4, total: 5.8, seed: 15004, intensity: 1.38,
+          damageNote: '대형 자폭 피해 판정', delayNote: '내구도 0 이후 기획 지연시간'
+        }
+      };
+
+      let modeKey = 'remote';
+      let mode = modes.remote;
+      let dpr = Math.min(window.devicePixelRatio || 1, 2);
+      let width = 1280;
+      let height = 700;
+      let elapsed = 0;
+      let playing = true;
+      let lastTime = performance.now();
+      let seeking = false;
+      let particles = null;
+
+      function mulberry32(seed) {
+        return function() {
+          let t = seed += 0x6D2B79F5;
+          t = Math.imul(t ^ t >>> 15, t | 1);
+          t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+          return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+      }
+
+      function lerp(a, b, t) { return a + (b - a) * t; }
+      function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
+      function easeOutCubic(t) { return 1 - Math.pow(1 - clamp(t, 0, 1), 3); }
+      function easeOutExpo(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * clamp(t, 0, 1)); }
+      function smoothstep(a, b, value) {
+        const t = clamp((value - a) / (b - a), 0, 1);
+        return t * t * (3 - 2 * t);
+      }
+
+      function buildParticles() {
+        const rand = mulberry32(mode.seed);
+        const flameCount = modeKey === 'self' ? 108 : 84;
+        const smokeCount = modeKey === 'self' ? 150 : 110;
+        const sparkCount = modeKey === 'self' ? 132 : 96;
+        const flame = [];
+        const smoke = [];
+        const sparks = [];
+        const debris = [];
+        const ground = [];
+
+        for (let i = 0; i < flameCount; i++) {
+          const angle = rand() * Math.PI * 2;
+          const verticalSpread = .62 + rand() * .38;
+          flame.push({
+            angle,
+            start: rand() * .07,
+            life: .24 + rand() * .30,
+            distance: (.10 + Math.pow(rand(), .66) * .54) * mode.radius,
+            rise: (.30 + rand() * .85) * mode.radius * verticalSpread,
+            size: (.035 + rand() * .075) * mode.radius,
+            squash: .72 + rand() * .55,
+            wobble: rand() * 6.283,
+            hot: rand(),
+            branch: rand() < .23 ? 1.35 : 1
+          });
+        }
+
+        for (let i = 0; i < smokeCount; i++) {
+          const angle = rand() * Math.PI * 2;
+          smoke.push({
+            angle,
+            start: .05 + rand() * .11,
+            life: .88 + rand() * .58,
+            distance: (.04 + rand() * .38) * mode.radius,
+            rise: (.28 + rand() * .82) * mode.radius,
+            size: (.065 + rand() * .105) * mode.radius,
+            drift: (rand() - .5) * .55,
+            tone: rand()
+          });
+        }
+
+        for (let i = 0; i < sparkCount; i++) {
+          const angle = rand() * Math.PI * 2;
+          sparks.push({
+            angle,
+            start: .025 + rand() * .13,
+            life: .38 + rand() * .72,
+            distance: (.28 + rand() * .82) * mode.radius,
+            lift: (.18 + rand() * .88) * mode.radius,
+            length: 6 + rand() * 24,
+            bright: rand() > .2
+          });
+        }
+
+        for (let i = 0; i < 22; i++) {
+          debris.push({
+            angle: rand() * Math.PI * 2,
+            start: .06 + rand() * .12,
+            life: .9 + rand() * .9,
+            distance: (.18 + rand() * .54) * mode.radius,
+            lift: (.20 + rand() * .82) * mode.radius,
+            spin: (rand() - .5) * 14,
+            size: 2 + rand() * 5
+          });
+        }
+
+        for (let i = 0; i < 18; i++) {
+          ground.push({
+            angle: rand() * Math.PI * 2,
+            distance: (.08 + rand() * .5) * mode.radius,
+            start: .32 + rand() * .34,
+            life: .55 + rand() * .78,
+            size: (.014 + rand() * .032) * mode.radius,
+            phase: rand() * 6.283
+          });
+        }
+
+        particles = { flame, smoke, sparks, debris, ground };
+      }
+
+      function resize() {
+        const rect = wrap.getBoundingClientRect();
+        width = Math.max(320, rect.width);
+        height = Math.max(320, rect.height);
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function projection() {
+        const isPortrait = height > width;
+        const centerX = width * .5;
+        const floorY = height * (isPortrait ? .64 : .67);
+        const rangePx = Math.min(width * (isPortrait ? .44 : .40), height * .44);
+        return { centerX, floorY, topY: floorY - rangePx, rangePx, meterPx: rangePx / mode.radius, isPortrait };
+      }
+
+      function drawBackdrop(p) {
+        const bg = ctx.createLinearGradient(0, 0, 0, height);
+        bg.addColorStop(0, '#172127');
+        bg.addColorStop(.58, '#0e1519');
+        bg.addColorStop(.585, '#182025');
+        bg.addColorStop(1, '#070a0c');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, width, height);
+
+        const glow = ctx.createRadialGradient(p.centerX, p.floorY * .62, 0, p.centerX, p.floorY * .62, width * .56);
+        glow.addColorStop(0, 'rgba(76,111,126,.16)');
+        glow.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.save();
+        ctx.strokeStyle = 'rgba(128,151,159,.14)';
+        ctx.lineWidth = 1;
+        for (let i = -8; i <= 8; i++) {
+          const x = p.centerX + i * width * .08;
+          ctx.beginPath();
+          ctx.moveTo(p.centerX + (x - p.centerX) * .18, p.floorY);
+          ctx.lineTo(x, height);
+          ctx.stroke();
+        }
+        for (let i = 0; i < 9; i++) {
+          const q = i / 8;
+          const y = lerp(p.floorY + 5, height + 20, q * q);
+          ctx.globalAlpha = .18 + q * .35;
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(width, y);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        ctx.save();
+        ctx.translate(p.centerX, p.floorY);
+        ctx.setLineDash([9, 8]);
+        ctx.strokeStyle = modeKey === 'self' ? 'rgba(255,75,50,.62)' : 'rgba(255,176,0,.58)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, p.rangePx, p.rangePx * .275, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        const step = modeKey === 'self' ? 5 : 1;
+        ctx.font = '11px Bahnschrift Condensed, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        for (let m = step; m <= mode.radius; m += step) {
+          const r = m * p.meterPx;
+          ctx.strokeStyle = 'rgba(171,190,197,.12)';
+          ctx.beginPath();
+          ctx.ellipse(0, 0, r, r * .275, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.fillStyle = 'rgba(203,213,216,.64)';
+          ctx.fillText(`${m}m`, r, 7);
+          ctx.fillText(`${m}m`, -r, 7);
+        }
+
+        ctx.setLineDash([7, 7]);
+        ctx.strokeStyle = modeKey === 'self' ? 'rgba(255,107,83,.34)' : 'rgba(255,193,76,.34)';
+        ctx.lineWidth = 1.25;
+        ctx.beginPath();
+        ctx.arc(0, 0, p.rangePx, Math.PI, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.setLineDash([3, 7]);
+        ctx.strokeStyle = 'rgba(178,200,207,.28)';
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, -p.rangePx);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.textAlign = 'left';
+        for (let m = step; m <= mode.radius; m += step) {
+          const y = -m * p.meterPx;
+          ctx.strokeStyle = 'rgba(178,200,207,.34)';
+          ctx.beginPath();
+          ctx.moveTo(-5, y);
+          ctx.lineTo(5, y);
+          ctx.stroke();
+          ctx.fillStyle = 'rgba(218,226,228,.72)';
+          ctx.fillText(`${m}m`, 9, y);
+        }
+        ctx.textAlign = 'center';
+        ctx.fillStyle = modeKey === 'self' ? 'rgba(255,137,113,.82)' : 'rgba(255,207,108,.82)';
+        ctx.fillText(`UP ${mode.radius}m`, 0, -p.rangePx - 15);
+        ctx.restore();
+      }
+
+      function drawTank(p, alpha = 1, warningPulse = 0) {
+        const scale = clamp(p.meterPx * .72, 18, 72);
+        ctx.save();
+        ctx.translate(p.centerX, p.floorY - scale * .38);
+        ctx.globalAlpha = alpha;
+
+        if (warningPulse > 0) {
+          const warning = ctx.createRadialGradient(0, 0, 0, 0, 0, scale * (1.5 + warningPulse));
+          warning.addColorStop(0, `rgba(255,54,28,${.26 * warningPulse})`);
+          warning.addColorStop(1, 'rgba(255,54,28,0)');
+          ctx.fillStyle = warning;
+          ctx.beginPath();
+          ctx.arc(0, 0, scale * (1.5 + warningPulse), 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.strokeStyle = '#4e626a';
+        ctx.lineWidth = Math.max(2, scale * .055);
+        ctx.fillStyle = '#182127';
+        ctx.beginPath();
+        ctx.roundRect(-scale * .62, -scale * .68, scale * 1.24, scale * 1.18, scale * .12);
+        ctx.fill();
+        ctx.stroke();
+
+        [-.28, .28].forEach((offset, index) => {
+          const tankGradient = ctx.createLinearGradient(offset * scale - scale * .22, 0, offset * scale + scale * .22, 0);
+          tankGradient.addColorStop(0, '#202a30');
+          tankGradient.addColorStop(.45, index ? '#53646a' : '#485a61');
+          tankGradient.addColorStop(.72, '#222d33');
+          tankGradient.addColorStop(1, '#11171b');
+          ctx.fillStyle = tankGradient;
+          ctx.strokeStyle = '#697980';
+          ctx.lineWidth = Math.max(1.5, scale * .035);
+          ctx.beginPath();
+          ctx.roundRect((offset - .22) * scale, -scale * .58, scale * .44, scale * .98, scale * .2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = '#27bad2';
+          ctx.fillRect((offset - .13) * scale, -scale * .04, scale * .26, scale * .055);
+        });
+
+        ctx.fillStyle = '#101519';
+        ctx.fillRect(-scale * .72, -scale * .16, scale * 1.44, scale * .14);
+        ctx.strokeStyle = '#64747b';
+        ctx.beginPath();
+        ctx.moveTo(-scale * .48, -scale * .68);
+        ctx.lineTo(-scale * .48, -scale * .9);
+        ctx.lineTo(scale * .38, -scale * .9);
+        ctx.lineTo(scale * .38, -scale * .68);
+        ctx.stroke();
+        ctx.fillStyle = warningPulse > .5 ? '#ff542d' : '#9eb0b5';
+        ctx.beginPath();
+        ctx.arc(0, -scale * .86, scale * .07, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        ctx.save();
+        ctx.translate(p.centerX, p.floorY + 2);
+        ctx.scale(1, .24);
+        const shadow = ctx.createRadialGradient(0, 0, 0, 0, 0, scale * 1.15);
+        shadow.addColorStop(0, `rgba(0,0,0,${.62 * alpha})`);
+        shadow.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = shadow;
+        ctx.beginPath();
+        ctx.arc(0, 0, scale * 1.15, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawFlash(p, effectTime) {
+        if (effectTime < 0 || effectTime > .30) return;
+        const expansion = easeOutExpo(effectTime / .30);
+        const fade = 1 - smoothstep(.055, .30, effectTime);
+        const coreRadius = p.rangePx * lerp(.018, .19, expansion) * mode.intensity;
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        const flash = ctx.createRadialGradient(p.centerX, p.floorY - coreRadius * .12, 0, p.centerX, p.floorY - coreRadius * .12, coreRadius);
+        flash.addColorStop(0, `rgba(255,255,236,${.98 * fade})`);
+        flash.addColorStop(.16, `rgba(255,240,122,${.95 * fade})`);
+        flash.addColorStop(.46, `rgba(255,143,13,${.7 * fade})`);
+        flash.addColorStop(1, 'rgba(255,53,0,0)');
+        ctx.fillStyle = flash;
+        ctx.beginPath();
+        ctx.arc(p.centerX, p.floorY - coreRadius * .12, coreRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.translate(p.centerX, p.floorY - coreRadius * .1);
+        ctx.rotate(effectTime * 1.8);
+        ctx.strokeStyle = `rgba(255,237,163,${fade * .84})`;
+        for (let i = 0; i < 14; i++) {
+          const a = i / 14 * Math.PI * 2;
+          const inner = coreRadius * (.12 + (i % 3) * .03);
+          const outer = coreRadius * (.50 + (i % 5) * .07);
+          ctx.lineWidth = i % 4 === 0 ? 1.8 : .75;
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(a) * inner, Math.sin(a) * inner);
+          ctx.lineTo(Math.cos(a) * outer, Math.sin(a) * outer);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      function drawRadialMuzzlePetals(p, effectTime) {
+        if (effectTime < .018 || effectTime > .18) return;
+        const age = (effectTime - .018) / .162;
+        const open = easeOutExpo(clamp(age * 1.7, 0, 1));
+        const fade = 1 - smoothstep(.28, 1, age);
+        const originY = p.floorY - p.rangePx * .018;
+        const petalAngles = [.05, .57, 1.18, 1.83, 2.64, 3.31, 4.10, 4.74, 5.61];
+
+        ctx.save();
+        ctx.translate(p.centerX, originY);
+        ctx.globalCompositeOperation = 'lighter';
+        for (let i = 0; i < petalAngles.length; i++) {
+          const angle = petalAngles[i];
+          const lengthFactor = .62 + ((i * 37) % 11) / 16;
+          const length = p.rangePx * (.05 + .235 * open) * lengthFactor * mode.intensity;
+          const halfWidth = length * (.13 + (i % 4) * .022);
+          const inner = p.rangePx * (.018 + (i % 3) * .004);
+          const gradient = ctx.createLinearGradient(
+            Math.cos(angle) * inner,
+            Math.sin(angle) * inner,
+            Math.cos(angle) * length,
+            Math.sin(angle) * length
+          );
+          gradient.addColorStop(0, `rgba(255,255,226,${.82 * fade})`);
+          gradient.addColorStop(.19, `rgba(255,226,81,${.78 * fade})`);
+          gradient.addColorStop(.58, `rgba(255,128,10,${.58 * fade})`);
+          gradient.addColorStop(1, 'rgba(190,40,2,0)');
+          ctx.fillStyle = gradient;
+          const tipX = Math.cos(angle) * length;
+          const tipY = Math.sin(angle) * length;
+          const leftControlX = Math.cos(angle) * length * .46 - Math.sin(angle) * halfWidth;
+          const leftControlY = Math.sin(angle) * length * .46 + Math.cos(angle) * halfWidth * .52;
+          const rightControlX = Math.cos(angle) * length * .48 + Math.sin(angle) * halfWidth;
+          const rightControlY = Math.sin(angle) * length * .48 - Math.cos(angle) * halfWidth * .52;
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(angle) * inner, Math.sin(angle) * inner);
+          ctx.quadraticCurveTo(leftControlX, leftControlY, tipX, tipY);
+          ctx.quadraticCurveTo(rightControlX, rightControlY, Math.cos(angle) * inner, Math.sin(angle) * inner);
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      function drawFireballBody(p, effectTime) {
+        if (effectTime < .035 || effectTime > .64) return;
+        const age = (effectTime - .035) / .605;
+        const spread = easeOutCubic(clamp(age * 1.8, 0, 1));
+        const appear = smoothstep(0, .08, age);
+        const fade = 1 - smoothstep(.48, 1, age);
+        const baseRadius = p.rangePx * (.10 + spread * .46);
+        const centerY = p.floorY - baseRadius * .72;
+
+        const shells = [
+          { scale: 1, alpha: .28, hot: false, seed: 1.1, lift: .02 },
+          { scale: .72, alpha: .38, hot: false, seed: 2.8, lift: .08 },
+          { scale: .46, alpha: .52, hot: true, seed: 4.7, lift: .12 }
+        ];
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'source-over';
+        for (const shell of shells) {
+          const radiusX = baseRadius * shell.scale;
+          const radiusY = radiusX * (1.02 + shell.lift);
+          const y = centerY - baseRadius * shell.lift;
+          const alpha = shell.alpha * appear * fade;
+          const gradient = ctx.createRadialGradient(
+            p.centerX - radiusX * .12,
+            y - radiusY * .12,
+            radiusX * .04,
+            p.centerX,
+            y,
+            radiusX
+          );
+          gradient.addColorStop(0, `rgba(255,245,137,${alpha})`);
+          gradient.addColorStop(shell.hot ? .22 : .13, `rgba(255,197,24,${alpha * .98})`);
+          gradient.addColorStop(.52, `rgba(255,91,4,${alpha * .92})`);
+          gradient.addColorStop(.78, `rgba(190,30,4,${alpha * .72})`);
+          gradient.addColorStop(1, 'rgba(101,13,4,0)');
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          const points = 34;
+          for (let i = 0; i <= points; i++) {
+            const a = i / points * Math.PI * 2;
+            const roughness = 1
+              + Math.sin(a * 5 + shell.seed + effectTime * 1.9) * .10
+              + Math.sin(a * 9 - shell.seed * 1.7) * .055
+              + Math.cos(a * 13 + shell.seed) * .025;
+            const x = p.centerX + Math.cos(a) * radiusX * roughness;
+            const py = y + Math.sin(a) * radiusY * roughness;
+            if (i === 0) ctx.moveTo(x, py); else ctx.lineTo(x, py);
+          }
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      function drawFlameLobes(p, effectTime) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        for (const f of particles.flame) {
+          const age = (effectTime - f.start) / f.life;
+          if (age <= 0 || age >= 1) continue;
+          const move = easeOutCubic(age);
+          const fadeIn = smoothstep(0, .09, age);
+          const fadeOut = 1 - smoothstep(.58, 1, age);
+          const radial = f.distance * p.meterPx * move;
+          const x = p.centerX + Math.cos(f.angle) * radial + Math.sin(age * 8 + f.wobble) * 5;
+          const groundDepth = Math.sin(f.angle) * radial * .26;
+          const y = p.floorY + groundDepth - f.rise * p.meterPx * Math.sin(Math.PI * clamp(age * 1.08, 0, 1));
+          const radius = f.size * p.meterPx * (0.34 + Math.sin(Math.PI * age) * .9) * f.branch;
+          const alpha = fadeIn * fadeOut * (.34 + f.hot * .20);
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.rotate(f.angle + Math.sin(f.wobble) * .10);
+          ctx.scale(1.15 + f.squash * .24, .64 + f.squash * .12);
+          const gradient = ctx.createRadialGradient(-radius * .18, -radius * .16, radius * .03, 0, 0, radius);
+          gradient.addColorStop(0, `rgba(255,246,148,${alpha})`);
+          gradient.addColorStop(.18, `rgba(255,205,39,${alpha * .98})`);
+          gradient.addColorStop(.5, `rgba(255,94,4,${alpha * .9})`);
+          gradient.addColorStop(.78, `rgba(199,31,4,${alpha * .72})`);
+          gradient.addColorStop(1, 'rgba(103,16,5,0)');
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(0, 0, radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+        ctx.restore();
+      }
+
+      function drawShockwave(p, effectTime) {
+        if (effectTime < .04 || effectTime > .56) return;
+        const age = (effectTime - .04) / .52;
+        const radius = p.rangePx * easeOutExpo(age);
+        const alpha = (1 - age) * .72;
+
+        ctx.save();
+        ctx.translate(p.centerX, p.floorY);
+        ctx.scale(1, .275);
+        ctx.globalCompositeOperation = 'lighter';
+        const ring = ctx.createRadialGradient(0, 0, Math.max(0, radius - 11), 0, 0, radius + 6);
+        ring.addColorStop(0, 'rgba(255,104,12,0)');
+        ring.addColorStop(.46, `rgba(255,154,37,${alpha * .38})`);
+        ring.addColorStop(.63, `rgba(255,244,188,${alpha})`);
+        ring.addColorStop(.78, `rgba(255,109,20,${alpha * .42})`);
+        ring.addColorStop(1, 'rgba(255,85,10,0)');
+        ctx.fillStyle = ring;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius + 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        if (effectTime < .40) {
+          const heatAge = (effectTime - .04) / .36;
+          ctx.save();
+          ctx.strokeStyle = `rgba(190,234,242,${(1 - heatAge) * .24})`;
+          ctx.lineWidth = 2 + heatAge * 5;
+          ctx.beginPath();
+          ctx.arc(p.centerX, p.floorY - radius * .12, radius * .62, Math.PI * 1.07, Math.PI * 1.93);
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+
+      function drawSparksAndDebris(p, effectTime) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        for (const s of particles.sparks) {
+          const age = (effectTime - s.start) / s.life;
+          if (age <= 0 || age >= 1) continue;
+          const dist = s.distance * p.meterPx * easeOutCubic(age);
+          const fall = Math.pow(age, 2) * s.lift * p.meterPx * .72;
+          const rise = Math.sin(Math.PI * age) * s.lift * p.meterPx;
+          const x = p.centerX + Math.cos(s.angle) * dist;
+          const y = p.floorY + Math.sin(s.angle) * dist * .25 - rise + fall;
+          const vx = Math.cos(s.angle) * s.length * (1 - age);
+          const vy = (Math.sin(s.angle) * .2 - .55 + age) * s.length * (1 - age);
+          ctx.strokeStyle = s.bright ? `rgba(255,224,91,${1 - age})` : `rgba(255,90,12,${(1 - age) * .8})`;
+          ctx.lineWidth = s.bright ? 1.4 : .8;
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x - vx, y - vy);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        ctx.save();
+        for (const d of particles.debris) {
+          const age = (effectTime - d.start) / d.life;
+          if (age <= 0 || age >= 1) continue;
+          const dist = d.distance * p.meterPx * easeOutCubic(age);
+          const rise = Math.sin(Math.PI * age) * d.lift * p.meterPx;
+          const x = p.centerX + Math.cos(d.angle) * dist;
+          const y = p.floorY + Math.sin(d.angle) * dist * .26 - rise;
+          ctx.translate(x, y);
+          ctx.rotate(d.spin * age);
+          ctx.fillStyle = `rgba(58,71,75,${1 - smoothstep(.68, 1, age)})`;
+          ctx.fillRect(-d.size, -d.size * .45, d.size * 2, d.size * .9);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        ctx.restore();
+      }
+
+      function drawSmokeBody(p, effectTime) {
+        if (effectTime < .10 || effectTime > 1.72) return;
+        const age = (effectTime - .10) / 1.62;
+        const grow = easeOutCubic(clamp(age * 1.55, 0, 1));
+        const appear = smoothstep(0, .09, age);
+        const fade = 1 - smoothstep(.68, 1, age);
+        const baseRadius = p.rangePx * (.08 + grow * .52);
+        const centerY = p.floorY - baseRadius * (.52 + age * .22);
+        const shells = [
+          { scale: 1, x: -.05, y: .02, alpha: .78, seed: 1.7 },
+          { scale: .82, x: .12, y: -.16, alpha: .65, seed: 3.9 },
+          { scale: .62, x: -.16, y: -.58, alpha: .54, seed: 6.2 }
+        ];
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.filter = 'blur(2px)';
+        for (const shell of shells) {
+          const radiusX = baseRadius * shell.scale * 1.13;
+          const radiusY = baseRadius * shell.scale * .98;
+          const x = p.centerX + baseRadius * shell.x;
+          const y = centerY + baseRadius * shell.y;
+          const alpha = shell.alpha * appear * fade;
+          const gradient = ctx.createRadialGradient(
+            x - radiusX * .16,
+            y - radiusY * .18,
+            radiusX * .04,
+            x,
+            y,
+            radiusX
+          );
+          gradient.addColorStop(0, `rgba(128,96,69,${alpha * .92})`);
+          gradient.addColorStop(.28, `rgba(89,85,79,${alpha})`);
+          gradient.addColorStop(.66, `rgba(53,59,59,${alpha * .96})`);
+          gradient.addColorStop(1, 'rgba(17,21,22,0)');
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          const points = 44;
+          for (let i = 0; i <= points; i++) {
+            const a = i / points * Math.PI * 2;
+            const roughness = 1
+              + Math.sin(a * 5 + shell.seed + effectTime * .72) * .13
+              + Math.sin(a * 9 - shell.seed * 1.3) * .075
+              + Math.cos(a * 14 + shell.seed * .6) * .035;
+            const px = x + Math.cos(a) * radiusX * roughness;
+            const py = y + Math.sin(a) * radiusY * roughness;
+            if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      function drawSmoke(p, effectTime) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.filter = 'blur(3px)';
+        for (const s of particles.smoke) {
+          const age = (effectTime - s.start) / s.life;
+          if (age <= 0 || age >= 1) continue;
+          const move = easeOutCubic(age);
+          const radial = s.distance * p.meterPx * move;
+          const x = p.centerX + Math.cos(s.angle) * radial + s.drift * age * p.meterPx;
+          const y = p.floorY - p.rangePx * (.10 + age * .10) + Math.sin(s.angle) * radial * .20 - s.rise * p.meterPx * move * .64;
+          const size = s.size * p.meterPx * (.46 + age * 1.02);
+          const alpha = smoothstep(0, .08, age) * (1 - smoothstep(.66, 1, age)) * (.26 + s.tone * .14);
+          const smoke = ctx.createRadialGradient(x - size * .2, y - size * .14, 0, x, y, size);
+          smoke.addColorStop(0, `rgba(126,96,72,${alpha * .90})`);
+          smoke.addColorStop(.30, `rgba(86,83,78,${alpha})`);
+          smoke.addColorStop(.68, `rgba(49,56,56,${alpha * .92})`);
+          smoke.addColorStop(1, 'rgba(15,18,18,0)');
+          ctx.fillStyle = smoke;
+          ctx.beginPath();
+          ctx.ellipse(x, y, size * (1.08 + s.tone * .32), size * (.68 + s.tone * .16), s.angle * .18, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      function drawGroundFire(p, effectTime) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        for (const g of particles.ground) {
+          const age = (effectTime - g.start) / g.life;
+          if (age <= 0 || age >= 1) continue;
+          const dist = g.distance * p.meterPx;
+          const x = p.centerX + Math.cos(g.angle) * dist;
+          const y = p.floorY + Math.sin(g.angle) * dist * .27;
+          const flicker = .72 + Math.sin(effectTime * 21 + g.phase) * .18;
+          const size = g.size * p.meterPx * flicker;
+          const alpha = (1 - smoothstep(.5, 1, age)) * .42;
+          const flame = ctx.createRadialGradient(x, y - size * .5, 0, x, y - size * .25, size);
+          flame.addColorStop(0, `rgba(255,241,116,${alpha})`);
+          flame.addColorStop(.45, `rgba(255,98,4,${alpha * .85})`);
+          flame.addColorStop(1, 'rgba(165,31,2,0)');
+          ctx.fillStyle = flame;
+          ctx.beginPath();
+          ctx.ellipse(x, y - size * .35, size * .34, size * .72, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      function drawCountdown(p, time) {
+        if (modeKey !== 'self' || time >= mode.delay) return;
+        const remain = mode.delay - time;
+        const pulse = .5 + .5 * Math.sin(time * Math.PI * 3.4);
+        const ringCount = 3;
+        ctx.save();
+        ctx.translate(p.centerX, p.floorY);
+        ctx.scale(1, .275);
+        for (let i = 0; i < ringCount; i++) {
+          const phase = (time * .62 + i / ringCount) % 1;
+          ctx.strokeStyle = `rgba(255,69,40,${(1 - phase) * .46})`;
+          ctx.lineWidth = 2 + (1 - phase) * 3;
+          ctx.beginPath();
+          ctx.arc(0, 0, p.rangePx * (.07 + phase * .25), 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        ctx.save();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = `rgba(255,91,54,${.78 + pulse * .22})`;
+        ctx.font = `700 ${Math.max(26, p.meterPx * .78)}px Agency FB, Bahnschrift Condensed, sans-serif`;
+        ctx.fillText(remain.toFixed(1), p.centerX, p.floorY - Math.max(72, p.meterPx * 1.5));
+        ctx.fillStyle = 'rgba(255,193,164,.82)';
+        ctx.font = '700 11px Bahnschrift Condensed, sans-serif';
+        ctx.letterSpacing = '2px';
+        ctx.fillText('SELF-DESTRUCT DELAY', p.centerX, p.floorY - Math.max(45, p.meterPx));
+        ctx.restore();
+      }
+
+      function render() {
+        const p = projection();
+        const effectTime = elapsed - mode.delay;
+        ctx.clearRect(0, 0, width, height);
+        drawBackdrop(p);
+
+        const warningPulse = modeKey === 'self' && elapsed < mode.delay ? .6 + .4 * Math.sin(elapsed * Math.PI * 3.4) : 0;
+        const tankAlpha = effectTime < 0 ? 1 : 1 - smoothstep(.015, .18, effectTime);
+        drawTank(p, tankAlpha, warningPulse);
+        drawCountdown(p, elapsed);
+
+        if (effectTime >= 0) {
+          drawGroundFire(p, effectTime);
+          drawSmokeBody(p, effectTime);
+          drawSmoke(p, effectTime);
+          drawFireballBody(p, effectTime);
+          drawFlameLobes(p, effectTime);
+          drawRadialMuzzlePetals(p, effectTime);
+          drawFlash(p, effectTime);
+          drawShockwave(p, effectTime);
+          drawSparksAndDebris(p, effectTime);
+        }
+
+        let phase = '대기';
+        if (modeKey === 'self' && effectTime < 0) phase = `자폭 지연 ${Math.max(0, mode.delay - elapsed).toFixed(1)}초`;
+        else if (effectTime < .12) phase = '백열 점화';
+        else if (effectTime < .34) phase = '360° 화염·압력파';
+        else if (effectTime < .88) phase = '짙은 화약 연기 팽창';
+        else if (effectTime < 1.55) phase = '연기·불티 잔류';
+        else phase = '소멸';
+        phaseReadout.textContent = phase;
+        timeLabel.textContent = `${elapsed.toFixed(2).padStart(5, '0')} s`;
+        scrubber.value = Math.round(elapsed / mode.total * 1000);
+      }
+
+      function frame(now) {
+        const delta = Math.min((now - lastTime) / 1000, .05);
+        lastTime = now;
+        if (playing && !seeking) {
+          elapsed += delta;
+          if (elapsed >= mode.total) {
+            if (loopToggle.checked) elapsed %= mode.total;
+            else { elapsed = mode.total; playing = false; playPause.textContent = '재생'; }
+          }
+        }
+        render();
+        requestAnimationFrame(frame);
+      }
+
+      function applyMode(nextMode) {
+        modeKey = nextMode;
+        mode = modes[nextMode];
+        elapsed = 0;
+        playing = true;
+        remoteButton.setAttribute('aria-pressed', String(nextMode === 'remote'));
+        selfButton.setAttribute('aria-pressed', String(nextMode === 'self'));
+        playPause.textContent = '일시정지';
+        modeTitle.textContent = mode.label;
+        modeSubtitle.textContent = mode.subtitle;
+        rangeValue.textContent = `R ${mode.radius}M`;
+        specRadius.innerHTML = `${mode.radius}<i> m</i>`;
+        specDamage.textContent = mode.damage;
+        specPlayer.innerHTML = `−${mode.player}<i>% HP</i>`;
+        specDelay.innerHTML = `${mode.delay}<i> s</i>`;
+        damageNote.textContent = mode.damageNote;
+        delayNote.textContent = mode.delayNote;
+        durationLabel.textContent = `${mode.total.toFixed(2).padStart(5, '0')} s`;
+        buildParticles();
+        render();
+      }
+
+      remoteButton.addEventListener('click', () => applyMode('remote'));
+      selfButton.addEventListener('click', () => applyMode('self'));
+      playPause.addEventListener('click', () => {
+        playing = !playing;
+        playPause.textContent = playing ? '일시정지' : '재생';
+        lastTime = performance.now();
+      });
+      restart.addEventListener('click', () => {
+        elapsed = 0;
+        playing = true;
+        playPause.textContent = '일시정지';
+        lastTime = performance.now();
+      });
+      scrubber.addEventListener('input', () => {
+        seeking = true;
+        elapsed = Number(scrubber.value) / 1000 * mode.total;
+        render();
+      });
+      scrubber.addEventListener('change', () => { seeking = false; lastTime = performance.now(); });
+      window.addEventListener('resize', () => { resize(); render(); });
+
+      const initialParams = new URLSearchParams(window.location.search);
+      const initialMode = initialParams.get('mode') === 'self' ? 'self' : 'remote';
+      if (initialParams.get('capture') === '1') document.body.classList.add('capture-mode');
+      resize();
+      applyMode(initialMode);
+
+      const requestedTime = Number(initialParams.get('time'));
+      if (initialParams.has('time') && Number.isFinite(requestedTime)) {
+        elapsed = clamp(requestedTime, 0, mode.total);
+        playing = false;
+        playPause.textContent = '재생';
+        render();
+      } else if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        playing = false;
+        elapsed = mode.delay + .62;
+        playPause.textContent = '재생';
+        render();
+      }
+
+      requestAnimationFrame(frame);
+    })();
+  </script>
+</body>
+</html>

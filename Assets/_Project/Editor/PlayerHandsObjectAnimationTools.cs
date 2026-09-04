@@ -28,6 +28,16 @@ namespace Bellerophon.Editor
         private const string StickCarryTargetName = "Stick_Carry";
         private const string MusketDrawTargetName = "Musket_Draw";
         private const string ShotgunDrawTargetName = "Shotgun_Draw";
+        private const string FlamethrowerIdleTargetName = "Flamethrower_Idle";
+        private const string FlamethrowerFireTargetName = "Flamethrower_Fire";
+        private const string FlamethrowerRemoteModeTargetName =
+            "Flamethrower_Remote_Mode";
+        private const string FlamethrowerTankPlaceTargetName =
+            "Flamethrower_Tank_Place";
+        private const string FlamethrowerTankRecoverTargetName =
+            "Flamethrower_Tank_Recover";
+        private const string FlamethrowerRemoteDetonateTargetName =
+            "Flamethrower_Remote_Detonate";
         private const string ShotgunIdleTargetName = "Shotgun_Idle";
         private const string ShotgunStowTargetName = "Shotgun_Stow";
         private const string ShotgunFireTargetName = "Shotgun_Fire";
@@ -88,6 +98,235 @@ namespace Bellerophon.Editor
             "ECAA2FCE857BD9E5275ECDDDFFA220F26C3AA802354A36C9980B51D1026A01D9";
         private const string ThrowSourceHash =
             "AF4F841C549ABFD62D5FC0E349CC744BD6A0837E578E9078F515F8A55DDB7BF5";
+        private const string MiniFlamethrowerSourceHash =
+            "04C88CCBE478FCA60DEF58EFE54ABE730356E2A01D98CB3F73A980934624FFC3";
+        private const string MiniFlamethrowerOriginalPath =
+            "item model/mini flamethrower.fbx";
+        private const string MiniFlamethrowerAssetPath =
+            "Assets/_Project/Art/Items/MiniFlamethrower/mini_flamethrower.fbx";
+        private const string MiniFlamethrowerValidationDirectory =
+            "docs/validation/player_mini_flamethrower_models_2026-09-04";
+        private const string MiniFlamethrowerInspectionPath =
+            MiniFlamethrowerValidationDirectory +
+            "/mini_flamethrower_asset_inspection.json";
+        private const string MiniFlamethrowerAssetPreviewPath =
+            MiniFlamethrowerValidationDirectory +
+            "/mini_flamethrower_asset_preview_contact_sheet.png";
+        private const string MiniFlamethrowerRigRegionPreviewPath =
+            MiniFlamethrowerValidationDirectory +
+            "/mini_flamethrower_rig_region_preview.png";
+        private const string MiniFlamethrowerTankMeshPath =
+            "Assets/_Project/Art/Items/MiniFlamethrower/mini_flamethrower_tank.asset";
+        private const string MiniFlamethrowerSprayerMeshPath =
+            "Assets/_Project/Art/Items/MiniFlamethrower/mini_flamethrower_sprayer.asset";
+        private const string MiniFlamethrowerRiggedMeshPath =
+            "Assets/_Project/Art/Items/MiniFlamethrower/mini_flamethrower_rigged.asset";
+        private const string MiniFlamethrowerMaterialFolder =
+            "Assets/_Project/Art/Items/MiniFlamethrower/Materials";
+        private const string MiniFlamethrowerTextureFolder =
+            "Assets/_Project/Art/Items/MiniFlamethrower/Textures";
+        private const string MiniFlamethrowerAutoTextureFolder =
+            "Assets/_Project/Art/Items/MiniFlamethrower/mini_flamethrower.fbm";
+        private const string MiniFlamethrowerExternalMaterialPath =
+            MiniFlamethrowerMaterialFolder + "/Material.001.mat";
+        private const string MiniFlamethrowerPackedMetallicSmoothnessPath =
+            MiniFlamethrowerTextureFolder +
+            "/mini_flamethrower_metallic_smoothness.png";
+        private const string MiniFlamethrowerApplyMetricsPath =
+            MiniFlamethrowerValidationDirectory +
+            "/mini_flamethrower_apply_metrics.json";
+        private const string MiniFlamethrowerReviewMetricsPath =
+            MiniFlamethrowerValidationDirectory +
+            "/mini_flamethrower_review_metrics.json";
+        private const string MiniFlamethrowerReviewPath =
+            MiniFlamethrowerValidationDirectory +
+            "/mini_flamethrower_playmode_contact_sheet.png";
+        private const string MiniFlamethrowerFinalPath =
+            MiniFlamethrowerValidationDirectory +
+            "/mini_flamethrower_final.png";
+        private const string FlamethrowerRemoteModeTankCarryReviewPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_remote_mode_tank_carry_review.png";
+        private static readonly Vector3
+            FlamethrowerRemoteModeTankCarrySavedLocalPosition =
+                new Vector3(
+                    -0.26830298f,
+                    1.4568014f,
+                    0.6099243f);
+        private const string FlamethrowerTankPlaceSourceHash =
+            "103F94D83084630296D4E0A1D6AB58FFE5F76E34E13B5122DFF954B23597FCD0";
+        private const string FlamethrowerTankPlaceOriginalPath =
+            "player model/transfer flame putting down.fbx";
+        private const string FlamethrowerTankPlaceSourcePath =
+            "Assets/_Project/Art/Player/Animations/Flamethrower/transfer flame putting down.fbx";
+        private const string FlamethrowerTankPlaceHoldClipPath =
+            "Assets/_Project/Art/Player/Animations/Flamethrower/Flamethrower_Tank_Place_RemoteHold.anim";
+        private const string FlamethrowerTankPlaceAdjustedClipPath =
+            "Assets/_Project/Art/Player/Animations/Flamethrower/Flamethrower_Tank_Place_SymmetricPlace.anim";
+        private const string FlamethrowerTankPlaceControllerPath =
+            "Assets/_Project/Art/Player/Animations/Flamethrower/Flamethrower_Tank_Place.controller";
+        private const string FlamethrowerTankPlaceApplyMetricsPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_tank_place_apply_metrics.json";
+        private const string FlamethrowerTankPlaceReviewMetricsPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_tank_place_review_metrics.json";
+        private const string FlamethrowerTankPlaceReviewPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_tank_place_sequence_review.png";
+        private const string FlamethrowerTankPlaceCaptureStageKey =
+            "Bellerophon.FlamethrowerTankPlace.Capture.Stage";
+        private const string FlamethrowerTankPlaceHoldStateName =
+            "FlamethrowerTankPlaceRemoteHold";
+        private const string FlamethrowerTankPlaceActionStateName =
+            "FlamethrowerTankPlaceMixamo";
+        private const float FlamethrowerTankPlaceHoldSeconds = 0.5f;
+        private const string FlamethrowerTankRecoverReverseClipPath =
+            "Assets/_Project/Art/Player/Animations/Flamethrower/Flamethrower_Tank_Recover_Reverse.anim";
+        private const string FlamethrowerTankRecoverIdleHoldClipPath =
+            "Assets/_Project/Art/Player/Animations/Flamethrower/Flamethrower_Tank_Recover_IdleHold.anim";
+        private const string FlamethrowerTankRecoverControllerPath =
+            "Assets/_Project/Art/Player/Animations/Flamethrower/Flamethrower_Tank_Recover.controller";
+        private const string FlamethrowerTankRecoverApplyMetricsPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_tank_recover_apply_metrics.json";
+        private const string FlamethrowerTankRecoverReviewMetricsPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_tank_recover_review_metrics.json";
+        private const string FlamethrowerTankRecoverReviewPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_tank_recover_sequence_review.png";
+        private const string FlamethrowerTankRecoverCaptureStageKey =
+            "Bellerophon.FlamethrowerTankRecover.Capture.Stage";
+        private const string FlamethrowerTankRecoverReverseStateName =
+            "FlamethrowerTankRecoverReversePlace";
+        private const string FlamethrowerTankRecoverIdleHoldStateName =
+            "FlamethrowerTankRecoverIdleHold";
+        // Holds the exact Flamethrower_Idle pose after the recovered rig changes anchors.
+        private const float FlamethrowerTankRecoverIdleHoldSeconds = 0.5f;
+        private const string RemoteDetonatorSourceHash =
+            "F2621A02D99DCA23954188B25DE7D5F1F396EBC3F3BAF5AB20751B6C99BC1835";
+        private const string RemoteDetonatorOriginalPath =
+            "item model/remote detonator.fbx";
+        private const string RemoteDetonatorAssetPath =
+            "Assets/_Project/Art/Items/RemoteDetonator/remote_detonator.fbx";
+        private const string FlamethrowerRemoteDetonatePreviewPath =
+            MiniFlamethrowerValidationDirectory +
+            "/remote_detonator_asset_preview.png";
+        private const string FlamethrowerRemoteDetonateClipPath =
+            "Assets/_Project/Art/Player/Animations/Flamethrower/Flamethrower_Remote_Detonate_Start.anim";
+        private const string FlamethrowerRemoteDetonateControllerPath =
+            "Assets/_Project/Art/Player/Animations/Flamethrower/Flamethrower_Remote_Detonate.controller";
+        private const string FlamethrowerRemoteDetonateApplyMetricsPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_remote_detonate_apply_metrics.json";
+        private const string FlamethrowerRemoteDetonateReviewMetricsPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_remote_detonate_review_metrics.json";
+        private const string FlamethrowerRemoteDetonateReviewPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_remote_detonate_start_review.png";
+        private const string FlamethrowerRemoteDetonateStateName =
+            "FlamethrowerRemoteDetonateStart";
+        private const string RemoteDetonatorGripRootName =
+            "RemoteDetonator_Grip";
+        private const string RemoteDetonatorOriginalInstanceName =
+            "RemoteDetonator_Original";
+        private const float FlamethrowerRemoteDetonateTankForwardMeters =
+            1f;
+        private const float FlamethrowerRemoteDetonateHandForwardMeters =
+            0.30f;
+        private const float FlamethrowerRemoteDetonateHandUpMeters = 0.20f;
+        private const string FlamethrowerAttackVfxSampleDirectory =
+            "artSample/flamethrower_attack_vfx";
+        private const string FlamethrowerAttackVfxSamplePreviewPath =
+            FlamethrowerAttackVfxSampleDirectory +
+            "/renders/06_unity_particle_flame_jet_final.png";
+        private const string FlamethrowerAttackVfxSampleMetricsPath =
+            FlamethrowerAttackVfxSampleDirectory + "/METRICS.json";
+        private const string FlamethrowerAttackVfxDirectory =
+            "Assets/_Project/Art/VFX/FlamethrowerAttack";
+        private const string FlamethrowerAttackVfxPrefabPath =
+            FlamethrowerAttackVfxDirectory + "/FlamethrowerAttackVfx.prefab";
+        private const string FlamethrowerAttackVfxFlameTexturePath =
+            FlamethrowerAttackVfxDirectory + "/FlamethrowerFlameTurbulence.asset";
+        private const string FlamethrowerAttackVfxSmokeTexturePath =
+            FlamethrowerAttackVfxDirectory + "/FlamethrowerSmokeTurbulence.asset";
+        private const string FlamethrowerAttackVfxCoreMaterialPath =
+            FlamethrowerAttackVfxDirectory + "/FlamethrowerCore.mat";
+        private const string FlamethrowerAttackVfxBodyMaterialPath =
+            FlamethrowerAttackVfxDirectory + "/FlamethrowerBody.mat";
+        private const string FlamethrowerAttackVfxOuterMaterialPath =
+            FlamethrowerAttackVfxDirectory + "/FlamethrowerOuter.mat";
+        private const string FlamethrowerAttackVfxCrownMaterialPath =
+            FlamethrowerAttackVfxDirectory + "/FlamethrowerCrown.mat";
+        private const string FlamethrowerAttackVfxSmokeMaterialPath =
+            FlamethrowerAttackVfxDirectory + "/FlamethrowerSmoke.mat";
+        private const string FlamethrowerAttackVfxControllerPath =
+            "Assets/_Project/Art/Player/Animations/Flamethrower/Flamethrower_Fire.controller";
+        private const string FlamethrowerAttackVfxApplyMetricsPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_attack_vfx_apply_metrics.json";
+        private const string FlamethrowerAttackVfxAppliedReviewPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_attack_vfx_applied_review.png";
+        private const string FlamethrowerFireRepeatReviewPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_fire_repeat_review.png";
+        private const string FlamethrowerFireRepeatReviewMetricsPath =
+            MiniFlamethrowerValidationDirectory +
+            "/flamethrower_fire_repeat_review_metrics.json";
+        private const string FlamethrowerFireRepeatCaptureStageKey =
+            "Bellerophon.FlamethrowerFireRepeat.Capture.Stage";
+        private const string FlamethrowerAttackVfxRootName =
+            "Flamethrower_Attack_VFX";
+        private const string FlamethrowerAttackVfxRuntimeTypeName =
+            "Bellerophon.Vfx.FlamethrowerAttackVfx, Bellerophon.Vfx";
+        private const string FlamethrowerAttackVfxBehaviourTypeName =
+            "Bellerophon.Vfx.FlamethrowerAttackVfxStateBehaviour, Bellerophon.Vfx";
+        private const float FlamethrowerAttackMinimumRangeMeters = 1f;
+        private const float FlamethrowerAttackMaximumRangeMeters = 3f;
+        private const float FlamethrowerAttackMaximumEmissionSeconds = 10f;
+        private const float FlamethrowerAttackCooldownSeconds = 2.5f;
+        private const float FlamethrowerAttackApprovedSampleRangeMeters = 4.5f;
+        private const string MiniFlamethrowerCaptureStageKey =
+            "Bellerophon.PlayerMiniFlamethrowerModels.Capture.Stage";
+        private const string MiniFlamethrowerTankInstanceName =
+            "MiniFlamethrower_Tank";
+        private const string MiniFlamethrowerSprayerInstanceName =
+            "MiniFlamethrower_Sprayer";
+        private const string MiniFlamethrowerHoseInstanceName =
+            "MiniFlamethrower_Hose";
+        private const string MiniFlamethrowerTankAnchorName =
+            "Tank_Hose_Anchor";
+        private const string MiniFlamethrowerSprayerAnchorName =
+            "Sprayer_Hose_Anchor";
+        private const string MiniFlamethrowerRigInstanceName =
+            "MiniFlamethrower_Rig";
+        private const string MiniFlamethrowerOriginalInstanceName =
+            "MiniFlamethrower_Original";
+        private const string MiniFlamethrowerTankBoneName =
+            "MiniFlamethrower_Tank_Bone";
+        private const string MiniFlamethrowerSprayerBoneName =
+            "MiniFlamethrower_Sprayer_Bone";
+        private const string MiniFlamethrowerHoseBoneNamePrefix =
+            "MiniFlamethrower_Hose_Bone_";
+        private const int MiniFlamethrowerHoseBoneCount = 8;
+        private const int MiniFlamethrowerTankBoneIndex = 0;
+        private const int MiniFlamethrowerFirstHoseBoneIndex = 1;
+        private const int MiniFlamethrowerSprayerBoneIndex =
+            MiniFlamethrowerFirstHoseBoneIndex +
+            MiniFlamethrowerHoseBoneCount;
+        private const int MiniFlamethrowerRigBoneCount =
+            MiniFlamethrowerSprayerBoneIndex + 1;
+        private const float MiniFlamethrowerPackHeightMeters = 0.76f;
+        private const float MiniFlamethrowerTankWidthMeters = 0.6f;
+        private const float MiniFlamethrowerTankHeightMeters = 0.76f;
+        private const float MiniFlamethrowerTankDepthMeters = 0.26f;
+        private const float MiniFlamethrowerSprayerLengthMeters = 0.78f;
+        private const float MiniFlamethrowerRearToGripMeters = 0.15f;
+        // Places the unchanged backpack center just behind the transporter's back.
+        private const float MiniFlamethrowerOriginalBackOffset = 0.34f;
 
         private const string IdleClipPath =
             "Assets/_Project/Art/Player/Animations/Player_Idle.anim";
@@ -404,6 +643,18 @@ namespace Bellerophon.Editor
             ShotgunDrawStartViewValidationDirectory + "/final.png";
         private const string ShotgunDrawStartViewReviewStageKey =
             "Bellerophon.PlayerShotgunDrawStartView.Review.Stage";
+        private const string FlamethrowerIdleStartViewValidationDirectory =
+            "docs/validation/player_start_flamethrower_idle_view_2026-09-04";
+        private const string FlamethrowerIdleStartViewApplyMetricsPath =
+            FlamethrowerIdleStartViewValidationDirectory + "/apply_metrics.json";
+        private const string FlamethrowerIdleStartViewReviewMetricsPath =
+            FlamethrowerIdleStartViewValidationDirectory + "/review_metrics.json";
+        private const string FlamethrowerIdleStartViewPlayModePath =
+            FlamethrowerIdleStartViewValidationDirectory + "/playmode.png";
+        private const string FlamethrowerIdleStartViewFinalPath =
+            FlamethrowerIdleStartViewValidationDirectory + "/final.png";
+        private const string FlamethrowerIdleStartViewReviewStageKey =
+            "Bellerophon.PlayerFlamethrowerIdleStartView.Review.Stage";
         private const string MusketAssetPath =
             "Assets/_Project/Art/Items/Musket/musket.fbx";
         private const string MusketBoreAssetPath =
@@ -2138,6 +2389,31 @@ namespace Bellerophon.Editor
             public bool targetTransformUnchanged;
             public bool matchesAppliedStart;
             public bool matchesStickCarryFraming;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class FlamethrowerIdleStartViewMetrics
+        {
+            public string target;
+            public Vector3 targetPosition;
+            public Quaternion targetRotation;
+            public Vector3 targetLocalScale;
+            public Vector3 playerStartPosition;
+            public Quaternion playerStartRotation;
+            public Vector3 playerCameraPosition;
+            public Quaternion playerCameraRotation;
+            public float cameraPlanarDistanceMeters;
+            public float playerRootPlanarDistanceMeters;
+            public float screenHorizontalCenterErrorNormalized;
+            public float screenVerticalCenterErrorNormalized;
+            public float playerFacingErrorDegrees;
+            public bool playerStartsOnTargetFrontSide;
+            public bool playerCameraTargetsCenter;
+            public bool targetTransformUnchanged;
+            public bool matchesAppliedStart;
+            public bool matchesReferenceFraming;
             public bool passedNumericChecks;
             public string validationPriority;
         }
@@ -8187,6 +8463,354 @@ namespace Bellerophon.Editor
             return metrics;
         }
 
+        [MenuItem("Bellerophon/Player/Apply Flamethrower Idle Start View")]
+        internal static void ApplyFlamethrowerIdleStartView()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                SessionState.EraseInt(FlamethrowerIdleStartViewReviewStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerFlamethrowerIdleStartView] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Flamethrower_Idle start-view apply.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, FlamethrowerIdleTargetName);
+            Vector3 targetPositionBefore = target.position;
+            Quaternion targetRotationBefore = target.rotation;
+            Vector3 targetLocalScaleBefore = target.localScale;
+            ConfigurePlayerStartFacingTarget(
+                scene,
+                target,
+                FlamethrowerIdleTargetName,
+                out Transform playerRoot,
+                out Transform playerCamera,
+                out Bounds targetBounds);
+            bool targetTransformUnchanged =
+                Vector3.Distance(targetPositionBefore, target.position) <= PositionTolerance &&
+                Quaternion.Angle(targetRotationBefore, target.rotation) <= RotationTolerance &&
+                Vector3.Distance(targetLocalScaleBefore, target.localScale) <= PositionTolerance;
+            if (!targetTransformUnchanged)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Idle Transform changed while applying the Player start view.");
+            }
+
+            EditorSceneManager.SaveScene(scene);
+            FlamethrowerIdleStartViewMetrics metrics =
+                MeasureFlamethrowerIdleStartView(
+                    target,
+                    playerRoot,
+                    playerCamera,
+                    targetBounds,
+                    targetTransformUnchanged,
+                    null);
+            WriteJson(FlamethrowerIdleStartViewApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Idle start-view apply support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            SessionState.EraseInt(FlamethrowerIdleStartViewReviewStageKey);
+            Debug.Log(
+                "[PlayerFlamethrowerIdleStartView] Applied front framing to Flamethrower_Idle. " +
+                "Player=(" +
+                Num(playerRoot.position.x) + "," +
+                Num(playerRoot.position.y) + "," +
+                Num(playerRoot.position.z) + ")" +
+                ", CameraDistance=" + Num(metrics.cameraPlanarDistanceMeters) +
+                ", TargetTransformUnchanged=" + metrics.targetTransformUnchanged + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Flamethrower Idle Start View Play Mode")]
+        internal static void CaptureFlamethrowerIdleStartViewPlayMode()
+        {
+            int stage = SessionState.GetInt(
+                FlamethrowerIdleStartViewReviewStageKey,
+                0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Idle start-view review must start in Edit Mode.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before Flamethrower_Idle start-view review.");
+                    }
+
+                    SessionState.SetInt(FlamethrowerIdleStartViewReviewStageKey, 1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[PlayerFlamethrowerIdleStartView] Entering Play Mode for direct review.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Idle start-view capture requires Play Mode.");
+                    }
+
+                    CaptureFlamethrowerIdleStartViewActualPlayMode();
+                    SessionState.SetInt(FlamethrowerIdleStartViewReviewStageKey, 2);
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Idle start-view review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(FlamethrowerIdleStartViewReviewStageKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[PlayerFlamethrowerIdleStartView] Exiting Play Mode after direct review.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Flamethrower_Idle start-view review stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(FlamethrowerIdleStartViewReviewStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+        private static void CaptureFlamethrowerIdleStartViewActualPlayMode()
+        {
+            FlamethrowerIdleStartViewMetrics applied =
+                ReadJson<FlamethrowerIdleStartViewMetrics>(
+                    FlamethrowerIdleStartViewApplyMetricsPath);
+            if (!applied.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Idle start-view apply metrics did not pass.");
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, FlamethrowerIdleTargetName);
+            Camera mainCamera = scene.GetRootGameObjects()
+                .SelectMany(root => root.GetComponentsInChildren<Camera>(true))
+                .Single(camera => camera.CompareTag("MainCamera"));
+            CharacterController controller =
+                mainCamera.GetComponentInParent<CharacterController>();
+            if (controller == null)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp runtime Player CharacterController is missing.");
+            }
+
+            Bounds targetBounds = CalculateVisibleBounds(target);
+            byte[] playModeFrame = CaptureCameraFrame(mainCamera);
+            string fullPlayModePath = Path.GetFullPath(
+                FlamethrowerIdleStartViewPlayModePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPlayModePath));
+            File.WriteAllBytes(fullPlayModePath, playModeFrame);
+
+            bool targetTransformUnchanged =
+                Vector3.Distance(target.position, applied.targetPosition) <= PositionTolerance &&
+                Quaternion.Angle(target.rotation, applied.targetRotation) <= RotationTolerance &&
+                Vector3.Distance(target.localScale, applied.targetLocalScale) <= PositionTolerance;
+            FlamethrowerIdleStartViewMetrics metrics =
+                MeasureFlamethrowerIdleStartView(
+                    target,
+                    controller.transform,
+                    mainCamera.transform,
+                    targetBounds,
+                    targetTransformUnchanged,
+                    applied);
+            WriteJson(FlamethrowerIdleStartViewReviewMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Idle start-view Play Mode support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[PlayerFlamethrowerIdleStartView] Captured direct Play Mode start view. " +
+                "CameraDistance=" + Num(metrics.cameraPlanarDistanceMeters) +
+                ", CenterError=" +
+                Num(metrics.screenHorizontalCenterErrorNormalized) + "/" +
+                Num(metrics.screenVerticalCenterErrorNormalized) +
+                ", TargetTransformUnchanged=" + metrics.targetTransformUnchanged + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Flamethrower Idle Start View Final")]
+        internal static void CaptureFlamethrowerIdleStartViewFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Idle start-view finalization requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after Flamethrower_Idle direct review.");
+            }
+
+            FlamethrowerIdleStartViewMetrics metrics =
+                ReadJson<FlamethrowerIdleStartViewMetrics>(
+                    FlamethrowerIdleStartViewReviewMetricsPath);
+            metrics.matchesReferenceFraming =
+                Mathf.Abs(metrics.cameraPlanarDistanceMeters - 5.4f) <= 0.01f &&
+                metrics.screenHorizontalCenterErrorNormalized <= 0.01f &&
+                metrics.screenVerticalCenterErrorNormalized <= 0.01f;
+            metrics.passedNumericChecks =
+                metrics.playerStartsOnTargetFrontSide &&
+                metrics.targetTransformUnchanged &&
+                metrics.matchesReferenceFraming;
+            WriteJson(FlamethrowerIdleStartViewReviewMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Idle start-view review did not pass before finalization.");
+            }
+
+            CopyReviewedContact(
+                FlamethrowerIdleStartViewPlayModePath,
+                FlamethrowerIdleStartViewFinalPath);
+            string reviewedFrameHash = HashFile(
+                FlamethrowerIdleStartViewPlayModePath);
+            string finalFrameHash = HashFile(
+                FlamethrowerIdleStartViewFinalPath);
+            if (!string.Equals(
+                    reviewedFrameHash,
+                    finalFrameHash,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Idle final image differs from the directly reviewed Play Mode frame.");
+            }
+
+            Debug.Log(
+                "[PlayerFlamethrowerIdleStartView] Final image copied once from the directly reviewed Play Mode frame. " +
+                "Path=" + Path.GetFullPath(FlamethrowerIdleStartViewFinalPath) +
+                ", Hash=" + finalFrameHash +
+                ", SceneChanged=False.");
+        }
+
+        private static FlamethrowerIdleStartViewMetrics MeasureFlamethrowerIdleStartView(
+            Transform target,
+            Transform playerRoot,
+            Transform playerCamera,
+            Bounds targetBounds,
+            bool targetTransformUnchanged,
+            FlamethrowerIdleStartViewMetrics applied)
+        {
+            Camera camera = playerCamera.GetComponent<Camera>();
+            if (camera == null)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp runtime Player camera component is missing.");
+            }
+
+            Vector3 viewportCenter = camera.WorldToViewportPoint(targetBounds.center);
+            float horizontalError = Mathf.Abs(viewportCenter.x - 0.5f);
+            float verticalError = Mathf.Abs(viewportCenter.y - 0.5f);
+            Vector3 cameraToCenter = targetBounds.center - playerCamera.position;
+            Vector3 playerToCenter = targetBounds.center - playerRoot.position;
+            float cameraPlanarDistance = Vector3.Distance(
+                Vector3.ProjectOnPlane(playerCamera.position, Vector3.up),
+                Vector3.ProjectOnPlane(targetBounds.center, Vector3.up));
+            float playerPlanarDistance = Vector3.Distance(
+                Vector3.ProjectOnPlane(playerRoot.position, Vector3.up),
+                Vector3.ProjectOnPlane(target.position, Vector3.up));
+            bool frontSide = Vector3.Dot(
+                playerCamera.position - targetBounds.center,
+                target.forward) > 0f;
+            bool cameraTargetsCenter = Vector3.Angle(
+                playerCamera.forward,
+                cameraToCenter) <= 0.1f;
+            float playerFacingError = Vector3.Angle(
+                playerRoot.forward,
+                Vector3.ProjectOnPlane(playerToCenter, Vector3.up));
+            bool matchesApplied = applied == null ||
+                (Vector3.Distance(
+                    playerRoot.position,
+                    applied.playerStartPosition) <= PositionTolerance &&
+                 Quaternion.Angle(
+                    playerRoot.rotation,
+                    applied.playerStartRotation) <= RotationTolerance &&
+                 Vector3.Distance(
+                    playerCamera.position,
+                    applied.playerCameraPosition) <= PositionTolerance &&
+                 Quaternion.Angle(
+                    playerCamera.rotation,
+                    applied.playerCameraRotation) <= RotationTolerance);
+            bool matchesReferenceFraming =
+                Mathf.Abs(cameraPlanarDistance - 5.4f) <= 0.01f &&
+                horizontalError <= 0.01f &&
+                verticalError <= 0.01f;
+            FlamethrowerIdleStartViewMetrics metrics =
+                new FlamethrowerIdleStartViewMetrics
+                {
+                    target = FlamethrowerIdleTargetName,
+                    targetPosition = target.position,
+                    targetRotation = target.rotation,
+                    targetLocalScale = target.localScale,
+                    playerStartPosition = playerRoot.position,
+                    playerStartRotation = playerRoot.rotation,
+                    playerCameraPosition = playerCamera.position,
+                    playerCameraRotation = playerCamera.rotation,
+                    cameraPlanarDistanceMeters = cameraPlanarDistance,
+                    playerRootPlanarDistanceMeters = playerPlanarDistance,
+                    screenHorizontalCenterErrorNormalized = horizontalError,
+                    screenVerticalCenterErrorNormalized = verticalError,
+                    playerFacingErrorDegrees = playerFacingError,
+                    playerStartsOnTargetFrontSide = frontSide,
+                    playerCameraTargetsCenter = cameraTargetsCenter,
+                    targetTransformUnchanged = targetTransformUnchanged,
+                    matchesAppliedStart = matchesApplied,
+                    matchesReferenceFraming = matchesReferenceFraming,
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                frontSide &&
+                targetTransformUnchanged &&
+                matchesReferenceFraming;
+            return metrics;
+        }
+
         [MenuItem("Bellerophon/Player/Apply Stick Throw Ready Release Cancel")]
         internal static void ApplyStickThrowReadyReleaseCancel()
         {
@@ -9995,6 +10619,12635 @@ namespace Bellerophon.Editor
                 "deg, FinalAngle=" +
                 Num(StickAttackForwardGifWeaponRaisedFinalDegreesFromVertical) +
                 "degFromVertical.");
+        }
+
+        [Serializable]
+        private sealed class MiniFlamethrowerMeshInspection
+        {
+            public string transformPath;
+            public string meshName;
+            public int vertexCount;
+            public int triangleCount;
+            public Vector3 localBoundsCenter;
+            public Vector3 localBoundsSize;
+            public string[] materials;
+        }
+
+        [Serializable]
+        private sealed class MiniFlamethrowerComponentInspection
+        {
+            public int componentIndex;
+            public int triangleCount;
+            public int referencedVertexCount;
+            public Vector3 localBoundsCenter;
+            public Vector3 localBoundsSize;
+        }
+
+        [Serializable]
+        private sealed class MiniFlamethrowerAssetInspection
+        {
+            public string sourcePath;
+            public string importedPath;
+            public string sourceHash;
+            public string importedHash;
+            public int meshCount;
+            public int totalVertexCount;
+            public int connectedComponentCount;
+            public Vector3 combinedLocalBoundsCenter;
+            public Vector3 combinedLocalBoundsSize;
+            public MiniFlamethrowerMeshInspection[] meshes;
+            public MiniFlamethrowerComponentInspection[] connectedComponents;
+            public string validationPriority;
+        }
+
+        private sealed class MiniFlamethrowerGeometryAnalysis
+        {
+            public Mesh SourceMesh;
+            public Material SourceMaterial;
+            public Bounds TankBounds;
+            public Bounds SprayerBounds;
+            public Vector3 SprayerRearPoint;
+            public Vector3 SprayerNozzlePoint;
+            public Vector3 SprayerRearToNozzleAxis;
+            public float SprayerSourceLength;
+            public int TankTriangleCount;
+            public int SprayerTriangleCount;
+        }
+
+        [Serializable]
+        private sealed class MiniFlamethrowerTargetMetrics
+        {
+            public string target;
+            public Vector3 targetLocalPosition;
+            public Quaternion targetLocalRotation;
+            public Vector3 targetLocalScale;
+            public string animatorConfiguration;
+            public Vector3 tankLocalPosition;
+            public Quaternion tankLocalRotation;
+            public Vector3 tankLocalScale;
+            public Vector3 sprayerLocalPosition;
+            public Quaternion sprayerLocalRotation;
+            public Vector3 sprayerLocalScale;
+            public float tankWidthMeters;
+            public float tankHeightMeters;
+            public float tankDepthMeters;
+            public float tankOutwardFacingDot;
+            public float tankCenterBehindSpineMeters;
+            public float sprayerLengthMeters;
+            public float rearToGripDistanceMeters;
+            public float gripCenterErrorMeters;
+            public float hoseStartErrorMeters;
+            public float hoseEndErrorMeters;
+            public bool tankParentedToSpine;
+            public bool sprayerParentedToRightHand;
+            public bool hoseConnected;
+            public bool targetRootUnchanged;
+            public bool animatorUnchanged;
+            public bool passedNumericChecks;
+        }
+
+        [Serializable]
+        private sealed class MiniFlamethrowerApplyMetrics
+        {
+            public string sourceModelPath;
+            public string importedModelPath;
+            public string sourceModelHash;
+            public string importedModelHash;
+            public string tankMeshPath;
+            public string sprayerMeshPath;
+            public int sourceTriangleCount;
+            public int tankTriangleCount;
+            public int sprayerTriangleCount;
+            public int targetCount;
+            public MiniFlamethrowerTargetMetrics[] targets;
+            public bool sourceAndImportedModelsExact;
+            public bool allTanksFixedToSpine;
+            public bool allSprayersFollowRightHand;
+            public bool allHosesConnected;
+            public bool allTargetRootsAndAnimatorsUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class MiniFlamethrowerReviewMetrics
+        {
+            public string targetSet;
+            public int targetCount;
+            public MiniFlamethrowerTargetMetrics[] targets;
+            public bool actualPlayModeObserved;
+            public bool allTanksFixedToSpine;
+            public bool allSprayersFollowRightHand;
+            public bool allHosesConnected;
+            public bool allGripReferencesExact;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+#if false
+        [MenuItem("Bellerophon/Player/Apply Mini Flamethrower Models Legacy Split")]
+        internal static void ApplyMiniFlamethrowerModels()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerMiniFlamethrower] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            RequireHash(
+                MiniFlamethrowerOriginalPath,
+                MiniFlamethrowerSourceHash,
+                "mini flamethrower source FBX");
+            RequireHash(
+                MiniFlamethrowerAssetPath,
+                MiniFlamethrowerSourceHash,
+                "Unity mini flamethrower FBX");
+            GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MiniFlamethrowerAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported mini flamethrower FBX is missing.",
+                    Path.GetFullPath(MiniFlamethrowerAssetPath));
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before mini flamethrower apply.");
+            }
+
+            MiniFlamethrowerAssetInspection inspection =
+                InspectMiniFlamethrowerAsset(asset);
+            WriteJson(MiniFlamethrowerInspectionPath, inspection);
+            MiniFlamethrowerGeometryAnalysis analysis =
+                AnalyzeMiniFlamethrowerGeometry(asset, inspection);
+            Mesh tankMesh = CreateOrReplaceMiniFlamethrowerMesh(
+                analysis.SourceMesh,
+                MiniFlamethrowerTankMeshPath,
+                "MiniFlamethrower_Tank_Mesh",
+                triangleCenter => IsMiniFlamethrowerTankTriangle(
+                    triangleCenter,
+                    inspection));
+            Mesh sprayerMesh = CreateOrReplaceMiniFlamethrowerMesh(
+                analysis.SourceMesh,
+                MiniFlamethrowerSprayerMeshPath,
+                "MiniFlamethrower_Sprayer_Mesh",
+                triangleCenter => IsMiniFlamethrowerSprayerTriangle(
+                    triangleCenter,
+                    inspection));
+            analysis.TankBounds = tankMesh.bounds;
+            analysis.SprayerBounds = sprayerMesh.bounds;
+            analysis.TankTriangleCount = tankMesh.triangles.Length / 3;
+            analysis.SprayerTriangleCount = sprayerMesh.triangles.Length / 3;
+            AnalyzeMiniFlamethrowerSprayerAxis(analysis, sprayerMesh);
+
+            Transform layout = RequireLayout(scene);
+            string[] targetNames = GetMiniFlamethrowerTargetNames();
+            Transform[] targets = targetNames
+                .Select(name => RequireTarget(layout, name))
+                .ToArray();
+            RootPose[] targetRootsBefore = targets
+                .Select(target => new RootPose(target))
+                .ToArray();
+            string[] animatorBefore = targets
+                .Select(DescribeAnimatorConfiguration)
+                .ToArray();
+            for (int index = 0; index < targets.Length; index++)
+            {
+                AttachMiniFlamethrower(
+                    targets[index],
+                    tankMesh,
+                    sprayerMesh,
+                    analysis);
+            }
+
+            MiniFlamethrowerTargetMetrics[] targetMetrics = targets
+                .Select((target, index) => MeasureMiniFlamethrowerTarget(
+                    target,
+                    analysis,
+                    targetRootsBefore[index],
+                    animatorBefore[index]))
+                .ToArray();
+            MiniFlamethrowerApplyMetrics metrics =
+                new MiniFlamethrowerApplyMetrics
+                {
+                    sourceModelPath = MiniFlamethrowerOriginalPath,
+                    importedModelPath = MiniFlamethrowerAssetPath,
+                    sourceModelHash = HashFile(MiniFlamethrowerOriginalPath),
+                    importedModelHash = HashFile(MiniFlamethrowerAssetPath),
+                    tankMeshPath = MiniFlamethrowerTankMeshPath,
+                    sprayerMeshPath = MiniFlamethrowerSprayerMeshPath,
+                    sourceTriangleCount = analysis.SourceMesh.triangles.Length / 3,
+                    tankTriangleCount = analysis.TankTriangleCount,
+                    sprayerTriangleCount = analysis.SprayerTriangleCount,
+                    targetCount = targets.Length,
+                    targets = targetMetrics,
+                    sourceAndImportedModelsExact = string.Equals(
+                        HashFile(MiniFlamethrowerOriginalPath),
+                        HashFile(MiniFlamethrowerAssetPath),
+                        StringComparison.OrdinalIgnoreCase),
+                    allTanksFixedToSpine = targetMetrics.All(target =>
+                        target.tankParentedToSpine),
+                    allSprayersFollowRightHand = targetMetrics.All(target =>
+                        target.sprayerParentedToRightHand),
+                    allHosesConnected = targetMetrics.All(target =>
+                        target.hoseConnected),
+                    allTargetRootsAndAnimatorsUnchanged = targetMetrics.All(
+                        target => target.targetRootUnchanged &&
+                            target.animatorUnchanged),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                metrics.sourceAndImportedModelsExact &&
+                metrics.targetCount == targetNames.Length &&
+                metrics.tankTriangleCount > 0 &&
+                metrics.sprayerTriangleCount > 0 &&
+                metrics.allTanksFixedToSpine &&
+                metrics.allSprayersFollowRightHand &&
+                metrics.allHosesConnected &&
+                metrics.allTargetRootsAndAnimatorsUnchanged &&
+                metrics.targets.All(target => target.passedNumericChecks);
+            WriteJson(MiniFlamethrowerApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower apply support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            SessionState.EraseInt(MiniFlamethrowerCaptureStageKey);
+            Debug.Log(
+                "[PlayerMiniFlamethrower] Attached tank, right-hand sprayer, and connected hose to all five states. " +
+                "Tank=" + Num(MiniFlamethrowerTankWidthMeters) + "x" +
+                Num(MiniFlamethrowerTankHeightMeters) + "m, RearToGrip=" +
+                Num(MiniFlamethrowerRearToGripMeters) + "m, TargetCount=" +
+                metrics.targetCount.ToString(CultureInfo.InvariantCulture) + ".");
+        }
+#endif
+
+        private static string[] GetMiniFlamethrowerTargetNames()
+        {
+            return new[]
+            {
+                FlamethrowerIdleTargetName,
+                FlamethrowerFireTargetName,
+                FlamethrowerRemoteModeTargetName,
+                FlamethrowerTankPlaceTargetName,
+                FlamethrowerTankRecoverTargetName
+            };
+        }
+
+        private sealed class MiniFlamethrowerRigAnalysis
+        {
+            public Mesh SourceMesh;
+            public Material[] SourceMaterials;
+            public string[] TextureReferences;
+            public Bounds CombinedBounds;
+            public Bounds TankBounds;
+            public Bounds SprayerBounds;
+            public Vector3 TankCenter;
+            public Vector3 SprayerRearPoint;
+            public Vector3 SprayerNozzlePoint;
+            public Vector3 SprayerAxis;
+            public Vector3 SprayerGripCenter;
+            public Vector3 SprayerTriggerDownDirection;
+            public HashSet<int> SprayerGripVertexIndices;
+            public HashSet<int> SourceConnectedHoseVertexIndices;
+            public float SprayerSourceLength;
+        }
+
+        [Serializable]
+        private sealed class MiniFlamethrowerRigTargetMetrics
+        {
+            public string target;
+            public Vector3 targetLocalPosition;
+            public Quaternion targetLocalRotation;
+            public Vector3 targetLocalScale;
+            public string animatorConfiguration;
+            public int visibleRendererCount;
+            public int visibleVertexCount;
+            public int visibleTriangleCount;
+            public int materialCount;
+            public string[] materialNames;
+            public string[] textureReferences;
+            public float packWidthMeters;
+            public float packHeightMeters;
+            public float packDepthMeters;
+            public float tankOutwardFacingDot;
+            public float rearToGripDistanceMeters;
+            public float gripCenterErrorMeters;
+            public float triggerDownDot;
+            public bool rigParentedToSpine;
+            public bool tankBoneFixedToRig;
+            public bool sprayerBoneParentedToRightHand;
+            public bool usesExactRiggedMesh;
+            public bool materialReferencesExact;
+            public bool hasNoGeneratedHose;
+            public bool targetRootUnchanged;
+            public bool animatorUnchanged;
+            public bool passedNumericChecks;
+        }
+
+        [Serializable]
+        private sealed class MiniFlamethrowerRigApplyMetrics
+        {
+            public string sourceModelPath;
+            public string importedModelPath;
+            public string riggedMeshPath;
+            public string sourceModelHash;
+            public string importedModelHash;
+            public int sourceVertexCount;
+            public int riggedVertexCount;
+            public int sourceTriangleCount;
+            public int riggedTriangleCount;
+            public int sourceSubMeshCount;
+            public int riggedSubMeshCount;
+            public int tankWeightedVertexCount;
+            public int sprayerWeightedVertexCount;
+            public int blendedHoseVertexCount;
+            public int sourceConnectedHoseGroupCount;
+            public string[] materialNames;
+            public string[] textureReferences;
+            public int targetCount;
+            public MiniFlamethrowerRigTargetMetrics[] targets;
+            public bool sourceAndImportedModelsExact;
+            public bool exactVerticesPreserved;
+            public bool exactTriangleIndicesPreserved;
+            public bool exactNormalsPreserved;
+            public bool exactTangentsPreserved;
+            public bool exactColorsPreserved;
+            public bool exactUvChannelsPreserved;
+            public bool exactBoundsPreserved;
+            public bool exactBlendShapesPreserved;
+            public bool allMaterialsAndTexturesApplied;
+            public bool allTargetsUseSingleFullMesh;
+            public bool allTargetRootsAndAnimatorsUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class FlamethrowerAttackVfxSampleMetrics
+        {
+            public string target;
+            public string referenceArchitecture;
+            public string visualRepresentation;
+            public string[] layers;
+            public int particleSystemCount;
+            public int maximumConfiguredParticles;
+            public float intendedJetLengthMeters;
+            public float[] previewAgesSeconds;
+            public string[] previewViews;
+            public Vector3 nozzleWorldPosition;
+            public Vector3 nozzleWorldDirection;
+            public bool usesParticleSystemsOnly;
+            public bool usesProjectileModel;
+            public bool usesFlameMeshRenderer;
+            public bool currentSceneModified;
+            public bool runtimeApplied;
+            public bool actualUnityPreviewRendered;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class FlamethrowerAttackVfxApplyMetrics
+        {
+            public string target;
+            public string prefabPath;
+            public string controllerPath;
+            public string stateName;
+            public string[] layers;
+            public int particleSystemCount;
+            public int maximumConfiguredParticles;
+            public float minimumEffectiveRangeMeters;
+            public float maximumEffectiveRangeMeters;
+            public float maximumEmissionSeconds;
+            public float cooldownSeconds;
+            public Vector3 anchorLocalPosition;
+            public Quaternion anchorLocalRotation;
+            public bool effectParentedToSprayerBone;
+            public bool stateBehaviourConnected;
+            public bool sourceMeshesUnchanged;
+            public bool sceneModified;
+            public bool runtimeApplied;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class FlamethrowerFireRepeatReviewMetrics
+        {
+            public string target;
+            public float maximumEmissionSeconds;
+            public float cooldownSeconds;
+            public float[] capturedEmissionAgesSeconds;
+            public bool firstEmissionObserved;
+            public bool lateFirstEmissionObserved;
+            public bool cooldownGapObserved;
+            public bool repeatedEmissionObserved;
+            public bool repeatRequestStayedActive;
+            public bool actualPlayModeObserved;
+            public bool contactSheetExists;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class FlamethrowerTankPlaceApplyMetrics
+        {
+            public string target;
+            public string remotePoseSource;
+            public string sourceModelPath;
+            public string importedModelPath;
+            public string sourceModelHash;
+            public string importedModelHash;
+            public string embeddedTakeName;
+            public float embeddedTakeDurationSeconds;
+            public float embeddedTakeFrameRate;
+            public int embeddedTakeCurveCount;
+            public float remotePoseHoldSeconds;
+            public int copiedPoseTransformCount;
+            public string holdStateName;
+            public string actionStateName;
+            public bool byteExactImport;
+            public bool sourceTakeUsedDirectly;
+            public string adjustedActionClipPath;
+            public int adjustedFramesBaked;
+            public int lowestPointFrame;
+            public float lowestPointTimeSeconds;
+            public float lowestPointGroundErrorMeters;
+            public float lowestPointForwardMeters;
+            public float lowestPointLateralErrorMeters;
+            public float lowestPointHandMirrorErrorMeters;
+            public float lowestPointForeArmMirrorErrorMeters;
+            public float lowestPointLeftPalmSupportErrorMeters;
+            public float lowestPointRightPalmSupportErrorMeters;
+            public float postReleaseTankBottomDriftMeters;
+            public bool actionUsesAdjustedDerivedClip;
+            public bool onlyRequestedArmAndTankPositionCurvesChanged;
+            public bool zeroDurationTransition;
+            public bool actionReturnsToHold;
+            public bool sequenceLoopsFromBeginning;
+            public bool sourceAnimationKeysUnmodified;
+            public string itemFollowParent;
+            public float tankBottomToRightPalmErrorMeters;
+            public float maximumRelativeBoneMatrixDifference;
+            public float referenceBakedBoundsDiagonal;
+            public float tankPlaceBakedBoundsDiagonal;
+            public bool hoseShapeMatchesReference;
+            public bool sprayerDirectRightHandFollowReleased;
+            public bool tankAnimationParentIsTargetRoot;
+            public bool tankBottomFollowsRightHandUntilLowestPoint;
+            public bool tankDetachedAtLowestPoint;
+            public bool tankGroundLockedAfterLowestPoint;
+            public bool targetMeshesUnchanged;
+            public bool targetRootUnchanged;
+            public bool otherAnimatorsUnchanged;
+            public bool passed;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class FlamethrowerTankPlaceReviewMetrics
+        {
+            public string target;
+            public float requiredHoldSeconds;
+            public float[] capturedElapsedSeconds;
+            public string[] capturedStates;
+            public bool remotePoseObservedBeforeTransition;
+            public bool originalTakeObservedAfterTransition;
+            public bool returnedToRemotePose;
+            public bool secondTakeObserved;
+            public bool fullSequenceRepeated;
+            public float lowestPointTimeSeconds;
+            public float lowestPointGroundErrorMeters;
+            public float lowestPointForwardMeters;
+            public float lowestPointLateralErrorMeters;
+            public float lowestPointHandMirrorErrorMeters;
+            public float lowestPointForeArmMirrorErrorMeters;
+            public float lowestPointLeftPalmSupportErrorMeters;
+            public float lowestPointRightPalmSupportErrorMeters;
+            public float postReleaseTankBottomDriftMeters;
+            public Vector3 tankBottomAnchorInRightHandLocalSpace;
+            public float[] tankBottomRightHandLocalDriftMeters;
+            public float maximumTankBottomRightHandLocalDriftMeters;
+            public bool sprayerDirectRightHandFollowReleased;
+            public bool tankAnimationParentIsTargetRoot;
+            public bool tankBottomFollowsRightHandUntilLowestPoint;
+            public bool tankDetachedAtLowestPoint;
+            public bool tankGroundLockedAfterLowestPoint;
+            public bool actualPlayModeObserved;
+            public bool contactSheetExists;
+            public bool passed;
+            public string validationPriority;
+        }
+
+        private sealed class FlamethrowerTankPlaceAdjustedClipResult
+        {
+            public AnimationClip Clip;
+            public int FramesBaked;
+            public int LowestPointFrame;
+            public float LowestPointTimeSeconds;
+            public float LowestPointGroundErrorMeters;
+            public float LowestPointForwardMeters;
+            public float LowestPointLateralErrorMeters;
+            public float LowestPointHandMirrorErrorMeters;
+            public float LowestPointForeArmMirrorErrorMeters;
+            public float LowestPointLeftPalmSupportErrorMeters;
+            public float LowestPointRightPalmSupportErrorMeters;
+            public float PostReleaseTankBottomDriftMeters;
+            public bool TankBottomFollowsRightHandUntilLowestPoint;
+            public bool TankDetachedAtLowestPoint;
+            public bool TankGroundLockedAfterLowestPoint;
+            public bool SprayerCounterAnimatedForGroundLock;
+        }
+
+        [Serializable]
+        private sealed class FlamethrowerTankRecoverApplyMetrics
+        {
+            public string target;
+            public string sourceClipPath;
+            public string reversedClipPath;
+            public string idlePoseSource;
+            public float sourceDurationSeconds;
+            public float reversedDurationSeconds;
+            public float pickupTimeSeconds;
+            public float idleHoldSeconds;
+            public int sourceCurveCount;
+            public int reversedCurveCount;
+            public int copiedStartPoseTransformCount;
+            public float startGroundErrorMeters;
+            public float startForwardMeters;
+            public float startLateralErrorMeters;
+            public float pickupLeftPalmSupportErrorMeters;
+            public float pickupRightPalmSupportErrorMeters;
+            public float raisedTankBottomMeters;
+            public float endRightPalmSupportErrorMeters;
+            public float idlePoseMaximumBoneMatrixDifference;
+            public float idleReferenceBakedBoundsDiagonal;
+            public float idleHoldBakedBoundsDiagonal;
+            public string sourceClipHashBefore;
+            public string sourceClipHashAfter;
+            public bool sourceClipUnmodified;
+            public bool exactCurveReverse;
+            public bool startsFromTankPlaceGroundedEnd;
+            public bool bothPalmsSupportAtPickup;
+            public bool tankFollowsRightHandThroughLift;
+            public bool tankFollowReleasedAtHighestPoint;
+            public bool idleTankPoseMatches;
+            public bool sprayerFollowsRightHandInIdleHold;
+            public bool zeroDurationTransitions;
+            public bool fullSequenceLoops;
+            public bool targetMeshesUnchanged;
+            public bool targetRootUnchanged;
+            public bool otherAnimatorsUnchanged;
+            public bool passed;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class FlamethrowerTankRecoverReviewMetrics
+        {
+            public string target;
+            public float[] capturedElapsedSeconds;
+            public string[] capturedStates;
+            public float pickupTimeSeconds;
+            public float idleHoldSeconds;
+            public float startGroundErrorMeters;
+            public float startForwardMeters;
+            public float startLateralErrorMeters;
+            public float pickupLeftPalmSupportErrorMeters;
+            public float pickupRightPalmSupportErrorMeters;
+            public float raisedTankBottomMeters;
+            public float endRightPalmSupportErrorMeters;
+            public float idlePoseMaximumBoneMatrixDifference;
+            public float maximumCapturedBakedBoundsDiagonal;
+            public bool groundedStartObserved;
+            public bool pickupObserved;
+            public bool reverseLiftObserved;
+            public bool idleBackpackHoldObserved;
+            public bool returnedToGroundedStart;
+            public bool fullSequenceRepeated;
+            public bool sprayerFollowsRightHandInIdleHold;
+            public bool hoseRemainedConnected;
+            public bool actualPlayModeObserved;
+            public bool contactSheetExists;
+            public bool passed;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class FlamethrowerRemoteDetonateStartMetrics
+        {
+            public string target;
+            public string poseSource;
+            public string sourceModelPath;
+            public string importedModelPath;
+            public string sourceModelHash;
+            public string importedModelHash;
+            public Vector3 sourceBoundsSize;
+            public int sourceMeshCount;
+            public int sourceVertexCount;
+            public int sourceTriangleCount;
+            public string[] materialNames;
+            public string[] textureReferences;
+            public int copiedPoseTransformCount;
+            public float sourceTankPoseErrorBeforeTranslationMeters;
+            public float tankForwardDistanceMeters;
+            public float tankForwardDistanceErrorMeters;
+            public float maximumTankBoneMatrixDifference;
+            public float referenceTankBoundsDiagonal;
+            public float targetTankBoundsDiagonal;
+            public Vector3 requestedRightHandDeltaMeters;
+            public Vector3 actualRightHandDeltaMeters;
+            public float rightHandForwardDeltaMeters;
+            public float rightHandUpDeltaMeters;
+            public float rightHandLateralDeltaMeters;
+            public float rightHandTargetErrorMeters;
+            public float rightPalmUpDot;
+            public float rightFingerForeArmProjectedAlignmentDegrees;
+            public float rightUpperArmSwivelDegrees;
+            public float rightForeArmAxialTwistDegrees;
+            public float rightElbowDisplacementMeters;
+            public float rightForeArmLocalRotationDifferenceDegrees;
+            public float rightHandLocalRotationDifferenceDegrees;
+            public float detonatorLengthMeters;
+            public float lowerGripErrorMeters;
+            public float buttonUpDot;
+            public bool byteExactImport;
+            public bool tankStartsFromPlaceFinalFrame;
+            public bool tankPlacedAtRequestedForwardDistance;
+            public bool hoseShapeMatchesPlaceFinalFrame;
+            public bool rightHandMovedByRequestedOffset;
+            public bool rightPalmFacesUp;
+            public bool rightWristRotationDistributed;
+            public bool detonatorParentedToRightHand;
+            public bool detonatorUsesOriginalPrefab;
+            public bool targetPlayerMeshUnchanged;
+            public bool targetRootUnchanged;
+            public bool otherAnimatorsUnchanged;
+            public bool startPoseClipApplied;
+            public bool noFollowupDetonationMotionGenerated;
+            public bool actualUnityObjectObserved;
+            public bool contactSheetExists;
+            public bool passed;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class MiniFlamethrowerRigReviewMetrics
+        {
+            public string targetSet;
+            public int targetCount;
+            public MiniFlamethrowerRigTargetMetrics[] targets;
+            public bool actualPlayModeObserved;
+            public bool allTargetsUseSingleFullMesh;
+            public bool allMaterialsAndTexturesApplied;
+            public bool allTanksFixedToSpine;
+            public bool allSprayersFollowRightHand;
+            public bool allGripReferencesExact;
+            public bool allTriggersFaceDown;
+            public bool allGeneratedHosesRemoved;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class MiniFlamethrowerOriginalTargetMetrics
+        {
+            public string target;
+            public Vector3 targetLocalPosition;
+            public Quaternion targetLocalRotation;
+            public Vector3 targetLocalScale;
+            public string animatorConfiguration;
+            public Vector3 placementLocalPosition;
+            public Quaternion placementLocalRotation;
+            public Vector3 placementLocalScale;
+            public int meshCount;
+            public int rendererCount;
+            public int vertexCount;
+            public int triangleCount;
+            public int materialCount;
+            public string[] materialNames;
+            public string[] textureReferences;
+            public float tankWidthMeters;
+            public float tankHeightMeters;
+            public float tankDepthMeters;
+            public float tankOutwardFacingDot;
+            public float tankCenterBehindSpineMeters;
+            public float rearToGripDistanceMeters;
+            public float gripCenterErrorMeters;
+            public string playerMeshSignature;
+            public string playerBoneTransformSignature;
+            public bool sourceMeshReferenceExact;
+            public bool materialReferencesExact;
+            public bool sourceRootTransformExact;
+            public bool hasNoRigOrGeneratedGeometry;
+            public bool playerMeshReferencesUnchanged;
+            public bool playerBoneTransformsUnchanged;
+            public bool targetRootUnchanged;
+            public bool animatorUnchanged;
+            public bool placementUnchangedSinceApply;
+            public bool passed;
+        }
+
+        [Serializable]
+        private sealed class MiniFlamethrowerOriginalApplyMetrics
+        {
+            public string sourceModelPath;
+            public string importedModelPath;
+            public string sourceModelHash;
+            public string importedModelHash;
+            public int sourceMeshCount;
+            public int sourceVertexCount;
+            public int sourceTriangleCount;
+            public int sourceMaterialCount;
+            public string[] materialNames;
+            public string[] textureReferences;
+            public int targetCount;
+            public MiniFlamethrowerOriginalTargetMetrics[] targets;
+            public bool byteExactImport;
+            public bool noSeparatedOrRiggedMeshAsset;
+            public bool passed;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class MiniFlamethrowerOriginalReviewMetrics
+        {
+            public string targetSet;
+            public int targetCount;
+            public MiniFlamethrowerOriginalTargetMetrics[] targets;
+            public bool actualPlayModeObserved;
+            public bool allOriginalMeshesUnchanged;
+            public bool allPlayerMeshesAndBonesUnchanged;
+            public bool allTanksBehindAndFacingOutward;
+            public bool allGripReferencesExact;
+            public bool passed;
+            public string validationPriority;
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Mini Flamethrower Models")]
+        internal static void ApplyMiniFlamethrowerModels()
+        {
+            ApplyExactMiniFlamethrowerHoseRig();
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Flamethrower Remote Mode Tank Carry Pose")]
+        internal static void ApplyFlamethrowerRemoteModeTankCarryPose()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Mode tank carry pose requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(
+                layout,
+                FlamethrowerRemoteModeTargetName);
+            Transform carryReference = RequireTarget(layout, TwoHandTargetName);
+            Transform rig = target.Find(MiniFlamethrowerRigInstanceName) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Mode mini flamethrower rig is missing.");
+            Transform visual = rig.Find("MiniFlamethrower_Skinned") ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Mode skinned mini flamethrower visual is missing.");
+            SkinnedMeshRenderer renderer = visual
+                .GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Mode mini flamethrower renderer is missing.");
+            Mesh riggedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(
+                MiniFlamethrowerRiggedMeshPath) ??
+                throw new FileNotFoundException(
+                    "Exact mini flamethrower rigged mesh is missing.",
+                    Path.GetFullPath(MiniFlamethrowerRiggedMeshPath));
+            if (renderer.sharedMesh != riggedMesh)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Mode does not reference the unchanged exact mini flamethrower rigged mesh.");
+            }
+
+            ResetMiniFlamethrowerRigToConnectedSourcePose(
+                visual,
+                renderer,
+                riggedMesh);
+            CopyFlamethrowerRemoteCarryArmPose(carryReference, target);
+
+            GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MiniFlamethrowerAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported mini flamethrower FBX is missing.",
+                    Path.GetFullPath(MiniFlamethrowerAssetPath));
+            MiniFlamethrowerAssetInspection inspection =
+                InspectMiniFlamethrowerAsset(asset);
+            MiniFlamethrowerRigAnalysis analysis =
+                AnalyzeMiniFlamethrowerRig(asset, inspection);
+            PlaceConnectedMiniFlamethrowerOnRemoteModeHands(
+                target,
+                rig,
+                visual,
+                analysis);
+            rig.localPosition =
+                FlamethrowerRemoteModeTankCarrySavedLocalPosition;
+
+            EditorUtility.SetDirty(rig.gameObject);
+            EditorUtility.SetDirty(visual.gameObject);
+            EditorUtility.SetDirty(target.gameObject);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            Debug.Log(
+                "[FlamethrowerRemoteModeTankCarry] Posed both arms forward and placed the unchanged connected tank, valves, hose, and sprayer assembly upright on both palms.");
+        }
+
+        private static void ResetMiniFlamethrowerRigToConnectedSourcePose(
+            Transform visual,
+            SkinnedMeshRenderer renderer,
+            Mesh riggedMesh)
+        {
+            Transform[] bones = renderer.bones;
+            Matrix4x4[] bindposes = riggedMesh.bindposes;
+            if (bones.Length != MiniFlamethrowerRigBoneCount ||
+                bindposes.Length != bones.Length)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower rig bone and bind-pose counts do not match the approved exact rig.");
+            }
+
+            for (int index = 0; index < bones.Length; index++)
+            {
+                Transform bone = bones[index] ??
+                    throw new InvalidOperationException(
+                        "Mini flamethrower rig contains a missing bone at index " +
+                        index.ToString(CultureInfo.InvariantCulture) + ".");
+                bone.SetParent(visual, false);
+                bone.localPosition = bindposes[index]
+                    .inverse
+                    .MultiplyPoint3x4(Vector3.zero);
+                bone.localRotation = Quaternion.identity;
+                bone.localScale = Vector3.one;
+                EditorUtility.SetDirty(bone.gameObject);
+            }
+
+            renderer.rootBone = bones[MiniFlamethrowerTankBoneIndex];
+            EditorUtility.SetDirty(renderer);
+        }
+
+        private static void CopyFlamethrowerRemoteCarryArmPose(
+            Transform source,
+            Transform target)
+        {
+            foreach (Transform sourceBone in source
+                         .GetComponentsInChildren<Transform>(true))
+            {
+                string path = AnimationUtility.CalculateTransformPath(
+                    sourceBone,
+                    source);
+                if (!IsArmTransformPath(path))
+                {
+                    continue;
+                }
+
+                Transform destination = target.Find(path);
+                if (destination == null)
+                {
+                    continue;
+                }
+
+                destination.localPosition = sourceBone.localPosition;
+                destination.localRotation = sourceBone.localRotation;
+                destination.localScale = sourceBone.localScale;
+                PrefabUtility.RecordPrefabInstancePropertyModifications(
+                    destination);
+                EditorUtility.SetDirty(destination.gameObject);
+            }
+        }
+
+        private static void PlaceConnectedMiniFlamethrowerOnRemoteModeHands(
+            Transform target,
+            Transform rig,
+            Transform visual,
+            MiniFlamethrowerRigAnalysis analysis)
+        {
+            rig.localPosition = Vector3.zero;
+            rig.localRotation = Quaternion.identity;
+            rig.localScale = Vector3.one;
+
+            Matrix4x4 sourceToRig = Matrix4x4.TRS(
+                visual.localPosition,
+                visual.localRotation,
+                visual.localScale);
+            Vector3 sourceTankUp = sourceToRig
+                .MultiplyVector(Vector3.forward)
+                .normalized;
+            Vector3 sourceTankOutward = sourceToRig
+                .MultiplyVector(-Vector3.up)
+                .normalized;
+            Quaternion sourceTankBasis = Quaternion.LookRotation(
+                sourceTankOutward,
+                sourceTankUp);
+            Quaternion carriedTankBasis = Quaternion.LookRotation(
+                target.forward.normalized,
+                target.up.normalized);
+            rig.rotation = carriedTankBasis * Quaternion.Inverse(
+                sourceTankBasis);
+
+            Vector3[] tankCornersInRig = GetBoundsCorners(analysis.TankBounds)
+                .Select(sourceToRig.MultiplyPoint3x4)
+                .ToArray();
+            float sourceTankHeight =
+                tankCornersInRig.Max(corner => Vector3.Dot(
+                    corner,
+                    sourceTankUp)) -
+                tankCornersInRig.Min(corner => Vector3.Dot(
+                    corner,
+                    sourceTankUp));
+            if (sourceTankHeight <= 0.000001f)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Mode mini flamethrower tank has no usable height.");
+            }
+
+            SetMiniFlamethrowerWorldUniformScale(
+                rig,
+                MiniFlamethrowerPackHeightMeters / sourceTankHeight);
+            Vector3 tankCenter = visual.TransformPoint(analysis.TankCenter);
+            Vector3[] worldTankCorners = GetBoundsCorners(analysis.TankBounds)
+                .Select(visual.TransformPoint)
+                .ToArray();
+            float tankBottom = worldTankCorners.Min(corner =>
+                Vector3.Dot(corner, target.up));
+            float centerToBottom = Vector3.Dot(tankCenter, target.up) -
+                tankBottom;
+            float tankFrontOffset = worldTankCorners.Max(corner =>
+                Vector3.Dot(corner - tankCenter, target.forward));
+            Vector3 chestCenter =
+                (FindRequired(target, SolarPlexusPath).position +
+                 FindRequired(target, SpinePath).position) * 0.5f;
+            Vector3 desiredTankCenter = chestCenter +
+                target.up * 0.17f +
+                target.forward * 0.28f;
+            rig.position += desiredTankCenter - tankCenter;
+            Vector3 tankBottomCenter = desiredTankCenter -
+                target.up * centerToBottom;
+            PoseFlamethrowerRemoteModeHandsUnderTank(
+                target,
+                tankBottomCenter,
+                Mathf.Max(0f, tankFrontOffset - 0.025f));
+            Vector3 carriedPalmCenter =
+                (CalculateLeftPalmSample(target).Center +
+                 CalculateRightPalmSample(target).Center) * 0.5f;
+            rig.position += carriedPalmCenter +
+                target.up * 0.008f -
+                tankBottomCenter;
+        }
+
+        private static void PoseFlamethrowerRemoteModeHandsUnderTank(
+            Transform target,
+            Vector3 tankBottomCenter,
+            float forwardSupportOffset)
+        {
+            CalculateFlamethrowerTankPlaceSupportTargets(
+                target,
+                tankBottomCenter,
+                forwardSupportOffset,
+                out Vector3 leftSupport,
+                out Vector3 rightSupport);
+            SolveFlamethrowerRemoteModeSupportArm(
+                target,
+                LeftArmPath,
+                LeftForeArmPath,
+                LeftHandPath,
+                leftSupport);
+            SolveFlamethrowerRemoteModeSupportArm(
+                target,
+                RightArmPath,
+                RightForeArmPath,
+                RightHandPath,
+                rightSupport);
+        }
+
+        private static void SolveFlamethrowerRemoteModeSupportArm(
+            Transform target,
+            string armPath,
+            string foreArmPath,
+            string handPath,
+            Vector3 palmTarget)
+        {
+            Transform arm = FindRequired(target, armPath);
+            Transform foreArm = FindRequired(target, foreArmPath);
+            Transform hand = FindRequired(target, handPath);
+            Vector3 pole = arm.position +
+                target.forward * 0.08f -
+                target.up * 0.48f;
+            for (int iteration = 0; iteration < 4; iteration++)
+            {
+                RightHandPalmSample palm = string.Equals(
+                    handPath,
+                    LeftHandPath,
+                    StringComparison.Ordinal)
+                    ? CalculateLeftPalmSample(target)
+                    : CalculateRightPalmSample(target);
+                Vector3 requestedHandPosition = hand.position +
+                    (palmTarget - palm.Center);
+                SolveTwoBoneIk(
+                    arm,
+                    foreArm,
+                    hand,
+                    requestedHandPosition,
+                    pole);
+            }
+
+            Vector3 foreArmAxis = hand.position - foreArm.position;
+            if (foreArmAxis.sqrMagnitude > 0.000001f)
+            {
+                float palmUpTwist = string.Equals(
+                    handPath,
+                    LeftHandPath,
+                    StringComparison.Ordinal)
+                    ? 90f
+                    : -90f;
+                hand.rotation = Quaternion.AngleAxis(
+                    palmUpTwist,
+                    foreArmAxis.normalized) * hand.rotation;
+            }
+
+            foreach (Transform bone in new[] { arm, foreArm, hand })
+            {
+                PrefabUtility.RecordPrefabInstancePropertyModifications(bone);
+                EditorUtility.SetDirty(bone.gameObject);
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Flamethrower Remote Mode Tank Carry Review")]
+        internal static void CaptureFlamethrowerRemoteModeTankCarryReview()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Mode tank carry review requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            Transform target = RequireTarget(
+                RequireLayout(scene),
+                FlamethrowerRemoteModeTargetName);
+            Transform rig = target.Find(MiniFlamethrowerRigInstanceName) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Mode mini flamethrower rig is missing before direct review.");
+            Transform visual = rig.Find("MiniFlamethrower_Skinned") ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Mode skinned mini flamethrower visual is missing before direct review.");
+            SkinnedMeshRenderer renderer = visual
+                .GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Mode mini flamethrower renderer is missing before direct review.");
+            Mesh exactMesh = AssetDatabase.LoadAssetAtPath<Mesh>(
+                MiniFlamethrowerRiggedMeshPath) ??
+                throw new FileNotFoundException(
+                    "Exact mini flamethrower rigged mesh is missing before direct review.",
+                    Path.GetFullPath(MiniFlamethrowerRiggedMeshPath));
+            if (renderer.sharedMesh != exactMesh)
+            {
+                throw new InvalidOperationException(
+                    "Direct review refused because the Remote_Mode mesh reference differs from the approved exact rig.");
+            }
+
+            Transform tankBone = renderer.bones[
+                MiniFlamethrowerTankBoneIndex];
+            Vector3 leftPalm = CalculateLeftPalmSample(target).Center;
+            Vector3 rightPalm = CalculateRightPalmSample(target).Center;
+            Vector3 handCenter = (leftPalm + rightPalm) * 0.5f;
+            Vector3 overviewCenter = (tankBone.position + handCenter) * 0.5f +
+                target.up * 0.08f;
+            List<byte[]> overview = new List<byte[]>();
+            List<byte[]> handCloseUps = new List<byte[]>();
+            using (CaptureEnvironment environment =
+                   new CaptureEnvironment(target))
+            {
+                environment.ConfigureDarkMaterialReview();
+                environment.ConfigureView(target, overviewCenter, 1.05f);
+                overview.Add(environment.CaptureFront());
+                overview.Add(environment.CaptureSide());
+                overview.Add(environment.CaptureOppositeSide(
+                    target,
+                    overviewCenter,
+                    1.05f));
+
+                environment.ConfigureView(
+                    target,
+                    handCenter + target.up * 0.06f,
+                    0.42f);
+                handCloseUps.Add(environment.CaptureFront());
+                handCloseUps.Add(environment.CaptureSide());
+                handCloseUps.Add(environment.CaptureOppositeSide(
+                    target,
+                    handCenter + target.up * 0.06f,
+                    0.42f));
+            }
+
+            ComposeRows(
+                new[] { overview, handCloseUps },
+                FlamethrowerRemoteModeTankCarryReviewPath);
+            AssetDatabase.Refresh();
+            Debug.Log(
+                "[FlamethrowerRemoteModeTankCarry] Captured direct front, both-side, and hand-support close-up views without manipulating the reviewed target.");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Flamethrower Tank Place Sequence")]
+        internal static void ApplyFlamethrowerTankPlaceSequence()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place sequence apply requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Flamethrower_Tank_Place sequence apply.");
+            }
+
+            EnsureExactSourceCopy(
+                FlamethrowerTankPlaceOriginalPath,
+                FlamethrowerTankPlaceSourcePath,
+                FlamethrowerTankPlaceSourceHash,
+                "flamethrower tank place");
+            ConfigureFlamethrowerTankPlaceSourceImporter();
+            AnimationClip sourceTake = LoadSingleEmbeddedClip(
+                FlamethrowerTankPlaceSourcePath,
+                "flamethrower tank place");
+            GameObject miniFlamethrowerAsset =
+                AssetDatabase.LoadAssetAtPath<GameObject>(
+                    MiniFlamethrowerAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported mini flamethrower FBX is missing for Tank_Place anchoring.",
+                    Path.GetFullPath(MiniFlamethrowerAssetPath));
+            MiniFlamethrowerRigAnalysis rigAnalysis =
+                AnalyzeMiniFlamethrowerRig(
+                    miniFlamethrowerAsset,
+                    InspectMiniFlamethrowerAsset(
+                        miniFlamethrowerAsset));
+
+            Transform layout = RequireLayout(scene);
+            Transform remoteMode = RequireTarget(
+                layout,
+                FlamethrowerRemoteModeTargetName);
+            Transform tankPlace = RequireTarget(
+                layout,
+                FlamethrowerTankPlaceTargetName);
+            RootPose targetRootBefore = new RootPose(tankPlace);
+            string targetMeshBefore =
+                DescribeMiniFlamethrowerMeshAssetSignature(tankPlace);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTarget(
+                    layout,
+                    FlamethrowerTankPlaceTargetName);
+
+            PrepareFlamethrowerTankPlaceRigForRemotePoseCopy(tankPlace);
+            int copiedPoseTransformCount = CopyMatchingLocalPose(
+                remoteMode,
+                tankPlace);
+            float tankBottomToRightPalmError =
+                ConfigureFlamethrowerTankPlaceTankBottomFollow(
+                    remoteMode,
+                    tankPlace,
+                    rigAnalysis,
+                    out bool tankAnimationParentIsTargetRoot,
+                    out string itemFollowParent);
+            float maximumRelativeBoneMatrixDifference =
+                CalculateMiniFlamethrowerRelativeBoneMatrixDifference(
+                    remoteMode,
+                    tankPlace,
+                    out string maximumDifferenceBone,
+                    out float remoteBakedBoundsDiagonal,
+                    out float tankPlaceBakedBoundsDiagonal);
+            Debug.Log(
+                "[FlamethrowerTankPlaceDiagnostic] MaximumRelativeBoneMatrixDifference=" +
+                maximumRelativeBoneMatrixDifference.ToString(
+                    "F6",
+                    CultureInfo.InvariantCulture) +
+                ", Bone=" + maximumDifferenceBone +
+                ", RemoteBakedBoundsDiagonal=" +
+                remoteBakedBoundsDiagonal.ToString(
+                    "F6",
+                    CultureInfo.InvariantCulture) +
+                ", TankPlaceBakedBoundsDiagonal=" +
+                tankPlaceBakedBoundsDiagonal.ToString(
+                    "F6",
+                    CultureInfo.InvariantCulture) + ".");
+            AnimationClip holdClip =
+                CreateOrUpdateFlamethrowerTankPlaceHoldClip(tankPlace);
+            FlamethrowerTankPlaceAdjustedClipResult adjustedAction =
+                CreateOrUpdateFlamethrowerTankPlaceAdjustedClip(
+                    tankPlace,
+                    sourceTake,
+                    rigAnalysis);
+            AnimatorController controller =
+                CreateOrUpdateFlamethrowerTankPlaceController(
+                    holdClip,
+                    adjustedAction.Clip);
+            ConfigureAnimator(tankPlace, controller);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+
+            AnimatorStateMachine stateMachine =
+                controller.layers[0].stateMachine;
+            AnimatorState holdState = stateMachine.states
+                .Select(child => child.state)
+                .Single(state => string.Equals(
+                    state.name,
+                    FlamethrowerTankPlaceHoldStateName,
+                    StringComparison.Ordinal));
+            AnimatorState actionState = stateMachine.states
+                .Select(child => child.state)
+                .Single(state => string.Equals(
+                    state.name,
+                    FlamethrowerTankPlaceActionStateName,
+                    StringComparison.Ordinal));
+            AnimatorStateTransition transition = holdState.transitions.Single();
+            AnimatorStateTransition returnTransition =
+                actionState.transitions.Single();
+            bool zeroDurationTransition =
+                transition.destinationState == actionState &&
+                transition.hasExitTime &&
+                Mathf.Abs(transition.exitTime - 1f) <= 0.0001f &&
+                transition.hasFixedDuration &&
+                Mathf.Abs(transition.duration) <= 0.0001f;
+            bool actionReturnsToHold =
+                returnTransition.destinationState == holdState &&
+                returnTransition.hasExitTime &&
+                Mathf.Abs(returnTransition.exitTime - 1f) <= 0.0001f &&
+                returnTransition.hasFixedDuration &&
+                Mathf.Abs(returnTransition.duration) <= 0.0001f;
+            bool sourceTakeUsedDirectly = actionState.motion == sourceTake;
+            bool actionUsesAdjustedDerivedClip =
+                actionState.motion == adjustedAction.Clip;
+            bool onlyRequestedArmAndTankPositionCurvesChanged =
+                FlamethrowerTankPlaceOnlyRequestedArmAndTankPositionCurvesChanged(
+                    sourceTake,
+                    adjustedAction.Clip);
+            bool targetMeshesUnchanged = string.Equals(
+                targetMeshBefore,
+                DescribeMiniFlamethrowerMeshAssetSignature(tankPlace),
+                StringComparison.Ordinal);
+            bool targetRootUnchanged = RootMatches(
+                tankPlace,
+                targetRootBefore);
+            bool otherAnimatorsUnchanged = DictionariesEqual(
+                otherAnimatorsBefore,
+                CaptureAnimatorsExceptTarget(
+                    layout,
+                    FlamethrowerTankPlaceTargetName));
+            string sourceHash = HashFile(FlamethrowerTankPlaceOriginalPath);
+            string importedHash = HashFile(FlamethrowerTankPlaceSourcePath);
+            FlamethrowerTankPlaceApplyMetrics metrics =
+                new FlamethrowerTankPlaceApplyMetrics
+                {
+                    target = FlamethrowerTankPlaceTargetName,
+                    remotePoseSource = FlamethrowerRemoteModeTargetName,
+                    sourceModelPath = FlamethrowerTankPlaceOriginalPath,
+                    importedModelPath = FlamethrowerTankPlaceSourcePath,
+                    sourceModelHash = sourceHash,
+                    importedModelHash = importedHash,
+                    embeddedTakeName = sourceTake.name,
+                    embeddedTakeDurationSeconds = sourceTake.length,
+                    embeddedTakeFrameRate = sourceTake.frameRate,
+                    embeddedTakeCurveCount =
+                        AnimationUtility.GetCurveBindings(sourceTake).Length,
+                    remotePoseHoldSeconds =
+                        FlamethrowerTankPlaceHoldSeconds,
+                    copiedPoseTransformCount = copiedPoseTransformCount,
+                    holdStateName = holdState.name,
+                    actionStateName = actionState.name,
+                    byteExactImport = string.Equals(
+                        sourceHash,
+                        importedHash,
+                        StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(
+                            sourceHash,
+                            FlamethrowerTankPlaceSourceHash,
+                            StringComparison.OrdinalIgnoreCase),
+                    sourceTakeUsedDirectly = sourceTakeUsedDirectly,
+                    adjustedActionClipPath =
+                        FlamethrowerTankPlaceAdjustedClipPath,
+                    adjustedFramesBaked = adjustedAction.FramesBaked,
+                    lowestPointFrame = adjustedAction.LowestPointFrame,
+                    lowestPointTimeSeconds =
+                        adjustedAction.LowestPointTimeSeconds,
+                    lowestPointGroundErrorMeters =
+                        adjustedAction.LowestPointGroundErrorMeters,
+                    lowestPointForwardMeters =
+                        adjustedAction.LowestPointForwardMeters,
+                    lowestPointLateralErrorMeters =
+                        adjustedAction.LowestPointLateralErrorMeters,
+                    lowestPointHandMirrorErrorMeters =
+                        adjustedAction.LowestPointHandMirrorErrorMeters,
+                    lowestPointForeArmMirrorErrorMeters =
+                        adjustedAction.LowestPointForeArmMirrorErrorMeters,
+                    lowestPointLeftPalmSupportErrorMeters =
+                        adjustedAction.LowestPointLeftPalmSupportErrorMeters,
+                    lowestPointRightPalmSupportErrorMeters =
+                        adjustedAction.LowestPointRightPalmSupportErrorMeters,
+                    postReleaseTankBottomDriftMeters =
+                        adjustedAction.PostReleaseTankBottomDriftMeters,
+                    actionUsesAdjustedDerivedClip =
+                        actionUsesAdjustedDerivedClip,
+                    onlyRequestedArmAndTankPositionCurvesChanged =
+                        onlyRequestedArmAndTankPositionCurvesChanged,
+                    zeroDurationTransition = zeroDurationTransition,
+                    actionReturnsToHold = actionReturnsToHold,
+                    sequenceLoopsFromBeginning = actionReturnsToHold,
+                    sourceAnimationKeysUnmodified =
+                        string.Equals(
+                            sourceHash,
+                            importedHash,
+                            StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(
+                            sourceHash,
+                            FlamethrowerTankPlaceSourceHash,
+                            StringComparison.OrdinalIgnoreCase),
+                    itemFollowParent = itemFollowParent,
+                    tankBottomToRightPalmErrorMeters =
+                        tankBottomToRightPalmError,
+                    maximumRelativeBoneMatrixDifference =
+                        maximumRelativeBoneMatrixDifference,
+                    referenceBakedBoundsDiagonal =
+                        remoteBakedBoundsDiagonal,
+                    tankPlaceBakedBoundsDiagonal =
+                        tankPlaceBakedBoundsDiagonal,
+                    hoseShapeMatchesReference =
+                        maximumRelativeBoneMatrixDifference <= 0.0001f &&
+                        Mathf.Abs(
+                            remoteBakedBoundsDiagonal -
+                            tankPlaceBakedBoundsDiagonal) <= 0.001f,
+                    sprayerDirectRightHandFollowReleased =
+                        adjustedAction.SprayerCounterAnimatedForGroundLock,
+                    tankAnimationParentIsTargetRoot =
+                        tankAnimationParentIsTargetRoot,
+                    tankBottomFollowsRightHandUntilLowestPoint =
+                        adjustedAction.TankBottomFollowsRightHandUntilLowestPoint,
+                    tankDetachedAtLowestPoint =
+                        adjustedAction.TankDetachedAtLowestPoint,
+                    tankGroundLockedAfterLowestPoint =
+                        adjustedAction.TankGroundLockedAfterLowestPoint,
+                    targetMeshesUnchanged = targetMeshesUnchanged,
+                    targetRootUnchanged = targetRootUnchanged,
+                    otherAnimatorsUnchanged = otherAnimatorsUnchanged,
+                    validationPriority =
+                        "1순위 실제 Unity 애니메이션 직접 확인, 2순위 원본 해시·클립 참조·전환 수치 보조 확인"
+                };
+            metrics.passed =
+                metrics.byteExactImport &&
+                !metrics.sourceTakeUsedDirectly &&
+                metrics.actionUsesAdjustedDerivedClip &&
+                metrics.onlyRequestedArmAndTankPositionCurvesChanged &&
+                metrics.zeroDurationTransition &&
+                metrics.actionReturnsToHold &&
+                metrics.sequenceLoopsFromBeginning &&
+                metrics.sourceAnimationKeysUnmodified &&
+                metrics.hoseShapeMatchesReference &&
+                metrics.sprayerDirectRightHandFollowReleased &&
+                metrics.tankAnimationParentIsTargetRoot &&
+                metrics.tankBottomFollowsRightHandUntilLowestPoint &&
+                metrics.tankDetachedAtLowestPoint &&
+                metrics.tankGroundLockedAfterLowestPoint &&
+                metrics.tankBottomToRightPalmErrorMeters <= 0.002f &&
+                metrics.lowestPointGroundErrorMeters <= 0.01f &&
+                metrics.lowestPointForwardMeters > 0f &&
+                metrics.lowestPointLateralErrorMeters <= 0.01f &&
+                metrics.postReleaseTankBottomDriftMeters <= 0.002f &&
+                metrics.targetMeshesUnchanged &&
+                metrics.targetRootUnchanged &&
+                metrics.otherAnimatorsUnchanged &&
+                copiedPoseTransformCount > 0 &&
+                Mathf.Abs(metrics.remotePoseHoldSeconds - 0.5f) <= 0.0001f;
+            WriteJson(FlamethrowerTankPlaceApplyMetricsPath, metrics);
+            if (!metrics.passed)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place sequence support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            SessionState.EraseInt(FlamethrowerTankPlaceCaptureStageKey);
+            Debug.Log(
+                "[FlamethrowerTankPlace] Applied the repeating 0.5s hold and a derived Take that keeps both palms under the tank during lowering, releases right-hand-relative following at the lowest point, and locks the connected tank assembly on the front ground through Take end. Take=" +
+                sourceTake.name + ", Duration=" +
+                sourceTake.length.ToString("F3", CultureInfo.InvariantCulture) +
+                "s, GroundError=" +
+                adjustedAction.LowestPointGroundErrorMeters.ToString(
+                    "F6",
+                    CultureInfo.InvariantCulture) +
+                "m, SourceKeysChanged=False, MeshesChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Flamethrower Tank Recover Sequence")]
+        internal static void ApplyFlamethrowerTankRecoverSequence()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Recover sequence apply requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Flamethrower_Tank_Recover sequence apply.");
+            }
+
+            AnimationClip sourceClip =
+                AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                    FlamethrowerTankPlaceAdjustedClipPath) ??
+                throw new FileNotFoundException(
+                    "Flamethrower_Tank_Place connected action clip is missing for exact reverse recovery.",
+                    FlamethrowerTankPlaceAdjustedClipPath);
+            GameObject miniFlamethrowerAsset =
+                AssetDatabase.LoadAssetAtPath<GameObject>(
+                    MiniFlamethrowerAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported mini flamethrower FBX is missing for Tank_Recover.",
+                    Path.GetFullPath(MiniFlamethrowerAssetPath));
+            MiniFlamethrowerRigAnalysis rigAnalysis =
+                AnalyzeMiniFlamethrowerRig(
+                    miniFlamethrowerAsset,
+                    InspectMiniFlamethrowerAsset(
+                        miniFlamethrowerAsset));
+
+            Transform layout = RequireLayout(scene);
+            Transform tankPlace = RequireTarget(
+                layout,
+                FlamethrowerTankPlaceTargetName);
+            Transform idle = RequireTarget(
+                layout,
+                FlamethrowerIdleTargetName);
+            Transform target = RequireTarget(
+                layout,
+                FlamethrowerTankRecoverTargetName);
+            foreach (Renderer renderer in target
+                         .GetComponentsInChildren<Renderer>(true))
+            {
+                renderer.enabled = true;
+                EditorUtility.SetDirty(renderer);
+            }
+
+            RootPose targetRootBefore = new RootPose(target);
+            string targetMeshesBefore =
+                DescribeMiniFlamethrowerMeshAssetSignature(target);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTarget(
+                    layout,
+                    FlamethrowerTankRecoverTargetName);
+            string sourceClipHashBefore = HashFile(
+                FlamethrowerTankPlaceAdjustedClipPath);
+
+            GameObject finalPoseObject = UnityEngine.Object.Instantiate(
+                tankPlace.gameObject);
+            finalPoseObject.name =
+                "FlamethrowerTankRecoverGroundedStartReference";
+            finalPoseObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(finalPoseObject);
+            GameObject sampleObject = null;
+            try
+            {
+                sourceClip.SampleAnimation(
+                    finalPoseObject,
+                    sourceClip.length);
+                Transform finalPose = finalPoseObject.transform;
+                RemoveFlamethrowerRemoteDetonateAddedObjects(target);
+                int copiedStartPoseTransformCount = CopyMatchingLocalPose(
+                    finalPose,
+                    target);
+                CloneFlamethrowerTankPlaceFinalAssembly(
+                    finalPose,
+                    target);
+
+                AnimationClip reversedClip =
+                    CreateOrUpdateExactReversedClip(
+                        sourceClip,
+                        0f,
+                        sourceClip.length,
+                        FlamethrowerTankRecoverReverseClipPath,
+                        "Flamethrower_Tank_Recover_Reverse");
+                AnimationClip idleHoldClip =
+                    CreateOrUpdateFlamethrowerTankRecoverIdleHoldClip(
+                        target,
+                        idle);
+                AnimatorController controller =
+                    CreateOrUpdateFlamethrowerTankRecoverController(
+                        reversedClip,
+                        idleHoldClip);
+                ConfigureAnimator(target, controller);
+                reversedClip.SampleAnimation(target.gameObject, 0f);
+                foreach (Transform transform in target
+                             .GetComponentsInChildren<Transform>(true))
+                {
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(
+                        transform);
+                    EditorUtility.SetDirty(transform.gameObject);
+                }
+
+                EditorSceneManager.MarkSceneDirty(scene);
+                EditorSceneManager.SaveScene(scene);
+                AssetDatabase.SaveAssets();
+
+                sampleObject = UnityEngine.Object.Instantiate(
+                    target.gameObject);
+                sampleObject.name =
+                    "FlamethrowerTankRecoverApplySample";
+                sampleObject.hideFlags = HideFlags.HideAndDontSave;
+                DisableAnimators(sampleObject);
+                Transform sample = sampleObject.transform;
+                Transform sampleRig = RequireFlamethrowerTankPlaceRig(
+                    sample);
+                SkinnedMeshRenderer sampleRenderer = sampleRig
+                    .GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Recover sample renderer is missing.");
+
+                float originalLowestTime =
+                    FindFlamethrowerTankPlaceLowestPointTime(
+                        tankPlace,
+                        sourceClip,
+                        rigAnalysis);
+                float pickupTime = Mathf.Clamp(
+                    reversedClip.length - originalLowestTime,
+                    0f,
+                    reversedClip.length);
+                float groundProjection =
+                    CalculatePrimaryPlayerGroundProjection(sample);
+
+                reversedClip.SampleAnimation(sampleObject, 0f);
+                Vector3 startBottom =
+                    CalculateFlamethrowerTankBottomCenter(
+                        sample,
+                        sampleRenderer,
+                        rigAnalysis);
+                Vector3 startBottomFromRoot =
+                    startBottom - sample.position;
+                float startGroundError = Mathf.Abs(
+                    Vector3.Dot(startBottom, sample.up.normalized) -
+                    groundProjection);
+                float startForward = Vector3.Dot(
+                    startBottomFromRoot,
+                    sample.forward.normalized);
+                float startLateralError = Mathf.Abs(Vector3.Dot(
+                    startBottomFromRoot,
+                    sample.right.normalized));
+                float startAssemblyDifference =
+                    CalculateMiniFlamethrowerRelativeBoneMatrixDifference(
+                        finalPose,
+                        sample,
+                        out _,
+                        out _,
+                        out _);
+
+                reversedClip.SampleAnimation(sampleObject, pickupTime);
+                Vector3 pickupBottom =
+                    CalculateFlamethrowerTankBottomCenter(
+                        sample,
+                        sampleRenderer,
+                        rigAnalysis);
+                float pickupLeftPalmError =
+                    CalculateFlamethrowerTankHandMeshContactError(
+                        sample,
+                        LeftHandPath,
+                        sampleRenderer);
+                float pickupRightPalmError =
+                    CalculateFlamethrowerTankHandMeshContactError(
+                        sample,
+                        RightHandPath,
+                        sampleRenderer);
+
+                reversedClip.SampleAnimation(
+                    sampleObject,
+                    reversedClip.length);
+                Vector3 raisedBottom =
+                    CalculateFlamethrowerTankBottomCenter(
+                        sample,
+                        sampleRenderer,
+                        rigAnalysis);
+                float raisedTankBottom = Vector3.Dot(
+                    raisedBottom - pickupBottom,
+                    sample.up.normalized);
+                float endRightPalmError =
+                    CalculateFlamethrowerTankHandMeshContactError(
+                        sample,
+                        RightHandPath,
+                        sampleRenderer);
+
+                idleHoldClip.SampleAnimation(sampleObject, 0f);
+                float idlePoseDifference =
+                    CalculateMiniFlamethrowerRelativeBoneMatrixDifference(
+                        idle,
+                        sample,
+                        out _,
+                        out float idleReferenceBoundsDiagonal,
+                        out float idleHoldBoundsDiagonal);
+                Transform sampleSprayer = sampleRenderer.bones[
+                    MiniFlamethrowerSprayerBoneIndex] ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Recover sprayer bone is missing after Idle hold sampling.");
+                bool sprayerFollowsRightHand =
+                    sampleSprayer.parent ==
+                    FindRequired(sample, RightHandPath);
+
+                AnimatorStateMachine stateMachine =
+                    controller.layers[0].stateMachine;
+                AnimatorState reverseState = stateMachine.states
+                    .Select(child => child.state)
+                    .Single(state => string.Equals(
+                        state.name,
+                        FlamethrowerTankRecoverReverseStateName,
+                        StringComparison.Ordinal));
+                AnimatorState idleHoldState = stateMachine.states
+                    .Select(child => child.state)
+                    .Single(state => string.Equals(
+                        state.name,
+                        FlamethrowerTankRecoverIdleHoldStateName,
+                        StringComparison.Ordinal));
+                AnimatorStateTransition toIdle =
+                    reverseState.transitions.Single();
+                AnimatorStateTransition toGround =
+                    idleHoldState.transitions.Single();
+                bool zeroDurationTransitions =
+                    TankRecoverTransitionIsExactEnd(toIdle, idleHoldState) &&
+                    TankRecoverTransitionIsExactEnd(toGround, reverseState);
+                bool fullSequenceLoops =
+                    stateMachine.defaultState == reverseState &&
+                    reverseState.motion == reversedClip &&
+                    reverseState.writeDefaultValues &&
+                    idleHoldState.motion == idleHoldClip &&
+                    zeroDurationTransitions;
+                string rigPath = AnimationUtility.CalculateTransformPath(
+                    sampleRig,
+                    sample);
+                bool hasExactTankFollowCurves = AnimationUtility
+                    .GetCurveBindings(reversedClip)
+                    .Any(binding =>
+                        string.Equals(
+                            binding.path,
+                            rigPath,
+                            StringComparison.Ordinal) &&
+                        (binding.propertyName.StartsWith(
+                             "m_LocalPosition.",
+                             StringComparison.Ordinal) ||
+                         IsTransformRotationProperty(
+                             binding.propertyName)));
+                string sourceClipHashAfter = HashFile(
+                    FlamethrowerTankPlaceAdjustedClipPath);
+                FlamethrowerTankRecoverApplyMetrics metrics =
+                    new FlamethrowerTankRecoverApplyMetrics
+                    {
+                        target = FlamethrowerTankRecoverTargetName,
+                        sourceClipPath =
+                            FlamethrowerTankPlaceAdjustedClipPath,
+                        reversedClipPath =
+                            FlamethrowerTankRecoverReverseClipPath,
+                        idlePoseSource = FlamethrowerIdleTargetName,
+                        sourceDurationSeconds = sourceClip.length,
+                        reversedDurationSeconds = reversedClip.length,
+                        pickupTimeSeconds = pickupTime,
+                        idleHoldSeconds = idleHoldClip.length,
+                        sourceCurveCount = AnimationUtility
+                            .GetCurveBindings(sourceClip).Length,
+                        reversedCurveCount = AnimationUtility
+                            .GetCurveBindings(reversedClip).Length,
+                        copiedStartPoseTransformCount =
+                            copiedStartPoseTransformCount,
+                        startGroundErrorMeters = startGroundError,
+                        startForwardMeters = startForward,
+                        startLateralErrorMeters = startLateralError,
+                        pickupLeftPalmSupportErrorMeters =
+                            pickupLeftPalmError,
+                        pickupRightPalmSupportErrorMeters =
+                            pickupRightPalmError,
+                        raisedTankBottomMeters = raisedTankBottom,
+                        endRightPalmSupportErrorMeters =
+                            endRightPalmError,
+                        idlePoseMaximumBoneMatrixDifference =
+                            idlePoseDifference,
+                        idleReferenceBakedBoundsDiagonal =
+                            idleReferenceBoundsDiagonal,
+                        idleHoldBakedBoundsDiagonal =
+                            idleHoldBoundsDiagonal,
+                        sourceClipHashBefore = sourceClipHashBefore,
+                        sourceClipHashAfter = sourceClipHashAfter,
+                        sourceClipUnmodified = string.Equals(
+                            sourceClipHashBefore,
+                            sourceClipHashAfter,
+                            StringComparison.OrdinalIgnoreCase),
+                        exactCurveReverse =
+                            IsAnimationClipExactFullReverse(
+                                sourceClip,
+                                reversedClip),
+                        startsFromTankPlaceGroundedEnd =
+                            startAssemblyDifference <= 0.0001f &&
+                            startGroundError <= 0.03f &&
+                            startForward > 0f,
+                        bothPalmsSupportAtPickup =
+                            pickupLeftPalmError <= 0.08f &&
+                            pickupRightPalmError <= 0.08f,
+                        tankFollowsRightHandThroughLift =
+                            hasExactTankFollowCurves &&
+                            raisedTankBottom > 0.25f &&
+                            endRightPalmError <= 0.08f,
+                        tankFollowReleasedAtHighestPoint =
+                            idleHoldState.motion == idleHoldClip &&
+                            idlePoseDifference <= 0.0001f,
+                        idleTankPoseMatches =
+                            idlePoseDifference <= 0.0001f &&
+                            Mathf.Abs(
+                                idleReferenceBoundsDiagonal -
+                                idleHoldBoundsDiagonal) <= 0.001f,
+                        sprayerFollowsRightHandInIdleHold =
+                            sprayerFollowsRightHand,
+                        zeroDurationTransitions =
+                            zeroDurationTransitions,
+                        fullSequenceLoops = fullSequenceLoops,
+                        targetMeshesUnchanged = string.Equals(
+                            targetMeshesBefore,
+                            DescribeMiniFlamethrowerMeshAssetSignature(
+                                target),
+                            StringComparison.Ordinal),
+                        targetRootUnchanged = RootMatches(
+                            target,
+                            targetRootBefore),
+                        otherAnimatorsUnchanged = DictionariesEqual(
+                            otherAnimatorsBefore,
+                            CaptureAnimatorsExceptTarget(
+                                layout,
+                                FlamethrowerTankRecoverTargetName)),
+                        validationPriority =
+                            "1순위 실제 Unity 애니메이션 직접 확인, 2순위 원본 역순 커브·상태·수치 보조 확인"
+                    };
+                metrics.passed =
+                    metrics.sourceClipUnmodified &&
+                    metrics.exactCurveReverse &&
+                    metrics.startsFromTankPlaceGroundedEnd &&
+                    metrics.bothPalmsSupportAtPickup &&
+                    metrics.tankFollowsRightHandThroughLift &&
+                    metrics.tankFollowReleasedAtHighestPoint &&
+                    metrics.idleTankPoseMatches &&
+                    metrics.sprayerFollowsRightHandInIdleHold &&
+                    metrics.zeroDurationTransitions &&
+                    metrics.fullSequenceLoops &&
+                    metrics.targetMeshesUnchanged &&
+                    metrics.targetRootUnchanged &&
+                    metrics.otherAnimatorsUnchanged &&
+                    copiedStartPoseTransformCount > 0 &&
+                    Mathf.Abs(
+                        metrics.sourceDurationSeconds -
+                        metrics.reversedDurationSeconds) <= 0.0001f &&
+                    Mathf.Abs(
+                        metrics.idleHoldSeconds -
+                        FlamethrowerTankRecoverIdleHoldSeconds) <= 0.0001f;
+                WriteJson(
+                    FlamethrowerTankRecoverApplyMetricsPath,
+                    metrics);
+                if (!metrics.passed)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Recover sequence support checks failed. " +
+                        JsonUtility.ToJson(metrics));
+                }
+
+                SessionState.EraseInt(
+                    FlamethrowerTankRecoverCaptureStageKey);
+                Debug.Log(
+                    "[FlamethrowerTankRecover] Applied the exact full reverse of " +
+                    sourceClip.name +
+                    " from its reachable grounded end, retained both-palm pickup and right-hand-relative lift, then changed to the exact Flamethrower_Idle tank and sprayer pose for 0.5s before repeating. SourceClipChanged=False, MeshesChanged=False.");
+            }
+            finally
+            {
+                if (sampleObject != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(sampleObject);
+                }
+                UnityEngine.Object.DestroyImmediate(finalPoseObject);
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Flamethrower Remote Detonate Start")]
+        internal static void ApplyFlamethrowerRemoteDetonateStart()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Detonate start apply requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Flamethrower_Remote_Detonate start apply.");
+            }
+
+            EnsureExactSourceCopy(
+                RemoteDetonatorOriginalPath,
+                RemoteDetonatorAssetPath,
+                RemoteDetonatorSourceHash,
+                "remote detonator");
+            PrepareExactRemoteDetonatorImport();
+            GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                RemoteDetonatorAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported remote detonator FBX is missing.",
+                    Path.GetFullPath(RemoteDetonatorAssetPath));
+            MiniFlamethrowerAssetInspection inspection =
+                InspectMiniFlamethrowerAsset(asset);
+            CaptureRemoteDetonatorAssetPreview(asset, inspection);
+
+            GameObject miniFlamethrowerAsset =
+                AssetDatabase.LoadAssetAtPath<GameObject>(
+                    MiniFlamethrowerAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported mini flamethrower FBX is missing for Remote_Detonate start placement.",
+                    Path.GetFullPath(MiniFlamethrowerAssetPath));
+            MiniFlamethrowerRigAnalysis rigAnalysis =
+                AnalyzeMiniFlamethrowerRig(
+                    miniFlamethrowerAsset,
+                    InspectMiniFlamethrowerAsset(
+                        miniFlamethrowerAsset));
+            AnimationClip tankPlaceClip =
+                AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                    FlamethrowerTankPlaceAdjustedClipPath) ??
+                throw new FileNotFoundException(
+                    "Flamethrower_Tank_Place adjusted clip is missing for Remote_Detonate start placement.",
+                    FlamethrowerTankPlaceAdjustedClipPath);
+            Transform layout = RequireLayout(scene);
+            Transform tankPlace = RequireTarget(
+                layout,
+                FlamethrowerTankPlaceTargetName);
+            Transform target = RequireTarget(
+                layout,
+                FlamethrowerRemoteDetonateTargetName);
+            foreach (Renderer renderer in target
+                         .GetComponentsInChildren<Renderer>(true))
+            {
+                renderer.enabled = true;
+                EditorUtility.SetDirty(renderer);
+            }
+            RootPose targetRootBefore = new RootPose(target);
+            Mesh playerMeshBefore = RequirePrimaryPlayerSkinnedMeshRenderer(
+                target).sharedMesh;
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTarget(
+                    layout,
+                    FlamethrowerRemoteDetonateTargetName);
+
+            GameObject finalPoseObject = UnityEngine.Object.Instantiate(
+                tankPlace.gameObject);
+            finalPoseObject.name = "FlamethrowerTankPlaceFinalPoseReference";
+            finalPoseObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(finalPoseObject);
+            try
+            {
+                tankPlaceClip.SampleAnimation(
+                    finalPoseObject,
+                    tankPlaceClip.length);
+                Transform finalPose = finalPoseObject.transform;
+                RemoveFlamethrowerRemoteDetonateAddedObjects(target);
+                int copiedPoseTransformCount = CopyMatchingLocalPose(
+                    finalPose,
+                    target);
+                RightHandPalmSample initialPlayerPalm =
+                    CalculateRightPalmSample(target);
+                Transform rightHand = FindRequired(target, RightHandPath);
+                Vector3 initialPalmDistalInHand =
+                    rightHand.InverseTransformPoint(
+                        initialPlayerPalm.DistalPoint);
+                CloneFlamethrowerTankPlaceFinalAssembly(
+                    finalPose,
+                    target);
+                Transform referenceRig =
+                    RequireFlamethrowerTankPlaceRig(finalPose);
+                SkinnedMeshRenderer referenceRenderer = referenceRig
+                    .GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Place final reference renderer is missing.");
+                Transform targetRig =
+                    RequireFlamethrowerTankPlaceRig(target);
+                SkinnedMeshRenderer targetRenderer = targetRig
+                    .GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Remote_Detonate renderer is missing.");
+                Vector3 referenceTankBottom =
+                    CalculateFlamethrowerTankBottomCenter(
+                        finalPose,
+                        referenceRenderer,
+                        rigAnalysis);
+                Vector3 targetTankBottom =
+                    CalculateFlamethrowerTankBottomCenter(
+                        target,
+                        targetRenderer,
+                        rigAnalysis);
+                float sourceTankPoseError = Vector3.Distance(
+                    finalPose.InverseTransformPoint(referenceTankBottom),
+                    target.InverseTransformPoint(targetTankBottom));
+                Transform targetSprayer = targetRenderer.bones[
+                    MiniFlamethrowerSprayerBoneIndex] ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Remote_Detonate sprayer bone is missing before approved translation.");
+                float currentTankForwardDistance = Vector3.Dot(
+                    targetTankBottom - target.position,
+                    target.forward.normalized);
+                Vector3 assemblyTranslation = target.forward.normalized *
+                    (FlamethrowerRemoteDetonateTankForwardMeters -
+                     currentTankForwardDistance);
+                targetRig.position += assemblyTranslation;
+                targetSprayer.position += assemblyTranslation;
+                Vector3 preservedSprayerPosition = targetSprayer.position;
+                Quaternion preservedSprayerRotation = targetSprayer.rotation;
+                float preservedSprayerScale = Mathf.Abs(
+                    targetSprayer.lossyScale.x);
+
+                Vector3 requestedRightHandDelta =
+                    target.forward.normalized *
+                    FlamethrowerRemoteDetonateHandForwardMeters +
+                    target.up.normalized *
+                    FlamethrowerRemoteDetonateHandUpMeters;
+                Vector3 solvedHandDelta =
+                    MoveFlamethrowerRemoteDetonateRightHand(
+                        target,
+                        requestedRightHandDelta,
+                        out float rightPalmUpDot,
+                        out float rightFingerForeArmAlignment,
+                        out float rightUpperArmSwivel,
+                        out float rightForeArmAxialTwist,
+                        out float rightElbowDisplacement,
+                        out float rightForeArmRotationDifference,
+                        out float rightHandRotationDifference);
+                targetSprayer.SetPositionAndRotation(
+                    preservedSprayerPosition,
+                    preservedSprayerRotation);
+                SetMiniFlamethrowerWorldUniformScale(
+                    targetSprayer,
+                    preservedSprayerScale);
+                PrefabUtility.RecordPrefabInstancePropertyModifications(
+                    targetRig);
+                PrefabUtility.RecordPrefabInstancePropertyModifications(
+                    targetSprayer);
+                EditorUtility.SetDirty(targetRig.gameObject);
+                EditorUtility.SetDirty(targetSprayer.gameObject);
+                EditorUtility.SetDirty(targetRenderer);
+
+                Vector3 movedPalmCenter =
+                    CalculateMiniFlamethrowerPlayerPalmCenter(
+                        target,
+                        targetRenderer);
+                RightHandPalmSample playerPalm = new RightHandPalmSample
+                {
+                    Center = movedPalmCenter,
+                    DistalPoint = rightHand.TransformPoint(
+                        initialPalmDistalInHand),
+                    WeightedBoneCount = initialPlayerPalm.WeightedBoneCount,
+                    WeightedVertexCount = initialPlayerPalm.WeightedVertexCount
+                };
+                Transform detonatorGrip =
+                    AttachRemoteDetonatorToRightHand(
+                        target,
+                        asset,
+                        inspection,
+                        playerPalm,
+                        out float detonatorLength,
+                        out float lowerGripError,
+                        out float buttonUpDot,
+                        out bool detonatorUsesOriginalPrefab);
+
+                targetTankBottom =
+                    CalculateFlamethrowerTankBottomCenter(
+                        target,
+                        targetRenderer,
+                        rigAnalysis);
+                float tankForwardDistance = Vector3.Dot(
+                    targetTankBottom - target.position,
+                    target.forward.normalized);
+                float tankForwardDistanceError = Mathf.Abs(
+                    tankForwardDistance -
+                    FlamethrowerRemoteDetonateTankForwardMeters);
+                float maximumTankBoneMatrixDifference =
+                    CalculateMiniFlamethrowerRelativeBoneMatrixDifference(
+                        finalPose,
+                        target,
+                        out string maximumDifferenceBone,
+                        out float referenceTankBoundsDiagonal,
+                        out float targetTankBoundsDiagonal);
+
+                AnimationClip startClip =
+                    CreateOrUpdateFlamethrowerRemoteDetonateStartClip(
+                        target);
+                AnimatorController controller =
+                    CreateOrUpdateFlamethrowerRemoteDetonateController(
+                        startClip);
+                Animator animator = ConfigureAnimator(target, controller);
+                EditorSceneManager.MarkSceneDirty(scene);
+                EditorSceneManager.SaveScene(scene);
+                AssetDatabase.SaveAssets();
+
+                string sourceHash = HashFile(
+                    RemoteDetonatorOriginalPath);
+                string importedHash = HashFile(
+                    RemoteDetonatorAssetPath);
+                string[] materialNames = asset
+                    .GetComponentsInChildren<Renderer>(true)
+                    .SelectMany(renderer => renderer.sharedMaterials)
+                    .Where(material => material != null)
+                    .Select(material => material.name)
+                    .Distinct(StringComparer.Ordinal)
+                    .OrderBy(value => value, StringComparer.Ordinal)
+                    .ToArray();
+                string[] textureReferences = asset
+                    .GetComponentsInChildren<Renderer>(true)
+                    .SelectMany(renderer => renderer.sharedMaterials)
+                    .Where(material => material != null)
+                    .SelectMany(GetMiniFlamethrowerMaterialTextureReferences)
+                    .Distinct(StringComparer.Ordinal)
+                    .OrderBy(value => value, StringComparer.Ordinal)
+                    .ToArray();
+                bool startPoseClipApplied =
+                    animator.runtimeAnimatorController == controller &&
+                    StateUsesClip(
+                        controller,
+                        FlamethrowerRemoteDetonateStateName,
+                        startClip);
+                FlamethrowerRemoteDetonateStartMetrics metrics =
+                    new FlamethrowerRemoteDetonateStartMetrics
+                    {
+                        target = FlamethrowerRemoteDetonateTargetName,
+                        poseSource = FlamethrowerTankPlaceTargetName +
+                            "/" + tankPlaceClip.name + "/final frame",
+                        sourceModelPath = RemoteDetonatorOriginalPath,
+                        importedModelPath = RemoteDetonatorAssetPath,
+                        sourceModelHash = sourceHash,
+                        importedModelHash = importedHash,
+                        sourceBoundsSize =
+                            inspection.combinedLocalBoundsSize,
+                        sourceMeshCount = inspection.meshCount,
+                        sourceVertexCount = inspection.totalVertexCount,
+                        sourceTriangleCount = inspection.meshes.Sum(
+                            mesh => mesh.triangleCount),
+                        materialNames = materialNames,
+                        textureReferences = textureReferences,
+                        copiedPoseTransformCount =
+                            copiedPoseTransformCount,
+                        sourceTankPoseErrorBeforeTranslationMeters =
+                            sourceTankPoseError,
+                        tankForwardDistanceMeters = tankForwardDistance,
+                        tankForwardDistanceErrorMeters =
+                            tankForwardDistanceError,
+                        maximumTankBoneMatrixDifference =
+                            maximumTankBoneMatrixDifference,
+                        referenceTankBoundsDiagonal =
+                            referenceTankBoundsDiagonal,
+                        targetTankBoundsDiagonal =
+                            targetTankBoundsDiagonal,
+                        requestedRightHandDeltaMeters =
+                            requestedRightHandDelta,
+                        actualRightHandDeltaMeters = solvedHandDelta,
+                        rightHandForwardDeltaMeters = Vector3.Dot(
+                            solvedHandDelta,
+                            target.forward.normalized),
+                        rightHandUpDeltaMeters = Vector3.Dot(
+                            solvedHandDelta,
+                            target.up.normalized),
+                        rightHandLateralDeltaMeters = Vector3.Dot(
+                            solvedHandDelta,
+                            target.right.normalized),
+                        rightHandTargetErrorMeters = Vector3.Distance(
+                            solvedHandDelta,
+                            requestedRightHandDelta),
+                        rightPalmUpDot = rightPalmUpDot,
+                        rightFingerForeArmProjectedAlignmentDegrees =
+                            rightFingerForeArmAlignment,
+                        rightUpperArmSwivelDegrees =
+                            rightUpperArmSwivel,
+                        rightForeArmAxialTwistDegrees =
+                            rightForeArmAxialTwist,
+                        rightElbowDisplacementMeters =
+                            rightElbowDisplacement,
+                        rightForeArmLocalRotationDifferenceDegrees =
+                            rightForeArmRotationDifference,
+                        rightHandLocalRotationDifferenceDegrees =
+                            rightHandRotationDifference,
+                        detonatorLengthMeters = detonatorLength,
+                        lowerGripErrorMeters = lowerGripError,
+                        buttonUpDot = buttonUpDot,
+                        byteExactImport = string.Equals(
+                            sourceHash,
+                            importedHash,
+                            StringComparison.OrdinalIgnoreCase) &&
+                            string.Equals(
+                                sourceHash,
+                                RemoteDetonatorSourceHash,
+                                StringComparison.OrdinalIgnoreCase),
+                        tankStartsFromPlaceFinalFrame =
+                            sourceTankPoseError <= 0.0001f,
+                        tankPlacedAtRequestedForwardDistance =
+                            tankForwardDistanceError <= 0.005f,
+                        hoseShapeMatchesPlaceFinalFrame =
+                            maximumTankBoneMatrixDifference <= 0.0001f &&
+                            Mathf.Abs(
+                                referenceTankBoundsDiagonal -
+                                targetTankBoundsDiagonal) <= 0.001f,
+                        rightHandMovedByRequestedOffset =
+                            Vector3.Distance(
+                                solvedHandDelta,
+                                requestedRightHandDelta) <= 0.005f,
+                        rightPalmFacesUp = rightPalmUpDot >= 0.999f,
+                        rightWristRotationDistributed =
+                            rightFingerForeArmAlignment <= 1f &&
+                            rightForeArmAxialTwist <= 12f &&
+                            rightHandRotationDifference <= 35f,
+                        detonatorParentedToRightHand =
+                            detonatorGrip.parent ==
+                            FindRequired(target, RightHandPath),
+                        detonatorUsesOriginalPrefab =
+                            detonatorUsesOriginalPrefab,
+                        targetPlayerMeshUnchanged =
+                            RequirePrimaryPlayerSkinnedMeshRenderer(target)
+                                .sharedMesh == playerMeshBefore,
+                        targetRootUnchanged = RootMatches(
+                            target,
+                            targetRootBefore),
+                        otherAnimatorsUnchanged = DictionariesEqual(
+                            otherAnimatorsBefore,
+                            CaptureAnimatorsExceptTarget(
+                                layout,
+                                FlamethrowerRemoteDetonateTargetName)),
+                        startPoseClipApplied = startPoseClipApplied,
+                        noFollowupDetonationMotionGenerated =
+                            controller.layers[0].stateMachine.states.Length ==
+                            1 &&
+                            controller.layers[0].stateMachine
+                                .anyStateTransitions.Length == 0,
+                        actualUnityObjectObserved = false,
+                        contactSheetExists = false,
+                        validationPriority =
+                            "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                    };
+                metrics.passed =
+                    metrics.byteExactImport &&
+                    metrics.sourceMeshCount > 0 &&
+                    metrics.sourceVertexCount > 0 &&
+                    metrics.textureReferences.Length > 0 &&
+                    metrics.textureReferences.All(reference =>
+                        reference.IndexOf(
+                            "/RemoteDetonator/",
+                            StringComparison.Ordinal) >= 0) &&
+                    metrics.tankStartsFromPlaceFinalFrame &&
+                    metrics.tankPlacedAtRequestedForwardDistance &&
+                    metrics.hoseShapeMatchesPlaceFinalFrame &&
+                    metrics.rightHandMovedByRequestedOffset &&
+                    metrics.rightPalmFacesUp &&
+                    metrics.rightWristRotationDistributed &&
+                    metrics.detonatorParentedToRightHand &&
+                    metrics.detonatorUsesOriginalPrefab &&
+                    metrics.lowerGripErrorMeters <= 0.0001f &&
+                    metrics.buttonUpDot >= 0.999f &&
+                    metrics.targetPlayerMeshUnchanged &&
+                    metrics.targetRootUnchanged &&
+                    metrics.otherAnimatorsUnchanged &&
+                    metrics.startPoseClipApplied &&
+                    metrics.noFollowupDetonationMotionGenerated &&
+                    copiedPoseTransformCount > 0;
+                WriteJson(
+                    FlamethrowerRemoteDetonateApplyMetricsPath,
+                    metrics);
+                if (!metrics.passed)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower_Remote_Detonate start support checks failed. MaximumDifferenceBone=" +
+                        maximumDifferenceBone + ". " +
+                        JsonUtility.ToJson(metrics));
+                }
+
+                Debug.Log(
+                    "[FlamethrowerRemoteDetonate] Applied the grounded assembly at 1m forward and moved the right hand 0.30m forward plus 0.20m up while preserving the Tank_Place final hose shape and the byte-identical remote detonator grip. TankForward=" +
+                    tankForwardDistance.ToString(
+                        "F6",
+                        CultureInfo.InvariantCulture) +
+                    "m, HandDelta=" +
+                    solvedHandDelta.ToString("F4") +
+                    ", PalmUpDot=" +
+                    rightPalmUpDot.ToString(
+                        "F6",
+                        CultureInfo.InvariantCulture) +
+                    ", WristAlignment=" +
+                    rightFingerForeArmAlignment.ToString(
+                        "F3",
+                        CultureInfo.InvariantCulture) +
+                    "deg, ForeArmAxialTwist=" +
+                    rightForeArmAxialTwist.ToString(
+                        "F3",
+                        CultureInfo.InvariantCulture) +
+                    "deg" +
+                    ", LowerGripError=" +
+                    lowerGripError.ToString(
+                        "F6",
+                        CultureInfo.InvariantCulture) +
+                    "m, ButtonUpDot=" +
+                    buttonUpDot.ToString(
+                        "F6",
+                        CultureInfo.InvariantCulture) +
+                    ", SourceMeshesUnchanged=True, FollowupMotionGenerated=False.");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(finalPoseObject);
+            }
+        }
+
+        private static Vector3 MoveFlamethrowerRemoteDetonateRightHand(
+            Transform target,
+            Vector3 requestedHandDelta,
+            out float palmUpDot,
+            out float fingerForeArmProjectedAlignmentDegrees,
+            out float upperArmSwivelDegrees,
+            out float foreArmAxialTwistDegrees,
+            out float elbowDisplacementMeters,
+            out float foreArmLocalRotationDifferenceDegrees,
+            out float handLocalRotationDifferenceDegrees)
+        {
+            Transform shoulder = FindRequired(target, RightShoulderPath);
+            Transform arm = FindRequired(target, RightArmPath);
+            Transform foreArm = FindRequired(target, RightForeArmPath);
+            Transform hand = FindRequired(target, RightHandPath);
+            Quaternion sourceArmLocalRotation = arm.localRotation;
+            Quaternion sourceForeArmLocalRotation = foreArm.localRotation;
+            Quaternion sourceHandLocalRotation = hand.localRotation;
+            Vector3 initialHandPosition = hand.position;
+            Vector3 requestedHandPosition =
+                initialHandPosition + requestedHandDelta;
+            for (int reachIteration = 0;
+                 reachIteration < 8;
+                 reachIteration++)
+            {
+                Vector3 pole = foreArm.position;
+                SolveTwoBoneIk(
+                    arm,
+                    foreArm,
+                    hand,
+                    requestedHandPosition,
+                    pole);
+                Vector3 residual =
+                    requestedHandPosition - hand.position;
+                if (residual.sqrMagnitude <= 0.00000025f)
+                {
+                    break;
+                }
+
+                Vector3 shoulderToArm =
+                    arm.position - shoulder.position;
+                Vector3 desiredShoulderToArm =
+                    arm.position + residual - shoulder.position;
+                if (shoulderToArm.sqrMagnitude <= 0.0000001f ||
+                    desiredShoulderToArm.sqrMagnitude <= 0.0000001f)
+                {
+                    break;
+                }
+
+                shoulder.rotation = Quaternion.FromToRotation(
+                    shoulderToArm,
+                    desiredShoulderToArm) * shoulder.rotation;
+            }
+
+            Vector3 solvedElbowPosition = foreArm.position;
+            RedistributeFlamethrowerRemoteDetonateWristRotation(
+                target,
+                arm,
+                foreArm,
+                hand,
+                sourceArmLocalRotation,
+                sourceForeArmLocalRotation,
+                sourceHandLocalRotation,
+                out upperArmSwivelDegrees,
+                out foreArmAxialTwistDegrees);
+            elbowDisplacementMeters = Vector3.Distance(
+                solvedElbowPosition,
+                foreArm.position);
+            Vector3 palmDirection = -hand.right.normalized;
+            Vector3 foreArmDirection =
+                (hand.position - foreArm.position).normalized;
+            Vector3 projectedFingerDirection = Vector3.ProjectOnPlane(
+                hand.up,
+                palmDirection).normalized;
+            Vector3 projectedForeArmDirection = Vector3.ProjectOnPlane(
+                foreArmDirection,
+                palmDirection).normalized;
+            palmUpDot = Vector3.Dot(
+                palmDirection,
+                target.up.normalized);
+            fingerForeArmProjectedAlignmentDegrees = Vector3.Angle(
+                projectedFingerDirection,
+                projectedForeArmDirection);
+            foreArmLocalRotationDifferenceDegrees = Quaternion.Angle(
+                sourceForeArmLocalRotation,
+                foreArm.localRotation);
+            handLocalRotationDifferenceDegrees = Quaternion.Angle(
+                sourceHandLocalRotation,
+                hand.localRotation);
+            foreach (Transform bone in new[]
+                     { shoulder, arm, foreArm, hand })
+            {
+                PrefabUtility.RecordPrefabInstancePropertyModifications(
+                    bone);
+                EditorUtility.SetDirty(bone.gameObject);
+            }
+
+            return hand.position - initialHandPosition;
+        }
+
+        private static Quaternion
+            CalculateFlamethrowerRemoteDetonatePalmUpRotation(
+                Transform target,
+                Transform foreArm,
+                Transform hand)
+        {
+            Vector3 palmDirection = target.up.normalized;
+            Vector3 fingerDirection = Vector3.ProjectOnPlane(
+                hand.position - foreArm.position,
+                palmDirection);
+            if (fingerDirection.sqrMagnitude <= 0.0000001f)
+            {
+                fingerDirection = Vector3.ProjectOnPlane(
+                    target.forward,
+                    palmDirection);
+            }
+
+            if (fingerDirection.sqrMagnitude <= 0.0000001f)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Detonate right arm has no usable palm-up finger direction.");
+            }
+
+            fingerDirection.Normalize();
+            Vector3 handRight = -palmDirection;
+            Vector3 handForward = Vector3.Cross(
+                handRight,
+                fingerDirection).normalized;
+            return Quaternion.LookRotation(
+                handForward,
+                fingerDirection);
+        }
+
+        private static void
+            RedistributeFlamethrowerRemoteDetonateWristRotation(
+                Transform target,
+                Transform arm,
+                Transform foreArm,
+                Transform hand,
+                Quaternion sourceArmLocalRotation,
+                Quaternion sourceForeArmLocalRotation,
+                Quaternion sourceHandLocalRotation,
+                out float selectedUpperArmSwivelDegrees,
+                out float selectedForeArmAxialTwistDegrees)
+        {
+            Vector3 requestedHandPosition = hand.position;
+            Quaternion baseArmLocalRotation = arm.localRotation;
+            Quaternion baseForeArmLocalRotation = foreArm.localRotation;
+            Quaternion baseHandLocalRotation = hand.localRotation;
+            Quaternion baseArmWorldRotation = arm.rotation;
+            Vector3 baseElbowPosition = foreArm.position;
+            Vector3 armSwivelAxis =
+                requestedHandPosition - arm.position;
+            if (armSwivelAxis.sqrMagnitude <= 0.0000001f)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Detonate right arm has no usable shoulder-to-hand swivel axis.");
+            }
+
+            armSwivelAxis.Normalize();
+            float bestScore = float.PositiveInfinity;
+            Quaternion bestArmLocalRotation = arm.localRotation;
+            Quaternion bestForeArmLocalRotation = foreArm.localRotation;
+            Quaternion bestHandLocalRotation = hand.localRotation;
+            selectedUpperArmSwivelDegrees = 0f;
+            selectedForeArmAxialTwistDegrees = float.PositiveInfinity;
+            for (int sample = 0; sample <= 180; sample++)
+            {
+                float upperArmSwivelDegrees = -180f + sample * 2f;
+                arm.localRotation = baseArmLocalRotation;
+                foreArm.localRotation = baseForeArmLocalRotation;
+                hand.localRotation = baseHandLocalRotation;
+                arm.rotation = Quaternion.AngleAxis(
+                    upperArmSwivelDegrees,
+                    armSwivelAxis) * baseArmWorldRotation;
+                Vector3 currentForeArmDirection =
+                    hand.position - foreArm.position;
+                Vector3 requestedForeArmDirection =
+                    requestedHandPosition - foreArm.position;
+                if (currentForeArmDirection.sqrMagnitude <= 0.0000001f ||
+                    requestedForeArmDirection.sqrMagnitude <= 0.0000001f)
+                {
+                    continue;
+                }
+
+                foreArm.rotation = Quaternion.FromToRotation(
+                    currentForeArmDirection,
+                    requestedForeArmDirection) * foreArm.rotation;
+                Quaternion desiredHandRotation =
+                    CalculateFlamethrowerRemoteDetonatePalmUpRotation(
+                        target,
+                        foreArm,
+                        hand);
+                hand.rotation = desiredHandRotation;
+                float handPositionError = Vector3.Distance(
+                    hand.position,
+                    requestedHandPosition);
+                float palmUpError = Vector3.Angle(
+                    -hand.right,
+                    target.up);
+                Vector3 localForeArmAxis = hand.localPosition.normalized;
+                Quaternion foreArmDelta = Quaternion.Inverse(
+                    baseForeArmLocalRotation) * foreArm.localRotation;
+                float foreArmAxialTwist =
+                    CalculateQuaternionTwistAngleDegrees(
+                        foreArmDelta,
+                        localForeArmAxis);
+                float armDifference = Quaternion.Angle(
+                    sourceArmLocalRotation,
+                    arm.localRotation);
+                float foreArmDifference = Quaternion.Angle(
+                    sourceForeArmLocalRotation,
+                    foreArm.localRotation);
+                float handDifference = Quaternion.Angle(
+                    sourceHandLocalRotation,
+                    hand.localRotation);
+                float elbowOutside = Vector3.Dot(
+                    foreArm.position - arm.position,
+                    target.right.normalized);
+                float elbowOutsidePenalty = Mathf.Max(
+                    0f,
+                    0.025f - elbowOutside) * 3000f;
+                float elbowDisplacement = Vector3.Distance(
+                    baseElbowPosition,
+                    foreArm.position);
+                float score = handPositionError * 10000f +
+                    palmUpError * 100f +
+                    foreArmAxialTwist * 8f +
+                    handDifference * 1.8f +
+                    armDifference * 0.25f +
+                    foreArmDifference * 0.35f +
+                    elbowDisplacement * 40f +
+                    elbowOutsidePenalty;
+                if (score >= bestScore)
+                {
+                    continue;
+                }
+
+                bestScore = score;
+                bestArmLocalRotation = arm.localRotation;
+                bestForeArmLocalRotation = foreArm.localRotation;
+                bestHandLocalRotation = hand.localRotation;
+                selectedUpperArmSwivelDegrees =
+                    upperArmSwivelDegrees;
+                selectedForeArmAxialTwistDegrees =
+                    foreArmAxialTwist;
+            }
+
+            if (float.IsInfinity(bestScore))
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Detonate found no usable full-arm palm-up solution.");
+            }
+
+            arm.localRotation = bestArmLocalRotation;
+            foreArm.localRotation = bestForeArmLocalRotation;
+            hand.localRotation = bestHandLocalRotation;
+        }
+
+        private static float CalculateQuaternionTwistAngleDegrees(
+            Quaternion rotation,
+            Vector3 normalizedAxis)
+        {
+            if (normalizedAxis.sqrMagnitude <= 0.0000001f)
+            {
+                return 0f;
+            }
+
+            normalizedAxis.Normalize();
+            Vector3 vector = new Vector3(
+                rotation.x,
+                rotation.y,
+                rotation.z);
+            Vector3 projected = Vector3.Project(
+                vector,
+                normalizedAxis);
+            Quaternion twist = new Quaternion(
+                projected.x,
+                projected.y,
+                projected.z,
+                rotation.w);
+            float magnitude = Mathf.Sqrt(
+                twist.x * twist.x +
+                twist.y * twist.y +
+                twist.z * twist.z +
+                twist.w * twist.w);
+            if (magnitude <= 0.000001f)
+            {
+                return 0f;
+            }
+
+            twist.x /= magnitude;
+            twist.y /= magnitude;
+            twist.z /= magnitude;
+            twist.w /= magnitude;
+            return Quaternion.Angle(Quaternion.identity, twist);
+        }
+
+        private static void PrepareExactRemoteDetonatorImport()
+        {
+            const string textureFolder =
+                "Assets/_Project/Art/Items/RemoteDetonator/Textures";
+            EnsureMiniFlamethrowerAssetFolder(textureFolder);
+            ModelImporter importer = AssetImporter.GetAtPath(
+                RemoteDetonatorAssetPath) as ModelImporter ??
+                throw new InvalidOperationException(
+                    "Remote detonator FBX does not have a ModelImporter.");
+            foreach (AssetImporter.SourceAssetIdentifier identifier in
+                     importer.GetExternalObjectMap().Keys
+                         .Where(identifier => identifier.type ==
+                             typeof(Material))
+                         .ToArray())
+            {
+                importer.RemoveRemap(identifier);
+            }
+
+            importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
+            importer.materialName =
+                ModelImporterMaterialName.BasedOnMaterialName;
+            importer.materialSearch = ModelImporterMaterialSearch.Local;
+            importer.SaveAndReimport();
+            bool hasExtractedTextures = AssetDatabase.FindAssets(
+                    "t:Texture2D",
+                    new[] { textureFolder })
+                .Length > 0;
+            if (!hasExtractedTextures)
+            {
+                importer = AssetImporter.GetAtPath(
+                    RemoteDetonatorAssetPath) as ModelImporter ??
+                    throw new InvalidOperationException(
+                        "Remote detonator importer was lost before embedded texture extraction.");
+                if (!importer.ExtractTextures(textureFolder))
+                {
+                    throw new InvalidOperationException(
+                        "Remote detonator embedded textures could not be extracted unchanged.");
+                }
+
+                AssetDatabase.Refresh(
+                    ImportAssetOptions.ForceSynchronousImport |
+                    ImportAssetOptions.ForceUpdate);
+            }
+
+            importer = AssetImporter.GetAtPath(
+                RemoteDetonatorAssetPath) as ModelImporter ??
+                throw new InvalidOperationException(
+                    "Remote detonator importer was lost after embedded texture extraction.");
+            importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
+            importer.materialName =
+                ModelImporterMaterialName.BasedOnMaterialName;
+            importer.materialSearch = ModelImporterMaterialSearch.Local;
+            importer.SaveAndReimport();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(
+                ImportAssetOptions.ForceSynchronousImport |
+                ImportAssetOptions.ForceUpdate);
+        }
+
+        private static void RemoveFlamethrowerRemoteDetonateAddedObjects(
+            Transform target)
+        {
+            Transform rightHand = FindRequired(target, RightHandPath);
+            foreach (Transform existing in new[]
+                     {
+                         target.Find(MiniFlamethrowerRigInstanceName),
+                         rightHand.Find(MiniFlamethrowerSprayerBoneName),
+                         rightHand.Find(RemoteDetonatorGripRootName)
+                     })
+            {
+                if (existing != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(
+                        existing.gameObject);
+                }
+            }
+        }
+
+        private static void CloneFlamethrowerTankPlaceFinalAssembly(
+            Transform source,
+            Transform destination)
+        {
+            Transform sourceRig = RequireFlamethrowerTankPlaceRig(source);
+            SkinnedMeshRenderer sourceRenderer = sourceRig
+                .GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place final source renderer is missing.");
+            Transform sourceSprayer = sourceRenderer.bones[
+                MiniFlamethrowerSprayerBoneIndex] ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place final source sprayer bone is missing.");
+            GameObject rigObject = UnityEngine.Object.Instantiate(
+                sourceRig.gameObject);
+            rigObject.name = MiniFlamethrowerRigInstanceName;
+            Transform destinationRig = rigObject.transform;
+            destinationRig.SetParent(destination, false);
+            destinationRig.localPosition = sourceRig.localPosition;
+            destinationRig.localRotation = sourceRig.localRotation;
+            destinationRig.localScale = sourceRig.localScale;
+            SkinnedMeshRenderer destinationRenderer = destinationRig
+                .GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                throw new InvalidOperationException(
+                    "Cloned Remote_Detonate mini flamethrower renderer is missing.");
+            Transform[] destinationBones = destinationRenderer.bones;
+            if (destinationBones.Length != MiniFlamethrowerRigBoneCount)
+            {
+                throw new InvalidOperationException(
+                    "Cloned Remote_Detonate mini flamethrower bone count changed.");
+            }
+
+            Transform rightHand = FindRequired(destination, RightHandPath);
+            GameObject sprayerObject = new GameObject(
+                MiniFlamethrowerSprayerBoneName);
+            Transform destinationSprayer = sprayerObject.transform;
+            destinationSprayer.SetParent(rightHand, false);
+            CopyMiniFlamethrowerBonePoseRelativeToRenderer(
+                sourceRenderer,
+                sourceSprayer,
+                destinationRenderer,
+                destinationSprayer);
+            destinationBones[MiniFlamethrowerSprayerBoneIndex] =
+                destinationSprayer;
+            destinationRenderer.bones = destinationBones;
+            destinationRenderer.rootBone = destinationBones[
+                MiniFlamethrowerTankBoneIndex];
+            destinationRenderer.updateWhenOffscreen = true;
+            EditorUtility.SetDirty(rigObject);
+            EditorUtility.SetDirty(sprayerObject);
+            EditorUtility.SetDirty(destinationRenderer);
+        }
+
+        private static Transform AttachRemoteDetonatorToRightHand(
+            Transform target,
+            GameObject asset,
+            MiniFlamethrowerAssetInspection inspection,
+            RightHandPalmSample palm,
+            out float detonatorLength,
+            out float lowerGripError,
+            out float buttonUpDot,
+            out bool usesOriginalPrefab)
+        {
+            Transform rightHand = FindRequired(target, RightHandPath);
+            GameObject gripObject = new GameObject(
+                RemoteDetonatorGripRootName);
+            Transform grip = gripObject.transform;
+            grip.SetParent(rightHand, false);
+            grip.localPosition = Vector3.zero;
+            grip.localRotation = Quaternion.identity;
+            grip.localScale = Vector3.one;
+            GameObject instance = PrefabUtility.InstantiatePrefab(
+                asset,
+                grip) as GameObject ??
+                throw new InvalidOperationException(
+                    "Remote detonator original FBX prefab could not be instantiated.");
+            instance.name = RemoteDetonatorOriginalInstanceName;
+            instance.transform.localPosition = Vector3.zero;
+            instance.transform.localRotation = Quaternion.identity;
+            instance.transform.localScale = Vector3.one;
+
+            float handLength = Vector3.Distance(
+                rightHand.position,
+                palm.DistalPoint);
+            float desiredLength = Mathf.Clamp(
+                handLength * 1.25f,
+                0.12f,
+                0.18f);
+            float sourceLength = inspection.combinedLocalBoundsSize.x;
+            if (sourceLength <= 0.000001f)
+            {
+                throw new InvalidOperationException(
+                    "Remote detonator source has no usable local X length.");
+            }
+
+            grip.rotation = Quaternion.LookRotation(
+                target.up,
+                target.right);
+            SetMiniFlamethrowerWorldUniformScale(
+                grip,
+                desiredLength / sourceLength);
+            Vector3 lowerGripPoint =
+                inspection.combinedLocalBoundsCenter;
+            lowerGripPoint.z =
+                inspection.combinedLocalBoundsCenter.z -
+                inspection.combinedLocalBoundsSize.z * 0.5f;
+            grip.position += palm.Center -
+                grip.TransformPoint(lowerGripPoint);
+
+            detonatorLength = grip.TransformVector(
+                Vector3.right * sourceLength).magnitude;
+            lowerGripError = Vector3.Distance(
+                grip.TransformPoint(lowerGripPoint),
+                palm.Center);
+            buttonUpDot = Vector3.Dot(
+                grip.TransformDirection(Vector3.forward).normalized,
+                target.up.normalized);
+            usesOriginalPrefab = string.Equals(
+                PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(
+                    instance),
+                RemoteDetonatorAssetPath,
+                StringComparison.Ordinal);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(grip);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(
+                instance.transform);
+            EditorUtility.SetDirty(gripObject);
+            EditorUtility.SetDirty(instance);
+            return grip;
+        }
+
+        private static AnimationClip
+            CreateOrUpdateFlamethrowerRemoteDetonateStartClip(
+                Transform sourcePose)
+        {
+            const float duration = 1f;
+            AnimationClip generated = new AnimationClip
+            {
+                name = "Flamethrower_Remote_Detonate_Start",
+                frameRate = 60f
+            };
+            foreach (Transform transform in sourcePose
+                         .GetComponentsInChildren<Transform>(true))
+            {
+                if (transform == sourcePose)
+                {
+                    continue;
+                }
+
+                string path = AnimationUtility.CalculateTransformPath(
+                    transform,
+                    sourcePose);
+                SetRemoteDetonateConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalPosition.x",
+                    transform.localPosition.x,
+                    duration);
+                SetRemoteDetonateConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalPosition.y",
+                    transform.localPosition.y,
+                    duration);
+                SetRemoteDetonateConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalPosition.z",
+                    transform.localPosition.z,
+                    duration);
+                SetRemoteDetonateConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalRotation.x",
+                    transform.localRotation.x,
+                    duration);
+                SetRemoteDetonateConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalRotation.y",
+                    transform.localRotation.y,
+                    duration);
+                SetRemoteDetonateConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalRotation.z",
+                    transform.localRotation.z,
+                    duration);
+                SetRemoteDetonateConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalRotation.w",
+                    transform.localRotation.w,
+                    duration);
+                SetRemoteDetonateConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalScale.x",
+                    transform.localScale.x,
+                    duration);
+                SetRemoteDetonateConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalScale.y",
+                    transform.localScale.y,
+                    duration);
+                SetRemoteDetonateConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalScale.z",
+                    transform.localScale.z,
+                    duration);
+            }
+
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(generated);
+            settings.loopTime = true;
+            settings.loopBlend = false;
+            AnimationUtility.SetAnimationClipSettings(generated, settings);
+            AnimationClip existing = AssetDatabase.LoadAssetAtPath<
+                AnimationClip>(FlamethrowerRemoteDetonateClipPath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(
+                    generated,
+                    FlamethrowerRemoteDetonateClipPath);
+                existing = generated;
+            }
+            else
+            {
+                EditorUtility.CopySerialized(generated, existing);
+                UnityEngine.Object.DestroyImmediate(generated);
+                existing.name = "Flamethrower_Remote_Detonate_Start";
+                EditorUtility.SetDirty(existing);
+            }
+
+            AssetDatabase.SaveAssets();
+            return existing;
+        }
+
+        private static void SetRemoteDetonateConstantTransformCurve(
+            AnimationClip clip,
+            string path,
+            string propertyName,
+            float value,
+            float duration)
+        {
+            AnimationUtility.SetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(
+                    path,
+                    typeof(Transform),
+                    propertyName),
+                new AnimationCurve(
+                    new Keyframe(0f, value),
+                    new Keyframe(duration, value)));
+        }
+
+        private static AnimatorController
+            CreateOrUpdateFlamethrowerRemoteDetonateController(
+                AnimationClip startClip)
+        {
+            AnimatorController controller =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    FlamethrowerRemoteDetonateControllerPath);
+            if (controller == null)
+            {
+                controller = AnimatorController
+                    .CreateAnimatorControllerAtPath(
+                        FlamethrowerRemoteDetonateControllerPath);
+            }
+
+            while (controller.layers.Length > 1)
+            {
+                controller.RemoveLayer(controller.layers.Length - 1);
+            }
+            controller.parameters = Array.Empty<AnimatorControllerParameter>();
+            AnimatorControllerLayer[] layers = controller.layers;
+            AnimatorStateMachine stateMachine = layers[0].stateMachine;
+            ClearStateMachine(stateMachine);
+            AnimatorState state = stateMachine.AddState(
+                FlamethrowerRemoteDetonateStateName);
+            state.motion = startClip;
+            state.speed = 1f;
+            state.mirror = false;
+            state.cycleOffset = 0f;
+            state.writeDefaultValues = false;
+            stateMachine.defaultState = state;
+            layers[0].name = "Base Layer";
+            layers[0].avatarMask = null;
+            layers[0].blendingMode = AnimatorLayerBlendingMode.Override;
+            layers[0].defaultWeight = 1f;
+            controller.layers = layers;
+            EditorUtility.SetDirty(state);
+            EditorUtility.SetDirty(stateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Flamethrower Remote Detonate Start Review")]
+        internal static void CaptureFlamethrowerRemoteDetonateStartReview()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Detonate start review requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Flamethrower_Remote_Detonate start review.");
+            }
+
+            Transform target = RequireTarget(
+                RequireLayout(scene),
+                FlamethrowerRemoteDetonateTargetName);
+            Transform rig = RequireFlamethrowerTankPlaceRig(target);
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform grip = rightHand.Find(
+                RemoteDetonatorGripRootName) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Detonate remote detonator grip is missing before review.");
+            if (grip.Find(RemoteDetonatorOriginalInstanceName) == null)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Detonate original remote detonator instance is missing before review.");
+            }
+
+            Vector3 overviewCenter = target.position +
+                target.up * 0.78f + target.forward * 0.46f;
+            const float overviewSize = 1.28f;
+            SkinnedMeshRenderer miniFlamethrowerRenderer = rig
+                .GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Detonate mini flamethrower renderer is missing before review.");
+            Vector3 handCenter =
+                CalculateMiniFlamethrowerPlayerPalmCenter(
+                    target,
+                    miniFlamethrowerRenderer) +
+                target.up * 0.035f;
+            List<byte[]> overview = new List<byte[]>();
+            List<byte[]> handCloseUps = new List<byte[]>();
+            List<byte[]> detonatorTop = new List<byte[]>();
+            using (CaptureEnvironment environment =
+                   new CaptureEnvironment(target))
+            {
+                environment.ConfigureDarkMaterialReview();
+                environment.ConfigureView(
+                    target,
+                    overviewCenter,
+                    overviewSize);
+                overview.Add(environment.CaptureFront());
+                overview.Add(environment.CaptureSide());
+                overview.Add(environment.CaptureOppositeSide(
+                    target,
+                    overviewCenter,
+                    overviewSize));
+
+                environment.ConfigureElevatedView(
+                    target,
+                    handCenter,
+                    0.24f);
+                handCloseUps.Add(environment.CaptureFront());
+                handCloseUps.Add(environment.CaptureSide());
+                environment.ConfigureTopView(
+                    target,
+                    handCenter,
+                    0.24f);
+                handCloseUps.Add(environment.CapturePalmFromTorso());
+            }
+
+            GameObject detonatorReviewFrame = new GameObject(
+                "RemoteDetonatorReviewFrame");
+            detonatorReviewFrame.hideFlags = HideFlags.HideAndDontSave;
+            detonatorReviewFrame.transform.SetPositionAndRotation(
+                grip.position,
+                target.rotation);
+            try
+            {
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(
+                           detonatorReviewFrame.transform,
+                           grip,
+                           null))
+                {
+                    environment.ConfigureDarkMaterialReview();
+                    environment.ConfigureView(
+                        target,
+                        grip.position,
+                        0.12f);
+                    detonatorTop.Add(environment.CaptureFront());
+                    detonatorTop.Add(environment.CaptureSide());
+                    environment.ConfigureTopView(
+                        target,
+                        grip.position,
+                        0.12f);
+                    detonatorTop.Add(
+                        environment.CapturePalmFromTorso());
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(
+                    detonatorReviewFrame);
+            }
+
+            ComposeRows(
+                new[] { overview, handCloseUps, detonatorTop },
+                FlamethrowerRemoteDetonateReviewPath);
+            AssetDatabase.Refresh();
+            FlamethrowerRemoteDetonateStartMetrics metrics =
+                ReadJson<FlamethrowerRemoteDetonateStartMetrics>(
+                    FlamethrowerRemoteDetonateApplyMetricsPath);
+            metrics.actualUnityObjectObserved =
+                rig.GetComponentInChildren<SkinnedMeshRenderer>(true) !=
+                null && grip != null;
+            metrics.contactSheetExists = File.Exists(
+                Path.GetFullPath(
+                    FlamethrowerRemoteDetonateReviewPath));
+            metrics.passed = metrics.passed &&
+                metrics.actualUnityObjectObserved &&
+                metrics.contactSheetExists;
+            WriteJson(
+                FlamethrowerRemoteDetonateReviewMetricsPath,
+                metrics);
+            if (!metrics.passed)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Detonate direct review support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            Debug.Log(
+                "[FlamethrowerRemoteDetonate] Captured the saved target from front, both sides, and elevated right-hand close-ups after the approved one-meter tank placement, right-hand offset, palm-up orientation, and full-arm upper-arm swivel solution with zero added forearm axial twist. The image is the primary validation evidence; metrics remain secondary.");
+        }
+
+        private static void CaptureRemoteDetonatorAssetPreview(
+            GameObject asset,
+            MiniFlamethrowerAssetInspection inspection)
+        {
+            GameObject instance = UnityEngine.Object.Instantiate(asset);
+            instance.name = "RemoteDetonatorAssetPreview";
+            instance.hideFlags = HideFlags.HideAndDontSave;
+            instance.transform.SetPositionAndRotation(
+                Vector3.zero,
+                Quaternion.identity);
+            instance.transform.localScale = Vector3.one;
+            try
+            {
+                Vector3 center = instance.transform.TransformPoint(
+                    inspection.combinedLocalBoundsCenter);
+                float orthographicSize = Mathf.Max(
+                    inspection.combinedLocalBoundsSize.x,
+                    inspection.combinedLocalBoundsSize.y) * 0.72f;
+                float previewSize = Mathf.Max(orthographicSize, 0.003f);
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(instance.transform))
+                {
+                    environment.ConfigureDarkMaterialReview();
+                    environment.ConfigureView(
+                        instance.transform,
+                        center,
+                        previewSize);
+                    ComposeRows(
+                        new[]
+                        {
+                            new List<byte[]>
+                            {
+                                environment.CaptureFront(),
+                                environment.CaptureSide(),
+                                environment.CaptureOppositeSide(
+                                    instance.transform,
+                                    center,
+                                    previewSize),
+                                environment.CaptureOblique(
+                                    instance.transform,
+                                    center,
+                                    (instance.transform.forward +
+                                     instance.transform.right).normalized,
+                                    previewSize)
+                            }
+                        },
+                        FlamethrowerRemoteDetonatePreviewPath);
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(instance);
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Flamethrower Tank Place Sequence Review")]
+        internal static void CaptureFlamethrowerTankPlaceSequenceReview()
+        {
+            int stage = SessionState.GetInt(
+                FlamethrowerTankPlaceCaptureStageKey,
+                0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Tank_Place review must start in Edit Mode.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before Flamethrower_Tank_Place review.");
+                    }
+
+                    SessionState.SetInt(
+                        FlamethrowerTankPlaceCaptureStageKey,
+                        1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[FlamethrowerTankPlace] Entering Play Mode for direct sequence review.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Tank_Place review requires Play Mode.");
+                    }
+
+                    FlamethrowerTankPlacePlayModeCapture.Start();
+                    SessionState.SetInt(
+                        FlamethrowerTankPlaceCaptureStageKey,
+                        2);
+                    Debug.Log(
+                        "[FlamethrowerTankPlace] Began natural controller playback capture.");
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Tank_Place review polling requires Play Mode.");
+                    }
+
+                    if (FlamethrowerTankPlacePlayModeCapture.Failure != null)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Tank_Place Play Mode capture failed.",
+                            FlamethrowerTankPlacePlayModeCapture.Failure);
+                    }
+
+                    if (!FlamethrowerTankPlacePlayModeCapture.IsComplete)
+                    {
+                        Debug.Log(
+                            "[FlamethrowerTankPlace] Capture is still running. " +
+                            FlamethrowerTankPlacePlayModeCapture.Status);
+                        return;
+                    }
+
+                    SessionState.SetInt(
+                        FlamethrowerTankPlaceCaptureStageKey,
+                        3);
+                    Debug.Log(
+                        "[FlamethrowerTankPlace] Direct sequence capture completed; run once more to exit Play Mode.");
+                    return;
+                }
+
+                if (stage == 3)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Tank_Place review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(
+                        FlamethrowerTankPlaceCaptureStageKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[FlamethrowerTankPlace] Exiting Play Mode after direct sequence review.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place review stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(
+                    FlamethrowerTankPlaceCaptureStageKey);
+                FlamethrowerTankPlacePlayModeCapture.Stop();
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Flamethrower Tank Recover Sequence Review")]
+        internal static void CaptureFlamethrowerTankRecoverSequenceReview()
+        {
+            int stage = SessionState.GetInt(
+                FlamethrowerTankRecoverCaptureStageKey,
+                0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Tank_Recover review must start in Edit Mode.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before Flamethrower_Tank_Recover review.");
+                    }
+
+                    SessionState.SetInt(
+                        FlamethrowerTankRecoverCaptureStageKey,
+                        1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[FlamethrowerTankRecover] Entering Play Mode for direct reverse-recovery review.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Tank_Recover review requires Play Mode.");
+                    }
+
+                    FlamethrowerTankRecoverPlayModeCapture.Start();
+                    SessionState.SetInt(
+                        FlamethrowerTankRecoverCaptureStageKey,
+                        2);
+                    Debug.Log(
+                        "[FlamethrowerTankRecover] Began natural reverse controller playback capture.");
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Tank_Recover review polling requires Play Mode.");
+                    }
+
+                    if (FlamethrowerTankRecoverPlayModeCapture.Failure != null)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Tank_Recover Play Mode capture failed.",
+                            FlamethrowerTankRecoverPlayModeCapture.Failure);
+                    }
+
+                    if (!FlamethrowerTankRecoverPlayModeCapture.IsComplete)
+                    {
+                        Debug.Log(
+                            "[FlamethrowerTankRecover] Capture is still running. " +
+                            FlamethrowerTankRecoverPlayModeCapture.Status);
+                        return;
+                    }
+
+                    SessionState.SetInt(
+                        FlamethrowerTankRecoverCaptureStageKey,
+                        3);
+                    Debug.Log(
+                        "[FlamethrowerTankRecover] Direct reverse sequence capture completed; run once more to exit Play Mode.");
+                    return;
+                }
+
+                if (stage == 3)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Tank_Recover review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(
+                        FlamethrowerTankRecoverCaptureStageKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[FlamethrowerTankRecover] Exiting Play Mode after direct reverse-recovery review.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Recover review stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(
+                    FlamethrowerTankRecoverCaptureStageKey);
+                FlamethrowerTankRecoverPlayModeCapture.Stop();
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+        private static int CopyMatchingLocalPose(
+            Transform source,
+            Transform destination)
+        {
+            int copied = 0;
+            foreach (Transform sourceTransform in source
+                         .GetComponentsInChildren<Transform>(true))
+            {
+                if (sourceTransform == source)
+                {
+                    continue;
+                }
+
+                string path = AnimationUtility.CalculateTransformPath(
+                    sourceTransform,
+                    source);
+                Transform destinationTransform = destination.Find(path);
+                if (destinationTransform == null)
+                {
+                    continue;
+                }
+
+                destinationTransform.localPosition =
+                    sourceTransform.localPosition;
+                destinationTransform.localRotation =
+                    sourceTransform.localRotation;
+                destinationTransform.localScale = sourceTransform.localScale;
+                PrefabUtility.RecordPrefabInstancePropertyModifications(
+                    destinationTransform);
+                EditorUtility.SetDirty(destinationTransform.gameObject);
+                copied++;
+            }
+
+            return copied;
+        }
+
+        private static void PrepareFlamethrowerTankPlaceRigForRemotePoseCopy(
+            Transform target)
+        {
+            Transform rig = RequireFlamethrowerTankPlaceRig(target);
+            Transform visual = rig.Find("MiniFlamethrower_Skinned") ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place skinned visual is missing.");
+            SkinnedMeshRenderer renderer = visual
+                .GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place renderer is missing.");
+            if (renderer.bones.Length != MiniFlamethrowerRigBoneCount)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place rig bone count changed.");
+            }
+
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform sprayerBone = renderer.bones[
+                MiniFlamethrowerSprayerBoneIndex] ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place sprayer bone is missing.");
+            rig.SetParent(target, true);
+            sprayerBone.SetParent(rightHand, true);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(rig);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(
+                sprayerBone);
+            EditorUtility.SetDirty(rig.gameObject);
+            EditorUtility.SetDirty(sprayerBone.gameObject);
+        }
+
+        private static float ConfigureFlamethrowerTankPlaceTankBottomFollow(
+            Transform referenceTarget,
+            Transform target,
+            MiniFlamethrowerRigAnalysis analysis,
+            out bool tankAnimationParentIsTargetRoot,
+            out string itemFollowParent)
+        {
+            Transform rig = RequireFlamethrowerTankPlaceRig(target);
+            Transform visual = rig.Find("MiniFlamethrower_Skinned") ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place skinned visual is missing before re-anchoring.");
+            SkinnedMeshRenderer renderer = visual
+                .GetComponent<SkinnedMeshRenderer>() ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place renderer is missing before re-anchoring.");
+            if (renderer.bones.Length != MiniFlamethrowerRigBoneCount)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place rig bone count changed before re-anchoring.");
+            }
+
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform sprayerBone = renderer.bones[
+                MiniFlamethrowerSprayerBoneIndex] ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place sprayer bone is missing before re-anchoring.");
+            Vector3 rightPalmCenter =
+                CalculateMiniFlamethrowerPlayerPalmCenter(
+                    target,
+                    renderer);
+
+            if (sprayerBone.parent != rightHand)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place sprayer bone must keep its approved RightHand skinning parent.");
+            }
+            Vector3 tankBottomCenter =
+                CalculateFlamethrowerTankBottomCenter(
+                    target,
+                    renderer,
+                    analysis);
+            Vector3 alignmentOffset = rightPalmCenter - tankBottomCenter;
+            rig.position += alignmentOffset;
+            Transform referenceRig =
+                RequireFlamethrowerTankPlaceRig(referenceTarget);
+            SkinnedMeshRenderer referenceRenderer = referenceRig
+                .GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Mode reference renderer is missing.");
+            Transform referenceSprayerBone = referenceRenderer.bones[
+                MiniFlamethrowerSprayerBoneIndex] ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Mode reference sprayer bone is missing.");
+            CopyMiniFlamethrowerBonePoseRelativeToRenderer(
+                referenceRenderer,
+                referenceSprayerBone,
+                renderer,
+                sprayerBone);
+            Vector3 alignedTankBottomCenter =
+                CalculateFlamethrowerTankBottomCenter(
+                    target,
+                    renderer,
+                    analysis);
+            float error = Vector3.Distance(
+                alignedTankBottomCenter,
+                rightPalmCenter);
+
+            tankAnimationParentIsTargetRoot = rig.parent == target;
+            itemFollowParent = AnimationUtility.CalculateTransformPath(
+                rig.parent,
+                target);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(
+                sprayerBone);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(rig);
+            EditorUtility.SetDirty(sprayerBone.gameObject);
+            EditorUtility.SetDirty(rig.gameObject);
+            EditorUtility.SetDirty(renderer);
+            return error;
+        }
+
+        private static void CopyMiniFlamethrowerBonePoseRelativeToRenderer(
+            SkinnedMeshRenderer referenceRenderer,
+            Transform referenceBone,
+            SkinnedMeshRenderer destinationRenderer,
+            Transform destinationBone)
+        {
+            Transform referenceVisual = referenceRenderer.transform;
+            Transform destinationVisual = destinationRenderer.transform;
+            Vector3 rendererLocalPosition =
+                referenceVisual.InverseTransformPoint(
+                    referenceBone.position);
+            Quaternion rendererLocalRotation =
+                Quaternion.Inverse(referenceVisual.rotation) *
+                referenceBone.rotation;
+            float referenceVisualScale =
+                Mathf.Abs(referenceVisual.lossyScale.x);
+            if (referenceVisualScale <= 0.000001f)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Remote_Mode reference visual scale is invalid.");
+            }
+
+            float boneToVisualScale =
+                Mathf.Abs(referenceBone.lossyScale.x) /
+                referenceVisualScale;
+            destinationBone.SetPositionAndRotation(
+                destinationVisual.TransformPoint(rendererLocalPosition),
+                destinationVisual.rotation * rendererLocalRotation);
+            SetMiniFlamethrowerWorldUniformScale(
+                destinationBone,
+                Mathf.Abs(destinationVisual.lossyScale.x) *
+                boneToVisualScale);
+        }
+
+        private static Transform RequireFlamethrowerTankPlaceRig(
+            Transform target)
+        {
+            Transform[] rigs = target
+                .GetComponentsInChildren<Transform>(true)
+                .Where(candidate => string.Equals(
+                    candidate.name,
+                    MiniFlamethrowerRigInstanceName,
+                    StringComparison.Ordinal))
+                .ToArray();
+            if (rigs.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place must contain exactly one mini flamethrower rig; actual=" +
+                    rigs.Length.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+
+            return rigs[0];
+        }
+
+        private static float
+            CalculateMiniFlamethrowerRelativeBoneMatrixDifference(
+                Transform referenceTarget,
+                Transform inspectedTarget,
+                out string maximumDifferenceBone,
+                out float referenceBakedBoundsDiagonal,
+                out float inspectedBakedBoundsDiagonal)
+        {
+            Transform referenceRig =
+                RequireFlamethrowerTankPlaceRig(referenceTarget);
+            Transform inspectedRig =
+                RequireFlamethrowerTankPlaceRig(inspectedTarget);
+            SkinnedMeshRenderer referenceRenderer = referenceRig
+                .GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                throw new InvalidOperationException(
+                    "Reference mini flamethrower renderer is missing.");
+            SkinnedMeshRenderer inspectedRenderer = inspectedRig
+                .GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                throw new InvalidOperationException(
+                    "Inspected mini flamethrower renderer is missing.");
+            if (referenceRenderer.bones.Length !=
+                    inspectedRenderer.bones.Length ||
+                referenceRenderer.sharedMesh == null ||
+                inspectedRenderer.sharedMesh == null ||
+                referenceRenderer.sharedMesh.bindposes.Length !=
+                    referenceRenderer.bones.Length ||
+                inspectedRenderer.sharedMesh.bindposes.Length !=
+                    inspectedRenderer.bones.Length)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower diagnostic rig arrays do not match.");
+            }
+
+            float maximumDifference = 0f;
+            maximumDifferenceBone = string.Empty;
+            for (int boneIndex = 0;
+                 boneIndex < referenceRenderer.bones.Length;
+                 boneIndex++)
+            {
+                Matrix4x4 referenceMatrix =
+                    referenceRenderer.transform.worldToLocalMatrix *
+                    referenceRenderer.bones[boneIndex].localToWorldMatrix *
+                    referenceRenderer.sharedMesh.bindposes[boneIndex];
+                Matrix4x4 inspectedMatrix =
+                    inspectedRenderer.transform.worldToLocalMatrix *
+                    inspectedRenderer.bones[boneIndex].localToWorldMatrix *
+                    inspectedRenderer.sharedMesh.bindposes[boneIndex];
+                float difference = 0f;
+                for (int matrixIndex = 0;
+                     matrixIndex < 16;
+                     matrixIndex++)
+                {
+                    difference = Mathf.Max(
+                        difference,
+                        Mathf.Abs(
+                            referenceMatrix[matrixIndex] -
+                            inspectedMatrix[matrixIndex]));
+                }
+
+                if (difference > maximumDifference)
+                {
+                    maximumDifference = difference;
+                    maximumDifferenceBone =
+                        referenceRenderer.bones[boneIndex].name;
+                }
+            }
+
+            referenceBakedBoundsDiagonal =
+                CalculateMiniFlamethrowerBakedBoundsDiagonal(
+                    referenceRenderer);
+            inspectedBakedBoundsDiagonal =
+                CalculateMiniFlamethrowerBakedBoundsDiagonal(
+                    inspectedRenderer);
+            return maximumDifference;
+        }
+
+        private static float CalculateMiniFlamethrowerBakedBoundsDiagonal(
+            SkinnedMeshRenderer renderer)
+        {
+            Mesh baked = new Mesh
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            try
+            {
+                renderer.BakeMesh(baked);
+                return baked.bounds.size.magnitude;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(baked);
+            }
+        }
+
+        private static Vector3 CalculateFlamethrowerTankBottomCenter(
+            Transform target,
+            SkinnedMeshRenderer renderer,
+            MiniFlamethrowerRigAnalysis analysis)
+        {
+            Mesh mesh = renderer.sharedMesh ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place rigged mesh is missing.");
+            if (renderer.bones.Length <= MiniFlamethrowerTankBoneIndex ||
+                mesh.bindposes.Length <= MiniFlamethrowerTankBoneIndex)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place tank bind pose is missing.");
+            }
+
+            Transform tankBone = renderer.bones[
+                MiniFlamethrowerTankBoneIndex] ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place tank bone is missing.");
+            Matrix4x4 tankDeformation = tankBone.localToWorldMatrix *
+                mesh.bindposes[MiniFlamethrowerTankBoneIndex];
+            Vector3 tankBottomCenter = analysis.TankBounds.center;
+            tankBottomCenter.z = analysis.TankBounds.min.z;
+            return tankDeformation.MultiplyPoint3x4(tankBottomCenter);
+        }
+
+        private static float CalculateFlamethrowerTankHandMeshContactError(
+            Transform target,
+            string handPath,
+            SkinnedMeshRenderer miniFlamethrowerRenderer)
+        {
+            SkinnedMeshRenderer playerRenderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(target);
+            Mesh playerMesh = playerRenderer.sharedMesh ??
+                throw new InvalidOperationException(
+                    "Transporter mesh is missing while measuring tank-hand contact.");
+            Mesh miniMesh = miniFlamethrowerRenderer.sharedMesh ??
+                throw new InvalidOperationException(
+                    "Mini flamethrower mesh is missing while measuring tank-hand contact.");
+            BoneWeight[] playerWeights = playerMesh.boneWeights;
+            BoneWeight[] miniWeights = miniMesh.boneWeights;
+            if (playerWeights.Length != playerMesh.vertexCount ||
+                miniWeights.Length != miniMesh.vertexCount)
+            {
+                throw new InvalidOperationException(
+                    "Tank-hand contact measurement requires unchanged readable skin weights.");
+            }
+
+            Transform hand = FindRequired(target, handPath);
+            HashSet<int> handBoneIndices = new HashSet<int>();
+            for (int index = 0;
+                 index < playerRenderer.bones.Length;
+                 index++)
+            {
+                Transform bone = playerRenderer.bones[index];
+                if (bone != null &&
+                    (bone == hand || bone.IsChildOf(hand)))
+                {
+                    handBoneIndices.Add(index);
+                }
+            }
+            if (handBoneIndices.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    target.name + " has no skin bones for " + handPath + ".");
+            }
+
+            Mesh bakedPlayer = new Mesh
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            Mesh bakedMini = new Mesh
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            try
+            {
+                playerRenderer.BakeMesh(bakedPlayer, true);
+                miniFlamethrowerRenderer.BakeMesh(bakedMini, true);
+                Vector3[] playerVertices = bakedPlayer.vertices;
+                Vector3[] miniVertices = bakedMini.vertices;
+                List<Vector3> handWorldVertices = new List<Vector3>();
+                List<Vector3> tankWorldVertices = new List<Vector3>();
+                for (int index = 0;
+                     index < playerVertices.Length;
+                     index++)
+                {
+                    if (BoneWeightForIndices(
+                            playerWeights[index],
+                            handBoneIndices) <
+                        RightHandVertexWeightThreshold)
+                    {
+                        continue;
+                    }
+
+                    handWorldVertices.Add(
+                        playerRenderer.transform.TransformPoint(
+                            playerVertices[index]));
+                }
+                for (int index = 0;
+                     index < miniVertices.Length;
+                     index++)
+                {
+                    if (BoneWeightForIndex(
+                            miniWeights[index],
+                            MiniFlamethrowerTankBoneIndex) < 0.95f)
+                    {
+                        continue;
+                    }
+
+                    tankWorldVertices.Add(
+                        miniFlamethrowerRenderer.transform.TransformPoint(
+                            miniVertices[index]));
+                }
+                if (handWorldVertices.Count == 0 ||
+                    tankWorldVertices.Count == 0)
+                {
+                    throw new InvalidOperationException(
+                        "Tank-hand contact measurement found no unchanged weighted vertices.");
+                }
+
+                float minimumSquaredDistance = float.PositiveInfinity;
+                foreach (Vector3 handVertex in handWorldVertices)
+                {
+                    foreach (Vector3 tankVertex in tankWorldVertices)
+                    {
+                        minimumSquaredDistance = Mathf.Min(
+                            minimumSquaredDistance,
+                            (handVertex - tankVertex).sqrMagnitude);
+                    }
+                }
+                return Mathf.Sqrt(minimumSquaredDistance);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(bakedPlayer);
+                UnityEngine.Object.DestroyImmediate(bakedMini);
+            }
+        }
+
+        private static FlamethrowerTankPlaceAdjustedClipResult
+            CreateOrUpdateFlamethrowerTankPlaceAdjustedClip(
+                Transform template,
+                AnimationClip source,
+                MiniFlamethrowerRigAnalysis analysis)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "FlamethrowerTankPlaceSymmetricBake";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                Transform rig = RequireFlamethrowerTankPlaceRig(root);
+                SkinnedMeshRenderer renderer = rig
+                    .GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Place bake renderer is missing.");
+                Transform initialRightHand = FindRequired(root, RightHandPath);
+                Transform sprayerBone = renderer.bones[
+                    MiniFlamethrowerSprayerBoneIndex] ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Place bake sprayer bone is missing.");
+                if (sprayerBone.parent != initialRightHand)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Place bake must retain the sprayer bone under RightHand to preserve the approved hose skinning shape.");
+                }
+
+                Vector3 rigFollowLocalPosition =
+                    initialRightHand.InverseTransformPoint(rig.position);
+                Quaternion rigFollowLocalRotation =
+                    Quaternion.Inverse(initialRightHand.rotation) *
+                    rig.rotation;
+                Vector3 rigRootLocalScale = rig.localScale;
+                Vector3 sprayerFollowLocalPosition =
+                    sprayerBone.localPosition;
+                Quaternion sprayerFollowLocalRotation =
+                    sprayerBone.localRotation;
+                Vector3 sprayerFollowLocalScale = sprayerBone.localScale;
+                float groundProjection =
+                    CalculatePrimaryPlayerGroundProjection(root);
+                int frameIntervals = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(source.length * source.frameRate));
+                int lowestFrame = 0;
+                float lowestHeight = float.PositiveInfinity;
+                Vector3 sourceLowestBottom = Vector3.zero;
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = source.length * frame / frameIntervals;
+                    source.SampleAnimation(workObject, time);
+                    SetFlamethrowerTankPlaceRigFollowPose(
+                        root,
+                        rig,
+                        rigFollowLocalPosition,
+                        rigFollowLocalRotation,
+                        rigRootLocalScale);
+                    Vector3 bottom = CalculateFlamethrowerTankBottomCenter(
+                        root,
+                        renderer,
+                        analysis);
+                    float height = Vector3.Dot(
+                        bottom - root.position,
+                        root.up.normalized);
+                    if (height < lowestHeight)
+                    {
+                        lowestHeight = height;
+                        lowestFrame = frame;
+                        sourceLowestBottom = bottom;
+                    }
+                }
+
+                source.SampleAnimation(
+                    workObject,
+                    source.length * lowestFrame / frameIntervals);
+                SetFlamethrowerTankPlaceRigFollowPose(
+                    root,
+                    rig,
+                    rigFollowLocalPosition,
+                    rigFollowLocalRotation,
+                    rigRootLocalScale);
+                Vector3 up = root.up.normalized;
+                Vector3 forward = root.forward.normalized;
+                float sourceForward = Vector3.Dot(
+                    sourceLowestBottom - root.position,
+                    forward);
+                Vector3 desiredLowestBottom = root.position +
+                    forward * Mathf.Abs(sourceForward) +
+                    up * (groundProjection -
+                        Vector3.Dot(root.position, up));
+                Vector3 placementCorrection =
+                    desiredLowestBottom - sourceLowestBottom;
+                string[] adjustedArmPaths =
+                {
+                    LeftArmPath,
+                    LeftForeArmPath,
+                    LeftHandPath
+                };
+                Dictionary<string, TransformCurveTrack> tracks =
+                    adjustedArmPaths.ToDictionary(
+                        path => path,
+                        path => new TransformCurveTrack(path),
+                        StringComparer.Ordinal);
+                string rigPath = AnimationUtility.CalculateTransformPath(
+                    rig,
+                    root);
+                TransformCurveTrack rigTrack =
+                    new TransformCurveTrack(rigPath);
+                string sprayerPath =
+                    AnimationUtility.CalculateTransformPath(
+                        sprayerBone,
+                        root);
+                TransformCurveTrack sprayerTrack =
+                    new TransformCurveTrack(sprayerPath);
+                Vector3 frozenRigWorldPosition = Vector3.zero;
+                Quaternion frozenRigWorldRotation = Quaternion.identity;
+                Vector3 frozenRigLocalScale = rig.localScale;
+                Vector3 frozenSprayerWorldPosition = Vector3.zero;
+                Quaternion frozenSprayerWorldRotation =
+                    Quaternion.identity;
+                float frozenSprayerWorldScale = sprayerBone.lossyScale.x;
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = source.length * frame / frameIntervals;
+                    source.SampleAnimation(workObject, time);
+                    sprayerBone.localPosition = sprayerFollowLocalPosition;
+                    sprayerBone.localRotation = sprayerFollowLocalRotation;
+                    sprayerBone.localScale = sprayerFollowLocalScale;
+                    if (frame <= lowestFrame)
+                    {
+                        SetFlamethrowerTankPlaceRigFollowPose(
+                            root,
+                            rig,
+                            rigFollowLocalPosition,
+                            rigFollowLocalRotation,
+                            rigRootLocalScale);
+                        float weight =
+                            CalculateFlamethrowerTankPlaceLoweringWeight(
+                                frame,
+                                lowestFrame,
+                                frameIntervals);
+                        Vector3 weightedCorrection =
+                            placementCorrection * weight;
+                        rig.position += weightedCorrection;
+                        sprayerBone.position += weightedCorrection;
+                        if (frame == lowestFrame)
+                        {
+                            frozenRigWorldPosition = rig.position;
+                            frozenRigWorldRotation = rig.rotation;
+                            frozenRigLocalScale = rig.localScale;
+                            frozenSprayerWorldPosition =
+                                sprayerBone.position;
+                            frozenSprayerWorldRotation =
+                                sprayerBone.rotation;
+                            frozenSprayerWorldScale =
+                                sprayerBone.lossyScale.x;
+                        }
+                    }
+                    else
+                    {
+                        rig.SetPositionAndRotation(
+                            frozenRigWorldPosition,
+                            frozenRigWorldRotation);
+                        rig.localScale = frozenRigLocalScale;
+                        sprayerBone.SetPositionAndRotation(
+                            frozenSprayerWorldPosition,
+                            frozenSprayerWorldRotation);
+                        SetMiniFlamethrowerWorldUniformScale(
+                            sprayerBone,
+                            frozenSprayerWorldScale);
+                    }
+
+                    Transform rightArm = FindRequired(root, RightArmPath);
+                    Transform rightForeArm = FindRequired(
+                        root,
+                        RightForeArmPath);
+                    Transform rightHand = FindRequired(root, RightHandPath);
+                    Transform leftArm = FindRequired(root, LeftArmPath);
+                    Transform leftForeArm = FindRequired(
+                        root,
+                        LeftForeArmPath);
+                    Transform leftHand = FindRequired(root, LeftHandPath);
+                    leftArm.rotation =
+                        ReflectFlamethrowerTankPlaceRotation(
+                            root,
+                            rightArm.rotation);
+                    leftForeArm.rotation =
+                        ReflectFlamethrowerTankPlaceRotation(
+                            root,
+                            rightForeArm.rotation);
+                    leftHand.rotation =
+                        ReflectFlamethrowerTankPlaceRotation(
+                            root,
+                            rightHand.rotation);
+
+                    foreach (string path in adjustedArmPaths)
+                    {
+                        tracks[path].Add(
+                            time,
+                            FindRequired(root, path));
+                    }
+                    rigTrack.Add(time, rig);
+                    sprayerTrack.Add(time, sprayerBone);
+                }
+
+                AnimationClip generated = new AnimationClip();
+                EditorUtility.CopySerialized(source, generated);
+                generated.name =
+                    "Flamethrower_Tank_Place_SymmetricPlace";
+                generated.frameRate = source.frameRate;
+                generated.legacy = false;
+                HashSet<string> adjustedPathSet = new HashSet<string>(
+                    adjustedArmPaths,
+                    StringComparer.Ordinal);
+                foreach (EditorCurveBinding binding in AnimationUtility
+                             .GetCurveBindings(generated)
+                             .Where(binding =>
+                                 adjustedPathSet.Contains(binding.path) &&
+                                 IsTransformRotationProperty(
+                                     binding.propertyName))
+                             .ToArray())
+                {
+                    AnimationUtility.SetEditorCurve(
+                        generated,
+                        binding,
+                        null);
+                }
+
+                foreach (TransformCurveTrack track in tracks.Values)
+                {
+                    SetRotationTrackCurves(generated, track);
+                }
+                SetTransformTrackCurves(generated, rigTrack);
+                SetTransformTrackCurves(generated, sprayerTrack);
+
+                AnimationClipSettings settings =
+                    AnimationUtility.GetAnimationClipSettings(source);
+                settings.startTime = 0f;
+                settings.stopTime = source.length;
+                settings.loopTime = false;
+                settings.loopBlend = false;
+                AnimationUtility.SetAnimationClipSettings(
+                    generated,
+                    settings);
+                generated.wrapMode = WrapMode.Once;
+                AnimationUtility.SetAnimationEvents(
+                    generated,
+                    AnimationUtility.GetAnimationEvents(source));
+                AnimationClip existing =
+                    AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                        FlamethrowerTankPlaceAdjustedClipPath);
+                if (existing == null)
+                {
+                    AssetDatabase.CreateAsset(
+                        generated,
+                        FlamethrowerTankPlaceAdjustedClipPath);
+                    existing = generated;
+                }
+                else
+                {
+                    EditorUtility.CopySerialized(generated, existing);
+                    UnityEngine.Object.DestroyImmediate(generated);
+                    existing.name =
+                        "Flamethrower_Tank_Place_SymmetricPlace";
+                    EditorUtility.SetDirty(existing);
+                }
+
+                AssetDatabase.SaveAssets();
+                float lowestTime = source.length * lowestFrame /
+                    frameIntervals;
+                existing.SampleAnimation(workObject, lowestTime);
+                Vector3 appliedBottom =
+                    CalculateFlamethrowerTankBottomCenter(
+                        root,
+                        renderer,
+                        analysis);
+                Vector3 bottomFromRoot = appliedBottom - root.position;
+                Transform appliedLeftArm = FindRequired(root, LeftArmPath);
+                Transform appliedLeftForeArm = FindRequired(
+                    root,
+                    LeftForeArmPath);
+                Transform appliedLeftHand = FindRequired(
+                    root,
+                    LeftHandPath);
+                Transform appliedRightArm = FindRequired(
+                    root,
+                    RightArmPath);
+                Transform appliedRightForeArm = FindRequired(
+                    root,
+                    RightForeArmPath);
+                Transform appliedRightHand = FindRequired(
+                    root,
+                    RightHandPath);
+                Vector3 appliedMirroredRightHandOffset =
+                    ReflectFlamethrowerTankPlaceVector(
+                        root,
+                        appliedRightHand.position -
+                            appliedRightArm.position);
+                Vector3 appliedMirroredRightForeArmOffset =
+                    ReflectFlamethrowerTankPlaceVector(
+                        root,
+                        appliedRightForeArm.position -
+                            appliedRightArm.position);
+                CalculateFlamethrowerTankPlaceSupportTargets(
+                    root,
+                    appliedBottom,
+                    0f,
+                    out Vector3 appliedLeftSupport,
+                    out Vector3 appliedRightSupport);
+                float leftPalmSupportError = Vector3.Distance(
+                    CalculateLeftPalmSample(root).Center,
+                    appliedLeftSupport);
+                float rightPalmSupportError = Vector3.Distance(
+                    CalculateRightPalmSample(root).Center,
+                    appliedRightSupport);
+                Vector3 lowestSprayerInRigSpace =
+                    rig.InverseTransformPoint(sprayerBone.position);
+                Quaternion lowestSprayerRelativeRotation =
+                    Quaternion.Inverse(rig.rotation) *
+                    sprayerBone.rotation;
+                existing.SampleAnimation(workObject, source.length);
+                Vector3 endBottom = CalculateFlamethrowerTankBottomCenter(
+                    root,
+                    renderer,
+                    analysis);
+                float postReleaseBottomDrift = Vector3.Distance(
+                    appliedBottom,
+                    endBottom);
+                float postReleaseSprayerPositionDrift = Vector3.Distance(
+                    lowestSprayerInRigSpace,
+                    rig.InverseTransformPoint(sprayerBone.position));
+                float postReleaseSprayerRotationDrift = Quaternion.Angle(
+                    lowestSprayerRelativeRotation,
+                    Quaternion.Inverse(rig.rotation) *
+                    sprayerBone.rotation);
+                return new FlamethrowerTankPlaceAdjustedClipResult
+                {
+                    Clip = existing,
+                    FramesBaked = frameIntervals + 1,
+                    LowestPointFrame = lowestFrame,
+                    LowestPointTimeSeconds = lowestTime,
+                    LowestPointGroundErrorMeters = Mathf.Abs(
+                        Vector3.Dot(appliedBottom, up) -
+                        groundProjection),
+                    LowestPointForwardMeters = Vector3.Dot(
+                        bottomFromRoot,
+                        root.forward.normalized),
+                    LowestPointLateralErrorMeters = Mathf.Abs(Vector3.Dot(
+                        bottomFromRoot,
+                        root.right.normalized)),
+                    LowestPointHandMirrorErrorMeters = Vector3.Distance(
+                        appliedLeftHand.position -
+                            appliedLeftArm.position,
+                        appliedMirroredRightHandOffset),
+                    LowestPointForeArmMirrorErrorMeters = Vector3.Distance(
+                        appliedLeftForeArm.position -
+                            appliedLeftArm.position,
+                        appliedMirroredRightForeArmOffset),
+                    LowestPointLeftPalmSupportErrorMeters =
+                        leftPalmSupportError,
+                    LowestPointRightPalmSupportErrorMeters =
+                        rightPalmSupportError,
+                    PostReleaseTankBottomDriftMeters =
+                        postReleaseBottomDrift,
+                    TankBottomFollowsRightHandUntilLowestPoint =
+                        rig.parent == root &&
+                        rigTrack.PositionX.Count == frameIntervals + 1,
+                    TankDetachedAtLowestPoint = rig.parent == root,
+                    TankGroundLockedAfterLowestPoint =
+                        postReleaseBottomDrift <= 0.002f,
+                    SprayerCounterAnimatedForGroundLock =
+                        sprayerBone.parent == appliedRightHand &&
+                        postReleaseSprayerPositionDrift <= 0.002f &&
+                        postReleaseSprayerRotationDrift <= 0.2f
+                };
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static float CalculateFlamethrowerTankPlaceLoweringWeight(
+            int frame,
+            int lowestFrame,
+            int finalFrame)
+        {
+            if (frame <= lowestFrame)
+            {
+                return lowestFrame <= 0
+                    ? 1f
+                    : Mathf.SmoothStep(
+                        0f,
+                        1f,
+                        frame / (float)lowestFrame);
+            }
+
+            return 1f;
+        }
+
+        private static void SetFlamethrowerTankPlaceRigFollowPose(
+            Transform root,
+            Transform rig,
+            Vector3 rightHandLocalPosition,
+            Quaternion rightHandLocalRotation,
+            Vector3 rigRootLocalScale)
+        {
+            Transform rightHand = FindRequired(root, RightHandPath);
+            if (rig.parent != root)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place rig must remain under the transporter root while following the hand pose.");
+            }
+
+            rig.SetPositionAndRotation(
+                rightHand.TransformPoint(rightHandLocalPosition),
+                rightHand.rotation * rightHandLocalRotation);
+            rig.localScale = rigRootLocalScale;
+        }
+
+        private static float
+            CalculateFlamethrowerTankPlaceForwardSupportOffset(
+                Transform target,
+                SkinnedMeshRenderer renderer,
+                MiniFlamethrowerRigAnalysis analysis,
+                Vector3 tankBottomCenter)
+        {
+            Mesh mesh = renderer.sharedMesh ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place rigged mesh is missing while calculating hand support.");
+            Transform tankBone = renderer.bones[
+                MiniFlamethrowerTankBoneIndex] ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place tank bone is missing while calculating hand support.");
+            Matrix4x4 tankDeformation = tankBone.localToWorldMatrix *
+                mesh.bindposes[MiniFlamethrowerTankBoneIndex];
+            float tankFrontOffset = GetBoundsCorners(analysis.TankBounds)
+                .Max(corner => Vector3.Dot(
+                    tankDeformation.MultiplyPoint3x4(corner) -
+                        tankBottomCenter,
+                    target.forward.normalized));
+            return Mathf.Max(0f, tankFrontOffset - 0.025f);
+        }
+
+        private static void CalculateFlamethrowerTankPlaceSupportTargets(
+            Transform target,
+            Vector3 tankBottomCenter,
+            float forwardSupportOffset,
+            out Vector3 leftSupport,
+            out Vector3 rightSupport)
+        {
+            Transform leftArm = FindRequired(target, LeftArmPath);
+            Transform rightArm = FindRequired(target, RightArmPath);
+            float leftShoulderLine = Vector3.Dot(
+                leftArm.position - tankBottomCenter,
+                target.right);
+            float rightShoulderLine = Vector3.Dot(
+                rightArm.position - tankBottomCenter,
+                target.right);
+            leftSupport = tankBottomCenter +
+                target.right * leftShoulderLine -
+                target.up * 0.008f +
+                target.forward * forwardSupportOffset;
+            rightSupport = tankBottomCenter +
+                target.right * rightShoulderLine -
+                target.up * 0.008f +
+                target.forward * forwardSupportOffset;
+        }
+
+        private static Vector3 ReflectFlamethrowerTankPlacePoint(
+            Transform root,
+            Vector3 worldPoint)
+        {
+            Vector3 localPoint = root.InverseTransformPoint(worldPoint);
+            localPoint.x = -localPoint.x;
+            return root.TransformPoint(localPoint);
+        }
+
+        private static Vector3 ReflectFlamethrowerTankPlaceVector(
+            Transform root,
+            Vector3 worldVector)
+        {
+            Vector3 localVector = root.InverseTransformVector(worldVector);
+            localVector.x = -localVector.x;
+            return root.TransformVector(localVector);
+        }
+
+        private static float CalculatePrimaryPlayerGroundProjection(
+            Transform root)
+        {
+            SkinnedMeshRenderer renderer =
+                RequirePrimaryPlayerSkinnedMeshRenderer(root);
+            Mesh baked = new Mesh
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            try
+            {
+                renderer.BakeMesh(baked);
+                Vector3 up = root.up.normalized;
+                return baked.vertices
+                    .Select(vertex => Vector3.Dot(
+                        renderer.transform.TransformPoint(vertex),
+                        up))
+                    .Min();
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(baked);
+            }
+        }
+
+        private static Quaternion ReflectFlamethrowerTankPlaceRotation(
+            Transform root,
+            Quaternion worldRotation)
+        {
+            Vector3 localForward = root.InverseTransformDirection(
+                worldRotation * Vector3.forward);
+            Vector3 localUp = root.InverseTransformDirection(
+                worldRotation * Vector3.up);
+            localForward.x = -localForward.x;
+            localUp.x = -localUp.x;
+            return Quaternion.LookRotation(
+                root.TransformDirection(localForward).normalized,
+                root.TransformDirection(localUp).normalized);
+        }
+
+        private static float FindFlamethrowerTankPlaceLowestPointTime(
+            Transform template,
+            AnimationClip clip,
+            MiniFlamethrowerRigAnalysis analysis)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "FlamethrowerTankPlaceLowestPointScan";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                Transform rig = RequireFlamethrowerTankPlaceRig(root);
+                SkinnedMeshRenderer renderer = rig
+                    .GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Place lowest-point scan renderer is missing.");
+                int frameIntervals = Mathf.Max(
+                    1,
+                    Mathf.RoundToInt(clip.length * clip.frameRate));
+                int lowestFrame = 0;
+                float lowestHeight = float.PositiveInfinity;
+                for (int frame = 0; frame <= frameIntervals; frame++)
+                {
+                    float time = clip.length * frame / frameIntervals;
+                    clip.SampleAnimation(workObject, time);
+                    Vector3 bottom = CalculateFlamethrowerTankBottomCenter(
+                        root,
+                        renderer,
+                        analysis);
+                    float height = Vector3.Dot(
+                        bottom - root.position,
+                        root.up.normalized);
+                    if (height < lowestHeight)
+                    {
+                        lowestHeight = height;
+                        lowestFrame = frame;
+                    }
+                }
+
+                return clip.length * lowestFrame / frameIntervals;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static bool
+            FlamethrowerTankPlaceOnlyRequestedArmAndTankPositionCurvesChanged(
+                AnimationClip source,
+                AnimationClip adjusted)
+        {
+            HashSet<string> adjustedArmPaths = new HashSet<string>(
+                new[]
+                {
+                    LeftArmPath,
+                    LeftForeArmPath,
+                    LeftHandPath
+                },
+                StringComparer.Ordinal);
+            string rigPath = MiniFlamethrowerRigInstanceName;
+            string sprayerPath = RightHandPath + "/" +
+                MiniFlamethrowerSprayerBoneName;
+            EditorCurveBinding[] sourceBindings =
+                AnimationUtility.GetCurveBindings(source);
+            EditorCurveBinding[] adjustedBindings =
+                AnimationUtility.GetCurveBindings(adjusted);
+            HashSet<EditorCurveBinding> allBindings =
+                new HashSet<EditorCurveBinding>(sourceBindings);
+            allBindings.UnionWith(adjustedBindings);
+            foreach (EditorCurveBinding binding in allBindings)
+            {
+                bool allowedArmRotation =
+                    adjustedArmPaths.Contains(binding.path) &&
+                    IsTransformRotationProperty(binding.propertyName);
+                bool allowedTankTransform =
+                    string.Equals(
+                        binding.path,
+                        rigPath,
+                        StringComparison.Ordinal) &&
+                    (binding.propertyName.StartsWith(
+                         "m_LocalPosition.",
+                         StringComparison.Ordinal) ||
+                     IsTransformRotationProperty(binding.propertyName));
+                bool allowedSprayerTransform =
+                    string.Equals(
+                        binding.path,
+                        sprayerPath,
+                        StringComparison.Ordinal) &&
+                    (binding.propertyName.StartsWith(
+                         "m_LocalPosition.",
+                         StringComparison.Ordinal) ||
+                     IsTransformRotationProperty(binding.propertyName));
+                if (allowedArmRotation ||
+                    allowedTankTransform ||
+                    allowedSprayerTransform)
+                {
+                    continue;
+                }
+
+                AnimationCurve sourceCurve =
+                    AnimationUtility.GetEditorCurve(source, binding);
+                AnimationCurve adjustedCurve =
+                    AnimationUtility.GetEditorCurve(adjusted, binding);
+                if (!AnimationCurvesEqual(sourceCurve, adjustedCurve))
+                {
+                    return false;
+                }
+            }
+
+            return adjustedArmPaths.All(path =>
+                new[] { "x", "y", "z", "w" }.All(axis =>
+                    AnimationUtility.GetEditorCurve(
+                        adjusted,
+                        EditorCurveBinding.FloatCurve(
+                            path,
+                            typeof(Transform),
+                            "m_LocalRotation." + axis)) != null)) &&
+                new[] { "x", "y", "z" }.All(axis =>
+                    AnimationUtility.GetEditorCurve(
+                        adjusted,
+                        EditorCurveBinding.FloatCurve(
+                            rigPath,
+                            typeof(Transform),
+                            "m_LocalPosition." + axis)) != null) &&
+                new[] { "x", "y", "z", "w" }.All(axis =>
+                    AnimationUtility.GetEditorCurve(
+                        adjusted,
+                        EditorCurveBinding.FloatCurve(
+                            rigPath,
+                            typeof(Transform),
+                            "m_LocalRotation." + axis)) != null);
+        }
+
+        private static AnimationClip
+            CreateOrUpdateFlamethrowerTankPlaceHoldClip(Transform sourcePose)
+        {
+            AnimationClip generated = new AnimationClip
+            {
+                name = "Flamethrower_Tank_Place_RemoteHold",
+                frameRate = 60f
+            };
+            foreach (Transform transform in sourcePose
+                         .GetComponentsInChildren<Transform>(true))
+            {
+                if (transform == sourcePose)
+                {
+                    continue;
+                }
+
+                string path = AnimationUtility.CalculateTransformPath(
+                    transform,
+                    sourcePose);
+                SetConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalPosition.x",
+                    transform.localPosition.x);
+                SetConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalPosition.y",
+                    transform.localPosition.y);
+                SetConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalPosition.z",
+                    transform.localPosition.z);
+                SetConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalRotation.x",
+                    transform.localRotation.x);
+                SetConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalRotation.y",
+                    transform.localRotation.y);
+                SetConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalRotation.z",
+                    transform.localRotation.z);
+                SetConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalRotation.w",
+                    transform.localRotation.w);
+                SetConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalScale.x",
+                    transform.localScale.x);
+                SetConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalScale.y",
+                    transform.localScale.y);
+                SetConstantTransformCurve(
+                    generated,
+                    path,
+                    "m_LocalScale.z",
+                    transform.localScale.z);
+            }
+
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(generated);
+            settings.loopTime = false;
+            settings.loopBlend = false;
+            AnimationUtility.SetAnimationClipSettings(generated, settings);
+            AnimationClip existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                FlamethrowerTankPlaceHoldClipPath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(
+                    generated,
+                    FlamethrowerTankPlaceHoldClipPath);
+                existing = generated;
+            }
+            else
+            {
+                EditorUtility.CopySerialized(generated, existing);
+                UnityEngine.Object.DestroyImmediate(generated);
+                existing.name = "Flamethrower_Tank_Place_RemoteHold";
+                EditorUtility.SetDirty(existing);
+            }
+
+            AssetDatabase.SaveAssets();
+            return existing;
+        }
+
+        private static void SetConstantTransformCurve(
+            AnimationClip clip,
+            string path,
+            string propertyName,
+            float value)
+        {
+            AnimationCurve curve = new AnimationCurve(
+                new Keyframe(0f, value),
+                new Keyframe(FlamethrowerTankPlaceHoldSeconds, value));
+            AnimationUtility.SetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(
+                    path,
+                    typeof(Transform),
+                    propertyName),
+                curve);
+        }
+
+        private static AnimatorController
+            CreateOrUpdateFlamethrowerTankPlaceController(
+                AnimationClip holdClip,
+                AnimationClip actionClip)
+        {
+            AnimatorController controller =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    FlamethrowerTankPlaceControllerPath);
+            if (controller == null)
+            {
+                controller = AnimatorController.CreateAnimatorControllerAtPath(
+                    FlamethrowerTankPlaceControllerPath);
+            }
+
+            while (controller.layers.Length > 1)
+            {
+                controller.RemoveLayer(controller.layers.Length - 1);
+            }
+            if (controller.layers.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place controller must contain one layer.");
+            }
+
+            controller.parameters = Array.Empty<AnimatorControllerParameter>();
+            AnimatorControllerLayer[] layers = controller.layers;
+            AnimatorStateMachine stateMachine = layers[0].stateMachine;
+            ClearStateMachine(stateMachine);
+            AnimatorState holdState = stateMachine.AddState(
+                FlamethrowerTankPlaceHoldStateName);
+            AnimatorState actionState = stateMachine.AddState(
+                FlamethrowerTankPlaceActionStateName);
+            ConfigureFlamethrowerTankPlaceState(holdState, holdClip);
+            ConfigureFlamethrowerTankPlaceState(actionState, actionClip);
+            AnimatorStateTransition transition = holdState.AddTransition(
+                actionState);
+            ConfigureFlamethrowerTankPlaceTransition(transition);
+            AnimatorStateTransition returnTransition =
+                actionState.AddTransition(holdState);
+            ConfigureFlamethrowerTankPlaceTransition(returnTransition);
+            stateMachine.defaultState = holdState;
+            layers[0].name = "Base Layer";
+            layers[0].avatarMask = null;
+            layers[0].blendingMode = AnimatorLayerBlendingMode.Override;
+            layers[0].defaultWeight = 1f;
+            controller.layers = layers;
+            EditorUtility.SetDirty(transition);
+            EditorUtility.SetDirty(returnTransition);
+            EditorUtility.SetDirty(holdState);
+            EditorUtility.SetDirty(actionState);
+            EditorUtility.SetDirty(stateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static void ConfigureFlamethrowerTankPlaceTransition(
+            AnimatorStateTransition transition)
+        {
+            transition.hasExitTime = true;
+            transition.exitTime = 1f;
+            transition.hasFixedDuration = true;
+            transition.duration = 0f;
+            transition.offset = 0f;
+            transition.interruptionSource = TransitionInterruptionSource.None;
+            transition.orderedInterruption = true;
+            transition.canTransitionToSelf = false;
+        }
+
+        private static void ConfigureFlamethrowerTankPlaceState(
+            AnimatorState state,
+            AnimationClip clip)
+        {
+            state.motion = clip;
+            state.speed = 1f;
+            state.mirror = false;
+            state.cycleOffset = 0f;
+            state.writeDefaultValues = false;
+        }
+
+        private static AnimationClip
+            CreateOrUpdateFlamethrowerTankRecoverIdleHoldClip(
+                Transform template,
+                Transform idleReference)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "FlamethrowerTankRecoverIdleHoldReference";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform workPose = workObject.transform;
+                CopyMatchingLocalPose(idleReference, workPose);
+                AnimationClip generated = new AnimationClip
+                {
+                    name = "Flamethrower_Tank_Recover_IdleHold",
+                    frameRate = 60f
+                };
+                foreach (Transform transform in workPose
+                             .GetComponentsInChildren<Transform>(true))
+                {
+                    if (transform == workPose)
+                    {
+                        continue;
+                    }
+
+                    string path = AnimationUtility.CalculateTransformPath(
+                        transform,
+                        workPose);
+                    SetRemoteDetonateConstantTransformCurve(
+                        generated,
+                        path,
+                        "m_LocalPosition.x",
+                        transform.localPosition.x,
+                        FlamethrowerTankRecoverIdleHoldSeconds);
+                    SetRemoteDetonateConstantTransformCurve(
+                        generated,
+                        path,
+                        "m_LocalPosition.y",
+                        transform.localPosition.y,
+                        FlamethrowerTankRecoverIdleHoldSeconds);
+                    SetRemoteDetonateConstantTransformCurve(
+                        generated,
+                        path,
+                        "m_LocalPosition.z",
+                        transform.localPosition.z,
+                        FlamethrowerTankRecoverIdleHoldSeconds);
+                    SetRemoteDetonateConstantTransformCurve(
+                        generated,
+                        path,
+                        "m_LocalRotation.x",
+                        transform.localRotation.x,
+                        FlamethrowerTankRecoverIdleHoldSeconds);
+                    SetRemoteDetonateConstantTransformCurve(
+                        generated,
+                        path,
+                        "m_LocalRotation.y",
+                        transform.localRotation.y,
+                        FlamethrowerTankRecoverIdleHoldSeconds);
+                    SetRemoteDetonateConstantTransformCurve(
+                        generated,
+                        path,
+                        "m_LocalRotation.z",
+                        transform.localRotation.z,
+                        FlamethrowerTankRecoverIdleHoldSeconds);
+                    SetRemoteDetonateConstantTransformCurve(
+                        generated,
+                        path,
+                        "m_LocalRotation.w",
+                        transform.localRotation.w,
+                        FlamethrowerTankRecoverIdleHoldSeconds);
+                    SetRemoteDetonateConstantTransformCurve(
+                        generated,
+                        path,
+                        "m_LocalScale.x",
+                        transform.localScale.x,
+                        FlamethrowerTankRecoverIdleHoldSeconds);
+                    SetRemoteDetonateConstantTransformCurve(
+                        generated,
+                        path,
+                        "m_LocalScale.y",
+                        transform.localScale.y,
+                        FlamethrowerTankRecoverIdleHoldSeconds);
+                    SetRemoteDetonateConstantTransformCurve(
+                        generated,
+                        path,
+                        "m_LocalScale.z",
+                        transform.localScale.z,
+                        FlamethrowerTankRecoverIdleHoldSeconds);
+                }
+
+                AnimationClipSettings settings =
+                    AnimationUtility.GetAnimationClipSettings(generated);
+                settings.loopTime = false;
+                settings.loopBlend = false;
+                AnimationUtility.SetAnimationClipSettings(
+                    generated,
+                    settings);
+                generated.wrapMode = WrapMode.Once;
+                AnimationClip existing =
+                    AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                        FlamethrowerTankRecoverIdleHoldClipPath);
+                if (existing == null)
+                {
+                    AssetDatabase.CreateAsset(
+                        generated,
+                        FlamethrowerTankRecoverIdleHoldClipPath);
+                    existing = generated;
+                }
+                else
+                {
+                    EditorUtility.CopySerialized(generated, existing);
+                    UnityEngine.Object.DestroyImmediate(generated);
+                    existing.name =
+                        "Flamethrower_Tank_Recover_IdleHold";
+                    EditorUtility.SetDirty(existing);
+                }
+
+                AssetDatabase.SaveAssets();
+                return existing;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static AnimatorController
+            CreateOrUpdateFlamethrowerTankRecoverController(
+                AnimationClip reversedClip,
+                AnimationClip idleHoldClip)
+        {
+            AnimatorController controller =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    FlamethrowerTankRecoverControllerPath);
+            if (controller == null)
+            {
+                controller = AnimatorController
+                    .CreateAnimatorControllerAtPath(
+                        FlamethrowerTankRecoverControllerPath);
+            }
+
+            while (controller.layers.Length > 1)
+            {
+                controller.RemoveLayer(controller.layers.Length - 1);
+            }
+            if (controller.layers.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Recover controller must contain one layer.");
+            }
+
+            controller.parameters = Array.Empty<AnimatorControllerParameter>();
+            AnimatorControllerLayer[] layers = controller.layers;
+            AnimatorStateMachine stateMachine = layers[0].stateMachine;
+            ClearStateMachine(stateMachine);
+            AnimatorState reverseState = stateMachine.AddState(
+                FlamethrowerTankRecoverReverseStateName);
+            AnimatorState idleHoldState = stateMachine.AddState(
+                FlamethrowerTankRecoverIdleHoldStateName);
+            ConfigureFlamethrowerTankPlaceState(
+                reverseState,
+                reversedClip);
+            ConfigureFlamethrowerTankPlaceState(
+                idleHoldState,
+                idleHoldClip);
+            // The source clip relies on its saved grounded scene defaults for
+            // hose bones that have no authored curves. Restore those exact
+            // defaults when a new reverse cycle starts after the Idle hold.
+            reverseState.writeDefaultValues = true;
+            AnimatorStateTransition toIdle = reverseState.AddTransition(
+                idleHoldState);
+            AnimatorStateTransition toGround = idleHoldState.AddTransition(
+                reverseState);
+            ConfigureFlamethrowerTankPlaceTransition(toIdle);
+            ConfigureFlamethrowerTankPlaceTransition(toGround);
+            stateMachine.defaultState = reverseState;
+            layers[0].name = "Base Layer";
+            layers[0].avatarMask = null;
+            layers[0].blendingMode = AnimatorLayerBlendingMode.Override;
+            layers[0].defaultWeight = 1f;
+            controller.layers = layers;
+            EditorUtility.SetDirty(toIdle);
+            EditorUtility.SetDirty(toGround);
+            EditorUtility.SetDirty(reverseState);
+            EditorUtility.SetDirty(idleHoldState);
+            EditorUtility.SetDirty(stateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static bool TankRecoverTransitionIsExactEnd(
+            AnimatorStateTransition transition,
+            AnimatorState destination)
+        {
+            return transition.destinationState == destination &&
+                transition.hasExitTime &&
+                Mathf.Abs(transition.exitTime - 1f) <= 0.0001f &&
+                transition.hasFixedDuration &&
+                Mathf.Abs(transition.duration) <= 0.0001f &&
+                Mathf.Abs(transition.offset) <= 0.0001f;
+        }
+
+        private static bool IsAnimationClipExactFullReverse(
+            AnimationClip source,
+            AnimationClip reversed)
+        {
+            if (Mathf.Abs(source.length - reversed.length) > 0.0001f ||
+                Mathf.Abs(source.frameRate - reversed.frameRate) > 0.0001f)
+            {
+                return false;
+            }
+
+            EditorCurveBinding[] sourceBindings =
+                AnimationUtility.GetCurveBindings(source);
+            EditorCurveBinding[] reversedBindings =
+                AnimationUtility.GetCurveBindings(reversed);
+            if (sourceBindings.Length != reversedBindings.Length ||
+                sourceBindings.Any(binding =>
+                    !reversedBindings.Contains(binding)))
+            {
+                return false;
+            }
+
+            foreach (EditorCurveBinding binding in sourceBindings)
+            {
+                AnimationCurve sourceCurve = AnimationUtility
+                    .GetEditorCurve(source, binding);
+                AnimationCurve reversedCurve = AnimationUtility
+                    .GetEditorCurve(reversed, binding);
+                if (sourceCurve == null || reversedCurve == null)
+                {
+                    return false;
+                }
+
+                int sampleIntervals = Mathf.Max(
+                    1,
+                    Mathf.CeilToInt(
+                        source.length * source.frameRate * 2f));
+                for (int index = 0; index <= sampleIntervals; index++)
+                {
+                    float reversedTime = source.length * index /
+                        sampleIntervals;
+                    float sourceTime = source.length - reversedTime;
+                    float sourceValue = sourceCurve.Evaluate(sourceTime);
+                    float reversedValue = reversedCurve.Evaluate(
+                        reversedTime);
+                    float tolerance = Mathf.Max(
+                        0.00001f,
+                        Mathf.Abs(sourceValue) * 0.00001f);
+                    if (Mathf.Abs(reversedValue - sourceValue) >
+                        tolerance)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            EditorCurveBinding[] sourceObjectBindings = AnimationUtility
+                .GetObjectReferenceCurveBindings(source);
+            EditorCurveBinding[] reversedObjectBindings = AnimationUtility
+                .GetObjectReferenceCurveBindings(reversed);
+            if (sourceObjectBindings.Length !=
+                    reversedObjectBindings.Length ||
+                sourceObjectBindings.Any(binding =>
+                    !reversedObjectBindings.Contains(binding)))
+            {
+                return false;
+            }
+
+            foreach (EditorCurveBinding binding in sourceObjectBindings)
+            {
+                ObjectReferenceKeyframe[] sourceKeys = AnimationUtility
+                    .GetObjectReferenceCurve(source, binding);
+                ObjectReferenceKeyframe[] reversedKeys = AnimationUtility
+                    .GetObjectReferenceCurve(reversed, binding);
+                if (sourceKeys.Length != reversedKeys.Length)
+                {
+                    return false;
+                }
+                for (int index = 0; index < sourceKeys.Length; index++)
+                {
+                    ObjectReferenceKeyframe sourceKey = sourceKeys[index];
+                    ObjectReferenceKeyframe reversedKey = reversedKeys[
+                        sourceKeys.Length - 1 - index];
+                    if (Mathf.Abs(
+                            reversedKey.time -
+                            (source.length - sourceKey.time)) > 0.0001f ||
+                        reversedKey.value != sourceKey.value)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        internal static class FlamethrowerTankPlacePlayModeCapture
+        {
+            private static readonly List<List<byte[]>> Rows =
+                new List<List<byte[]>>
+                {
+                    new List<byte[]>(),
+                    new List<byte[]>(),
+                    new List<byte[]>(),
+                    new List<byte[]>()
+                };
+            private static readonly List<float> CapturedElapsedSeconds =
+                new List<float>();
+            private static readonly List<string> CapturedStates =
+                new List<string>();
+            private static readonly List<float> TankBottomRightHandLocalDrifts =
+                new List<float>();
+            private static readonly List<Vector3> TankBottomWorldPositions =
+                new List<Vector3>();
+            private static readonly List<Vector3> SprayerWorldPositions =
+                new List<Vector3>();
+            private static readonly List<float> TankBottomGroundErrors =
+                new List<float>();
+            private static readonly List<float> TankBottomForwardDistances =
+                new List<float>();
+            private static readonly List<float> TankBottomLateralErrors =
+                new List<float>();
+            private static readonly List<float> HandMirrorErrors =
+                new List<float>();
+            private static readonly List<float> ForeArmMirrorErrors =
+                new List<float>();
+            private static readonly List<float> LeftPalmSupportErrors =
+                new List<float>();
+            private static readonly List<float> RightPalmSupportErrors =
+                new List<float>();
+            private static Transform target;
+            private static Transform rightHand;
+            private static Animator animator;
+            private static AnimationClip sourceTake;
+            private static AnimationClip adjustedActionClip;
+            private static SkinnedMeshRenderer miniFlamethrowerRenderer;
+            private static MiniFlamethrowerRigAnalysis rigAnalysis;
+            private static Vector3 tankBottomAnchorInRightHandLocalSpace;
+            private static float lowestPointNormalizedTime;
+            private static float groundProjection;
+            private static CaptureEnvironment environment;
+            private static double startedAt;
+            private static int nextCaptureIndex;
+            private static bool isRunning;
+
+            internal static bool IsComplete { get; private set; }
+
+            internal static Exception Failure { get; private set; }
+
+            internal static string Status { get; private set; }
+
+            internal static void Start()
+            {
+                if (isRunning)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Place capture is already running.");
+                }
+                if (!EditorApplication.isPlaying)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Place capture requires Play Mode.");
+                }
+
+                Scene scene = RequireScene();
+                target = RequireTarget(
+                    RequireLayout(scene),
+                    FlamethrowerTankPlaceTargetName);
+                animator = RequireAnimator(target);
+                sourceTake = LoadSingleEmbeddedClip(
+                    FlamethrowerTankPlaceSourcePath,
+                    "flamethrower tank place review");
+                adjustedActionClip =
+                    AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                        FlamethrowerTankPlaceAdjustedClipPath) ??
+                    throw new FileNotFoundException(
+                        "Flamethrower_Tank_Place adjusted action clip is missing.",
+                        FlamethrowerTankPlaceAdjustedClipPath);
+                Transform rig = RequireFlamethrowerTankPlaceRig(target);
+                miniFlamethrowerRenderer = rig
+                    .GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Place renderer is missing in Play Mode.");
+                GameObject miniFlamethrowerAsset =
+                    AssetDatabase.LoadAssetAtPath<GameObject>(
+                        MiniFlamethrowerAssetPath) ??
+                    throw new FileNotFoundException(
+                        "Imported mini flamethrower FBX is missing during Tank_Place review.",
+                        Path.GetFullPath(MiniFlamethrowerAssetPath));
+                rigAnalysis = AnalyzeMiniFlamethrowerRig(
+                    miniFlamethrowerAsset,
+                    InspectMiniFlamethrowerAsset(
+                        miniFlamethrowerAsset));
+                lowestPointNormalizedTime = Mathf.Clamp(
+                    FindFlamethrowerTankPlaceLowestPointTime(
+                        target,
+                        adjustedActionClip,
+                        rigAnalysis) /
+                    Mathf.Max(adjustedActionClip.length, 0.000001f),
+                    0.05f,
+                    0.95f);
+                foreach (List<byte[]> row in Rows)
+                {
+                    row.Clear();
+                }
+                CapturedElapsedSeconds.Clear();
+                CapturedStates.Clear();
+                TankBottomRightHandLocalDrifts.Clear();
+                TankBottomWorldPositions.Clear();
+                SprayerWorldPositions.Clear();
+                TankBottomGroundErrors.Clear();
+                TankBottomForwardDistances.Clear();
+                TankBottomLateralErrors.Clear();
+                HandMirrorErrors.Clear();
+                ForeArmMirrorErrors.Clear();
+                LeftPalmSupportErrors.Clear();
+                RightPalmSupportErrors.Clear();
+                nextCaptureIndex = 0;
+                IsComplete = false;
+                Failure = null;
+                Status = "Waiting for the first Remote_Mode hold frame.";
+                environment = new CaptureEnvironment(target);
+                environment.ConfigureDarkMaterialReview();
+                animator.Play(
+                    FlamethrowerTankPlaceHoldStateName,
+                    0,
+                    0f);
+                animator.Update(0f);
+                rightHand = FindRequired(target, RightHandPath);
+                groundProjection =
+                    CalculatePrimaryPlayerGroundProjection(target);
+                Vector3 initialTankBottomCenter =
+                    CalculateFlamethrowerTankBottomCenter(
+                        target,
+                        miniFlamethrowerRenderer,
+                        rigAnalysis);
+                tankBottomAnchorInRightHandLocalSpace =
+                    rightHand.InverseTransformPoint(initialTankBottomCenter);
+                startedAt = EditorApplication.timeSinceStartup;
+                isRunning = true;
+                EditorApplication.update -= CaptureUpdate;
+                EditorApplication.update += CaptureUpdate;
+            }
+
+            internal static void Stop()
+            {
+                EditorApplication.update -= CaptureUpdate;
+                if (environment != null)
+                {
+                    environment.Dispose();
+                    environment = null;
+                }
+                isRunning = false;
+            }
+
+            private static void CaptureUpdate()
+            {
+                try
+                {
+                    if (!isRunning || IsComplete || Failure != null)
+                    {
+                        return;
+                    }
+                    if (!EditorApplication.isPlaying || animator == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Play Mode ended during Flamethrower_Tank_Place capture.");
+                    }
+
+                    float elapsed = (float)(
+                        EditorApplication.timeSinceStartup - startedAt);
+                    AnimatorStateInfo state =
+                        animator.GetCurrentAnimatorStateInfo(0);
+                    int holdStateHash = Animator.StringToHash(
+                        FlamethrowerTankPlaceHoldStateName);
+                    int actionStateHash = Animator.StringToHash(
+                        FlamethrowerTankPlaceActionStateName);
+                    bool sampleDue;
+                    switch (nextCaptureIndex)
+                    {
+                        case 0:
+                            sampleDue = state.shortNameHash == holdStateHash &&
+                                state.normalizedTime >= 0.10f;
+                            break;
+                        case 1:
+                            sampleDue = state.shortNameHash == holdStateHash &&
+                                state.normalizedTime >= 0.95f;
+                            break;
+                        case 2:
+                            sampleDue = state.shortNameHash == actionStateHash &&
+                                state.normalizedTime >= Mathf.Max(
+                                    0.10f,
+                                    lowestPointNormalizedTime * 0.55f);
+                            break;
+                        case 3:
+                            sampleDue = state.shortNameHash == actionStateHash &&
+                                state.normalizedTime >=
+                                    lowestPointNormalizedTime;
+                            break;
+                        case 4:
+                            sampleDue = state.shortNameHash == actionStateHash &&
+                                state.normalizedTime >= 0.95f;
+                            break;
+                        case 5:
+                            sampleDue = state.shortNameHash == holdStateHash &&
+                                state.normalizedTime >= 0.10f;
+                            break;
+                        case 6:
+                            sampleDue = state.shortNameHash == holdStateHash &&
+                                state.normalizedTime >= 0.95f;
+                            break;
+                        case 7:
+                            sampleDue = state.shortNameHash == actionStateHash &&
+                                state.normalizedTime >= 0.05f;
+                            break;
+                        default:
+                            sampleDue = false;
+                            break;
+                    }
+                    if (sampleDue)
+                    {
+                        CaptureCurrentFrame(elapsed);
+                        nextCaptureIndex++;
+                        Status = "Captured " +
+                            nextCaptureIndex.ToString(
+                                CultureInfo.InvariantCulture) +
+                            "/8" +
+                            " natural playback frames.";
+                        if (nextCaptureIndex == 8)
+                        {
+                            CompleteCapture();
+                            return;
+                        }
+                    }
+
+                    if (elapsed >
+                        (FlamethrowerTankPlaceHoldSeconds +
+                         sourceTake.length) * 2f + 8f)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Tank_Place playback capture timed out at frame " +
+                            nextCaptureIndex.ToString(
+                                CultureInfo.InvariantCulture) +
+                            ".");
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Failure = exception;
+                    Status = "Failed: " + exception.Message;
+                    Stop();
+                }
+            }
+
+            private static void CaptureCurrentFrame(float elapsed)
+            {
+                AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+                string stateName;
+                if (state.shortNameHash == Animator.StringToHash(
+                        FlamethrowerTankPlaceHoldStateName))
+                {
+                    stateName = FlamethrowerTankPlaceHoldStateName;
+                }
+                else if (state.shortNameHash == Animator.StringToHash(
+                             FlamethrowerTankPlaceActionStateName))
+                {
+                    stateName = FlamethrowerTankPlaceActionStateName;
+                }
+                else
+                {
+                    stateName = "Unknown:" + state.shortNameHash.ToString(
+                        CultureInfo.InvariantCulture);
+                }
+
+                environment.ConfigureView(target, 1.02f, 1.42f);
+                Rows[0].Add(environment.CaptureFront());
+                Rows[1].Add(environment.CaptureSide());
+                Vector3 tankBottomCenter =
+                    CalculateFlamethrowerTankBottomCenter(
+                        target,
+                        miniFlamethrowerRenderer,
+                        rigAnalysis);
+                Rows[2].Add(environment.CaptureOppositeSide(
+                    target,
+                    target.position + target.up * 0.95f,
+                    1.42f));
+                Vector3 leftPalmCenter =
+                    CalculateLeftPalmSample(target).Center;
+                Vector3 rightPalmCenter =
+                    CalculateRightPalmSample(target).Center;
+                environment.ConfigureView(
+                    target,
+                    (tankBottomCenter + leftPalmCenter + rightPalmCenter) /
+                        3f,
+                    0.55f);
+                Rows[3].Add(environment.CaptureFront());
+                Vector3 currentTankBottomInRightHandLocalSpace =
+                    rightHand.InverseTransformPoint(tankBottomCenter);
+                TankBottomWorldPositions.Add(tankBottomCenter);
+                Transform currentSprayerBone =
+                    miniFlamethrowerRenderer.bones[
+                        MiniFlamethrowerSprayerBoneIndex] ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Place capture sprayer bone is missing.");
+                SprayerWorldPositions.Add(currentSprayerBone.position);
+                TankBottomRightHandLocalDrifts.Add(Vector3.Distance(
+                    currentTankBottomInRightHandLocalSpace,
+                    tankBottomAnchorInRightHandLocalSpace));
+                Vector3 bottomFromRoot = tankBottomCenter - target.position;
+                TankBottomGroundErrors.Add(Mathf.Abs(
+                    Vector3.Dot(
+                        tankBottomCenter,
+                        target.up.normalized) -
+                    groundProjection));
+                TankBottomForwardDistances.Add(Vector3.Dot(
+                    bottomFromRoot,
+                    target.forward.normalized));
+                TankBottomLateralErrors.Add(Mathf.Abs(Vector3.Dot(
+                    bottomFromRoot,
+                    target.right.normalized)));
+                Transform leftArm = FindRequired(target, LeftArmPath);
+                Transform rightArm = FindRequired(target, RightArmPath);
+                HandMirrorErrors.Add(Vector3.Distance(
+                    FindRequired(target, LeftHandPath).position -
+                        leftArm.position,
+                    ReflectFlamethrowerTankPlaceVector(
+                        target,
+                        rightHand.position - rightArm.position)));
+                ForeArmMirrorErrors.Add(Vector3.Distance(
+                    FindRequired(target, LeftForeArmPath).position -
+                        leftArm.position,
+                    ReflectFlamethrowerTankPlaceVector(
+                        target,
+                        FindRequired(target, RightForeArmPath).position -
+                            rightArm.position)));
+                CalculateFlamethrowerTankPlaceSupportTargets(
+                    target,
+                    tankBottomCenter,
+                    0f,
+                    out Vector3 leftSupport,
+                    out Vector3 rightSupport);
+                LeftPalmSupportErrors.Add(Vector3.Distance(
+                    leftPalmCenter,
+                    leftSupport));
+                RightPalmSupportErrors.Add(Vector3.Distance(
+                    rightPalmCenter,
+                    rightSupport));
+                CapturedElapsedSeconds.Add(elapsed);
+                CapturedStates.Add(stateName);
+            }
+
+            private static void CompleteCapture()
+            {
+                ComposeRows(Rows, FlamethrowerTankPlaceReviewPath);
+                bool remotePoseObserved = CapturedStates
+                    .Take(2)
+                    .All(state => string.Equals(
+                        state,
+                        FlamethrowerTankPlaceHoldStateName,
+                        StringComparison.Ordinal));
+                bool originalTakeObserved = CapturedStates
+                    .Skip(2)
+                    .Take(3)
+                    .All(state => string.Equals(
+                        state,
+                        FlamethrowerTankPlaceActionStateName,
+                        StringComparison.Ordinal));
+                bool returnedToRemotePose = CapturedStates
+                    .Skip(5)
+                    .Take(2)
+                    .All(state => string.Equals(
+                        state,
+                        FlamethrowerTankPlaceHoldStateName,
+                        StringComparison.Ordinal));
+                bool secondTakeObserved = CapturedStates.Count == 8 &&
+                    string.Equals(
+                        CapturedStates[7],
+                        FlamethrowerTankPlaceActionStateName,
+                        StringComparison.Ordinal);
+                Transform rig = RequireFlamethrowerTankPlaceRig(target);
+                Transform sprayerBone = miniFlamethrowerRenderer.bones[
+                    MiniFlamethrowerSprayerBoneIndex] ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Place review sprayer bone is missing.");
+                string sprayerPath =
+                    AnimationUtility.CalculateTransformPath(
+                        sprayerBone,
+                        target);
+                bool sprayerHasCounterAnimation =
+                    sprayerBone.parent == rightHand &&
+                    AnimationUtility.GetCurveBindings(adjustedActionClip)
+                        .Any(binding =>
+                            string.Equals(
+                                binding.path,
+                                sprayerPath,
+                                StringComparison.Ordinal) &&
+                            (binding.propertyName.StartsWith(
+                                 "m_LocalPosition.",
+                                 StringComparison.Ordinal) ||
+                             IsTransformRotationProperty(
+                                 binding.propertyName)));
+                bool tankAnimationParentIsTargetRoot = rig.parent == target;
+                float maximumTankBottomRightHandLocalDrift =
+                    TankBottomRightHandLocalDrifts.Count > 0
+                        ? TankBottomRightHandLocalDrifts.Max()
+                        : float.PositiveInfinity;
+                const int lowestPointCaptureIndex = 3;
+                float lowestPointGroundError =
+                    TankBottomGroundErrors[lowestPointCaptureIndex];
+                float lowestPointForward =
+                    TankBottomForwardDistances[lowestPointCaptureIndex];
+                float lowestPointLateralError =
+                    TankBottomLateralErrors[lowestPointCaptureIndex];
+                float lowestPointHandMirrorError =
+                    HandMirrorErrors[lowestPointCaptureIndex];
+                float lowestPointForeArmMirrorError =
+                    ForeArmMirrorErrors[lowestPointCaptureIndex];
+                float lowestPointLeftPalmSupportError =
+                    LeftPalmSupportErrors[lowestPointCaptureIndex];
+                float lowestPointRightPalmSupportError =
+                    RightPalmSupportErrors[lowestPointCaptureIndex];
+                float postReleaseTankBottomDrift = Vector3.Distance(
+                    TankBottomWorldPositions[lowestPointCaptureIndex],
+                    TankBottomWorldPositions[4]);
+                float postReleaseSprayerDrift = Vector3.Distance(
+                    SprayerWorldPositions[lowestPointCaptureIndex],
+                    SprayerWorldPositions[4]);
+                bool followsRightHandUntilLowestPoint =
+                    tankAnimationParentIsTargetRoot;
+                bool tankDetachedAtLowestPoint =
+                    tankAnimationParentIsTargetRoot;
+                bool tankGroundLockedAfterLowestPoint =
+                    postReleaseTankBottomDrift <= 0.01f;
+                FlamethrowerTankPlaceReviewMetrics metrics =
+                    new FlamethrowerTankPlaceReviewMetrics
+                    {
+                        target = FlamethrowerTankPlaceTargetName,
+                        requiredHoldSeconds =
+                            FlamethrowerTankPlaceHoldSeconds,
+                        capturedElapsedSeconds =
+                            CapturedElapsedSeconds.ToArray(),
+                        capturedStates = CapturedStates.ToArray(),
+                        remotePoseObservedBeforeTransition =
+                            remotePoseObserved,
+                        originalTakeObservedAfterTransition =
+                            originalTakeObserved,
+                        returnedToRemotePose = returnedToRemotePose,
+                        secondTakeObserved = secondTakeObserved,
+                        fullSequenceRepeated =
+                            returnedToRemotePose && secondTakeObserved,
+                        lowestPointTimeSeconds =
+                            adjustedActionClip.length *
+                            lowestPointNormalizedTime,
+                        lowestPointGroundErrorMeters =
+                            lowestPointGroundError,
+                        lowestPointForwardMeters = lowestPointForward,
+                        lowestPointLateralErrorMeters =
+                            lowestPointLateralError,
+                        lowestPointHandMirrorErrorMeters =
+                            lowestPointHandMirrorError,
+                        lowestPointForeArmMirrorErrorMeters =
+                            lowestPointForeArmMirrorError,
+                        lowestPointLeftPalmSupportErrorMeters =
+                            lowestPointLeftPalmSupportError,
+                        lowestPointRightPalmSupportErrorMeters =
+                            lowestPointRightPalmSupportError,
+                        postReleaseTankBottomDriftMeters =
+                            postReleaseTankBottomDrift,
+                        tankBottomAnchorInRightHandLocalSpace =
+                            tankBottomAnchorInRightHandLocalSpace,
+                        tankBottomRightHandLocalDriftMeters =
+                            TankBottomRightHandLocalDrifts.ToArray(),
+                        maximumTankBottomRightHandLocalDriftMeters =
+                            maximumTankBottomRightHandLocalDrift,
+                        sprayerDirectRightHandFollowReleased =
+                            sprayerHasCounterAnimation &&
+                            postReleaseSprayerDrift <= 0.01f,
+                        tankAnimationParentIsTargetRoot =
+                            tankAnimationParentIsTargetRoot,
+                        tankBottomFollowsRightHandUntilLowestPoint =
+                            followsRightHandUntilLowestPoint,
+                        tankDetachedAtLowestPoint =
+                            tankDetachedAtLowestPoint,
+                        tankGroundLockedAfterLowestPoint =
+                            tankGroundLockedAfterLowestPoint,
+                        actualPlayModeObserved = true,
+                        contactSheetExists = File.Exists(
+                            Path.GetFullPath(
+                                FlamethrowerTankPlaceReviewPath)),
+                        validationPriority =
+                            "1순위 실제 Unity Play Mode 애니메이션 직접 확인, 2순위 상태·시간 보조 확인"
+                    };
+                metrics.passed =
+                    metrics.remotePoseObservedBeforeTransition &&
+                    metrics.originalTakeObservedAfterTransition &&
+                    metrics.returnedToRemotePose &&
+                    metrics.secondTakeObserved &&
+                    metrics.fullSequenceRepeated &&
+                    metrics.sprayerDirectRightHandFollowReleased &&
+                    metrics.tankAnimationParentIsTargetRoot &&
+                    metrics.tankBottomFollowsRightHandUntilLowestPoint &&
+                    metrics.tankDetachedAtLowestPoint &&
+                    metrics.tankGroundLockedAfterLowestPoint &&
+                    metrics.lowestPointGroundErrorMeters <= 0.01f &&
+                    metrics.lowestPointForwardMeters > 0f &&
+                    metrics.lowestPointLateralErrorMeters <= 0.01f &&
+                    metrics.postReleaseTankBottomDriftMeters <= 0.01f &&
+                    metrics.actualPlayModeObserved &&
+                    metrics.contactSheetExists;
+                WriteJson(
+                    FlamethrowerTankPlaceReviewMetricsPath,
+                    metrics);
+                if (!metrics.passed)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Place direct review support checks failed. " +
+                        JsonUtility.ToJson(metrics));
+                }
+
+                IsComplete = true;
+                Status = "Completed one full sequence and observed the second cycle start.";
+                Stop();
+                Debug.Log(
+                    "[FlamethrowerTankPlace] Captured both palms supporting the tank through mid-lowering and the lowest point, the connected tank remaining locked on the front ground through Take end after right-hand-relative release, the returned hold, and the second Take start in actual Play Mode without changing the reviewed state.");
+            }
+        }
+
+        internal static class FlamethrowerTankRecoverPlayModeCapture
+        {
+            private static readonly List<List<byte[]>> Rows =
+                new List<List<byte[]>>
+                {
+                    new List<byte[]>(),
+                    new List<byte[]>(),
+                    new List<byte[]>(),
+                    new List<byte[]>()
+                };
+            private static readonly List<float> CapturedElapsedSeconds =
+                new List<float>();
+            private static readonly List<string> CapturedStates =
+                new List<string>();
+            private static readonly List<float> GroundErrors =
+                new List<float>();
+            private static readonly List<float> ForwardDistances =
+                new List<float>();
+            private static readonly List<float> LateralErrors =
+                new List<float>();
+            private static readonly List<float> LeftPalmSupportErrors =
+                new List<float>();
+            private static readonly List<float> RightPalmSupportErrors =
+                new List<float>();
+            private static readonly List<float> TankBottomHeights =
+                new List<float>();
+            private static readonly List<float> RightPalmErrors =
+                new List<float>();
+            private static readonly List<float> IdlePoseDifferences =
+                new List<float>();
+            private static readonly List<float> BakedBoundsDiagonals =
+                new List<float>();
+            private static Transform target;
+            private static Transform idleReference;
+            private static Transform rightHand;
+            private static Animator animator;
+            private static AnimationClip sourceClip;
+            private static AnimationClip reversedClip;
+            private static AnimationClip idleHoldClip;
+            private static SkinnedMeshRenderer renderer;
+            private static MiniFlamethrowerRigAnalysis rigAnalysis;
+            private static float pickupTime;
+            private static float pickupNormalizedTime;
+            private static float groundProjection;
+            private static CaptureEnvironment environment;
+            private static double startedAt;
+            private static int nextCaptureIndex;
+            private static bool isRunning;
+
+            internal static bool IsComplete { get; private set; }
+
+            internal static Exception Failure { get; private set; }
+
+            internal static string Status { get; private set; }
+
+            internal static void Start()
+            {
+                if (isRunning)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Recover capture is already running.");
+                }
+                if (!EditorApplication.isPlaying)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Recover capture requires Play Mode.");
+                }
+
+                Scene scene = RequireScene();
+                Transform layout = RequireLayout(scene);
+                target = RequireTarget(
+                    layout,
+                    FlamethrowerTankRecoverTargetName);
+                idleReference = RequireTarget(
+                    layout,
+                    FlamethrowerIdleTargetName);
+                animator = RequireAnimator(target);
+                sourceClip = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                    FlamethrowerTankPlaceAdjustedClipPath) ??
+                    throw new FileNotFoundException(
+                        "Flamethrower_Tank_Place source clip is missing during Tank_Recover review.",
+                        FlamethrowerTankPlaceAdjustedClipPath);
+                reversedClip = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                    FlamethrowerTankRecoverReverseClipPath) ??
+                    throw new FileNotFoundException(
+                        "Flamethrower_Tank_Recover reversed clip is missing.",
+                        FlamethrowerTankRecoverReverseClipPath);
+                idleHoldClip = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                    FlamethrowerTankRecoverIdleHoldClipPath) ??
+                    throw new FileNotFoundException(
+                        "Flamethrower_Tank_Recover Idle hold clip is missing.",
+                        FlamethrowerTankRecoverIdleHoldClipPath);
+                Transform rig = RequireFlamethrowerTankPlaceRig(target);
+                renderer = rig.GetComponentInChildren<
+                    SkinnedMeshRenderer>(true) ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Recover renderer is missing in Play Mode.");
+                GameObject miniFlamethrowerAsset =
+                    AssetDatabase.LoadAssetAtPath<GameObject>(
+                        MiniFlamethrowerAssetPath) ??
+                    throw new FileNotFoundException(
+                        "Imported mini flamethrower FBX is missing during Tank_Recover review.",
+                        MiniFlamethrowerAssetPath);
+                rigAnalysis = AnalyzeMiniFlamethrowerRig(
+                    miniFlamethrowerAsset,
+                    InspectMiniFlamethrowerAsset(
+                        miniFlamethrowerAsset));
+                Transform tankPlace = RequireTarget(
+                    layout,
+                    FlamethrowerTankPlaceTargetName);
+                float originalLowestTime =
+                    FindFlamethrowerTankPlaceLowestPointTime(
+                        tankPlace,
+                        sourceClip,
+                        rigAnalysis);
+                pickupTime = Mathf.Clamp(
+                    reversedClip.length - originalLowestTime,
+                    0f,
+                    reversedClip.length);
+                pickupNormalizedTime = pickupTime /
+                    Mathf.Max(reversedClip.length, 0.000001f);
+
+                foreach (List<byte[]> row in Rows)
+                {
+                    row.Clear();
+                }
+                CapturedElapsedSeconds.Clear();
+                CapturedStates.Clear();
+                GroundErrors.Clear();
+                ForwardDistances.Clear();
+                LateralErrors.Clear();
+                LeftPalmSupportErrors.Clear();
+                RightPalmSupportErrors.Clear();
+                TankBottomHeights.Clear();
+                RightPalmErrors.Clear();
+                IdlePoseDifferences.Clear();
+                BakedBoundsDiagonals.Clear();
+                nextCaptureIndex = 0;
+                IsComplete = false;
+                Failure = null;
+                Status = "Waiting for the grounded reverse start frame.";
+                environment = new CaptureEnvironment(target);
+                environment.ConfigureDarkMaterialReview();
+                animator.Play(
+                    FlamethrowerTankRecoverReverseStateName,
+                    0,
+                    0f);
+                animator.Update(0f);
+                rightHand = FindRequired(target, RightHandPath);
+                groundProjection =
+                    CalculatePrimaryPlayerGroundProjection(target);
+                startedAt = EditorApplication.timeSinceStartup;
+                isRunning = true;
+                EditorApplication.update -= CaptureUpdate;
+                EditorApplication.update += CaptureUpdate;
+            }
+
+            internal static void Stop()
+            {
+                EditorApplication.update -= CaptureUpdate;
+                if (environment != null)
+                {
+                    environment.Dispose();
+                    environment = null;
+                }
+                isRunning = false;
+            }
+
+            private static void CaptureUpdate()
+            {
+                try
+                {
+                    if (!isRunning || IsComplete || Failure != null)
+                    {
+                        return;
+                    }
+                    if (!EditorApplication.isPlaying || animator == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Play Mode ended during Flamethrower_Tank_Recover capture.");
+                    }
+
+                    float elapsed = (float)(
+                        EditorApplication.timeSinceStartup - startedAt);
+                    AnimatorStateInfo state =
+                        animator.GetCurrentAnimatorStateInfo(0);
+                    int reverseStateHash = Animator.StringToHash(
+                        FlamethrowerTankRecoverReverseStateName);
+                    int idleHoldStateHash = Animator.StringToHash(
+                        FlamethrowerTankRecoverIdleHoldStateName);
+                    bool sampleDue;
+                    switch (nextCaptureIndex)
+                    {
+                        case 0:
+                            sampleDue = state.shortNameHash ==
+                                reverseStateHash &&
+                                state.normalizedTime >= 0.02f;
+                            break;
+                        case 1:
+                            sampleDue = state.shortNameHash ==
+                                reverseStateHash &&
+                                state.normalizedTime >= Mathf.Max(
+                                    0.12f,
+                                    pickupNormalizedTime * 0.55f);
+                            break;
+                        case 2:
+                            sampleDue = state.shortNameHash ==
+                                reverseStateHash &&
+                                state.normalizedTime >= pickupNormalizedTime;
+                            break;
+                        case 3:
+                            sampleDue = state.shortNameHash ==
+                                reverseStateHash &&
+                                state.normalizedTime >= Mathf.Lerp(
+                                    pickupNormalizedTime,
+                                    0.92f,
+                                    0.55f);
+                            break;
+                        case 4:
+                            sampleDue = state.shortNameHash ==
+                                reverseStateHash &&
+                                state.normalizedTime >= 0.95f;
+                            break;
+                        case 5:
+                            sampleDue = state.shortNameHash ==
+                                idleHoldStateHash &&
+                                state.normalizedTime >= 0.10f;
+                            break;
+                        case 6:
+                            sampleDue = state.shortNameHash ==
+                                idleHoldStateHash &&
+                                state.normalizedTime >= 0.90f;
+                            break;
+                        case 7:
+                            sampleDue = state.shortNameHash ==
+                                reverseStateHash &&
+                                state.normalizedTime >= 0.02f;
+                            break;
+                        default:
+                            sampleDue = false;
+                            break;
+                    }
+
+                    if (sampleDue)
+                    {
+                        CaptureCurrentFrame(elapsed);
+                        nextCaptureIndex++;
+                        Status = "Captured " +
+                            nextCaptureIndex.ToString(
+                                CultureInfo.InvariantCulture) +
+                            "/8 natural playback frames.";
+                        if (nextCaptureIndex == 8)
+                        {
+                            CompleteCapture();
+                            return;
+                        }
+                    }
+
+                    if (elapsed >
+                        (reversedClip.length +
+                         FlamethrowerTankRecoverIdleHoldSeconds) * 2f +
+                        8f)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower_Tank_Recover playback capture timed out at frame " +
+                            nextCaptureIndex.ToString(
+                                CultureInfo.InvariantCulture) + ".");
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Failure = exception;
+                    Status = "Failed: " + exception.Message;
+                    Stop();
+                }
+            }
+
+            private static void CaptureCurrentFrame(float elapsed)
+            {
+                AnimatorStateInfo state =
+                    animator.GetCurrentAnimatorStateInfo(0);
+                string stateName;
+                if (state.shortNameHash == Animator.StringToHash(
+                        FlamethrowerTankRecoverReverseStateName))
+                {
+                    stateName = FlamethrowerTankRecoverReverseStateName;
+                }
+                else if (state.shortNameHash == Animator.StringToHash(
+                             FlamethrowerTankRecoverIdleHoldStateName))
+                {
+                    stateName = FlamethrowerTankRecoverIdleHoldStateName;
+                }
+                else
+                {
+                    stateName = "Unknown:" + state.shortNameHash.ToString(
+                        CultureInfo.InvariantCulture);
+                }
+
+                environment.ConfigureView(target, 1.02f, 1.42f);
+                Rows[0].Add(environment.CaptureFront());
+                Rows[1].Add(environment.CaptureSide());
+                Vector3 tankBottom =
+                    CalculateFlamethrowerTankBottomCenter(
+                        target,
+                        renderer,
+                        rigAnalysis);
+                Rows[2].Add(environment.CaptureOppositeSide(
+                    target,
+                    target.position + target.up * 0.95f,
+                    1.42f));
+                Vector3 leftPalm =
+                    CalculateLeftPalmSample(target).Center;
+                Vector3 rightPalm =
+                    CalculateRightPalmSample(target).Center;
+                environment.ConfigureView(
+                    target,
+                    (tankBottom + leftPalm + rightPalm) / 3f,
+                    0.55f);
+                Rows[3].Add(environment.CaptureFront());
+
+                Vector3 bottomFromRoot = tankBottom - target.position;
+                GroundErrors.Add(Mathf.Abs(
+                    Vector3.Dot(tankBottom, target.up.normalized) -
+                    groundProjection));
+                ForwardDistances.Add(Vector3.Dot(
+                    bottomFromRoot,
+                    target.forward.normalized));
+                LateralErrors.Add(Mathf.Abs(Vector3.Dot(
+                    bottomFromRoot,
+                    target.right.normalized)));
+                LeftPalmSupportErrors.Add(
+                    CalculateFlamethrowerTankHandMeshContactError(
+                        target,
+                        LeftHandPath,
+                        renderer));
+                RightPalmSupportErrors.Add(
+                    CalculateFlamethrowerTankHandMeshContactError(
+                        target,
+                        RightHandPath,
+                        renderer));
+                TankBottomHeights.Add(Vector3.Dot(
+                    tankBottom - target.position,
+                    target.up.normalized));
+                RightPalmErrors.Add(
+                    CalculateFlamethrowerTankHandMeshContactError(
+                        target,
+                        RightHandPath,
+                        renderer));
+                IdlePoseDifferences.Add(
+                    CalculateMiniFlamethrowerRelativeBoneMatrixDifference(
+                        idleReference,
+                        target,
+                        out _,
+                        out _,
+                        out _));
+                BakedBoundsDiagonals.Add(
+                    CalculateMiniFlamethrowerBakedBoundsDiagonal(
+                        renderer));
+                CapturedElapsedSeconds.Add(elapsed);
+                CapturedStates.Add(stateName);
+            }
+
+            private static void CompleteCapture()
+            {
+                ComposeRows(Rows, FlamethrowerTankRecoverReviewPath);
+                bool reverseFramesObserved = CapturedStates
+                    .Take(5)
+                    .All(value => string.Equals(
+                        value,
+                        FlamethrowerTankRecoverReverseStateName,
+                        StringComparison.Ordinal));
+                bool idleFramesObserved = CapturedStates
+                    .Skip(5)
+                    .Take(2)
+                    .All(value => string.Equals(
+                        value,
+                        FlamethrowerTankRecoverIdleHoldStateName,
+                        StringComparison.Ordinal));
+                bool secondStartObserved = CapturedStates.Count == 8 &&
+                    string.Equals(
+                        CapturedStates[7],
+                        FlamethrowerTankRecoverReverseStateName,
+                        StringComparison.Ordinal);
+                const int startIndex = 0;
+                const int pickupIndex = 2;
+                const int raisedIndex = 4;
+                const int idleIndex = 5;
+                const int secondStartIndex = 7;
+                float raisedTankBottom =
+                    TankBottomHeights[raisedIndex] -
+                    TankBottomHeights[pickupIndex];
+                Transform sprayer = renderer.bones[
+                    MiniFlamethrowerSprayerBoneIndex] ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Recover review sprayer bone is missing.");
+                bool sprayerFollowsRightHand =
+                    sprayer.parent == rightHand;
+                float maximumBakedBoundsDiagonal =
+                    BakedBoundsDiagonals.Max();
+                float idleReferenceBoundsDiagonal =
+                    CalculateMiniFlamethrowerBakedBoundsDiagonal(
+                        RequireFlamethrowerTankPlaceRig(idleReference)
+                            .GetComponentInChildren<
+                                SkinnedMeshRenderer>(true) ??
+                        throw new InvalidOperationException(
+                            "Flamethrower_Idle reference renderer is missing during Tank_Recover review."));
+                FlamethrowerTankRecoverReviewMetrics metrics =
+                    new FlamethrowerTankRecoverReviewMetrics
+                    {
+                        target = FlamethrowerTankRecoverTargetName,
+                        capturedElapsedSeconds =
+                            CapturedElapsedSeconds.ToArray(),
+                        capturedStates = CapturedStates.ToArray(),
+                        pickupTimeSeconds = pickupTime,
+                        idleHoldSeconds = idleHoldClip.length,
+                        startGroundErrorMeters =
+                            GroundErrors[startIndex],
+                        startForwardMeters =
+                            ForwardDistances[startIndex],
+                        startLateralErrorMeters =
+                            LateralErrors[startIndex],
+                        pickupLeftPalmSupportErrorMeters =
+                            LeftPalmSupportErrors[pickupIndex],
+                        pickupRightPalmSupportErrorMeters =
+                            RightPalmSupportErrors[pickupIndex],
+                        raisedTankBottomMeters = raisedTankBottom,
+                        endRightPalmSupportErrorMeters =
+                            RightPalmErrors[raisedIndex],
+                        idlePoseMaximumBoneMatrixDifference =
+                            IdlePoseDifferences[idleIndex],
+                        maximumCapturedBakedBoundsDiagonal =
+                            maximumBakedBoundsDiagonal,
+                        groundedStartObserved =
+                            GroundErrors[startIndex] <= 0.03f &&
+                            ForwardDistances[startIndex] > 0f,
+                        pickupObserved =
+                            LeftPalmSupportErrors[pickupIndex] <= 0.08f &&
+                            RightPalmSupportErrors[pickupIndex] <= 0.08f,
+                        reverseLiftObserved =
+                            reverseFramesObserved &&
+                            raisedTankBottom > 0.25f &&
+                            RightPalmErrors[raisedIndex] <= 0.08f,
+                        idleBackpackHoldObserved =
+                            idleFramesObserved &&
+                            IdlePoseDifferences[idleIndex] <= 0.001f &&
+                            IdlePoseDifferences[6] <= 0.001f,
+                        returnedToGroundedStart =
+                            secondStartObserved &&
+                            GroundErrors[secondStartIndex] <= 0.03f &&
+                            Mathf.Abs(
+                                ForwardDistances[secondStartIndex] -
+                                ForwardDistances[startIndex]) <= 0.02f,
+                        fullSequenceRepeated =
+                            reverseFramesObserved &&
+                            idleFramesObserved &&
+                            secondStartObserved,
+                        sprayerFollowsRightHandInIdleHold =
+                            sprayerFollowsRightHand,
+                        hoseRemainedConnected =
+                            maximumBakedBoundsDiagonal <=
+                            idleReferenceBoundsDiagonal * 2.5f,
+                        actualPlayModeObserved = true,
+                        contactSheetExists = File.Exists(
+                            Path.GetFullPath(
+                                FlamethrowerTankRecoverReviewPath)),
+                        validationPriority =
+                            "1순위 실제 Unity Play Mode 애니메이션 직접 확인, 2순위 상태·시간·수치 보조 확인"
+                    };
+                metrics.passed =
+                    metrics.groundedStartObserved &&
+                    metrics.pickupObserved &&
+                    metrics.reverseLiftObserved &&
+                    metrics.idleBackpackHoldObserved &&
+                    metrics.returnedToGroundedStart &&
+                    metrics.fullSequenceRepeated &&
+                    metrics.sprayerFollowsRightHandInIdleHold &&
+                    metrics.hoseRemainedConnected &&
+                    metrics.actualPlayModeObserved &&
+                    metrics.contactSheetExists &&
+                    Mathf.Abs(
+                        metrics.idleHoldSeconds -
+                        FlamethrowerTankRecoverIdleHoldSeconds) <= 0.0001f;
+                WriteJson(
+                    FlamethrowerTankRecoverReviewMetricsPath,
+                    metrics);
+                if (!metrics.passed)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower_Tank_Recover direct review support checks failed. " +
+                        JsonUtility.ToJson(metrics));
+                }
+
+                IsComplete = true;
+                Status =
+                    "Completed the grounded pickup, exact reverse lift, Idle hold, and second grounded start.";
+                Stop();
+                Debug.Log(
+                    "[FlamethrowerTankRecover] Captured the reachable grounded start, both-palm pickup, exact reversed lift with the connected rig following the right hand, exact Flamethrower_Idle backpack and right-hand sprayer hold for 0.5s, and the second grounded start in actual Play Mode without manipulating the reviewed target.");
+            }
+        }
+
+        private static void ApplyExactMiniFlamethrowerHoseRig()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                SessionState.EraseInt(MiniFlamethrowerCaptureStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerMiniFlamethrowerRig] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            RequireHash(
+                MiniFlamethrowerOriginalPath,
+                MiniFlamethrowerSourceHash,
+                "mini flamethrower source FBX");
+            RequireHash(
+                MiniFlamethrowerAssetPath,
+                MiniFlamethrowerSourceHash,
+                "Unity mini flamethrower FBX");
+            Scene scene = RequireScene();
+            if (scene.isDirty &&
+                !IsControlledMiniFlamethrowerRigRetry(scene))
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before exact mini flamethrower rig apply.");
+            }
+
+            PrepareExactOriginalMiniFlamethrowerImport();
+            GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MiniFlamethrowerAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported mini flamethrower FBX is missing.",
+                    Path.GetFullPath(MiniFlamethrowerAssetPath));
+            MiniFlamethrowerAssetInspection inspection =
+                InspectMiniFlamethrowerAsset(asset);
+            WriteJson(MiniFlamethrowerInspectionPath, inspection);
+            MiniFlamethrowerRigAnalysis analysis =
+                AnalyzeMiniFlamethrowerRig(asset, inspection);
+            Mesh riggedMesh = CreateOrReplaceExactMiniFlamethrowerRiggedMesh(
+                analysis,
+                out int tankWeightedVertexCount,
+                out int sprayerWeightedVertexCount,
+                out int blendedHoseVertexCount,
+                out int sourceConnectedHoseGroupCount,
+                out Vector3[] bonePivots);
+            CaptureExactMiniFlamethrowerRigRegionPreview(
+                analysis,
+                riggedMesh);
+
+            Transform layout = RequireLayout(scene);
+            string[] targetNames = GetMiniFlamethrowerTargetNames();
+            Transform[] targets = targetNames
+                .Select(name => RequireTarget(layout, name))
+                .ToArray();
+            RootPose[] rootsBefore = targets
+                .Select(target => new RootPose(target))
+                .ToArray();
+            string[] animatorsBefore = targets
+                .Select(DescribeAnimatorConfiguration)
+                .ToArray();
+            for (int index = 0; index < targets.Length; index++)
+            {
+                AttachExactMiniFlamethrowerRig(
+                    targets[index],
+                    riggedMesh,
+                    analysis,
+                    bonePivots);
+            }
+
+            MiniFlamethrowerRigTargetMetrics[] targetMetrics = targets
+                .Select((target, index) => MeasureExactMiniFlamethrowerRigTarget(
+                    target,
+                    riggedMesh,
+                    analysis,
+                    rootsBefore[index],
+                    animatorsBefore[index]))
+                .ToArray();
+            MiniFlamethrowerRigApplyMetrics metrics =
+                BuildMiniFlamethrowerRigApplyMetrics(
+                    riggedMesh,
+                    analysis,
+                    tankWeightedVertexCount,
+                    sprayerWeightedVertexCount,
+                    blendedHoseVertexCount,
+                    sourceConnectedHoseGroupCount,
+                    targetMetrics);
+            WriteJson(MiniFlamethrowerApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Exact mini flamethrower rig apply support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            SessionState.EraseInt(MiniFlamethrowerCaptureStageKey);
+            Debug.Log(
+                "[PlayerMiniFlamethrowerRig] Applied the complete original FBX mesh and embedded material/texture references to five states. " +
+                "Vertices=" + metrics.riggedVertexCount.ToString(
+                    CultureInfo.InvariantCulture) +
+                ", Triangles=" + metrics.riggedTriangleCount.ToString(
+                    CultureInfo.InvariantCulture) +
+                ", Materials=" + metrics.materialNames.Length.ToString(
+                    CultureInfo.InvariantCulture) +
+                ", Textures=" + metrics.textureReferences.Length.ToString(
+                    CultureInfo.InvariantCulture) + ".");
+        }
+        private static void ApplyExactOriginalMiniFlamethrowerModels()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                SessionState.EraseInt(MiniFlamethrowerCaptureStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[PlayerMiniFlamethrowerOriginal] Exited Play Mode before exact original apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            RequireHash(
+                MiniFlamethrowerOriginalPath,
+                MiniFlamethrowerSourceHash,
+                "mini flamethrower source FBX");
+            RequireHash(
+                MiniFlamethrowerAssetPath,
+                MiniFlamethrowerSourceHash,
+                "Unity mini flamethrower FBX");
+            Scene scene = RequireScene();
+            if (scene.isDirty &&
+                !IsControlledExactOriginalMiniFlamethrowerRetry(scene))
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before exact original mini flamethrower apply.");
+            }
+
+            PrepareExactOriginalMiniFlamethrowerImport();
+            GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MiniFlamethrowerAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported mini flamethrower FBX is missing.",
+                    Path.GetFullPath(MiniFlamethrowerAssetPath));
+            MiniFlamethrowerAssetInspection inspection =
+                InspectMiniFlamethrowerAsset(asset);
+            WriteJson(MiniFlamethrowerInspectionPath, inspection);
+            CaptureMiniFlamethrowerAssetPreview(asset, inspection);
+            MiniFlamethrowerRigAnalysis analysis =
+                AnalyzeMiniFlamethrowerRig(asset, inspection);
+
+            MeshFilter[] sourceFilters = asset
+                .GetComponentsInChildren<MeshFilter>(true)
+                .Where(filter => filter.sharedMesh != null)
+                .ToArray();
+            Renderer[] sourceRenderers = asset
+                .GetComponentsInChildren<Renderer>(true)
+                .Where(renderer => renderer.sharedMaterials.Length > 0)
+                .ToArray();
+            if (sourceFilters.Length != 1 || sourceRenderers.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "The original FBX must remain one complete mesh renderer. Meshes=" +
+                    sourceFilters.Length.ToString(CultureInfo.InvariantCulture) +
+                    ", Renderers=" +
+                    sourceRenderers.Length.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+
+            Mesh sourceMesh = sourceFilters[0].sharedMesh;
+            Material[] sourceMaterials = sourceRenderers[0].sharedMaterials;
+            string[] sourceTextures = sourceMaterials
+                .Where(material => material != null && material.shader != null)
+                .SelectMany(GetMiniFlamethrowerMaterialTextureReferences)
+                .Distinct(StringComparer.Ordinal)
+                .OrderBy(value => value, StringComparer.Ordinal)
+                .ToArray();
+            if (sourceMaterials.Length == 0 ||
+                sourceMaterials.Any(material => material == null) ||
+                sourceTextures.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "The original mini flamethrower material or texture references are missing.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            string[] targetNames = GetMiniFlamethrowerTargetNames();
+            List<MiniFlamethrowerOriginalTargetMetrics> targetMetrics =
+                new List<MiniFlamethrowerOriginalTargetMetrics>();
+            foreach (string targetName in targetNames)
+            {
+                Transform target = RequireTarget(layout, targetName);
+                RootPose rootBefore = new RootPose(target);
+                string animatorBefore = DescribeAnimatorConfiguration(target);
+                string playerMeshSignatureBefore =
+                    DescribeMiniFlamethrowerPlayerMeshSignature(target);
+                string playerBoneSignatureBefore =
+                    DescribeMiniFlamethrowerPlayerBoneTransformSignature(
+                        target);
+                Transform spine = FindRequired(target, SpinePath);
+                Transform rightHand = FindRequired(target, RightHandPath);
+                RemoveLegacyMiniFlamethrowerObjects(
+                    target,
+                    spine,
+                    rightHand);
+                Transform previous = target.Find(
+                    MiniFlamethrowerOriginalInstanceName);
+                if (previous != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(previous.gameObject);
+                }
+
+                GameObject placementObject = new GameObject(
+                    MiniFlamethrowerOriginalInstanceName);
+                Transform placement = placementObject.transform;
+                placement.SetParent(target, false);
+                placement.localPosition = Vector3.zero;
+                placement.localRotation = Quaternion.identity;
+                placement.localScale = Vector3.one;
+                GameObject instance = PrefabUtility.InstantiatePrefab(
+                    asset,
+                    placement) as GameObject ??
+                    throw new InvalidOperationException(
+                        targetName + " could not instantiate the original FBX prefab.");
+                PlaceExactOriginalMiniFlamethrower(
+                    target,
+                    placement,
+                    instance.transform,
+                    analysis);
+                MiniFlamethrowerOriginalTargetMetrics metrics =
+                    MeasureExactOriginalMiniFlamethrowerTarget(
+                        target,
+                        placement,
+                        instance.transform,
+                        asset.transform,
+                        sourceMesh,
+                        sourceMaterials,
+                        analysis,
+                        rootBefore.LocalPosition,
+                        rootBefore.LocalRotation,
+                        rootBefore.LocalScale,
+                        animatorBefore,
+                        playerMeshSignatureBefore,
+                        playerBoneSignatureBefore,
+                        null);
+                targetMetrics.Add(metrics);
+                EditorUtility.SetDirty(placementObject);
+                EditorUtility.SetDirty(target.gameObject);
+            }
+
+            if (AssetDatabase.LoadAssetAtPath<Mesh>(
+                    MiniFlamethrowerRiggedMeshPath) != null)
+            {
+                AssetDatabase.DeleteAsset(MiniFlamethrowerRiggedMeshPath);
+            }
+            MiniFlamethrowerOriginalApplyMetrics applyMetrics =
+                new MiniFlamethrowerOriginalApplyMetrics
+                {
+                    sourceModelPath = MiniFlamethrowerOriginalPath,
+                    importedModelPath = MiniFlamethrowerAssetPath,
+                    sourceModelHash = HashFile(MiniFlamethrowerOriginalPath),
+                    importedModelHash = HashFile(MiniFlamethrowerAssetPath),
+                    sourceMeshCount = sourceFilters.Length,
+                    sourceVertexCount = sourceMesh.vertexCount,
+                    sourceTriangleCount = sourceMesh.triangles.Length / 3,
+                    sourceMaterialCount = sourceMaterials.Length,
+                    materialNames = sourceMaterials
+                        .Select(material => material.name)
+                        .ToArray(),
+                    textureReferences = sourceTextures,
+                    targetCount = targetMetrics.Count,
+                    targets = targetMetrics.ToArray(),
+                    byteExactImport = string.Equals(
+                        HashFile(MiniFlamethrowerOriginalPath),
+                        HashFile(MiniFlamethrowerAssetPath),
+                        StringComparison.OrdinalIgnoreCase),
+                    noSeparatedOrRiggedMeshAsset =
+                        AssetDatabase.LoadAssetAtPath<Mesh>(
+                            MiniFlamethrowerTankMeshPath) == null &&
+                        AssetDatabase.LoadAssetAtPath<Mesh>(
+                            MiniFlamethrowerSprayerMeshPath) == null &&
+                        AssetDatabase.LoadAssetAtPath<Mesh>(
+                            MiniFlamethrowerRiggedMeshPath) == null,
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            applyMetrics.passed =
+                applyMetrics.byteExactImport &&
+                applyMetrics.sourceMeshCount == 1 &&
+                applyMetrics.sourceVertexCount == 4203 &&
+                applyMetrics.sourceTriangleCount == 4178 &&
+                applyMetrics.sourceMaterialCount == 1 &&
+                applyMetrics.textureReferences.Length > 0 &&
+                applyMetrics.targetCount == targetNames.Length &&
+                applyMetrics.noSeparatedOrRiggedMeshAsset &&
+                applyMetrics.targets.All(target => target.passed);
+            WriteJson(MiniFlamethrowerApplyMetricsPath, applyMetrics);
+            if (!applyMetrics.passed)
+            {
+                throw new InvalidOperationException(
+                    "Exact original mini flamethrower apply checks failed. " +
+                    JsonUtility.ToJson(applyMetrics));
+            }
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+            SessionState.EraseInt(MiniFlamethrowerCaptureStageKey);
+            Debug.Log(
+                "[PlayerMiniFlamethrowerOriginal] Applied the unchanged original FBX prefab to five states. " +
+                "Vertices=" + applyMetrics.sourceVertexCount.ToString(
+                    CultureInfo.InvariantCulture) +
+                ", Triangles=" + applyMetrics.sourceTriangleCount.ToString(
+                    CultureInfo.InvariantCulture) +
+                ", Materials=" + applyMetrics.sourceMaterialCount.ToString(
+                    CultureInfo.InvariantCulture) + ".");
+        }
+
+        private static void PlaceExactOriginalMiniFlamethrower(
+            Transform target,
+            Transform placement,
+            Transform sourceModel,
+            MiniFlamethrowerRigAnalysis analysis)
+        {
+            Vector3 chestCenter =
+                (FindRequired(target, SolarPlexusPath).position +
+                 FindRequired(target, SpinePath).position) * 0.5f +
+                target.up * 0.03f;
+            Matrix4x4 sourceToPlacement = Matrix4x4.TRS(
+                sourceModel.localPosition,
+                sourceModel.localRotation,
+                sourceModel.localScale);
+            Vector3 sourceTankCenter =
+                sourceToPlacement.MultiplyPoint3x4(analysis.TankCenter);
+            Vector3 sourceTankUp = sourceToPlacement.MultiplyVector(
+                Vector3.forward).normalized;
+            Vector3 sourceTankOutward = sourceToPlacement.MultiplyVector(
+                -Vector3.up).normalized;
+            Quaternion sourceBackpackBasis = Quaternion.LookRotation(
+                sourceTankOutward,
+                sourceTankUp);
+            Quaternion wornBackpackBasis = Quaternion.LookRotation(
+                -target.forward.normalized,
+                target.up.normalized);
+            Quaternion wornBackpackRotation =
+                wornBackpackBasis * Quaternion.Inverse(
+                    sourceBackpackBasis);
+            Vector3 desiredTankCenter = chestCenter -
+                target.forward.normalized *
+                MiniFlamethrowerOriginalBackOffset;
+            Vector3[] tankCorners = GetBoundsCorners(analysis.TankBounds)
+                .Select(sourceToPlacement.MultiplyPoint3x4)
+                .ToArray();
+            float sourceTankHeight =
+                tankCorners.Max(corner => Vector3.Dot(corner, sourceTankUp)) -
+                tankCorners.Min(corner => Vector3.Dot(corner, sourceTankUp));
+            if (sourceTankHeight <= 0.000001f)
+            {
+                throw new InvalidOperationException(
+                    target.name + " has no usable backpack height.");
+            }
+
+            float scale = MiniFlamethrowerPackHeightMeters /
+                sourceTankHeight;
+
+            placement.rotation = wornBackpackRotation;
+            SetMiniFlamethrowerWorldUniformScale(placement, scale);
+            placement.position += desiredTankCenter -
+                sourceModel.TransformPoint(analysis.TankCenter);
+        }
+
+        private static void ConfigureExactOriginalMiniFlamethrowerTransform(
+            Transform target,
+            Transform placement,
+            Transform sourceModel,
+            MiniFlamethrowerRigAnalysis analysis,
+            Vector3 desiredTankCenter,
+            Vector3 desiredGripCenter,
+            float scale)
+        {
+            Matrix4x4 sourceToPlacement = Matrix4x4.TRS(
+                sourceModel.localPosition,
+                sourceModel.localRotation,
+                sourceModel.localScale);
+            Vector3 sourceTankCenter = sourceToPlacement.MultiplyPoint3x4(
+                analysis.TankCenter);
+            Vector3 sourceRearPoint = sourceToPlacement.MultiplyPoint3x4(
+                analysis.SprayerRearPoint);
+            Vector3 sourceSprayerAxis = sourceToPlacement.MultiplyVector(
+                analysis.SprayerAxis).normalized;
+            Vector3 sourceTankUp = sourceToPlacement.MultiplyVector(
+                Vector3.forward).normalized;
+            Vector3 sourceTankOutward = sourceToPlacement.MultiplyVector(
+                -Vector3.up).normalized;
+            Vector3 sourceGripPoint = sourceRearPoint +
+                sourceSprayerAxis *
+                (MiniFlamethrowerRearToGripMeters / scale);
+            Vector3 sourceTankToGrip =
+                sourceGripPoint - sourceTankCenter;
+            Vector3 desiredTankToGrip =
+                desiredGripCenter - desiredTankCenter;
+            Quaternion baseRotation = Quaternion.FromToRotation(
+                sourceTankToGrip.normalized,
+                desiredTankToGrip.normalized);
+            Vector3 rotatedOutward = baseRotation * sourceTankOutward;
+            Vector3 projectedOutward = Vector3.ProjectOnPlane(
+                rotatedOutward,
+                desiredTankToGrip.normalized);
+            Vector3 projectedDesiredOutward = Vector3.ProjectOnPlane(
+                -target.forward.normalized,
+                desiredTankToGrip.normalized);
+            float roll = 0f;
+            if (projectedOutward.sqrMagnitude > 0.000001f &&
+                projectedDesiredOutward.sqrMagnitude > 0.000001f)
+            {
+                roll = Vector3.SignedAngle(
+                    projectedOutward,
+                    projectedDesiredOutward,
+                    desiredTankToGrip.normalized);
+            }
+            Quaternion rotation = Quaternion.AngleAxis(
+                roll,
+                desiredTankToGrip.normalized) * baseRotation;
+
+            if (Vector3.Dot(rotation * sourceTankUp, target.up) < 0f)
+            {
+                rotation = Quaternion.AngleAxis(
+                    180f,
+                    desiredTankToGrip.normalized) * rotation;
+            }
+
+            placement.rotation = rotation;
+            SetMiniFlamethrowerWorldUniformScale(placement, scale);
+            placement.position += desiredTankCenter -
+                sourceModel.TransformPoint(analysis.TankCenter);
+        }
+
+        private static MiniFlamethrowerOriginalTargetMetrics
+            MeasureExactOriginalMiniFlamethrowerTarget(
+                Transform target,
+                Transform placement,
+                Transform sourceModel,
+                Transform sourceAssetRoot,
+                Mesh sourceMesh,
+                Material[] sourceMaterials,
+                MiniFlamethrowerRigAnalysis analysis,
+                Vector3 expectedTargetLocalPosition,
+                Quaternion expectedTargetLocalRotation,
+                Vector3 expectedTargetLocalScale,
+                string expectedAnimator,
+                string expectedPlayerMeshSignature,
+                string expectedPlayerBoneTransformSignature,
+                MiniFlamethrowerOriginalTargetMetrics expectedPlacement)
+        {
+            Transform spine = FindRequired(target, SpinePath);
+            Transform rightHand = FindRequired(target, RightHandPath);
+            MeshFilter[] instanceFilters = sourceModel
+                .GetComponentsInChildren<MeshFilter>(true)
+                .Where(filter => filter.sharedMesh != null)
+                .ToArray();
+            Renderer[] instanceRenderers = sourceModel
+                .GetComponentsInChildren<Renderer>(true)
+                .Where(renderer => renderer.sharedMaterials.Length > 0)
+                .ToArray();
+            float sourceWorldScale = Vector3.Distance(
+                sourceModel.TransformPoint(analysis.SprayerRearPoint),
+                sourceModel.TransformPoint(
+                    analysis.SprayerRearPoint + analysis.SprayerAxis));
+            if (sourceWorldScale <= 0.000001f)
+            {
+                throw new InvalidOperationException(
+                    target.name + " original mini flamethrower has no measurable world scale.");
+            }
+            Vector3 gripPoint = analysis.SprayerRearPoint +
+                analysis.SprayerAxis *
+                (MiniFlamethrowerRearToGripMeters / sourceWorldScale);
+            Vector3 tankCenterWorld = sourceModel.TransformPoint(
+                analysis.TankCenter);
+            Vector3 rearWorld = sourceModel.TransformPoint(
+                analysis.SprayerRearPoint);
+            Vector3 gripWorld = sourceModel.TransformPoint(gripPoint);
+            Vector3 palmCenter = CalculateRightPalmSample(target).Center;
+            string playerMeshSignature =
+                DescribeMiniFlamethrowerPlayerMeshSignature(target);
+            string playerBoneSignature =
+                DescribeMiniFlamethrowerPlayerBoneTransformSignature(target);
+            bool placementUnchanged = expectedPlacement == null ||
+                (Vector3.Distance(
+                     placement.localPosition,
+                     expectedPlacement.placementLocalPosition) <=
+                 PositionTolerance &&
+                 Quaternion.Angle(
+                     placement.localRotation,
+                     expectedPlacement.placementLocalRotation) <=
+                 RotationTolerance &&
+                 Vector3.Distance(
+                     placement.localScale,
+                     expectedPlacement.placementLocalScale) <=
+                 PositionTolerance);
+            MiniFlamethrowerOriginalTargetMetrics metrics =
+                new MiniFlamethrowerOriginalTargetMetrics
+                {
+                    target = target.name,
+                    targetLocalPosition = target.localPosition,
+                    targetLocalRotation = target.localRotation,
+                    targetLocalScale = target.localScale,
+                    animatorConfiguration =
+                        DescribeAnimatorConfiguration(target),
+                    placementLocalPosition = placement.localPosition,
+                    placementLocalRotation = placement.localRotation,
+                    placementLocalScale = placement.localScale,
+                    meshCount = instanceFilters.Length,
+                    rendererCount = instanceRenderers.Length,
+                    vertexCount = instanceFilters.Sum(filter =>
+                        filter.sharedMesh.vertexCount),
+                    triangleCount = instanceFilters.Sum(filter =>
+                        filter.sharedMesh.triangles.Length / 3),
+                    materialCount = instanceRenderers.Sum(renderer =>
+                        renderer.sharedMaterials.Length),
+                    materialNames = instanceRenderers
+                        .SelectMany(renderer => renderer.sharedMaterials)
+                        .Select(material => material != null
+                            ? material.name
+                            : "<null>")
+                        .ToArray(),
+                    textureReferences = instanceRenderers
+                        .SelectMany(renderer => renderer.sharedMaterials)
+                        .Where(material =>
+                            material != null && material.shader != null)
+                        .SelectMany(
+                            GetMiniFlamethrowerMaterialTextureReferences)
+                        .Distinct(StringComparer.Ordinal)
+                        .OrderBy(value => value, StringComparer.Ordinal)
+                        .ToArray(),
+                    tankWidthMeters =
+                        MeasureExactOriginalMiniFlamethrowerProjection(
+                            sourceModel,
+                            analysis.TankBounds,
+                            target.right),
+                    tankHeightMeters =
+                        MeasureExactOriginalMiniFlamethrowerProjection(
+                            sourceModel,
+                            analysis.TankBounds,
+                            target.up),
+                    tankDepthMeters =
+                        MeasureExactOriginalMiniFlamethrowerProjection(
+                            sourceModel,
+                            analysis.TankBounds,
+                            target.forward),
+                    tankOutwardFacingDot = Vector3.Dot(
+                        sourceModel.TransformDirection(-Vector3.up)
+                            .normalized,
+                        -target.forward.normalized),
+                    tankCenterBehindSpineMeters = Vector3.Dot(
+                        spine.position - tankCenterWorld,
+                        target.forward.normalized),
+                    rearToGripDistanceMeters = Vector3.Distance(
+                        rearWorld,
+                        gripWorld),
+                    gripCenterErrorMeters = Vector3.Distance(
+                        gripWorld,
+                        palmCenter),
+                    playerMeshSignature = playerMeshSignature,
+                    playerBoneTransformSignature = playerBoneSignature,
+                    sourceMeshReferenceExact =
+                        instanceFilters.Length == 1 &&
+                        instanceFilters[0].sharedMesh == sourceMesh,
+                    materialReferencesExact =
+                        instanceRenderers.Length == 1 &&
+                        instanceRenderers[0].sharedMaterials.SequenceEqual(
+                            sourceMaterials),
+                    sourceRootTransformExact =
+                        Vector3.Distance(
+                            sourceModel.localPosition,
+                            sourceAssetRoot.localPosition) <=
+                        PositionTolerance &&
+                        Quaternion.Angle(
+                            sourceModel.localRotation,
+                            sourceAssetRoot.localRotation) <=
+                        RotationTolerance &&
+                        Vector3.Distance(
+                            sourceModel.localScale,
+                            sourceAssetRoot.localScale) <= PositionTolerance,
+                    hasNoRigOrGeneratedGeometry =
+                        placement.GetComponentsInChildren<LineRenderer>(true)
+                            .Length == 0 &&
+                        spine.Find(MiniFlamethrowerRigInstanceName) == null &&
+                        rightHand.Find(MiniFlamethrowerSprayerBoneName) == null,
+                    playerMeshReferencesUnchanged = string.Equals(
+                        playerMeshSignature,
+                        expectedPlayerMeshSignature,
+                        StringComparison.Ordinal),
+                    playerBoneTransformsUnchanged = string.Equals(
+                        playerBoneSignature,
+                        expectedPlayerBoneTransformSignature,
+                        StringComparison.Ordinal),
+                    targetRootUnchanged =
+                        Vector3.Distance(
+                            target.localPosition,
+                            expectedTargetLocalPosition) <=
+                        PositionTolerance &&
+                        Quaternion.Angle(
+                            target.localRotation,
+                            expectedTargetLocalRotation) <=
+                        RotationTolerance &&
+                        Vector3.Distance(
+                            target.localScale,
+                            expectedTargetLocalScale) <= PositionTolerance,
+                    animatorUnchanged = string.Equals(
+                        DescribeAnimatorConfiguration(target),
+                        expectedAnimator,
+                        StringComparison.Ordinal),
+                    placementUnchangedSinceApply = placementUnchanged
+                };
+            metrics.passed =
+                metrics.meshCount == 1 &&
+                metrics.rendererCount == 1 &&
+                metrics.vertexCount == sourceMesh.vertexCount &&
+                metrics.triangleCount == sourceMesh.triangles.Length / 3 &&
+                metrics.materialCount == sourceMaterials.Length &&
+                metrics.sourceMeshReferenceExact &&
+                metrics.materialReferencesExact &&
+                metrics.sourceRootTransformExact &&
+                metrics.hasNoRigOrGeneratedGeometry &&
+                metrics.playerMeshReferencesUnchanged &&
+                metrics.playerBoneTransformsUnchanged &&
+                metrics.targetRootUnchanged &&
+                metrics.animatorUnchanged &&
+                metrics.placementUnchangedSinceApply;
+            return metrics;
+        }
+
+        private static float MeasureExactOriginalMiniFlamethrowerProjection(
+            Transform sourceModel,
+            Bounds sourceBounds,
+            Vector3 worldAxis)
+        {
+            float minimum = float.PositiveInfinity;
+            float maximum = float.NegativeInfinity;
+            foreach (Vector3 corner in GetBoundsCorners(sourceBounds))
+            {
+                float projection = Vector3.Dot(
+                    sourceModel.TransformPoint(corner),
+                    worldAxis.normalized);
+                minimum = Mathf.Min(minimum, projection);
+                maximum = Mathf.Max(maximum, projection);
+            }
+            return maximum - minimum;
+        }
+
+        private static string DescribeMiniFlamethrowerPlayerMeshSignature(
+            Transform target)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (SkinnedMeshRenderer renderer in target
+                         .GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                         .OrderBy(renderer =>
+                             AnimationUtility.CalculateTransformPath(
+                                 renderer.transform,
+                                 target),
+                             StringComparer.Ordinal))
+            {
+                Mesh mesh = renderer.sharedMesh;
+                builder.Append(AnimationUtility.CalculateTransformPath(
+                    renderer.transform,
+                    target));
+                builder.Append('|');
+                builder.Append(mesh != null
+                    ? AssetDatabase.GetAssetPath(mesh)
+                    : "<null>");
+                builder.Append('|');
+                builder.Append(mesh != null ? mesh.name : "<null>");
+                builder.Append('|');
+                builder.Append(mesh != null ? mesh.vertexCount : 0);
+                builder.Append('|');
+                builder.Append(mesh != null
+                    ? mesh.triangles.Length / 3
+                    : 0);
+                builder.AppendLine();
+            }
+            return HashMiniFlamethrowerSignature(builder.ToString());
+        }
+
+        private static string DescribeMiniFlamethrowerMeshAssetSignature(
+            Transform target)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (SkinnedMeshRenderer renderer in target
+                         .GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                         .OrderBy(renderer => renderer.sharedMesh != null
+                                 ? AssetDatabase.GetAssetPath(
+                                     renderer.sharedMesh)
+                                 : string.Empty,
+                             StringComparer.Ordinal))
+            {
+                Mesh mesh = renderer.sharedMesh;
+                builder.Append(mesh != null
+                    ? AssetDatabase.GetAssetPath(mesh)
+                    : "<null>");
+                builder.Append('|');
+                builder.Append(mesh != null ? mesh.name : "<null>");
+                builder.Append('|');
+                builder.Append(mesh != null ? mesh.vertexCount : 0);
+                builder.Append('|');
+                builder.Append(mesh != null
+                    ? mesh.triangles.Length / 3
+                    : 0);
+                foreach (Material material in renderer.sharedMaterials)
+                {
+                    builder.Append('|');
+                    builder.Append(material != null
+                        ? AssetDatabase.GetAssetPath(material)
+                        : "<null>");
+                }
+                builder.AppendLine();
+            }
+            return HashMiniFlamethrowerSignature(builder.ToString());
+        }
+
+        private static string
+            DescribeMiniFlamethrowerPlayerBoneTransformSignature(
+                Transform target)
+        {
+            IEnumerable<Transform> bones = target
+                .GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                .SelectMany(renderer => renderer.bones)
+                .Where(bone => bone != null)
+                .Distinct()
+                .OrderBy(bone => AnimationUtility.CalculateTransformPath(
+                    bone,
+                    target), StringComparer.Ordinal);
+            StringBuilder builder = new StringBuilder();
+            foreach (Transform bone in bones)
+            {
+                builder.Append(AnimationUtility.CalculateTransformPath(
+                    bone,
+                    target));
+                AppendMiniFlamethrowerVectorSignature(
+                    builder,
+                    bone.localPosition);
+                AppendMiniFlamethrowerQuaternionSignature(
+                    builder,
+                    bone.localRotation);
+                AppendMiniFlamethrowerVectorSignature(
+                    builder,
+                    bone.localScale);
+                builder.AppendLine();
+            }
+            return HashMiniFlamethrowerSignature(builder.ToString());
+        }
+
+        private static void AppendMiniFlamethrowerVectorSignature(
+            StringBuilder builder,
+            Vector3 value)
+        {
+            builder.Append('|');
+            builder.Append(value.x.ToString("R", CultureInfo.InvariantCulture));
+            builder.Append(',');
+            builder.Append(value.y.ToString("R", CultureInfo.InvariantCulture));
+            builder.Append(',');
+            builder.Append(value.z.ToString("R", CultureInfo.InvariantCulture));
+        }
+
+        private static void AppendMiniFlamethrowerQuaternionSignature(
+            StringBuilder builder,
+            Quaternion value)
+        {
+            builder.Append('|');
+            builder.Append(value.x.ToString("R", CultureInfo.InvariantCulture));
+            builder.Append(',');
+            builder.Append(value.y.ToString("R", CultureInfo.InvariantCulture));
+            builder.Append(',');
+            builder.Append(value.z.ToString("R", CultureInfo.InvariantCulture));
+            builder.Append(',');
+            builder.Append(value.w.ToString("R", CultureInfo.InvariantCulture));
+        }
+
+        private static string HashMiniFlamethrowerSignature(string value)
+        {
+            using (SHA256 sha = SHA256.Create())
+            {
+                return BitConverter.ToString(
+                        sha.ComputeHash(Encoding.UTF8.GetBytes(value)))
+                    .Replace("-", string.Empty);
+            }
+        }
+
+        private static bool IsControlledExactOriginalMiniFlamethrowerRetry(
+            Scene scene)
+        {
+            Transform layout = RequireLayout(scene);
+            return GetMiniFlamethrowerTargetNames().All(targetName =>
+            {
+                Transform target = RequireTarget(layout, targetName);
+                return target.Find(MiniFlamethrowerOriginalInstanceName) !=
+                    null;
+            });
+        }
+
+        private static void PrepareExactOriginalMiniFlamethrowerImport()
+        {
+            ModelImporter importer = AssetImporter.GetAtPath(
+                MiniFlamethrowerAssetPath) as ModelImporter ??
+                throw new InvalidOperationException(
+                    "Mini flamethrower FBX does not have a ModelImporter.");
+            foreach (AssetImporter.SourceAssetIdentifier identifier in
+                     importer.GetExternalObjectMap().Keys
+                         .Where(identifier => identifier.type ==
+                             typeof(Material))
+                         .ToArray())
+            {
+                importer.RemoveRemap(identifier);
+            }
+            importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
+            importer.materialName =
+                ModelImporterMaterialName.BasedOnMaterialName;
+            importer.materialSearch = ModelImporterMaterialSearch.Local;
+            importer.SaveAndReimport();
+
+            EnsureMiniFlamethrowerAssetFolder(
+                MiniFlamethrowerMaterialFolder);
+            EnsureMiniFlamethrowerAssetFolder(
+                MiniFlamethrowerTextureFolder);
+            ConfigureExactMiniFlamethrowerTextureImports();
+            CreateExactMiniFlamethrowerPackedMetallicSmoothnessTexture();
+
+            Material embedded = AssetDatabase
+                .LoadAllAssetsAtPath(MiniFlamethrowerAssetPath)
+                .OfType<Material>()
+                .Single(material => string.Equals(
+                    material.name,
+                    "Material.001",
+                    StringComparison.Ordinal));
+            Material external = AssetDatabase.LoadAssetAtPath<Material>(
+                MiniFlamethrowerExternalMaterialPath);
+            if (external == null)
+            {
+                external = new Material(embedded)
+                {
+                    name = embedded.name
+                };
+                AssetDatabase.CreateAsset(
+                    external,
+                    MiniFlamethrowerExternalMaterialPath);
+            }
+            else
+            {
+                EditorUtility.CopySerialized(embedded, external);
+                external.name = embedded.name;
+            }
+
+            ConfigureExactMiniFlamethrowerExternalMaterial(external);
+            importer = AssetImporter.GetAtPath(
+                MiniFlamethrowerAssetPath) as ModelImporter ??
+                throw new InvalidOperationException(
+                    "Mini flamethrower importer was lost before material remap.");
+            importer.AddRemap(
+                new AssetImporter.SourceAssetIdentifier(
+                    typeof(Material),
+                    embedded.name),
+                external);
+            importer.materialLocation = ModelImporterMaterialLocation.External;
+            importer.materialName =
+                ModelImporterMaterialName.BasedOnMaterialName;
+            importer.materialSearch = ModelImporterMaterialSearch.Local;
+            importer.SaveAndReimport();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(
+                ImportAssetOptions.ForceSynchronousImport |
+                ImportAssetOptions.ForceUpdate);
+        }
+
+        private static void ConfigureExactMiniFlamethrowerTextureImports()
+        {
+            string[] paths =
+            {
+                MiniFlamethrowerAutoTextureFolder + "/base_color.jpg",
+                MiniFlamethrowerAutoTextureFolder + "/normal.jpg",
+                MiniFlamethrowerAutoTextureFolder +
+                "/texture_0_metallic.png",
+                MiniFlamethrowerAutoTextureFolder +
+                "/texture_0_roughness.png"
+            };
+            foreach (string path in paths)
+            {
+                TextureImporter textureImporter = AssetImporter.GetAtPath(path)
+                    as TextureImporter ??
+                    throw new FileNotFoundException(
+                        "Mini flamethrower source texture is missing.",
+                        Path.GetFullPath(path));
+                string fileName = Path.GetFileNameWithoutExtension(path);
+                bool isNormal = string.Equals(
+                    fileName,
+                    "normal",
+                    StringComparison.OrdinalIgnoreCase);
+                bool isLinear = isNormal ||
+                    fileName.IndexOf(
+                        "metallic",
+                        StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    fileName.IndexOf(
+                        "roughness",
+                        StringComparison.OrdinalIgnoreCase) >= 0;
+                bool needsReadWrite = fileName.IndexOf(
+                        "metallic",
+                        StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    fileName.IndexOf(
+                        "roughness",
+                        StringComparison.OrdinalIgnoreCase) >= 0;
+                textureImporter.textureType = isNormal
+                    ? TextureImporterType.NormalMap
+                    : TextureImporterType.Default;
+                textureImporter.sRGBTexture = !isLinear;
+                textureImporter.isReadable = needsReadWrite;
+                textureImporter.SaveAndReimport();
+            }
+        }
+
+        private static void
+            CreateExactMiniFlamethrowerPackedMetallicSmoothnessTexture()
+        {
+            Texture2D metallic = AssetDatabase.LoadAssetAtPath<Texture2D>(
+                MiniFlamethrowerAutoTextureFolder +
+                "/texture_0_metallic.png");
+            Texture2D roughness = AssetDatabase.LoadAssetAtPath<Texture2D>(
+                MiniFlamethrowerAutoTextureFolder +
+                "/texture_0_roughness.png");
+            if (metallic == null || roughness == null ||
+                metallic.width != roughness.width ||
+                metallic.height != roughness.height)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower metallic and roughness textures are incomplete.");
+            }
+
+            Color32[] metallicPixels = metallic.GetPixels32();
+            Color32[] roughnessPixels = roughness.GetPixels32();
+            Color32[] packedPixels = new Color32[metallicPixels.Length];
+            for (int index = 0; index < packedPixels.Length; index++)
+            {
+                Color32 metal = metallicPixels[index];
+                packedPixels[index] = new Color32(
+                    metal.r,
+                    metal.g,
+                    metal.b,
+                    (byte)(255 - roughnessPixels[index].r));
+            }
+
+            Texture2D packed = new Texture2D(
+                metallic.width,
+                metallic.height,
+                TextureFormat.RGBA32,
+                false,
+                true);
+            try
+            {
+                packed.SetPixels32(packedPixels);
+                packed.Apply(false, false);
+                File.WriteAllBytes(
+                    Path.GetFullPath(
+                        MiniFlamethrowerPackedMetallicSmoothnessPath),
+                    packed.EncodeToPNG());
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(packed);
+            }
+
+            AssetDatabase.ImportAsset(
+                MiniFlamethrowerPackedMetallicSmoothnessPath,
+                ImportAssetOptions.ForceSynchronousImport |
+                ImportAssetOptions.ForceUpdate);
+            TextureImporter packedImporter = AssetImporter.GetAtPath(
+                MiniFlamethrowerPackedMetallicSmoothnessPath) as
+                TextureImporter ??
+                throw new InvalidOperationException(
+                    "Mini flamethrower packed PBR texture has no importer.");
+            packedImporter.textureType = TextureImporterType.Default;
+            packedImporter.sRGBTexture = false;
+            packedImporter.isReadable = false;
+            packedImporter.SaveAndReimport();
+        }
+
+        private static void ConfigureExactMiniFlamethrowerExternalMaterial(
+            Material material)
+        {
+            Shader shader = Shader.Find("Universal Render Pipeline/Lit") ??
+                throw new InvalidOperationException(
+                    "URP Lit shader is unavailable for the original mini flamethrower material.");
+            material.shader = shader;
+            Texture2D baseColor = AssetDatabase.LoadAssetAtPath<Texture2D>(
+                MiniFlamethrowerAutoTextureFolder + "/base_color.jpg");
+            Texture2D normal = AssetDatabase.LoadAssetAtPath<Texture2D>(
+                MiniFlamethrowerAutoTextureFolder + "/normal.jpg");
+            Texture2D metallicSmoothness =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    MiniFlamethrowerPackedMetallicSmoothnessPath);
+            if (baseColor == null || normal == null ||
+                metallicSmoothness == null)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower PBR texture set is incomplete.");
+            }
+
+            material.SetTexture("_BaseMap", baseColor);
+            material.SetTexture("_BumpMap", normal);
+            material.SetTexture("_MetallicGlossMap", metallicSmoothness);
+            material.SetFloat("_Metallic", 1f);
+            material.SetFloat("_Smoothness", 1f);
+            material.SetFloat("_Cull", 0f);
+            material.doubleSidedGI = true;
+            material.EnableKeyword("_NORMALMAP");
+            material.EnableKeyword("_METALLICSPECGLOSSMAP");
+            EditorUtility.SetDirty(material);
+        }
+
+        private static MiniFlamethrowerRigAnalysis AnalyzeMiniFlamethrowerRig(
+            GameObject asset,
+            MiniFlamethrowerAssetInspection inspection)
+        {
+            MeshFilter[] filters = asset.GetComponentsInChildren<MeshFilter>(true)
+                .Where(filter => filter.sharedMesh != null)
+                .ToArray();
+            Renderer[] renderers = asset.GetComponentsInChildren<Renderer>(true)
+                .Where(renderer => renderer.sharedMaterials.Length > 0)
+                .ToArray();
+            if (filters.Length != 1 || renderers.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "The exact mini flamethrower FBX must remain one mesh renderer. Meshes=" +
+                    filters.Length.ToString(CultureInfo.InvariantCulture) +
+                    ", Renderers=" +
+                    renderers.Length.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+
+            Mesh mesh = filters[0].sharedMesh;
+            Vector3[] vertices = mesh.vertices;
+            int[] triangles = mesh.triangles;
+            Bounds tankBounds = CalculateMiniFlamethrowerRegionBounds(
+                vertices,
+                triangles,
+                center => IsExactMiniFlamethrowerTankRegion(
+                    center,
+                    inspection));
+            Bounds sprayerBounds = CalculateMiniFlamethrowerRegionBounds(
+                vertices,
+                triangles,
+                center => IsExactMiniFlamethrowerSprayerRegion(
+                    center,
+                    inspection));
+            HashSet<int> sprayerIndices = GetMiniFlamethrowerRegionVertexIndices(
+                vertices,
+                triangles,
+                center => IsExactMiniFlamethrowerSprayerRegion(
+                    center,
+                    inspection));
+            Vector3 axisHint = new Vector3(1f, 0.72f, 0f).normalized;
+            float minimum = sprayerIndices.Min(index =>
+                Vector3.Dot(vertices[index], axisHint));
+            float maximum = sprayerIndices.Max(index =>
+                Vector3.Dot(vertices[index], axisHint));
+            float band = (maximum - minimum) * 0.055f;
+            Vector3 rear = AverageMiniFlamethrowerVerticesExact(
+                sprayerIndices.Where(index =>
+                    Vector3.Dot(vertices[index], axisHint) <= minimum + band),
+                vertices);
+            Vector3 nozzle = AverageMiniFlamethrowerVerticesExact(
+                sprayerIndices.Where(index =>
+                    Vector3.Dot(vertices[index], axisHint) >= maximum - band),
+                vertices);
+            Bounds combinedBounds = new Bounds(
+                inspection.combinedLocalBoundsCenter,
+                inspection.combinedLocalBoundsSize);
+            int[][] gripComponents =
+                GetExactMiniFlamethrowerConnectedComponents(mesh, false)
+                    .Where(component =>
+                        IsExactMiniFlamethrowerPistolGripComponent(
+                            component,
+                            vertices,
+                            combinedBounds))
+                    .ToArray();
+            if (gripComponents.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "The unchanged source FBX must contain exactly one directly identified black grooved pistol grip. Matches=" +
+                    gripComponents.Length.ToString(CultureInfo.InvariantCulture) +
+                    ".");
+            }
+            HashSet<int> gripIndices = new HashSet<int>(gripComponents[0]);
+            Vector3 gripCenter = AverageMiniFlamethrowerVerticesExact(
+                gripIndices,
+                vertices);
+            // The unchanged source side view shows the trigger guard opening
+            // on the axis-facing side of the accepted central grip surface.
+            Vector3 triggerDownDirection =
+                ClosestPointOnMiniFlamethrowerAxis(
+                    gripCenter,
+                    rear,
+                    nozzle) - gripCenter;
+            if (triggerDownDirection.sqrMagnitude <= 0.0000001f)
+            {
+                throw new InvalidOperationException(
+                    "The directly identified pistol grip does not define a trigger-down direction from the sprayer axis.");
+            }
+            triggerDownDirection.Normalize();
+            string[] textureReferences = renderers[0].sharedMaterials
+                .Where(material => material != null && material.shader != null)
+                .SelectMany(GetMiniFlamethrowerMaterialTextureReferences)
+                .Distinct(StringComparer.Ordinal)
+                .OrderBy(value => value, StringComparer.Ordinal)
+                .ToArray();
+            return new MiniFlamethrowerRigAnalysis
+            {
+                SourceMesh = mesh,
+                SourceMaterials = renderers[0].sharedMaterials,
+                TextureReferences = textureReferences,
+                CombinedBounds = combinedBounds,
+                TankBounds = tankBounds,
+                SprayerBounds = sprayerBounds,
+                TankCenter = tankBounds.center,
+                SprayerRearPoint = rear,
+                SprayerNozzlePoint = nozzle,
+                SprayerAxis = (nozzle - rear).normalized,
+                SprayerGripCenter = gripCenter,
+                SprayerTriggerDownDirection = triggerDownDirection,
+                SprayerGripVertexIndices = gripIndices,
+                SprayerSourceLength = Vector3.Distance(rear, nozzle)
+            };
+        }
+
+        private static bool IsExactMiniFlamethrowerPistolGripComponent(
+            IReadOnlyList<int> component,
+            IReadOnlyList<Vector3> vertices,
+            Bounds combinedBounds)
+        {
+            Bounds componentBounds = new Bounds(
+                vertices[component[0]],
+                Vector3.zero);
+            foreach (int vertexIndex in component)
+            {
+                componentBounds.Encapsulate(vertices[vertexIndex]);
+            }
+
+            Vector3 center = componentBounds.center;
+            float normalizedX = Mathf.InverseLerp(
+                combinedBounds.min.x,
+                combinedBounds.max.x,
+                center.x);
+            float normalizedY = Mathf.InverseLerp(
+                combinedBounds.min.y,
+                combinedBounds.max.y,
+                center.y);
+            float normalizedZ = Mathf.InverseLerp(
+                combinedBounds.min.z,
+                combinedBounds.max.z,
+                center.z);
+            float normalizedHeight = componentBounds.size.y /
+                Mathf.Max(0.0000001f, combinedBounds.size.y);
+
+            float normalizedWidth = componentBounds.size.x /
+                Mathf.Max(0.0000001f, combinedBounds.size.x);
+
+            // Directly identified in the unchanged source side view as the
+            // solid central gripping surface inside the trigger guard.
+            return normalizedX >= 0.12f && normalizedX <= 0.19f &&
+                normalizedY >= 0.09f && normalizedY <= 0.15f &&
+                normalizedZ >= 0.40f && normalizedZ <= 0.50f &&
+                normalizedWidth >= 0.10f &&
+                normalizedHeight >= 0.10f;
+        }
+
+        private static bool IsControlledMiniFlamethrowerRigRetry(Scene scene)
+        {
+            string absoluteMetrics = Path.GetFullPath(
+                MiniFlamethrowerApplyMetricsPath);
+            if (!File.Exists(absoluteMetrics))
+            {
+                return false;
+            }
+
+            MiniFlamethrowerRigApplyMetrics failed =
+                ReadJson<MiniFlamethrowerRigApplyMetrics>(
+                    MiniFlamethrowerApplyMetricsPath);
+            if (failed.passedNumericChecks)
+            {
+                return false;
+            }
+
+            Transform layout = RequireLayout(scene);
+            return GetMiniFlamethrowerTargetNames().All(name =>
+            {
+                Transform target = RequireTarget(layout, name);
+                return target.Find(MiniFlamethrowerRigInstanceName) != null;
+            });
+        }
+
+        private static void ExtractAndRemapExactMiniFlamethrowerMaterialsAndTextures()
+        {
+            EnsureMiniFlamethrowerAssetFolder(
+                MiniFlamethrowerMaterialFolder);
+            EnsureMiniFlamethrowerAssetFolder(
+                MiniFlamethrowerTextureFolder);
+            ModelImporter importer = AssetImporter.GetAtPath(
+                MiniFlamethrowerAssetPath) as ModelImporter ??
+                throw new InvalidOperationException(
+                    "Mini flamethrower FBX does not have a ModelImporter.");
+            Material[] existingMaterials = AssetDatabase.FindAssets(
+                    "t:Material",
+                    new[] { MiniFlamethrowerMaterialFolder })
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Select(AssetDatabase.LoadAssetAtPath<Material>)
+                .Where(material => material != null)
+                .OrderBy(material => material.name, StringComparer.Ordinal)
+                .ToArray();
+            if (existingMaterials.Length > 0)
+            {
+                foreach (Material material in existingMaterials)
+                {
+                    importer.AddRemap(
+                        new AssetImporter.SourceAssetIdentifier(
+                            typeof(Material),
+                            material.name),
+                        material);
+                }
+                importer.materialLocation =
+                    ModelImporterMaterialLocation.External;
+                importer.materialName =
+                    ModelImporterMaterialName.BasedOnMaterialName;
+                importer.materialSearch = ModelImporterMaterialSearch.Local;
+                importer.SaveAndReimport();
+                AssetDatabase.SaveAssets();
+                return;
+            }
+
+            importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
+            importer.materialName =
+                ModelImporterMaterialName.BasedOnMaterialName;
+            importer.materialSearch = ModelImporterMaterialSearch.Local;
+            importer.SaveAndReimport();
+
+            bool hasExtractedTextures = AssetDatabase.FindAssets(
+                    "t:Texture2D",
+                    new[] { MiniFlamethrowerTextureFolder })
+                .Length > 0;
+            if (!hasExtractedTextures)
+            {
+                importer = AssetImporter.GetAtPath(
+                    MiniFlamethrowerAssetPath) as ModelImporter ??
+                    throw new InvalidOperationException(
+                        "Mini flamethrower importer was lost before texture extraction.");
+                importer.ExtractTextures(MiniFlamethrowerTextureFolder);
+                AssetDatabase.Refresh(
+                    ImportAssetOptions.ForceSynchronousImport |
+                    ImportAssetOptions.ForceUpdate);
+            }
+
+            importer = AssetImporter.GetAtPath(
+                MiniFlamethrowerAssetPath) as ModelImporter ??
+                throw new InvalidOperationException(
+                    "Mini flamethrower importer was lost after texture extraction.");
+            Material[] embeddedMaterials = AssetDatabase
+                .LoadAllAssetsAtPath(MiniFlamethrowerAssetPath)
+                .OfType<Material>()
+                .Where(material => string.Equals(
+                    AssetDatabase.GetAssetPath(material),
+                    MiniFlamethrowerAssetPath,
+                    StringComparison.Ordinal))
+                .OrderBy(material => material.name, StringComparer.Ordinal)
+                .ToArray();
+            if (embeddedMaterials.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower FBX contains no embedded material to preserve.");
+            }
+
+            foreach (Material embedded in embeddedMaterials)
+            {
+                string materialPath = MiniFlamethrowerMaterialFolder + "/" +
+                    SanitizeStickAssetName(embedded.name) + ".mat";
+                Material external = AssetDatabase.LoadAssetAtPath<Material>(
+                    materialPath);
+                if (external == null)
+                {
+                    external = new Material(embedded)
+                    {
+                        name = embedded.name
+                    };
+                    AssetDatabase.CreateAsset(external, materialPath);
+                }
+                else
+                {
+                    EditorUtility.CopySerialized(embedded, external);
+                    external.name = embedded.name;
+                    EditorUtility.SetDirty(external);
+                }
+
+                importer.AddRemap(
+                    new AssetImporter.SourceAssetIdentifier(
+                        typeof(Material),
+                        embedded.name),
+                    external);
+            }
+
+            importer.materialLocation = ModelImporterMaterialLocation.External;
+            importer.materialName =
+                ModelImporterMaterialName.BasedOnMaterialName;
+            importer.materialSearch = ModelImporterMaterialSearch.Local;
+            importer.SaveAndReimport();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(
+                ImportAssetOptions.ForceSynchronousImport |
+                ImportAssetOptions.ForceUpdate);
+        }
+
+        private static void EnsureMiniFlamethrowerAssetFolder(string folderPath)
+        {
+            string[] segments = folderPath.Split('/');
+            string current = segments[0];
+            for (int index = 1; index < segments.Length; index++)
+            {
+                string next = current + "/" + segments[index];
+                if (!AssetDatabase.IsValidFolder(next))
+                {
+                    AssetDatabase.CreateFolder(current, segments[index]);
+                }
+                current = next;
+            }
+        }
+
+        private static IEnumerable<string>
+            GetMiniFlamethrowerMaterialTextureReferences(Material material)
+        {
+            int propertyCount = ShaderUtil.GetPropertyCount(material.shader);
+            for (int index = 0; index < propertyCount; index++)
+            {
+                if (ShaderUtil.GetPropertyType(material.shader, index) !=
+                    ShaderUtil.ShaderPropertyType.TexEnv)
+                {
+                    continue;
+                }
+
+                string propertyName = ShaderUtil.GetPropertyName(
+                    material.shader,
+                    index);
+                Texture texture = material.GetTexture(propertyName);
+                if (texture == null)
+                {
+                    continue;
+                }
+
+                yield return material.name + "/" + propertyName + "=" +
+                    texture.name + "@" + AssetDatabase.GetAssetPath(texture);
+            }
+        }
+
+        private static bool IsExactMiniFlamethrowerTankRegion(
+            Vector3 center,
+            MiniFlamethrowerAssetInspection inspection)
+        {
+            Bounds bounds = new Bounds(
+                inspection.combinedLocalBoundsCenter,
+                inspection.combinedLocalBoundsSize);
+            float normalizedX = Mathf.InverseLerp(
+                bounds.min.x,
+                bounds.max.x,
+                center.x);
+            float normalizedY = Mathf.InverseLerp(
+                bounds.min.y,
+                bounds.max.y,
+                center.y);
+            return normalizedX >= 0.62f &&
+                normalizedY >= 0.39f &&
+                normalizedY <= 0.74f;
+        }
+
+        private static bool IsExactMiniFlamethrowerSprayerRegion(
+            Vector3 center,
+            MiniFlamethrowerAssetInspection inspection)
+        {
+            Bounds bounds = new Bounds(
+                inspection.combinedLocalBoundsCenter,
+                inspection.combinedLocalBoundsSize);
+            Vector2 rear = new Vector2(bounds.min.x, bounds.min.y);
+            Vector2 nozzle = new Vector2(
+                Mathf.Lerp(bounds.min.x, bounds.max.x, 0.64f),
+                Mathf.Lerp(bounds.min.y, bounds.max.y, 0.39f));
+            Vector2 segment = nozzle - rear;
+            Vector2 point = new Vector2(center.x, center.y);
+            float amount = Mathf.Clamp01(
+                Vector2.Dot(point - rear, segment) /
+                Mathf.Max(0.0000000001f, segment.sqrMagnitude));
+            float distance = Vector2.Distance(
+                point,
+                rear + segment * amount);
+            return amount >= 0.02f &&
+                amount <= 1f &&
+                distance <= inspection.combinedLocalBoundsSize.x * 0.115f &&
+                center.y <= Mathf.Lerp(bounds.min.y, bounds.max.y, 0.48f);
+        }
+
+        private static Bounds CalculateMiniFlamethrowerRegionBounds(
+            IReadOnlyList<Vector3> vertices,
+            IReadOnlyList<int> triangles,
+            Func<Vector3, bool> includeTriangle)
+        {
+            HashSet<int> indices = GetMiniFlamethrowerRegionVertexIndices(
+                vertices,
+                triangles,
+                includeTriangle);
+            if (indices.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower directly reviewed rig region is empty.");
+            }
+
+            Bounds bounds = new Bounds(vertices[indices.First()], Vector3.zero);
+            foreach (int index in indices.Skip(1))
+            {
+                bounds.Encapsulate(vertices[index]);
+            }
+            return bounds;
+        }
+
+        private static HashSet<int> GetMiniFlamethrowerRegionVertexIndices(
+            IReadOnlyList<Vector3> vertices,
+            IReadOnlyList<int> triangles,
+            Func<Vector3, bool> includeTriangle)
+        {
+            HashSet<int> indices = new HashSet<int>();
+            for (int index = 0; index + 2 < triangles.Count; index += 3)
+            {
+                int first = triangles[index];
+                int second = triangles[index + 1];
+                int third = triangles[index + 2];
+                Vector3 center =
+                    (vertices[first] + vertices[second] + vertices[third]) / 3f;
+                if (!includeTriangle(center))
+                {
+                    continue;
+                }
+
+                indices.Add(first);
+                indices.Add(second);
+                indices.Add(third);
+            }
+            return indices;
+        }
+
+        private static Vector3 AverageMiniFlamethrowerVerticesExact(
+            IEnumerable<int> indices,
+            IReadOnlyList<Vector3> vertices)
+        {
+            int[] selected = indices.Distinct().ToArray();
+            if (selected.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower directly reviewed endpoint is empty.");
+            }
+
+            Vector3 sum = Vector3.zero;
+            foreach (int index in selected)
+            {
+                sum += vertices[index];
+            }
+            return sum / selected.Length;
+        }
+
+        private static Mesh CreateOrReplaceExactMiniFlamethrowerRiggedMesh(
+            MiniFlamethrowerRigAnalysis analysis,
+            out int tankWeightedVertexCount,
+            out int sprayerWeightedVertexCount,
+            out int blendedHoseVertexCount,
+            out int sourceConnectedHoseGroupCount,
+            out Vector3[] bonePivots)
+        {
+            Mesh output = UnityEngine.Object.Instantiate(analysis.SourceMesh);
+            output.name = "MiniFlamethrower_ExactRiggedMesh";
+            Vector3[] vertices = output.vertices;
+            BoneWeight[] weights = new BoneWeight[vertices.Length];
+            Vector3[] hosePivotSums = new Vector3[
+                MiniFlamethrowerHoseBoneCount];
+            int[] hosePivotCounts = new int[
+                MiniFlamethrowerHoseBoneCount];
+            tankWeightedVertexCount = 0;
+            sprayerWeightedVertexCount = 0;
+            blendedHoseVertexCount = 0;
+            IReadOnlyList<int[]> components =
+                GetExactMiniFlamethrowerConnectedComponents(output);
+            Dictionary<int, float> sourceConnectedHoseProgress =
+                CalculateExactMiniFlamethrowerSourceConnectedHoseProgress(
+                    vertices,
+                    components,
+                    analysis,
+                    out sourceConnectedHoseGroupCount);
+            analysis.SourceConnectedHoseVertexIndices =
+                new HashSet<int>(sourceConnectedHoseProgress.Keys);
+            foreach (int[] component in components)
+            {
+                Vector3 center = Vector3.zero;
+                foreach (int vertexIndex in component)
+                {
+                    center += vertices[vertexIndex];
+                }
+                center /= Mathf.Max(1, component.Length);
+                bool isPistolGrip = component.Any(index =>
+                    analysis.SprayerGripVertexIndices.Contains(index));
+                bool isSprayerComponent =
+                    IsExactMiniFlamethrowerSprayerRigRegion(
+                        center,
+                        analysis);
+                bool hasJoinedSourceHose = component.Any(vertexIndex =>
+                    sourceConnectedHoseProgress.ContainsKey(vertexIndex));
+                if (hasJoinedSourceHose)
+                {
+                    foreach (int vertexIndex in component)
+                    {
+                        if (sourceConnectedHoseProgress.TryGetValue(
+                                vertexIndex,
+                                out float progress))
+                        {
+                            SetExactMiniFlamethrowerFlexibleWeight(
+                                weights,
+                                vertexIndex,
+                                progress,
+                                vertices[vertexIndex],
+                                hosePivotSums,
+                                hosePivotCounts);
+                            blendedHoseVertexCount++;
+                        }
+                        else
+                        {
+                            bool followsSprayer =
+                                analysis.SprayerGripVertexIndices.Contains(
+                                    vertexIndex) ||
+                                IsExactMiniFlamethrowerSprayerRigRegion(
+                                    vertices[vertexIndex],
+                                    analysis);
+                            weights[vertexIndex] = new BoneWeight
+                            {
+                                boneIndex0 = followsSprayer
+                                    ? MiniFlamethrowerSprayerBoneIndex
+                                    : MiniFlamethrowerTankBoneIndex,
+                                weight0 = 1f
+                            };
+                            if (followsSprayer)
+                            {
+                                sprayerWeightedVertexCount++;
+                            }
+                            else
+                            {
+                                tankWeightedVertexCount++;
+                            }
+                        }
+                    }
+                }
+                else if (isPistolGrip || isSprayerComponent)
+                {
+                    SetExactMiniFlamethrowerRigidWeights(
+                        weights,
+                        component,
+                        MiniFlamethrowerSprayerBoneIndex);
+                    sprayerWeightedVertexCount += component.Length;
+                }
+                else if (IsExactMiniFlamethrowerHoseRegion(
+                             center,
+                             analysis))
+                {
+                    foreach (int vertexIndex in component)
+                    {
+                        float progress =
+                            CalculateExactMiniFlamethrowerRigProgress(
+                                vertices[vertexIndex],
+                                analysis);
+                        SetExactMiniFlamethrowerFlexibleWeight(
+                            weights,
+                            vertexIndex,
+                            progress,
+                            vertices[vertexIndex],
+                            hosePivotSums,
+                            hosePivotCounts);
+                    }
+                    blendedHoseVertexCount += component.Length;
+                }
+                else
+                {
+                    SetExactMiniFlamethrowerRigidWeights(
+                        weights,
+                        component,
+                        MiniFlamethrowerTankBoneIndex);
+                    tankWeightedVertexCount += component.Length;
+                }
+            }
+
+            bonePivots = new Vector3[MiniFlamethrowerRigBoneCount];
+            bonePivots[MiniFlamethrowerTankBoneIndex] =
+                analysis.TankCenter;
+            bonePivots[MiniFlamethrowerSprayerBoneIndex] =
+                analysis.SprayerRearPoint;
+            for (int hoseIndex = 0;
+                 hoseIndex < MiniFlamethrowerHoseBoneCount;
+                 hoseIndex++)
+            {
+                int boneIndex = MiniFlamethrowerFirstHoseBoneIndex +
+                    hoseIndex;
+                float amount = boneIndex /
+                    (float)(MiniFlamethrowerRigBoneCount - 1);
+                bonePivots[boneIndex] = hosePivotCounts[hoseIndex] > 0
+                    ? hosePivotSums[hoseIndex] /
+                      hosePivotCounts[hoseIndex]
+                    : Vector3.Lerp(
+                        analysis.TankCenter,
+                        analysis.SprayerRearPoint,
+                        amount);
+            }
+
+            output.boneWeights = weights;
+            output.bindposes = bonePivots
+                .Select(pivot => Matrix4x4.Translate(-pivot))
+                .ToArray();
+            if (AssetDatabase.LoadAssetAtPath<Mesh>(
+                    MiniFlamethrowerRiggedMeshPath) != null)
+            {
+                AssetDatabase.DeleteAsset(MiniFlamethrowerRiggedMeshPath);
+            }
+            AssetDatabase.CreateAsset(output, MiniFlamethrowerRiggedMeshPath);
+            AssetDatabase.ImportAsset(
+                MiniFlamethrowerRiggedMeshPath,
+                ImportAssetOptions.ForceUpdate);
+            return AssetDatabase.LoadAssetAtPath<Mesh>(
+                       MiniFlamethrowerRiggedMeshPath) ??
+                throw new InvalidOperationException(
+                    "Exact mini flamethrower rigged mesh could not be reloaded.");
+        }
+
+        private static Dictionary<int, float>
+            CalculateExactMiniFlamethrowerSourceConnectedHoseProgress(
+                IReadOnlyList<Vector3> vertices,
+                IReadOnlyList<int[]> components,
+                MiniFlamethrowerRigAnalysis analysis,
+                out int connectedGroupCount)
+        {
+            int componentCount = components.Count;
+            bool[] candidates = new bool[componentCount];
+            List<int> tankVertices = new List<int>();
+            List<int> sprayerVertices = new List<int>();
+            for (int componentIndex = 0;
+                 componentIndex < componentCount;
+                 componentIndex++)
+            {
+                int[] component = components[componentIndex];
+                Vector3 center = AverageMiniFlamethrowerVerticesExact(
+                    component,
+                    vertices);
+                bool isPistolGrip = component.Any(index =>
+                    analysis.SprayerGripVertexIndices.Contains(index));
+                bool entirelyInsideSprayer = component.All(index =>
+                    IsExactMiniFlamethrowerSprayerRigRegion(
+                        vertices[index],
+                        analysis));
+                int hoseLikeVertexCount = component.Count(index =>
+                    !IsExactMiniFlamethrowerSprayerRigRegion(
+                        vertices[index],
+                        analysis) &&
+                    IsExactMiniFlamethrowerHoseRegion(
+                        vertices[index],
+                        analysis));
+                candidates[componentIndex] =
+                    !isPistolGrip &&
+                    !entirelyInsideSprayer &&
+                    IsExactMiniFlamethrowerHoseRegion(center, analysis) &&
+                    hoseLikeVertexCount >= Mathf.Max(
+                        3,
+                        Mathf.CeilToInt(component.Length * 0.5f));
+                if (candidates[componentIndex])
+                {
+                    continue;
+                }
+
+                if (isPistolGrip ||
+                    IsExactMiniFlamethrowerSprayerRigRegion(
+                        center,
+                        analysis))
+                {
+                    sprayerVertices.AddRange(component);
+                }
+                else if (!IsExactMiniFlamethrowerHoseRegion(
+                             center,
+                             analysis))
+                {
+                    tankVertices.AddRange(component);
+                }
+            }
+
+            float sourceScale = Mathf.Max(
+                analysis.CombinedBounds.size.x,
+                Mathf.Max(
+                    analysis.CombinedBounds.size.y,
+                    analysis.CombinedBounds.size.z));
+            float connectionTolerance = sourceScale * 0.02f;
+            float connectionToleranceSquared =
+                connectionTolerance * connectionTolerance;
+            int[] parents = Enumerable.Range(0, componentCount).ToArray();
+            int[] ranks = new int[componentCount];
+            for (int first = 0; first < componentCount; first++)
+            {
+                if (!candidates[first])
+                {
+                    continue;
+                }
+                for (int second = first + 1;
+                     second < componentCount;
+                     second++)
+                {
+                    if (!candidates[second] ||
+                        !MiniFlamethrowerVertexSetsWithinDistance(
+                            vertices,
+                            components[first],
+                            components[second],
+                            connectionToleranceSquared))
+                    {
+                        continue;
+                    }
+                    UnionExactMiniFlamethrowerVertices(
+                        parents,
+                        ranks,
+                        first,
+                        second);
+                }
+            }
+
+            Dictionary<int, List<int>> groups =
+                new Dictionary<int, List<int>>();
+            for (int componentIndex = 0;
+                 componentIndex < componentCount;
+                 componentIndex++)
+            {
+                if (!candidates[componentIndex])
+                {
+                    continue;
+                }
+                int root = FindExactMiniFlamethrowerVertexRoot(
+                    parents,
+                    componentIndex);
+                if (!groups.TryGetValue(root, out List<int> group))
+                {
+                    group = new List<int>();
+                    groups.Add(root, group);
+                }
+                group.AddRange(components[componentIndex]);
+            }
+
+            Dictionary<int, float> result =
+                new Dictionary<int, float>();
+            connectedGroupCount = 0;
+            foreach (List<int> group in groups.Values)
+            {
+                if (!MiniFlamethrowerVertexSetsWithinDistance(
+                        vertices,
+                        group,
+                        tankVertices,
+                        connectionToleranceSquared) ||
+                    !MiniFlamethrowerVertexSetsWithinDistance(
+                        vertices,
+                        group,
+                        sprayerVertices,
+                        connectionToleranceSquared))
+                {
+                    continue;
+                }
+
+                int[] flexibleVertices = group
+                    .Distinct()
+                    .ToArray();
+                if (flexibleVertices.Length < 12)
+                {
+                    continue;
+                }
+
+                float[] rawProgress = flexibleVertices
+                    .Select(index =>
+                        CalculateExactMiniFlamethrowerRigProgress(
+                            vertices[index],
+                            analysis))
+                    .ToArray();
+                float minimum = rawProgress.Min();
+                float maximum = rawProgress.Max();
+                if (maximum - minimum <= 0.01f)
+                {
+                    continue;
+                }
+
+                for (int index = 0;
+                     index < flexibleVertices.Length;
+                     index++)
+                {
+                    result[flexibleVertices[index]] = Mathf.InverseLerp(
+                        minimum,
+                        maximum,
+                        rawProgress[index]);
+                }
+                connectedGroupCount++;
+            }
+            return result;
+        }
+
+        private static bool MiniFlamethrowerVertexSetsWithinDistance(
+            IReadOnlyList<Vector3> vertices,
+            IReadOnlyList<int> first,
+            IReadOnlyList<int> second,
+            float maximumDistanceSquared)
+        {
+            foreach (int firstIndex in first)
+            {
+                Vector3 firstPosition = vertices[firstIndex];
+                foreach (int secondIndex in second)
+                {
+                    if ((firstPosition - vertices[secondIndex]).sqrMagnitude <=
+                        maximumDistanceSquared)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private static bool IsExactMiniFlamethrowerHoseRegion(
+            Vector3 center,
+            MiniFlamethrowerRigAnalysis analysis)
+        {
+            Bounds bounds = analysis.CombinedBounds;
+            Vector2 normalized = new Vector2(
+                Mathf.InverseLerp(bounds.min.x, bounds.max.x, center.x),
+                Mathf.InverseLerp(bounds.min.y, bounds.max.y, center.y));
+            CalculateExactMiniFlamethrowerHosePathProgress(
+                normalized,
+                out float distance);
+            return distance <= 0.075f;
+        }
+
+        private static bool IsExactMiniFlamethrowerSprayerRegion(
+            Vector3 center,
+            Bounds bounds)
+        {
+            Vector2 rear = new Vector2(bounds.min.x, bounds.min.y);
+            Vector2 nozzle = new Vector2(
+                Mathf.Lerp(bounds.min.x, bounds.max.x, 0.64f),
+                Mathf.Lerp(bounds.min.y, bounds.max.y, 0.39f));
+            Vector2 segment = nozzle - rear;
+            Vector2 point = new Vector2(center.x, center.y);
+            float amount = Mathf.Clamp01(
+                Vector2.Dot(point - rear, segment) /
+                Mathf.Max(0.0000000001f, segment.sqrMagnitude));
+            float distance = Vector2.Distance(
+                point,
+                rear + segment * amount);
+            return amount >= 0.02f &&
+                amount <= 1f &&
+                distance <= bounds.size.x * 0.115f &&
+                center.y <= Mathf.Lerp(bounds.min.y, bounds.max.y, 0.48f);
+        }
+
+        private static bool IsExactMiniFlamethrowerSprayerRigRegion(
+            Vector3 center,
+            MiniFlamethrowerRigAnalysis analysis)
+        {
+            float normalizedZ = Mathf.InverseLerp(
+                analysis.CombinedBounds.min.z,
+                analysis.CombinedBounds.max.z,
+                center.z);
+            return normalizedZ >= 0.25f &&
+                IsExactMiniFlamethrowerSprayerRegion(
+                    center,
+                    analysis.CombinedBounds);
+        }
+
+        private static void SetExactMiniFlamethrowerRigidWeights(
+            IList<BoneWeight> weights,
+            IEnumerable<int> component,
+            int boneIndex)
+        {
+            foreach (int vertexIndex in component)
+            {
+                weights[vertexIndex] = new BoneWeight
+                {
+                    boneIndex0 = boneIndex,
+                    weight0 = 1f
+                };
+            }
+        }
+
+        private static void SetExactMiniFlamethrowerFlexibleWeight(
+            IList<BoneWeight> weights,
+            int vertexIndex,
+            float progress,
+            Vector3 position,
+            IList<Vector3> hosePivotSums,
+            IList<int> hosePivotCounts)
+        {
+            float scaled = progress *
+                (MiniFlamethrowerRigBoneCount - 1);
+            int lower = Mathf.Clamp(
+                Mathf.FloorToInt(scaled),
+                0,
+                MiniFlamethrowerRigBoneCount - 1);
+            int upper = Mathf.Clamp(
+                lower + 1,
+                0,
+                MiniFlamethrowerRigBoneCount - 1);
+            float upperWeight = scaled - lower;
+            weights[vertexIndex] = new BoneWeight
+            {
+                boneIndex0 = lower,
+                weight0 = 1f - upperWeight,
+                boneIndex1 = upper,
+                weight1 = upperWeight
+            };
+            int hoseIndex = Mathf.Clamp(
+                Mathf.RoundToInt(progress *
+                    (MiniFlamethrowerRigBoneCount - 1)) -
+                MiniFlamethrowerFirstHoseBoneIndex,
+                0,
+                MiniFlamethrowerHoseBoneCount - 1);
+            hosePivotSums[hoseIndex] += position;
+            hosePivotCounts[hoseIndex]++;
+        }
+
+        private static float CalculateExactMiniFlamethrowerRigProgress(
+            Vector3 position,
+            MiniFlamethrowerRigAnalysis analysis)
+        {
+            Bounds bounds = analysis.CombinedBounds;
+            Vector2 normalized = new Vector2(
+                Mathf.InverseLerp(bounds.min.x, bounds.max.x, position.x),
+                Mathf.InverseLerp(bounds.min.y, bounds.max.y, position.y));
+            return CalculateExactMiniFlamethrowerHosePathProgress(
+                normalized,
+                out _);
+        }
+
+        private static float CalculateExactMiniFlamethrowerHosePathProgress(
+            Vector2 point,
+            out float distance)
+        {
+            // Directly traced from the unchanged source FBX front view:
+            // the outer main hose and the thinner direct hose both run from
+            // the backpack outlets to the sprayer-side connections.
+            Vector2[][] paths =
+            {
+                new[]
+                {
+                    new Vector2(0.62f, 0.50f),
+                    new Vector2(0.52f, 0.49f),
+                    new Vector2(0.44f, 0.53f),
+                    new Vector2(0.35f, 0.58f),
+                    new Vector2(0.27f, 0.55f),
+                    new Vector2(0.20f, 0.45f),
+                    new Vector2(0.15f, 0.30f),
+                    new Vector2(0.10f, 0.15f),
+                    new Vector2(0.04f, 0.06f)
+                },
+                new[]
+                {
+                    new Vector2(0.62f, 0.47f),
+                    new Vector2(0.52f, 0.42f),
+                    new Vector2(0.42f, 0.36f),
+                    new Vector2(0.32f, 0.29f),
+                    new Vector2(0.22f, 0.21f),
+                    new Vector2(0.12f, 0.13f),
+                    new Vector2(0.04f, 0.06f)
+                }
+            };
+            float bestDistance = float.PositiveInfinity;
+            float bestProgress = 0f;
+            foreach (Vector2[] path in paths)
+            {
+                float totalLength = 0f;
+                float[] segmentLengths = new float[path.Length - 1];
+                for (int index = 0;
+                     index < segmentLengths.Length;
+                     index++)
+                {
+                    segmentLengths[index] = Vector2.Distance(
+                        path[index],
+                        path[index + 1]);
+                    totalLength += segmentLengths[index];
+                }
+
+                float lengthBefore = 0f;
+                for (int index = 0;
+                     index < segmentLengths.Length;
+                     index++)
+                {
+                    Vector2 segment = path[index + 1] - path[index];
+                    float amount = Mathf.Clamp01(
+                        Vector2.Dot(point - path[index], segment) /
+                        Mathf.Max(0.0000001f, segment.sqrMagnitude));
+                    float candidateDistance = Vector2.Distance(
+                        point,
+                        path[index] + segment * amount);
+                    if (candidateDistance < bestDistance)
+                    {
+                        bestDistance = candidateDistance;
+                        bestProgress = (lengthBefore +
+                            segmentLengths[index] * amount) /
+                            Mathf.Max(0.0000001f, totalLength);
+                    }
+                    lengthBefore += segmentLengths[index];
+                }
+            }
+
+            distance = bestDistance;
+            return Mathf.Clamp01(bestProgress);
+        }
+
+        private static IReadOnlyList<int[]>
+            GetExactMiniFlamethrowerConnectedComponents(
+                Mesh mesh,
+                bool weldCoincidentVertices = true)
+        {
+            int vertexCount = mesh.vertexCount;
+            int[] parents = Enumerable.Range(0, vertexCount).ToArray();
+            int[] ranks = new int[vertexCount];
+            int[] triangles = mesh.triangles;
+            for (int index = 0; index + 2 < triangles.Length; index += 3)
+            {
+                UnionExactMiniFlamethrowerVertices(
+                    parents,
+                    ranks,
+                    triangles[index],
+                    triangles[index + 1]);
+                UnionExactMiniFlamethrowerVertices(
+                    parents,
+                    ranks,
+                    triangles[index + 1],
+                    triangles[index + 2]);
+            }
+
+            Vector3[] vertices = mesh.vertices;
+            if (weldCoincidentVertices)
+            {
+                float weldTolerance = Mathf.Max(
+                    mesh.bounds.size.x,
+                    Mathf.Max(mesh.bounds.size.y, mesh.bounds.size.z)) *
+                    0.00025f;
+                Dictionary<Vector3Int, int> weldedVertices =
+                    new Dictionary<Vector3Int, int>();
+                for (int vertexIndex = 0;
+                     vertexIndex < vertexCount;
+                     vertexIndex++)
+                {
+                    Vector3 position = vertices[vertexIndex] /
+                        Mathf.Max(0.000000001f, weldTolerance);
+                    Vector3Int key = new Vector3Int(
+                        Mathf.RoundToInt(position.x),
+                        Mathf.RoundToInt(position.y),
+                        Mathf.RoundToInt(position.z));
+                    if (weldedVertices.TryGetValue(
+                            key,
+                            out int matchingVertex))
+                    {
+                        UnionExactMiniFlamethrowerVertices(
+                            parents,
+                            ranks,
+                            vertexIndex,
+                            matchingVertex);
+                    }
+                    else
+                    {
+                        weldedVertices.Add(key, vertexIndex);
+                    }
+                }
+            }
+
+            Dictionary<int, List<int>> components =
+                new Dictionary<int, List<int>>();
+            for (int vertexIndex = 0;
+                 vertexIndex < vertexCount;
+                 vertexIndex++)
+            {
+                int root = FindExactMiniFlamethrowerVertexRoot(
+                    parents,
+                    vertexIndex);
+                if (!components.TryGetValue(
+                        root,
+                        out List<int> component))
+                {
+                    component = new List<int>();
+                    components.Add(root, component);
+                }
+                component.Add(vertexIndex);
+            }
+            return components.Values
+                .Select(component => component.ToArray())
+                .ToArray();
+        }
+
+        private static int FindExactMiniFlamethrowerVertexRoot(
+            int[] parents,
+            int vertex)
+        {
+            int root = vertex;
+            while (parents[root] != root)
+            {
+                root = parents[root];
+            }
+            while (parents[vertex] != vertex)
+            {
+                int next = parents[vertex];
+                parents[vertex] = root;
+                vertex = next;
+            }
+            return root;
+        }
+
+        private static void UnionExactMiniFlamethrowerVertices(
+            int[] parents,
+            int[] ranks,
+            int first,
+            int second)
+        {
+            int firstRoot = FindExactMiniFlamethrowerVertexRoot(
+                parents,
+                first);
+            int secondRoot = FindExactMiniFlamethrowerVertexRoot(
+                parents,
+                second);
+            if (firstRoot == secondRoot)
+            {
+                return;
+            }
+
+            if (ranks[firstRoot] < ranks[secondRoot])
+            {
+                parents[firstRoot] = secondRoot;
+            }
+            else
+            {
+                parents[secondRoot] = firstRoot;
+                if (ranks[firstRoot] == ranks[secondRoot])
+                {
+                    ranks[firstRoot]++;
+                }
+            }
+        }
+
+        private static Vector3 ClosestPointOnMiniFlamethrowerAxis(
+            Vector3 point,
+            Vector3 start,
+            Vector3 end)
+        {
+            Vector3 segment = end - start;
+            float amount = Mathf.Clamp01(
+                Vector3.Dot(point - start, segment) /
+                Mathf.Max(0.0000001f, segment.sqrMagnitude));
+            return start + segment * amount;
+        }
+
+        private static void AttachExactMiniFlamethrowerRig(
+            Transform target,
+            Mesh riggedMesh,
+            MiniFlamethrowerRigAnalysis analysis,
+            IReadOnlyList<Vector3> bonePivots)
+        {
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform previousRig = target.Find(
+                MiniFlamethrowerRigInstanceName);
+            if (previousRig != null)
+            {
+                UnityEngine.Object.DestroyImmediate(previousRig.gameObject);
+            }
+            Transform previousHandBone = rightHand.Find(
+                MiniFlamethrowerSprayerBoneName);
+            if (previousHandBone != null)
+            {
+                UnityEngine.Object.DestroyImmediate(
+                    previousHandBone.gameObject);
+            }
+
+            Transform originalPlacement = target.Find(
+                MiniFlamethrowerOriginalInstanceName);
+            if (originalPlacement == null)
+            {
+                GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                    MiniFlamethrowerAssetPath) ??
+                    throw new FileNotFoundException(
+                        "Imported mini flamethrower FBX is missing.",
+                        Path.GetFullPath(MiniFlamethrowerAssetPath));
+                GameObject placementObject = new GameObject(
+                    MiniFlamethrowerOriginalInstanceName);
+                originalPlacement = placementObject.transform;
+                originalPlacement.SetParent(target, false);
+                GameObject instance = PrefabUtility.InstantiatePrefab(
+                    asset,
+                    originalPlacement) as GameObject ??
+                    throw new InvalidOperationException(
+                        target.name +
+                        " could not recreate the exact backpack rest pose.");
+                PlaceExactOriginalMiniFlamethrower(
+                    target,
+                    originalPlacement,
+                    instance.transform,
+                    analysis);
+            }
+
+            MeshFilter sourceFilter = originalPlacement
+                .GetComponentsInChildren<MeshFilter>(true)
+                .Single(filter => filter.sharedMesh != null);
+            Renderer sourceRenderer = sourceFilter
+                .GetComponent<Renderer>() ??
+                throw new InvalidOperationException(
+                    target.name + " source renderer is missing.");
+            Vector3 visualLocalPosition =
+                sourceFilter.transform.localPosition;
+            Quaternion visualLocalRotation =
+                sourceFilter.transform.localRotation;
+            Vector3 visualLocalScale =
+                sourceFilter.transform.localScale;
+
+            GameObject rigObject = new GameObject(
+                MiniFlamethrowerRigInstanceName);
+            Transform rig = rigObject.transform;
+            rig.SetParent(target, false);
+            rig.localPosition = originalPlacement.localPosition;
+            rig.localRotation = originalPlacement.localRotation;
+            rig.localScale = originalPlacement.localScale;
+            GameObject visualObject = new GameObject(
+                "MiniFlamethrower_Skinned",
+                typeof(SkinnedMeshRenderer));
+            Transform visual = visualObject.transform;
+            visual.SetParent(rig, false);
+            visual.localPosition = visualLocalPosition;
+            visual.localRotation = visualLocalRotation;
+            visual.localScale = visualLocalScale;
+
+            Transform[] bones = new Transform[
+                MiniFlamethrowerRigBoneCount];
+            GameObject[] boneObjects = new GameObject[
+                MiniFlamethrowerRigBoneCount];
+            for (int index = 0;
+                 index < MiniFlamethrowerRigBoneCount;
+                 index++)
+            {
+                string boneName;
+                if (index == 0)
+                {
+                    boneName = MiniFlamethrowerTankBoneName;
+                }
+                else if (index == MiniFlamethrowerSprayerBoneIndex)
+                {
+                    boneName = MiniFlamethrowerSprayerBoneName;
+                }
+                else
+                {
+                    boneName = MiniFlamethrowerHoseBoneNamePrefix +
+                        index.ToString("00", CultureInfo.InvariantCulture);
+                }
+
+                boneObjects[index] = new GameObject(boneName);
+                bones[index] = boneObjects[index].transform;
+                bones[index].SetParent(visual, false);
+                bones[index].localPosition = bonePivots[index];
+                bones[index].localRotation = Quaternion.identity;
+                bones[index].localScale = Vector3.one;
+            }
+            Transform tankBone = bones[MiniFlamethrowerTankBoneIndex];
+            Transform sprayerBone = bones[MiniFlamethrowerSprayerBoneIndex];
+            Vector3[] restWorldPositions = bones
+                .Select(bone => bone.position)
+                .ToArray();
+
+            SkinnedMeshRenderer renderer =
+                visualObject.GetComponent<SkinnedMeshRenderer>();
+            renderer.sharedMesh = riggedMesh;
+            renderer.sharedMaterials = sourceRenderer.sharedMaterials;
+            renderer.bones = bones;
+            renderer.rootBone = tankBone;
+            Bounds safeBounds = analysis.CombinedBounds;
+            safeBounds.Expand(
+                analysis.CombinedBounds.size.magnitude * 4f);
+            renderer.localBounds = safeBounds;
+            renderer.updateWhenOffscreen = true;
+            renderer.shadowCastingMode = ShadowCastingMode.On;
+            renderer.receiveShadows = true;
+
+            float sourceWorldUnitsPerMeshUnit = visual
+                .TransformVector(analysis.SprayerAxis).magnitude;
+            if (sourceWorldUnitsPerMeshUnit <= 0.000001f)
+            {
+                throw new InvalidOperationException(
+                    target.name + " has no usable mini flamethrower scale.");
+            }
+            Vector3 sourceGripPoint = analysis.SprayerGripCenter;
+            Vector3 sourceAxisWorld = visual.TransformDirection(
+                analysis.SprayerAxis).normalized;
+            Vector3 desiredAxis =
+                (target.forward + target.up * 0.08f).normalized;
+            Quaternion sprayerDeltaRotation = Quaternion.FromToRotation(
+                sourceAxisWorld,
+                desiredAxis);
+            Vector3 rotatedTriggerDown = sprayerDeltaRotation *
+                visual.TransformDirection(
+                    analysis.SprayerTriggerDownDirection).normalized;
+            Vector3 desiredTriggerDown = Vector3.ProjectOnPlane(
+                -target.up,
+                desiredAxis).normalized;
+            float roll = Vector3.SignedAngle(
+                rotatedTriggerDown,
+                desiredTriggerDown,
+                desiredAxis);
+            sprayerBone.rotation = Quaternion.AngleAxis(
+                roll,
+                desiredAxis) * sprayerDeltaRotation * visual.rotation;
+            SetMiniFlamethrowerWorldUniformScale(
+                sprayerBone,
+                visual.lossyScale.x);
+            Vector3 palmCenter = CalculateMiniFlamethrowerPlayerPalmCenter(
+                target,
+                renderer);
+            Vector3 deformedGrip = sprayerBone.TransformPoint(
+                sourceGripPoint - analysis.SprayerRearPoint);
+            sprayerBone.position += palmCenter - deformedGrip;
+            Vector3[] desiredWorldPositions =
+                (Vector3[])restWorldPositions.Clone();
+            desiredWorldPositions[MiniFlamethrowerSprayerBoneIndex] =
+                sprayerBone.position;
+            for (int hoseIndex = 0;
+                 hoseIndex < MiniFlamethrowerHoseBoneCount;
+                 hoseIndex++)
+            {
+                int index = MiniFlamethrowerFirstHoseBoneIndex +
+                    hoseIndex;
+                float amount = index /
+                    (float)(MiniFlamethrowerRigBoneCount - 1);
+                Vector3 sprayerSpacePosition = sprayerBone.TransformPoint(
+                    bonePivots[index] - analysis.SprayerRearPoint);
+                desiredWorldPositions[index] = Vector3.Lerp(
+                    restWorldPositions[index],
+                    sprayerSpacePosition,
+                    amount);
+            }
+            for (int hoseIndex = 0;
+                 hoseIndex < MiniFlamethrowerHoseBoneCount;
+                 hoseIndex++)
+            {
+                int index = MiniFlamethrowerFirstHoseBoneIndex +
+                    hoseIndex;
+                int previousIndex = index - 1;
+                int nextIndex = index + 1;
+                Vector3 restDirection =
+                    restWorldPositions[nextIndex] -
+                    restWorldPositions[previousIndex];
+                Vector3 desiredDirection =
+                    desiredWorldPositions[nextIndex] -
+                    desiredWorldPositions[previousIndex];
+                Transform hoseBone = bones[index];
+                hoseBone.position = desiredWorldPositions[index];
+                if (restDirection.sqrMagnitude > 0.000001f &&
+                    desiredDirection.sqrMagnitude > 0.000001f)
+                {
+                    hoseBone.rotation = Quaternion.FromToRotation(
+                        restDirection,
+                        desiredDirection) * visual.rotation;
+                }
+                SetMiniFlamethrowerWorldUniformScale(
+                    hoseBone,
+                    visual.lossyScale.x);
+            }
+            sprayerBone.SetParent(rightHand, true);
+            UnityEngine.Object.DestroyImmediate(
+                originalPlacement.gameObject);
+
+            EditorUtility.SetDirty(rigObject);
+            EditorUtility.SetDirty(visualObject);
+            foreach (GameObject boneObject in boneObjects)
+            {
+                EditorUtility.SetDirty(boneObject);
+            }
+            EditorUtility.SetDirty(target.gameObject);
+        }
+
+        private static void RemoveLegacyMiniFlamethrowerObjects(
+            Transform target,
+            Transform spine,
+            Transform rightHand)
+        {
+            foreach (Transform existing in new[]
+                     {
+                         spine.Find(MiniFlamethrowerRigInstanceName),
+                         spine.Find(MiniFlamethrowerTankInstanceName),
+                         rightHand.Find(MiniFlamethrowerSprayerInstanceName),
+                         rightHand.Find(MiniFlamethrowerSprayerBoneName),
+                         target.Find(MiniFlamethrowerHoseInstanceName)
+                     })
+            {
+                if (existing != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(existing.gameObject);
+                }
+            }
+
+            Component legacy = target.GetComponents<Component>()
+                .FirstOrDefault(component =>
+                    component != null &&
+                    string.Equals(
+                        component.GetType().FullName,
+                        "Bellerophon.Items.MiniFlamethrowerAttachment",
+                        StringComparison.Ordinal));
+            if (legacy != null)
+            {
+                UnityEngine.Object.DestroyImmediate(legacy);
+            }
+            GameObjectUtility.RemoveMonoBehavioursWithMissingScript(
+                target.gameObject);
+        }
+
+        private static void SetMiniFlamethrowerWorldUniformScale(
+            Transform value,
+            float uniformScale)
+        {
+            Transform parent = value.parent;
+            Vector3 parentScale = parent != null
+                ? parent.lossyScale
+                : Vector3.one;
+            value.localScale = new Vector3(
+                uniformScale /
+                    Mathf.Max(0.000001f, Mathf.Abs(parentScale.x)),
+                uniformScale /
+                    Mathf.Max(0.000001f, Mathf.Abs(parentScale.y)),
+                uniformScale /
+                    Mathf.Max(0.000001f, Mathf.Abs(parentScale.z)));
+        }
+
+        private static Vector3 CalculateExactMiniFlamethrowerGripPoint(
+            Transform sprayerBone,
+            MiniFlamethrowerRigAnalysis analysis)
+        {
+            return analysis.SprayerGripCenter;
+        }
+
+        private static MiniFlamethrowerRigTargetMetrics
+            MeasureExactMiniFlamethrowerRigTarget(
+                Transform target,
+                Mesh riggedMesh,
+                MiniFlamethrowerRigAnalysis analysis,
+                RootPose expectedRoot,
+                string expectedAnimator)
+        {
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform rig = target.Find(MiniFlamethrowerRigInstanceName) ??
+                throw new InvalidOperationException(
+                    target.name + " exact mini flamethrower rig is missing.");
+            Transform tankBone = rig
+                .GetComponentsInChildren<Transform>(true)
+                .SingleOrDefault(value => string.Equals(
+                    value.name,
+                    MiniFlamethrowerTankBoneName,
+                    StringComparison.Ordinal)) ??
+                throw new InvalidOperationException(
+                    target.name + " mini flamethrower tank bone is missing.");
+            Transform sprayerBone = rightHand.Find(
+                MiniFlamethrowerSprayerBoneName) ??
+                throw new InvalidOperationException(
+                    target.name + " mini flamethrower sprayer bone is missing.");
+            SkinnedMeshRenderer renderer =
+                rig.GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                throw new InvalidOperationException(
+                    target.name + " mini flamethrower SkinnedMeshRenderer is missing.");
+            Vector3 gripPoint = analysis.SprayerGripCenter;
+            Vector3 rearWorld = sprayerBone.position;
+            Vector3 gripWorld = sprayerBone.TransformPoint(
+                gripPoint - analysis.SprayerRearPoint);
+            Vector3 palmCenter = CalculateMiniFlamethrowerPlayerPalmCenter(
+                target,
+                renderer);
+            bool materialsExact =
+                renderer.sharedMaterials.Length ==
+                    analysis.SourceMaterials.Length &&
+                renderer.sharedMaterials.SequenceEqual(
+                    analysis.SourceMaterials);
+            MiniFlamethrowerRigTargetMetrics metrics =
+                new MiniFlamethrowerRigTargetMetrics
+                {
+                    target = target.name,
+                    targetLocalPosition = target.localPosition,
+                    targetLocalRotation = target.localRotation,
+                    targetLocalScale = target.localScale,
+                    animatorConfiguration = DescribeAnimatorConfiguration(target),
+                    visibleRendererCount = rig
+                        .GetComponentsInChildren<Renderer>(true).Length,
+                    visibleVertexCount = renderer.sharedMesh != null
+                        ? renderer.sharedMesh.vertexCount
+                        : 0,
+                    visibleTriangleCount = renderer.sharedMesh != null
+                        ? renderer.sharedMesh.triangles.Length / 3
+                        : 0,
+                    materialCount = renderer.sharedMaterials.Length,
+                    materialNames = renderer.sharedMaterials
+                        .Select(material => material != null
+                            ? material.name
+                            : "<null>")
+                        .ToArray(),
+                    textureReferences = analysis.TextureReferences,
+                    packWidthMeters = MeasureExactMiniFlamethrowerProjection(
+                        renderer.transform,
+                        analysis.TankBounds,
+                        target.right),
+                    packHeightMeters = MeasureExactMiniFlamethrowerProjection(
+                        renderer.transform,
+                        analysis.TankBounds,
+                        target.up),
+                    packDepthMeters = MeasureExactMiniFlamethrowerProjection(
+                        renderer.transform,
+                        analysis.TankBounds,
+                        target.forward),
+                    tankOutwardFacingDot = Vector3.Dot(
+                        renderer.transform.TransformDirection(-Vector3.up)
+                            .normalized,
+                        -target.forward.normalized),
+                    rearToGripDistanceMeters = Vector3.Distance(
+                        rearWorld,
+                        gripWorld),
+                    gripCenterErrorMeters = Vector3.Distance(
+                        gripWorld,
+                        palmCenter),
+                    triggerDownDot = Vector3.Dot(
+                        sprayerBone.TransformDirection(
+                            analysis.SprayerTriggerDownDirection).normalized,
+                        -target.up.normalized),
+                    rigParentedToSpine = rig.parent == target,
+                    tankBoneFixedToRig =
+                        tankBone.parent == renderer.transform,
+                    sprayerBoneParentedToRightHand =
+                        sprayerBone.parent == rightHand,
+                    usesExactRiggedMesh = renderer.sharedMesh == riggedMesh,
+                    materialReferencesExact = materialsExact,
+                    hasNoGeneratedHose =
+                        target.GetComponentsInChildren<LineRenderer>(true)
+                            .All(line => !string.Equals(
+                                line.name,
+                                MiniFlamethrowerHoseInstanceName,
+                                StringComparison.Ordinal)),
+                    targetRootUnchanged = RootMatches(target, expectedRoot),
+                    animatorUnchanged = string.Equals(
+                        DescribeAnimatorConfiguration(target),
+                        expectedAnimator,
+                        StringComparison.Ordinal)
+                };
+            metrics.passedNumericChecks =
+                metrics.visibleRendererCount == 1 &&
+                metrics.visibleVertexCount == analysis.SourceMesh.vertexCount &&
+                metrics.visibleTriangleCount ==
+                    analysis.SourceMesh.triangles.Length / 3 &&
+                metrics.materialCount == analysis.SourceMaterials.Length &&
+                metrics.rigParentedToSpine &&
+                metrics.tankBoneFixedToRig &&
+                metrics.sprayerBoneParentedToRightHand &&
+                metrics.usesExactRiggedMesh &&
+                metrics.materialReferencesExact &&
+                metrics.hasNoGeneratedHose &&
+                metrics.targetRootUnchanged &&
+                metrics.animatorUnchanged &&
+                metrics.packHeightMeters >= 0.74f &&
+                metrics.packHeightMeters <= 0.78f &&
+                metrics.packWidthMeters >= 0.4f &&
+                metrics.packWidthMeters <= 0.9f &&
+                metrics.packDepthMeters >= 0.1f &&
+                metrics.packDepthMeters <= 1.1f &&
+                metrics.tankOutwardFacingDot >= 0.98f &&
+                metrics.gripCenterErrorMeters <= 0.002f &&
+                metrics.triggerDownDot >= 0.98f;
+            return metrics;
+        }
+
+        private static Vector3 CalculateMiniFlamethrowerPlayerPalmCenter(
+            Transform target,
+            SkinnedMeshRenderer miniFlamethrowerRenderer)
+        {
+            Transform[] bones = miniFlamethrowerRenderer.bones;
+            Transform rootBone = miniFlamethrowerRenderer.rootBone;
+            miniFlamethrowerRenderer.bones = Array.Empty<Transform>();
+            miniFlamethrowerRenderer.rootBone = null;
+            try
+            {
+                return CalculateRightPalmSample(target).Center;
+            }
+            finally
+            {
+                miniFlamethrowerRenderer.bones = bones;
+                miniFlamethrowerRenderer.rootBone = rootBone;
+            }
+        }
+
+        private static float MeasureExactMiniFlamethrowerProjection(
+            Transform bone,
+            Bounds sourceBounds,
+            Vector3 worldAxis)
+        {
+            float minimum = float.PositiveInfinity;
+            float maximum = float.NegativeInfinity;
+            foreach (Vector3 corner in GetBoundsCorners(sourceBounds))
+            {
+                float projection = Vector3.Dot(
+                    bone.TransformPoint(corner),
+                    worldAxis.normalized);
+                minimum = Mathf.Min(minimum, projection);
+                maximum = Mathf.Max(maximum, projection);
+            }
+            return maximum - minimum;
+        }
+
+        private static MiniFlamethrowerRigApplyMetrics
+            BuildMiniFlamethrowerRigApplyMetrics(
+                Mesh riggedMesh,
+                MiniFlamethrowerRigAnalysis analysis,
+                int tankWeightedVertexCount,
+                int sprayerWeightedVertexCount,
+                int blendedHoseVertexCount,
+                int sourceConnectedHoseGroupCount,
+                MiniFlamethrowerRigTargetMetrics[] targets)
+        {
+            Mesh source = analysis.SourceMesh;
+            MiniFlamethrowerRigApplyMetrics metrics =
+                new MiniFlamethrowerRigApplyMetrics
+                {
+                    sourceModelPath = MiniFlamethrowerOriginalPath,
+                    importedModelPath = MiniFlamethrowerAssetPath,
+                    riggedMeshPath = MiniFlamethrowerRiggedMeshPath,
+                    sourceModelHash = HashFile(MiniFlamethrowerOriginalPath),
+                    importedModelHash = HashFile(MiniFlamethrowerAssetPath),
+                    sourceVertexCount = source.vertexCount,
+                    riggedVertexCount = riggedMesh.vertexCount,
+                    sourceTriangleCount = source.triangles.Length / 3,
+                    riggedTriangleCount = riggedMesh.triangles.Length / 3,
+                    sourceSubMeshCount = source.subMeshCount,
+                    riggedSubMeshCount = riggedMesh.subMeshCount,
+                    tankWeightedVertexCount = tankWeightedVertexCount,
+                    sprayerWeightedVertexCount = sprayerWeightedVertexCount,
+                    blendedHoseVertexCount = blendedHoseVertexCount,
+                    sourceConnectedHoseGroupCount =
+                        sourceConnectedHoseGroupCount,
+                    materialNames = analysis.SourceMaterials
+                        .Select(material => material != null
+                            ? material.name
+                            : "<null>")
+                        .ToArray(),
+                    textureReferences = analysis.TextureReferences,
+                    targetCount = targets.Length,
+                    targets = targets,
+                    sourceAndImportedModelsExact = string.Equals(
+                        HashFile(MiniFlamethrowerOriginalPath),
+                        HashFile(MiniFlamethrowerAssetPath),
+                        StringComparison.OrdinalIgnoreCase),
+                    exactVerticesPreserved = source.vertices.SequenceEqual(
+                        riggedMesh.vertices),
+                    exactTriangleIndicesPreserved =
+                        MiniFlamethrowerSubMeshesEqual(source, riggedMesh),
+                    exactNormalsPreserved = source.normals.SequenceEqual(
+                        riggedMesh.normals),
+                    exactTangentsPreserved = source.tangents.SequenceEqual(
+                        riggedMesh.tangents),
+                    exactColorsPreserved = source.colors32.SequenceEqual(
+                        riggedMesh.colors32),
+                    exactUvChannelsPreserved =
+                        MiniFlamethrowerUvChannelsEqual(source, riggedMesh),
+                    exactBoundsPreserved =
+                        source.bounds.center == riggedMesh.bounds.center &&
+                        source.bounds.size == riggedMesh.bounds.size,
+                    exactBlendShapesPreserved =
+                        MiniFlamethrowerBlendShapesEqual(source, riggedMesh),
+                    allMaterialsAndTexturesApplied =
+                        analysis.SourceMaterials.Length > 0 &&
+                        analysis.SourceMaterials.All(material => material != null) &&
+                        analysis.TextureReferences.Length > 0 &&
+                        targets.All(target => target.materialReferencesExact),
+                    allTargetsUseSingleFullMesh = targets.All(target =>
+                        target.visibleRendererCount == 1 &&
+                        target.visibleVertexCount == source.vertexCount &&
+                        target.visibleTriangleCount ==
+                            source.triangles.Length / 3 &&
+                        target.usesExactRiggedMesh &&
+                        target.hasNoGeneratedHose),
+                    allTargetRootsAndAnimatorsUnchanged = targets.All(target =>
+                        target.targetRootUnchanged && target.animatorUnchanged),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                metrics.sourceAndImportedModelsExact &&
+                metrics.sourceVertexCount == metrics.riggedVertexCount &&
+                metrics.sourceTriangleCount == metrics.riggedTriangleCount &&
+                metrics.sourceSubMeshCount == metrics.riggedSubMeshCount &&
+                metrics.tankWeightedVertexCount > 0 &&
+                metrics.sprayerWeightedVertexCount > 0 &&
+                metrics.blendedHoseVertexCount > 0 &&
+                metrics.sourceConnectedHoseGroupCount > 0 &&
+                metrics.tankWeightedVertexCount +
+                    metrics.sprayerWeightedVertexCount +
+                    metrics.blendedHoseVertexCount == metrics.sourceVertexCount &&
+                metrics.exactVerticesPreserved &&
+                metrics.exactTriangleIndicesPreserved &&
+                metrics.exactNormalsPreserved &&
+                metrics.exactTangentsPreserved &&
+                metrics.exactColorsPreserved &&
+                metrics.exactUvChannelsPreserved &&
+                metrics.exactBoundsPreserved &&
+                metrics.exactBlendShapesPreserved &&
+                metrics.allMaterialsAndTexturesApplied &&
+                metrics.allTargetsUseSingleFullMesh &&
+                metrics.allTargetRootsAndAnimatorsUnchanged &&
+                metrics.targetCount == GetMiniFlamethrowerTargetNames().Length &&
+                metrics.targets.All(target => target.passedNumericChecks);
+            return metrics;
+        }
+
+        private static bool MiniFlamethrowerSubMeshesEqual(
+            Mesh source,
+            Mesh candidate)
+        {
+            if (source.subMeshCount != candidate.subMeshCount)
+            {
+                return false;
+            }
+            for (int index = 0; index < source.subMeshCount; index++)
+            {
+                if (source.GetTopology(index) != candidate.GetTopology(index) ||
+                    !source.GetIndices(index).SequenceEqual(
+                        candidate.GetIndices(index)))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static bool MiniFlamethrowerUvChannelsEqual(
+            Mesh source,
+            Mesh candidate)
+        {
+            for (int channel = 0; channel < 8; channel++)
+            {
+                List<Vector4> sourceValues = new List<Vector4>();
+                List<Vector4> candidateValues = new List<Vector4>();
+                source.GetUVs(channel, sourceValues);
+                candidate.GetUVs(channel, candidateValues);
+                if (!sourceValues.SequenceEqual(candidateValues))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static bool MiniFlamethrowerBlendShapesEqual(
+            Mesh source,
+            Mesh candidate)
+        {
+            if (source.blendShapeCount != candidate.blendShapeCount)
+            {
+                return false;
+            }
+            for (int shape = 0; shape < source.blendShapeCount; shape++)
+            {
+                if (!string.Equals(
+                        source.GetBlendShapeName(shape),
+                        candidate.GetBlendShapeName(shape),
+                        StringComparison.Ordinal) ||
+                    source.GetBlendShapeFrameCount(shape) !=
+                        candidate.GetBlendShapeFrameCount(shape))
+                {
+                    return false;
+                }
+                for (int frame = 0;
+                     frame < source.GetBlendShapeFrameCount(shape);
+                     frame++)
+                {
+                    if (Mathf.Abs(
+                            source.GetBlendShapeFrameWeight(shape, frame) -
+                            candidate.GetBlendShapeFrameWeight(shape, frame)) >
+                        0.000001f)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private static MiniFlamethrowerGeometryAnalysis
+            AnalyzeMiniFlamethrowerGeometry(
+                GameObject asset,
+                MiniFlamethrowerAssetInspection inspection)
+        {
+            MeshFilter[] filters = asset.GetComponentsInChildren<MeshFilter>(true)
+                .Where(filter => filter.sharedMesh != null)
+                .ToArray();
+            Renderer[] renderers = asset.GetComponentsInChildren<Renderer>(true)
+                .Where(renderer => renderer.sharedMaterial != null)
+                .ToArray();
+            if (filters.Length != 1 || renderers.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower FBX structure changed after inspection. MeshFilters=" +
+                    filters.Length.ToString(CultureInfo.InvariantCulture) +
+                    ", Renderers=" +
+                    renderers.Length.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+
+            if (inspection.meshCount != 1 || inspection.totalVertexCount < 8)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower FBX inspection is not usable for exact mesh separation.");
+            }
+
+            return new MiniFlamethrowerGeometryAnalysis
+            {
+                SourceMesh = filters[0].sharedMesh,
+                SourceMaterial = renderers[0].sharedMaterial
+            };
+        }
+
+#if false
+        private static bool IsMiniFlamethrowerTankTriangle(
+            Vector3 center,
+            MiniFlamethrowerAssetInspection inspection)
+        {
+            Bounds bounds = new Bounds(
+                inspection.combinedLocalBoundsCenter,
+                inspection.combinedLocalBoundsSize);
+            float normalizedX = Mathf.InverseLerp(
+                bounds.min.x,
+                bounds.max.x,
+                center.x);
+            float normalizedY = Mathf.InverseLerp(
+                bounds.min.y,
+                bounds.max.y,
+                center.y);
+            return normalizedX >= 0.39f && normalizedY >= 0.43f;
+        }
+
+        private static bool IsMiniFlamethrowerSprayerTriangle(
+            Vector3 center,
+            MiniFlamethrowerAssetInspection inspection)
+        {
+            Bounds bounds = new Bounds(
+                inspection.combinedLocalBoundsCenter,
+                inspection.combinedLocalBoundsSize);
+            Vector2 rear = new Vector2(bounds.min.x, bounds.min.y);
+            Vector2 nozzle = new Vector2(
+                Mathf.Lerp(bounds.min.x, bounds.max.x, 0.64f),
+                Mathf.Lerp(bounds.min.y, bounds.max.y, 0.39f));
+            Vector2 segment = nozzle - rear;
+            float lengthSquared = segment.sqrMagnitude;
+            Vector2 point = new Vector2(center.x, center.y);
+            float amount = Mathf.Clamp01(
+                Vector2.Dot(point - rear, segment) /
+                Mathf.Max(0.0000000001f, lengthSquared));
+            float distance = Vector2.Distance(
+                point,
+                rear + segment * amount);
+            return amount >= 0.02f &&
+                amount <= 1f &&
+                distance <= inspection.combinedLocalBoundsSize.x * 0.115f &&
+                center.y <= Mathf.Lerp(bounds.min.y, bounds.max.y, 0.48f);
+        }
+
+        private static Mesh CreateOrReplaceMiniFlamethrowerMesh(
+            Mesh source,
+            string assetPath,
+            string meshName,
+            Func<Vector3, bool> includeTriangle)
+        {
+            Vector3[] vertices = source.vertices;
+            int[] sourceTriangles = source.triangles;
+            List<int> selectedTriangles = new List<int>();
+            Bounds selectedBounds = default;
+            bool hasBounds = false;
+            for (int index = 0; index + 2 < sourceTriangles.Length; index += 3)
+            {
+                int first = sourceTriangles[index];
+                int second = sourceTriangles[index + 1];
+                int third = sourceTriangles[index + 2];
+                Vector3 center =
+                    (vertices[first] + vertices[second] + vertices[third]) / 3f;
+                if (!includeTriangle(center))
+                {
+                    continue;
+                }
+
+                selectedTriangles.Add(first);
+                selectedTriangles.Add(second);
+                selectedTriangles.Add(third);
+                foreach (int vertexIndex in new[] { first, second, third })
+                {
+                    if (!hasBounds)
+                    {
+                        selectedBounds = new Bounds(
+                            vertices[vertexIndex],
+                            Vector3.zero);
+                        hasBounds = true;
+                    }
+                    else
+                    {
+                        selectedBounds.Encapsulate(vertices[vertexIndex]);
+                    }
+                }
+            }
+
+            if (!hasBounds || selectedTriangles.Count < 30)
+            {
+                throw new InvalidOperationException(
+                    meshName + " separation produced insufficient source triangles.");
+            }
+
+            Mesh output = new Mesh
+            {
+                name = meshName,
+                indexFormat = source.indexFormat,
+                vertices = vertices
+            };
+            if (source.normals.Length == vertices.Length)
+            {
+                output.normals = source.normals;
+            }
+            if (source.tangents.Length == vertices.Length)
+            {
+                output.tangents = source.tangents;
+            }
+            if (source.uv.Length == vertices.Length)
+            {
+                output.uv = source.uv;
+            }
+            if (source.uv2.Length == vertices.Length)
+            {
+                output.uv2 = source.uv2;
+            }
+            if (source.colors.Length == vertices.Length)
+            {
+                output.colors = source.colors;
+            }
+            else if (source.colors32.Length == vertices.Length)
+            {
+                output.colors32 = source.colors32;
+            }
+            output.SetTriangles(selectedTriangles, 0, false);
+            output.bounds = selectedBounds;
+            if (output.normals.Length != vertices.Length)
+            {
+                output.RecalculateNormals();
+            }
+
+            if (AssetDatabase.LoadAssetAtPath<Mesh>(assetPath) != null)
+            {
+                AssetDatabase.DeleteAsset(assetPath);
+            }
+            AssetDatabase.CreateAsset(output, assetPath);
+            AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
+            return AssetDatabase.LoadAssetAtPath<Mesh>(assetPath) ??
+                throw new InvalidOperationException(
+                    "Separated mini flamethrower mesh could not be reloaded: " +
+                    assetPath);
+        }
+
+        private static void AnalyzeMiniFlamethrowerSprayerAxis(
+            MiniFlamethrowerGeometryAnalysis analysis,
+            Mesh sprayerMesh)
+        {
+            int[] triangles = sprayerMesh.triangles;
+            Vector3[] vertices = sprayerMesh.vertices;
+            HashSet<int> used = new HashSet<int>(triangles);
+            Vector3 axis = new Vector3(1f, 0.72f, 0f).normalized;
+            float minimum = used.Min(index => Vector3.Dot(vertices[index], axis));
+            float maximum = used.Max(index => Vector3.Dot(vertices[index], axis));
+            float length = maximum - minimum;
+            if (length <= 0.000001f)
+            {
+                throw new InvalidOperationException(
+                    "Separated mini flamethrower sprayer has no measurable length.");
+            }
+
+            float band = length * 0.055f;
+            Vector3 rear = AverageMiniFlamethrowerVertices(
+                used.Where(index =>
+                    Vector3.Dot(vertices[index], axis) <= minimum + band),
+                vertices);
+            Vector3 nozzle = AverageMiniFlamethrowerVertices(
+                used.Where(index =>
+                    Vector3.Dot(vertices[index], axis) >= maximum - band),
+                vertices);
+            analysis.SprayerRearPoint = rear;
+            analysis.SprayerNozzlePoint = nozzle;
+            analysis.SprayerRearToNozzleAxis =
+                (nozzle - rear).normalized;
+            analysis.SprayerSourceLength = Vector3.Distance(rear, nozzle);
+            if (analysis.SprayerRearToNozzleAxis.sqrMagnitude < 0.99f)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower sprayer rear/nozzle direction is invalid.");
+            }
+        }
+
+        private static Vector3 AverageMiniFlamethrowerVertices(
+            IEnumerable<int> indices,
+            IReadOnlyList<Vector3> vertices)
+        {
+            int[] selected = indices.Distinct().ToArray();
+            if (selected.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower endpoint selection is empty.");
+            }
+
+            Vector3 sum = Vector3.zero;
+            foreach (int index in selected)
+            {
+                sum += vertices[index];
+            }
+            return sum / selected.Length;
+        }
+
+        private static void AttachMiniFlamethrower(
+            Transform target,
+            Mesh tankMesh,
+            Mesh sprayerMesh,
+            MiniFlamethrowerGeometryAnalysis analysis)
+        {
+            Transform spine = FindRequired(target, SpinePath);
+            Transform rightHand = FindRequired(target, RightHandPath);
+            DestroyMiniFlamethrowerAttachment(target, spine, rightHand);
+
+            Transform tank = CreateMiniFlamethrowerVisual(
+                MiniFlamethrowerTankInstanceName,
+                spine,
+                tankMesh,
+                analysis.SourceMaterial);
+            tank.localPosition = Vector3.zero;
+            tank.localRotation = Quaternion.identity;
+            tank.localScale = new Vector3(
+                MiniFlamethrowerTankWidthMeters /
+                    Mathf.Max(analysis.TankBounds.size.x, 0.000001f),
+                MiniFlamethrowerTankHeightMeters /
+                    Mathf.Max(analysis.TankBounds.size.y, 0.000001f),
+                MiniFlamethrowerTankDepthMeters /
+                    Mathf.Max(analysis.TankBounds.size.z, 0.000001f));
+            tank.rotation = Quaternion.LookRotation(
+                -target.forward,
+                target.up);
+            Vector3 chestCenter =
+                (FindRequired(target, SolarPlexusPath).position +
+                 FindRequired(target, SpinePath).position) * 0.5f +
+                target.up * 0.03f;
+            float backSurface = MeasureBackSurfaceProjection(
+                target,
+                chestCenter);
+            Vector3 desiredTankCenter = chestCenter +
+                target.forward *
+                (backSurface - MiniFlamethrowerTankDepthMeters * 0.5f -
+                 0.015f);
+            tank.position += desiredTankCenter -
+                tank.TransformPoint(analysis.TankBounds.center);
+
+            Transform sprayer = CreateMiniFlamethrowerVisual(
+                MiniFlamethrowerSprayerInstanceName,
+                rightHand,
+                sprayerMesh,
+                analysis.SourceMaterial);
+            sprayer.localPosition = Vector3.zero;
+            sprayer.localRotation = Quaternion.identity;
+            sprayer.localScale = Vector3.one *
+                (MiniFlamethrowerSprayerLengthMeters /
+                 analysis.SprayerSourceLength);
+            Vector3 desiredAxis =
+                (target.forward + target.up * 0.08f).normalized;
+            Quaternion sprayerRotation = Quaternion.FromToRotation(
+                analysis.SprayerRearToNozzleAxis,
+                desiredAxis);
+            Vector3 rotatedThickness = sprayerRotation * Vector3.forward;
+            Vector3 desiredThickness = Vector3.ProjectOnPlane(
+                target.right,
+                desiredAxis).normalized;
+            float roll = Vector3.SignedAngle(
+                rotatedThickness,
+                desiredThickness,
+                desiredAxis);
+            sprayer.rotation = Quaternion.AngleAxis(roll, desiredAxis) *
+                sprayerRotation;
+            Vector3 localGripPoint = CalculateMiniFlamethrowerLocalGripPoint(
+                sprayer,
+                analysis);
+            Vector3 palmCenter = CalculateRightPalmSample(target).Center;
+            sprayer.position += palmCenter -
+                sprayer.TransformPoint(localGripPoint);
+
+            GameObject tankAnchorObject = new GameObject(
+                MiniFlamethrowerTankAnchorName);
+            Transform tankAnchor = tankAnchorObject.transform;
+            tankAnchor.SetParent(tank, false);
+            tankAnchor.localPosition = new Vector3(
+                analysis.TankBounds.center.x,
+                analysis.TankBounds.min.y,
+                analysis.TankBounds.max.z);
+            GameObject sprayerAnchorObject = new GameObject(
+                MiniFlamethrowerSprayerAnchorName);
+            Transform sprayerAnchor = sprayerAnchorObject.transform;
+            sprayerAnchor.SetParent(sprayer, false);
+            sprayerAnchor.localPosition = analysis.SprayerRearPoint;
+
+            GameObject hoseObject = new GameObject(
+                MiniFlamethrowerHoseInstanceName,
+                typeof(LineRenderer));
+            hoseObject.transform.SetParent(target, false);
+            LineRenderer hose = hoseObject.GetComponent<LineRenderer>();
+            hose.useWorldSpace = true;
+            hose.sharedMaterial = analysis.SourceMaterial;
+            hose.startWidth = 0.026f;
+            hose.endWidth = 0.026f;
+            hose.numCapVertices = 6;
+            hose.numCornerVertices = 6;
+            hose.textureMode = LineTextureMode.Tile;
+            hose.shadowCastingMode = ShadowCastingMode.On;
+            hose.receiveShadows = true;
+            MiniFlamethrowerAttachment attachment =
+                target.gameObject.AddComponent<MiniFlamethrowerAttachment>();
+            attachment.Configure(
+                tankAnchor,
+                sprayerAnchor,
+                hose,
+                24,
+                0.24f);
+            EditorUtility.SetDirty(tank.gameObject);
+            EditorUtility.SetDirty(sprayer.gameObject);
+            EditorUtility.SetDirty(hoseObject);
+            EditorUtility.SetDirty(target.gameObject);
+        }
+
+        private static Transform CreateMiniFlamethrowerVisual(
+            string name,
+            Transform parent,
+            Mesh mesh,
+            Material material)
+        {
+            GameObject visual = new GameObject(
+                name,
+                typeof(MeshFilter),
+                typeof(MeshRenderer));
+            visual.transform.SetParent(parent, false);
+            visual.GetComponent<MeshFilter>().sharedMesh = mesh;
+            MeshRenderer renderer = visual.GetComponent<MeshRenderer>();
+            renderer.sharedMaterial = material;
+            renderer.shadowCastingMode = ShadowCastingMode.On;
+            renderer.receiveShadows = true;
+            return visual.transform;
+        }
+
+        private static void DestroyMiniFlamethrowerAttachment(
+            Transform target,
+            Transform spine,
+            Transform rightHand)
+        {
+            foreach (Transform existing in new[]
+                     {
+                         spine.Find(MiniFlamethrowerTankInstanceName),
+                         rightHand.Find(MiniFlamethrowerSprayerInstanceName),
+                         target.Find(MiniFlamethrowerHoseInstanceName)
+                     })
+            {
+                if (existing != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(existing.gameObject);
+                }
+            }
+
+            MiniFlamethrowerAttachment existingAttachment =
+                target.GetComponent<MiniFlamethrowerAttachment>();
+            if (existingAttachment != null)
+            {
+                UnityEngine.Object.DestroyImmediate(existingAttachment);
+            }
+        }
+
+        private static Vector3 CalculateMiniFlamethrowerLocalGripPoint(
+            Transform sprayer,
+            MiniFlamethrowerGeometryAnalysis analysis)
+        {
+            float worldLength = Vector3.Distance(
+                sprayer.TransformPoint(analysis.SprayerRearPoint),
+                sprayer.TransformPoint(analysis.SprayerNozzlePoint));
+            if (worldLength <= 0.000001f)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower sprayer has no measurable placed length.");
+            }
+
+            float sourceDistance = analysis.SprayerSourceLength *
+                (MiniFlamethrowerRearToGripMeters / worldLength);
+            return analysis.SprayerRearPoint +
+                analysis.SprayerRearToNozzleAxis * sourceDistance;
+        }
+
+        private static MiniFlamethrowerTargetMetrics
+            MeasureMiniFlamethrowerTarget(
+                Transform target,
+                MiniFlamethrowerGeometryAnalysis analysis,
+                RootPose expectedRoot,
+                string expectedAnimator)
+        {
+            Transform spine = FindRequired(target, SpinePath);
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform tank = spine.Find(MiniFlamethrowerTankInstanceName) ??
+                throw new InvalidOperationException(
+                    target.name + " mini flamethrower tank is missing.");
+            Transform sprayer = rightHand.Find(
+                MiniFlamethrowerSprayerInstanceName) ??
+                throw new InvalidOperationException(
+                    target.name + " mini flamethrower sprayer is missing.");
+            MiniFlamethrowerAttachment attachment =
+                target.GetComponent<MiniFlamethrowerAttachment>() ??
+                throw new InvalidOperationException(
+                    target.name + " mini flamethrower attachment is missing.");
+            LineRenderer hose = attachment.HoseRenderer;
+            Vector3 localGripPoint = CalculateMiniFlamethrowerLocalGripPoint(
+                sprayer,
+                analysis);
+            Vector3 rearWorld = sprayer.TransformPoint(
+                analysis.SprayerRearPoint);
+            Vector3 gripWorld = sprayer.TransformPoint(localGripPoint);
+            Vector3 nozzleWorld = sprayer.TransformPoint(
+                analysis.SprayerNozzlePoint);
+            Vector3 palmCenter = CalculateRightPalmSample(target).Center;
+            float tankWidth = MeasureMiniFlamethrowerProjection(
+                tank,
+                analysis.TankBounds,
+                target.right);
+            float tankHeight = MeasureMiniFlamethrowerProjection(
+                tank,
+                analysis.TankBounds,
+                target.up);
+            float tankDepth = MeasureMiniFlamethrowerProjection(
+                tank,
+                analysis.TankBounds,
+                target.forward);
+            float centerBehind = -Vector3.Dot(
+                tank.TransformPoint(analysis.TankBounds.center) -
+                    spine.position,
+                target.forward);
+            float hoseStartError = hose != null && hose.positionCount > 1
+                ? Vector3.Distance(
+                    hose.GetPosition(0),
+                    attachment.TankHoseAnchor.position)
+                : float.PositiveInfinity;
+            float hoseEndError = hose != null && hose.positionCount > 1
+                ? Vector3.Distance(
+                    hose.GetPosition(hose.positionCount - 1),
+                    attachment.SprayerHoseAnchor.position)
+                : float.PositiveInfinity;
+            MiniFlamethrowerTargetMetrics metrics =
+                new MiniFlamethrowerTargetMetrics
+                {
+                    target = target.name,
+                    targetLocalPosition = target.localPosition,
+                    targetLocalRotation = target.localRotation,
+                    targetLocalScale = target.localScale,
+                    animatorConfiguration = DescribeAnimatorConfiguration(target),
+                    tankLocalPosition = tank.localPosition,
+                    tankLocalRotation = tank.localRotation,
+                    tankLocalScale = tank.localScale,
+                    sprayerLocalPosition = sprayer.localPosition,
+                    sprayerLocalRotation = sprayer.localRotation,
+                    sprayerLocalScale = sprayer.localScale,
+                    tankWidthMeters = tankWidth,
+                    tankHeightMeters = tankHeight,
+                    tankDepthMeters = tankDepth,
+                    tankOutwardFacingDot = Vector3.Dot(
+                        tank.TransformDirection(Vector3.forward).normalized,
+                        -target.forward.normalized),
+                    tankCenterBehindSpineMeters = centerBehind,
+                    sprayerLengthMeters = Vector3.Distance(
+                        rearWorld,
+                        nozzleWorld),
+                    rearToGripDistanceMeters = Vector3.Distance(
+                        rearWorld,
+                        gripWorld),
+                    gripCenterErrorMeters = Vector3.Distance(
+                        gripWorld,
+                        palmCenter),
+                    hoseStartErrorMeters = hoseStartError,
+                    hoseEndErrorMeters = hoseEndError,
+                    tankParentedToSpine = tank.parent == spine,
+                    sprayerParentedToRightHand = sprayer.parent == rightHand,
+                    hoseConnected = hose != null &&
+                        hose.positionCount >= 4 &&
+                        hoseStartError <= 0.001f &&
+                        hoseEndError <= 0.001f,
+                    targetRootUnchanged = RootMatches(target, expectedRoot),
+                    animatorUnchanged = string.Equals(
+                        DescribeAnimatorConfiguration(target),
+                        expectedAnimator,
+                        StringComparison.Ordinal)
+                };
+            metrics.passedNumericChecks =
+                metrics.tankParentedToSpine &&
+                metrics.sprayerParentedToRightHand &&
+                metrics.hoseConnected &&
+                metrics.targetRootUnchanged &&
+                metrics.animatorUnchanged &&
+                metrics.tankWidthMeters >= 0.56f &&
+                metrics.tankWidthMeters <= 0.64f &&
+                metrics.tankHeightMeters >= 0.72f &&
+                metrics.tankHeightMeters <= 0.8f &&
+                metrics.tankDepthMeters >= 0.22f &&
+                metrics.tankDepthMeters <= 0.3f &&
+                metrics.tankOutwardFacingDot >= 0.98f &&
+                metrics.tankCenterBehindSpineMeters >= 0.16f &&
+                Mathf.Abs(
+                    metrics.sprayerLengthMeters -
+                    MiniFlamethrowerSprayerLengthMeters) <= 0.01f &&
+                Mathf.Abs(
+                    metrics.rearToGripDistanceMeters -
+                    MiniFlamethrowerRearToGripMeters) <= 0.002f &&
+                metrics.gripCenterErrorMeters <= 0.002f;
+            return metrics;
+        }
+
+        private static float MeasureMiniFlamethrowerProjection(
+            Transform visual,
+            Bounds localBounds,
+            Vector3 worldAxis)
+        {
+            float minimum = float.PositiveInfinity;
+            float maximum = float.NegativeInfinity;
+            foreach (Vector3 corner in GetBoundsCorners(localBounds))
+            {
+                float projection = Vector3.Dot(
+                    visual.TransformPoint(corner),
+                    worldAxis.normalized);
+                minimum = Mathf.Min(minimum, projection);
+                maximum = Mathf.Max(maximum, projection);
+            }
+            return maximum - minimum;
+        }
+#endif
+
+        private static MiniFlamethrowerAssetInspection InspectMiniFlamethrowerAsset(
+            GameObject asset)
+        {
+            GameObject instance = UnityEngine.Object.Instantiate(asset);
+            instance.name = "MiniFlamethrowerAssetInspection";
+            instance.hideFlags = HideFlags.HideAndDontSave;
+            instance.transform.position = Vector3.zero;
+            instance.transform.rotation = Quaternion.identity;
+            instance.transform.localScale = Vector3.one;
+            try
+            {
+                List<MiniFlamethrowerMeshInspection> meshes =
+                    new List<MiniFlamethrowerMeshInspection>();
+                List<MiniFlamethrowerComponentInspection> components =
+                    new List<MiniFlamethrowerComponentInspection>();
+                Bounds combined = default;
+                bool hasBounds = false;
+                int totalVertexCount = 0;
+                foreach (Renderer renderer in
+                         instance.GetComponentsInChildren<Renderer>(true))
+                {
+                    Mesh mesh = null;
+                    MeshFilter filter = renderer.GetComponent<MeshFilter>();
+                    if (filter != null)
+                    {
+                        mesh = filter.sharedMesh;
+                    }
+                    else if (renderer is SkinnedMeshRenderer skinned)
+                    {
+                        mesh = skinned.sharedMesh;
+                    }
+
+                    if (mesh == null)
+                    {
+                        continue;
+                    }
+
+                    Vector3[] corners = GetBoundsCorners(mesh.bounds);
+                    Bounds localBounds = default;
+                    bool localHasBounds = false;
+                    foreach (Vector3 corner in corners)
+                    {
+                        Vector3 rootLocal = instance.transform.InverseTransformPoint(
+                            renderer.transform.TransformPoint(corner));
+                        if (!localHasBounds)
+                        {
+                            localBounds = new Bounds(rootLocal, Vector3.zero);
+                            localHasBounds = true;
+                        }
+                        else
+                        {
+                            localBounds.Encapsulate(rootLocal);
+                        }
+
+                        if (!hasBounds)
+                        {
+                            combined = new Bounds(rootLocal, Vector3.zero);
+                            hasBounds = true;
+                        }
+                        else
+                        {
+                            combined.Encapsulate(rootLocal);
+                        }
+                    }
+
+                    totalVertexCount += mesh.vertexCount;
+                    components.AddRange(InspectMiniFlamethrowerComponents(
+                        mesh,
+                        renderer.transform,
+                        instance.transform,
+                        components.Count));
+                    meshes.Add(new MiniFlamethrowerMeshInspection
+                    {
+                        transformPath = AnimationUtility.CalculateTransformPath(
+                            renderer.transform,
+                            instance.transform),
+                        meshName = mesh.name,
+                        vertexCount = mesh.vertexCount,
+                        triangleCount = mesh.triangles.Length / 3,
+                        localBoundsCenter = localBounds.center,
+                        localBoundsSize = localBounds.size,
+                        materials = renderer.sharedMaterials
+                            .Select(material => material != null
+                                ? material.name
+                                : "<null>")
+                            .ToArray()
+                    });
+                }
+
+                if (!hasBounds || meshes.Count == 0)
+                {
+                    throw new InvalidOperationException(
+                        "Imported mini flamethrower FBX has no inspectable renderer bounds.");
+                }
+
+                return new MiniFlamethrowerAssetInspection
+                {
+                    sourcePath = MiniFlamethrowerOriginalPath,
+                    importedPath = MiniFlamethrowerAssetPath,
+                    sourceHash = HashFile(MiniFlamethrowerOriginalPath),
+                    importedHash = HashFile(MiniFlamethrowerAssetPath),
+                    meshCount = meshes.Count,
+                    totalVertexCount = totalVertexCount,
+                    connectedComponentCount = components.Count,
+                    combinedLocalBoundsCenter = combined.center,
+                    combinedLocalBoundsSize = combined.size,
+                    meshes = meshes
+                        .OrderBy(mesh => mesh.transformPath, StringComparer.Ordinal)
+                        .ToArray(),
+                    connectedComponents = components
+                        .OrderByDescending(component => component.triangleCount)
+                        .ThenBy(component => component.componentIndex)
+                        .ToArray(),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(instance);
+            }
+        }
+
+        private static IEnumerable<MiniFlamethrowerComponentInspection>
+            InspectMiniFlamethrowerComponents(
+                Mesh mesh,
+                Transform meshTransform,
+                Transform root,
+                int indexOffset)
+        {
+            int[] triangles = mesh.triangles;
+            int[] parents = Enumerable.Range(0, mesh.vertexCount).ToArray();
+            Func<int, int> find = null;
+            find = value =>
+            {
+                int parent = parents[value];
+                if (parent != value)
+                {
+                    parents[value] = find(parent);
+                }
+
+                return parents[value];
+            };
+            Action<int, int> join = (left, right) =>
+            {
+                int leftRoot = find(left);
+                int rightRoot = find(right);
+                if (leftRoot != rightRoot)
+                {
+                    parents[rightRoot] = leftRoot;
+                }
+            };
+            for (int index = 0; index + 2 < triangles.Length; index += 3)
+            {
+                join(triangles[index], triangles[index + 1]);
+                join(triangles[index], triangles[index + 2]);
+            }
+
+            Dictionary<int, List<int>> componentTriangles =
+                new Dictionary<int, List<int>>();
+            for (int index = 0; index + 2 < triangles.Length; index += 3)
+            {
+                int component = find(triangles[index]);
+                if (!componentTriangles.TryGetValue(
+                        component,
+                        out List<int> componentIndices))
+                {
+                    componentIndices = new List<int>();
+                    componentTriangles.Add(component, componentIndices);
+                }
+
+                componentIndices.Add(triangles[index]);
+                componentIndices.Add(triangles[index + 1]);
+                componentIndices.Add(triangles[index + 2]);
+            }
+
+            Vector3[] vertices = mesh.vertices;
+            int localIndex = 0;
+            foreach (List<int> componentIndices in componentTriangles.Values)
+            {
+                HashSet<int> referenced = new HashSet<int>(componentIndices);
+                Bounds bounds = default;
+                bool hasBounds = false;
+                foreach (int vertexIndex in referenced)
+                {
+                    Vector3 rootLocal = root.InverseTransformPoint(
+                        meshTransform.TransformPoint(vertices[vertexIndex]));
+                    if (!hasBounds)
+                    {
+                        bounds = new Bounds(rootLocal, Vector3.zero);
+                        hasBounds = true;
+                    }
+                    else
+                    {
+                        bounds.Encapsulate(rootLocal);
+                    }
+                }
+
+                yield return new MiniFlamethrowerComponentInspection
+                {
+                    componentIndex = indexOffset + localIndex,
+                    triangleCount = componentIndices.Count / 3,
+                    referencedVertexCount = referenced.Count,
+                    localBoundsCenter = bounds.center,
+                    localBoundsSize = bounds.size
+                };
+                localIndex++;
+            }
+        }
+
+        private static void CaptureMiniFlamethrowerAssetPreview(
+            GameObject asset,
+            MiniFlamethrowerAssetInspection inspection)
+        {
+            GameObject instance = UnityEngine.Object.Instantiate(asset);
+            instance.name = "MiniFlamethrowerAssetPreview";
+            instance.hideFlags = HideFlags.HideAndDontSave;
+            instance.transform.position = Vector3.zero;
+            instance.transform.rotation = Quaternion.identity;
+            instance.transform.localScale = Vector3.one;
+            try
+            {
+                Vector3 center = instance.transform.TransformPoint(
+                    inspection.combinedLocalBoundsCenter);
+                float orthographicSize = Mathf.Max(
+                    inspection.combinedLocalBoundsSize.x,
+                    inspection.combinedLocalBoundsSize.y) * 0.62f;
+                byte[] front;
+                byte[] side;
+                byte[] oblique;
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(instance.transform))
+                {
+                    environment.ConfigureView(
+                        instance.transform,
+                        center,
+                        orthographicSize);
+                    front = environment.CaptureFront();
+                    side = environment.CaptureSide();
+                    oblique = environment.CaptureOblique(
+                        instance.transform,
+                        center,
+                        (instance.transform.forward + instance.transform.right)
+                            .normalized,
+                        orthographicSize);
+                }
+
+                ComposeRows(
+                    new[]
+                    {
+                        new List<byte[]> { front, side, oblique }
+                    },
+                    MiniFlamethrowerAssetPreviewPath);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(instance);
+            }
+        }
+
+        private static void CaptureExactMiniFlamethrowerRigRegionPreview(
+            MiniFlamethrowerRigAnalysis analysis,
+            Mesh riggedMesh)
+        {
+            Mesh previewMesh = UnityEngine.Object.Instantiate(
+                analysis.SourceMesh);
+            previewMesh.name = "MiniFlamethrower_RigRegionPreview";
+            Vector3[] vertices = previewMesh.vertices;
+            int[] triangles = previewMesh.triangles;
+            BoneWeight[] boneWeights = riggedMesh.boneWeights;
+            if (boneWeights.Length != vertices.Length)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower rig-region preview has no complete bone-weight set.");
+            }
+            List<int> tankTriangles = new List<int>();
+            List<int> hoseTriangles = new List<int>();
+            List<int> sprayerTriangles = new List<int>();
+            List<int> gripTriangles = new List<int>();
+            List<int> sourceConnectedHoseTriangles = new List<int>();
+            for (int index = 0; index + 2 < triangles.Length; index += 3)
+            {
+                int first = triangles[index];
+                int second = triangles[index + 1];
+                int third = triangles[index + 2];
+                Vector3 center =
+                    (vertices[first] + vertices[second] + vertices[third]) / 3f;
+                bool isPistolGrip =
+                    analysis.SprayerGripVertexIndices.Contains(first) &&
+                    analysis.SprayerGripVertexIndices.Contains(second) &&
+                    analysis.SprayerGripVertexIndices.Contains(third);
+                bool isSourceConnectedHose =
+                    analysis.SourceConnectedHoseVertexIndices != null &&
+                    analysis.SourceConnectedHoseVertexIndices.Contains(first) &&
+                    analysis.SourceConnectedHoseVertexIndices.Contains(second) &&
+                    analysis.SourceConnectedHoseVertexIndices.Contains(third);
+                float tankWeight = (
+                    BoneWeightForIndex(
+                        boneWeights[first],
+                        MiniFlamethrowerTankBoneIndex) +
+                    BoneWeightForIndex(
+                        boneWeights[second],
+                        MiniFlamethrowerTankBoneIndex) +
+                    BoneWeightForIndex(
+                        boneWeights[third],
+                        MiniFlamethrowerTankBoneIndex)) / 3f;
+                float sprayerWeight = (
+                    BoneWeightForIndex(
+                        boneWeights[first],
+                        MiniFlamethrowerSprayerBoneIndex) +
+                    BoneWeightForIndex(
+                        boneWeights[second],
+                        MiniFlamethrowerSprayerBoneIndex) +
+                    BoneWeightForIndex(
+                        boneWeights[third],
+                        MiniFlamethrowerSprayerBoneIndex)) / 3f;
+                List<int> destination = isSourceConnectedHose
+                    ? sourceConnectedHoseTriangles
+                    : isPistolGrip
+                    ? gripTriangles
+                    : sprayerWeight >= 0.999f
+                    ? sprayerTriangles
+                    : tankWeight >= 0.999f
+                    ? tankTriangles
+                    : hoseTriangles;
+                destination.Add(first);
+                destination.Add(second);
+                destination.Add(third);
+            }
+
+            previewMesh.subMeshCount = 5;
+            previewMesh.SetTriangles(tankTriangles, 0, false);
+            previewMesh.SetTriangles(hoseTriangles, 1, false);
+            previewMesh.SetTriangles(sprayerTriangles, 2, false);
+            previewMesh.SetTriangles(gripTriangles, 3, false);
+            previewMesh.SetTriangles(sourceConnectedHoseTriangles, 4, false);
+            previewMesh.bounds = analysis.SourceMesh.bounds;
+
+            Shader shader = Shader.Find("Universal Render Pipeline/Unlit") ??
+                Shader.Find("Unlit/Color");
+            if (shader == null)
+            {
+                throw new InvalidOperationException(
+                    "No unlit shader is available for the exact rig-region preview.");
+            }
+
+            Material[] materials =
+            {
+                new Material(shader),
+                new Material(shader),
+                new Material(shader),
+                new Material(shader),
+                new Material(shader)
+            };
+            Color[] colors =
+            {
+                new Color(0.12f, 0.45f, 1f, 1f),
+                new Color(1f, 0.7f, 0.08f, 1f),
+                new Color(0.18f, 1f, 0.32f, 1f),
+                new Color(1f, 0.12f, 0.18f, 1f),
+                new Color(1f, 0f, 1f, 1f)
+            };
+            for (int index = 0; index < materials.Length; index++)
+            {
+                materials[index].hideFlags = HideFlags.HideAndDontSave;
+                if (materials[index].HasProperty("_BaseColor"))
+                {
+                    materials[index].SetColor("_BaseColor", colors[index]);
+                }
+                if (materials[index].HasProperty("_Color"))
+                {
+                    materials[index].SetColor("_Color", colors[index]);
+                }
+            }
+
+            GameObject preview = new GameObject(
+                "MiniFlamethrowerRigRegionPreview",
+                typeof(MeshFilter),
+                typeof(MeshRenderer));
+            preview.hideFlags = HideFlags.HideAndDontSave;
+            preview.GetComponent<MeshFilter>().sharedMesh = previewMesh;
+            preview.GetComponent<MeshRenderer>().sharedMaterials = materials;
+            try
+            {
+                Vector3 center = analysis.CombinedBounds.center;
+                float orthographicSize = Mathf.Max(
+                    analysis.CombinedBounds.size.x,
+                    analysis.CombinedBounds.size.y) * 0.62f;
+                byte[] front;
+                byte[] side;
+                byte[] oblique;
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(preview.transform))
+                {
+                    environment.ConfigureDarkMaterialReview();
+                    environment.ConfigureView(
+                        preview.transform,
+                        center,
+                        orthographicSize);
+                    front = environment.CaptureFront();
+                    side = environment.CaptureSide();
+                    oblique = environment.CaptureOblique(
+                        preview.transform,
+                        center,
+                        (preview.transform.forward + preview.transform.right)
+                            .normalized,
+                        orthographicSize);
+                }
+
+                ComposeRows(
+                    new[] { new List<byte[]> { front, side, oblique } },
+                    MiniFlamethrowerRigRegionPreviewPath);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(preview);
+                UnityEngine.Object.DestroyImmediate(previewMesh);
+                foreach (Material material in materials)
+                {
+                    UnityEngine.Object.DestroyImmediate(material);
+                }
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Mini Flamethrower Models Play Mode")]
+        internal static void CaptureMiniFlamethrowerModelsPlayMode()
+        {
+            int stage = SessionState.GetInt(
+                MiniFlamethrowerCaptureStageKey,
+                0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Mini flamethrower review must start in Edit Mode.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before mini flamethrower review.");
+                    }
+
+                    SessionState.SetInt(MiniFlamethrowerCaptureStageKey, 1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[PlayerMiniFlamethrower] Entering Play Mode for five-state direct review.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Mini flamethrower review capture requires Play Mode.");
+                    }
+
+                    CaptureMiniFlamethrowerRiggedActualPlayMode();
+                    SessionState.SetInt(MiniFlamethrowerCaptureStageKey, 2);
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Mini flamethrower review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(MiniFlamethrowerCaptureStageKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[PlayerMiniFlamethrower] Exiting Play Mode after direct review.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Mini flamethrower review stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(MiniFlamethrowerCaptureStageKey);
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+#if false
+        private static void CaptureMiniFlamethrowerActualPlayMode()
+        {
+            MiniFlamethrowerApplyMetrics apply =
+                ReadJson<MiniFlamethrowerApplyMetrics>(
+                    MiniFlamethrowerApplyMetricsPath);
+            if (!apply.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower apply metrics did not pass.");
+            }
+
+            GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MiniFlamethrowerAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported mini flamethrower FBX is missing before review.",
+                    Path.GetFullPath(MiniFlamethrowerAssetPath));
+            MiniFlamethrowerAssetInspection inspection =
+                ReadJson<MiniFlamethrowerAssetInspection>(
+                    MiniFlamethrowerInspectionPath);
+            MiniFlamethrowerGeometryAnalysis analysis =
+                AnalyzeMiniFlamethrowerGeometry(asset, inspection);
+            Mesh tankMesh = AssetDatabase.LoadAssetAtPath<Mesh>(
+                MiniFlamethrowerTankMeshPath) ??
+                throw new FileNotFoundException(
+                    "Separated mini flamethrower tank mesh is missing.",
+                    Path.GetFullPath(MiniFlamethrowerTankMeshPath));
+            Mesh sprayerMesh = AssetDatabase.LoadAssetAtPath<Mesh>(
+                MiniFlamethrowerSprayerMeshPath) ??
+                throw new FileNotFoundException(
+                    "Separated mini flamethrower sprayer mesh is missing.",
+                    Path.GetFullPath(MiniFlamethrowerSprayerMeshPath));
+            analysis.TankBounds = tankMesh.bounds;
+            analysis.SprayerBounds = sprayerMesh.bounds;
+            analysis.TankTriangleCount = tankMesh.triangles.Length / 3;
+            analysis.SprayerTriangleCount = sprayerMesh.triangles.Length / 3;
+            AnalyzeMiniFlamethrowerSprayerAxis(analysis, sprayerMesh);
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            string[] targetNames = GetMiniFlamethrowerTargetNames();
+            List<byte[]> backFrames = new List<byte[]>();
+            List<byte[]> frontFrames = new List<byte[]>();
+            List<MiniFlamethrowerTargetMetrics> targetMetrics =
+                new List<MiniFlamethrowerTargetMetrics>();
+            foreach (string targetName in targetNames)
+            {
+                Transform target = RequireTarget(layout, targetName);
+                MiniFlamethrowerTargetMetrics expected = apply.targets
+                    .Single(metrics => string.Equals(
+                        metrics.target,
+                        targetName,
+                        StringComparison.Ordinal));
+                MiniFlamethrowerTargetMetrics current =
+                    MeasureMiniFlamethrowerTarget(
+                        target,
+                        analysis,
+                        new RootPose(target),
+                        DescribeAnimatorConfiguration(target));
+                current.targetRootUnchanged =
+                    Vector3.Distance(
+                        target.localPosition,
+                        expected.targetLocalPosition) <= PositionTolerance &&
+                    Quaternion.Angle(
+                        target.localRotation,
+                        expected.targetLocalRotation) <= RotationTolerance &&
+                    Vector3.Distance(
+                        target.localScale,
+                        expected.targetLocalScale) <= PositionTolerance;
+                current.animatorUnchanged = string.Equals(
+                    DescribeAnimatorConfiguration(target),
+                    expected.animatorConfiguration,
+                    StringComparison.Ordinal);
+                current.passedNumericChecks =
+                    current.passedNumericChecks &&
+                    current.targetRootUnchanged &&
+                    current.animatorUnchanged;
+                targetMetrics.Add(current);
+
+                byte[] back;
+                byte[] front;
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(target))
+                {
+                    environment.ConfigureBackView(target, 1.05f, 1.25f);
+                    back = environment.CaptureFront();
+                    environment.ConfigureView(target, 1.05f, 1.25f);
+                    front = environment.CaptureFront();
+                }
+                backFrames.Add(back);
+                frontFrames.Add(front);
+            }
+
+            ComposeRows(
+                new[] { backFrames, frontFrames },
+                MiniFlamethrowerReviewPath);
+            MiniFlamethrowerReviewMetrics review =
+                new MiniFlamethrowerReviewMetrics
+                {
+                    targetSet = string.Join(", ", targetNames),
+                    targetCount = targetMetrics.Count,
+                    targets = targetMetrics.ToArray(),
+                    actualPlayModeObserved = true,
+                    allTanksFixedToSpine = targetMetrics.All(target =>
+                        target.tankParentedToSpine),
+                    allSprayersFollowRightHand = targetMetrics.All(target =>
+                        target.sprayerParentedToRightHand),
+                    allHosesConnected = targetMetrics.All(target =>
+                        target.hoseConnected),
+                    allGripReferencesExact = targetMetrics.All(target =>
+                        Mathf.Abs(
+                            target.rearToGripDistanceMeters -
+                            MiniFlamethrowerRearToGripMeters) <= 0.002f &&
+                        target.gripCenterErrorMeters <= 0.012f),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            review.passedNumericChecks =
+                review.targetCount == targetNames.Length &&
+                review.actualPlayModeObserved &&
+                review.allTanksFixedToSpine &&
+                review.allSprayersFollowRightHand &&
+                review.allHosesConnected &&
+                review.allGripReferencesExact &&
+                review.targets.All(target => target.passedNumericChecks);
+            WriteJson(MiniFlamethrowerReviewMetricsPath, review);
+            if (!review.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower Play Mode support checks failed. " +
+                    JsonUtility.ToJson(review));
+            }
+
+            Debug.Log(
+                "[PlayerMiniFlamethrower] Captured five actual Play Mode states from the back and front. " +
+                "TankFixed=True, SprayerFollowsRightHand=True, HoseConnected=True.");
+        }
+#endif
+
+        private static void CaptureMiniFlamethrowerOriginalActualPlayMode()
+        {
+            MiniFlamethrowerOriginalApplyMetrics apply =
+                ReadJson<MiniFlamethrowerOriginalApplyMetrics>(
+                    MiniFlamethrowerApplyMetricsPath);
+            if (!apply.passed)
+            {
+                throw new InvalidOperationException(
+                    "Exact original mini flamethrower apply metrics did not pass.");
+            }
+
+            GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MiniFlamethrowerAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported mini flamethrower FBX is missing before review.",
+                    Path.GetFullPath(MiniFlamethrowerAssetPath));
+            MiniFlamethrowerAssetInspection inspection =
+                ReadJson<MiniFlamethrowerAssetInspection>(
+                    MiniFlamethrowerInspectionPath);
+            MiniFlamethrowerRigAnalysis analysis =
+                AnalyzeMiniFlamethrowerRig(asset, inspection);
+            Mesh sourceMesh = asset.GetComponentsInChildren<MeshFilter>(true)
+                .Single(filter => filter.sharedMesh != null)
+                .sharedMesh;
+            Material[] sourceMaterials = asset
+                .GetComponentsInChildren<Renderer>(true)
+                .Single(renderer => renderer.sharedMaterials.Length > 0)
+                .sharedMaterials;
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            string[] targetNames = GetMiniFlamethrowerTargetNames();
+            List<byte[]> backFrames = new List<byte[]>();
+            List<byte[]> frontFrames = new List<byte[]>();
+            List<byte[]> sideFrames = new List<byte[]>();
+            List<byte[]> isolatedBackFrames = new List<byte[]>();
+            List<byte[]> isolatedFrontFrames = new List<byte[]>();
+            List<byte[]> isolatedSideFrames = new List<byte[]>();
+            List<MiniFlamethrowerOriginalTargetMetrics> targets =
+                new List<MiniFlamethrowerOriginalTargetMetrics>();
+            foreach (string targetName in targetNames)
+            {
+                Transform target = RequireTarget(layout, targetName);
+                MiniFlamethrowerOriginalTargetMetrics expected =
+                    apply.targets.Single(metrics => string.Equals(
+                        metrics.target,
+                        targetName,
+                        StringComparison.Ordinal));
+                Transform placement = target.Find(
+                    MiniFlamethrowerOriginalInstanceName) ??
+                    throw new InvalidOperationException(
+                        targetName + " original mini flamethrower placement is missing.");
+                if (placement.childCount != 1)
+                {
+                    throw new InvalidOperationException(
+                        targetName + " original mini flamethrower must contain exactly one source prefab root.");
+                }
+                Transform sourceModel = placement.GetChild(0);
+                MiniFlamethrowerOriginalTargetMetrics current =
+                    MeasureExactOriginalMiniFlamethrowerTarget(
+                        target,
+                        placement,
+                        sourceModel,
+                        asset.transform,
+                        sourceMesh,
+                        sourceMaterials,
+                        analysis,
+                        expected.targetLocalPosition,
+                        expected.targetLocalRotation,
+                        expected.targetLocalScale,
+                        expected.animatorConfiguration,
+                        expected.playerMeshSignature,
+                        expected.playerBoneTransformSignature,
+                        expected);
+                targets.Add(current);
+
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(target))
+                {
+                    environment.ConfigureDarkMaterialReview();
+                    environment.ConfigureBackView(target, 1.05f, 1.35f);
+                    backFrames.Add(environment.CaptureFront());
+                    environment.ConfigureView(target, 1.05f, 1.35f);
+                    frontFrames.Add(environment.CaptureFront());
+                    sideFrames.Add(environment.CaptureSide());
+                    Renderer[] playerRenderers = target
+                        .GetComponentsInChildren<Renderer>(true)
+                        .Where(renderer =>
+                            !renderer.transform.IsChildOf(placement))
+                        .ToArray();
+                    bool[] rendererStates = playerRenderers
+                        .Select(renderer => renderer.enabled)
+                        .ToArray();
+                    try
+                    {
+                        foreach (Renderer playerRenderer in playerRenderers)
+                        {
+                            playerRenderer.enabled = false;
+                        }
+
+                        environment.ConfigureBackView(
+                            target,
+                            1.05f,
+                            1.35f);
+                        isolatedBackFrames.Add(
+                            environment.CaptureFront());
+                        environment.ConfigureView(
+                            target,
+                            1.05f,
+                            1.35f);
+                        isolatedFrontFrames.Add(
+                            environment.CaptureFront());
+                        isolatedSideFrames.Add(
+                            environment.CaptureSide());
+                    }
+                    finally
+                    {
+                        for (int rendererIndex = 0;
+                             rendererIndex < playerRenderers.Length;
+                             rendererIndex++)
+                        {
+                            playerRenderers[rendererIndex].enabled =
+                                rendererStates[rendererIndex];
+                        }
+                    }
+                }
+            }
+
+            ComposeRows(
+                new[]
+                {
+                    backFrames,
+                    frontFrames,
+                    sideFrames,
+                    isolatedBackFrames,
+                    isolatedFrontFrames,
+                    isolatedSideFrames
+                },
+                MiniFlamethrowerReviewPath);
+            MiniFlamethrowerOriginalReviewMetrics review =
+                new MiniFlamethrowerOriginalReviewMetrics
+                {
+                    targetSet = string.Join(", ", targetNames),
+                    targetCount = targets.Count,
+                    targets = targets.ToArray(),
+                    actualPlayModeObserved = true,
+                    allOriginalMeshesUnchanged = targets.All(target =>
+                        target.sourceMeshReferenceExact &&
+                        target.sourceRootTransformExact &&
+                        target.hasNoRigOrGeneratedGeometry &&
+                        target.vertexCount == apply.sourceVertexCount &&
+                        target.triangleCount == apply.sourceTriangleCount),
+                    allPlayerMeshesAndBonesUnchanged = targets.All(target =>
+                        target.playerMeshReferencesUnchanged &&
+                        target.playerBoneTransformsUnchanged &&
+                        target.targetRootUnchanged &&
+                        target.animatorUnchanged),
+                    allTanksBehindAndFacingOutward = targets.All(target =>
+                        target.tankCenterBehindSpineMeters >= 0.1f &&
+                        target.tankOutwardFacingDot >= 0.7f),
+                    allGripReferencesExact = targets.All(target =>
+                        Mathf.Abs(
+                            target.rearToGripDistanceMeters -
+                            MiniFlamethrowerRearToGripMeters) <= 0.002f &&
+                        target.gripCenterErrorMeters <= 0.002f),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            review.passed =
+                review.actualPlayModeObserved &&
+                review.targetCount == targetNames.Length &&
+                review.allOriginalMeshesUnchanged &&
+                review.allPlayerMeshesAndBonesUnchanged &&
+                review.targets.All(target => target.passed);
+            WriteJson(MiniFlamethrowerReviewMetricsPath, review);
+            if (!review.passed)
+            {
+                throw new InvalidOperationException(
+                    "Exact original mini flamethrower Play Mode support checks failed. " +
+                    JsonUtility.ToJson(review));
+            }
+
+            Debug.Log(
+                "[PlayerMiniFlamethrowerOriginal] Captured five actual Play Mode states with unchanged player and mini flamethrower meshes.");
+        }
+
+        private static void CaptureMiniFlamethrowerRiggedActualPlayMode()
+        {
+            MiniFlamethrowerRigApplyMetrics apply =
+                ReadJson<MiniFlamethrowerRigApplyMetrics>(
+                    MiniFlamethrowerApplyMetricsPath);
+            if (!apply.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Exact mini flamethrower rig apply metrics did not pass.");
+            }
+
+            GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MiniFlamethrowerAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported mini flamethrower FBX is missing before review.",
+                    Path.GetFullPath(MiniFlamethrowerAssetPath));
+            MiniFlamethrowerAssetInspection inspection =
+                ReadJson<MiniFlamethrowerAssetInspection>(
+                    MiniFlamethrowerInspectionPath);
+            MiniFlamethrowerRigAnalysis analysis =
+                AnalyzeMiniFlamethrowerRig(asset, inspection);
+            Mesh riggedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(
+                MiniFlamethrowerRiggedMeshPath) ??
+                throw new FileNotFoundException(
+                    "Exact mini flamethrower rigged mesh is missing before review.",
+                    Path.GetFullPath(MiniFlamethrowerRiggedMeshPath));
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            string[] targetNames = GetMiniFlamethrowerTargetNames();
+            List<byte[]> backFrames = new List<byte[]>();
+            List<byte[]> frontFrames = new List<byte[]>();
+            List<byte[]> rightSideFrames = new List<byte[]>();
+            List<byte[]> leftSideFrames = new List<byte[]>();
+            List<byte[]> gripFrontFrames = new List<byte[]>();
+            List<byte[]> gripSideFrames = new List<byte[]>();
+            List<MiniFlamethrowerRigTargetMetrics> targets =
+                new List<MiniFlamethrowerRigTargetMetrics>();
+            foreach (string targetName in targetNames)
+            {
+                Transform target = RequireTarget(layout, targetName);
+                MiniFlamethrowerRigTargetMetrics expected = apply.targets
+                    .Single(metrics => string.Equals(
+                        metrics.target,
+                        targetName,
+                        StringComparison.Ordinal));
+                MiniFlamethrowerRigTargetMetrics current =
+                    MeasureExactMiniFlamethrowerRigTarget(
+                        target,
+                        riggedMesh,
+                        analysis,
+                        new RootPose(target),
+                        DescribeAnimatorConfiguration(target));
+                current.targetRootUnchanged =
+                    Vector3.Distance(
+                        target.localPosition,
+                        expected.targetLocalPosition) <= PositionTolerance &&
+                    Quaternion.Angle(
+                        target.localRotation,
+                        expected.targetLocalRotation) <= RotationTolerance &&
+                    Vector3.Distance(
+                        target.localScale,
+                        expected.targetLocalScale) <= PositionTolerance;
+                current.animatorUnchanged = string.Equals(
+                    DescribeAnimatorConfiguration(target),
+                    expected.animatorConfiguration,
+                    StringComparison.Ordinal);
+                current.passedNumericChecks =
+                    current.passedNumericChecks &&
+                    current.targetRootUnchanged &&
+                    current.animatorUnchanged;
+                targets.Add(current);
+
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(target))
+                {
+                    environment.ConfigureDarkMaterialReview();
+                    Vector3 reviewCenter = target.position +
+                        target.up * 1.05f;
+                    environment.ConfigureBackView(target, 1.05f, 1.15f);
+                    backFrames.Add(environment.CaptureFront());
+                    environment.ConfigureView(target, reviewCenter, 1.15f);
+                    frontFrames.Add(environment.CaptureFront());
+                    rightSideFrames.Add(environment.CaptureSide());
+                    leftSideFrames.Add(environment.CaptureOppositeSide(
+                        target,
+                        reviewCenter,
+                        1.15f));
+                    Vector3 gripReviewCenter = FindRequired(
+                        target,
+                        RightHandPath).position;
+                    environment.ConfigureView(
+                        target,
+                        gripReviewCenter,
+                        0.42f);
+                    gripFrontFrames.Add(environment.CaptureFront());
+                    gripSideFrames.Add(environment.CaptureSide());
+                }
+            }
+
+            ComposeRows(
+                new[]
+                {
+                    backFrames,
+                    frontFrames,
+                    rightSideFrames,
+                    leftSideFrames,
+                    gripFrontFrames,
+                    gripSideFrames
+                },
+                MiniFlamethrowerReviewPath);
+            MiniFlamethrowerRigReviewMetrics review =
+                new MiniFlamethrowerRigReviewMetrics
+                {
+                    targetSet = string.Join(", ", targetNames),
+                    targetCount = targets.Count,
+                    targets = targets.ToArray(),
+                    actualPlayModeObserved = true,
+                    allTargetsUseSingleFullMesh = targets.All(target =>
+                        target.visibleRendererCount == 1 &&
+                        target.visibleVertexCount == apply.sourceVertexCount &&
+                        target.visibleTriangleCount == apply.sourceTriangleCount &&
+                        target.usesExactRiggedMesh),
+                    allMaterialsAndTexturesApplied =
+                        apply.allMaterialsAndTexturesApplied &&
+                        targets.All(target => target.materialReferencesExact),
+                    allTanksFixedToSpine = targets.All(target =>
+                        target.rigParentedToSpine && target.tankBoneFixedToRig),
+                    allSprayersFollowRightHand = targets.All(target =>
+                        target.sprayerBoneParentedToRightHand),
+                    allGripReferencesExact = targets.All(target =>
+                        target.gripCenterErrorMeters <= 0.012f),
+                    allTriggersFaceDown = targets.All(target =>
+                        target.triggerDownDot >= 0.98f),
+                    allGeneratedHosesRemoved = targets.All(target =>
+                        target.hasNoGeneratedHose),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            review.passedNumericChecks =
+                review.actualPlayModeObserved &&
+                review.targetCount == targetNames.Length &&
+                review.allTargetsUseSingleFullMesh &&
+                review.allMaterialsAndTexturesApplied &&
+                review.allTanksFixedToSpine &&
+                review.allSprayersFollowRightHand &&
+                review.allGripReferencesExact &&
+                review.allTriggersFaceDown &&
+                review.allGeneratedHosesRemoved &&
+                review.targets.All(target => target.passedNumericChecks);
+            WriteJson(MiniFlamethrowerReviewMetricsPath, review);
+            if (!review.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Exact mini flamethrower rig Play Mode support checks failed. " +
+                    JsonUtility.ToJson(review));
+            }
+
+            Debug.Log(
+                "[PlayerMiniFlamethrowerRig] Captured five actual Play Mode states using one complete original mesh with embedded material and texture references.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Mini Flamethrower Models Final")]
+        internal static void CaptureMiniFlamethrowerModelsFinal()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower finalization requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after mini flamethrower direct review.");
+            }
+
+            MiniFlamethrowerRigReviewMetrics review =
+                ReadJson<MiniFlamethrowerRigReviewMetrics>(
+                    MiniFlamethrowerReviewMetricsPath);
+            if (!review.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower Play Mode review did not pass before finalization.");
+            }
+
+            CopyReviewedContact(
+                MiniFlamethrowerReviewPath,
+                MiniFlamethrowerFinalPath);
+            string reviewHash = HashFile(MiniFlamethrowerReviewPath);
+            string finalHash = HashFile(MiniFlamethrowerFinalPath);
+            if (!string.Equals(
+                    reviewHash,
+                    finalHash,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "Mini flamethrower final image differs from the directly reviewed Play Mode contact sheet.");
+            }
+
+            Debug.Log(
+                "[PlayerMiniFlamethrower] Final image copied once from directly reviewed Play Mode frames. " +
+                "Path=" + Path.GetFullPath(MiniFlamethrowerFinalPath) +
+                ", Hash=" + finalHash + ", SceneChanged=False.");
+        }
+
+#if false
+        [MenuItem("Bellerophon/Player/Capture Flamethrower Attack VFX Art Sample")]
+        internal static void CaptureFlamethrowerAttackVfxArtSample()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower attack VFX art sample requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before the temporary flamethrower VFX sample.");
+            }
+
+            Directory.CreateDirectory(Path.GetFullPath(
+                FlamethrowerAttackVfxSampleDirectory + "/renders"));
+            GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MiniFlamethrowerAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported mini flamethrower FBX is missing for the VFX sample.",
+                    Path.GetFullPath(MiniFlamethrowerAssetPath));
+            MiniFlamethrowerAssetInspection inspection =
+                InspectMiniFlamethrowerAsset(asset);
+            MiniFlamethrowerRigAnalysis analysis =
+                AnalyzeMiniFlamethrowerRig(asset, inspection);
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(
+                layout,
+                FlamethrowerFireTargetName);
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform sprayerBone = rightHand.Find(
+                MiniFlamethrowerSprayerBoneName) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Fire has no accepted right-hand sprayer bone.");
+            Vector3 nozzleWorldPosition = sprayerBone.TransformPoint(
+                analysis.SprayerNozzlePoint - analysis.SprayerRearPoint);
+            Vector3 nozzleWorldDirection = sprayerBone.TransformDirection(
+                analysis.SprayerAxis).normalized;
+
+            Material coreMaterial = CloneFlamethrowerAttackVfxSampleMaterial(
+                MusketMuzzleFlashMaterialPath,
+                new Color(4.2f, 2.5f, 0.75f, 1f),
+                new Color(8.0f, 4.2f, 1.0f, 1f));
+            Material hotMaterial = CloneFlamethrowerAttackVfxSampleMaterial(
+                MusketMuzzleHotGasMaterialPath,
+                new Color(3.6f, 1.25f, 0.12f, 0.92f),
+                new Color(7.0f, 2.25f, 0.20f, 1f));
+            Material outerMaterial = CloneFlamethrowerAttackVfxSampleMaterial(
+                MusketMuzzleHotGasMaterialPath,
+                new Color(2.8f, 0.62f, 0.035f, 0.78f),
+                new Color(5.4f, 1.05f, 0.07f, 1f));
+            Material smokeMaterial = CloneFlamethrowerAttackVfxSampleMaterial(
+                MusketMuzzleSmokeMaterialPath,
+                new Color(0.56f, 0.52f, 0.49f, 0.34f),
+                Color.black);
+            Material[] temporaryMaterials =
+            {
+                coreMaterial,
+                hotMaterial,
+                outerMaterial,
+                smokeMaterial
+            };
+            GameObject preview = new GameObject(
+                "Flamethrower_Attack_VFX_ArtSample");
+            preview.hideFlags = HideFlags.HideAndDontSave;
+            preview.transform.SetPositionAndRotation(
+                nozzleWorldPosition,
+                Quaternion.FromToRotation(
+                    Vector3.forward,
+                    nozzleWorldDirection));
+            preview.transform.localScale = Vector3.one;
+            try
+            {
+                ParticleSystem core = CreateFlamethrowerAttackVfxSampleSystem(
+                    preview.transform,
+                    "WhiteHotCoreJet",
+                    coreMaterial,
+                    48,
+                    110f,
+                    0.14f,
+                    0.22f,
+                    6.8f,
+                    8.5f,
+                    0.12f,
+                    0.18f,
+                    2.5f,
+                    0.008f,
+                    0.04f,
+                    true,
+                    2.10f,
+                    new Color(1f, 1f, 0.92f, 1f),
+                    new Color(1f, 0.56f, 0.08f, 0f),
+                    1101u);
+                ParticleSystem body = CreateFlamethrowerAttackVfxSampleSystem(
+                    preview.transform,
+                    "HighTemperatureFlameJet",
+                    hotMaterial,
+                    80,
+                    95f,
+                    0.28f,
+                    0.45f,
+                    4.4f,
+                    6.4f,
+                    0.18f,
+                    0.32f,
+                    5f,
+                    0.018f,
+                    0.12f,
+                    true,
+                    2.55f,
+                    new Color(1f, 0.92f, 0.42f, 0.96f),
+                    new Color(1f, 0.18f, 0.015f, 0f),
+                    2202u);
+                ParticleSystem lobes = CreateFlamethrowerAttackVfxSampleSystem(
+                    preview.transform,
+                    "OrangeOuterFlameLobes",
+                    outerMaterial,
+                    56,
+                    55f,
+                    0.38f,
+                    0.62f,
+                    3.2f,
+                    4.8f,
+                    0.28f,
+                    0.50f,
+                    9f,
+                    0.032f,
+                    0.22f,
+                    false,
+                    1f,
+                    new Color(1f, 0.62f, 0.12f, 0.82f),
+                    new Color(0.90f, 0.08f, 0.01f, 0f),
+                    3303u);
+                ParticleSystem embers = CreateFlamethrowerAttackVfxSampleSystem(
+                    preview.transform,
+                    "HotEmberSpray",
+                    coreMaterial,
+                    28,
+                    28f,
+                    0.25f,
+                    0.50f,
+                    5.0f,
+                    8.0f,
+                    0.018f,
+                    0.040f,
+                    14f,
+                    0.012f,
+                    0.18f,
+                    true,
+                    1.35f,
+                    new Color(1f, 0.72f, 0.16f, 1f),
+                    new Color(1f, 0.12f, 0.01f, 0f),
+                    4404u);
+                ParticleSystem smoke = CreateFlamethrowerAttackVfxSampleSystem(
+                    preview.transform,
+                    "ThinTrailingSmoke",
+                    smokeMaterial,
+                    24,
+                    12f,
+                    0.65f,
+                    1.15f,
+                    1.8f,
+                    2.8f,
+                    0.22f,
+                    0.38f,
+                    8f,
+                    0.020f,
+                    0.16f,
+                    false,
+                    1f,
+                    new Color(0.56f, 0.53f, 0.50f, 0.28f),
+                    new Color(0.24f, 0.26f, 0.29f, 0f),
+                    5505u);
+                ParticleSystem.VelocityOverLifetimeModule smokeVelocity =
+                    smoke.velocityOverLifetime;
+                smokeVelocity.enabled = true;
+                smokeVelocity.space = ParticleSystemSimulationSpace.Local;
+                smokeVelocity.y = new ParticleSystem.MinMaxCurve(0.10f, 0.22f);
+                ParticleSystem.SizeOverLifetimeModule smokeSize =
+                    smoke.sizeOverLifetime;
+                smokeSize.size = new ParticleSystem.MinMaxCurve(
+                    1f,
+                    new AnimationCurve(
+                        new Keyframe(0f, 0.45f),
+                        new Keyframe(0.35f, 1.15f),
+                        new Keyframe(1f, 2.20f)));
+
+                ParticleSystem[] systems =
+                {
+                    core,
+                    body,
+                    lobes,
+                    embers,
+                    smoke
+                };
+                float[] ages = { 0.18f, 0.42f, 0.78f, 1.15f };
+                List<List<byte[]>> rows = new List<List<byte[]>>
+                {
+                    new List<byte[]>(),
+                    new List<byte[]>(),
+                    new List<byte[]>(),
+                    new List<byte[]>()
+                };
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(target, preview.transform, null))
+                {
+                    environment.ConfigureDarkMaterialReview();
+                    foreach (float age in ages)
+                    {
+                        foreach (ParticleSystem system in systems)
+                        {
+                            system.Stop(
+                                true,
+                                ParticleSystemStopBehavior.StopEmittingAndClear);
+                            system.Simulate(age, true, true, true);
+                        }
+
+                        Vector3 jetCenter = nozzleWorldPosition +
+                            nozzleWorldDirection * 1.42f;
+                        environment.ConfigureView(target, jetCenter, 1.16f);
+                        rows[0].Add(environment.CaptureSide());
+                        rows[1].Add(environment.CaptureOblique(
+                            target,
+                            jetCenter,
+                            target.forward + target.right * 0.72f +
+                                target.up * 0.12f,
+                            1.16f));
+                        rows[2].Add(environment.CaptureFront());
+                        environment.ConfigureView(
+                            target,
+                            target.position + target.up * 1.02f +
+                                nozzleWorldDirection * 0.62f,
+                            1.70f);
+                        rows[3].Add(environment.CaptureSide());
+                    }
+                }
+
+                ComposeRows(rows, FlamethrowerAttackVfxSamplePreviewPath);
+                FlamethrowerAttackVfxSampleMetrics metrics =
+                    new FlamethrowerAttackVfxSampleMetrics
+                    {
+                        target = FlamethrowerFireTargetName,
+                        referenceArchitecture =
+                            "Musket layered particle muzzle effect expanded into a sustained flame jet",
+                        visualRepresentation =
+                            "Five looping Unity ParticleSystems: white-hot core, hot flame body, orange outer lobes, embers, and thin smoke",
+                        layers = systems.Select(system => system.name).ToArray(),
+                        particleSystemCount = systems.Length,
+                        maximumConfiguredParticles = systems.Sum(system =>
+                            system.main.maxParticles),
+                        intendedJetLengthMeters = 3.0f,
+                        previewAgesSeconds = ages,
+                        previewViews = new[]
+                        {
+                            "side_close",
+                            "oblique_close",
+                            "front_close",
+                            "side_full_context"
+                        },
+                        nozzleWorldPosition = nozzleWorldPosition,
+                        nozzleWorldDirection = nozzleWorldDirection,
+                        usesParticleSystemsOnly = systems.All(system =>
+                            system.GetComponent<ParticleSystemRenderer>()
+                                .renderMode != ParticleSystemRenderMode.Mesh),
+                        usesProjectileModel = false,
+                        usesFlameMeshRenderer = false,
+                        currentSceneModified = false,
+                        runtimeApplied = false,
+                        actualUnityPreviewRendered = File.Exists(
+                            Path.GetFullPath(
+                                FlamethrowerAttackVfxSamplePreviewPath)),
+                        validationPriority =
+                            "1순위 Unity VFX 직접 확인, 2순위 파티클 설정값 보조 확인"
+                    };
+                metrics.passedNumericChecks =
+                    metrics.particleSystemCount == 5 &&
+                    metrics.maximumConfiguredParticles == 236 &&
+                    metrics.usesParticleSystemsOnly &&
+                    !metrics.usesProjectileModel &&
+                    !metrics.usesFlameMeshRenderer &&
+                    !metrics.currentSceneModified &&
+                    !metrics.runtimeApplied &&
+                    metrics.actualUnityPreviewRendered;
+                WriteJson(FlamethrowerAttackVfxSampleMetricsPath, metrics);
+                if (!metrics.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower attack VFX art sample support checks failed. " +
+                        JsonUtility.ToJson(metrics));
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(preview);
+                foreach (Material material in temporaryMaterials)
+                {
+                    UnityEngine.Object.DestroyImmediate(material);
+                }
+            }
+
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "The temporary flamethrower VFX sample dirtied CargoRunMvp.");
+            }
+
+            Debug.Log(
+                "[FlamethrowerAttackVfxSample] Captured five particle-only " +
+                "layers at the accepted Flamethrower_Fire nozzle without " +
+                "scene or runtime linkage. Path=" +
+                Path.GetFullPath(FlamethrowerAttackVfxSamplePreviewPath) + ".");
+        }
+
+        private static Material CloneFlamethrowerAttackVfxSampleMaterial(
+            string sourcePath,
+            Color color,
+            Color emission)
+        {
+            Material source = AssetDatabase.LoadAssetAtPath<Material>(
+                sourcePath) ?? throw new FileNotFoundException(
+                "Musket reference VFX material is missing.",
+                Path.GetFullPath(sourcePath));
+            Material material = new Material(source)
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            if (material.HasProperty("_BaseColor"))
+            {
+                material.SetColor("_BaseColor", color);
+            }
+            if (material.HasProperty("_Color"))
+            {
+                material.SetColor("_Color", color);
+            }
+            if (material.HasProperty("_EmissionColor"))
+            {
+                material.SetColor("_EmissionColor", emission);
+            }
+            return material;
+        }
+
+        private static ParticleSystem CreateFlamethrowerAttackVfxSampleSystem(
+            Transform parent,
+            string name,
+            Material material,
+            int maximumParticles,
+            float rate,
+            float lifetimeMinimum,
+            float lifetimeMaximum,
+            float speedMinimum,
+            float speedMaximum,
+            float sizeMinimum,
+            float sizeMaximum,
+            float coneAngle,
+            float coneRadius,
+            float noiseStrength,
+            bool stretched,
+            float lengthScale,
+            Color startColor,
+            Color endColor,
+            uint randomSeed)
+        {
+            GameObject item = new GameObject(name);
+            item.hideFlags = HideFlags.HideAndDontSave;
+            item.transform.SetParent(parent, false);
+            ParticleSystem system = item.AddComponent<ParticleSystem>();
+            system.useAutoRandomSeed = false;
+            system.randomSeed = randomSeed;
+            ParticleSystem.MainModule main = system.main;
+            main.duration = 2f;
+            main.loop = true;
+            main.playOnAwake = false;
+            main.simulationSpace = ParticleSystemSimulationSpace.Local;
+            main.scalingMode = ParticleSystemScalingMode.Local;
+            main.maxParticles = maximumParticles;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(
+                lifetimeMinimum,
+                lifetimeMaximum);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(
+                speedMinimum,
+                speedMaximum);
+            main.startSize = new ParticleSystem.MinMaxCurve(
+                sizeMinimum,
+                sizeMaximum);
+            main.startRotation = new ParticleSystem.MinMaxCurve(
+                0f,
+                Mathf.PI * 2f);
+            main.startColor = new ParticleSystem.MinMaxGradient(Color.white);
+            ParticleSystem.EmissionModule emission = system.emission;
+            emission.enabled = true;
+            emission.rateOverTime = new ParticleSystem.MinMaxCurve(rate);
+            ParticleSystem.ShapeModule shape = system.shape;
+            shape.enabled = true;
+            shape.shapeType = ParticleSystemShapeType.Cone;
+            shape.angle = coneAngle;
+            shape.radius = coneRadius;
+            shape.length = 0.025f;
+            ParticleSystem.NoiseModule noise = system.noise;
+            noise.enabled = true;
+            noise.strength = new ParticleSystem.MinMaxCurve(noiseStrength);
+            noise.frequency = 0.72f;
+            noise.scrollSpeed = 0.58f;
+            ParticleSystem.SizeOverLifetimeModule size =
+                system.sizeOverLifetime;
+            size.enabled = true;
+            size.size = new ParticleSystem.MinMaxCurve(
+                1f,
+                new AnimationCurve(
+                    new Keyframe(0f, 0.40f),
+                    new Keyframe(0.22f, 1.12f),
+                    new Keyframe(0.72f, 0.82f),
+                    new Keyframe(1f, 0.08f)));
+            ConfigureParticleFade(system, startColor, endColor);
+            ConfigureMusketMuzzleFourTileSheet(system);
+            ParticleSystemRenderer renderer =
+                item.GetComponent<ParticleSystemRenderer>();
+            renderer.renderMode = stretched
+                ? ParticleSystemRenderMode.Stretch
+                : ParticleSystemRenderMode.Billboard;
+            renderer.alignment = stretched
+                ? ParticleSystemRenderSpace.Local
+                : ParticleSystemRenderSpace.View;
+            renderer.sharedMaterial = material;
+            renderer.sortMode = ParticleSystemSortMode.Distance;
+            renderer.normalDirection = 0.55f;
+            renderer.velocityScale = stretched ? 0.16f : 0f;
+            renderer.lengthScale = lengthScale;
+            renderer.pivot = stretched
+                ? new Vector3(0f, 0.5f, 0f)
+                : Vector3.zero;
+            renderer.maxParticleSize = 0.55f;
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            renderer.motionVectorGenerationMode =
+                MotionVectorGenerationMode.ForceNoMotion;
+            renderer.lightProbeUsage = LightProbeUsage.Off;
+            renderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
+            renderer.allowOcclusionWhenDynamic = false;
+            system.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            return system;
+        }
+#endif
+
+        [MenuItem("Bellerophon/Player/Capture Flamethrower Attack VFX Art Sample")]
+        internal static void CaptureFlamethrowerAttackVfxArtSample()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower attack VFX art sample requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before the temporary flamethrower VFX sample.");
+            }
+
+            Directory.CreateDirectory(Path.GetFullPath(
+                FlamethrowerAttackVfxSampleDirectory + "/renders"));
+            GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MiniFlamethrowerAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported mini flamethrower FBX is missing for the VFX sample.",
+                    Path.GetFullPath(MiniFlamethrowerAssetPath));
+            MiniFlamethrowerAssetInspection inspection =
+                InspectMiniFlamethrowerAsset(asset);
+            MiniFlamethrowerRigAnalysis analysis =
+                AnalyzeMiniFlamethrowerRig(asset, inspection);
+            Transform target = RequireTarget(
+                RequireLayout(scene),
+                FlamethrowerFireTargetName);
+            Transform sprayerBone = FindRequired(target, RightHandPath).Find(
+                MiniFlamethrowerSprayerBoneName) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Fire has no accepted right-hand sprayer bone.");
+            Vector3 nozzle = CalculateMiniFlamethrowerRenderedForwardTip(
+                target);
+            Vector3 direction = sprayerBone.TransformDirection(
+                analysis.SprayerAxis).normalized;
+            Texture2D flameTurbulenceTexture =
+                CreateFlamethrowerTurbulenceSheet(
+                    "Flamethrower_Flame_Turbulence_Preview",
+                    7401,
+                    false);
+            Texture2D smokeTurbulenceTexture =
+                CreateFlamethrowerTurbulenceSheet(
+                    "Flamethrower_Smoke_Turbulence_Preview",
+                    8603,
+                    true);
+            Material coreMaterial = CloneFlamethrowerAttackVfxPreviewMaterial(
+                MusketMuzzleFlashMaterialPath,
+                new Color(2.2f, 3.2f, 4.2f, 1f),
+                new Color(4.0f, 7.0f, 10.0f, 1f),
+                true,
+                1.80f,
+                null);
+            Material bodyMaterial = CloneFlamethrowerAttackVfxPreviewMaterial(
+                MusketMuzzleHotGasMaterialPath,
+                new Color(1.60f, 1.05f, 0.180f, 1f),
+                new Color(3.20f, 1.90f, 0.300f, 1f),
+                true,
+                1.60f,
+                flameTurbulenceTexture);
+            Material outerMaterial = CloneFlamethrowerAttackVfxPreviewMaterial(
+                MusketMuzzleHotGasMaterialPath,
+                new Color(1.10f, 0.62f, 0.075f, 1f),
+                new Color(2.00f, 0.90f, 0.100f, 1f),
+                true,
+                1.35f,
+                flameTurbulenceTexture);
+            Material crownMaterial = CloneFlamethrowerAttackVfxPreviewMaterial(
+                MusketMuzzleHotGasMaterialPath,
+                new Color(0.70f, 0.320f, 0.050f, 1f),
+                new Color(1.15f, 0.450f, 0.050f, 1f),
+                true,
+                1.08f,
+                flameTurbulenceTexture);
+            Material smokeMaterial = CloneFlamethrowerAttackVfxPreviewMaterial(
+                MusketMuzzleHotGasMaterialPath,
+                new Color(0.24f, 0.095f, 0.025f, 0.08f),
+                new Color(0.10f, 0.030f, 0.008f, 1f),
+                false,
+                1f,
+                smokeTurbulenceTexture);
+
+            GameObject preview = new GameObject(
+                "Flamethrower_Attack_VFX_ArtSample");
+            preview.hideFlags = HideFlags.HideAndDontSave;
+            preview.transform.SetPositionAndRotation(
+                nozzle,
+                Quaternion.FromToRotation(Vector3.forward, direction));
+            try
+            {
+                ParticleSystem[] systems =
+                {
+                    CreateSimpleFlamethrowerVfxSystem(
+                        preview.transform,
+                        "WhiteHotCoreJet",
+                        coreMaterial,
+                        64,
+                        240f,
+                        0.10f,
+                        0.18f,
+                        8.0f,
+                        10.0f,
+                        0.05f,
+                        0.10f,
+                        1.0f,
+                        0f,
+                        0.020f,
+                        new Color(0.70f, 0.90f, 1f, 1f),
+                        new Color(1f, 0.76f, 0.28f, 0f),
+                        false,
+                        0f,
+                        1f,
+                        1101u),
+                    CreateSimpleFlamethrowerVfxSystem(
+                        preview.transform,
+                        "HighTemperatureFlameJet",
+                        bodyMaterial,
+                        96,
+                        180f,
+                        0.50f,
+                        0.80f,
+                        7.0f,
+                        10.0f,
+                        0.18f,
+                        0.32f,
+                        3f,
+                        0.005f,
+                        0.12f,
+                        new Color(1f, 0.88f, 0.24f, 1f),
+                        new Color(1f, 0.52f, 0.055f, 0f),
+                        false,
+                        0f,
+                        1f,
+                        2202u),
+                    CreateSimpleFlamethrowerVfxSystem(
+                        preview.transform,
+                        "GoldenPressureBloom",
+                        bodyMaterial,
+                        96,
+                        200f,
+                        0.48f,
+                        0.78f,
+                        6.2f,
+                        9.5f,
+                        0.14f,
+                        0.28f,
+                        4f,
+                        0.010f,
+                        0.32f,
+                        new Color(1f, 0.90f, 0.28f, 1f),
+                        new Color(0.96f, 0.48f, 0.045f, 0f),
+                        false,
+                        0f,
+                        1f,
+                        2752u),
+                    CreateSimpleFlamethrowerVfxSystem(
+                        preview.transform,
+                        "OrangeOuterFlameLobes",
+                        outerMaterial,
+                        96,
+                        150f,
+                        0.55f,
+                        0.90f,
+                        6.2f,
+                        9.0f,
+                        0.22f,
+                        0.40f,
+                        5.5f,
+                        0.015f,
+                        0.55f,
+                        new Color(1f, 0.76f, 0.120f, 1f),
+                        new Color(0.78f, 0.34f, 0.045f, 0f),
+                        false,
+                        0f,
+                        1f,
+                        3303u),
+                    CreateSimpleFlamethrowerVfxSystem(
+                        preview.transform,
+                        "RedRollingFlameCrown",
+                        crownMaterial,
+                        72,
+                        52f,
+                        0.46f,
+                        0.76f,
+                        6.5f,
+                        9.5f,
+                        0.07f,
+                        0.14f,
+                        5f,
+                        0.012f,
+                        0.38f,
+                        new Color(0.96f, 0.56f, 0.090f, 0.92f),
+                        new Color(0.76f, 0.30f, 0.045f, 0f),
+                        true,
+                        0.030f,
+                        1.80f,
+                        3853u),
+                    CreateSimpleFlamethrowerVfxSystem(
+                        preview.transform,
+                        "HotEmberSpray",
+                        coreMaterial,
+                        24,
+                        14f,
+                        0.45f,
+                        0.85f,
+                        6.0f,
+                        10.0f,
+                        0.025f,
+                        0.055f,
+                        11f,
+                        0.010f,
+                        0.18f,
+                        new Color(1f, 0.72f, 0.16f, 1f),
+                        new Color(1f, 0.58f, 0.10f, 0f),
+                        true,
+                        0.05f,
+                        1.20f,
+                        4404u),
+                    CreateSimpleFlamethrowerVfxSystem(
+                        preview.transform,
+                        "ThinTrailingSmoke",
+                        smokeMaterial,
+                        32,
+                        12f,
+                        0.80f,
+                        1.25f,
+                        5.0f,
+                        7.0f,
+                        0.08f,
+                        0.17f,
+                        6f,
+                        0.020f,
+                        0.34f,
+                        new Color(0.72f, 0.38f, 0.16f, 0.10f),
+                        new Color(0.46f, 0.22f, 0.10f, 0f),
+                        true,
+                        0.035f,
+                        1.45f,
+                        5505u)
+                };
+                systems[0].transform.localPosition = Vector3.zero;
+                systems[1].transform.localPosition = Vector3.zero;
+                systems[5].transform.localPosition = Vector3.zero;
+
+                float[] ages = { 0.18f, 0.48f, 0.92f, 1.35f };
+                List<List<byte[]>> rows = new List<List<byte[]>>
+                {
+                    new List<byte[]>(),
+                    new List<byte[]>(),
+                    new List<byte[]>(),
+                    new List<byte[]>()
+                };
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(target, preview.transform, null))
+                {
+                    environment.ConfigureDarkMaterialReview();
+                    foreach (float age in ages)
+                    {
+                        foreach (ParticleSystem system in systems)
+                        {
+                            system.Stop(
+                                true,
+                                ParticleSystemStopBehavior.StopEmittingAndClear);
+                            system.Simulate(age, true, true, false);
+                        }
+
+                        Vector3 center = nozzle + direction * 0.38f;
+                        environment.ConfigureView(target, center, 0.72f);
+                        rows[0].Add(environment.CaptureSide());
+                        rows[1].Add(environment.CaptureOblique(
+                            target,
+                            nozzle + direction * 1.75f,
+                            target.forward + target.right * 0.72f +
+                                target.up * 0.12f,
+                            1.90f));
+                        rows[2].Add(environment.CaptureFront());
+                        environment.ConfigureView(
+                            target,
+                            target.position + target.up * 1.02f +
+                                direction * 1.45f,
+                            3.40f);
+                        rows[3].Add(environment.CaptureSide());
+                    }
+                }
+
+                ComposeRows(rows, FlamethrowerAttackVfxSamplePreviewPath);
+                FlamethrowerAttackVfxSampleMetrics metrics =
+                    new FlamethrowerAttackVfxSampleMetrics
+                    {
+                        target = FlamethrowerFireTargetName,
+                        referenceArchitecture =
+                            "Reference-matched narrow fuel jet expanding into rolling turbulent combustion clouds",
+                        visualRepresentation =
+                            "Seven forward-only looping ParticleSystems with overlapping yellow-orange-red velocity bands, randomized dual color gradients, short interleaving flame trails, embers, and small wispy brown-gray smoke",
+                        layers = systems.Select(system => system.name).ToArray(),
+                        particleSystemCount = systems.Length,
+                        maximumConfiguredParticles = systems.Sum(system =>
+                            system.main.maxParticles),
+                        intendedJetLengthMeters = 4.5f,
+                        previewAgesSeconds = ages,
+                        previewViews = new[]
+                        {
+                            "side_nozzle_close",
+                            "oblique_close",
+                            "front_close",
+                            "side_full_context"
+                        },
+                        nozzleWorldPosition = nozzle,
+                        nozzleWorldDirection = direction,
+                        usesParticleSystemsOnly = systems.All(system =>
+                            system.GetComponent<ParticleSystemRenderer>()
+                                .renderMode != ParticleSystemRenderMode.Mesh),
+                        usesProjectileModel = false,
+                        usesFlameMeshRenderer = false,
+                        currentSceneModified = false,
+                        runtimeApplied = false,
+                        actualUnityPreviewRendered = File.Exists(
+                            Path.GetFullPath(
+                                FlamethrowerAttackVfxSamplePreviewPath)),
+                        validationPriority =
+                            "1순위 Unity VFX 직접 확인, 2순위 파티클 설정값 보조 확인"
+                    };
+                metrics.passedNumericChecks =
+                    metrics.particleSystemCount == 7 &&
+                    metrics.maximumConfiguredParticles == 480 &&
+                    metrics.usesParticleSystemsOnly &&
+                    !metrics.usesProjectileModel &&
+                    !metrics.usesFlameMeshRenderer &&
+                    !metrics.currentSceneModified &&
+                    !metrics.runtimeApplied &&
+                    metrics.actualUnityPreviewRendered;
+                WriteJson(FlamethrowerAttackVfxSampleMetricsPath, metrics);
+                if (!metrics.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower attack VFX art sample support checks failed. " +
+                        JsonUtility.ToJson(metrics));
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(preview);
+                UnityEngine.Object.DestroyImmediate(coreMaterial);
+                UnityEngine.Object.DestroyImmediate(bodyMaterial);
+                UnityEngine.Object.DestroyImmediate(outerMaterial);
+                UnityEngine.Object.DestroyImmediate(crownMaterial);
+                UnityEngine.Object.DestroyImmediate(smokeMaterial);
+                UnityEngine.Object.DestroyImmediate(flameTurbulenceTexture);
+                UnityEngine.Object.DestroyImmediate(smokeTurbulenceTexture);
+            }
+
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "The temporary flamethrower VFX sample dirtied CargoRunMvp.");
+            }
+
+            Debug.Log(
+                "[FlamethrowerAttackVfxSample] Captured a seven-layer " +
+                "particle-only flame jet at the accepted Flamethrower_Fire " +
+                "nozzle without scene or runtime linkage.");
+        }
+
+        private static Material CloneFlamethrowerAttackVfxPreviewMaterial(
+            string sourcePath,
+            Color color,
+            Color emission,
+            bool denseFlame,
+            float opacityMultiplier,
+            Texture2D previewTexture)
+        {
+            Material source = AssetDatabase.LoadAssetAtPath<Material>(
+                sourcePath) ?? throw new FileNotFoundException(
+                "Musket reference VFX material is missing.",
+                Path.GetFullPath(sourcePath));
+            Material material = new Material(source)
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            if (material.HasProperty("_BaseColor"))
+            {
+                material.SetColor("_BaseColor", color);
+            }
+            if (material.HasProperty("_Color"))
+            {
+                material.SetColor("_Color", color);
+            }
+            if (material.HasProperty("_EmissionColor"))
+            {
+                material.SetColor("_EmissionColor", emission);
+            }
+            if (previewTexture != null)
+            {
+                if (material.HasProperty("_BaseMap"))
+                {
+                    material.SetTexture("_BaseMap", previewTexture);
+                }
+                if (material.HasProperty("_MainTex"))
+                {
+                    material.SetTexture("_MainTex", previewTexture);
+                }
+            }
+            if (denseFlame)
+            {
+                Color opaqueColor = color;
+                opaqueColor.a = opacityMultiplier;
+                if (material.HasProperty("_BaseColor"))
+                {
+                    material.SetColor("_BaseColor", opaqueColor);
+                }
+                if (material.HasProperty("_Color"))
+                {
+                    material.SetColor("_Color", opaqueColor);
+                }
+                if (material.HasProperty("_Surface"))
+                {
+                    material.SetFloat("_Surface", 1f);
+                }
+                if (material.HasProperty("_Blend"))
+                {
+                    material.SetFloat("_Blend", 0f);
+                }
+                if (material.HasProperty("_SrcBlend"))
+                {
+                    material.SetFloat("_SrcBlend", 5f);
+                }
+                if (material.HasProperty("_DstBlend"))
+                {
+                    material.SetFloat("_DstBlend", 10f);
+                }
+                if (material.HasProperty("_SrcBlendAlpha"))
+                {
+                    material.SetFloat("_SrcBlendAlpha", 1f);
+                }
+                if (material.HasProperty("_DstBlendAlpha"))
+                {
+                    material.SetFloat("_DstBlendAlpha", 10f);
+                }
+                if (material.HasProperty("_AlphaClip"))
+                {
+                    material.SetFloat("_AlphaClip", 0f);
+                }
+                if (material.HasProperty("_Cutoff"))
+                {
+                    material.SetFloat("_Cutoff", 0f);
+                }
+                if (material.HasProperty("_SoftParticlesEnabled"))
+                {
+                    material.SetFloat("_SoftParticlesEnabled", 0f);
+                }
+                material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+                material.DisableKeyword("_ALPHATEST_ON");
+                material.DisableKeyword("_SOFTPARTICLES_ON");
+                material.DisableKeyword("_FADING_ON");
+                material.SetOverrideTag("RenderType", "Transparent");
+                material.renderQueue = 3000;
+            }
+            return material;
+        }
+
+        private static Texture2D CreateFlamethrowerTurbulenceSheet(
+            string textureName,
+            int seed,
+            bool wispySmoke)
+        {
+            const int tileSize = 96;
+            const int tilesPerAxis = 2;
+            int sheetSize = tileSize * tilesPerAxis;
+            Texture2D texture = new Texture2D(
+                sheetSize,
+                sheetSize,
+                TextureFormat.RGBA32,
+                false,
+                true)
+            {
+                name = textureName,
+                hideFlags = HideFlags.HideAndDontSave,
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp
+            };
+            Color32[] pixels = new Color32[sheetSize * sheetSize];
+            for (int tileY = 0; tileY < tilesPerAxis; tileY++)
+            {
+                for (int tileX = 0; tileX < tilesPerAxis; tileX++)
+                {
+                    int tileIndex = tileY * tilesPerAxis + tileX;
+                    float tileOffset = seed * 0.001f + tileIndex * 13.37f;
+                    for (int y = 0; y < tileSize; y++)
+                    {
+                        for (int x = 0; x < tileSize; x++)
+                        {
+                            float nx = ((x + 0.5f) / tileSize) * 2f - 1f;
+                            float ny = ((y + 0.5f) / tileSize) * 2f - 1f;
+                            float coarse = Mathf.PerlinNoise(
+                                (nx + 2.4f) * 1.75f + tileOffset,
+                                (ny + 2.1f) * 1.75f + tileOffset * 0.73f);
+                            float fine = Mathf.PerlinNoise(
+                                (nx + 3.7f) * 4.8f + tileOffset * 1.41f,
+                                (ny + 3.2f) * 4.8f + tileOffset * 0.91f);
+                            float warpX = nx * (wispySmoke ? 0.58f : 1f) +
+                                (coarse - 0.5f) * 0.34f;
+                            float warpY = ny * (wispySmoke ? 1.35f : 1f) +
+                                (fine - 0.5f) * 0.28f;
+                            float radius = Mathf.Sqrt(
+                                warpX * warpX + warpY * warpY);
+                            float edge = Mathf.Clamp01(
+                                (1.04f - radius) / 0.36f);
+                            edge = edge * edge * (3f - 2f * edge);
+                            float turbulence = Mathf.Clamp01(
+                                (coarse * 0.70f + fine * 0.30f - 0.16f) *
+                                1.45f);
+                            float alpha = Mathf.Clamp01(
+                                edge * Mathf.Lerp(
+                                    wispySmoke ? 0.18f : 0.72f,
+                                    wispySmoke ? 0.58f : 1f,
+                                    turbulence) *
+                                (wispySmoke ? 0.82f : 1.12f));
+                            float brightness = Mathf.Lerp(
+                                wispySmoke ? 0.30f : 0.46f,
+                                1f,
+                                Mathf.Pow(turbulence, 1.35f));
+                            byte value = (byte)Mathf.RoundToInt(
+                                brightness * 255f);
+                            byte opacity = (byte)Mathf.RoundToInt(
+                                alpha * 255f);
+                            int pixelX = tileX * tileSize + x;
+                            int pixelY = tileY * tileSize + y;
+                            pixels[pixelY * sheetSize + pixelX] =
+                                new Color32(value, value, value, opacity);
+                        }
+                    }
+                }
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply(false, true);
+            return texture;
+        }
+
+        private static Vector3 CalculateMiniFlamethrowerRenderedForwardTip(
+            Transform target)
+        {
+            Transform rig = target.Find(MiniFlamethrowerRigInstanceName) ??
+                throw new InvalidOperationException(
+                    target.name + " exact mini flamethrower rig is missing.");
+            SkinnedMeshRenderer renderer =
+                rig.GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                throw new InvalidOperationException(
+                    target.name + " mini flamethrower renderer is missing.");
+            Mesh baked = new Mesh
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            try
+            {
+                renderer.BakeMesh(baked, true);
+                Vector3[] worldVertices = baked.vertices
+                    .Select(renderer.transform.TransformPoint)
+                    .ToArray();
+                float maximumForward = worldVertices.Max(vertex =>
+                    Vector3.Dot(vertex, target.forward));
+                Vector3[] forwardTipVertices = worldVertices
+                    .Where(vertex =>
+                        Vector3.Dot(vertex, target.forward) >=
+                        maximumForward - 0.035f)
+                    .ToArray();
+                if (forwardTipVertices.Length == 0)
+                {
+                    throw new InvalidOperationException(
+                        target.name + " mini flamethrower has no rendered forward tip.");
+                }
+
+                Vector3 tip = Vector3.zero;
+                foreach (Vector3 vertex in forwardTipVertices)
+                {
+                    tip += vertex;
+                }
+                return tip / forwardTipVertices.Length +
+                    target.forward.normalized * 0.015f;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(baked);
+            }
+        }
+
+        private static ParticleSystem CreateSimpleFlamethrowerVfxSystem(
+            Transform parent,
+            string name,
+            Material material,
+            int maximumParticles,
+            float rate,
+            float lifetimeMinimum,
+            float lifetimeMaximum,
+            float speedMinimum,
+            float speedMaximum,
+            float sizeMinimum,
+            float sizeMaximum,
+            float coneAngle,
+            float coneRadius,
+            float noiseStrength,
+            Color startColor,
+            Color endColor,
+            bool stretched,
+            float stretchVelocityScale,
+            float stretchLengthScale,
+            uint randomSeed)
+        {
+            ParticleSystem system = CreateMusketMuzzleParticleSystem(
+                parent,
+                "HotGasVolume",
+                null,
+                material);
+            system.gameObject.name = name;
+            system.useAutoRandomSeed = false;
+            system.randomSeed = randomSeed;
+            ParticleSystem.MainModule main = system.main;
+            main.duration = 2f;
+            main.loop = true;
+            main.maxParticles = maximumParticles;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(
+                lifetimeMinimum,
+                lifetimeMaximum);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(
+                speedMinimum,
+                speedMaximum);
+            main.startSize = new ParticleSystem.MinMaxCurve(
+                sizeMinimum,
+                sizeMaximum);
+            main.startColor = new ParticleSystem.MinMaxGradient(Color.white);
+            ParticleSystem.EmissionModule emission = system.emission;
+            emission.rateOverTime = new ParticleSystem.MinMaxCurve(rate);
+            ParticleSystem.ShapeModule shape = system.shape;
+            shape.angle = coneAngle;
+            shape.radius = coneRadius;
+            shape.length = 0.025f;
+            bool smokeLayer = string.Equals(
+                name,
+                "ThinTrailingSmoke",
+                StringComparison.Ordinal);
+            bool coreJetLayer = string.Equals(
+                name,
+                "WhiteHotCoreJet",
+                StringComparison.Ordinal);
+            bool bodyJetLayer = string.Equals(
+                name,
+                "HighTemperatureFlameJet",
+                StringComparison.Ordinal);
+            bool jetLayer = coreJetLayer || bodyJetLayer;
+            bool goldenLayer = string.Equals(
+                name,
+                "GoldenPressureBloom",
+                StringComparison.Ordinal);
+            bool orangeLayer = string.Equals(
+                name,
+                "OrangeOuterFlameLobes",
+                StringComparison.Ordinal);
+            bool crownLayer = string.Equals(
+                name,
+                "RedRollingFlameCrown",
+                StringComparison.Ordinal);
+            bool rollingPlume = goldenLayer || orangeLayer || crownLayer ||
+                smokeLayer;
+            bool turbulentLayer = goldenLayer || orangeLayer || crownLayer ||
+                smokeLayer;
+            ParticleSystem.NoiseModule noise = system.noise;
+            noise.enabled = true;
+            noise.strength = new ParticleSystem.MinMaxCurve(noiseStrength);
+            noise.frequency = turbulentLayer ? 0.34f : 0.72f;
+            noise.scrollSpeed = turbulentLayer ? 0.42f : 0.58f;
+            noise.damping = turbulentLayer;
+            noise.octaveCount = turbulentLayer ? 2 : 1;
+            noise.octaveMultiplier = 0.55f;
+            noise.octaveScale = 0.62f;
+            ParticleSystem.SizeOverLifetimeModule size =
+                system.sizeOverLifetime;
+            size.enabled = true;
+            AnimationCurve sizeCurve;
+            if (smokeLayer)
+            {
+                sizeCurve = new AnimationCurve(
+                    new Keyframe(0f, 0.02f),
+                    new Keyframe(0.25f, 0.08f),
+                    new Keyframe(0.45f, 0.55f),
+                    new Keyframe(0.72f, 1.10f),
+                    new Keyframe(1f, 0.30f));
+            }
+            else if (crownLayer)
+            {
+                sizeCurve = new AnimationCurve(
+                    new Keyframe(0f, 0.01f),
+                    new Keyframe(0.25f, 0.06f),
+                    new Keyframe(0.45f, 0.62f),
+                    new Keyframe(0.72f, 1.00f),
+                    new Keyframe(1f, 0.16f));
+            }
+            else if (orangeLayer)
+            {
+                sizeCurve = new AnimationCurve(
+                    new Keyframe(0f, 0.02f),
+                    new Keyframe(0.15f, 0.18f),
+                    new Keyframe(0.35f, 0.75f),
+                    new Keyframe(0.68f, 1.00f),
+                    new Keyframe(1f, 0.12f));
+            }
+            else if (goldenLayer)
+            {
+                sizeCurve = new AnimationCurve(
+                    new Keyframe(0f, 0.03f),
+                    new Keyframe(0.12f, 0.55f),
+                    new Keyframe(0.35f, 1.00f),
+                    new Keyframe(0.72f, 0.85f),
+                    new Keyframe(1f, 0.08f));
+            }
+            else if (jetLayer)
+            {
+                sizeCurve = new AnimationCurve(
+                    new Keyframe(0f, 0.32f),
+                    new Keyframe(0.12f, 1.00f),
+                    new Keyframe(0.68f, 0.80f),
+                    new Keyframe(1f, 0.03f));
+            }
+            else if (rollingPlume)
+            {
+                sizeCurve = new AnimationCurve(
+                    new Keyframe(0f, 0.03f),
+                    new Keyframe(0.12f, 0.55f),
+                    new Keyframe(0.35f, 1.00f),
+                    new Keyframe(0.72f, 0.85f),
+                    new Keyframe(1f, 0.08f));
+            }
+            else
+            {
+                sizeCurve = new AnimationCurve(
+                    new Keyframe(0f, 0.06f),
+                    new Keyframe(0.12f, 1.00f),
+                    new Keyframe(0.68f, 0.80f),
+                    new Keyframe(1f, 0.03f));
+            }
+            size.size = new ParticleSystem.MinMaxCurve(
+                1f,
+                sizeCurve);
+            if (turbulentLayer)
+            {
+                float liftMinimum = smokeLayer
+                    ? 0.35f
+                    : crownLayer
+                        ? 0.28f
+                        : orangeLayer
+                            ? 0.18f
+                            : 0.10f;
+                float liftMaximum = smokeLayer
+                    ? 0.75f
+                    : crownLayer
+                        ? 0.75f
+                        : orangeLayer
+                            ? 0.58f
+                            : 0.35f;
+                ParticleSystem.VelocityOverLifetimeModule velocity =
+                    system.velocityOverLifetime;
+                velocity.enabled = true;
+                velocity.space = ParticleSystemSimulationSpace.Local;
+                velocity.x = new ParticleSystem.MinMaxCurve(
+                    -noiseStrength * 0.22f,
+                    noiseStrength * 0.22f);
+                velocity.y = new ParticleSystem.MinMaxCurve(
+                    liftMinimum,
+                    liftMaximum);
+                velocity.z = new ParticleSystem.MinMaxCurve(-0.35f, -0.12f);
+                ParticleSystem.RotationOverLifetimeModule rotation =
+                    system.rotationOverLifetime;
+                rotation.enabled = true;
+                rotation.z = smokeLayer
+                    ? new ParticleSystem.MinMaxCurve(-0.25f, 0.25f)
+                    : new ParticleSystem.MinMaxCurve(-1.8f, 1.8f);
+            }
+            if (smokeLayer)
+            {
+                ConfigureParticleFade(system, startColor, endColor);
+            }
+            else
+            {
+                ConfigureFlamethrowerDenseColor(
+                    system,
+                    startColor,
+                    endColor);
+            }
+            ConfigureMusketMuzzleFourTileSheet(system);
+            ParticleSystemRenderer renderer =
+                system.GetComponent<ParticleSystemRenderer>();
+            bool flameTrailLayer = coreJetLayer || bodyJetLayer ||
+                goldenLayer || orangeLayer;
+            if (flameTrailLayer)
+            {
+                ParticleSystem.TrailModule trails = system.trails;
+                trails.enabled = true;
+                trails.mode = ParticleSystemTrailMode.PerParticle;
+                trails.ratio = 0.95f;
+                trails.lifetime = coreJetLayer
+                    ? new ParticleSystem.MinMaxCurve(0.08f, 0.14f)
+                    : bodyJetLayer
+                        ? new ParticleSystem.MinMaxCurve(0.14f, 0.25f)
+                        : orangeLayer
+                            ? new ParticleSystem.MinMaxCurve(0.10f, 0.18f)
+                            : new ParticleSystem.MinMaxCurve(0.20f, 0.30f);
+                trails.dieWithParticles = true;
+                trails.inheritParticleColor = true;
+                trails.sizeAffectsWidth = true;
+                trails.worldSpace = false;
+                renderer.trailMaterial = material;
+            }
+            renderer.renderMode = stretched
+                ? ParticleSystemRenderMode.Stretch
+                : ParticleSystemRenderMode.Billboard;
+            renderer.alignment = ParticleSystemRenderSpace.View;
+            renderer.pivot = stretched
+                ? new Vector3(0f, 0.5f, 0f)
+                : Vector3.zero;
+            renderer.velocityScale = stretched ? stretchVelocityScale : 0f;
+            renderer.lengthScale = stretched ? stretchLengthScale : 1f;
+            renderer.maxParticleSize = 0.60f;
+            system.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            return system;
+        }
+
+        private static void ConfigureFlamethrowerDenseColor(
+            ParticleSystem system,
+            Color start,
+            Color end)
+        {
+            Gradient gradient = new Gradient();
+            Gradient alternateGradient = new Gradient();
+            GradientAlphaKey[] alphaKeys =
+            {
+                new GradientAlphaKey(Mathf.Max(0.96f, start.a), 0f),
+                new GradientAlphaKey(1f, 0.28f),
+                new GradientAlphaKey(0.90f, 0.82f),
+                new GradientAlphaKey(0f, 1f)
+            };
+            gradient.SetKeys(
+                new[]
+                {
+                    new GradientColorKey(start, 0f),
+                    new GradientColorKey(Color.Lerp(start, end, 0.16f), 0.58f),
+                    new GradientColorKey(end, 1f)
+                },
+                alphaKeys);
+            alternateGradient.SetKeys(
+                new[]
+                {
+                    new GradientColorKey(Color.Lerp(start, end, 0.32f), 0f),
+                    new GradientColorKey(Color.Lerp(start, end, 0.58f), 0.55f),
+                    new GradientColorKey(Color.Lerp(end, start, 0.22f), 1f)
+                },
+                alphaKeys);
+            ParticleSystem.ColorOverLifetimeModule color =
+                system.colorOverLifetime;
+            color.enabled = true;
+            color.color = new ParticleSystem.MinMaxGradient(
+                gradient,
+                alternateGradient);
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Flamethrower Attack VFX")]
+        internal static void ApplyFlamethrowerAttackVfx()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower attack VFX apply requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before flamethrower attack VFX apply.");
+            }
+
+            Directory.CreateDirectory(Path.GetFullPath(
+                FlamethrowerAttackVfxDirectory));
+            Directory.CreateDirectory(Path.GetFullPath(
+                Path.GetDirectoryName(FlamethrowerAttackVfxControllerPath) ??
+                throw new InvalidOperationException(
+                    "Flamethrower controller directory is unavailable.")));
+            AssetDatabase.Refresh();
+
+            Texture2D flameTexture =
+                CreateOrUpdateFlamethrowerAttackTextureAsset(
+                    FlamethrowerAttackVfxFlameTexturePath,
+                    "FlamethrowerFlameTurbulence",
+                    7401,
+                    false);
+            Texture2D smokeTexture =
+                CreateOrUpdateFlamethrowerAttackTextureAsset(
+                    FlamethrowerAttackVfxSmokeTexturePath,
+                    "FlamethrowerSmokeTurbulence",
+                    8603,
+                    true);
+            Material coreMaterial =
+                CreateOrUpdateFlamethrowerAttackMaterialAsset(
+                    FlamethrowerAttackVfxCoreMaterialPath,
+                    MusketMuzzleFlashMaterialPath,
+                    new Color(2.2f, 3.2f, 4.2f, 1f),
+                    new Color(4.0f, 7.0f, 10.0f, 1f),
+                    true,
+                    1.80f,
+                    null);
+            Material bodyMaterial =
+                CreateOrUpdateFlamethrowerAttackMaterialAsset(
+                    FlamethrowerAttackVfxBodyMaterialPath,
+                    MusketMuzzleHotGasMaterialPath,
+                    new Color(1.60f, 1.05f, 0.180f, 1f),
+                    new Color(3.20f, 1.90f, 0.300f, 1f),
+                    true,
+                    1.60f,
+                    flameTexture);
+            Material outerMaterial =
+                CreateOrUpdateFlamethrowerAttackMaterialAsset(
+                    FlamethrowerAttackVfxOuterMaterialPath,
+                    MusketMuzzleHotGasMaterialPath,
+                    new Color(1.10f, 0.62f, 0.075f, 1f),
+                    new Color(2.00f, 0.90f, 0.100f, 1f),
+                    true,
+                    1.35f,
+                    flameTexture);
+            Material crownMaterial =
+                CreateOrUpdateFlamethrowerAttackMaterialAsset(
+                    FlamethrowerAttackVfxCrownMaterialPath,
+                    MusketMuzzleHotGasMaterialPath,
+                    new Color(0.70f, 0.320f, 0.050f, 1f),
+                    new Color(1.15f, 0.450f, 0.050f, 1f),
+                    true,
+                    1.08f,
+                    flameTexture);
+            Material smokeMaterial =
+                CreateOrUpdateFlamethrowerAttackMaterialAsset(
+                    FlamethrowerAttackVfxSmokeMaterialPath,
+                    MusketMuzzleHotGasMaterialPath,
+                    new Color(0.24f, 0.095f, 0.025f, 0.08f),
+                    new Color(0.10f, 0.030f, 0.008f, 1f),
+                    false,
+                    1f,
+                    smokeTexture);
+            GameObject prefab = CreateOrUpdateFlamethrowerAttackVfxPrefab(
+                coreMaterial,
+                bodyMaterial,
+                outerMaterial,
+                crownMaterial,
+                smokeMaterial);
+
+            GameObject asset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                MiniFlamethrowerAssetPath) ??
+                throw new FileNotFoundException(
+                    "Imported mini flamethrower FBX is missing for VFX placement.",
+                    Path.GetFullPath(MiniFlamethrowerAssetPath));
+            MiniFlamethrowerAssetInspection inspection =
+                InspectMiniFlamethrowerAsset(asset);
+            MiniFlamethrowerRigAnalysis analysis =
+                AnalyzeMiniFlamethrowerRig(asset, inspection);
+            Transform target = RequireTarget(
+                RequireLayout(scene),
+                FlamethrowerFireTargetName);
+            Transform rig = target.Find(MiniFlamethrowerRigInstanceName) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Fire exact mini flamethrower rig is missing.");
+            SkinnedMeshRenderer sourceRenderer =
+                rig.GetComponentInChildren<SkinnedMeshRenderer>(true) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Fire source renderer is missing.");
+            Mesh sourceMeshBefore = sourceRenderer.sharedMesh;
+            Transform sprayerBone = FindRequired(target, RightHandPath).Find(
+                MiniFlamethrowerSprayerBoneName) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Fire has no accepted right-hand sprayer bone.");
+            Vector3 nozzle = CalculateMiniFlamethrowerRenderedForwardTip(
+                target);
+            Vector3 worldDirection = sprayerBone.TransformDirection(
+                analysis.SprayerAxis).normalized;
+            Transform existing = sprayerBone.Find(
+                FlamethrowerAttackVfxRootName);
+            if (existing != null)
+            {
+                UnityEngine.Object.DestroyImmediate(existing.gameObject);
+            }
+
+            GameObject instance = PrefabUtility.InstantiatePrefab(
+                prefab,
+                sprayerBone) as GameObject ??
+                throw new InvalidOperationException(
+                    "Flamethrower attack VFX prefab could not be instantiated.");
+            instance.name = FlamethrowerAttackVfxRootName;
+            instance.transform.localPosition =
+                sprayerBone.InverseTransformPoint(nozzle);
+            instance.transform.localRotation = Quaternion.FromToRotation(
+                Vector3.forward,
+                sprayerBone.InverseTransformDirection(worldDirection)
+                    .normalized);
+            instance.transform.localScale = Vector3.one;
+            PrefabUtility.RecordPrefabInstancePropertyModifications(
+                instance.transform);
+
+            AnimatorController controller = CreateOrUpdateController(
+                FlamethrowerAttackVfxControllerPath,
+                FlamethrowerFireTargetName,
+                null);
+            AnimatorState state = RequireControllerState(
+                controller,
+                FlamethrowerFireTargetName);
+            ConfigureFlamethrowerAttackVfxStateBehaviour(state);
+
+            target = RequireTarget(
+                RequireLayout(scene),
+                FlamethrowerFireTargetName);
+            rig = target.Find(MiniFlamethrowerRigInstanceName) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Fire exact mini flamethrower rig is missing after controller save.");
+            sourceRenderer = rig.GetComponentInChildren<
+                SkinnedMeshRenderer>(true) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Fire source renderer is missing after controller save.");
+            sprayerBone = FindRequired(target, RightHandPath).Find(
+                MiniFlamethrowerSprayerBoneName) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Fire sprayer bone is missing after controller save.");
+            instance = sprayerBone.Find(FlamethrowerAttackVfxRootName)
+                ?.gameObject ?? throw new InvalidOperationException(
+                    "Flamethrower attack VFX instance is missing after controller save.");
+            Animator animator = instance.GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = instance.AddComponent<Animator>();
+            }
+            animator.runtimeAnimatorController = controller;
+            animator.speed = 1f;
+            animator.applyRootMotion = false;
+
+            Type effectType = RequireMusketMuzzleFlashRuntimeType(
+                FlamethrowerAttackVfxRuntimeTypeName);
+            MonoBehaviour effect = instance.GetComponent(effectType)
+                as MonoBehaviour ?? throw new InvalidOperationException(
+                    "Applied flamethrower VFX runtime component is missing.");
+            ParticleSystem[] systems = instance
+                .GetComponentsInChildren<ParticleSystem>(true);
+            Type behaviourType = RequireMusketMuzzleFlashRuntimeType(
+                FlamethrowerAttackVfxBehaviourTypeName);
+            int behaviourCount = state.behaviours.Count(value =>
+                value != null && behaviourType.IsInstanceOfType(value));
+            bool sourceMeshUnchanged =
+                sourceRenderer.sharedMesh == sourceMeshBefore;
+            FlamethrowerAttackVfxApplyMetrics metrics =
+                new FlamethrowerAttackVfxApplyMetrics
+                {
+                    target = FlamethrowerFireTargetName,
+                    prefabPath = FlamethrowerAttackVfxPrefabPath,
+                    controllerPath = FlamethrowerAttackVfxControllerPath,
+                    stateName = state.name,
+                    layers = systems.Select(system => system.name).ToArray(),
+                    particleSystemCount = systems.Length,
+                    maximumConfiguredParticles = systems.Sum(system =>
+                        system.main.maxParticles),
+                    minimumEffectiveRangeMeters =
+                        ReadMusketMuzzleFlashProperty<float>(
+                            effect,
+                            "MinimumEffectiveRangeMeters"),
+                    maximumEffectiveRangeMeters =
+                        ReadMusketMuzzleFlashProperty<float>(
+                            effect,
+                            "MaximumEffectiveRangeMeters"),
+                    maximumEmissionSeconds =
+                        ReadMusketMuzzleFlashProperty<float>(
+                            effect,
+                            "MaximumEmissionSeconds"),
+                    cooldownSeconds =
+                        ReadMusketMuzzleFlashProperty<float>(
+                            effect,
+                            "CooldownSeconds"),
+                    anchorLocalPosition = instance.transform.localPosition,
+                    anchorLocalRotation = instance.transform.localRotation,
+                    effectParentedToSprayerBone =
+                        instance.transform.parent == sprayerBone,
+                    stateBehaviourConnected = behaviourCount == 1,
+                    sourceMeshesUnchanged = sourceMeshUnchanged,
+                    sceneModified = true,
+                    runtimeApplied = true,
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션·VFX 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                metrics.particleSystemCount == 7 &&
+                metrics.maximumConfiguredParticles == 480 &&
+                Mathf.Abs(metrics.minimumEffectiveRangeMeters -
+                    FlamethrowerAttackMinimumRangeMeters) <= 0.0001f &&
+                Mathf.Abs(metrics.maximumEffectiveRangeMeters -
+                    FlamethrowerAttackMaximumRangeMeters) <= 0.0001f &&
+                Mathf.Abs(metrics.maximumEmissionSeconds -
+                    FlamethrowerAttackMaximumEmissionSeconds) <= 0.0001f &&
+                Mathf.Abs(metrics.cooldownSeconds -
+                    FlamethrowerAttackCooldownSeconds) <= 0.0001f &&
+                metrics.effectParentedToSprayerBone &&
+                metrics.stateBehaviourConnected &&
+                metrics.sourceMeshesUnchanged &&
+                metrics.runtimeApplied;
+            if (!metrics.passedNumericChecks)
+            {
+                UnityEngine.Object.DestroyImmediate(instance);
+                throw new InvalidOperationException(
+                    "Flamethrower attack VFX apply support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            EditorUtility.SetDirty(effect);
+            EditorUtility.SetDirty(instance);
+            EditorUtility.SetDirty(animator);
+            EditorUtility.SetDirty(state);
+            EditorUtility.SetDirty(controller);
+            EditorSceneManager.MarkSceneDirty(scene);
+            AssetDatabase.SaveAssets();
+            if (!EditorSceneManager.SaveScene(scene))
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp could not be saved after flamethrower VFX apply.");
+            }
+
+            WriteJson(FlamethrowerAttackVfxApplyMetricsPath, metrics);
+            Debug.Log(
+                "[FlamethrowerAttackVfx] Applied the approved seven-layer " +
+                "particle flame to Flamethrower_Fire. Range=1-3m, " +
+                "MaximumEmission=10s, Cooldown=2.5s, SceneChanged=True.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Flamethrower Attack VFX Applied Review")]
+        internal static void CaptureFlamethrowerAttackVfxAppliedReview()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower attack VFX review requires Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before flamethrower VFX review.");
+            }
+
+            FlamethrowerAttackVfxApplyMetrics apply =
+                ReadJson<FlamethrowerAttackVfxApplyMetrics>(
+                    FlamethrowerAttackVfxApplyMetricsPath);
+            if (!apply.passedNumericChecks || !apply.runtimeApplied)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower attack VFX apply metrics did not pass.");
+            }
+
+            Transform target = RequireTarget(
+                RequireLayout(scene),
+                FlamethrowerFireTargetName);
+            Transform sprayerBone = FindRequired(target, RightHandPath).Find(
+                MiniFlamethrowerSprayerBoneName) ??
+                throw new InvalidOperationException(
+                    "Flamethrower_Fire has no accepted right-hand sprayer bone.");
+            Transform effectRoot = sprayerBone.Find(
+                FlamethrowerAttackVfxRootName) ??
+                throw new InvalidOperationException(
+                    "Applied flamethrower attack VFX is missing.");
+            Type effectType = RequireMusketMuzzleFlashRuntimeType(
+                FlamethrowerAttackVfxRuntimeTypeName);
+            if (effectRoot.GetComponent(effectType) == null)
+            {
+                throw new InvalidOperationException(
+                    "Applied flamethrower attack VFX runtime component is missing.");
+            }
+
+            Animator animator = effectRoot.GetComponent<Animator>() ??
+                throw new InvalidOperationException(
+                    "Applied flamethrower VFX animator is missing.");
+            AnimatorController controller = animator.runtimeAnimatorController
+                as AnimatorController ?? throw new InvalidOperationException(
+                    "Flamethrower_Fire does not use its editable controller.");
+            AnimatorState state = RequireControllerState(
+                controller,
+                FlamethrowerFireTargetName);
+            Type behaviourType = RequireMusketMuzzleFlashRuntimeType(
+                FlamethrowerAttackVfxBehaviourTypeName);
+            if (state.behaviours.Count(value =>
+                    value != null && behaviourType.IsInstanceOfType(value)) != 1)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Fire state VFX lifecycle connection changed.");
+            }
+
+            ParticleSystem[] systems = effectRoot
+                .GetComponentsInChildren<ParticleSystem>(true);
+            if (systems.Length != 7 || systems.Sum(system =>
+                    system.main.maxParticles) != 480)
+            {
+                throw new InvalidOperationException(
+                    "Applied flamethrower particle configuration changed.");
+            }
+
+            Vector3 nozzle = effectRoot.position;
+            Vector3 direction = effectRoot.forward.normalized;
+            float[] ages = { 0.18f, 0.48f, 0.92f, 1.35f };
+            List<List<byte[]>> rows = new List<List<byte[]>>
+            {
+                new List<byte[]>(),
+                new List<byte[]>(),
+                new List<byte[]>(),
+                new List<byte[]>()
+            };
+            using (CaptureEnvironment environment =
+                   new CaptureEnvironment(target, effectRoot, null))
+            {
+                environment.ConfigureDarkMaterialReview();
+                foreach (float age in ages)
+                {
+                    foreach (ParticleSystem system in systems)
+                    {
+                        system.Stop(
+                            true,
+                            ParticleSystemStopBehavior.StopEmittingAndClear);
+                        system.Simulate(age, true, true, false);
+                    }
+
+                    Vector3 center = nozzle + direction * 0.30f;
+                    environment.ConfigureView(target, center, 0.72f);
+                    rows[0].Add(environment.CaptureSide());
+                    rows[1].Add(environment.CaptureOblique(
+                        target,
+                        nozzle + direction * 1.20f,
+                        target.forward + target.right * 0.72f +
+                            target.up * 0.12f,
+                        1.65f));
+                    rows[2].Add(environment.CaptureFront());
+                    environment.ConfigureView(
+                        target,
+                        target.position + target.up * 1.02f +
+                            direction * 1.00f,
+                        2.85f);
+                    rows[3].Add(environment.CaptureSide());
+                }
+            }
+
+            foreach (ParticleSystem system in systems)
+            {
+                system.Stop(
+                    true,
+                    ParticleSystemStopBehavior.StopEmittingAndClear);
+            }
+            ComposeRows(rows, FlamethrowerAttackVfxAppliedReviewPath);
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower VFX review dirtied CargoRunMvp.");
+            }
+
+            Debug.Log(
+                "[FlamethrowerAttackVfx] Captured the applied VFX at four " +
+                "emission ages from nozzle-close, oblique, front, and full-range views. " +
+                "SceneChanged=False.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Flamethrower Fire Repeat Review")]
+        internal static void CaptureFlamethrowerFireRepeatReview()
+        {
+            int stage = SessionState.GetInt(
+                FlamethrowerFireRepeatCaptureStageKey,
+                0);
+            try
+            {
+                if (stage == 0)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower repeat review must start in Edit Mode.");
+                    }
+
+                    Scene scene = RequireScene();
+                    if (scene.isDirty)
+                    {
+                        throw new InvalidOperationException(
+                            "CargoRunMvp must be clean before flamethrower repeat review.");
+                    }
+
+                    SessionState.SetInt(
+                        FlamethrowerFireRepeatCaptureStageKey,
+                        1);
+                    EditorApplication.EnterPlaymode();
+                    Debug.Log(
+                        "[FlamethrowerFireRepeat] Entering Play Mode for direct repeat review.");
+                    return;
+                }
+
+                if (stage == 1)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower repeat capture requires Play Mode.");
+                    }
+
+                    FlamethrowerFireRepeatPlayModeCapture.Start();
+                    SessionState.SetInt(
+                        FlamethrowerFireRepeatCaptureStageKey,
+                        2);
+                    Debug.Log(
+                        "[FlamethrowerFireRepeat] Began natural 10s/2.5s repeat capture.");
+                    return;
+                }
+
+                if (stage == 2)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower repeat capture polling requires Play Mode.");
+                    }
+
+                    if (FlamethrowerFireRepeatPlayModeCapture.Failure != null)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower repeat Play Mode capture failed.",
+                            FlamethrowerFireRepeatPlayModeCapture.Failure);
+                    }
+
+                    if (!FlamethrowerFireRepeatPlayModeCapture.IsComplete)
+                    {
+                        Debug.Log(
+                            "[FlamethrowerFireRepeat] Capture is still running. " +
+                            FlamethrowerFireRepeatPlayModeCapture.Status);
+                        return;
+                    }
+
+                    SessionState.SetInt(
+                        FlamethrowerFireRepeatCaptureStageKey,
+                        3);
+                    Debug.Log(
+                        "[FlamethrowerFireRepeat] Repeat capture completed; run once more to exit Play Mode.");
+                    return;
+                }
+
+                if (stage == 3)
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower repeat review exit requires Play Mode.");
+                    }
+
+                    SessionState.EraseInt(
+                        FlamethrowerFireRepeatCaptureStageKey);
+                    EditorApplication.ExitPlaymode();
+                    Debug.Log(
+                        "[FlamethrowerFireRepeat] Exiting Play Mode after direct repeat review.");
+                    return;
+                }
+
+                throw new InvalidOperationException(
+                    "Flamethrower repeat review stage is invalid: " +
+                    stage.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+            catch
+            {
+                SessionState.EraseInt(
+                    FlamethrowerFireRepeatCaptureStageKey);
+                FlamethrowerFireRepeatPlayModeCapture.Stop();
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw;
+            }
+        }
+
+        internal static class FlamethrowerFireRepeatPlayModeCapture
+        {
+            private static readonly List<List<byte[]>> Rows =
+                new List<List<byte[]>>
+                {
+                    new List<byte[]>(),
+                    new List<byte[]>()
+                };
+            private static readonly List<float> CapturedEmissionAges =
+                new List<float>();
+            private static Transform target;
+            private static MonoBehaviour effect;
+            private static CaptureEnvironment environment;
+            private static double startedAt;
+            private static int phase;
+            private static bool firstEmissionObserved;
+            private static bool lateFirstEmissionObserved;
+            private static bool cooldownGapObserved;
+            private static bool repeatedEmissionObserved;
+            private static bool repeatRequestStayedActive;
+            private static bool isRunning;
+
+            internal static bool IsComplete { get; private set; }
+
+            internal static Exception Failure { get; private set; }
+
+            internal static string Status { get; private set; }
+
+            internal static void Start()
+            {
+                if (isRunning)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower repeat capture is already running.");
+                }
+                if (!EditorApplication.isPlaying)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower repeat capture requires Play Mode.");
+                }
+
+                Scene scene = RequireScene();
+                target = RequireTarget(
+                    RequireLayout(scene),
+                    FlamethrowerFireTargetName);
+                Transform sprayerBone = FindRequired(
+                    target,
+                    RightHandPath).Find(MiniFlamethrowerSprayerBoneName) ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Fire sprayer bone is missing in Play Mode.");
+                Transform effectRoot = sprayerBone.Find(
+                    FlamethrowerAttackVfxRootName) ??
+                    throw new InvalidOperationException(
+                        "Flamethrower_Fire VFX root is missing in Play Mode.");
+                Type runtimeType = RequireMusketMuzzleFlashRuntimeType(
+                    FlamethrowerAttackVfxRuntimeTypeName);
+                effect = effectRoot.GetComponent(runtimeType)
+                    as MonoBehaviour ?? throw new InvalidOperationException(
+                        "Flamethrower repeat runtime component is missing.");
+
+                foreach (List<byte[]> row in Rows)
+                {
+                    row.Clear();
+                }
+                CapturedEmissionAges.Clear();
+                phase = 0;
+                firstEmissionObserved = false;
+                lateFirstEmissionObserved = false;
+                cooldownGapObserved = false;
+                repeatedEmissionObserved = false;
+                repeatRequestStayedActive = true;
+                IsComplete = false;
+                Failure = null;
+                Status = "Waiting for the first natural emission frame.";
+                environment = new CaptureEnvironment(target);
+                environment.ConfigureDarkMaterialReview();
+                startedAt = EditorApplication.timeSinceStartup;
+                isRunning = true;
+                EditorApplication.update -= CaptureUpdate;
+                EditorApplication.update += CaptureUpdate;
+            }
+
+            internal static void Stop()
+            {
+                EditorApplication.update -= CaptureUpdate;
+                if (environment != null)
+                {
+                    environment.Dispose();
+                    environment = null;
+                }
+                isRunning = false;
+            }
+
+            private static void CaptureUpdate()
+            {
+                try
+                {
+                    if (!isRunning || IsComplete || Failure != null)
+                    {
+                        return;
+                    }
+                    if (!EditorApplication.isPlaying || effect == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Play Mode ended during flamethrower repeat capture.");
+                    }
+
+                    bool isEmitting = ReadMusketMuzzleFlashProperty<bool>(
+                        effect,
+                        "IsEmitting");
+                    bool repeatRequested =
+                        ReadMusketMuzzleFlashProperty<bool>(
+                            effect,
+                            "RepeatRequested");
+                    float emissionAge = ReadMusketMuzzleFlashProperty<float>(
+                        effect,
+                        "EmissionElapsedSeconds");
+                    float cooldownRemaining =
+                        ReadMusketMuzzleFlashProperty<float>(
+                            effect,
+                            "CooldownRemainingSeconds");
+                    repeatRequestStayedActive &= repeatRequested;
+
+                    if (phase == 0 && isEmitting && emissionAge >= 0.75f)
+                    {
+                        CaptureCurrentFrame(emissionAge);
+                        firstEmissionObserved = true;
+                        phase = 1;
+                        Status = "First emission captured; waiting for its late sustained frame.";
+                    }
+                    else if (phase == 1 && isEmitting && emissionAge >= 9.25f)
+                    {
+                        CaptureCurrentFrame(emissionAge);
+                        lateFirstEmissionObserved = true;
+                        phase = 2;
+                        Status = "Late first emission captured; waiting for cooldown gap.";
+                    }
+                    else if (phase == 2 && !isEmitting &&
+                             cooldownRemaining > 0f &&
+                             cooldownRemaining <= 0.75f)
+                    {
+                        CaptureCurrentFrame(0f);
+                        cooldownGapObserved = true;
+                        phase = 3;
+                        Status = "Cooldown gap captured; waiting for repeated emission.";
+                    }
+                    else if (phase == 3 && isEmitting && emissionAge >= 0.75f)
+                    {
+                        CaptureCurrentFrame(emissionAge);
+                        repeatedEmissionObserved = true;
+                        CompleteCapture();
+                        return;
+                    }
+
+                    if (EditorApplication.timeSinceStartup - startedAt > 18d)
+                    {
+                        throw new InvalidOperationException(
+                            "Flamethrower did not complete a 10s/2.5s repeat cycle within 18 seconds. Phase=" +
+                            phase.ToString(CultureInfo.InvariantCulture) + ".");
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Failure = exception;
+                    Status = "Failed: " + exception.Message;
+                    Stop();
+                }
+            }
+
+            private static void CaptureCurrentFrame(float emissionAge)
+            {
+                Vector3 nozzle = effect.transform.position;
+                Vector3 direction = effect.transform.forward.normalized;
+                environment.ConfigureView(
+                    target,
+                    nozzle + direction * 0.95f,
+                    1.70f);
+                Rows[0].Add(environment.CaptureSide());
+                environment.ConfigureView(
+                    target,
+                    nozzle + direction * 0.30f,
+                    0.78f);
+                Rows[1].Add(environment.CaptureSide());
+                CapturedEmissionAges.Add(emissionAge);
+            }
+
+            private static void CompleteCapture()
+            {
+                ComposeRows(Rows, FlamethrowerFireRepeatReviewPath);
+                FlamethrowerFireRepeatReviewMetrics metrics =
+                    new FlamethrowerFireRepeatReviewMetrics
+                    {
+                        target = FlamethrowerFireTargetName,
+                        maximumEmissionSeconds =
+                            ReadMusketMuzzleFlashProperty<float>(
+                                effect,
+                                "MaximumEmissionSeconds"),
+                        cooldownSeconds =
+                            ReadMusketMuzzleFlashProperty<float>(
+                                effect,
+                                "CooldownSeconds"),
+                        capturedEmissionAgesSeconds =
+                            CapturedEmissionAges.ToArray(),
+                        firstEmissionObserved = firstEmissionObserved,
+                        lateFirstEmissionObserved =
+                            lateFirstEmissionObserved,
+                        cooldownGapObserved = cooldownGapObserved,
+                        repeatedEmissionObserved = repeatedEmissionObserved,
+                        repeatRequestStayedActive =
+                            repeatRequestStayedActive,
+                        actualPlayModeObserved = true,
+                        contactSheetExists = File.Exists(
+                            Path.GetFullPath(
+                                FlamethrowerFireRepeatReviewPath)),
+                        validationPriority =
+                            "1순위 실제 Unity Play Mode 화염 반복 직접 확인, 2순위 시간·상태 수치 보조 확인"
+                    };
+                metrics.passedNumericChecks =
+                    Mathf.Abs(metrics.maximumEmissionSeconds -
+                        FlamethrowerAttackMaximumEmissionSeconds) <= 0.0001f &&
+                    Mathf.Abs(metrics.cooldownSeconds -
+                        FlamethrowerAttackCooldownSeconds) <= 0.0001f &&
+                    metrics.firstEmissionObserved &&
+                    metrics.lateFirstEmissionObserved &&
+                    metrics.cooldownGapObserved &&
+                    metrics.repeatedEmissionObserved &&
+                    metrics.repeatRequestStayedActive &&
+                    metrics.actualPlayModeObserved &&
+                    metrics.contactSheetExists;
+                WriteJson(
+                    FlamethrowerFireRepeatReviewMetricsPath,
+                    metrics);
+                if (!metrics.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Flamethrower repeat Play Mode support checks failed. " +
+                        JsonUtility.ToJson(metrics));
+                }
+
+                IsComplete = true;
+                Status = "Completed one natural 10s/2.5s repeat cycle.";
+                Stop();
+                Debug.Log(
+                    "[FlamethrowerFireRepeat] Directly captured first emission, late sustain, cooldown gap, and repeated emission in actual Play Mode.");
+            }
+        }
+
+        private static Texture2D CreateOrUpdateFlamethrowerAttackTextureAsset(
+            string path,
+            string assetName,
+            int seed,
+            bool wispySmoke)
+        {
+            Texture2D generated = CreateFlamethrowerTurbulenceSheet(
+                assetName,
+                seed,
+                wispySmoke);
+            generated.hideFlags = HideFlags.None;
+            generated.name = assetName;
+            Texture2D existing = AssetDatabase.LoadAssetAtPath<Texture2D>(
+                path);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(generated, path);
+                return generated;
+            }
+
+            EditorUtility.CopySerialized(generated, existing);
+            existing.hideFlags = HideFlags.None;
+            existing.name = assetName;
+            UnityEngine.Object.DestroyImmediate(generated);
+            EditorUtility.SetDirty(existing);
+            return existing;
+        }
+
+        private static Material CreateOrUpdateFlamethrowerAttackMaterialAsset(
+            string path,
+            string sourcePath,
+            Color color,
+            Color emission,
+            bool denseFlame,
+            float opacityMultiplier,
+            Texture2D texture)
+        {
+            Material generated = CloneFlamethrowerAttackVfxPreviewMaterial(
+                sourcePath,
+                color,
+                emission,
+                denseFlame,
+                opacityMultiplier,
+                texture);
+            generated.hideFlags = HideFlags.None;
+            generated.name = Path.GetFileNameWithoutExtension(path);
+            Material existing = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(generated, path);
+                return generated;
+            }
+
+            EditorUtility.CopySerialized(generated, existing);
+            existing.hideFlags = HideFlags.None;
+            existing.name = Path.GetFileNameWithoutExtension(path);
+            UnityEngine.Object.DestroyImmediate(generated);
+            EditorUtility.SetDirty(existing);
+            return existing;
+        }
+
+        private static GameObject CreateOrUpdateFlamethrowerAttackVfxPrefab(
+            Material coreMaterial,
+            Material bodyMaterial,
+            Material outerMaterial,
+            Material crownMaterial,
+            Material smokeMaterial)
+        {
+            float rangeScale = FlamethrowerAttackMaximumRangeMeters /
+                FlamethrowerAttackApprovedSampleRangeMeters;
+            GameObject root = new GameObject(FlamethrowerAttackVfxRootName);
+            try
+            {
+                ParticleSystem[] systems =
+                {
+                    CreateSimpleFlamethrowerVfxSystem(
+                        root.transform, "WhiteHotCoreJet", coreMaterial,
+                        64, 240f, 0.10f, 0.18f,
+                        8.0f * rangeScale, 10.0f * rangeScale,
+                        0.05f, 0.10f, 1.0f, 0f, 0.020f,
+                        new Color(0.70f, 0.90f, 1f, 1f),
+                        new Color(1f, 0.76f, 0.28f, 0f),
+                        false, 0f, 1f, 1101u),
+                    CreateSimpleFlamethrowerVfxSystem(
+                        root.transform, "HighTemperatureFlameJet", bodyMaterial,
+                        96, 180f, 0.50f, 0.80f,
+                        7.0f * rangeScale, 10.0f * rangeScale,
+                        0.18f, 0.32f, 3f, 0.005f, 0.12f,
+                        new Color(1f, 0.88f, 0.24f, 1f),
+                        new Color(1f, 0.52f, 0.055f, 0f),
+                        false, 0f, 1f, 2202u),
+                    CreateSimpleFlamethrowerVfxSystem(
+                        root.transform, "GoldenPressureBloom", bodyMaterial,
+                        96, 200f, 0.48f, 0.78f,
+                        6.2f * rangeScale, 9.5f * rangeScale,
+                        0.14f, 0.28f, 4f, 0.010f, 0.32f,
+                        new Color(1f, 0.90f, 0.28f, 1f),
+                        new Color(0.96f, 0.48f, 0.045f, 0f),
+                        false, 0f, 1f, 2752u),
+                    CreateSimpleFlamethrowerVfxSystem(
+                        root.transform, "OrangeOuterFlameLobes", outerMaterial,
+                        96, 150f, 0.55f, 0.90f,
+                        6.2f * rangeScale, 9.0f * rangeScale,
+                        0.22f, 0.40f, 5.5f, 0.015f, 0.55f,
+                        new Color(1f, 0.76f, 0.120f, 1f),
+                        new Color(0.78f, 0.34f, 0.045f, 0f),
+                        false, 0f, 1f, 3303u),
+                    CreateSimpleFlamethrowerVfxSystem(
+                        root.transform, "RedRollingFlameCrown", crownMaterial,
+                        72, 52f, 0.46f, 0.76f,
+                        6.5f * rangeScale, 9.5f * rangeScale,
+                        0.07f, 0.14f, 5f, 0.012f, 0.38f,
+                        new Color(0.96f, 0.56f, 0.090f, 0.92f),
+                        new Color(0.76f, 0.30f, 0.045f, 0f),
+                        true, 0.030f, 1.80f, 3853u),
+                    CreateSimpleFlamethrowerVfxSystem(
+                        root.transform, "HotEmberSpray", coreMaterial,
+                        24, 14f, 0.45f, 0.85f,
+                        6.0f * rangeScale, 10.0f * rangeScale,
+                        0.025f, 0.055f, 11f, 0.010f, 0.18f,
+                        new Color(1f, 0.72f, 0.16f, 1f),
+                        new Color(1f, 0.58f, 0.10f, 0f),
+                        true, 0.05f, 1.20f, 4404u),
+                    CreateSimpleFlamethrowerVfxSystem(
+                        root.transform, "ThinTrailingSmoke", smokeMaterial,
+                        32, 12f, 0.80f, 1.25f,
+                        5.0f * rangeScale, 7.0f * rangeScale,
+                        0.08f, 0.17f, 6f, 0.020f, 0.34f,
+                        new Color(0.72f, 0.38f, 0.16f, 0.10f),
+                        new Color(0.46f, 0.22f, 0.10f, 0f),
+                        true, 0.035f, 1.45f, 5505u)
+                };
+                Type runtimeType = RequireMusketMuzzleFlashRuntimeType(
+                    FlamethrowerAttackVfxRuntimeTypeName);
+                MonoBehaviour effect = root.AddComponent(runtimeType)
+                    as MonoBehaviour ?? throw new InvalidOperationException(
+                        "Flamethrower VFX runtime controller could not be added.");
+                InvokeMusketMuzzleFlashMethod(
+                    effect,
+                    "Configure",
+                    systems,
+                    FlamethrowerAttackMinimumRangeMeters,
+                    FlamethrowerAttackMaximumRangeMeters,
+                    FlamethrowerAttackMaximumEmissionSeconds,
+                    FlamethrowerAttackCooldownSeconds);
+                PrefabUtility.SaveAsPrefabAsset(
+                    root,
+                    FlamethrowerAttackVfxPrefabPath);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(root);
+            }
+
+            AssetDatabase.SaveAssets();
+            return AssetDatabase.LoadAssetAtPath<GameObject>(
+                FlamethrowerAttackVfxPrefabPath) ??
+                throw new FileNotFoundException(
+                    "Flamethrower attack VFX prefab is missing after creation.",
+                    Path.GetFullPath(FlamethrowerAttackVfxPrefabPath));
+        }
+
+        private static void ConfigureFlamethrowerAttackVfxStateBehaviour(
+            AnimatorState state)
+        {
+            Type behaviourType = RequireMusketMuzzleFlashRuntimeType(
+                FlamethrowerAttackVfxBehaviourTypeName);
+            StateMachineBehaviour[] matches = state.behaviours
+                .Where(value =>
+                    value != null && behaviourType.IsInstanceOfType(value))
+                .ToArray();
+            StateMachineBehaviour behaviour = matches.FirstOrDefault();
+            if (behaviour == null)
+            {
+                behaviour = state.AddStateMachineBehaviour(behaviourType);
+            }
+            foreach (StateMachineBehaviour duplicate in matches.Skip(1))
+            {
+                UnityEngine.Object.DestroyImmediate(duplicate, true);
+            }
+
+            EditorUtility.SetDirty(behaviour);
+            EditorUtility.SetDirty(state);
+        }
+
+        private static Vector3[] GetBoundsCorners(Bounds bounds)
+        {
+            Vector3 min = bounds.min;
+            Vector3 max = bounds.max;
+            return new[]
+            {
+                new Vector3(min.x, min.y, min.z),
+                new Vector3(min.x, min.y, max.z),
+                new Vector3(min.x, max.y, min.z),
+                new Vector3(min.x, max.y, max.z),
+                new Vector3(max.x, min.y, min.z),
+                new Vector3(max.x, min.y, max.z),
+                new Vector3(max.x, max.y, min.z),
+                new Vector3(max.x, max.y, max.z)
+            };
         }
 
         [MenuItem("Bellerophon/Player/Apply Musket Back Carry Models")]
@@ -51060,6 +64313,49 @@ namespace Bellerophon.Editor
             importer.SaveAndReimport();
         }
 
+        private static void ConfigureFlamethrowerTankPlaceSourceImporter()
+        {
+            ModelImporter importer = AssetImporter.GetAtPath(
+                FlamethrowerTankPlaceSourcePath) as ModelImporter;
+            if (importer == null)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place FBX ModelImporter is unavailable.");
+            }
+
+            importer.importAnimation = true;
+            importer.animationType = ModelImporterAnimationType.Generic;
+            importer.resampleCurves = false;
+            importer.animationCompression =
+                ModelImporterAnimationCompression.Off;
+            importer.SaveAndReimport();
+
+            importer = AssetImporter.GetAtPath(
+                FlamethrowerTankPlaceSourcePath) as ModelImporter;
+            if (importer == null)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place FBX importer disappeared after reimport.");
+            }
+
+            ModelImporterClipAnimation[] clips = importer.clipAnimations;
+            if (clips == null || clips.Length == 0)
+            {
+                clips = importer.defaultClipAnimations;
+            }
+            if (clips.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Flamethrower_Tank_Place FBX must expose exactly one embedded Mixamo Take; actual=" +
+                    clips.Length.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+
+            clips[0].loopTime = false;
+            clips[0].loopPose = false;
+            importer.clipAnimations = clips;
+            importer.SaveAndReimport();
+        }
+
         private static AnimationClip LoadSingleEmbeddedClip(string path, string label)
         {
             AnimationClip[] clips = AssetDatabase.LoadAllAssetsAtPath(path)
@@ -59758,7 +73054,6 @@ namespace Bellerophon.Editor
                     new HashSet<Renderer>(targetRenderers);
                 hiddenRenderers = new List<RendererState>();
                 hiddenRendererSet = new HashSet<Renderer>();
-                HideNonTargetRenderers();
 
                 frontCameraObject = CreateCameraObject(target.name + "FrontCamera");
                 sideCameraObject = CreateCameraObject(target.name + "SideCamera");
@@ -59788,6 +73083,7 @@ namespace Bellerophon.Editor
                     TextureFormat.RGB24,
                     false);
                 previousActive = RenderTexture.active;
+                HideNonTargetRenderers();
             }
 
             internal byte[] CaptureFront()
@@ -59803,6 +73099,20 @@ namespace Bellerophon.Editor
             internal byte[] CapturePalmFromTorso()
             {
                 return CaptureFrame(palmCameraObject.GetComponent<Camera>());
+            }
+
+            internal void ConfigureDarkMaterialReview()
+            {
+                Color neutralBackground = new Color(0.28f, 0.29f, 0.31f, 1f);
+                frontCameraObject.GetComponent<Camera>().backgroundColor =
+                    neutralBackground;
+                sideCameraObject.GetComponent<Camera>().backgroundColor =
+                    neutralBackground;
+                palmCameraObject.GetComponent<Camera>().backgroundColor =
+                    neutralBackground;
+                Light reviewLight = lightObject.GetComponent<Light>();
+                reviewLight.intensity = 3f;
+                reviewLight.color = Color.white;
             }
 
             internal byte[] CaptureOppositeSide(
@@ -59943,6 +73253,20 @@ namespace Bellerophon.Editor
                     center,
                     target.right,
                     orthographicSize);
+            }
+
+            internal void ConfigureTopView(
+                Transform target,
+                Vector3 center,
+                float orthographicSize)
+            {
+                Camera camera = palmCameraObject.GetComponent<Camera>();
+                camera.orthographic = true;
+                camera.transform.position = center + target.up * 8f;
+                camera.transform.LookAt(center, target.forward);
+                camera.orthographicSize = orthographicSize;
+                camera.nearClipPlane = 0.01f;
+                camera.farClipPlane = 100f;
             }
 
             private byte[] CaptureFrame(Camera camera)

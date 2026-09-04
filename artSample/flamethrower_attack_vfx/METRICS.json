@@ -1,0 +1,47 @@
+{
+    "target": "Flamethrower_Fire",
+    "referenceArchitecture": "Reference-matched narrow fuel jet expanding into rolling turbulent combustion clouds",
+    "visualRepresentation": "Seven forward-only looping ParticleSystems with overlapping yellow-orange-red velocity bands, randomized dual color gradients, short interleaving flame trails, embers, and small wispy brown-gray smoke",
+    "layers": [
+        "WhiteHotCoreJet",
+        "HighTemperatureFlameJet",
+        "GoldenPressureBloom",
+        "OrangeOuterFlameLobes",
+        "RedRollingFlameCrown",
+        "HotEmberSpray",
+        "ThinTrailingSmoke"
+    ],
+    "particleSystemCount": 7,
+    "maximumConfiguredParticles": 480,
+    "intendedJetLengthMeters": 4.5,
+    "previewAgesSeconds": [
+        0.18000000715255738,
+        0.47999998927116396,
+        0.9200000166893005,
+        1.350000023841858
+    ],
+    "previewViews": [
+        "side_nozzle_close",
+        "oblique_close",
+        "front_close",
+        "side_full_context"
+    ],
+    "nozzleWorldPosition": {
+        "x": 73.37914276123047,
+        "y": 0.9692742824554443,
+        "z": -230.69183349609376
+    },
+    "nozzleWorldDirection": {
+        "x": 1.2519718950443349e-7,
+        "y": 0.07974541187286377,
+        "z": -0.9968152642250061
+    },
+    "usesParticleSystemsOnly": true,
+    "usesProjectileModel": false,
+    "usesFlameMeshRenderer": false,
+    "currentSceneModified": false,
+    "runtimeApplied": false,
+    "actualUnityPreviewRendered": true,
+    "passedNumericChecks": true,
+    "validationPriority": "1순위 Unity VFX 직접 확인, 2순위 파티클 설정값 보조 확인"
+}

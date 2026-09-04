@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">미니 화염방사기 연료탱크 원격 폭파 6m 최대 팽창 프레임</title>
+  <desc id="desc">어두운 화물선 바닥의 연료탱크 위치에서 백열 중심과 황색, 주황색, 적색 화염이 방사형으로 퍼지고 압력파와 불티, 분리된 연기가 뒤따르는 폭발 아트 샘플</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#19242a"/>
+      <stop offset="0.62" stop-color="#0d1418"/>
+      <stop offset="0.625" stop-color="#171f23"/>
+      <stop offset="1" stop-color="#070a0c"/>
+    </linearGradient>
+    <radialGradient id="ambient">
+      <stop offset="0" stop-color="#628596" stop-opacity=".17"/>
+      <stop offset="1" stop-color="#101820" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="core">
+      <stop offset="0" stop-color="#fffde2"/>
+      <stop offset=".14" stop-color="#fff38a"/>
+      <stop offset=".36" stop-color="#ffc21a"/>
+      <stop offset=".62" stop-color="#ff6506" stop-opacity=".96"/>
+      <stop offset=".85" stop-color="#cf2507" stop-opacity=".56"/>
+      <stop offset="1" stop-color="#751306" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="hot">
+      <stop offset="0" stop-color="#fff9bd"/>
+      <stop offset=".24" stop-color="#ffe145"/>
+      <stop offset=".58" stop-color="#ff7b08"/>
+      <stop offset=".83" stop-color="#df2e06" stop-opacity=".72"/>
+      <stop offset="1" stop-color="#8a1607" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="orange">
+      <stop offset="0" stop-color="#ffd33a" stop-opacity=".96"/>
+      <stop offset=".38" stop-color="#ff7208" stop-opacity=".93"/>
+      <stop offset=".72" stop-color="#c92a08" stop-opacity=".78"/>
+      <stop offset="1" stop-color="#651307" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="smoke">
+      <stop offset="0" stop-color="#85431e" stop-opacity=".78"/>
+      <stop offset=".42" stop-color="#49362c" stop-opacity=".75"/>
+      <stop offset=".78" stop-color="#24292a" stop-opacity=".58"/>
+      <stop offset="1" stop-color="#131718" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="groundGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ff7a08" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#ff3c00" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tank" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#172025"/>
+      <stop offset=".42" stop-color="#607279"/>
+      <stop offset=".68" stop-color="#27343a"/>
+      <stop offset="1" stop-color="#11171b"/>
+    </linearGradient>
+    <filter id="rough" x="-40%" y="-40%" width="180%" height="180%">
+      <feTurbulence type="fractalNoise" baseFrequency=".018 .03" numOctaves="3" seed="23" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="24" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="1.2"/>
+    </filter>
+    <filter id="smokeRough" x="-50%" y="-50%" width="200%" height="200%">
+      <feTurbulence type="fractalNoise" baseFrequency=".012 .022" numOctaves="3" seed="81" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="34"/>
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
+      <path d="M0 0H4" stroke="#fff" stroke-opacity=".035"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <ellipse cx="800" cy="330" rx="780" ry="500" fill="url(#ambient)"/>
+
+  <g stroke="#8aa0a8" stroke-opacity=".12" fill="none">
+    <path d="M800 560L60 900M800 560L230 900M800 560L400 900M800 560L570 900M800 560L720 900M800 560L880 900M800 560L1030 900M800 560L1200 900M800 560L1370 900M800 560L1540 900"/>
+    <path d="M0 607H1600M0 659H1600M0 731H1600M0 824H1600"/>
+  </g>
+
+  <ellipse cx="800" cy="560" rx="650" ry="179" fill="none" stroke="#ffb000" stroke-width="2" stroke-dasharray="11 10" stroke-opacity=".7"/>
+  <g fill="#d4dde0" fill-opacity=".64" font-family="Bahnschrift Condensed, sans-serif" font-size="17" text-anchor="middle">
+    <text x="908" y="572">1m</text><text x="1017" y="572">2m</text><text x="1125" y="572">3m</text>
+    <text x="1233" y="572">4m</text><text x="1342" y="572">5m</text><text x="1450" y="572">6m</text>
+    <text x="692" y="572">1m</text><text x="583" y="572">2m</text><text x="475" y="572">3m</text>
+    <text x="367" y="572">4m</text><text x="258" y="572">5m</text><text x="150" y="572">6m</text>
+  </g>
+
+  <ellipse cx="800" cy="608" rx="470" ry="108" fill="url(#groundGlow)"/>
+
+  <g opacity=".78" filter="url(#smokeRough)">
+    <ellipse cx="505" cy="330" rx="138" ry="104" fill="url(#smoke)" transform="rotate(-16 505 330)"/>
+    <ellipse cx="670" cy="224" rx="158" ry="121" fill="url(#smoke)" transform="rotate(11 670 224)"/>
+    <ellipse cx="854" cy="190" rx="182" ry="132" fill="url(#smoke)" transform="rotate(-7 854 190)"/>
+    <ellipse cx="1040" cy="262" rx="142" ry="116" fill="url(#smoke)" transform="rotate(18 1040 262)"/>
+    <ellipse cx="1188" cy="350" rx="126" ry="92" fill="url(#smoke)" transform="rotate(9 1188 350)"/>
+  </g>
+
+  <g fill="none" stroke-linecap="round" filter="url(#glow)">
+    <ellipse cx="800" cy="558" rx="612" ry="168" stroke="#ff8c19" stroke-width="8" stroke-opacity=".26"/>
+    <ellipse cx="800" cy="558" rx="618" ry="171" stroke="#fff0c2" stroke-width="2" stroke-opacity=".8"/>
+    <ellipse cx="800" cy="538" rx="400" ry="275" stroke="#a8eff8" stroke-width="4" stroke-opacity=".16" stroke-dasharray="140 38 70 54"/>
+  </g>
+
+  <g filter="url(#rough)">
+    <ellipse cx="375" cy="482" rx="182" ry="135" fill="url(#orange)" transform="rotate(-11 375 482)"/>
+    <ellipse cx="482" cy="376" rx="194" ry="160" fill="url(#orange)" transform="rotate(18 482 376)"/>
+    <ellipse cx="598" cy="472" rx="215" ry="177" fill="url(#hot)" transform="rotate(-9 598 472)"/>
+    <ellipse cx="690" cy="324" rx="220" ry="193" fill="url(#orange)" transform="rotate(15 690 324)"/>
+    <ellipse cx="800" cy="442" rx="278" ry="224" fill="url(#core)"/>
+    <ellipse cx="926" cy="326" rx="210" ry="185" fill="url(#orange)" transform="rotate(-14 926 326)"/>
+    <ellipse cx="1020" cy="466" rx="222" ry="180" fill="url(#hot)" transform="rotate(11 1020 466)"/>
+    <ellipse cx="1145" cy="384" rx="192" ry="154" fill="url(#orange)" transform="rotate(-17 1145 384)"/>
+    <ellipse cx="1246" cy="492" rx="174" ry="128" fill="url(#orange)" transform="rotate(8 1246 492)"/>
+    <ellipse cx="538" cy="576" rx="188" ry="118" fill="url(#orange)" transform="rotate(7 538 576)"/>
+    <ellipse cx="1068" cy="579" rx="202" ry="112" fill="url(#orange)" transform="rotate(-6 1068 579)"/>
+  </g>
+
+  <g opacity=".9" filter="url(#glow)">
+    <ellipse cx="800" cy="454" rx="170" ry="146" fill="url(#core)"/>
+    <ellipse cx="748" cy="503" rx="112" ry="94" fill="url(#hot)"/>
+    <ellipse cx="864" cy="490" rx="126" ry="102" fill="url(#hot)"/>
+  </g>
+
+  <g stroke-linecap="round" filter="url(#glow)">
+    <path d="M800 463L241 300M800 463L198 433M800 463L275 649M800 463L415 735M800 463L585 211M800 463L722 116M800 463L1004 143M800 463L1188 224M800 463L1393 365M800 463L1422 552M800 463L1207 715M800 463L950 796" stroke="#ff7d08" stroke-width="4" stroke-opacity=".84"/>
+    <path d="M800 463L286 335M800 463L337 681M800 463L632 174M800 463L1110 188M800 463L1345 430M800 463L1175 674" stroke="#ffe867" stroke-width="3" stroke-opacity=".96"/>
+  </g>
+
+  <g fill="#ffe25a" filter="url(#glow)">
+    <circle cx="226" cy="298" r="6"/><circle cx="187" cy="427" r="4"/><circle cx="270" cy="652" r="7"/>
+    <circle cx="407" cy="742" r="5"/><circle cx="581" cy="205" r="7"/><circle cx="720" cy="108" r="5"/>
+    <circle cx="1008" cy="137" r="6"/><circle cx="1193" cy="218" r="5"/><circle cx="1400" cy="361" r="7"/>
+    <circle cx="1427" cy="552" r="4"/><circle cx="1214" cy="721" r="7"/><circle cx="953" cy="803" r="5"/>
+  </g>
+
+  <g opacity=".72">
+    <path d="M350 669q18-82 39 0z" fill="url(#hot)"/><path d="M462 700q20-105 44 0z" fill="url(#hot)"/>
+    <path d="M593 729q17-88 38 0z" fill="url(#hot)"/><path d="M1008 730q21-98 44 0z" fill="url(#hot)"/>
+    <path d="M1142 701q18-89 41 0z" fill="url(#hot)"/><path d="M1267 658q16-81 36 0z" fill="url(#hot)"/>
+  </g>
+
+  <g opacity=".23" aria-label="폭심 위치를 표시하는 탱크 대리 실루엣">
+    <rect x="744" y="392" width="112" height="147" rx="18" fill="#10171b" stroke="#8aa0a8" stroke-width="5"/>
+    <rect x="756" y="405" width="42" height="112" rx="20" fill="url(#tank)" stroke="#94a4aa" stroke-width="3"/>
+    <rect x="802" y="405" width="42" height="112" rx="20" fill="url(#tank)" stroke="#94a4aa" stroke-width="3"/>
+    <rect x="733" y="455" width="134" height="16" fill="#0d1215"/>
+    <rect x="768" y="448" width="64" height="5" fill="#36cbe1"/>
+  </g>
+
+  <rect width="1600" height="900" fill="url(#scan)" opacity=".45"/>
+
+  <g font-family="Bahnschrift Condensed, sans-serif">
+    <text x="58" y="67" fill="#ffb000" font-size="18" font-weight="700" letter-spacing="4">REMOTE DETONATION / PEAK EXPANSION</text>
+    <text x="58" y="101" fill="#dce3e3" font-size="38" font-weight="700">연료탱크 폭발 VFX · 반경 6m</text>
+    <text x="58" y="131" fill="#92a0a5" font-size="16">백열 코어 · 혼합 화염 · 전 방향 압력파 · 불티 · 분리형 난류 연기</text>
+    <text x="1542" y="72" fill="#ffbe65" font-size="50" font-weight="700" text-anchor="end">R 6M</text>
+    <text x="1542" y="101" fill="#9ca8ac" font-size="14" letter-spacing="2" text-anchor="end">기획 피해 반경 / 검토용 표시</text>
+    <text x="58" y="849" fill="#809096" font-size="14">사용자 승인 대기 · Unity 미적용 · 탱크 실루엣과 거리 오버레이는 최종 VFX에 포함하지 않음</text>
+  </g>
+</svg>

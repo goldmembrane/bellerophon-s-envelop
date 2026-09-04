@@ -1,0 +1,67 @@
+{
+  "sample": "Flamethrower Tank Explosion VFX",
+  "status": "사용자 승인 대기 / Unity 미적용",
+  "source": "docs/GAME_DESIGN_SOURCE.txt",
+  "sourceFacts": {
+    "remoteDetonation": {
+      "trigger": "설치된 연료탱크에서 Q 입력",
+      "radiusMeters": 6,
+      "damage": 300,
+      "friendlyFire": true,
+      "playerHealthLossPercent": 70,
+      "shieldDamageMultiplier": 2
+    },
+    "durabilityZeroSelfDestruct": {
+      "trigger": "연료탱크 내구도 0%",
+      "delaySeconds": 4,
+      "radiusMeters": 15,
+      "damage": 500,
+      "playerHealthLossPercent": 90,
+      "shieldDamageMultiplier": 2
+    }
+  },
+  "generatedProposal": {
+    "visualReference": "artSample/musket_muzzle_flash — 승인된 백열 플래시, 황금·주황 고온부, 짙은 화약 연기의 재질 및 시간 리듬",
+    "adaptation": "총구 방향 원뿔을 복사하지 않고 연료탱크 중심에서 360도로 갈라지는 방사형 폭발로 확장",
+    "effectVolume": "탱크 중심 기준 수평과 상방이 같은 구형 시각 범위",
+    "verticalReachMeters": {
+      "remoteDetonation": 6,
+      "durabilityZeroSelfDestruct": 15
+    },
+    "effectDurationSeconds": 1.8,
+    "layers": [
+      "0.3초 이내의 머스켓 계열 백열 점화 코어",
+      "황금·주황색 360도 방사 화염 갈래",
+      "피해 반경까지 전개되는 압력파",
+      "방사형 불티와 금속 파편",
+      "연속된 회갈색·암회색 화약 연기 난류",
+      "지면 잔불"
+    ],
+    "notes": "폭발 연출의 시간, 입자 밀도와 화염/연기 비율은 아트 샘플용 생성 제안이며 원본 기획 수치가 아니다. 사용자 확인에 따라 상방 시각 범위를 수평 반경과 동일하게 설정했다. 백열 플래시는 짧게 소멸하고 짙은 연기가 빠르게 화면의 주도권을 넘겨받는다. 피해 반경 안내선, 상반구와 거리 눈금은 검토용 오버레이로 게임 VFX에 포함하지 않는다."
+  },
+  "implementationConstraints": {
+    "explosionBody": {
+      "rendering": "Unity Particle System 또는 VFX Graph의 파티클·빌보드·노이즈 효과",
+      "parts": [
+        "백열 점화 코어",
+        "화염",
+        "압력파와 열 왜곡",
+        "불티",
+        "연기",
+        "지면 잔불"
+      ],
+      "forbidden": [
+        "폭발 형상을 위한 신규 또는 기존 메시",
+        "MeshRenderer 기반 폭발 본체",
+        "SkinnedMeshRenderer 기반 폭발 본체",
+        "VFX Graph Output Particle Mesh"
+      ]
+    },
+    "meshException": {
+      "allowed": true,
+      "scope": "폭발로 튀는 작은 금속 파편",
+      "restriction": "파편만 개별 소형 메시를 사용할 수 있으며 화염·연기·압력파 형상을 대신할 수 없다."
+    }
+  },
+  "unityApplied": false
+}

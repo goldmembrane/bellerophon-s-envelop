@@ -646,6 +646,132 @@ namespace Bellerophon.Editor.Validation
                             .CaptureShotgunDrawStartViewFinal,
                         "Player Shotgun_Draw start-view final image copied from the reviewed Play Mode frame.");
                     break;
+                case "ApplyFlamethrowerIdleStartView":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyFlamethrowerIdleStartView,
+                        "Player start moved to the front framing for Flamethrower_Idle.");
+                    break;
+                case "CaptureFlamethrowerIdleStartViewPlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureFlamethrowerIdleStartViewPlayMode,
+                        "Player Flamethrower_Idle start-view Play Mode review advanced.");
+                    break;
+                case "CaptureFlamethrowerIdleStartViewFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureFlamethrowerIdleStartViewFinal,
+                        "Player Flamethrower_Idle start-view final image copied from the reviewed Play Mode frame.");
+                    break;
+                case "ApplyMiniFlamethrowerModels":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyMiniFlamethrowerModels,
+                        "Unchanged original mini flamethrower FBX prefab applied to five states.");
+                    break;
+                case "CaptureMiniFlamethrowerModelsPlayMode":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureMiniFlamethrowerModelsPlayMode,
+                        "Mini flamethrower five-state Play Mode review advanced.");
+                    break;
+                case "CaptureMiniFlamethrowerModelsFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureMiniFlamethrowerModelsFinal,
+                        "Mini flamethrower final image copied from reviewed Play Mode frames.");
+                    break;
+                case "ApplyFlamethrowerRemoteModeTankCarryPose":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyFlamethrowerRemoteModeTankCarryPose,
+                        "Flamethrower_Remote_Mode now carries the complete connected mini flamethrower assembly upright on both palms.");
+                    break;
+                case "CaptureFlamethrowerRemoteModeTankCarryReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureFlamethrowerRemoteModeTankCarryReview,
+                        "Flamethrower_Remote_Mode tank carry direct review captured from front, both sides, and hand close-ups.");
+                    break;
+                case "ApplyFlamethrowerTankPlaceSequence":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyFlamethrowerTankPlaceSequence,
+                        "Flamethrower_Tank_Place now keeps both palms under the tank while lowering, releases right-hand-relative following at the lowest point, locks the connected assembly on the ground through Take end, and resets only at the repeated hold.");
+                    break;
+                case "CaptureFlamethrowerTankPlaceSequenceReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureFlamethrowerTankPlaceSequenceReview,
+                        "Flamethrower_Tank_Place direct Play Mode sequence review advanced.");
+                    break;
+                case "ApplyFlamethrowerTankRecoverSequence":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyFlamethrowerTankRecoverSequence,
+                        "Flamethrower_Tank_Recover now starts from the reachable Tank_Place grounded end, plays an exact full reverse with both-palm pickup and right-hand-relative lift, holds the exact Flamethrower_Idle backpack and right-hand sprayer pose for 0.5 seconds, then repeats.");
+                    break;
+                case "CaptureFlamethrowerTankRecoverSequenceReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureFlamethrowerTankRecoverSequenceReview,
+                        "Flamethrower_Tank_Recover direct Play Mode reverse sequence review advanced.");
+                    break;
+                case "ApplyFlamethrowerRemoteDetonateStart":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyFlamethrowerRemoteDetonateStart,
+                        "Flamethrower_Remote_Detonate now keeps the Tank_Place final assembly shape at a total one-meter forward distance, moves the right hand 0.30m forward and 0.20m up with the palm facing up, and uses a full-arm upper-arm swivel solution with zero added forearm axial twist while keeping the byte-identical remote detonator lower grip with its button facing up.");
+                    break;
+                case "CaptureFlamethrowerRemoteDetonateStartReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureFlamethrowerRemoteDetonateStartReview,
+                        "Flamethrower_Remote_Detonate saved one-meter assembly placement and raised-forward palm-up right-hand state with zero added forearm axial twist captured from full-body and elevated close-up views for direct wrist review.");
+                    break;
+                case "CaptureFlamethrowerAttackVfxArtSample":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureFlamethrowerAttackVfxArtSample,
+                        "Particle-only flamethrower attack VFX art sample captured at the accepted Flamethrower_Fire nozzle without scene linkage.");
+                    break;
+                case "ApplyFlamethrowerAttackVfx":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyFlamethrowerAttackVfx,
+                        "Approved flamethrower attack VFX applied to Flamethrower_Fire with design range and timing.");
+                    break;
+                case "CaptureFlamethrowerAttackVfxAppliedReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureFlamethrowerAttackVfxAppliedReview,
+                        "Applied flamethrower attack VFX direct review captured from four views and emission ages.");
+                    break;
+                case "CaptureFlamethrowerFireRepeatReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureFlamethrowerFireRepeatReview,
+                        "Flamethrower_Fire natural 10-second emission and 2.5-second repeat review advanced.");
+                    break;
                 case "ApplyMusketBackCarryModels":
                     RunSynchronous(
                         request,
