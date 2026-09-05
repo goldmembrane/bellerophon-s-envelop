@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="pageBg" x2="0" y2="1">
+      <stop stop-color="#071017"/>
+      <stop offset="1" stop-color="#03070a"/>
+    </linearGradient>
+    <radialGradient id="collectorHalo">
+      <stop stop-color="#fff" stop-opacity=".98"/>
+      <stop offset=".18" stop-color="#72efff" stop-opacity=".88"/>
+      <stop offset=".5" stop-color="#317dff" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#317dff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="cyanGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="blueGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="leftPanel"><rect x="55" y="135" width="725" height="625" rx="18"/></clipPath>
+    <clipPath id="rightPanel"><rect x="820" y="135" width="725" height="625" rx="18"/></clipPath>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#pageBg)"/>
+  <circle cx="270" cy="0" r="390" fill="#245d9a" opacity=".11"/>
+  <circle cx="1320" cy="35" r="350" fill="#43e9ff" opacity=".055"/>
+
+  <text x="58" y="56" fill="#67efff" font-family="Bahnschrift,Segoe UI,sans-serif" font-size="14" font-weight="700" letter-spacing="3">BELLEROPHON · FULL-BATON VFX SAMPLE</text>
+  <text x="58" y="99" fill="#eefcff" font-family="Segoe UI,sans-serif" font-size="34" font-weight="800">전류봉 전체 모습 기반 상단 전류 효과 — 정지 피크 비교</text>
+  <rect x="1280" y="57" width="262" height="36" rx="18" fill="#172418" stroke="#92d55f" stroke-opacity=".45"/>
+  <text x="1411" y="80" fill="#baf185" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" font-weight="700">UNITY 모델 직접 렌더 · 런타임 미적용</text>
+
+  <rect x="55" y="135" width="725" height="625" rx="18" fill="#f8f8f7" stroke="#7ccdde" stroke-opacity=".55"/>
+  <rect x="820" y="135" width="725" height="625" rx="18" fill="#f8f8f7" stroke="#7ccdde" stroke-opacity=".55"/>
+
+  <g clip-path="url(#leftPanel)">
+    <image href="unity_model_full.png" x="177" y="145" width="480" height="600" preserveAspectRatio="none"/>
+    <path d="M398 220 L438 237 L393 253 L441 271 L397 288 M435 300 L391 318 L440 335 L396 351 L438 367 M401 380 L441 397 L393 415 L438 432 L397 448 M434 460 L390 478 L440 495 L395 513 L418 538"
+          fill="none" stroke="#1541bd" stroke-width="17" opacity=".82"/>
+    <path d="M398 220 L438 237 L393 253 L441 271 L397 288 M435 300 L391 318 L440 335 L396 351 L438 367 M401 380 L441 397 L393 415 L438 432 L397 448 M434 460 L390 478 L440 495 L395 513 L418 538"
+          fill="none" stroke="#3d74ff" stroke-width="14" opacity=".76" filter="url(#blueGlow)"/>
+    <path d="M398 220 L438 237 L393 253 L441 271 L397 288 M435 300 L391 318 L440 335 L396 351 L438 367 M401 380 L441 397 L393 415 L438 432 L397 448 M434 460 L390 478 L440 495 L395 513 L418 538"
+          fill="none" stroke="#65eaff" stroke-width="6" filter="url(#cyanGlow)"/>
+    <path d="M398 220 L438 237 L393 253 L441 271 L397 288 M435 300 L391 318 L440 335 L396 351 L438 367 M401 380 L441 397 L393 415 L438 432 L397 448 M434 460 L390 478 L440 495 L395 513 L418 538"
+          fill="none" stroke="#fff" stroke-width="2"/>
+    <path d="M394 490 L369 476 L390 460 M438 441 L463 424 L441 407 M397 390 L370 374 L392 356 M438 339 L464 322 L439 305 M394 254 L371 239 L398 220"
+          fill="none" stroke="#916cff" stroke-width="4.5" filter="url(#cyanGlow)"/>
+    <g fill="#dfffff" filter="url(#cyanGlow)">
+      <circle cx="369" cy="476" r="3"/><circle cx="463" cy="424" r="3"/><circle cx="370" cy="374" r="3"/><circle cx="464" cy="322" r="3"/><circle cx="371" cy="239" r="2.7"/>
+    </g>
+    <line x1="367" y1="539" x2="476" y2="539" stroke="#1e6f87" stroke-width="1.5" stroke-dasharray="5 5"/>
+    <text x="484" y="543" fill="#174b5a" font-family="Segoe UI,sans-serif" font-size="10" font-weight="800">손잡이 상단 경계</text>
+  </g>
+
+  <g clip-path="url(#rightPanel)">
+    <image href="unity_model_full.png" x="942" y="145" width="480" height="600" preserveAspectRatio="none"/>
+    <path d="M1155 275 L1168 252 L1182 220 M1207 274 L1196 250 L1182 220 M1162 259 L1177 242 L1182 220 M1202 258 L1189 241 L1182 220"
+          fill="none" stroke="#317dff" stroke-width="8" opacity=".58" filter="url(#blueGlow)"/>
+    <path d="M1155 275 L1168 252 L1182 220 M1207 274 L1196 250 L1182 220 M1162 259 L1177 242 L1182 220 M1202 258 L1189 241 L1182 220"
+          fill="none" stroke="#c4fbff" stroke-width="2.2" filter="url(#cyanGlow)"/>
+    <circle cx="1182" cy="220" r="65" fill="url(#collectorHalo)" opacity=".88"/>
+    <path d="M1182 220 L1214 210 L1245 225 L1278 202 L1310 219 L1342 194 L1374 211 L1406 189 L1438 206 L1470 184 L1500 196 L1528 181"
+          fill="none" stroke="#1239b8" stroke-width="23" opacity=".90"/>
+    <path d="M1182 220 L1214 210 L1245 225 L1278 202 L1310 219 L1342 194 L1374 211 L1406 189 L1438 206 L1470 184 L1500 196 L1528 181"
+          fill="none" stroke="#513dff" stroke-width="36" opacity=".42" filter="url(#blueGlow)"/>
+    <path d="M1182 220 L1214 210 L1245 225 L1278 202 L1310 219 L1342 194 L1374 211 L1406 189 L1438 206 L1470 184 L1500 196 L1528 181"
+          fill="none" stroke="#286cff" stroke-width="18" opacity=".96" filter="url(#blueGlow)"/>
+    <path d="M1182 220 L1214 210 L1245 225 L1278 202 L1310 219 L1342 194 L1374 211 L1406 189 L1438 206 L1470 184 L1500 196 L1528 181"
+          fill="none" stroke="#55eaff" stroke-width="9" filter="url(#cyanGlow)"/>
+    <path d="M1182 220 L1214 210 L1245 225 L1278 202 L1310 219 L1342 194 L1374 211 L1406 189 L1438 206 L1470 184 L1500 196 L1528 181"
+          fill="none" stroke="#fff" stroke-width="3.4"/>
+    <path d="M1278 202 L1304 242 L1334 253 M1342 194 L1371 152 L1403 144 M1438 206 L1459 245 L1493 255"
+          fill="none" stroke="#1946c9" stroke-width="8" opacity=".9"/>
+    <path d="M1278 202 L1304 242 L1334 253 M1342 194 L1371 152 L1403 144 M1438 206 L1459 245 L1493 255"
+          fill="none" stroke="#9a76ff" stroke-width="5" filter="url(#cyanGlow)"/>
+  </g>
+
+  <g fill="none" stroke="#1c6377" stroke-width="1.5">
+    <path d="M382 177 H370 V714 H382"/>
+    <path d="M1147 177 H1135 V714 H1147"/>
+  </g>
+  <g fill="#1f5d70" font-family="Bahnschrift,sans-serif" font-size="10" font-weight="700" letter-spacing="1">
+    <text transform="translate(357 445) rotate(-90)" text-anchor="middle">전체 전류봉 · 50 cm</text>
+    <text transform="translate(1122 445) rotate(-90)" text-anchor="middle">전체 전류봉 · 50 cm</text>
+  </g>
+
+  <g fill="none" stroke="#559523" stroke-width="1.8" stroke-dasharray="5 4">
+    <circle cx="417" cy="220" r="27"/>
+    <circle cx="1182" cy="220" r="27"/>
+  </g>
+  <g fill="#315e16" font-family="Segoe UI,sans-serif" font-size="11" font-weight="800">
+    <text x="454" y="217">최상단 보호 케이지</text>
+    <text x="454" y="234">내부 파란 집전 코어</text>
+    <text x="1219" y="272">파란 집전 코어 방출점</text>
+  </g>
+
+  <rect x="75" y="153" width="206" height="27" rx="13" fill="#112329" stroke="#63edff" stroke-opacity=".58"/>
+  <text x="178" y="171" fill="#7bf2ff" text-anchor="middle" font-family="Bahnschrift,sans-serif" font-size="10" font-weight="700" letter-spacing="1.7">CHARGE READY / LOOP</text>
+  <rect x="840" y="153" width="198" height="27" rx="13" fill="#112329" stroke="#63edff" stroke-opacity=".58"/>
+  <text x="939" y="171" fill="#7bf2ff" text-anchor="middle" font-family="Bahnschrift,sans-serif" font-size="10" font-weight="700" letter-spacing="1.7">DISCHARGE / BURST</text>
+
+  <text x="505" y="667" fill="#10212a" font-family="Segoe UI,sans-serif" font-size="23" font-weight="800">전류 모드 활성화</text>
+  <text x="505" y="692" fill="#47616a" font-family="Segoe UI,sans-serif" font-size="12">전체 전류봉 표시 · 집전부부터 검은 손잡이 상단까지 감싸는 전류</text>
+  <text x="1210" y="667" fill="#10212a" font-family="Segoe UI,sans-serif" font-size="23" font-weight="800">전류 방출</text>
+  <text x="1210" y="692" fill="#47616a" font-family="Segoe UI,sans-serif" font-size="12">파란 집전 코어에서 시작 · 굵은 코어와 짙은 외곽의 3~5m 전격</text>
+
+  <line x1="1182" y1="285" x2="1528" y2="242" stroke="#245a69" stroke-opacity=".42" stroke-dasharray="6 8"/>
+  <line x1="1390" y1="214" x2="1390" y2="257" stroke="#1d6a80"/>
+  <line x1="1528" y1="203" x2="1528" y2="246" stroke="#1d6a80"/>
+  <text x="1390" y="274" fill="#174b5a" text-anchor="middle" font-family="Bahnschrift,sans-serif" font-size="12" font-weight="700">3 m</text>
+  <text x="1528" y="263" fill="#174b5a" text-anchor="middle" font-family="Bahnschrift,sans-serif" font-size="12" font-weight="700">5 m</text>
+
+  <rect x="55" y="790" width="1490" height="72" rx="14" fill="#09131a" stroke="#7ccdde" stroke-opacity=".21"/>
+  <text x="79" y="819" fill="#b8f37a" font-family="Segoe UI,sans-serif" font-size="12" font-weight="800">ACTUAL UNITY MODEL RENDER LOCKED</text>
+  <text x="79" y="843" fill="#a9c4ca" font-family="Segoe UI,sans-serif" font-size="13">베이스는 Unity의 electric_baton.fbx와 현재 Material.001 직접 렌더입니다. 보호 케이지부터 하단 끝까지 표시하며 메시·텍스처·머티리얼은 변형하지 않았습니다.</text>
+</svg>

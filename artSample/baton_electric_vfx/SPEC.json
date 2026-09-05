@@ -1,0 +1,97 @@
+{
+  "sampleId": "baton-electric-vfx-unity-replayable",
+  "titleKo": "기존 전류봉 모델 기반 Unity 재생형 상단 전류 VFX",
+  "approvalStatus": "사용자 승인 대기",
+  "unitySampleApplied": true,
+  "gameplayConnected": false,
+  "source": {
+    "gameDesign": "docs/GAME_DESIGN_SOURCE.txt: 전류봉 충전 완료 스파크, 전류 방출 사거리 3~5m, 좁은 다중 피격",
+    "originalModel": "item model/electric baton.fbx",
+    "unityModel": "Assets/_Project/Art/Items/ElectricBaton/electric_baton.fbx",
+    "unityMaterial": "Assets/_Project/Art/Items/ElectricBaton/Materials/Material.001.mat",
+    "visualBase": "unity_model_full.png",
+    "referenceImage": "../../image/item/electric baton.png"
+  },
+  "preservation": {
+    "modelPixelsRedrawn": false,
+    "meshModified": false,
+    "uvModified": false,
+    "rigModified": false,
+    "textureModified": false,
+    "materialModified": false,
+    "gameplaySceneModified": false,
+    "sampleMethod": "기존 Unity FBX 인스턴스와 별도 LineRenderer 프리팹을 독립 샘플 씬에서 직접 재생하고 카메라로 렌더"
+  },
+  "confirmedDesignFacts": {
+    "batonLengthMeters": 0.5,
+    "chargeCompleteVisual": "전류봉 주변 전기 스파크 활성화",
+    "dischargeRangeMeters": [3, 5],
+    "hitWidth": "좁음",
+    "canHitMultipleTargets": true,
+    "targetStopSeconds": 2.5
+  },
+  "unityAssets": {
+    "assembly": "Assets/_Project/ArtSamples/BatonElectricVfx/Bellerophon.BatonElectricVfxSample.asmdef",
+    "controller": "Assets/_Project/ArtSamples/BatonElectricVfx/Scripts/BatonElectricVfxUnitySample.cs",
+    "sequence": "Assets/_Project/ArtSamples/BatonElectricVfx/Scripts/BatonElectricVfxSampleSequence.cs",
+    "chargePrefab": "Assets/_Project/ArtSamples/BatonElectricVfx/Prefabs/BatonChargeReadyVfx.prefab",
+    "dischargePrefab": "Assets/_Project/ArtSamples/BatonElectricVfx/Prefabs/BatonDischargeVfx.prefab",
+    "sampleScene": "Assets/_Project/ArtSamples/BatonElectricVfx/BatonElectricVfxSample.unity",
+    "materials": [
+      "Assets/_Project/ArtSamples/BatonElectricVfx/Materials/BatonElectricVioletHalo.mat",
+      "Assets/_Project/ArtSamples/BatonElectricVfx/Materials/BatonElectricDeepBlue.mat",
+      "Assets/_Project/ArtSamples/BatonElectricVfx/Materials/BatonElectricBrightBlue.mat",
+      "Assets/_Project/ArtSamples/BatonElectricVfx/Materials/BatonElectricCyanGlow.mat",
+      "Assets/_Project/ArtSamples/BatonElectricVfx/Materials/BatonElectricWhiteCore.mat"
+    ]
+  },
+  "chargeReady": {
+    "anchor": "검은 ON/OFF 손잡이 상단 경계",
+    "upperBoundary": "최상단 보호 케이지 내부 파란 집전 코어",
+    "heightMeters": 0.3,
+    "lineGroups": 11,
+    "layersPerLine": ["violet halo", "deep blue", "bright blue", "cyan glow", "white core"],
+    "motion": "11개 그룹이 서로 다른 불규칙 주기로 출현·소멸하고 위치·길이·회전 방향·곡률·반경을 계속 변경하며 최소 한 그룹은 항상 표시",
+    "continuousEffect": true,
+    "individualArcDisappear": true,
+    "regularCoilPattern": false,
+    "lowerGripEffect": false,
+    "runtimeAnimated": true
+  },
+  "discharge": {
+    "anchor": "최상단 보호 케이지 내부 파란 집전 코어",
+    "visualRangeMeters": 5,
+    "designRangeMeters": [3, 5],
+    "mainLineGroups": 1,
+    "branchLineGroups": 3,
+    "collectorArcGroups": 4,
+    "target": "최상단 집전 코어에서 전방 5m의 단일점",
+    "allLongPathsConvergeToSinglePoint": true,
+    "middlePathPattern": "각 궤적의 제어점 전진 간격·높이·깊이·진폭이 독립적으로 변하는 비대칭 불규칙 경로",
+    "regularDiamondPattern": false,
+    "layersPerLine": ["violet halo", "deep blue", "bright blue", "cyan glow", "white core"],
+    "restoredFrom": "artSample/baton_electric_vfx/preview_peak_comparison.svg",
+    "runtimeAnimated": true,
+    "gameplayCollisionSeparatedFromVfx": true
+  },
+  "samplePlayback": {
+    "cycleSeconds": 4,
+    "chargeReadySeconds": 2.4,
+    "dischargeSeconds": 1.6,
+    "independentScene": true
+  },
+  "captures": {
+    "chargeReady": "unity_charge_ready.png",
+    "dischargePeak": "unity_discharge_peak.png",
+    "comparison": "unity_sample_comparison.png",
+    "originalArtReference": "preview_peak_comparison.png",
+    "captureMeaning": "독립 Unity 샘플 씬에서 샘플 레이어만 격리해 실제 카메라로 렌더"
+  },
+  "excluded": [
+    "CargoRunMvp 씬과 Baton_Idle·공격 상태 연결",
+    "전류봉 메시·UV·리그·텍스처·머티리얼 변경",
+    "피해·충돌·감전 정지 판정",
+    "사운드·UI 구현",
+    "기존 애니메이션 변경"
+  ]
+}

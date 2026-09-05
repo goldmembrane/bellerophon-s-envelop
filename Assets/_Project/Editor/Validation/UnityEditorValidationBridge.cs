@@ -667,6 +667,117 @@ namespace Bellerophon.Editor.Validation
                             .CaptureFlamethrowerIdleStartViewFinal,
                         "Player Flamethrower_Idle start-view final image copied from the reviewed Play Mode frame.");
                     break;
+                case "ApplyBatonIdleStartView":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools.ApplyBatonIdleStartView,
+                        "Player start moved to the front framing for Baton_Idle.");
+                    break;
+                case "CaptureBatonIdleStartViewReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonIdleStartViewReview,
+                        "Player Baton_Idle start-view review advanced.");
+                    break;
+                case "ApplyBatonIdleOneHandCarry":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyBatonIdleOneHandCarry,
+                        "Baton_Idle exact Hands_Carry_OneHand animation and electric baton grip applied.");
+                    break;
+                case "CaptureBatonIdleOneHandCarryReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonIdleOneHandCarryReview,
+                        "Baton_Idle actual two-loop Play Mode review advanced.");
+                    break;
+                case "ApplyBatonSwingRightExactMixamo":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyBatonSwingRightExactMixamo,
+                        "Baton_Swing_Right exact embedded Mixamo Take and right-hand electric baton applied.");
+                    break;
+                case "CaptureBatonSwingRightExactMixamoReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonSwingRightExactMixamoReview,
+                        "Baton_Swing_Right actual two-loop Play Mode review advanced.");
+                    break;
+                case "ApplyBatonSwingRightStraightKnees":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyBatonSwingRightStraightKnees,
+                        "Baton_Swing_Right left/right lower-leg-only straight-knee curves applied.");
+                    break;
+                case "CaptureBatonSwingRightStraightKneesReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonSwingRightStraightKneesReview,
+                        "Baton_Swing_Right original/straight-knee actual two-loop Play Mode review advanced.");
+                    break;
+                case "ApplyBatonSwingRightStandingSwing":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyBatonSwingRightStandingSwing,
+                        "Baton_Swing_Right Baton_Idle standing lower body with exact swing upper body applied.");
+                    break;
+                case "CaptureBatonSwingRightStandingSwingReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonSwingRightStandingSwingReview,
+                        "Baton_Swing_Right standing actual two-loop Play Mode review advanced.");
+                    break;
+                case "ApplyBatonSwingRightTorsoClearance":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyBatonSwingRightTorsoClearance,
+                        "Baton_Swing_Right right-arm/electric-baton torso clearance applied.");
+                    break;
+                case "CaptureBatonSwingRightTorsoClearanceReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonSwingRightTorsoClearanceReview,
+                        "Baton_Swing_Right torso-clearance actual two-loop Play Mode review advanced.");
+                    break;
+                case "ApplyBatonDischargeStatesElectricBatonAndChargeVfx":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyBatonDischargeStatesElectricBatonAndChargeVfx,
+                        "Baton discharge states received the Baton_Idle right-hand electric baton transform and all five targets received the approved charge-ready VFX.");
+                    break;
+                case "CaptureBatonDischargeStatesElectricBatonAndChargeVfxReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonDischargeStatesElectricBatonAndChargeVfxReview,
+                        "Five Baton targets were captured in direct front, side, and right-hand VFX close-up views.");
+                    break;
+                case "ApplyBatonChargeVfxFullUpperRange":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyBatonChargeVfxFullUpperRange,
+                        "Approved charge-ready VFX fitted from the top of the handle through the collector tip on all five Baton targets.");
+                    break;
+                case "CaptureBatonChargeVfxFullUpperRangeReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonChargeVfxFullUpperRangeReview,
+                        "Five Baton targets captured for direct full-upper-range charge VFX review.");
+                    break;
                 case "ApplyMiniFlamethrowerModels":
                     RunSynchronous(
                         request,
@@ -743,6 +854,34 @@ namespace Bellerophon.Editor.Validation
                         PlayerHandsObjectAnimationTools
                             .CaptureFlamethrowerRemoteDetonateStartReview,
                         "Flamethrower_Remote_Detonate saved one-meter assembly placement and raised-forward palm-up right-hand state with zero added forearm axial twist captured from full-body and elevated close-up views for direct wrist review.");
+                    break;
+                case "ApplyFlamethrowerTankExplosionVfx":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyFlamethrowerTankExplosionVfx,
+                        "Approved remote 6m tank explosion VFX applied to Flamethrower_Remote_Detonate with one-second detonation, immediate complete assembly hiding, and three-second reset loop.");
+                    break;
+                case "CaptureFlamethrowerTankExplosionVfxReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureFlamethrowerTankExplosionVfxReview,
+                        "Flamethrower_Remote_Detonate tank explosion three-second cycle direct Play Mode review advanced.");
+                    break;
+                case "ApplyBatonElectricVfxUnitySample":
+                    RunSynchronous(
+                        request,
+                        BatonElectricVfxUnitySampleTool
+                            .ApplyBatonElectricVfxUnitySample,
+                        "Unity-replayable standalone electric baton charge-ready and discharge VFX prefabs and sample scene applied without gameplay linkage.");
+                    break;
+                case "CaptureBatonElectricVfxUnitySampleReview":
+                    RunSynchronous(
+                        request,
+                        BatonElectricVfxUnitySampleTool
+                            .CaptureBatonElectricVfxUnitySampleReview,
+                        "Standalone Unity electric baton VFX charge-ready and discharge direct review captures completed.");
                     break;
                 case "CaptureFlamethrowerAttackVfxArtSample":
                     RunSynchronous(

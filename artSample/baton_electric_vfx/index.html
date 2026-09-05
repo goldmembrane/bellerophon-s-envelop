@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Unity 재생형 전류봉 VFX 아트 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #05090d;
+      --panel: #091116;
+      --line: rgba(125, 201, 221, .20);
+      --cyan: #66efff;
+      --blue: #3489ff;
+      --text: #e8f6f8;
+      --muted: #88a7b0;
+      --lime: #b8f37a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 18% -10%, rgba(50, 137, 255, .16), transparent 38%),
+        radial-gradient(circle at 82% 5%, rgba(102, 239, 255, .08), transparent 32%),
+        var(--bg);
+      color: var(--text);
+      font-family: Pretendard, "Noto Sans KR", "Segoe UI", sans-serif;
+    }
+    .shell { width: min(1540px, calc(100% - 32px)); margin: 0 auto; padding: 30px 0 46px; }
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+      padding: 24px 2px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow, .tag, .mono {
+      font-family: Bahnschrift, "Segoe UI", sans-serif;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .eyebrow { color: var(--cyan); font-size: 11px; font-weight: 800; }
+    h1 { margin: 8px 0; font-size: clamp(28px, 4vw, 52px); line-height: 1.02; letter-spacing: -.04em; }
+    .subtitle { margin: 0; max-width: 940px; color: var(--muted); line-height: 1.65; }
+    .status {
+      justify-self: end;
+      border: 1px solid rgba(184, 243, 122, .34);
+      background: rgba(184, 243, 122, .07);
+      color: var(--lime);
+      border-radius: 999px;
+      padding: 9px 13px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .source {
+      margin: 18px 0;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 14px;
+      border: 1px solid rgba(102, 239, 255, .25);
+      background: rgba(10, 27, 34, .84);
+      border-radius: 12px;
+      font-size: 12px;
+      color: #b9d4da;
+    }
+    .source strong { color: #eaffff; }
+    .source .fixed { color: var(--cyan); font-weight: 900; }
+    .overview {
+      display: grid;
+      grid-template-columns: minmax(520px, 1.1fr) .9fr;
+      margin-bottom: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(184, 243, 122, .24);
+      border-radius: 16px;
+      background: linear-gradient(110deg, rgba(8, 18, 23, .98), rgba(7, 14, 18, .94));
+    }
+    .overview-stage { min-width: 0; border-right: 1px solid var(--line); background: #f1f4f5; }
+    .overview-stage img { display: block; width: 100%; max-height: 620px; object-fit: contain; }
+    .overview-copy { display: grid; align-content: center; gap: 13px; padding: 22px 26px; }
+    .overview-copy h2 { margin: 0; font-size: 22px; }
+    .overview-copy > p { margin: 0; color: #91b1b9; font-size: 12px; line-height: 1.62; }
+    .anatomy { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .anatomy div { padding: 10px 11px; border: 1px solid rgba(122, 193, 211, .16); border-radius: 9px; background: rgba(10, 25, 31, .7); }
+    .anatomy b { display: block; margin-bottom: 3px; color: #e7fbfd; font-size: 11px; }
+    .anatomy span { color: #7798a1; font-size: 10px; line-height: 1.4; }
+    .overview-note { color: var(--lime) !important; font-weight: 800; }
+    .comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .sample {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(11, 23, 29, .96), rgba(5, 11, 15, .98));
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .28);
+    }
+    .sample-head { display: flex; justify-content: space-between; gap: 16px; min-height: 88px; padding: 18px 20px 14px; border-bottom: 1px solid var(--line); }
+    .sample h2 { margin: 5px 0 0; font-size: 22px; }
+    .tag { color: var(--cyan); font-size: 9px; font-weight: 900; }
+    .readout { text-align: right; color: #6d8a93; font: 9px/1.4 Bahnschrift, monospace; letter-spacing: .12em; }
+    .readout b { display: block; color: #d7fcff; font-size: 18px; letter-spacing: .02em; }
+    .stage { background: #f1f4f5; }
+    .stage img { display: block; width: 100%; height: 470px; object-fit: contain; }
+    .sample-copy { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; border-top: 1px solid var(--line); }
+    .fact { padding: 13px 15px 15px; border-right: 1px solid var(--line); }
+    .fact:last-child { border-right: 0; }
+    dt { color: #6f8e97; font-size: 9px; letter-spacing: .12em; font-weight: 900; }
+    dd { margin: 6px 0 0; color: #d7eaee; font-size: 12px; line-height: 1.45; }
+    .details { display: grid; grid-template-columns: 1.15fr .85fr; gap: 16px; margin-top: 16px; }
+    .note, .assets, .implementation { padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: rgba(8, 16, 21, .88); }
+    h3 { margin: 0 0 11px; font-size: 14px; }
+    .note p, .assets p, .implementation { color: #92b0b8; font-size: 12px; line-height: 1.68; }
+    .note p, .assets p { margin: 8px 0; }
+    .note strong, .assets strong, .implementation strong { color: #e6f9fb; }
+    code { color: #d8fbff; overflow-wrap: anywhere; }
+    .implementation { margin-top: 16px; }
+    .static-review { overflow: hidden; margin: 16px 0 0; border: 1px solid var(--line); border-radius: 14px; background: #e8edf0; }
+    .static-review figcaption { padding: 12px 16px; color: #91b0b7; font-size: 11px; border-bottom: 1px solid var(--line); background: #071014; }
+    .static-review img { display: block; width: 100%; height: auto; }
+    footer { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-top: 18px; color: #66818a; font-size: 11px; }
+    .button { display: inline-block; margin: 3px 0; border: 1px solid rgba(102, 239, 255, .28); border-radius: 8px; padding: 9px 12px; background: rgba(50, 137, 255, .08); color: #d9fbff; font: 800 11px "Segoe UI", sans-serif; text-decoration: none; }
+    @media (max-width: 900px) {
+      header, .overview, .comparison, .details { grid-template-columns: 1fr; }
+      .status { justify-self: start; }
+      .overview-stage { border-right: 0; border-bottom: 1px solid var(--line); }
+      .stage img { height: auto; max-height: 560px; }
+    }
+    @media (max-width: 620px) {
+      .shell { width: min(100% - 16px, 1540px); padding-top: 10px; }
+      .source { grid-template-columns: 1fr; }
+      .anatomy, .sample-copy { grid-template-columns: 1fr; }
+      .fact { border-right: 0; border-bottom: 1px solid var(--line); }
+      footer { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div>
+        <div class="eyebrow">Bellerophon · Unity-replayable VFX sample</div>
+        <h1>전류봉 상단 전류 효과</h1>
+        <p class="subtitle">브라우저 합성 이미지를 사용하지 않고, Unity 6000.3의 실제 전류봉 FBX와 재생 가능한 LineRenderer 프리팹을 독립 샘플 씬에서 직접 렌더한 아트 샘플입니다.</p>
+      </div>
+      <div class="status">불규칙 연속 활성화 · 단일점 방출 · 승인 대기</div>
+    </header>
+
+    <section class="source" aria-label="Unity 샘플 정보">
+      <span class="fixed">UNITY ASSET READY</span>
+      <span><strong>실제 자산:</strong> 충전 프리팹 + 방출 프리팹 + 4초 반복 샘플 씬</span>
+      <span>게임 상태 연결 0 · 모델 변경 0</span>
+    </section>
+
+    <section class="overview" aria-label="전류봉 전체 구조">
+      <div class="overview-stage">
+        <img src="unity_model_full.png" alt="Unity에서 직접 렌더한 전류봉 전체 모습">
+      </div>
+      <div class="overview-copy">
+        <div class="tag">Full baton location guide</div>
+        <h2>현재 Unity 전류봉 전체 모델</h2>
+        <p>기존 <code>electric_baton.fbx</code>와 현재 머티리얼을 그대로 렌더했습니다. 아래 VFX 캡처도 같은 모델을 사용하며 별도 메시나 대체 봉을 생성하지 않았습니다.</p>
+        <div class="anatomy">
+          <div><b>① 파란 집전 코어</b><span>방출 전류가 시작되는 최상단 보호 케이지 내부</span></div>
+          <div><b>② 금속 상부</b><span>충전 완료 전류가 감싸는 중심 구간</span></div>
+          <div><b>③ ON/OFF 손잡이</b><span>활성화 효과가 진입하지 않는 검은 그립</span></div>
+          <div><b>④ 하단 끝</b><span>VFX 범위 밖으로 유지되는 손잡이 끝</span></div>
+        </div>
+        <p class="overview-note">전류봉 전체 길이 50cm · 메시·UV·텍스처·머티리얼 변경 없음</p>
+      </div>
+    </section>
+
+    <section class="comparison" aria-label="Unity VFX 직접 렌더 비교">
+      <article class="sample">
+        <div class="sample-head">
+          <div><div class="tag">State / Charge ready</div><h2>전류 모드 활성화</h2></div>
+          <div class="readout">COVERAGE<b>손잡이 상단</b>RUNTIME LOOP</div>
+        </div>
+        <div class="stage">
+          <img src="unity_charge_ready.png" alt="Unity 샘플 씬에서 직접 렌더한 전류 모드 활성화 프리팹">
+        </div>
+        <dl class="sample-copy">
+          <div class="fact"><dt>발생 범위</dt><dd>파란 집전 코어부터 검은 손잡이 상단 경계까지</dd></div>
+          <div class="fact"><dt>재생 방식</dt><dd>11개 독립 아크가 서로 다른 주기로 출현·소멸하고 형상을 갱신하되 전체 효과는 계속 유지</dd></div>
+          <div class="fact"><dt>모델 보존</dt><dd>전류봉 전체가 보이며 검은 그립 내부에는 진입하지 않음</dd></div>
+        </dl>
+      </article>
+
+      <article class="sample">
+        <div class="sample-head">
+          <div><div class="tag">Attack / Discharge</div><h2>전류 방출</h2></div>
+          <div class="readout">RANGE<b>3—5 m</b>NARROW HIT</div>
+        </div>
+        <div class="stage">
+          <img src="unity_discharge_peak.png" alt="Unity 샘플 씬에서 직접 렌더한 최상단 집전부 전류 방출 프리팹">
+        </div>
+        <dl class="sample-copy">
+          <div class="fact"><dt>발사점</dt><dd>보호 케이지 내부 파란 집전 코어</dd></div>
+          <div class="fact"><dt>형태</dt><dd>서로 다른 비대칭 불규칙 경로를 통과한 주 전격과 보조 궤적 3개가 전방 5m의 한 점으로 수렴</dd></div>
+          <div class="fact"><dt>기획 범위</dt><dd>최대 5m 시각 길이, 좁은 다중 피격 판정과 분리</dd></div>
+        </dl>
+      </article>
+    </section>
+
+    <section class="details">
+      <div class="note">
+        <h3>기획 확정값과 샘플 범위</h3>
+        <p><strong>기획 확정값:</strong> 전류봉 길이 50cm, 충전 완료 시 전기 스파크 활성화, 전류 방출 사거리 3~5m, 좁은 다중 피격, 대상 정지 2.5초입니다.</p>
+        <p><strong>이번 구현:</strong> 활성화는 11개 독립 아크가 각기 다른 시간 간격으로 나타났다 사라지며 형상을 계속 바꾸고, 임의 시점에도 최소 한 아크가 남아 전체 효과가 끊기지 않습니다. 방출은 5중 색상 구조를 유지하면서 각 궤적의 굴절 위치·간격·진폭·방향을 독립적으로 변화시켜 규칙적인 마름모를 없앴고, 시작점과 단일 목표점만 공유합니다.</p>
+        <p><strong>직접 확인:</strong> 밝은 배경에서 전류봉 전체, 손잡이 상단 하한, 최상단 발사점, 불규칙 활성화와 전방 5m 단일 목표점 수렴을 실제 Unity 카메라로 확인했습니다.</p>
+      </div>
+      <div class="assets">
+        <h3>재사용 가능한 Unity 자산</h3>
+        <p><strong>충전:</strong> <code>BatonChargeReadyVfx.prefab</code></p>
+        <p><strong>방출:</strong> <code>BatonDischargeVfx.prefab</code></p>
+        <p><strong>재생 씬:</strong> <code>BatonElectricVfxSample.unity</code></p>
+        <p><strong>컨트롤러:</strong> <code>BatonElectricVfxUnitySample.cs</code></p>
+      </div>
+    </section>
+
+    <div class="implementation">
+      <strong>적용 상태:</strong> 두 VFX는 독립 Unity 프리팹으로 실제 재생 가능하며 샘플 씬은 불규칙 연속 활성화 2.4초와 단일점 수렴형 방출 1.6초를 합친 4초 주기로 반복합니다. 실제 <code>Baton_Idle</code>·공격 상태 연결은 수행하지 않았습니다.
+    </div>
+
+    <figure class="static-review">
+      <figcaption>복원 기준 원본 · 최초 HTML 아트 시안</figcaption>
+      <img src="preview_peak_comparison.png" alt="최초 HTML 전류봉 활성화와 방출 아트 시안">
+    </figure>
+
+    <figure class="static-review">
+      <figcaption>Unity 수정 결과 · 왼쪽 불규칙 연속 활성화 / 오른쪽 단일점 수렴형 5m 방출</figcaption>
+      <img src="unity_sample_comparison.png" alt="Unity에서 직접 렌더한 전류봉 활성화와 방출 비교">
+    </figure>
+
+    <footer>
+      <span>Unity 5중 LineRenderer · 불규칙 연속 활성화 · 전방 5m 단일점 방출 · 실제 게임 상태 미연결</span>
+      <span>
+        <a class="button" href="unity_charge_ready.png">활성화 원본</a>
+        <a class="button" href="unity_discharge_peak.png">방출 원본</a>
+        <a class="button" href="unity_sample_comparison.png">비교 원본</a>
+        <a class="button" href="SPEC.json">SPEC.json</a>
+      </span>
+    </footer>
+  </main>
+</body>
+</html>

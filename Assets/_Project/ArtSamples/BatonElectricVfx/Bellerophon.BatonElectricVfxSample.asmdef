@@ -1,0 +1,14 @@
+{
+  "name": "Bellerophon.BatonElectricVfxSample",
+  "rootNamespace": "Bellerophon.ArtSamples",
+  "references": [],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
