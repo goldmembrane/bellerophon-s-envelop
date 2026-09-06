@@ -35,6 +35,13 @@ namespace Bellerophon.Editor
             "Baton_Discharge_Fire";
         private const string BatonDischargeExitTargetName =
             "Baton_Discharge_Exit";
+        private const string DaggerIdleTargetName = "Dagger_Idle";
+        private const string DaggerStabTargetName = "Dagger_Stab";
+        private const string DaggerThrowModeTargetName = "Dagger_Throw_Mode";
+        private const string DaggerThrowReleaseTargetName =
+            "Dagger_Throw_Release";
+        private const string DaggerThrowCancelTargetName =
+            "Dagger_Throw_Cancel";
         private const string FlamethrowerIdleTargetName = "Flamethrower_Idle";
         private const string FlamethrowerFireTargetName = "Flamethrower_Fire";
         private const string FlamethrowerRemoteModeTargetName =
@@ -1400,6 +1407,41 @@ namespace Bellerophon.Editor
             ElectricBatonAssetFolder + "/Textures";
         private const string ElectricBatonInstanceName =
             "Electric_Baton_RightHand";
+        private const string DaggerSourceModelPath =
+            "item model/dagger.fbx";
+        private const string DaggerAssetPath =
+            "Assets/_Project/Art/Items/Dagger/dagger.fbx";
+        private const string DaggerInstanceName = "Dagger_RightHand";
+        private const float DaggerScaleMultiplier = 0.70f;
+        private const float DaggerPalmLeftDegrees = 30f;
+        private const float DaggerShoulderRollShare = 0.10f;
+        private const float DaggerUpperArmRollShare = 0.20f;
+        private const float DaggerForeArmRollShare = 0.45f;
+        private static readonly Vector3 DaggerUserLocalPosition =
+            new Vector3(
+                -0.1313183307647705f,
+                -0.03518795967102051f,
+                -0.0789811760187149f);
+        private const string DaggerPreviousFinalPath =
+            "docs/validation/dagger_palm_left_30_2026-09-07/final.png";
+        private const string DaggerValidationDirectory =
+            "docs/validation/dagger_idle_position_sync_2026-09-07";
+        private const string DaggerCurrentPositionPath =
+            DaggerValidationDirectory + "/current_position.json";
+        private const string DaggerApplyMetricsPath =
+            DaggerValidationDirectory + "/apply_metrics.json";
+        private const string DaggerPositionSyncMetricsPath =
+            DaggerValidationDirectory + "/position_sync_metrics.json";
+        private const string DaggerFinalPath =
+            DaggerValidationDirectory + "/final.png";
+        private static readonly string[] DaggerTargetNames =
+        {
+            DaggerIdleTargetName,
+            DaggerStabTargetName,
+            DaggerThrowModeTargetName,
+            DaggerThrowReleaseTargetName,
+            DaggerThrowCancelTargetName
+        };
         private const string BatonChargeReadyVfxPrefabPath =
             "Assets/_Project/ArtSamples/BatonElectricVfx/Prefabs/BatonChargeReadyVfx.prefab";
         private const string BatonChargeReadyVfxInstanceName =
@@ -1457,6 +1499,108 @@ namespace Bellerophon.Editor
             "Bellerophon.BatonIdleOneHandCarry.Review.Stage";
         private const string BatonIdleReviewErrorKey =
             "Bellerophon.BatonIdleOneHandCarry.Review.Error";
+        private const string BatonDischargeModeOriginalPath =
+            "player model/transfer electronic emission.fbx";
+        private const string BatonDischargeModeSourceFolder =
+            BatonAnimationFolder + "/Source";
+        private const string BatonDischargeModeSourcePath =
+            BatonDischargeModeSourceFolder + "/transfer electronic emission.fbx";
+        private const string BatonDischargeModeSourceHash =
+            "301000283BAA44DC34D281A1EBB3D08083B42F0EA88734464CF82C38D1433F1B";
+        private const string BatonDischargeModeTransitionClipPath =
+            BatonAnimationFolder + "/Baton_Discharge_Mode_TransitionLoop.anim";
+        private const string BatonDischargeModeControllerPath =
+            BatonAnimationFolder + "/Baton_Discharge_Mode.controller";
+        private const string BatonDischargeModeTransitionStateName =
+            "BatonDischargeModeIdleTransition";
+        private const string BatonDischargeModeSourceStateName =
+            "BatonDischargeModeExactMixamo";
+        private const float BatonDischargeModeTransitionSeconds = 0.5f;
+        private const string BatonDischargeModeValidationDirectory =
+            "docs/validation/baton_discharge_mode_transition_2026-09-06";
+        private const string BatonDischargeModeApplyMetricsPath =
+            BatonDischargeModeValidationDirectory + "/apply_metrics.json";
+        private const string BatonDischargeModeReviewMetricsPath =
+            BatonDischargeModeValidationDirectory + "/review_metrics.json";
+        private const string BatonDischargeModeReviewPath =
+            BatonDischargeModeValidationDirectory + "/direct_playmode_review.png";
+        private const string BatonDischargeModeFinalPath =
+            BatonDischargeModeValidationDirectory + "/final.png";
+        private const string BatonDischargeModeReviewStageKey =
+            "Bellerophon.BatonDischargeModeTransition.Review.Stage";
+        private const string BatonDischargeModeReviewErrorKey =
+            "Bellerophon.BatonDischargeModeTransition.Review.Error";
+        private const string BatonDischargeExitControllerPath =
+            BatonAnimationFolder + "/Baton_Discharge_Exit.controller";
+        private const string BatonDischargeExitModeHoldStateName =
+            "BatonDischargeExitModePoseHold";
+        private const string BatonDischargeExitModeHoldClipName =
+            "BatonDischargeExitModePoseHoldClip";
+        private const string BatonDischargeExitSourceStateName =
+            "BatonDischargeExitExactMixamoReverse";
+        private const string BatonDischargeExitTransitionStateName =
+            "BatonDischargeExitIdleTransitionReverse";
+        private const string BatonDischargeExitIdleHoldStateName =
+            "BatonDischargeExitIdlePoseHold";
+        private const string BatonDischargeExitIdleHoldClipName =
+            "BatonDischargeExitIdlePoseHoldClip";
+        private const float BatonDischargeExitModeHoldSeconds = 0.2f;
+        private const float BatonDischargeExitSourceFastTailSeconds = 0f;
+        private const float
+            BatonDischargeExitSourceFastTailEndNormalizedTime = 1f;
+        private const float BatonDischargeExitIdleHoldSeconds = 0.5f;
+        private const string BatonDischargeExitValidationDirectory =
+            "docs/validation/baton_discharge_exit_mode_hold_2026-09-07";
+        private const string BatonDischargeExitApplyMetricsPath =
+            BatonDischargeExitValidationDirectory + "/apply_metrics.json";
+        private const string BatonDischargeExitReviewMetricsPath =
+            BatonDischargeExitValidationDirectory + "/review_metrics.json";
+        private const string BatonDischargeExitReviewPath =
+            BatonDischargeExitValidationDirectory + "/direct_playmode_review.png";
+        private const string BatonDischargeExitComparisonPath =
+            BatonDischargeExitValidationDirectory + "/mode_reverse_comparison.png";
+        private const string BatonDischargeExitFinalPath =
+            BatonDischargeExitValidationDirectory + "/final.png";
+        private const string BatonDischargeExitReviewStageKey =
+            "Bellerophon.BatonDischargeExitReverse.Review.Stage";
+        private const string BatonDischargeExitReviewErrorKey =
+            "Bellerophon.BatonDischargeExitReverse.Review.Error";
+        private const string BatonDischargeFireHoldClipPath =
+            BatonAnimationFolder + "/Baton_Discharge_Fire_Hold.anim";
+        private const string BatonDischargeFireControllerPath =
+            BatonAnimationFolder + "/Baton_Discharge_Fire.controller";
+        private const string BatonDischargeFireStateName =
+            "BatonDischargeFireHoldAndVfx";
+        private const string BatonDischargeVfxPrefabPath =
+            "Assets/_Project/ArtSamples/BatonElectricVfx/Prefabs/BatonDischargeVfx.prefab";
+        private const string BatonDischargeVfxInstanceName =
+            "BatonDischargeVfx";
+        private const string BatonDischargeFireCycleTypeName =
+            "Bellerophon.Vfx.BatonDischargeFireCycle, Bellerophon.Vfx";
+        private const string BatonDischargeFireBehaviourTypeName =
+            "Bellerophon.Vfx.BatonDischargeFireStateBehaviour, Bellerophon.Vfx";
+        private const float BatonDischargeFireEmissionSeconds = 1.6f;
+        private const float BatonDischargeFirePostHoldSeconds = 0.5f;
+        private const float BatonDischargeFireRangeMeters = 5f;
+        private const string BatonDischargeFireValidationDirectory =
+            "docs/validation/baton_discharge_fire_2026-09-06";
+        private const string BatonDischargeFireApplyMetricsPath =
+            BatonDischargeFireValidationDirectory + "/apply_metrics.json";
+        private const string BatonDischargeFireReviewMetricsPath =
+            BatonDischargeFireValidationDirectory + "/review_metrics.json";
+        private const string BatonDischargeFireReviewPath =
+            BatonDischargeFireValidationDirectory + "/direct_playmode_review.png";
+        private const string BatonDischargeFireFinalPath =
+            BatonDischargeFireValidationDirectory + "/final.png";
+        private const string BatonDischargeFireReferenceComparisonPath =
+            BatonDischargeFireValidationDirectory +
+            "/approved_sample_comparison.png";
+        private const string BatonDischargeFireApprovedReferencePath =
+            "artSample/baton_electric_vfx/unity_discharge_peak.png";
+        private const string BatonDischargeFireReviewStageKey =
+            "Bellerophon.BatonDischargeFire.Review.Stage";
+        private const string BatonDischargeFireReviewErrorKey =
+            "Bellerophon.BatonDischargeFire.Review.Error";
         private const string BatonSwingRightTargetName =
             "Baton_Swing_Right";
         private const string BatonSwingRightOriginalPath =
@@ -1544,6 +1688,69 @@ namespace Bellerophon.Editor
         private const float BatonSwingRightMaximumClearanceBiasMeters = 0.75f;
         private const float BatonSwingRightClearanceRollStepDegrees = 5f;
         private const float BatonSwingRightMaximumClearanceRollDegrees = 90f;
+        private const string BatonSwingRightNaturalLeftArmClipPath =
+            BatonAnimationFolder +
+            "/Baton_Swing_Right_StandingSwing_TorsoClearance_NaturalLeftArm.anim";
+        private const string BatonSwingRightNaturalLeftArmValidationDirectory =
+            "docs/validation/baton_swing_right_natural_left_arm_2026-09-06";
+        private const string BatonSwingRightNaturalLeftArmApplyMetricsPath =
+            BatonSwingRightNaturalLeftArmValidationDirectory +
+            "/apply_metrics.json";
+        private const string BatonSwingRightNaturalLeftArmReviewMetricsPath =
+            BatonSwingRightNaturalLeftArmValidationDirectory +
+            "/review_metrics.json";
+        private const string BatonSwingRightNaturalLeftArmReviewPath =
+            BatonSwingRightNaturalLeftArmValidationDirectory +
+            "/direct_playmode_review.png";
+        private const string BatonSwingRightNaturalLeftArmFinalPath =
+            BatonSwingRightNaturalLeftArmValidationDirectory + "/final.png";
+        private const string BatonSwingRightNaturalLeftArmReviewStageKey =
+            "Bellerophon.BatonSwingRightNaturalLeftArm.Review.Stage";
+        private const string BatonSwingRightNaturalLeftArmReviewErrorKey =
+            "Bellerophon.BatonSwingRightNaturalLeftArm.Review.Error";
+        private const string BatonSwingRightArmClearanceClipPath =
+            BatonAnimationFolder +
+            "/Baton_Swing_Right_StandingSwing_ArmClearance.anim";
+        private const string BatonSwingRightArmClearanceValidationDirectory =
+            "docs/validation/baton_swing_right_upper_torso_follow_2026-09-06";
+        private const string BatonSwingRightArmClearanceApplyMetricsPath =
+            BatonSwingRightArmClearanceValidationDirectory +
+            "/apply_metrics.json";
+        private const string BatonSwingRightArmClearanceReviewMetricsPath =
+            BatonSwingRightArmClearanceValidationDirectory +
+            "/review_metrics.json";
+        private const string BatonSwingRightArmClearanceReviewPath =
+            BatonSwingRightArmClearanceValidationDirectory +
+            "/direct_playmode_review.png";
+        private const string BatonSwingRightArmClearanceFinalPath =
+            BatonSwingRightArmClearanceValidationDirectory + "/final.png";
+        private const string BatonSwingRightArmClearanceReviewStageKey =
+            "Bellerophon.BatonSwingRightUpperTorsoFollow.Review.Stage";
+        private const string BatonSwingRightArmClearanceReviewErrorKey =
+            "Bellerophon.BatonSwingRightUpperTorsoFollow.Review.Error";
+        private const float BatonSwingRightArmSilhouetteGapMeters = 0.012f;
+        private const float BatonSwingRightArmClearanceBiasStepMeters = 0.01f;
+        private const float BatonSwingRightMaximumArmClearanceBiasMeters = 1f;
+        private const float BatonSwingRightTorsoMeshClearanceMeters = 0.015f;
+        private const float BatonSwingRightMaximumTorsoMeshForwardBiasMeters =
+            0.34f;
+        private const float BatonSwingRightTorsoMeshCorrectionStartPhase = 0.32f;
+        private const float BatonSwingRightTorsoMeshCorrectionFullPhase = 0.42f;
+        private const float BatonSwingRightTorsoMeshCorrectionReleasePhase = 0.74f;
+        private const float BatonSwingRightTorsoMeshCorrectionEndPhase = 0.86f;
+        private const float BatonSwingRightUpperTorsoRightWindupDegrees = 8f;
+        private const float BatonSwingRightUpperTorsoCollisionEntryDegrees = -18f;
+        private const float BatonSwingRightUpperTorsoCollisionPeakDegrees = -60f;
+        private const float BatonSwingRightUpperTorsoCollisionExitDegrees = -28f;
+        // Opens the right clavicle only through the chest-crossing interval so
+        // the authored right-to-left swing travels in front of the torso.
+        private const float BatonSwingRightShoulderForwardYawDegrees = -32f;
+        private const float BatonSwingRightTorsoBaseYawWeight = 1f;
+        private const float BatonSwingRightSolarPlexusYawWeight = 0f;
+        private const float BatonSwingRightUpperSpineYawWeight = 0f;
+        private const float BatonSwingRightMaximumUpperTorsoAwayPitchDegrees =
+            35f;
+        private const float BatonSwingRightUpperTorsoPitchSearchStepDegrees = 1f;
         private const float RightHandVertexWeightThreshold = 0.5f;
         private static readonly string[] StickExpectedTextureNames =
         {
@@ -1726,6 +1933,7 @@ namespace Bellerophon.Editor
         private const string ActualPalmInwardGripReviewStageKey =
             "Bellerophon.PlayerHandsCarryOneHandActualPalmInwardGrip.Review.Stage";
         private const string HipsPath = "Armature/Hips";
+        private const string TorsoBasePath = HipsPath + "/Spine02";
         private const string SolarPlexusPath =
             "Armature/Hips/Spine02/Spine01";
         private const string SpinePath =
@@ -3297,6 +3505,230 @@ namespace Bellerophon.Editor
         }
 
         [Serializable]
+        private sealed class BatonDischargeModeApplyMetrics
+        {
+            public string target;
+            public string originalFbxPath;
+            public string importedFbxPath;
+            public string originalFbxHash;
+            public string importedFbxHash;
+            public bool byteExactImport;
+            public string embeddedTakeName;
+            public float embeddedTakeDurationSeconds;
+            public float embeddedTakeFrameRate;
+            public int embeddedTakeFloatCurveBindings;
+            public int embeddedTakeObjectCurveBindings;
+            public bool importerIsGeneric;
+            public bool importerResampleCurvesDisabled;
+            public bool importerCompressionDisabled;
+            public bool embeddedTakeDoesNotLoopAlone;
+            public string transitionClipPath;
+            public float transitionDurationSeconds;
+            public float transitionFrameRate;
+            public int transitionTransformPaths;
+            public float startPosePositionDifferenceMeters;
+            public float startPoseRotationDifferenceDegrees;
+            public float endPosePositionDifferenceMeters;
+            public float endPoseRotationDifferenceDegrees;
+            public string controllerPath;
+            public string transitionStateName;
+            public string sourceStateName;
+            public bool controllerUsesTransitionClip;
+            public bool controllerUsesExactEmbeddedTakeDirectly;
+            public bool controllerSequenceExact;
+            public bool sequenceLoopsFromBatonIdle;
+            public bool animatorSettingsCorrect;
+            public bool targetRootUnchanged;
+            public bool otherAnimatorsUnchanged;
+            public bool batonParentIsRightHand;
+            public bool batonLocalTransformUnchanged;
+            public bool playerModelUnchanged;
+            public bool batonModelUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class BatonDischargeModeReviewMetrics
+        {
+            public string target;
+            public int actualPlayModeFramesCaptured;
+            public float actualLoopsObserved;
+            public float sequenceDurationSeconds;
+            public float transitionDurationSeconds;
+            public float embeddedTakeDurationSeconds;
+            public bool transitionStateObserved;
+            public bool exactMixamoStateObserved;
+            public bool returnedToBatonIdleTransition;
+            public bool batonVisible;
+            public bool batonParentIsRightHand;
+            public bool targetRootUnchanged;
+            public bool reviewContactSheetExists;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class BatonDischargeExitApplyMetrics
+        {
+            public string target;
+            public string modeControllerPath;
+            public string exitControllerPath;
+            public string transitionClipPath;
+            public string exactMixamoClipName;
+            public float transitionDurationSeconds;
+            public float exactMixamoDurationSeconds;
+            public float exactMixamoFrameRate;
+            public float sourceFinalStationaryTailSeconds;
+            public float modePoseHoldSeconds;
+            public float sourceReverseDurationSeconds;
+            public float sourceReverseFastTailSeconds;
+            public float sourceReverseFastTailEndNormalizedTime;
+            public float idlePoseHoldSeconds;
+            public float sequenceDurationSeconds;
+            public bool usesModeTransitionClipDirectly;
+            public bool usesExactEmbeddedTakeDirectly;
+            public bool defaultStateIsModePoseHold;
+            public bool controllerStatesAreExternallySampled;
+            public bool cycleDriverPresent;
+            public bool cycleDriverSettingsCorrect;
+            public bool holdStatesFreezeExactEndpoints;
+            public bool fourStateSequenceLoops;
+            public bool modeApplyMetricsPassed;
+            public float reverseBoundaryPositionDifferenceMeters;
+            public float reverseBoundaryRotationDifferenceDegrees;
+            public bool animatorSettingsCorrect;
+            public bool targetRootUnchanged;
+            public bool otherAnimatorsUnchanged;
+            public bool batonParentIsRightHand;
+            public bool batonLocalTransformUnchanged;
+            public int batonLineRendererCountBefore;
+            public int batonLineRendererCountAfter;
+            public bool batonVfxHierarchyUnchanged;
+            public string modeControllerHashBefore;
+            public string modeControllerHashAfter;
+            public string transitionClipHashBefore;
+            public string transitionClipHashAfter;
+            public string sourceAnimationHashBefore;
+            public string sourceAnimationHashAfter;
+            public string electricBatonModelHashBefore;
+            public string electricBatonModelHashAfter;
+            public bool sourceAssetsUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class BatonDischargeExitReviewMetrics
+        {
+            public string target;
+            public int actualPlayModeFramesCaptured;
+            public float actualLoopsObserved;
+            public float sequenceDurationSeconds;
+            public float modePoseHoldSeconds;
+            public float idlePoseHoldSeconds;
+            public float observedModePoseHoldSeconds;
+            public float observedIdlePoseHoldSeconds;
+            public bool cycleDriverPresent;
+            public bool cycleDriverSettingsCorrect;
+            public bool modePoseHoldStateObserved;
+            public bool exactMixamoReverseStateObserved;
+            public bool idleTransitionReverseStateObserved;
+            public bool idlePoseHoldStateObserved;
+            public bool returnedToModePoseHold;
+            public float maximumModeHoldPosePositionDifferenceMeters;
+            public float maximumModeHoldPoseRotationDifferenceDegrees;
+            public float maximumIdleHoldPosePositionDifferenceMeters;
+            public float maximumIdleHoldPoseRotationDifferenceDegrees;
+            public float maximumReversePosePositionDifferenceMeters;
+            public float maximumReversePoseRotationDifferenceDegrees;
+            public bool exactReversePoseOrder;
+            public bool batonVisible;
+            public bool batonParentIsRightHand;
+            public bool targetRootUnchanged;
+            public bool reviewContactSheetExists;
+            public bool modeReverseComparisonExists;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        private sealed class BatonDischargeModeLocalPose
+        {
+            internal Vector3 Position;
+            internal Quaternion Rotation;
+            internal Vector3 Scale;
+        }
+
+        [Serializable]
+        private sealed class BatonDischargeFireApplyMetrics
+        {
+            public string target;
+            public string sourceTakeName;
+            public float sourceTakeDurationSeconds;
+            public string holdClipPath;
+            public float holdClipDurationSeconds;
+            public int holdTransformCurveBindings;
+            public float holdStartPositionDifferenceMeters;
+            public float holdStartRotationDifferenceDegrees;
+            public float holdEmissionEndPositionDifferenceMeters;
+            public float holdEmissionEndRotationDifferenceDegrees;
+            public float holdCycleEndPositionDifferenceMeters;
+            public float holdCycleEndRotationDifferenceDegrees;
+            public string controllerPath;
+            public string stateName;
+            public bool controllerUsesHoldClip;
+            public bool holdClipLoops;
+            public bool animatorSettingsCorrect;
+            public string approvedDischargePrefabPath;
+            public string approvedDischargePrefabHashBefore;
+            public string approvedDischargePrefabHashAfter;
+            public bool approvedDischargePrefabUnchanged;
+            public bool dischargeVfxParentIsBaton;
+            public int dischargeLineRendererCount;
+            public float dischargeRangeMeters;
+            public float dischargeSeconds;
+            public float postDischargeHoldSeconds;
+            public float cycleDurationSeconds;
+            public float dischargeAnchorDifferenceMeters;
+            public float dischargeAxisDifferenceDegrees;
+            public float dischargeEndHeightDifferenceFromChestMeters;
+            public float dischargeDownwardAngleDegrees;
+            public int stateBehaviourCount;
+            public bool targetRootUnchanged;
+            public bool otherAnimatorsUnchanged;
+            public bool batonParentIsRightHand;
+            public bool batonLocalTransformUnchanged;
+            public bool sourceAnimationUnchanged;
+            public bool electricBatonModelUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class BatonDischargeFireReviewMetrics
+        {
+            public string target;
+            public int actualPlayModeFramesCaptured;
+            public float actualLoopsObserved;
+            public float cycleDurationSeconds;
+            public float dischargeSeconds;
+            public float postDischargeHoldSeconds;
+            public bool dischargeVisibleDuringEmission;
+            public bool dischargeHiddenDuringPostHold;
+            public bool dischargeReturnedOnNextLoop;
+            public bool fixedPoseMaintained;
+            public float maximumFixedPosePositionDifferenceMeters;
+            public float maximumFixedPoseRotationDifferenceDegrees;
+            public bool batonVisible;
+            public bool batonParentIsRightHand;
+            public bool targetRootUnchanged;
+            public bool reviewContactSheetExists;
+            public bool referenceComparisonExists;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
         private sealed class BatonSwingRightReviewMetrics
         {
             public string target;
@@ -3509,6 +3941,227 @@ namespace Bellerophon.Editor
             public bool reviewContactSheetExists;
             public bool passedNumericChecks;
             public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class BatonSwingRightNaturalLeftArmApplyMetrics
+        {
+            public string target;
+            public string sourceClipPath;
+            public string batonIdleReferenceClipPath;
+            public string adjustedClipPath;
+            public float durationSeconds;
+            public float frameRate;
+            public int framesPerLoop;
+            public int adjustedLeftArmRotationCurveBindings;
+            public float maximumLeftArmReferenceDifferenceDegrees;
+            public float maximumLeftArmChangeFromSourceDegrees;
+            public bool onlyLeftArmChainRotationCurvesDiffer;
+            public bool eventsExact;
+            public bool durationFrameRateAndLoopExact;
+            public bool controllerUsesAdjustedClip;
+            public bool targetRootUnchanged;
+            public bool everyAnimatorAssignmentUnchanged;
+            public bool batonParentAndLocalTransformUnchanged;
+            public string sourceClipHashBefore;
+            public string sourceClipHashAfter;
+            public string idleReferenceClipHashBefore;
+            public string idleReferenceClipHashAfter;
+            public string playerModelHashBefore;
+            public string playerModelHashAfter;
+            public string batonModelHashBefore;
+            public string batonModelHashAfter;
+            public bool sourceClipUnchanged;
+            public bool idleReferenceClipUnchanged;
+            public bool playerModelUnchanged;
+            public bool batonModelUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class BatonSwingRightNaturalLeftArmReviewMetrics
+        {
+            public string target;
+            public int actualPlayModeFramesCaptured;
+            public float actualLoopsObserved;
+            public float clipDurationSeconds;
+            public bool stateIsBatonSwingRight;
+            public bool stateLoops;
+            public bool batonVisible;
+            public bool batonParentIsRightHand;
+            public bool targetRootUnchanged;
+            public float maximumCapturedLeftArmReferenceDifferenceDegrees;
+            public bool reviewContactSheetExists;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class BatonSwingRightArmClearanceApplyMetrics
+        {
+            public string target;
+            public string sourceClipPath;
+            public string adjustedClipPath;
+            public float durationSeconds;
+            public float frameRate;
+            public int framesPerLoop;
+            public float measuredLeftPalmWidthMeters;
+            public float requestedLeftArmGapMeters;
+            public float requestedLeftHandOutwardShiftMeters;
+            public float minimumLeftHandOutwardShiftMeters;
+            public float requestedRightArmGapMeters;
+            public float sourceMinimumLeftArmSilhouetteGapMeters;
+            public float adjustedMinimumLeftArmSilhouetteGapMeters;
+            public float sourceMinimumRightArmSilhouetteGapMeters;
+            public float adjustedMinimumRightArmSilhouetteGapMeters;
+            public float sourceMinimumRightArmTorsoClearanceMeters;
+            public float adjustedMinimumRightArmTorsoClearanceMeters;
+            public float sourceMinimumRightArmMeshFrontClearanceMeters;
+            public float adjustedMinimumRightArmMeshFrontClearanceMeters;
+            public int sourceRightArmMeshFrontSamples;
+            public int adjustedRightArmMeshFrontSamples;
+            public float[] sourceRightArmMeshFrontClearanceMetersByFrame;
+            public float[] adjustedRightArmMeshFrontClearanceMetersByFrame;
+            public float[] appliedTorsoMeshForwardBiasMetersByFrame;
+            public float[] appliedUpperTorsoYawDegreesByFrame;
+            public float[] appliedUpperTorsoAwayPitchDegreesByFrame;
+            public float[] appliedRightShoulderForwardYawDegreesByFrame;
+            public float sourceMinimumBatonTorsoClearanceMeters;
+            public float adjustedMinimumBatonTorsoClearanceMeters;
+            public int sourceRightArmOverlapFrameCount;
+            public int adjustedRightArmOverlapFrameCount;
+            public float maximumLeftHandShiftMeters;
+            public float maximumRightHandShiftMeters;
+            public float maximumRightHandLateralDeviationMeters;
+            public float maximumRightHandVerticalDeviationMeters;
+            public float maximumRightHandForwardShiftMeters;
+            public float maximumAppliedTorsoMeshForwardBiasMeters;
+            public float minimumAppliedUpperTorsoYawDegrees;
+            public float maximumAppliedUpperTorsoYawDegrees;
+            public float maximumAppliedUpperTorsoYawMagnitudeDegrees;
+            public float minimumAppliedUpperTorsoAwayPitchDegrees;
+            public float maximumAppliedUpperTorsoAwayPitchDegrees;
+            public float minimumAppliedRightShoulderForwardYawDegrees;
+            public float maximumAppliedRightShoulderForwardYawMagnitudeDegrees;
+            public float maximumIkTargetErrorMeters;
+            public float leftArmOutwardRotationDegrees;
+            public float rightArmOutwardRotationDegrees;
+            public float rightArmOutwardLiftRotationDegrees;
+            public float maximumElbowFlexDifferenceDegrees;
+            public float sourceRightHandLateralSpanMeters;
+            public float adjustedRightHandLateralSpanMeters;
+            public float rightHandLateralSpanDifferenceMeters;
+            public int adjustedArmRotationCurveBindings;
+            public bool onlyApprovedArmRotationCurvesDiffer;
+            public bool rightForeArmAndHandCurvesExact;
+            public bool rightArmChainCurvesExact;
+            public bool eventsExact;
+            public bool durationFrameRateAndLoopExact;
+            public bool controllerUsesAdjustedClip;
+            public bool targetRootUnchanged;
+            public bool everyAnimatorAssignmentUnchanged;
+            public bool batonParentAndLocalTransformUnchanged;
+            public string sourceClipHashBefore;
+            public string sourceClipHashAfter;
+            public string playerModelHashBefore;
+            public string playerModelHashAfter;
+            public string batonModelHashBefore;
+            public string batonModelHashAfter;
+            public bool sourceClipUnchanged;
+            public bool playerModelUnchanged;
+            public bool batonModelUnchanged;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        [Serializable]
+        private sealed class BatonSwingRightArmClearanceReviewMetrics
+        {
+            public string target;
+            public int actualPlayModeFramesCaptured;
+            public float actualLoopsObserved;
+            public float clipDurationSeconds;
+            public bool stateIsBatonSwingRight;
+            public bool stateLoops;
+            public bool batonVisible;
+            public bool batonParentIsRightHand;
+            public bool targetRootUnchanged;
+            public float minimumCapturedLeftArmSilhouetteGapMeters;
+            public float minimumCapturedRightArmSilhouetteGapMeters;
+            public float minimumCapturedRightArmTorsoClearanceMeters;
+            public float minimumCapturedRightArmMeshFrontClearanceMeters;
+            public int capturedRightArmMeshFrontSamples;
+            public float minimumCapturedBatonTorsoClearanceMeters;
+            public float maximumCapturedRightHandPositionDifferenceMeters;
+            public float maximumCapturedRightHandLateralDeviationMeters;
+            public float maximumCapturedRightHandVerticalDeviationMeters;
+            public float maximumCapturedRightHandForwardShiftMeters;
+            public bool reviewContactSheetExists;
+            public bool passedNumericChecks;
+            public string validationPriority;
+        }
+
+        private sealed class BatonSwingRightArmClearanceBuildResult
+        {
+            internal AnimationClip Clip;
+            internal int FramesPerLoop;
+            internal float LeftPalmWidth;
+            internal float SourceMinimumLeftGap = float.PositiveInfinity;
+            internal float AdjustedMinimumLeftGap = float.PositiveInfinity;
+            internal float MinimumLeftHandOutwardShift = float.PositiveInfinity;
+            internal float SourceMinimumRightGap = float.PositiveInfinity;
+            internal float AdjustedMinimumRightGap = float.PositiveInfinity;
+            internal float SourceMinimumRightTorsoClearance =
+                float.PositiveInfinity;
+            internal float AdjustedMinimumRightTorsoClearance =
+                float.PositiveInfinity;
+            internal float SourceMinimumRightMeshFrontClearance =
+                float.PositiveInfinity;
+            internal float AdjustedMinimumRightMeshFrontClearance =
+                float.PositiveInfinity;
+            internal int SourceRightMeshFrontSamples;
+            internal int AdjustedRightMeshFrontSamples;
+            internal float[] SourceRightMeshFrontClearanceByFrame;
+            internal float[] AdjustedRightMeshFrontClearanceByFrame;
+            internal float[] AppliedTorsoMeshForwardBiasByFrame;
+            internal float[] AppliedUpperTorsoYawDegreesByFrame;
+            internal float[] AppliedUpperTorsoAwayPitchDegreesByFrame;
+            internal float[] AppliedRightShoulderForwardYawDegreesByFrame;
+            internal float SourceMinimumBatonTorsoClearance =
+                float.PositiveInfinity;
+            internal float AdjustedMinimumBatonTorsoClearance =
+                float.PositiveInfinity;
+            internal float SourceRightHandLateralMinimum =
+                float.PositiveInfinity;
+            internal float SourceRightHandLateralMaximum =
+                float.NegativeInfinity;
+            internal float AdjustedRightHandLateralMinimum =
+                float.PositiveInfinity;
+            internal float AdjustedRightHandLateralMaximum =
+                float.NegativeInfinity;
+            internal int SourceRightOverlapFrameCount;
+            internal int AdjustedRightOverlapFrameCount;
+            internal float MaximumLeftHandShift;
+            internal float MaximumRightHandShift;
+            internal float MaximumRightHandLateralDeviation;
+            internal float MaximumRightHandVerticalDeviation;
+            internal float MaximumRightHandForwardShift;
+            internal float MaximumAppliedTorsoMeshForwardBias;
+            internal float MinimumAppliedUpperTorsoYawDegrees =
+                float.PositiveInfinity;
+            internal float MaximumAppliedUpperTorsoYawDegrees =
+                float.NegativeInfinity;
+            internal float MaximumAppliedUpperTorsoYawMagnitudeDegrees;
+            internal float MinimumAppliedUpperTorsoAwayPitchDegrees;
+            internal float MaximumAppliedUpperTorsoAwayPitchDegrees;
+            internal float MinimumAppliedRightShoulderForwardYawDegrees;
+            internal float MaximumAppliedRightShoulderForwardYawMagnitudeDegrees;
+            internal float MaximumIkTargetError;
+            internal float LeftArmOutwardRotationDegrees;
+            internal float RightArmOutwardRotationDegrees;
+            internal float RightArmOutwardLiftRotationDegrees;
+            internal float MaximumElbowFlexDifferenceDegrees;
         }
 
         private sealed class BatonSwingRightTorsoClearanceBuildResult
@@ -35555,6 +36208,3894 @@ namespace Bellerophon.Editor
             return baton;
         }
 
+        [MenuItem("Bellerophon/Player/Apply Baton Discharge Mode Transition")]
+        internal static void ApplyBatonDischargeModeTransition()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[BatonDischargeModeTransition] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            EnsureStickAssetFolder(BatonAnimationFolder);
+            EnsureStickAssetFolder(BatonDischargeModeSourceFolder);
+            EnsureExactSourceCopy(
+                BatonDischargeModeOriginalPath,
+                BatonDischargeModeSourcePath,
+                BatonDischargeModeSourceHash,
+                "electronic emission");
+            ConfigureBatonDischargeModeSourceImporter();
+            AnimationClip sourceTake = LoadSingleEmbeddedClip(
+                BatonDischargeModeSourcePath,
+                "electronic emission");
+            ModelImporter importer = AssetImporter.GetAtPath(
+                BatonDischargeModeSourcePath) as ModelImporter ??
+                throw new InvalidOperationException(
+                    "Electronic emission FBX importer is unavailable after configuration.");
+            AnimatorController idleController =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    BatonIdleControllerPath) ??
+                throw new FileNotFoundException(
+                    "Baton_Idle controller is missing.",
+                    Path.GetFullPath(BatonIdleControllerPath));
+            AnimationClip idleBaseClip = RequireDefaultLayerClip(
+                idleController,
+                0,
+                AlignmentBaseStateName);
+            AnimationClip idleArmClip = RequireDefaultLayerClip(
+                idleController,
+                1,
+                BatonIdleStateName);
+
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(
+                layout,
+                BatonDischargeModeTargetName);
+            RootPose targetRootBefore = new RootPose(target);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTarget(
+                    layout,
+                    BatonDischargeModeTargetName);
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform baton = rightHand.Find(ElectricBatonInstanceName) ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Mode has no right-hand electric baton.");
+            RootPose batonPoseBefore = new RootPose(baton);
+            string playerModelHashBefore = HashFile(PlayerModelPath);
+            string batonModelHashBefore = HashFile(ElectricBatonAssetPath);
+            AnimationClip transitionClip =
+                CreateOrUpdateBatonDischargeModeTransitionClip(
+                    target,
+                    idleBaseClip,
+                    idleArmClip,
+                    sourceTake,
+                    out int transitionTransformPaths,
+                    out float startPositionDifference,
+                    out float startRotationDifference,
+                    out float endPositionDifference,
+                    out float endRotationDifference);
+            AnimatorController controller =
+                CreateOrUpdateBatonDischargeModeController(
+                    transitionClip,
+                    sourceTake);
+            Animator animator = ConfigureAnimator(target, controller);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+
+            string originalHash = HashFile(BatonDischargeModeOriginalPath);
+            string importedHash = HashFile(BatonDischargeModeSourcePath);
+            bool controllerSequenceExact =
+                BatonDischargeModeControllerIsExact(
+                    controller,
+                    transitionClip,
+                    sourceTake);
+            BatonDischargeModeApplyMetrics metrics =
+                new BatonDischargeModeApplyMetrics
+                {
+                    target = BatonDischargeModeTargetName,
+                    originalFbxPath = BatonDischargeModeOriginalPath,
+                    importedFbxPath = BatonDischargeModeSourcePath,
+                    originalFbxHash = originalHash,
+                    importedFbxHash = importedHash,
+                    byteExactImport = string.Equals(
+                        originalHash,
+                        importedHash,
+                        StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(
+                            originalHash,
+                            BatonDischargeModeSourceHash,
+                            StringComparison.OrdinalIgnoreCase),
+                    embeddedTakeName = sourceTake.name,
+                    embeddedTakeDurationSeconds = sourceTake.length,
+                    embeddedTakeFrameRate = sourceTake.frameRate,
+                    embeddedTakeFloatCurveBindings = AnimationUtility
+                        .GetCurveBindings(sourceTake).Length,
+                    embeddedTakeObjectCurveBindings = AnimationUtility
+                        .GetObjectReferenceCurveBindings(sourceTake).Length,
+                    importerIsGeneric = importer.animationType ==
+                        ModelImporterAnimationType.Generic,
+                    importerResampleCurvesDisabled = !importer.resampleCurves,
+                    importerCompressionDisabled = importer.animationCompression ==
+                        ModelImporterAnimationCompression.Off,
+                    embeddedTakeDoesNotLoopAlone = !AnimationUtility
+                        .GetAnimationClipSettings(sourceTake).loopTime,
+                    transitionClipPath =
+                        BatonDischargeModeTransitionClipPath,
+                    transitionDurationSeconds = transitionClip.length,
+                    transitionFrameRate = transitionClip.frameRate,
+                    transitionTransformPaths = transitionTransformPaths,
+                    startPosePositionDifferenceMeters =
+                        startPositionDifference,
+                    startPoseRotationDifferenceDegrees =
+                        startRotationDifference,
+                    endPosePositionDifferenceMeters = endPositionDifference,
+                    endPoseRotationDifferenceDegrees = endRotationDifference,
+                    controllerPath = BatonDischargeModeControllerPath,
+                    transitionStateName =
+                        BatonDischargeModeTransitionStateName,
+                    sourceStateName = BatonDischargeModeSourceStateName,
+                    controllerUsesTransitionClip = controller.layers[0]
+                        .stateMachine.states
+                        .Select(child => child.state)
+                        .Any(state =>
+                            string.Equals(
+                                state.name,
+                                BatonDischargeModeTransitionStateName,
+                                StringComparison.Ordinal) &&
+                            state.motion == transitionClip),
+                    controllerUsesExactEmbeddedTakeDirectly = controller.layers[0]
+                        .stateMachine.states
+                        .Select(child => child.state)
+                        .Any(state =>
+                            string.Equals(
+                                state.name,
+                                BatonDischargeModeSourceStateName,
+                                StringComparison.Ordinal) &&
+                            state.motion == sourceTake),
+                    controllerSequenceExact = controllerSequenceExact,
+                    sequenceLoopsFromBatonIdle = controllerSequenceExact,
+                    animatorSettingsCorrect = AnimatorMatches(
+                        animator,
+                        controller),
+                    targetRootUnchanged = RootMatches(
+                        target,
+                        targetRootBefore),
+                    otherAnimatorsUnchanged = DictionariesEqual(
+                        otherAnimatorsBefore,
+                        CaptureAnimatorsExceptTarget(
+                            layout,
+                            BatonDischargeModeTargetName)),
+                    batonParentIsRightHand = baton.parent == rightHand,
+                    batonLocalTransformUnchanged = RootMatches(
+                        baton,
+                        batonPoseBefore),
+                    playerModelUnchanged = string.Equals(
+                        playerModelHashBefore,
+                        HashFile(PlayerModelPath),
+                        StringComparison.OrdinalIgnoreCase),
+                    batonModelUnchanged = string.Equals(
+                        batonModelHashBefore,
+                        HashFile(ElectricBatonAssetPath),
+                        StringComparison.OrdinalIgnoreCase),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                metrics.byteExactImport &&
+                metrics.importerIsGeneric &&
+                metrics.importerResampleCurvesDisabled &&
+                metrics.importerCompressionDisabled &&
+                metrics.embeddedTakeDoesNotLoopAlone &&
+                Mathf.Abs(
+                    metrics.transitionDurationSeconds -
+                    BatonDischargeModeTransitionSeconds) <= 0.0001f &&
+                metrics.transitionTransformPaths > 0 &&
+                metrics.startPosePositionDifferenceMeters <= 0.0001f &&
+                metrics.startPoseRotationDifferenceDegrees <= 0.01f &&
+                metrics.endPosePositionDifferenceMeters <= 0.0001f &&
+                metrics.endPoseRotationDifferenceDegrees <= 0.01f &&
+                metrics.controllerUsesTransitionClip &&
+                metrics.controllerUsesExactEmbeddedTakeDirectly &&
+                metrics.controllerSequenceExact &&
+                metrics.sequenceLoopsFromBatonIdle &&
+                metrics.animatorSettingsCorrect &&
+                metrics.targetRootUnchanged &&
+                metrics.otherAnimatorsUnchanged &&
+                metrics.batonParentIsRightHand &&
+                metrics.batonLocalTransformUnchanged &&
+                metrics.playerModelUnchanged &&
+                metrics.batonModelUnchanged;
+            WriteJson(BatonDischargeModeApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Mode transition support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            foreach (string reviewPath in new[]
+                     {
+                         BatonDischargeModeReviewMetricsPath,
+                         BatonDischargeModeReviewPath,
+                         BatonDischargeModeFinalPath
+                     })
+            {
+                string absolute = Path.GetFullPath(reviewPath);
+                if (File.Exists(absolute))
+                {
+                    File.Delete(absolute);
+                }
+            }
+
+            SessionState.EraseInt(BatonDischargeModeReviewStageKey);
+            SessionState.EraseString(BatonDischargeModeReviewErrorKey);
+            Debug.Log(
+                "[BatonDischargeModeTransition] Applied exact 0.5-second Baton_Idle transition followed by the directly referenced embedded Mixamo Take. " +
+                "Take=" + sourceTake.name +
+                ", TakeDuration=" + Num(sourceTake.length) +
+                "s, TransitionPaths=" +
+                transitionTransformPaths.ToString(CultureInfo.InvariantCulture) + ".");
+        }
+
+        private static AnimationClip
+            CreateOrUpdateBatonDischargeModeTransitionClip(
+                Transform target,
+                AnimationClip idleBaseClip,
+                AnimationClip idleArmClip,
+                AnimationClip sourceTake,
+                out int transformPathCount,
+                out float startPositionDifference,
+                out float startRotationDifference,
+                out float endPositionDifference,
+                out float endRotationDifference)
+        {
+            string[] paths = AnimationUtility.GetCurveBindings(idleBaseClip)
+                .Concat(AnimationUtility.GetCurveBindings(idleArmClip))
+                .Concat(AnimationUtility.GetCurveBindings(sourceTake))
+                .Where(binding => binding.type == typeof(Transform))
+                .Select(binding => binding.path)
+                .Where(path =>
+                    !string.IsNullOrEmpty(path) &&
+                    target.Find(path) != null)
+                .Distinct(StringComparer.Ordinal)
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+            if (paths.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Mode transition found no compatible Transform paths.");
+            }
+
+            Dictionary<string, BatonDischargeModeLocalPose> idlePose =
+                CaptureBatonDischargeModeIdlePose(
+                    target,
+                    idleBaseClip,
+                    idleArmClip,
+                    paths);
+            Dictionary<string, BatonDischargeModeLocalPose> sourcePose =
+                CaptureBatonDischargeModeClipPose(
+                    target,
+                    sourceTake,
+                    0f,
+                    paths);
+            AnimationClip generated = new AnimationClip
+            {
+                name = "Baton_Discharge_Mode_TransitionLoop",
+                frameRate = sourceTake.frameRate,
+                wrapMode = WrapMode.Once,
+                legacy = false
+            };
+            foreach (string path in paths)
+            {
+                BatonDischargeModeLocalPose start = idlePose[path];
+                BatonDischargeModeLocalPose end = sourcePose[path];
+                Quaternion endRotation = end.Rotation;
+                if (Quaternion.Dot(start.Rotation, endRotation) < 0f)
+                {
+                    endRotation = new Quaternion(
+                        -endRotation.x,
+                        -endRotation.y,
+                        -endRotation.z,
+                        -endRotation.w);
+                }
+
+                SetBatonDischargeModeTransitionCurve(
+                    generated,
+                    path,
+                    "m_LocalPosition.x",
+                    start.Position.x,
+                    end.Position.x);
+                SetBatonDischargeModeTransitionCurve(
+                    generated,
+                    path,
+                    "m_LocalPosition.y",
+                    start.Position.y,
+                    end.Position.y);
+                SetBatonDischargeModeTransitionCurve(
+                    generated,
+                    path,
+                    "m_LocalPosition.z",
+                    start.Position.z,
+                    end.Position.z);
+                SetBatonDischargeModeTransitionCurve(
+                    generated,
+                    path,
+                    "m_LocalRotation.x",
+                    start.Rotation.x,
+                    endRotation.x);
+                SetBatonDischargeModeTransitionCurve(
+                    generated,
+                    path,
+                    "m_LocalRotation.y",
+                    start.Rotation.y,
+                    endRotation.y);
+                SetBatonDischargeModeTransitionCurve(
+                    generated,
+                    path,
+                    "m_LocalRotation.z",
+                    start.Rotation.z,
+                    endRotation.z);
+                SetBatonDischargeModeTransitionCurve(
+                    generated,
+                    path,
+                    "m_LocalRotation.w",
+                    start.Rotation.w,
+                    endRotation.w);
+                SetBatonDischargeModeTransitionCurve(
+                    generated,
+                    path,
+                    "m_LocalScale.x",
+                    start.Scale.x,
+                    end.Scale.x);
+                SetBatonDischargeModeTransitionCurve(
+                    generated,
+                    path,
+                    "m_LocalScale.y",
+                    start.Scale.y,
+                    end.Scale.y);
+                SetBatonDischargeModeTransitionCurve(
+                    generated,
+                    path,
+                    "m_LocalScale.z",
+                    start.Scale.z,
+                    end.Scale.z);
+            }
+
+            generated.EnsureQuaternionContinuity();
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(generated);
+            settings.startTime = 0f;
+            settings.stopTime = BatonDischargeModeTransitionSeconds;
+            settings.loopTime = false;
+            settings.loopBlend = false;
+            AnimationUtility.SetAnimationClipSettings(generated, settings);
+            AnimationClip existing =
+                AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                    BatonDischargeModeTransitionClipPath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(
+                    generated,
+                    BatonDischargeModeTransitionClipPath);
+                existing = generated;
+            }
+            else
+            {
+                EditorUtility.CopySerialized(generated, existing);
+                UnityEngine.Object.DestroyImmediate(generated);
+                existing.name = "Baton_Discharge_Mode_TransitionLoop";
+                EditorUtility.SetDirty(existing);
+            }
+
+            AssetDatabase.SaveAssets();
+            Dictionary<string, BatonDischargeModeLocalPose> actualStart =
+                CaptureBatonDischargeModeClipPose(
+                    target,
+                    existing,
+                    0f,
+                    paths);
+            Dictionary<string, BatonDischargeModeLocalPose> actualEnd =
+                CaptureBatonDischargeModeClipPose(
+                    target,
+                    existing,
+                    BatonDischargeModeTransitionSeconds,
+                    paths);
+            MeasureBatonDischargeModePoseDifference(
+                idlePose,
+                actualStart,
+                out startPositionDifference,
+                out startRotationDifference);
+            MeasureBatonDischargeModePoseDifference(
+                sourcePose,
+                actualEnd,
+                out endPositionDifference,
+                out endRotationDifference);
+            transformPathCount = paths.Length;
+            return existing;
+        }
+
+        private static Dictionary<string, BatonDischargeModeLocalPose>
+            CaptureBatonDischargeModeIdlePose(
+                Transform target,
+                AnimationClip baseClip,
+                AnimationClip armClip,
+                IReadOnlyList<string> paths)
+        {
+            GameObject clone = UnityEngine.Object.Instantiate(target.gameObject);
+            clone.name = target.name;
+            clone.hideFlags = HideFlags.HideAndDontSave;
+            try
+            {
+                foreach (Animator animator in clone.GetComponentsInChildren<Animator>(true))
+                {
+                    animator.enabled = false;
+                }
+
+                baseClip.SampleAnimation(clone, 0f);
+                Dictionary<string, BatonDischargeModeLocalPose> basePose =
+                    CaptureBatonDischargeModeLocalPose(clone.transform, paths);
+                armClip.SampleAnimation(clone, 0f);
+                Dictionary<string, BatonDischargeModeLocalPose> armPose =
+                    CaptureBatonDischargeModeLocalPose(clone.transform, paths);
+                foreach (string path in paths.Where(IsArmTransformPath))
+                {
+                    basePose[path] = armPose[path];
+                }
+
+                return basePose;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(clone);
+            }
+        }
+
+        private static Dictionary<string, BatonDischargeModeLocalPose>
+            CaptureBatonDischargeModeClipPose(
+                Transform target,
+                AnimationClip clip,
+                float time,
+                IReadOnlyList<string> paths)
+        {
+            GameObject clone = UnityEngine.Object.Instantiate(target.gameObject);
+            clone.name = target.name;
+            clone.hideFlags = HideFlags.HideAndDontSave;
+            try
+            {
+                foreach (Animator animator in clone.GetComponentsInChildren<Animator>(true))
+                {
+                    animator.enabled = false;
+                }
+
+                clip.SampleAnimation(clone, time);
+                return CaptureBatonDischargeModeLocalPose(
+                    clone.transform,
+                    paths);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(clone);
+            }
+        }
+
+        private static Dictionary<string, BatonDischargeModeLocalPose>
+            CaptureBatonDischargeModeLocalPose(
+                Transform root,
+                IReadOnlyList<string> paths)
+        {
+            return paths.ToDictionary(
+                path => path,
+                path =>
+                {
+                    Transform item = root.Find(path) ??
+                        throw new InvalidOperationException(
+                            "Transition pose path is missing: " + path);
+                    return new BatonDischargeModeLocalPose
+                    {
+                        Position = item.localPosition,
+                        Rotation = item.localRotation,
+                        Scale = item.localScale
+                    };
+                },
+                StringComparer.Ordinal);
+        }
+
+        private static void MeasureBatonDischargeModePoseDifference(
+            IReadOnlyDictionary<string, BatonDischargeModeLocalPose> expected,
+            IReadOnlyDictionary<string, BatonDischargeModeLocalPose> actual,
+            out float maximumPositionDifference,
+            out float maximumRotationDifference)
+        {
+            maximumPositionDifference = 0f;
+            maximumRotationDifference = 0f;
+            foreach (KeyValuePair<string, BatonDischargeModeLocalPose> pair in expected)
+            {
+                BatonDischargeModeLocalPose actualPose = actual[pair.Key];
+                maximumPositionDifference = Mathf.Max(
+                    maximumPositionDifference,
+                    Vector3.Distance(pair.Value.Position, actualPose.Position));
+                maximumRotationDifference = Mathf.Max(
+                    maximumRotationDifference,
+                    Quaternion.Angle(pair.Value.Rotation, actualPose.Rotation));
+            }
+        }
+
+        private static void SetBatonDischargeModeTransitionCurve(
+            AnimationClip clip,
+            string path,
+            string property,
+            float start,
+            float end)
+        {
+            AnimationUtility.SetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(
+                    path,
+                    typeof(Transform),
+                    property),
+                AnimationCurve.EaseInOut(
+                    0f,
+                    start,
+                    BatonDischargeModeTransitionSeconds,
+                    end));
+        }
+
+        private static AnimatorController
+            CreateOrUpdateBatonDischargeModeController(
+                AnimationClip transitionClip,
+                AnimationClip sourceTake)
+        {
+            AnimatorController controller =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    BatonDischargeModeControllerPath);
+            if (controller == null)
+            {
+                controller = AnimatorController.CreateAnimatorControllerAtPath(
+                    BatonDischargeModeControllerPath);
+            }
+
+            while (controller.layers.Length > 1)
+            {
+                controller.RemoveLayer(controller.layers.Length - 1);
+            }
+
+            if (controller.layers.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Mode controller must contain one layer.");
+            }
+
+            controller.parameters = Array.Empty<AnimatorControllerParameter>();
+            AnimatorControllerLayer[] layers = controller.layers;
+            AnimatorStateMachine stateMachine = layers[0].stateMachine;
+            ClearStateMachine(stateMachine);
+            AnimatorState transitionState = stateMachine.AddState(
+                BatonDischargeModeTransitionStateName);
+            AnimatorState sourceState = stateMachine.AddState(
+                BatonDischargeModeSourceStateName);
+            ConfigureBatonDischargeModeState(transitionState, transitionClip);
+            ConfigureBatonDischargeModeState(sourceState, sourceTake);
+            ConfigureBatonDischargeModeStateTransition(
+                transitionState.AddTransition(sourceState));
+            ConfigureBatonDischargeModeStateTransition(
+                sourceState.AddTransition(transitionState));
+            stateMachine.defaultState = transitionState;
+            layers[0].name = "Base Layer";
+            layers[0].avatarMask = null;
+            layers[0].blendingMode = AnimatorLayerBlendingMode.Override;
+            layers[0].defaultWeight = 1f;
+            controller.layers = layers;
+            EditorUtility.SetDirty(transitionState);
+            EditorUtility.SetDirty(sourceState);
+            EditorUtility.SetDirty(stateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static void ConfigureBatonDischargeModeState(
+            AnimatorState state,
+            AnimationClip clip)
+        {
+            state.motion = clip;
+            state.speed = 1f;
+            state.mirror = false;
+            state.cycleOffset = 0f;
+            state.writeDefaultValues = false;
+        }
+
+        private static void ConfigureBatonDischargeModeStateTransition(
+            AnimatorStateTransition transition)
+        {
+            transition.hasExitTime = true;
+            transition.exitTime = 1f;
+            transition.hasFixedDuration = true;
+            transition.duration = 0f;
+            transition.offset = 0f;
+            transition.interruptionSource = TransitionInterruptionSource.None;
+            transition.orderedInterruption = true;
+            transition.canTransitionToSelf = false;
+            EditorUtility.SetDirty(transition);
+        }
+
+        private static bool BatonDischargeModeControllerIsExact(
+            AnimatorController controller,
+            AnimationClip transitionClip,
+            AnimationClip sourceTake)
+        {
+            if (controller.layers.Length != 1 || controller.parameters.Length != 0)
+            {
+                return false;
+            }
+
+            AnimatorStateMachine stateMachine =
+                controller.layers[0].stateMachine;
+            AnimatorState[] states = stateMachine.states
+                .Select(child => child.state)
+                .ToArray();
+            AnimatorState transitionState = states.SingleOrDefault(state =>
+                string.Equals(
+                    state.name,
+                    BatonDischargeModeTransitionStateName,
+                    StringComparison.Ordinal));
+            AnimatorState sourceState = states.SingleOrDefault(state =>
+                string.Equals(
+                    state.name,
+                    BatonDischargeModeSourceStateName,
+                    StringComparison.Ordinal));
+            return states.Length == 2 &&
+                   transitionState != null &&
+                   sourceState != null &&
+                   stateMachine.defaultState == transitionState &&
+                   transitionState.motion == transitionClip &&
+                   sourceState.motion == sourceTake &&
+                   BatonDischargeModeTransitionIsExact(
+                       transitionState,
+                       sourceState) &&
+                   BatonDischargeModeTransitionIsExact(
+                       sourceState,
+                       transitionState);
+        }
+
+        private static bool BatonDischargeModeTransitionIsExact(
+            AnimatorState source,
+            AnimatorState destination)
+        {
+            return source.transitions.Length == 1 &&
+                   source.transitions[0].destinationState == destination &&
+                   source.transitions[0].hasExitTime &&
+                   Mathf.Abs(source.transitions[0].exitTime - 1f) <= 0.0001f &&
+                   source.transitions[0].hasFixedDuration &&
+                   Mathf.Abs(source.transitions[0].duration) <= 0.0001f;
+        }
+
+        private static void ConfigureBatonDischargeModeSourceImporter()
+        {
+            ModelImporter importer = AssetImporter.GetAtPath(
+                BatonDischargeModeSourcePath) as ModelImporter;
+            if (importer == null)
+            {
+                throw new InvalidOperationException(
+                    "Electronic emission FBX ModelImporter is unavailable.");
+            }
+
+            importer.importAnimation = true;
+            importer.animationType = ModelImporterAnimationType.Generic;
+            importer.resampleCurves = false;
+            importer.animationCompression = ModelImporterAnimationCompression.Off;
+            importer.SaveAndReimport();
+            importer = AssetImporter.GetAtPath(
+                BatonDischargeModeSourcePath) as ModelImporter ??
+                throw new InvalidOperationException(
+                    "Electronic emission FBX importer disappeared after reimport.");
+            ModelImporterClipAnimation[] clips = importer.clipAnimations;
+            if (clips == null || clips.Length == 0)
+            {
+                clips = importer.defaultClipAnimations;
+            }
+
+            if (clips.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Electronic emission FBX must expose exactly one embedded Mixamo Take; actual=" +
+                    clips.Length.ToString(CultureInfo.InvariantCulture) + ".");
+            }
+
+            clips[0].loopTime = false;
+            clips[0].loopPose = false;
+            importer.clipAnimations = clips;
+            importer.SaveAndReimport();
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Baton Discharge Mode Transition Review")]
+        internal static void CaptureBatonDischargeModeTransitionReview()
+        {
+            int stage = SessionState.GetInt(
+                BatonDischargeModeReviewStageKey,
+                0);
+            if (stage == -1)
+            {
+                string error = SessionState.GetString(
+                    BatonDischargeModeReviewErrorKey,
+                    "Unknown Baton_Discharge_Mode Play Mode capture error.");
+                SessionState.EraseInt(BatonDischargeModeReviewStageKey);
+                SessionState.EraseString(BatonDischargeModeReviewErrorKey);
+                throw new InvalidOperationException(error);
+            }
+
+            if (stage == 0)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Mode review must start in Edit Mode.");
+                }
+
+                BatonDischargeModeApplyMetrics apply =
+                    ReadJson<BatonDischargeModeApplyMetrics>(
+                        BatonDischargeModeApplyMetricsPath);
+                if (!apply.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Mode apply metrics did not pass before review.");
+                }
+
+                SessionState.SetInt(BatonDischargeModeReviewStageKey, 1);
+                EditorApplication.EnterPlaymode();
+                Debug.Log(
+                    "[BatonDischargeModeTransition] Entering Play Mode for direct two-loop review.");
+                return;
+            }
+
+            if (stage == 1)
+            {
+                if (!EditorApplication.isPlaying)
+                {
+                    SessionState.EraseInt(BatonDischargeModeReviewStageKey);
+                    SessionState.EraseString(BatonDischargeModeReviewErrorKey);
+                    Debug.Log(
+                        "[BatonDischargeModeTransition] Cleared a review that exited before runtime capture began.");
+                    return;
+                }
+
+                SessionState.SetInt(BatonDischargeModeReviewStageKey, 11);
+                StartBatonDischargeModeActualPlayModeCapture();
+                return;
+            }
+
+            if (stage == 11)
+            {
+                Debug.Log(
+                    "[BatonDischargeModeTransition] Direct two-loop capture is still running.");
+                return;
+            }
+
+            if (stage == 2)
+            {
+                if (!EditorApplication.isPlaying)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Mode review exit requires Play Mode.");
+                }
+
+                SessionState.SetInt(BatonDischargeModeReviewStageKey, 3);
+                EditorApplication.ExitPlaymode();
+                return;
+            }
+
+            if (stage == 3)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Mode finalization requires Edit Mode.");
+                }
+
+                BatonDischargeModeReviewMetrics review =
+                    ReadJson<BatonDischargeModeReviewMetrics>(
+                        BatonDischargeModeReviewMetricsPath);
+                if (!review.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Mode direct review did not pass.");
+                }
+
+                CopyReviewedContact(
+                    BatonDischargeModeReviewPath,
+                    BatonDischargeModeFinalPath);
+                SessionState.EraseInt(BatonDischargeModeReviewStageKey);
+                SessionState.EraseString(BatonDischargeModeReviewErrorKey);
+                Debug.Log(
+                    "[BatonDischargeModeTransition] Final image copied once from the directly reviewed Play Mode contact sheet. Path=" +
+                    Path.GetFullPath(BatonDischargeModeFinalPath) + ".");
+                return;
+            }
+
+            throw new InvalidOperationException(
+                "Baton_Discharge_Mode review stage is invalid: " +
+                stage.ToString(CultureInfo.InvariantCulture) + ".");
+        }
+
+        private static void StartBatonDischargeModeActualPlayModeCapture()
+        {
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(
+                layout,
+                BatonDischargeModeTargetName);
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Mode runtime controller is missing.");
+            AnimatorState[] states = controller.layers[0].stateMachine.states
+                .Select(child => child.state)
+                .ToArray();
+            AnimationClip transitionClip = states
+                .Single(state => string.Equals(
+                    state.name,
+                    BatonDischargeModeTransitionStateName,
+                    StringComparison.Ordinal)).motion as AnimationClip ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Mode transition clip is missing.");
+            AnimationClip sourceTake = states
+                .Single(state => string.Equals(
+                    state.name,
+                    BatonDischargeModeSourceStateName,
+                    StringComparison.Ordinal)).motion as AnimationClip ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Mode exact Mixamo Take is missing.");
+            float sequenceDuration = transitionClip.length + sourceTake.length;
+            int transitionHash = Animator.StringToHash(
+                BatonDischargeModeTransitionStateName);
+            int sourceHash = Animator.StringToHash(
+                BatonDischargeModeSourceStateName);
+            float[] captureTimes =
+            {
+                0.03f,
+                0.25f,
+                0.48f,
+                transitionClip.length + sourceTake.length * 0.05f,
+                transitionClip.length + sourceTake.length * 0.35f,
+                transitionClip.length + sourceTake.length * 0.65f,
+                transitionClip.length + sourceTake.length * 0.95f,
+                sequenceDuration + 0.03f,
+                sequenceDuration + 0.25f,
+                sequenceDuration + 0.48f,
+                sequenceDuration + transitionClip.length +
+                    sourceTake.length * 0.05f,
+                sequenceDuration + transitionClip.length +
+                    sourceTake.length * 0.5f,
+                sequenceDuration + transitionClip.length +
+                    sourceTake.length * 0.95f,
+                sequenceDuration * 2f + 0.03f
+            };
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform baton = rightHand.Find(ElectricBatonInstanceName) ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Mode right-hand electric baton is missing.");
+            RootPose rootBefore = new RootPose(target);
+            List<byte[]> frontPanels = new List<byte[]>();
+            List<byte[]> sidePanels = new List<byte[]>();
+            List<byte[]> obliquePanels = new List<byte[]>();
+            List<byte[]> upperBodyPanels = new List<byte[]>();
+            int nextCapture = 0;
+            int completedLoops = 0;
+            int previousStateHash = 0;
+            bool initialized = false;
+            bool transitionObserved = false;
+            bool sourceObserved = false;
+            bool returnedToTransition = false;
+            float observedLoops = 0f;
+            double deadline = EditorApplication.timeSinceStartup +
+                Math.Max(12d, sequenceDuration * 4d + 8d);
+            EditorApplication.CallbackFunction update = null;
+            update = () =>
+            {
+                try
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Play Mode ended before Baton_Discharge_Mode completed direct review.");
+                    }
+
+                    AnimatorStateInfo state =
+                        animator.GetCurrentAnimatorStateInfo(0);
+                    int stateHash = state.shortNameHash;
+                    if (!initialized)
+                    {
+                        if (stateHash != transitionHash ||
+                            state.normalizedTime > 0.35f)
+                        {
+                            if (EditorApplication.timeSinceStartup > deadline)
+                            {
+                                throw new InvalidOperationException(
+                                    "Baton_Discharge_Mode did not reach a natural sequence start.");
+                            }
+
+                            return;
+                        }
+
+                        initialized = true;
+                        previousStateHash = transitionHash;
+                    }
+
+                    transitionObserved |= stateHash == transitionHash;
+                    sourceObserved |= stateHash == sourceHash;
+                    if (stateHash == transitionHash && previousStateHash == sourceHash)
+                    {
+                        completedLoops++;
+                        returnedToTransition = true;
+                    }
+
+                    previousStateHash = stateHash;
+                    float phaseSeconds;
+                    if (stateHash == transitionHash)
+                    {
+                        phaseSeconds = Mathf.Clamp01(state.normalizedTime) *
+                            transitionClip.length;
+                    }
+                    else if (stateHash == sourceHash)
+                    {
+                        phaseSeconds = transitionClip.length +
+                            Mathf.Clamp01(state.normalizedTime) * sourceTake.length;
+                    }
+                    else
+                    {
+                        if (EditorApplication.timeSinceStartup > deadline)
+                        {
+                            throw new InvalidOperationException(
+                                "Baton_Discharge_Mode entered an unexpected runtime state.");
+                        }
+
+                        return;
+                    }
+
+                    float observedSeconds =
+                        completedLoops * sequenceDuration + phaseSeconds;
+                    observedLoops = observedSeconds / sequenceDuration;
+                    if (nextCapture < captureTimes.Length &&
+                        observedSeconds >= captureTimes[nextCapture])
+                    {
+                        using (CaptureEnvironment environment =
+                               new CaptureEnvironment(target))
+                        {
+                            environment.ConfigureView(target, 1.05f, 1.35f);
+                            frontPanels.Add(environment.CaptureFront());
+                            sidePanels.Add(environment.CaptureSide());
+                            Vector3 fullCenter = CalculateVisibleBounds(target).center;
+                            obliquePanels.Add(environment.CaptureOblique(
+                                target,
+                                fullCenter,
+                                -(target.forward + target.right).normalized,
+                                1.35f));
+                            Vector3 upperCenter = Vector3.Lerp(
+                                FindRequired(target, TorsoBasePath).position,
+                                FindRequired(target, HeadPath).position,
+                                0.55f);
+                            environment.ConfigureView(target, upperCenter, 0.85f);
+                            upperBodyPanels.Add(environment.CaptureFront());
+                        }
+
+                        nextCapture++;
+                    }
+
+                    if (nextCapture < captureTimes.Length)
+                    {
+                        if (EditorApplication.timeSinceStartup > deadline)
+                        {
+                            throw new InvalidOperationException(
+                                "Baton_Discharge_Mode direct two-loop capture timed out.");
+                        }
+
+                        return;
+                    }
+
+                    EditorApplication.update -= update;
+                    ComposeRows(
+                        new[]
+                        {
+                            frontPanels,
+                            sidePanels,
+                            obliquePanels,
+                            upperBodyPanels
+                        },
+                        BatonDischargeModeReviewPath);
+                    BatonDischargeModeReviewMetrics metrics =
+                        new BatonDischargeModeReviewMetrics
+                        {
+                            target = BatonDischargeModeTargetName,
+                            actualPlayModeFramesCaptured = frontPanels.Count,
+                            actualLoopsObserved = observedLoops,
+                            sequenceDurationSeconds = sequenceDuration,
+                            transitionDurationSeconds = transitionClip.length,
+                            embeddedTakeDurationSeconds = sourceTake.length,
+                            transitionStateObserved = transitionObserved,
+                            exactMixamoStateObserved = sourceObserved,
+                            returnedToBatonIdleTransition =
+                                returnedToTransition,
+                            batonVisible = baton
+                                .GetComponentsInChildren<Renderer>(true)
+                                .Any(renderer => renderer.enabled),
+                            batonParentIsRightHand = baton.parent == rightHand,
+                            targetRootUnchanged = RootMatches(
+                                target,
+                                rootBefore),
+                            reviewContactSheetExists = File.Exists(
+                                Path.GetFullPath(BatonDischargeModeReviewPath)),
+                            validationPriority =
+                                "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                        };
+                    metrics.passedNumericChecks =
+                        metrics.actualPlayModeFramesCaptured ==
+                            captureTimes.Length &&
+                        metrics.actualLoopsObserved >= 2f &&
+                        metrics.transitionStateObserved &&
+                        metrics.exactMixamoStateObserved &&
+                        metrics.returnedToBatonIdleTransition &&
+                        metrics.batonVisible &&
+                        metrics.batonParentIsRightHand &&
+                        metrics.targetRootUnchanged &&
+                        metrics.reviewContactSheetExists;
+                    WriteJson(BatonDischargeModeReviewMetricsPath, metrics);
+                    if (!metrics.passedNumericChecks)
+                    {
+                        throw new InvalidOperationException(
+                            "Baton_Discharge_Mode direct Play Mode support checks failed. " +
+                            JsonUtility.ToJson(metrics));
+                    }
+
+                    SessionState.SetInt(BatonDischargeModeReviewStageKey, 2);
+                    Debug.Log(
+                        "[BatonDischargeModeTransition] Captured actual Play Mode review. Frames=" +
+                        metrics.actualPlayModeFramesCaptured.ToString(
+                            CultureInfo.InvariantCulture) +
+                        ", Loops=" + Num(metrics.actualLoopsObserved) + ".");
+                }
+                catch (Exception exception)
+                {
+                    EditorApplication.update -= update;
+                    SessionState.SetString(
+                        BatonDischargeModeReviewErrorKey,
+                        exception.ToString());
+                    SessionState.SetInt(BatonDischargeModeReviewStageKey, -1);
+                    Debug.LogException(exception);
+                }
+            };
+            EditorApplication.update += update;
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Baton Discharge Exit Reverse")]
+        internal static void ApplyBatonDischargeExitReverse()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[BatonDischargeExitReverse] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            AnimatorController modeController =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    BatonDischargeModeControllerPath) ??
+                throw new FileNotFoundException(
+                    "Baton_Discharge_Mode controller is missing.",
+                    Path.GetFullPath(BatonDischargeModeControllerPath));
+            AnimatorState[] modeStates = modeController.layers[0]
+                .stateMachine.states
+                .Select(child => child.state)
+                .ToArray();
+            AnimationClip transitionClip = modeStates
+                .Single(state => string.Equals(
+                    state.name,
+                    BatonDischargeModeTransitionStateName,
+                    StringComparison.Ordinal)).motion as AnimationClip ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Mode transition clip is missing.");
+            AnimationClip sourceTake = modeStates
+                .Single(state => string.Equals(
+                    state.name,
+                    BatonDischargeModeSourceStateName,
+                    StringComparison.Ordinal)).motion as AnimationClip ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Mode exact Mixamo Take is missing.");
+            BatonDischargeModeApplyMetrics modeApply =
+                ReadJson<BatonDischargeModeApplyMetrics>(
+                    BatonDischargeModeApplyMetricsPath);
+            if (!modeApply.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Mode must retain its accepted exact sequence before Exit can reuse it.");
+            }
+
+            string transitionPath = AssetDatabase.GetAssetPath(transitionClip);
+            string sourcePath = AssetDatabase.GetAssetPath(sourceTake);
+            string modeControllerHashBefore = HashFile(
+                BatonDischargeModeControllerPath);
+            string transitionHashBefore = HashFile(transitionPath);
+            string sourceHashBefore = HashFile(sourcePath);
+            string batonModelHashBefore = HashFile(ElectricBatonAssetPath);
+
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(
+                layout,
+                BatonDischargeExitTargetName);
+            RootPose targetRootBefore = new RootPose(target);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTarget(
+                    layout,
+                    BatonDischargeExitTargetName);
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform baton = rightHand.Find(ElectricBatonInstanceName) ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Exit has no right-hand electric baton.");
+            RootPose batonPoseBefore = new RootPose(baton);
+            int lineRendererCountBefore = baton
+                .GetComponentsInChildren<LineRenderer>(true).Length;
+
+            string[] boundaryPaths = AnimationUtility
+                .GetCurveBindings(sourceTake)
+                .Where(binding => binding.type == typeof(Transform))
+                .Select(binding => binding.path)
+                .Intersect(
+                    AnimationUtility.GetCurveBindings(transitionClip)
+                        .Where(binding => binding.type == typeof(Transform))
+                        .Select(binding => binding.path),
+                    StringComparer.Ordinal)
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+            if (boundaryPaths.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Mode clips have no shared Transform paths for the exact reverse boundary.");
+            }
+
+            Dictionary<string, BatonDischargeModeLocalPose> sourceStartPose =
+                CaptureBatonDischargeModeClipPose(
+                    target,
+                    sourceTake,
+                    0f,
+                    boundaryPaths);
+            Dictionary<string, BatonDischargeModeLocalPose> transitionEndPose =
+                CaptureBatonDischargeModeClipPose(
+                    target,
+                    transitionClip,
+                    transitionClip.length,
+                    boundaryPaths);
+            MeasureBatonDischargeModePoseDifference(
+                sourceStartPose,
+                transitionEndPose,
+                out float boundaryPositionDifference,
+                out float boundaryRotationDifference);
+            float sourceFinalStationaryTailSeconds =
+                MeasureBatonDischargeExitSourceFinalStationaryTail(
+                    target,
+                    sourceTake);
+
+            AnimatorController exitController =
+                CreateOrUpdateBatonDischargeExitController(
+                    transitionClip,
+                    sourceTake);
+            Animator animator = ConfigureAnimator(target, exitController);
+            BatonDischargeExitHoldStateBehaviour cycle =
+                target.GetComponent<BatonDischargeExitHoldStateBehaviour>();
+            if (cycle == null)
+            {
+                cycle = target.gameObject.AddComponent<
+                    BatonDischargeExitHoldStateBehaviour>();
+            }
+
+            float sourceReverseDuration =
+                BatonDischargeExitSourceReverseDuration(sourceTake);
+            cycle.Configure(
+                animator,
+                BatonDischargeExitModeHoldStateName,
+                BatonDischargeExitSourceStateName,
+                BatonDischargeExitTransitionStateName,
+                BatonDischargeExitIdleHoldStateName,
+                0f,
+                sourceReverseDuration,
+                BatonDischargeExitSourceFastTailSeconds,
+                BatonDischargeExitSourceFastTailEndNormalizedTime,
+                transitionClip.length,
+                BatonDischargeExitIdleHoldSeconds);
+            EditorUtility.SetDirty(target.gameObject);
+            EditorUtility.SetDirty(animator);
+            EditorUtility.SetDirty(cycle);
+            EditorUtility.SetDirty(exitController);
+            EditorSceneManager.MarkSceneDirty(scene);
+            AssetDatabase.SaveAssets();
+            if (!EditorSceneManager.SaveScene(scene))
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp could not be saved after Baton_Discharge_Exit reverse setup.");
+            }
+
+            bool controllerSequenceExact =
+                BatonDischargeExitControllerIsExact(
+                    exitController,
+                    transitionClip,
+                    sourceTake);
+            int lineRendererCountAfter = baton
+                .GetComponentsInChildren<LineRenderer>(true).Length;
+            BatonDischargeExitApplyMetrics metrics =
+                new BatonDischargeExitApplyMetrics
+                {
+                    target = BatonDischargeExitTargetName,
+                    modeControllerPath = BatonDischargeModeControllerPath,
+                    exitControllerPath = BatonDischargeExitControllerPath,
+                    transitionClipPath = transitionPath,
+                    exactMixamoClipName = sourceTake.name,
+                    transitionDurationSeconds = transitionClip.length,
+                    exactMixamoDurationSeconds = sourceTake.length,
+                    exactMixamoFrameRate = sourceTake.frameRate,
+                    sourceFinalStationaryTailSeconds =
+                        sourceFinalStationaryTailSeconds,
+                    modePoseHoldSeconds =
+                        BatonDischargeExitModeHoldSeconds,
+                    sourceReverseDurationSeconds =
+                        sourceReverseDuration,
+                    sourceReverseFastTailSeconds =
+                        BatonDischargeExitSourceFastTailSeconds,
+                    sourceReverseFastTailEndNormalizedTime =
+                        BatonDischargeExitSourceFastTailEndNormalizedTime,
+                    idlePoseHoldSeconds =
+                        BatonDischargeExitIdleHoldSeconds,
+                    sequenceDurationSeconds =
+                        sourceReverseDuration +
+                        transitionClip.length +
+                        BatonDischargeExitIdleHoldSeconds,
+                    usesModeTransitionClipDirectly = exitController.layers[0]
+                        .stateMachine.states
+                        .Any(child => child.state.motion == transitionClip),
+                    usesExactEmbeddedTakeDirectly = exitController.layers[0]
+                        .stateMachine.states
+                        .Any(child => child.state.motion == sourceTake),
+                    defaultStateIsModePoseHold = string.Equals(
+                        exitController.layers[0].stateMachine.defaultState.name,
+                        BatonDischargeExitModeHoldStateName,
+                        StringComparison.Ordinal),
+                    controllerStatesAreExternallySampled =
+                        controllerSequenceExact,
+                    cycleDriverPresent = cycle != null,
+                    cycleDriverSettingsCorrect =
+                        BatonDischargeExitCycleIsExact(
+                            cycle,
+                            animator,
+                            sourceTake,
+                            transitionClip),
+                    holdStatesFreezeExactEndpoints =
+                        controllerSequenceExact,
+                    fourStateSequenceLoops = controllerSequenceExact,
+                    modeApplyMetricsPassed = modeApply.passedNumericChecks,
+                    reverseBoundaryPositionDifferenceMeters =
+                        boundaryPositionDifference,
+                    reverseBoundaryRotationDifferenceDegrees =
+                        boundaryRotationDifference,
+                    animatorSettingsCorrect = AnimatorMatches(
+                        animator,
+                        exitController),
+                    targetRootUnchanged = RootMatches(
+                        target,
+                        targetRootBefore),
+                    otherAnimatorsUnchanged = DictionariesEqual(
+                        otherAnimatorsBefore,
+                        CaptureAnimatorsExceptTarget(
+                            layout,
+                            BatonDischargeExitTargetName)),
+                    batonParentIsRightHand = baton.parent == rightHand,
+                    batonLocalTransformUnchanged = RootMatches(
+                        baton,
+                        batonPoseBefore),
+                    batonLineRendererCountBefore = lineRendererCountBefore,
+                    batonLineRendererCountAfter = lineRendererCountAfter,
+                    batonVfxHierarchyUnchanged =
+                        lineRendererCountBefore == lineRendererCountAfter,
+                    modeControllerHashBefore = modeControllerHashBefore,
+                    modeControllerHashAfter = HashFile(
+                        BatonDischargeModeControllerPath),
+                    transitionClipHashBefore = transitionHashBefore,
+                    transitionClipHashAfter = HashFile(transitionPath),
+                    sourceAnimationHashBefore = sourceHashBefore,
+                    sourceAnimationHashAfter = HashFile(sourcePath),
+                    electricBatonModelHashBefore = batonModelHashBefore,
+                    electricBatonModelHashAfter = HashFile(
+                        ElectricBatonAssetPath),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.sourceAssetsUnchanged =
+                string.Equals(
+                    metrics.modeControllerHashBefore,
+                    metrics.modeControllerHashAfter,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.transitionClipHashBefore,
+                    metrics.transitionClipHashAfter,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.sourceAnimationHashBefore,
+                    metrics.sourceAnimationHashAfter,
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    metrics.electricBatonModelHashBefore,
+                    metrics.electricBatonModelHashAfter,
+                    StringComparison.OrdinalIgnoreCase);
+            metrics.passedNumericChecks =
+                metrics.modeApplyMetricsPassed &&
+                metrics.usesModeTransitionClipDirectly &&
+                metrics.usesExactEmbeddedTakeDirectly &&
+                metrics.defaultStateIsModePoseHold &&
+                metrics.controllerStatesAreExternallySampled &&
+                metrics.cycleDriverPresent &&
+                metrics.cycleDriverSettingsCorrect &&
+                metrics.holdStatesFreezeExactEndpoints &&
+                metrics.fourStateSequenceLoops &&
+                Mathf.Abs(
+                    metrics.modePoseHoldSeconds -
+                    BatonDischargeExitModeHoldSeconds) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.sourceReverseDurationSeconds -
+                    BatonDischargeExitSourceReverseDuration(sourceTake)) <=
+                    0.0001f &&
+                Mathf.Abs(
+                    metrics.sourceReverseFastTailSeconds -
+                    BatonDischargeExitSourceFastTailSeconds) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.sourceReverseFastTailEndNormalizedTime -
+                    BatonDischargeExitSourceFastTailEndNormalizedTime) <=
+                    0.0001f &&
+                Mathf.Abs(
+                    metrics.idlePoseHoldSeconds -
+                    BatonDischargeExitIdleHoldSeconds) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.transitionDurationSeconds -
+                    BatonDischargeModeTransitionSeconds) <= 0.0001f &&
+                metrics.reverseBoundaryPositionDifferenceMeters <= 0.0001f &&
+                metrics.reverseBoundaryRotationDifferenceDegrees <= 0.01f &&
+                metrics.animatorSettingsCorrect &&
+                metrics.targetRootUnchanged &&
+                metrics.otherAnimatorsUnchanged &&
+                metrics.batonParentIsRightHand &&
+                metrics.batonLocalTransformUnchanged &&
+                metrics.batonVfxHierarchyUnchanged &&
+                metrics.sourceAssetsUnchanged;
+            WriteJson(BatonDischargeExitApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Exit exact reverse setup support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            foreach (string reviewPath in new[]
+                     {
+                         BatonDischargeExitReviewMetricsPath,
+                         BatonDischargeExitReviewPath,
+                         BatonDischargeExitComparisonPath,
+                         BatonDischargeExitFinalPath
+                     })
+            {
+                string absolute = Path.GetFullPath(reviewPath);
+                if (File.Exists(absolute))
+                {
+                    File.Delete(absolute);
+                }
+            }
+
+            SessionState.EraseInt(BatonDischargeExitReviewStageKey);
+            SessionState.EraseString(BatonDischargeExitReviewErrorKey);
+            Debug.Log(
+                "[BatonDischargeExitReverse] Plays the exact Baton_Discharge_Mode Mixamo Take in reverse within the complete 0.2-second mode phase, then reverses the accepted Idle transition and holds Baton_Idle for 0.5 seconds before repeating without generating animation curves.");
+        }
+
+        private static float
+            MeasureBatonDischargeExitSourceFinalStationaryTail(
+                Transform target,
+                AnimationClip sourceTake)
+        {
+            string[] sourcePaths = AnimationUtility
+                .GetCurveBindings(sourceTake)
+                .Where(binding => binding.type == typeof(Transform))
+                .Select(binding => binding.path)
+                .Distinct(StringComparer.Ordinal)
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+            Dictionary<string, BatonDischargeModeLocalPose> finalPose =
+                CaptureBatonDischargeModeClipPose(
+                    target,
+                    sourceTake,
+                    sourceTake.length,
+                    sourcePaths);
+            int finalFrame = Mathf.RoundToInt(
+                sourceTake.length * sourceTake.frameRate);
+            int stationaryFrames = 0;
+            for (int frame = finalFrame - 1; frame >= 0; frame--)
+            {
+                float sampleTime = frame / sourceTake.frameRate;
+                Dictionary<string, BatonDischargeModeLocalPose> samplePose =
+                    CaptureBatonDischargeModeClipPose(
+                        target,
+                        sourceTake,
+                        sampleTime,
+                        sourcePaths);
+                MeasureBatonDischargeModePoseDifference(
+                    finalPose,
+                    samplePose,
+                    out float positionDifference,
+                    out float rotationDifference);
+                if (positionDifference > 0.000001f ||
+                    rotationDifference > 0.0001f)
+                {
+                    break;
+                }
+
+                stationaryFrames++;
+            }
+
+            return stationaryFrames / sourceTake.frameRate;
+        }
+
+        private static AnimatorController
+            CreateOrUpdateBatonDischargeExitController(
+                AnimationClip transitionClip,
+                AnimationClip sourceTake)
+        {
+            AnimatorController controller =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    BatonDischargeExitControllerPath);
+            if (controller == null)
+            {
+                controller = AnimatorController.CreateAnimatorControllerAtPath(
+                    BatonDischargeExitControllerPath);
+            }
+
+            while (controller.layers.Length > 1)
+            {
+                controller.RemoveLayer(controller.layers.Length - 1);
+            }
+
+            if (controller.layers.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Exit controller must contain one layer.");
+            }
+
+            controller.parameters = Array.Empty<AnimatorControllerParameter>();
+            AnimatorControllerLayer[] layers = controller.layers;
+            AnimatorStateMachine stateMachine = layers[0].stateMachine;
+            ClearStateMachine(stateMachine);
+            RemoveBatonDischargeExitControllerClip(
+                BatonDischargeExitModeHoldClipName);
+            RemoveBatonDischargeExitControllerClip(
+                BatonDischargeExitIdleHoldClipName);
+            AnimatorState modeHoldState = stateMachine.AddState(
+                BatonDischargeExitModeHoldStateName);
+            AnimatorState sourceReverseState = stateMachine.AddState(
+                BatonDischargeExitSourceStateName);
+            AnimatorState transitionReverseState = stateMachine.AddState(
+                BatonDischargeExitTransitionStateName);
+            AnimatorState idleHoldState = stateMachine.AddState(
+                BatonDischargeExitIdleHoldStateName);
+            ConfigureBatonDischargeExitDrivenState(
+                modeHoldState,
+                sourceTake);
+            ConfigureBatonDischargeExitDrivenState(
+                sourceReverseState,
+                sourceTake);
+            ConfigureBatonDischargeExitDrivenState(
+                transitionReverseState,
+                transitionClip);
+            ConfigureBatonDischargeExitDrivenState(
+                idleHoldState,
+                transitionClip);
+            stateMachine.defaultState = modeHoldState;
+            layers[0].name = "Base Layer";
+            layers[0].avatarMask = null;
+            layers[0].blendingMode = AnimatorLayerBlendingMode.Override;
+            layers[0].defaultWeight = 1f;
+            controller.layers = layers;
+            EditorUtility.SetDirty(modeHoldState);
+            EditorUtility.SetDirty(sourceReverseState);
+            EditorUtility.SetDirty(transitionReverseState);
+            EditorUtility.SetDirty(idleHoldState);
+            EditorUtility.SetDirty(stateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static void ConfigureBatonDischargeExitDrivenState(
+            AnimatorState state,
+            AnimationClip clip)
+        {
+            state.motion = clip;
+            state.speed = 0f;
+            state.mirror = false;
+            state.cycleOffset = 0f;
+            state.writeDefaultValues = false;
+        }
+
+        private static AnimationClip
+            CreateOrUpdateBatonDischargeExitStaticHoldClip(
+                AnimatorController controller,
+                string clipName,
+                AnimationClip sourceClip,
+                float sourceTime,
+                float durationSeconds)
+        {
+            AnimationClip[] matches = AssetDatabase
+                .LoadAllAssetsAtPath(BatonDischargeExitControllerPath)
+                .OfType<AnimationClip>()
+                .Where(clip => string.Equals(
+                    clip.name,
+                    clipName,
+                    StringComparison.Ordinal))
+                .ToArray();
+            AnimationClip holdClip = matches.FirstOrDefault();
+            foreach (AnimationClip duplicate in matches.Skip(1))
+            {
+                UnityEngine.Object.DestroyImmediate(duplicate, true);
+            }
+
+            if (holdClip == null)
+            {
+                holdClip = new AnimationClip
+                {
+                    name = clipName,
+                    hideFlags = HideFlags.HideInHierarchy
+                };
+                AssetDatabase.AddObjectToAsset(holdClip, controller);
+            }
+
+            foreach (EditorCurveBinding existingBinding in
+                     AnimationUtility.GetCurveBindings(holdClip))
+            {
+                AnimationUtility.SetEditorCurve(
+                    holdClip,
+                    existingBinding,
+                    null);
+            }
+
+            foreach (EditorCurveBinding existingBinding in
+                     AnimationUtility.GetObjectReferenceCurveBindings(
+                         holdClip))
+            {
+                AnimationUtility.SetObjectReferenceCurve(
+                    holdClip,
+                    existingBinding,
+                    null);
+            }
+
+            foreach (EditorCurveBinding sourceBinding in
+                     AnimationUtility.GetCurveBindings(sourceClip))
+            {
+                AnimationCurve sourceCurve = AnimationUtility.GetEditorCurve(
+                    sourceClip,
+                    sourceBinding);
+                if (sourceCurve == null)
+                {
+                    continue;
+                }
+
+                float value = sourceCurve.Evaluate(sourceTime);
+                AnimationUtility.SetEditorCurve(
+                    holdClip,
+                    sourceBinding,
+                    AnimationCurve.Constant(
+                        0f,
+                        durationSeconds,
+                        value));
+            }
+
+            foreach (EditorCurveBinding sourceBinding in
+                     AnimationUtility.GetObjectReferenceCurveBindings(
+                         sourceClip))
+            {
+                ObjectReferenceKeyframe[] sourceKeys =
+                    AnimationUtility.GetObjectReferenceCurve(
+                        sourceClip,
+                        sourceBinding);
+                UnityEngine.Object value = sourceKeys
+                    .Where(key => key.time <= sourceTime + 0.0001f)
+                    .OrderBy(key => key.time)
+                    .Select(key => key.value)
+                    .LastOrDefault() ?? sourceKeys
+                    .OrderBy(key => key.time)
+                    .Select(key => key.value)
+                    .FirstOrDefault();
+                AnimationUtility.SetObjectReferenceCurve(
+                    holdClip,
+                    sourceBinding,
+                    new[]
+                    {
+                        new ObjectReferenceKeyframe
+                        {
+                            time = 0f,
+                            value = value
+                        },
+                        new ObjectReferenceKeyframe
+                        {
+                            time = durationSeconds,
+                            value = value
+                        }
+                    });
+            }
+
+            holdClip.frameRate = sourceClip.frameRate;
+            holdClip.wrapMode = WrapMode.ClampForever;
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(holdClip);
+            settings.loopTime = false;
+            settings.startTime = 0f;
+            settings.stopTime = durationSeconds;
+            AnimationUtility.SetAnimationClipSettings(holdClip, settings);
+            holdClip.EnsureQuaternionContinuity();
+            EditorUtility.SetDirty(holdClip);
+            return holdClip;
+        }
+
+        private static void RemoveBatonDischargeExitControllerClip(
+            string clipName)
+        {
+            foreach (AnimationClip clip in AssetDatabase
+                         .LoadAllAssetsAtPath(
+                             BatonDischargeExitControllerPath)
+                         .OfType<AnimationClip>()
+                         .Where(clip => string.Equals(
+                             clip.name,
+                             clipName,
+                             StringComparison.Ordinal))
+                         .ToArray())
+            {
+                UnityEngine.Object.DestroyImmediate(clip, true);
+            }
+        }
+
+        private static void ConfigureBatonDischargeExitNativeModeHoldState(
+            AnimatorState state,
+            AnimationClip sourceTake)
+        {
+            state.motion = sourceTake;
+            state.speed = 1f;
+            state.mirror = false;
+            state.cycleOffset = 1f;
+            state.writeDefaultValues = false;
+        }
+
+        private static float
+            BatonDischargeExitModeAnimatorTransitionSeconds(
+                AnimationClip sourceTake)
+        {
+            // The state switch becomes visible on the following evaluated
+            // source frame. Ending 1.5 frames early yields six visible 30 fps
+            // hold frames, i.e. the requested 0.2-second displayed pose.
+            return Mathf.Max(
+                0f,
+                BatonDischargeExitModeHoldSeconds -
+                1.5f / sourceTake.frameRate);
+        }
+
+        private static void ConfigureBatonDischargeExitStaticHoldState(
+            AnimatorState state,
+            AnimationClip clip)
+        {
+            state.motion = clip;
+            state.speed = 1f;
+            state.mirror = false;
+            state.cycleOffset = 0f;
+            state.writeDefaultValues = false;
+        }
+
+        private static void ConfigureBatonDischargeExitReverseTransition(
+            AnimatorStateTransition transition)
+        {
+            transition.hasExitTime = true;
+            transition.exitTime = 0f;
+            transition.hasFixedDuration = true;
+            transition.duration = 0f;
+            transition.offset = 0f;
+            transition.interruptionSource = TransitionInterruptionSource.None;
+            transition.orderedInterruption = true;
+            transition.canTransitionToSelf = false;
+        }
+
+        private static void ConfigureBatonDischargeExitTimedTransition(
+            AnimatorStateTransition transition,
+            float exitTime)
+        {
+            transition.hasExitTime = true;
+            transition.exitTime = exitTime;
+            transition.hasFixedDuration = true;
+            transition.duration = 0f;
+            transition.offset = 0f;
+            transition.interruptionSource = TransitionInterruptionSource.None;
+            transition.orderedInterruption = true;
+            transition.canTransitionToSelf = false;
+        }
+
+        private static bool BatonDischargeExitControllerIsExact(
+            AnimatorController controller,
+            AnimationClip transitionClip,
+            AnimationClip sourceTake)
+        {
+            if (controller.layers.Length != 1)
+            {
+                return false;
+            }
+
+            AnimatorStateMachine stateMachine =
+                controller.layers[0].stateMachine;
+            AnimatorState[] states = stateMachine.states
+                .Select(child => child.state)
+                .ToArray();
+            if (states.Length != 4)
+            {
+                return false;
+            }
+
+            AnimatorState modeHold = states.SingleOrDefault(state =>
+                string.Equals(
+                    state.name,
+                    BatonDischargeExitModeHoldStateName,
+                    StringComparison.Ordinal));
+            AnimatorState source = states.SingleOrDefault(state =>
+                string.Equals(
+                    state.name,
+                    BatonDischargeExitSourceStateName,
+                    StringComparison.Ordinal));
+            AnimatorState transition = states.SingleOrDefault(state =>
+                string.Equals(
+                    state.name,
+                    BatonDischargeExitTransitionStateName,
+                    StringComparison.Ordinal));
+            AnimatorState idleHold = states.SingleOrDefault(state =>
+                string.Equals(
+                    state.name,
+                    BatonDischargeExitIdleHoldStateName,
+                    StringComparison.Ordinal));
+            return modeHold != null &&
+                   source != null &&
+                   transition != null &&
+                   idleHold != null &&
+                   stateMachine.defaultState == modeHold &&
+                   BatonDischargeExitDrivenStateIsExact(
+                       modeHold,
+                       sourceTake) &&
+                   BatonDischargeExitDrivenStateIsExact(
+                       source,
+                       sourceTake) &&
+                   BatonDischargeExitDrivenStateIsExact(
+                       transition,
+                       transitionClip) &&
+                   BatonDischargeExitDrivenStateIsExact(
+                       idleHold,
+                       transitionClip);
+        }
+
+        private static bool BatonDischargeExitDrivenStateIsExact(
+            AnimatorState state,
+            AnimationClip clip)
+        {
+            return state.motion == clip &&
+                   Mathf.Abs(state.speed) <= 0.0001f &&
+                   !state.mirror &&
+                   Mathf.Abs(state.cycleOffset) <= 0.0001f &&
+                   !state.writeDefaultValues &&
+                   state.behaviours.Length == 0 &&
+                   state.transitions.Length == 0;
+        }
+
+        private static bool BatonDischargeExitCycleIsExact(
+            BatonDischargeExitHoldStateBehaviour cycle,
+            Animator animator,
+            AnimationClip sourceTake,
+            AnimationClip transitionClip)
+        {
+            return cycle != null &&
+                   cycle.TargetAnimator == animator &&
+                   string.Equals(
+                       cycle.ModeHoldStateName,
+                       BatonDischargeExitModeHoldStateName,
+                       StringComparison.Ordinal) &&
+                   string.Equals(
+                       cycle.SourceReverseStateName,
+                       BatonDischargeExitSourceStateName,
+                       StringComparison.Ordinal) &&
+                   string.Equals(
+                       cycle.TransitionReverseStateName,
+                       BatonDischargeExitTransitionStateName,
+                       StringComparison.Ordinal) &&
+                   string.Equals(
+                       cycle.IdleHoldStateName,
+                       BatonDischargeExitIdleHoldStateName,
+                       StringComparison.Ordinal) &&
+                   Mathf.Abs(
+                       cycle.ModeHoldSeconds -
+                       0f) <= 0.0001f &&
+                   Mathf.Abs(
+                       cycle.SourceReverseSeconds -
+                       BatonDischargeExitSourceReverseDuration(sourceTake)) <=
+                       0.0001f &&
+                   Mathf.Abs(
+                       cycle.SourceReverseFastTailSeconds -
+                       BatonDischargeExitSourceFastTailSeconds) <= 0.0001f &&
+                   Mathf.Abs(
+                       cycle.SourceReverseFastTailEndNormalizedTime -
+                       BatonDischargeExitSourceFastTailEndNormalizedTime) <=
+                       0.0001f &&
+                   Mathf.Abs(
+                       cycle.TransitionReverseSeconds -
+                       transitionClip.length) <= 0.0001f &&
+                   Mathf.Abs(
+                       cycle.IdleHoldSeconds -
+                       BatonDischargeExitIdleHoldSeconds) <= 0.0001f;
+        }
+
+        private static float BatonDischargeExitSourceReverseDuration(
+            AnimationClip sourceTake)
+        {
+            return BatonDischargeExitModeHoldSeconds;
+        }
+
+        private static bool BatonDischargeExitNativeModeHoldStateIsExact(
+            AnimatorState state,
+            AnimationClip sourceTake,
+            AnimatorState destination,
+            float exitTime)
+        {
+            return state.motion == sourceTake &&
+                   Mathf.Abs(state.speed - 1f) <= 0.0001f &&
+                   !state.mirror &&
+                   Mathf.Abs(state.cycleOffset - 1f) <= 0.0001f &&
+                   !state.writeDefaultValues &&
+                   state.behaviours.Length == 0 &&
+                   BatonDischargeExitTransitionIsExact(
+                       state,
+                       destination,
+                       exitTime);
+        }
+
+        private static bool BatonDischargeExitStaticHoldStateIsExact(
+            AnimatorState state,
+            AnimationClip clip,
+            AnimatorState destination,
+            float exitTime)
+        {
+            return state.motion == clip &&
+                   Mathf.Abs(state.speed - 1f) <= 0.0001f &&
+                   !state.mirror &&
+                   Mathf.Abs(state.cycleOffset) <= 0.0001f &&
+                   !state.writeDefaultValues &&
+                   state.behaviours.Length == 0 &&
+                   BatonDischargeExitTransitionIsExact(
+                       state,
+                       destination,
+                       exitTime);
+        }
+
+        private static bool BatonDischargeExitStaticHoldClipIsExact(
+            AnimationClip holdClip,
+            AnimationClip sourceClip,
+            float sourceTime,
+            float durationSeconds)
+        {
+            if (Mathf.Abs(holdClip.length - durationSeconds) > 0.0001f ||
+                AnimationUtility.GetAnimationClipSettings(holdClip).loopTime)
+            {
+                return false;
+            }
+
+            Dictionary<string, EditorCurveBinding> sourceBindings =
+                AnimationUtility.GetCurveBindings(sourceClip)
+                    .ToDictionary(
+                        BatonDischargeExitBindingKey,
+                        binding => binding,
+                        StringComparer.Ordinal);
+            EditorCurveBinding[] holdBindings = AnimationUtility
+                .GetCurveBindings(holdClip)
+                .ToArray();
+            if (sourceBindings.Count != holdBindings.Length)
+            {
+                return false;
+            }
+
+            foreach (EditorCurveBinding holdBinding in holdBindings)
+            {
+                if (!sourceBindings.TryGetValue(
+                        BatonDischargeExitBindingKey(holdBinding),
+                        out EditorCurveBinding sourceBinding))
+                {
+                    return false;
+                }
+
+                AnimationCurve sourceCurve = AnimationUtility.GetEditorCurve(
+                    sourceClip,
+                    sourceBinding);
+                AnimationCurve holdCurve = AnimationUtility.GetEditorCurve(
+                    holdClip,
+                    holdBinding);
+                if (sourceCurve == null || holdCurve == null)
+                {
+                    return false;
+                }
+
+                float expectedValue = sourceCurve.Evaluate(sourceTime);
+                if (holdCurve.keys.Any(key =>
+                        Mathf.Abs(key.value - expectedValue) > 0.00001f) ||
+                    Mathf.Abs(holdCurve.Evaluate(0f) - expectedValue) >
+                        0.00001f ||
+                    Mathf.Abs(
+                        holdCurve.Evaluate(durationSeconds) -
+                        expectedValue) > 0.00001f)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static string BatonDischargeExitBindingKey(
+            EditorCurveBinding binding)
+        {
+            return binding.path + "\n" +
+                   binding.propertyName + "\n" +
+                   binding.type.AssemblyQualifiedName;
+        }
+
+        private static bool BatonDischargeExitReverseStateIsExact(
+            AnimatorState state,
+            AnimationClip clip)
+        {
+            return state.motion == clip &&
+                   Mathf.Abs(state.speed + 1f) <= 0.0001f &&
+                   !state.mirror &&
+                   Mathf.Abs(state.cycleOffset - 1f) <= 0.0001f &&
+                   !state.writeDefaultValues;
+        }
+
+        private static bool BatonDischargeExitReverseTransitionIsExact(
+            AnimatorState source,
+            AnimatorState destination)
+        {
+            return BatonDischargeExitTransitionIsExact(
+                source,
+                destination,
+                0f);
+        }
+
+        private static bool BatonDischargeExitTransitionIsExact(
+            AnimatorState source,
+            AnimatorState destination,
+            float exitTime)
+        {
+            AnimatorStateTransition[] transitions = source.transitions;
+            return transitions.Length == 1 &&
+                   transitions[0].destinationState == destination &&
+                   transitions[0].conditions.Length == 0 &&
+                   transitions[0].hasExitTime &&
+                   Mathf.Abs(transitions[0].exitTime - exitTime) <= 0.0001f &&
+                   transitions[0].hasFixedDuration &&
+                   Mathf.Abs(transitions[0].duration) <= 0.0001f &&
+                   !transitions[0].canTransitionToSelf;
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Baton Discharge Exit Reverse Review")]
+        internal static void CaptureBatonDischargeExitReverseReview()
+        {
+            int stage = SessionState.GetInt(
+                BatonDischargeExitReviewStageKey,
+                0);
+            if (stage == -1)
+            {
+                string error = SessionState.GetString(
+                    BatonDischargeExitReviewErrorKey,
+                    "Unknown Baton_Discharge_Exit Play Mode capture error.");
+                SessionState.EraseInt(BatonDischargeExitReviewStageKey);
+                SessionState.EraseString(BatonDischargeExitReviewErrorKey);
+                throw new InvalidOperationException(error);
+            }
+
+            if (stage == 0)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Exit review must start in Edit Mode.");
+                }
+
+                BatonDischargeExitApplyMetrics apply =
+                    ReadJson<BatonDischargeExitApplyMetrics>(
+                        BatonDischargeExitApplyMetricsPath);
+                if (!apply.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Exit apply metrics did not pass before review.");
+                }
+
+                SessionState.SetInt(BatonDischargeExitReviewStageKey, 1);
+                EditorApplication.EnterPlaymode();
+                Debug.Log(
+                    "[BatonDischargeExitReverse] Entering Play Mode for direct two-loop reverse review.");
+                return;
+            }
+
+            if (stage == 1)
+            {
+                if (!EditorApplication.isPlaying)
+                {
+                    SessionState.EraseInt(BatonDischargeExitReviewStageKey);
+                    SessionState.EraseString(BatonDischargeExitReviewErrorKey);
+                    Debug.Log(
+                        "[BatonDischargeExitReverse] Cleared a review that exited before runtime capture began.");
+                    return;
+                }
+
+                SessionState.SetInt(BatonDischargeExitReviewStageKey, 11);
+                StartBatonDischargeExitActualPlayModeCapture();
+                return;
+            }
+
+            if (stage == 11)
+            {
+                Debug.Log(
+                    "[BatonDischargeExitReverse] Direct two-loop capture is still running.");
+                return;
+            }
+
+            if (stage == 2)
+            {
+                if (!EditorApplication.isPlaying)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Exit review exit requires Play Mode.");
+                }
+
+                SessionState.SetInt(BatonDischargeExitReviewStageKey, 3);
+                EditorApplication.ExitPlaymode();
+                return;
+            }
+
+            if (stage == 3)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Exit finalization requires Edit Mode.");
+                }
+
+                BatonDischargeExitReviewMetrics review =
+                    ReadJson<BatonDischargeExitReviewMetrics>(
+                        BatonDischargeExitReviewMetricsPath);
+                if (!review.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Exit direct review did not pass.");
+                }
+
+                CopyReviewedContact(
+                    BatonDischargeExitReviewPath,
+                    BatonDischargeExitFinalPath);
+                SessionState.EraseInt(BatonDischargeExitReviewStageKey);
+                SessionState.EraseString(BatonDischargeExitReviewErrorKey);
+                Debug.Log(
+                    "[BatonDischargeExitReverse] Final image copied once from the directly reviewed Play Mode contact sheet. Path=" +
+                    Path.GetFullPath(BatonDischargeExitFinalPath) + ".");
+                return;
+            }
+
+            throw new InvalidOperationException(
+                "Baton_Discharge_Exit review stage is invalid: " +
+                stage.ToString(CultureInfo.InvariantCulture) + ".");
+        }
+
+        private static void StartBatonDischargeExitActualPlayModeCapture()
+        {
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(
+                layout,
+                BatonDischargeExitTargetName);
+            Animator animator = RequireAnimator(target);
+            BatonDischargeExitHoldStateBehaviour cycle =
+                target.GetComponent<BatonDischargeExitHoldStateBehaviour>() ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Exit absolute-time cycle driver is missing.");
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Exit runtime controller is missing.");
+            AnimatorState[] states = controller.layers[0].stateMachine.states
+                .Select(child => child.state)
+                .ToArray();
+            AnimationClip sourceTake = states
+                .Single(state => string.Equals(
+                    state.name,
+                    BatonDischargeExitSourceStateName,
+                    StringComparison.Ordinal)).motion as AnimationClip ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Exit exact Mixamo Take is missing.");
+            AnimationClip transitionClip = states
+                .Single(state => string.Equals(
+                    state.name,
+                    BatonDischargeExitTransitionStateName,
+                    StringComparison.Ordinal)).motion as AnimationClip ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Exit transition clip is missing.");
+            float sequenceDuration = cycle.CycleDurationSeconds;
+            float sourceReverseDuration = cycle.SourceReverseSeconds;
+            float transitionStartTime = sourceReverseDuration;
+            float idleStartTime =
+                transitionStartTime + transitionClip.length;
+            int modeHoldHash = Animator.StringToHash(
+                BatonDischargeExitModeHoldStateName);
+            int sourceHash = Animator.StringToHash(
+                BatonDischargeExitSourceStateName);
+            int transitionHash = Animator.StringToHash(
+                BatonDischargeExitTransitionStateName);
+            int idleHoldHash = Animator.StringToHash(
+                BatonDischargeExitIdleHoldStateName);
+            float[] captureTimes =
+            {
+                0.03f,
+                0.08f,
+                0.13f,
+                0.18f,
+                transitionStartTime + 0.03f,
+                transitionStartTime + 0.15f,
+                transitionStartTime + 0.28f,
+                transitionStartTime + 0.47f,
+                idleStartTime + 0.03f,
+                idleStartTime + 0.25f,
+                sequenceDuration - 0.03f,
+                sequenceDuration + 0.03f,
+                sequenceDuration + 0.13f,
+                sequenceDuration +
+                    transitionStartTime + 0.25f,
+                sequenceDuration * 2f - 0.03f,
+                sequenceDuration * 2f + 0.03f
+            };
+            string[] posePaths = AnimationUtility
+                .GetCurveBindings(sourceTake)
+                .Concat(AnimationUtility.GetCurveBindings(transitionClip))
+                .Where(binding => binding.type == typeof(Transform))
+                .Select(binding => binding.path)
+                .Distinct(StringComparer.Ordinal)
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform baton = rightHand.Find(ElectricBatonInstanceName) ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Exit right-hand electric baton is missing.");
+            RootPose rootBefore = new RootPose(target);
+            List<byte[]> frontPanels = new List<byte[]>();
+            List<byte[]> sidePanels = new List<byte[]>();
+            List<byte[]> obliquePanels = new List<byte[]>();
+            List<byte[]> upperBodyPanels = new List<byte[]>();
+            int nextCapture = 0;
+            int previousStateHash = 0;
+            bool initialized = false;
+            bool sawIdleHoldBeforeInitialization = false;
+            bool timingMeasurementComplete = false;
+            bool modeHoldObserved = false;
+            bool sourceObserved = false;
+            bool transitionObserved = false;
+            bool idleHoldObserved = false;
+            bool returnedToModeHold = false;
+            float observedLoops = 0f;
+            float observedModeHoldSeconds = 0f;
+            float observedIdleHoldSeconds = 0f;
+            float maximumModeHoldPositionDifference = 0f;
+            float maximumModeHoldRotationDifference = 0f;
+            float maximumIdleHoldPositionDifference = 0f;
+            float maximumIdleHoldRotationDifference = 0f;
+            float maximumPositionDifference = 0f;
+            float maximumRotationDifference = 0f;
+            double sequenceStartTime = 0d;
+            double stateStartTime = 0d;
+            double deadline = EditorApplication.timeSinceStartup +
+                Math.Max(12d, sequenceDuration * 4d + 8d);
+            EditorApplication.CallbackFunction update = null;
+            update = () =>
+            {
+                try
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Play Mode ended before Baton_Discharge_Exit completed direct review.");
+                    }
+
+                    AnimatorStateInfo state =
+                        animator.GetCurrentAnimatorStateInfo(0);
+                    int stateHash = state.shortNameHash;
+                    if (!initialized)
+                    {
+                        sawIdleHoldBeforeInitialization |=
+                            stateHash == idleHoldHash;
+                        bool reachedNaturalLoopStart =
+                            sawIdleHoldBeforeInitialization &&
+                            stateHash == sourceHash &&
+                            previousStateHash == idleHoldHash;
+                        previousStateHash = stateHash;
+                        if (!reachedNaturalLoopStart)
+                        {
+                            if (EditorApplication.timeSinceStartup > deadline)
+                            {
+                                throw new InvalidOperationException(
+                                    "Baton_Discharge_Exit did not reach a natural 0.2-second mode-pose hold start.");
+                            }
+
+                            return;
+                        }
+
+                        initialized = true;
+                        previousStateHash = sourceHash;
+                        sequenceStartTime = Time.timeAsDouble;
+                        stateStartTime = sequenceStartTime;
+                    }
+
+                    double now = Time.timeAsDouble;
+                    if (stateHash != previousStateHash)
+                    {
+                        float previousStateSeconds =
+                            (float)(now - stateStartTime);
+                        if (!timingMeasurementComplete &&
+                            previousStateHash == sourceHash &&
+                            stateHash == transitionHash)
+                        {
+                            observedModeHoldSeconds = previousStateSeconds;
+                        }
+                        else if (!timingMeasurementComplete &&
+                                 previousStateHash == idleHoldHash &&
+                                 stateHash == sourceHash)
+                        {
+                            observedIdleHoldSeconds = previousStateSeconds;
+                            returnedToModeHold = true;
+                            timingMeasurementComplete =
+                                observedModeHoldSeconds > 0f;
+                            if (timingMeasurementComplete)
+                            {
+                                sequenceStartTime = now;
+                            }
+                        }
+
+                        stateStartTime = now;
+                    }
+
+                    modeHoldObserved |= stateHash == sourceHash;
+                    sourceObserved |= stateHash == sourceHash;
+                    transitionObserved |= stateHash == transitionHash;
+                    idleHoldObserved |= stateHash == idleHoldHash;
+                    previousStateHash = stateHash;
+                    if (!timingMeasurementComplete)
+                    {
+                        if (EditorApplication.timeSinceStartup > deadline)
+                        {
+                            throw new InvalidOperationException(
+                                "Baton_Discharge_Exit timing-only observation did not complete before visual capture.");
+                        }
+
+                        return;
+                    }
+
+                    float stateProgress = Mathf.Clamp01(state.normalizedTime);
+                    AnimationClip expectedClip;
+                    float expectedTime;
+                    if (stateHash == modeHoldHash)
+                    {
+                        expectedClip = sourceTake;
+                        expectedTime = sourceTake.length;
+                    }
+                    else if (stateHash == sourceHash)
+                    {
+                        expectedClip = sourceTake;
+                        expectedTime = sourceTake.length * stateProgress;
+                    }
+                    else if (stateHash == transitionHash)
+                    {
+                        expectedClip = transitionClip;
+                        expectedTime = transitionClip.length * stateProgress;
+                    }
+                    else if (stateHash == idleHoldHash)
+                    {
+                        expectedClip = transitionClip;
+                        expectedTime = 0f;
+                    }
+                    else
+                    {
+                        if (EditorApplication.timeSinceStartup > deadline)
+                        {
+                            throw new InvalidOperationException(
+                                "Baton_Discharge_Exit entered an unexpected runtime state.");
+                        }
+
+                        return;
+                    }
+
+                    float observedSeconds =
+                        (float)(now - sequenceStartTime);
+                    observedLoops = observedSeconds / sequenceDuration;
+                    if (nextCapture < captureTimes.Length &&
+                        observedSeconds >= captureTimes[nextCapture])
+                    {
+                        Dictionary<string, BatonDischargeModeLocalPose>
+                            expectedPose = CaptureBatonDischargeModeClipPose(
+                                target,
+                                expectedClip,
+                                expectedTime,
+                                posePaths);
+                        Dictionary<string, BatonDischargeModeLocalPose>
+                            actualPose = CaptureBatonDischargeModeLocalPose(
+                                target,
+                                posePaths);
+                        MeasureBatonDischargeModePoseDifference(
+                            expectedPose,
+                            actualPose,
+                            out float positionDifference,
+                            out float rotationDifference);
+                        if (stateHash == modeHoldHash)
+                        {
+                            maximumModeHoldPositionDifference = Mathf.Max(
+                                maximumModeHoldPositionDifference,
+                                positionDifference);
+                            maximumModeHoldRotationDifference = Mathf.Max(
+                                maximumModeHoldRotationDifference,
+                                rotationDifference);
+                        }
+                        else if (stateHash == idleHoldHash)
+                        {
+                            maximumIdleHoldPositionDifference = Mathf.Max(
+                                maximumIdleHoldPositionDifference,
+                                positionDifference);
+                            maximumIdleHoldRotationDifference = Mathf.Max(
+                                maximumIdleHoldRotationDifference,
+                                rotationDifference);
+                        }
+                        else
+                        {
+                            maximumPositionDifference = Mathf.Max(
+                                maximumPositionDifference,
+                                positionDifference);
+                            maximumRotationDifference = Mathf.Max(
+                                maximumRotationDifference,
+                                rotationDifference);
+                        }
+
+                        using (CaptureEnvironment environment =
+                               new CaptureEnvironment(target))
+                        {
+                            environment.ConfigureDarkMaterialReview();
+                            environment.ConfigureView(target, 1.05f, 1.35f);
+                            frontPanels.Add(environment.CaptureFront());
+                            sidePanels.Add(environment.CaptureSide());
+                            Vector3 fullCenter = CalculateVisibleBounds(target).center;
+                            obliquePanels.Add(environment.CaptureOblique(
+                                target,
+                                fullCenter,
+                                -(target.forward + target.right).normalized,
+                                1.35f));
+                            Vector3 upperCenter = Vector3.Lerp(
+                                FindRequired(target, TorsoBasePath).position,
+                                FindRequired(target, HeadPath).position,
+                                0.55f);
+                            environment.ConfigureView(target, upperCenter, 0.85f);
+                            upperBodyPanels.Add(environment.CaptureFront());
+                        }
+
+                        nextCapture++;
+                    }
+
+                    if (nextCapture < captureTimes.Length)
+                    {
+                        if (EditorApplication.timeSinceStartup > deadline)
+                        {
+                            throw new InvalidOperationException(
+                                "Baton_Discharge_Exit direct two-loop capture timed out.");
+                        }
+
+                        return;
+                    }
+
+                    EditorApplication.update -= update;
+                    ComposeRows(
+                        new[]
+                        {
+                            frontPanels,
+                            sidePanels,
+                            obliquePanels,
+                            upperBodyPanels
+                        },
+                        BatonDischargeExitReviewPath);
+                    ComposeBatonDischargeExitModeReverseComparison();
+                    BatonDischargeExitReviewMetrics metrics =
+                        new BatonDischargeExitReviewMetrics
+                        {
+                            target = BatonDischargeExitTargetName,
+                            actualPlayModeFramesCaptured = frontPanels.Count,
+                            actualLoopsObserved = observedLoops,
+                            sequenceDurationSeconds = sequenceDuration,
+                            modePoseHoldSeconds =
+                                BatonDischargeExitModeHoldSeconds,
+                            idlePoseHoldSeconds =
+                                BatonDischargeExitIdleHoldSeconds,
+                            observedModePoseHoldSeconds =
+                                observedModeHoldSeconds,
+                            observedIdlePoseHoldSeconds =
+                                observedIdleHoldSeconds,
+                            cycleDriverPresent = cycle != null,
+                            cycleDriverSettingsCorrect =
+                                BatonDischargeExitCycleIsExact(
+                                    cycle,
+                                    animator,
+                                    sourceTake,
+                                    transitionClip),
+                            modePoseHoldStateObserved = modeHoldObserved,
+                            exactMixamoReverseStateObserved = sourceObserved,
+                            idleTransitionReverseStateObserved =
+                                transitionObserved,
+                            idlePoseHoldStateObserved = idleHoldObserved,
+                            returnedToModePoseHold = returnedToModeHold,
+                            maximumModeHoldPosePositionDifferenceMeters =
+                                maximumModeHoldPositionDifference,
+                            maximumModeHoldPoseRotationDifferenceDegrees =
+                                maximumModeHoldRotationDifference,
+                            maximumIdleHoldPosePositionDifferenceMeters =
+                                maximumIdleHoldPositionDifference,
+                            maximumIdleHoldPoseRotationDifferenceDegrees =
+                                maximumIdleHoldRotationDifference,
+                            maximumReversePosePositionDifferenceMeters =
+                                maximumPositionDifference,
+                            maximumReversePoseRotationDifferenceDegrees =
+                                maximumRotationDifference,
+                            exactReversePoseOrder =
+                                maximumPositionDifference <= 0.0001f &&
+                                maximumRotationDifference <= 0.01f,
+                            batonVisible = baton
+                                .GetComponentsInChildren<Renderer>(true)
+                                .Any(renderer =>
+                                    renderer.enabled &&
+                                    renderer.gameObject.activeInHierarchy),
+                            batonParentIsRightHand = baton.parent == rightHand,
+                            targetRootUnchanged = RootMatches(
+                                target,
+                                rootBefore),
+                            reviewContactSheetExists = File.Exists(
+                                Path.GetFullPath(
+                                    BatonDischargeExitReviewPath)),
+                            modeReverseComparisonExists = File.Exists(
+                                Path.GetFullPath(
+                                    BatonDischargeExitComparisonPath)),
+                            validationPriority =
+                                "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                        };
+                    metrics.passedNumericChecks =
+                        metrics.actualPlayModeFramesCaptured ==
+                            captureTimes.Length &&
+                        metrics.actualLoopsObserved >= 2f &&
+                        Mathf.Abs(
+                            metrics.modePoseHoldSeconds -
+                            BatonDischargeExitModeHoldSeconds) <= 0.0001f &&
+                        Mathf.Abs(
+                            metrics.idlePoseHoldSeconds -
+                            BatonDischargeExitIdleHoldSeconds) <= 0.0001f &&
+                        Mathf.Abs(
+                            metrics.observedModePoseHoldSeconds -
+                            BatonDischargeExitModeHoldSeconds) <=
+                            1f / sourceTake.frameRate + 0.01f &&
+                        Mathf.Abs(
+                            metrics.observedIdlePoseHoldSeconds -
+                            BatonDischargeExitIdleHoldSeconds) <=
+                            1f / sourceTake.frameRate + 0.01f &&
+                        metrics.cycleDriverPresent &&
+                        metrics.cycleDriverSettingsCorrect &&
+                        metrics.modePoseHoldStateObserved &&
+                        metrics.exactMixamoReverseStateObserved &&
+                        metrics.idleTransitionReverseStateObserved &&
+                        metrics.idlePoseHoldStateObserved &&
+                        metrics.returnedToModePoseHold &&
+                        metrics.maximumModeHoldPosePositionDifferenceMeters <=
+                            0.001f &&
+                        metrics.maximumModeHoldPoseRotationDifferenceDegrees <=
+                            0.5f &&
+                        metrics.maximumIdleHoldPosePositionDifferenceMeters <=
+                            0.001f &&
+                        metrics.maximumIdleHoldPoseRotationDifferenceDegrees <=
+                            0.01f &&
+                        metrics.exactReversePoseOrder &&
+                        metrics.batonVisible &&
+                        metrics.batonParentIsRightHand &&
+                        metrics.targetRootUnchanged &&
+                        metrics.reviewContactSheetExists &&
+                        metrics.modeReverseComparisonExists;
+                    WriteJson(BatonDischargeExitReviewMetricsPath, metrics);
+                    if (!metrics.passedNumericChecks)
+                    {
+                        throw new InvalidOperationException(
+                            "Baton_Discharge_Exit direct Play Mode support checks failed. " +
+                            JsonUtility.ToJson(metrics));
+                    }
+
+                    SessionState.SetInt(BatonDischargeExitReviewStageKey, 2);
+                    Debug.Log(
+                        "[BatonDischargeExitReverse] Captured actual exact reverse two-loop review. Frames=" +
+                        metrics.actualPlayModeFramesCaptured.ToString(
+                            CultureInfo.InvariantCulture) +
+                        ", Loops=" + Num(metrics.actualLoopsObserved) + ".");
+                }
+                catch (Exception exception)
+                {
+                    EditorApplication.update -= update;
+                    SessionState.SetString(
+                        BatonDischargeExitReviewErrorKey,
+                        exception.ToString());
+                    SessionState.SetInt(BatonDischargeExitReviewStageKey, -1);
+                    Debug.LogException(exception);
+                }
+            };
+            EditorApplication.update += update;
+        }
+
+        private static void ComposeBatonDischargeExitModeReverseComparison()
+        {
+            string modePath = Path.GetFullPath(BatonDischargeModeReviewPath);
+            string exitPath = Path.GetFullPath(BatonDischargeExitReviewPath);
+            if (!File.Exists(modePath) || !File.Exists(exitPath))
+            {
+                throw new FileNotFoundException(
+                    "Baton discharge Mode or Exit direct review image is missing for the reverse comparison.");
+            }
+
+            Texture2D mode = new Texture2D(2, 2, TextureFormat.RGB24, false);
+            Texture2D exit = new Texture2D(2, 2, TextureFormat.RGB24, false);
+            Texture2D comparison = null;
+            try
+            {
+                if (!mode.LoadImage(File.ReadAllBytes(modePath)) ||
+                    !exit.LoadImage(File.ReadAllBytes(exitPath)))
+                {
+                    throw new InvalidOperationException(
+                        "Baton discharge Mode or Exit review image could not be decoded.");
+                }
+
+                int width = mode.width + exit.width;
+                int height = Mathf.Max(mode.height, exit.height);
+                comparison = new Texture2D(
+                    width,
+                    height,
+                    TextureFormat.RGB24,
+                    false);
+                comparison.SetPixels(Enumerable.Repeat(
+                        new Color(0.055f, 0.065f, 0.08f, 1f),
+                        width * height)
+                    .ToArray());
+                comparison.SetPixels(
+                    0,
+                    (height - mode.height) / 2,
+                    mode.width,
+                    mode.height,
+                    mode.GetPixels());
+                comparison.SetPixels(
+                    mode.width,
+                    (height - exit.height) / 2,
+                    exit.width,
+                    exit.height,
+                    exit.GetPixels());
+                comparison.Apply(false, false);
+                string output = Path.GetFullPath(
+                    BatonDischargeExitComparisonPath);
+                Directory.CreateDirectory(
+                    Path.GetDirectoryName(output) ??
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Exit comparison directory is unavailable."));
+                File.WriteAllBytes(output, comparison.EncodeToPNG());
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(mode);
+                UnityEngine.Object.DestroyImmediate(exit);
+                if (comparison != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(comparison);
+                }
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Baton Discharge Fire Pose And VFX")]
+        internal static void ApplyBatonDischargeFirePoseAndVfx()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[BatonDischargeFire] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(
+                layout,
+                BatonDischargeFireTargetName);
+            RootPose targetRootBefore = new RootPose(target);
+            Dictionary<string, string> otherAnimatorsBefore =
+                CaptureAnimatorsExceptTarget(
+                    layout,
+                    BatonDischargeFireTargetName);
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform baton = rightHand.Find(ElectricBatonInstanceName) ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Fire has no right-hand electric baton.");
+            RootPose batonPoseBefore = new RootPose(baton);
+            string sourceAnimationHashBefore = HashFile(
+                BatonDischargeModeSourcePath);
+            string batonModelHashBefore = HashFile(ElectricBatonAssetPath);
+            string approvedPrefabHashBefore = HashFile(
+                BatonDischargeVfxPrefabPath);
+
+            AnimationClip sourceTake = LoadSingleEmbeddedClip(
+                BatonDischargeModeSourcePath,
+                "electronic emission");
+            string[] posePaths = AnimationUtility
+                .GetCurveBindings(sourceTake)
+                .Where(binding => binding.type == typeof(Transform))
+                .Select(binding => binding.path)
+                .Distinct(StringComparer.Ordinal)
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+            if (posePaths.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    "Electronic emission Take has no Transform pose paths.");
+            }
+
+            Dictionary<string, BatonDischargeModeLocalPose> expectedPose =
+                CaptureBatonDischargeModeClipPose(
+                    target,
+                    sourceTake,
+                    sourceTake.length,
+                    posePaths);
+            AnimationClip holdClip =
+                CreateOrUpdateBatonDischargeFireHoldClip(
+                    sourceTake,
+                    expectedPose);
+            Dictionary<string, BatonDischargeModeLocalPose> holdStartPose =
+                CaptureBatonDischargeModeClipPose(
+                    target,
+                    holdClip,
+                    0f,
+                    posePaths);
+            Dictionary<string, BatonDischargeModeLocalPose> holdEmissionEndPose =
+                CaptureBatonDischargeModeClipPose(
+                    target,
+                    holdClip,
+                    BatonDischargeFireEmissionSeconds,
+                    posePaths);
+            Dictionary<string, BatonDischargeModeLocalPose> holdCycleEndPose =
+                CaptureBatonDischargeModeClipPose(
+                    target,
+                    holdClip,
+                    BatonDischargeFireEmissionSeconds +
+                    BatonDischargeFirePostHoldSeconds,
+                    posePaths);
+            MeasureBatonDischargeModePoseDifference(
+                expectedPose,
+                holdStartPose,
+                out float holdStartPositionDifference,
+                out float holdStartRotationDifference);
+            MeasureBatonDischargeModePoseDifference(
+                expectedPose,
+                holdEmissionEndPose,
+                out float holdEmissionEndPositionDifference,
+                out float holdEmissionEndRotationDifference);
+            MeasureBatonDischargeModePoseDifference(
+                expectedPose,
+                holdCycleEndPose,
+                out float holdCycleEndPositionDifference,
+                out float holdCycleEndRotationDifference);
+
+            AnimatorController controller =
+                CreateOrUpdateBatonDischargeFireController(holdClip);
+            Animator animator = ConfigureAnimator(target, controller);
+            GameObject dischargePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                BatonDischargeVfxPrefabPath) ??
+                throw new FileNotFoundException(
+                    "Approved BatonDischargeVfx prefab is missing.",
+                    Path.GetFullPath(BatonDischargeVfxPrefabPath));
+            CalculateBatonDischargeFirePoseRelativeTransform(
+                target,
+                baton,
+                holdClip,
+                out Quaternion dischargeLocalRotation,
+                out Vector3 dischargeLocalScale);
+            Transform discharge = AttachApprovedBatonDischargeVfx(
+                baton,
+                dischargeLocalRotation,
+                dischargeLocalScale,
+                dischargePrefab);
+            MonoBehaviour cycle = ConfigureBatonDischargeFireCycle(
+                target,
+                discharge.gameObject);
+            ConfigureBatonDischargeFireStateBehaviour(controller);
+
+            EditorUtility.SetDirty(target.gameObject);
+            EditorUtility.SetDirty(animator);
+            EditorUtility.SetDirty(controller);
+            EditorSceneManager.MarkSceneDirty(scene);
+            AssetDatabase.SaveAssets();
+            if (!EditorSceneManager.SaveScene(scene))
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp could not be saved after Baton_Discharge_Fire setup.");
+            }
+
+            CalculateElectricBatonDischargeAnchor(
+                baton,
+                out Vector3 expectedLocalAnchor,
+                out _);
+            Component sampleController = RequireBatonElectricSampleController(
+                discharge);
+            Type behaviourType = RequireMusketMuzzleFlashRuntimeType(
+                BatonDischargeFireBehaviourTypeName);
+            AnimatorState state = RequireControllerState(
+                controller,
+                BatonDischargeFireStateName);
+            int behaviourCount = state.behaviours.Count(behaviour =>
+                behaviour != null && behaviourType.IsInstanceOfType(behaviour));
+            string approvedPrefabHashAfter = HashFile(
+                BatonDischargeVfxPrefabPath);
+            float dischargeAxisDifferenceDegrees =
+                MeasureBatonDischargeFirePoseDirectionDifference(
+                    target,
+                    holdClip,
+                    out float dischargeEndHeightDifferenceFromChestMeters,
+                    out float dischargeDownwardAngleDegrees);
+            BatonDischargeFireApplyMetrics metrics =
+                new BatonDischargeFireApplyMetrics
+                {
+                    target = BatonDischargeFireTargetName,
+                    sourceTakeName = sourceTake.name,
+                    sourceTakeDurationSeconds = sourceTake.length,
+                    holdClipPath = BatonDischargeFireHoldClipPath,
+                    holdClipDurationSeconds = holdClip.length,
+                    holdTransformCurveBindings = AnimationUtility
+                        .GetCurveBindings(holdClip)
+                        .Count(binding => binding.type == typeof(Transform)),
+                    holdStartPositionDifferenceMeters =
+                        holdStartPositionDifference,
+                    holdStartRotationDifferenceDegrees =
+                        holdStartRotationDifference,
+                    holdEmissionEndPositionDifferenceMeters =
+                        holdEmissionEndPositionDifference,
+                    holdEmissionEndRotationDifferenceDegrees =
+                        holdEmissionEndRotationDifference,
+                    holdCycleEndPositionDifferenceMeters =
+                        holdCycleEndPositionDifference,
+                    holdCycleEndRotationDifferenceDegrees =
+                        holdCycleEndRotationDifference,
+                    controllerPath = BatonDischargeFireControllerPath,
+                    stateName = BatonDischargeFireStateName,
+                    controllerUsesHoldClip = state.motion == holdClip,
+                    holdClipLoops = AnimationUtility
+                        .GetAnimationClipSettings(holdClip).loopTime,
+                    animatorSettingsCorrect = AnimatorMatches(
+                        animator,
+                        controller),
+                    approvedDischargePrefabPath =
+                        BatonDischargeVfxPrefabPath,
+                    approvedDischargePrefabHashBefore =
+                        approvedPrefabHashBefore,
+                    approvedDischargePrefabHashAfter =
+                        approvedPrefabHashAfter,
+                    approvedDischargePrefabUnchanged = string.Equals(
+                        approvedPrefabHashBefore,
+                        approvedPrefabHashAfter,
+                        StringComparison.OrdinalIgnoreCase),
+                    dischargeVfxParentIsBaton = discharge.parent == baton,
+                    dischargeLineRendererCount = discharge
+                        .GetComponentsInChildren<LineRenderer>(true).Length,
+                    dischargeRangeMeters =
+                        ReadMusketMuzzleFlashProperty<float>(
+                            sampleController,
+                            "DischargeRangeMeters"),
+                    dischargeSeconds =
+                        ReadMusketMuzzleFlashProperty<float>(
+                            cycle,
+                            "DischargeSeconds"),
+                    postDischargeHoldSeconds =
+                        ReadMusketMuzzleFlashProperty<float>(
+                            cycle,
+                            "PostDischargeHoldSeconds"),
+                    cycleDurationSeconds =
+                        ReadMusketMuzzleFlashProperty<float>(
+                            cycle,
+                            "CycleDurationSeconds"),
+                    dischargeAnchorDifferenceMeters = Vector3.Distance(
+                        discharge.position,
+                        baton.TransformPoint(expectedLocalAnchor)),
+                    dischargeAxisDifferenceDegrees =
+                        dischargeAxisDifferenceDegrees,
+                    dischargeEndHeightDifferenceFromChestMeters =
+                        dischargeEndHeightDifferenceFromChestMeters,
+                    dischargeDownwardAngleDegrees =
+                        dischargeDownwardAngleDegrees,
+                    stateBehaviourCount = behaviourCount,
+                    targetRootUnchanged = RootMatches(
+                        target,
+                        targetRootBefore),
+                    otherAnimatorsUnchanged = DictionariesEqual(
+                        otherAnimatorsBefore,
+                        CaptureAnimatorsExceptTarget(
+                            layout,
+                            BatonDischargeFireTargetName)),
+                    batonParentIsRightHand = baton.parent == rightHand,
+                    batonLocalTransformUnchanged = RootMatches(
+                        baton,
+                        batonPoseBefore),
+                    sourceAnimationUnchanged = string.Equals(
+                        sourceAnimationHashBefore,
+                        HashFile(BatonDischargeModeSourcePath),
+                        StringComparison.OrdinalIgnoreCase),
+                    electricBatonModelUnchanged = string.Equals(
+                        batonModelHashBefore,
+                        HashFile(ElectricBatonAssetPath),
+                        StringComparison.OrdinalIgnoreCase),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                Mathf.Abs(
+                    metrics.holdClipDurationSeconds -
+                    (BatonDischargeFireEmissionSeconds +
+                     BatonDischargeFirePostHoldSeconds)) <= 0.0001f &&
+                metrics.holdTransformCurveBindings > 0 &&
+                metrics.holdStartPositionDifferenceMeters <= 0.0001f &&
+                metrics.holdStartRotationDifferenceDegrees <= 0.01f &&
+                metrics.holdEmissionEndPositionDifferenceMeters <= 0.0001f &&
+                metrics.holdEmissionEndRotationDifferenceDegrees <= 0.01f &&
+                metrics.holdCycleEndPositionDifferenceMeters <= 0.0001f &&
+                metrics.holdCycleEndRotationDifferenceDegrees <= 0.01f &&
+                metrics.controllerUsesHoldClip &&
+                metrics.holdClipLoops &&
+                metrics.animatorSettingsCorrect &&
+                metrics.approvedDischargePrefabUnchanged &&
+                metrics.dischargeVfxParentIsBaton &&
+                metrics.dischargeLineRendererCount == 40 &&
+                Mathf.Abs(
+                    metrics.dischargeRangeMeters -
+                    BatonDischargeFireRangeMeters) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.dischargeSeconds -
+                    BatonDischargeFireEmissionSeconds) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.postDischargeHoldSeconds -
+                    BatonDischargeFirePostHoldSeconds) <= 0.0001f &&
+                Mathf.Abs(
+                    metrics.cycleDurationSeconds -
+                    (BatonDischargeFireEmissionSeconds +
+                     BatonDischargeFirePostHoldSeconds)) <= 0.0001f &&
+                metrics.dischargeAnchorDifferenceMeters <= 0.000001f &&
+                metrics.dischargeAxisDifferenceDegrees <= 0.001f &&
+                metrics.dischargeEndHeightDifferenceFromChestMeters <= 0.001f &&
+                metrics.dischargeDownwardAngleDegrees > 0.1f &&
+                metrics.stateBehaviourCount == 1 &&
+                metrics.targetRootUnchanged &&
+                metrics.otherAnimatorsUnchanged &&
+                metrics.batonParentIsRightHand &&
+                metrics.batonLocalTransformUnchanged &&
+                metrics.sourceAnimationUnchanged &&
+                metrics.electricBatonModelUnchanged;
+            WriteJson(BatonDischargeFireApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Fire setup support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            foreach (string reviewPath in new[]
+                     {
+                         BatonDischargeFireReviewMetricsPath,
+                         BatonDischargeFireReviewPath,
+                         BatonDischargeFireFinalPath,
+                         BatonDischargeFireReferenceComparisonPath
+                     })
+            {
+                string absolute = Path.GetFullPath(reviewPath);
+                if (File.Exists(absolute))
+                {
+                    File.Delete(absolute);
+                }
+            }
+
+            SessionState.EraseInt(BatonDischargeFireReviewStageKey);
+            SessionState.EraseString(BatonDischargeFireReviewErrorKey);
+            Debug.Log(
+                "[BatonDischargeFire] Applied the exact final Baton_Discharge_Mode pose as a 2.1-second fixed loop and attached the unchanged approved 5m discharge prefab at the collector tip, angled forward and down so its endpoint reaches the transporter chest-center height. Emission=1.6s, PostHold=0.5s.");
+        }
+
+        private static AnimationClip CreateOrUpdateBatonDischargeFireHoldClip(
+            AnimationClip sourceTake,
+            IReadOnlyDictionary<string, BatonDischargeModeLocalPose>
+                finalPose)
+        {
+            AnimationClip clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                BatonDischargeFireHoldClipPath);
+            if (clip == null)
+            {
+                clip = new AnimationClip
+                {
+                    name = "Baton_Discharge_Fire_Hold"
+                };
+                AssetDatabase.CreateAsset(
+                    clip,
+                    BatonDischargeFireHoldClipPath);
+            }
+
+            clip.ClearCurves();
+            clip.frameRate = sourceTake.frameRate;
+            float cycleDuration = BatonDischargeFireEmissionSeconds +
+                BatonDischargeFirePostHoldSeconds;
+            foreach (KeyValuePair<string, BatonDischargeModeLocalPose> pair in
+                     finalPose)
+            {
+                BatonDischargeModeLocalPose pose = pair.Value;
+                SetBatonDischargeFireConstantCurve(
+                    clip,
+                    pair.Key,
+                    "m_LocalPosition.x",
+                    pose.Position.x,
+                    cycleDuration);
+                SetBatonDischargeFireConstantCurve(
+                    clip,
+                    pair.Key,
+                    "m_LocalPosition.y",
+                    pose.Position.y,
+                    cycleDuration);
+                SetBatonDischargeFireConstantCurve(
+                    clip,
+                    pair.Key,
+                    "m_LocalPosition.z",
+                    pose.Position.z,
+                    cycleDuration);
+                SetBatonDischargeFireConstantCurve(
+                    clip,
+                    pair.Key,
+                    "m_LocalRotation.x",
+                    pose.Rotation.x,
+                    cycleDuration);
+                SetBatonDischargeFireConstantCurve(
+                    clip,
+                    pair.Key,
+                    "m_LocalRotation.y",
+                    pose.Rotation.y,
+                    cycleDuration);
+                SetBatonDischargeFireConstantCurve(
+                    clip,
+                    pair.Key,
+                    "m_LocalRotation.z",
+                    pose.Rotation.z,
+                    cycleDuration);
+                SetBatonDischargeFireConstantCurve(
+                    clip,
+                    pair.Key,
+                    "m_LocalRotation.w",
+                    pose.Rotation.w,
+                    cycleDuration);
+                SetBatonDischargeFireConstantCurve(
+                    clip,
+                    pair.Key,
+                    "m_LocalScale.x",
+                    pose.Scale.x,
+                    cycleDuration);
+                SetBatonDischargeFireConstantCurve(
+                    clip,
+                    pair.Key,
+                    "m_LocalScale.y",
+                    pose.Scale.y,
+                    cycleDuration);
+                SetBatonDischargeFireConstantCurve(
+                    clip,
+                    pair.Key,
+                    "m_LocalScale.z",
+                    pose.Scale.z,
+                    cycleDuration);
+            }
+
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(clip);
+            settings.loopTime = true;
+            settings.loopBlend = false;
+            settings.loopBlendOrientation = false;
+            settings.loopBlendPositionY = false;
+            settings.loopBlendPositionXZ = false;
+            settings.stopTime = cycleDuration;
+            AnimationUtility.SetAnimationClipSettings(clip, settings);
+            EditorUtility.SetDirty(clip);
+            AssetDatabase.SaveAssets();
+            return AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                BatonDischargeFireHoldClipPath) ??
+                throw new FileNotFoundException(
+                    "Baton_Discharge_Fire hold clip is missing after creation.",
+                    Path.GetFullPath(BatonDischargeFireHoldClipPath));
+        }
+
+        private static void SetBatonDischargeFireConstantCurve(
+            AnimationClip clip,
+            string path,
+            string property,
+            float value,
+            float duration)
+        {
+            AnimationUtility.SetEditorCurve(
+                clip,
+                EditorCurveBinding.FloatCurve(
+                    path,
+                    typeof(Transform),
+                    property),
+                AnimationCurve.Constant(0f, duration, value));
+        }
+
+        private static AnimatorController
+            CreateOrUpdateBatonDischargeFireController(AnimationClip holdClip)
+        {
+            AnimatorController controller =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    BatonDischargeFireControllerPath);
+            if (controller == null)
+            {
+                controller = AnimatorController.CreateAnimatorControllerAtPath(
+                    BatonDischargeFireControllerPath);
+            }
+
+            while (controller.layers.Length > 1)
+            {
+                controller.RemoveLayer(controller.layers.Length - 1);
+            }
+
+            if (controller.layers.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Fire controller must contain one layer.");
+            }
+
+            controller.parameters = Array.Empty<AnimatorControllerParameter>();
+            AnimatorControllerLayer[] layers = controller.layers;
+            AnimatorStateMachine stateMachine = layers[0].stateMachine;
+            ClearStateMachine(stateMachine);
+            AnimatorState state = stateMachine.AddState(
+                BatonDischargeFireStateName);
+            state.motion = holdClip;
+            state.speed = 1f;
+            state.mirror = false;
+            state.cycleOffset = 0f;
+            state.writeDefaultValues = false;
+            stateMachine.defaultState = state;
+            layers[0].name = "Base Layer";
+            layers[0].avatarMask = null;
+            layers[0].blendingMode = AnimatorLayerBlendingMode.Override;
+            layers[0].defaultWeight = 1f;
+            controller.layers = layers;
+            EditorUtility.SetDirty(state);
+            EditorUtility.SetDirty(stateMachine);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static Transform AttachApprovedBatonDischargeVfx(
+            Transform baton,
+            Quaternion localRotation,
+            Vector3 localScale,
+            GameObject dischargePrefab)
+        {
+            Transform existing = baton.Find(BatonDischargeVfxInstanceName);
+            if (existing != null)
+            {
+                UnityEngine.Object.DestroyImmediate(existing.gameObject);
+            }
+
+            CalculateElectricBatonDischargeAnchor(
+                baton,
+                out Vector3 localAnchor,
+                out _);
+            GameObject instance = PrefabUtility.InstantiatePrefab(
+                dischargePrefab,
+                baton) as GameObject ??
+                throw new InvalidOperationException(
+                    "Approved BatonDischargeVfx could not be instantiated under the electric baton.");
+            instance.name = BatonDischargeVfxInstanceName;
+            Transform effect = instance.transform;
+            effect.localPosition = localAnchor;
+            effect.localRotation = localRotation;
+            effect.localScale = localScale;
+            effect.gameObject.SetActive(false);
+            EditorUtility.SetDirty(instance);
+            return effect;
+        }
+
+        private static void CalculateBatonDischargeFirePoseRelativeTransform(
+            Transform target,
+            Transform baton,
+            AnimationClip holdClip,
+            out Quaternion localRotation,
+            out Vector3 localScale)
+        {
+            string batonPath = AnimationUtility.CalculateTransformPath(
+                baton,
+                target);
+            GameObject clone = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            clone.name = "BatonDischargeFirePosePlacement";
+            clone.hideFlags = HideFlags.HideAndDontSave;
+            try
+            {
+                DisableAnimators(clone);
+                holdClip.SampleAnimation(clone, 0f);
+                Transform poseBaton = clone.transform.Find(batonPath) ??
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Fire pose clone has no electric baton.");
+                Transform existingDischarge = poseBaton.Find(
+                    BatonDischargeVfxInstanceName);
+                if (existingDischarge != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(
+                        existingDischarge.gameObject);
+                }
+
+                CalculateElectricBatonDischargeAnchor(
+                    poseBaton,
+                    out Vector3 localAnchor,
+                    out _);
+                Vector3 poseForward =
+                    CalculateBatonDischargeFireChestHeightDirection(
+                        clone.transform,
+                        poseBaton,
+                        localAnchor);
+                Vector3 localForward = poseBaton.InverseTransformVector(
+                    poseForward).normalized;
+                localRotation = Quaternion.FromToRotation(
+                    Vector3.right,
+                    localForward);
+                float worldPerEffectX = poseBaton.TransformVector(
+                    localRotation * Vector3.right).magnitude;
+                float worldPerEffectY = poseBaton.TransformVector(
+                    localRotation * Vector3.up).magnitude;
+                float worldPerEffectZ = poseBaton.TransformVector(
+                    localRotation * Vector3.forward).magnitude;
+                localScale = new Vector3(
+                    1f / Mathf.Max(0.000001f, worldPerEffectX),
+                    1f / Mathf.Max(0.000001f, worldPerEffectY),
+                    1f / Mathf.Max(0.000001f, worldPerEffectZ));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(clone);
+            }
+        }
+
+        private static float MeasureBatonDischargeFirePoseDirectionDifference(
+            Transform target,
+            AnimationClip holdClip,
+            out float endHeightDifferenceFromChestMeters,
+            out float downwardAngleDegrees)
+        {
+            GameObject clone = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            clone.name = "BatonDischargeFireDirectionMeasure";
+            clone.hideFlags = HideFlags.HideAndDontSave;
+            try
+            {
+                DisableAnimators(clone);
+                holdClip.SampleAnimation(clone, 0f);
+                Transform poseBaton = FindRequired(
+                        clone.transform,
+                        RightHandPath)
+                    .Find(ElectricBatonInstanceName) ??
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Fire pose measure has no electric baton.");
+                Transform poseDischarge = poseBaton.Find(
+                    BatonDischargeVfxInstanceName) ??
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Fire pose measure has no discharge VFX.");
+                Vector3 actualDirection = poseDischarge
+                    .TransformVector(Vector3.right)
+                    .normalized;
+                Vector3 expectedDirection =
+                    CalculateBatonDischargeFireChestHeightDirection(
+                        clone.transform,
+                        poseBaton,
+                        poseDischarge.localPosition);
+                Vector3 actualEndpoint = poseDischarge.position +
+                    actualDirection * BatonDischargeFireRangeMeters;
+                Transform poseChest = FindRequired(
+                    clone.transform,
+                    SpinePath);
+                endHeightDifferenceFromChestMeters = Mathf.Abs(
+                    Vector3.Dot(
+                        actualEndpoint - poseChest.position,
+                        clone.transform.up.normalized));
+                downwardAngleDegrees = Mathf.Asin(
+                    Mathf.Clamp(
+                        -Vector3.Dot(
+                            actualDirection,
+                            clone.transform.up.normalized),
+                        -1f,
+                        1f)) * Mathf.Rad2Deg;
+                return Vector3.Angle(
+                    actualDirection,
+                    expectedDirection);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(clone);
+            }
+        }
+
+        private static Vector3 CalculateBatonDischargeFireChestHeightDirection(
+            Transform poseRoot,
+            Transform poseBaton,
+            Vector3 localAnchor)
+        {
+            Vector3 up = poseRoot.up.normalized;
+            Vector3 forward = Vector3.ProjectOnPlane(
+                poseRoot.forward,
+                up).normalized;
+            if (forward.sqrMagnitude <= 0.999f)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Fire transporter root has no usable forward direction.");
+            }
+
+            Vector3 emissionOrigin = poseBaton.TransformPoint(localAnchor);
+            Transform poseChest = FindRequired(poseRoot, SpinePath);
+            float heightOffset = Vector3.Dot(
+                poseChest.position - emissionOrigin,
+                up);
+            float maximumHeightOffset =
+                BatonDischargeFireRangeMeters - 0.0001f;
+            heightOffset = Mathf.Clamp(
+                heightOffset,
+                -maximumHeightOffset,
+                maximumHeightOffset);
+            float forwardDistance = Mathf.Sqrt(Mathf.Max(
+                0f,
+                BatonDischargeFireRangeMeters *
+                BatonDischargeFireRangeMeters -
+                heightOffset * heightOffset));
+            return (forward * forwardDistance + up * heightOffset).normalized;
+        }
+
+        private static void CalculateElectricBatonDischargeAnchor(
+            Transform baton,
+            out Vector3 localAnchor,
+            out Vector3 localAxis)
+        {
+            Bounds localBounds = CalculateBoundsRelativeTo(baton);
+            int longestAxis = LongestBoundsAxis(localBounds);
+            localAxis = longestAxis == 0
+                ? Vector3.right
+                : longestAxis == 1 ? Vector3.up : Vector3.forward;
+            float localLength = AxisComponent(localBounds.size, longestAxis);
+            localAnchor = localBounds.center + localAxis * localLength * 0.5f;
+        }
+
+        private static Component RequireBatonElectricSampleController(
+            Transform effect)
+        {
+            return effect.GetComponents<Component>()
+                .FirstOrDefault(component =>
+                    component != null &&
+                    string.Equals(
+                        component.GetType().FullName,
+                        "Bellerophon.ArtSamples.BatonElectricVfxUnitySample",
+                        StringComparison.Ordinal)) ??
+                throw new InvalidOperationException(
+                    effect.root.name +
+                    " approved Baton discharge sample controller is missing.");
+        }
+
+        private static MonoBehaviour ConfigureBatonDischargeFireCycle(
+            Transform target,
+            GameObject dischargeEffect)
+        {
+            Type cycleType = RequireMusketMuzzleFlashRuntimeType(
+                BatonDischargeFireCycleTypeName);
+            MonoBehaviour[] existing = target
+                .GetComponents(cycleType)
+                .OfType<MonoBehaviour>()
+                .ToArray();
+            MonoBehaviour cycle = existing.FirstOrDefault();
+            if (cycle == null)
+            {
+                cycle = target.gameObject.AddComponent(cycleType)
+                    as MonoBehaviour ?? throw new InvalidOperationException(
+                    "Baton_Discharge_Fire cycle controller could not be added.");
+            }
+
+            foreach (MonoBehaviour duplicate in existing.Skip(1))
+            {
+                UnityEngine.Object.DestroyImmediate(duplicate);
+            }
+
+            InvokeMusketMuzzleFlashMethod(
+                cycle,
+                "Configure",
+                dischargeEffect,
+                BatonDischargeFireEmissionSeconds,
+                BatonDischargeFirePostHoldSeconds);
+            EditorUtility.SetDirty(cycle);
+            return cycle;
+        }
+
+        private static void ConfigureBatonDischargeFireStateBehaviour(
+            AnimatorController controller)
+        {
+            AnimatorState state = RequireControllerState(
+                controller,
+                BatonDischargeFireStateName);
+            Type behaviourType = RequireMusketMuzzleFlashRuntimeType(
+                BatonDischargeFireBehaviourTypeName);
+            StateMachineBehaviour[] matches = state.behaviours
+                .Where(behaviour =>
+                    behaviour != null &&
+                    behaviourType.IsInstanceOfType(behaviour))
+                .ToArray();
+            StateMachineBehaviour behaviour = matches.FirstOrDefault();
+            if (behaviour == null)
+            {
+                behaviour = state.AddStateMachineBehaviour(behaviourType);
+            }
+
+            foreach (StateMachineBehaviour duplicate in matches.Skip(1))
+            {
+                UnityEngine.Object.DestroyImmediate(duplicate, true);
+            }
+
+            EditorUtility.SetDirty(behaviour);
+            EditorUtility.SetDirty(state);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Baton Discharge Fire Pose And VFX Review")]
+        internal static void CaptureBatonDischargeFirePoseAndVfxReview()
+        {
+            int stage = SessionState.GetInt(
+                BatonDischargeFireReviewStageKey,
+                0);
+            if (stage == -1)
+            {
+                string error = SessionState.GetString(
+                    BatonDischargeFireReviewErrorKey,
+                    "Unknown Baton_Discharge_Fire Play Mode capture error.");
+                SessionState.EraseInt(BatonDischargeFireReviewStageKey);
+                SessionState.EraseString(BatonDischargeFireReviewErrorKey);
+                throw new InvalidOperationException(error);
+            }
+
+            if (stage == 0)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Fire review must start in Edit Mode.");
+                }
+
+                BatonDischargeFireApplyMetrics apply =
+                    ReadJson<BatonDischargeFireApplyMetrics>(
+                        BatonDischargeFireApplyMetricsPath);
+                if (!apply.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Fire apply metrics did not pass before review.");
+                }
+
+                SessionState.SetInt(BatonDischargeFireReviewStageKey, 1);
+                EditorApplication.EnterPlaymode();
+                Debug.Log(
+                    "[BatonDischargeFire] Entering Play Mode for direct fixed-pose and two-loop VFX review.");
+                return;
+            }
+
+            if (stage == 1)
+            {
+                if (!EditorApplication.isPlaying)
+                {
+                    SessionState.EraseInt(BatonDischargeFireReviewStageKey);
+                    SessionState.EraseString(BatonDischargeFireReviewErrorKey);
+                    Debug.Log(
+                        "[BatonDischargeFire] Cleared a review that exited before runtime capture began.");
+                    return;
+                }
+
+                SessionState.SetInt(BatonDischargeFireReviewStageKey, 11);
+                StartBatonDischargeFireActualPlayModeCapture();
+                return;
+            }
+
+            if (stage == 11)
+            {
+                Debug.Log(
+                    "[BatonDischargeFire] Direct two-loop capture is still running.");
+                return;
+            }
+
+            if (stage == 2)
+            {
+                if (!EditorApplication.isPlaying)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Fire review exit requires Play Mode.");
+                }
+
+                SessionState.SetInt(BatonDischargeFireReviewStageKey, 3);
+                EditorApplication.ExitPlaymode();
+                return;
+            }
+
+            if (stage == 3)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Fire finalization requires Edit Mode.");
+                }
+
+                BatonDischargeFireReviewMetrics review =
+                    ReadJson<BatonDischargeFireReviewMetrics>(
+                        BatonDischargeFireReviewMetricsPath);
+                if (!review.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Discharge_Fire direct review did not pass.");
+                }
+
+                CopyReviewedContact(
+                    BatonDischargeFireReviewPath,
+                    BatonDischargeFireFinalPath);
+                SessionState.EraseInt(BatonDischargeFireReviewStageKey);
+                SessionState.EraseString(BatonDischargeFireReviewErrorKey);
+                Debug.Log(
+                    "[BatonDischargeFire] Final image copied once from the directly reviewed Play Mode contact sheet. Path=" +
+                    Path.GetFullPath(BatonDischargeFireFinalPath) + ".");
+                return;
+            }
+
+            throw new InvalidOperationException(
+                "Baton_Discharge_Fire review stage is invalid: " +
+                stage.ToString(CultureInfo.InvariantCulture) + ".");
+        }
+
+        private static void StartBatonDischargeFireActualPlayModeCapture()
+        {
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(
+                layout,
+                BatonDischargeFireTargetName);
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Fire runtime controller is missing.");
+            AnimatorState state = RequireControllerState(
+                controller,
+                BatonDischargeFireStateName);
+            AnimationClip holdClip = state.motion as AnimationClip ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Fire hold clip is missing.");
+            float cycleDuration = BatonDischargeFireEmissionSeconds +
+                BatonDischargeFirePostHoldSeconds;
+            int stateHash = Animator.StringToHash(BatonDischargeFireStateName);
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform baton = rightHand.Find(ElectricBatonInstanceName) ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Fire right-hand electric baton is missing.");
+            Transform discharge = baton.Find(BatonDischargeVfxInstanceName) ??
+                throw new InvalidOperationException(
+                    "Baton_Discharge_Fire approved discharge VFX is missing.");
+            string[] posePaths = AnimationUtility
+                .GetCurveBindings(holdClip)
+                .Where(binding => binding.type == typeof(Transform))
+                .Select(binding => binding.path)
+                .Distinct(StringComparer.Ordinal)
+                .ToArray();
+            float[] captureTimes =
+            {
+                0.08f,
+                0.45f,
+                1.00f,
+                1.55f,
+                1.72f,
+                2.02f,
+                2.18f,
+                2.75f,
+                3.65f,
+                3.85f,
+                4.05f,
+                4.24f
+            };
+            RootPose rootBefore = new RootPose(target);
+            List<byte[]> fullFrontPanels = new List<byte[]>();
+            List<byte[]> fullSidePanels = new List<byte[]>();
+            List<byte[]> rangePanels = new List<byte[]>();
+            List<byte[]> collectorPanels = new List<byte[]>();
+            Dictionary<string, BatonDischargeModeLocalPose> referencePose = null;
+            float maximumPositionDifference = 0f;
+            float maximumRotationDifference = 0f;
+            bool visibleDuringEmission = false;
+            bool hiddenDuringPostHold = false;
+            bool returnedOnNextLoop = false;
+            bool initialized = false;
+            float startCycleIndex = 0f;
+            int nextCapture = 0;
+            float observedLoops = 0f;
+            double deadline = EditorApplication.timeSinceStartup + 20d;
+            EditorApplication.CallbackFunction update = null;
+            update = () =>
+            {
+                try
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Play Mode ended before Baton_Discharge_Fire completed direct review.");
+                    }
+
+                    AnimatorStateInfo stateInfo =
+                        animator.GetCurrentAnimatorStateInfo(0);
+                    if (stateInfo.shortNameHash != stateHash)
+                    {
+                        if (EditorApplication.timeSinceStartup > deadline)
+                        {
+                            throw new InvalidOperationException(
+                                "Baton_Discharge_Fire did not enter its fixed-pose state.");
+                        }
+
+                        return;
+                    }
+
+                    if (!initialized)
+                    {
+                        float naturalPhase = Mathf.Repeat(
+                            stateInfo.normalizedTime,
+                            1f);
+                        if (naturalPhase > 0.08f)
+                        {
+                            if (EditorApplication.timeSinceStartup > deadline)
+                            {
+                                throw new InvalidOperationException(
+                                    "Baton_Discharge_Fire did not reach a natural cycle start.");
+                            }
+
+                            return;
+                        }
+
+                        initialized = true;
+                        startCycleIndex = Mathf.Floor(
+                            stateInfo.normalizedTime);
+                        referencePose = CaptureBatonDischargeModeLocalPose(
+                            target,
+                            posePaths);
+                    }
+
+                    float observedSeconds =
+                        (stateInfo.normalizedTime - startCycleIndex) *
+                        cycleDuration;
+                    observedLoops =
+                        stateInfo.normalizedTime - startCycleIndex;
+                    if (nextCapture < captureTimes.Length &&
+                        observedSeconds >= captureTimes[nextCapture])
+                    {
+                        float requestedTime = captureTimes[nextCapture];
+                        float requestedPhase = Mathf.Repeat(
+                            requestedTime,
+                            cycleDuration);
+                        bool shouldBeVisible = requestedPhase <
+                            BatonDischargeFireEmissionSeconds;
+                        visibleDuringEmission |=
+                            shouldBeVisible && discharge.gameObject.activeSelf;
+                        hiddenDuringPostHold |=
+                            !shouldBeVisible && !discharge.gameObject.activeSelf;
+                        returnedOnNextLoop |=
+                            requestedTime >= cycleDuration &&
+                            shouldBeVisible &&
+                            discharge.gameObject.activeSelf;
+
+                        Dictionary<string, BatonDischargeModeLocalPose>
+                            currentPose =
+                                CaptureBatonDischargeModeLocalPose(
+                                    target,
+                                    posePaths);
+                        MeasureBatonDischargeModePoseDifference(
+                            referencePose,
+                            currentPose,
+                            out float positionDifference,
+                            out float rotationDifference);
+                        maximumPositionDifference = Mathf.Max(
+                            maximumPositionDifference,
+                            positionDifference);
+                        maximumRotationDifference = Mathf.Max(
+                            maximumRotationDifference,
+                            rotationDifference);
+
+                        using (CaptureEnvironment environment =
+                               new CaptureEnvironment(target))
+                        {
+                            environment.ConfigureDarkMaterialReview();
+                            environment.ConfigureView(target, 1.05f, 1.35f);
+                            fullFrontPanels.Add(environment.CaptureFront());
+                            fullSidePanels.Add(environment.CaptureSide());
+                            Vector3 dischargeOrigin = discharge.position;
+                            Vector3 dischargeAxis = discharge
+                                .TransformVector(Vector3.right)
+                                .normalized;
+                            Vector3 rangeCenter = dischargeOrigin +
+                                dischargeAxis *
+                                (BatonDischargeFireRangeMeters * 0.5f);
+                            Vector3 viewDirection = Vector3.Cross(
+                                target.up,
+                                dischargeAxis).normalized;
+                            if (viewDirection.sqrMagnitude < 0.5f)
+                            {
+                                viewDirection = target.forward;
+                            }
+
+                            rangePanels.Add(environment.CaptureOblique(
+                                target,
+                                rangeCenter,
+                                viewDirection,
+                                3.25f));
+                            collectorPanels.Add(environment.CaptureOblique(
+                                target,
+                                dischargeOrigin + dischargeAxis * 0.25f,
+                                viewDirection,
+                                0.70f));
+                        }
+
+                        nextCapture++;
+                    }
+
+                    if (nextCapture < captureTimes.Length)
+                    {
+                        if (EditorApplication.timeSinceStartup > deadline)
+                        {
+                            throw new InvalidOperationException(
+                                "Baton_Discharge_Fire direct two-loop capture timed out.");
+                        }
+
+                        return;
+                    }
+
+                    EditorApplication.update -= update;
+                    ComposeRows(
+                        new[]
+                        {
+                            fullFrontPanels,
+                            fullSidePanels,
+                            rangePanels,
+                            collectorPanels
+                        },
+                        BatonDischargeFireReviewPath);
+                    ComposeBatonDischargeReferenceComparison(
+                        rangePanels[3],
+                        BatonDischargeFireReferenceComparisonPath);
+                    BatonDischargeFireReviewMetrics metrics =
+                        new BatonDischargeFireReviewMetrics
+                        {
+                            target = BatonDischargeFireTargetName,
+                            actualPlayModeFramesCaptured =
+                                fullFrontPanels.Count,
+                            actualLoopsObserved = observedLoops,
+                            cycleDurationSeconds = cycleDuration,
+                            dischargeSeconds =
+                                BatonDischargeFireEmissionSeconds,
+                            postDischargeHoldSeconds =
+                                BatonDischargeFirePostHoldSeconds,
+                            dischargeVisibleDuringEmission =
+                                visibleDuringEmission,
+                            dischargeHiddenDuringPostHold =
+                                hiddenDuringPostHold,
+                            dischargeReturnedOnNextLoop =
+                                returnedOnNextLoop,
+                            fixedPoseMaintained =
+                                maximumPositionDifference <= 0.0001f &&
+                                maximumRotationDifference <= 0.01f,
+                            maximumFixedPosePositionDifferenceMeters =
+                                maximumPositionDifference,
+                            maximumFixedPoseRotationDifferenceDegrees =
+                                maximumRotationDifference,
+                            batonVisible = baton
+                                .GetComponentsInChildren<Renderer>(true)
+                                .Any(renderer =>
+                                    renderer.enabled &&
+                                    renderer.gameObject.activeInHierarchy),
+                            batonParentIsRightHand = baton.parent == rightHand,
+                            targetRootUnchanged = RootMatches(
+                                target,
+                                rootBefore),
+                            reviewContactSheetExists = File.Exists(
+                                Path.GetFullPath(
+                                    BatonDischargeFireReviewPath)),
+                            referenceComparisonExists = File.Exists(
+                                Path.GetFullPath(
+                                    BatonDischargeFireReferenceComparisonPath)),
+                            validationPriority =
+                                "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                        };
+                    metrics.passedNumericChecks =
+                        metrics.actualPlayModeFramesCaptured ==
+                            captureTimes.Length &&
+                        metrics.actualLoopsObserved >= 2f &&
+                        metrics.dischargeVisibleDuringEmission &&
+                        metrics.dischargeHiddenDuringPostHold &&
+                        metrics.dischargeReturnedOnNextLoop &&
+                        metrics.fixedPoseMaintained &&
+                        metrics.batonVisible &&
+                        metrics.batonParentIsRightHand &&
+                        metrics.targetRootUnchanged &&
+                        metrics.reviewContactSheetExists &&
+                        metrics.referenceComparisonExists;
+                    WriteJson(BatonDischargeFireReviewMetricsPath, metrics);
+                    if (!metrics.passedNumericChecks)
+                    {
+                        throw new InvalidOperationException(
+                            "Baton_Discharge_Fire direct Play Mode support checks failed. " +
+                            JsonUtility.ToJson(metrics));
+                    }
+
+                    SessionState.SetInt(BatonDischargeFireReviewStageKey, 2);
+                    Debug.Log(
+                        "[BatonDischargeFire] Captured actual fixed-pose and approved-discharge review. Frames=" +
+                        metrics.actualPlayModeFramesCaptured.ToString(
+                            CultureInfo.InvariantCulture) +
+                        ", Loops=" + Num(metrics.actualLoopsObserved) + ".");
+                }
+                catch (Exception exception)
+                {
+                    EditorApplication.update -= update;
+                    SessionState.SetString(
+                        BatonDischargeFireReviewErrorKey,
+                        exception.ToString());
+                    SessionState.SetInt(BatonDischargeFireReviewStageKey, -1);
+                    Debug.LogException(exception);
+                }
+            };
+            EditorApplication.update += update;
+        }
+
+        private static void ComposeBatonDischargeReferenceComparison(
+            byte[] actualPng,
+            string outputPath)
+        {
+            Texture2D reference = new Texture2D(
+                2,
+                2,
+                TextureFormat.RGB24,
+                false);
+            Texture2D actual = new Texture2D(
+                2,
+                2,
+                TextureFormat.RGB24,
+                false);
+            Texture2D composite = new Texture2D(
+                CaptureWidth * 2,
+                CaptureHeight,
+                TextureFormat.RGB24,
+                false);
+            try
+            {
+                if (!reference.LoadImage(File.ReadAllBytes(
+                        Path.GetFullPath(
+                            BatonDischargeFireApprovedReferencePath))))
+                {
+                    throw new InvalidOperationException(
+                        "Approved Baton discharge reference could not be decoded.");
+                }
+
+                if (!actual.LoadImage(actualPng))
+                {
+                    throw new InvalidOperationException(
+                        "Applied Baton discharge frame could not be decoded.");
+                }
+
+                composite.SetPixels(
+                    0,
+                    0,
+                    CaptureWidth,
+                    CaptureHeight,
+                    FitTextureToPanel(
+                        reference,
+                        CaptureWidth,
+                        CaptureHeight,
+                        new Color(0.92f, 0.93f, 0.94f, 1f)));
+                composite.SetPixels(
+                    CaptureWidth,
+                    0,
+                    CaptureWidth,
+                    CaptureHeight,
+                    FitTextureToPanel(
+                        actual,
+                        CaptureWidth,
+                        CaptureHeight,
+                        new Color(0.055f, 0.065f, 0.08f, 1f)));
+                composite.Apply(false, false);
+                string absoluteOutput = Path.GetFullPath(outputPath);
+                Directory.CreateDirectory(
+                    Path.GetDirectoryName(absoluteOutput) ??
+                    throw new InvalidOperationException(
+                        "Baton discharge comparison directory is unavailable."));
+                File.WriteAllBytes(
+                    absoluteOutput,
+                    composite.EncodeToPNG());
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(reference);
+                UnityEngine.Object.DestroyImmediate(actual);
+                UnityEngine.Object.DestroyImmediate(composite);
+            }
+        }
+
+        private static Color[] FitTextureToPanel(
+            Texture2D source,
+            int width,
+            int height,
+            Color background)
+        {
+            Color[] pixels = Enumerable.Repeat(
+                    background,
+                    width * height)
+                .ToArray();
+            float scale = Mathf.Min(
+                width / (float)source.width,
+                height / (float)source.height);
+            int fittedWidth = Mathf.Max(
+                1,
+                Mathf.RoundToInt(source.width * scale));
+            int fittedHeight = Mathf.Max(
+                1,
+                Mathf.RoundToInt(source.height * scale));
+            int offsetX = (width - fittedWidth) / 2;
+            int offsetY = (height - fittedHeight) / 2;
+            for (int y = 0; y < fittedHeight; y++)
+            {
+                float v = fittedHeight > 1
+                    ? y / (float)(fittedHeight - 1)
+                    : 0.5f;
+                for (int x = 0; x < fittedWidth; x++)
+                {
+                    float u = fittedWidth > 1
+                        ? x / (float)(fittedWidth - 1)
+                        : 0.5f;
+                    pixels[(offsetY + y) * width + offsetX + x] =
+                        source.GetPixelBilinear(u, v);
+                }
+            }
+
+            return pixels;
+        }
+
         [MenuItem("Bellerophon/Player/Apply Baton Discharge States Electric Baton And Charge VFX")]
         internal static void ApplyBatonDischargeStatesElectricBatonAndChargeVfx()
         {
@@ -38977,6 +43518,77 @@ namespace Bellerophon.Editor
                 frame.ToString(CultureInfo.InvariantCulture) + ".");
         }
 
+        private static float ApplyBatonSwingRightTorsoMeshForwardOffset(
+            Transform root,
+            Transform shoulder,
+            Transform arm,
+            Transform foreArm,
+            Transform hand,
+            Quaternion sourceShoulderLocal,
+            Quaternion sourceArmLocal,
+            Quaternion sourceForeArmLocal,
+            Quaternion sourceHandLocal,
+            Vector3 sourceElbow,
+            float requestedForwardShift,
+            out float appliedForwardShift)
+        {
+            shoulder.localRotation = sourceShoulderLocal;
+            arm.localRotation = sourceArmLocal;
+            foreArm.localRotation = sourceForeArmLocal;
+            hand.localRotation = sourceHandLocal;
+            appliedForwardShift = 0f;
+            if (requestedForwardShift <= 0.000001f)
+            {
+                return 0f;
+            }
+
+            Quaternion sourceHandWorldRotation = hand.rotation;
+            Vector3 fromArm = hand.position - arm.position;
+            float reach = fromArm.magnitude;
+            if (reach <= 0.0001f)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right right arm has no usable shoulder-to-hand reach for chain rotation.");
+            }
+
+            float vertical = Vector3.Dot(fromArm, root.up);
+            float forward = Vector3.Dot(fromArm, root.forward);
+            float verticalForwardRadius = Mathf.Sqrt(
+                vertical * vertical + forward * forward);
+            if (verticalForwardRadius <= 0.0001f)
+            {
+                return 0f;
+            }
+
+            Vector3 sourceHandPosition = hand.position;
+            float targetForward = Mathf.Min(
+                verticalForwardRadius - 0.0001f,
+                forward + requestedForwardShift);
+            float targetVertical = Mathf.Sign(
+                Mathf.Abs(vertical) > 0.0001f ? vertical : -1f) *
+                Mathf.Sqrt(Mathf.Max(
+                    0f,
+                    verticalForwardRadius * verticalForwardRadius -
+                    targetForward * targetForward));
+            float sourceAngle = Mathf.Atan2(forward, vertical) *
+                Mathf.Rad2Deg;
+            float targetAngle = Mathf.Atan2(
+                targetForward,
+                targetVertical) * Mathf.Rad2Deg;
+            float angle = Mathf.DeltaAngle(sourceAngle, targetAngle);
+            arm.rotation = Quaternion.AngleAxis(
+                angle,
+                root.right) * arm.rotation;
+            appliedForwardShift = Mathf.Max(
+                0f,
+                Vector3.Dot(
+                    hand.position - sourceHandPosition,
+                    root.forward));
+            hand.rotation = sourceHandWorldRotation;
+            shoulder.localRotation = sourceShoulderLocal;
+            return 0f;
+        }
+
         private static float ApplyBatonSwingRightClearanceBias(
             Transform root,
             Transform shoulder,
@@ -39331,6 +43943,411 @@ namespace Bellerophon.Editor
                 {
                     if (Mathf.Abs(
                             sourceKeys[index].time -
+                            adjustedKeys[index].time) > 0.000001f ||
+                        sourceKeys[index].value != adjustedKeys[index].value)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return AnimationEventsExact(source, adjusted);
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Baton Swing Right Natural Left Arm")]
+        internal static void ApplyBatonSwingRightNaturalLeftArm()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[BatonSwingRightNaturalLeftArm] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, BatonSwingRightTargetName);
+            AnimationClip source = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                BatonSwingRightTorsoClearanceClipPath) ??
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right torso-clearance source clip is missing.");
+            AnimationClip idleReference = AssetDatabase
+                .LoadAssetAtPath<AnimationClip>(BatonIdleClipPath) ??
+                throw new InvalidOperationException(
+                    "Baton_Idle one-hand reference clip is missing.");
+            Animator targetAnimator = RequireAnimator(target);
+            if (!string.Equals(
+                    AssetDatabase.GetAssetPath(
+                        targetAnimator.runtimeAnimatorController),
+                    BatonSwingRightControllerPath,
+                    StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right does not use its approved controller.");
+            }
+
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform baton = rightHand.Find(ElectricBatonInstanceName) ??
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right exact right-hand electric baton is missing.");
+            RootPose targetRootBefore = new RootPose(target);
+            Transform batonParentBefore = baton.parent;
+            RootPose batonPoseBefore = new RootPose(baton);
+            Dictionary<string, string> animatorAssignmentsBefore =
+                CaptureAnimatorsExceptTargets(layout);
+            string sourceClipHashBefore = HashFile(
+                BatonSwingRightTorsoClearanceClipPath);
+            string idleReferenceHashBefore = HashFile(BatonIdleClipPath);
+            string playerModelHashBefore = HashFile(PlayerModelPath);
+            string batonModelHashBefore = HashFile(ElectricBatonAssetPath);
+
+            AnimationClip adjusted =
+                CreateOrUpdateBatonSwingRightNaturalLeftArmClip(
+                    target,
+                    source,
+                    idleReference,
+                    out int framesPerLoop,
+                    out float maximumReferenceDifference,
+                    out float maximumChangeFromSource);
+            AnimatorController controller =
+                CreateOrUpdateExactEmbeddedTakeController(
+                    BatonSwingRightControllerPath,
+                    BatonSwingRightStateName,
+                    adjusted);
+            AssetDatabase.SaveAssets();
+
+            AnimationClipSettings sourceSettings =
+                AnimationUtility.GetAnimationClipSettings(source);
+            AnimationClipSettings adjustedSettings =
+                AnimationUtility.GetAnimationClipSettings(adjusted);
+            bool durationFrameRateAndLoopExact =
+                Mathf.Abs(source.length - adjusted.length) <= 0.000001f &&
+                Mathf.Abs(source.frameRate - adjusted.frameRate) <=
+                    0.000001f &&
+                source.wrapMode == adjusted.wrapMode &&
+                sourceSettings.loopTime == adjustedSettings.loopTime &&
+                sourceSettings.loopBlend == adjustedSettings.loopBlend &&
+                Mathf.Abs(sourceSettings.startTime -
+                    adjustedSettings.startTime) <= 0.000001f &&
+                Mathf.Abs(sourceSettings.stopTime -
+                    adjustedSettings.stopTime) <= 0.000001f;
+            string sourceClipHashAfter = HashFile(
+                BatonSwingRightTorsoClearanceClipPath);
+            string idleReferenceHashAfter = HashFile(BatonIdleClipPath);
+            string playerModelHashAfter = HashFile(PlayerModelPath);
+            string batonModelHashAfter = HashFile(ElectricBatonAssetPath);
+            BatonSwingRightNaturalLeftArmApplyMetrics metrics =
+                new BatonSwingRightNaturalLeftArmApplyMetrics
+                {
+                    target = BatonSwingRightTargetName,
+                    sourceClipPath = BatonSwingRightTorsoClearanceClipPath,
+                    batonIdleReferenceClipPath = BatonIdleClipPath,
+                    adjustedClipPath =
+                        BatonSwingRightNaturalLeftArmClipPath,
+                    durationSeconds = adjusted.length,
+                    frameRate = adjusted.frameRate,
+                    framesPerLoop = framesPerLoop,
+                    adjustedLeftArmRotationCurveBindings = AnimationUtility
+                        .GetCurveBindings(adjusted)
+                        .Count(IsBatonSwingRightLeftArmChainRotationBinding),
+                    maximumLeftArmReferenceDifferenceDegrees =
+                        maximumReferenceDifference,
+                    maximumLeftArmChangeFromSourceDegrees =
+                        maximumChangeFromSource,
+                    onlyLeftArmChainRotationCurvesDiffer =
+                        BatonSwingRightMatchesExceptLeftArmChainRotations(
+                            source,
+                            adjusted),
+                    eventsExact = AnimationEventsExact(source, adjusted),
+                    durationFrameRateAndLoopExact =
+                        durationFrameRateAndLoopExact,
+                    controllerUsesAdjustedClip =
+                        StateUsesClip(
+                            controller,
+                            BatonSwingRightStateName,
+                            adjusted) &&
+                        targetAnimator.runtimeAnimatorController == controller,
+                    targetRootUnchanged = RootMatches(
+                        target,
+                        targetRootBefore),
+                    everyAnimatorAssignmentUnchanged = DictionariesEqual(
+                        animatorAssignmentsBefore,
+                        CaptureAnimatorsExceptTargets(layout)),
+                    batonParentAndLocalTransformUnchanged =
+                        baton.parent == batonParentBefore &&
+                        RootMatches(baton, batonPoseBefore),
+                    sourceClipHashBefore = sourceClipHashBefore,
+                    sourceClipHashAfter = sourceClipHashAfter,
+                    idleReferenceClipHashBefore = idleReferenceHashBefore,
+                    idleReferenceClipHashAfter = idleReferenceHashAfter,
+                    playerModelHashBefore = playerModelHashBefore,
+                    playerModelHashAfter = playerModelHashAfter,
+                    batonModelHashBefore = batonModelHashBefore,
+                    batonModelHashAfter = batonModelHashAfter,
+                    sourceClipUnchanged = string.Equals(
+                        sourceClipHashBefore,
+                        sourceClipHashAfter,
+                        StringComparison.OrdinalIgnoreCase),
+                    idleReferenceClipUnchanged = string.Equals(
+                        idleReferenceHashBefore,
+                        idleReferenceHashAfter,
+                        StringComparison.OrdinalIgnoreCase),
+                    playerModelUnchanged = string.Equals(
+                        playerModelHashBefore,
+                        playerModelHashAfter,
+                        StringComparison.OrdinalIgnoreCase),
+                    batonModelUnchanged = string.Equals(
+                        batonModelHashBefore,
+                        batonModelHashAfter,
+                        StringComparison.OrdinalIgnoreCase),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                metrics.framesPerLoop > 0 &&
+                metrics.adjustedLeftArmRotationCurveBindings == 16 &&
+                metrics.maximumLeftArmReferenceDifferenceDegrees <= 0.0001f &&
+                metrics.maximumLeftArmChangeFromSourceDegrees > 0.1f &&
+                metrics.onlyLeftArmChainRotationCurvesDiffer &&
+                metrics.eventsExact &&
+                metrics.durationFrameRateAndLoopExact &&
+                metrics.controllerUsesAdjustedClip &&
+                metrics.targetRootUnchanged &&
+                metrics.everyAnimatorAssignmentUnchanged &&
+                metrics.batonParentAndLocalTransformUnchanged &&
+                metrics.sourceClipUnchanged &&
+                metrics.idleReferenceClipUnchanged &&
+                metrics.playerModelUnchanged &&
+                metrics.batonModelUnchanged;
+            WriteJson(
+                BatonSwingRightNaturalLeftArmApplyMetricsPath,
+                metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right natural-left-arm support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            SessionState.EraseInt(
+                BatonSwingRightNaturalLeftArmReviewStageKey);
+            SessionState.EraseString(
+                BatonSwingRightNaturalLeftArmReviewErrorKey);
+            Debug.Log(
+                "[BatonSwingRightNaturalLeftArm] Replaced only LeftShoulder/Arm/ForeArm/Hand rotation curves with normalized Baton_Idle reference motion. Frames=" +
+                metrics.framesPerLoop +
+                ", MaximumSourceChange=" +
+                Num(metrics.maximumLeftArmChangeFromSourceDegrees) +
+                "deg.");
+        }
+
+        private static AnimationClip
+            CreateOrUpdateBatonSwingRightNaturalLeftArmClip(
+                Transform template,
+                AnimationClip source,
+                AnimationClip idleReference,
+                out int framesPerLoop,
+                out float maximumReferenceDifference,
+                out float maximumChangeFromSource)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            GameObject referenceObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "BatonSwingRightNaturalLeftArmBake";
+            referenceObject.name = "BatonIdleLeftArmReference";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            referenceObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            DisableAnimators(referenceObject);
+            try
+            {
+                string[] leftArmPaths = GetBatonSwingRightLeftArmPaths();
+                Transform workRoot = workObject.transform;
+                Transform referenceRoot = referenceObject.transform;
+                Dictionary<Transform, LocalTransformState> workBasePose =
+                    workRoot.GetComponentsInChildren<Transform>(true)
+                        .ToDictionary(
+                            transform => transform,
+                            transform => new LocalTransformState(transform));
+                Dictionary<Transform, LocalTransformState> referenceBasePose =
+                    referenceRoot.GetComponentsInChildren<Transform>(true)
+                        .ToDictionary(
+                            transform => transform,
+                            transform => new LocalTransformState(transform));
+                Dictionary<string, TransformCurveTrack> tracks =
+                    leftArmPaths.ToDictionary(
+                        path => path,
+                        path => new TransformCurveTrack(path),
+                        StringComparer.Ordinal);
+                framesPerLoop = Mathf.Max(
+                    4,
+                    Mathf.RoundToInt(source.length * source.frameRate));
+                maximumReferenceDifference = 0f;
+                maximumChangeFromSource = 0f;
+                for (int frame = 0; frame <= framesPerLoop; frame++)
+                {
+                    int phaseFrame = frame == framesPerLoop ? 0 : frame;
+                    float normalizedPhase = phaseFrame /
+                        (float)framesPerLoop;
+                    float sourceTime = source.length * normalizedPhase;
+                    float idleTime = idleReference.length * normalizedPhase;
+                    float keyTime = source.length * frame / framesPerLoop;
+                    RestoreLocalTransformStates(workBasePose);
+                    RestoreLocalTransformStates(referenceBasePose);
+                    source.SampleAnimation(workObject, sourceTime);
+                    idleReference.SampleAnimation(referenceObject, idleTime);
+                    foreach (string path in leftArmPaths)
+                    {
+                        Transform work = FindRequired(workRoot, path);
+                        Transform reference = FindRequired(referenceRoot, path);
+                        Quaternion sourceRotation = work.localRotation;
+                        work.localRotation = reference.localRotation;
+                        maximumReferenceDifference = Mathf.Max(
+                            maximumReferenceDifference,
+                            Quaternion.Angle(
+                                work.localRotation,
+                                reference.localRotation));
+                        maximumChangeFromSource = Mathf.Max(
+                            maximumChangeFromSource,
+                            Quaternion.Angle(
+                                sourceRotation,
+                                work.localRotation));
+                        tracks[path].Add(keyTime, work);
+                    }
+                }
+
+                AnimationClip generated = new AnimationClip();
+                EditorUtility.CopySerialized(source, generated);
+                generated.name =
+                    "Baton_Swing_Right_StandingSwing_TorsoClearance_NaturalLeftArm";
+                foreach (EditorCurveBinding binding in AnimationUtility
+                             .GetCurveBindings(generated)
+                             .Where(
+                                 IsBatonSwingRightLeftArmChainRotationBinding)
+                             .ToArray())
+                {
+                    AnimationUtility.SetEditorCurve(generated, binding, null);
+                }
+
+                foreach (TransformCurveTrack track in tracks.Values)
+                {
+                    SetRotationTrackCurves(generated, track);
+                }
+
+                AnimationUtility.SetAnimationEvents(
+                    generated,
+                    AnimationUtility.GetAnimationEvents(source));
+                AnimationClip existing = AssetDatabase
+                    .LoadAssetAtPath<AnimationClip>(
+                        BatonSwingRightNaturalLeftArmClipPath);
+                if (existing == null)
+                {
+                    AssetDatabase.CreateAsset(
+                        generated,
+                        BatonSwingRightNaturalLeftArmClipPath);
+                    existing = generated;
+                }
+                else
+                {
+                    EditorUtility.CopySerialized(generated, existing);
+                    UnityEngine.Object.DestroyImmediate(generated);
+                    existing.name =
+                        "Baton_Swing_Right_StandingSwing_TorsoClearance_NaturalLeftArm";
+                    EditorUtility.SetDirty(existing);
+                }
+
+                AssetDatabase.SaveAssets();
+                return existing;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(referenceObject);
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static string[] GetBatonSwingRightLeftArmPaths()
+        {
+            return new[]
+            {
+                LeftShoulderPath,
+                LeftArmPath,
+                LeftForeArmPath,
+                LeftHandPath
+            };
+        }
+
+        private static bool IsBatonSwingRightLeftArmChainRotationBinding(
+            EditorCurveBinding binding)
+        {
+            return GetBatonSwingRightLeftArmPaths().Contains(
+                       binding.path,
+                       StringComparer.Ordinal) &&
+                   IsTransformRotationProperty(binding.propertyName);
+        }
+
+        private static bool BatonSwingRightMatchesExceptLeftArmChainRotations(
+            AnimationClip source,
+            AnimationClip adjusted)
+        {
+            EditorCurveBinding[] sourceUnchanged = AnimationUtility
+                .GetCurveBindings(source)
+                .Where(binding =>
+                    !IsBatonSwingRightLeftArmChainRotationBinding(binding))
+                .ToArray();
+            EditorCurveBinding[] adjustedUnchanged = AnimationUtility
+                .GetCurveBindings(adjusted)
+                .Where(binding =>
+                    !IsBatonSwingRightLeftArmChainRotationBinding(binding))
+                .ToArray();
+            if (sourceUnchanged.Length != adjustedUnchanged.Length ||
+                sourceUnchanged.Any(binding =>
+                    !adjustedUnchanged.Contains(binding)))
+            {
+                return false;
+            }
+
+            foreach (EditorCurveBinding binding in sourceUnchanged)
+            {
+                if (!AnimationCurvesEqual(
+                        AnimationUtility.GetEditorCurve(source, binding),
+                        AnimationUtility.GetEditorCurve(adjusted, binding)))
+                {
+                    return false;
+                }
+            }
+
+            EditorCurveBinding[] sourceObjectBindings = AnimationUtility
+                .GetObjectReferenceCurveBindings(source);
+            EditorCurveBinding[] adjustedObjectBindings = AnimationUtility
+                .GetObjectReferenceCurveBindings(adjusted);
+            if (sourceObjectBindings.Length != adjustedObjectBindings.Length ||
+                sourceObjectBindings.Any(binding =>
+                    !adjustedObjectBindings.Contains(binding)))
+            {
+                return false;
+            }
+
+            foreach (EditorCurveBinding binding in sourceObjectBindings)
+            {
+                ObjectReferenceKeyframe[] sourceKeys = AnimationUtility
+                    .GetObjectReferenceCurve(source, binding);
+                ObjectReferenceKeyframe[] adjustedKeys = AnimationUtility
+                    .GetObjectReferenceCurve(adjusted, binding);
+                if (sourceKeys.Length != adjustedKeys.Length)
+                {
+                    return false;
+                }
+
+                for (int index = 0; index < sourceKeys.Length; index++)
+                {
+                    if (Mathf.Abs(sourceKeys[index].time -
                             adjustedKeys[index].time) > 0.000001f ||
                         sourceKeys[index].value != adjustedKeys[index].value)
                     {
@@ -39759,19 +44776,3111 @@ namespace Bellerophon.Editor
                     -(subject.forward + subject.right).normalized,
                     1.35f));
                 Vector3 chestCenter =
-                    (FindRequired(subject, SpinePath).position +
-                     FindRequired(subject, RightArmPath).position +
-                     FindRequired(subject, RightHandPath).position) / 3f;
+                    (FindRequired(subject, TorsoBasePath).position +
+                     FindRequired(subject, SolarPlexusPath).position) * 0.5f;
                 environment.ConfigureView(
                     subject,
                     chestCenter,
-                    0.78f);
+                    0.52f);
                 chestFrontPanels.Add(environment.CaptureFront());
                 chestObliquePanels.Add(environment.CaptureOblique(
                     subject,
                     chestCenter,
                     -(subject.forward + subject.right).normalized,
-                    0.78f));
+                    0.52f));
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Baton Swing Right Arm Clearance")]
+        internal static void ApplyBatonSwingRightArmClearance()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                Debug.Log(
+                    "[BatonSwingRightArmClearance] Exited Play Mode before apply; run apply again in Edit Mode.");
+                return;
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, BatonSwingRightTargetName);
+            AnimationClip source = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                BatonSwingRightNaturalLeftArmClipPath) ??
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right natural-left-arm source clip is missing.");
+            Animator targetAnimator = RequireAnimator(target);
+            if (!string.Equals(
+                    AssetDatabase.GetAssetPath(
+                        targetAnimator.runtimeAnimatorController),
+                    BatonSwingRightControllerPath,
+                    StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right does not use its approved controller.");
+            }
+
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform baton = rightHand.Find(ElectricBatonInstanceName) ??
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right exact right-hand electric baton is missing.");
+            RootPose targetRootBefore = new RootPose(target);
+            Transform batonParentBefore = baton.parent;
+            RootPose batonPoseBefore = new RootPose(baton);
+            Dictionary<string, string> animatorAssignmentsBefore =
+                CaptureAnimatorsExceptTargets(layout);
+            string sourceClipHashBefore = HashFile(
+                BatonSwingRightNaturalLeftArmClipPath);
+            string playerModelHashBefore = HashFile(PlayerModelPath);
+            string batonModelHashBefore = HashFile(ElectricBatonAssetPath);
+
+            BatonSwingRightArmClearanceBuildResult build =
+                CreateOrUpdateBatonSwingRightArmClearanceClip(target, source);
+            AnimatorController controller =
+                CreateOrUpdateExactEmbeddedTakeController(
+                    BatonSwingRightControllerPath,
+                    BatonSwingRightStateName,
+                    build.Clip);
+            AssetDatabase.SaveAssets();
+
+            AnimationClipSettings sourceSettings =
+                AnimationUtility.GetAnimationClipSettings(source);
+            AnimationClipSettings adjustedSettings =
+                AnimationUtility.GetAnimationClipSettings(build.Clip);
+            bool durationFrameRateAndLoopExact =
+                Mathf.Abs(source.length - build.Clip.length) <= 0.000001f &&
+                Mathf.Abs(source.frameRate - build.Clip.frameRate) <=
+                    0.000001f &&
+                source.wrapMode == build.Clip.wrapMode &&
+                sourceSettings.loopTime == adjustedSettings.loopTime &&
+                sourceSettings.loopBlend == adjustedSettings.loopBlend &&
+                Mathf.Abs(sourceSettings.startTime -
+                    adjustedSettings.startTime) <= 0.000001f &&
+                Mathf.Abs(sourceSettings.stopTime -
+                    adjustedSettings.stopTime) <= 0.000001f;
+            string sourceClipHashAfter = HashFile(
+                BatonSwingRightNaturalLeftArmClipPath);
+            string playerModelHashAfter = HashFile(PlayerModelPath);
+            string batonModelHashAfter = HashFile(ElectricBatonAssetPath);
+            BatonSwingRightArmClearanceApplyMetrics metrics =
+                new BatonSwingRightArmClearanceApplyMetrics
+                {
+                    target = BatonSwingRightTargetName,
+                    sourceClipPath = BatonSwingRightNaturalLeftArmClipPath,
+                    adjustedClipPath = BatonSwingRightArmClearanceClipPath,
+                    durationSeconds = build.Clip.length,
+                    frameRate = build.Clip.frameRate,
+                    framesPerLoop = build.FramesPerLoop,
+                    measuredLeftPalmWidthMeters = build.LeftPalmWidth,
+                    requestedLeftArmGapMeters =
+                        BatonSwingRightArmSilhouetteGapMeters,
+                    requestedLeftHandOutwardShiftMeters =
+                        build.LeftPalmWidth,
+                    minimumLeftHandOutwardShiftMeters =
+                        build.MinimumLeftHandOutwardShift,
+                    requestedRightArmGapMeters = 0f,
+                    sourceMinimumLeftArmSilhouetteGapMeters =
+                        build.SourceMinimumLeftGap,
+                    adjustedMinimumLeftArmSilhouetteGapMeters =
+                        build.AdjustedMinimumLeftGap,
+                    sourceMinimumRightArmSilhouetteGapMeters =
+                        build.SourceMinimumRightGap,
+                    adjustedMinimumRightArmSilhouetteGapMeters =
+                        build.AdjustedMinimumRightGap,
+                    sourceMinimumRightArmTorsoClearanceMeters =
+                        build.SourceMinimumRightTorsoClearance,
+                    adjustedMinimumRightArmTorsoClearanceMeters =
+                        build.AdjustedMinimumRightTorsoClearance,
+                    sourceMinimumRightArmMeshFrontClearanceMeters =
+                        build.SourceMinimumRightMeshFrontClearance,
+                    adjustedMinimumRightArmMeshFrontClearanceMeters =
+                        build.AdjustedMinimumRightMeshFrontClearance,
+                    sourceRightArmMeshFrontSamples =
+                        build.SourceRightMeshFrontSamples,
+                    adjustedRightArmMeshFrontSamples =
+                        build.AdjustedRightMeshFrontSamples,
+                    sourceRightArmMeshFrontClearanceMetersByFrame =
+                        build.SourceRightMeshFrontClearanceByFrame,
+                    adjustedRightArmMeshFrontClearanceMetersByFrame =
+                        build.AdjustedRightMeshFrontClearanceByFrame,
+                    appliedTorsoMeshForwardBiasMetersByFrame =
+                        build.AppliedTorsoMeshForwardBiasByFrame,
+                    appliedUpperTorsoYawDegreesByFrame =
+                        build.AppliedUpperTorsoYawDegreesByFrame,
+                    appliedUpperTorsoAwayPitchDegreesByFrame =
+                        build.AppliedUpperTorsoAwayPitchDegreesByFrame,
+                    appliedRightShoulderForwardYawDegreesByFrame =
+                        build.AppliedRightShoulderForwardYawDegreesByFrame,
+                    sourceMinimumBatonTorsoClearanceMeters =
+                        build.SourceMinimumBatonTorsoClearance,
+                    adjustedMinimumBatonTorsoClearanceMeters =
+                        build.AdjustedMinimumBatonTorsoClearance,
+                    sourceRightArmOverlapFrameCount =
+                        build.SourceRightOverlapFrameCount,
+                    adjustedRightArmOverlapFrameCount =
+                        build.AdjustedRightOverlapFrameCount,
+                    maximumLeftHandShiftMeters = build.MaximumLeftHandShift,
+                    maximumRightHandShiftMeters = build.MaximumRightHandShift,
+                    maximumRightHandLateralDeviationMeters =
+                        build.MaximumRightHandLateralDeviation,
+                    maximumRightHandVerticalDeviationMeters =
+                        build.MaximumRightHandVerticalDeviation,
+                    maximumRightHandForwardShiftMeters =
+                        build.MaximumRightHandForwardShift,
+                    maximumAppliedTorsoMeshForwardBiasMeters =
+                        build.MaximumAppliedTorsoMeshForwardBias,
+                    minimumAppliedUpperTorsoYawDegrees =
+                        build.MinimumAppliedUpperTorsoYawDegrees,
+                    maximumAppliedUpperTorsoYawDegrees =
+                        build.MaximumAppliedUpperTorsoYawDegrees,
+                    maximumAppliedUpperTorsoYawMagnitudeDegrees =
+                        build.MaximumAppliedUpperTorsoYawMagnitudeDegrees,
+                    minimumAppliedUpperTorsoAwayPitchDegrees =
+                        build.MinimumAppliedUpperTorsoAwayPitchDegrees,
+                    maximumAppliedUpperTorsoAwayPitchDegrees =
+                        build.MaximumAppliedUpperTorsoAwayPitchDegrees,
+                    minimumAppliedRightShoulderForwardYawDegrees =
+                        build.MinimumAppliedRightShoulderForwardYawDegrees,
+                    maximumAppliedRightShoulderForwardYawMagnitudeDegrees =
+                        build.MaximumAppliedRightShoulderForwardYawMagnitudeDegrees,
+                    maximumIkTargetErrorMeters = build.MaximumIkTargetError,
+                    leftArmOutwardRotationDegrees =
+                        build.LeftArmOutwardRotationDegrees,
+                    rightArmOutwardRotationDegrees =
+                        build.RightArmOutwardRotationDegrees,
+                    rightArmOutwardLiftRotationDegrees =
+                        build.RightArmOutwardLiftRotationDegrees,
+                    maximumElbowFlexDifferenceDegrees =
+                        build.MaximumElbowFlexDifferenceDegrees,
+                    sourceRightHandLateralSpanMeters =
+                        build.SourceRightHandLateralMaximum -
+                        build.SourceRightHandLateralMinimum,
+                    adjustedRightHandLateralSpanMeters =
+                        build.AdjustedRightHandLateralMaximum -
+                        build.AdjustedRightHandLateralMinimum,
+                    rightHandLateralSpanDifferenceMeters = Mathf.Abs(
+                        (build.AdjustedRightHandLateralMaximum -
+                         build.AdjustedRightHandLateralMinimum) -
+                        (build.SourceRightHandLateralMaximum -
+                         build.SourceRightHandLateralMinimum)),
+                    adjustedArmRotationCurveBindings = AnimationUtility
+                        .GetCurveBindings(build.Clip)
+                        .Count(IsBatonSwingRightArmClearanceRotationBinding),
+                    onlyApprovedArmRotationCurvesDiffer =
+                        BatonSwingRightMatchesExceptArmClearanceRotations(
+                            source,
+                            build.Clip),
+                    rightForeArmAndHandCurvesExact =
+                        BatonSwingRightRightForeArmAndHandCurvesExact(
+                            source,
+                            build.Clip),
+                    rightArmChainCurvesExact =
+                        BatonSwingRightRightArmChainCurvesExact(
+                            source,
+                            build.Clip),
+                    eventsExact = AnimationEventsExact(source, build.Clip),
+                    durationFrameRateAndLoopExact =
+                        durationFrameRateAndLoopExact,
+                    controllerUsesAdjustedClip = StateUsesClip(
+                        controller,
+                        BatonSwingRightStateName,
+                        build.Clip),
+                    targetRootUnchanged = RootMatches(
+                        target,
+                        targetRootBefore),
+                    everyAnimatorAssignmentUnchanged = DictionariesEqual(
+                        animatorAssignmentsBefore,
+                        CaptureAnimatorsExceptTargets(layout)),
+                    batonParentAndLocalTransformUnchanged =
+                        baton.parent == batonParentBefore &&
+                        RootMatches(baton, batonPoseBefore),
+                    sourceClipHashBefore = sourceClipHashBefore,
+                    sourceClipHashAfter = sourceClipHashAfter,
+                    playerModelHashBefore = playerModelHashBefore,
+                    playerModelHashAfter = playerModelHashAfter,
+                    batonModelHashBefore = batonModelHashBefore,
+                    batonModelHashAfter = batonModelHashAfter,
+                    sourceClipUnchanged = string.Equals(
+                        sourceClipHashBefore,
+                        sourceClipHashAfter,
+                        StringComparison.OrdinalIgnoreCase),
+                    playerModelUnchanged = string.Equals(
+                        playerModelHashBefore,
+                        playerModelHashAfter,
+                        StringComparison.OrdinalIgnoreCase),
+                    batonModelUnchanged = string.Equals(
+                        batonModelHashBefore,
+                        batonModelHashAfter,
+                        StringComparison.OrdinalIgnoreCase),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            metrics.passedNumericChecks =
+                metrics.adjustedArmRotationCurveBindings ==
+                    GetBatonSwingRightArmClearancePaths().Length * 4 &&
+                metrics.adjustedMinimumLeftArmSilhouetteGapMeters >=
+                    0f &&
+                metrics.sourceMinimumRightArmTorsoClearanceMeters >=
+                    BatonSwingRightTorsoClearanceMeters - 0.001f &&
+                metrics.adjustedMinimumRightArmTorsoClearanceMeters >=
+                    BatonSwingRightTorsoClearanceMeters - 0.001f &&
+                metrics.adjustedRightArmMeshFrontSamples > 0 &&
+                metrics.maximumIkTargetErrorMeters <= 0.002f &&
+                metrics.maximumRightHandShiftMeters <= 0.29f &&
+                metrics.maximumRightHandLateralDeviationMeters <= 0.27f &&
+                metrics.maximumRightHandVerticalDeviationMeters <= 0.03f &&
+                metrics.maximumRightHandForwardShiftMeters <= 0.162f &&
+                metrics.minimumAppliedUpperTorsoYawDegrees <= -59f &&
+                metrics.maximumAppliedUpperTorsoYawDegrees >= 7f &&
+                metrics.maximumAppliedUpperTorsoYawMagnitudeDegrees <= 60.1f &&
+                metrics.minimumAppliedRightShoulderForwardYawDegrees <= -31f &&
+                metrics.maximumAppliedRightShoulderForwardYawMagnitudeDegrees <=
+                    32.1f &&
+                metrics.minimumAppliedUpperTorsoAwayPitchDegrees >=
+                    -BatonSwingRightMaximumUpperTorsoAwayPitchDegrees - 0.1f &&
+                metrics.maximumAppliedUpperTorsoAwayPitchDegrees <=
+                    BatonSwingRightMaximumUpperTorsoAwayPitchDegrees + 0.1f &&
+                metrics.maximumElbowFlexDifferenceDegrees <= 1f &&
+                metrics.rightHandLateralSpanDifferenceMeters <= 0.14f &&
+                metrics.onlyApprovedArmRotationCurvesDiffer &&
+                metrics.eventsExact &&
+                metrics.durationFrameRateAndLoopExact &&
+                metrics.controllerUsesAdjustedClip &&
+                metrics.targetRootUnchanged &&
+                metrics.everyAnimatorAssignmentUnchanged &&
+                metrics.batonParentAndLocalTransformUnchanged &&
+                metrics.sourceClipUnchanged &&
+                metrics.playerModelUnchanged &&
+                metrics.batonModelUnchanged;
+            WriteJson(BatonSwingRightArmClearanceApplyMetricsPath, metrics);
+            if (!metrics.passedNumericChecks)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right arm-clearance support checks failed. " +
+                    JsonUtility.ToJson(metrics));
+            }
+
+            SessionState.EraseInt(BatonSwingRightArmClearanceReviewStageKey);
+            SessionState.EraseString(BatonSwingRightArmClearanceReviewErrorKey);
+            Debug.Log(
+                "[BatonSwingRightUpperTorsoFollow] Preserved the full right-to-left swing while the upper torso follows the strike and the right-arm world rotations remain intact. LeftGap=" +
+                Num(metrics.adjustedMinimumLeftArmSilhouetteGapMeters) +
+                "m, RightHandSpan=" +
+                Num(metrics.adjustedRightHandLateralSpanMeters) +
+                "m.");
+        }
+
+        private static BatonSwingRightArmClearanceBuildResult
+            CreateOrUpdateBatonSwingRightArmClearanceClip(
+                Transform template,
+                AnimationClip source)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "BatonSwingRightMotionPreservingClearanceBake";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                Transform leftArm = FindRequired(root, LeftArmPath);
+                Transform leftForeArm = FindRequired(root, LeftForeArmPath);
+                Transform leftHand = FindRequired(root, LeftHandPath);
+                Transform rightShoulder = FindRequired(root, RightShoulderPath);
+                Transform rightArm = FindRequired(root, RightArmPath);
+                Transform rightForeArm = FindRequired(root, RightForeArmPath);
+                Transform rightHand = FindRequired(root, RightHandPath);
+                Transform baton = rightHand.Find(ElectricBatonInstanceName) ??
+                    throw new InvalidOperationException(
+                        "Motion-preserving clearance bake has no exact electric baton under RightHand.");
+                Dictionary<Transform, LocalTransformState> basePose = root
+                    .GetComponentsInChildren<Transform>(true)
+                    .ToDictionary(
+                        transform => transform,
+                        transform => new LocalTransformState(transform));
+                RestoreLocalTransformStates(basePose);
+                source.SampleAnimation(workObject, 0f);
+                float leftPalmWidth = MeasureHandLateralWidth(
+                    root,
+                    LeftHandPath,
+                    "LeftHand");
+                int framesPerLoop = Mathf.Max(
+                    4,
+                    Mathf.RoundToInt(source.length * source.frameRate));
+                float leftAngle =
+                    FindMinimumBatonSwingRightLeftArmOutwardAngle(
+                        workObject,
+                        root,
+                        source,
+                        basePose,
+                        framesPerLoop,
+                        leftPalmWidth);
+                BatonSwingRightArmClearanceBuildResult result =
+                    new BatonSwingRightArmClearanceBuildResult
+                    {
+                        FramesPerLoop = framesPerLoop,
+                        LeftPalmWidth = leftPalmWidth,
+                        LeftArmOutwardRotationDegrees = leftAngle,
+                        RightArmOutwardRotationDegrees = 0f,
+                        RightArmOutwardLiftRotationDegrees = 0f,
+                        MaximumIkTargetError = 0f,
+                        SourceRightMeshFrontClearanceByFrame =
+                            new float[framesPerLoop],
+                        AdjustedRightMeshFrontClearanceByFrame =
+                            new float[framesPerLoop],
+                        AppliedTorsoMeshForwardBiasByFrame =
+                            new float[framesPerLoop],
+                        AppliedUpperTorsoYawDegreesByFrame =
+                            new float[framesPerLoop],
+                        AppliedUpperTorsoAwayPitchDegreesByFrame =
+                            new float[framesPerLoop],
+                        AppliedRightShoulderForwardYawDegreesByFrame =
+                            new float[framesPerLoop],
+                        MinimumAppliedUpperTorsoAwayPitchDegrees = 0f,
+                        MaximumAppliedUpperTorsoAwayPitchDegrees = 0f
+                    };
+                float[] upperTorsoAwayPitchByFrame =
+                    new float[framesPerLoop];
+                for (int frame = 0; frame < framesPerLoop; frame++)
+                {
+                    RestoreLocalTransformStates(basePose);
+                    source.SampleAnimation(
+                        workObject,
+                        source.length * frame / framesPerLoop);
+                    ShotgunTorsoClearanceProfile torsoProfile =
+                        MeasureShotgunTorsoClearanceProfile(root);
+                    float meshClearance =
+                        MeasureRightArmMeshTorsoFrontClearance(
+                            root,
+                            torsoProfile,
+                            out int meshSamples);
+                    float phase = frame / (float)framesPerLoop;
+                    result.SourceRightMeshFrontClearanceByFrame[frame] =
+                        meshClearance;
+                    if (meshSamples > 0 &&
+                        phase >= BatonSwingRightTorsoMeshCorrectionFullPhase &&
+                        phase <= BatonSwingRightTorsoMeshCorrectionReleasePhase)
+                    {
+                        result.SourceMinimumRightMeshFrontClearance =
+                            Mathf.Min(
+                                result.SourceMinimumRightMeshFrontClearance,
+                                meshClearance);
+                        result.SourceRightMeshFrontSamples += meshSamples;
+                    }
+                }
+
+                string[] adjustedPaths = GetBatonSwingRightArmClearancePaths();
+                Dictionary<string, TransformCurveTrack> tracks = adjustedPaths
+                    .ToDictionary(
+                        path => path,
+                        path => new TransformCurveTrack(path),
+                        StringComparer.Ordinal);
+                for (int frame = 0; frame <= framesPerLoop; frame++)
+                {
+                    int phaseFrame = frame == framesPerLoop ? 0 : frame;
+                    float sampleTime = source.length * phaseFrame /
+                        framesPerLoop;
+                    float keyTime = source.length * frame / framesPerLoop;
+                    RestoreLocalTransformStates(basePose);
+                    source.SampleAnimation(workObject, sampleTime);
+                    ShotgunTorsoClearanceProfile torsoProfile =
+                        MeasureShotgunTorsoClearanceProfile(root);
+                    Vector3 sourceLeftHand = leftHand.position;
+                    Vector3 sourceRightHand = rightHand.position;
+                    Vector3 sourceRightHandLocal =
+                        root.InverseTransformPoint(sourceRightHand);
+                    Quaternion sourceRightArmWorldRotation =
+                        rightArm.rotation;
+                    Quaternion sourceRightForeArmWorldRotation =
+                        rightForeArm.rotation;
+                    Quaternion sourceRightHandWorldRotation =
+                        rightHand.rotation;
+                    float sourceLeftGap = MeasureArmFrontSilhouetteGap(
+                        root,
+                        leftArm,
+                        leftForeArm,
+                        leftHand,
+                        -1f);
+                    float sourceRightGap = MeasureArmFrontSilhouetteGap(
+                        root,
+                        rightArm,
+                        rightForeArm,
+                        rightHand,
+                        1f);
+                    float sourceElbowFlex = ElbowFlexDegrees(
+                        rightArm,
+                        rightForeArm,
+                        rightHand);
+                    float sourceRightTorso = MeasureRightArmTorsoClearance(
+                        root,
+                        rightArm,
+                        rightForeArm,
+                        rightHand);
+                    float sourceBatonTorso =
+                        MeasureElectricBatonTorsoClearance(
+                            root,
+                            baton,
+                            torsoProfile);
+                    float sourceRightHandLateral = Vector3.Dot(
+                        rightHand.position - root.position,
+                        root.right);
+
+                    float phase = phaseFrame / (float)framesPerLoop;
+                    float upperTorsoYawDegrees =
+                        EvaluateBatonSwingRightUpperTorsoYaw(phase);
+                    float upperTorsoAwayPitchDegrees =
+                        upperTorsoAwayPitchByFrame[phaseFrame];
+                    float rightShoulderForwardYawDegrees =
+                        BatonSwingRightShoulderForwardYawDegrees *
+                        BatonSwingRightTorsoMeshCorrectionEnvelope(phase);
+                    ApplyBatonSwingRightUpperTorsoFollow(
+                        root,
+                        FindRequired(root, TorsoBasePath),
+                        FindRequired(root, SolarPlexusPath),
+                        FindRequired(root, SpinePath),
+                        rightShoulder,
+                        rightArm,
+                        rightForeArm,
+                        rightHand,
+                        sourceRightArmWorldRotation,
+                        sourceRightForeArmWorldRotation,
+                        sourceRightHandWorldRotation,
+                        upperTorsoYawDegrees,
+                        upperTorsoAwayPitchDegrees,
+                        rightShoulderForwardYawDegrees);
+                    float appliedForwardShift = Mathf.Max(
+                        0f,
+                        Vector3.Dot(
+                            rightHand.position - sourceRightHand,
+                            root.forward));
+                    float ikError = 0f;
+                    leftArm.rotation = Quaternion.AngleAxis(
+                        leftAngle,
+                        -root.forward) * leftArm.rotation;
+
+                    float adjustedLeftGap = MeasureArmFrontSilhouetteGap(
+                        root,
+                        leftArm,
+                        leftForeArm,
+                        leftHand,
+                        -1f);
+                    float adjustedRightGap = MeasureArmFrontSilhouetteGap(
+                        root,
+                        rightArm,
+                        rightForeArm,
+                        rightHand,
+                        1f);
+                    float adjustedRightTorso = MeasureRightArmTorsoClearance(
+                        root,
+                        rightArm,
+                        rightForeArm,
+                        rightHand);
+                    ShotgunTorsoClearanceProfile adjustedTorsoProfile =
+                        MeasureShotgunTorsoClearanceProfile(root);
+                    float adjustedRightMesh =
+                        MeasureRightArmMeshTorsoFrontClearance(
+                            root,
+                            adjustedTorsoProfile,
+                            out int adjustedMeshSamples);
+                    float adjustedBatonTorso =
+                        MeasureElectricBatonTorsoClearance(
+                            root,
+                            baton,
+                            adjustedTorsoProfile);
+                    float leftOutwardShift = Vector3.Dot(
+                        leftHand.position - sourceLeftHand,
+                        -root.right);
+                    float adjustedRightHandLateral = Vector3.Dot(
+                        rightHand.position - root.position,
+                        root.right);
+                    if (frame < framesPerLoop)
+                    {
+                        result.SourceMinimumLeftGap = Mathf.Min(
+                            result.SourceMinimumLeftGap,
+                            sourceLeftGap);
+                        result.SourceMinimumRightGap = Mathf.Min(
+                            result.SourceMinimumRightGap,
+                            sourceRightGap);
+                        result.AdjustedMinimumLeftGap = Mathf.Min(
+                            result.AdjustedMinimumLeftGap,
+                            adjustedLeftGap);
+                        result.MinimumLeftHandOutwardShift = Mathf.Min(
+                            result.MinimumLeftHandOutwardShift,
+                            leftOutwardShift);
+                        result.AdjustedMinimumRightGap = Mathf.Min(
+                            result.AdjustedMinimumRightGap,
+                            adjustedRightGap);
+                        result.SourceMinimumRightTorsoClearance = Mathf.Min(
+                            result.SourceMinimumRightTorsoClearance,
+                            sourceRightTorso);
+                        result.AdjustedMinimumRightTorsoClearance = Mathf.Min(
+                            result.AdjustedMinimumRightTorsoClearance,
+                            adjustedRightTorso);
+                        result.AdjustedRightMeshFrontClearanceByFrame[frame] =
+                            adjustedRightMesh;
+                        result.AppliedTorsoMeshForwardBiasByFrame[frame] =
+                            appliedForwardShift;
+                        result.AppliedUpperTorsoYawDegreesByFrame[frame] =
+                            upperTorsoYawDegrees;
+                        result.AppliedUpperTorsoAwayPitchDegreesByFrame[frame] =
+                            upperTorsoAwayPitchDegrees;
+                        result.AppliedRightShoulderForwardYawDegreesByFrame[frame] =
+                            rightShoulderForwardYawDegrees;
+                        result.MinimumAppliedUpperTorsoYawDegrees = Mathf.Min(
+                            result.MinimumAppliedUpperTorsoYawDegrees,
+                            upperTorsoYawDegrees);
+                        result.MaximumAppliedUpperTorsoYawDegrees = Mathf.Max(
+                            result.MaximumAppliedUpperTorsoYawDegrees,
+                            upperTorsoYawDegrees);
+                        result.MaximumAppliedUpperTorsoYawMagnitudeDegrees =
+                            Mathf.Max(
+                                result.MaximumAppliedUpperTorsoYawMagnitudeDegrees,
+                                Mathf.Abs(upperTorsoYawDegrees));
+                        result.MinimumAppliedUpperTorsoAwayPitchDegrees =
+                            Mathf.Min(
+                                result.MinimumAppliedUpperTorsoAwayPitchDegrees,
+                                upperTorsoAwayPitchDegrees);
+                        result.MaximumAppliedUpperTorsoAwayPitchDegrees =
+                            Mathf.Max(
+                                result.MaximumAppliedUpperTorsoAwayPitchDegrees,
+                                upperTorsoAwayPitchDegrees);
+                        result.MinimumAppliedRightShoulderForwardYawDegrees =
+                            Mathf.Min(
+                                result.MinimumAppliedRightShoulderForwardYawDegrees,
+                                rightShoulderForwardYawDegrees);
+                        result.MaximumAppliedRightShoulderForwardYawMagnitudeDegrees =
+                            Mathf.Max(
+                                result.MaximumAppliedRightShoulderForwardYawMagnitudeDegrees,
+                                Mathf.Abs(rightShoulderForwardYawDegrees));
+                        if (adjustedMeshSamples > 0 &&
+                            phase >=
+                                BatonSwingRightTorsoMeshCorrectionFullPhase &&
+                            phase <=
+                                BatonSwingRightTorsoMeshCorrectionReleasePhase)
+                        {
+                            result.AdjustedMinimumRightMeshFrontClearance =
+                                Mathf.Min(
+                                    result.AdjustedMinimumRightMeshFrontClearance,
+                                    adjustedRightMesh);
+                            result.AdjustedRightMeshFrontSamples +=
+                                adjustedMeshSamples;
+                        }
+                        result.SourceMinimumBatonTorsoClearance = Mathf.Min(
+                            result.SourceMinimumBatonTorsoClearance,
+                            sourceBatonTorso);
+                        result.AdjustedMinimumBatonTorsoClearance = Mathf.Min(
+                            result.AdjustedMinimumBatonTorsoClearance,
+                            adjustedBatonTorso);
+                        result.SourceRightHandLateralMinimum = Mathf.Min(
+                            result.SourceRightHandLateralMinimum,
+                            sourceRightHandLateral);
+                        result.SourceRightHandLateralMaximum = Mathf.Max(
+                            result.SourceRightHandLateralMaximum,
+                            sourceRightHandLateral);
+                        result.AdjustedRightHandLateralMinimum = Mathf.Min(
+                            result.AdjustedRightHandLateralMinimum,
+                            adjustedRightHandLateral);
+                        result.AdjustedRightHandLateralMaximum = Mathf.Max(
+                            result.AdjustedRightHandLateralMaximum,
+                            adjustedRightHandLateral);
+                        if (sourceRightGap < 0f)
+                        {
+                            result.SourceRightOverlapFrameCount++;
+                        }
+                        if (adjustedRightGap < 0f)
+                        {
+                            result.AdjustedRightOverlapFrameCount++;
+                        }
+                    }
+
+                    result.MaximumLeftHandShift = Mathf.Max(
+                        result.MaximumLeftHandShift,
+                        Vector3.Distance(sourceLeftHand, leftHand.position));
+                    result.MaximumRightHandShift = Mathf.Max(
+                        result.MaximumRightHandShift,
+                        Vector3.Distance(sourceRightHand, rightHand.position));
+                    Vector3 adjustedRightHandLocal =
+                        root.InverseTransformPoint(rightHand.position);
+                    result.MaximumRightHandLateralDeviation = Mathf.Max(
+                        result.MaximumRightHandLateralDeviation,
+                        Mathf.Abs(
+                            adjustedRightHandLocal.x -
+                            sourceRightHandLocal.x));
+                    result.MaximumRightHandVerticalDeviation = Mathf.Max(
+                        result.MaximumRightHandVerticalDeviation,
+                        Mathf.Abs(
+                            adjustedRightHandLocal.y -
+                            sourceRightHandLocal.y));
+                    result.MaximumRightHandForwardShift = Mathf.Max(
+                        result.MaximumRightHandForwardShift,
+                        adjustedRightHandLocal.z - sourceRightHandLocal.z);
+                    result.MaximumAppliedTorsoMeshForwardBias = Mathf.Max(
+                        result.MaximumAppliedTorsoMeshForwardBias,
+                        appliedForwardShift);
+                    result.MaximumIkTargetError = Mathf.Max(
+                        result.MaximumIkTargetError,
+                        ikError);
+                    result.MaximumElbowFlexDifferenceDegrees = Mathf.Max(
+                        result.MaximumElbowFlexDifferenceDegrees,
+                        Mathf.Abs(
+                            sourceElbowFlex -
+                            ElbowFlexDegrees(
+                                rightArm,
+                                rightForeArm,
+                                rightHand)));
+                    foreach (string path in adjustedPaths)
+                    {
+                        tracks[path].Add(keyTime, FindRequired(root, path));
+                    }
+                }
+
+                AnimationClip generated = new AnimationClip();
+                EditorUtility.CopySerialized(source, generated);
+                generated.name =
+                    "Baton_Swing_Right_StandingSwing_ArmClearance";
+                foreach (EditorCurveBinding binding in AnimationUtility
+                             .GetCurveBindings(generated)
+                             .Where(
+                                 IsBatonSwingRightArmClearanceRotationBinding)
+                             .ToArray())
+                {
+                    AnimationUtility.SetEditorCurve(generated, binding, null);
+                }
+
+                foreach (TransformCurveTrack track in tracks.Values)
+                {
+                    SetRotationTrackCurves(generated, track);
+                }
+
+                AnimationUtility.SetAnimationEvents(
+                    generated,
+                    AnimationUtility.GetAnimationEvents(source));
+                AnimationClip existing = AssetDatabase
+                    .LoadAssetAtPath<AnimationClip>(
+                        BatonSwingRightArmClearanceClipPath);
+                if (existing == null)
+                {
+                    AssetDatabase.CreateAsset(
+                        generated,
+                        BatonSwingRightArmClearanceClipPath);
+                    existing = generated;
+                }
+                else
+                {
+                    EditorUtility.CopySerialized(generated, existing);
+                    UnityEngine.Object.DestroyImmediate(generated);
+                    existing.name =
+                        "Baton_Swing_Right_StandingSwing_ArmClearance";
+                    EditorUtility.SetDirty(existing);
+                }
+
+                AssetDatabase.SaveAssets();
+                result.Clip = existing;
+                return result;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static float FindMinimumBatonSwingRightLeftArmOutwardAngle(
+            GameObject workObject,
+            Transform root,
+            AnimationClip source,
+            IReadOnlyDictionary<Transform, LocalTransformState> basePose,
+            int framesPerLoop,
+            float leftPalmWidth)
+        {
+            for (int degrees = 0; degrees <= 45; degrees++)
+            {
+                bool safe = true;
+                for (int frame = 0; frame < framesPerLoop; frame++)
+                {
+                    RestoreLocalTransformStates(basePose);
+                    source.SampleAnimation(
+                        workObject,
+                        source.length * frame / framesPerLoop);
+                    Transform arm = FindRequired(root, LeftArmPath);
+                    Transform foreArm = FindRequired(root, LeftForeArmPath);
+                    Transform hand = FindRequired(root, LeftHandPath);
+                    Vector3 sourceHand = hand.position;
+                    arm.rotation = Quaternion.AngleAxis(
+                        degrees,
+                        -root.forward) * arm.rotation;
+                    float outwardShift = Vector3.Dot(
+                        hand.position - sourceHand,
+                        -root.right);
+                    if (outwardShift < leftPalmWidth - 0.002f ||
+                        MeasureArmFrontSilhouetteGap(
+                            root,
+                            arm,
+                            foreArm,
+                            hand,
+                            -1f) <
+                        BatonSwingRightArmSilhouetteGapMeters - 0.002f)
+                    {
+                        safe = false;
+                        break;
+                    }
+                }
+
+                if (safe)
+                {
+                    return degrees;
+                }
+            }
+
+            throw new InvalidOperationException(
+                "Baton_Swing_Right has no constant left-arm outward rotation matching one palm width.");
+        }
+
+        private static float[]
+            FindBatonSwingRightMotionPreservingRightArmAngles(
+                GameObject workObject,
+                Transform root,
+                AnimationClip source,
+                IReadOnlyDictionary<Transform, LocalTransformState> basePose,
+                int framesPerLoop,
+                Transform baton,
+                out float liftAngle)
+        {
+            const int maximumLiftMagnitude = 60;
+            const int liftStepDegrees = 2;
+            for (int liftMagnitude = 0;
+                 liftMagnitude <= maximumLiftMagnitude;
+                 liftMagnitude += liftStepDegrees)
+            {
+                int signCount = liftMagnitude == 0 ? 1 : 2;
+                for (int signIndex = 0; signIndex < signCount; signIndex++)
+                {
+                    float candidateLift = liftMagnitude *
+                                          (signIndex == 0 ? 1f : -1f);
+                    if (TryFindBatonSwingRightMotionPreservingYawAngles(
+                            workObject,
+                            root,
+                            source,
+                            basePose,
+                            framesPerLoop,
+                            baton,
+                            candidateLift,
+                            out float[] yawAngles))
+                    {
+                        liftAngle = candidateLift;
+                        return yawAngles;
+                    }
+                }
+            }
+
+            throw new InvalidOperationException(
+                "Baton_Swing_Right has no two-axis motion-preserving right-arm clearance rotation.");
+        }
+
+        private static bool
+            TryFindBatonSwingRightMotionPreservingYawAngles(
+                GameObject workObject,
+                Transform root,
+                AnimationClip source,
+                IReadOnlyDictionary<Transform, LocalTransformState> basePose,
+                int framesPerLoop,
+                Transform baton,
+                float liftAngle,
+                out float[] angles)
+        {
+            const int maximumYawMagnitude = 120;
+            bool[,] positiveSafe = new bool[
+                framesPerLoop,
+                maximumYawMagnitude + 1];
+            bool[,] negativeSafe = new bool[
+                framesPerLoop,
+                maximumYawMagnitude + 1];
+            float[] positiveMinimums = Enumerable.Repeat(
+                    float.PositiveInfinity,
+                    framesPerLoop)
+                .ToArray();
+            float[] negativeMinimums = Enumerable.Repeat(
+                    float.PositiveInfinity,
+                    framesPerLoop)
+                .ToArray();
+            for (int frame = 0; frame < framesPerLoop; frame++)
+            {
+                RestoreLocalTransformStates(basePose);
+                source.SampleAnimation(
+                    workObject,
+                    source.length * frame / framesPerLoop);
+                Transform arm = FindRequired(root, RightArmPath);
+                Transform foreArm = FindRequired(root, RightForeArmPath);
+                Transform hand = FindRequired(root, RightHandPath);
+                ShotgunTorsoClearanceProfile torsoProfile =
+                    MeasureShotgunTorsoClearanceProfile(root);
+                Quaternion sourceWorldRotation = arm.rotation;
+                for (int yawMagnitude = 0;
+                     yawMagnitude <= maximumYawMagnitude;
+                     yawMagnitude++)
+                {
+                    arm.rotation =
+                        Quaternion.AngleAxis(liftAngle, root.forward) *
+                        Quaternion.AngleAxis(yawMagnitude, root.up) *
+                        sourceWorldRotation;
+                    positiveSafe[frame, yawMagnitude] =
+                        BatonSwingRightMotionPreservingRightArmPoseIsSafe(
+                            root,
+                            arm,
+                            foreArm,
+                            hand,
+                            baton,
+                            torsoProfile);
+                    if (positiveSafe[frame, yawMagnitude] &&
+                        float.IsPositiveInfinity(positiveMinimums[frame]))
+                    {
+                        positiveMinimums[frame] = yawMagnitude;
+                    }
+
+                    arm.rotation =
+                        Quaternion.AngleAxis(liftAngle, root.forward) *
+                        Quaternion.AngleAxis(-yawMagnitude, root.up) *
+                        sourceWorldRotation;
+                    negativeSafe[frame, yawMagnitude] =
+                        BatonSwingRightMotionPreservingRightArmPoseIsSafe(
+                            root,
+                            arm,
+                            foreArm,
+                            hand,
+                            baton,
+                            torsoProfile);
+                    if (negativeSafe[frame, yawMagnitude] &&
+                        float.IsPositiveInfinity(negativeMinimums[frame]))
+                    {
+                        negativeMinimums[frame] = yawMagnitude;
+                    }
+                }
+
+                if (float.IsPositiveInfinity(positiveMinimums[frame]) &&
+                    float.IsPositiveInfinity(negativeMinimums[frame]))
+                {
+                    angles = null;
+                    return false;
+                }
+            }
+
+            bool positiveComplete = positiveMinimums.All(float.IsFinite);
+            bool negativeComplete = negativeMinimums.All(float.IsFinite);
+            if (!positiveComplete && !negativeComplete)
+            {
+                angles = null;
+                return false;
+            }
+
+            bool usePositive = positiveComplete &&
+                               (!negativeComplete ||
+                                positiveMinimums.Sum() <=
+                                negativeMinimums.Sum());
+            float[] rawMagnitudes = usePositive
+                ? positiveMinimums
+                : negativeMinimums;
+            bool[,] selectedSafe = usePositive ? positiveSafe : negativeSafe;
+            float[] expanded = new float[framesPerLoop];
+            for (int frame = 0; frame < framesPerLoop; frame++)
+            {
+                float maximum = rawMagnitudes[frame];
+                for (int offset = -2; offset <= 2; offset++)
+                {
+                    int wrapped = (frame + offset + framesPerLoop) %
+                                  framesPerLoop;
+                    maximum = Mathf.Max(maximum, rawMagnitudes[wrapped]);
+                }
+
+                expanded[frame] = maximum;
+            }
+
+            angles = new float[framesPerLoop];
+            float sign = usePositive ? 1f : -1f;
+            for (int frame = 0; frame < framesPerLoop; frame++)
+            {
+                float targetMagnitude = Mathf.Max(
+                    rawMagnitudes[frame],
+                    (expanded[(frame - 1 + framesPerLoop) % framesPerLoop] +
+                     expanded[frame] * 2f +
+                     expanded[(frame + 1) % framesPerLoop]) / 4f);
+                int chosenMagnitude = Enumerable.Range(
+                        0,
+                        maximumYawMagnitude + 1)
+                    .Where(magnitude => selectedSafe[frame, magnitude])
+                    .OrderBy(magnitude =>
+                        Mathf.Abs(magnitude - targetMagnitude))
+                    .ThenBy(magnitude => magnitude)
+                    .First();
+                angles[frame] = chosenMagnitude * sign;
+            }
+
+            return true;
+        }
+
+        private static bool
+            BatonSwingRightMotionPreservingRightArmPoseIsSafe(
+                Transform root,
+                Transform arm,
+                Transform foreArm,
+                Transform hand,
+                Transform baton,
+                ShotgunTorsoClearanceProfile torsoProfile)
+        {
+            return MeasureArmFrontSilhouetteGap(
+                       root,
+                       arm,
+                       foreArm,
+                       hand,
+                       1f) >= BatonSwingRightArmSilhouetteGapMeters &&
+                   MeasureRightArmTorsoClearance(
+                       root,
+                       arm,
+                       foreArm,
+                       hand) >= BatonSwingRightTorsoClearanceMeters &&
+                   MeasureElectricBatonTorsoClearance(
+                       root,
+                       baton,
+                       torsoProfile) >= BatonSwingRightTorsoClearanceMeters;
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Baton Swing Right Upper Torso Follow")]
+        internal static void ApplyBatonSwingRightUpperTorsoFollow()
+        {
+            ApplyBatonSwingRightArmClearance();
+        }
+
+        private static BatonSwingRightArmClearanceBuildResult
+            CreateOrUpdateBatonSwingRightArmClearanceClipLegacyIk(
+                Transform template,
+                AnimationClip source)
+        {
+            GameObject workObject = UnityEngine.Object.Instantiate(
+                template.gameObject);
+            workObject.name = "BatonSwingRightArmClearanceBake";
+            workObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(workObject);
+            try
+            {
+                Transform root = workObject.transform;
+                Transform leftShoulder = FindRequired(root, LeftShoulderPath);
+                Transform leftArm = FindRequired(root, LeftArmPath);
+                Transform leftForeArm = FindRequired(root, LeftForeArmPath);
+                Transform leftHand = FindRequired(root, LeftHandPath);
+                Transform rightShoulder = FindRequired(root, RightShoulderPath);
+                Transform rightArm = FindRequired(root, RightArmPath);
+                Transform rightForeArm = FindRequired(root, RightForeArmPath);
+                Transform rightHand = FindRequired(root, RightHandPath);
+                Transform baton = rightHand.Find(ElectricBatonInstanceName) ??
+                    throw new InvalidOperationException(
+                        "Arm-clearance bake has no exact electric baton under RightHand.");
+                Dictionary<Transform, LocalTransformState> basePose = root
+                    .GetComponentsInChildren<Transform>(true)
+                    .ToDictionary(
+                        transform => transform,
+                        transform => new LocalTransformState(transform));
+                RestoreLocalTransformStates(basePose);
+                source.SampleAnimation(workObject, 0f);
+                float leftPalmWidth = MeasureHandLateralWidth(
+                    root,
+                    LeftHandPath,
+                    "LeftHand");
+                if (leftPalmWidth <= 0.001f)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Swing_Right left palm width could not be measured.");
+                }
+
+                int framesPerLoop = Mathf.Max(
+                    4,
+                    Mathf.RoundToInt(source.length * source.frameRate));
+                float[] rawLeftBiases = new float[framesPerLoop];
+                float[] rawRightBiases = new float[framesPerLoop];
+                BatonSwingRightArmClearanceBuildResult result =
+                    new BatonSwingRightArmClearanceBuildResult
+                    {
+                        FramesPerLoop = framesPerLoop,
+                        LeftPalmWidth = leftPalmWidth
+                    };
+                for (int frame = 0; frame < framesPerLoop; frame++)
+                {
+                    float sampleTime = source.length * frame / framesPerLoop;
+                    RestoreLocalTransformStates(basePose);
+                    source.SampleAnimation(workObject, sampleTime);
+                    ShotgunTorsoClearanceProfile torsoProfile =
+                        MeasureShotgunTorsoClearanceProfile(root);
+                    float sourceLeftGap = MeasureArmFrontSilhouetteGap(
+                        root,
+                        leftArm,
+                        leftForeArm,
+                        leftHand,
+                        -1f);
+                    float sourceRightGap = MeasureArmFrontSilhouetteGap(
+                        root,
+                        rightArm,
+                        rightForeArm,
+                        rightHand,
+                        1f);
+                    result.SourceMinimumLeftGap = Mathf.Min(
+                        result.SourceMinimumLeftGap,
+                        sourceLeftGap);
+                    result.SourceMinimumRightGap = Mathf.Min(
+                        result.SourceMinimumRightGap,
+                        sourceRightGap);
+                    if (sourceRightGap < 0f)
+                    {
+                        result.SourceRightOverlapFrameCount++;
+                    }
+
+                    rawLeftBiases[frame] =
+                        FindMinimumBatonSwingRightArmLateralBias(
+                            root,
+                            leftShoulder,
+                            leftArm,
+                            leftForeArm,
+                            leftHand,
+                            null,
+                            null,
+                            leftShoulder.localRotation,
+                            leftArm.localRotation,
+                            leftForeArm.localRotation,
+                            leftHand.localRotation,
+                            leftForeArm.position,
+                            leftHand.position,
+                            -1f,
+                            BatonSwingRightArmSilhouetteGapMeters,
+                            leftPalmWidth,
+                            false,
+                            frame);
+                    rawRightBiases[frame] =
+                        FindMinimumBatonSwingRightArmLateralBias(
+                            root,
+                            rightShoulder,
+                            rightArm,
+                            rightForeArm,
+                            rightHand,
+                            baton,
+                            torsoProfile,
+                            rightShoulder.localRotation,
+                            rightArm.localRotation,
+                            rightForeArm.localRotation,
+                            rightHand.localRotation,
+                            rightForeArm.position,
+                            rightHand.position,
+                            1f,
+                            BatonSwingRightArmSilhouetteGapMeters,
+                            0f,
+                            true,
+                            frame);
+                }
+
+                float[] smoothLeftBiases =
+                    SmoothCircularBatonSwingRightClearanceAverages(
+                        rawLeftBiases,
+                        3);
+                float[] smoothRightBiases =
+                    SmoothCircularBatonSwingRightClearanceAverages(
+                        rawRightBiases,
+                        3);
+                string[] adjustedPaths = GetBatonSwingRightArmClearancePaths();
+                Dictionary<string, TransformCurveTrack> tracks = adjustedPaths
+                    .ToDictionary(
+                        path => path,
+                        path => new TransformCurveTrack(path),
+                        StringComparer.Ordinal);
+                for (int frame = 0; frame <= framesPerLoop; frame++)
+                {
+                    int phaseFrame = frame == framesPerLoop ? 0 : frame;
+                    float sampleTime = source.length * phaseFrame /
+                        framesPerLoop;
+                    float keyTime = source.length * frame / framesPerLoop;
+                    RestoreLocalTransformStates(basePose);
+                    source.SampleAnimation(workObject, sampleTime);
+                    ShotgunTorsoClearanceProfile torsoProfile =
+                        MeasureShotgunTorsoClearanceProfile(root);
+                    Vector3 sourceLeftHand = leftHand.position;
+                    Vector3 sourceRightHand = rightHand.position;
+                    Vector3 sourceLeftElbow = leftForeArm.position;
+                    Vector3 sourceRightElbow = rightForeArm.position;
+                    Quaternion sourceLeftShoulder = leftShoulder.localRotation;
+                    Quaternion sourceLeftArm = leftArm.localRotation;
+                    Quaternion sourceLeftForeArm = leftForeArm.localRotation;
+                    Quaternion sourceLeftHandRotation = leftHand.localRotation;
+                    Quaternion sourceRightShoulder = rightShoulder.localRotation;
+                    Quaternion sourceRightArm = rightArm.localRotation;
+                    Quaternion sourceRightForeArm = rightForeArm.localRotation;
+                    Quaternion sourceRightHandRotation = rightHand.localRotation;
+                    float leftBias =
+                        FindBatonSwingRightArmLateralBiasNearTarget(
+                            root,
+                            leftShoulder,
+                            leftArm,
+                            leftForeArm,
+                            leftHand,
+                            null,
+                            null,
+                            sourceLeftShoulder,
+                            sourceLeftArm,
+                            sourceLeftForeArm,
+                            sourceLeftHandRotation,
+                            sourceLeftElbow,
+                            sourceLeftHand,
+                            -1f,
+                            BatonSwingRightArmSilhouetteGapMeters,
+                            leftPalmWidth,
+                            false,
+                            phaseFrame,
+                            smoothLeftBiases[phaseFrame]);
+                    float rightBias =
+                        FindBatonSwingRightArmLateralBiasNearTarget(
+                            root,
+                            rightShoulder,
+                            rightArm,
+                            rightForeArm,
+                            rightHand,
+                            baton,
+                            torsoProfile,
+                            sourceRightShoulder,
+                            sourceRightArm,
+                            sourceRightForeArm,
+                            sourceRightHandRotation,
+                            sourceRightElbow,
+                            sourceRightHand,
+                            1f,
+                            BatonSwingRightArmSilhouetteGapMeters,
+                            0f,
+                            true,
+                            phaseFrame,
+                            smoothRightBiases[phaseFrame]);
+                    float leftError = ApplyBatonSwingRightArmLateralBias(
+                        root,
+                        leftShoulder,
+                        leftArm,
+                        leftForeArm,
+                        leftHand,
+                        sourceLeftShoulder,
+                        sourceLeftArm,
+                        sourceLeftForeArm,
+                        sourceLeftHandRotation,
+                        sourceLeftElbow,
+                        -1f,
+                        leftBias);
+                    float rightError = ApplyBatonSwingRightArmLateralBias(
+                        root,
+                        rightShoulder,
+                        rightArm,
+                        rightForeArm,
+                        rightHand,
+                        sourceRightShoulder,
+                        sourceRightArm,
+                        sourceRightForeArm,
+                        sourceRightHandRotation,
+                        sourceRightElbow,
+                        1f,
+                        rightBias);
+                    float adjustedLeftGap = MeasureArmFrontSilhouetteGap(
+                        root,
+                        leftArm,
+                        leftForeArm,
+                        leftHand,
+                        -1f);
+                    float adjustedRightGap = MeasureArmFrontSilhouetteGap(
+                        root,
+                        rightArm,
+                        rightForeArm,
+                        rightHand,
+                        1f);
+                    float adjustedRightTorso = MeasureRightArmTorsoClearance(
+                        root,
+                        rightArm,
+                        rightForeArm,
+                        rightHand);
+                    float adjustedBatonTorso =
+                        MeasureElectricBatonTorsoClearance(
+                            root,
+                            baton,
+                            torsoProfile);
+                    if (frame < framesPerLoop)
+                    {
+                        float leftOutwardShift = Vector3.Dot(
+                            leftHand.position - sourceLeftHand,
+                            -root.right);
+                        result.AdjustedMinimumLeftGap = Mathf.Min(
+                            result.AdjustedMinimumLeftGap,
+                            adjustedLeftGap);
+                        result.MinimumLeftHandOutwardShift = Mathf.Min(
+                            result.MinimumLeftHandOutwardShift,
+                            leftOutwardShift);
+                        result.AdjustedMinimumRightGap = Mathf.Min(
+                            result.AdjustedMinimumRightGap,
+                            adjustedRightGap);
+                        result.AdjustedMinimumRightTorsoClearance = Mathf.Min(
+                            result.AdjustedMinimumRightTorsoClearance,
+                            adjustedRightTorso);
+                        result.AdjustedMinimumBatonTorsoClearance = Mathf.Min(
+                            result.AdjustedMinimumBatonTorsoClearance,
+                            adjustedBatonTorso);
+                        if (adjustedRightGap < 0f)
+                        {
+                            result.AdjustedRightOverlapFrameCount++;
+                        }
+                    }
+
+                    float adjustedLeftOutwardShift = Vector3.Dot(
+                        leftHand.position - sourceLeftHand,
+                        -root.right);
+                    if (adjustedLeftGap <
+                            BatonSwingRightArmSilhouetteGapMeters - 0.002f ||
+                        adjustedLeftOutwardShift < leftPalmWidth - 0.002f ||
+                        adjustedRightGap <
+                            BatonSwingRightArmSilhouetteGapMeters - 0.001f ||
+                        adjustedRightTorso <
+                            BatonSwingRightTorsoClearanceMeters - 0.001f ||
+                        adjustedBatonTorso <
+                            BatonSwingRightTorsoClearanceMeters - 0.001f)
+                    {
+                        throw new InvalidOperationException(
+                            "Baton_Swing_Right smoothed arm clearance failed at frame " +
+                            phaseFrame.ToString(CultureInfo.InvariantCulture) +
+                            ".");
+                    }
+
+                    result.MaximumLeftHandShift = Mathf.Max(
+                        result.MaximumLeftHandShift,
+                        Vector3.Distance(sourceLeftHand, leftHand.position));
+                    result.MaximumRightHandShift = Mathf.Max(
+                        result.MaximumRightHandShift,
+                        Vector3.Distance(sourceRightHand, rightHand.position));
+                    result.MaximumIkTargetError = Mathf.Max(
+                        result.MaximumIkTargetError,
+                        Mathf.Max(leftError, rightError));
+                    foreach (string path in adjustedPaths)
+                    {
+                        tracks[path].Add(keyTime, FindRequired(root, path));
+                    }
+                }
+
+                AnimationClip generated = new AnimationClip();
+                EditorUtility.CopySerialized(source, generated);
+                generated.name =
+                    "Baton_Swing_Right_StandingSwing_ArmClearance";
+                foreach (EditorCurveBinding binding in AnimationUtility
+                             .GetCurveBindings(generated)
+                             .Where(
+                                 IsBatonSwingRightArmClearanceRotationBinding)
+                             .ToArray())
+                {
+                    AnimationUtility.SetEditorCurve(generated, binding, null);
+                }
+
+                foreach (TransformCurveTrack track in tracks.Values)
+                {
+                    SetRotationTrackCurves(generated, track);
+                }
+
+                AnimationUtility.SetAnimationEvents(
+                    generated,
+                    AnimationUtility.GetAnimationEvents(source));
+                AnimationClip existing = AssetDatabase
+                    .LoadAssetAtPath<AnimationClip>(
+                        BatonSwingRightArmClearanceClipPath);
+                if (existing == null)
+                {
+                    AssetDatabase.CreateAsset(
+                        generated,
+                        BatonSwingRightArmClearanceClipPath);
+                    existing = generated;
+                }
+                else
+                {
+                    EditorUtility.CopySerialized(generated, existing);
+                    UnityEngine.Object.DestroyImmediate(generated);
+                    existing.name =
+                        "Baton_Swing_Right_StandingSwing_ArmClearance";
+                    EditorUtility.SetDirty(existing);
+                }
+
+                AssetDatabase.SaveAssets();
+                result.Clip = existing;
+                return result;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(workObject);
+            }
+        }
+
+        private static float FindMinimumBatonSwingRightArmLateralBias(
+            Transform root,
+            Transform shoulder,
+            Transform arm,
+            Transform foreArm,
+            Transform hand,
+            Transform baton,
+            ShotgunTorsoClearanceProfile torsoProfile,
+            Quaternion sourceShoulder,
+            Quaternion sourceArm,
+            Quaternion sourceForeArm,
+            Quaternion sourceHand,
+            Vector3 sourceElbow,
+            Vector3 sourceHandPosition,
+            float sideSign,
+            float requestedSilhouetteGap,
+            float requestedOutwardHandShift,
+            bool requireTorsoAndBatonClearance,
+            int frame)
+        {
+            int steps = Mathf.RoundToInt(
+                BatonSwingRightMaximumArmClearanceBiasMeters /
+                BatonSwingRightArmClearanceBiasStepMeters);
+            for (int step = 0; step <= steps; step++)
+            {
+                float bias = step *
+                    BatonSwingRightArmClearanceBiasStepMeters;
+                ApplyBatonSwingRightArmLateralBias(
+                    root,
+                    shoulder,
+                    arm,
+                    foreArm,
+                    hand,
+                    sourceShoulder,
+                    sourceArm,
+                    sourceForeArm,
+                    sourceHand,
+                    sourceElbow,
+                    sideSign,
+                    bias);
+                if (MeasureArmFrontSilhouetteGap(
+                        root,
+                        arm,
+                        foreArm,
+                        hand,
+                        sideSign) < requestedSilhouetteGap)
+                {
+                    continue;
+                }
+
+                float outwardHandShift = Vector3.Dot(
+                    hand.position - sourceHandPosition,
+                    root.right) * sideSign;
+                if (outwardHandShift < requestedOutwardHandShift)
+                {
+                    continue;
+                }
+
+                if (requireTorsoAndBatonClearance &&
+                    (MeasureRightArmTorsoClearance(
+                         root,
+                         arm,
+                         foreArm,
+                         hand) < BatonSwingRightTorsoClearanceMeters ||
+                     MeasureElectricBatonTorsoClearance(
+                         root,
+                         baton,
+                         torsoProfile) <
+                     BatonSwingRightTorsoClearanceMeters))
+                {
+                    continue;
+                }
+
+                return bias;
+            }
+
+            throw new InvalidOperationException(
+                "Baton_Swing_Right has no approved arm-silhouette clearance solution at frame " +
+                frame.ToString(CultureInfo.InvariantCulture) + ".");
+        }
+
+        private static float ApplyBatonSwingRightArmLateralBias(
+            Transform root,
+            Transform shoulder,
+            Transform arm,
+            Transform foreArm,
+            Transform hand,
+            Quaternion sourceShoulder,
+            Quaternion sourceArm,
+            Quaternion sourceForeArm,
+            Quaternion sourceHand,
+            Vector3 sourceElbow,
+            float sideSign,
+            float lateralBias)
+        {
+            shoulder.localRotation = sourceShoulder;
+            arm.localRotation = sourceArm;
+            foreArm.localRotation = sourceForeArm;
+            hand.localRotation = sourceHand;
+            if (lateralBias <= 0.000001f)
+            {
+                return 0f;
+            }
+
+            Vector3 sourceShoulderToHand = hand.position - arm.position;
+            float reach = sourceShoulderToHand.magnitude;
+            if (reach <= 0.0001f)
+            {
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right arm has no usable shoulder-to-hand reach.");
+            }
+
+            Vector3 desiredDirection =
+                (sourceShoulderToHand +
+                 root.right * sideSign * lateralBias).normalized;
+            Vector3 requestedHand = arm.position + desiredDirection * reach;
+            Vector3 pole = sourceElbow +
+                root.right * sideSign * 0.08f;
+            float error = SolveTwoBoneIk(
+                arm,
+                foreArm,
+                hand,
+                requestedHand,
+                pole);
+            hand.localRotation = sourceHand;
+            shoulder.localRotation = sourceShoulder;
+            return error;
+        }
+
+        private static float FindBatonSwingRightArmLateralBiasNearTarget(
+            Transform root,
+            Transform shoulder,
+            Transform arm,
+            Transform foreArm,
+            Transform hand,
+            Transform baton,
+            ShotgunTorsoClearanceProfile torsoProfile,
+            Quaternion sourceShoulder,
+            Quaternion sourceArm,
+            Quaternion sourceForeArm,
+            Quaternion sourceHand,
+            Vector3 sourceElbow,
+            Vector3 sourceHandPosition,
+            float sideSign,
+            float requestedSilhouetteGap,
+            float requestedOutwardHandShift,
+            bool requireTorsoAndBatonClearance,
+            int frame,
+            float targetBias)
+        {
+            int steps = Mathf.RoundToInt(
+                BatonSwingRightMaximumArmClearanceBiasMeters /
+                BatonSwingRightArmClearanceBiasStepMeters);
+            float[] biases = Enumerable.Range(0, steps + 1)
+                .Select(step =>
+                    step * BatonSwingRightArmClearanceBiasStepMeters)
+                .OrderBy(value => Mathf.Abs(value - targetBias))
+                .ThenBy(value => value)
+                .ToArray();
+            foreach (float bias in biases)
+            {
+                ApplyBatonSwingRightArmLateralBias(
+                    root,
+                    shoulder,
+                    arm,
+                    foreArm,
+                    hand,
+                    sourceShoulder,
+                    sourceArm,
+                    sourceForeArm,
+                    sourceHand,
+                    sourceElbow,
+                    sideSign,
+                    bias);
+                if (MeasureArmFrontSilhouetteGap(
+                        root,
+                        arm,
+                        foreArm,
+                        hand,
+                        sideSign) < requestedSilhouetteGap)
+                {
+                    continue;
+                }
+
+                float outwardHandShift = Vector3.Dot(
+                    hand.position - sourceHandPosition,
+                    root.right) * sideSign;
+                if (outwardHandShift < requestedOutwardHandShift)
+                {
+                    continue;
+                }
+
+                if (requireTorsoAndBatonClearance &&
+                    (MeasureRightArmTorsoClearance(
+                         root,
+                         arm,
+                         foreArm,
+                         hand) < BatonSwingRightTorsoClearanceMeters ||
+                     MeasureElectricBatonTorsoClearance(
+                         root,
+                         baton,
+                         torsoProfile) <
+                     BatonSwingRightTorsoClearanceMeters))
+                {
+                    continue;
+                }
+
+                return bias;
+            }
+
+            throw new InvalidOperationException(
+                "Baton_Swing_Right has no continuous arm-clearance solution near the temporal target at frame " +
+                frame.ToString(CultureInfo.InvariantCulture) + ".");
+        }
+
+        private static float MeasureArmFrontSilhouetteGap(
+            Transform root,
+            Transform upper,
+            Transform lower,
+            Transform hand,
+            float sideSign)
+        {
+            Transform spine = FindRequired(root, SpinePath);
+            Transform hips = FindRequired(root, HipsPath);
+            float upperLength = Vector3.Distance(upper.position, lower.position);
+            float boundaryLateral = Vector3.Dot(
+                upper.position - spine.position,
+                root.right);
+            float armSilhouetteRadius = upperLength * 0.16f;
+            float lowerVertical = Vector3.Dot(
+                hips.position - spine.position,
+                root.up) - upperLength * 0.08f;
+            float upperVertical = Vector3.Dot(
+                upper.position - spine.position,
+                root.up) + upperLength * 2.8f;
+            float minimum = float.PositiveInfinity;
+            foreach (Vector3 point in new[] { lower.position, hand.position })
+            {
+                Vector3 relative = point - spine.position;
+                float vertical = Vector3.Dot(relative, root.up);
+                if (vertical < lowerVertical || vertical > upperVertical)
+                {
+                    continue;
+                }
+
+                float lateral = Vector3.Dot(relative, root.right);
+                minimum = Mathf.Min(
+                    minimum,
+                    (lateral - boundaryLateral) * sideSign -
+                    armSilhouetteRadius);
+            }
+
+            return float.IsPositiveInfinity(minimum)
+                ? armSilhouetteRadius
+                : minimum;
+        }
+
+        private static float MeasureHandLateralWidth(
+            Transform root,
+            string handPath,
+            string handLabel)
+        {
+            Transform hand = FindRequired(root, handPath);
+            float minimum = float.PositiveInfinity;
+            float maximum = float.NegativeInfinity;
+            int weightedVertexCount = 0;
+            foreach (SkinnedMeshRenderer renderer in root
+                         .GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                Mesh mesh = renderer.sharedMesh;
+                if (mesh == null)
+                {
+                    continue;
+                }
+
+                Transform[] bones = renderer.bones;
+                HashSet<int> handBoneIndices = new HashSet<int>();
+                for (int index = 0; index < bones.Length; index++)
+                {
+                    Transform bone = bones[index];
+                    if (bone != null &&
+                        (bone == hand || bone.IsChildOf(hand)))
+                    {
+                        handBoneIndices.Add(index);
+                    }
+                }
+
+                if (handBoneIndices.Count == 0)
+                {
+                    continue;
+                }
+
+                BoneWeight[] weights = mesh.boneWeights;
+                Mesh bakedMesh = new Mesh
+                {
+                    name = renderer.name + "_" + handLabel +
+                        "LateralWidthBake"
+                };
+                try
+                {
+                    renderer.BakeMesh(bakedMesh, true);
+                    Vector3[] vertices = bakedMesh.vertices;
+                    if (vertices.Length != weights.Length)
+                    {
+                        throw new InvalidOperationException(
+                            renderer.name +
+                            " baked vertex count does not match hand weights.");
+                    }
+
+                    for (int index = 0; index < vertices.Length; index++)
+                    {
+                        if (BoneWeightForIndices(
+                                weights[index],
+                                handBoneIndices) <
+                            RightHandVertexWeightThreshold)
+                        {
+                            continue;
+                        }
+
+                        Vector3 world = renderer.transform.TransformPoint(
+                            vertices[index]);
+                        float projection = Vector3.Dot(world, root.right);
+                        minimum = Mathf.Min(minimum, projection);
+                        maximum = Mathf.Max(maximum, projection);
+                        weightedVertexCount++;
+                    }
+                }
+                finally
+                {
+                    UnityEngine.Object.DestroyImmediate(bakedMesh);
+                }
+            }
+
+            if (weightedVertexCount == 0 ||
+                float.IsPositiveInfinity(minimum) ||
+                float.IsNegativeInfinity(maximum))
+            {
+                throw new InvalidOperationException(
+                    root.name + " has no weighted vertices for " +
+                    handLabel + " width measurement.");
+            }
+
+            return maximum - minimum;
+        }
+
+        private static string[] GetBatonSwingRightArmClearancePaths()
+        {
+            return new[]
+            {
+                TorsoBasePath,
+                SolarPlexusPath,
+                SpinePath,
+                LeftArmPath,
+                RightShoulderPath,
+                RightArmPath,
+                RightForeArmPath,
+                RightHandPath
+            };
+        }
+
+        private static void ApplyBatonSwingRightUpperTorsoFollow(
+            Transform root,
+            Transform torsoBase,
+            Transform solarPlexus,
+            Transform upperSpine,
+            Transform rightShoulder,
+            Transform rightArm,
+            Transform rightForeArm,
+            Transform rightHand,
+            Quaternion sourceRightArmWorldRotation,
+            Quaternion sourceRightForeArmWorldRotation,
+            Quaternion sourceRightHandWorldRotation,
+            float upperTorsoYawDegrees,
+            float upperTorsoAwayPitchDegrees,
+            float rightShoulderForwardYawDegrees)
+        {
+            torsoBase.rotation = Quaternion.AngleAxis(
+                upperTorsoYawDegrees *
+                BatonSwingRightTorsoBaseYawWeight,
+                root.up) * torsoBase.rotation;
+            solarPlexus.rotation = Quaternion.AngleAxis(
+                upperTorsoYawDegrees *
+                BatonSwingRightSolarPlexusYawWeight,
+                root.up) * solarPlexus.rotation;
+            upperSpine.rotation = Quaternion.AngleAxis(
+                upperTorsoYawDegrees *
+                BatonSwingRightUpperSpineYawWeight,
+                root.up) * upperSpine.rotation;
+            torsoBase.rotation = Quaternion.AngleAxis(
+                upperTorsoAwayPitchDegrees *
+                BatonSwingRightTorsoBaseYawWeight,
+                root.right) * torsoBase.rotation;
+            solarPlexus.rotation = Quaternion.AngleAxis(
+                upperTorsoAwayPitchDegrees *
+                BatonSwingRightSolarPlexusYawWeight,
+                root.right) * solarPlexus.rotation;
+            upperSpine.rotation = Quaternion.AngleAxis(
+                upperTorsoAwayPitchDegrees *
+                BatonSwingRightUpperSpineYawWeight,
+                root.right) * upperSpine.rotation;
+
+            rightShoulder.rotation = Quaternion.AngleAxis(
+                rightShoulderForwardYawDegrees,
+                root.up) * rightShoulder.rotation;
+
+            // Move the shoulder joint with the accelerated torso, then restore
+            // the authored world rotations so the original swing arc is intact.
+            rightArm.rotation = sourceRightArmWorldRotation;
+            rightForeArm.rotation = sourceRightForeArmWorldRotation;
+            rightHand.rotation = sourceRightHandWorldRotation;
+        }
+
+        private static float EvaluateBatonSwingRightUpperTorsoYaw(float phase)
+        {
+            if (phase <= 0.30f)
+            {
+                return BatonSwingRightUpperTorsoRightWindupDegrees;
+            }
+
+            if (phase <= 0.38f)
+            {
+                return SmoothBatonSwingRightTorsoYaw(
+                    phase,
+                    0.30f,
+                    0.38f,
+                    BatonSwingRightUpperTorsoRightWindupDegrees,
+                    BatonSwingRightUpperTorsoCollisionEntryDegrees);
+            }
+
+            if (phase <= 0.48f)
+            {
+                return SmoothBatonSwingRightTorsoYaw(
+                    phase,
+                    0.38f,
+                    0.48f,
+                    BatonSwingRightUpperTorsoCollisionEntryDegrees,
+                    BatonSwingRightUpperTorsoCollisionPeakDegrees);
+            }
+
+            if (phase <= 0.74f)
+            {
+                return BatonSwingRightUpperTorsoCollisionPeakDegrees;
+            }
+
+            if (phase <= 0.84f)
+            {
+                return SmoothBatonSwingRightTorsoYaw(
+                    phase,
+                    0.74f,
+                    0.84f,
+                    BatonSwingRightUpperTorsoCollisionPeakDegrees,
+                    BatonSwingRightUpperTorsoCollisionExitDegrees);
+            }
+
+            if (phase <= 0.94f)
+            {
+                return SmoothBatonSwingRightTorsoYaw(
+                    phase,
+                    0.84f,
+                    0.94f,
+                    BatonSwingRightUpperTorsoCollisionExitDegrees,
+                    0f);
+            }
+
+            return SmoothBatonSwingRightTorsoYaw(
+                phase,
+                0.94f,
+                1f,
+                0f,
+                BatonSwingRightUpperTorsoRightWindupDegrees);
+        }
+
+        private static float SmoothBatonSwingRightTorsoYaw(
+            float phase,
+            float startPhase,
+            float endPhase,
+            float startDegrees,
+            float endDegrees)
+        {
+            float t = Mathf.Clamp01(
+                Mathf.InverseLerp(startPhase, endPhase, phase));
+            float smooth = t * t * (3f - 2f * t);
+            return Mathf.Lerp(startDegrees, endDegrees, smooth);
+        }
+
+        private static float[] BuildBatonSwingRightUpperTorsoAwayPitchByFrame(
+            GameObject workObject,
+            Transform root,
+            AnimationClip source,
+            IReadOnlyDictionary<Transform, LocalTransformState> basePose,
+            int framesPerLoop)
+        {
+            float[] yawByFrame = new float[framesPerLoop];
+            for (int frame = 0; frame < framesPerLoop; frame++)
+            {
+                float phase = frame / (float)framesPerLoop;
+                if (phase < BatonSwingRightTorsoMeshCorrectionStartPhase ||
+                    phase > BatonSwingRightTorsoMeshCorrectionEndPhase)
+                {
+                    yawByFrame[frame] = 0f;
+                    continue;
+                }
+
+                yawByFrame[frame] =
+                    FindMinimumBatonSwingRightUpperTorsoAwayPitch(
+                        workObject,
+                        root,
+                        source,
+                        basePose,
+                        source.length * frame / framesPerLoop,
+                        EvaluateBatonSwingRightUpperTorsoYaw(phase),
+                        frame);
+            }
+
+            return yawByFrame;
+        }
+
+        private static float FindMinimumBatonSwingRightUpperTorsoAwayPitch(
+            GameObject workObject,
+            Transform root,
+            AnimationClip source,
+            IReadOnlyDictionary<Transform, LocalTransformState> basePose,
+            float sampleTime,
+            float upperTorsoYawDegrees,
+            int frame)
+        {
+            float baselineClearance = float.NegativeInfinity;
+            float bestClearance = float.NegativeInfinity;
+            float bestCandidate = 0f;
+            for (float magnitude = 0f;
+                 magnitude <= BatonSwingRightMaximumUpperTorsoAwayPitchDegrees;
+                 magnitude += BatonSwingRightUpperTorsoPitchSearchStepDegrees)
+            {
+                float negativeCandidate = -magnitude;
+                float negativeClearance =
+                    MeasureBatonSwingRightArmMeshClearanceAtRotations(
+                        workObject,
+                        root,
+                        source,
+                        basePose,
+                        sampleTime,
+                        upperTorsoYawDegrees,
+                        negativeCandidate);
+                if (negativeClearance > bestClearance)
+                {
+                    bestClearance = negativeClearance;
+                    bestCandidate = negativeCandidate;
+                }
+                if (magnitude <= 0f)
+                {
+                    baselineClearance = negativeClearance;
+                    if (negativeClearance >=
+                        BatonSwingRightTorsoMeshClearanceMeters)
+                    {
+                        return 0f;
+                    }
+
+                    continue;
+                }
+
+                float positiveCandidate = magnitude;
+                float positiveClearance =
+                    MeasureBatonSwingRightArmMeshClearanceAtRotations(
+                        workObject,
+                        root,
+                        source,
+                        basePose,
+                        sampleTime,
+                        upperTorsoYawDegrees,
+                        positiveCandidate);
+                if (positiveClearance > bestClearance)
+                {
+                    bestClearance = positiveClearance;
+                    bestCandidate = positiveCandidate;
+                }
+                bool negativePass = negativeClearance >=
+                    BatonSwingRightTorsoMeshClearanceMeters;
+                bool positivePass = positiveClearance >=
+                    BatonSwingRightTorsoMeshClearanceMeters;
+                if (negativePass || positivePass)
+                {
+                    return positivePass &&
+                           (!negativePass ||
+                            positiveClearance > negativeClearance)
+                        ? positiveCandidate
+                        : negativeCandidate;
+                }
+            }
+
+            if (bestClearance >= baselineClearance + 0.005f)
+            {
+                return bestCandidate;
+            }
+
+            throw new InvalidOperationException(
+                "Baton_Swing_Right torso yaw and away pitch cannot improve the right-arm skin clearance at frame " +
+                frame.ToString(CultureInfo.InvariantCulture) +
+                " without exceeding the approved rotation search range.");
+        }
+
+        private static float MeasureBatonSwingRightArmMeshClearanceAtRotations(
+                GameObject workObject,
+                Transform root,
+                AnimationClip source,
+                IReadOnlyDictionary<Transform, LocalTransformState> basePose,
+                float sampleTime,
+                float upperTorsoYawDegrees,
+                float upperTorsoAwayPitchDegrees)
+        {
+            RestoreLocalTransformStates(basePose);
+            source.SampleAnimation(workObject, sampleTime);
+            Transform rightArm = FindRequired(root, RightArmPath);
+            Transform rightForeArm = FindRequired(root, RightForeArmPath);
+            Transform rightHand = FindRequired(root, RightHandPath);
+            Quaternion sourceRightArmWorldRotation = rightArm.rotation;
+            Quaternion sourceRightForeArmWorldRotation = rightForeArm.rotation;
+            Quaternion sourceRightHandWorldRotation = rightHand.rotation;
+            ApplyBatonSwingRightUpperTorsoFollow(
+                root,
+                FindRequired(root, TorsoBasePath),
+                FindRequired(root, SolarPlexusPath),
+                FindRequired(root, SpinePath),
+                FindRequired(root, RightShoulderPath),
+                rightArm,
+                rightForeArm,
+                rightHand,
+                sourceRightArmWorldRotation,
+                sourceRightForeArmWorldRotation,
+                sourceRightHandWorldRotation,
+                upperTorsoYawDegrees,
+                upperTorsoAwayPitchDegrees,
+                0f);
+            ShotgunTorsoClearanceProfile torsoProfile =
+                MeasureShotgunTorsoClearanceProfile(root);
+            return MeasureRightArmMeshTorsoFrontClearance(
+                root,
+                torsoProfile,
+                out int _);
+        }
+
+        private static float BatonSwingRightTorsoMeshCorrectionEnvelope(
+            float phase)
+        {
+            if (phase <= BatonSwingRightTorsoMeshCorrectionStartPhase ||
+                phase >= BatonSwingRightTorsoMeshCorrectionEndPhase)
+            {
+                return 0f;
+            }
+
+            if (phase < BatonSwingRightTorsoMeshCorrectionFullPhase)
+            {
+                float t = Mathf.InverseLerp(
+                    BatonSwingRightTorsoMeshCorrectionStartPhase,
+                    BatonSwingRightTorsoMeshCorrectionFullPhase,
+                    phase);
+                return t * t * (3f - 2f * t);
+            }
+
+            if (phase <= BatonSwingRightTorsoMeshCorrectionReleasePhase)
+            {
+                return 1f;
+            }
+
+            float release = Mathf.InverseLerp(
+                BatonSwingRightTorsoMeshCorrectionEndPhase,
+                BatonSwingRightTorsoMeshCorrectionReleasePhase,
+                phase);
+            return release * release * (3f - 2f * release);
+        }
+
+        private static bool IsBatonSwingRightArmClearanceRotationBinding(
+            EditorCurveBinding binding)
+        {
+            return GetBatonSwingRightArmClearancePaths().Contains(
+                       binding.path,
+                       StringComparer.Ordinal) &&
+                   IsTransformRotationProperty(binding.propertyName);
+        }
+
+        private static bool BatonSwingRightMatchesExceptArmClearanceRotations(
+            AnimationClip source,
+            AnimationClip adjusted)
+        {
+            EditorCurveBinding[] sourceUnchanged = AnimationUtility
+                .GetCurveBindings(source)
+                .Where(binding =>
+                    !IsBatonSwingRightArmClearanceRotationBinding(binding))
+                .ToArray();
+            EditorCurveBinding[] adjustedUnchanged = AnimationUtility
+                .GetCurveBindings(adjusted)
+                .Where(binding =>
+                    !IsBatonSwingRightArmClearanceRotationBinding(binding))
+                .ToArray();
+            if (sourceUnchanged.Length != adjustedUnchanged.Length ||
+                sourceUnchanged.Any(binding =>
+                    !adjustedUnchanged.Contains(binding)))
+            {
+                return false;
+            }
+
+            foreach (EditorCurveBinding binding in sourceUnchanged)
+            {
+                if (!AnimationCurvesEqual(
+                        AnimationUtility.GetEditorCurve(source, binding),
+                        AnimationUtility.GetEditorCurve(adjusted, binding)))
+                {
+                    return false;
+                }
+            }
+
+            EditorCurveBinding[] sourceObjectBindings = AnimationUtility
+                .GetObjectReferenceCurveBindings(source);
+            EditorCurveBinding[] adjustedObjectBindings = AnimationUtility
+                .GetObjectReferenceCurveBindings(adjusted);
+            if (sourceObjectBindings.Length != adjustedObjectBindings.Length ||
+                sourceObjectBindings.Any(binding =>
+                    !adjustedObjectBindings.Contains(binding)))
+            {
+                return false;
+            }
+
+            foreach (EditorCurveBinding binding in sourceObjectBindings)
+            {
+                ObjectReferenceKeyframe[] sourceKeys = AnimationUtility
+                    .GetObjectReferenceCurve(source, binding);
+                ObjectReferenceKeyframe[] adjustedKeys = AnimationUtility
+                    .GetObjectReferenceCurve(adjusted, binding);
+                if (sourceKeys.Length != adjustedKeys.Length)
+                {
+                    return false;
+                }
+
+                for (int index = 0; index < sourceKeys.Length; index++)
+                {
+                    if (Mathf.Abs(
+                            sourceKeys[index].time -
+                            adjustedKeys[index].time) > 0.000001f ||
+                        sourceKeys[index].value != adjustedKeys[index].value)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return AnimationEventsExact(source, adjusted);
+        }
+
+        private static bool BatonSwingRightRightForeArmAndHandCurvesExact(
+            AnimationClip source,
+            AnimationClip adjusted)
+        {
+            HashSet<string> paths = new HashSet<string>(
+                new[] { RightForeArmPath, RightHandPath },
+                StringComparer.Ordinal);
+            EditorCurveBinding[] sourceBindings = AnimationUtility
+                .GetCurveBindings(source)
+                .Where(binding =>
+                    paths.Contains(binding.path) &&
+                    IsTransformRotationProperty(binding.propertyName))
+                .ToArray();
+            EditorCurveBinding[] adjustedBindings = AnimationUtility
+                .GetCurveBindings(adjusted)
+                .Where(binding =>
+                    paths.Contains(binding.path) &&
+                    IsTransformRotationProperty(binding.propertyName))
+                .ToArray();
+            return sourceBindings.Length == adjustedBindings.Length &&
+                   sourceBindings.All(binding =>
+                       adjustedBindings.Contains(binding) &&
+                       AnimationCurvesEqual(
+                           AnimationUtility.GetEditorCurve(source, binding),
+                           AnimationUtility.GetEditorCurve(
+                               adjusted,
+                               binding)));
+        }
+
+        private static bool BatonSwingRightRightArmChainCurvesExact(
+            AnimationClip source,
+            AnimationClip adjusted)
+        {
+            HashSet<string> paths = new HashSet<string>(
+                new[]
+                {
+                    RightShoulderPath,
+                    RightArmPath,
+                    RightForeArmPath,
+                    RightHandPath
+                },
+                StringComparer.Ordinal);
+            EditorCurveBinding[] sourceBindings = AnimationUtility
+                .GetCurveBindings(source)
+                .Where(binding =>
+                    paths.Contains(binding.path) &&
+                    IsTransformRotationProperty(binding.propertyName))
+                .ToArray();
+            EditorCurveBinding[] adjustedBindings = AnimationUtility
+                .GetCurveBindings(adjusted)
+                .Where(binding =>
+                    paths.Contains(binding.path) &&
+                    IsTransformRotationProperty(binding.propertyName))
+                .ToArray();
+            return sourceBindings.Length == adjustedBindings.Length &&
+                   sourceBindings.All(binding =>
+                       adjustedBindings.Contains(binding) &&
+                       AnimationCurvesEqual(
+                           AnimationUtility.GetEditorCurve(source, binding),
+                           AnimationUtility.GetEditorCurve(
+                               adjusted,
+                               binding)));
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Baton Swing Right Natural Left Arm Review")]
+        internal static void CaptureBatonSwingRightNaturalLeftArmReview()
+        {
+            int stage = SessionState.GetInt(
+                BatonSwingRightNaturalLeftArmReviewStageKey,
+                0);
+            if (stage == -1)
+            {
+                string error = SessionState.GetString(
+                    BatonSwingRightNaturalLeftArmReviewErrorKey,
+                    "Unknown Baton_Swing_Right natural-left-arm capture error.");
+                SessionState.EraseInt(
+                    BatonSwingRightNaturalLeftArmReviewStageKey);
+                SessionState.EraseString(
+                    BatonSwingRightNaturalLeftArmReviewErrorKey);
+                throw new InvalidOperationException(error);
+            }
+
+            if (stage == 0)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Swing_Right natural-left-arm review must start in Edit Mode.");
+                }
+
+                BatonSwingRightNaturalLeftArmApplyMetrics apply =
+                    ReadJson<BatonSwingRightNaturalLeftArmApplyMetrics>(
+                        BatonSwingRightNaturalLeftArmApplyMetricsPath);
+                if (!apply.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Swing_Right natural-left-arm apply metrics did not pass before review.");
+                }
+
+                SessionState.SetInt(
+                    BatonSwingRightNaturalLeftArmReviewStageKey,
+                    1);
+                EditorApplication.EnterPlaymode();
+                Debug.Log(
+                    "[BatonSwingRightNaturalLeftArm] Entering Play Mode for two-loop direct left-arm review.");
+                return;
+            }
+
+            if (stage == 1)
+            {
+                if (!EditorApplication.isPlaying)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Swing_Right natural-left-arm runtime capture requires Play Mode.");
+                }
+
+                SessionState.SetInt(
+                    BatonSwingRightNaturalLeftArmReviewStageKey,
+                    11);
+                StartBatonSwingRightNaturalLeftArmActualPlayModeCapture();
+                Debug.Log(
+                    "[BatonSwingRightNaturalLeftArm] Started actual runtime capture across two complete loops.");
+                return;
+            }
+
+            if (stage == 11)
+            {
+                Debug.Log(
+                    "[BatonSwingRightNaturalLeftArm] Actual two-loop runtime capture is still running.");
+                return;
+            }
+
+            if (stage == 2)
+            {
+                if (!EditorApplication.isPlaying)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Swing_Right natural-left-arm review exit requires Play Mode.");
+                }
+
+                SessionState.SetInt(
+                    BatonSwingRightNaturalLeftArmReviewStageKey,
+                    3);
+                EditorApplication.ExitPlaymode();
+                Debug.Log(
+                    "[BatonSwingRightNaturalLeftArm] Exiting Play Mode after direct left-arm review.");
+                return;
+            }
+
+            if (stage == 3)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Swing_Right natural-left-arm finalization requires Edit Mode.");
+                }
+
+                BatonSwingRightNaturalLeftArmReviewMetrics review =
+                    ReadJson<BatonSwingRightNaturalLeftArmReviewMetrics>(
+                        BatonSwingRightNaturalLeftArmReviewMetricsPath);
+                if (!review.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Swing_Right natural-left-arm direct review did not pass.");
+                }
+
+                CopyReviewedContact(
+                    BatonSwingRightNaturalLeftArmReviewPath,
+                    BatonSwingRightNaturalLeftArmFinalPath);
+                SessionState.EraseInt(
+                    BatonSwingRightNaturalLeftArmReviewStageKey);
+                SessionState.EraseString(
+                    BatonSwingRightNaturalLeftArmReviewErrorKey);
+                Debug.Log(
+                    "[BatonSwingRightNaturalLeftArm] Final image copied once from the directly reviewed Play Mode contact sheet. Path=" +
+                    Path.GetFullPath(
+                        BatonSwingRightNaturalLeftArmFinalPath) + ".");
+                return;
+            }
+
+            throw new InvalidOperationException(
+                "Baton_Swing_Right natural-left-arm review stage is invalid: " +
+                stage.ToString(CultureInfo.InvariantCulture) + ".");
+        }
+
+        private static void
+            StartBatonSwingRightNaturalLeftArmActualPlayModeCapture()
+        {
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(
+                layout,
+                BatonSwingRightTargetName);
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController ??
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right natural-left-arm runtime controller is missing.");
+            AnimationClip adjustedClip = RequireDefaultLayerClip(
+                controller,
+                0,
+                BatonSwingRightStateName);
+            AnimationClip sourceClip = AssetDatabase
+                .LoadAssetAtPath<AnimationClip>(
+                    BatonSwingRightTorsoClearanceClipPath) ??
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right torso-clearance review source is missing.");
+            AnimationClip idleReference = AssetDatabase
+                .LoadAssetAtPath<AnimationClip>(BatonIdleClipPath) ??
+                throw new InvalidOperationException(
+                    "Baton_Idle left-arm review reference is missing.");
+            Transform hand = FindRequired(target, RightHandPath);
+            StickGripPlacement baton = DescribeElectricBatonGrip(target);
+            RootPose rootBefore = new RootPose(target);
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            GameObject referenceObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            sourceObject.name = "BatonSwingRightLeftArmSourceReview";
+            referenceObject.name = "BatonIdleLeftArmPoseReview";
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            referenceObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            DisableAnimators(referenceObject);
+            foreach (MonoBehaviour behaviour in sourceObject
+                         .GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                behaviour.enabled = false;
+            }
+            foreach (MonoBehaviour behaviour in referenceObject
+                         .GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                behaviour.enabled = false;
+            }
+
+            Transform sourceRoot = sourceObject.transform;
+            Transform referenceRoot = referenceObject.transform;
+            List<byte[]> sourceFrontPanels = new List<byte[]>();
+            List<byte[]> targetFrontPanels = new List<byte[]>();
+            List<byte[]> sourceSidePanels = new List<byte[]>();
+            List<byte[]> targetSidePanels = new List<byte[]>();
+            List<byte[]> sourceLeftFrontPanels = new List<byte[]>();
+            List<byte[]> targetLeftFrontPanels = new List<byte[]>();
+            List<byte[]> sourceLeftSidePanels = new List<byte[]>();
+            List<byte[]> targetLeftSidePanels = new List<byte[]>();
+            float maximumCapturedReferenceDifference = 0f;
+            float[] captureLoops = { 0.05f, 0.35f, 0.65f, 0.9f, 2.05f };
+            int nextCapture = 0;
+            bool initialized = false;
+            float initialNormalized = 0f;
+            float observedLoops = 0f;
+            double deadline = EditorApplication.timeSinceStartup +
+                Math.Max(8d, adjustedClip.length * 3d + 4d);
+            EditorApplication.CallbackFunction update = null;
+            update = () =>
+            {
+                try
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Play Mode ended before Baton_Swing_Right natural-left-arm review completed two loops.");
+                    }
+
+                    AnimatorStateInfo state =
+                        animator.GetCurrentAnimatorStateInfo(0);
+                    if (state.shortNameHash !=
+                        Animator.StringToHash(BatonSwingRightStateName))
+                    {
+                        if (EditorApplication.timeSinceStartup > deadline)
+                        {
+                            throw new InvalidOperationException(
+                                "Baton_Swing_Right did not enter its natural-left-arm runtime state.");
+                        }
+
+                        return;
+                    }
+
+                    if (!initialized)
+                    {
+                        initialNormalized = state.normalizedTime;
+                        initialized = true;
+                    }
+
+                    observedLoops = state.normalizedTime - initialNormalized;
+                    if (nextCapture < captureLoops.Length &&
+                        observedLoops >= captureLoops[nextCapture])
+                    {
+                        float phase = Mathf.Repeat(state.normalizedTime, 1f);
+                        sourceClip.SampleAnimation(
+                            sourceObject,
+                            phase * sourceClip.length);
+                        sourceClip.SampleAnimation(
+                            referenceObject,
+                            phase * sourceClip.length);
+                        idleReference.SampleAnimation(
+                            referenceObject,
+                            phase * idleReference.length);
+                        foreach (string path in
+                                 GetBatonSwingRightLeftArmPaths())
+                        {
+                            maximumCapturedReferenceDifference = Mathf.Max(
+                                maximumCapturedReferenceDifference,
+                                Quaternion.Angle(
+                                    FindRequired(target, path).localRotation,
+                                    FindRequired(referenceRoot, path)
+                                        .localRotation));
+                        }
+
+                        CaptureBatonSwingRightNaturalLeftArmPanels(
+                            sourceRoot,
+                            sourceFrontPanels,
+                            sourceSidePanels,
+                            sourceLeftFrontPanels,
+                            sourceLeftSidePanels);
+                        sourceObject.SetActive(false);
+                        referenceObject.SetActive(false);
+                        try
+                        {
+                            CaptureBatonSwingRightNaturalLeftArmPanels(
+                                target,
+                                targetFrontPanels,
+                                targetSidePanels,
+                                targetLeftFrontPanels,
+                                targetLeftSidePanels);
+                        }
+                        finally
+                        {
+                            referenceObject.SetActive(true);
+                            sourceObject.SetActive(true);
+                        }
+                        nextCapture++;
+                    }
+
+                    if (nextCapture < captureLoops.Length)
+                    {
+                        if (EditorApplication.timeSinceStartup > deadline)
+                        {
+                            throw new InvalidOperationException(
+                                "Baton_Swing_Right natural-left-arm two-loop capture timed out.");
+                        }
+
+                        return;
+                    }
+
+                    EditorApplication.update -= update;
+                    UnityEngine.Object.Destroy(referenceObject);
+                    UnityEngine.Object.Destroy(sourceObject);
+                    ComposeRows(
+                        new[]
+                        {
+                            sourceFrontPanels,
+                            targetFrontPanels,
+                            sourceSidePanels,
+                            targetSidePanels,
+                            sourceLeftFrontPanels,
+                            targetLeftFrontPanels,
+                            sourceLeftSidePanels,
+                            targetLeftSidePanels
+                        },
+                        BatonSwingRightNaturalLeftArmReviewPath);
+                    AnimatorStateInfo finalState =
+                        animator.GetCurrentAnimatorStateInfo(0);
+                    BatonSwingRightNaturalLeftArmReviewMetrics metrics =
+                        new BatonSwingRightNaturalLeftArmReviewMetrics
+                        {
+                            target = BatonSwingRightTargetName,
+                            actualPlayModeFramesCaptured =
+                                targetFrontPanels.Count,
+                            actualLoopsObserved = observedLoops,
+                            clipDurationSeconds = adjustedClip.length,
+                            stateIsBatonSwingRight =
+                                finalState.shortNameHash ==
+                                Animator.StringToHash(
+                                    BatonSwingRightStateName),
+                            stateLoops = AnimationUtility
+                                .GetAnimationClipSettings(adjustedClip)
+                                .loopTime,
+                            batonVisible = baton.Instance
+                                .GetComponentsInChildren<Renderer>(true)
+                                .Any(renderer => renderer.enabled),
+                            batonParentIsRightHand =
+                                baton.Instance.parent == hand,
+                            targetRootUnchanged = RootMatches(
+                                target,
+                                rootBefore),
+                            maximumCapturedLeftArmReferenceDifferenceDegrees =
+                                maximumCapturedReferenceDifference,
+                            reviewContactSheetExists = File.Exists(
+                                Path.GetFullPath(
+                                    BatonSwingRightNaturalLeftArmReviewPath)),
+                            validationPriority =
+                                "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                        };
+                    metrics.passedNumericChecks =
+                        metrics.actualPlayModeFramesCaptured ==
+                            captureLoops.Length &&
+                        metrics.actualLoopsObserved >= 2f &&
+                        metrics.stateIsBatonSwingRight &&
+                        metrics.stateLoops &&
+                        metrics.batonVisible &&
+                        metrics.batonParentIsRightHand &&
+                        metrics.targetRootUnchanged &&
+                        metrics.maximumCapturedLeftArmReferenceDifferenceDegrees <=
+                            1f &&
+                        metrics.reviewContactSheetExists;
+                    WriteJson(
+                        BatonSwingRightNaturalLeftArmReviewMetricsPath,
+                        metrics);
+                    if (!metrics.passedNumericChecks)
+                    {
+                        throw new InvalidOperationException(
+                            "Baton_Swing_Right natural-left-arm runtime support checks failed. " +
+                            JsonUtility.ToJson(metrics));
+                    }
+
+                    SessionState.SetInt(
+                        BatonSwingRightNaturalLeftArmReviewStageKey,
+                        2);
+                    Debug.Log(
+                        "[BatonSwingRightNaturalLeftArm] Captured direct source/adjusted left-arm review. Frames=" +
+                        metrics.actualPlayModeFramesCaptured +
+                        ", Loops=" + Num(metrics.actualLoopsObserved) +
+                        ", ReferenceDifference=" +
+                        Num(metrics.maximumCapturedLeftArmReferenceDifferenceDegrees) +
+                        "deg.");
+                }
+                catch (Exception exception)
+                {
+                    EditorApplication.update -= update;
+                    if (referenceObject != null)
+                    {
+                        UnityEngine.Object.Destroy(referenceObject);
+                    }
+                    if (sourceObject != null)
+                    {
+                        UnityEngine.Object.Destroy(sourceObject);
+                    }
+
+                    SessionState.SetString(
+                        BatonSwingRightNaturalLeftArmReviewErrorKey,
+                        exception.ToString());
+                    SessionState.SetInt(
+                        BatonSwingRightNaturalLeftArmReviewStageKey,
+                        -1);
+                    Debug.LogException(exception);
+                }
+            };
+            EditorApplication.update += update;
+        }
+
+        private static void CaptureBatonSwingRightNaturalLeftArmPanels(
+            Transform subject,
+            List<byte[]> frontPanels,
+            List<byte[]> sidePanels,
+            List<byte[]> leftFrontPanels,
+            List<byte[]> leftSidePanels)
+        {
+            using (CaptureEnvironment environment =
+                   new CaptureEnvironment(subject))
+            {
+                environment.ConfigureView(subject, 1.05f, 1.35f);
+                frontPanels.Add(environment.CaptureFront());
+                sidePanels.Add(environment.CaptureSide());
+                Vector3 leftArmCenter =
+                    (FindRequired(subject, LeftShoulderPath).position +
+                     FindRequired(subject, LeftArmPath).position +
+                     FindRequired(subject, LeftForeArmPath).position +
+                     FindRequired(subject, LeftHandPath).position) / 4f;
+                environment.ConfigureView(
+                    subject,
+                    leftArmCenter,
+                    0.62f);
+                leftFrontPanels.Add(environment.CaptureFront());
+                leftSidePanels.Add(environment.CaptureSide());
+            }
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Baton Swing Right Arm Clearance Review")]
+        internal static void CaptureBatonSwingRightArmClearanceReview()
+        {
+            int stage = SessionState.GetInt(
+                BatonSwingRightArmClearanceReviewStageKey,
+                0);
+            if (stage == -1)
+            {
+                string error = SessionState.GetString(
+                    BatonSwingRightArmClearanceReviewErrorKey,
+                    "Unknown Baton_Swing_Right arm-clearance capture error.");
+                SessionState.EraseInt(
+                    BatonSwingRightArmClearanceReviewStageKey);
+                SessionState.EraseString(
+                    BatonSwingRightArmClearanceReviewErrorKey);
+                throw new InvalidOperationException(error);
+            }
+
+            if (stage == 0)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Swing_Right arm-clearance review must start in Edit Mode.");
+                }
+
+                BatonSwingRightArmClearanceApplyMetrics apply =
+                    ReadJson<BatonSwingRightArmClearanceApplyMetrics>(
+                        BatonSwingRightArmClearanceApplyMetricsPath);
+                if (!apply.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Swing_Right arm-clearance apply metrics did not pass before review.");
+                }
+
+                SessionState.SetInt(
+                    BatonSwingRightArmClearanceReviewStageKey,
+                    1);
+                EditorApplication.EnterPlaymode();
+                Debug.Log(
+                    "[BatonSwingRightArmClearance] Entering Play Mode for two-loop direct arm review.");
+                return;
+            }
+
+            if (stage == 1)
+            {
+                if (!EditorApplication.isPlaying)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Swing_Right arm-clearance runtime capture requires Play Mode.");
+                }
+
+                SessionState.SetInt(
+                    BatonSwingRightArmClearanceReviewStageKey,
+                    11);
+                StartBatonSwingRightArmClearanceActualPlayModeCapture();
+                Debug.Log(
+                    "[BatonSwingRightArmClearance] Started actual runtime capture across two complete loops.");
+                return;
+            }
+
+            if (stage == 11)
+            {
+                Debug.Log(
+                    "[BatonSwingRightArmClearance] Actual two-loop runtime capture is still running.");
+                return;
+            }
+
+            if (stage == 2)
+            {
+                if (!EditorApplication.isPlaying)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Swing_Right arm-clearance review exit requires Play Mode.");
+                }
+
+                SessionState.SetInt(
+                    BatonSwingRightArmClearanceReviewStageKey,
+                    3);
+                EditorApplication.ExitPlaymode();
+                Debug.Log(
+                    "[BatonSwingRightArmClearance] Exiting Play Mode after direct arm review.");
+                return;
+            }
+
+            if (stage == 3)
+            {
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Swing_Right arm-clearance finalization requires Edit Mode.");
+                }
+
+                BatonSwingRightArmClearanceReviewMetrics review =
+                    ReadJson<BatonSwingRightArmClearanceReviewMetrics>(
+                        BatonSwingRightArmClearanceReviewMetricsPath);
+                if (!review.passedNumericChecks)
+                {
+                    throw new InvalidOperationException(
+                        "Baton_Swing_Right arm-clearance direct review did not pass.");
+                }
+
+                CopyReviewedContact(
+                    BatonSwingRightArmClearanceReviewPath,
+                    BatonSwingRightArmClearanceFinalPath);
+                SessionState.EraseInt(
+                    BatonSwingRightArmClearanceReviewStageKey);
+                SessionState.EraseString(
+                    BatonSwingRightArmClearanceReviewErrorKey);
+                Debug.Log(
+                    "[BatonSwingRightArmClearance] Final image copied once from the directly reviewed Play Mode contact sheet. Path=" +
+                    Path.GetFullPath(BatonSwingRightArmClearanceFinalPath) +
+                    ".");
+                return;
+            }
+
+            throw new InvalidOperationException(
+                "Baton_Swing_Right arm-clearance review stage is invalid: " +
+                stage.ToString(CultureInfo.InvariantCulture) + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Baton Swing Right Upper Torso Follow Review")]
+        internal static void CaptureBatonSwingRightUpperTorsoFollowReview()
+        {
+            CaptureBatonSwingRightArmClearanceReview();
+        }
+
+        private static void
+            StartBatonSwingRightArmClearanceActualPlayModeCapture()
+        {
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, BatonSwingRightTargetName);
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller =
+                animator.runtimeAnimatorController as AnimatorController ??
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right arm-clearance runtime controller is missing.");
+            AnimationClip adjustedClip = RequireDefaultLayerClip(
+                controller,
+                0,
+                BatonSwingRightStateName);
+            AnimationClip sourceClip = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                BatonSwingRightNaturalLeftArmClipPath) ??
+                throw new InvalidOperationException(
+                    "Baton_Swing_Right arm-clearance review source is missing.");
+            Transform hand = FindRequired(target, RightHandPath);
+            StickGripPlacement baton = DescribeElectricBatonGrip(target);
+            RootPose rootBefore = new RootPose(target);
+            GameObject sourceObject = UnityEngine.Object.Instantiate(
+                target.gameObject);
+            sourceObject.name = "BatonSwingRightArmClearanceSourceReview";
+            sourceObject.hideFlags = HideFlags.HideAndDontSave;
+            DisableAnimators(sourceObject);
+            foreach (MonoBehaviour behaviour in sourceObject
+                         .GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                behaviour.enabled = false;
+            }
+
+            Transform sourceRoot = sourceObject.transform;
+            Transform sourceRightHand = FindRequired(
+                sourceRoot,
+                RightHandPath);
+            List<byte[]> sourceFrontPanels = new List<byte[]>();
+            List<byte[]> targetFrontPanels = new List<byte[]>();
+            List<byte[]> sourceSidePanels = new List<byte[]>();
+            List<byte[]> targetSidePanels = new List<byte[]>();
+            List<byte[]> sourceObliquePanels = new List<byte[]>();
+            List<byte[]> targetObliquePanels = new List<byte[]>();
+            List<byte[]> sourceChestFrontPanels = new List<byte[]>();
+            List<byte[]> targetChestFrontPanels = new List<byte[]>();
+            List<byte[]> sourceChestObliquePanels = new List<byte[]>();
+            List<byte[]> targetChestObliquePanels = new List<byte[]>();
+            float minimumLeftGap = float.PositiveInfinity;
+            float minimumRightGap = float.PositiveInfinity;
+            float minimumRightTorso = float.PositiveInfinity;
+            float minimumRightMeshFront = float.PositiveInfinity;
+            int rightMeshFrontSamples = 0;
+            float minimumBatonTorso = float.PositiveInfinity;
+            float maximumRightHandDifference = 0f;
+            float maximumRightHandLateralDeviation = 0f;
+            float maximumRightHandVerticalDeviation = 0f;
+            float maximumRightHandForwardShift = 0f;
+            float[] captureLoops =
+            {
+                0.02f,
+                0.42f,
+                0.50f,
+                0.56f,
+                0.60f,
+                0.64f,
+                0.66f,
+                0.68f,
+                0.70f,
+                0.72f,
+                0.74f,
+                0.76f,
+                0.78f,
+                0.80f,
+                0.84f,
+                0.88f,
+                0.94f,
+                2.02f
+            };
+            int nextCapture = 0;
+            bool initialized = false;
+            float initialNormalized = 0f;
+            float observedLoops = 0f;
+            double deadline = EditorApplication.timeSinceStartup +
+                Math.Max(8d, adjustedClip.length * 3d + 4d);
+            EditorApplication.CallbackFunction update = null;
+            update = () =>
+            {
+                try
+                {
+                    if (!EditorApplication.isPlaying)
+                    {
+                        throw new InvalidOperationException(
+                            "Play Mode ended before Baton_Swing_Right arm-clearance review completed two loops.");
+                    }
+
+                    AnimatorStateInfo state =
+                        animator.GetCurrentAnimatorStateInfo(0);
+                    if (state.shortNameHash !=
+                        Animator.StringToHash(BatonSwingRightStateName))
+                    {
+                        if (EditorApplication.timeSinceStartup > deadline)
+                        {
+                            throw new InvalidOperationException(
+                                "Baton_Swing_Right did not enter its arm-clearance runtime state.");
+                        }
+
+                        return;
+                    }
+
+                    if (!initialized)
+                    {
+                        initialNormalized = state.normalizedTime;
+                        initialized = true;
+                    }
+
+                    observedLoops = state.normalizedTime - initialNormalized;
+                    if (nextCapture < captureLoops.Length &&
+                        observedLoops >= captureLoops[nextCapture])
+                    {
+                        float phase = Mathf.Repeat(state.normalizedTime, 1f);
+                        sourceClip.SampleAnimation(
+                            sourceObject,
+                            phase * sourceClip.length);
+                        CaptureBatonSwingRightClearanceComparisonPanels(
+                            sourceRoot,
+                            sourceFrontPanels,
+                            sourceSidePanels,
+                            sourceObliquePanels,
+                            sourceChestFrontPanels,
+                            sourceChestObliquePanels);
+                        sourceObject.SetActive(false);
+                        try
+                        {
+                            CaptureBatonSwingRightClearanceComparisonPanels(
+                                target,
+                                targetFrontPanels,
+                                targetSidePanels,
+                                targetObliquePanels,
+                                targetChestFrontPanels,
+                                targetChestObliquePanels);
+                        }
+                        finally
+                        {
+                            sourceObject.SetActive(true);
+                        }
+
+                        Transform leftArm = FindRequired(target, LeftArmPath);
+                        Transform leftForeArm = FindRequired(
+                            target,
+                            LeftForeArmPath);
+                        Transform leftHand = FindRequired(target, LeftHandPath);
+                        Transform rightArm = FindRequired(target, RightArmPath);
+                        Transform rightForeArm = FindRequired(
+                            target,
+                            RightForeArmPath);
+                        Transform rightHand = FindRequired(target, RightHandPath);
+                        maximumRightHandDifference = Mathf.Max(
+                            maximumRightHandDifference,
+                            Vector3.Distance(
+                                sourceRoot.InverseTransformPoint(
+                                    sourceRightHand.position),
+                                target.InverseTransformPoint(
+                                    rightHand.position)));
+                        Vector3 sourceHandFromRoot =
+                            sourceRightHand.position - sourceRoot.position;
+                        Vector3 targetHandFromRoot =
+                            rightHand.position - target.position;
+                        maximumRightHandLateralDeviation = Mathf.Max(
+                            maximumRightHandLateralDeviation,
+                            Mathf.Abs(
+                                Vector3.Dot(
+                                    targetHandFromRoot,
+                                    target.right) -
+                                Vector3.Dot(
+                                    sourceHandFromRoot,
+                                    sourceRoot.right)));
+                        maximumRightHandVerticalDeviation = Mathf.Max(
+                            maximumRightHandVerticalDeviation,
+                            Mathf.Abs(
+                                Vector3.Dot(
+                                    targetHandFromRoot,
+                                    target.up) -
+                                Vector3.Dot(
+                                    sourceHandFromRoot,
+                                    sourceRoot.up)));
+                        maximumRightHandForwardShift = Mathf.Max(
+                            maximumRightHandForwardShift,
+                            Vector3.Dot(
+                                targetHandFromRoot,
+                                target.forward) -
+                            Vector3.Dot(
+                                sourceHandFromRoot,
+                                sourceRoot.forward));
+                        ShotgunTorsoClearanceProfile torsoProfile =
+                            MeasureShotgunTorsoClearanceProfile(target);
+                        minimumLeftGap = Mathf.Min(
+                            minimumLeftGap,
+                            MeasureArmFrontSilhouetteGap(
+                                target,
+                                leftArm,
+                                leftForeArm,
+                                leftHand,
+                                -1f));
+                        minimumRightGap = Mathf.Min(
+                            minimumRightGap,
+                            MeasureArmFrontSilhouetteGap(
+                                target,
+                                rightArm,
+                                rightForeArm,
+                                rightHand,
+                                1f));
+                        minimumRightTorso = Mathf.Min(
+                            minimumRightTorso,
+                            MeasureRightArmTorsoClearance(
+                                target,
+                                rightArm,
+                                rightForeArm,
+                                rightHand));
+                        float meshFrontClearance =
+                            MeasureRightArmMeshTorsoFrontClearance(
+                                target,
+                                torsoProfile,
+                                out int meshFrontSamples);
+                        if (meshFrontSamples > 0 &&
+                            phase >=
+                                BatonSwingRightTorsoMeshCorrectionFullPhase &&
+                            phase <=
+                                BatonSwingRightTorsoMeshCorrectionReleasePhase)
+                        {
+                            minimumRightMeshFront = Mathf.Min(
+                                minimumRightMeshFront,
+                                meshFrontClearance);
+                            rightMeshFrontSamples += meshFrontSamples;
+                        }
+                        minimumBatonTorso = Mathf.Min(
+                            minimumBatonTorso,
+                            MeasureElectricBatonTorsoClearance(
+                                target,
+                                baton.Instance,
+                                torsoProfile));
+                        nextCapture++;
+                    }
+
+                    if (nextCapture < captureLoops.Length)
+                    {
+                        if (EditorApplication.timeSinceStartup > deadline)
+                        {
+                            throw new InvalidOperationException(
+                                "Baton_Swing_Right arm-clearance two-loop capture timed out.");
+                        }
+
+                        return;
+                    }
+
+                    EditorApplication.update -= update;
+                    UnityEngine.Object.Destroy(sourceObject);
+                    ComposeRows(
+                        new[]
+                        {
+                            sourceFrontPanels,
+                            targetFrontPanels,
+                            sourceSidePanels,
+                            targetSidePanels,
+                            sourceObliquePanels,
+                            targetObliquePanels,
+                            sourceChestFrontPanels,
+                            targetChestFrontPanels,
+                            sourceChestObliquePanels,
+                            targetChestObliquePanels
+                        },
+                        BatonSwingRightArmClearanceReviewPath);
+                    AnimatorStateInfo finalState =
+                        animator.GetCurrentAnimatorStateInfo(0);
+                    BatonSwingRightArmClearanceReviewMetrics metrics =
+                        new BatonSwingRightArmClearanceReviewMetrics
+                        {
+                            target = BatonSwingRightTargetName,
+                            actualPlayModeFramesCaptured =
+                                targetFrontPanels.Count,
+                            actualLoopsObserved = observedLoops,
+                            clipDurationSeconds = adjustedClip.length,
+                            stateIsBatonSwingRight =
+                                finalState.shortNameHash ==
+                                Animator.StringToHash(BatonSwingRightStateName),
+                            stateLoops = AnimationUtility
+                                .GetAnimationClipSettings(adjustedClip)
+                                .loopTime,
+                            batonVisible = baton.Instance
+                                .GetComponentsInChildren<Renderer>(true)
+                                .Any(renderer => renderer.enabled),
+                            batonParentIsRightHand =
+                                baton.Instance.parent == hand,
+                            targetRootUnchanged = RootMatches(
+                                target,
+                                rootBefore),
+                            minimumCapturedLeftArmSilhouetteGapMeters =
+                                minimumLeftGap,
+                            minimumCapturedRightArmSilhouetteGapMeters =
+                                minimumRightGap,
+                            minimumCapturedRightArmTorsoClearanceMeters =
+                                minimumRightTorso,
+                            minimumCapturedRightArmMeshFrontClearanceMeters =
+                                minimumRightMeshFront,
+                            capturedRightArmMeshFrontSamples =
+                                rightMeshFrontSamples,
+                            minimumCapturedBatonTorsoClearanceMeters =
+                                minimumBatonTorso,
+                            maximumCapturedRightHandPositionDifferenceMeters =
+                                maximumRightHandDifference,
+                            maximumCapturedRightHandLateralDeviationMeters =
+                                maximumRightHandLateralDeviation,
+                            maximumCapturedRightHandVerticalDeviationMeters =
+                                maximumRightHandVerticalDeviation,
+                            maximumCapturedRightHandForwardShiftMeters =
+                                maximumRightHandForwardShift,
+                            reviewContactSheetExists = File.Exists(
+                                Path.GetFullPath(
+                                    BatonSwingRightArmClearanceReviewPath)),
+                            validationPriority =
+                                "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                        };
+                    metrics.passedNumericChecks =
+                        BatonSwingRightUpperTorsoFollowReviewSupportChecks(
+                            metrics,
+                            captureLoops.Length);
+                    WriteJson(
+                        BatonSwingRightArmClearanceReviewMetricsPath,
+                        metrics);
+                    if (!metrics.passedNumericChecks)
+                    {
+                        throw new InvalidOperationException(
+                            "Baton_Swing_Right arm-clearance runtime support checks failed. " +
+                            JsonUtility.ToJson(metrics));
+                    }
+
+                    SessionState.SetInt(
+                        BatonSwingRightArmClearanceReviewStageKey,
+                        2);
+                    Debug.Log(
+                        "[BatonSwingRightArmClearance] Captured direct source/adjusted arm review. Frames=" +
+                        metrics.actualPlayModeFramesCaptured +
+                        ", Loops=" + Num(metrics.actualLoopsObserved) +
+                        ", LeftGap=" +
+                        Num(metrics.minimumCapturedLeftArmSilhouetteGapMeters) +
+                        "m, RightHandDifference=" +
+                        Num(metrics.maximumCapturedRightHandPositionDifferenceMeters) +
+                        "m.");
+                }
+                catch (Exception exception)
+                {
+                    EditorApplication.update -= update;
+                    if (sourceObject != null)
+                    {
+                        UnityEngine.Object.Destroy(sourceObject);
+                    }
+
+                    SessionState.SetString(
+                        BatonSwingRightArmClearanceReviewErrorKey,
+                        exception.ToString());
+                    SessionState.SetInt(
+                        BatonSwingRightArmClearanceReviewStageKey,
+                        -1);
+                    Debug.LogException(exception);
+                }
+            };
+            EditorApplication.update += update;
+        }
+
+        private static bool
+            BatonSwingRightUpperTorsoFollowReviewSupportChecks(
+                BatonSwingRightArmClearanceReviewMetrics metrics,
+                int requiredFrames)
+        {
+            return metrics.actualPlayModeFramesCaptured == requiredFrames &&
+                   metrics.actualLoopsObserved >= 2f &&
+                   metrics.stateIsBatonSwingRight &&
+                   metrics.stateLoops &&
+                   metrics.batonVisible &&
+                   metrics.batonParentIsRightHand &&
+                   metrics.targetRootUnchanged &&
+                   metrics.minimumCapturedLeftArmSilhouetteGapMeters >=
+                       0f &&
+                   metrics.minimumCapturedRightArmTorsoClearanceMeters >=
+                       BatonSwingRightTorsoClearanceMeters - 0.001f &&
+                   metrics.capturedRightArmMeshFrontSamples > 0 &&
+                   metrics.maximumCapturedRightHandPositionDifferenceMeters <=
+                       0.29f &&
+                   metrics.maximumCapturedRightHandLateralDeviationMeters <=
+                       0.27f &&
+                   metrics.maximumCapturedRightHandVerticalDeviationMeters <=
+                       0.03f &&
+                   metrics.maximumCapturedRightHandForwardShiftMeters <=
+                       0.162f &&
+                   metrics.reviewContactSheetExists;
+        }
+
+        private static void CaptureBatonSwingRightArmClearancePanels(
+            Transform subject,
+            List<byte[]> frontPanels,
+            List<byte[]> sidePanels,
+            List<byte[]> armsFrontPanels,
+            List<byte[]> armsSidePanels)
+        {
+            using (CaptureEnvironment environment =
+                   new CaptureEnvironment(subject))
+            {
+                environment.ConfigureView(subject, 1.05f, 1.35f);
+                frontPanels.Add(environment.CaptureFront());
+                sidePanels.Add(environment.CaptureSide());
+                Vector3 armsCenter =
+                    (FindRequired(subject, LeftArmPath).position +
+                     FindRequired(subject, LeftHandPath).position +
+                     FindRequired(subject, RightArmPath).position +
+                     FindRequired(subject, RightHandPath).position) / 4f;
+                environment.ConfigureView(subject, armsCenter, 0.78f);
+                armsFrontPanels.Add(environment.CaptureFront());
+                armsSidePanels.Add(environment.CaptureSide());
             }
         }
 
@@ -73123,6 +81232,103 @@ namespace Bellerophon.Editor
                    outwardDirection.normalized * horizontal.magnitude;
         }
 
+        private static float MeasureRightArmMeshTorsoFrontClearance(
+            Transform root,
+            ShotgunTorsoClearanceProfile torsoProfile,
+            out int comparedVertexCount)
+        {
+            Transform upper = FindRequired(root, RightArmPath);
+            Transform lower = FindRequired(root, RightForeArmPath);
+            float upperLength = Vector3.Distance(
+                upper.position,
+                lower.position);
+            // The shoulder seam is an anatomical connection, not a torso
+            // penetration. Evaluate the distal upper arm and forearm that can
+            // visibly cross through the chest during the strike.
+            float proximalExclusionRadius = upperLength * 0.45f;
+            float minimum = float.PositiveInfinity;
+            comparedVertexCount = 0;
+            foreach (SkinnedMeshRenderer renderer in root
+                         .GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                Mesh source = renderer.sharedMesh;
+                if (source == null ||
+                    source.boneWeights.Length != source.vertexCount)
+                {
+                    continue;
+                }
+
+                Mesh baked = new Mesh();
+                try
+                {
+                    renderer.BakeMesh(baked, true);
+                    Vector3[] vertices = baked.vertices;
+                    BoneWeight[] weights = source.boneWeights;
+                    for (int index = 0; index < vertices.Length; index++)
+                    {
+                        float rightArmWeight = BoneWeightForSuffixes(
+                            weights[index],
+                            renderer.bones,
+                            "RightForeArm",
+                            "RightHand");
+                        if (rightArmWeight < 0.35f)
+                        {
+                            continue;
+                        }
+
+                        float torsoWeight = BoneWeightForSuffixes(
+                            weights[index],
+                            renderer.bones,
+                            "Hips",
+                            "Spine02",
+                            "Spine01",
+                            "Spine",
+                            "RightShoulder",
+                            "Neck");
+                        if (torsoWeight > 0.35f)
+                        {
+                            continue;
+                        }
+
+                        Vector3 world = renderer.transform.TransformPoint(
+                            vertices[index]);
+                        if (Vector3.Distance(world, upper.position) <
+                            proximalExclusionRadius)
+                        {
+                            continue;
+                        }
+
+                        Vector3 fromRoot = world - root.position;
+                        float lateral = Vector3.Dot(fromRoot, root.right);
+                        float vertical = Vector3.Dot(fromRoot, root.up);
+                        if (!torsoProfile.TryGetFront(
+                                lateral,
+                                vertical,
+                                out float torsoFront))
+                        {
+                            continue;
+                        }
+
+                        float forward = Vector3.Dot(
+                            fromRoot,
+                            root.forward);
+                        minimum = Mathf.Min(
+                            minimum,
+                            forward - torsoFront);
+                        comparedVertexCount++;
+                    }
+                }
+                finally
+                {
+                    UnityEngine.Object.DestroyImmediate(baked);
+                }
+            }
+
+            return comparedVertexCount > 0
+                ? minimum
+                : float.PositiveInfinity;
+        }
+
         private static float MeasureRightArmTorsoClearance(
             Transform root,
             Transform upper,
@@ -83238,6 +91444,106 @@ namespace Bellerophon.Editor
             }
         }
 
+        private static void ComposeRowsBesideRightHalfReference(
+            IReadOnlyList<List<byte[]>> rows,
+            string referencePath,
+            string outputPath)
+        {
+            if (rows.Count == 0 || rows.Any(row => row.Count != rows[0].Count))
+            {
+                throw new InvalidOperationException(
+                    "Dagger comparison rows have inconsistent frame counts.");
+            }
+
+            int columns = rows[0].Count;
+            int appliedWidth = CaptureWidth * columns;
+            int appliedHeight = CaptureHeight * rows.Count;
+            Texture2D reference = new Texture2D(
+                2,
+                2,
+                TextureFormat.RGB24,
+                false);
+            Texture2D composite = null;
+            List<Texture2D> panels = new List<Texture2D>();
+            try
+            {
+                string absoluteReference = Path.GetFullPath(referencePath);
+                if (!reference.LoadImage(File.ReadAllBytes(absoluteReference)))
+                {
+                    throw new InvalidOperationException(
+                        "Previous Dagger comparison could not be decoded.");
+                }
+
+                if (reference.width != appliedWidth * 2 ||
+                    reference.height != appliedHeight)
+                {
+                    throw new InvalidOperationException(
+                        "Previous Dagger comparison does not contain the expected right-half current state.");
+                }
+
+                composite = new Texture2D(
+                    appliedWidth * 2,
+                    appliedHeight,
+                    TextureFormat.RGB24,
+                    false);
+                composite.SetPixels(
+                    0,
+                    0,
+                    appliedWidth,
+                    appliedHeight,
+                    reference.GetPixels(
+                        appliedWidth,
+                        0,
+                        appliedWidth,
+                        appliedHeight));
+                for (int row = 0; row < rows.Count; row++)
+                {
+                    for (int column = 0; column < columns; column++)
+                    {
+                        Texture2D panel = new Texture2D(
+                            CaptureWidth,
+                            CaptureHeight,
+                            TextureFormat.RGB24,
+                            false);
+                        if (!panel.LoadImage(rows[row][column]))
+                        {
+                            throw new InvalidOperationException(
+                                "Applied Dagger review frame could not be decoded.");
+                        }
+
+                        panels.Add(panel);
+                        composite.SetPixels(
+                            appliedWidth + column * CaptureWidth,
+                            (rows.Count - row - 1) * CaptureHeight,
+                            CaptureWidth,
+                            CaptureHeight,
+                            panel.GetPixels());
+                    }
+                }
+
+                composite.Apply(false, false);
+                string absoluteOutput = Path.GetFullPath(outputPath);
+                Directory.CreateDirectory(
+                    Path.GetDirectoryName(absoluteOutput) ??
+                    throw new InvalidOperationException(
+                        "Dagger comparison output directory is unavailable."));
+                File.WriteAllBytes(absoluteOutput, composite.EncodeToPNG());
+            }
+            finally
+            {
+                foreach (Texture2D panel in panels)
+                {
+                    UnityEngine.Object.DestroyImmediate(panel);
+                }
+
+                UnityEngine.Object.DestroyImmediate(reference);
+                if (composite != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(composite);
+                }
+            }
+        }
+
         private static void ComposePairedFrameGrid(
             IReadOnlyList<byte[]> frontFrames,
             IReadOnlyList<byte[]> sideFrames,
@@ -83328,6 +91634,755 @@ namespace Bellerophon.Editor
             {
                 UnityEngine.Object.DestroyImmediate(panel);
             }
+        }
+
+        [Serializable]
+        private sealed class DaggerTargetApplyMetrics
+        {
+            public string target;
+            public bool itemParentedToRightHand;
+            public float handleCenterToRightPalmMeters;
+            public float bladeDirectionErrorDegrees;
+            public float itemScaleRatioFromAuthored;
+            public float palmRequestedDirectionDot;
+            public float rightHandBonePositionErrorMeters;
+            public float rightPalmCenterShiftMeters;
+            public float rightShoulderRotationDeltaDegrees;
+            public float rightUpperArmRotationDeltaDegrees;
+            public float rightForeArmRotationDeltaDegrees;
+            public float rightWristRotationDeltaDegrees;
+            public Vector3 itemLocalPosition;
+            public Quaternion itemLocalRotation;
+            public Vector3 itemLocalScale;
+            public bool targetRootUnchanged;
+        }
+
+        [Serializable]
+        private sealed class DaggerPlacementApplyMetrics
+        {
+            public string sourcePath;
+            public string importedPath;
+            public string sourceHash;
+            public string importedHash;
+            public string targetSet;
+            public Vector3 detectedBladeLocalAxis;
+            public Vector3 detectedHandleCenterLocal;
+            public DaggerTargetApplyMetrics[] targets;
+            public bool sourceAndImportedFbxByteExact;
+            public bool allItemsParentedToRightHand;
+            public bool allTargetRootsUnchanged;
+            public string validationPriority;
+        }
+
+        private sealed class DaggerGeometry
+        {
+            internal Bounds LocalBounds;
+            internal Vector3 BladeAxis;
+            internal Vector3 HandleCenter;
+        }
+
+        private sealed class DaggerArmAdjustment
+        {
+            internal float PalmRequestedDirectionDot;
+            internal float HandBonePositionErrorMeters;
+            internal float PalmCenterShiftMeters;
+            internal float ShoulderRotationDeltaDegrees;
+            internal float UpperArmRotationDeltaDegrees;
+            internal float ForeArmRotationDeltaDegrees;
+            internal float WristRotationDeltaDegrees;
+        }
+
+        [Serializable]
+        private sealed class DaggerIdlePositionSnapshot
+        {
+            public string target;
+            public string itemPath;
+            public Vector3 localPosition;
+            public Quaternion localRotation;
+            public Vector3 localScale;
+        }
+
+        [Serializable]
+        private sealed class DaggerPositionSyncTargetMetrics
+        {
+            public string target;
+            public Vector3 previousLocalPosition;
+            public Vector3 appliedLocalPosition;
+            public float distanceToDaggerIdlePositionMeters;
+            public bool rotationUnchanged;
+            public bool scaleUnchanged;
+        }
+
+        [Serializable]
+        private sealed class DaggerPositionSyncMetrics
+        {
+            public Vector3 capturedDaggerIdleLocalPosition;
+            public DaggerPositionSyncTargetMetrics[] targets;
+            public bool daggerIdlePositionPreserved;
+            public bool allFivePositionsIdentical;
+            public bool allRotationsUnchanged;
+            public bool allScalesUnchanged;
+            public string validationPriority;
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Current Dagger Idle Position")]
+        internal static void CaptureCurrentDaggerIdlePosition()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "The current Dagger_Idle position must be captured in Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform target = RequireTarget(layout, DaggerIdleTargetName);
+            Transform rightHand = FindRequired(target, RightHandPath);
+            Transform dagger = rightHand.Find(DaggerInstanceName) ??
+                throw new InvalidOperationException(
+                    "Dagger_Idle has no Dagger_RightHand under its right hand.");
+            DaggerIdlePositionSnapshot snapshot =
+                new DaggerIdlePositionSnapshot
+                {
+                    target = DaggerIdleTargetName,
+                    itemPath = RightHandPath + "/" + DaggerInstanceName,
+                    localPosition = dagger.localPosition,
+                    localRotation = dagger.localRotation,
+                    localScale = dagger.localScale
+                };
+            WriteJson(DaggerCurrentPositionPath, snapshot);
+            Debug.Log(
+                "[DaggerIdlePositionSync] Captured the user's current Dagger_Idle local position without changing or saving the scene. LocalPosition=" +
+                dagger.localPosition.ToString("F9") + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Captured Dagger Idle Position To All")]
+        internal static void ApplyCapturedDaggerIdlePositionToAll()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "The captured Dagger_Idle position must be applied in Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            Transform layout = RequireLayout(scene);
+            Transform daggerIdle = RequireTarget(layout, DaggerIdleTargetName);
+            Transform daggerIdleItem = FindRequired(
+                    daggerIdle,
+                    RightHandPath)
+                .Find(DaggerInstanceName) ??
+                throw new InvalidOperationException(
+                    "Dagger_Idle has no Dagger_RightHand under its right hand.");
+            if (Vector3.Distance(
+                    daggerIdleItem.localPosition,
+                    DaggerUserLocalPosition) > 0.0000005f)
+            {
+                throw new InvalidOperationException(
+                    "Dagger_Idle changed after its user-edited position was captured. No position was applied.");
+            }
+
+            List<DaggerPositionSyncTargetMetrics> targetMetrics =
+                new List<DaggerPositionSyncTargetMetrics>();
+            foreach (string targetName in DaggerTargetNames)
+            {
+                Transform target = RequireTarget(layout, targetName);
+                Transform item = FindRequired(target, RightHandPath)
+                    .Find(DaggerInstanceName) ??
+                    throw new InvalidOperationException(
+                        targetName +
+                        " has no Dagger_RightHand under its right hand.");
+                Vector3 previousLocalPosition = item.localPosition;
+                Quaternion previousLocalRotation = item.localRotation;
+                Vector3 previousLocalScale = item.localScale;
+                item.localPosition = DaggerUserLocalPosition;
+                EditorUtility.SetDirty(item);
+                targetMetrics.Add(new DaggerPositionSyncTargetMetrics
+                {
+                    target = targetName,
+                    previousLocalPosition = previousLocalPosition,
+                    appliedLocalPosition = item.localPosition,
+                    distanceToDaggerIdlePositionMeters = Vector3.Distance(
+                        item.localPosition,
+                        DaggerUserLocalPosition),
+                    rotationUnchanged = Quaternion.Angle(
+                        previousLocalRotation,
+                        item.localRotation) <= 0.000001f,
+                    scaleUnchanged = Vector3.Distance(
+                        previousLocalScale,
+                        item.localScale) <= 0.000001f
+                });
+            }
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            DaggerPositionSyncMetrics metrics =
+                new DaggerPositionSyncMetrics
+                {
+                    capturedDaggerIdleLocalPosition =
+                        DaggerUserLocalPosition,
+                    targets = targetMetrics.ToArray(),
+                    daggerIdlePositionPreserved = Vector3.Distance(
+                        daggerIdleItem.localPosition,
+                        DaggerUserLocalPosition) <= 0.0000005f,
+                    allFivePositionsIdentical = targetMetrics.All(
+                        item =>
+                            item.distanceToDaggerIdlePositionMeters <=
+                            0.0000005f),
+                    allRotationsUnchanged = targetMetrics.All(
+                        item => item.rotationUnchanged),
+                    allScalesUnchanged = targetMetrics.All(
+                        item => item.scaleUnchanged),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            WriteJson(DaggerPositionSyncMetricsPath, metrics);
+            Debug.Log(
+                "[DaggerIdlePositionSync] Preserved the captured Dagger_Idle position and copied only that local Position to " +
+                string.Join(", ", DaggerTargetNames) +
+                ". LocalPosition=" +
+                DaggerUserLocalPosition.ToString("F9") + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Dagger Right Hand Placement")]
+        internal static void ApplyDaggerRightHandPlacement()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Dagger right-hand placement must be applied in Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp must be clean before Dagger placement apply.");
+            }
+
+            GameObject daggerAsset = AssetDatabase.LoadAssetAtPath<GameObject>(
+                DaggerAssetPath) ??
+                throw new FileNotFoundException(
+                    "The exact imported dagger FBX is missing.",
+                    Path.GetFullPath(DaggerAssetPath));
+            string sourceHash = HashFile(DaggerSourceModelPath);
+            string importedHash = HashFile(DaggerAssetPath);
+            if (!string.Equals(
+                    sourceHash,
+                    importedHash,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "The imported dagger FBX is not byte-identical to the supplied source.");
+            }
+
+            DaggerGeometry geometry = AnalyzeDaggerGeometry(daggerAsset);
+            Transform layout = RequireLayout(scene);
+            Transform[] targets = DaggerTargetNames
+                .Select(name => RequireTarget(layout, name))
+                .ToArray();
+            RootPose[] rootsBefore = targets
+                .Select(target => new RootPose(target))
+                .ToArray();
+            List<DaggerTargetApplyMetrics> targetMetrics =
+                new List<DaggerTargetApplyMetrics>();
+
+            for (int index = 0; index < targets.Length; index++)
+            {
+                Transform target = targets[index];
+                DaggerArmAdjustment armAdjustment =
+                    AdjustDaggerRightArmAndWristForPalmForwardLeft(target);
+                Transform rightHand = FindRequired(target, RightHandPath);
+                Transform existing = rightHand.Find(DaggerInstanceName);
+                if (existing != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(existing.gameObject);
+                }
+
+                GameObject instance = PrefabUtility.InstantiatePrefab(
+                    daggerAsset,
+                    rightHand) as GameObject;
+                if (instance == null)
+                {
+                    throw new InvalidOperationException(
+                        target.name +
+                        " could not instantiate the exact dagger FBX under RightHand.");
+                }
+
+                instance.name = DaggerInstanceName;
+                Transform dagger = instance.transform;
+                Vector3 authoredScale = dagger.localScale;
+                Quaternion authoredRotation = dagger.localRotation;
+                Vector3 desiredWorldBladeDirection =
+                    (target.forward + target.up).normalized;
+                Vector3 desiredHandBladeDirection = rightHand
+                    .InverseTransformDirection(desiredWorldBladeDirection)
+                    .normalized;
+                Vector3 authoredBladeDirection =
+                    authoredRotation * geometry.BladeAxis;
+                dagger.localRotation = Quaternion.FromToRotation(
+                    authoredBladeDirection,
+                    desiredHandBladeDirection) *
+                    authoredRotation;
+                dagger.localScale = authoredScale * DaggerScaleMultiplier;
+
+                RightHandPalmSample palm = CalculateRightPalmSample(target);
+                dagger.localPosition = DaggerUserLocalPosition;
+                EditorUtility.SetDirty(instance);
+
+                float handleDistance = Vector3.Distance(
+                    dagger.TransformPoint(geometry.HandleCenter),
+                    palm.Center);
+                float bladeDirectionError = Vector3.Angle(
+                    dagger.TransformDirection(geometry.BladeAxis),
+                    desiredWorldBladeDirection);
+                targetMetrics.Add(new DaggerTargetApplyMetrics
+                {
+                    target = target.name,
+                    itemParentedToRightHand = dagger.parent == rightHand,
+                    handleCenterToRightPalmMeters = handleDistance,
+                    bladeDirectionErrorDegrees = bladeDirectionError,
+                    itemScaleRatioFromAuthored = DaggerScaleMultiplier,
+                    palmRequestedDirectionDot =
+                        armAdjustment.PalmRequestedDirectionDot,
+                    rightHandBonePositionErrorMeters =
+                        armAdjustment.HandBonePositionErrorMeters,
+                    rightPalmCenterShiftMeters =
+                        armAdjustment.PalmCenterShiftMeters,
+                    rightShoulderRotationDeltaDegrees =
+                        armAdjustment.ShoulderRotationDeltaDegrees,
+                    rightUpperArmRotationDeltaDegrees =
+                        armAdjustment.UpperArmRotationDeltaDegrees,
+                    rightForeArmRotationDeltaDegrees =
+                        armAdjustment.ForeArmRotationDeltaDegrees,
+                    rightWristRotationDeltaDegrees =
+                        armAdjustment.WristRotationDeltaDegrees,
+                    itemLocalPosition = dagger.localPosition,
+                    itemLocalRotation = dagger.localRotation,
+                    itemLocalScale = dagger.localScale,
+                    targetRootUnchanged = RootMatches(
+                        target,
+                        rootsBefore[index])
+                });
+            }
+
+            Transform daggerIdle = targets[0];
+            ConfigurePlayerStartFacingTarget(
+                scene,
+                daggerIdle,
+                DaggerIdleTargetName,
+                out _,
+                out _,
+                out _);
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+
+            DaggerPlacementApplyMetrics metrics =
+                new DaggerPlacementApplyMetrics
+                {
+                    sourcePath = DaggerSourceModelPath,
+                    importedPath = DaggerAssetPath,
+                    sourceHash = sourceHash,
+                    importedHash = importedHash,
+                    targetSet = string.Join(", ", DaggerTargetNames),
+                    detectedBladeLocalAxis = geometry.BladeAxis,
+                    detectedHandleCenterLocal = geometry.HandleCenter,
+                    targets = targetMetrics.ToArray(),
+                    sourceAndImportedFbxByteExact = string.Equals(
+                        sourceHash,
+                        importedHash,
+                        StringComparison.OrdinalIgnoreCase),
+                    allItemsParentedToRightHand = targetMetrics.All(
+                        item => item.itemParentedToRightHand),
+                    allTargetRootsUnchanged = targetMetrics.All(
+                        item => item.targetRootUnchanged),
+                    validationPriority =
+                        "1순위 직접 모델링·애니메이션 확인, 2순위 수치·스크립트 보조 검증"
+                };
+            WriteJson(DaggerApplyMetricsPath, metrics);
+            Debug.Log(
+                "[DaggerRightHandPlacement] Kept the exact dagger FBX at 70% size and distributed the absolute palm direction 30 degrees toward performer-left across the right shoulder, upper arm, forearm, and wrist for " +
+                string.Join(", ", DaggerTargetNames) +
+                ". SourceHash=" + sourceHash + ".");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Dagger Right Hand Placement Review")]
+        internal static void CaptureDaggerRightHandPlacementReview()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                throw new InvalidOperationException(
+                    "Dagger placement review must run in Edit Mode.");
+            }
+
+            Scene scene = RequireScene();
+            if (scene.isDirty)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp changed after Dagger placement apply.");
+            }
+
+            Transform layout = RequireLayout(scene);
+            List<List<byte[]>> rows = new List<List<byte[]>>
+            {
+                new List<byte[]>(),
+                new List<byte[]>(),
+                new List<byte[]>(),
+                new List<byte[]>()
+            };
+            foreach (string targetName in DaggerTargetNames)
+            {
+                Transform target = RequireTarget(layout, targetName);
+                Transform rightHand = FindRequired(target, RightHandPath);
+                Transform dagger = rightHand.Find(DaggerInstanceName) ??
+                    throw new InvalidOperationException(
+                        targetName + " has no dagger under RightHand.");
+                using (CaptureEnvironment environment =
+                       new CaptureEnvironment(target))
+                {
+                    environment.ConfigureView(target, 1.05f, 1.35f);
+                    rows[0].Add(environment.CaptureFront());
+                    Vector3 handCenter = CalculateRightPalmSample(target).Center;
+                    environment.ConfigureView(target, handCenter, 0.42f);
+                    rows[1].Add(environment.CaptureFront());
+                    rows[2].Add(environment.CaptureSide());
+                }
+            }
+
+            Camera mainCamera = scene.GetRootGameObjects()
+                .SelectMany(root => root.GetComponentsInChildren<Camera>(true))
+                .Single(camera => camera.CompareTag("MainCamera"));
+            byte[] startView = CaptureCameraFrame(mainCamera);
+            for (int index = 0; index < DaggerTargetNames.Length; index++)
+            {
+                rows[3].Add(startView);
+            }
+
+            ComposeRowsBesideRightHalfReference(
+                rows,
+                DaggerPreviousFinalPath,
+                DaggerFinalPath);
+            Debug.Log(
+                "[DaggerRightHandPlacement] Captured one direct review sheet. " +
+                "Columns=" + string.Join(", ", DaggerTargetNames) +
+                ", Rows=full-front/right-hand-front/right-hand-side/start-view, " +
+                "Left=pre-sync state, Right=Dagger_Idle-position-synchronized state. " +
+                "Path=" + Path.GetFullPath(DaggerFinalPath) + ".");
+        }
+
+        private static DaggerArmAdjustment
+            AdjustDaggerRightArmAndWristForPalmForwardLeft(
+                Transform characterRoot)
+        {
+            Transform shoulder = FindRequired(
+                characterRoot,
+                RightShoulderPath);
+            Transform upperArm = FindRequired(
+                characterRoot,
+                RightArmPath);
+            Transform foreArm = FindRequired(
+                characterRoot,
+                RightForeArmPath);
+            Transform hand = FindRequired(
+                characterRoot,
+                RightHandPath);
+            Quaternion sourceShoulderLocalRotation = shoulder.localRotation;
+            Quaternion sourceUpperArmLocalRotation = upperArm.localRotation;
+            Quaternion sourceForeArmLocalRotation = foreArm.localRotation;
+            Quaternion sourceHandLocalRotation = hand.localRotation;
+            Vector3 sourceElbowPosition = foreArm.position;
+            Vector3 sourceHandPosition = hand.position;
+            Vector3 sourcePalmCenter =
+                CalculateRightPalmSample(characterRoot).Center;
+            float palmLeftRadians =
+                DaggerPalmLeftDegrees * Mathf.Deg2Rad;
+            Vector3 desiredPalmDirection =
+                (characterRoot.forward * Mathf.Cos(palmLeftRadians) -
+                 characterRoot.right * Mathf.Sin(palmLeftRadians)).normalized;
+            Vector3 sourcePalmDirection = -hand.right.normalized;
+            Quaternion desiredHandWorldRotation =
+                Quaternion.FromToRotation(
+                    sourcePalmDirection,
+                    desiredPalmDirection) *
+                hand.rotation;
+
+            Vector3 sourceForeArmAxis =
+                sourceHandPosition - sourceElbowPosition;
+            if (sourceForeArmAxis.sqrMagnitude <= 0.0000001f)
+            {
+                throw new InvalidOperationException(
+                    characterRoot.name +
+                    " has no usable right-forearm axis for palm-left adjustment.");
+            }
+
+            sourceForeArmAxis.Normalize();
+            Vector3 projectedSourcePalm = Vector3.ProjectOnPlane(
+                sourcePalmDirection,
+                sourceForeArmAxis);
+            Vector3 projectedDesiredPalm = Vector3.ProjectOnPlane(
+                desiredPalmDirection,
+                sourceForeArmAxis);
+            if (projectedSourcePalm.sqrMagnitude <= 0.0000001f ||
+                projectedDesiredPalm.sqrMagnitude <= 0.0000001f)
+            {
+                throw new InvalidOperationException(
+                    characterRoot.name +
+                    " cannot project the requested palm-left direction onto the right-arm roll plane.");
+            }
+
+            float requestedRollDegrees = Vector3.SignedAngle(
+                projectedSourcePalm,
+                projectedDesiredPalm,
+                sourceForeArmAxis);
+            Vector3 shoulderAxis = upperArm.position - shoulder.position;
+            Vector3 upperArmAxis = foreArm.position - upperArm.position;
+            if (shoulderAxis.sqrMagnitude <= 0.0000001f ||
+                upperArmAxis.sqrMagnitude <= 0.0000001f)
+            {
+                throw new InvalidOperationException(
+                    characterRoot.name +
+                    " has no usable shoulder or upper-arm axis for distributed palm rotation.");
+            }
+
+            shoulder.rotation = Quaternion.AngleAxis(
+                    requestedRollDegrees * DaggerShoulderRollShare,
+                    shoulderAxis.normalized) *
+                shoulder.rotation;
+            upperArmAxis = foreArm.position - upperArm.position;
+            upperArm.rotation = Quaternion.AngleAxis(
+                    requestedRollDegrees * DaggerUpperArmRollShare,
+                    upperArmAxis.normalized) *
+                upperArm.rotation;
+            SolveTwoBoneIk(
+                upperArm,
+                foreArm,
+                hand,
+                sourceHandPosition,
+                sourceElbowPosition);
+            Vector3 adjustedForeArmAxis = hand.position - foreArm.position;
+            if (adjustedForeArmAxis.sqrMagnitude <= 0.0000001f)
+            {
+                throw new InvalidOperationException(
+                    characterRoot.name +
+                    " lost its right-forearm axis during palm-left adjustment.");
+            }
+
+            foreArm.rotation = Quaternion.AngleAxis(
+                    requestedRollDegrees * DaggerForeArmRollShare,
+                    adjustedForeArmAxis.normalized) *
+                foreArm.rotation;
+            hand.rotation = desiredHandWorldRotation;
+
+            float palmRequestedDirectionDot = Vector3.Dot(
+                -hand.right.normalized,
+                desiredPalmDirection);
+            float handPositionError = Vector3.Distance(
+                hand.position,
+                sourceHandPosition);
+            if (palmRequestedDirectionDot < 0.999f ||
+                handPositionError > 0.0005f)
+            {
+                throw new InvalidOperationException(
+                    characterRoot.name +
+                    " could not preserve the right-hand position while facing the palm 30 degrees toward performer-left.");
+            }
+
+            Vector3 adjustedPalmCenter =
+                CalculateRightPalmSample(characterRoot).Center;
+            EditorUtility.SetDirty(shoulder);
+            EditorUtility.SetDirty(upperArm);
+            EditorUtility.SetDirty(foreArm);
+            EditorUtility.SetDirty(hand);
+            return new DaggerArmAdjustment
+            {
+                PalmRequestedDirectionDot = palmRequestedDirectionDot,
+                HandBonePositionErrorMeters = handPositionError,
+                PalmCenterShiftMeters = Vector3.Distance(
+                    adjustedPalmCenter,
+                    sourcePalmCenter),
+                ShoulderRotationDeltaDegrees = Quaternion.Angle(
+                    sourceShoulderLocalRotation,
+                    shoulder.localRotation),
+                UpperArmRotationDeltaDegrees = Quaternion.Angle(
+                    sourceUpperArmLocalRotation,
+                    upperArm.localRotation),
+                ForeArmRotationDeltaDegrees = Quaternion.Angle(
+                    sourceForeArmLocalRotation,
+                    foreArm.localRotation),
+                WristRotationDeltaDegrees = Quaternion.Angle(
+                    sourceHandLocalRotation,
+                    hand.localRotation)
+            };
+        }
+
+        private static DaggerGeometry AnalyzeDaggerGeometry(GameObject asset)
+        {
+            GameObject preview = UnityEngine.Object.Instantiate(asset);
+            preview.hideFlags = HideFlags.HideAndDontSave;
+            try
+            {
+                Transform root = preview.transform;
+                Bounds bounds = CalculateBoundsRelativeTo(root);
+                int longestAxisIndex = bounds.size.x >= bounds.size.y &&
+                                       bounds.size.x >= bounds.size.z
+                    ? 0
+                    : bounds.size.y >= bounds.size.z ? 1 : 2;
+                Vector3 unsignedAxis = longestAxisIndex == 0
+                    ? Vector3.right
+                    : longestAxisIndex == 1 ? Vector3.up : Vector3.forward;
+                List<Vector3> vertices = CollectDaggerLocalVertices(root);
+                if (vertices.Count == 0)
+                {
+                    throw new InvalidOperationException(
+                        "The imported dagger contains no readable mesh vertices.");
+                }
+
+                float minimum = vertices.Min(vertex =>
+                    Vector3.Dot(vertex, unsignedAxis));
+                float maximum = vertices.Max(vertex =>
+                    Vector3.Dot(vertex, unsignedAxis));
+                float length = maximum - minimum;
+                if (length <= 0.000001f)
+                {
+                    throw new InvalidOperationException(
+                        "The imported dagger has no measurable blade length.");
+                }
+
+                float band = length * 0.08f;
+                float minimumEndRadius = MeasureDaggerTerminalRadius(
+                    vertices,
+                    unsignedAxis,
+                    minimum,
+                    minimum + band);
+                float maximumEndRadius = MeasureDaggerTerminalRadius(
+                    vertices,
+                    unsignedAxis,
+                    maximum - band,
+                    maximum);
+                Vector3 bladeAxis = maximumEndRadius <= minimumEndRadius
+                    ? unsignedAxis
+                    : -unsignedAxis;
+                Vector3 handleEnd = bounds.center -
+                    bladeAxis * (AxisComponent(bounds.size, longestAxisIndex) * 0.5f);
+                Vector3 handleCenter = FindDaggerHandleCenter(
+                    vertices,
+                    handleEnd,
+                    bladeAxis,
+                    length);
+                return new DaggerGeometry
+                {
+                    LocalBounds = bounds,
+                    BladeAxis = bladeAxis,
+                    HandleCenter = handleCenter
+                };
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(preview);
+            }
+        }
+
+        private static List<Vector3> CollectDaggerLocalVertices(Transform root)
+        {
+            List<Vector3> vertices = new List<Vector3>();
+            foreach (MeshFilter filter in root
+                         .GetComponentsInChildren<MeshFilter>(true))
+            {
+                Mesh mesh = filter.sharedMesh;
+                if (mesh == null)
+                {
+                    continue;
+                }
+
+                vertices.AddRange(mesh.vertices.Select(vertex =>
+                    root.InverseTransformPoint(
+                        filter.transform.TransformPoint(vertex))));
+            }
+
+            foreach (SkinnedMeshRenderer renderer in root
+                         .GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                Mesh mesh = new Mesh();
+                try
+                {
+                    renderer.BakeMesh(mesh, true);
+                    vertices.AddRange(mesh.vertices.Select(vertex =>
+                        root.InverseTransformPoint(
+                            renderer.transform.TransformPoint(vertex))));
+                }
+                finally
+                {
+                    UnityEngine.Object.DestroyImmediate(mesh);
+                }
+            }
+
+            return vertices;
+        }
+
+        private static float MeasureDaggerTerminalRadius(
+            IReadOnlyList<Vector3> vertices,
+            Vector3 axis,
+            float minimum,
+            float maximum)
+        {
+            List<float> radii = vertices
+                .Where(vertex =>
+                {
+                    float projection = Vector3.Dot(vertex, axis);
+                    return projection >= minimum && projection <= maximum;
+                })
+                .Select(vertex =>
+                {
+                    float projection = Vector3.Dot(vertex, axis);
+                    return (vertex - axis * projection).magnitude;
+                })
+                .ToList();
+            return radii.Count > 0 ? radii.Average() : float.PositiveInfinity;
+        }
+
+        private static Vector3 FindDaggerHandleCenter(
+            IReadOnlyList<Vector3> vertices,
+            Vector3 handleEnd,
+            Vector3 bladeAxis,
+            float totalLength)
+        {
+            const int binCount = 24;
+            float handleSearchLength = totalLength * 0.45f;
+            float[] radialMaximum = new float[binCount];
+            int[] counts = new int[binCount];
+            foreach (Vector3 vertex in vertices)
+            {
+                float distance = Vector3.Dot(
+                    vertex - handleEnd,
+                    bladeAxis);
+                if (distance < 0f || distance > handleSearchLength)
+                {
+                    continue;
+                }
+
+                int bin = Mathf.Clamp(
+                    Mathf.FloorToInt(
+                        distance / handleSearchLength * binCount),
+                    0,
+                    binCount - 1);
+                Vector3 axisPoint = handleEnd + bladeAxis * distance;
+                radialMaximum[bin] = Mathf.Max(
+                    radialMaximum[bin],
+                    (vertex - axisPoint).magnitude);
+                counts[bin]++;
+            }
+
+            int guardBin = Enumerable.Range(0, binCount)
+                .Where(index => counts[index] > 0)
+                .OrderByDescending(index => radialMaximum[index])
+                .First();
+            float guardDistance = handleSearchLength *
+                (guardBin + 0.5f) / binCount;
+            float gripDistance = Mathf.Clamp(
+                guardDistance * 0.55f,
+                totalLength * 0.08f,
+                guardDistance * 0.8f);
+            return handleEnd + bladeAxis * gripDistance;
         }
 
         private static AnimationClip LoadClip(string path)

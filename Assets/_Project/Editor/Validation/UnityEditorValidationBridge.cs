@@ -680,6 +680,34 @@ namespace Bellerophon.Editor.Validation
                             .CaptureBatonIdleStartViewReview,
                         "Player Baton_Idle start-view review advanced.");
                     break;
+                case "ApplyDaggerRightHandPlacement":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyDaggerRightHandPlacement,
+                        "Dagger_Idle start view and exact dagger right-hand placement applied to all five dagger targets.");
+                    break;
+                case "CaptureDaggerRightHandPlacementReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureDaggerRightHandPlacementReview,
+                        "Dagger right-hand placement direct visual review captured for all five dagger targets.");
+                    break;
+                case "CaptureCurrentDaggerIdlePosition":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureCurrentDaggerIdlePosition,
+                        "Current user-edited Dagger_Idle local position captured without changing the scene.");
+                    break;
+                case "ApplyCapturedDaggerIdlePositionToAll":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyCapturedDaggerIdlePositionToAll,
+                        "Captured Dagger_Idle local Position applied unchanged to all five dagger targets.");
+                    break;
                 case "ApplyBatonIdleOneHandCarry":
                     RunSynchronous(
                         request,
@@ -749,6 +777,90 @@ namespace Bellerophon.Editor.Validation
                         PlayerHandsObjectAnimationTools
                             .CaptureBatonSwingRightTorsoClearanceReview,
                         "Baton_Swing_Right torso-clearance actual two-loop Play Mode review advanced.");
+                    break;
+                case "ApplyBatonSwingRightNaturalLeftArm":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyBatonSwingRightNaturalLeftArm,
+                        "Baton_Swing_Right left arm now follows the normalized Baton_Idle relaxed arm motion without changing the right-arm swing.");
+                    break;
+                case "CaptureBatonSwingRightNaturalLeftArmReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonSwingRightNaturalLeftArmReview,
+                        "Baton_Swing_Right natural-left-arm actual two-loop Play Mode review advanced.");
+                    break;
+                case "ApplyBatonSwingRightArmClearance":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyBatonSwingRightArmClearance,
+                        "Baton_Swing_Right palm-width left-arm spacing and right-arm front-silhouette clearance applied.");
+                    break;
+                case "CaptureBatonSwingRightArmClearanceReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonSwingRightArmClearanceReview,
+                        "Baton_Swing_Right arm-clearance actual two-loop Play Mode review advanced.");
+                    break;
+                case "ApplyBatonSwingRightUpperTorsoFollow":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyBatonSwingRightUpperTorsoFollow,
+                        "Baton_Swing_Right upper torso now follows the right-to-left strike while preserving the authored right-arm world rotations.");
+                    break;
+                case "CaptureBatonSwingRightUpperTorsoFollowReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonSwingRightUpperTorsoFollowReview,
+                        "Baton_Swing_Right upper-torso-follow actual two-loop Play Mode review advanced.");
+                    break;
+                case "ApplyBatonDischargeModeTransition":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyBatonDischargeModeTransition,
+                        "Baton_Discharge_Mode received the 0.5-second Baton_Idle transition and exact embedded Mixamo sequence.");
+                    break;
+                case "CaptureBatonDischargeModeTransitionReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonDischargeModeTransitionReview,
+                        "Baton_Discharge_Mode transition actual two-loop Play Mode review advanced.");
+                    break;
+                case "ApplyBatonDischargeExitReverse":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyBatonDischargeExitReverse,
+                        "Baton_Discharge_Exit received the exact Baton_Discharge_Mode sequence in reverse order and playback.");
+                    break;
+                case "CaptureBatonDischargeExitReverseReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonDischargeExitReverseReview,
+                        "Baton_Discharge_Exit exact reverse actual two-loop Play Mode review advanced.");
+                    break;
+                case "ApplyBatonDischargeFirePoseAndVfx":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .ApplyBatonDischargeFirePoseAndVfx,
+                        "Baton_Discharge_Fire received the exact Baton_Discharge_Mode final pose and approved 5m discharge VFX loop.");
+                    break;
+                case "CaptureBatonDischargeFirePoseAndVfxReview":
+                    RunSynchronous(
+                        request,
+                        PlayerHandsObjectAnimationTools
+                            .CaptureBatonDischargeFirePoseAndVfxReview,
+                        "Baton_Discharge_Fire fixed-pose and approved-discharge actual Play Mode review advanced.");
                     break;
                 case "ApplyBatonDischargeStatesElectricBatonAndChargeVfx":
                     RunSynchronous(
