@@ -680,6 +680,104 @@ namespace Bellerophon.Editor.Validation
                             .CaptureBatonIdleStartViewReview,
                         "Player Baton_Idle start-view review advanced.");
                     break;
+                case "InspectDaggerEmbeddedMaterials":
+                    RunSynchronous(request, DaggerEmbeddedMaterialTools.Inspect,
+                        "Dagger embedded material inspection completed.");
+                    break;
+                case "FocusDaggerIdleSceneView":
+                    RunSynchronous(request, DaggerSceneViewFocusTools.Focus, "Dagger_Idle Scene view focused.");
+                    break;
+                case "InspectDaggerAnimationSources":
+                    RunSynchronous(request, DaggerAnimationTools.Inspect, "Dagger animation sources inspected.");
+                    break;
+                case "InspectDaggerAngleAndThrowContinuity":
+                    RunSynchronous(request, DaggerAnimationTools.InspectAlignment, "Dagger angle and throw continuity inspected.");
+                    break;
+                case "CaptureDaggerAngleAndThrowContinuity":
+                    RunSynchronous(request, () => DaggerAnimationTools.CaptureAlignment(request.OutputPath), "Dagger angle and throw capture started.");
+                    break;
+                case "ApplyDaggerStateAnimations":
+                    RunSynchronous(request, DaggerAnimationTools.Apply, "Dagger animation application advanced.");
+                    break;
+                case "CaptureDaggerAnimationReview":
+                    RunSynchronous(request, () => DaggerAnimationTools.Capture(request.OutputPath), "Dagger animation review captured.");
+                    break;
+                case "StartDaggerAnimationReviewLoop":
+                    RunSynchronous(request, DaggerAnimationTools.StartReview, "Dagger actual animation playback started.");
+                    break;
+                case "StopDaggerAnimationReviewLoop":
+                    RunSynchronous(request, DaggerAnimationTools.StopReview, "Dagger actual animation playback stopped.");
+                    break;
+                case "ApplyShieldStateAnimations":
+                    RunSynchronous(request, ShieldAnimationTools.Apply, "Shield state animations applied.");
+                    break;
+                case "InspectShieldEmbeddedMaterials":
+                    RunSynchronous(request, ShieldEmbeddedMaterialTools.Inspect,
+                        "Shield embedded textures, materials, and geometry inspected.");
+                    break;
+                case "InspectShieldSurfaceSources":
+                    RunSynchronous(request, ShieldSurfaceAppearanceTools.Inspect,
+                        "Shield surface geometry and texture sources inspected.");
+                    break;
+                case "BuildShieldSurfaceArtSample":
+                    RunSynchronous(request, ShieldSurfaceAppearanceTools.BuildArtSample,
+                        "Shield text-removal and semitransparent-window art sample built.");
+                    break;
+                case "ApplyApprovedShieldSurfaceAppearance":
+                    RunSynchronous(request, ShieldSurfaceAppearanceTools.ApplyApprovedAppearance,
+                        "Approved text-free Shield surface and 65% opaque window applied.");
+                    break;
+                case "InspectApprovedShieldSurfaceAppearance":
+                    RunSynchronous(request, ShieldSurfaceAppearanceTools.InspectApprovedAppearance,
+                        "Approved Shield surface appearance inspected.");
+                    break;
+                case "CaptureShieldSurfaceAppearanceReview":
+                    RunSynchronous(request, () => ShieldAnimationTools.Capture(request.OutputPath),
+                        "Approved Shield surface appearance review capture started.");
+                    break;
+                case "ApplyShieldEmbeddedMaterials":
+                    RunSynchronous(request, ShieldEmbeddedMaterialTools.Apply,
+                        "Original embedded Shield textures and material applied.");
+                    break;
+                case "StartShieldAnimationReviewLoop":
+                    RunSynchronous(request, ShieldAnimationTools.StartReview, "Shield actual animation playback started.");
+                    break;
+                case "ApplyShieldClearanceCorrection":
+                    RunSynchronous(request, ShieldAnimationTools.Apply,
+                        "Shield forward clearance, two-centimeter handle overlap, and right-arm correction applied.");
+                    break;
+                case "InspectShieldClearance":
+                    RunSynchronous(request, ShieldClearanceTools.Inspect,
+                        "Shield handle and forearm clearance inspected during live playback.");
+                    break;
+                case "InspectShieldAnimationSources":
+                    RunSynchronous(request, ShieldAnimationTools.Inspect, "Shield animation sources inspected.");
+                    break;
+                case "CaptureShieldAnimationReview":
+                    RunSynchronous(request, () => ShieldAnimationTools.Capture(request.OutputPath), "Shield animation review capture started.");
+                    break;
+                case "CaptureShieldClearanceReview":
+                    RunSynchronous(request, () => ShieldAnimationTools.Capture(request.OutputPath),
+                        "Shield forward clearance and right-arm review capture started.");
+                    break;
+                case "CaptureShieldHandleMaterialReview":
+                    RunSynchronous(request, () => ShieldAnimationTools.Capture(request.OutputPath),
+                        "Shield handle placement and embedded material review capture started.");
+                    break;
+                case "StopShieldAnimationReviewLoop":
+                    RunSynchronous(request, ShieldAnimationTools.StopReview, "Shield actual animation playback stopped.");
+                    break;
+                case "CaptureDaggerSceneViewFocus":
+                    RunSynchronous(request, DaggerSceneViewFocusTools.Capture, "Dagger_Idle Scene-view camera capture completed.");
+                    break;
+                case "ApplyDaggerEmbeddedMaterials":
+                    RunSynchronous(request, DaggerEmbeddedMaterialTools.Apply,
+                        "Original embedded dagger textures and materials applied to all five dagger targets.");
+                    break;
+                case "CaptureDaggerEmbeddedMaterialsReview":
+                    RunSynchronous(request, DaggerEmbeddedMaterialTools.CaptureReview,
+                        "Dagger embedded material direct review captured.");
+                    break;
                 case "ApplyDaggerRightHandPlacement":
                     RunSynchronous(
                         request,

@@ -91674,6 +91674,21 @@ namespace Bellerophon.Editor
             public string validationPriority;
         }
 
+        internal static void GetDaggerAnimationGeometry(GameObject asset, out Vector3 bladeAxis, out Vector3 handleCenter, out Bounds bounds)
+        {
+            DaggerGeometry geometry = AnalyzeDaggerGeometry(asset);
+            bladeAxis = geometry.BladeAxis;
+            handleCenter = geometry.HandleCenter;
+            bounds = geometry.LocalBounds;
+        }
+
+        internal static float GetDaggerReferenceReleaseTime(Transform source, AnimationClip clip)
+        {
+            return FindStickThrowReleaseFrame(source, clip) / clip.frameRate;
+        }
+
+        internal static float DaggerReferenceThrowElevation => StickThrowJavelinElevationDegrees;
+
         private sealed class DaggerGeometry
         {
             internal Bounds LocalBounds;
