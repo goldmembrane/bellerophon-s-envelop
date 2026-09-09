@@ -753,6 +753,39 @@ namespace Bellerophon.Editor.Validation
                 case "InspectShieldAnimationSources":
                     RunSynchronous(request, ShieldAnimationTools.Inspect, "Shield animation sources inspected.");
                     break;
+                case "InspectShieldGroundImpactBreakCorrections":
+                    RunSynchronous(request, ShieldAnimationTools.InspectGroundImpactBreakCorrections,
+                        "Shield ground, impact and break correction observation started.");
+                    break;
+                case "GenerateShieldBreakArtSample":
+                    RunSynchronous(request, ShieldBreakArtSampleTools.Generate,
+                        "Shield break art sample frame pass completed.");
+                    break;
+                case "ApplyApprovedShieldBreakRuntime":
+                    RunSynchronous(request, ShieldBreakArtSampleTools.ApplyApprovedRuntime,
+                        "Approved Shield break runtime applied.");
+                    break;
+                case "InspectApprovedShieldBreakRuntime":
+                    RunSynchronous(request, ShieldBreakArtSampleTools.InspectApprovedRuntime,
+                        "Approved Shield break runtime observation started.");
+                    break;
+                case "CaptureApprovedShieldBreakRuntime":
+                    RunSynchronous(request, () => ShieldBreakArtSampleTools.CaptureApprovedRuntime(request.OutputPath),
+                        "Approved Shield break runtime final capture started.");
+                    break;
+                case "ApplyShieldDrawVerticalForearmFollow":
+                    RunSynchronous(request, ShieldAnimationTools.ApplyShieldDrawVerticalForearmFollow,
+                        "Shield_Draw forearm-driven vertical-limited rotation applied.");
+                    break;
+                case "InspectShieldDrawVerticalForearmFollow":
+                    RunSynchronous(request, ShieldAnimationTools.InspectShieldDrawVerticalForearmFollow,
+                        "Shield_Draw forearm-driven vertical-limited rotation inspection started.");
+                    break;
+                case "CaptureShieldDrawVerticalForearmFollowReview":
+                    RunSynchronous(request,
+                        () => ShieldAnimationTools.CaptureShieldDrawVerticalForearmFollowReview(request.OutputPath),
+                        "Shield_Draw forearm-driven vertical-limited rotation final capture started.");
+                    break;
                 case "CaptureShieldAnimationReview":
                     RunSynchronous(request, () => ShieldAnimationTools.Capture(request.OutputPath), "Shield animation review capture started.");
                     break;
@@ -769,6 +802,26 @@ namespace Bellerophon.Editor.Validation
                     break;
                 case "CaptureDaggerSceneViewFocus":
                     RunSynchronous(request, DaggerSceneViewFocusTools.Capture, "Dagger_Idle Scene-view camera capture completed.");
+                    break;
+                case "InspectSceneViewPerformance":
+                    RunSynchronous(request, SceneViewPerformanceDiagnostics.Inspect,
+                        "Read-only SceneView performance inspection completed.");
+                    break;
+                case "CaptureSceneViewPerformance":
+                    RunSynchronous(request, SceneViewPerformanceDiagnostics.Capture,
+                        "SceneView performance recording started; results will be written asynchronously.");
+                    break;
+                case "BeginSceneViewCpuTrace":
+                    RunSynchronous(request, SceneViewCpuTrace.Begin, "SceneView CPU timeline recording started.");
+                    break;
+                case "BeginSceneViewDirtyFlushProbe":
+                    RunSynchronous(request, SceneViewCpuTrace.BeginUpdateProbe, "Bounded Scene dirty flush comparison started.");
+                    break;
+                case "EndSceneViewCpuTrace":
+                    RunSynchronous(request, SceneViewCpuTrace.End, "SceneView CPU timeline recording stopped and exported.");
+                    break;
+                case "FinishSceneViewPerformanceInvestigation":
+                    RunSynchronous(request, SceneViewCpuTrace.FinishInvestigation, "SceneView diagnostics finished; final state recorded.");
                     break;
                 case "ApplyDaggerEmbeddedMaterials":
                     RunSynchronous(request, DaggerEmbeddedMaterialTools.Apply,
@@ -2277,6 +2330,233 @@ namespace Bellerophon.Editor.Validation
                         request,
                         PlayerAnimationLayoutTool.ApplyPlayerStartView,
                         "Player start view applied.");
+                    break;
+                case "ApplyArmorProtectiveIdleStartView":
+                    RunSynchronous(
+                        request,
+                        ArmorProtectiveIdleStartViewTools.ApplyArmorProtectiveIdleStartView,
+                        "Armor_Protective_Idle start view applied.");
+                    break;
+                case "InspectArmorProtectiveIdleStartView":
+                    RunSynchronous(
+                        request,
+                        ArmorProtectiveIdleStartViewTools.InspectArmorProtectiveIdleStartView,
+                        "Armor_Protective_Idle start view inspected.");
+                    break;
+                case "CaptureArmorProtectiveIdleStartView":
+                    RunSynchronous(
+                        request,
+                        ArmorProtectiveIdleStartViewTools.CaptureArmorProtectiveIdleStartView,
+                        "Armor_Protective_Idle first-frame capture requested.");
+                    break;
+                case "StopArmorProtectiveIdleStartViewReview":
+                    RunSynchronous(
+                        request,
+                        ArmorProtectiveIdleStartViewTools.StopArmorProtectiveIdleStartViewReview,
+                        "Armor_Protective_Idle start-view Play Mode stopped.");
+                    break;
+                case "InspectArmorIdleAnimationAndMedicineStart":
+                    RunSynchronous(
+                        request,
+                        ArmorIdleAnimationMedicineStartTools.InspectArmorIdleAnimationAndMedicineStart,
+                        "Armor idle animation and Medicine_Drink start view inspected.");
+                    break;
+                case "ApplyArmorIdleAnimationAndMedicineStart":
+                    RunSynchronous(
+                        request,
+                        ArmorIdleAnimationMedicineStartTools.ApplyArmorIdleAnimationAndMedicineStart,
+                        "Armor idle animation and Medicine_Drink start view applied.");
+                    break;
+                case "EnterArmorIdleAnimationAndMedicineStartReview":
+                    RunSynchronous(
+                        request,
+                        ArmorIdleAnimationMedicineStartTools.EnterArmorIdleAnimationAndMedicineStartReview,
+                        "Armor idle animation and Medicine_Drink review requested.");
+                    break;
+                case "CaptureArmorIdleAnimationAndMedicineStartReview":
+                    RunSynchronous(
+                        request,
+                        ArmorIdleAnimationMedicineStartTools.CaptureArmorIdleAnimationAndMedicineStartReview,
+                        "Armor idle animation and Medicine_Drink final capture requested.");
+                    break;
+                case "StopArmorIdleAnimationAndMedicineStartReview":
+                    RunSynchronous(
+                        request,
+                        ArmorIdleAnimationMedicineStartTools.StopArmorIdleAnimationAndMedicineStartReview,
+                        "Armor idle animation and Medicine_Drink review stopped.");
+                    break;
+                case "PreparePlayerHandRigReview":
+                    RunSynchronous(request, PlayerHandRigTools.PreparePlayerHandRigReview, "Hand review assets prepared.");
+                    break;
+                case "PrepareConsumableHandWeightReview":
+                    RunSynchronous(request, ConsumableRiggedSharedMotionTools.PrepareConsumableHandWeightReview, "Weight-only candidate previews prepared; scene/source preserved.");
+                    break;
+                case "PrepareConsumableHandTopologyReview":
+                    RunSynchronous(request, ConsumableRiggedSharedMotionTools.PrepareConsumableHandTopologyReview, "Local topology candidate previews prepared; scene/source preserved.");
+                    break;
+                case "EnterConsumableHandWeightReview":
+                    RunSynchronous(request, ConsumableRiggedSharedMotionTools.EnterConsumableHandWeightReview, "Candidate natural playback requested.");
+                    break;
+                case "RefitConsumableHandWeightReview":
+                    RunSynchronous(request, ConsumableRiggedSharedMotionTools.RefitConsumableHandWeightReview, "Candidate grips authored; direct natural review required.");
+                    break;
+                case "ApplySharedPlayerHandRig":
+                    RunSynchronous(request, PlayerHandRigTools.ApplySharedPlayerHandRig, "Shared transporter hand rig applied; runtime visual review still required.");
+                    break;
+                case "ApplySharedRightFingerRepair":
+                    RunSynchronous(request, PlayerHandRigTools.ApplySharedRightFingerRepair, "Shared right-finger repair applied; actual natural review still required.");
+                    break;
+                case "CaptureSharedPlayerHandRigDiagnostic":
+                    RunSynchronous(request, PlayerHandRigTools.CaptureSharedPlayerHandRigDiagnostic, "Existing transporter natural observation scheduled; wait for completed report.");
+                    break;
+                case "RepairSharedPlayerCorrectiveSkinData":
+                    RunSynchronous(request, PlayerHandRigTools.RepairSharedPlayerCorrectiveSkinData, "Corrective skin native index metadata reconstructed; runtime visual review required.");
+                    break;
+                case "UsePlayerHandRigGpuSkinning":
+                    RunSynchronous(request, PlayerHandRigTools.UsePlayerHandRigGpuSkinning, "Temporary non-batched GPU hand skinning selected.");
+                    break;
+                case "UsePlayerHandRigCpuSkinning":
+                    RunSynchronous(request, PlayerHandRigTools.UsePlayerHandRigCpuSkinning, "Temporary CPU hand skinning selected.");
+                    break;
+                case "RestorePlayerHandRigSkinning":
+                    RunSynchronous(request, PlayerHandRigTools.RestorePlayerHandRigSkinning, "Hand skinning environment restored.");
+                    break;
+                case "InspectPlayerHandRigReviewState":
+                    RunSynchronous(request, PlayerHandRigTools.InspectPlayerHandRigReviewState, "Hand review state inspected without writes to targets.");
+                    break;
+                case "InspectPlayerHandRigMotionSkin":
+                    RunSynchronous(request, PlayerHandRigTools.InspectPlayerHandRigMotionSkin, "Natural hand skin inspection scheduled.");
+                    break;
+                case "InspectPlayerHandRigGrip":
+                    RunSynchronous(request, PlayerHandRigTools.InspectPlayerHandRigGrip, "Natural grip surface observation scheduled.");
+                    break;
+                case "EnterPlayerHandRigReview":
+                    RunSynchronous(request, PlayerHandRigTools.EnterPlayerHandRigReview, "Hand review natural playback requested.");
+                    break;
+                case "CapturePlayerHandRigDiagnostic":
+                    RunSynchronous(request, PlayerHandRigTools.CapturePlayerHandRigDiagnostic, "Hand diagnostic scheduled; wait for completed report.");
+                    break;
+                case "CapturePlayerHandRigCandidateRest":
+                    RunSynchronous(request, PlayerHandRigTools.CapturePlayerHandRigCandidateRest, "Static candidate imported-pose comparison captured.");
+                    break;
+                case "StopPlayerHandRigReview":
+                    RunSynchronous(request, PlayerHandRigTools.StopPlayerHandRigReview, "Hand review stopped.");
+                    break;
+                case "InspectPlayerHandRigCandidate":
+                    RunSynchronous(request, PlayerHandRigTools.InspectPlayerHandRigCandidate,
+                        "Shared transporter hand candidate compared.");
+                    break;
+                case "CapturePlayerHandRigTopology":
+                    RunSynchronous(request, PlayerHandRigTools.CapturePlayerHandRigTopology,
+                        "Read-only transporter hand topology diagnostic saved.");
+                    break;
+                case "InspectPlayerHandRigSources":
+                    RunSynchronous(
+                        request,
+                        PlayerHandRigTools.InspectPlayerHandRigSources,
+                        "Shared transporter hand rig sources inspected.");
+                    break;
+                case "InspectConsumableRiggedMotionSources":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.InspectConsumableRiggedMotionSources,
+                        "Consumable rigged shared-motion sources inspected.");
+                    break;
+                case "ApplyConsumableRiggedSharedMotion":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.ApplyConsumableRiggedSharedMotion,
+                        "Consumable rigged shared motion applied.");
+                    break;
+                case "EnterConsumableRiggedSharedMotionReview":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.EnterConsumableRiggedSharedMotionReview,
+                        "Consumable rigged shared-motion review requested.");
+                    break;
+                case "InspectConsumableRiggedSharedMotion":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.InspectConsumableRiggedSharedMotion,
+                        "Consumable natural-playback inspection scheduled; read its completed report.");
+                    break;
+                case "CaptureConsumableRiggedSharedMotionDiagnostic":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.CaptureConsumableRiggedSharedMotionDiagnostic,
+                        "Consumable natural-playback diagnostic scheduled; read its completed report.");
+                    break;
+                case "CaptureConsumableRiggedSharedMotionFinal":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.CaptureConsumableRiggedSharedMotionFinal,
+                        "Consumable natural-playback final capture scheduled; read its completed report.");
+                    break;
+                case "StopConsumableRiggedSharedMotionReview":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.StopConsumableRiggedSharedMotionReview,
+                        "Consumable rigged shared-motion review stopped.");
+                    break;
+                case "InspectArmorAppearanceSources":
+                    RunSynchronous(
+                        request,
+                        ArmorAppearanceTools.InspectArmorAppearanceSources,
+                        "Armor appearance sources inspected.");
+                    break;
+                case "InspectArmorLeftUpperArmCleanup":
+                    RunSynchronous(
+                        request,
+                        ArmorAppearanceTools.ValidateArmorLeftUpperArmCleanup,
+                        "Armor left upper arm cleanup inspected.");
+                    break;
+                case "ApplyArmorLeftUpperArmCleanup":
+                    RunSynchronous(
+                        request,
+                        ArmorAppearanceTools.ApplyArmorLeftUpperArmCleanup,
+                        "Armor left upper arm markers removed.");
+                    break;
+                case "CaptureArmorLeftUpperArmCleanup":
+                    RunSynchronous(
+                        request,
+                        () => ArmorAppearanceTools.CaptureArmorLeftUpperArmCleanup(request.OutputPath),
+                        "Armor left upper arm cleanup comparison captured.");
+                    break;
+                case "ApplyArmorAppearance":
+                    RunSynchronous(
+                        request,
+                        ArmorAppearanceTools.ApplyArmorAppearance,
+                        "Armor appearance applied.");
+                    break;
+                case "InspectArmorAppearance":
+                    RunSynchronous(
+                        request,
+                        ArmorAppearanceTools.InspectArmorAppearance,
+                        "Armor appearance inspected.");
+                    break;
+                case "CaptureArmorAppearanceFinal":
+                    RunSynchronous(
+                        request,
+                        () => ArmorAppearanceTools.CaptureArmorAppearanceFinal(request.OutputPath),
+                        "Armor appearance direct comparison captured.");
+                    break;
+                case "ApplyArmorFireproofPhysicalColors":
+                    RunSynchronous(
+                        request,
+                        ArmorAppearanceTools.ApplyArmorFireproofPhysicalColors,
+                        "Fireproof and Physical Armor colors applied.");
+                    break;
+                case "InspectArmorFireproofPhysicalColors":
+                    RunSynchronous(
+                        request,
+                        ArmorAppearanceTools.InspectArmorFireproofPhysicalColors,
+                        "Fireproof and Physical Armor colors inspected.");
+                    break;
+                case "CaptureArmorFireproofPhysicalColors":
+                    RunSynchronous(
+                        request,
+                        () => ArmorAppearanceTools.CaptureArmorFireproofPhysicalColors(request.OutputPath),
+                        "Fireproof and Physical Armor comparison captured.");
                     break;
                 case "EnterPlayerStartViewPlayMode":
                     RunSynchronous(

@@ -57,14 +57,15 @@ namespace Bellerophon.ArtSamples
 
         private void Update()
         {
-            if (manualPreview)
+            // Scene navigation also invokes ExecuteAlways.Update. Rewriting the preview
+            // renderers there causes expensive editor FlushDirty work; animate only in Play.
+            // OnEnable and explicit SetPreviewTime/Evaluate still provide editor previews.
+            if (!Application.isPlaying || manualPreview)
             {
                 return;
             }
 
-            runtimeTime += Application.isPlaying
-                ? Time.deltaTime
-                : 1f / 30f;
+            runtimeTime += Time.deltaTime;
             Evaluate(runtimeTime);
         }
 

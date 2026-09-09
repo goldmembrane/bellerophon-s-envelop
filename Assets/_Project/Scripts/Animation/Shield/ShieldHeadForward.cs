@@ -10,9 +10,11 @@ namespace Bellerophon.PlayerAnimation
         [SerializeField] private Transform head;
         [SerializeField] private Vector3 localFaceAxis = Vector3.forward;
         [SerializeField] private Vector3 localUpAxis = Vector3.up;
+        [SerializeField] private bool applyRuntimeAlignment = true;
 
         public float LastForwardAlignment { get; private set; }
         public float LastUpAlignment { get; private set; }
+        public bool ApplyRuntimeAlignment => applyRuntimeAlignment;
 
         public void Configure(Transform transporterRoot, Transform headBone, Vector3 faceAxis, Vector3 upAxis)
         {
@@ -25,7 +27,7 @@ namespace Bellerophon.PlayerAnimation
 
         public void AlignImmediately()
         {
-            if (transporter == null || head == null) return;
+            if (!applyRuntimeAlignment || transporter == null || head == null) return;
             Vector3 currentFace = head.TransformDirection(localFaceAxis).normalized;
             Vector3 currentUp = head.TransformDirection(localUpAxis).normalized;
             Quaternion currentBasis = Quaternion.LookRotation(currentFace, currentUp);
@@ -35,6 +37,11 @@ namespace Bellerophon.PlayerAnimation
                 transporter.forward.normalized);
             LastUpAlignment = Vector3.Dot(head.TransformDirection(localUpAxis).normalized,
                 transporter.up.normalized);
+        }
+
+        public void ConfigureRuntimeAlignment(bool enabled)
+        {
+            applyRuntimeAlignment = enabled;
         }
 
         private void LateUpdate()

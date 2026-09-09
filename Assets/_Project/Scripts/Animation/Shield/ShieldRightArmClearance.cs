@@ -14,11 +14,13 @@ namespace Bellerophon.PlayerAnimation
         [SerializeField] private Transform rightHand;
         [SerializeField] private float maximumForearmCenterRightOffsetMeters = 0.22f;
         [SerializeField] private float forearmCenterDownwardOffsetMeters = 0.05f;
+        [SerializeField] private bool applyRuntimeCorrection = true;
 
         public float MaximumForearmCenterRightOffsetMeters => maximumForearmCenterRightOffsetMeters;
         public float ForearmCenterDownwardOffsetMeters => forearmCenterDownwardOffsetMeters;
         public float LastAppliedDownwardDisplacementMeters { get; private set; }
         public float LastLoweringRotationErrorDegrees { get; private set; }
+        public bool ApplyRuntimeCorrection => applyRuntimeCorrection;
 
         public void Configure(Transform transporterRoot, Transform spineBone, Transform shoulder, Transform upperArm,
             Transform forearm, Transform hand, float maximumRightOffsetMeters, float downwardOffsetMeters)
@@ -33,9 +35,15 @@ namespace Bellerophon.PlayerAnimation
             forearmCenterDownwardOffsetMeters = downwardOffsetMeters;
         }
 
+        public void ConfigureRuntimeCorrection(bool enabled)
+        {
+            applyRuntimeCorrection = enabled;
+        }
+
         private void LateUpdate()
         {
-            if (!Application.isPlaying || transporter == null || spine == null || rightShoulder == null || rightArm == null ||
+            if (!Application.isPlaying || !applyRuntimeCorrection || transporter == null || spine == null ||
+                rightShoulder == null || rightArm == null ||
                 rightForearm == null || rightHand == null) return;
 
             LastAppliedDownwardDisplacementMeters = 0f;
@@ -47,7 +55,8 @@ namespace Bellerophon.PlayerAnimation
 
         public void ConstrainRightOffsetImmediately()
         {
-            if (transporter == null || spine == null || rightArm == null || rightForearm == null || rightHand == null)
+            if (!applyRuntimeCorrection || transporter == null || spine == null || rightArm == null ||
+                rightForearm == null || rightHand == null)
                 return;
             Vector3 right = transporter.right.normalized;
             Vector3 center = Vector3.Lerp(rightForearm.position, rightHand.position, 0.5f);

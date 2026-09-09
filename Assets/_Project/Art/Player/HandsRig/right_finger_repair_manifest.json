@@ -1,0 +1,11 @@
+{
+  "kind": "RightFingerSurfaceReconstruction",
+  "source": "D:\\Bellerophon2\\Bellerophon\\Backups\\ConsumableItemGrips_2026-09-09\\finger_shape_before\\player_hands_candidate.fbx",
+  "protectedHandLocalBelowMeters": 0.065,
+  "skeletonBones": 54,
+  "vertices": 13473,
+  "faces": 27008,
+  "seamVertices": 66,
+  "existingAtlasOnly": true,
+  "directReviewRequired": true
+}
