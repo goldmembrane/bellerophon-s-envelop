@@ -1,0 +1,19 @@
+﻿Flashbang natural Play Mode direct review
+captureKind=Final
+placementRevision=2
+panelOrder=IdleFull,AimFull,ReleaseFull,CancelFull,IdleGrip,AimGrip,ReleaseGrip,CancelGrip
+verificationTargetTransformManipulated=False
+forcedAnimatorTime=False
+allFourAnimationsCompletedNaturalLoop=True
+rightHandParentFollow=True
+flashbangVerticalAtClipStart=True
+safetyLeverAndPinUp=True
+rightHandWrapsCylinder=True
+embeddedTexturesPresent=4
+derivedUnityPackingTexturesPresent=1
+externalMaterialsPresent=2
+elapsedSeconds=4.09651947
+Flashbang_Idle|normalizedTime=1.283814|maximumFollowPositionError=0|maximumFollowRotationErrorDegrees=0
+Flashbang_Throw_Aim|normalizedTime=1.06002963|maximumFollowPositionError=0|maximumFollowRotationErrorDegrees=0
+Flashbang_Throw_Release|normalizedTime=1.75065529|maximumFollowPositionError=0|maximumFollowRotationErrorDegrees=0
+Flashbang_Throw_Cancel|normalizedTime=2.35802531|maximumFollowPositionError=0|maximumFollowRotationErrorDegrees=0

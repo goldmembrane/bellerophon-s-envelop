@@ -1,0 +1,19 @@
+Flashlight_Idle six-motion locomotion application
+preexistingSceneDirty=True
+preexistingUserSceneChangesPreserved=True
+sourceOrder=Player_Idle,Player_Walk_Forward,Player_Walk_Backward,Player_Sidestep,Player_Walk_Diagonal,Player_Run_Forward
+secondsPerMotion=1
+sequenceLoopsAfterRun=True
+blendTreeType=FreeformCartesian2D
+sourceAnimationsCopiedExactly=True
+sourceCurvesGenerated=False
+originalClipsRetimed=False
+currentUpperBodyPoseChangedInEditMode=False
+rightShoulderSourceMotionWeight=1
+rightArmMotionWeight=0.05
+rightForeArmMotionWeight=0.03
+rightHandMotionWeight=0.01
+flashlightTransformChanged=False
+flashlightRendererMeshMaterialChanged=False
+flashlightFollowsAnimatedRightHand=True
+objectsOutsideFlashlightIdleChanged=False

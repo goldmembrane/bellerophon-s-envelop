@@ -1,0 +1,11 @@
+Flashlight_Idle locomotion inspection
+verificationTargetManipulated=False
+motionCount=6
+secondsPerMotion=1
+sequence=Idle,WalkForward,WalkBackward,Sidestep,WalkDiagonal,RunForward
+sequenceLoops=True
+blendTreeType=FreeformCartesian2D
+sourceCopiesExact=True
+authoredRightArmPosePreserved=True
+naturalUpperBodyAndShoulderMotionRetained=True
+flashlightRightHandFollowConfigured=True

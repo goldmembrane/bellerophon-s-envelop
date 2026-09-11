@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc1390b03ab69f34c9e470e90618161c, type: 3}
+  m_Name: SpeakerIdleCarryProfile
+  m_EditorClassIdentifier: Bellerophon.Runtime::Bellerophon.PlayerAnimation.SpeakerIdleCarryProfile
+  speakerPrefab: {fileID: 919132149155446097, guid: 2a913804f52f9c646bd3edd6a628cbcb, type: 3}
+  leftShoulderPath: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder
+  positionOffsetInShoulderSpace: {x: -0.076427944, y: 0.2311733, z: -0.18552072}
+  rotationOffsetFromShoulder: {x: -0.78536814, y: 0.0011929532, z: 0.17981951, w: 0.59233475}
+  holderScale: {x: 0.52, y: 0.52, z: 0.52}
+  modelLocalPosition: {x: 0, y: 0.108, z: -0.223}
+  modelLocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  modelLocalScale: {x: 100, y: 50, z: 70}
+  hasAuthoredModelTransform: 1
+  handlePointInHolderSpace: {x: 0.0039320798, y: 0.41127318, z: -0.2225142}
+  handleAxisInHolderSpace: {x: 1, y: -8.8817825e-15, z: 0}
+  sourceLeftArmPose:
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm
+    localRotation: {x: 0.24352013, y: -0.6144201, z: -0.3512568, w: 0.6631776}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm
+    localRotation: {x: 0.028309168, y: -0.0072157066, z: -0.014589757, w: 0.9994667}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand
+    localRotation: {x: 0.002670833, y: -0.13987611, z: -0.3029442, w: 0.94268364}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftIndexProximal
+    localRotation: {x: 0.13754168, y: 0.98872465, z: 0.05864568, w: -0.008158253}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftIndexProximal/LeftIndexIntermediate
+    localRotation: {x: 0.010490152, y: -0.0033369295, z: 0.03152594, w: 0.99944234}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftIndexProximal/LeftIndexIntermediate/LeftIndexDistal
+    localRotation: {x: -0.06730872, y: 0.013147383, z: -0.14574187, w: 0.98694277}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftLittleProximal
+    localRotation: {x: -0.012796252, y: 0.99959, z: 0.0256135, w: 0.00032786562}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftLittleProximal/LeftLittleIntermediate
+    localRotation: {x: 0.025563369, y: -0.0016259847, z: 0.08897817, w: 0.9957042}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftLittleProximal/LeftLittleIntermediate/LeftLittleDistal
+    localRotation: {x: 0.030906808, y: -0.0043044994, z: -0.014259563, w: 0.9994113}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftMiddleProximal
+    localRotation: {x: -0.030537581, y: 0.9993255, z: 0.020385945, w: 0.0006228595}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftMiddleProximal/LeftMiddleIntermediate
+    localRotation: {x: -0.084055655, y: 0.012947101, z: 0.21153003, w: 0.9736643}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftMiddleProximal/LeftMiddleIntermediate/LeftMiddleDistal
+    localRotation: {x: 0.07535299, y: -0.024293113, z: -0.054687172, w: 0.9953598}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftRingProximal
+    localRotation: {x: -0.021565001, y: 0.99830216, z: 0.05409634, w: 0.0011686278}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftRingProximal/LeftRingIntermediate
+    localRotation: {x: 0.03766036, y: -0.005090239, z: 0.17648457, w: 0.98356956}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftRingProximal/LeftRingIntermediate/LeftRingDistal
+    localRotation: {x: -0.0098273745, y: 0.0026096774, z: -0.052309964, w: 0.99857914}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftThumbProximal
+    localRotation: {x: -0.021455178, y: 0.70678115, z: -0.21123008, w: 0.67481995}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftThumbProximal/LeftThumbIntermediate
+    localRotation: {x: -0.096384935, y: -0.0175022, z: 0.1527247, w: 0.98340166}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftThumbProximal/LeftThumbIntermediate/LeftThumbDistal
+    localRotation: {x: -0.057570584, y: -0.00073575816, z: 0.012758062, w: 0.99825966}
+  leftArmPose:
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm
+    localRotation: {x: -0.50065404, y: -0.6626263, z: 0.1817268, w: 0.5265428}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm
+    localRotation: {x: -0.56698036, y: 0.5534751, z: 0.5804979, w: 0.18767242}
+  - path: Armature/Hips/Spine02/Spine01/Spine/LeftShoulder/LeftArm/LeftForeArm/LeftHand
+    localRotation: {x: 0.033544004, y: -0.1339381, z: 0.15536796, w: 0.97815955}

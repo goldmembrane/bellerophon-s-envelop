@@ -1,0 +1,6 @@
+Flashlight_Idle automatic application and direct review
+applicationCompleted=True
+runtimeSequenceObserved=True
+returnedToEditMode=True
+editModeAuthoredPoseRestored=True
+unityConsoleErrors=0

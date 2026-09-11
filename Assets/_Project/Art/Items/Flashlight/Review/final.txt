@@ -1,0 +1,7 @@
+Flashlight final direct-review composite
+columns=Flashlight_Idle|Flashlight_Charge_Connect|Flashlight_Charge_Disconnect
+topRow=full character three-quarter view
+bottomRow=right arm, fist grip, and flashlight close-up
+lensDirection=transporter forward
+rightHandFollow=True
+sourceModelChanged=False
