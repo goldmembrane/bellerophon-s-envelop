@@ -1,0 +1,19 @@
+﻿Flashbang four-object setup
+preexistingSceneDirty=True
+sourceModelHash=E759412AAF0335CF3E010C32CDDEC60259417AC26EA465BD2026274C2A81FD6E
+embeddedMaterialCount=2
+embeddedTextureCount=4
+derivedUnityPackingTextureCount=1
+modelBoundsSize=0.416992,0.36035198,1
+modelLocalUpAlignedToTransporterUp=True
+safetyLeverAndPinDirection=Up
+rightHandTracking=TransformParenting
+Flashbang_Idle<-Hands_Empty_Idle|sourceClip=Assets/_Project/Art/Player/Animations/Hands_Empty_Idle.anim|copiedClip=Assets/_Project/Art/Player/Animations/Flashbang/Flashbang_Idle.anim|controller=Assets/_Project/Art/Player/Animations/Flashbang/Flashbang_Idle.controller|sourceCurves=AC8F847EB5FF325D741FD781A1459A520A21D65C52890C4A9AADA0CCC7BB45D1|copiedCurves=AC8F847EB5FF325D741FD781A1459A520A21D65C52890C4A9AADA0CCC7BB45D1|loop=True|propLocalPosition=-0.0122864256,0.117883846,-0.006521389|propLocalRotation=-0.193058118,-0.669634342,0.7030605,-0.1415073|propLocalScale=21.7380352,21.7380352,21.7380352
+Flashbang_Throw_Aim<-Hands_Throw_Ready|sourceClip=Assets/_Project/Art/Player/Animations/Hands_Throw_Ready_MixamoHeadHeightBreathing.anim|copiedClip=Assets/_Project/Art/Player/Animations/Flashbang/Flashbang_Throw_Aim.anim|controller=Assets/_Project/Art/Player/Animations/Flashbang/Flashbang_Throw_Aim.controller|sourceCurves=E74D938361BC82BF7E31A1CDC26173CDA72A4F4508D341F7DB34DD10A22BE7D8|copiedCurves=E74D938361BC82BF7E31A1CDC26173CDA72A4F4508D341F7DB34DD10A22BE7D8|loop=True|propLocalPosition=-0.0122642042,0.117918,-0.006564879|propLocalRotation=-0.3179338,-0.583798,0.737135768,-0.121362507|propLocalScale=21.7399235,21.7399235,21.7399235
+Flashbang_Throw_Release<-Hands_Throw_Release|sourceClip=Assets/_Project/Art/Player/Animations/Hands_Throw_Mixamo.fbx|copiedClip=Assets/_Project/Art/Player/Animations/Flashbang/Flashbang_Throw_Release.anim|controller=Assets/_Project/Art/Player/Animations/Flashbang/Flashbang_Throw_Release.controller|sourceCurves=846BF3928E9B77C4C7C099FDCA0CC40FE2DBF23A140B6D5CB6495D006FFEC213|copiedCurves=846BF3928E9B77C4C7C099FDCA0CC40FE2DBF23A140B6D5CB6495D006FFEC213|loop=True|propLocalPosition=-0.0122642042,0.117918,-0.006564879|propLocalRotation=-0.3179338,-0.583798,0.737135768,-0.121362507|propLocalScale=21.7399235,21.7399235,21.7399235
+Flashbang_Throw_Cancel<-Hands_Throw_Cancel|sourceClip=Assets/_Project/Art/Player/Animations/Hands_Throw_Cancel_MixamoReverse.anim|copiedClip=Assets/_Project/Art/Player/Animations/Flashbang/Flashbang_Throw_Cancel.anim|controller=Assets/_Project/Art/Player/Animations/Flashbang/Flashbang_Throw_Cancel.controller|sourceCurves=C0350EF9EB7BA557EE4A271D25548759AFF0505652ADBF1EFBB6B78B7125DC05|copiedCurves=C0350EF9EB7BA557EE4A271D25548759AFF0505652ADBF1EFBB6B78B7125DC05|loop=True|propLocalPosition=-0.0120616453,0.117762223,-0.00652933028|propLocalRotation=0.533035457,-0.427415758,0.2532543,-0.684873164|propLocalScale=21.7373753,21.7373753,21.7373753
+sceneSaved=True
+sourceObjectsChanged=False
+sourceAnimationAssetsChanged=False
+sourceAnimationCurvesGenerated=False
+unrelatedSceneObjectsChanged=False

@@ -1,0 +1,24 @@
+Shield break art sample integrity record
+Generated: 2026-09-08
+Runtime integrated: False
+Image generation used: False
+
+Approved Shield mesh SHA256: B9289C31B9673E8A4D6EC195D847D06165DFC1834076E30F91537EB825929AFE
+Approved body material SHA256: BA4B8B624AAD262EDB23B5462F467961C8DDC1191B520CF84AEFADA1645CDE0F
+Approved window material SHA256: 38D25DD80976EDFB116F0131D755D1328964A717E28A6B976900C2D96127850B
+Break source FBX SHA256: 7CE9FDBC3FE3B042E6E8CB5E0637FB3FFDD8E5D77A1CEDF0E270BA6E41F46B7D
+Approved 65% source image SHA256: 000BDC8F40073BD509420C36F27ACDB798B45969079047D20264368762466663
+Preview MP4 SHA256: 098D348DE37BA7B824B84B70B6729079243118C6CC747D5F569356CB962AE072
+Comparison PNG SHA256: B95E37DF1B3408C1F3F15912ACC71FF63A42B56E5C599D05D230076FA4F47512
+
+Piece count: 17 (approved maximum: 20)
+Fragment shape: random Voronoi polygons
+Fragment shape seed: 20260913
+Projected area variation: 0.517643
+Maximum-to-minimum projected area ratio: 7.190810
+Minimum projected area fraction: 0.020464
+Duration seconds: 2.866667
+Frame rate: 30
+Encoded frame count: 86
+Overall direction: transporter-right-rear
+Body and window fractured: True

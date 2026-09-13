@@ -1,0 +1,20 @@
+Flashbang_Idle six-motion locomotion application
+sceneSaved=True
+target=Flashbang_Idle
+controller=Assets/_Project/Art/Player/Animations/Flashbang/IdleLocomotion/FlashbangIdle_Locomotion.controller
+blendTreeType=FreeformCartesian2D
+sequence=Idle,WalkForward,WalkBackward,Sidestep,WalkDiagonal,RunForward
+secondsPerMotion=1
+sequenceLoopsAfterRun=True
+sourceAnimationsCopiedExactly=True
+sourceCurvesGenerated=False
+originalClipsRetimed=False
+rightShoulderMotionWeight=1
+rightArmMotionWeight=0.05
+rightForeArmMotionWeight=0.03
+rightHandMotionWeight=0.01
+fingerMotionWeight=0
+flashbangCurrentLocalPoseChanged=False
+flashbangFollowsAnimatedRightHand=True
+sourceObjectsChanged=False
+objectsOutsideFlashbangIdleChanged=False

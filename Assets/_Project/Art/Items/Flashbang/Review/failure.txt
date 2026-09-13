@@ -1,0 +1,4 @@
+﻿System.InvalidOperationException: Flashbang_Idle Flashbang scale is not a hand-sized uniform scale: 21.737999,21.737999,21.737999
+  at Bellerophon.Editor.Validation.FlashbangSetupTools.InspectApplied (UnityEngine.SceneManagement.Scene scene) [0x001a3] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\FlashbangSetupTools.cs:610 
+  at Bellerophon.Editor.Validation.FlashbangSetupTools.ApplyAll () [0x004ec] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\FlashbangSetupTools.cs:321 
+  at Bellerophon.Editor.Validation.FlashbangSetupTools.TryAutoRun () [0x00080] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\FlashbangSetupTools.cs:125 

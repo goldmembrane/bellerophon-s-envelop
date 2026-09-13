@@ -1,0 +1,28 @@
+﻿Shield break art sample generated only from the currently approved Shield mesh and materials.
+mesh=Assets/_Project/Art/Items/Shield/Meshes/Shield_TextFree_Window.asset sha256=B9289C31B9673E8A4D6EC195D847D06165DFC1834076E30F91537EB825929AFE
+bodyMaterial=Assets/_Project/Art/Items/Shield/Materials/Shield_TextFree.mat sha256=BA4B8B624AAD262EDB23B5462F467961C8DDC1191B520CF84AEFADA1645CDE0F
+windowMaterial=Assets/_Project/Art/Items/Shield/Materials/Shield_Window_Transparent.mat sha256=38D25DD80976EDFB116F0131D755D1328964A717E28A6B976900C2D96127850B
+breakAnimation=Assets/_Project/Art/Player/Animations/Shield/Shield_Break_Reaction_Mixamo.fbx sha256=7CE9FDBC3FE3B042E6E8CB5E0637FB3FFDD8E5D77A1CEDF0E270BA6E41F46B7D
+durationSeconds=2.866667
+framesPerSecond=30 frameCount=87
+pieceCount=17 approvedMaximumPieceCount=20 motionRandomSeed=20260908 fragmentShapeSeed=20260913
+fragmentShape=random-voronoi projectedAreaVariation=0.517643 minimumAreaFraction=0.020464 maximumToMinimumAreaRatio=7.190810
+overallDirection=transporter-right-rear
+bodyAndWindowBothPartitioned=True runtimeIntegrated=False imageGenerationUsed=False
+piece01 seed=(0.00037,0.00373) projectedArea=0.00000943 vertexCount=971 triangleCount=346 direction=(0.84154,0.48059,-0.24667) rotationAxis=(-0.78623,-0.55877,0.26385) rotationDegrees=154.544
+piece02 seed=(0.00075,-0.00274) projectedArea=0.00002313 vertexCount=1178 triangleCount=414 direction=(0.59151,0.70381,-0.39341) rotationAxis=(-0.85085,0.47330,0.22814) rotationDegrees=-157.679
+piece03 seed=(-0.00001,0.00457) projectedArea=0.00000322 vertexCount=522 triangleCount=184 direction=(0.59942,0.79426,0.09928) rotationAxis=(-0.60092,0.69921,0.38730) rotationDegrees=-156.061
+piece04 seed=(0.00100,-0.00018) projectedArea=0.00001239 vertexCount=2384 triangleCount=840 direction=(0.73011,0.66188,0.16987) rotationAxis=(-0.09034,0.57413,0.81377) rotationDegrees=178.585
+piece05 seed=(-0.00127,-0.00296) projectedArea=0.00001576 vertexCount=695 triangleCount=244 direction=(0.69437,0.71608,0.07131) rotationAxis=(0.67187,-0.11824,0.73117) rotationDegrees=203.795
+piece06 seed=(-0.00045,0.00390) projectedArea=0.00000327 vertexCount=370 triangleCount=134 direction=(0.74911,0.62080,0.23117) rotationAxis=(-0.23028,0.44321,0.86633) rotationDegrees=-109.957
+piece07 seed=(-0.00257,0.00071) projectedArea=0.00000535 vertexCount=381 triangleCount=145 direction=(0.79622,0.60493,0.00906) rotationAxis=(-0.24909,0.41050,0.87718) rotationDegrees=221.723
+piece08 seed=(-0.00052,-0.00074) projectedArea=0.00001019 vertexCount=1559 triangleCount=562 direction=(0.40518,0.82040,0.40346) rotationAxis=(-0.66033,0.28868,-0.69327) rotationDegrees=-121.065
+piece09 seed=(-0.00047,0.00233) projectedArea=0.00000916 vertexCount=798 triangleCount=296 direction=(0.85266,0.51816,-0.06690) rotationAxis=(0.46667,-0.46138,-0.75455) rotationDegrees=118.656
+piece10 seed=(-0.00155,-0.00155) projectedArea=0.00001010 vertexCount=1170 triangleCount=417 direction=(0.56112,0.57916,0.59137) rotationAxis=(0.61767,-0.45322,0.64271) rotationDegrees=129.235
+piece11 seed=(0.00174,0.00001) projectedArea=0.00001057 vertexCount=1755 triangleCount=627 direction=(0.79346,0.60579,0.05862) rotationAxis=(0.21352,-0.97099,0.10764) rotationDegrees=181.704
+piece12 seed=(0.00249,0.00041) projectedArea=0.00000563 vertexCount=595 triangleCount=221 direction=(0.76880,0.57524,0.27938) rotationAxis=(0.49870,-0.78564,-0.36616) rotationDegrees=-211.943
+piece13 seed=(-0.00251,0.00142) projectedArea=0.00000435 vertexCount=343 triangleCount=130 direction=(0.75007,0.66091,0.02414) rotationAxis=(-0.57645,-0.62704,0.52395) rotationDegrees=97.645
+piece14 seed=(0.00285,0.00196) projectedArea=0.00000929 vertexCount=783 triangleCount=282 direction=(0.78896,0.59371,0.15825) rotationAxis=(-0.64465,0.40668,-0.64733) rotationDegrees=-123.940
+piece15 seed=(-0.00084,0.00044) projectedArea=0.00001085 vertexCount=1830 triangleCount=645 direction=(0.84039,0.52915,-0.11727) rotationAxis=(0.56653,-0.79443,0.21892) rotationDegrees=163.042
+piece16 seed=(-0.00141,0.00131) projectedArea=0.00000550 vertexCount=895 triangleCount=320 direction=(0.51010,0.64899,0.56445) rotationAxis=(0.16297,0.73617,0.65688) rotationDegrees=107.739
+piece17 seed=(-0.00185,0.00398) projectedArea=0.00000898 vertexCount=908 triangleCount=319 direction=(0.63717,0.76439,0.09857) rotationAxis=(0.71545,0.05928,-0.69615) rotationDegrees=-216.946

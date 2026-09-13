@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>방패 파손 아트 샘플</title>
+  <style>
+    :root{color-scheme:dark;--bg:#06090d;--panel:#111924;--line:#26384b;--ink:#eef6fb;--muted:#9fb2c2;--cyan:#75d8ed;--amber:#f0c477}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#17283a 0,transparent 35%),var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif}
+    main{max-width:1380px;margin:auto;padding:40px 28px 64px}h1{font-size:clamp(2rem,5vw,4.5rem);line-height:1;margin:0 0 12px;letter-spacing:-.04em}h2{margin:0 0 16px;font-size:1.2rem}.lead{max-width:880px;color:var(--muted);font-size:1.08rem}.status{display:inline-block;margin-top:12px;padding:7px 12px;border:1px solid var(--amber);border-radius:999px;color:var(--amber)}
+    .hero,.facts,.stages{margin-top:28px;background:color-mix(in srgb,var(--panel) 92%,transparent);border:1px solid var(--line);border-radius:18px;overflow:hidden}.hero video{display:block;width:min(100%,720px);margin:auto;background:#06090d}.caption{padding:14px 18px;color:var(--muted);border-top:1px solid var(--line)}
+    .stages{display:grid;grid-template-columns:repeat(4,1fr)}figure{margin:0;border-right:1px solid var(--line)}figure:last-child{border:0}figure img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#06090d}figcaption{padding:12px 14px;color:var(--muted)}
+    .facts{padding:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.fact strong{display:block;color:var(--cyan);font-size:1.3rem}.fact span{color:var(--muted)}
+    .notes{margin-top:28px;padding:24px;border-left:3px solid var(--cyan);background:#0d151e}.notes p{margin:.45rem 0}.links a{color:var(--cyan);margin-right:18px}
+    @media(max-width:850px){.stages,.facts{grid-template-columns:1fr 1fr}}@media(max-width:520px){.stages,.facts{grid-template-columns:1fr}}
+  </style>
+</head>
+<body><main>
+  <p class="status">사용자 승인 완료 · 10.0배 선형 이동 · 파손 시작 1초 뒤 파편 숨김</p>
+  <h1>방패 파손 아트 샘플</h1>
+  <p class="lead">현재 승인된 글자 제거 방패와 불투명도 65% 창을 그대로 사용해, 몸체와 창을 크기와 윤곽이 서로 다른 17개의 불규칙 조각으로 함께 파손합니다. 난수 중심점으로 절단선을 만들고 조각마다 서로 다른 방향·거리·회전을 주며, 전체 흐름은 수송자 기준 오른쪽 뒤편으로 모았습니다.</p>
+
+  <section class="hero">
+    <video controls preload="metadata" poster="comparison.png"><source src="shield_break_preview.mp4" type="video/mp4"></video>
+    <div class="caption">승인 원본 상태에서 즉시 파손 시작 · 전체 2.866667초 · 30fps. 전면 구도에서 수송자의 오른쪽은 화면 왼쪽으로 보입니다.</div>
+  </section>
+
+  <section class="stages">
+    <figure><img src="source_approved_65.png" alt="승인된 방패 원본"><figcaption>승인 원본 · 글자 제거 · 창 65%</figcaption></figure>
+    <figure><img src="break_early.png" alt="초기 파손"><figcaption>초기 · 몸체와 창의 불규칙한 17조각 분리</figcaption></figure>
+    <figure><img src="break_mid.png" alt="중간 파손"><figcaption>중간 · 개별 무작위 이동과 회전</figcaption></figure>
+    <figure><img src="break_end.png" alt="최종 파손"><figcaption>최종 · 전체 오른쪽 뒤편 분산</figcaption></figure>
+  </section>
+
+  <section class="facts">
+    <div class="fact"><strong>17개</strong><span>허용 상한 20개 이하</span></div>
+    <div class="fact"><strong>2.866667초</strong><span>원본 Break 클립과 동일</span></div>
+    <div class="fact"><strong>몸체 + 창</strong><span>두 재질 영역 모두 파손</span></div>
+    <div class="fact"><strong>불규칙 다각형</strong><span>난수 중심점 기반 파쇄 윤곽</span></div>
+    <div class="fact"><strong>오른쪽 뒤편</strong><span>수송자 기준 전체 분산 방향</span></div>
+    <div class="fact"><strong>생성형 미사용</strong><span>실제 Unity 메시·머티리얼 절단 렌더</span></div>
+  </section>
+
+  <section class="notes">
+    <h2>적용 경계</h2>
+    <p>승인된 파편 형태·재질·개별 방향을 유지해 <code>Shield_Break_Reaction</code>의 오른팔 전완부를 추종하는 방패에 연결했습니다. 모션 시작 0.05초 뒤 월드 기준으로 분리되고 최종 10.0배 선형 속도로 이동합니다. 파손 시작 1초 뒤인 1.05초부터 모든 파편을 숨기고, 다음 반복에서 원형 방패로 복구합니다.</p>
+    <p>원본 방패 메시·UV·리그·스킨 웨이트·텍스처·머티리얼은 수정하지 않았습니다. 샘플 생성기가 읽은 실제 정점·노멀·탄젠트·UV를 절단 경계에서 보간했습니다.</p>
+    <p class="links"><a href="comparison.png">한 장 비교</a><a href="sample_manifest.txt">파편 방향·원본 기록</a><a href="asset_integrity.txt">무결성 기록</a><a href="README.md">검토 메모</a></p>
+  </section>
+</main></body>
+</html>

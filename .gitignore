@@ -5,6 +5,12 @@
 /Logs/
 /UserSettings/
 /MemoryCaptures/
+/Assets/_Recovery/
+/Backups/
+
+# Local scripting caches
+__pycache__/
+*.py[cod]
 
 # Unity template tutorial assets
 /Assets/Readme.asset

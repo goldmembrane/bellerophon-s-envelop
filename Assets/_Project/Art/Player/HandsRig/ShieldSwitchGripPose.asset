@@ -48,32 +48,32 @@ MonoBehaviour:
   - BoneName: LeftThumbDistal
     LocalRotation: {x: 0.27895752, y: 0.0035651175, z: 0.012271927, w: 0.9602185}
   - BoneName: RightIndexProximal
-    LocalRotation: {x: -0.13956991, y: 0.12222544, z: 0.64724904, w: 0.7393577}
+    LocalRotation: {x: -0.19989167, y: 0.19442976, z: 0.6695034, w: 0.6884806}
   - BoneName: RightIndexIntermediate
-    LocalRotation: {x: 0.07486685, y: -0.050131183, z: 0.34648442, w: 0.9337186}
+    LocalRotation: {x: 0.066640265, y: -0.06067774, z: 0.4806884, w: 0.8722477}
   - BoneName: RightIndexDistal
-    LocalRotation: {x: 0.07250544, y: -0.009403184, z: -0.047484472, w: 0.99619263}
+    LocalRotation: {x: 0.07262231, y: -0.008453312, z: -0.060520165, w: 0.9954857}
   - BoneName: RightLittleProximal
-    LocalRotation: {x: 0.13553339, y: -0.065853395, z: 0.43191338, w: 0.8892384}
+    LocalRotation: {x: 0.15222451, y: -0.08935984, z: 0.49818176, w: 0.8489156}
   - BoneName: RightLittleIntermediate
-    LocalRotation: {x: -0.010897215, y: 0.0040511456, z: 0.26007116, w: 0.9655194}
+    LocalRotation: {x: -0.011048101, y: 0.0036193456, z: 0.22196454, w: 0.9749854}
   - BoneName: RightLittleDistal
-    LocalRotation: {x: -0.064158335, y: 0.037622426, z: -0.010032827, w: 0.9971798}
+    LocalRotation: {x: -0.064963795, y: 0.036213867, z: -0.031783804, w: 0.99672365}
   - BoneName: RightMiddleProximal
-    LocalRotation: {x: 0.06350922, y: -0.02992836, z: 0.42721048, w: 0.90142226}
+    LocalRotation: {x: 0.007728995, y: -0.004865418, z: 0.549833, w: 0.8352248}
   - BoneName: RightMiddleIntermediate
-    LocalRotation: {x: 0.045546107, y: -0.013333386, z: 0.23502427, w: 0.97083026}
+    LocalRotation: {x: 0.038843386, y: -0.027254649, z: 0.5346153, w: 0.8437624}
   - BoneName: RightMiddleDistal
-    LocalRotation: {x: 0.070161395, y: -0.010130076, z: -0.116648406, w: 0.99064016}
+    LocalRotation: {x: 0.07028798, y: -0.009210824, z: -0.12960549, w: 0.9890284}
   - BoneName: RightRingProximal
-    LocalRotation: {x: -0.2112185, y: 0.09615848, z: 0.4032313, w: 0.8851808}
+    LocalRotation: {x: -0.025563663, y: 0.01395363, z: 0.4806369, w: 0.876436}
   - BoneName: RightRingIntermediate
-    LocalRotation: {x: 0.109068155, y: -0.015886461, z: 0.22877331, w: 0.96722007}
+    LocalRotation: {x: 0.09683192, y: -0.052623667, z: 0.5494079, w: 0.8282544}
   - BoneName: RightRingDistal
-    LocalRotation: {x: 0.009320133, y: -0.0038533644, z: 0.041299734, w: 0.9990959}
+    LocalRotation: {x: 0.009336858, y: -0.003812662, z: 0.03693998, w: 0.99926656}
   - BoneName: RightThumbProximal
-    LocalRotation: {x: -0.4978953, y: 0.8169356, z: -0.1210262, w: 0.26470593}
+    LocalRotation: {x: -0.11971804, y: 0.7181533, z: 0.10094347, w: 0.67803675}
   - BoneName: RightThumbIntermediate
-    LocalRotation: {x: -0.29351574, y: -0.013208814, z: 0.10380053, w: 0.9502103}
+    LocalRotation: {x: 0.11833417, y: -0.02915497, z: 0.54158837, w: 0.8317627}
   - BoneName: RightThumbDistal
-    LocalRotation: {x: -0.30339125, y: -0.021507135, z: 0.06736162, w: 0.9502387}
+    LocalRotation: {x: 0.034274805, y: -0.009792736, z: 0.40735215, w: 0.91257524}

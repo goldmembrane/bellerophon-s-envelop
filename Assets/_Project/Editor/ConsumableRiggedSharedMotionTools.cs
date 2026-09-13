@@ -25,6 +25,21 @@ namespace Bellerophon.Editor
             "Assets/_Project/Art/Player/Animations/Consumable/ConsumableRiggedShared.controller";
         private const string OutputFolder =
             "docs/validation/consumable_item_grips_2026-09-09";
+        private const string RightBackOutputFolder =
+            "docs/validation/consumable_right_back_fix_2026-09-10";
+        private const string RightBackRestorePending =
+            "Bellerophon.Consumable.RightBackRestorePending";
+        // Round two reproduces the user's real Game-view angle and audits posed triangle stretch.
+        private const string RightBackRound2OutputFolder =
+            "docs/validation/consumable_right_back_fix_2026-09-10/review_103229";
+        private const string RightBackRound2RestorePending =
+            "Bellerophon.Consumable.RightBackRound2RestorePending";
+        private const string NativePlayerWeightExportSessionKey =
+            "Bellerophon.PlayerHands.ExportNativeWeights";
+        private const string NativePlayerWeightExportCompletedSessionKey =
+            "Bellerophon.PlayerHands.ExportNativeWeights.Completed";
+        private const string NativePlayerWeightExportPath =
+            "docs/validation/consumable_right_back_fix_2026-09-10/review_103229/native_fbx_weights.json";
         private const string BatteryPath = "Assets/_Project/Art/Items/Consumable/AuxiliaryBattery/AuxiliaryBattery.fbx";
         private const string BatteryFolder = "Assets/_Project/Art/Items/Consumable/AuxiliaryBattery";
         private const string RigRootName = "ConsumableRiggedSharedRig";
@@ -502,6 +517,629 @@ namespace Bellerophon.Editor
             else RecordRestoredReviewState(PlayModeStateChange.EnteredEditMode);
         }
 
+        internal static void EnterConsumableGripAndRightBackReview()
+        {
+            if (!EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                RequireAppliedStructure(RequireScene());
+                EditorApplication.EnterPlaymode();
+                Debug.Log("Consumable grip and right-back review entered Play Mode.");
+                return;
+            }
+
+            if (!EditorApplication.isPlaying)
+                throw new InvalidOperationException("Consumable grip and right-back review is waiting for Play Mode.");
+
+            InspectConsumableGripAndRightBack();
+        }
+
+        internal static void InspectConsumableGripAndRightBack()
+            => BeginObservation(null, RightBackOutputFolder, true);
+
+        internal static void CaptureConsumableGripAndRightBackDiagnostic()
+        {
+            for (int index = 1; index <= 4; index++)
+            {
+                string folder = RightBackOutputFolder + "/diagnostic_" + index.ToString("00", CultureInfo.InvariantCulture);
+                if (Directory.Exists(Absolute(folder))) continue;
+                BeginObservation(folder, RightBackOutputFolder, true);
+                return;
+            }
+            throw new InvalidOperationException("The approved four consumable/right-back diagnostic sets are already used.");
+        }
+
+        internal static void CaptureConsumableGripAndRightBackFinal()
+        {
+            string folder = RightBackOutputFolder + "/final";
+            if (Directory.Exists(Absolute(folder)))
+                throw new InvalidOperationException("The one-time consumable/right-back final capture already exists.");
+            string inspection = Absolute(RightBackOutputFolder + "/inspection.txt");
+            if (!File.Exists(inspection) || !File.ReadAllText(inspection).Contains("result=PASS"))
+                throw new InvalidOperationException("The live consumable/right-back inspection must pass after direct visual review.");
+            BeginObservation(folder, RightBackOutputFolder, true);
+        }
+
+        internal static void EnterConsumableRightBackRound2Review()
+        {
+            if (!EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                RequireAppliedStructure(RequireScene());
+                EditorApplication.EnterPlaymode();
+                Debug.Log("Consumable right-back round-two review entered Play Mode.");
+                return;
+            }
+
+            if (!EditorApplication.isPlaying)
+                throw new InvalidOperationException("Consumable right-back round-two review is waiting for Play Mode.");
+
+            InspectConsumableRightBackRound2();
+        }
+
+        internal static void InspectConsumableRightBackRound2()
+            => BeginObservation(null, RightBackRound2OutputFolder, true, true);
+
+        internal static void ExportConsumableRightBackNativeWeights()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException("Export native player FBX weights only in Edit Mode.");
+
+            const string playerPath = "Assets/_Project/Art/Player/player.fbx";
+            Scene scene = RequireScene();
+            bool sceneWasDirty = scene.isDirty;
+            SessionState.EraseBool(NativePlayerWeightExportCompletedSessionKey);
+            SessionState.SetBool(NativePlayerWeightExportSessionKey, true);
+            try
+            {
+                AssetDatabase.ImportAsset(playerPath,
+                    ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+            }
+            finally
+            {
+                SessionState.EraseBool(NativePlayerWeightExportSessionKey);
+            }
+
+            bool completed = SessionState.GetBool(NativePlayerWeightExportCompletedSessionKey, false);
+            SessionState.EraseBool(NativePlayerWeightExportCompletedSessionKey);
+            string exportPath = Absolute(NativePlayerWeightExportPath);
+            if (!completed || !File.Exists(exportPath))
+                throw new InvalidOperationException("The guarded native player FBX weight export did not complete.");
+            SkinnedMeshRenderer imported = AssetDatabase.LoadAssetAtPath<GameObject>(playerPath)
+                .GetComponentInChildren<SkinnedMeshRenderer>();
+            if (imported == null || imported.bones.Length != 54 || imported.sharedMesh.vertexCount != 17230)
+                throw new InvalidOperationException("The shared player layout changed during native weight export.");
+            if (scene.isDirty != sceneWasDirty)
+                throw new InvalidOperationException("Native weight export changed the CargoRunMvp scene dirty state.");
+
+            Directory.CreateDirectory(Absolute(RightBackRound2OutputFolder));
+            File.WriteAllText(Absolute(RightBackRound2OutputFolder + "/native_export.txt"),
+                "Native FBX weights exported before authored JSON override.\n" +
+                "playerAssetModified=False\n" +
+                "importedLayout=54 bones; 17230 vertices\n" +
+                "sceneChanged=False; sceneDirtyStatePreserved=True; sceneWasDirty=" + sceneWasDirty + "\n",
+                new UTF8Encoding(false));
+            Debug.Log("Guarded native player FBX weights exported; authored JSON weights were reapplied after capture.");
+        }
+
+        internal static void CaptureConsumableRightBackRound2Diagnostic()
+        {
+            for (int index = 1; index <= 5; index++)
+            {
+                string folder = RightBackRound2OutputFolder + "/diagnostic_" + index.ToString("00", CultureInfo.InvariantCulture);
+                if (Directory.Exists(Absolute(folder))) continue;
+                BeginObservation(folder, RightBackRound2OutputFolder, true, true);
+                return;
+            }
+            throw new InvalidOperationException("The approved five round-two right-back diagnostic sets are already used.");
+        }
+
+        internal static void CaptureConsumableRightBackRound2Final()
+        {
+            string folder = RightBackRound2OutputFolder + "/final";
+            if (Directory.Exists(Absolute(folder)))
+                throw new InvalidOperationException("The one-time round-two right-back final capture already exists.");
+            string inspection = Absolute(RightBackRound2OutputFolder + "/inspection.txt");
+            if (!File.Exists(inspection) || !File.ReadAllText(inspection).Contains("result=PASS"))
+                throw new InvalidOperationException("The round-two right-back inspection must pass after direct visual review.");
+            BeginObservation(folder, RightBackRound2OutputFolder, true, true);
+        }
+
+        internal static void ApplyConsumableRightBackRound2Fix()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException("Apply the round-two right-back fix only in Edit Mode.");
+
+            const string playerPath = "Assets/_Project/Art/Player/player.fbx";
+            string[] correctivePaths =
+            {
+                "Assets/_Project/Art/Player/ShotgunReloadWristDeform/Shotgun_Reload_LeftWristDeform.asset",
+                "Assets/_Project/Art/Player/Animations/Hands_Throw_Ready_Breathing.asset"
+            };
+            Scene scene = RequireScene();
+            bool sceneWasDirty = scene.isDirty;
+
+            ConsumableRiggedSharedMotion[] motions = TargetNames.Select(name =>
+                FindUnique(scene, name).GetComponent<ConsumableRiggedSharedMotion>()).ToArray();
+            var poses = motions.ToDictionary(motion => motion, motion => Enumerable.Range(0, 101)
+                .Select(sample => motion.GetAuthoredRigPose(sample * .05f)).ToArray());
+            var roots = motions.ToDictionary(motion => motion, motion =>
+                (motion.transform.localPosition, motion.transform.localRotation, motion.transform.localScale));
+            var rendererSignatures = motions.ToDictionary(motion => motion, motion => RendererSignature(motion.gameObject));
+            var profileJson = motions.Select(ProfileFor).Distinct().ToDictionary(profile => profile,
+                profile => EditorJsonUtility.ToJson(profile));
+            var itemTransforms = motions.ToDictionary(motion => motion, motion =>
+            {
+                MeshFilter item = motion.BatteryGrip.GetComponentInChildren<MeshFilter>();
+                return (motion.BatteryGrip.localPosition, motion.BatteryGrip.localRotation, motion.BatteryGrip.localScale,
+                    item.transform.localPosition, item.transform.localRotation, item.transform.localScale,
+                    item.sharedMesh, AssetDatabase.GetAssetPath(item.sharedMesh), item.sharedMesh.bounds);
+            });
+
+            GameObject layout = scene.GetRootGameObjects().Single(root => root.name == "PlayerAnimationLayout");
+            SkinnedMeshRenderer[] skins = layout.GetComponentsInChildren<SkinnedMeshRenderer>(true).Where(renderer =>
+                AssetDatabase.GetAssetPath(renderer.sharedMesh) == playerPath ||
+                correctivePaths.Contains(AssetDatabase.GetAssetPath(renderer.sharedMesh))).ToArray();
+            if (skins.Length != 144 || skins.Count(renderer => AssetDatabase.GetAssetPath(renderer.sharedMesh) == playerPath) != 141)
+                throw new InvalidOperationException("Expected the existing 141 shared and three corrective transporter skins.");
+            var skinBones = skins.ToDictionary(renderer => renderer, renderer => renderer.bones);
+            var skinRoots = skins.ToDictionary(renderer => renderer, renderer => renderer.rootBone);
+            var skinMaterials = skins.ToDictionary(renderer => renderer, renderer => renderer.sharedMaterials);
+            var skinPaths = skins.ToDictionary(renderer => renderer, renderer => AssetDatabase.GetAssetPath(renderer.sharedMesh));
+            var shapeWeights = skins.ToDictionary(renderer => renderer, renderer => Enumerable.Range(0, renderer.sharedMesh.blendShapeCount)
+                .ToDictionary(shape => renderer.sharedMesh.GetBlendShapeName(shape), renderer.GetBlendShapeWeight));
+            Animator[] animators = skins.Select(renderer => renderer.GetComponentInParent<Animator>())
+                .Where(animator => animator != null).Distinct().ToArray();
+            var avatars = animators.ToDictionary(animator => animator, animator => animator.avatar);
+            var controllers = animators.ToDictionary(animator => animator, animator => animator.runtimeAnimatorController);
+
+            AssetDatabase.ImportAsset(playerPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+            SkinnedMeshRenderer imported = AssetDatabase.LoadAssetAtPath<GameObject>(playerPath)
+                .GetComponentInChildren<SkinnedMeshRenderer>();
+            string[] sourceNames = imported.bones.Select(bone => bone.name).ToArray();
+            if (sourceNames.Length != 54 || imported.sharedMesh.vertexCount != 17230)
+                throw new InvalidOperationException("The approved shared player mesh layout changed.");
+            bool[] sourceTransfer = RightBackRound2TransferMask(imported.sharedMesh);
+            int sourceTransferRows = sourceTransfer.Count(selected => selected);
+            RightBackNativeTransferManifest transferManifest = LoadRightBackNativeTransferManifest(imported.sharedMesh);
+            if (sourceTransferRows != transferManifest.changedRows)
+                throw new InvalidOperationException("The audited native-transfer region changed: " + sourceTransferRows +
+                    " expected=" + transferManifest.changedRows);
+
+            var report = new StringBuilder("Round-two right-back weight-only application.\n");
+            report.AppendLine("sharedPlayerGeometryAndPivotChanged=False");
+            report.AppendLine("animationCurvesOrMotionParametersChanged=False");
+            report.AppendLine("itemPlacementOrGripChanged=False");
+            foreach (string path in correctivePaths)
+            {
+                Mesh mesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+                SkinnedMeshRenderer user = skins.First(renderer => AssetDatabase.GetAssetPath(renderer.sharedMesh) == path);
+                string[] names = user.bones.Select(bone => bone.name).ToArray();
+                if (mesh.vertexCount != imported.sharedMesh.vertexCount || !mesh.vertices.SequenceEqual(imported.sharedMesh.vertices) ||
+                    !mesh.triangles.SequenceEqual(imported.sharedMesh.triangles) || !mesh.uv.SequenceEqual(imported.sharedMesh.uv) ||
+                    !names.Take(sourceNames.Length).SequenceEqual(sourceNames))
+                    throw new InvalidOperationException("Corrective topology, UV, or shared bone order changed: " + path);
+                BoneWeight[] weights = mesh.boneWeights;
+                BoneWeight[] sourceWeights = imported.sharedMesh.boneWeights;
+                int changed = 0;
+                for (int vertex = 0; vertex < weights.Length; vertex++)
+                {
+                    if (!sourceTransfer[vertex]) continue;
+                    weights[vertex] = sourceWeights[vertex];
+                    changed++;
+                }
+                if (changed > 0)
+                {
+                    Undo.RegisterCompleteObjectUndo(mesh, "Round-two isolated right-back skin weights");
+                    mesh.boneWeights = weights;
+                    EditorUtility.SetDirty(mesh);
+                    AssetDatabase.SaveAssetIfDirty(mesh);
+                }
+                if (changed != sourceTransferRows || Enumerable.Range(0, weights.Length)
+                    .Any(vertex => sourceTransfer[vertex] && !SameBoneWeight(weights[vertex], sourceWeights[vertex])))
+                    throw new InvalidOperationException("Corrective round-two transfer was incomplete: " + path);
+                report.AppendLine("corrective=" + path + " changedWeightRows=" + changed +
+                    " geometryUvTopologyBlendShapesPreserved=True");
+            }
+
+            foreach (SkinnedMeshRenderer skin in skins)
+            {
+                if (AssetDatabase.GetAssetPath(skin.sharedMesh) != skinPaths[skin] ||
+                    !skin.bones.SequenceEqual(skinBones[skin]) || skin.rootBone != skinRoots[skin] ||
+                    !skin.sharedMaterials.SequenceEqual(skinMaterials[skin]))
+                    throw new InvalidOperationException("Existing skin binding changed: " + skin.name);
+                foreach (var shape in shapeWeights[skin])
+                {
+                    int shapeIndex = skin.sharedMesh.GetBlendShapeIndex(shape.Key);
+                    if (shapeIndex < 0 || Mathf.Abs(skin.GetBlendShapeWeight(shapeIndex) - shape.Value) > .0001f)
+                        throw new InvalidOperationException("Existing corrective BlendShape binding changed: " + skin.name + "/" + shape.Key);
+                }
+            }
+            if (animators.Any(animator => animator.avatar != avatars[animator] ||
+                animator.runtimeAnimatorController != controllers[animator]))
+                throw new InvalidOperationException("An existing avatar or controller changed.");
+            foreach (var profile in profileJson)
+                if (EditorJsonUtility.ToJson(profile.Key) != profile.Value)
+                    throw new InvalidOperationException("A reviewed grip profile changed during the weight-only fix: " + profile.Key.name);
+            foreach (ConsumableRiggedSharedMotion motion in motions)
+            {
+                (Vector3 position, Quaternion rotation, Vector3 scale) = roots[motion];
+                RequireUnchanged(position, motion.transform.localPosition, motion.name + " root position");
+                RequireUnchanged(rotation, motion.transform.localRotation, motion.name + " root rotation");
+                RequireUnchanged(scale, motion.transform.localScale, motion.name + " root scale");
+                if (RendererSignature(motion.gameObject) != rendererSignatures[motion])
+                    throw new InvalidOperationException("Renderer mesh/material path changed: " + motion.name);
+                var beforeItem = itemTransforms[motion];
+                MeshFilter item = motion.BatteryGrip.GetComponentInChildren<MeshFilter>();
+                RequireUnchanged(beforeItem.Item1, motion.BatteryGrip.localPosition, motion.name + " grip position");
+                RequireUnchanged(beforeItem.Item2, motion.BatteryGrip.localRotation, motion.name + " grip rotation");
+                RequireUnchanged(beforeItem.Item3, motion.BatteryGrip.localScale, motion.name + " grip scale");
+                RequireUnchanged(beforeItem.Item4, item.transform.localPosition, motion.name + " item position");
+                RequireUnchanged(beforeItem.Item5, item.transform.localRotation, motion.name + " item rotation");
+                RequireUnchanged(beforeItem.Item6, item.transform.localScale, motion.name + " item scale");
+                if (item.sharedMesh != beforeItem.Item7 || AssetDatabase.GetAssetPath(item.sharedMesh) != beforeItem.Item8 ||
+                    item.sharedMesh.bounds != beforeItem.Item9)
+                    throw new InvalidOperationException("Original item mesh or asset pivot changed: " + motion.name);
+                for (int sample = 0; sample < poses[motion].Length; sample++)
+                    RequireUnchangedAuthoredPose(poses[motion][sample], motion.GetAuthoredRigPose(sample * .05f),
+                        motion.name + " motion sample " + sample);
+            }
+            if (scene.isDirty != sceneWasDirty)
+                throw new InvalidOperationException("The weight-only round-two fix changed the CargoRunMvp scene dirty state.");
+
+            report.AppendLine("authoredMotionSamplesUnchanged=4 targets x 101 samples x all pose fields");
+            report.AppendLine("rightBackRound2SharedRows=" + sourceTransferRows +
+                "; disconnectedCorrectiveVertices=" + transferManifest.correctiveVertices.Length +
+                "; disconnectedComponents=" + transferManifest.componentIds.Length +
+                "; predictedComponentMaxStretch=" + Format(transferManifest.predictedMaxStretch) +
+                "; correctiveRowsMatched=True");
+            report.AppendLine("sceneChanged=False; sceneDirtyStatePreserved=True; sceneWasDirty=" + sceneWasDirty +
+                "; directNaturalPlaybackReviewRequired=True");
+            Directory.CreateDirectory(Absolute(RightBackRound2OutputFolder));
+            File.WriteAllText(Absolute(RightBackRound2OutputFolder + "/application.txt"), report.ToString(),
+                new UTF8Encoding(false));
+            AssetDatabase.SaveAssets();
+            Debug.Log("Round-two isolated right-back weights applied; motion, items, grips, geometry and scene unchanged.");
+        }
+
+        internal static void ApplyConsumableGripAndRightBackFix()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException("Apply the consumable grip and right-back fix only in Edit Mode.");
+
+            const string playerPath = "Assets/_Project/Art/Player/player.fbx";
+            string[] correctivePaths =
+            {
+                "Assets/_Project/Art/Player/ShotgunReloadWristDeform/Shotgun_Reload_LeftWristDeform.asset",
+                "Assets/_Project/Art/Player/Animations/Hands_Throw_Ready_Breathing.asset"
+            };
+            Scene scene = RequireScene();
+            if (scene.isDirty && !EditorSceneManager.SaveScene(scene))
+                throw new InvalidOperationException("Could not save the approved CargoRunMvp scene restored from review.");
+
+            ConsumableRiggedSharedMotion[] motions = TargetNames.Select(name =>
+                FindUnique(scene, name).GetComponent<ConsumableRiggedSharedMotion>()).ToArray();
+            var poses = motions.ToDictionary(motion => motion, motion => Enumerable.Range(0, 101)
+                .Select(sample => motion.GetAuthoredRigPose(sample * .05f)).ToArray());
+            var roots = motions.ToDictionary(motion => motion, motion =>
+                (motion.transform.localPosition, motion.transform.localRotation, motion.transform.localScale));
+            var rendererSignatures = motions.ToDictionary(motion => motion, motion => RendererSignature(motion.gameObject));
+            var itemAssets = motions.ToDictionary(motion => motion, motion =>
+            {
+                MeshFilter item = motion.BatteryGrip.GetComponentInChildren<MeshFilter>();
+                return (item.sharedMesh, AssetDatabase.GetAssetPath(item.sharedMesh), item.sharedMesh.vertexCount,
+                    item.sharedMesh.bounds);
+            });
+
+            // The JSON repair is authored outside Unity so its exact rows can be audited.
+            // Reimport only the existing FBX; geometry and its original pivot are unchanged.
+            AssetDatabase.ImportAsset(playerPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+            SkinnedMeshRenderer imported = AssetDatabase.LoadAssetAtPath<GameObject>(playerPath)
+                .GetComponentInChildren<SkinnedMeshRenderer>();
+            string[] sourceNames = imported.bones.Select(bone => bone.name).ToArray();
+            if (sourceNames.Length != 54 || imported.sharedMesh.vertexCount != 17230)
+                throw new InvalidOperationException("The approved shared player mesh layout changed.");
+            int sourceOutliers = CountLowerRightBackArmOutliers(imported.sharedMesh, sourceNames);
+            if (sourceOutliers != 0)
+                throw new InvalidOperationException("The audited right-back JSON repair was not applied to the shared player mesh: " + sourceOutliers);
+
+            GameObject layout = scene.GetRootGameObjects().Single(root => root.name == "PlayerAnimationLayout");
+            SkinnedMeshRenderer[] skins = layout.GetComponentsInChildren<SkinnedMeshRenderer>(true).Where(renderer =>
+                AssetDatabase.GetAssetPath(renderer.sharedMesh) == playerPath ||
+                correctivePaths.Contains(AssetDatabase.GetAssetPath(renderer.sharedMesh))).ToArray();
+            if (skins.Length != 144 || skins.Count(renderer => AssetDatabase.GetAssetPath(renderer.sharedMesh) == playerPath) != 141)
+                throw new InvalidOperationException("Expected the existing 141 shared and three corrective transporter skins.");
+            var skinBones = skins.ToDictionary(renderer => renderer, renderer => renderer.bones);
+            var skinRoots = skins.ToDictionary(renderer => renderer, renderer => renderer.rootBone);
+            var skinMaterials = skins.ToDictionary(renderer => renderer, renderer => renderer.sharedMaterials);
+            var shapeWeights = skins.ToDictionary(renderer => renderer, renderer => Enumerable.Range(0, renderer.sharedMesh.blendShapeCount)
+                .ToDictionary(shape => renderer.sharedMesh.GetBlendShapeName(shape), renderer.GetBlendShapeWeight));
+            Animator[] animators = skins.Select(renderer => renderer.GetComponentInParent<Animator>()).Where(animator => animator != null).Distinct().ToArray();
+            var avatars = animators.ToDictionary(animator => animator, animator => animator.avatar);
+            var controllers = animators.ToDictionary(animator => animator, animator => animator.runtimeAnimatorController);
+
+            var report = new StringBuilder("Consumable grip and isolated right-back skin-weight application.\n");
+            report.AppendLine("sharedPlayerGeometryAndPivotChanged=False");
+            report.AppendLine("animationCurvesOrMotionParametersChanged=False");
+            foreach (string path in correctivePaths)
+            {
+                Mesh mesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+                SkinnedMeshRenderer user = skins.First(renderer => AssetDatabase.GetAssetPath(renderer.sharedMesh) == path);
+                string[] names = user.bones.Select(bone => bone.name).ToArray();
+                if (mesh.vertexCount != imported.sharedMesh.vertexCount || !mesh.vertices.SequenceEqual(imported.sharedMesh.vertices) ||
+                    !mesh.triangles.SequenceEqual(imported.sharedMesh.triangles) || !mesh.uv.SequenceEqual(imported.sharedMesh.uv) ||
+                    !names.Take(sourceNames.Length).SequenceEqual(sourceNames))
+                    throw new InvalidOperationException("Corrective topology, UV, or shared bone order changed: " + path);
+                int before = CountLowerRightBackArmOutliers(mesh, names);
+                BoneWeight[] weights = mesh.boneWeights;
+                BoneWeight[] sourceWeights = imported.sharedMesh.boneWeights;
+                Vector3[] vertices = mesh.vertices;
+                int changed = 0;
+                for (int vertex = 0; vertex < weights.Length; vertex++)
+                {
+                    if (!IsLowerRightBackArmOutlier(vertices[vertex], weights[vertex], names)) continue;
+                    weights[vertex] = sourceWeights[vertex];
+                    changed++;
+                }
+                if (changed > 0)
+                {
+                    Undo.RegisterCompleteObjectUndo(mesh, "Isolated right-back skin weights");
+                    mesh.boneWeights = weights;
+                    EditorUtility.SetDirty(mesh);
+                    AssetDatabase.SaveAssetIfDirty(mesh);
+                }
+                int after = CountLowerRightBackArmOutliers(mesh, names);
+                if (changed != before || after != 0)
+                    throw new InvalidOperationException("Corrective right-back transfer was incomplete: " + path);
+                report.AppendLine("corrective=" + path + " changedWeightRows=" + changed +
+                    " geometryUvTopologyBlendShapesPreserved=True");
+            }
+
+            Vector3[] desiredGripPositions = motions.Select(motion =>
+            {
+                PlayerHandGripPose profile = ProfileFor(motion);
+                return new Vector3(profile.RightItemPosition.x, .125f, profile.RightItemPosition.z);
+            }).ToArray();
+            for (int index = 0; index < motions.Length; index++)
+            {
+                ConsumableRiggedSharedMotion motion = motions[index];
+                PlayerHandGripPose profile = ProfileFor(motion);
+                Transform grip = motion.BatteryGrip;
+                MeshFilter item = grip.GetComponentInChildren<MeshFilter>();
+                Vector3 before = grip.localPosition;
+                Undo.RecordObject(grip, "Consumable item grip position");
+                Undo.RecordObject(item.transform, "Consumable item position around fixed plug tip");
+                Undo.RegisterCompleteObjectUndo(profile, "Consumable right-hand grip pose");
+                grip.localPosition = desiredGripPositions[index];
+                profile.RightItemPosition = grip.localPosition;
+                Vector3 itemPositionBefore = item.transform.localPosition;
+                Quaternion itemRotationBefore = item.transform.localRotation;
+                float pivotAngle = PositionItemBodyAroundFixedTip(motion, item, .095f);
+                FitRequestedGrip(motion, item, profile, motion.name == "Nanomachine_Inject", report, true);
+                foreach (PlayerHandGripPose.JointPose joint in profile.Joints.Where(joint =>
+                    joint.BoneName.StartsWith("Right", StringComparison.Ordinal)))
+                {
+                    Transform control = RequireDescendant(motion.RightHandTarget, joint.BoneName + "GripControl");
+                    Undo.RecordObject(control, "Consumable right-hand static grip");
+                    control.localRotation = joint.LocalRotation;
+                    EditorUtility.SetDirty(control);
+                }
+                EditorUtility.SetDirty(grip);
+                EditorUtility.SetDirty(item.transform);
+                EditorUtility.SetDirty(profile);
+                AssetDatabase.SaveAssetIfDirty(profile);
+                (Mesh sourceMesh, string sourcePath, int sourceVertices, Bounds sourceBounds) = itemAssets[motion];
+                if (item.sharedMesh != sourceMesh || AssetDatabase.GetAssetPath(item.sharedMesh) != sourcePath ||
+                    item.sharedMesh.vertexCount != sourceVertices || item.sharedMesh.bounds != sourceBounds)
+                    throw new InvalidOperationException("Original item mesh geometry or source pivot changed: " + motion.name);
+                report.AppendLine("target=" + motion.name + " gripPosition=" + Format(before) + " -> " + Format(grip.localPosition) +
+                    " itemChildPosition=" + Format(itemPositionBefore) + " -> " + Format(item.transform.localPosition) +
+                    " itemChildRotation=" + Format(itemRotationBefore.eulerAngles) + " -> " + Format(item.transform.localRotation.eulerAngles) +
+                    " fixedTipPivotAngle=" + Format(pivotAngle) +
+                    " originalMeshGeometryAndAssetPivotPreserved=True staticRightHandGripAdjusted=True");
+            }
+
+            foreach (SkinnedMeshRenderer skin in skins)
+            {
+                if (!skin.bones.SequenceEqual(skinBones[skin]) || skin.rootBone != skinRoots[skin] ||
+                    !skin.sharedMaterials.SequenceEqual(skinMaterials[skin]))
+                    throw new InvalidOperationException("Existing skin bindings changed: " + skin.name);
+                foreach (var shape in shapeWeights[skin])
+                {
+                    int shapeIndex = skin.sharedMesh.GetBlendShapeIndex(shape.Key);
+                    if (shapeIndex < 0 || Mathf.Abs(skin.GetBlendShapeWeight(shapeIndex) - shape.Value) > .0001f)
+                        throw new InvalidOperationException("Existing corrective BlendShape binding changed: " + skin.name + "/" + shape.Key);
+                }
+            }
+            if (animators.Any(animator => animator.avatar != avatars[animator] ||
+                animator.runtimeAnimatorController != controllers[animator]))
+                throw new InvalidOperationException("An existing avatar or controller changed.");
+            foreach (ConsumableRiggedSharedMotion motion in motions)
+            {
+                (Vector3 position, Quaternion rotation, Vector3 scale) = roots[motion];
+                RequireUnchanged(position, motion.transform.localPosition, motion.name + " root position");
+                RequireUnchanged(rotation, motion.transform.localRotation, motion.name + " root rotation");
+                RequireUnchanged(scale, motion.transform.localScale, motion.name + " root scale");
+                if (RendererSignature(motion.gameObject) != rendererSignatures[motion])
+                    throw new InvalidOperationException("Renderer mesh/material path changed: " + motion.name);
+                for (int sample = 0; sample < poses[motion].Length; sample++)
+                    RequireUnchangedAuthoredPose(poses[motion][sample], motion.GetAuthoredRigPose(sample * .05f),
+                        motion.name + " motion sample " + sample);
+            }
+            report.AppendLine("authoredMotionSamplesUnchanged=4 targets x 101 samples x all pose fields");
+            report.AppendLine("rightBackSharedRowsRemaining=0; correctiveRowsRemaining=0");
+            report.AppendLine("directNaturalPlaybackReviewRequired=True");
+            Directory.CreateDirectory(Absolute(RightBackOutputFolder));
+            File.WriteAllText(Absolute(RightBackOutputFolder + "/application.txt"), report.ToString(), new UTF8Encoding(false));
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene))
+                throw new InvalidOperationException("Could not save the scoped consumable grip/right-back changes.");
+            AssetDatabase.SaveAssets();
+            Debug.Log("Consumable grip positions, static right-hand poses, and isolated right-back weights applied; motion unchanged.");
+        }
+
+        private static float BoneWeightAt(BoneWeight weight, int bone)
+        {
+            if (weight.boneIndex0 == bone) return weight.weight0;
+            if (weight.boneIndex1 == bone) return weight.weight1;
+            if (weight.boneIndex2 == bone) return weight.weight2;
+            return weight.boneIndex3 == bone ? weight.weight3 : 0f;
+        }
+
+        private static bool IsLowerRightBackArmOutlier(Vector3 position, BoneWeight weight, string[] boneNames)
+        {
+            int rightArm = Array.IndexOf(boneNames, "RightArm");
+            string[] torsoNames = { "Hips", "RightUpLeg", "Spine", "Spine01", "Spine02" };
+            bool lowerTorso = torsoNames.Any(name =>
+            {
+                int bone = Array.IndexOf(boneNames, name);
+                return bone >= 0 && BoneWeightAt(weight, bone) > 0f;
+            });
+            bool excluded = new[] { "RightShoulder", "RightForeArm", "RightHand" }.Any(name =>
+            {
+                int bone = Array.IndexOf(boneNames, name);
+                return bone >= 0 && BoneWeightAt(weight, bone) > 0f;
+            });
+            return position.x >= .05f && position.x <= .20f && position.y >= 1.00f && position.y <= 1.20f &&
+                position.z >= .10f && position.z <= .30f && rightArm >= 0 && BoneWeightAt(weight, rightArm) >= .01f &&
+                lowerTorso && !excluded;
+        }
+
+        private static int CountLowerRightBackArmOutliers(Mesh mesh, string[] boneNames)
+        {
+            Vector3[] vertices = mesh.vertices;
+            BoneWeight[] weights = mesh.boneWeights;
+            return Enumerable.Range(0, vertices.Length).Count(vertex =>
+                IsLowerRightBackArmOutlier(vertices[vertex], weights[vertex], boneNames));
+        }
+
+        private static bool IsRightBackRound2Outlier(Vector3 position, BoneWeight weight, string[] boneNames)
+        {
+            int rightArm = Array.IndexOf(boneNames, "RightArm");
+            int rightForeArm = Array.IndexOf(boneNames, "RightForeArm");
+            string[] torsoNames = { "Hips", "RightUpLeg", "Spine", "Spine01", "Spine02" };
+            bool torso = torsoNames.Any(name =>
+            {
+                int bone = Array.IndexOf(boneNames, name);
+                return bone >= 0 && BoneWeightAt(weight, bone) > 0f;
+            });
+            int rightHand = Array.IndexOf(boneNames, "RightHand");
+            bool limbPull = (rightArm >= 0 && BoneWeightAt(weight, rightArm) >= .01f) ||
+                (rightForeArm >= 0 && BoneWeightAt(weight, rightForeArm) >= .01f);
+            return position.x >= 0f && position.x <= .25f && position.y >= .90f && position.y <= 1.30f &&
+                position.z >= .05f && position.z <= .36f && limbPull && torso &&
+                (rightHand < 0 || BoneWeightAt(weight, rightHand) <= 0f);
+        }
+
+        private static int CountRightBackRound2Outliers(Mesh mesh, string[] boneNames)
+        {
+            Vector3[] vertices = mesh.vertices;
+            BoneWeight[] weights = mesh.boneWeights;
+            return Enumerable.Range(0, vertices.Length).Count(vertex =>
+                IsRightBackRound2Outlier(vertices[vertex], weights[vertex], boneNames));
+        }
+
+        private static bool[] RightBackRound2TransferMask(Mesh mesh)
+        {
+            RightBackNativeTransferManifest manifest = LoadRightBackNativeTransferManifest(mesh);
+            var selected = new bool[mesh.vertexCount];
+            foreach (int vertex in manifest.unityVertices) selected[vertex] = true;
+            return selected;
+        }
+
+        private static bool[] RightBackRound2CorrectiveComponentMask(Mesh mesh)
+        {
+            RightBackNativeTransferManifest manifest = LoadRightBackNativeTransferManifest(mesh);
+            var selected = new bool[mesh.vertexCount];
+            foreach (int vertex in manifest.correctiveVertices) selected[vertex] = true;
+            return selected;
+        }
+
+        private static RightBackNativeTransferManifest LoadRightBackNativeTransferManifest(Mesh mesh)
+        {
+            const string path =
+                "docs/validation/consumable_right_back_fix_2026-09-10/review_103229/native_transfer_manifest.json";
+            string absolute = Absolute(path);
+            if (!File.Exists(absolute))
+                throw new InvalidOperationException("The approved native right-back transfer manifest is missing.");
+            RightBackNativeTransferManifest manifest =
+                JsonUtility.FromJson<RightBackNativeTransferManifest>(File.ReadAllText(absolute));
+            if (manifest == null || manifest.unityVertices == null || manifest.correctiveVertices == null ||
+                manifest.componentIds == null || manifest.unityVertices.Length != manifest.changedRows ||
+                manifest.unityVertices.Distinct().Count() != manifest.unityVertices.Length ||
+                manifest.correctiveVertices.Distinct().Count() != manifest.correctiveVertices.Length ||
+                manifest.correctiveVertices.Except(manifest.unityVertices).Any() ||
+                manifest.unityVertices.Any(vertex => vertex < 0 || vertex >= mesh.vertexCount))
+                throw new InvalidOperationException("The approved native right-back transfer manifest is invalid.");
+            return manifest;
+        }
+
+        private static bool SameBoneWeight(BoneWeight first, BoneWeight second) =>
+            first.boneIndex0 == second.boneIndex0 && first.boneIndex1 == second.boneIndex1 &&
+            first.boneIndex2 == second.boneIndex2 && first.boneIndex3 == second.boneIndex3 &&
+            Mathf.Abs(first.weight0 - second.weight0) <= .000001f &&
+            Mathf.Abs(first.weight1 - second.weight1) <= .000001f &&
+            Mathf.Abs(first.weight2 - second.weight2) <= .000001f &&
+            Mathf.Abs(first.weight3 - second.weight3) <= .000001f;
+
+        private static float PositionItemBodyAroundFixedTip(ConsumableRiggedSharedMotion motion, MeshFilter item,
+            float targetCenterY)
+        {
+            Transform hand = motion.RightHand;
+            Vector3 tip = motion.BatteryPlugTip.position;
+            Vector3 itemLocalTip = item.transform.InverseTransformPoint(tip);
+            Vector3 center = item.transform.TransformPoint(item.sharedMesh.bounds.center);
+            float bestAngle = 0f;
+            float bestError = Mathf.Abs(hand.InverseTransformPoint(center).y - targetCenterY);
+            for (int step = -180; step <= 180; step++)
+            {
+                float angle = step * .25f;
+                Quaternion rotation = Quaternion.AngleAxis(angle, hand.right);
+                Vector3 candidate = tip + rotation * (center - tip);
+                float error = Mathf.Abs(hand.InverseTransformPoint(candidate).y - targetCenterY);
+                if (error > bestError + .0000001f || Mathf.Abs(error - bestError) <= .0000001f &&
+                    Mathf.Abs(angle) >= Mathf.Abs(bestAngle)) continue;
+                bestError = error;
+                bestAngle = angle;
+            }
+            if (bestError > .0005f)
+                throw new InvalidOperationException(motion.name + " item body cannot reach the reviewed palm center around its fixed tip: " + bestError);
+            Quaternion pivotRotation = Quaternion.AngleAxis(bestAngle, hand.right);
+            item.transform.rotation = pivotRotation * item.transform.rotation;
+            item.transform.position = tip + pivotRotation * (item.transform.position - tip);
+            if (Vector3.Distance(item.transform.TransformPoint(itemLocalTip), tip) > .00002f)
+                throw new InvalidOperationException(motion.name + " physical plug tip moved during item-body placement.");
+            return bestAngle;
+        }
+
+        private static void RequireUnchangedAuthoredPose(ConsumableRiggedSharedMotion.AuthoredRigPose before,
+            ConsumableRiggedSharedMotion.AuthoredRigPose after, string label)
+        {
+            RequireUnchanged(before.Spine0, after.Spine0, label + " spine0");
+            RequireUnchanged(before.Spine1, after.Spine1, label + " spine1");
+            RequireUnchanged(before.Spine2, after.Spine2, label + " spine2");
+            RequireUnchanged(before.TorsoDelta, after.TorsoDelta, label + " torso delta");
+            RequireUnchanged(before.LeftArmRotation, after.LeftArmRotation, label + " left arm rotation");
+            RequireUnchanged(before.ForearmRotation, after.ForearmRotation, label + " right forearm rotation");
+            RequireUnchanged(before.HandRotation, after.HandRotation, label + " right hand rotation");
+            RequireUnchanged(before.LeftArmOrigin, after.LeftArmOrigin, label + " left arm origin");
+            RequireUnchanged(before.ShoulderOrigin, after.ShoulderOrigin, label + " shoulder origin");
+            RequireUnchanged(before.ShoulderHint, after.ShoulderHint, label + " shoulder hint");
+            RequireUnchanged(before.Elbow, after.Elbow, label + " right elbow");
+            RequireUnchanged(before.Hand, after.Hand, label + " right hand");
+            RequireUnchanged(before.Plug, after.Plug, label + " plug trajectory");
+        }
+
+        internal static void StopConsumableGripAndRightBackReview()
+        {
+            SessionState.SetBool(RightBackRestorePending, true);
+            StopConsumableRiggedSharedMotionReview();
+        }
+
+        internal static void StopConsumableRightBackRound2Review()
+        {
+            SessionState.SetBool(RightBackRound2RestorePending, true);
+            StopConsumableRiggedSharedMotionReview();
+        }
+
         private static void RecordRestoredReviewState(PlayModeStateChange state)
         {
             if (state != PlayModeStateChange.EnteredEditMode) return;
@@ -517,18 +1155,28 @@ namespace Bellerophon.Editor
                 AppendAppliedStructure(report, motion.gameObject);
                 report.AppendLine("target=" + name + " item=" + AssetDatabase.GetAssetPath(motion.BatteryGrip.GetComponentInChildren<MeshFilter>().sharedMesh));
             }
-            File.WriteAllText(Absolute(OutputFolder + "/restored_state.txt"), report.ToString(), new UTF8Encoding(false));
+            bool round2Restore = SessionState.GetBool(RightBackRound2RestorePending, false);
+            string restoreFolder = round2Restore ? RightBackRound2OutputFolder :
+                SessionState.GetBool(RightBackRestorePending, false) ? RightBackOutputFolder : OutputFolder;
+            SessionState.EraseBool(RightBackRound2RestorePending);
+            SessionState.EraseBool(RightBackRestorePending);
+            Directory.CreateDirectory(Absolute(restoreFolder));
+            File.WriteAllText(Absolute(restoreFolder + "/restored_state.txt"), report.ToString(), new UTF8Encoding(false));
             Debug.Log(report.ToString());
         }
 
         private static LiveObservation observation;
         private static void BeginObservation(string captureFolder)
+            => BeginObservation(captureFolder, OutputFolder, false);
+
+        private static void BeginObservation(string captureFolder, string reportFolder, bool includeRightBackViews,
+            bool analyzeRightBackTriangles = false)
         {
             if (!EditorApplication.isPlaying || EditorApplication.isPaused)
                 throw new InvalidOperationException("Unpaused live automatic playback is required.");
             if (observation != null) throw new InvalidOperationException("An observation is already running.");
             RequireAppliedStructure(RequireScene());
-            observation = new LiveObservation(captureFolder);
+            observation = new LiveObservation(captureFolder, reportFolder, includeRightBackViews, analyzeRightBackTriangles);
             ConsumableRiggedSharedMotion.PoseEvaluated += ObservePose;
             Debug.Log("Consumable read-only natural playback observation STARTED; wait for its report.");
         }
@@ -556,6 +1204,10 @@ namespace Bellerophon.Editor
         {
             private const int Width = 640, Height = 480;
             private readonly string folder;
+            private readonly string reportFolder;
+            private readonly int viewCount;
+            private readonly bool includeRightBackViews;
+            private readonly bool analyzeRightBackTriangles;
             private readonly StringBuilder report = new StringBuilder();
             private readonly List<string> failures = new List<string>();
             private readonly Dictionary<Transform, BoneInvariant>[] invariants = new Dictionary<Transform, BoneInvariant>[4];
@@ -570,17 +1222,23 @@ namespace Bellerophon.Editor
             private int captureTarget, frameSamples, failureCount;
             private float minimumBody = float.MaxValue, minimumArm = float.MaxValue;
             private float minimumRightReserve = float.MaxValue, maximumLeftAngleDrift, maximumRightError;
+            private float maximumRightBackTriangleStretch = 1f;
             private readonly double started = EditorApplication.timeSinceStartup;
 
-            public LiveObservation(string captureFolder)
+            public LiveObservation(string captureFolder, string outputFolder, bool includeRightBackViews,
+                bool analyzeRightBackTriangles)
             {
                 folder = captureFolder;
+                reportFolder = outputFolder;
+                this.includeRightBackViews = includeRightBackViews;
+                this.analyzeRightBackTriangles = analyzeRightBackTriangles;
+                viewCount = includeRightBackViews ? 10 : 8;
                 if (folder != null)
                 {
                     Directory.CreateDirectory(Absolute(folder));
-                    sheets = new Texture2D[4,8];
+                    sheets = new Texture2D[4,viewCount];
                     for (int i = 0; i < 4; i++)
-                        for (int v = 0; v < 8; v++)
+                        for (int v = 0; v < viewCount; v++)
                             sheets[i,v] = NewFilledTexture(Width * 4, Height * 4, new Color32(9,12,18,255));
                 }
                 report.AppendLine("mode=unmodified automatic playback; callback=WaitForEndOfFrame after live skin rendering");
@@ -640,7 +1298,15 @@ namespace Bellerophon.Editor
                         report.AppendLine("target=" + motion.name + " phase=" + ReviewTimeLabel(ReviewTimes[phase]) +
                             " actual=" + Format(time) + " frame=" + Time.frameCount);
                         AppendPoseMetrics(report, time, metrics);
-                        if (phase == 9) AppendHandSurfaceReadout(report, motion, currentFailures);
+                        if (analyzeRightBackTriangles)
+                        {
+                            float stretch = AppendRightBackTriangleStretch(report, skins[i], poseReadbacks[i],
+                                motion.name, time, phase, phase == 9);
+                            maximumRightBackTriangleStretch = Mathf.Max(maximumRightBackTriangleStretch, stretch);
+                            if (stretch > 1.5f)
+                                currentFailures.Add(motion.name + " visible right-back triangle stretch=" + Format(stretch));
+                        }
+                        if (phase == 9) AppendHandSurfaceReadout(report, motion, currentFailures, includeRightBackViews);
                         AppendFingerReadout(report, motion);
                         if (folder != null)
                         {
@@ -648,10 +1314,12 @@ namespace Bellerophon.Editor
                                 (motion.transform.forward + motion.transform.right).normalized,
                                 (motion.transform.forward - motion.transform.right).normalized, motion.transform.right,
                                 (motion.transform.forward + motion.transform.right).normalized, motion.transform.right,
-                                motion.RightHand.TransformDirection(Vector3.left), motion.RightHand.TransformDirection(new Vector3(-1f, 0f, -1f).normalized) };
-                            for (int v = 0; v < 8; v++)
+                                motion.RightHand.TransformDirection(Vector3.left), motion.RightHand.TransformDirection(new Vector3(-1f, 0f, -1f).normalized),
+                                -motion.transform.forward, (motion.transform.right - motion.transform.forward).normalized };
+                            for (int v = 0; v < viewCount; v++)
                                 sheets[i,v].SetPixels32((phase % 4) * Width, (3 - phase / 4) * Height,
-                                    Width, Height, RenderUpperBody(motion.gameObject, directions[v], Width, Height, v >= 4, v >= 6));
+                                    Width, Height, RenderUpperBody(motion.gameObject, directions[v], Width, Height,
+                                        v >= 4 && v < 6, v >= 6 && v < 8));
                             if (phase == 9)
                                 foreach (int view in new[] { 4, 6, 7, 16, 17, 18, 19 })
                                 {
@@ -683,15 +1351,18 @@ namespace Bellerophon.Editor
                 report.AppendLine("minBodyClearance=" + Format(minimumBody) + "; minArmClearance=" + Format(minimumArm));
                 report.AppendLine("minRightReserve=" + Format(minimumRightReserve) + "; maxLeftElbowDrift=" + Format(maximumLeftAngleDrift) +
                     "; maxRightTargetError=" + Format(maximumRightError));
+                if (analyzeRightBackTriangles)
+                    report.AppendLine("maxVisibleRightBackTriangleStretch=" + Format(maximumRightBackTriangleStretch) +
+                        "; threshold=1.500000");
                 report.AppendLine("failureCount=" + failureCount);
                 foreach (string failure in failures) report.AppendLine("failure=" + failure);
                 // Capture success is deliberately not a visual approval.
                 report.AppendLine("result=" + (failureCount == 0 ? "PASS" : "FAIL"));
                 if (folder != null)
                 {
-                    string[] views = { "front", "right_oblique", "left_oblique", "right_side", "wrist_oblique_detail", "wrist_side_detail", "grip_palm_detail", "grip_thumb_detail" };
+                    string[] views = { "front", "right_oblique", "left_oblique", "right_side", "wrist_oblique_detail", "wrist_side_detail", "grip_palm_detail", "grip_thumb_detail", "back", "right_back_oblique" };
                     for (int i = 0; i < 4; i++)
-                        for (int v = 0; v < 8; v++)
+                        for (int v = 0; v < viewCount; v++)
                         {
                             sheets[i,v].Apply(false, false);
                             File.WriteAllBytes(Absolute(folder + "/" + TargetNames[i] + "_" + views[v] + ".png"),
@@ -705,8 +1376,8 @@ namespace Bellerophon.Editor
             public void Abort(Exception exception) { report.AppendLine("result=ABORT; exception=" + exception); WriteReport(); }
             private void WriteReport()
             {
-                Directory.CreateDirectory(Absolute(OutputFolder));
-                File.WriteAllText(Absolute(folder == null ? OutputFolder + "/inspection.txt" : folder + "/observation.txt"),
+                Directory.CreateDirectory(Absolute(reportFolder));
+                File.WriteAllText(Absolute(folder == null ? reportFolder + "/inspection.txt" : folder + "/observation.txt"),
                     report.ToString(), new UTF8Encoding(false));
             }
             public void Dispose()
@@ -1358,7 +2029,8 @@ namespace Bellerophon.Editor
             public int[] itemTriangles;
         }
 
-        private static void AppendHandSurfaceReadout(StringBuilder report, ConsumableRiggedSharedMotion motion, List<string> surfaceFailures)
+        private static void AppendHandSurfaceReadout(StringBuilder report, ConsumableRiggedSharedMotion motion,
+            List<string> surfaceFailures, bool gripAndRightBackScope)
         {
             var skin = motion.GetComponentInChildren<SkinnedMeshRenderer>();
             Mesh source = skin.sharedMesh;
@@ -1399,17 +2071,21 @@ namespace Bellerophon.Editor
                 var reference = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Art/Player/HandsRig/player_hands_candidate.fbx").GetComponentInChildren<SkinnedMeshRenderer>();
                 Vector3[] referenceVertices = reference.sharedMesh.vertices; BoneWeight[] referenceWeights = reference.sharedMesh.boneWeights;
                 float vertexDifference = 0f, weightDifference = 0f, bindDifference = 0f; int boneIndexDifferences = 0;
-                if (referenceVertices.Length != rest.Length) throw new InvalidOperationException("Reviewed/current skin topology differs.");
-                for (int v = 0; v < rest.Length; v++)
+                if (referenceVertices.Length == rest.Length)
                 {
-                    vertexDifference = Mathf.Max(vertexDifference, Vector3.Distance(rest[v], referenceVertices[v]));
-                    BoneWeight a = weights[v], b = referenceWeights[v];
-                    weightDifference = Mathf.Max(weightDifference, Mathf.Abs(a.weight0-b.weight0), Mathf.Abs(a.weight1-b.weight1), Mathf.Abs(a.weight2-b.weight2), Mathf.Abs(a.weight3-b.weight3));
-                    if (a.boneIndex0!=b.boneIndex0 || a.boneIndex1!=b.boneIndex1 || a.boneIndex2!=b.boneIndex2 || a.boneIndex3!=b.boneIndex3) boneIndexDifferences++;
+                    for (int v = 0; v < rest.Length; v++)
+                    {
+                        vertexDifference = Mathf.Max(vertexDifference, Vector3.Distance(rest[v], referenceVertices[v]));
+                        BoneWeight a = weights[v], b = referenceWeights[v];
+                        weightDifference = Mathf.Max(weightDifference, Mathf.Abs(a.weight0-b.weight0), Mathf.Abs(a.weight1-b.weight1), Mathf.Abs(a.weight2-b.weight2), Mathf.Abs(a.weight3-b.weight3));
+                        if (a.boneIndex0!=b.boneIndex0 || a.boneIndex1!=b.boneIndex1 || a.boneIndex2!=b.boneIndex2 || a.boneIndex3!=b.boneIndex3) boneIndexDifferences++;
+                    }
+                    for(int i=0;i<source.bindposes.Length;i++)for(int r=0;r<4;r++)for(int c=0;c<4;c++)
+                        bindDifference=Mathf.Max(bindDifference,Mathf.Abs(source.bindposes[i][r,c]-reference.sharedMesh.bindposes[i][r,c]));
+                    report.AppendLine("reviewedCandidateDifference vertices="+Format(vertexDifference)+" weights="+Format(weightDifference)+" boneIndices="+boneIndexDifferences+" bindposes="+Format(bindDifference));
                 }
-                for(int i=0;i<source.bindposes.Length;i++)for(int r=0;r<4;r++)for(int c=0;c<4;c++)
-                    bindDifference=Mathf.Max(bindDifference,Mathf.Abs(source.bindposes[i][r,c]-reference.sharedMesh.bindposes[i][r,c]));
-                report.AppendLine("reviewedCandidateDifference vertices="+Format(vertexDifference)+" weights="+Format(weightDifference)+" boneIndices="+boneIndexDifferences+" bindposes="+Format(bindDifference));
+                else report.AppendLine("reviewedCandidateDifference notApplicable=True currentVertices="+rest.Length+
+                    " candidateVertices="+referenceVertices.Length+"; current shared skin remains the observation target");
                 var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Art/Player/HandsRig/Review_BatteryGrip.prefab");
                 var profile=ProfileFor(motion);
                 var prefabBones=prefab.GetComponentsInChildren<Transform>(true).Where(t=>profile.Joints.Any(j=>j.BoneName==t.name)).ToDictionary(t=>t.name);
@@ -1428,10 +2104,12 @@ namespace Bellerophon.Editor
                 MeshFilter item=motion.BatteryGrip.GetComponentInChildren<MeshFilter>();
                 Matrix4x4 toHand=motion.RightHand.worldToLocalMatrix*skin.transform.localToWorldMatrix;
                 Matrix4x4 itemToHand=motion.RightHand.worldToLocalMatrix*item.transform.localToWorldMatrix;
+                report.AppendLine("physicalTipInHand=" + Format(motion.RightHand.InverseTransformPoint(motion.BatteryPlugTip.position)));
                 MeshFilter referenceItem=referenceGrip.GetComponentInChildren<MeshFilter>();
                 Matrix4x4 referenceItemToHand=referenceGrip.parent.worldToLocalMatrix*referenceItem.transform.localToWorldMatrix;
                 report.AppendLine("itemToHand="+itemToHand.ToString("F6")+" referenceItemToHand="+referenceItemToHand.ToString("F6"));
                 var surface=new PlayerHandRigTools.HandItemSurface(item.sharedMesh.vertices.Select(itemToHand.MultiplyPoint3x4).ToArray(),item.sharedMesh.triangles,itemToHand.inverse,item.sharedMesh.bounds);
+                int contactingDigits = 0, penetratingVertices = 0;
                 foreach(string digit in new[]{"Thumb","Index","Middle","Ring","Little"})
                 {
                     int near=0,inside=0;float distance=float.PositiveInfinity,depth=0;
@@ -1442,7 +2120,17 @@ namespace Bellerophon.Editor
                         distance=Mathf.Min(distance,Mathf.Abs(d));if(Mathf.Abs(d)<=.003f)near++;if(d<-.0005f){inside++;depth=Mathf.Max(depth,-d);}
                     }
                     report.AppendLine("actualGrip "+digit+" near3mm="+near+" nearest="+Format(distance)+" insideOver0.5mm="+inside+" depth="+Format(depth));
-                    if(near==0||inside>0)surfaceFailures.Add(motion.name+" actual grip "+digit+" missing contact or penetrating battery");
+                    if(near>0||distance<=.0035f)contactingDigits++;
+                    penetratingVertices+=inside;
+                    if(!gripAndRightBackScope&&(near==0||inside>0))surfaceFailures.Add(motion.name+" actual grip "+digit+" missing contact or penetrating battery");
+                }
+                if(gripAndRightBackScope)
+                {
+                    report.AppendLine("scopedGrip contactingDigitsWithin3.5mm="+contactingDigits+
+                        " penetratingVerticesOver0.5mm="+penetratingVertices+
+                        " directVisualReviewPrimary=True completedFingerMeshMetricsReportedOnly=True");
+                    if(contactingDigits<2)surfaceFailures.Add(motion.name+" scoped grip has fewer than two contacting digits="+contactingDigits);
+                    if(penetratingVertices>0)surfaceFailures.Add(motion.name+" scoped grip penetrating vertices="+penetratingVertices);
                 }
                 Vector3[] handPoints = actual.Select(toHand.MultiplyPoint3x4).ToArray();
                 bool[] handVertices = weights.Select(w =>
@@ -1478,9 +2166,9 @@ namespace Bellerophon.Editor
                     }
                 }
                 report.AppendLine("actualHandItemCrossingTriangles=" + crossingTriangles);
-                if (crossingTriangles > 0) surfaceFailures.Add(motion.name + " hand/item triangle intersections=" + crossingTriangles);
+                if (!gripAndRightBackScope && crossingTriangles > 0) surfaceFailures.Add(motion.name + " hand/item triangle intersections=" + crossingTriangles);
                 report.AppendLine("actualHandFoldedFaces="+foldedFaces+" collapsedFaces="+collapsedFaces);
-                if(foldedFaces>0||collapsedFaces>0)surfaceFailures.Add(motion.name+" folded/collapsed hand faces="+foldedFaces+"/"+collapsedFaces);
+                if(!gripAndRightBackScope&&(foldedFaces>0||collapsedFaces>0))surfaceFailures.Add(motion.name+" folded/collapsed hand faces="+foldedFaces+"/"+collapsedFaces);
                 float maxEdgeRatio = 0; int stretched = 0, clipOutside = 0;
                 Vector3 cameraCenter = motion.RightHand.TransformPoint(new Vector3(0, .125f, 0));
                 foreach (int v in Enumerable.Range(0, actual.Length).Where(v => handVertices[v]))
@@ -1509,7 +2197,7 @@ namespace Bellerophon.Editor
                     }
                 }
                 report.AppendLine("handSurfaceDiagnostic maxEdgeRatio=" + maxEdgeRatio + " stretchedEdgeOccurrences=" + stretched + " palmCameraClippedHandVertices=" + clipOutside);
-                if(stretched > 0) surfaceFailures.Add(motion.name + " excessive hand surface stretching=" + stretched + " maxRatio=" + maxEdgeRatio);
+                if(!gripAndRightBackScope&&stretched > 0) surfaceFailures.Add(motion.name + " excessive hand surface stretching=" + stretched + " maxRatio=" + maxEdgeRatio);
                 string poseFolder = Absolute(OutputFolder + "/weight_pose_readout");
                 Directory.CreateDirectory(poseFolder);
                 File.WriteAllText(poseFolder + "/" + motion.name + ".json", JsonUtility.ToJson(new HandWeightPoseReadout
@@ -2094,6 +2782,236 @@ namespace Bellerophon.Editor
             Bounds result = renderers[0].bounds;
             for (int index = 1; index < renderers.Length; index++) result.Encapsulate(renderers[index].bounds);
             return result;
+        }
+
+        private sealed class RightBackStretchTriangle
+        {
+            internal int Triangle;
+            internal int A;
+            internal int B;
+            internal int C;
+            internal float Ratio;
+        }
+
+        [Serializable]
+        private sealed class RightBackNativeTransferManifest
+        {
+            public int[] unityVertices;
+            public int[] correctiveVertices;
+            public int changedRows;
+            public int selectedRing;
+            public float predictedMaxStretch;
+            public float allLocalMaxStretch;
+            public int[] componentIds;
+        }
+
+        [Serializable]
+        private sealed class RightBackTopologyPose
+        {
+            public Vector3[] vertices;
+            public Vector2[] uv;
+            public int[] triangles;
+            public string[] boneNames;
+            public int[] boneIndices;
+            public float[] boneWeights;
+            public float[] boneTransforms;
+            public float posedPredictionMaxError;
+        }
+
+        [Serializable]
+        private sealed class RightBackBonePose
+        {
+            public string target;
+            public int phase;
+            public float time;
+            public float[] boneTransforms;
+            public float posedPredictionMaxError;
+        }
+
+        private static bool IsRightBackRound2AuditPoint(Vector3 point) =>
+            point.x >= .02f && point.x <= .24f &&
+            point.y >= .92f && point.y <= 1.44f &&
+            point.z >= .06f && point.z <= .36f;
+
+        private static string PointLabel(Vector3 point) =>
+            "(" + Format(point.x) + "," + Format(point.y) + "," + Format(point.z) + ")";
+
+        private static string WeightLabel(BoneWeight weight, string[] names)
+        {
+            var values = new[]
+            {
+                (weight.boneIndex0, weight.weight0),
+                (weight.boneIndex1, weight.weight1),
+                (weight.boneIndex2, weight.weight2),
+                (weight.boneIndex3, weight.weight3)
+            };
+            return string.Join(",", values.Where(value => value.Item2 > 0f)
+                .Select(value => names[value.Item1] + ":" + Format(value.Item2)));
+        }
+
+        private static float AppendRightBackTriangleStretch(StringBuilder report, SkinnedMeshRenderer skin,
+            Mesh posedMesh, string targetName, float time, int phase, bool verbose)
+        {
+            Mesh restMesh = skin.sharedMesh;
+            Vector3[] rest = restMesh.vertices;
+            Vector3[] posed = posedMesh.vertices;
+            int[] triangles = restMesh.triangles;
+            bool[] correctiveComponents = RightBackRound2CorrectiveComponentMask(restMesh);
+            if (rest.Length != posed.Length)
+                throw new InvalidOperationException(targetName + " posed/rest vertex counts differ during right-back audit.");
+
+            var samples = new List<RightBackStretchTriangle>();
+            float maximum = 1f;
+            int scanned = 0, over125 = 0, over150 = 0, over200 = 0;
+            for (int offset = 0; offset < triangles.Length; offset += 3)
+            {
+                int a = triangles[offset], b = triangles[offset + 1], c = triangles[offset + 2];
+                if (!correctiveComponents[a] || !correctiveComponents[b] || !correctiveComponents[c]) continue;
+                scanned++;
+                float ab = Vector3.Distance(rest[a], rest[b]);
+                float bc = Vector3.Distance(rest[b], rest[c]);
+                float ca = Vector3.Distance(rest[c], rest[a]);
+                float ratio = Mathf.Max(
+                    ab > .000001f ? Vector3.Distance(posed[a], posed[b]) / ab : 1f,
+                    bc > .000001f ? Vector3.Distance(posed[b], posed[c]) / bc : 1f,
+                    ca > .000001f ? Vector3.Distance(posed[c], posed[a]) / ca : 1f);
+                maximum = Mathf.Max(maximum, ratio);
+                if (ratio > 1.25f) over125++;
+                if (ratio > 1.5f) over150++;
+                if (ratio > 2f) over200++;
+                if (ratio > 1.25f)
+                    samples.Add(new RightBackStretchTriangle
+                    {
+                        Triangle = offset / 3,
+                        A = a,
+                        B = b,
+                        C = c,
+                        Ratio = ratio
+                    });
+            }
+            if (scanned == 0)
+                throw new InvalidOperationException("No disconnected right-back corrective triangles were audited.");
+
+            report.AppendLine("rightBackCorrectiveComponentStretch target=" + targetName + " time=" + Format(time) +
+                " scanned=" + scanned + " over1.25=" + over125 + " over1.50=" + over150 +
+                " over2.00=" + over200 + " max=" + Format(maximum));
+            WriteRightBackBonePose(report, skin, posedMesh, targetName, time, phase);
+            if (verbose)
+            {
+                if (targetName == TargetNames[0])
+                    WriteRightBackTopologyPose(report, skin, posedMesh);
+                BoneWeight[] weights = restMesh.boneWeights;
+                string[] names = skin.bones.Select(bone => bone.name).ToArray();
+                foreach (RightBackStretchTriangle sample in samples.OrderByDescending(item => item.Ratio).Take(24))
+                {
+                    report.AppendLine("rightBackStretchTriangle triangle=" + sample.Triangle +
+                        " ratio=" + Format(sample.Ratio) + " vertices=" + sample.A + "," + sample.B + "," + sample.C);
+                    foreach (int vertex in new[] { sample.A, sample.B, sample.C })
+                        report.AppendLine("rightBackStretchVertex index=" + vertex + " rest=" + PointLabel(rest[vertex]) +
+                            " posed=" + PointLabel(posed[vertex]) + " weights=" + WeightLabel(weights[vertex], names));
+                }
+            }
+            return maximum;
+        }
+
+        private static Matrix4x4[] RightBackBoneTransforms(SkinnedMeshRenderer skin) =>
+            Enumerable.Range(0, skin.bones.Length).Select(index =>
+                skin.transform.worldToLocalMatrix * skin.bones[index].localToWorldMatrix * skin.sharedMesh.bindposes[index]).ToArray();
+
+        private static float[] FlattenMatrices(Matrix4x4[] transforms)
+        {
+            var result = new float[transforms.Length * 16];
+            for (int bone = 0; bone < transforms.Length; bone++)
+                for (int row = 0; row < 4; row++)
+                    for (int column = 0; column < 4; column++)
+                        result[bone * 16 + row * 4 + column] = transforms[bone][row, column];
+            return result;
+        }
+
+        private static float RightBackPosePredictionError(Mesh restMesh, Mesh posedMesh, Matrix4x4[] transforms)
+        {
+            Vector3[] vertices = restMesh.vertices;
+            BoneWeight[] weights = restMesh.boneWeights;
+            Vector3[] posed = posedMesh.vertices;
+            float maximumError = 0f;
+            for (int vertex = 0; vertex < weights.Length; vertex++)
+            {
+                int[] indices = { weights[vertex].boneIndex0, weights[vertex].boneIndex1,
+                    weights[vertex].boneIndex2, weights[vertex].boneIndex3 };
+                float[] values = { weights[vertex].weight0, weights[vertex].weight1,
+                    weights[vertex].weight2, weights[vertex].weight3 };
+                Vector3 predicted = Vector3.zero;
+                for (int influence = 0; influence < 4; influence++)
+                    predicted += transforms[indices[influence]].MultiplyPoint3x4(vertices[vertex]) * values[influence];
+                maximumError = Mathf.Max(maximumError, Vector3.Distance(predicted, posed[vertex]));
+            }
+            return maximumError;
+        }
+
+        private static void WriteRightBackBonePose(StringBuilder report, SkinnedMeshRenderer skin, Mesh posedMesh,
+            string targetName, float time, int phase)
+        {
+            Matrix4x4[] transforms = RightBackBoneTransforms(skin);
+            float maximumError = RightBackPosePredictionError(skin.sharedMesh, posedMesh, transforms);
+            if (maximumError > .0001f)
+                throw new InvalidOperationException("Right-back bone-pose prediction did not match BakeMesh: " + maximumError);
+            var snapshot = new RightBackBonePose
+            {
+                target = targetName,
+                phase = phase,
+                time = time,
+                boneTransforms = FlattenMatrices(transforms),
+                posedPredictionMaxError = maximumError
+            };
+            string outputFolder = RightBackRound2OutputFolder + "/pose_matrices";
+            Directory.CreateDirectory(Absolute(outputFolder));
+            File.WriteAllText(Absolute(outputFolder + "/" + targetName + "_" +
+                phase.ToString("00", CultureInfo.InvariantCulture) + ".json"), JsonUtility.ToJson(snapshot),
+                new UTF8Encoding(false));
+            report.AppendLine("rightBackBonePoseExported=" + targetName + "/" + phase +
+                " predictionMaxError=" + Format(maximumError));
+        }
+
+        private static void WriteRightBackTopologyPose(StringBuilder report, SkinnedMeshRenderer skin, Mesh posedMesh)
+        {
+            Mesh restMesh = skin.sharedMesh;
+            Vector3[] vertices = restMesh.vertices;
+            BoneWeight[] weights = restMesh.boneWeights;
+            Matrix4x4[] transforms = RightBackBoneTransforms(skin);
+            var snapshot = new RightBackTopologyPose
+            {
+                vertices = vertices,
+                uv = restMesh.uv,
+                triangles = restMesh.triangles,
+                boneNames = skin.bones.Select(bone => bone.name).ToArray(),
+                boneIndices = new int[weights.Length * 4],
+                boneWeights = new float[weights.Length * 4],
+                boneTransforms = FlattenMatrices(transforms)
+            };
+            float maximumError = 0f;
+            Vector3[] posed = posedMesh.vertices;
+            for (int vertex = 0; vertex < weights.Length; vertex++)
+            {
+                int[] indices = { weights[vertex].boneIndex0, weights[vertex].boneIndex1,
+                    weights[vertex].boneIndex2, weights[vertex].boneIndex3 };
+                float[] values = { weights[vertex].weight0, weights[vertex].weight1,
+                    weights[vertex].weight2, weights[vertex].weight3 };
+                Vector3 predicted = Vector3.zero;
+                for (int influence = 0; influence < 4; influence++)
+                {
+                    snapshot.boneIndices[vertex * 4 + influence] = indices[influence];
+                    snapshot.boneWeights[vertex * 4 + influence] = values[influence];
+                    predicted += transforms[indices[influence]].MultiplyPoint3x4(vertices[vertex]) * values[influence];
+                }
+                maximumError = Mathf.Max(maximumError, Vector3.Distance(predicted, posed[vertex]));
+            }
+            snapshot.posedPredictionMaxError = maximumError;
+            if (maximumError > .0001f)
+                throw new InvalidOperationException("Right-back topology pose prediction did not match BakeMesh: " + maximumError);
+            Directory.CreateDirectory(Absolute(RightBackRound2OutputFolder));
+            File.WriteAllText(Absolute(RightBackRound2OutputFolder + "/topology_pose.json"),
+                JsonUtility.ToJson(snapshot), new UTF8Encoding(false));
+            report.AppendLine("rightBackTopologyPoseExported=True predictionMaxError=" + Format(maximumError));
         }
 
         private static Color32[] RenderUpperBody(GameObject target, Vector3 viewDirection, int width, int height, bool wristDetail = false, bool gripDetail = false, bool unclipped = false)

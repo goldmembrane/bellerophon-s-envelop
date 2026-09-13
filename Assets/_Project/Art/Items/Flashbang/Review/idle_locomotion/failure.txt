@@ -1,0 +1,3 @@
+System.InvalidOperationException: Flashbang_Idle locomotion requires a clean CargoRunMvp scene.
+  at Bellerophon.Editor.Validation.FlashbangIdleLocomotionTools.Apply () [0x00472] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\FlashbangSetupTools.cs:2546 
+  at Bellerophon.Editor.Validation.FlashbangIdleLocomotionTools.TryRunApprovedRequest () [0x000d6] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\FlashbangSetupTools.cs:2420 

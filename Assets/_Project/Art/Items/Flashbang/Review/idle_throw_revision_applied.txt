@@ -1,0 +1,22 @@
+﻿Flashbang Idle palm-forward and Throw Release flight
+idleSourceAnimationChanged=False
+releaseSourceAnimationChanged=False
+flashbangModelChanged=False
+rendererMeshMaterialTextureChanged=False
+unrelatedSceneObjectsChanged=False
+idlePalmBeforeDegrees=134.416122
+idlePalmAfterDegrees=0
+idleRotationDistribution=LongitudinalTwist:RightShoulder10%,RightArm35%,RightForeArm55%,RightHandResidualOnly
+idleBoneDeltaDegrees=14.3564825,76.36121,63.51587,29.6095943
+releaseMaximumHeightSampleRate=240
+releaseTimeSeconds=0.775000036
+releaseHandHeight=1.71661425
+previousHandHeight=1.7155416
+nextHandHeight=1.71514511
+sourceHandVelocityLocal=1.34674,-0.0475788079,6.63574171
+launchVelocityLocal=0,-0.0475788079,6.63574171
+launchSpeedFromSourceHand=6.63591242
+spinRadiansPerSecondFromSourceHand=21.25249
+gravitySource=UnityPhysicsGravity
+flightOrientation=VelocityAlignmentPlusSourceHandSpin
+loopReset=ReparentToRightHandAndRethrow

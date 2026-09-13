@@ -1,0 +1,3 @@
+﻿System.InvalidOperationException: Flashbang velocity alignment exceeded tolerance: 128.712524
+  at Bellerophon.Editor.Validation.FlashbangIdleThrowRevisionTools.InspectRuntime (Bellerophon.Editor.Validation.FlashbangIdleThrowRevisionTools+MotionProxy idle, Bellerophon.Editor.Validation.FlashbangIdleThrowRevisionTools+MotionProxy release) [0x00148] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\FlashbangSetupTools.cs:1705 
+  at Bellerophon.Editor.Validation.FlashbangIdleThrowRevisionTools.ReviewUpdate () [0x00556] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\FlashbangSetupTools.cs:1634 

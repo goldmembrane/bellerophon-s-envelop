@@ -1,0 +1,3 @@
+﻿System.InvalidOperationException: Flashbang_Idle palm drifted away from transporter forward: 71.6025162
+  at Bellerophon.Editor.Validation.FlashbangIdleThrowRevisionTools.InspectRuntime (Bellerophon.Editor.Validation.FlashbangIdleThrowRevisionTools+MotionProxy idle, Bellerophon.Editor.Validation.FlashbangIdleThrowRevisionTools+MotionProxy release) [0x0000d] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\FlashbangSetupTools.cs:1620 
+  at Bellerophon.Editor.Validation.FlashbangIdleThrowRevisionTools.ReviewUpdate () [0x003f6] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\FlashbangSetupTools.cs:1578 
