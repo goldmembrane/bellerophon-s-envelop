@@ -1,0 +1,16 @@
+Flashlight charge grip and disconnect final-hold application
+sceneWasDirtyBeforeApplication=True
+connectForwardOffsetBeforeMeters=0.1598767
+disconnectForwardOffsetBeforeMeters=0.1598767
+appliedForwardOffsetMeters=0.02
+connectHoldDurationBeforeSeconds=1
+connectHoldDurationAfterSeconds=1
+disconnectHoldDurationBeforeSeconds=1
+disconnectFinalHoldDurationAfterSeconds=0.5
+disconnectInitialHoldRemoved=True
+rightArmWristBodyModified=False
+rightHandFollowModified=False
+sourceClipModified=False
+controllersModified=False
+rendererMeshMaterialRotationScaleModified=False
+objectsOutsideTargetsChanged=False

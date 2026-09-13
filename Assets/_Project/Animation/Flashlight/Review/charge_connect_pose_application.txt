@@ -1,0 +1,16 @@
+Flashlight_Charge_Connect approved pose revision application
+target=Flashlight_Charge_Connect
+idleReference=Player_Idle
+sceneWasDirtyBeforeApplication=True
+idleBodyBoneCount=12
+bodyAndLegsMatchPlayerIdle=True
+leftArmModified=False
+headModified=False
+rightArmCorrection=LongitudinalShoulder10_Arm35_Forearm55_ResidualHand
+rightPalmForwardDeviationDegrees=0.01978234
+flashlightLensUpDeviationDegrees=0
+rightHandPositionFollowPreserved=True
+sourceClipModified=False
+controllerModified=False
+rendererMeshMaterialScaleModified=False
+objectsOutsideTargetChanged=False

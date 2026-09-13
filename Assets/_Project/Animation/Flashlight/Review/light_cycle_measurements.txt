@@ -1,0 +1,9 @@
+Flashlight_Idle light-cycle receiver measurements
+initialOnReceiverLuminance=0.14653933
+idleOffReceiverLuminance=0.0836547762
+returnedOnReceiverLuminance=0.148588762
+initialOnLensLuminance=1
+idleOffLensLuminance=0.211233273
+returnedOnLensLuminance=0.9999919
+requiredReceiverDifference=0.02
+requiredLensDifference=0.02

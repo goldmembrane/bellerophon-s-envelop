@@ -1,0 +1,27 @@
+RepairDevice_Operate start view and repair kit application
+sceneSaved=True
+sourceModelChanged=False
+sourceAndImportedBytesEqual=True
+targetTransformUnchanged=True
+outsidePlayerAndKitChanged=False
+modelRotationReinterpreted=False
+modelScaleReinterpreted=False
+placementDistanceMeters=1.000000
+floorContactY=-0.201330
+playerPosition=(71.307860, 0.000000, -285.575400)
+playerRotation=(0.000000, 0.000000, 0.000000, 1.000000)
+kitPosition=(71.311550, 0.099451, -282.415000)
+kitRotation=(-0.707107, 0.000000, 0.000000, 0.707107)
+kitScale=(100.000000, 100.000000, 100.000000)
+cameraHorizontalDistance=4.000000
+cameraFacingDot=1.000000
+sourceSha256=CD2FDF59D96CDAE7DA3866FD44601C852474734E2D8AEF5A5A26EF3BF3D9A1C9
+importedSha256=CD2FDF59D96CDAE7DA3866FD44601C852474734E2D8AEF5A5A26EF3BF3D9A1C9
+rendererCount=1
+textureCount=5
+texture=Assets/_Project/Art/Items/RepairKitClose/Textures/RepairKitClose_MetallicSmoothness.png
+texture=Assets/_Project/Art/Items/RepairKitClose/Textures/base_color.jpg
+texture=Assets/_Project/Art/Items/RepairKitClose/Textures/normal.jpg
+texture=Assets/_Project/Art/Items/RepairKitClose/Textures/texture_0_metallic.png
+texture=Assets/_Project/Art/Items/RepairKitClose/Textures/texture_0_roughness.png
+material=Assets/_Project/Art/Items/RepairKitClose/Materials/Material.001.mat|shader=Universal Render Pipeline/Lit

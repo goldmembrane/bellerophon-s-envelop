@@ -1,0 +1,15 @@
+Flashlight_Charge_Connect supplied animation inspection
+targetCount=1
+takeName=mixamo.com
+clipName=FlashlightChargeConnect_SourceExact
+clipLengthSeconds=1.03333342
+clipFrameRate=30
+curveBindingCount=79
+fullTakePreserved=True
+sameEmbeddedClipReferenced=True
+loopTime=True
+controllerStateCount=1
+controllerSpeed=1
+applyRootMotion=False
+rightHandFollowPresent=True
+inspectionManipulatedTarget=False

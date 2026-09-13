@@ -1,0 +1,21 @@
+DoorOpener_Idle read-only carry inspection
+verificationTargetManipulated=False
+sceneDirty=False
+sourceModelChanged=False
+sourceAndImportedBytesEqual=True
+rightHandFollowConfigured=True
+rightFingerRigApplied=True
+antennaForwardUp45=True
+antennaDirectionErrorDegrees=0
+antennaElevationDegrees=44.99999
+followPositionError=0
+followRotationErrorDegrees=0
+gripHeightFraction=0.27
+gripFrontInsetFraction=0.08
+palmToModelBoundsDistance=0
+rightForeArmPoseErrorDegrees=0
+rightHandPoseErrorDegrees=0
+rightFingerPoseErrorDegrees=0
+torsoHeadLowerBodyLeftArmChanged=False
+embeddedTextureCount=4
+externalMaterialApplied=True

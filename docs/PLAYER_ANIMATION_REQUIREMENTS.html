@@ -42,6 +42,16 @@
       color: #16a34a;
       font-weight: 800;
     }
+    .animation-omission-note {
+      padding: 12px 14px;
+      border-left: 4px solid #64748b;
+      background: #f8fafc;
+      color: #475569;
+    }
+    tr.animation-omitted td {
+      color: #94a3b8;
+      text-decoration: line-through;
+    }
     @media (max-width: 900px) {
       main { padding: 16px; overflow-x: auto; }
       table { min-width: 1200px; }
@@ -293,21 +303,21 @@
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-SHD-001</td><td>P1</td><td>Shield_Draw</td><td>제압 방패 꺼내기</td><td>상체&#183;손</td><td>0.5초</td><td>제압 방패 선택</td><td>한손 대기</td><td>피격</td><td>명시</td><td>158행</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-SHD-002</td><td>P1</td><td>Shield_Idle</td><td>제압 방패 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>제압 방패 장착</td><td>자체 유지</td><td>방어&#183;보관</td><td>명시</td><td>158행</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-SHD-003</td><td>P1</td><td>Shield_Stow</td><td>제압 방패 등에 넣기</td><td>상체&#183;손</td><td>0.5초</td><td>양손 장비 선택</td><td>다음 장비</td><td>피격</td><td>명시</td><td>158행</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-SHD-004</td><td>P1</td><td>Shield_Raise</td><td>제압 방패 올리기</td><td>상체&#183;손</td><td>1회</td><td>방패를 내린 상태에서 좌클릭</td><td>방어 대기</td><td>피격</td><td>사용자 확정</td><td>158행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-SHD-005</td><td>P1</td><td>Shield_Block_Idle</td><td>제압 방패 방어 대기</td><td>상체&#183;손</td><td>반복</td><td>방패 올리기 완료와 방어 토글 활성</td><td>자체 유지</td><td>좌클릭 토글 해제&#183;파손</td><td>사용자 확정</td><td>158행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-SHD-006</td><td>P1</td><td>Shield_Lower</td><td>제압 방패 내리기</td><td>상체&#183;손</td><td>1회</td><td>방어 대기 중 좌클릭</td><td>한손 대기</td><td>피격</td><td>사용자 확정</td><td>158행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-SHD-007</td><td>P1</td><td>Shield_Block_Impact</td><td>제압 방패 충격 반응</td><td>상체&#183;손</td><td>1회</td><td>방어 성공</td><td>방어 대기</td><td>방패 파손</td><td>필수 파생</td><td>158행</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-SHD-008</td><td>P1</td><td>Shield_Break_Reaction</td><td>제압 방패 파손 반응</td><td>상체&#183;손</td><td>1회</td><td>방패 내구도 0</td><td>빈손 대기</td><td>없음</td><td>필수 파생</td><td>158행</td></tr>
 </tbody></table>
 <ul>
@@ -318,40 +328,43 @@
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-ARM-001</td><td>P2</td><td>Armor_Protective_Idle</td><td>방호복 장착 정적 자세</td><td>전신</td><td>정적 유지</td><td>방호복 장착</td><td>자체 유지</td><td>장비 해제</td><td>사용자 확정</td><td>159행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-ARM-005</td><td>P2</td><td>Armor_Insulated_Idle</td><td>절연복 장착 정적 자세</td><td>전신</td><td>정적 유지</td><td>절연복 장착</td><td>자체 유지</td><td>장비 해제</td><td>사용자 확정</td><td>160행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-ARM-007</td><td>P2</td><td>Armor_Fireproof_Idle</td><td>방염복 장착 정적 자세</td><td>전신</td><td>정적 유지</td><td>방염복 장착</td><td>자체 유지</td><td>장비 해제</td><td>사용자 확정</td><td>161행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-ARM-009</td><td>P2</td><td>Armor_Head_Idle</td><td>머리 보호대 장착 정적 자세</td><td>머리</td><td>정적 유지</td><td>머리 보호대 장착</td><td>자체 유지</td><td>장비 해제</td><td>사용자 확정</td><td>162행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-ARM-013</td><td>P2</td><td>Armor_Physical_Idle</td><td>물리 방호복 장착 정적 자세</td><td>전신</td><td>정적 유지</td><td>물리 방호복 장착</td><td>자체 유지</td><td>장비 해제</td><td>사용자 확정</td><td>184행, 사용자 확정</td></tr>
 </tbody></table>
 <h2>12. 치료와 보호막 물품</h2>
+<p class="animation-omission-note"><code>Medicine_Drink</code>, <code>Bandage_Hemostat</code>, <code>Bandage_Wrap</code>은 별도 모션을 제작하지 않는다. 사용 과정은 이펙트와 진행 바로 처리하므로 아래 세 제작 항목을 애니메이션 범위에서 제외한다.</p>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
-<tr>
+<tr class="animation-omitted" data-completion="모션 제작 제외">
 <td>PLR-MED-001</td><td>P1</td><td>Medicine_Drink</td><td>부상 완화제 마시기</td><td>상체&#183;손</td><td>1초</td><td>사용 입력</td><td>기존 휴대</td><td>피격</td><td>명시</td><td>164행</td></tr>
-<tr>
+<tr class="animation-omitted" data-completion="모션 제작 제외">
 <td>PLR-MED-002</td><td>P1</td><td>Bandage_Hemostat</td><td>허리에 지혈제 바르기</td><td>상체&#183;손</td><td>1회</td><td>지혈제 사용 시작</td><td>붕대 감기</td><td>피격</td><td>명시</td><td>165행</td></tr>
-<tr>
+<tr class="animation-omitted" data-completion="모션 제작 제외">
 <td>PLR-MED-003</td><td>P1</td><td>Bandage_Wrap</td><td>허리에 붕대 감기</td><td>상체&#183;손</td><td>총 과정 3초</td><td>지혈제 동작 완료</td><td>기존 휴대</td><td>피격</td><td>명시</td><td>165행</td></tr>
-<tr>
-<td>PLR-MED-004</td><td>P1</td><td>Battery_Aux_Plug</td><td>보조 배터리 팔 연결</td><td>상체&#183;손</td><td>1초</td><td>사용 입력</td><td>기존 휴대</td><td>피격</td><td>사용자 확정</td><td>166행, 사용자 확정</td></tr>
-<tr>
-<td>PLR-MED-007</td><td>P1</td><td>Converter_Shield_Plug</td><td>보호막 전환기 팔 연결</td><td>상체&#183;손</td><td>1초</td><td>사용 입력</td><td>기존 휴대 또는 사망</td><td>피격</td><td>사용자 확정</td><td>168행, 사용자 확정</td></tr>
-<tr>
-<td>PLR-MED-009</td><td>P1</td><td>Buffer_Shield_Plug</td><td>급속 보호막 완충제 팔 연결</td><td>상체&#183;손</td><td>1회</td><td>사용 입력</td><td>기존 휴대</td><td>피격</td><td>사용자 확정</td><td>186행, 사용자 확정</td></tr>
-<tr>
-<td>PLR-MED-008</td><td>P1</td><td>Nanomachine_Inject</td><td>나노머신 주사기 팔 주입</td><td>상체&#183;손</td><td>1회</td><td>사용 입력</td><td>기존 휴대</td><td>피격</td><td>사용자 확정</td><td>185행, 사용자 확정</td></tr>
+<tr class="animation-complete" data-completion="완료">
+<td>PLR-MED-004</td><td>P1</td><td>Battery_Aux_Plug</td><td>보조 배터리 팔 연결</td><td>상체&#183;손</td><td>5초 반복</td><td>사용 입력</td><td>기존 휴대</td><td>피격</td><td>사용자 확정</td><td>166행, 사용자 확정</td></tr>
+<tr class="animation-complete" data-completion="완료">
+<td>PLR-MED-007</td><td>P1</td><td>Converter_Shield_Plug</td><td>보호막 전환기 팔 연결</td><td>상체&#183;손</td><td>5초 반복</td><td>사용 입력</td><td>기존 휴대 또는 사망</td><td>피격</td><td>사용자 확정</td><td>168행, 사용자 확정</td></tr>
+<tr class="animation-complete" data-completion="완료">
+<td>PLR-MED-009</td><td>P1</td><td>Buffer_Shield_Plug</td><td>급속 보호막 완충제 팔 연결</td><td>상체&#183;손</td><td>5초 반복</td><td>사용 입력</td><td>기존 휴대</td><td>피격</td><td>사용자 확정</td><td>186행, 사용자 확정</td></tr>
+<tr class="animation-complete" data-completion="완료">
+<td>PLR-MED-008</td><td>P1</td><td>Nanomachine_Inject</td><td>나노머신 주사기 팔 주입</td><td>상체&#183;손</td><td>5초 반복</td><td>사용 입력</td><td>기존 휴대</td><td>피격</td><td>사용자 확정</td><td>185행, 사용자 확정</td></tr>
 </tbody></table>
 <h3>팔 연결 공용 모션 재사용</h3>
 <ul>
 <li><code>Battery_Aux_Plug</code>, <code>Converter_Shield_Plug</code>, <code>Buffer_Shield_Plug</code>, <code>Nanomachine_Inject</code>은 장비별 요구사항 행과 제작 키를 유지한다.</li>
-<li>네 항목은 동일한 상체&#183;손 모션을 재사용하고, 오른손에 들린 오브젝트만 해당 장비로 교체한다.</li>
+<li>네 항목은 사용자 추가 승인에 따라 동일한 보조 배터리 원본 모델을 오른손에 쥐고 플러그가 아래를 향하는 5초 공용 모션을 사용해야 한다. 0~0.5초에 시작 자세의 왼팔 좌우 위치, 원본의 편 팔꿈치 각도와 손목 자세를 그대로 유지한 채 어깨에서 팔 전체를 앞&#183;위 방향으로 들어 올려 전완부가 지면과 거의 수평이고 손목이 가슴 아래 높이에 오게 한다. 왼팔을 몸통 바깥쪽으로 벌리는 좌우 이동은 넣지 않는다. 0.5~1초에 오른팔과 손목을 얼굴 아래에서 내리찍기 준비 자세로 전환하며, 1~1.2초에 오른팔을 약간 든 뒤 1.2~1.7초에 팔꿈치가 어깨 위로 꺾이지 않는 굽힘 평면을 유지하면서 왼쪽 손목 바로 뒤 전완부로 내려꽂는다. 1.7~3초에는 접촉 자세, 3~3.5초에는 위로 분리하는 동작, 3.5~5초에는 분리 자세를 유지하고 5초에 즉시 0초 시작 자세로 전환한다.</li>
+<li>왼팔은 원본의 편 팔꿈치·손목 각도를 유지하며 <code>MultiRotationConstraint</code>로 어깨에서 팔 전체를 들어 올린다. 현재 미완료 시험안의 오른팔은 입력 회전 제약 이후 <code>RightShoulder</code>부터 <code>RightForeArm</code>까지의 <code>ChainIKConstraint</code>와 전완 회전 제약을 사용하며 원본 오른손목 로컬 회전을 유지한다. 접촉점은 왼쪽 손목 바로 뒤 전완의 <code>LeftWristDorsalSocket</code>이다. 런타임은 리그 컨트롤만 쓰며 모델 뼈의 위치·스케일과 루트 Transform은 변경하지 않는다.</li>
+<li>몸통과 양팔의 비의도 겹침 및 비정상 메시 늘어남·비틀림·균열을 허용하지 않는다. 오른팔 도달 여유 0.045m는 유지한다. 왼팔은 승인된 변경에 따라 도달 여유 대신 팔꿈치 각도 유지·과신전 금지·본 길이 불변을 검증한다. 핵심 9시점과 중간 구간을 정면·양 사선·측면에서 자연 재생 그대로 직접 확인한 뒤 수치를 보조 근거로 사용한다. 14:50:38 사용자 영상 피드백 이후 이전 완료 판정을 철회했다. 배터리 그립 시험안은 직접 확인에서 손 관통·미파지, 보조 확인에서 몸통 여유·팔꿈치 각도 불합격이다. 손가락 리그·가중치 보완 범위 확인 전에는 완료로 표시하지 않는다. <a href="validation/consumable_battery_grip_2026-09-09/README.md">진단 근거</a>.</li>
 <li>보호막 충전 배터리 내려놓기와 작동은 별도 모션을 제작하지 않으며, 제거된 <code>PLR-MED-005</code>, <code>PLR-MED-006</code>과 후속 <code>PLR-MED</code> ID는 재번호하지 않는다.</li>
 </ul>
 <h2>13. 강화 물품</h2>
@@ -381,29 +394,29 @@
 <td>PLR-OTH-011</td><td>P1</td><td>Flashbang_Throw_Release</td><td>섬광탄 던지기</td><td>상체&#183;손</td><td>1회</td><td>조준 중 좌클릭</td><td>빈손 대기</td><td>없음</td><td>명시</td><td>180행</td></tr>
 <tr class="animation-complete" data-completion="완료">
 <td>PLR-OTH-012</td><td>P1</td><td>Flashbang_Throw_Cancel</td><td>섬광탄 투척 취소</td><td>상체&#183;손</td><td>1회</td><td>조준 중 우클릭 해제</td><td>휴대 대기</td><td>피격</td><td>필수 파생</td><td>180행</td></tr>
-<tr>
-<td>PLR-OTH-013</td><td>P1</td><td>Flashlight_Idle</td><td>손전등 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>손전등 소지</td><td>자체 유지</td><td>충전 연결&#183;장비 해제&#183;막대기 공격</td><td>명시</td><td>181행</td></tr>
-<tr>
-<td>PLR-OTH-016</td><td>P1</td><td>Flashlight_Charge_Connect</td><td>손전등 충전 연결</td><td>상체&#183;손</td><td>1회</td><td>동력실 충전 지점에 F</td><td>충전 상태</td><td>피격</td><td>명시/필수 파생</td><td>181행</td></tr>
-<tr>
-<td>PLR-OTH-017</td><td>P1</td><td>Flashlight_Charge_Disconnect</td><td>손전등 충전 분리</td><td>상체&#183;손</td><td>1회</td><td>충전 완료 또는 중단</td><td>한손 대기</td><td>피격</td><td>필수 파생</td><td>181행</td></tr>
-<tr>
+  <tr class="animation-complete" data-completion="완료">
+  <td>PLR-OTH-013</td><td>P1</td><td>Flashlight_Idle</td><td>손전등 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>손전등 소지</td><td>자체 유지</td><td>충전 연결&#183;장비 해제&#183;막대기 공격</td><td>명시</td><td>181행</td></tr>
+  <tr class="animation-complete" data-completion="완료">
+  <td>PLR-OTH-016</td><td>P1</td><td>Flashlight_Charge_Connect</td><td>손전등 충전 연결</td><td>상체&#183;손</td><td>1회</td><td>동력실 충전 지점에 F</td><td>충전 상태</td><td>피격</td><td>명시/필수 파생</td><td>181행</td></tr>
+  <tr class="animation-complete" data-completion="완료">
+  <td>PLR-OTH-017</td><td>P1</td><td>Flashlight_Charge_Disconnect</td><td>손전등 충전 분리</td><td>상체&#183;손</td><td>1회</td><td>충전 완료 또는 중단</td><td>한손 대기</td><td>피격</td><td>필수 파생</td><td>181행</td></tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-OTH-020</td><td>P1</td><td>DoorOpener_Idle</td><td>임시 개방 장치 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>장치 소지</td><td>자체 유지</td><td>문 부착</td><td>필수 파생</td><td>182행</td></tr>
-<tr>
+<tr class="animation-omitted" data-completion="모션 제작 제외">
 <td>PLR-OTH-021</td><td>P1</td><td>DoorOpener_Attach</td><td>임시 개방 장치 문 부착</td><td>전신&#183;손</td><td>1회</td><td>폐쇄 문 앞에서 F</td><td>기존 수송자 자세의 7초 작동 진행</td><td>피격</td><td>명시</td><td>182행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-omitted" data-completion="모션 제작 제외">
 <td>PLR-OTH-023</td><td>P1</td><td>DoorOpener_Finish</td><td>임시 개방 장치 완료 반응</td><td>상체&#183;손</td><td>1회</td><td>7초 경과</td><td>빈손 대기</td><td>피격</td><td>필수 파생</td><td>182행</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-OTH-026</td><td>P1</td><td>MarkerSpray_Idle</td><td>표식 스프레이 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>스프레이 소지</td><td>자체 유지</td><td>분사</td><td>필수 파생</td><td>188행</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-OTH-027</td><td>P1</td><td>MarkerSpray_Spray</td><td>표식 스프레이 분사</td><td>상체&#183;손</td><td>조건 반복</td><td>유효 표면을 향해 사용 입력</td><td>휴대 대기</td><td>입력 해제&#183;피격</td><td>명시</td><td>188행</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-OTH-028</td><td>P1</td><td>SmokeGrenade_Idle</td><td>연막탄 휴대 대기</td><td>상체&#183;손</td><td>반복</td><td>연막탄 소지</td><td>자체 유지</td><td>우클릭&#183;피격</td><td>사용자 확정</td><td>105행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-OTH-029</td><td>P1</td><td>SmokeGrenade_Throw_Aim</td><td>연막탄 투척 조준</td><td>상체&#183;손</td><td>반복</td><td>우클릭 유지</td><td>자체 유지</td><td>우클릭 해제&#183;피격</td><td>사용자 확정</td><td>105행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-OTH-030</td><td>P1</td><td>SmokeGrenade_Throw_Release</td><td>연막탄 던지기</td><td>상체&#183;손</td><td>1회</td><td>조준 중 좌클릭</td><td>빈손 대기</td><td>없음</td><td>사용자 확정</td><td>105행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-OTH-031</td><td>P1</td><td>SmokeGrenade_Throw_Cancel</td><td>연막탄 투척 취소</td><td>상체&#183;손</td><td>1회</td><td>조준 중 우클릭 해제</td><td>휴대 대기</td><td>피격</td><td>사용자 확정</td><td>105행, 사용자 확정</td></tr>
 </tbody></table>
 <h3>기타 장비 비애니메이션 처리</h3>
@@ -412,7 +425,7 @@
 <li>섬광탄은 별도 투척 준비 모션 없이 우클릭 유지로 <code>Flashbang_Throw_Aim</code>에 바로 진입한다.</li>
 <li>연막탄은 섬광탄과 같은 대기&#183;투척 조준&#183;던지기&#183;취소 모션을 재사용하고, 손에 든 오브젝트와 폭발 효과만 연막탄으로 교체한다. 별도 투척 준비 모션은 제작하지 않는다.</li>
 <li>막대기 공격 전후 손전등 주머니 이동과 손 복귀는 즉시 오브젝트 상태를 전환하며 별도 모션을 제작하지 않는다.</li>
-<li>임시 개방 장치는 문 부착 후 별도 작동 모션 없이 기존 수송자 자세로 7초 진행 시간을 유지한 뒤 완료 반응으로 이어진다.</li>
+<li>임시 개방 장치의 문 부착과 완료 반응은 별도 모션을 제작하지 않는다. 오브젝트 부착 상태와 기존 수송자 자세로 7초 진행 시간을 처리한 뒤 대기 상태로 복귀한다.</li>
 <li>긴급 수리 장치는 사용 입력을 유지한 채 현재 구역 내 원하는 위치에 설치하면 해당 구역의 내구도를 회복한다. 별도 설치 모션 없이 기존 수송자 자세와 오브젝트 배치&#183;게임 로직으로 처리한다.</li>
 <li>최신 원본에 없는 임시 해킹 장치는 장비와 애니메이션 대상에서 제거한다.</li>
 <li>제거된 <code>PLR-OTH-003</code>, <code>PLR-OTH-005</code>, <code>PLR-OTH-007</code>, <code>PLR-OTH-009</code>, <code>PLR-OTH-014</code>, <code>PLR-OTH-015</code>, <code>PLR-OTH-018</code>, <code>PLR-OTH-019</code>, <code>PLR-OTH-022</code>, <code>PLR-OTH-024~025</code>와 후속 <code>PLR-OTH</code> ID는 재번호하지 않는다.</li>
@@ -421,7 +434,7 @@
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-RPR-002</td><td>P1</td><td>RepairDevice_Operate</td><td>수리 장치 작동</td><td>전신&#183;손</td><td>5초 반복</td><td>수리 대상에 사용 입력</td><td>수리 완료</td><td>피격&#183;이동</td><td>사용자 확정</td><td>187행, 사용자 확정</td></tr>
 </tbody></table>
 <h3>수리 장치 단일 모션 기준</h3>

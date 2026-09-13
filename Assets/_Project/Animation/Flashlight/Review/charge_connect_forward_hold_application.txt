@@ -1,0 +1,16 @@
+Flashlight_Charge_Connect forward-hold application
+target=Flashlight_Charge_Connect
+sceneWasDirtyBeforeApplication=True
+maximumForwardFrame=17
+maximumForwardTimeSeconds=0.566666663
+maximumForwardNormalizedTime=0.548387051
+holdDurationSeconds=1
+sourceClipLengthSeconds=1.03333342
+expectedCycleDurationSeconds=2.0333333
+controllerSpeed=1
+sourceUpperBodyRestored=True
+forwardReachConfigured=False
+sourceClipModified=False
+controllerModified=False
+rendererMeshMaterialScaleModified=False
+objectsOutsideTargetChanged=False

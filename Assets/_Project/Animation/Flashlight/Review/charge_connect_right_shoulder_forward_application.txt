@@ -1,0 +1,17 @@
+Flashlight_Charge_Connect right-shoulder-forward application
+target=Flashlight_Charge_Connect
+sceneWasDirtyBeforeApplication=True
+sourceForwardDeviationDegrees=67.70773
+sourceLateralOffsetMeters=0.39427942
+targetRightHandLocal=0.177505434,1.35801733,0.620910645
+targetForwardDeviationDegrees=0
+targetLateralOffsetMeters=0
+targetElbowAngleDegrees=140
+shoulderRotationShare=0.18
+wristSourceRotationWeight=0.65
+forwardHoldDurationSeconds=1
+sourceClipLengthSeconds=1.03333342
+sourceClipModified=False
+controllerModified=False
+rendererMeshMaterialScaleModified=False
+objectsOutsideTargetChanged=False

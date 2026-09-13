@@ -1,0 +1,21 @@
+﻿SmokeGrenade Throw Release direct Play Mode review
+captureKind=FlightDiagnostic
+verificationTargetAnimationManipulated=False
+naturalAnimatorAndRigidbodyPlayback=True
+releaseAtRecordedMaximumHandHeight=True
+handoffAtExactHeldPropPose=True
+gravity=True
+velocityAlignedTilt=True
+naturalSpin=True
+restoreAndRepeat=True
+releaseCount=2
+resetCount=2
+maximumHeldPositionError=0
+maximumHeldRotationErrorDegrees=0
+maximumHandoffPositionError=0
+maximumHandoffRotationErrorDegrees=0
+maximumHandoffVerticalDrop=0
+maximumVelocityAlignmentErrorDegrees=0.01978234
+releaseVelocity=-5.80114943E-07,-0.0475788079,-6.63574171
+spinRadiansPerSecond=21.25249
+elapsedSeconds=3.91290379

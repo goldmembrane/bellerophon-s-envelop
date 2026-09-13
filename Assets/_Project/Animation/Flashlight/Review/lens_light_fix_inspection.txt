@@ -1,0 +1,7 @@
+Flashlight_Idle visible lens-light fix inspection
+verificationTargetManipulated=False
+beamSpotLightPresent=True
+lensSurfacePointLightPresent=True
+lensSurfaceSourceOffsetMeters=0.00399780273
+bothLightsParentedToRightHandHolder=True
+flashlightRendererMeshMaterialTextureChanged=False

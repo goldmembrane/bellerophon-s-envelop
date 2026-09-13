@@ -1,0 +1,6 @@
+Flashlight_Charge_Connect neutral-wrist final direct review
+applicationCompleted=True
+naturalPlaybackObserved=True
+fullCycleAndReturnObserved=True
+returnedToEditMode=True
+unityConsoleErrors=0

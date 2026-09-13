@@ -1,0 +1,12 @@
+Flashlight_Idle visible lens-light fix application
+beamLightType=Spot
+lensSurfaceLightType=Point
+lensSurfaceLightRangeMeters=0.18
+lensSurfaceLightIntensity=35
+bothLightsFollowRightHandHolder=True
+bothLightsShareZeroToTwoSecondWindow=True
+sceneSaveRequired=False
+flashlightTransformChanged=False
+flashlightRendererMeshMaterialTextureChanged=False
+rightArmPoseChanged=False
+objectsOutsideFlashlightIdleChanged=False

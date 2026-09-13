@@ -1,0 +1,7 @@
+Unity editor bridge request completed: 1f9c359b277a4deeb3199752a6539f25
+Unity editor bridge command: InspectFlashlightChargeConnectHandClearance
+Unity editor bridge mode: open editor
+Flashlight_Charge_Connect right-hand surface clearance inspected.
+
+Captured Unity log:
+Log: [FlashlightChargeConnectHandClearance] Inspection passed.

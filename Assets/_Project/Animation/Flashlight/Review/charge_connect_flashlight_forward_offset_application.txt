@@ -1,0 +1,14 @@
+Flashlight_Charge_Connect flashlight-only forward-offset application
+target=Flashlight_Charge_Connect
+sceneWasDirtyBeforeApplication=False
+appliedTransporterForwardOffsetMeters=0.02
+preservedTransporterRightOffsetMeters=0.04
+rightArmBodyPoseModified=False
+flashlightRightHandFollowPreserved=True
+flashlightLensUpCorrectionPreserved=True
+forwardHoldDurationSeconds=1
+sourceClipLengthSeconds=1.03333342
+sourceClipModified=False
+controllerModified=False
+rendererMeshMaterialRotationScaleModified=False
+objectsOutsideTargetChanged=False

@@ -1,0 +1,5 @@
+Flashlight_Idle automatic entry
+activeScene=Assets/_Project/Scenes/CargoRunMvp.unity
+sceneDirty=True
+isPlaying=True
+controllerExists=True

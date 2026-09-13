@@ -1,0 +1,14 @@
+Flashlight_Idle light-cycle inspection
+verificationTargetManipulated=False
+idleDurationSeconds=5
+lightOnWindowSeconds=0-2
+lightOffWindowSeconds=2-5
+otherMotionDurationSeconds=1
+totalCycleDurationSeconds=10
+lightType=Spot
+lightRangeMeters=3
+lensSurfaceLightType=Point
+lensSurfaceLightPresent=True
+lensForwardAligned=True
+rightHandFollowRetained=True
+flashlightVisualAssetsChanged=False

@@ -1,0 +1,27 @@
+Flashlight charge grip and disconnect timing natural Play Mode inspection
+naturalPlayback=True
+unityPlayMode=True
+captureGenerated=False
+targetManipulatedByValidation=False
+animatorPlayUsed=False
+animatorRebindUsed=False
+forcedAnimationTimeUsed=False
+connectForwardOffsetMeters=0.02
+disconnectForwardOffsetMeters=0.02
+connectFullReachGripSamples=36
+disconnectFullReachGripSamples=6
+connectMinimumProjectedOverlapMeters=0.05657959
+disconnectMinimumProjectedOverlapMeters=0.0566711426
+disconnectInitialHoldObserved=False
+disconnectFinalHoldObserved=True
+disconnectFinalHoldPhase=0.01101321
+disconnectFinalHoldLoopBoundaryDistance=0.01101321
+disconnectCompletedFinalHoldCount=1
+disconnectFinalHoldDurationSeconds=0.5186348
+targetDisconnectFinalHoldDurationSeconds=0.5
+reverseMotionObserved=True
+reverseLoopReturnedToStart=True
+maximumForwardPhaseError=0
+maximumHolderFollowErrorMeters=4.76837158E-07
+maximumLensUpDeviationDegrees=0
+unityConsoleErrors=0

@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "status": "art-sample-awaiting-approval",
+  "unityApplied": false,
+  "compatibility": {
+    "unity": "6000.3.x",
+    "renderPipeline": "Universal Render Pipeline 17.3.0",
+    "recommendedShader": "Universal Render Pipeline/Particles/Unlit",
+    "surface": "Transparent",
+    "blend": "Alpha",
+    "zWrite": false,
+    "cull": "Off",
+    "softParticles": true
+  },
+  "anchor": {
+    "target": "MarkerSpray_Spray spray nozzle",
+    "forwardAxis": "nozzle forward",
+    "simulationSpace": "World",
+    "stopAction": "StopEmitting",
+    "reason": "The emitter follows the nozzle while already-emitted aerosol keeps its world-space trajectory and fades naturally."
+  },
+  "shared": {
+    "durationSeconds": 1.0,
+    "looping": true,
+    "playOnAwake": false,
+    "gravityModifier": 0.0,
+    "maxParticles": 512,
+    "shape": {
+      "type": "Cone",
+      "angleDegrees": 7.0,
+      "halfHeightAtOneMeter": 0.1228,
+      "fullHeightAtOneMeter": 0.2456,
+      "radiusMeters": 0.006,
+      "lengthMeters": 0.02,
+      "emitFrom": "Base"
+    },
+    "colorOverLifetime": [
+      { "time": 0.0, "color": "#FF2637", "alpha": 0.0 },
+      { "time": 0.08, "color": "#FF2637", "alpha": 0.82 },
+      { "time": 0.62, "color": "#DF172A", "alpha": 0.42 },
+      { "time": 1.0, "color": "#B40E20", "alpha": 0.0 }
+    ],
+    "noise": {
+      "enabled": true,
+      "strengthMeters": 0.045,
+      "frequency": 0.85,
+      "scrollSpeed": 0.25,
+      "damping": true
+    }
+  },
+  "layers": [
+    {
+      "name": "MarkerSpray_Mist",
+      "texture": "marker_spray_mist_particle.png",
+      "renderMode": "Billboard",
+      "rateOverTime": 72,
+      "startLifetimeSeconds": [0.95, 1.05],
+      "startSpeedMetersPerSecond": [0.85, 0.95],
+      "calculatedTravelMeters": [0.8075, 0.9975],
+      "startSizeMeters": [0.055, 0.13],
+      "sizeOverLifetime": [0.35, 1.0, 1.22],
+      "rotationRandomDegrees": [0, 360]
+    },
+    {
+      "name": "MarkerSpray_Flow",
+      "texture": "marker_spray_red_cone_mist_texture.png",
+      "renderMode": "StretchedBillboard",
+      "rateOverTime": 46,
+      "startLifetimeSeconds": [0.72, 0.82],
+      "startSpeedMetersPerSecond": [1.1, 1.25],
+      "calculatedTravelMeters": [0.792, 1.025],
+      "startSizeMeters": [0.022, 0.052],
+      "lengthScale": 1.6,
+      "speedScale": 0.12
+    },
+    {
+      "name": "MarkerSpray_Specks",
+      "texture": "marker_spray_droplet_particle.png",
+      "renderMode": "Billboard",
+      "rateOverTime": 118,
+      "startLifetimeSeconds": [0.78, 0.86],
+      "startSpeedMetersPerSecond": [1.05, 1.18],
+      "calculatedTravelMeters": [0.819, 1.0148],
+      "startSizeMeters": [0.008, 0.024],
+      "sizeOverLifetime": [0.42, 0.9, 0.28],
+      "rotationRandomDegrees": [0, 360]
+    }
+  ],
+  "importSettings": {
+    "textureType": "Default",
+    "sRGB": true,
+    "alphaSource": "Input Texture Alpha",
+    "alphaIsTransparency": true,
+    "wrapMode": "Clamp",
+    "filterMode": "Bilinear",
+    "mipMaps": false,
+    "compression": "None during review; choose platform compression after visual approval"
+  },
+  "acceptance": {
+    "rangeMeters": "approximately 1.0",
+    "continuousWhileInputHeld": true,
+    "releaseBehavior": "stop emission, keep existing particles until natural fade",
+    "visual": "dense red center, translucent outer cone, no fire or liquid-stream appearance"
+  }
+}

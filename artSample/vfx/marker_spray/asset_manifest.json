@@ -1,0 +1,85 @@
+{
+  "assetId": "marker-spray-red-cone-mist-unity-ready-art-sample",
+  "status": "awaiting-art-approval",
+  "unityApplied": false,
+  "target": "MarkerSpray_Spray nozzle VFX",
+  "direction": "nozzle-origin left-to-right",
+  "rangeMeters": 1.0,
+  "coneHalfAngleDegrees": 7.0,
+  "coneHalfHeightAtOneMeter": 0.1228,
+  "coneFullHeightAtOneMeter": 0.2456,
+  "emission": "continuous-while-input-held",
+  "renderPipeline": "Universal Render Pipeline 17.3.0",
+  "implementationSpec": "unity_particle_system_spec.json",
+  "color": {
+    "core": "#ff202d",
+    "mid": "#e31325",
+    "edge": "rgba(255, 66, 78, 0.08)"
+  },
+  "assets": [
+    {
+      "path": "marker_spray_red_cone_mist_texture.png",
+      "role": "transparent stretched-billboard flow texture",
+      "generator": "Codex built-in image_gen",
+      "sourceOutput": "C:/Users/gus68/.codex/generated_images/01a08dc2-e03a-7753-b8db-0890290af252/exec-ec5985af-3798-4398-a202-c69d2e883cfd.png"
+    },
+    {
+      "path": "marker_spray_mist_particle.png",
+      "role": "transparent soft-mist billboard texture",
+      "generator": "Codex built-in image_gen",
+      "sourceOutput": "C:/Users/gus68/.codex/generated_images/01a08dc2-e03a-7753-b8db-0890290af252/exec-946e5165-1ad8-4b7c-ad1a-d43df0e3fa0f.png"
+    },
+    {
+      "path": "marker_spray_droplet_particle.png",
+      "role": "transparent dry-speck billboard texture",
+      "generator": "Codex built-in image_gen",
+      "sourceOutput": "C:/Users/gus68/.codex/generated_images/01a08dc2-e03a-7753-b8db-0890290af252/exec-87113be2-3b83-4f28-a3e0-13eed0b3ed45.png"
+    },
+    {
+      "path": "marker_spray_red_cone_mist_reference.png",
+      "role": "static seven-degree cone approval reference",
+      "generator": "Codex built-in image_gen",
+      "sourceOutput": "C:/Users/gus68/.codex/generated_images/01a08dc2-e03a-7753-b8db-0890290af252/exec-93fb3154-f7fe-4b66-a918-ea05c1294870.png"
+    }
+  ],
+  "generationPrompts": {
+    "mistParticle": "Use case: stylized-concept. Unity URP Particle System billboard texture: one centered irregular soft red aerosol mist puff with a moderately dense crimson center and smooth zero-alpha edge falloff. Genuine transparent background, at least 20 percent transparent padding, no full plume, fire, liquid, glow, baked backdrop, text or watermark.",
+    "dropletParticle": "Use case: stylized-concept. Unity URP Particle System billboard texture: one compact cluster of extremely fine dry matte red aerosol specks with faint haze. Genuine transparent background, broad transparent padding, no glossy spheres, liquid beads, bubbles, full plume, fire, text or watermark.",
+    "flowParticle": "Use case: stylized-concept. Unity URP Particle System stretched-billboard texture: one thin horizontal crimson aerosol wisp, softly tapered to zero alpha at all edges. Genuine transparent background, no complete cone, solid beam, fire, liquid jet, baked backdrop, text or watermark.",
+    "reference": "Use case: stylized-concept. Static game VFX approval plate on a dark charcoal backdrop. A tiny cropped nozzle emits a one-meter red aerosol cone using an exact seven-degree half-angle; at one meter the half-height is 12.28cm and full height is 24.56cm. Strict side view, symmetric above and below the centerline, dense crimson core and translucent scarlet falloff. Visibly narrower than the prior cone; no particles outside the envelope; no text, UI, character, fire, liquid stream, border, logo or watermark."
+  },
+  "review": {
+    "primary": "passed direct inspection of the three isolated Unity particle textures; rejected glossy-liquid first speck variant was not imported",
+    "secondary": "passed alpha gate and approximately-one-meter travel checks",
+    "alphaValidation": {
+      "marker_spray_mist_particle.png": {
+        "dimensions": "1254x1254",
+        "pixelFormat": "Format32bppArgb",
+        "alphaRange": [0, 253],
+        "borderAlphaMax": 1,
+        "transparentPercent": 70.21,
+        "pass": true
+      },
+      "marker_spray_droplet_particle.png": {
+        "dimensions": "1254x1254",
+        "pixelFormat": "Format32bppArgb",
+        "alphaRange": [0, 250],
+        "borderAlphaMax": 0,
+        "transparentPercent": 93.28,
+        "pass": true
+      },
+      "marker_spray_red_cone_mist_texture.png": {
+        "dimensions": "2172x724",
+        "pixelFormat": "Format32bppArgb",
+        "alphaRange": [0, 251],
+        "borderAlphaMax": 0,
+        "transparentPercent": 84.6,
+        "pass": true
+      }
+    },
+    "calculatedTravelMeters": [0.792, 1.025],
+    "liveHtmlPlayback": "not captured because CUA returned no available browser and Edge launch was unavailable",
+    "sevenDegreeRevision": "passed direct before-and-after inspection; the revised cone is visibly narrower while preserving the one-meter length, horizontal centerline, symmetric envelope, red mist character, and continuous-spray intent",
+    "finalCapture": "not created because no CUA browser surface was available after structural validation"
+  }
+}

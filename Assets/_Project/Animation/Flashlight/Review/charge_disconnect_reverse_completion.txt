@@ -1,0 +1,7 @@
+Flashlight_Charge_Disconnect exact reverse final direct review
+applicationCompleted=True
+naturalReversePlaybackObserved=True
+fullReverseCycleAndReturnObserved=True
+returnedToEditMode=True
+finalCaptureRepeated=False
+unityConsoleErrors=0

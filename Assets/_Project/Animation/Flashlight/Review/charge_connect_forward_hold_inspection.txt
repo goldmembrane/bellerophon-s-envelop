@@ -1,0 +1,20 @@
+Flashlight_Charge_Connect forward-hold inspection
+targetCount=1
+maximumForwardFrame=17
+maximumForwardTimeSeconds=0.566666663
+maximumForwardNormalizedTime=0.548387051
+configuredHoldStartNormalized=0.548387051
+configuredHoldDurationSeconds=1
+sourceClipLengthSeconds=1.03333342
+expectedCycleDurationSeconds=2.0333333
+controllerSpeed=1
+maximumSourceUpperBodyRotationErrorDegrees=0
+maximumSourceUpperBodyPositionErrorMeters=0
+maximumIdleLeftArmRotationErrorDegrees=0
+maximumIdleLeftArmPositionErrorMeters=0
+maximumIdleLowerBodyRotationErrorDegrees=0
+maximumIdleLowerBodyPositionErrorMeters=0
+sourceClipCopiedExactly=True
+controllerSourceStatePreserved=True
+unityConsoleErrors=0
+inspectionManipulatedTarget=False

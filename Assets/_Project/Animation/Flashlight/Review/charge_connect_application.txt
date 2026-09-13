@@ -1,0 +1,18 @@
+Flashlight_Charge_Connect supplied animation application
+target=Flashlight_Charge_Connect
+sourcePath=D:\Bellerophon2\Bellerophon\player model\transfer flashlight charging.fbx
+importedPath=Assets/_Project/Animation/Flashlight/Source/transfer flashlight charging.fbx
+sourceSha256=07725BD4627EEAD71C9CC869C6343865F6C4E68E5E0E9FE2D0210895C565DB58
+importedSha256=07725BD4627EEAD71C9CC869C6343865F6C4E68E5E0E9FE2D0210895C565DB58
+takeName=mixamo.com
+clipName=FlashlightChargeConnect_SourceExact
+controllerPath=Assets/_Project/Animation/Flashlight/FlashlightChargeConnect_SourceExact.controller
+stateName=FlashlightChargeConnectSourceExact
+fullTakePreserved=True
+keyframesEdited=False
+animationGenerated=False
+loopTime=True
+applyRootMotion=False
+existingCarryConfigurationChanged=False
+existingVisualAssetsChanged=False
+objectsOutsideTargetChanged=False

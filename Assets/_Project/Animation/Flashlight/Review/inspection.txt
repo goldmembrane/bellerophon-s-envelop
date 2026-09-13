@@ -1,7 +1,9 @@
 Flashlight_Idle locomotion inspection
 verificationTargetManipulated=False
 motionCount=6
-secondsPerMotion=1
+idleDurationSeconds=5
+otherMotionDurationSeconds=1
+totalCycleDurationSeconds=10
 sequence=Idle,WalkForward,WalkBackward,Sidestep,WalkDiagonal,RunForward
 sequenceLoops=True
 blendTreeType=FreeformCartesian2D

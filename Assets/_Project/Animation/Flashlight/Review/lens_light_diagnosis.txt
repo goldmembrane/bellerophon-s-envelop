@@ -1,0 +1,11 @@
+Flashlight_Idle visible lens-light diagnosis
+verificationTargetManipulated=False
+beamSpotLightPresent=True
+beamRangeMeters=3
+holderLightCount=1
+lensSurfacePointLightPresent=False
+lightComponentHasVisibleSourceGeometry=False
+forwardReceiverIlluminationPreviouslyConfirmed=True
+visibleLensIlluminationMissing=True
+rootCause=Spot light illuminates forward surfaces but does not render a visible source or illuminate the lens face
+flashlightRendererMeshMaterialTextureChanged=False

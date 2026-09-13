@@ -1,0 +1,6 @@
+Flashlight_Idle light-cycle direct review
+applicationCompleted=True
+naturalPlaybackObserved=True
+returnedToEditMode=True
+editModeLensLightDisabled=True
+unityConsoleErrorsDuringNaturalCapture=0

@@ -1,0 +1,26 @@
+DoorOpener_Idle carry application
+sceneSaved=True
+sourceModelChanged=False
+sourceAndImportedBytesEqual=True
+torsoHeadLowerBodyLeftArmChanged=False
+rightForeArmPosePreserved=True
+rightHandPosePreserved=True
+rightFingerRigApplied=True
+rightFingerJointCount=15
+rightHandPath=Armature/Hips/Spine02/Spine01/Spine/RightShoulder/RightArm/RightForeArm/RightHand
+holderLocalPosition=0.01448227,0.1347524,-0.01947783
+holderLocalRotation=-0.5381996,-0.716799,0.2451919,-0.3693534
+modelLocalPosition=-0.00016592,-0.0222925,0.0782
+modelLocalRotation=0,0,0,1
+modelLocalScale=33.99999,33.99999,33.99999
+modelLocalBoundsCenter=0.00000488,-0.0000293,0
+modelLocalBoundsSize=0.00350586,0.001630862,0.01
+antennaSourceAxis=0,0,1
+frontSourceAxis=0,1,0
+desiredDeviceHeightMeters=0.34
+gripHeightFraction=0.27
+gripFrontInsetFraction=0.08
+antennaDirection=-0.000000062,0.7071068,-0.7071068
+antennaElevationDegrees=45
+embeddedTextureCount=4
+externalMaterialPath=Assets/_Project/Art/Items/DoorOpener/Materials/TemporaryOpeningDevice.mat

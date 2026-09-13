@@ -1,0 +1,15 @@
+﻿Lightsaber supplied geometry inspection
+modelPath=Assets/_Project/Art/Items/Lightsaber/Lightsaber.fbx
+modelRoot=Lightsaber
+sourceSha256=A1194265AF8BEBEDCE72A40A10279BD2F60372BE437F71F04AC40C2CEFBFA930
+mesh=Lightsaber|meshName=mesh_node|vertices=3477|localBoundsCenter=0.000000,-0.000017,0.000000|localBoundsSize=0.010000,0.002485,0.002559|materials=Material.001
+rootBoundsCenter=0.000000,-0.000017,0.000000
+rootBoundsSize=0.010000,0.002485,0.002559
+longestAxis=0
+axisMinimum=-0.005000
+axisMaximum=0.005000
+originDistanceFromMinimum=0.005000
+originDistanceFromMaximum=0.005000
+endFraction=0.100000|minimumThickness=0.002427|maximumThickness=0.002559|minimumVertices=960|maximumVertices=673
+endFraction=0.220000|minimumThickness=0.002427|maximumThickness=0.002559|minimumVertices=1310|maximumVertices=1167
+endFraction=0.350000|minimumThickness=0.002427|maximumThickness=0.002559|minimumVertices=1621|maximumVertices=1282

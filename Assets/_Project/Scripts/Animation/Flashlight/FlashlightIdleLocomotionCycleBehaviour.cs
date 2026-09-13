@@ -7,7 +7,10 @@ namespace Bellerophon.PlayerAnimation
     public sealed class FlashlightIdleLocomotionCycleBehaviour : StateMachineBehaviour
     {
         public const int MotionCount = 6;
+        public const float IdleDurationSeconds = 5f;
         public const float SecondsPerMotion = 1f;
+        public const float TotalCycleDurationSeconds =
+            IdleDurationSeconds + SecondsPerMotion * (MotionCount - 1);
         public const string MoveXParameter = "MoveX";
         public const string MoveYParameter = "MoveY";
         public const string DiagonalBlendParameter = "ForwardSidestepBlend";
@@ -45,6 +48,13 @@ namespace Bellerophon.PlayerAnimation
             return MotionNames[phase];
         }
 
+        public static float MotionDuration(int phase)
+        {
+            if (phase < 0 || phase >= MotionCount)
+                throw new ArgumentOutOfRangeException(nameof(phase));
+            return phase == 0 ? IdleDurationSeconds : SecondsPerMotion;
+        }
+
         public static bool TryGetSequenceState(
             Animator animator,
             out int absolutePhase,
@@ -58,10 +68,11 @@ namespace Bellerophon.PlayerAnimation
                 !StartTimes.TryGetValue(animator.GetInstanceID(), out float start))
                 return false;
 
-            float elapsed = Mathf.Max(0f, Time.time - start);
-            absolutePhase = Mathf.FloorToInt(elapsed / SecondsPerMotion);
-            phase = absolutePhase % MotionCount;
-            phaseElapsed = elapsed - absolutePhase * SecondsPerMotion;
+            CalculateSequenceState(
+                Mathf.Max(0f, Time.time - start),
+                out absolutePhase,
+                out phase,
+                out phaseElapsed);
             return true;
         }
 
@@ -85,9 +96,12 @@ namespace Bellerophon.PlayerAnimation
                 StartTimes[animator.GetInstanceID()] = start;
             }
 
-            int absolutePhase = Mathf.FloorToInt(
-                Mathf.Max(0f, Time.time - start) / SecondsPerMotion);
-            ApplyPhase(animator, absolutePhase % MotionCount);
+            CalculateSequenceState(
+                Mathf.Max(0f, Time.time - start),
+                out _,
+                out int phase,
+                out _);
+            ApplyPhase(animator, phase);
         }
 
         public override void OnStateExit(
@@ -104,6 +118,30 @@ namespace Bellerophon.PlayerAnimation
             animator.SetFloat(MoveXParameter, position.x);
             animator.SetFloat(MoveYParameter, position.y);
             animator.SetFloat(DiagonalBlendParameter, 0.5f);
+        }
+
+        private static void CalculateSequenceState(
+            float elapsed,
+            out int absolutePhase,
+            out int phase,
+            out float phaseElapsed)
+        {
+            int completedCycles = Mathf.FloorToInt(
+                elapsed / TotalCycleDurationSeconds);
+            float cycleElapsed = elapsed -
+                completedCycles * TotalCycleDurationSeconds;
+
+            float phaseStart = 0f;
+            phase = 0;
+            for (; phase < MotionCount - 1; phase++)
+            {
+                float phaseEnd = phaseStart + MotionDuration(phase);
+                if (cycleElapsed < phaseEnd) break;
+                phaseStart = phaseEnd;
+            }
+
+            absolutePhase = completedCycles * MotionCount + phase;
+            phaseElapsed = cycleElapsed - phaseStart;
         }
     }
 }

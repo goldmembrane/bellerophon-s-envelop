@@ -1,0 +1,14 @@
+Flashlight_Idle five-second idle light-cycle application
+preexistingSceneDirty=False
+preexistingUserSceneChangesPreserved=True
+idleDurationSeconds=5
+lightOnDurationSeconds=2
+lightOffDurationSeconds=3
+otherMotionDurationSeconds=1
+totalCycleDurationSeconds=10
+lightRangeMeters=3
+flashlightTransformChanged=False
+flashlightRendererMeshMaterialTextureChanged=False
+rightArmPoseChanged=False
+rightHandFollowChanged=False
+objectsOutsideFlashlightIdleChanged=False

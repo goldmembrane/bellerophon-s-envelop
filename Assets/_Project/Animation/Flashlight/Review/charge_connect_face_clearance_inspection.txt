@@ -1,0 +1,20 @@
+Flashlight_Charge_Connect face-clearance inspection
+targetCount=1
+sampleCount=121
+minimumFaceClearanceMeters=0.0598078519
+configuredRightOffsetMeters=0.127533317
+maximumHandTargetErrorMeters=3.47829737E-05
+minimumRightElbowAngleDegrees=66.975
+maximumRightElbowAngleDegrees=164.319366
+maximumRightWristBendDegrees=0.0279764552
+maximumRightShoulderRotationChangeDegrees=2.55649471
+maximumRightArmRotationChangeDegrees=12.6934948
+maximumRightForeArmRotationChangeDegrees=27.8623142
+maximumUnaffectedRotationErrorDegrees=0
+maximumUnaffectedPositionErrorMeters=0
+forwardHoldDurationSeconds=1
+sourceClipLengthSeconds=1.03333342
+sourceClipCopiedExactly=True
+controllerSourceStatePreserved=True
+unityConsoleErrors=0
+inspectionManipulatedTarget=False

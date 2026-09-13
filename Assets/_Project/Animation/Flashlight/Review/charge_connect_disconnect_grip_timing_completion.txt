@@ -1,0 +1,8 @@
+Flashlight charge grip and disconnect final-hold direct review
+applicationCompleted=True
+naturalReversePlaybackObserved=True
+fullReverseCycleAndReturnObserved=True
+disconnectInitialHoldObserved=False
+disconnectFinalHoldDurationSeconds=0.5
+returnedToEditMode=True
+unityConsoleErrors=0

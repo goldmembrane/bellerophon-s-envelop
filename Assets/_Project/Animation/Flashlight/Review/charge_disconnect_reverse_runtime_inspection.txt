@@ -1,0 +1,22 @@
+Flashlight_Charge_Disconnect corrected reverse natural-playback inspection
+naturalPlayback=True
+captureGenerated=False
+targetManipulatedByValidation=False
+animatorPlayUsed=False
+animatorRebindUsed=False
+forcedAnimationTimeUsed=False
+expectedCycleDurationSeconds=2.0333333
+controllerStateSpeed=-1
+controllerCycleOffset=1
+initialStateNormalizedTime=0.01935483
+maximumStateNormalizedTime=1.271176
+maximumForwardPhaseError=0
+maximumBoneRotationDeltaDegrees=96.20646
+maximumHolderPositionErrorMeters=5.96046448E-07
+maximumFlashlightLensUpDeviationDegrees=0
+completedReverseHoldCount=1
+lastCompletedReverseHoldDurationSeconds=1.00810885
+reverseMotionObserved=True
+reverseHoldObserved=True
+reverseLoopReturnedToStart=True
+unityConsoleErrors=0

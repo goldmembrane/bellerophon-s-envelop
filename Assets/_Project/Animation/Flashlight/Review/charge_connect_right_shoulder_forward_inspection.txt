@@ -1,0 +1,22 @@
+Flashlight_Charge_Connect right-shoulder-forward inspection
+targetCount=1
+sourceForwardDeviationDegrees=67.70773
+correctedPeakForwardDeviationDegrees=0
+sourceLateralOffsetMeters=0.39427942
+correctedPeakLateralOffsetMeters=7.584691E-06
+correctedPeakElbowAngleDegrees=139.993362
+correctedPeakHandErrorMeters=8.425997E-06
+peakRightShoulderRotationChangeDegrees=9.156339
+peakRightArmRotationChangeDegrees=63.60581
+peakRightForeArmRotationChangeDegrees=18.7735214
+peakRightHandRotationChangeDegrees=155.492722
+maximumUnaffectedUpperBodyRotationErrorDegrees=0
+maximumUnaffectedUpperBodyPositionErrorMeters=0
+maximumIdlePoseRotationErrorDegrees=0
+maximumIdlePosePositionErrorMeters=0
+forwardHoldDurationSeconds=1
+sourceClipLengthSeconds=1.03333342
+sourceClipCopiedExactly=True
+controllerSourceStatePreserved=True
+unityConsoleErrors=0
+inspectionManipulatedTarget=False

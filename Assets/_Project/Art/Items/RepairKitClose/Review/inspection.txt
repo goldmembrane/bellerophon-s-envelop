@@ -1,0 +1,20 @@
+Read-only RepairDevice_Operate start view and repair kit inspection
+playMode=False
+verificationTargetManipulated=False
+sourceAndImportedBytesEqual=True
+placementDistanceMeters=1.000000
+floorErrorMeters=0.000000
+cameraHorizontalDistance=4.000000
+cameraFrontAxisDot=1.000000
+cameraFacingDot=1.000000
+targetCenterViewport=(0.500001, 0.339981, 4.000000)
+kitCenterViewport=(0.500568, 0.083194, 3.161377)
+inspectionPassed=True
+rendererCount=1
+textureCount=5
+texture=Assets/_Project/Art/Items/RepairKitClose/Textures/RepairKitClose_MetallicSmoothness.png
+texture=Assets/_Project/Art/Items/RepairKitClose/Textures/base_color.jpg
+texture=Assets/_Project/Art/Items/RepairKitClose/Textures/normal.jpg
+texture=Assets/_Project/Art/Items/RepairKitClose/Textures/texture_0_metallic.png
+texture=Assets/_Project/Art/Items/RepairKitClose/Textures/texture_0_roughness.png
+material=Assets/_Project/Art/Items/RepairKitClose/Materials/Material.001.mat|shader=Universal Render Pipeline/Lit

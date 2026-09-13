@@ -1,0 +1,10 @@
+﻿SmokeGrenade four-state direct Play Mode review
+captureKind=FourStateDiagnostic
+verificationTargetAnimationManipulated=False
+naturalAnimatorPlayback=True
+panelOrder=IdleFull,AimFull,ReleaseFull,CancelFull,IdleGrip,AimGrip,ReleaseGrip,CancelGrip
+elapsedSeconds=0.9058647
+SmokeGrenade_Idle|normalizedTime=0.2393681|loop=True|rightHandParent=True
+SmokeGrenade_Throw_Aim|normalizedTime=0.197643384|loop=True|rightHandParent=True
+SmokeGrenade_Throw_Release|normalizedTime=0.326411039|loop=True|rightHandParent=True
+SmokeGrenade_Throw_Cancel|normalizedTime=0.439655662|loop=True|rightHandParent=True

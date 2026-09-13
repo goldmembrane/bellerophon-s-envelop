@@ -1,0 +1,15 @@
+Flashlight_Charge_Connect neutral-wrist application
+target=Flashlight_Charge_Connect
+sceneWasDirtyBeforeApplication=True
+previousPeakWristBendDegrees=131.352188
+previousWristSourceRotationWeight=0.65
+currentWristSourceRotationWeight=0
+neutralWristConfigured=True
+foreArmAndHandAxisAligned=True
+flashlightLensUpCorrectionPreserved=True
+forwardHoldDurationSeconds=1
+sourceClipLengthSeconds=1.03333342
+sourceClipModified=False
+controllerModified=False
+rendererMeshMaterialScaleModified=False
+objectsOutsideTargetChanged=False

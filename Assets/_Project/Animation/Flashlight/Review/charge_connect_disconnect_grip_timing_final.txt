@@ -1,0 +1,35 @@
+Flashlight charge grip and disconnect final-hold natural Play Mode direct review
+naturalPlayback=True
+unityPlayMode=True
+captureGenerated=True
+targetManipulatedByValidation=False
+animatorPlayUsed=False
+animatorRebindUsed=False
+forcedAnimationTimeUsed=False
+connectForwardOffsetMeters=0.02
+disconnectForwardOffsetMeters=0.02
+connectFullReachGripSamples=34
+disconnectFullReachGripSamples=6
+connectMinimumProjectedOverlapMeters=0.0563964844
+disconnectMinimumProjectedOverlapMeters=0.05633545
+disconnectInitialHoldObserved=False
+disconnectFinalHoldObserved=True
+disconnectFinalHoldPhase=0.987740755
+disconnectCompletedFinalHoldCount=1
+disconnectFinalHoldDurationSeconds=0.5295043
+targetDisconnectFinalHoldDurationSeconds=0.5
+reverseMotionObserved=True
+reverseLoopReturnedToStart=True
+maximumForwardPhaseError=0
+maximumHolderFollowErrorMeters=5.96046448E-07
+maximumLensUpDeviationDegrees=0
+panelsCaptured=12
+topRowView=Flashlight_Charge_Connect right-side grip closeup
+bottomRowView=Flashlight_Charge_Disconnect right-side grip closeup
+panel=0|requestedElapsedSeconds=0.05|actualElapsedSeconds=0.1305708|stateNormalizedTime=0.106335759|sourcePhase=0.893664241|holding=False|initialHoldObserved=False
+panel=1|requestedElapsedSeconds=0.310000032|actualElapsedSeconds=0.3243604|stateNormalizedTime=0.3850966|sourcePhase=0.6149034|holding=False|initialHoldObserved=False
+panel=2|requestedElapsedSeconds=0.620000064|actualElapsedSeconds=0.6312063|stateNormalizedTime=0.6822778|sourcePhase=0.3177222|holding=False|initialHoldObserved=False
+panel=3|requestedElapsedSeconds=1.08333337|actualElapsedSeconds=1.112248|stateNormalizedTime=1.01225924|sourcePhase=0.987740755|holding=True|initialHoldObserved=False
+panel=4|requestedElapsedSeconds=1.3083334|actualElapsedSeconds=1.30906737|stateNormalizedTime=1.01225924|sourcePhase=0.987740755|holding=True|initialHoldObserved=False
+panel=5|requestedElapsedSeconds=1.65333343|actualElapsedSeconds=1.67004657|stateNormalizedTime=1.17583644|sourcePhase=0.824163556|holding=False|initialHoldObserved=False
+unityConsoleErrors=0

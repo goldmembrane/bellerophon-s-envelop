@@ -1,0 +1,6 @@
+Flashlight_Charge_Connect flashlight-only right-offset final direct review
+applicationCompleted=True
+naturalPlaybackObserved=True
+fullCycleAndReturnObserved=True
+returnedToEditMode=True
+unityConsoleErrors=0

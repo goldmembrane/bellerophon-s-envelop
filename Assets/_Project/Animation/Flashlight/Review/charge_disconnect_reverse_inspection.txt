@@ -1,0 +1,24 @@
+Flashlight_Charge_Disconnect exact reverse inspection
+targetCount=1
+sampleCount=121
+sourceClip=a7fb1868695c14347a6dda50a8038d13:-203655887218126122
+sourceClipLengthSeconds=1.03333342
+reverseController=Assets/_Project/Animation/Flashlight/FlashlightChargeDisconnect_Reverse.controller
+reverseStateSpeed=-1
+reverseStateCycleOffset=1
+poseConfigurationMatchesConnect=True
+maximumMirroredBoneRotationErrorDegrees=0
+maximumMirroredBonePositionErrorMeters=4.652963E-07
+maximumMirroredHolderPositionErrorMeters=7.15255737E-07
+maximumMirroredHolderRotationErrorDegrees=0
+maximumMirroredHolderScaleError=0
+maximumVisibleBoneMotionDegrees=96.2401657
+maximumRightHandFollowErrorMeters=7.15255737E-07
+fullSourceTakePreserved=True
+keyframesEdited=False
+animationGenerated=False
+loopTime=True
+rightHandFollowPreserved=True
+rendererMeshMaterialPreserved=True
+inspectionManipulatedTarget=False
+unityConsoleErrors=0

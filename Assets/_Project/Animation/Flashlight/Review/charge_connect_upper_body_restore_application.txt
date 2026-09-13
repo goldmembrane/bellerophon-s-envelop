@@ -1,0 +1,19 @@
+Flashlight_Charge_Connect upper-body restore application
+target=Flashlight_Charge_Connect
+idleReference=Player_Idle
+sceneWasDirtyBeforeApplication=True
+clipLengthSeconds=1.03333342
+controllerSpeed=1
+idleLowerBodyAndLeftArmBoneCount=28
+idleLowerBodyBoneCount=9
+idleLeftArmBoneCount=19
+previousAuthoredRightArmPoseCount=0
+previousSourceRightArmPoseCount=0
+currentAuthoredRightArmPoseCount=0
+currentSourceRightArmPoseCount=0
+forwardReachConfigured=False
+sourceUpperBodyRestored=True
+sourceClipModified=False
+controllerModified=False
+rendererMeshMaterialScaleModified=False
+objectsOutsideTargetChanged=False

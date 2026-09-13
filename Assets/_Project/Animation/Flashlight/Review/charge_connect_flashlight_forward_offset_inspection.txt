@@ -1,0 +1,20 @@
+Flashlight_Charge_Connect flashlight-only forward-offset inspection
+targetCount=1
+sampleCount=121
+configuredTransporterForwardOffsetMeters=0.02
+minimumAppliedForwardOffsetMeters=0.0199890137
+maximumAppliedForwardOffsetMeters=0.0199890137
+maximumOffAxisPositionErrorMeters=1.09917009E-05
+minimumPreservedRightOffsetMeters=0.0400009155
+maximumPreservedRightOffsetMeters=0.0400009155
+maximumArmAndBodyRotationErrorDegrees=0
+maximumArmAndBodyPositionErrorMeters=0
+maximumHolderRotationErrorDegrees=0
+maximumHolderScaleError=0
+minimumFaceClearanceMeters=0.09980877
+rightHandFollowPreserved=True
+lensUpPreserved=True
+sourceClipCopiedExactly=True
+controllerSourceStatePreserved=True
+unityConsoleErrors=0
+inspectionManipulatedTarget=False

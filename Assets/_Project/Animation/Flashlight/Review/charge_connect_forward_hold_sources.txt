@@ -1,0 +1,17 @@
+Flashlight_Charge_Connect forward-hold source inspection
+target=Flashlight_Charge_Connect
+clip=FlashlightChargeConnect_SourceExact
+clipLengthSeconds=1.03333342
+clipFrameRate=30
+controllerSpeed=1
+animatorSpeed=1
+sampleCount=32
+maximumForwardFrame=17
+maximumForwardTimeSeconds=0.566666663
+maximumForwardNormalizedTime=0.548387051
+maximumForwardRightHandLocal=0.5717849,1.4882021,0.3453675
+requestedHoldDurationSeconds=1
+expectedCycleDurationSeconds=2.0333333
+externalSha256=07725BD4627EEAD71C9CC869C6343865F6C4E68E5E0E9FE2D0210895C565DB58
+importedSha256=07725BD4627EEAD71C9CC869C6343865F6C4E68E5E0E9FE2D0210895C565DB58
+inspectionManipulatedTarget=False

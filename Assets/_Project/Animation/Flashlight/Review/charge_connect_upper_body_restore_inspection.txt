@@ -1,0 +1,25 @@
+Flashlight_Charge_Connect upper-body restore inspection
+targetCount=1
+clipLengthSeconds=1.03333342
+controllerSpeed=1
+sampleCount=61
+sourceUpperBodyBoneCount=11
+idleLeftArmBoneCount=19
+idleLowerBodyBoneCount=9
+maximumSourceUpperBodyRotationErrorDegrees=0
+maximumSourceUpperBodyPositionErrorMeters=0
+maximumIdleLeftArmRotationErrorDegrees=0
+maximumIdleLeftArmPositionErrorMeters=0
+maximumIdleLowerBodyRotationErrorDegrees=0
+maximumIdleLowerBodyPositionErrorMeters=0
+maximumSourceUpperBodyMotionDegrees=99.73562
+maximumHolderPositionErrorMeters=0
+maximumFlashlightLensUpDeviationDegrees=0
+sourceUpperBodyRestored=True
+forwardReachConfigured=False
+authoredRightArmPoseCount=0
+sourceRightArmPoseCount=0
+sourceClipCopiedExactly=True
+controllerSourceStatePreserved=True
+unityConsoleErrors=0
+inspectionManipulatedTarget=False

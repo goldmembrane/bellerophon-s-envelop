@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Bellerophon.Editor.Build;
@@ -44,6 +45,38 @@ namespace Bellerophon.Editor.Validation
         private const string Dolore05ExecutionOpeningDiagnosticCommand = "CaptureDolore05ExecutionOpeningDiagnostic";
         private const string RebellionMoveVisualReviewCommand =
             "CaptureRebellionMoveVisualReview";
+        private const string VacuumUseLocomotionDiagnosticCommand =
+            "CaptureVacuumUseLocomotionDiagnostic";
+        private const string VacuumUseLocomotionFinalCommand =
+            "CaptureVacuumUseLocomotionFinal";
+        private const string HoloSprayIdleLocomotionFinalCommand =
+            "CaptureHoloSprayIdleLocomotionFinal";
+        private const string DoorOpenerIdleLocomotionFinalCommand =
+            "CaptureDoorOpenerIdleLocomotionFinal";
+        private const string SpeakerIdleLocomotionDiagnosticCommand =
+            "CaptureSpeakerIdleLocomotionDiagnostic";
+        private const string SpeakerIdleLocomotionFinalCommand =
+            "CaptureSpeakerIdleLocomotionFinal";
+        private const string SpeakerIdleScaleFinalCommand =
+            "CaptureSpeakerIdleScaleFinal";
+        private const string SpeakerIdleTransformReflectionFinalCommand =
+            "CaptureSpeakerIdleTransformReflectionFinal";
+        private const string SpeakerIdleNeutralHandleHandDiagnosticCommand =
+            "CaptureSpeakerIdleNeutralHandleHandDiagnostic";
+        private const string SpeakerIdleNeutralHandleHandFinalCommand =
+            "CaptureSpeakerIdleNeutralHandleHandFinal";
+        private const string SpeakerIdlePalmRightDiagnosticCommand =
+            "CaptureSpeakerIdlePalmRightDiagnostic";
+        private const string SpeakerIdlePalmRightFinalCommand =
+            "CaptureSpeakerIdlePalmRightFinal";
+        private const string VacuumRightHandFollowDiagnosticCommand =
+            "CaptureVacuumUseRightHandFollowDiagnostic";
+        private const string VacuumRightHandFollowFinalCommand =
+            "CaptureVacuumUseRightHandFollowFinal";
+        private const string SpeakerIdleCarryDiagnosticCommand =
+            "CaptureSpeakerIdleCarryDiagnostic";
+        private const string SpeakerIdleCarryFinalCommand =
+            "CaptureSpeakerIdleCarryFinal";
         private const string RebellionFrontArtifactVisualReviewCommand =
             "CaptureRebellionFrontArtifactReview";
         private const string RebellionAttackTransitionVisualReviewCommand =
@@ -134,7 +167,17 @@ namespace Bellerophon.Editor.Validation
                 return;
             }
 
-            var request = BridgeRequest.Read(requestPath);
+            BridgeRequest request;
+            try
+            {
+                request = BridgeRequest.Read(requestPath);
+            }
+            catch (IOException)
+            {
+                // The PowerShell bridge replaces this small file atomically enough for the
+                // next 100 ms poll, but Windows can briefly hold an exclusive write handle.
+                return;
+            }
             if (!request.IsValid)
             {
                 return;
@@ -179,6 +222,19 @@ namespace Bellerophon.Editor.Validation
                 request.Command != StickThrowReadyReleaseCancelPlayModeCommand &&
                 request.Command != StickThrowReleasePhysicsArcPlayModeCommand &&
                 request.Command != Dolore05ExecutionOpeningDiagnosticCommand &&
+                request.Command != VacuumUseLocomotionDiagnosticCommand &&
+                request.Command != VacuumUseLocomotionFinalCommand &&
+                request.Command != HoloSprayIdleLocomotionFinalCommand &&
+                request.Command != SpeakerIdleLocomotionDiagnosticCommand &&
+                request.Command != SpeakerIdleLocomotionFinalCommand &&
+                request.Command != SpeakerIdleScaleFinalCommand &&
+                request.Command != SpeakerIdleTransformReflectionFinalCommand &&
+                request.Command != SpeakerIdleNeutralHandleHandDiagnosticCommand &&
+                request.Command != SpeakerIdleNeutralHandleHandFinalCommand &&
+                request.Command != SpeakerIdlePalmRightDiagnosticCommand &&
+                request.Command != SpeakerIdlePalmRightFinalCommand &&
+                request.Command != VacuumRightHandFollowDiagnosticCommand &&
+                request.Command != VacuumRightHandFollowFinalCommand &&
                 request.Command != RebellionAttackTransitionVisualReviewCommand &&
                 request.Command != RebellionForwardScanVisualReviewCommand &&
                 request.Command != RebellionForwardBurstVisualReviewCommand &&
@@ -216,6 +272,1085 @@ namespace Bellerophon.Editor.Validation
                         request,
                         RefreshAssets,
                         "Unity assets refreshed.");
+                    break;
+                case "ClearFlashlightConsoleErrors":
+                    RunSynchronous(
+                        request,
+                        ClearUnityConsole,
+                        "Flashlight console errors cleared after the callback loop stopped.");
+                    break;
+                case "ProbeFlashlightSource":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ProbeSource"),
+                        "Flashlight source and target arm chains inspected read-only.");
+                    break;
+                case "ApplyFlashlightCarry":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyCarry"),
+                        "Flashlight model, materials, fist grips, and right-hand follows applied.");
+                    break;
+                case "InspectFlashlightCarry":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectCarry"),
+                        "Flashlight carries inspected without target manipulation.");
+                    break;
+                case "CaptureFlashlightCarryFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureFinal"),
+                        "Flashlight final direct-review composite captured once.");
+                    break;
+                case "ApplyFlashlightIdleLocomotion":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyIdleLocomotion"),
+                        "Flashlight_Idle exact six-motion 2D locomotion applied.");
+                    break;
+                case "InspectFlashlightIdleLocomotion":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectIdleLocomotion"),
+                        "Flashlight_Idle locomotion inspected without target manipulation.");
+                    break;
+                case "ApplyFlashlightIdleLightCycle":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyIdleLightCycle"),
+                        "Flashlight_Idle five-second idle lens-light cycle applied.");
+                    break;
+                case "DiagnoseFlashlightIdleLensLight":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("DiagnoseIdleLensLight"),
+                        "Flashlight_Idle visible lens-light cause diagnosed read-only.");
+                    break;
+                case "ApplyFlashlightIdleLensLightFix":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyIdleLensLightFix"),
+                        "Flashlight_Idle visible lens-surface light fix applied.");
+                    break;
+                case "InspectFlashlightIdleLightCycle":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectIdleLightCycle"),
+                        "Flashlight_Idle light cycle inspected without target manipulation.");
+                    break;
+                case "InspectFlashlightIdleLensLightFix":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectIdleLensLightFix"),
+                        "Flashlight_Idle visible lens-light fix inspected.");
+                    break;
+                case "CaptureFlashlightIdleLightCycleFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureIdleLightCycleFinal"),
+                        "Flashlight_Idle final natural light-cycle capture started.");
+                    break;
+                case "CaptureFlashlightIdleLensLightFixFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureIdleLightCycleFinal"),
+                        "Flashlight_Idle final visible-lens capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectSource":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectSource"),
+                        "Flashlight_Charge_Connect supplied FBX source inspected.");
+                    break;
+                case "ApplyFlashlightChargeConnectAnimation":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyAnimation"),
+                        "Flashlight_Charge_Connect supplied animation applied exactly.");
+                    break;
+                case "InspectFlashlightChargeConnectAnimation":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectAnimation"),
+                        "Flashlight_Charge_Connect animation linkage inspected.");
+                    break;
+                case "CaptureFlashlightChargeConnectAnimationFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureChargeConnectFinal"),
+                        "Flashlight_Charge_Connect final natural-playback capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectPoseSources":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectPoseSources"),
+                        "Flashlight_Charge_Connect and Player_Idle pose sources inspected.");
+                    break;
+                case "InspectFlashlightChargeConnectForwardReachSources":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectForwardReachSources"),
+                        "Flashlight_Charge_Connect forward-reach source trajectory inspected.");
+                    break;
+                case "ApplyFlashlightChargeConnectForwardReachRevision":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyForwardReachRevision"),
+                        "Flashlight_Charge_Connect forward reach and smoother approach applied.");
+                    break;
+                case "InspectFlashlightChargeConnectForwardReachRevision":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectForwardReachRevision"),
+                        "Flashlight_Charge_Connect forward reach inspected.");
+                    break;
+                case "CaptureFlashlightChargeConnectForwardReachFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureForwardReachFinal"),
+                        "Flashlight_Charge_Connect forward-reach final natural-playback capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectUpperBodyRestoreSources":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectUpperBodyRestoreSources"),
+                        "Flashlight_Charge_Connect supplied upper-body and Player_Idle left-arm sources inspected.");
+                    break;
+                case "ApplyFlashlightChargeConnectUpperBodyRestore":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyUpperBodyRestore"),
+                        "Flashlight_Charge_Connect supplied upper body and Player_Idle complete left arm applied.");
+                    break;
+                case "CaptureFlashlightChargeConnectUpperBodyRestoreDiagnostic":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureUpperBodyRestoreDiagnostic"),
+                        "Flashlight_Charge_Connect upper-body restore diagnostic natural-playback capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectUpperBodyRestore":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectUpperBodyRestore"),
+                        "Flashlight_Charge_Connect upper-body restore inspected.");
+                    break;
+                case "CaptureFlashlightChargeConnectUpperBodyRestoreFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureUpperBodyRestoreFinal"),
+                        "Flashlight_Charge_Connect upper-body restore final natural-playback capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectForwardHoldSources":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectForwardHoldSources"),
+                        "Flashlight_Charge_Connect maximum-forward source frame inspected read-only.");
+                    break;
+                case "ApplyFlashlightChargeConnectForwardHold":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyForwardHold"),
+                        "Flashlight_Charge_Connect one-second full-upper-body forward hold applied.");
+                    break;
+                case "CaptureFlashlightChargeConnectForwardHoldDiagnostic":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureForwardHoldDiagnostic"),
+                        "Flashlight_Charge_Connect forward-hold diagnostic natural-playback capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectForwardHold":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectForwardHold"),
+                        "Flashlight_Charge_Connect one-second forward hold inspected.");
+                    break;
+                case "CaptureFlashlightChargeConnectForwardHoldFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureForwardHoldFinal"),
+                        "Flashlight_Charge_Connect forward-hold final natural-playback capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectRightShoulderForwardSources":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectRightShoulderForwardSources"),
+                        "Flashlight_Charge_Connect right-shoulder-forward sources inspected read-only.");
+                    break;
+                case "ApplyFlashlightChargeConnectRightShoulderForward":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyRightShoulderForward"),
+                        "Flashlight_Charge_Connect right arm aimed in front of its right shoulder.");
+                    break;
+                case "CaptureFlashlightChargeConnectRightShoulderForwardDiagnostic":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureRightShoulderForwardDiagnostic"),
+                        "Flashlight_Charge_Connect right-shoulder-forward diagnostic capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectRightShoulderForward":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectRightShoulderForward"),
+                        "Flashlight_Charge_Connect right-shoulder-forward correction inspected.");
+                    break;
+                case "CaptureFlashlightChargeConnectRightShoulderForwardFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureRightShoulderForwardFinal"),
+                        "Flashlight_Charge_Connect right-shoulder-forward final capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectNeutralWristSources":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectNeutralWristSources"),
+                        "Flashlight_Charge_Connect neutral-wrist sources inspected read-only.");
+                    break;
+                case "ApplyFlashlightChargeConnectNeutralWrist":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyNeutralWrist"),
+                        "Flashlight_Charge_Connect right wrist aligned neutrally with the forearm.");
+                    break;
+                case "CaptureFlashlightChargeConnectNeutralWristDiagnostic":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureNeutralWristDiagnostic"),
+                        "Flashlight_Charge_Connect neutral-wrist diagnostic capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectNeutralWrist":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectNeutralWrist"),
+                        "Flashlight_Charge_Connect neutral-wrist correction inspected.");
+                    break;
+                case "CaptureFlashlightChargeConnectNeutralWristFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureNeutralWristFinal"),
+                        "Flashlight_Charge_Connect neutral-wrist final capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectFaceClearanceSources":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectFaceClearanceSources"),
+                        "Flashlight_Charge_Connect face-clearance sources inspected read-only.");
+                    break;
+                case "ApplyFlashlightChargeConnectFaceClearance":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyFaceClearance"),
+                        "Flashlight_Charge_Connect right arm and flashlight moved clear of the face.");
+                    break;
+                case "CaptureFlashlightChargeConnectFaceClearanceDiagnostic":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureFaceClearanceDiagnostic"),
+                        "Flashlight_Charge_Connect face-clearance diagnostic capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectFaceClearance":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectFaceClearance"),
+                        "Flashlight_Charge_Connect face-clearance correction inspected.");
+                    break;
+                case "CaptureFlashlightChargeConnectFaceClearanceFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureFaceClearanceFinal"),
+                        "Flashlight_Charge_Connect face-clearance final capture started.");
+                    break;
+                case "ApplyFlashlightChargeConnectFlashlightRightOffset":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyFlashlightRightOffset"),
+                        "Flashlight_Charge_Connect flashlight moved four centimeters to transporter right.");
+                    break;
+                case "InspectFlashlightChargeConnectFlashlightRightOffset":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectFlashlightRightOffset"),
+                        "Flashlight_Charge_Connect flashlight-only right offset inspected.");
+                    break;
+                case "CaptureFlashlightChargeConnectFlashlightRightOffsetFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureFlashlightRightOffsetFinal"),
+                        "Flashlight_Charge_Connect flashlight-only right-offset final capture started.");
+                    break;
+                case "ApplyFlashlightChargeConnectFlashlightForwardOffset":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyFlashlightForwardOffset"),
+                        "Flashlight_Charge_Connect flashlight moved two centimeters to transporter forward.");
+                    break;
+                case "InspectFlashlightChargeConnectFlashlightForwardOffset":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectFlashlightForwardOffset"),
+                        "Flashlight_Charge_Connect flashlight-only forward offset inspected.");
+                    break;
+                case "CaptureFlashlightChargeConnectFlashlightForwardOffsetFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureFlashlightForwardOffsetFinal"),
+                        "Flashlight_Charge_Connect flashlight-only forward-offset final capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectHandClearanceSources":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectFlashlightHandClearanceSources"),
+                        "Flashlight_Charge_Connect right-hand and flashlight surfaces inspected read-only.");
+                    break;
+                case "ApplyFlashlightChargeConnectHandClearance":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyFlashlightHandClearance"),
+                        "Flashlight_Charge_Connect flashlight moved to the minimum right-hand clearance.");
+                    break;
+                case "InspectFlashlightChargeConnectHandClearance":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectFlashlightHandClearance"),
+                        "Flashlight_Charge_Connect right-hand surface clearance inspected.");
+                    break;
+                case "CaptureFlashlightChargeConnectHandClearanceFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CaptureFlashlightHandClearanceFinal"),
+                        "Flashlight_Charge_Connect right-hand surface-clearance final capture started.");
+                    break;
+                case "InspectFlashlightChargeConnectDisconnectGripAndTimingSources":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup(
+                            "InspectFlashlightChargeConnectDisconnectGripAndTimingSources"),
+                        "Charge flashlight grip and disconnect timing sources inspected read-only.");
+                    break;
+                case "ApplyFlashlightChargeConnectDisconnectGripAndTiming":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup(
+                            "ApplyFlashlightChargeConnectDisconnectGripAndTiming"),
+                        "Charge flashlights aligned with the right hand and disconnect final hold configured.");
+                    break;
+                case "InspectFlashlightChargeConnectDisconnectGripAndTimingPlayMode":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup(
+                            "InspectFlashlightChargeConnectDisconnectGripAndTimingPlayMode"),
+                        "Charge flashlight grip and disconnect final hold Play Mode inspection started.");
+                    break;
+                case "CaptureFlashlightChargeConnectDisconnectGripAndTimingFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup(
+                            "CaptureFlashlightChargeConnectDisconnectGripAndTimingFinal"),
+                        "Charge flashlight grip and disconnect timing final capture started.");
+                    break;
+                case "InspectDoorOpenerIdleSources":
+                    RunSynchronous(
+                        request,
+                        () => InvokeDoorOpenerSetup("InspectSources"),
+                        "DoorOpener_Idle source model, embedded assets, and right-hand rig inspected read-only.");
+                    break;
+                case "ApplyDoorOpenerIdleCarry":
+                    RunSynchronous(
+                        request,
+                        () => InvokeDoorOpenerSetup("ApplyCarry"),
+                        "DoorOpener_Idle material, lower-front grip, 45-degree antenna, and right-hand follow applied.");
+                    break;
+                case "InspectDoorOpenerIdleCarry":
+                    RunSynchronous(
+                        request,
+                        () => InvokeDoorOpenerSetup("InspectCarry"),
+                        "DoorOpener_Idle carry inspected without target manipulation.");
+                    break;
+                case "CaptureDoorOpenerIdleCarryFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeDoorOpenerSetup("CaptureFinal"),
+                        "DoorOpener_Idle final direct-review composite captured once.");
+                    break;
+                case "InspectDoorOpenerIdleLocomotionSources":
+                    RunSynchronous(
+                        request,
+                        () => InvokeDoorOpenerSetup("InspectLocomotionSources"),
+                        "DoorOpener_Idle locomotion source controllers and motions inspected read-only.");
+                    break;
+                case "ApplyDoorOpenerIdleLocomotion":
+                    RunSynchronous(
+                        request,
+                        () => InvokeDoorOpenerSetup("ApplyLocomotion"),
+                        "DoorOpener_Idle exact six-motion 2D locomotion applied.");
+                    break;
+                case "InspectDoorOpenerIdleLocomotion":
+                    RunSynchronous(
+                        request,
+                        () => InvokeDoorOpenerSetup("InspectLocomotion"),
+                        "DoorOpener_Idle locomotion inspected without target manipulation.");
+                    break;
+                case "CaptureDoorOpenerIdleLocomotionFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeDoorOpenerSetup("CaptureLocomotionFinal"),
+                        "DoorOpener_Idle controller-driven final direct-review composite captured once.");
+                    break;
+                case "InspectFlashlightChargeDisconnectReverseSources":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup(
+                            "InspectFlashlightChargeDisconnectReverseSources"),
+                        "Flashlight_Charge_Disconnect reverse sources inspected read-only.");
+                    break;
+                case "ApplyFlashlightChargeDisconnectReverse":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup(
+                            "ApplyFlashlightChargeDisconnectReverse"),
+                        "Flashlight_Charge_Disconnect exact Connect animation reverse applied.");
+                    break;
+                case "InspectFlashlightChargeDisconnectReverse":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup(
+                            "InspectFlashlightChargeDisconnectReverse"),
+                        "Flashlight_Charge_Disconnect exact reverse inspected.");
+                    break;
+                case "CaptureFlashlightChargeDisconnectReverseFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup(
+                            "CaptureFlashlightChargeDisconnectReverseFinal"),
+                        "Flashlight_Charge_Disconnect exact reverse final capture started.");
+                    break;
+                case "ApplyFlashlightChargeConnectPoseRevision":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("ApplyPoseRevision"),
+                        "Flashlight_Charge_Connect Player_Idle body, palm-forward arm, and lens-up pose applied.");
+                    break;
+                case "InspectFlashlightChargeConnectPoseRevision":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("InspectPoseRevision"),
+                        "Flashlight_Charge_Connect approved pose revision inspected.");
+                    break;
+                case "CaptureFlashlightChargeConnectPoseRevisionFinal":
+                    RunSynchronous(
+                        request,
+                        () => InvokeFlashlightSetup("CapturePoseRevisionFinal"),
+                        "Flashlight_Charge_Connect pose revision final natural-playback capture started.");
+                    break;
+                case "InspectVacuumCleanerGripSources":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.InspectSources,
+                        "Vacuum cleaner model and target sources inspected.");
+                    break;
+                case "InspectSpeakerIdleCarrySources":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.InspectSources,
+                        "Speaker_Idle model and pose sources inspected read-only.");
+                    break;
+                case "InspectSpeakerIdleLocomotionSources":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleLocomotionTools.InspectSources,
+                        "Speaker_Idle locomotion sources inspected read-only.");
+                    break;
+                case "ApplySpeakerIdleLocomotion":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleLocomotionTools.Apply,
+                        "Speaker_Idle six-motion lower-body Blend Tree applied.");
+                    break;
+                case "InspectSpeakerIdleLocomotion":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleLocomotionTools.Inspect,
+                        "Speaker_Idle locomotion inspected read-only.");
+                    break;
+                case "ApplySpeakerIdleScale":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleLocomotionTools.ApplyScale,
+                        "Speaker_Idle speaker Y scale 60 applied with Edit Mode transform unlocked.");
+                    break;
+                case "InspectSpeakerIdleScale":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleLocomotionTools.InspectScale,
+                        "Speaker_Idle speaker scale inspected read-only.");
+                    break;
+                case "ApplySpeakerIdleTransformReflection":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.ApplyTransformReflection,
+                        "Speaker_Idle current speaker transform reflected exactly.");
+                    break;
+                case "InspectSpeakerIdleTransformReflection":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.VerifyEditedTransformReflection,
+                        "Speaker_Idle current speaker transform reflection inspected read-only.");
+                    break;
+                case "EnterSpeakerIdleLocomotionReview":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleLocomotionTools.EnterReview,
+                        "Speaker_Idle natural locomotion review entered.");
+                    break;
+                case "CaptureSpeakerIdleLocomotionDiagnostic":
+                    RunSpeakerIdleLocomotionCapture(request, false);
+                    break;
+                case "CaptureSpeakerIdleLocomotionFinal":
+                    RunSpeakerIdleLocomotionCapture(request, true);
+                    break;
+                case "CaptureSpeakerIdleScaleFinal":
+                    RunSpeakerIdleLocomotionCapture(request, true);
+                    break;
+                case "CaptureSpeakerIdleTransformReflectionFinal":
+                    RunSpeakerIdleLocomotionCapture(request, true);
+                    break;
+                case "StopSpeakerIdleLocomotionReview":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleLocomotionTools.StopReview,
+                        "Speaker_Idle locomotion review stopped.");
+                    break;
+                case "ExtractSpeakerEmbeddedAssets":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.ExtractEmbeddedAssets,
+                        "PortableSpeaker embedded textures and material extracted.");
+                    break;
+                case "CaptureSpeakerModelViews":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.CaptureModelViews,
+                        "PortableSpeaker six source views captured.");
+                    break;
+                case "InspectSpeakerHandleGeometry":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.InspectHandleGeometry,
+                        "PortableSpeaker upper handle geometry inspected read-only.");
+                    break;
+                case "ApplySpeakerIdleNeutralHandleHand":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.ApplyNeutralHandleHand,
+                        "Speaker_Idle hand moved near handle without grip locking.");
+                    break;
+                case "InspectSpeakerIdleNeutralHandleHand":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.InspectNeutralHandleHand,
+                        "Speaker_Idle handle-near hand inspected read-only.");
+                    break;
+                case "CaptureSpeakerIdleNeutralHandleHandDiagnostic":
+                    RunSpeakerIdleLocomotionCapture(request, false);
+                    break;
+                case "CaptureSpeakerIdleNeutralHandleHandFinal":
+                    RunSpeakerIdleLocomotionCapture(request, true);
+                    break;
+                case "InspectSpeakerIdlePalmRightSource":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.InspectPalmRightSource,
+                        "Speaker_Idle palm-right source inspected read-only.");
+                    break;
+                case "ApplySpeakerIdlePalmRight":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.ApplyPalmRight,
+                        "Speaker_Idle left arm adjusted with palm facing player-right.");
+                    break;
+                case "InspectSpeakerIdlePalmRight":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.InspectPalmRight,
+                        "Speaker_Idle palm-right pose inspected read-only.");
+                    break;
+                case "CaptureSpeakerIdlePalmRightDiagnostic":
+                    RunSpeakerIdleLocomotionCapture(request, false);
+                    break;
+                case "CaptureSpeakerIdlePalmRightFinal":
+                    RunSpeakerIdleLocomotionCapture(request, true);
+                    break;
+                case "ApplySpeakerIdleCarry":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.Apply,
+                        "Speaker_Idle left-shoulder carry pose and follower applied.");
+                    break;
+                case "InspectSpeakerIdleCarry":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.Inspect,
+                        "Speaker_Idle carry state inspected read-only.");
+                    break;
+                case "SnapshotSpeakerIdleEditedTransform":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.SnapshotEditedTransform,
+                        "Speaker_Idle edited speaker transform snapshot captured read-only.");
+                    break;
+                case "VerifySpeakerIdleEditedTransformReflection":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.VerifyEditedTransformReflection,
+                        "Speaker_Idle edited speaker transform reflection verified read-only.");
+                    break;
+                case "CaptureSpeakerIdleEditedTransformDiagnostic":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.CaptureEditedTransformDiagnostic,
+                        "Speaker_Idle edited speaker transform diagnostic captured.");
+                    break;
+                case "CaptureSpeakerIdleEditedTransformFinal":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.CaptureEditedTransformFinal,
+                        "Speaker_Idle edited speaker transform final comparison captured.");
+                    break;
+                case "EnterSpeakerIdleCarryReview":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.EnterReview,
+                        "Speaker_Idle natural carry review entered.");
+                    break;
+                case "CaptureSpeakerIdleCarryDiagnostic":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.CaptureDiagnostic,
+                        "Speaker_Idle diagnostic comparison captured and Edit Mode requested.");
+                    break;
+                case "CaptureSpeakerIdleCarryFinal":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.CaptureFinal,
+                        "Speaker_Idle final comparison captured and Edit Mode requested.");
+                    break;
+                case "StopSpeakerIdleCarryReview":
+                    RunSynchronous(
+                        request,
+                        SpeakerIdleCarryTools.StopReview,
+                        "Speaker_Idle carry review stopped.");
+                    break;
+                case "InspectVacuumCleanerEmbeddedAppearance":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.InspectEmbeddedAppearance,
+                        "Vacuum cleaner embedded materials and textures inspected.");
+                    break;
+                case "CaptureVacuumCleanerGripBefore":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.CaptureBefore,
+                        "Vacuum grip unmodified before view captured.");
+                    break;
+                case "ApplyVacuumCleanerGrip":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.Apply,
+                        "Vacuum cleaner model and two-hand grip applied.");
+                    break;
+                case "ApplyVacuumCleanerScaleGripAndAppearance":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.Apply,
+                        "Vacuum cleaner scale, embedded appearance, and two-hand grip applied.");
+                    break;
+                case "ApplyVacuumCleanerFloorContactDiagonalGrip":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.ApplyFloorContactDiagonalGrip,
+                        "Player_Idle arm pose applied without moving the vacuum cleaner.");
+                    break;
+                case "CaptureVacuumIdleAuthoredTransform":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.CaptureVacuumIdleAuthoredTransform,
+                        "Vacuum_Idle authored transform captured without modification.");
+                    break;
+                case "InspectVacuumCleanerTransformSyncSource":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.InspectVacuumCleanerTransformSyncSource,
+                        "Vacuum_Idle cleaner local transforms inspected without modification.");
+                    break;
+                case "ApplyVacuumCleanerTransformSyncToUse":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.ApplyVacuumCleanerTransformSyncToUse,
+                        "Vacuum_Use cleaner local transforms matched Vacuum_Idle.");
+                    break;
+                case "InspectVacuumCleanerTransformSync":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.InspectVacuumCleanerTransformSync,
+                        "Vacuum cleaner local transforms inspected read-only.");
+                    break;
+                case "CaptureVacuumCleanerTransformSyncDiagnostic":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.CaptureVacuumCleanerTransformSyncDiagnostic,
+                        "Vacuum cleaner transform-sync diagnostic captured once.");
+                    break;
+                case "CaptureVacuumCleanerTransformSyncFinal":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.CaptureVacuumCleanerTransformSyncFinal,
+                        "Vacuum cleaner transform-sync final comparison captured once.");
+                    break;
+                case "InspectVacuumUseLocomotionSources":
+                    RunSynchronous(
+                        request,
+                        VacuumUseLocomotionTools.InspectSources,
+                        "Vacuum_Use locomotion sources inspected read-only.");
+                    break;
+                case "ApplyVacuumUseLocomotionBlendTree":
+                    RunSynchronous(
+                        request,
+                        VacuumUseLocomotionTools.Apply,
+                        "Vacuum_Use locomotion Blend Tree and one-second cycle applied.");
+                    break;
+                case "EnterVacuumUseLocomotionReview":
+                    RunSynchronous(
+                        request,
+                        VacuumUseLocomotionTools.EnterReview,
+                        "Vacuum_Use natural locomotion review entered.");
+                    break;
+                case "CaptureVacuumUseLocomotionDiagnostic":
+                    RunVacuumUseLocomotionCapture(request, false);
+                    break;
+                case "InspectVacuumUseLocomotion":
+                    RunSynchronous(
+                        request,
+                        VacuumUseLocomotionTools.Inspect,
+                        "Vacuum_Use locomotion inspected in restored Edit Mode.");
+                    break;
+                case "CaptureVacuumUseLocomotionFinal":
+                    RunVacuumUseLocomotionCapture(request, true);
+                    break;
+                case "StopVacuumUseLocomotionReview":
+                    RunSynchronous(
+                        request,
+                        VacuumUseLocomotionTools.StopReview,
+                        "Vacuum_Use locomotion review stopped in Edit Mode.");
+                    break;
+                case "InspectVacuumUseRightHandFollowSource":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerRightHandFollowTools.InspectSource,
+                        "Vacuum_Use right-hand follow source inspected read-only.");
+                    break;
+                case "InspectHoloSprayIdleSource":
+                    RunSynchronous(
+                        request,
+                        HoloSprayIdleCarryTools.InspectSource,
+                        "HoloSpray_Idle and holographic spray sources inspected read-only.");
+                    break;
+                case "ImportHoloSprayAssets":
+                    RunSynchronous(
+                        request,
+                        HoloSprayIdleCarryTools.ImportAssets,
+                        "Holographic spray embedded textures and material imported.");
+                    break;
+                case "ApplyHoloSprayIdleGrip":
+                    RunSynchronous(
+                        request,
+                        HoloSprayIdleCarryTools.ApplyGrip,
+                        "HoloSpray_Idle forward right-hand grip applied.");
+                    break;
+                case "InspectHoloSprayIdleGrip":
+                    RunSynchronous(
+                        request,
+                        HoloSprayIdleCarryTools.Inspect,
+                        "HoloSpray_Idle forward grip inspected read-only.");
+                    break;
+                case "InspectHoloSprayIdleLocomotionSources":
+                    RunSynchronous(
+                        request,
+                        HoloSprayIdleLocomotionTools.InspectSources,
+                        "HoloSpray_Idle locomotion sources inspected read-only.");
+                    break;
+                case "ApplyHoloSprayIdleLocomotion":
+                    RunSynchronous(
+                        request,
+                        HoloSprayIdleLocomotionTools.Apply,
+                        "HoloSpray_Idle source-exact six-motion Blend Tree applied.");
+                    break;
+                case "InspectHoloSprayIdleLocomotion":
+                    RunSynchronous(
+                        request,
+                        HoloSprayIdleLocomotionTools.Inspect,
+                        "HoloSpray_Idle locomotion inspected read-only.");
+                    break;
+                case "EnterHoloSprayIdleLocomotionReview":
+                    RunSynchronous(
+                        request,
+                        HoloSprayIdleLocomotionTools.EnterReview,
+                        "HoloSpray_Idle natural locomotion review entered.");
+                    break;
+                case "CaptureHoloSprayIdleLocomotionFinal":
+                    RunHoloSprayIdleLocomotionCapture(request);
+                    break;
+                case "StopHoloSprayIdleLocomotionReview":
+                    RunSynchronous(
+                        request,
+                        HoloSprayIdleLocomotionTools.StopReview,
+                        "HoloSpray_Idle locomotion review stopped.");
+                    break;
+                case "EnterHoloSprayIdleReview":
+                    RunSynchronous(
+                        request,
+                        HoloSprayIdleCarryTools.EnterReview,
+                        "HoloSpray_Idle Play Mode review requested.");
+                    break;
+                case "CaptureHoloSprayIdleDiagnostic":
+                    RunSynchronous(
+                        request,
+                        HoloSprayIdleCarryTools.CaptureDiagnostic,
+                        "HoloSpray_Idle diagnostic captured.");
+                    break;
+                case "CaptureHoloSprayIdleFinal":
+                    RunSynchronous(
+                        request,
+                        HoloSprayIdleCarryTools.CaptureFinal,
+                        "HoloSpray_Idle final comparison captured once.");
+                    break;
+                case "StopHoloSprayIdleReview":
+                    RunSynchronous(
+                        request,
+                        HoloSprayIdleCarryTools.StopReview,
+                        "HoloSpray_Idle review stopped.");
+                    break;
+                case "InspectMarkerSprayIdleSources":
+                    RunSynchronous(
+                        request,
+                        MarkerSprayIdleSetupTools.InspectSources,
+                        "MarkerSpray_Idle and exact HoloSpray sources inspected read-only.");
+                    break;
+                case "ImportMarkerSprayAssets":
+                    RunSynchronous(
+                        request,
+                        MarkerSprayIdleSetupTools.ImportAssets,
+                        "Marking spray embedded textures and material imported.");
+                    break;
+                case "ApplyMarkerSprayIdle":
+                    RunSynchronous(
+                        request,
+                        MarkerSprayIdleSetupTools.Apply,
+                        "MarkerSpray_Idle exact HoloSpray carry and locomotion applied.");
+                    break;
+                case "InspectMarkerSprayIdle":
+                    RunSynchronous(
+                        request,
+                        MarkerSprayIdleSetupTools.Inspect,
+                        "MarkerSpray_Idle inspected read-only.");
+                    break;
+                case "CaptureMarkerSprayIdleFinal":
+                    RunSynchronous(
+                        request,
+                        MarkerSprayIdleSetupTools.CaptureFinal,
+                        "MarkerSpray_Idle final direct comparison captured once.");
+                    break;
+                case "InspectMarkerSpraySprayIdleSource":
+                    RunSynchronous(
+                        request,
+                        MarkerSpraySpraySetupTools.InspectSource,
+                        "MarkerSpray_Spray idle source inspected read-only.");
+                    break;
+                case "ApplyMarkerSpraySprayIdleLoop":
+                    RunSynchronous(
+                        request,
+                        MarkerSpraySpraySetupTools.ApplyIdleLoop,
+                        "MarkerSpray_Spray exact idle copy connected as a loop.");
+                    break;
+                case "InspectMarkerSpraySprayIdleLoop":
+                    RunSynchronous(
+                        request,
+                        MarkerSpraySpraySetupTools.InspectIdleLoop,
+                        "MarkerSpray_Spray exact idle loop inspected read-only.");
+                    break;
+                case "CaptureMarkerSpraySprayIdleLoopFinal":
+                    RunSynchronous(
+                        request,
+                        MarkerSpraySpraySetupTools.CaptureFinal,
+                        "MarkerSpray_Spray final direct idle loop comparison captured once.");
+                    break;
+                case "InspectMarkerSpraySprayActualPlayback":
+                    RunSynchronous(
+                        request,
+                        MarkerSpraySpraySetupTools.InspectActualPlayback,
+                        "MarkerSpray_Spray actual target playback inspected read-only.");
+                    break;
+                case "ApplyMarkerSpraySprayActualPlaybackFix":
+                    RunSynchronous(
+                        request,
+                        MarkerSpraySpraySetupTools.ApplyActualPlaybackFix,
+                        "MarkerSpray_Spray actual target playback repaired.");
+                    break;
+                case "CaptureMarkerSpraySprayActualPlaybackFinal":
+                    RunSynchronous(
+                        request,
+                        MarkerSpraySpraySetupTools.CaptureActualPlaybackFinal,
+                        "MarkerSpray_Spray actual target playback captured directly once.");
+                    break;
+                case "InspectMarkerSpraySprayCarrySource":
+                    RunSynchronous(
+                        request,
+                        MarkerSpraySpraySetupTools.InspectCarrySource,
+                        "MarkerSpray_Spray carry source inspected read-only.");
+                    break;
+                case "ApplyMarkerSpraySprayCarry":
+                    RunSynchronous(
+                        request,
+                        MarkerSpraySpraySetupTools.ApplyCarry,
+                        "MarkerSpray_Spray exact MarkerSpray_Idle carry applied.");
+                    break;
+                case "InspectMarkerSpraySprayCarry":
+                    RunSynchronous(
+                        request,
+                        MarkerSpraySpraySetupTools.InspectCarry,
+                        "MarkerSpray_Spray carry inspected read-only.");
+                    break;
+                case "CaptureMarkerSpraySprayCarryFinal":
+                    RunSynchronous(
+                        request,
+                        MarkerSpraySpraySetupTools.CaptureCarryFinal,
+                        "MarkerSpray_Spray carry final direct comparison captured once.");
+                    break;
+                case "ApplyVacuumUseRightHandFollow":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerRightHandFollowTools.Apply,
+                        "Vacuum_Use right-hand follow configured without changing its authored pose.");
+                    break;
+                case "CaptureVacuumUseRightHandFollowDiagnostic":
+                    RunVacuumRightHandFollowCapture(request, false);
+                    break;
+                case "InspectVacuumUseRightHandFollow":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerRightHandFollowTools.Inspect,
+                        "Vacuum_Use right-hand follow inspected in restored Edit Mode.");
+                    break;
+                case "CaptureVacuumUseRightHandFollowFinal":
+                    RunVacuumRightHandFollowCapture(request, true);
+                    break;
+                case "ApplyVacuumIdleRightHandGrip":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.ApplyVacuumIdleRightHandGrip,
+                        "Vacuum_Idle right-hand handle grip applied.");
+                    break;
+                case "InspectVacuumIdleRightHandGrip":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.InspectVacuumIdleRightHandGrip,
+                        "Vacuum_Idle right-hand handle grip inspected read-only.");
+                    break;
+                case "CaptureVacuumIdleRightHandGripDiagnostic":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.CaptureVacuumIdleRightHandGripDiagnostic,
+                        "Vacuum_Idle right-hand handle grip captured once.");
+                    break;
+                case "ApplyVacuumIdleStateToUse":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.ApplyVacuumIdleStateToUse,
+                        "Vacuum_Idle complete state copied to Vacuum_Use.");
+                    break;
+                case "InspectVacuumIdleStateToUse":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.InspectVacuumIdleStateToUse,
+                        "Vacuum_Idle and Vacuum_Use states inspected read-only.");
+                    break;
+                case "CaptureVacuumIdleStateToUse":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.CaptureVacuumIdleStateToUse,
+                        "Vacuum_Idle and Vacuum_Use state comparison captured once.");
+                    break;
+                case "ApplyVacuumRightWristGrip":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.ApplyVacuumRightWristGrip,
+                        "Reference-aligned right wrist grip applied to both vacuum poses.");
+                    break;
+                case "InspectVacuumTopHandleGeometry":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.InspectVacuumTopHandleGeometry,
+                        "Vacuum top-handle geometry inspected read-only.");
+                    break;
+                case "ApplyVacuumTopHandleGrip":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.ApplyVacuumTopHandleGrip,
+                        "Vacuum upper straight-handle center grip applied.");
+                    break;
+                case "InspectVacuumTopHandleGrip":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.InspectVacuumTopHandleGrip,
+                        "Vacuum upper straight-handle grip inspected read-only.");
+                    break;
+                case "CaptureVacuumTopHandleGrip":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.CaptureVacuumTopHandleGrip,
+                        "Vacuum top-handle reference/result comparison captured once.");
+                    break;
+                case "InspectVacuumRightWristGrip":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.InspectVacuumRightWristGrip,
+                        "Reference-aligned right wrist grip inspected read-only.");
+                    break;
+                case "CaptureVacuumRightWristGrip":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.CaptureVacuumRightWristGrip,
+                        "Reference-image right wrist comparison captured once.");
+                    break;
+                case "EnterVacuumCleanerGripReview":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.EnterReview,
+                        "Vacuum cleaner grip Play Mode review requested.");
+                    break;
+                case "InspectVacuumCleanerGrip":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.Inspect,
+                        "Vacuum Player_Idle arm pose inspected without target manipulation.");
+                    break;
+                case "CaptureVacuumCleanerGripFinal":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.CaptureFinal,
+                        "Vacuum cleaner grip final comparison captured once.");
+                    break;
+                case "CaptureVacuumCleanerGripCorrectionDiagnostic":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.CaptureCorrectionDiagnostic,
+                        "Vacuum cleaner grip correction diagnostic captured once.");
+                    break;
+                case "StopVacuumCleanerGripReview":
+                    RunSynchronous(
+                        request,
+                        VacuumCleanerGripTools.StopReview,
+                        "Vacuum cleaner grip review stopped.");
                     break;
                 case "ArrangePlayerAnimationLayout":
                     RunSynchronous(
@@ -2491,6 +3626,84 @@ namespace Bellerophon.Editor.Validation
                         request,
                         ConsumableRiggedSharedMotionTools.CaptureConsumableRiggedSharedMotionFinal,
                         "Consumable natural-playback final capture scheduled; read its completed report.");
+                    break;
+                case "EnterConsumableGripAndRightBackReview":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.EnterConsumableGripAndRightBackReview,
+                        "Consumable grip and right-back natural review requested.");
+                    break;
+                case "InspectConsumableGripAndRightBack":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.InspectConsumableGripAndRightBack,
+                        "Consumable grip and right-back natural inspection scheduled.");
+                    break;
+                case "CaptureConsumableGripAndRightBackDiagnostic":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.CaptureConsumableGripAndRightBackDiagnostic,
+                        "Consumable grip and right-back diagnostic scheduled.");
+                    break;
+                case "CaptureConsumableGripAndRightBackFinal":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.CaptureConsumableGripAndRightBackFinal,
+                        "Consumable grip and right-back final capture scheduled.");
+                    break;
+                case "ApplyConsumableGripAndRightBackFix":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.ApplyConsumableGripAndRightBackFix,
+                        "Consumable grip and right-back fix applied.");
+                    break;
+                case "StopConsumableGripAndRightBackReview":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.StopConsumableGripAndRightBackReview,
+                        "Consumable grip and right-back review stopped.");
+                    break;
+                case "EnterConsumableRightBackRound2Review":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.EnterConsumableRightBackRound2Review,
+                        "Consumable right-back round-two natural review requested.");
+                    break;
+                case "ExportConsumableRightBackNativeWeights":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.ExportConsumableRightBackNativeWeights,
+                        "Native player FBX skin weights exported before the authored JSON override.");
+                    break;
+                case "ApplyConsumableRightBackRound2Fix":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.ApplyConsumableRightBackRound2Fix,
+                        "Consumable right-back round-two weight-only fix applied.");
+                    break;
+                case "InspectConsumableRightBackRound2":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.InspectConsumableRightBackRound2,
+                        "Consumable right-back round-two inspection scheduled.");
+                    break;
+                case "CaptureConsumableRightBackRound2Diagnostic":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.CaptureConsumableRightBackRound2Diagnostic,
+                        "Consumable right-back round-two diagnostic scheduled.");
+                    break;
+                case "CaptureConsumableRightBackRound2Final":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.CaptureConsumableRightBackRound2Final,
+                        "Consumable right-back round-two final capture scheduled.");
+                    break;
+                case "StopConsumableRightBackRound2Review":
+                    RunSynchronous(
+                        request,
+                        ConsumableRiggedSharedMotionTools.StopConsumableRightBackRound2Review,
+                        "Consumable right-back round-two review stopped.");
                     break;
                 case "StopConsumableRiggedSharedMotionReview":
                     RunSynchronous(
@@ -9375,6 +10588,321 @@ namespace Bellerophon.Editor.Validation
                         ModelingInspectionModeBootstrap.EnableFreeCameraForModeling,
                         "Modeling inspection free camera enabled.");
                     break;
+                case "ApplyRepairDeviceOperateStartAndKit":
+                    RunSynchronous(
+                        request,
+                        RepairDeviceOperateSetupTools.ApplyRepairDeviceOperateStartAndKit,
+                        "RepairDevice_Operate start view and exact repair kit placement applied.");
+                    break;
+                case "InspectRepairDeviceOperateStartAndKit":
+                    RunSynchronous(
+                        request,
+                        RepairDeviceOperateSetupTools.InspectRepairDeviceOperateStartAndKit,
+                        "RepairDevice_Operate start view and repair kit inspected read-only.");
+                    break;
+                case "CaptureRepairDeviceOperateStartAndKitFinal":
+                    RunSynchronous(
+                        request,
+                        RepairDeviceOperateSetupTools.CaptureRepairDeviceOperateStartAndKitFinal,
+                        "RepairDevice_Operate one-time final capture started.");
+                    break;
+                case "ApplyLightsaberOffIdleStartView":
+                    RunSynchronous(
+                        request,
+                        LightsaberOffIdleStartSetupTools.ApplyLightsaberOffIdleStartView,
+                        "Lightsaber_Off_Idle startup view applied.");
+                    break;
+                case "InspectLightsaberOffIdleStartView":
+                    RunSynchronous(
+                        request,
+                        LightsaberOffIdleStartSetupTools.InspectLightsaberOffIdleStartView,
+                        "Lightsaber_Off_Idle startup view inspected read-only.");
+                    break;
+                case "CaptureLightsaberOffIdleStartViewFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberOffIdleStartSetupTools.CaptureLightsaberOffIdleStartViewFinal,
+                        "Lightsaber_Off_Idle one-time final startup-view capture completed.");
+                    break;
+                case "InspectLightsaberSourceAndTargets":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberSourceAndTargets,
+                        "Lightsaber source and six target right-hand rigs inspected read-only.");
+                    break;
+                case "InspectLightsaberGripPoseSource":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberGripPoseSource,
+                        "Lightsaber static grip-pose sources and current arm metrics inspected read-only.");
+                    break;
+                case "ApplyLightsaberGripPose":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberGripPose,
+                        "Lightsaber static right-arm and hand grip poses applied to six targets.");
+                    break;
+                case "InspectLightsaberGripPose":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberGripPose,
+                        "Six lightsaber static grip poses inspected read-only.");
+                    break;
+                case "CaptureLightsaberGripPoseFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.CaptureLightsaberGripPoseFinal,
+                        "One final 3x2 lightsaber grip-pose composite captured.");
+                    break;
+                case "InspectLightsaberLoweredGripPoseSource":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberLoweredGripPoseSource,
+                        "Six current left-arm references and right-arm offsets inspected read-only.");
+                    break;
+                case "ApplyLightsaberLoweredGripPose":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberLoweredGripPose,
+                        "Six right arms lowered from their current left-arm references.");
+                    break;
+                case "InspectLightsaberLoweredGripPose":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberLoweredGripPose,
+                        "Six lowered lightsaber grip poses inspected read-only.");
+                    break;
+                case "CaptureLightsaberLoweredGripPoseFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.CaptureLightsaberLoweredGripPoseFinal,
+                        "One final 3x2 front/oblique lowered lightsaber grip composite captured.");
+                    break;
+                case "InspectLightsaberPropTransformReplicationSource":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberPropTransformReplicationSource,
+                        "Lightsaber_Off_Idle user-authored prop transform inspected read-only.");
+                    break;
+                case "ApplyLightsaberPropTransformReplication":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberPropTransformReplication,
+                        "Lightsaber_Off_Idle prop transform copied to five lightsaber targets.");
+                    break;
+                case "InspectLightsaberPropTransformReplication":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberPropTransformReplication,
+                        "Six lightsaber prop transforms inspected read-only.");
+                    break;
+                case "CaptureLightsaberPropTransformReplicationFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.CaptureLightsaberPropTransformReplicationFinal,
+                        "One final 3x2 lightsaber transform-replication composite captured.");
+                    break;
+                case "InspectLightsaberBladeUnitySampleSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberBladeUnitySampleTools
+                            .InspectLightsaberBladeUnitySampleSources,
+                        "Lightsaber blade Unity sample sources inspected read-only.");
+                    break;
+                case "CreateLightsaberBladeUnitySample":
+                    RunSynchronous(
+                        request,
+                        LightsaberBladeUnitySampleTools.CreateLightsaberBladeUnitySample,
+                        "Reusable static-on lightsaber blade prefab and standalone sample scene created.");
+                    break;
+                case "InspectLightsaberBladeUnitySample":
+                    RunSynchronous(
+                        request,
+                        LightsaberBladeUnitySampleTools.InspectLightsaberBladeUnitySample,
+                        "Lightsaber blade Unity sample inspected read-only.");
+                    break;
+                case "CaptureLightsaberBladeUnitySampleFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberBladeUnitySampleTools
+                            .CaptureLightsaberBladeUnitySampleFinal,
+                        "One final direct Unity lightsaber blade sample render captured.");
+                    break;
+                case "InspectLightsaberBladeApplicationSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberBladeApplicationSources,
+                        "Lightsaber blade application sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberBladeToSixObjects":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberBladeToSixObjects,
+                        "Approved static-on blade attached to all six lightsaber handles.");
+                    break;
+                case "InspectLightsaberBladeApplication":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberBladeApplication,
+                        "Six lightsaber blade applications inspected read-only.");
+                    break;
+                case "CaptureLightsaberBladeApplicationFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.CaptureLightsaberBladeApplicationFinal,
+                        "One final six-target lightsaber blade composite captured.");
+                    break;
+                case "InspectLightsaberBladePerformanceSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberBladePerformanceTools
+                            .InspectLightsaberBladePerformanceSources,
+                        "Lightsaber blade performance sources inspected read-only.");
+                    break;
+                case "ProfileLightsaberBladeWorstCase":
+                    RunSynchronous(
+                        request,
+                        LightsaberBladePerformanceTools.ProfileLightsaberBladeWorstCase,
+                        "Six-blade worst-case performance profile completed.");
+                    break;
+                case "OptimizeLightsaberBladePerformance":
+                    RunSynchronous(
+                        request,
+                        LightsaberBladePerformanceTools.OptimizeLightsaberBladePerformance,
+                        "Conditional lightsaber blade performance optimization completed.");
+                    break;
+                case "InspectLightsaberBladePerformance":
+                    RunSynchronous(
+                        request,
+                        LightsaberBladePerformanceTools.InspectLightsaberBladePerformance,
+                        "Lightsaber blade final performance inspected read-only.");
+                    break;
+                case "CaptureLightsaberBladePerformanceFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberBladePerformanceTools.CaptureLightsaberBladePerformanceFinal,
+                        "One final optimized lightsaber blade composite captured.");
+                    break;
+                case "ApplyLightsaberCarry":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberCarry,
+                        "Exact lightsaber appearance and six right-hand-follow placements applied.");
+                    break;
+                case "InspectLightsaberCarry":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberCarry,
+                        "Six lightsaber grips and requested angles inspected read-only.");
+                    break;
+                case "CaptureLightsaberCarryFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.CaptureLightsaberCarryFinal,
+                        "One final six-target lightsaber composite captured.");
+                    break;
+                case "ApplyRepairKitStaticNoTransition":
+                    RunSynchronous(
+                        request,
+                        RepairDeviceOperateSetupTools.ApplyRepairKitStaticNoTransition,
+                        "Static repair kit without transition applied.");
+                    break;
+                case "InspectRepairKitStaticNoTransition":
+                    RunSynchronous(
+                        request,
+                        RepairDeviceOperateSetupTools.InspectRepairKitStaticNoTransition,
+                        "Static repair kit without transition inspected read-only.");
+                    break;
+                case "CaptureRepairKitStaticNoTransitionFinal":
+                    RunSynchronous(
+                        request,
+                        RepairDeviceOperateSetupTools.CaptureRepairKitStaticNoTransitionFinal,
+                        "Static repair kit one-time final capture completed.");
+                    break;
+                case "ApplyRepairKitHandleUpOrientation":
+                    RunSynchronous(
+                        request,
+                        RepairDeviceOperateSetupTools.ApplyRepairKitHandleUpOrientation,
+                        "Repair kit handle-up orientation applied.");
+                    break;
+                case "InspectRepairKitHandleUpOrientation":
+                    RunSynchronous(
+                        request,
+                        RepairDeviceOperateSetupTools.InspectRepairKitHandleUpOrientation,
+                        "Repair kit handle-up orientation inspected read-only.");
+                    break;
+                case "CaptureRepairKitHandleUpFinal":
+                    RunSynchronous(
+                        request,
+                        RepairDeviceOperateSetupTools.CaptureRepairKitHandleUpFinal,
+                        "Repair kit one-time handle-up final capture completed.");
+                    break;
+                case "InspectSmokeGrenadeFourStateSources":
+                    RunSynchronous(
+                        request,
+                        SmokeGrenadeSetupTools.InspectSources,
+                        "SmokeGrenade source FBX and corresponding Flashbang states inspected read-only.");
+                    break;
+                case "ImportSmokeGrenadeFourStateAssets":
+                    RunSynchronous(
+                        request,
+                        SmokeGrenadeSetupTools.ImportAssets,
+                        "Smoke shell FBX, embedded textures, and materials imported exactly.");
+                    break;
+                case "ApplySmokeGrenadeFourStateSetup":
+                    RunSynchronous(
+                        request,
+                        SmokeGrenadeSetupTools.ApplyFourStateSetup,
+                        "SmokeGrenade four-state Flashbang animation and grip copies applied.");
+                    break;
+                case "InspectSmokeGrenadeThrowReleaseFlightSource":
+                    RunSynchronous(
+                        request,
+                        SmokeGrenadeSetupTools.InspectThrowReleaseSource,
+                        "Flashbang Throw Release flight source inspected read-only.");
+                    break;
+                case "ApplySmokeGrenadeThrowReleaseFlight":
+                    RunSynchronous(
+                        request,
+                        SmokeGrenadeSetupTools.ApplyThrowReleaseFlight,
+                        "SmokeGrenade Throw Release exact handoff and flight behaviour copied.");
+                    break;
+                case "CaptureSmokeGrenadeFourStateDiagnostic":
+                    RunSynchronous(
+                        request,
+                        SmokeGrenadeCaptureTools.CaptureFourStateDiagnostic,
+                        "SmokeGrenade four-state diagnostic direct capture started.");
+                    break;
+                case "CaptureSmokeGrenadeThrowReleaseFlightDiagnostic":
+                    RunSynchronous(
+                        request,
+                        SmokeGrenadeCaptureTools.CaptureThrowReleaseFlightDiagnostic,
+                        "SmokeGrenade Throw Release diagnostic direct capture started.");
+                    break;
+                case "InspectSmokeGrenadeFourStateSetup":
+                    RunSynchronous(
+                        request,
+                        SmokeGrenadeSetupTools.InspectFourStateSetup,
+                        "SmokeGrenade four-state setup inspected without target manipulation.");
+                    break;
+                case "InspectSmokeGrenadeThrowReleaseFlight":
+                    RunSynchronous(
+                        request,
+                        SmokeGrenadeSetupTools.InspectThrowReleaseFlight,
+                        "SmokeGrenade Throw Release exact copied configuration inspected.");
+                    break;
+                case "CaptureSmokeGrenadeFourStateFinal":
+                    RunSynchronous(
+                        request,
+                        SmokeGrenadeCaptureTools.CaptureFourStateFinal,
+                        "SmokeGrenade four-state final direct capture started once.");
+                    break;
+                case "CaptureSmokeGrenadeThrowReleaseFlightFinal":
+                    RunSynchronous(
+                        request,
+                        SmokeGrenadeCaptureTools.CaptureThrowReleaseFlightFinal,
+                        "SmokeGrenade Throw Release final direct capture started once.");
+                    break;
                 case "ValidateModelingInspectionFreeCamera":
                     RunSynchronous(
                         request,
@@ -9418,6 +10946,65 @@ namespace Bellerophon.Editor.Validation
                         string.Empty);
                     break;
             }
+        }
+
+        private static void InvokeFlashlightSetup(string methodName)
+        {
+            string[] typeNames =
+            {
+                "Bellerophon.PlayerAnimation.Editor.FlashlightSetupTools",
+                "Bellerophon.PlayerAnimation.Editor.FlashlightIdleLocomotionTools",
+                "Bellerophon.PlayerAnimation.Editor.FlashlightChargeConnectAnimationTools"
+            };
+            MethodInfo method = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(assembly => typeNames.Select(
+                    typeName => assembly.GetType(typeName, false)))
+                .Where(type => type != null)
+                .Select(type => type.GetMethod(
+                    methodName,
+                    BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+                .FirstOrDefault(candidate => candidate != null) ??
+                throw new MissingMethodException(
+                    "Flashlight setup tools do not expose " + methodName + ".");
+            method.Invoke(null, null);
+        }
+
+        private static void InvokeDoorOpenerSetup(string methodName)
+        {
+            const string typeName =
+                "Bellerophon.Editor.Validation.DoorOpenerSetupTools";
+            MethodInfo method = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(assembly => assembly.GetType(typeName, false))
+                .Where(type => type != null)
+                .Select(type => type.GetMethod(
+                    methodName,
+                    BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+                .FirstOrDefault(candidate => candidate != null) ??
+                throw new MissingMethodException(
+                    "Door opener setup tools do not expose " + methodName + ".");
+            method.Invoke(null, null);
+        }
+
+        private static void InvokeDoorOpenerCapture(
+            string methodName,
+            Action<string> complete,
+            Action<Exception> fail)
+        {
+            const string typeName =
+                "Bellerophon.Editor.Validation.DoorOpenerSetupTools";
+            MethodInfo method = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(assembly => assembly.GetType(typeName, false))
+                .Where(type => type != null)
+                .Select(type => type.GetMethod(
+                    methodName,
+                    BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic,
+                    null,
+                    new[] { typeof(Action<string>), typeof(Action<Exception>) },
+                    null))
+                .FirstOrDefault(candidate => candidate != null) ??
+                throw new MissingMethodException(
+                    "Door opener setup tools do not expose " + methodName + ".");
+            method.Invoke(null, new object[] { complete, fail });
         }
 
         private static void RefreshAssets()
@@ -9903,6 +11490,216 @@ namespace Bellerophon.Editor.Validation
                         .RebellionMovePlayModeCapture.Start(
                             completeCallback,
                             failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunVacuumUseLocomotionCapture(
+            BridgeRequest request,
+            bool final)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (VacuumUseLocomotionPlayModeCapture.HasPendingCapture)
+                {
+                    VacuumUseLocomotionPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                }
+                else
+                {
+                    VacuumUseLocomotionPlayModeCapture.Start(
+                        final,
+                        completeCallback,
+                        failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunHoloSprayIdleLocomotionCapture(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (HoloSprayIdleLocomotionPlayModeCapture.HasPendingCapture)
+                    HoloSprayIdleLocomotionPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    HoloSprayIdleLocomotionPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunDoorOpenerIdleLocomotionCapture(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                InvokeDoorOpenerCapture(
+                    "StartLocomotionFinalCapture",
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunSpeakerIdleLocomotionCapture(
+            BridgeRequest request,
+            bool final)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                bool scaleFinal = request.Command == SpeakerIdleScaleFinalCommand;
+                bool transformReflectionFinal =
+                    request.Command == SpeakerIdleTransformReflectionFinalCommand;
+                bool neutralHandleHand =
+                    request.Command == SpeakerIdleNeutralHandleHandDiagnosticCommand ||
+                    request.Command == SpeakerIdleNeutralHandleHandFinalCommand;
+                bool palmRight = request.Command == SpeakerIdlePalmRightDiagnosticCommand ||
+                    request.Command == SpeakerIdlePalmRightFinalCommand;
+                if (SpeakerIdleLocomotionPlayModeCapture.HasPendingCapture)
+                {
+                    if (palmRight)
+                        SpeakerIdleLocomotionPlayModeCapture.ResumePalmRight(
+                            final, completeCallback, failCallback);
+                    else if (neutralHandleHand)
+                        SpeakerIdleLocomotionPlayModeCapture.ResumeNeutralHandleHand(
+                            final, completeCallback, failCallback);
+                    else if (transformReflectionFinal)
+                        SpeakerIdleLocomotionPlayModeCapture.ResumeTransformReflectionFinal(
+                            completeCallback, failCallback);
+                    else if (scaleFinal)
+                        SpeakerIdleLocomotionPlayModeCapture.ResumeScaleFinal(
+                            completeCallback, failCallback);
+                    else
+                        SpeakerIdleLocomotionPlayModeCapture.Resume(
+                            final, completeCallback, failCallback);
+                }
+                else if (palmRight)
+                    SpeakerIdleLocomotionPlayModeCapture.StartPalmRight(
+                        final, completeCallback, failCallback);
+                else if (neutralHandleHand)
+                    SpeakerIdleLocomotionPlayModeCapture.StartNeutralHandleHand(
+                        final, completeCallback, failCallback);
+                else if (transformReflectionFinal)
+                    SpeakerIdleLocomotionPlayModeCapture.StartTransformReflectionFinal(
+                        completeCallback, failCallback);
+                else if (scaleFinal)
+                    SpeakerIdleLocomotionPlayModeCapture.StartScaleFinal(
+                        completeCallback, failCallback);
+                else
+                    SpeakerIdleLocomotionPlayModeCapture.Start(
+                        final, completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunVacuumRightHandFollowCapture(
+            BridgeRequest request,
+            bool final)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback =
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    };
+                Action<Exception> failCallback =
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    };
+                if (VacuumCleanerRightHandFollowPlayModeCapture.HasPendingCapture)
+                {
+                    VacuumCleanerRightHandFollowPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                }
+                else
+                {
+                    VacuumCleanerRightHandFollowPlayModeCapture.Start(
+                        final,
+                        completeCallback,
+                        failCallback);
                 }
             }
             catch (Exception exception)
@@ -10604,6 +12401,19 @@ namespace Bellerophon.Editor.Validation
                 request.Command == StickThrowReadyReleaseCancelPlayModeCommand ||
                 request.Command == StickThrowReleasePhysicsArcPlayModeCommand ||
                 request.Command == Dolore05ExecutionOpeningDiagnosticCommand ||
+                request.Command == VacuumUseLocomotionDiagnosticCommand ||
+                request.Command == VacuumUseLocomotionFinalCommand ||
+                request.Command == HoloSprayIdleLocomotionFinalCommand ||
+                request.Command == SpeakerIdleLocomotionDiagnosticCommand ||
+                request.Command == SpeakerIdleLocomotionFinalCommand ||
+                request.Command == SpeakerIdleScaleFinalCommand ||
+                request.Command == SpeakerIdleTransformReflectionFinalCommand ||
+                request.Command == SpeakerIdleNeutralHandleHandDiagnosticCommand ||
+                request.Command == SpeakerIdleNeutralHandleHandFinalCommand ||
+                request.Command == SpeakerIdlePalmRightDiagnosticCommand ||
+                request.Command == SpeakerIdlePalmRightFinalCommand ||
+                request.Command == VacuumRightHandFollowDiagnosticCommand ||
+                request.Command == VacuumRightHandFollowFinalCommand ||
                 request.Command == RebellionMoveVisualReviewCommand ||
                 request.Command == RebellionFrontArtifactVisualReviewCommand ||
                 request.Command == RebellionAttackTransitionVisualReviewCommand ||
@@ -10883,6 +12693,137 @@ namespace Bellerophon.Editor.Validation
                 activeLog.AppendLine(
                     "Resuming Negatif idle eye emission actual Play Mode capture after Play Mode transition.");
                 Bellerophon.Editor.NegatifCargoRunScene.NegatifIdleEyeEmissionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == VacuumUseLocomotionDiagnosticCommand ||
+                request.Command == VacuumUseLocomotionFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Vacuum_Use natural two-cycle locomotion capture " +
+                    "after Play Mode transition.");
+                VacuumUseLocomotionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == HoloSprayIdleLocomotionFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming HoloSpray_Idle natural two-cycle locomotion capture.");
+                HoloSprayIdleLocomotionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == DoorOpenerIdleLocomotionFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Recovering DoorOpener_Idle final direct animation review " +
+                    "without the unavailable Play Mode transition.");
+                try
+                {
+                    InvokeDoorOpenerSetup("CaptureLocomotionFinal");
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(
+                        request,
+                        "DoorOpener_Idle controller-driven final direct-review " +
+                        "composite captured once.");
+                }
+                catch (Exception exception)
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                }
+                return true;
+            }
+
+            if (request.Command == SpeakerIdleLocomotionDiagnosticCommand ||
+                request.Command == SpeakerIdleLocomotionFinalCommand ||
+                request.Command == SpeakerIdleScaleFinalCommand ||
+                request.Command == SpeakerIdleTransformReflectionFinalCommand ||
+                request.Command == SpeakerIdleNeutralHandleHandDiagnosticCommand ||
+                request.Command == SpeakerIdleNeutralHandleHandFinalCommand ||
+                request.Command == SpeakerIdlePalmRightDiagnosticCommand ||
+                request.Command == SpeakerIdlePalmRightFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Speaker_Idle natural two-cycle locomotion capture.");
+                bool final = request.Command == SpeakerIdleLocomotionFinalCommand ||
+                    request.Command == SpeakerIdleScaleFinalCommand ||
+                    request.Command == SpeakerIdleTransformReflectionFinalCommand ||
+                    request.Command == SpeakerIdleNeutralHandleHandFinalCommand ||
+                    request.Command == SpeakerIdlePalmRightFinalCommand;
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (request.Command == SpeakerIdlePalmRightDiagnosticCommand ||
+                    request.Command == SpeakerIdlePalmRightFinalCommand)
+                    SpeakerIdleLocomotionPlayModeCapture.ResumePalmRight(
+                        final, completeCallback, failCallback);
+                else if (request.Command == SpeakerIdleNeutralHandleHandDiagnosticCommand ||
+                    request.Command == SpeakerIdleNeutralHandleHandFinalCommand)
+                    SpeakerIdleLocomotionPlayModeCapture.ResumeNeutralHandleHand(
+                        final, completeCallback, failCallback);
+                else if (request.Command == SpeakerIdleTransformReflectionFinalCommand)
+                    SpeakerIdleLocomotionPlayModeCapture.ResumeTransformReflectionFinal(
+                        completeCallback, failCallback);
+                else if (request.Command == SpeakerIdleScaleFinalCommand)
+                    SpeakerIdleLocomotionPlayModeCapture.ResumeScaleFinal(
+                        completeCallback, failCallback);
+                else
+                    SpeakerIdleLocomotionPlayModeCapture.Resume(
+                        final, completeCallback, failCallback);
+                return true;
+            }
+
+            if (request.Command == VacuumRightHandFollowDiagnosticCommand ||
+                request.Command == VacuumRightHandFollowFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Vacuum_Use natural two-cycle right-hand follow " +
+                    "capture after Play Mode transition.");
+                VacuumCleanerRightHandFollowPlayModeCapture.Resume(
                     successMarker =>
                     {
                         TryDelete(ActiveRequestPath);

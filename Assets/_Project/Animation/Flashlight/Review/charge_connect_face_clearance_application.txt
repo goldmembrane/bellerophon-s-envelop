@@ -1,0 +1,15 @@
+Flashlight_Charge_Connect face-clearance application
+target=Flashlight_Charge_Connect
+sceneWasDirtyBeforeApplication=True
+sourceMinimumFaceClearanceMeters=-0.112533323
+appliedRightOffsetMeters=0.127533317
+shoulderRotationShare=0.18
+neutralWristPreserved=True
+flashlightRightHandFollowPreserved=True
+flashlightLensUpCorrectionPreserved=True
+forwardHoldDurationSeconds=1
+sourceClipLengthSeconds=1.03333342
+sourceClipModified=False
+controllerModified=False
+rendererMeshMaterialScaleModified=False
+objectsOutsideTargetChanged=False

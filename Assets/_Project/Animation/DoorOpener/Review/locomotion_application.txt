@@ -1,0 +1,23 @@
+DoorOpener_Idle locomotion application
+sceneSaved=True
+sourceObjectsChanged=False
+sourceAnimationAssetsChanged=False
+sourceCurvesGenerated=False
+originalClipsRetimed=False
+currentCarryTransformChanged=False
+deviceMeshMaterialTextureChanged=False
+secondsPerMotion=1
+totalCycleSeconds=6
+sequence=Idle,WalkForward,WalkBackward,Sidestep,WalkDiagonal,RunForward
+sequenceLoopsAfterRun=True
+controller=Assets/_Project/Animation/DoorOpener/DoorOpenerIdle_Locomotion.controller
+blendTreeType=FreeformCartesian2D
+blendTreeChildCount=6
+diagonalSourceTreeCopiedExactly=True
+upperBodySourceMotionEnabled=True
+rightShoulderSourceMotionWeight=1
+rightArmMotionWeight=0.05
+rightForeArmMotionWeight=0.03
+rightHandMotionWeight=0.01
+rightFingerGripLocked=True
+deviceFollowsAnimatedRightHand=True

@@ -1,0 +1,24 @@
+Flashlight_Charge_Connect forward-reach revision application
+target=Flashlight_Charge_Connect
+sceneWasDirtyBeforeApplication=True
+clipLengthSeconds=1.03333342
+controllerSpeed=1
+startHandLocal=0.297363251,1.41761279,0.203643829
+rightArmStartLocal=0.200241074,1.31281972,0.105011
+endHandLocal=0.200241044,1.25970781,0.5476074
+forwardDirectionDeviationDegrees=6.84277868
+upperArmLengthMeters=0.249944463
+lowerArmLengthMeters=0.224347338
+desiredElbowAngleDegrees=140
+approachStartNormalized=0.04
+reachEndNormalized=0.63
+holdEndNormalized=0.72
+returnEndNormalized=1
+approachDurationSeconds=0.6096667
+timingCurve=QuinticSmootherStep
+leftArmModified=False
+headModified=False
+sourceClipModified=False
+controllerModified=False
+rendererMeshMaterialScaleModified=False
+objectsOutsideTargetChanged=False

@@ -26,6 +26,7 @@ namespace Bellerophon.Editor.Validation
         private const string RequirementsPath = "docs/PLAYER_ANIMATION_REQUIREMENTS.html";
         private const string LayoutRootName = "PlayerAnimationLayout";
         private const string IdleKey = "Player_Idle";
+        private const string PlayerStartTargetKey = "Vacuum_Idle";
         private const string PlayerRootName = "Player";
         private const string AtaRootName = "Approved Ata Enemy Placement";
         private const string LongaRootName = "Approved Longa Arma Enemy Placement";
@@ -221,7 +222,7 @@ namespace Bellerophon.Editor.Validation
                 ", SceneChanged=False.");
         }
 
-        [MenuItem("Bellerophon/Player/Position Start View At Standing Idle")]
+        [MenuItem("Bellerophon/Player/Position Start View At Vacuum Idle")]
         public static void ApplyPlayerStartView()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
@@ -232,28 +233,28 @@ namespace Bellerophon.Editor.Validation
 
             var scene = RequireScene();
             var layoutRoot = RequireRoot(LayoutRootName).transform;
-            var idleInstance = RequireDirectChild(layoutRoot, IdleKey);
+            var targetInstance = RequireDirectChild(layoutRoot, PlayerStartTargetKey);
             var player = RequireRoot(PlayerRootName).transform;
             var camera = RequirePlayerCamera(player);
-            var bounds = BoundsOf(idleInstance
+            var bounds = BoundsOf(targetInstance
                 .GetComponentsInChildren<Renderer>(true)
                 .Where(renderer => renderer.enabled));
-            var front = Vector3.ProjectOnPlane(idleInstance.forward, Vector3.up).normalized;
+            var front = Vector3.ProjectOnPlane(targetInstance.forward, Vector3.up).normalized;
             if (front.sqrMagnitude < 0.99f)
             {
                 throw new InvalidOperationException(
-                    "Player_Idle has no usable horizontal front direction.");
+                    PlayerStartTargetKey + " has no usable horizontal front direction.");
             }
 
-            var position = idleInstance.position + front * PlayerStartFrontDistance;
-            position.y = idleInstance.position.y;
+            var position = targetInstance.position + front * PlayerStartFrontDistance;
+            position.y = targetInstance.position.y;
             var lookDirection = Vector3.ProjectOnPlane(bounds.center - position, Vector3.up);
             player.SetPositionAndRotation(
                 position,
                 Quaternion.LookRotation(lookDirection.normalized, Vector3.up));
             camera.transform.localRotation = Quaternion.identity;
 
-            var metrics = InspectPlayerStartView(player, idleInstance, camera, bounds);
+            var metrics = InspectPlayerStartView(player, targetInstance, camera, bounds);
             EditorUtility.SetDirty(player.gameObject);
             EditorUtility.SetDirty(camera.gameObject);
             EditorSceneManager.MarkSceneDirty(scene);
@@ -266,7 +267,8 @@ namespace Bellerophon.Editor.Validation
                 "PlayerStartView applied." +
                 " PlayerPosition=" + Vec(player.position) +
                 ", PlayerYaw=" + Num(player.eulerAngles.y) +
-                ", IdlePosition=" + Vec(idleInstance.position) +
+                ", Target=" + PlayerStartTargetKey +
+                ", TargetPosition=" + Vec(targetInstance.position) +
                 ", FrontDistance=" + Num(metrics.FrontDistance) +
                 ", FacingDot=" + Num(metrics.FacingDot) +
                 ", UpperBodyViewport=" + Vec(metrics.UpperBodyViewport) +
@@ -307,13 +309,13 @@ namespace Bellerophon.Editor.Validation
 
             RequireScene();
             var layoutRoot = RequireRoot(LayoutRootName).transform;
-            var idleInstance = RequireDirectChild(layoutRoot, IdleKey);
+            var targetInstance = RequireDirectChild(layoutRoot, PlayerStartTargetKey);
             var player = RequireRoot(PlayerRootName).transform;
             var camera = RequirePlayerCamera(player);
-            var bounds = BoundsOf(idleInstance
+            var bounds = BoundsOf(targetInstance
                 .GetComponentsInChildren<Renderer>(true)
                 .Where(renderer => renderer.enabled));
-            var metrics = InspectPlayerStartView(player, idleInstance, camera, bounds);
+            var metrics = InspectPlayerStartView(player, targetInstance, camera, bounds);
             var destination = Absolute(outputPath);
             Directory.CreateDirectory(
                 Path.GetDirectoryName(destination) ??
@@ -358,6 +360,7 @@ namespace Bellerophon.Editor.Validation
             Debug.Log(
                 "PlayerStartView captured." +
                 " Output=" + destination +
+                ", Target=" + PlayerStartTargetKey +
                 ", PlayerPosition=" + Vec(player.position) +
                 ", FrontDistance=" + Num(metrics.FrontDistance) +
                 ", FacingDot=" + Num(metrics.FacingDot) +
@@ -368,20 +371,21 @@ namespace Bellerophon.Editor.Validation
 
         private static PlayerStartViewMetrics InspectPlayerStartView(
             Transform player,
-            Transform idleInstance,
+            Transform targetInstance,
             Camera camera,
             Bounds bounds)
         {
-            var idleToPlayer = player.position - idleInstance.position;
-            var horizontalOffset = Vector3.ProjectOnPlane(idleToPlayer, Vector3.up);
-            var front = Vector3.ProjectOnPlane(idleInstance.forward, Vector3.up).normalized;
+            var targetToPlayer = player.position - targetInstance.position;
+            var horizontalOffset = Vector3.ProjectOnPlane(targetToPlayer, Vector3.up);
+            var front = Vector3.ProjectOnPlane(targetInstance.forward, Vector3.up).normalized;
             var frontDistance = Vector3.Dot(horizontalOffset, front);
             var lateralError = (horizontalOffset - front * frontDistance).magnitude;
             if (Mathf.Abs(frontDistance - PlayerStartFrontDistance) > PositionTolerance ||
                 lateralError > PositionTolerance)
             {
                 throw new InvalidOperationException(
-                    "Player start is not on the Player_Idle front axis. Distance=" +
+                    "Player start is not on the " + PlayerStartTargetKey +
+                    " front axis. Distance=" +
                     Num(frontDistance) + ", LateralError=" + Num(lateralError) + ".");
             }
 
@@ -392,7 +396,8 @@ namespace Bellerophon.Editor.Validation
             if (facingDot < 0.999f)
             {
                 throw new InvalidOperationException(
-                    "Player start is not facing Player_Idle. Dot=" + Num(facingDot) + ".");
+                    "Player start is not facing " + PlayerStartTargetKey +
+                    ". Dot=" + Num(facingDot) + ".");
             }
 
             var upperBodyPoint = bounds.center + Vector3.up * bounds.extents.y * 0.35f;
@@ -402,7 +407,8 @@ namespace Bellerophon.Editor.Validation
                 upperBodyViewport.y < 0.2f || upperBodyViewport.y > 0.8f)
             {
                 throw new InvalidOperationException(
-                    "Player_Idle upper body is not framed by the player camera. Viewport=" +
+                    PlayerStartTargetKey +
+                    " upper body is not framed by the player camera. Viewport=" +
                     Vec(upperBodyViewport) + ".");
             }
 

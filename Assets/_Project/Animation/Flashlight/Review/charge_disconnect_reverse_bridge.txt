@@ -1,0 +1,7 @@
+Unity editor bridge request completed: d79431098c134fbbabae7506a4205778
+Unity editor bridge command: InspectFlashlightChargeDisconnectReverse
+Unity editor bridge mode: open editor
+Flashlight_Charge_Disconnect exact reverse inspected.
+
+Captured Unity log:
+Log: [FlashlightChargeDisconnectReverse] Reverse linkage inspection passed.

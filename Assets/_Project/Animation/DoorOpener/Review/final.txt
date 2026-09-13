@@ -1,0 +1,11 @@
+DoorOpener_Idle final direct visual review
+captureCount=1
+panelOrder=fullFront,fullPlayerRight,fullThreeQuarter,gripFront,gripPlayerRight,gripFrontLeft
+actualTargetRendered=True
+deviceLowerFrontGrip=True
+rightFingerRigApplied=True
+antennaForwardUp45=True
+antennaDirectionErrorDegrees=0
+rightHandFollowConfigured=True
+embeddedTexturesAndMaterialApplied=True
+torsoHeadLowerBodyLeftArmChanged=False

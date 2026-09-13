@@ -1,0 +1,8 @@
+﻿SmokeGrenade exact Flashbang four-state setup
+sourceModelSha256=9E05050EB5527A201E173AB733F90882EF356C4B2FA3D5C2E411C6E93D986CA8
+animationCurvesGenerated=False
+flashbangSourcesChanged=False
+SmokeGrenade_Idle<-Flashbang_Idle|controller=Assets/_Project/Animation/SmokeGrenade/SmokeGrenade_Idle.controller|motion=79AA438716A1501894AF5E6FE1A52838EA24654F75DBF75BC3A610F4E84579AC|propPosition=-0.0122864256,0.117883846,-0.006521389|propRotation=-0.193058118,-0.6696344,0.7030605,-0.141507313|propScale=21.7380352,21.7380352,21.7380352|rightHandFollow=True
+SmokeGrenade_Throw_Aim<-Flashbang_Throw_Aim|controller=Assets/_Project/Animation/SmokeGrenade/SmokeGrenade_Throw_Aim.controller|motion=Clip:762E695364AF877F3076B6D7CAD2DD9D57FBF0D249EB40716EA070D5B80DD6F9|propPosition=-0.0122642042,0.117918,-0.006564879|propRotation=-0.3179338,-0.583798,0.737135768,-0.121362507|propScale=21.7399235,21.7399235,21.7399235|rightHandFollow=True
+SmokeGrenade_Throw_Release<-Flashbang_Throw_Release|controller=Assets/_Project/Animation/SmokeGrenade/SmokeGrenade_Throw_Release.controller|motion=Clip:107EBF5ED6DABCAA04F8123AA7945264EA9AD5F8DC8905F3C818D07621D315BF|propPosition=-0.0122642042,0.117918,-0.006564879|propRotation=-0.3179338,-0.583798,0.737135768,-0.121362507|propScale=21.7399235,21.7399235,21.7399235|rightHandFollow=True
+SmokeGrenade_Throw_Cancel<-Flashbang_Throw_Cancel|controller=Assets/_Project/Animation/SmokeGrenade/SmokeGrenade_Throw_Cancel.controller|motion=Clip:E49571CA606FB960A4C95CD93891C00FF1E7CA2CCEE35E40D65A6C9D7EE81897|propPosition=-0.0120616453,0.117762223,-0.00652933028|propRotation=0.533035457,-0.427415758,0.2532543,-0.684873164|propScale=21.7373753,21.7373753,21.7373753|rightHandFollow=True

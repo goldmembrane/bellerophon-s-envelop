@@ -1,0 +1,17 @@
+Flashlight_Charge_Connect right-hand surface-clearance application
+target=Flashlight_Charge_Connect
+sceneWasDirtyBeforeApplication=True
+previousTransporterForwardOffsetMeters=0.180029288
+appliedTransporterForwardOffsetMeters=0.1598767
+appliedAdditionalForwardOffsetMeters=-0.0201525837
+sourceMinimumBaselineSurfaceClearanceMeters=-0.154876709
+sourceMinimumCurrentSurfaceClearanceMeters=0.0251464844
+targetSurfaceClearanceMeters=0.005
+preservedTransporterRightOffsetMeters=0.04
+rightArmBodyPoseModified=False
+flashlightRightHandFollowPreserved=True
+flashlightLensUpCorrectionPreserved=True
+sourceClipModified=False
+controllerModified=False
+rendererMeshMaterialRotationScaleModified=False
+objectsOutsideTargetChanged=False

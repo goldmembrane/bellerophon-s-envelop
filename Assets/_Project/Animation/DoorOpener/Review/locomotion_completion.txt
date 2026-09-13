@@ -1,0 +1,2 @@
+status=passed
+detail=Natural six-motion playback returned to Idle.

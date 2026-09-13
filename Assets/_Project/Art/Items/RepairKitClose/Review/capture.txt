@@ -1,0 +1,7 @@
+RepairDevice_Operate one-time unmodified first Play frame capture
+playMode=True
+verificationTargetManipulated=False
+cameraFacingDot=1.000000
+targetCenterViewport=(0.500001, 0.339981, 4.000000)
+kitCenterViewport=(0.500568, 0.083194, 3.161377)
+capturePassed=True

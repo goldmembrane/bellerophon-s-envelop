@@ -1,0 +1,7 @@
+Unity editor bridge request completed: 5887c6834074405eb9c8b9cd838a6d1e
+Unity editor bridge command: InspectFlashlightChargeConnectFlashlightRightOffset
+Unity editor bridge mode: open editor
+Flashlight_Charge_Connect flashlight-only right offset inspected.
+
+Captured Unity log:
+Log: [FlashlightChargeConnectFlashlightRightOffset] Inspection passed.

@@ -1,0 +1,15 @@
+Flashlight_Charge_Connect pose revision inspection
+targetCount=1
+idleReference=Player_Idle
+idleBodyBoneCount=12
+maximumStoredBodyRotationDifferenceDegrees=0
+maximumStoredBodyPositionDifferenceMeters=0
+maximumAppliedBodyRotationDifferenceDegrees=0
+maximumAppliedBodyPositionDifferenceMeters=0
+rightPalmForwardDeviationDegrees=0.01978234
+flashlightLensUpDeviationDegrees=0
+leftArmAndHeadPathsPostProcessed=False
+rightHandPositionFollowPresent=True
+sourceClipCopiedExactly=True
+unityConsoleErrors=0
+inspectionManipulatedTarget=False

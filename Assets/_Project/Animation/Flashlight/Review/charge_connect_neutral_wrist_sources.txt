@@ -1,0 +1,10 @@
+Flashlight_Charge_Connect neutral-wrist source inspection
+target=Flashlight_Charge_Connect
+clip=FlashlightChargeConnect_SourceExact
+currentPeakWristBendDegrees=131.352188
+currentWristSourceRotationWeight=0.65
+currentPeakHandLocalRotationChangeDegrees=155.492722
+targetWristBendDegrees=0
+maximumAcceptedWristBendDegrees=5
+flashlightLensAlignmentIndependentOfWrist=True
+inspectionManipulatedTarget=False

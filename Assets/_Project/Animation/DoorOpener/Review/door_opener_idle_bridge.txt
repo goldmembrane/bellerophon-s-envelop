@@ -1,0 +1,8 @@
+Unity editor bridge request completed: cea97e0eb9274881a6b5537681ea99b0
+Unity editor bridge command: CaptureDoorOpenerIdleCarryFinal
+Unity editor bridge mode: open editor
+DoorOpener_Idle final direct-review composite captured once.
+
+Captured Unity log:
+Log: [DoorOpenerIdle] Read-only carry inspection passed.
+Log: [DoorOpenerIdle] Final direct-review composite captured once.

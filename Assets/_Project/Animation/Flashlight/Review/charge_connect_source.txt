@@ -1,0 +1,18 @@
+Flashlight_Charge_Connect supplied FBX source inspection
+externalPath=D:\Bellerophon2\Bellerophon\player model\transfer flashlight charging.fbx
+importedPath=Assets/_Project/Animation/Flashlight/Source/transfer flashlight charging.fbx
+externalSha256=07725BD4627EEAD71C9CC869C6343865F6C4E68E5E0E9FE2D0210895C565DB58
+importedSha256=07725BD4627EEAD71C9CC869C6343865F6C4E68E5E0E9FE2D0210895C565DB58
+animationStackCount=1
+takeName=mixamo.com
+clipName=FlashlightChargeConnect_SourceExact
+firstFrame=0
+lastFrame=31
+frameRate=30
+lengthSeconds=1.03333342
+curveBindingCount=79
+objectReferenceCurveBindingCount=0
+loopTime=True
+fullTakePreserved=True
+keyframesEdited=False
+animationGenerated=False

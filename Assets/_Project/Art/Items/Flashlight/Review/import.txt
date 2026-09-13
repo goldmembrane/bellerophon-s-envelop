@@ -1,0 +1,10 @@
+Flashlight embedded asset import
+sourceModelChanged=False
+sourceTextureCount=4
+materialCount=1
+baseColor=Assets/_Project/Art/Items/Flashlight/Textures/base_color.jpg
+normal=Assets/_Project/Art/Items/Flashlight/Textures/normal.jpg
+metallic=Assets/_Project/Art/Items/Flashlight/Textures/texture_0_metallic.png
+roughness=Assets/_Project/Art/Items/Flashlight/Textures/texture_0_roughness.png
+metallicSmoothness=Assets/_Project/Art/Items/Flashlight/Textures/Flashlight_MetallicSmoothness.png
+roughnessUsage=inverted into metallic alpha as smoothness

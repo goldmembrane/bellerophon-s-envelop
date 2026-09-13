@@ -1,0 +1,20 @@
+Flashlight_Charge_Connect natural playback direct review
+captureKind=Final
+naturalPlayback=True
+targetManipulatedByValidation=False
+animatorPlayUsed=False
+animatorRebindUsed=False
+forcedAnimationTimeUsed=False
+sourceClip=FlashlightChargeConnect_SourceExact
+cyclesObserved=1
+panelsCaptured=10
+maximumBoneRotationDeltaDegrees=98.3107147
+maximumHolderPositionErrorMeters=0
+maximumHolderRotationErrorDegrees=0
+loopReturnedToStart=True
+panel=0|requestedNormalizedTime=0.08|actualNormalizedTime=0.121747814
+panel=1|requestedNormalizedTime=0.3|actualNormalizedTime=0.3331303
+panel=2|requestedNormalizedTime=0.55|actualNormalizedTime=0.55926013
+panel=3|requestedNormalizedTime=0.8|actualNormalizedTime=0.8246029
+panel=4|requestedNormalizedTime=1.08|actualNormalizedTime=1.08458865
+unityConsoleErrorsDuringCapture=0

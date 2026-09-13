@@ -1,0 +1,27 @@
+Flashlight_Charge_Connect forward-reach revision inspection
+targetCount=1
+clipLengthSeconds=1.03333342
+controllerSpeed=1
+startHandLocal=0.297363251,1.41761279,0.203643829
+endHandLocal=0.200241044,1.25970781,0.5476074
+forwardDirectionDeviationDegrees=6.84280729
+expectedFullReachElbowAngleDegrees=140.00032
+editPreviewHandTargetErrorMeters=3.5066987E-05
+approachDurationSeconds=0.6096667
+timingCurve=QuinticSmootherStep
+sourceMaximumHandSpeedMetersPerSecond=3.15233541
+revisedMaximumHandSpeedMetersPerSecond=2.52467012
+revisedMaximumApproachHandSpeedMetersPerSecond=1.19976115
+sourceMaximumHandAccelerationMetersPerSecondSquared=63.80477
+revisedMaximumHandAccelerationMetersPerSecondSquared=26.5404472
+maximumSampledTargetErrorMeters=0.000196461
+maximumSampledFullReachForwardDeviationDegrees=6.85228825
+minimumSampledFullReachElbowAngleDegrees=138.886765
+maximumSampledFullReachElbowAngleDegrees=139.998428
+bodyLegsPlayerIdlePreserved=True
+leftArmAndHeadPathsPostProcessed=False
+rightPalmForwardPreserved=True
+flashlightLensUpPreserved=True
+sourceClipCopiedExactly=True
+unityConsoleErrors=0
+inspectionManipulatedTarget=False

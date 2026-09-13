@@ -1,0 +1,11 @@
+Flashlight_Charge_Connect pose source inspection
+target=Flashlight_Charge_Connect
+idleReference=Player_Idle
+idleBodyBoneCount=12
+idleBodyPaths=Armature/Hips|Armature/Hips/LeftUpLeg|Armature/Hips/LeftUpLeg/LeftLeg|Armature/Hips/LeftUpLeg/LeftLeg/LeftFoot|Armature/Hips/LeftUpLeg/LeftLeg/LeftFoot/LeftToeBase|Armature/Hips/RightUpLeg|Armature/Hips/RightUpLeg/RightLeg|Armature/Hips/RightUpLeg/RightLeg/RightFoot|Armature/Hips/RightUpLeg/RightLeg/RightFoot/RightToeBase|Armature/Hips/Spine02|Armature/Hips/Spine02/Spine01|Armature/Hips/Spine02/Spine01/Spine
+maximumBodyRotationDifferenceDegrees=0
+maximumBodyPositionDifferenceMeters=5.665843E-07
+rightPalmForwardDeviationDegrees=134.415863
+flashlightLensUpDeviationDegrees=90.00001
+leftArmAndHeadModificationRequested=False
+inspectionManipulatedTarget=False

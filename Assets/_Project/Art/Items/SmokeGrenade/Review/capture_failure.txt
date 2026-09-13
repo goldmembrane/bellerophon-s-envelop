@@ -1,0 +1,4 @@
+﻿System.InvalidOperationException: Smoke grenade position error: held=0, handoff=0.375077575, verticalDrop=0.174758673
+  at Bellerophon.Editor.Validation.SmokeGrenadeCaptureTools.InspectFlightRuntime (Bellerophon.Editor.Validation.SmokeGrenadeSetupTools+MotionProxy motion) [0x00037] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\SmokeGrenadeCaptureTools.cs:227
+  at Bellerophon.Editor.Validation.SmokeGrenadeCaptureTools.CaptureFlightUpdate () [0x00270] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\SmokeGrenadeCaptureTools.cs:182
+  at Bellerophon.Editor.Validation.SmokeGrenadeCaptureTools.CaptureUpdate () [0x00022] in D:\Bellerophon2\Bellerophon\Assets\_Project\Editor\SmokeGrenadeCaptureTools.cs:93

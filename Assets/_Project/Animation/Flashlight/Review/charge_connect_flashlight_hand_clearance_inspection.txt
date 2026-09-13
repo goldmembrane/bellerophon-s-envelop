@@ -1,0 +1,22 @@
+Flashlight_Charge_Connect right-hand and flashlight surface-clearance inspection
+targetCount=1
+sampleCount=241
+configuredTransporterForwardOffsetMeters=0.1598767
+minimumHandFlashlightSurfaceClearanceMeters=0.005004883
+surfaceClearanceSafetyMarginMeters=0.005
+worstNormalizedTime=0.983333349
+rightHandSurfaceVertexCount=5076
+flashlightSurfaceVertexCount=2826
+minimumPreservedRightOffsetMeters=0.0400009
+maximumPreservedRightOffsetMeters=0.0400009
+maximumArmAndBodyRotationErrorDegrees=0
+maximumArmAndBodyPositionErrorMeters=0
+maximumHolderRotationErrorDegrees=0
+maximumHolderScaleError=0
+minimumFaceClearanceMeters=0.09980874
+rightHandFollowPreserved=True
+lensUpPreserved=True
+sourceClipCopiedExactly=True
+controllerSourceStatePreserved=True
+unityConsoleErrors=0
+inspectionManipulatedTarget=False

@@ -1,0 +1,21 @@
+Flashlight_Charge_Connect right-shoulder-forward source inspection
+target=Flashlight_Charge_Connect
+clip=FlashlightChargeConnect_SourceExact
+clipLengthSeconds=1.03333342
+maximumForwardFrame=17
+maximumForwardTimeSeconds=0.566666663
+maximumForwardNormalizedTime=0.548387051
+sourceRightArmLocal=0.177505478,1.35801733,0.1751404
+sourceRightHandLocal=0.5717849,1.4882021,0.3453675
+sourceRightHandLateralOffsetFromArmMeters=0.39427942
+sourceRightArmForwardDeviationDegrees=67.70773
+sourceRightElbowAngleDegrees=142.161957
+targetRightHandLocal=0.177505434,1.35801733,0.620910645
+targetRightHandLateralOffsetFromArmMeters=0
+targetRightArmForwardDeviationDegrees=0
+targetRightElbowAngleDegrees=140
+rightUpperArmLengthMeters=0.249942869
+rightForeArmLengthMeters=0.224358946
+externalSha256=07725BD4627EEAD71C9CC869C6343865F6C4E68E5E0E9FE2D0210895C565DB58
+importedSha256=07725BD4627EEAD71C9CC869C6343865F6C4E68E5E0E9FE2D0210895C565DB58
+inspectionManipulatedTarget=False

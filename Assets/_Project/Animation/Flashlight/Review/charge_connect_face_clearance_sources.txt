@@ -1,0 +1,14 @@
+Flashlight_Charge_Connect face-clearance source inspection
+target=Flashlight_Charge_Connect
+clip=FlashlightChargeConnect_SourceExact
+sampleCount=121
+minimumClearanceFrame=65
+minimumClearanceTimeSeconds=0.5597223
+minimumClearanceNormalizedTime=0.5416667
+currentMinimumFaceClearanceMeters=-0.112533323
+faceRightBoundaryLocalX=0.135070488
+flashlightMinimumLocalX=0.0225371644
+requiredRightOffsetMeters=0.127533317
+boundaryRatioFromHeadToRightArm=0.82
+safetyMarginMeters=0.015
+inspectionManipulatedTarget=False

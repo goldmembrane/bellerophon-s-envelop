@@ -1,0 +1,26 @@
+Flashlight carry inspection
+modelHash=1E477B6158A44C1F7ADD004215A241C80C8C2823E91039EB5446A9F8B0DC4C23
+materialHash=30CDE3545530F53D79AE3DA234C10D07BE0284881AC4732FA309D6CE44D13EE0
+sourceTextureCount=4
+packedMetallicSmoothnessPresent=True
+target=Flashlight_Idle
+rightHandFollow=True
+positionError=0
+rotationErrorDegrees=0
+lensForwardAngleDegrees=0.000000
+propLengthMeters=0.299999
+palmToPropDistance=0.000000
+target=Flashlight_Charge_Connect
+rightHandFollow=True
+positionError=0
+rotationErrorDegrees=0
+lensForwardAngleDegrees=0.000000
+propLengthMeters=0.299999
+palmToPropDistance=0.000000
+target=Flashlight_Charge_Disconnect
+rightHandFollow=True
+positionError=0
+rotationErrorDegrees=0
+lensForwardAngleDegrees=0.000000
+propLengthMeters=0.299999
+palmToPropDistance=0.000000

@@ -1,0 +1,21 @@
+Flashlight_Charge_Connect neutral-wrist inspection
+targetCount=1
+correctedPeakWristBendDegrees=0.03956468
+maximumAcceptedWristBendDegrees=5
+correctedPeakForwardDeviationDegrees=0
+correctedPeakLateralOffsetMeters=7.584691E-06
+correctedPeakElbowAngleDegrees=139.993362
+correctedPeakHandErrorMeters=8.425997E-06
+peakRightShoulderRotationChangeDegrees=9.156339
+peakRightArmRotationChangeDegrees=63.60581
+peakRightForeArmRotationChangeDegrees=18.7735214
+peakRightHandRotationChangeDegrees=21.2317848
+sourceForwardDeviationDegrees=67.70773
+neutralWristConfigured=True
+wristSourceRotationWeight=0
+forwardHoldDurationSeconds=1
+sourceClipLengthSeconds=1.03333342
+sourceClipCopiedExactly=True
+controllerSourceStatePreserved=True
+unityConsoleErrors=0
+inspectionManipulatedTarget=False

@@ -1,0 +1,8 @@
+Unity editor bridge request completed: 1caec110c4ae4e389cbb4b9dd24464ab
+Unity editor bridge command: InspectFlashlightChargeConnectDisconnectGripAndTimingPlayMode
+Unity editor bridge mode: open editor
+Charge flashlight grip and disconnect final hold Play Mode inspection started.
+
+Captured Unity log:
+Log: [FlashlightChargeGripTiming] Static inspection passed.
+Log: [FlashlightChargeGripTiming] Natural Play Mode inspection started without capture.
