@@ -51,6 +51,110 @@ namespace Bellerophon.Editor.Validation
             "CaptureVacuumUseLocomotionFinal";
         private const string HoloSprayIdleLocomotionFinalCommand =
             "CaptureHoloSprayIdleLocomotionFinal";
+        private const string LightsaberOffIdleLocomotionInspectionCommand =
+            "InspectLightsaberOffIdleLocomotion";
+        private const string LightsaberDiagonalSlashInspectionCommand =
+            "InspectLightsaberDiagonalSlashSequence";
+        private const string LightsaberDiagonalSlashBladeTrajectoryInspectionCommand =
+            "InspectLightsaberDiagonalSlashGifComparison";
+        private const string LightsaberGripOneHandInspectionCommand =
+            "InspectLightsaberGripOneHandTransition";
+        private const string LightsaberGripOneHandFinalCommand =
+            "CaptureLightsaberGripOneHandTransitionFinal";
+        private const string LightsaberThrustModeEnterInspectionCommand =
+            "InspectLightsaberThrustModeEnterTransition";
+        private const string LightsaberThrustModeEnterFinalCommand =
+            "CaptureLightsaberThrustModeEnterFinal";
+        private const string LightsaberThrustModeExitInspectionCommand =
+            "InspectLightsaberThrustModeExitSequence";
+        private const string LightsaberThrustModeExitFinalCommand =
+            "CaptureLightsaberThrustModeExitFinal";
+        private const string LightsaberEnterExitLeftArmClearanceInspectionCommand =
+            "InspectLightsaberEnterExitLeftArmClearanceAndThrustSpeed";
+        private const string LightsaberEnterExitLeftArmClearanceFinalCommand =
+            "CaptureLightsaberEnterExitLeftArmClearanceAndThrustSpeedFinal";
+        private const string LightsaberEnterExitLeftArmPopInspectionCommand =
+            "InspectLightsaberEnterExitLeftArmPopCorrection";
+        private const string DetectorAttachedStaticStartViewInspectionCommand =
+            "InspectDetectorAttachedStaticStartView";
+        private const string LightsaberThrustModeEnterCorrectionInspectionCommand =
+            "InspectLightsaberThrustModeEnterCorrection";
+        private const string LightsaberThrustModeEnterCorrectionFinalCommand =
+            "CaptureLightsaberThrustModeEnterCorrectionFinal";
+        private const string LightsaberThrustModeEnterRightSideInspectionCommand =
+            "InspectLightsaberThrustModeEnterRightSideFootPlantCorrection";
+        private const string LightsaberThrustModeEnterRightSideFinalCommand =
+            "CaptureLightsaberThrustModeEnterRightSideFootPlantFinal";
+        private const string LightsaberThrustModeEnterFaceClearanceInspectionCommand =
+            "InspectLightsaberThrustModeEnterFaceClearanceCorrection";
+        private const string LightsaberThrustModeEnterFaceClearanceFinalCommand =
+            "CaptureLightsaberThrustModeEnterFaceClearanceFinal";
+        private const string LightsaberThrustModeEnterUpperRedBoxKnee10InspectionCommand =
+            "InspectLightsaberThrustModeEnterUpperRedBoxKnee10Correction";
+        private const string LightsaberThrustModeEnterUpperRedBoxKnee10FinalCommand =
+            "CaptureLightsaberThrustModeEnterUpperRedBoxKnee10Final";
+        private const string LightsaberThrustModeEnterBladeTiltInspectionCommand =
+            "InspectLightsaberThrustModeEnterBladeTilt";
+        private const string LightsaberThrustModeEnterBladeTiltFinalCommand =
+            "CaptureLightsaberThrustModeEnterBladeTiltFinal";
+        private const string LightsaberThrustStartPoseInspectionCommand =
+            "InspectLightsaberThrustStartPose";
+        private const string LightsaberThrustStartPoseFinalCommand =
+            "CaptureLightsaberThrustStartPoseFinal";
+        private const string LightsaberThrustMotionInspectionCommand =
+            "InspectLightsaberThrustMotion";
+        private const string LightsaberThrustMotionFinalCommand =
+            "CaptureLightsaberThrustMotionFinal";
+        private const string LightsaberThrustAnatomicalInspectionCommand =
+            "InspectLightsaberThrustAnatomicalReach";
+        private const string LightsaberThrustAnatomicalFinalCommand =
+            "CaptureLightsaberThrustAnatomicalReachFinal";
+        private const string LightsaberThrustLeftArmAndHandFollowInspectionCommand =
+            "InspectLightsaberThrustLeftArmAndHandFollow";
+        private const string LightsaberThrustLeftArmAndHandFollowFinalCommand =
+            "CaptureLightsaberThrustLeftArmAndHandFollowFinal";
+        private const string LightsaberThrustStabbingInspectionCommand =
+            "InspectLightsaberThrustStabbingSequence";
+        private const string LightsaberThrustStabbingFinalCommand =
+            "CaptureLightsaberThrustStabbingFinal";
+        private const string LightsaberThrustRightHandBladeForwardInspectionCommand =
+            "InspectLightsaberThrustRightHandBladeForwardCorrection";
+        private const string LightsaberThrustRightHandBladeForwardFinalCommand =
+            "CaptureLightsaberThrustRightHandBladeForwardFinal";
+        private const string LightsaberThrustArmPopInspectionCommand =
+            "InspectLightsaberThrustArmPopCorrection";
+        private const string LightsaberThrustArmPopFinalCommand =
+            "CaptureLightsaberThrustArmPopFinal";
+        private const string LightsaberThrustForearmDeformationInspectionCommand =
+            "InspectLightsaberThrustForearmDeformation";
+        private const string LightsaberThrustForearmDeformationCorrectionInspectionCommand =
+            "InspectLightsaberThrustForearmDeformationCorrection";
+        private const string LightsaberThrustForearmDeformationFinalCommand =
+            "CaptureLightsaberThrustForearmDeformationFinal";
+        private const string LightsaberThrustDistalForearmSkinningInspectionCommand =
+            "InspectLightsaberThrustDistalForearmSkinning";
+        private const string LightsaberThrustDistalForearmSkinningApplyCommand =
+            "ApplyLightsaberThrustDistalForearmSkinningCorrection";
+        private const string LightsaberThrustDistalForearmSkinningCorrectionInspectionCommand =
+            "InspectLightsaberThrustDistalForearmSkinningCorrection";
+        private const string LightsaberThrustDistalForearmSkinningFinalCommand =
+            "CaptureLightsaberThrustDistalForearmSkinningFinal";
+        private const string LightsaberThrustWristPanelInspectionCommand =
+            "InspectLightsaberThrustWristPanelOrientation";
+        private const string LightsaberThrustWristPanelApplyCommand =
+            "ApplyLightsaberThrustWristPanelOrientationCorrection";
+        private const string LightsaberThrustWristPanelCorrectionInspectionCommand =
+            "InspectLightsaberThrustWristPanelOrientationCorrection";
+        private const string LightsaberThrustWristPanelFinalCommand =
+            "CaptureLightsaberThrustWristPanelOrientationFinal";
+        private const string LightsaberThrustTopGripInspectionCommand =
+            "InspectLightsaberThrustTopGripPose";
+        private const string LightsaberThrustTopGripApplyCommand =
+            "ApplyLightsaberThrustTopGripPoseCorrection";
+        private const string LightsaberThrustTopGripCorrectionInspectionCommand =
+            "InspectLightsaberThrustTopGripPoseCorrection";
+        private const string LightsaberThrustTopGripFinalCommand =
+            "CaptureLightsaberThrustTopGripFinal";
         private const string DoorOpenerIdleLocomotionFinalCommand =
             "CaptureDoorOpenerIdleLocomotionFinal";
         private const string SpeakerIdleLocomotionDiagnosticCommand =
@@ -225,6 +329,51 @@ namespace Bellerophon.Editor.Validation
                 request.Command != VacuumUseLocomotionDiagnosticCommand &&
                 request.Command != VacuumUseLocomotionFinalCommand &&
                 request.Command != HoloSprayIdleLocomotionFinalCommand &&
+                request.Command != LightsaberOffIdleLocomotionInspectionCommand &&
+                request.Command != LightsaberDiagonalSlashInspectionCommand &&
+                request.Command != LightsaberDiagonalSlashBladeTrajectoryInspectionCommand &&
+                request.Command != LightsaberGripOneHandInspectionCommand &&
+                request.Command != LightsaberGripOneHandFinalCommand &&
+                request.Command != LightsaberThrustModeEnterInspectionCommand &&
+                request.Command != LightsaberThrustModeEnterCorrectionInspectionCommand &&
+                request.Command != LightsaberThrustModeEnterCorrectionFinalCommand &&
+                request.Command != LightsaberThrustModeEnterRightSideInspectionCommand &&
+                request.Command != LightsaberThrustModeEnterRightSideFinalCommand &&
+                request.Command != LightsaberThrustModeEnterFaceClearanceInspectionCommand &&
+                request.Command != LightsaberThrustModeEnterFaceClearanceFinalCommand &&
+                request.Command != LightsaberThrustModeEnterUpperRedBoxKnee10InspectionCommand &&
+                request.Command != LightsaberThrustModeEnterUpperRedBoxKnee10FinalCommand &&
+                request.Command != LightsaberThrustModeEnterBladeTiltInspectionCommand &&
+                request.Command != LightsaberThrustModeEnterBladeTiltFinalCommand &&
+                request.Command !=
+                    LightsaberEnterExitLeftArmClearanceInspectionCommand &&
+                request.Command !=
+                    LightsaberEnterExitLeftArmPopInspectionCommand &&
+                request.Command !=
+                    DetectorAttachedStaticStartViewInspectionCommand &&
+                request.Command != LightsaberThrustStartPoseInspectionCommand &&
+                request.Command != LightsaberThrustStartPoseFinalCommand &&
+                request.Command != LightsaberThrustMotionInspectionCommand &&
+                request.Command != LightsaberThrustMotionFinalCommand &&
+                request.Command != LightsaberThrustAnatomicalInspectionCommand &&
+                request.Command != LightsaberThrustAnatomicalFinalCommand &&
+                request.Command != LightsaberThrustLeftArmAndHandFollowInspectionCommand &&
+                request.Command != LightsaberThrustLeftArmAndHandFollowFinalCommand &&
+                request.Command != LightsaberThrustStabbingInspectionCommand &&
+                request.Command != LightsaberThrustStabbingFinalCommand &&
+                request.Command !=
+                    LightsaberThrustRightHandBladeForwardInspectionCommand &&
+                request.Command !=
+                    LightsaberThrustRightHandBladeForwardFinalCommand &&
+                request.Command != LightsaberThrustArmPopInspectionCommand &&
+                request.Command != LightsaberThrustArmPopFinalCommand &&
+                request.Command !=
+                    LightsaberThrustForearmDeformationCorrectionInspectionCommand &&
+                request.Command != LightsaberThrustForearmDeformationFinalCommand &&
+                request.Command !=
+                    LightsaberThrustWristPanelCorrectionInspectionCommand &&
+                request.Command !=
+                    LightsaberThrustTopGripCorrectionInspectionCommand &&
                 request.Command != SpeakerIdleLocomotionDiagnosticCommand &&
                 request.Command != SpeakerIdleLocomotionFinalCommand &&
                 request.Command != SpeakerIdleScaleFinalCommand &&
@@ -10624,6 +10773,123 @@ namespace Bellerophon.Editor.Validation
                         LightsaberOffIdleStartSetupTools.CaptureLightsaberOffIdleStartViewFinal,
                         "Lightsaber_Off_Idle one-time final startup-view capture completed.");
                     break;
+                case "InspectDetectorAttachedStaticStartViewSources":
+                    RunSynchronous(
+                        request,
+                        DetectorAttachedStaticStartSetupTools
+                            .InspectDetectorAttachedStaticStartViewSources,
+                        "Detector_Attached_Static startup-view sources inspected " +
+                        "read-only.");
+                    break;
+                case "ApplyDetectorAttachedStaticStartView":
+                    RunSynchronous(
+                        request,
+                        DetectorAttachedStaticStartSetupTools
+                            .ApplyDetectorAttachedStaticStartView,
+                        "Detector_Attached_Static startup view applied.");
+                    break;
+                case "InspectDetectorAttachedStaticStartView":
+                    RunDetectorAttachedStaticStartViewInspection(request);
+                    break;
+                case "CaptureDetectorAttachedStaticStartViewFinal":
+                    RunSynchronous(
+                        request,
+                        DetectorAttachedStaticStartSetupTools
+                            .CaptureDetectorAttachedStaticStartViewFinal,
+                        "Passed Detector_Attached_Static natural Play Mode start " +
+                        "view copied once as final evidence.");
+                    break;
+                case "InspectLightsaberThrustForearmDeformation":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .InspectLightsaberThrustForearmDeformation,
+                        "Lightsaber_Thrust forearm deformation inspected read-only.");
+                    break;
+                case "InspectLightsaberThrustDistalForearmSkinning":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .InspectLightsaberThrustDistalForearmSkinning,
+                        "Lightsaber_Thrust distal-forearm skinning inspected " +
+                        "read-only.");
+                    break;
+                case "ApplyLightsaberThrustDistalForearmSkinningCorrection":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .ApplyLightsaberThrustDistalForearmSkinningCorrection,
+                        "Lightsaber_Thrust distal-forearm skinning correction " +
+                        "applied.");
+                    break;
+                case "InspectLightsaberThrustDistalForearmSkinningCorrection":
+                    RunLightsaberThrustDistalForearmSkinningInspection(request);
+                    break;
+                case "CaptureLightsaberThrustDistalForearmSkinningFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .CaptureLightsaberThrustDistalForearmSkinningFinal,
+                        "Lightsaber_Thrust one-time distal-forearm final " +
+                        "capture copied from the passed Play Mode review.");
+                    break;
+                case "InspectLightsaberThrustWristPanelOrientation":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .InspectLightsaberThrustWristPanelOrientation,
+                        "Lightsaber_Thrust wrist-panel orientation inspected " +
+                        "read-only.");
+                    break;
+                case "ApplyLightsaberThrustWristPanelOrientationCorrection":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .ApplyLightsaberThrustWristPanelOrientationCorrection,
+                        "Lightsaber_Thrust wrist-panel orientation correction " +
+                        "applied.");
+                    break;
+                case "InspectLightsaberThrustWristPanelOrientationCorrection":
+                    RunLightsaberThrustWristPanelOrientationInspection(request);
+                    break;
+                case "CaptureLightsaberThrustWristPanelOrientationFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .CaptureLightsaberThrustWristPanelOrientationFinal,
+                        "Lightsaber_Thrust one-time wrist-panel final capture " +
+                        "copied from the passed Play Mode review.");
+                    break;
+                case "InspectLightsaberThrustTopGripPose":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberThrustTopGripPose,
+                        "Lightsaber_Thrust top-grip pose inspected read-only.");
+                    break;
+                case "ApplyLightsaberThrustTopGripPoseCorrection":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .ApplyLightsaberThrustTopGripPoseCorrection,
+                        "Lightsaber_Thrust top-grip pose correction applied.");
+                    break;
+                case "InspectLightsaberThrustTopGripPoseCorrection":
+                    RunLightsaberThrustTopGripInspection(request);
+                    break;
+                case "CaptureLightsaberThrustTopGripFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.CaptureLightsaberThrustTopGripFinal,
+                        "Lightsaber_Thrust one-time top-grip final capture copied " +
+                        "from the passed Play Mode review.");
+                    break;
+                case "ApplyLightsaberThrustForearmDeformationCorrection":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .ApplyLightsaberThrustForearmDeformationCorrection,
+                        "Lightsaber_Thrust forearm deformation correction applied.");
+                    break;
                 case "InspectLightsaberSourceAndTargets":
                     RunSynchronous(
                         request,
@@ -10800,6 +11066,393 @@ namespace Bellerophon.Editor.Validation
                         request,
                         LightsaberSetupTools.CaptureLightsaberCarryFinal,
                         "One final six-target lightsaber composite captured.");
+                    break;
+                case "ApplyLightsaberOffIdleLocomotion":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberOffIdleLocomotion,
+                        "Lightsaber_Off_Idle exact six-motion 2D Blend Tree applied.");
+                    break;
+                case "InspectLightsaberOffIdleLocomotion":
+                    RunLightsaberOffIdleLocomotionInspection(request);
+                    break;
+                case "InspectLightsaberDiagonalSlashSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberDiagonalSlashSources,
+                        "Lightsaber_DiagonalSlash supplied sources and current target inspected read-only.");
+                    break;
+                case "ApplyLightsaberDiagonalSlashSequence":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberDiagonalSlashSequence,
+                        "Lightsaber_DiagonalSlash exact two-source looping sequence applied.");
+                    break;
+                case "InspectLightsaberDiagonalSlashSequence":
+                    RunLightsaberDiagonalSlashInspection(request);
+                    break;
+                case "CaptureLightsaberDiagonalSlashFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.CaptureLightsaberDiagonalSlashFinal,
+                        "Lightsaber_DiagonalSlash one-time final reviewed contact sheet captured.");
+                    break;
+                case "InspectLightsaberDiagonalSlashBladeTrajectorySources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberDiagonalSlashBladeTrajectorySources,
+                        "Lightsaber_DiagonalSlash blade trajectory sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberDiagonalSlashBladeTrajectory":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberDiagonalSlashBladeTrajectory,
+                        "Lightsaber_DiagonalSlash rotation-only blade trajectory applied.");
+                    break;
+                case "InspectLightsaberDiagonalSlashBladeTrajectory":
+                    RunLightsaberDiagonalSlashBladeTrajectoryInspection(request);
+                    break;
+                case "CaptureLightsaberDiagonalSlashBladeTrajectoryFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.CaptureLightsaberDiagonalSlashBladeTrajectoryFinal,
+                        "Lightsaber_DiagonalSlash blade trajectory final contact sheet captured.");
+                    break;
+                case "InspectLightsaberDiagonalSlashGifTrajectoryMismatchSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberDiagonalSlashGifTrajectoryMismatchSources,
+                        "Lightsaber_DiagonalSlash GIF trajectory mismatch sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberDiagonalSlashGifMatchedTrajectory":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberDiagonalSlashGifMatchedTrajectory,
+                        "Lightsaber_DiagonalSlash GIF screen-space trajectory correction applied.");
+                    break;
+                case "InspectLightsaberDiagonalSlashGifComparison":
+                    RunLightsaberDiagonalSlashBladeTrajectoryInspection(request);
+                    break;
+                case "CaptureLightsaberDiagonalSlashGifComparisonFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.CaptureLightsaberDiagonalSlashGifComparisonFinal,
+                        "Lightsaber_DiagonalSlash final GIF-versus-Unity comparison captured.");
+                    break;
+                case "InspectLightsaberGripOneHandTransitionSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberGripOneHandTransitionSources,
+                        "Lightsaber_Grip_OneHand exact source poses inspected read-only.");
+                    break;
+                case "ApplyLightsaberGripOneHandTransition":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberGripOneHandTransition,
+                        "Lightsaber_Grip_OneHand 0.4-second transition and 0.5-second hold loop applied.");
+                    break;
+                case "InspectLightsaberGripOneHandTransition":
+                    RunLightsaberGripOneHandTransitionInspection(request);
+                    break;
+                case "CaptureLightsaberGripOneHandTransitionFinal":
+                    RunLightsaberGripOneHandTransitionFinal(request);
+                    break;
+                case "InspectLightsaberThrustModeEnterSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberThrustModeEnterSources,
+                        "Lightsaber_ThrustMode_Enter sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberThrustModeEnterTransition":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberThrustModeEnterTransition,
+                        "Lightsaber_ThrustMode_Enter one-second transition and hold loop applied.");
+                    break;
+                case "InspectLightsaberThrustModeEnterTransition":
+                    RunLightsaberThrustModeEnterInspection(request);
+                    break;
+                case "CaptureLightsaberThrustModeEnterFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.CaptureLightsaberThrustModeEnterFinal,
+                        "Lightsaber_ThrustMode_Enter passed review copied to final asset.");
+                    break;
+                case "InspectLightsaberThrustModeExitSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberThrustModeExitSources,
+                        "Lightsaber_ThrustMode_Exit sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberThrustModeExitSequence":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberThrustModeExitSequence,
+                        "Lightsaber_ThrustMode_Exit exact reverse and Off Idle hold applied.");
+                    break;
+                case "InspectLightsaberThrustModeExitSequence":
+                    RunLightsaberThrustModeExitInspection(request, false);
+                    break;
+                case "CaptureLightsaberThrustModeExitFinal":
+                    RunLightsaberThrustModeExitInspection(request, true);
+                    break;
+                case "InspectLightsaberEnterExitLeftArmClearanceSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .InspectLightsaberEnterExitLeftArmClearanceSources,
+                        "Lightsaber Enter/Exit left-arm clearance and thrust-speed " +
+                        "sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberEnterExitLeftArmClearanceAndThrustSpeed":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .ApplyLightsaberEnterExitLeftArmClearanceAndThrustSpeed,
+                        "Lightsaber Enter/Exit intermediate left-arm clearance and " +
+                        "3x stabbing source playback applied.");
+                    break;
+                case "InspectLightsaberEnterExitLeftArmClearanceAndThrustSpeed":
+                    RunLightsaberEnterExitLeftArmClearanceInspection(request, false);
+                    break;
+                case "CaptureLightsaberEnterExitLeftArmClearanceAndThrustSpeedFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .CaptureLightsaberEnterExitLeftArmClearanceAndThrustSpeedFinal,
+                        "Passed Enter, Exit and 3x thrust reviews copied once as " +
+                        "final evidence.");
+                    break;
+                case "InspectLightsaberEnterExitLeftArmPopSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .InspectLightsaberEnterExitLeftArmPopSources,
+                        "Lightsaber Enter/Exit left-arm-pop sources inspected " +
+                        "read-only.");
+                    break;
+                case "ApplyLightsaberEnterExitLeftArmPopCorrection":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .ApplyLightsaberEnterExitLeftArmPopCorrection,
+                        "Lightsaber Enter/Exit left-arm outward pop removed.");
+                    break;
+                case "InspectLightsaberEnterExitLeftArmPopCorrection":
+                    RunLightsaberEnterExitLeftArmPopInspection(request);
+                    break;
+                case "CaptureLightsaberEnterExitLeftArmPopFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .CaptureLightsaberEnterExitLeftArmPopFinal,
+                        "Passed Enter/Exit left-arm-pop reviews copied once as " +
+                        "final evidence.");
+                    break;
+                case "InspectLightsaberThrustModeEnterCorrectionSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberThrustModeEnterCorrectionSources,
+                        "Lightsaber_ThrustMode_Enter correction sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberThrustModeEnterTwoHandForwardCorrection":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberThrustModeEnterTwoHandForwardCorrection,
+                        "Lightsaber_ThrustMode_Enter two-hand forward correction applied.");
+                    break;
+                case "InspectLightsaberThrustModeEnterCorrection":
+                    RunLightsaberThrustModeEnterInspection(request);
+                    break;
+                case "CaptureLightsaberThrustModeEnterCorrectionFinal":
+                    RunLightsaberThrustModeEnterFinal(request);
+                    break;
+                case "InspectLightsaberThrustModeEnterRightSideFootPlantSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberThrustModeEnterRightSideFootPlantSources,
+                        "Lightsaber_ThrustMode_Enter right-side and foot-plant sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberThrustModeEnterRightSideFootPlantCorrection":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberThrustModeEnterRightSideFootPlantCorrection,
+                        "Lightsaber_ThrustMode_Enter right-side grip and foot plant applied.");
+                    break;
+                case "InspectLightsaberThrustModeEnterRightSideFootPlantCorrection":
+                    RunLightsaberThrustModeEnterInspection(request);
+                    break;
+                case "CaptureLightsaberThrustModeEnterRightSideFootPlantFinal":
+                    RunLightsaberThrustModeEnterFinal(request);
+                    break;
+                case "InspectLightsaberThrustModeEnterFaceClearanceSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberThrustModeEnterFaceClearanceSources,
+                        "Lightsaber_ThrustMode_Enter red-box and blade-clearance sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberThrustModeEnterFaceClearanceCorrection":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberThrustModeEnterFaceClearanceCorrection,
+                        "Lightsaber_ThrustMode_Enter red-box arm pose and blade clearance applied.");
+                    break;
+                case "InspectLightsaberThrustModeEnterFaceClearanceCorrection":
+                    RunLightsaberThrustModeEnterInspection(request);
+                    break;
+                case "CaptureLightsaberThrustModeEnterFaceClearanceFinal":
+                    RunLightsaberThrustModeEnterFinal(request);
+                    break;
+                case "InspectLightsaberThrustModeEnterUpperRedBoxKnee10Sources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberThrustModeEnterUpperRedBoxKnee10Sources,
+                        "Lightsaber_ThrustMode_Enter upper red-box and ten-degree knee sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberThrustModeEnterUpperRedBoxKnee10Correction":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberThrustModeEnterUpperRedBoxKnee10Correction,
+                        "Lightsaber_ThrustMode_Enter upper red-box grip and planted ten-degree knees applied.");
+                    break;
+                case "InspectLightsaberThrustModeEnterUpperRedBoxKnee10Correction":
+                    RunLightsaberThrustModeEnterInspection(request);
+                    break;
+                case "CaptureLightsaberThrustModeEnterUpperRedBoxKnee10Final":
+                    RunLightsaberThrustModeEnterFinal(request);
+                    break;
+                case "InspectLightsaberThrustModeEnterBladeTiltSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberThrustModeEnterBladeTiltSources,
+                        "Lightsaber_ThrustMode_Enter blade-tilt sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberThrustModeEnterBladeTilt":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberThrustModeEnterBladeTilt,
+                        "Lightsaber_ThrustMode_Enter ten-degree down-left blade tilt applied.");
+                    break;
+                case "InspectLightsaberThrustModeEnterBladeTilt":
+                    RunLightsaberThrustModeEnterInspection(request);
+                    break;
+                case "CaptureLightsaberThrustModeEnterBladeTiltFinal":
+                    RunLightsaberThrustModeEnterFinal(request);
+                    break;
+                case "InspectLightsaberThrustStartPoseSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberThrustStartPoseSources,
+                        "Lightsaber_Thrust start-pose sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberThrustStartPose":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberThrustStartPose,
+                        "Lightsaber_Thrust exact start pose applied.");
+                    break;
+                case "InspectLightsaberThrustStartPose":
+                    RunLightsaberThrustStartPoseInspection(request);
+                    break;
+                case "CaptureLightsaberThrustStartPoseFinal":
+                    RunLightsaberThrustStartPoseFinal(request);
+                    break;
+                case "InspectLightsaberThrustMotionSources":
+                case "InspectLightsaberThrustArmExtensionSources":
+                case "InspectLightsaberThrustAnatomicalReachSources":
+                case "InspectLightsaberThrustLeftArmAndHandFollowSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberThrustMotionSources,
+                        "Lightsaber_Thrust motion sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberThrustMotion":
+                case "ApplyLightsaberThrustArmExtensionCorrection":
+                case "ApplyLightsaberThrustAnatomicalReachCorrection":
+                case "ApplyLightsaberThrustLeftArmAndHandFollowCorrection":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberThrustMotion,
+                        "Lightsaber_Thrust 0.9-second thrust and 0.5-second hold loop applied.");
+                    break;
+                case "InspectLightsaberThrustMotion":
+                case "InspectLightsaberThrustAnatomicalReach":
+                case "InspectLightsaberThrustLeftArmAndHandFollow":
+                    RunLightsaberThrustMotionInspection(request);
+                    break;
+                case "CaptureLightsaberThrustMotionFinal":
+                case "CaptureLightsaberThrustAnatomicalReachFinal":
+                case "CaptureLightsaberThrustLeftArmAndHandFollowFinal":
+                    RunLightsaberThrustMotionFinal(request);
+                    break;
+                case "InspectLightsaberThrustStabbingSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberThrustStabbingSources,
+                        "Lightsaber_Thrust stabbing sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberThrustStabbingSequence":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberThrustStabbingSequence,
+                        "Lightsaber_Thrust exact stabbing sequence applied.");
+                    break;
+                case "InspectLightsaberThrustStabbingSequence":
+                    RunLightsaberThrustStabbingInspection(request);
+                    break;
+                case "CaptureLightsaberThrustStabbingFinal":
+                    RunLightsaberThrustStabbingFinal(request);
+                    break;
+                case "InspectLightsaberThrustRightHandBladeForwardSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .InspectLightsaberThrustRightHandBladeForwardSources,
+                        "Lightsaber_Thrust right-hand and blade-forward sources " +
+                        "inspected read-only.");
+                    break;
+                case "ApplyLightsaberThrustRightHandBladeForwardCorrection":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .ApplyLightsaberThrustRightHandBladeForwardCorrection,
+                        "Lightsaber_Thrust full-loop right-hand and blade-forward " +
+                        "correction applied.");
+                    break;
+                case "InspectLightsaberThrustRightHandBladeForwardCorrection":
+                    RunLightsaberThrustRightHandBladeForwardInspection(request);
+                    break;
+                case "CaptureLightsaberThrustRightHandBladeForwardFinal":
+                    RunLightsaberThrustRightHandBladeForwardFinal(request);
+                    break;
+                case "InspectLightsaberThrustArmPopSources":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.InspectLightsaberThrustArmPopSources,
+                        "Lightsaber_Thrust arm-pop sources inspected read-only.");
+                    break;
+                case "ApplyLightsaberThrustArmPopCorrection":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools.ApplyLightsaberThrustArmPopCorrection,
+                        "Lightsaber_Thrust arm-pop correction applied.");
+                    break;
+                case "InspectLightsaberThrustArmPopCorrection":
+                    RunLightsaberThrustArmPopInspection(request);
+                    break;
+                case "CaptureLightsaberThrustArmPopFinal":
+                    RunLightsaberThrustArmPopFinal(request);
+                    break;
+                case "InspectLightsaberThrustForearmDeformationCorrection":
+                    RunLightsaberThrustForearmDeformationInspection(request);
+                    break;
+                case "CaptureLightsaberThrustForearmDeformationFinal":
+                    RunSynchronous(
+                        request,
+                        LightsaberSetupTools
+                            .CaptureLightsaberThrustForearmDeformationFinal,
+                        "Lightsaber_Thrust one-time focused forearm final " +
+                        "capture copied from the passed Play Mode review.");
                     break;
                 case "ApplyRepairKitStaticNoTransition":
                     RunSynchronous(
@@ -11533,6 +12186,981 @@ namespace Bellerophon.Editor.Validation
                         completeCallback,
                         failCallback);
                 }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberOffIdleLocomotionInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberOffIdleLocomotionPlayModeCapture.HasPendingCapture)
+                    LightsaberOffIdleLocomotionPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberOffIdleLocomotionPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberDiagonalSlashInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberDiagonalSlashPlayModeCapture.HasPendingCapture)
+                    LightsaberDiagonalSlashPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberDiagonalSlashPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberDiagonalSlashBladeTrajectoryInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberDiagonalSlashBladeTrajectoryPlayModeCapture.HasPendingCapture)
+                    LightsaberDiagonalSlashBladeTrajectoryPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberDiagonalSlashBladeTrajectoryPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberGripOneHandTransitionInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberGripOneHandTransitionPlayModeCapture.HasPendingCapture)
+                    LightsaberGripOneHandTransitionPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberGripOneHandTransitionPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberGripOneHandTransitionFinal(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    try
+                    {
+                        LightsaberSetupTools.CaptureLightsaberGripOneHandTransitionFinal();
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(
+                            request,
+                            successMarker +
+                            " One final reviewed image copied into the asset folder.");
+                    }
+                    catch (Exception exception)
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    }
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberGripOneHandTransitionPlayModeCapture.HasPendingCapture)
+                    LightsaberGripOneHandTransitionPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberGripOneHandTransitionPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustModeEnterInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustModeEnterPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustModeEnterPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustModeEnterPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustModeEnterFinal(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    try
+                    {
+                        LightsaberSetupTools.CaptureLightsaberThrustModeEnterBladeTiltFinal();
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(
+                            request,
+                            successMarker +
+                            " One final reviewed image copied into the asset folder.");
+                    }
+                    catch (Exception exception)
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    }
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustModeEnterPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustModeEnterPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustModeEnterPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustModeExitInspection(
+            BridgeRequest request,
+            bool captureFinal)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    try
+                    {
+                        if (captureFinal)
+                            LightsaberSetupTools.CaptureLightsaberThrustModeExitFinal();
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(
+                            request,
+                            successMarker + (captureFinal
+                                ? " One final reviewed image copied into the asset folder."
+                                : string.Empty));
+                    }
+                    catch (Exception exception)
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    }
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustModeExitPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustModeExitPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustModeExitPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberEnterExitLeftArmClearanceInspection(
+            BridgeRequest request,
+            bool captureFinal)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    try
+                    {
+                        if (captureFinal)
+                            LightsaberSetupTools
+                                .CaptureLightsaberEnterExitLeftArmClearanceAndThrustSpeedFinal();
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(
+                            request,
+                            successMarker + (captureFinal
+                                ? " Passed reviews copied once as final evidence."
+                                : string.Empty));
+                    }
+                    catch (Exception exception)
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    }
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberEnterExitLeftArmClearancePlayModeCapture
+                    .HasPendingCapture)
+                    LightsaberEnterExitLeftArmClearancePlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberEnterExitLeftArmClearancePlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberEnterExitLeftArmPopInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberEnterExitLeftArmPopPlayModeCapture
+                    .HasPendingCapture)
+                    LightsaberEnterExitLeftArmPopPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberEnterExitLeftArmPopPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunDetectorAttachedStaticStartViewInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (DetectorAttachedStaticStartViewPlayModeCapture
+                    .HasPendingCapture)
+                    DetectorAttachedStaticStartViewPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    DetectorAttachedStaticStartViewPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustStartPoseInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustStartPosePlayModeCapture.HasPendingCapture)
+                    LightsaberThrustStartPosePlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustStartPosePlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustStartPoseFinal(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    try
+                    {
+                        LightsaberSetupTools.CaptureLightsaberThrustStartPoseFinal();
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(
+                            request,
+                            successMarker +
+                            " One final reviewed image copied into the asset folder.");
+                    }
+                    catch (Exception exception)
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    }
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustStartPosePlayModeCapture.HasPendingCapture)
+                    LightsaberThrustStartPosePlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustStartPosePlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustMotionInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustMotionPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustMotionPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustMotionPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustMotionFinal(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    try
+                    {
+                        LightsaberSetupTools.CaptureLightsaberThrustMotionFinal();
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(
+                            request,
+                            successMarker +
+                            " One final reviewed image copied into the asset folder.");
+                    }
+                    catch (Exception exception)
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    }
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustMotionPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustMotionPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustMotionPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustStabbingInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustStabbingPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustStabbingPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustStabbingPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustStabbingFinal(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    try
+                    {
+                        LightsaberSetupTools.CaptureLightsaberThrustStabbingFinal();
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(
+                            request,
+                            successMarker +
+                            " One final reviewed image copied into the asset folder.");
+                    }
+                    catch (Exception exception)
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    }
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustStabbingPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustStabbingPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustStabbingPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustRightHandBladeForwardInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustStabbingPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustStabbingPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustStabbingPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustRightHandBladeForwardFinal(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    try
+                    {
+                        LightsaberSetupTools
+                            .CaptureLightsaberThrustRightHandBladeForwardFinal();
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(
+                            request,
+                            successMarker +
+                            " One final right-hand and blade-forward reviewed image " +
+                            "copied into the asset folder.");
+                    }
+                    catch (Exception exception)
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    }
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustStabbingPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustStabbingPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustStabbingPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustArmPopInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustStabbingPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustStabbingPlayModeCapture.ResumeArmPop(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustStabbingPlayModeCapture.StartArmPop(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustArmPopFinal(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    try
+                    {
+                        LightsaberSetupTools.CaptureLightsaberThrustArmPopFinal();
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(
+                            request,
+                            successMarker +
+                            " One final arm-pop reviewed image copied into the " +
+                            "asset folder.");
+                    }
+                    catch (Exception exception)
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    }
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustStabbingPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustStabbingPlayModeCapture.ResumeArmPop(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustStabbingPlayModeCapture.StartArmPop(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustForearmDeformationInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustStabbingPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustStabbingPlayModeCapture
+                        .ResumeForearmDeformation(
+                            completeCallback, failCallback);
+                else
+                    LightsaberThrustStabbingPlayModeCapture
+                        .StartForearmDeformation(
+                            completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustDistalForearmSkinningInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustStabbingPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustStabbingPlayModeCapture
+                        .ResumeDistalForearmSkinning(
+                            completeCallback, failCallback);
+                else
+                    LightsaberThrustStabbingPlayModeCapture
+                        .StartDistalForearmSkinning(
+                            completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustWristPanelOrientationInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustStabbingPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustStabbingPlayModeCapture
+                        .ResumeWristPanelOrientation(
+                            completeCallback, failCallback);
+                else
+                    LightsaberThrustStabbingPlayModeCapture
+                        .StartWristPanelOrientation(
+                            completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustTopGripInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustStabbingPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustStabbingPlayModeCapture.ResumeTopGrip(
+                        completeCallback, failCallback);
+                else
+                    LightsaberThrustStabbingPlayModeCapture.StartTopGrip(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunLightsaberThrustForearmDeformationFinal(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    try
+                    {
+                        LightsaberSetupTools
+                            .CaptureLightsaberThrustForearmDeformationFinal();
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(
+                            request,
+                            successMarker +
+                            " One final focused forearm image copied into the " +
+                            "asset folder.");
+                    }
+                    catch (Exception exception)
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    }
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (LightsaberThrustStabbingPlayModeCapture.HasPendingCapture)
+                    LightsaberThrustStabbingPlayModeCapture
+                        .ResumeForearmDeformation(
+                            completeCallback, failCallback);
+                else
+                    LightsaberThrustStabbingPlayModeCapture
+                        .StartForearmDeformation(
+                            completeCallback, failCallback);
             }
             catch (Exception exception)
             {
@@ -12404,6 +14032,51 @@ namespace Bellerophon.Editor.Validation
                 request.Command == VacuumUseLocomotionDiagnosticCommand ||
                 request.Command == VacuumUseLocomotionFinalCommand ||
                 request.Command == HoloSprayIdleLocomotionFinalCommand ||
+                request.Command == LightsaberOffIdleLocomotionInspectionCommand ||
+                request.Command == LightsaberDiagonalSlashInspectionCommand ||
+                request.Command == LightsaberDiagonalSlashBladeTrajectoryInspectionCommand ||
+                request.Command == LightsaberGripOneHandInspectionCommand ||
+                request.Command == LightsaberGripOneHandFinalCommand ||
+                request.Command == LightsaberThrustModeEnterInspectionCommand ||
+                request.Command == LightsaberThrustModeEnterCorrectionInspectionCommand ||
+                request.Command == LightsaberThrustModeEnterCorrectionFinalCommand ||
+                request.Command == LightsaberThrustModeEnterRightSideInspectionCommand ||
+                request.Command == LightsaberThrustModeEnterRightSideFinalCommand ||
+                request.Command == LightsaberThrustModeEnterFaceClearanceInspectionCommand ||
+                request.Command == LightsaberThrustModeEnterFaceClearanceFinalCommand ||
+                request.Command == LightsaberThrustModeEnterUpperRedBoxKnee10InspectionCommand ||
+                request.Command == LightsaberThrustModeEnterUpperRedBoxKnee10FinalCommand ||
+                request.Command == LightsaberThrustModeEnterBladeTiltInspectionCommand ||
+                request.Command == LightsaberThrustModeEnterBladeTiltFinalCommand ||
+                request.Command ==
+                    LightsaberEnterExitLeftArmClearanceInspectionCommand ||
+                request.Command ==
+                    LightsaberEnterExitLeftArmPopInspectionCommand ||
+                request.Command ==
+                    DetectorAttachedStaticStartViewInspectionCommand ||
+                request.Command == LightsaberThrustStartPoseInspectionCommand ||
+                request.Command == LightsaberThrustStartPoseFinalCommand ||
+                request.Command == LightsaberThrustMotionInspectionCommand ||
+                request.Command == LightsaberThrustMotionFinalCommand ||
+                request.Command == LightsaberThrustAnatomicalInspectionCommand ||
+                request.Command == LightsaberThrustAnatomicalFinalCommand ||
+                request.Command == LightsaberThrustLeftArmAndHandFollowInspectionCommand ||
+                request.Command == LightsaberThrustLeftArmAndHandFollowFinalCommand ||
+                request.Command == LightsaberThrustStabbingInspectionCommand ||
+                request.Command == LightsaberThrustStabbingFinalCommand ||
+                request.Command ==
+                    LightsaberThrustRightHandBladeForwardInspectionCommand ||
+                request.Command ==
+                    LightsaberThrustRightHandBladeForwardFinalCommand ||
+                request.Command == LightsaberThrustArmPopInspectionCommand ||
+                request.Command == LightsaberThrustArmPopFinalCommand ||
+                request.Command ==
+                    LightsaberThrustForearmDeformationCorrectionInspectionCommand ||
+                request.Command == LightsaberThrustForearmDeformationFinalCommand ||
+                request.Command ==
+                    LightsaberThrustWristPanelCorrectionInspectionCommand ||
+                request.Command ==
+                    LightsaberThrustTopGripCorrectionInspectionCommand ||
                 request.Command == SpeakerIdleLocomotionDiagnosticCommand ||
                 request.Command == SpeakerIdleLocomotionFinalCommand ||
                 request.Command == SpeakerIdleScaleFinalCommand ||
@@ -12486,6 +14159,27 @@ namespace Bellerophon.Editor.Validation
             {
                 TryDelete(ActiveRequestPath);
                 return false;
+            }
+
+            if (request.Command ==
+                DetectorAttachedStaticStartViewInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Detector_Attached_Static startup-view natural " +
+                    "Play Mode inspection after mode transition.");
+                DetectorAttachedStaticStartViewPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
             }
 
             if (request.Command == TergoPierceAttackCurrentSceneVisualRunCommand)
@@ -12733,6 +14427,670 @@ namespace Bellerophon.Editor.Validation
                 activeLog.AppendLine(
                     "Resuming HoloSpray_Idle natural two-cycle locomotion capture.");
                 HoloSprayIdleLocomotionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberOffIdleLocomotionInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Off_Idle natural six-motion loop inspection.");
+                LightsaberOffIdleLocomotionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberDiagonalSlashInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_DiagonalSlash natural sequence inspection.");
+                LightsaberDiagonalSlashPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberDiagonalSlashBladeTrajectoryInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_DiagonalSlash blade trajectory inspection.");
+                LightsaberDiagonalSlashBladeTrajectoryPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberGripOneHandInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Grip_OneHand natural transition inspection.");
+                LightsaberGripOneHandTransitionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberGripOneHandFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Grip_OneHand final natural transition capture.");
+                LightsaberGripOneHandTransitionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        try
+                        {
+                            LightsaberSetupTools.CaptureLightsaberGripOneHandTransitionFinal();
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(
+                                request,
+                                successMarker +
+                                " One final reviewed image copied into the asset folder.");
+                        }
+                        catch (Exception exception)
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        }
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustModeEnterInspectionCommand ||
+                request.Command == LightsaberThrustModeEnterCorrectionInspectionCommand ||
+                request.Command == LightsaberThrustModeEnterRightSideInspectionCommand ||
+                request.Command == LightsaberThrustModeEnterFaceClearanceInspectionCommand ||
+                request.Command == LightsaberThrustModeEnterUpperRedBoxKnee10InspectionCommand ||
+                request.Command == LightsaberThrustModeEnterBladeTiltInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_ThrustMode_Enter natural transition inspection.");
+                LightsaberThrustModeEnterPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustModeEnterFinalCommand ||
+                request.Command == LightsaberThrustModeEnterCorrectionFinalCommand ||
+                request.Command == LightsaberThrustModeEnterRightSideFinalCommand ||
+                request.Command == LightsaberThrustModeEnterFaceClearanceFinalCommand ||
+                request.Command == LightsaberThrustModeEnterUpperRedBoxKnee10FinalCommand ||
+                request.Command == LightsaberThrustModeEnterBladeTiltFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_ThrustMode_Enter final natural transition capture.");
+                LightsaberThrustModeEnterPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        try
+                        {
+                            LightsaberSetupTools.CaptureLightsaberThrustModeEnterBladeTiltFinal();
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(
+                                request,
+                                successMarker +
+                                " One final reviewed image copied into the asset folder.");
+                        }
+                        catch (Exception exception)
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        }
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustModeExitInspectionCommand ||
+                request.Command == LightsaberThrustModeExitFinalCommand)
+            {
+                BeginRequest(request);
+                bool captureFinal =
+                    request.Command == LightsaberThrustModeExitFinalCommand;
+                activeLog.AppendLine(
+                    captureFinal
+                        ? "Resuming Lightsaber_ThrustMode_Exit final natural playback capture."
+                        : "Resuming Lightsaber_ThrustMode_Exit natural playback inspection.");
+                LightsaberThrustModeExitPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        try
+                        {
+                            if (captureFinal)
+                                LightsaberSetupTools
+                                    .CaptureLightsaberThrustModeExitFinal();
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(
+                                request,
+                                successMarker + (captureFinal
+                                    ? " One final reviewed image copied into the asset folder."
+                                    : string.Empty));
+                        }
+                        catch (Exception exception)
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        }
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command ==
+                LightsaberEnterExitLeftArmClearanceInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming combined direct playback review.");
+                LightsaberEnterExitLeftArmClearancePlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        try
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        }
+                        catch (Exception exception)
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        }
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command ==
+                LightsaberEnterExitLeftArmPopInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Enter/Exit left-arm-pop direct playback review.");
+                LightsaberEnterExitLeftArmPopPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustStartPoseInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust natural start-pose inspection.");
+                LightsaberThrustStartPosePlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustStartPoseFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust final natural start-pose capture.");
+                LightsaberThrustStartPosePlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        try
+                        {
+                            LightsaberSetupTools.CaptureLightsaberThrustStartPoseFinal();
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(
+                                request,
+                                successMarker +
+                                " One final reviewed image copied into the asset folder.");
+                        }
+                        catch (Exception exception)
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        }
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustMotionInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust natural motion inspection.");
+                LightsaberThrustMotionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustAnatomicalInspectionCommand ||
+                request.Command == LightsaberThrustLeftArmAndHandFollowInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust anatomical reach inspection.");
+                LightsaberThrustMotionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustMotionFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust final natural motion capture.");
+                LightsaberThrustMotionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        try
+                        {
+                            LightsaberSetupTools.CaptureLightsaberThrustMotionFinal();
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(
+                                request,
+                                successMarker +
+                                " One final reviewed image copied into the asset folder.");
+                        }
+                        catch (Exception exception)
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        }
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustAnatomicalFinalCommand ||
+                request.Command == LightsaberThrustLeftArmAndHandFollowFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust final anatomical reach capture.");
+                LightsaberThrustMotionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        try
+                        {
+                            LightsaberSetupTools.CaptureLightsaberThrustMotionFinal();
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(
+                                request,
+                                successMarker +
+                                " One final reviewed image copied into the asset folder.");
+                        }
+                        catch (Exception exception)
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        }
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustStabbingInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust exact stabbing sequence inspection.");
+                LightsaberThrustStabbingPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustStabbingFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust exact stabbing sequence final capture.");
+                LightsaberThrustStabbingPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        try
+                        {
+                            LightsaberSetupTools.CaptureLightsaberThrustStabbingFinal();
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(
+                                request,
+                                successMarker +
+                                " One final reviewed image copied into the asset folder.");
+                        }
+                        catch (Exception exception)
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        }
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command ==
+                LightsaberThrustRightHandBladeForwardInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust full-loop right-hand and " +
+                    "blade-forward inspection.");
+                LightsaberThrustStabbingPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command ==
+                LightsaberThrustRightHandBladeForwardFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust full-loop right-hand and " +
+                    "blade-forward final capture.");
+                LightsaberThrustStabbingPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        try
+                        {
+                            LightsaberSetupTools
+                                .CaptureLightsaberThrustRightHandBladeForwardFinal();
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(
+                                request,
+                                successMarker +
+                                " One final right-hand and blade-forward reviewed " +
+                                "image copied into the asset folder.");
+                        }
+                        catch (Exception exception)
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        }
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustArmPopInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust arm-pop Play Mode inspection.");
+                LightsaberThrustStabbingPlayModeCapture.ResumeArmPop(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustArmPopFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust arm-pop final Play Mode capture.");
+                LightsaberThrustStabbingPlayModeCapture.ResumeArmPop(
+                    successMarker =>
+                    {
+                        try
+                        {
+                            LightsaberSetupTools
+                                .CaptureLightsaberThrustArmPopFinal();
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(
+                                request,
+                                successMarker +
+                                " One final arm-pop reviewed image copied into " +
+                                "the asset folder.");
+                        }
+                        catch (Exception exception)
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        }
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command ==
+                LightsaberThrustForearmDeformationCorrectionInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust focused forearm deformation " +
+                    "Play Mode inspection.");
+                LightsaberThrustStabbingPlayModeCapture
+                    .ResumeForearmDeformation(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command == LightsaberThrustForearmDeformationFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust focused forearm final Play Mode " +
+                    "capture.");
+                LightsaberThrustStabbingPlayModeCapture
+                    .ResumeForearmDeformation(
+                        successMarker =>
+                        {
+                            try
+                            {
+                                LightsaberSetupTools
+                                    .CaptureLightsaberThrustForearmDeformationFinal();
+                                TryDelete(ActiveRequestPath);
+                                CompleteRequest(
+                                    request,
+                                    successMarker +
+                                    " One final focused forearm image copied into " +
+                                    "the asset folder.");
+                            }
+                            catch (Exception exception)
+                            {
+                                TryDelete(ActiveRequestPath);
+                                FailRequest(request, exception);
+                            }
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command ==
+                LightsaberThrustWristPanelCorrectionInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust focused wrist-panel orientation " +
+                    "Play Mode inspection.");
+                LightsaberThrustStabbingPlayModeCapture
+                    .ResumeWristPanelOrientation(
+                        successMarker =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            CompleteRequest(request, successMarker);
+                        },
+                        exception =>
+                        {
+                            TryDelete(ActiveRequestPath);
+                            FailRequest(request, exception);
+                        });
+                return true;
+            }
+
+            if (request.Command ==
+                LightsaberThrustTopGripCorrectionInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Lightsaber_Thrust focused top-grip Play Mode " +
+                    "inspection.");
+                LightsaberThrustStabbingPlayModeCapture.ResumeTopGrip(
                     successMarker =>
                     {
                         TryDelete(ActiveRequestPath);

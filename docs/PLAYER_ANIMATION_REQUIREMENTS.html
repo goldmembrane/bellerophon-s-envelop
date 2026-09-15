@@ -447,22 +447,23 @@
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-LGT-001</td><td>P1</td><td>Lightsaber_Off_Idle</td><td>꺼진 광선검 한손 대기</td><td>상체&#183;손</td><td>반복</td><td>광선검 소지와 비공격 상태</td><td>자체 유지</td><td>사선 베기&#183;찌르기 모드</td><td>명시</td><td>191행</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-LGT-005</td><td>P1</td><td>Lightsaber_DiagonalSlash</td><td>광선검 사선 베기</td><td>상체&#183;손</td><td>1회</td><td>좌클릭</td><td>광선검 한손 전환</td><td>피격</td><td>사용자 확정</td><td>191행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-LGT-008</td><td>P1</td><td>Lightsaber_Grip_OneHand</td><td>광선검 한손 전환</td><td>상체&#183;손</td><td>1회</td><td>사선 베기 완료</td><td>꺼진 한손 대기</td><td>피격</td><td>필수 파생</td><td>191행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-LGT-010</td><td>P1</td><td>Lightsaber_ThrustMode_Enter</td><td>광선검 찌르기 모드 시작</td><td>상체&#183;손</td><td>1회</td><td>우클릭</td><td>찌르기 모드</td><td>피격</td><td>명시</td><td>191행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-LGT-012</td><td>P1</td><td>Lightsaber_Thrust</td><td>광선검 찌르기</td><td>상체&#183;손</td><td>1회</td><td>찌르기 모드에서 좌클릭</td><td>찌르기 모드</td><td>피격</td><td>사용자 확정</td><td>191행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-LGT-014</td><td>P1</td><td>Lightsaber_ThrustMode_Exit</td><td>광선검 찌르기 모드 해제</td><td>상체&#183;손</td><td>1회</td><td>우클릭</td><td>꺼진 한손 대기</td><td>피격</td><td>명시</td><td>191행</td></tr>
 </tbody></table>
 <h3>광선검 통합 모션 기준</h3>
 <ul>
 <li><code>Lightsaber_DiagonalSlash</code>는 양손 전환, 오른쪽 위에서 왼쪽 아래로 사선 베기, 베기 회수를 한 동작에 포함하고 완료 후 <code>Lightsaber_Grip_OneHand</code>로 이어진다.</li>
+<li><code>Lightsaber_ThrustMode_Enter</code>는 2026-09-14 구현 기준으로 현재 자세에서 0.5초 동안 찌르기 모드 자세로 전환하고 0.5초 유지한 뒤 즉시 처음부터 반복한다. 도착 자세는 오른손을 기준으로 왼손이 손잡이 뒤쪽에 모이는 양손 파지, 칼날 중심축과 끝의 수송자 정면 정렬, 원본 도착 자세 대비 골반 낮아짐과 양쪽 무릎 굽힘 변화량 50% 완화를 적용한다. 광선검의 오른손 직접 추종과 로컬 위치&#183;회전&#183;스케일은 유지한다.</li>
 <li><code>Lightsaber_Thrust</code>는 찌르기 준비, 화면 중앙을 향한 찌르기, 찌르기 회수를 한 동작에 포함하고 완료 후 찌르기 모드로 돌아간다.</li>
 <li>보조 장비 주머니 이동&#183;손 복귀와 광선검 켜기&#183;끄기는 오브젝트 상태로 처리하며 별도 모션을 제작하지 않는다. 원본 기획의 점등&#183;소등 전환 시간 0.2초는 게임플레이 시간으로 유지한다.</li>
 <li>제거된 <code>PLR-LGT-002</code>, <code>PLR-LGT-003</code>, <code>PLR-LGT-004</code>, <code>PLR-LGT-006</code>, <code>PLR-LGT-007</code>, <code>PLR-LGT-009</code>, <code>PLR-LGT-011</code>, <code>PLR-LGT-013</code>과 후속 <code>PLR-LGT</code> ID는 재번호하지 않는다.</li>
