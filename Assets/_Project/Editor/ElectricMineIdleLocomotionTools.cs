@@ -26,9 +26,38 @@ namespace Bellerophon.Editor.Validation
         internal const string FinalReportPath = OutputFolder + "/Final.txt";
         internal const string ControllerPath =
             AssetFolder + "/ElectricMineIdle_Locomotion.controller";
+        internal const string ArmedTargetName = "ElectricMine_Armed_Idle";
+        internal const string ArmedControllerPath =
+            ArmedAssetFolder + "/ElectricMineArmedIdle_Locomotion.controller";
+        internal const string ArmedReviewFolder =
+            "Temp/ElectricMineArmedIdleLocomotion";
+        internal const string ArmedReviewImagePath =
+            ArmedReviewFolder + "/FinalContactSheet.png";
+        internal const string ArmedReviewReportPath =
+            ArmedReviewFolder + "/FinalReport.txt";
 
         private const string AssetFolder =
             "Assets/_Project/Art/Player/Animations/ElectricMineIdleLocomotion";
+        private const string ArmedAssetFolder =
+            "Assets/_Project/Animations/ElectricMineArmedIdleLocomotion";
+        private const string ArmedIdleClipPath =
+            ArmedAssetFolder + "/ElectricMineArmedIdle_Idle.anim";
+        private const string ArmedForwardClipPath =
+            ArmedAssetFolder + "/ElectricMineArmedIdle_WalkForward.anim";
+        private const string ArmedBackwardClipPath =
+            ArmedAssetFolder + "/ElectricMineArmedIdle_WalkBackward.anim";
+        private const string ArmedSidestepClipPath =
+            ArmedAssetFolder + "/ElectricMineArmedIdle_Sidestep.anim";
+        private const string ArmedRunClipPath =
+            ArmedAssetFolder + "/ElectricMineArmedIdle_RunForward.anim";
+        private const string ArmedJumpClipPath =
+            ArmedAssetFolder + "/ElectricMineArmedIdle_Jump.anim";
+        private const string ArmedGripClipPath =
+            ArmedAssetFolder + "/ElectricMineArmedIdle_CurrentGrip.anim";
+        private const string ArmedStateName = "ElectricMineArmedIdleLocomotion2D";
+        private const string ArmedRootTreeName = "ElectricMineArmedIdleSevenMotion2D";
+        private const string ArmedDiagonalTreeName =
+            "ElectricMineArmedIdleWalkDiagonalSourceExact";
         private const string IdleClipPath =
             AssetFolder + "/ElectricMineIdle_Idle.anim";
         private const string ForwardClipPath =
@@ -64,6 +93,13 @@ namespace Bellerophon.Editor.Validation
             new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, -1f),
             new Vector2(1f, 0f), new Vector2(0.70710677f, 0.70710677f),
             new Vector2(0f, 2f)
+        };
+
+        private static readonly Vector2[] ArmedRequiredPositions =
+        {
+            new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, -1f),
+            new Vector2(1f, 0f), new Vector2(0.70710677f, 0.70710677f),
+            new Vector2(0f, 2f), new Vector2(0f, -2f)
         };
 
         internal static string ReviewAbsolutePath => Absolute(ReviewImagePath);
@@ -205,6 +241,161 @@ namespace Bellerophon.Editor.Validation
                 .ToString());
             UnityConsoleDiagnostics.AssertNoErrors();
             Debug.Log("[ElectricMineIdleLocomotion] Applied and saved.");
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Electric Mine Armed Idle Locomotion")]
+        internal static void ApplyArmed()
+        {
+            RequireEditMode();
+            Scene scene = RequireScene();
+            GameObject target = FindUnique(scene, ArmedTargetName);
+            Animator animator = RequireAnimator(target);
+            string avatarPath = AssetDatabase.GetAssetPath(animator.avatar);
+            if (string.IsNullOrWhiteSpace(avatarPath))
+                throw new InvalidOperationException(ArmedTargetName + " Avatar is missing.");
+
+            SourceMotions sources = RequireSourceMotions(scene);
+            AnimationClip jumpSource = RequireSourceClip(scene, "Player_Jump");
+            var sourceSignatures = new Dictionary<AnimationClip, string>
+            {
+                [sources.Idle] = ClipSignature(sources.Idle),
+                [sources.Forward] = ClipSignature(sources.Forward),
+                [sources.Backward] = ClipSignature(sources.Backward),
+                [sources.Sidestep] = ClipSignature(sources.Sidestep),
+                [sources.Run] = ClipSignature(sources.Run),
+                [jumpSource] = ClipSignature(jumpSource)
+            };
+            string targetBefore = TargetProtectedSignature(target);
+            string mineBefore = MineSignature(target);
+            GripData grip = GripPose(target);
+            Vector3 targetPosition = target.transform.position;
+            Quaternion targetRotation = target.transform.rotation;
+            Vector3 targetScale = target.transform.localScale;
+
+            EnsureFolder(ArmedAssetFolder);
+            AnimationClip idle = CopyClip(
+                sources.Idle, ArmedIdleClipPath, "ElectricMineArmedIdle_Idle");
+            AnimationClip forward = CopyClip(
+                sources.Forward, ArmedForwardClipPath,
+                "ElectricMineArmedIdle_WalkForward");
+            AnimationClip backward = CopyClip(
+                sources.Backward, ArmedBackwardClipPath,
+                "ElectricMineArmedIdle_WalkBackward");
+            AnimationClip sidestep = CopyClip(
+                sources.Sidestep, ArmedSidestepClipPath,
+                "ElectricMineArmedIdle_Sidestep");
+            AnimationClip run = CopyClip(
+                sources.Run, ArmedRunClipPath, "ElectricMineArmedIdle_RunForward");
+            AnimationClip jump = CopyClip(
+                jumpSource, ArmedJumpClipPath, "ElectricMineArmedIdle_Jump");
+            AnimationClip gripClip = CreateArmedGripClip(grip);
+            AnimatorController controller = CreateArmedController(
+                sources.Diagonal,
+                idle,
+                forward,
+                backward,
+                sidestep,
+                run,
+                jump,
+                gripClip,
+                grip);
+
+            Undo.RecordObject(animator, "Connect ElectricMine_Armed_Idle locomotion");
+            animator.runtimeAnimatorController = controller;
+            animator.applyRootMotion = false;
+            animator.enabled = true;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            PrefabUtility.RecordPrefabInstancePropertyModifications(animator);
+            EditorUtility.SetDirty(animator);
+            AssetDatabase.SaveAssets();
+
+            RequireEqual(avatarPath, AssetDatabase.GetAssetPath(animator.avatar), "Avatar");
+            RequireNear(target.transform.position, targetPosition, "target position");
+            RequireNear(target.transform.rotation, targetRotation, "target rotation");
+            RequireNear(target.transform.localScale, targetScale, "target scale");
+            RequireEqual(targetBefore, TargetProtectedSignature(target),
+                "ElectricMine_Armed_Idle transforms and appearance");
+            RequireEqual(mineBefore, MineSignature(target),
+                "ElectricMine_Armed_Idle electric mine state");
+            RequireCopiedClip(sources.Idle, idle, "Armed Idle");
+            RequireCopiedClip(sources.Forward, forward, "Armed WalkForward");
+            RequireCopiedClip(sources.Backward, backward, "Armed WalkBackward");
+            RequireCopiedClip(sources.Sidestep, sidestep, "Armed Sidestep");
+            RequireCopiedClip(sources.Run, run, "Armed RunForward");
+            RequireCopiedClip(jumpSource, jump, "Armed Jump");
+            foreach (KeyValuePair<AnimationClip, string> item in sourceSignatures)
+                RequireEqual(item.Value, ClipSignature(item.Key),
+                    item.Key.name + " source clip");
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene))
+                throw new InvalidOperationException("CargoRunMvp scene save failed.");
+            AssetDatabase.SaveAssets();
+            InspectArmedStructure();
+            UnityConsoleDiagnostics.AssertNoErrors();
+            Debug.Log(
+                "[ElectricMineArmedIdleLocomotion] Applied seven exact source motions " +
+                "with one-second looping preview and preserved armed mine grip.");
+        }
+
+        [MenuItem("Bellerophon/Player/Inspect Electric Mine Armed Idle Locomotion")]
+        internal static void InspectArmedStructure()
+        {
+            RequireEditMode();
+            Scene scene = RequireScene();
+            GameObject target = FindUnique(scene, ArmedTargetName);
+            Animator animator = RequireAnimator(target);
+            AnimatorController controller = RequireController(animator, ArmedTargetName);
+            RequireEqual(ArmedControllerPath, AssetDatabase.GetAssetPath(controller),
+                "armed controller path");
+            if (!animator.enabled || animator.applyRootMotion ||
+                animator.cullingMode != AnimatorCullingMode.AlwaysAnimate)
+                throw new InvalidOperationException(
+                    "ElectricMine_Armed_Idle Animator differs.");
+            if (controller.layers.Length != 2)
+                throw new InvalidOperationException(
+                    "Armed controller must have two layers.");
+            AnimatorState state = controller.layers[0].stateMachine.defaultState ??
+                throw new InvalidOperationException("Armed locomotion state is missing.");
+            BlendTree root = state.motion as BlendTree ??
+                throw new InvalidOperationException("Armed 2D Blend Tree is missing.");
+            if (root.blendType != BlendTreeType.FreeformCartesian2D ||
+                root.children.Length != 7)
+                throw new InvalidOperationException(
+                    "Armed 2D Blend Tree must contain seven motions.");
+            for (int index = 0; index < ArmedRequiredPositions.Length; index++)
+            {
+                if (root.children[index].motion == null ||
+                    Vector2.Distance(root.children[index].position,
+                        ArmedRequiredPositions[index]) > 0.00001f)
+                    throw new InvalidOperationException(
+                        "Armed Blend Tree child differs at index " + index + ".");
+            }
+            ElectricMineArmedIdleLocomotionCycleBehaviour behaviour = state.behaviours
+                .OfType<ElectricMineArmedIdleLocomotionCycleBehaviour>()
+                .SingleOrDefault() ?? throw new InvalidOperationException(
+                    "Armed seven-motion cycle behaviour is missing.");
+            if (behaviour.GripBoneCount != GripPose(target).Paths.Length)
+                throw new InvalidOperationException("Armed grip bone count differs.");
+            AnimatorState gripState = controller.layers[1].stateMachine.defaultState ??
+                throw new InvalidOperationException("Armed grip state is missing.");
+            AnimationClip gripClip = gripState.motion as AnimationClip ??
+                throw new InvalidOperationException("Armed grip clip is missing.");
+            RequireGripClipMatches(GripPose(target), gripClip);
+            ElectricMineSetupTools.RequireRuntimeProp(target);
+            UnityConsoleDiagnostics.AssertNoErrors();
+            Debug.Log(
+                "[ElectricMineArmedIdleLocomotion] Seven-motion structure passed. " +
+                "secondsPerMotion=1|sequenceLoopsAfterJump=True|mineFollowsRightHand=True");
+        }
+
+        internal static void BeginArmedNaturalRuntimeReview(
+            string requestId, string logPath)
+        {
+            RequireEditMode();
+            InspectArmedStructure();
+            DetectorAttachedStaticStartSetupTools.InspectHelmEnterStartView();
+            ElectricMineArmedIdleLocomotionPlayModeReview.Start(requestId, logPath);
         }
 
         [MenuItem("Bellerophon/Player/Inspect Electric Mine Idle Locomotion")]
@@ -357,6 +548,77 @@ namespace Bellerophon.Editor.Validation
             return FindUnique(RequireScene(), TargetName);
         }
 
+        internal static GameObject RequireArmedRuntimeTarget()
+        {
+            return FindUnique(RequireScene(), ArmedTargetName);
+        }
+
+        internal static RuntimeMetrics MeasureArmedRuntime(GameObject target)
+        {
+            Animator animator = RequireAnimator(target);
+            ElectricMineArmedIdleLocomotionCycleBehaviour behaviour =
+                animator.GetBehaviour<
+                    ElectricMineArmedIdleLocomotionCycleBehaviour>() ??
+                throw new InvalidOperationException(
+                    "Runtime armed grip behaviour is missing.");
+            Transform prop = ElectricMineSetupTools.RequireRuntimeProp(target);
+            Transform spine = RequirePath(target.transform, SpinePath);
+            Transform shoulder = RequirePath(target.transform, RightShoulderPath);
+            return new RuntimeMetrics(
+                behaviour.MaximumGripDeviation(animator),
+                prop.localPosition,
+                prop.localRotation,
+                prop.localScale,
+                spine.localRotation,
+                shoulder.localRotation,
+                prop.parent != null && prop.parent.name == "RightHand");
+        }
+
+        internal static void ComposeArmedReview(IReadOnlyList<Texture2D> panels)
+        {
+            if (panels.Count != 14 || panels.Any(panel => panel == null))
+                throw new InvalidOperationException(
+                    "Armed review requires fourteen panels.");
+            int panelWidth = panels[0].width;
+            int panelHeight = panels[0].height;
+            var output = new Texture2D(
+                panelWidth * 7, panelHeight * 2, TextureFormat.RGB24, false);
+            try
+            {
+                output.SetPixels32(Enumerable.Repeat(
+                    new Color32(5, 7, 10, 255), output.width * output.height).ToArray());
+                for (int index = 0; index < panels.Count; index++)
+                {
+                    int column = index % 7;
+                    int row = index < 7 ? 1 : 0;
+                    output.SetPixels32(column * panelWidth, row * panelHeight,
+                        panelWidth, panelHeight, panels[index].GetPixels32());
+                }
+                output.Apply(false, false);
+                string absolute = Absolute(ArmedReviewImagePath);
+                if (File.Exists(absolute))
+                    throw new InvalidOperationException(
+                        "The one final armed locomotion contact sheet already exists.");
+                Directory.CreateDirectory(Path.GetDirectoryName(absolute) ??
+                    throw new InvalidOperationException(
+                        "Armed review folder is unavailable."));
+                File.WriteAllBytes(absolute, output.EncodeToPNG());
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(output);
+            }
+        }
+
+        internal static void WriteArmedReviewReport(string value)
+        {
+            string absolute = Absolute(ArmedReviewReportPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(absolute) ??
+                throw new InvalidOperationException(
+                    "Armed review report folder is unavailable."));
+            File.WriteAllText(absolute, value, new UTF8Encoding(false));
+        }
+
         internal static RuntimeMetrics MeasureRuntime(GameObject target)
         {
             Animator animator = RequireAnimator(target);
@@ -487,6 +749,175 @@ namespace Bellerophon.Editor.Validation
             }
             RequireCopiedClip(source, copy, name);
             return copy;
+        }
+
+        private static AnimationClip RequireSourceClip(Scene scene, string sourceName)
+        {
+            AnimatorController controller = RequireController(
+                RequireAnimator(FindUnique(scene, sourceName)), sourceName);
+            return controller.layers[0].stateMachine.defaultState?.motion as AnimationClip ??
+                throw new InvalidOperationException(
+                    sourceName + " default AnimationClip is missing.");
+        }
+
+        private static AnimatorController CreateArmedController(
+            BlendTree sourceDiagonal,
+            AnimationClip idle,
+            AnimationClip forward,
+            AnimationClip backward,
+            AnimationClip sidestep,
+            AnimationClip run,
+            AnimationClip jump,
+            AnimationClip gripClip,
+            GripData grip)
+        {
+            AnimatorController controller =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(ArmedControllerPath);
+            if (controller == null)
+                controller = AnimatorController.CreateAnimatorControllerAtPath(
+                    ArmedControllerPath);
+            AnimatorControllerLayer layer = controller.layers[0];
+            foreach (AnimatorControllerLayer extraLayer in controller.layers.Skip(1))
+                if (extraLayer.stateMachine != null)
+                    UnityEngine.Object.DestroyImmediate(extraLayer.stateMachine, true);
+            controller.layers = new[] { layer };
+            AnimatorStateMachine machine = layer.stateMachine;
+            foreach (AnimatorState state in machine.states.Select(item => item.state).ToArray())
+                machine.RemoveState(state);
+            foreach (AnimatorStateMachine child in machine.stateMachines
+                         .Select(item => item.stateMachine).ToArray())
+                machine.RemoveStateMachine(child);
+            foreach (BlendTree tree in AssetDatabase.LoadAllAssetsAtPath(ArmedControllerPath)
+                         .OfType<BlendTree>().ToArray())
+                UnityEngine.Object.DestroyImmediate(tree, true);
+
+            controller.parameters = Array.Empty<AnimatorControllerParameter>();
+            controller.AddParameter(
+                ElectricMineArmedIdleLocomotionCycleBehaviour.MoveXParameter,
+                AnimatorControllerParameterType.Float);
+            controller.AddParameter(
+                ElectricMineArmedIdleLocomotionCycleBehaviour.MoveYParameter,
+                AnimatorControllerParameterType.Float);
+            controller.AddParameter(new AnimatorControllerParameter
+            {
+                name = ElectricMineArmedIdleLocomotionCycleBehaviour
+                    .DiagonalBlendParameter,
+                type = AnimatorControllerParameterType.Float,
+                defaultFloat = 0.5f
+            });
+            layer.name = "Exact Source Locomotion With Armed Grip";
+            layer.defaultWeight = 1f;
+            layer.blendingMode = AnimatorLayerBlendingMode.Override;
+            layer.avatarMask = null;
+            layer.iKPass = false;
+
+            ChildMotion[] diagonalChildren = sourceDiagonal.children;
+            var clipMap = new Dictionary<AnimationClip, AnimationClip>
+            {
+                [(AnimationClip)diagonalChildren[0].motion] = forward,
+                [(AnimationClip)diagonalChildren[1].motion] = sidestep
+            };
+            BlendTree diagonal = CloneTree(
+                sourceDiagonal, ArmedDiagonalTreeName, controller, clipMap);
+            var root = new BlendTree
+            {
+                name = ArmedRootTreeName,
+                blendType = BlendTreeType.FreeformCartesian2D,
+                blendParameter =
+                    ElectricMineArmedIdleLocomotionCycleBehaviour.MoveXParameter,
+                blendParameterY =
+                    ElectricMineArmedIdleLocomotionCycleBehaviour.MoveYParameter,
+                useAutomaticThresholds = false
+            };
+            AssetDatabase.AddObjectToAsset(root, controller);
+            root.children = new[]
+            {
+                RootChild(idle, ArmedRequiredPositions[0]),
+                RootChild(forward, ArmedRequiredPositions[1]),
+                RootChild(backward, ArmedRequiredPositions[2]),
+                RootChild(sidestep, ArmedRequiredPositions[3]),
+                RootChild(diagonal, ArmedRequiredPositions[4]),
+                RootChild(run, ArmedRequiredPositions[5]),
+                RootChild(jump, ArmedRequiredPositions[6])
+            };
+            AnimatorState locomotion = machine.AddState(ArmedStateName);
+            locomotion.motion = root;
+            locomotion.speed = 1f;
+            locomotion.cycleOffset = 0f;
+            locomotion.mirror = false;
+            locomotion.writeDefaultValues = false;
+            ElectricMineArmedIdleLocomotionCycleBehaviour behaviour = locomotion
+                .AddStateMachineBehaviour<
+                    ElectricMineArmedIdleLocomotionCycleBehaviour>();
+            behaviour.ConfigureGrip(grip.Paths, grip.Rotations);
+            machine.defaultState = locomotion;
+            controller.layers = new[] { layer };
+
+            controller.AddLayer("Current Armed Grip Override");
+            AnimatorControllerLayer[] layers = controller.layers;
+            AnimatorControllerLayer gripLayer = layers[1];
+            gripLayer.name = "Current Armed Grip Override";
+            gripLayer.defaultWeight = 1f;
+            gripLayer.blendingMode = AnimatorLayerBlendingMode.Override;
+            gripLayer.avatarMask = null;
+            gripLayer.iKPass = false;
+            AnimatorState gripState = gripLayer.stateMachine.AddState(
+                "CurrentArmedGripPose");
+            gripState.motion = gripClip;
+            gripState.speed = 1f;
+            gripState.cycleOffset = 0f;
+            gripState.mirror = false;
+            gripState.writeDefaultValues = false;
+            gripLayer.stateMachine.defaultState = gripState;
+            layers[1] = gripLayer;
+            controller.layers = layers;
+            EditorUtility.SetDirty(behaviour);
+            EditorUtility.SetDirty(controller);
+            EditorUtility.SetDirty(machine);
+            EditorUtility.SetDirty(gripLayer.stateMachine);
+            EditorUtility.SetDirty(root);
+            EditorUtility.SetDirty(diagonal);
+            return controller;
+        }
+
+        private static AnimationClip CreateArmedGripClip(GripData grip)
+        {
+            AnimationClip clip =
+                AssetDatabase.LoadAssetAtPath<AnimationClip>(ArmedGripClipPath);
+            if (clip == null)
+            {
+                clip = new AnimationClip
+                {
+                    name = "ElectricMineArmedIdle_CurrentGrip",
+                    frameRate = 60f,
+                    wrapMode = WrapMode.Loop
+                };
+                AssetDatabase.CreateAsset(clip, ArmedGripClipPath);
+            }
+            foreach (EditorCurveBinding binding in AnimationUtility.GetCurveBindings(clip))
+                AnimationUtility.SetEditorCurve(clip, binding, null);
+            for (int index = 0; index < grip.Paths.Length; index++)
+            {
+                Quaternion rotation = grip.Rotations[index];
+                SetConstantRotationCurve(
+                    clip, grip.Paths[index], "m_LocalRotation.x", rotation.x);
+                SetConstantRotationCurve(
+                    clip, grip.Paths[index], "m_LocalRotation.y", rotation.y);
+                SetConstantRotationCurve(
+                    clip, grip.Paths[index], "m_LocalRotation.z", rotation.z);
+                SetConstantRotationCurve(
+                    clip, grip.Paths[index], "m_LocalRotation.w", rotation.w);
+            }
+            AnimationClipSettings settings =
+                AnimationUtility.GetAnimationClipSettings(clip);
+            settings.loopTime = true;
+            settings.keepOriginalPositionXZ = true;
+            settings.keepOriginalPositionY = true;
+            settings.keepOriginalOrientation = true;
+            AnimationUtility.SetAnimationClipSettings(clip, settings);
+            EditorUtility.SetDirty(clip);
+            RequireGripClipMatches(grip, clip);
+            return clip;
         }
 
         private static AnimatorController CreateController(
@@ -1151,6 +1582,342 @@ namespace Bellerophon.Editor.Validation
             internal Quaternion ShoulderRotation { get; }
             internal bool PropParentIsRightHand { get; }
         }
+    }
+
+    [InitializeOnLoad]
+    internal static class ElectricMineArmedIdleLocomotionPlayModeReview
+    {
+        private const string PendingKey =
+            "Bellerophon.ElectricMineArmedIdleLocomotionReview.Pending";
+        private const string RequestIdKey =
+            "Bellerophon.ElectricMineArmedIdleLocomotionReview.RequestId";
+        private const string LogPathKey =
+            "Bellerophon.ElectricMineArmedIdleLocomotionReview.LogPath";
+        private const string StateKey =
+            "Bellerophon.ElectricMineArmedIdleLocomotionReview.State";
+        private const string FailureKey =
+            "Bellerophon.ElectricMineArmedIdleLocomotionReview.Failure";
+        private const int WaitingForPlayMode = 1;
+        private const int Capturing = 2;
+        private const int WaitingForEditMode = 3;
+        private const float CapturePhaseTime = 0.48f;
+        private const double TimeoutSeconds = 45d;
+
+        private static bool initialized;
+        private static double startedAt;
+        private static int baseAbsolutePhase = -1;
+        private static int nextCapture;
+        private static GameObject target;
+        private static Animator animator;
+        private static Texture2D[] panels;
+        private static Vector3 rootPosition;
+        private static Quaternion rootRotation;
+        private static Vector3 rootScale;
+        private static Vector3 propPosition;
+        private static Quaternion propRotation;
+        private static Vector3 propScale;
+        private static float maximumGripDeviation;
+        private static float maximumPropPositionError;
+        private static float maximumPropRotationError;
+        private static float maximumPropScaleError;
+        private static readonly List<double> CaptureTimes = new List<double>();
+        private static readonly List<string> Observations = new List<string>();
+
+        static ElectricMineArmedIdleLocomotionPlayModeReview()
+        {
+            if (SessionState.GetBool(PendingKey, false)) Subscribe();
+        }
+
+        internal static void Start(string requestId, string logPath)
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException(
+                    "Armed locomotion review must start in Edit Mode.");
+            if (SessionState.GetBool(PendingKey, false))
+                throw new InvalidOperationException(
+                    "An armed locomotion review is already pending.");
+            string finalImage = ElectricMineIdleLocomotionTools.Absolute(
+                ElectricMineIdleLocomotionTools.ArmedReviewImagePath);
+            if (File.Exists(finalImage))
+                throw new InvalidOperationException(
+                    "The one final armed locomotion contact sheet already exists.");
+            SessionState.SetBool(PendingKey, true);
+            SessionState.SetString(RequestIdKey, requestId);
+            SessionState.SetString(LogPathKey, logPath);
+            SessionState.SetInt(StateKey, WaitingForPlayMode);
+            SessionState.EraseString(FailureKey);
+            Subscribe();
+            EditorApplication.EnterPlaymode();
+        }
+
+        private static void Subscribe()
+        {
+            EditorApplication.update -= Tick;
+            EditorApplication.update += Tick;
+        }
+
+        private static void Tick()
+        {
+            if (!SessionState.GetBool(PendingKey, false))
+            {
+                EditorApplication.update -= Tick;
+                return;
+            }
+            try
+            {
+                int state = SessionState.GetInt(StateKey, WaitingForPlayMode);
+                if (state == WaitingForPlayMode)
+                {
+                    if (!EditorApplication.isPlaying) return;
+                    InitializeRuntime();
+                    SessionState.SetInt(StateKey, Capturing);
+                    return;
+                }
+                if (state == Capturing)
+                {
+                    if (!EditorApplication.isPlaying)
+                        throw new InvalidOperationException(
+                            "Play Mode ended before armed review completed.");
+                    Observe();
+                    return;
+                }
+                if (state == WaitingForEditMode)
+                {
+                    if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+                    CompleteInEditMode();
+                    return;
+                }
+                throw new InvalidOperationException("Unknown armed review state.");
+            }
+            catch (Exception exception)
+            {
+                Fail(exception);
+            }
+        }
+
+        private static void InitializeRuntime()
+        {
+            initialized = true;
+            startedAt = EditorApplication.timeSinceStartup;
+            baseAbsolutePhase = -1;
+            nextCapture = 0;
+            target = ElectricMineIdleLocomotionTools.RequireArmedRuntimeTarget();
+            animator = target.GetComponent<Animator>() ??
+                throw new InvalidOperationException("Runtime Animator is missing.");
+            panels = new Texture2D[14];
+            rootPosition = target.transform.position;
+            rootRotation = target.transform.rotation;
+            rootScale = target.transform.localScale;
+            Transform prop = ElectricMineSetupTools.RequireRuntimeProp(target);
+            propPosition = prop.localPosition;
+            propRotation = prop.localRotation;
+            propScale = prop.localScale;
+            maximumGripDeviation = 0f;
+            maximumPropPositionError = 0f;
+            maximumPropRotationError = 0f;
+            maximumPropScaleError = 0f;
+            CaptureTimes.Clear();
+            Observations.Clear();
+        }
+
+        private static void Observe()
+        {
+            if (!initialized) InitializeRuntime();
+            if (EditorApplication.timeSinceStartup - startedAt > TimeoutSeconds)
+                throw new TimeoutException(
+                    "Natural armed locomotion review exceeded 45 seconds.");
+            if (!animator.isInitialized ||
+                !ElectricMineArmedIdleLocomotionCycleBehaviour.TryGetSequenceState(
+                    animator, out int absolutePhase, out int phase,
+                    out float phaseElapsed))
+                return;
+            if (baseAbsolutePhase < 0)
+            {
+                if (phase != 0 || phaseElapsed > 0.65f) return;
+                baseAbsolutePhase = absolutePhase;
+            }
+
+            ElectricMineIdleLocomotionTools.RuntimeMetrics metrics =
+                ElectricMineIdleLocomotionTools.MeasureArmedRuntime(target);
+            maximumGripDeviation = Mathf.Max(
+                maximumGripDeviation, metrics.GripDeviation);
+            maximumPropPositionError = Mathf.Max(maximumPropPositionError,
+                Vector3.Distance(metrics.PropLocalPosition, propPosition));
+            maximumPropRotationError = Mathf.Max(maximumPropRotationError,
+                Quaternion.Angle(metrics.PropLocalRotation, propRotation));
+            maximumPropScaleError = Mathf.Max(maximumPropScaleError,
+                Vector3.Distance(metrics.PropLocalScale, propScale));
+            if (!metrics.PropParentIsRightHand)
+                throw new InvalidOperationException(
+                    "Armed electric mine stopped following RightHand.");
+            if (Vector3.Distance(target.transform.position, rootPosition) > 0.0001f ||
+                Quaternion.Angle(target.transform.rotation, rootRotation) > 0.02f ||
+                Vector3.Distance(target.transform.localScale, rootScale) > 0.00001f)
+                throw new InvalidOperationException(
+                    "Armed target root moved during playback.");
+
+            if (nextCapture < 7)
+            {
+                int expectedAbsolute = baseAbsolutePhase + nextCapture;
+                if (absolutePhase < expectedAbsolute || phaseElapsed < CapturePhaseTime)
+                    return;
+                if (absolutePhase > expectedAbsolute || phase != nextCapture)
+                    throw new InvalidOperationException(
+                        "An armed locomotion phase was missed.");
+                Vector2 expected =
+                    ElectricMineArmedIdleLocomotionCycleBehaviour.MotionPosition(phase);
+                float moveX = animator.GetFloat(
+                    ElectricMineArmedIdleLocomotionCycleBehaviour.MoveXParameter);
+                float moveY = animator.GetFloat(
+                    ElectricMineArmedIdleLocomotionCycleBehaviour.MoveYParameter);
+                if (Mathf.Abs(moveX - expected.x) > 0.001f ||
+                    Mathf.Abs(moveY - expected.y) > 0.001f)
+                    throw new InvalidOperationException(
+                        "Armed Blend Tree parameters differ.");
+                panels[nextCapture] = ElectricMineSetupTools.CaptureTargetPanel(
+                    target, false);
+                panels[nextCapture + 7] = ElectricMineSetupTools.CaptureTargetPanel(
+                    target, true);
+                CaptureTimes.Add(EditorApplication.timeSinceStartup);
+                Observations.Add("phase=" + phase + "|motion=" +
+                    ElectricMineArmedIdleLocomotionCycleBehaviour.MotionName(phase) +
+                    "|phaseElapsed=" + F(phaseElapsed) + "|moveX=" + F(moveX) +
+                    "|moveY=" + F(moveY));
+                nextCapture++;
+                return;
+            }
+
+            if (absolutePhase < baseAbsolutePhase + 14) return;
+            if (absolutePhase != baseAbsolutePhase + 14 || phase != 0)
+                throw new InvalidOperationException(
+                    "Jump did not return naturally to Idle after two cycles.");
+            FinishPlayMode();
+        }
+
+        private static void FinishPlayMode()
+        {
+            if (panels == null || panels.Any(panel => panel == null))
+                throw new InvalidOperationException(
+                    "Armed review panels are incomplete.");
+            float minimumInterval = float.MaxValue;
+            float maximumInterval = 0f;
+            for (int index = 1; index < CaptureTimes.Count; index++)
+            {
+                float interval = (float)(CaptureTimes[index] - CaptureTimes[index - 1]);
+                minimumInterval = Mathf.Min(minimumInterval, interval);
+                maximumInterval = Mathf.Max(maximumInterval, interval);
+            }
+            if (minimumInterval < 0.75f || maximumInterval > 1.25f)
+                throw new InvalidOperationException(
+                    "Natural armed one-second phase timing differs.");
+            if (maximumGripDeviation > 0.1f)
+                throw new InvalidOperationException("Armed right-hand grip drifted.");
+            if (maximumPropPositionError > 0.00001f ||
+                maximumPropRotationError > 0.02f ||
+                maximumPropScaleError > 0.00001f)
+                throw new InvalidOperationException(
+                    "Armed electric mine local state changed.");
+
+            ElectricMineIdleLocomotionTools.ComposeArmedReview(panels);
+            var report = new StringBuilder()
+                .AppendLine("ElectricMine_Armed_Idle natural 2D locomotion review")
+                .AppendLine("passed=True")
+                .AppendLine("naturalPlayback=True")
+                .AppendLine("targetManipulatedByValidation=False")
+                .AppendLine("blendTreeType=FreeformCartesian2D")
+                .AppendLine("secondsPerMotion=1")
+                .AppendLine("cyclesObserved=2")
+                .AppendLine(
+                    "sequence=Idle,WalkForward,WalkBackward,Sidestep,WalkDiagonal,RunForward,Jump")
+                .AppendLine("returnedToIdleAfterJump=True")
+                .AppendLine("minimumObservedCaptureInterval=" + F(minimumInterval))
+                .AppendLine("maximumObservedCaptureInterval=" + F(maximumInterval))
+                .AppendLine("maximumGripDeviationDegrees=" +
+                    F(maximumGripDeviation))
+                .AppendLine("electricMineFollowsRightHand=True")
+                .AppendLine("maximumMineLocalPositionError=" +
+                    F(maximumPropPositionError))
+                .AppendLine("maximumMineLocalRotationErrorDegrees=" +
+                    F(maximumPropRotationError))
+                .AppendLine("maximumMineLocalScaleError=" +
+                    F(maximumPropScaleError));
+            foreach (string observation in Observations)
+                report.AppendLine(observation);
+            ElectricMineIdleLocomotionTools.WriteArmedReviewReport(
+                report.ToString());
+            CleanupRuntime();
+            SessionState.SetInt(StateKey, WaitingForEditMode);
+            EditorApplication.ExitPlaymode();
+        }
+
+        private static void CompleteInEditMode()
+        {
+            string requestId = SessionState.GetString(RequestIdKey, string.Empty);
+            string logPath = SessionState.GetString(LogPathKey, string.Empty);
+            string failure = SessionState.GetString(FailureKey, string.Empty);
+            if (string.IsNullOrEmpty(failure))
+            {
+                ElectricMineIdleLocomotionTools.InspectArmedStructure();
+                DetectorAttachedStaticStartSetupTools.InspectHelmEnterStartView();
+                WriteBridgeLog(logPath,
+                    "Unity editor bridge request completed: " + requestId +
+                    Environment.NewLine + "status=passed" + Environment.NewLine +
+                    "ElectricMine_Armed_Idle natural two-cycle review completed.");
+            }
+            else
+                WriteBridgeLog(logPath,
+                    "Unity editor bridge request completed: " + requestId +
+                    Environment.NewLine + "status=failed" + Environment.NewLine + failure);
+            ClearSession();
+        }
+
+        private static void Fail(Exception exception)
+        {
+            CleanupRuntime();
+            SessionState.SetString(FailureKey, exception.ToString());
+            SessionState.SetInt(StateKey, WaitingForEditMode);
+            Debug.LogWarning(
+                "ElectricMine_Armed_Idle review failed: " + exception.Message);
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                EditorApplication.ExitPlaymode();
+            else
+                CompleteInEditMode();
+        }
+
+        private static void CleanupRuntime()
+        {
+            if (panels != null)
+                foreach (Texture2D panel in panels)
+                    if (panel != null) UnityEngine.Object.DestroyImmediate(panel);
+            initialized = false;
+            target = null;
+            animator = null;
+            panels = null;
+            CaptureTimes.Clear();
+            Observations.Clear();
+        }
+
+        private static void ClearSession()
+        {
+            EditorApplication.update -= Tick;
+            SessionState.EraseBool(PendingKey);
+            SessionState.EraseString(RequestIdKey);
+            SessionState.EraseString(LogPathKey);
+            SessionState.EraseInt(StateKey);
+            SessionState.EraseString(FailureKey);
+        }
+
+        private static void WriteBridgeLog(string path, string value)
+        {
+            string absolute = ElectricMineIdleLocomotionTools.Absolute(path);
+            Directory.CreateDirectory(Path.GetDirectoryName(absolute) ??
+                throw new InvalidOperationException(
+                    "Armed review bridge log folder is unavailable."));
+            File.WriteAllText(absolute, value, new UTF8Encoding(false));
+        }
+
+        private static string F(float value) =>
+            value.ToString("R", CultureInfo.InvariantCulture);
     }
 
     [InitializeOnLoad]

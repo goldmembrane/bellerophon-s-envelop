@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ElectricMine_Armed_Idle 앞·뒷면 중앙부 점멸 아트 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0d1117;
+      --panel: #151b23;
+      --line: #2c3542;
+      --text: #f0f4f8;
+      --muted: #9eaab8;
+      --red: #ff3b3b;
+      --green: #64d39b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #18202a 0, var(--bg) 52rem);
+      color: var(--text);
+      font-family: "Pretendard", "Noto Sans KR", system-ui, sans-serif;
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 56px 0 72px;
+    }
+
+    header, section {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--panel) 94%, transparent);
+      box-shadow: 0 18px 60px rgb(0 0 0 / 24%);
+    }
+
+    header { padding: 30px 32px; }
+    section { margin-top: 22px; padding: 26px 28px; }
+    h1, h2, p { margin-top: 0; }
+    h1 { margin-bottom: 8px; font-size: clamp(1.7rem, 4vw, 2.6rem); }
+    h2 { margin-bottom: 16px; font-size: 1.2rem; }
+    p:last-child { margin-bottom: 0; }
+    .muted { color: var(--muted); }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding: 6px 11px;
+      border: 1px solid #5b4630;
+      border-radius: 999px;
+      background: #2b2117;
+      color: #ffd29d;
+      font-size: .84rem;
+      font-weight: 700;
+    }
+
+    .status::before {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffae55;
+      content: "";
+    }
+
+    figure { margin: 0; }
+    img {
+      display: block;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #d9d9d9;
+    }
+
+    figcaption {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .views {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .view-card {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #10151c;
+    }
+
+    .view-card h3 { margin: 0 0 10px; font-size: 1rem; }
+    .view-card p { margin: 10px 2px 0; }
+
+    .state {
+      padding: 15px 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #10151c;
+    }
+
+    .state strong { display: block; margin-bottom: 4px; }
+    .off strong { color: #c6cfda; }
+    .on strong { color: var(--red); }
+
+    .specs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--line);
+    }
+
+    .spec {
+      padding: 15px 17px;
+      background: #10151c;
+    }
+
+    .spec span { display: block; color: var(--muted); font-size: .8rem; }
+    .spec strong { display: block; margin-top: 3px; }
+
+    .checks {
+      display: grid;
+      gap: 9px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .checks li::before {
+      margin-right: 9px;
+      color: var(--green);
+      content: "✓";
+      font-weight: 800;
+    }
+
+    code { color: #d8e9ff; }
+
+    @media (max-width: 680px) {
+      main { width: min(100% - 24px, 1180px); padding-top: 24px; }
+      header, section { padding: 21px; }
+      figcaption, .specs, .views { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="status">아트 샘플 · Unity 미적용 · 사용자 승인 대기</div>
+      <h1>ElectricMine_Armed_Idle 앞·뒷면 중앙부 점멸</h1>
+      <p class="muted">Unity의 <code>ElectricMine_Armed_Idle</code>에 실제 적용된 모델 앞면과 뒷면을 기준으로, 양면 중앙부가 동시에 점멸하는 1초 주기 샘플입니다.</p>
+    </header>
+
+    <section aria-labelledby="source-title">
+      <h2 id="source-title">Unity 적용 모델 앞면 / 뒷면</h2>
+      <div class="views">
+        <article class="view-card">
+          <h3>앞면 · 점멸 효과 기준면</h3>
+          <a href="ElectricMineArmedIdle_UnityFront.png">
+            <img src="ElectricMineArmedIdle_UnityFront.png" alt="Unity에 실제 적용된 전류 지뢰 모델의 앞면">
+          </a>
+          <p class="muted">중앙 적색 버튼, 적색 외곽 링과 네 개의 기계 결합부가 보이는 면입니다. OFF / ON 비교는 이 앞면을 사용합니다.</p>
+        </article>
+        <article class="view-card">
+          <h3>뒷면 · 수송자 파지 시 노출면</h3>
+          <a href="ElectricMineArmedIdle_UnityBack.png">
+            <img src="ElectricMineArmedIdle_UnityBack.png" alt="Unity에 실제 적용된 전류 지뢰 모델의 뒷면">
+          </a>
+          <p class="muted">어두운 원판과 방사형 날개 구조가 보이는 면입니다. 중앙의 갈색 원형 캡을 뒷면 점멸 부위로 사용합니다.</p>
+        </article>
+      </div>
+      <figure style="margin-top: 16px">
+        <a href="ElectricMineArmedIdle_UnityReference.png">
+          <img src="ElectricMineArmedIdle_UnityReference.png" alt="CargoRunMvp Scene View에서 ElectricMine Armed Idle이 전류 지뢰를 들고 있는 현재 파지 캡처">
+        </a>
+        <p class="muted">현재 <code>CargoRunMvp</code> Scene View의 착용 구도입니다. 수송자 파지에서는 뒷면이 카메라 쪽으로 노출됩니다.</p>
+      </figure>
+    </section>
+
+    <section aria-labelledby="comparison-title">
+      <h2 id="comparison-title">앞면 OFF / ON 직접 비교</h2>
+      <figure>
+        <a href="ElectricMineArmedIdle_ButtonBlink_ArtSample.png">
+          <img src="ElectricMineArmedIdle_ButtonBlink_ArtSample.png" alt="동일한 전류 지뢰의 중앙 버튼 꺼짐 상태와 켜짐 상태를 나란히 비교한 아트 샘플">
+        </a>
+        <figcaption>
+          <div class="state off">
+            <strong>왼쪽 · OFF · 0.5초</strong>
+            중앙 버튼은 일반적인 어두운 적색 금속 재질로 보이며 발광하지 않습니다.
+          </div>
+          <div class="state on">
+            <strong>오른쪽 · ON · 0.5초</strong>
+            중앙 버튼 표면만 선명한 적색으로 발광하며 버튼 바로 인접한 테두리에만 최소 블룸이 생깁니다.
+          </div>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section aria-labelledby="back-comparison-title">
+      <h2 id="back-comparison-title">뒷면 OFF / ON 직접 비교</h2>
+      <figure>
+        <a href="ElectricMineArmedIdle_BackButtonBlink_ArtSample.png">
+          <img src="ElectricMineArmedIdle_BackButtonBlink_ArtSample.png" alt="동일한 전류 지뢰 뒷면의 중앙 원형 캡 꺼짐 상태와 켜짐 상태를 나란히 비교한 아트 샘플">
+        </a>
+        <figcaption>
+          <div class="state off">
+            <strong>왼쪽 · OFF · 0.5초</strong>
+            뒷면 중앙 원형 캡은 기존의 갈색 금속 재질로 보이며 발광하지 않습니다.
+          </div>
+          <div class="state on">
+            <strong>오른쪽 · ON · 0.5초</strong>
+            뒷면 중앙 원형 캡만 선명한 적색으로 발광하며 캡 바로 인접한 테두리에만 최소 블룸이 생깁니다.
+          </div>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section aria-labelledby="spec-title">
+      <h2 id="spec-title">적용 명세</h2>
+      <div class="specs">
+        <div class="spec"><span>대상</span><strong><code>ElectricMine_Armed_Idle</code></strong></div>
+        <div class="spec"><span>효과 부위</span><strong>앞면 중앙 빨간 버튼 + 뒷면 중앙 원형 캡</strong></div>
+        <div class="spec"><span>점멸 주기</span><strong>양면 동시 ON 0.5초 → OFF 0.5초 → 반복</strong></div>
+        <div class="spec"><span>발광 방식</span><strong>적색 Emission + 버튼 국소 블룸</strong></div>
+        <div class="spec"><span>주변 조명</span><strong>없음 — Point/Spot Light 미사용</strong></div>
+        <div class="spec"><span>Unity 적용 상태</span><strong>미적용 — 샘플 승인 후 별도 작업</strong></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="criteria-title">
+      <h2 id="criteria-title">고정 조건</h2>
+      <ul class="checks">
+        <li>앞면·뒷면 각 비교에서 좌우 모델의 형상, 배치, 카메라, 재질, 배경은 동일합니다.</li>
+        <li>앞면 중앙 버튼과 뒷면 중앙 원형 캡 이외의 본체, 기계 홈, 방사형 핀과 배경에는 적색 빛이 번지지 않습니다.</li>
+        <li>앞면과 뒷면의 점등·소등 시점은 서로 정확히 일치합니다.</li>
+        <li>전기 아크, 스파크, 연기, 입자, 빔, 경고 아이콘과 추가 조명은 포함하지 않습니다.</li>
+        <li>기존 전류 지뢰 모델 디자인은 변경하지 않습니다.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="provenance-title">
+      <h2 id="provenance-title">제작 정보</h2>
+      <p>제작 방식: <code>ElectricMine_Armed_Idle</code>의 실제 적용 모델과 현재 할당된 머티리얼을 저장하지 않는 Unity Preview Scene에 복제해 앞면과 뒷면을 직접 렌더링했습니다. 각 면의 실제 Unity 렌더를 편집 원본으로 지정해 내장 이미지 생성 도구의 정밀 오브젝트 편집 방식으로 점멸 비교를 제작했습니다.</p>
+      <p>편집 범위: 각 비교의 좌우에 같은 Unity 기준 이미지를 배치했습니다. 앞면은 오른쪽 패널의 기존 중앙 적색 버튼에만, 뒷면은 오른쪽 패널의 기존 중앙 원형 캡에만 적색 발광과 국소 블룸을 추가했습니다. 두 부위는 같은 ON 0.5초 / OFF 0.5초 타이밍으로 동시에 점멸합니다.</p>
+      <p class="muted">이 문서는 시각 승인용 샘플이며, Unity 에셋·머티리얼·씬에는 아직 반영하지 않았습니다.</p>
+    </section>
+  </main>
+</body>
+</html>

@@ -28,57 +28,6 @@ namespace Bellerophon.Editor.Validation
         private const string ScreenMaterialPath = SettingsDirectory + "/Phase20ScreenMaterial.mat";
         private const string GlassFrameMaterialPath = SettingsDirectory + "/Phase20GlassFrameMaterial.mat";
 
-        [MenuItem("Bellerophon/Bootstrap/Ensure Phase 20 Presentation Polish")]
-        public static void EnsurePhase20Assets()
-        {
-            Phase16HudMapAtmosphereBootstrap.EnsurePhase16Assets();
-
-            var scene = EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
-            DeleteGeneratedObject(Phase20RootName);
-
-            var planetController = UnityEngine.Object.FindFirstObjectByType<PlanetStayController>();
-            var settlementController = UnityEngine.Object.FindFirstObjectByType<TransportSettlementController>();
-            var audioHooks = UnityEngine.Object.FindFirstObjectByType<ShipSignalAudioHooks>();
-            if (planetController == null || settlementController == null || audioHooks == null)
-            {
-                throw new InvalidOperationException("Phase 20 requires Phase 16 scene assets plus planet stay, settlement, and audio hook controllers.");
-            }
-
-            if (settlementController.PlanetStayController != planetController)
-            {
-                settlementController.ConfigurePlanetContinuation(
-                    planetController,
-                    settlementController.ContinueToMaintenanceButton);
-            }
-
-            var root = new GameObject(Phase20RootName);
-            var accentMaterial = EnsureMaterial(AccentMaterialPath, new Color(0.12f, 0.5f, 0.42f, 1f));
-            var warningMaterial = EnsureMaterial(WarningMaterialPath, new Color(0.75f, 0.12f, 0.08f, 1f));
-            var screenMaterial = EnsureMaterial(ScreenMaterialPath, new Color(0.04f, 0.34f, 0.28f, 1f));
-            var glassFrameMaterial = EnsureMaterial(GlassFrameMaterialPath, new Color(0.18f, 0.36f, 0.42f, 1f));
-
-            CreateCockpitGlassFrame(root.transform, glassFrameMaterial);
-            CreateEngineDonutRing(root.transform, accentMaterial);
-            CreateControlScreenAccents(root.transform, screenMaterial);
-            CreateArmoryTurretAccent(root.transform, accentMaterial);
-            CreateSupplyEjectionWarning(root.transform, warningMaterial);
-            CreateCargoHoldStraps(root.transform, warningMaterial);
-            CreateCorridorBeacons(root.transform, accentMaterial);
-
-            EditorSceneManager.MarkSceneDirty(scene);
-            EditorSceneManager.SaveScene(scene, CargoRunScenePath);
-            Phase20PresentationEditorValidation.Run();
-
-            if (!Application.isBatchMode)
-            {
-                EditorSceneManager.OpenScene(CargoRunScenePath, OpenSceneMode.Single);
-            }
-
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-            Debug.Log("Phase 20 presentation polish assets are ready.");
-        }
-
         private static void CreateCockpitGlassFrame(Transform parent, Material material)
         {
             var root = new GameObject(CockpitGlassFrameName);

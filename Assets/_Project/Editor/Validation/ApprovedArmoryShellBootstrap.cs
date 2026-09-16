@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -1178,6 +1179,47 @@ namespace Bellerophon.Editor.Validation
                 states.Count.ToString(CultureInfo.InvariantCulture) +
                 "; Output=" +
                 CurrentStateUnityPath);
+        }
+
+        public static void InspectCurrentEditorObjectsAgainstSnapshot()
+        {
+            var scene = RequireCargoRunMvpActiveScene();
+            var root = RequireObject(RootName);
+            var current = CaptureCurrentTransformStates(root.transform);
+            var saved = ApprovedArmoryShellCurrentState.Transforms;
+            if (current.Count != saved.Length)
+            {
+                throw new InvalidOperationException(
+                    "Weapon-room hierarchy count differs from the captured state. Current=" +
+                    current.Count.ToString(CultureInfo.InvariantCulture) +
+                    "; Saved=" + saved.Length.ToString(CultureInfo.InvariantCulture));
+            }
+
+            for (var i = 0; i < current.Count; i++)
+            {
+                var actual = current[i];
+                var expected = saved[i];
+                if (!string.Equals(actual.Name, expected.Name, StringComparison.Ordinal) ||
+                    actual.ActiveSelf != expected.ActiveSelf ||
+                    !actual.SiblingPath.SequenceEqual(expected.SiblingPath) ||
+                    actual.LocalPosition != expected.LocalPosition ||
+                    actual.LocalRotation != expected.LocalRotation ||
+                    actual.LocalScale != expected.LocalScale)
+                {
+                    throw new InvalidOperationException(
+                        "Weapon-room captured state differs at index " +
+                        i.ToString(CultureInfo.InvariantCulture) +
+                        ". Current=" + actual.Name +
+                        "; Saved=" + expected.Name);
+                }
+            }
+
+            Debug.Log(
+                "Weapon-room current-state reflection inspected without modifying the scene. Root=" +
+                RootName +
+                "; TransformCount=" + current.Count.ToString(CultureInfo.InvariantCulture) +
+                "; HierarchyExact=True; ActiveSelfExact=True; LocalPositionExact=True; " +
+                "LocalRotationExact=True; LocalScaleExact=True; VerificationTargetManipulated=False");
         }
 
         [MenuItem("Bellerophon/Bootstrap/Restore Approved Armory 01 Current State")]

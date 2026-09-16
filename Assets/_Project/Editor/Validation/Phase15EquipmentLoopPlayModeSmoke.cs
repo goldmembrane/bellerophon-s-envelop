@@ -193,8 +193,7 @@ namespace Bellerophon.Editor.Validation
                 return;
             }
 
-            Phase20PresentationBootstrap.EnsurePhase20Assets();
-            request.Details = AppendDetails(request.Details, "Scene=Phase20Restored");
+            request.Details = AppendDetails(request.Details, "Scene=CurrentStatePreserved");
             WriteLog(request, false, null);
             TryDelete(ActivePath);
             TryDelete(ErrorsPath);

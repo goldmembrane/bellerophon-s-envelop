@@ -1,6 +1,5 @@
 param(
   [switch]$Restart,
-  [switch]$ValidateCargoRunScene,
   [int]$TimeoutSeconds = 120
 )
 
@@ -13,6 +12,45 @@ $cargoRunScenePath = Join-Path $projectRoot "Assets\_Project\Scenes\CargoRunMvp.
 $lockPath = Join-Path $projectRoot "Temp\UnityLockfile"
 $sceneOpenLogPath = Join-Path $projectRoot "Logs\OpenCargoRunMvpScene.log"
 $openedNewEditor = $false
+$expectedCargoRunSceneLength = 17560585
+$expectedCargoRunSceneHash = "F12B48063DACAC62E7512EC3E73A1836A9E4D80E985EF121E0A3F4BF85475B64"
+$requiredCargoRunSceneMarkers = @(
+  "value: Lightsaber_Off_Idle",
+  "value: Lightsaber_DiagonalSlash",
+  "value: Lightsaber_Grip_OneHand",
+  "value: Lightsaber_ThrustMode_Enter",
+  "value: Lightsaber_ThrustMode_Exit",
+  "value: Detector_Attached_Static",
+  "value: PresenceDetector_Attached",
+  "value: ElectricMine_Idle",
+  "value: ElectricMine_Activate",
+  "value: ElectricMine_Armed_Idle"
+)
+
+function Assert-CurrentCargoRunScene {
+  $resolvedScenePath = (Resolve-Path -LiteralPath $cargoRunScenePath).Path
+  $expectedScenePath = [IO.Path]::GetFullPath((Join-Path $projectRoot "Assets\_Project\Scenes\CargoRunMvp.unity"))
+  if (-not $resolvedScenePath.Equals($expectedScenePath, [StringComparison]::OrdinalIgnoreCase)) {
+    throw "CargoRunMvp resolved outside the protected current scene path. Expected=$expectedScenePath; Actual=$resolvedScenePath"
+  }
+
+  $sceneInfo = Get-Item -LiteralPath $resolvedScenePath
+  if ($sceneInfo.Length -ne $expectedCargoRunSceneLength) {
+    throw "CargoRunMvp is not the protected current scene. Length mismatch. Expected=$expectedCargoRunSceneLength; Actual=$($sceneInfo.Length)"
+  }
+
+  $actualHash = (Get-FileHash -LiteralPath $resolvedScenePath -Algorithm SHA256).Hash
+  if (-not $actualHash.Equals($expectedCargoRunSceneHash, [StringComparison]::OrdinalIgnoreCase)) {
+    throw "CargoRunMvp is not the protected current scene. SHA-256 mismatch. Expected=$expectedCargoRunSceneHash; Actual=$actualHash"
+  }
+
+  $sceneText = [IO.File]::ReadAllText($resolvedScenePath, [Text.Encoding]::UTF8)
+  foreach ($marker in $requiredCargoRunSceneMarkers) {
+    if ($sceneText.IndexOf($marker, [StringComparison]::Ordinal) -lt 0) {
+      throw "CargoRunMvp is missing a protected current-work marker: $marker"
+    }
+  }
+}
 
 if (-not (Test-Path -LiteralPath $projectVersionPath)) {
   throw "ProjectSettings\ProjectVersion.txt was not found. Refusing to open Unity outside the project root: $projectRoot"
@@ -21,6 +59,8 @@ if (-not (Test-Path -LiteralPath $projectVersionPath)) {
 if (-not (Test-Path -LiteralPath $cargoRunScenePath)) {
   throw "CargoRunMvp scene was not found. Refusing to open an incomplete Unity project: $cargoRunScenePath"
 }
+
+Assert-CurrentCargoRunScene
 
 $unity = & (Join-Path $PSScriptRoot "unity-path.ps1")
 $unityEditorDir = Split-Path -Parent $unity
@@ -117,6 +157,4 @@ if ($sceneOpenExitCode -ne 0 -or
   throw "Unity editor opened the project, but failed to open CargoRunMvp scene. See $sceneOpenLogPath"
 }
 
-if ($ValidateCargoRunScene) {
-  & (Join-Path $PSScriptRoot "Run-PostDetailedStage2ShipInteriorSmoke.ps1")
-}
+Assert-CurrentCargoRunScene

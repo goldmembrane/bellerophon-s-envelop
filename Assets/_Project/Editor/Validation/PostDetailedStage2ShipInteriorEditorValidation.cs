@@ -18,7 +18,6 @@ namespace Bellerophon.Editor.Validation
 
         public static void Run()
         {
-            Phase20PresentationBootstrap.EnsurePhase20Assets();
             Phase20PresentationEditorValidation.Run();
 
             for (var i = 0; i < RequiredRooms.Length; i++)

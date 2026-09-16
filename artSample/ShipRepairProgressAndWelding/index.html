@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShipRepair 진행 바 · 용접 이펙트 아트 샘플</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --panel: #101b26;
+      --panel-soft: #0b151f;
+      --line: #284052;
+      --text: #edf9ff;
+      --muted: #9db2c0;
+      --cyan: #35d8f2;
+      --orange: #ffad45;
+      --green: #63d89a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #123047 0, var(--bg) 48rem);
+      color: var(--text);
+      font-family: "Pretendard", "Noto Sans KR", system-ui, sans-serif;
+      line-height: 1.65;
+    }
+    main { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 54px 0 72px; }
+    header, section {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--panel) 95%, transparent);
+      box-shadow: 0 18px 55px rgb(0 0 0 / 28%);
+    }
+    header { padding: 30px 32px; }
+    section { margin-top: 22px; padding: 26px 28px; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 8px; font-size: clamp(1.7rem, 4vw, 2.6rem); }
+    h2 { margin-bottom: 16px; font-size: 1.25rem; }
+    h3 { margin-bottom: 9px; font-size: 1rem; }
+    p:last-child { margin-bottom: 0; }
+    .muted { color: var(--muted); }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding: 6px 11px;
+      border: 1px solid #645037;
+      border-radius: 999px;
+      background: #2b2117;
+      color: #ffd29d;
+      font-size: .84rem;
+      font-weight: 700;
+    }
+    .status::before { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); content: ""; }
+    figure { margin: 0; }
+    img {
+      display: block;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #000;
+    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .card { padding: 15px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel-soft); }
+    .card p { margin: 11px 2px 0; }
+    .specs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--line);
+    }
+    .spec { padding: 15px 17px; background: var(--panel-soft); }
+    .spec span { display: block; color: var(--muted); font-size: .8rem; }
+    .spec strong { display: block; margin-top: 3px; }
+    .checks { display: grid; gap: 9px; padding: 0; list-style: none; }
+    .checks li::before { margin-right: 9px; color: var(--green); content: "✓"; font-weight: 800; }
+    code { color: #c7efff; }
+    .cyan { color: var(--cyan); }
+    .orange { color: var(--orange); }
+    @media (max-width: 760px) {
+      main { width: min(100% - 24px, 1180px); padding-top: 24px; }
+      header, section { padding: 21px; }
+      .grid, .specs { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="status">아트 샘플 · Unity 미적용 · 사용자 승인 대기</div>
+      <h1>ShipRepair 진행 바 · 용접 이펙트</h1>
+      <p class="muted"><code>ShipRepair</code>와 <code>SabotageRepair</code>의 수리 진행 표시, 그리고 <code>ShipRepair</code> 앞 작업점의 용접 연출을 현재 Unity 수송자 모델 기준으로 정리한 시각 승인용 샘플입니다.</p>
+    </header>
+
+    <section aria-labelledby="source-title">
+      <h2 id="source-title">현재 Unity 기준</h2>
+      <figure>
+        <a href="UnityReference_Paired.png"><img src="UnityReference_Paired.png" alt="현재 Unity의 ShipRepair와 SabotageRepair 수송자 기준 이미지"></a>
+        <p class="muted">왼쪽은 <code>ShipRepair</code>, 오른쪽은 <code>SabotageRepair</code>입니다. 두 모델의 형상·자세·크기와 검은 배경은 후속 샘플의 불변 기준입니다.</p>
+      </figure>
+    </section>
+
+    <section aria-labelledby="progress-title">
+      <h2 id="progress-title">진행 바 · 두 개체 각각 50%</h2>
+      <figure>
+        <a href="ProgressBars_50Percent_ArtSample.png"><img src="ProgressBars_50Percent_ArtSample.png" alt="ShipRepair와 SabotageRepair 머리 위에 각각 50퍼센트 진행 바가 표시된 샘플"></a>
+      </figure>
+      <div class="specs" style="margin-top:16px">
+        <div class="spec"><span>표시 대상</span><strong><code>ShipRepair</code>, <code>SabotageRepair</code> 개별 표시</strong></div>
+        <div class="spec"><span>앵커</span><strong>각 개체 머리 중심 위쪽 · 월드 공간 추종</strong></div>
+        <div class="spec"><span>샘플 진행값</span><strong>내부 206px 중 103px · 정확히 50%</strong></div>
+        <div class="spec"><span>시각 구조</span><strong>어두운 반투명 트랙 + 청록색 채움 + 밝은 중앙 눈금</strong></div>
+        <div class="spec"><span>제안 표시 조건</span><strong>해당 수리 상호작용 진행 중 표시</strong></div>
+        <div class="spec"><span>제안 숨김 조건</span><strong>완료·취소·상호작용 종료 시 숨김</strong></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="welding-title">
+      <h2 id="welding-title">ShipRepair 앞 작업점 · 용접 이펙트</h2>
+      <figure>
+        <a href="ShipRepair_WeldingVFX_Comparison.png"><img src="ShipRepair_WeldingVFX_Comparison.png" alt="왼쪽 Unity 원본과 오른쪽 ShipRepair 용접 이펙트 적용 샘플 비교"></a>
+      </figure>
+      <div class="grid" style="margin-top:16px">
+        <article class="card">
+          <h3>전체 배치</h3>
+          <a href="ShipRepair_WeldingVFX_ArtSample.png"><img src="ShipRepair_WeldingVFX_ArtSample.png" alt="ShipRepair 앞 작업점에서 용접 효과가 발생하는 전체 샘플"></a>
+          <p class="muted">효과 중심은 양손 사이의 몸통 앞 작업점에 있으며 캐릭터 실루엣을 크게 가리지 않습니다.</p>
+        </article>
+        <article class="card">
+          <h3>작업점 확대</h3>
+          <a href="ShipRepair_WeldingVFX_Detail.png"><img src="ShipRepair_WeldingVFX_Detail.png" alt="청백색 용접 아크와 주황색 스파크 확대"></a>
+          <p><span class="cyan">청백색 중심 아크</span>와 얇은 청색 전기광, <span class="orange">주황색 하강 스파크</span>, 중심 근처의 짧고 옅은 연기만 사용합니다.</p>
+        </article>
+      </div>
+      <div class="specs" style="margin-top:16px">
+        <div class="spec"><span>적용 대상</span><strong><code>ShipRepair</code>만</strong></div>
+        <div class="spec"><span>발생 위치</span><strong>수송자 양손 앞 수리 작업점</strong></div>
+        <div class="spec"><span>핵심 색상</span><strong>청백색 아크 + 청색 외곽광 + 주황색 불꽃</strong></div>
+        <div class="spec"><span>입자 방향</span><strong>아래쪽 중심 · 좌우로 소폭 확산</strong></div>
+        <div class="spec"><span>제안 재생 조건</span><strong>수리 진행 중 연속 재생</strong></div>
+        <div class="spec"><span>Unity 적용 상태</span><strong>미적용 · 샘플 승인 후 별도 작업</strong></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="fixed-title">
+      <h2 id="fixed-title">고정 조건</h2>
+      <ul class="checks">
+        <li>진행 바는 두 개체에 개별로 생성하며 각각 자신의 머리 위치를 추종합니다.</li>
+        <li>진행값은 개체별 실제 수리 진행률을 사용하며 샘플은 두 개체 모두 50%입니다.</li>
+        <li>용접 이펙트는 <code>ShipRepair</code>의 앞 작업점에만 표시하고 <code>SabotageRepair</code>에는 적용하지 않습니다.</li>
+        <li>수송자 모델, 리깅, 애니메이션, 메시, 머티리얼과 자세는 변경하지 않습니다.</li>
+        <li>대형 폭발, 화염구, 과도한 연기, 화면 전체 플래시와 추가 장비는 포함하지 않습니다.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="provenance-title">
+      <h2 id="provenance-title">제작 및 적용 경계</h2>
+      <p>진행 바는 현재 Unity 검증 이미지에서 <code>ShipRepair</code>와 <code>SabotageRepair</code>를 같은 크기로 분리한 뒤, 50% 수치를 픽셀 단위로 고정해 합성했습니다.</p>
+      <p>용접 이펙트는 내장 이미지 생성 도구로 투명 배경 VFX 레이어만 생성하고, 이를 원본 <code>ShipRepair</code> Unity 이미지 위에 별도로 합성했습니다. 따라서 최종 샘플의 수송자 픽셀과 자세는 원본과 동일하며 생성된 부분은 용접 광원·스파크·연기 레이어뿐입니다.</p>
+      <p class="muted">이 폴더는 시각 승인용 아트 샘플입니다. Unity 씬·프리팹·런타임 UI·VFX 자산에는 아직 연결하지 않았습니다.</p>
+    </section>
+  </main>
+</body>
+</html>

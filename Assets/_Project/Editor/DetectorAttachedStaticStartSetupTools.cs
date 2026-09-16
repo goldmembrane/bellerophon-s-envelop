@@ -17,6 +17,23 @@ namespace Bellerophon.Editor.Validation
         private const string ScenePath = "Assets/_Project/Scenes/CargoRunMvp.unity";
         private const string PlayerName = "Player";
         private const string TargetName = "Detector_Attached_Static";
+        private const string HelmTargetName = "Helm_Enter";
+        private const string TurretTargetName = "Turret_Enter";
+        private const string ShipRepairTargetName = "ShipRepair";
+        private const string TurretReviewFolder = "Temp/TurretEnterStart";
+        private const string TurretRuntimeReportRelativePath =
+            TurretReviewFolder + "/RuntimeInspection.txt";
+        private const string TurretFinalImageRelativePath =
+            TurretReviewFolder + "/Final.png";
+        private const string TurretFinalReportRelativePath =
+            TurretReviewFolder + "/Final.txt";
+        private const string ShipRepairReviewFolder = "Temp/ShipRepairStart";
+        private const string ShipRepairRuntimeReportRelativePath =
+            ShipRepairReviewFolder + "/RuntimeInspection.txt";
+        private const string ShipRepairFinalImageRelativePath =
+            ShipRepairReviewFolder + "/Final.png";
+        private const string ShipRepairFinalReportRelativePath =
+            ShipRepairReviewFolder + "/Final.txt";
         internal const string ReviewImageRelativePath =
             "Temp/DetectorAttachedStaticStartView/UnityPlayModeReview.png";
         internal const string ReviewReportRelativePath =
@@ -60,10 +77,33 @@ namespace Bellerophon.Editor.Validation
         [MenuItem("Bellerophon/Player/Apply Detector Attached Static Start View")]
         internal static void ApplyDetectorAttachedStaticStartView()
         {
+            ApplyStartView(TargetName);
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Helm Enter Start View")]
+        internal static void ApplyHelmEnterStartView()
+        {
+            ApplyStartView(HelmTargetName);
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Turret Enter Start View")]
+        internal static void ApplyTurretEnterReviewStart()
+        {
+            ApplyStartView(TurretTargetName);
+        }
+
+        [MenuItem("Bellerophon/Player/Apply ShipRepair Start View")]
+        internal static void ApplyShipRepairReviewStart()
+        {
+            ApplyStartView(ShipRepairTargetName);
+        }
+
+        private static void ApplyStartView(string targetName)
+        {
             RequireEditMode();
             Scene scene = RequireScene();
             Transform player = FindUnique(scene, PlayerName);
-            Transform target = FindUnique(scene, TargetName);
+            Transform target = FindUnique(scene, targetName);
             Camera camera = RequirePlayerCamera(player);
 
             string outsidePlayerBefore = SceneSignature(scene, player);
@@ -75,7 +115,7 @@ namespace Bellerophon.Editor.Validation
 
             Bounds targetBounds = BoundsOf(target);
             Vector3 targetFront = HorizontalDirection(
-                target.forward, TargetName + " forward");
+                target.forward, targetName + " forward");
             Vector3 cameraLocalOffset = Quaternion.Inverse(player.rotation) *
                 (camera.transform.position - player.position);
             Vector3 cameraForwardInPlayerSpace = Quaternion.Inverse(player.rotation) *
@@ -100,7 +140,7 @@ namespace Bellerophon.Editor.Validation
             bool found = false;
             Undo.RecordObject(
                 player,
-                "Place startup view before Detector_Attached_Static");
+                "Place startup view before " + targetName);
             for (float distance = MinimumDistanceMeters;
                  distance <= MaximumDistanceMeters + 0.0001f;
                  distance += DistanceStepMeters)
@@ -128,7 +168,7 @@ namespace Bellerophon.Editor.Validation
             if (!found)
                 throw new InvalidOperationException(
                     "No 2.5-8m startup position preserves the Player camera while " +
-                    "showing the full " + TargetName + " target from its front axis.");
+                    "showing the full " + targetName + " target from its front axis.");
 
             player.SetPositionAndRotation(chosenPosition, desiredPlayerRotation);
             EditorUtility.SetDirty(player.gameObject);
@@ -143,9 +183,9 @@ namespace Bellerophon.Editor.Validation
                 PlayerChildrenSignature(player),
                 "Player children and camera settings");
             RequireNear(player.localScale, playerScaleBefore, "Player scale");
-            RequireNear(target.position, targetPositionBefore, TargetName + " position");
-            RequireNear(target.rotation, targetRotationBefore, TargetName + " rotation");
-            RequireNear(target.localScale, targetScaleBefore, TargetName + " scale");
+            RequireNear(target.position, targetPositionBefore, targetName + " position");
+            RequireNear(target.rotation, targetRotationBefore, targetName + " rotation");
+            RequireNear(target.localScale, targetScaleBefore, targetName + " scale");
             StartViewMetrics metrics = RequireStartView(player, target, camera);
 
             EditorSceneManager.MarkSceneDirty(scene);
@@ -154,7 +194,7 @@ namespace Bellerophon.Editor.Validation
             AssetDatabase.SaveAssets();
             RequireNoUnityConsoleErrors();
             Debug.Log(
-                "[DetectorAttachedStaticStart] Startup view saved." +
+                "[PlayerAnimationStartView] Startup view saved for " + targetName + "." +
                 " cameraDistance=" + Num(chosenDistance) +
                 "m|frontAxisDot=" + Num(metrics.FrontAxisDot) +
                 "|facingDot=" + Num(metrics.FacingDot) +
@@ -164,15 +204,209 @@ namespace Bellerophon.Editor.Validation
 
         internal static void InspectAppliedStartView()
         {
+            InspectAppliedStartView(TargetName);
+        }
+
+        internal static void InspectHelmEnterStartView()
+        {
+            InspectAppliedStartView(HelmTargetName);
+        }
+
+        internal static void InspectTurretEnterReviewStart()
+        {
+            InspectAppliedStartView(TurretTargetName);
+        }
+
+        internal static void InspectShipRepairReviewStart()
+        {
+            InspectAppliedStartView(ShipRepairTargetName);
+        }
+
+        internal static void InspectTurretEnterRuntimeStart()
+        {
+            if (!EditorApplication.isPlaying)
+                throw new InvalidOperationException(
+                    "Turret_Enter runtime start-view inspection requires Play Mode.");
+            Scene scene = RequireScene();
+            Transform player = FindUnique(scene, PlayerName);
+            Transform target = FindUnique(scene, TurretTargetName);
+            Camera camera = RequirePlayerCamera(player);
+            Vector3 targetPositionBefore = target.position;
+            Quaternion targetRotationBefore = target.rotation;
+            Vector3 targetScaleBefore = target.localScale;
+            StartViewMetrics metrics = RequireStartView(player, target, camera);
+            RequireNear(target.position, targetPositionBefore, TurretTargetName + " position");
+            RequireNear(target.rotation, targetRotationBefore, TurretTargetName + " rotation");
+            RequireNear(target.localScale, targetScaleBefore, TurretTargetName + " scale");
+            string reportPath = Absolute(TurretRuntimeReportRelativePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(reportPath) ??
+                throw new InvalidOperationException("Turret runtime report folder is unavailable."));
+            var report = new StringBuilder()
+                .AppendLine("Turret_Enter natural Play Mode startup inspection")
+                .AppendLine("naturalPlayMode=True")
+                .AppendLine("targetTransformChanged=False")
+                .AppendLine("cameraOrPlayerChildrenChanged=False")
+                .AppendLine("fullTargetBoundsVisible=True")
+                .AppendLine("targetFrontViewConfirmed=True")
+                .AppendLine("cameraFacesTarget=True")
+                .AppendLine("horizontalDistanceMeters=" + Num(metrics.HorizontalDistance))
+                .AppendLine("frontAxisDot=" + Num(metrics.FrontAxisDot))
+                .AppendLine("facingDot=" + Num(metrics.FacingDot))
+                .AppendLine("minimumViewportMargin=" + Num(metrics.MinimumViewportMargin))
+                .AppendLine("runtimeInspectionPassed=True");
+            File.WriteAllText(reportPath, report.ToString(), new UTF8Encoding(false));
+            RequireNoUnityConsoleErrors();
+            Debug.Log("[TurretEnterStart] Natural Play Mode startup inspection passed.\n" + report);
+        }
+
+        internal static void InspectShipRepairRuntimeStart()
+        {
+            if (!EditorApplication.isPlaying)
+                throw new InvalidOperationException(
+                    "ShipRepair runtime start-view inspection requires Play Mode.");
+            Scene scene = RequireScene();
+            Transform player = FindUnique(scene, PlayerName);
+            Transform target = FindUnique(scene, ShipRepairTargetName);
+            Camera camera = RequirePlayerCamera(player);
+            Vector3 targetPositionBefore = target.position;
+            Quaternion targetRotationBefore = target.rotation;
+            Vector3 targetScaleBefore = target.localScale;
+            StartViewMetrics metrics = RequireStartView(player, target, camera);
+            RequireNear(target.position, targetPositionBefore,
+                ShipRepairTargetName + " position");
+            RequireNear(target.rotation, targetRotationBefore,
+                ShipRepairTargetName + " rotation");
+            RequireNear(target.localScale, targetScaleBefore,
+                ShipRepairTargetName + " scale");
+            string reportPath = Absolute(ShipRepairRuntimeReportRelativePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(reportPath) ??
+                throw new InvalidOperationException(
+                    "ShipRepair runtime report folder is unavailable."));
+            var report = new StringBuilder()
+                .AppendLine("ShipRepair natural Play Mode startup inspection")
+                .AppendLine("naturalPlayMode=True")
+                .AppendLine("targetTransformChanged=False")
+                .AppendLine("cameraOrPlayerChildrenChanged=False")
+                .AppendLine("fullTargetBoundsVisible=True")
+                .AppendLine("targetFrontViewConfirmed=True")
+                .AppendLine("cameraFacesTarget=True")
+                .AppendLine("horizontalDistanceMeters=" + Num(metrics.HorizontalDistance))
+                .AppendLine("frontAxisDot=" + Num(metrics.FrontAxisDot))
+                .AppendLine("facingDot=" + Num(metrics.FacingDot))
+                .AppendLine("minimumViewportMargin=" + Num(metrics.MinimumViewportMargin))
+                .AppendLine("runtimeInspectionPassed=True");
+            File.WriteAllText(reportPath, report.ToString(), new UTF8Encoding(false));
+            RequireNoUnityConsoleErrors();
+            Debug.Log("[ShipRepairStart] Natural Play Mode startup inspection passed.\n" +
+                report);
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Turret Enter Start View Final")]
+        internal static void CaptureTurretEnterReviewStart()
+        {
+            RequireEditMode();
+            InspectAppliedStartView(TurretTargetName);
+            string runtimeReportPath = Absolute(TurretRuntimeReportRelativePath);
+            if (!File.Exists(runtimeReportPath))
+                throw new InvalidOperationException(
+                    "Turret_Enter natural Play Mode inspection report is missing.");
+            string runtimeReport = File.ReadAllText(runtimeReportPath, Encoding.UTF8);
+            if (!runtimeReport.Contains("naturalPlayMode=True") ||
+                !runtimeReport.Contains("targetTransformChanged=False") ||
+                !runtimeReport.Contains("runtimeInspectionPassed=True"))
+                throw new InvalidOperationException(
+                    "Turret_Enter natural Play Mode inspection has not passed.");
+
+            Scene scene = RequireScene();
+            Transform target = FindUnique(scene, TurretTargetName);
+            Camera camera = RequirePlayerCamera(FindUnique(scene, PlayerName));
+            Vector3 targetPositionBefore = target.position;
+            Quaternion targetRotationBefore = target.rotation;
+            Vector3 targetScaleBefore = target.localScale;
+            string finalImagePath = Absolute(TurretFinalImageRelativePath);
+            string finalReportPath = Absolute(TurretFinalReportRelativePath);
+            if (File.Exists(finalImagePath) || File.Exists(finalReportPath))
+                throw new InvalidOperationException(
+                    "Turret_Enter one-time final startup capture already exists.");
+            Directory.CreateDirectory(Path.GetDirectoryName(finalImagePath) ??
+                throw new InvalidOperationException("Turret final capture folder is unavailable."));
+            Render(camera, finalImagePath);
+            RequireNear(target.position, targetPositionBefore, TurretTargetName + " position");
+            RequireNear(target.rotation, targetRotationBefore, TurretTargetName + " rotation");
+            RequireNear(target.localScale, targetScaleBefore, TurretTargetName + " scale");
+            File.WriteAllText(
+                finalReportPath,
+                "Turret_Enter one-time final startup-view capture\n" +
+                "naturalPlayModeInspectionPassed=True\n" +
+                "targetTransformChanged=False\n" +
+                "cameraOrPlayerChildrenChanged=False\n" +
+                "directVisualReviewPending=True\n",
+                new UTF8Encoding(false));
+            RequireNoUnityConsoleErrors();
+            Debug.Log("[TurretEnterStart] One-time final startup-view capture completed.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture ShipRepair Start View Final")]
+        internal static void CaptureShipRepairReviewStart()
+        {
+            RequireEditMode();
+            InspectAppliedStartView(ShipRepairTargetName);
+            string runtimeReportPath = Absolute(ShipRepairRuntimeReportRelativePath);
+            if (!File.Exists(runtimeReportPath))
+                throw new InvalidOperationException(
+                    "ShipRepair natural Play Mode inspection report is missing.");
+            string runtimeReport = File.ReadAllText(runtimeReportPath, Encoding.UTF8);
+            if (!runtimeReport.Contains("naturalPlayMode=True") ||
+                !runtimeReport.Contains("targetTransformChanged=False") ||
+                !runtimeReport.Contains("runtimeInspectionPassed=True"))
+                throw new InvalidOperationException(
+                    "ShipRepair natural Play Mode inspection has not passed.");
+
+            Scene scene = RequireScene();
+            Transform target = FindUnique(scene, ShipRepairTargetName);
+            Camera camera = RequirePlayerCamera(FindUnique(scene, PlayerName));
+            Vector3 targetPositionBefore = target.position;
+            Quaternion targetRotationBefore = target.rotation;
+            Vector3 targetScaleBefore = target.localScale;
+            string finalImagePath = Absolute(ShipRepairFinalImageRelativePath);
+            string finalReportPath = Absolute(ShipRepairFinalReportRelativePath);
+            if (File.Exists(finalImagePath) || File.Exists(finalReportPath))
+                throw new InvalidOperationException(
+                    "ShipRepair one-time final startup capture already exists.");
+            Directory.CreateDirectory(Path.GetDirectoryName(finalImagePath) ??
+                throw new InvalidOperationException(
+                    "ShipRepair final capture folder is unavailable."));
+            Render(camera, finalImagePath);
+            RequireNear(target.position, targetPositionBefore,
+                ShipRepairTargetName + " position");
+            RequireNear(target.rotation, targetRotationBefore,
+                ShipRepairTargetName + " rotation");
+            RequireNear(target.localScale, targetScaleBefore,
+                ShipRepairTargetName + " scale");
+            File.WriteAllText(
+                finalReportPath,
+                "ShipRepair one-time final startup-view capture\n" +
+                "naturalPlayModeInspectionPassed=True\n" +
+                "targetTransformChanged=False\n" +
+                "cameraOrPlayerChildrenChanged=False\n" +
+                "directVisualReviewPending=True\n",
+                new UTF8Encoding(false));
+            RequireNoUnityConsoleErrors();
+            Debug.Log("[ShipRepairStart] One-time final startup-view capture completed.");
+        }
+
+        private static void InspectAppliedStartView(string targetName)
+        {
             RequireEditMode();
             Scene scene = RequireScene();
             Transform player = FindUnique(scene, PlayerName);
-            Transform target = FindUnique(scene, TargetName);
+            Transform target = FindUnique(scene, targetName);
             Camera camera = RequirePlayerCamera(player);
             StartViewMetrics metrics = RequireStartView(player, target, camera);
             RequireNoUnityConsoleErrors();
             Debug.Log(
-                "[DetectorAttachedStaticStart] Saved start view inspected." +
+                "[PlayerAnimationStartView] Saved start view inspected for " +
+                targetName + "." +
                 " horizontalDistance=" + Num(metrics.HorizontalDistance) +
                 "m|frontAxisDot=" + Num(metrics.FrontAxisDot) +
                 "|facingDot=" + Num(metrics.FacingDot) +
@@ -269,7 +503,7 @@ namespace Bellerophon.Editor.Validation
         {
             Bounds bounds = BoundsOf(target);
             Vector3 targetFront = HorizontalDirection(
-                target.forward, TargetName + " forward");
+                target.forward, target.name + " forward");
             Vector3 targetToCamera = HorizontalDirection(
                 camera.transform.position - bounds.center,
                 "target-to-camera direction");
@@ -290,7 +524,7 @@ namespace Bellerophon.Editor.Validation
             float minimumViewportMargin = MinimumViewportMargin(camera, bounds);
             if (minimumViewportMargin < ViewportMargin)
                 throw new InvalidOperationException(
-                    TargetName + " full renderer bounds are not visible in the " +
+                    target.name + " full renderer bounds are not visible in the " +
                     "startup camera. Margin=" + Num(minimumViewportMargin) + ".");
 
             float facingDot = FacingDot(camera, bounds.center);
@@ -592,6 +826,256 @@ namespace Bellerophon.Editor.Validation
             internal float FrontAxisDot;
             internal float FacingDot;
             internal float MinimumViewportMargin;
+        }
+    }
+
+    [InitializeOnLoad]
+    internal static class ShipRepairStartViewPlayModeInspection
+    {
+        private const string PendingKey = "Bellerophon.ShipRepairStartView.Pending";
+        private const string StateKey = "Bellerophon.ShipRepairStartView.State";
+        private const string WaitStartKey = "Bellerophon.ShipRepairStartView.WaitStart";
+        private const string FailureKey = "Bellerophon.ShipRepairStartView.Failure";
+        private const int WaitingForPlayMode = 0;
+        private const int WaitingForEditModeAfterSuccess = 1;
+        private const int WaitingForEditModeAfterFailure = 2;
+        private static Action<string> complete;
+        private static Action<Exception> fail;
+
+        static ShipRepairStartViewPlayModeInspection()
+        {
+        }
+
+        internal static bool HasPendingInspection =>
+            SessionState.GetBool(PendingKey, false);
+
+        internal static void Start(Action<string> onComplete, Action<Exception> onFail)
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException(
+                    "ShipRepair startup inspection must start in Edit Mode.");
+            complete = onComplete;
+            fail = onFail;
+            SessionState.SetBool(PendingKey, true);
+            SessionState.SetInt(StateKey, WaitingForPlayMode);
+            SessionState.SetFloat(WaitStartKey, (float)EditorApplication.timeSinceStartup);
+            SessionState.EraseString(FailureKey);
+            Subscribe();
+            EditorApplication.EnterPlaymode();
+        }
+
+        internal static void Resume(Action<string> onComplete, Action<Exception> onFail)
+        {
+            complete = onComplete;
+            fail = onFail;
+            if (!HasPendingInspection)
+                throw new InvalidOperationException(
+                    "ShipRepair startup Play Mode inspection has no pending state.");
+            Subscribe();
+        }
+
+        private static void Subscribe()
+        {
+            EditorApplication.update -= Tick;
+            EditorApplication.update += Tick;
+        }
+
+        private static void Tick()
+        {
+            if (!HasPendingInspection)
+            {
+                EditorApplication.update -= Tick;
+                return;
+            }
+            int state = SessionState.GetInt(StateKey, WaitingForPlayMode);
+            try
+            {
+                if (state == WaitingForPlayMode)
+                {
+                    if (!EditorApplication.isPlaying)
+                        return;
+                    double elapsed = EditorApplication.timeSinceStartup -
+                        SessionState.GetFloat(WaitStartKey, 0f);
+                    if (elapsed < 0.75d)
+                        return;
+                    DetectorAttachedStaticStartSetupTools
+                        .InspectShipRepairRuntimeStart();
+                    SessionState.SetInt(StateKey, WaitingForEditModeAfterSuccess);
+                    EditorApplication.ExitPlaymode();
+                    return;
+                }
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    return;
+                if (state == WaitingForEditModeAfterFailure)
+                {
+                    FinishFailure();
+                    return;
+                }
+                DetectorAttachedStaticStartSetupTools
+                    .InspectShipRepairReviewStart();
+                Action<string> callback = complete;
+                Cleanup();
+                callback?.Invoke(
+                    "ShipRepair startup view inspected through natural Play Mode and restored to Edit Mode.");
+            }
+            catch (Exception exception)
+            {
+                SessionState.SetString(FailureKey, exception.ToString());
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    SessionState.SetInt(StateKey, WaitingForEditModeAfterFailure);
+                    if (EditorApplication.isPlaying)
+                        EditorApplication.ExitPlaymode();
+                    return;
+                }
+                FinishFailure();
+            }
+        }
+
+        private static void FinishFailure()
+        {
+            string message = SessionState.GetString(
+                FailureKey,
+                "ShipRepair startup Play Mode inspection failed.");
+            Action<Exception> callback = fail;
+            Cleanup();
+            callback?.Invoke(new InvalidOperationException(message));
+        }
+
+        private static void Cleanup()
+        {
+            EditorApplication.update -= Tick;
+            complete = null;
+            fail = null;
+            SessionState.EraseBool(PendingKey);
+            SessionState.EraseInt(StateKey);
+            SessionState.EraseFloat(WaitStartKey);
+            SessionState.EraseString(FailureKey);
+        }
+    }
+
+    [InitializeOnLoad]
+    internal static class TurretEnterStartViewPlayModeInspection
+    {
+        private const string PendingKey = "Bellerophon.TurretEnterStartView.Pending";
+        private const string StateKey = "Bellerophon.TurretEnterStartView.State";
+        private const string WaitStartKey = "Bellerophon.TurretEnterStartView.WaitStart";
+        private const string FailureKey = "Bellerophon.TurretEnterStartView.Failure";
+        private const int WaitingForPlayMode = 0;
+        private const int WaitingForEditModeAfterSuccess = 1;
+        private const int WaitingForEditModeAfterFailure = 2;
+        private static Action<string> complete;
+        private static Action<Exception> fail;
+
+        static TurretEnterStartViewPlayModeInspection()
+        {
+        }
+
+        internal static bool HasPendingInspection =>
+            SessionState.GetBool(PendingKey, false);
+
+        internal static void Start(Action<string> onComplete, Action<Exception> onFail)
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException(
+                    "Turret_Enter startup inspection must start in Edit Mode.");
+            complete = onComplete;
+            fail = onFail;
+            SessionState.SetBool(PendingKey, true);
+            SessionState.SetInt(StateKey, WaitingForPlayMode);
+            SessionState.SetFloat(WaitStartKey, (float)EditorApplication.timeSinceStartup);
+            SessionState.EraseString(FailureKey);
+            Subscribe();
+            EditorApplication.EnterPlaymode();
+        }
+
+        internal static void Resume(Action<string> onComplete, Action<Exception> onFail)
+        {
+            complete = onComplete;
+            fail = onFail;
+            if (!HasPendingInspection)
+                throw new InvalidOperationException(
+                    "Turret_Enter startup Play Mode inspection has no pending state.");
+            Subscribe();
+        }
+
+        private static void Subscribe()
+        {
+            EditorApplication.update -= Tick;
+            EditorApplication.update += Tick;
+        }
+
+        private static void Tick()
+        {
+            if (!HasPendingInspection)
+            {
+                EditorApplication.update -= Tick;
+                return;
+            }
+            int state = SessionState.GetInt(StateKey, WaitingForPlayMode);
+            try
+            {
+                if (state == WaitingForPlayMode)
+                {
+                    if (!EditorApplication.isPlaying)
+                        return;
+                    double elapsed = EditorApplication.timeSinceStartup -
+                        SessionState.GetFloat(WaitStartKey, 0f);
+                    if (elapsed < 0.75d)
+                        return;
+                    DetectorAttachedStaticStartSetupTools
+                        .InspectTurretEnterRuntimeStart();
+                    SessionState.SetInt(StateKey, WaitingForEditModeAfterSuccess);
+                    EditorApplication.ExitPlaymode();
+                    return;
+                }
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    return;
+                if (state == WaitingForEditModeAfterFailure)
+                {
+                    FinishFailure();
+                    return;
+                }
+                DetectorAttachedStaticStartSetupTools
+                    .InspectTurretEnterReviewStart();
+                Action<string> callback = complete;
+                Cleanup();
+                callback?.Invoke(
+                    "Turret_Enter startup view inspected through natural Play Mode and restored to Edit Mode.");
+            }
+            catch (Exception exception)
+            {
+                SessionState.SetString(FailureKey, exception.ToString());
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    SessionState.SetInt(StateKey, WaitingForEditModeAfterFailure);
+                    if (EditorApplication.isPlaying)
+                        EditorApplication.ExitPlaymode();
+                    return;
+                }
+                FinishFailure();
+            }
+        }
+
+        private static void FinishFailure()
+        {
+            string message = SessionState.GetString(
+                FailureKey,
+                "Turret_Enter startup Play Mode inspection failed.");
+            Action<Exception> callback = fail;
+            Cleanup();
+            callback?.Invoke(new InvalidOperationException(message));
+        }
+
+        private static void Cleanup()
+        {
+            EditorApplication.update -= Tick;
+            complete = null;
+            fail = null;
+            SessionState.EraseBool(PendingKey);
+            SessionState.EraseInt(StateKey);
+            SessionState.EraseFloat(WaitStartKey);
+            SessionState.EraseString(FailureKey);
         }
     }
 

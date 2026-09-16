@@ -19,6 +19,24 @@ namespace Bellerophon.Editor.Validation
         private const string RequestFileName = "UnityEditorBridge.request";
         private const string ActiveRequestFileName = "UnityEditorBridge.active";
         private const string DefaultTestResultsFileName = "TestResults.xml";
+        private const long CurrentCargoRunSceneLength = 17585031;
+        private const string CurrentCargoRunSceneSha256 =
+            "83B2B8795105A53C5191E8BEF3005A469548D75AFE8C855B09AC5664AAD877FB";
+        private static readonly string[] CurrentCargoRunSceneMarkers =
+        {
+            "value: Lightsaber_Off_Idle",
+            "value: Lightsaber_DiagonalSlash",
+            "value: Lightsaber_Grip_OneHand",
+            "value: Lightsaber_ThrustMode_Enter",
+            "value: Lightsaber_ThrustMode_Exit",
+            "value: Detector_Attached_Static",
+            "value: PresenceDetector_Attached",
+            "value: ElectricMine_Idle",
+            "value: ElectricMine_Activate",
+            "value: ElectricMine_Armed_Idle",
+            "m_Name: ApprovedRepairProgressBar",
+            "m_Name: ApprovedRepairWeldingVfx"
+        };
         private const string TergoPierceAttackCurrentSceneVisualRunCommand = "RunTergoPierceAttackCurrentSceneVisualRun";
         private const string Dolore04TentacleStabDiagnosticCommand = "CaptureDolore04TentacleStabFullMotionDiagnostic";
         private const string Dolore04TentacleStabFinalCommand = "CaptureDolore04TentacleStabFullMotionFinal";
@@ -77,6 +95,14 @@ namespace Bellerophon.Editor.Validation
             "InspectLightsaberEnterExitLeftArmPopCorrection";
         private const string DetectorAttachedStaticStartViewInspectionCommand =
             "InspectDetectorAttachedStaticStartView";
+        private const string TurretEnterStartViewInspectionCommand =
+            "InspectTurretEnterReviewStart";
+        private const string ShipRepairStartViewInspectionCommand =
+            "InspectShipRepairReviewStart";
+        private const string ShipRepairSharedAnimationFinalCommand =
+            "CaptureShipRepairSharedAnimationCorrectionFinal";
+        private const string ShipRepairProgressAndWeldingFinalCommand =
+            "CaptureShipRepairProgressAndWeldingFinal";
         private const string LightsaberThrustModeEnterCorrectionInspectionCommand =
             "InspectLightsaberThrustModeEnterCorrection";
         private const string LightsaberThrustModeEnterCorrectionFinalCommand =
@@ -351,6 +377,10 @@ namespace Bellerophon.Editor.Validation
                     LightsaberEnterExitLeftArmPopInspectionCommand &&
                 request.Command !=
                     DetectorAttachedStaticStartViewInspectionCommand &&
+                request.Command != TurretEnterStartViewInspectionCommand &&
+                request.Command != ShipRepairStartViewInspectionCommand &&
+                request.Command != ShipRepairSharedAnimationFinalCommand &&
+                request.Command != ShipRepairProgressAndWeldingFinalCommand &&
                 request.Command != LightsaberThrustStartPoseInspectionCommand &&
                 request.Command != LightsaberThrustStartPoseFinalCommand &&
                 request.Command != LightsaberThrustMotionInspectionCommand &&
@@ -421,6 +451,120 @@ namespace Bellerophon.Editor.Validation
                         request,
                         RefreshAssets,
                         "Unity assets refreshed.");
+                    break;
+                case "InspectHelmEnterSources":
+                    RunSynchronous(
+                        request,
+                        HelmEnterAnimationTools.InspectSources,
+                        "Helm_Enter and Player_Idle sources inspected read-only.");
+                    break;
+                case "ApplyHelmEnterAnimation":
+                    RunSynchronous(
+                        request,
+                        HelmEnterAnimationTools.Apply,
+                        "Helm_Enter 10/2 o'clock two-hand wheel grip animation applied.");
+                    break;
+                case "InspectHelmEnterAnimation":
+                    RunSynchronous(
+                        request,
+                        HelmEnterAnimationTools.InspectAnimation,
+                        "Helm_Enter wheel grip animation inspected without target manipulation.");
+                    break;
+                case "CaptureHelmEnterFinal":
+                    RunSynchronous(
+                        request,
+                        HelmEnterAnimationTools.CaptureFinal,
+                        "Helm_Enter final direct contact sheet captured once.");
+                    break;
+                case "ApplyHelmExitAnimation":
+                    RunSynchronous(
+                        request,
+                        HelmEnterAnimationTools.ApplyExit,
+                        "Helm_Exit exact reverse animation applied from Helm_Enter.");
+                    break;
+                case "InspectHelmExitAnimation":
+                    RunSynchronous(
+                        request,
+                        HelmEnterAnimationTools.InspectExitAnimation,
+                        "Helm_Exit exact reverse animation inspected without target manipulation.");
+                    break;
+                case "CaptureHelmExitFinal":
+                    RunSynchronous(
+                        request,
+                        HelmEnterAnimationTools.CaptureExitFinal,
+                        "Helm_Exit final direct contact sheet captured once.");
+                    break;
+                case "ApplyTurretEnterReviewStart":
+                    RunSynchronous(
+                        request,
+                        DetectorAttachedStaticStartSetupTools.ApplyTurretEnterReviewStart,
+                        "Turret_Enter startup view applied without changing the target.");
+                    break;
+                case TurretEnterStartViewInspectionCommand:
+                    RunTurretEnterStartViewInspection(request);
+                    break;
+                case "CaptureTurretEnterReviewStart":
+                    RunSynchronous(
+                        request,
+                        DetectorAttachedStaticStartSetupTools.CaptureTurretEnterReviewStart,
+                        "Turret_Enter one-time final startup-view capture completed.");
+                    break;
+                case "ApplyShipRepairReviewStart":
+                    RunSynchronous(
+                        request,
+                        DetectorAttachedStaticStartSetupTools.ApplyShipRepairReviewStart,
+                        "ShipRepair startup view applied without changing the target.");
+                    break;
+                case ShipRepairStartViewInspectionCommand:
+                    RunShipRepairStartViewInspection(request);
+                    break;
+                case "CaptureShipRepairReviewStart":
+                    RunSynchronous(
+                        request,
+                        DetectorAttachedStaticStartSetupTools.CaptureShipRepairReviewStart,
+                        "ShipRepair one-time final startup-view capture completed.");
+                    break;
+                case "InspectShipRepairSharedAnimationCorrectionSources":
+                    RunSynchronous(
+                        request,
+                        ShipRepairSharedAnimationTools.InspectSources,
+                        "ShipRepair and SabotageRepair correction sources inspected read-only.");
+                    break;
+                case "ApplyShipRepairSharedAnimationCorrection":
+                    RunSynchronous(
+                        request,
+                        ShipRepairSharedAnimationTools.Apply,
+                        "ShipRepair and SabotageRepair Humanoid-retargeted repairing correction applied.");
+                    break;
+                case "InspectShipRepairSharedAnimationCorrection":
+                    RunSynchronous(
+                        request,
+                        ShipRepairSharedAnimationTools.InspectAnimation,
+                        "ShipRepair and SabotageRepair corrected repairing animation inspected.");
+                    break;
+                case ShipRepairSharedAnimationFinalCommand:
+                    RunShipRepairSharedAnimationFinal(request);
+                    break;
+                case "InspectShipRepairProgressAndWeldingSources":
+                    RunSynchronous(
+                        request,
+                        ShipRepairProgressAndWeldingSetupTools.InspectSources,
+                        "ShipRepair/SabotageRepair approved progress and welding sources inspected read-only.");
+                    break;
+                case "ApplyShipRepairProgressAndWelding":
+                    RunSynchronous(
+                        request,
+                        ShipRepairProgressAndWeldingSetupTools.Apply,
+                        "ShipRepair/SabotageRepair approved progress bars and ShipRepair welding VFX applied.");
+                    break;
+                case "InspectShipRepairProgressAndWelding":
+                    RunSynchronous(
+                        request,
+                        ShipRepairProgressAndWeldingSetupTools.Inspect,
+                        "ShipRepair/SabotageRepair progress and welding setup inspected.");
+                    break;
+                case ShipRepairProgressAndWeldingFinalCommand:
+                    RunShipRepairProgressAndWeldingFinal(request);
                     break;
                 case "ClearFlashlightConsoleErrors":
                     RunSynchronous(
@@ -4537,102 +4681,6 @@ namespace Bellerophon.Editor.Validation
                         request,
                         global::Bellerophon.Editor.IspantCargoRunScene.IspantSlashRunningCompositeAnimationTool.DiagnoseIspantSlashRunningRevision,
                         "The slot-5 upper-body lateral offset, blade angle range, forearm relationship, and intact-versus-corrected body mesh were diagnosed without changing the scene.");
-                    break;
-                case "DiagnoseIspant06LegacyMotionTransfer":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.DiagnoseIspant06LegacyMotionTransfer,
-                        "The current slot-6 model and the two legacy slot-6 source models were diagnosed without changing the scene.");
-                    break;
-                case "DiagnoseIspant06MusketComponents":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.DiagnoseIspant06MusketComponents,
-                        "The current slot-6 rigid LeftShoulder mesh components were diagnosed without changing the scene.");
-                    break;
-                case "DiagnoseIspant06LegacyRecoveryMotion":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.DiagnoseIspant06LegacyRecoveryMotion,
-                        "The finalized legacy slot-6 recovery object hierarchy was diagnosed without saving either scene.");
-                    break;
-                case "DiagnoseIspant06WeaponAlignment":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.DiagnoseIspant06WeaponAlignment,
-                        "The current and finalized legacy slot-6 hand, musket, and forward-axis alignment was diagnosed without saving either scene.");
-                    break;
-                case "CaptureIspant06MusketComponentGroups":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.CaptureIspant06MusketComponentGroups,
-                        "The current slot-6 upper-back component groups were isolated with the original material for direct diagnosis without saving the scene.");
-                    break;
-                case "CaptureIspant06WeaponIdentity":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.CaptureIspant06WeaponIdentity,
-                        "The current slot-6 back musket, hand musket, and sword were isolated at the same rifle phase without saving the scene.");
-                    break;
-                case "StopPlayModeForIspant06Inspection":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.StopPlayModeForIspant06Inspection,
-                        "Unity play mode was stopped for the approved slot-6 inspection.");
-                    break;
-                case "DiagnoseIspant06RetargetSamples":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.DiagnoseIspant06RetargetSamples,
-                        "The legacy and current slot-6 shoulder, arm, forearm, and hand samples were measured at matching clip phases without changing the scene.");
-                    break;
-                case "ApplyIspant06LegacyMotionTransfer":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.ApplyIspant06LegacyMotionTransfer,
-                        "The legacy slot-6 sheath, hold, bridge, and rifle-aim sequence was retargeted to the current direct model and saved only in slot 6.");
-                    break;
-                case "OptimizeCargoRunMvpShadowLights":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.OptimizeCargoRunMvpShadowLights,
-                        "Realtime shadow casting was disabled on the current CargoRunMvp scene lights while preserving their brightness, color, and range for direct visual review.");
-                    break;
-                case "ApplyIspant06SwordGripOnly":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.ApplyIspant06SwordGripOnly,
-                        "Only the current slot-6 hand-sword grip was restored without regenerating the four motion clips; the visual verdict remains pending user review.");
-                    break;
-                case "ApplyIspant06SheathLeftArmStaticPose":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.ApplyIspant06SheathLeftArmStaticPose,
-                        "Only the current slot-6 sheath clip left shoulder, arm, forearm, and hand were matched to the static-model pose while preserving the approved right-hand sword grip and sword motion.");
-                    break;
-                case "InspectIspant06LegacyMotionTransfer":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.InspectIspant06LegacyMotionTransfer,
-                        "The current slot-6 legacy-motion retarget, sword grip, intact mesh, controller sequence, and finite deformation were inspected without changing the scene.");
-                    break;
-                case "CaptureIspant06LegacyMotionComparison":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.CaptureIspant06LegacyMotionComparison,
-                        "The legacy final slot-6 sequence and the current retarget were captured once at the same 11 phases for direct visual comparison.");
-                    break;
-                case "CaptureIspant06SwordGripReview":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.CaptureIspant06SwordGripReview,
-                        "Four close views of the current slot-6 right hand and sword hilt were captured for direct visual review without an automatic motion verdict.");
-                    break;
-                case "CaptureIspant06SheathLeftArmReview":
-                    RunSynchronous(
-                        request,
-                        global::Bellerophon.Editor.IspantCargoRunScene.Ispant06LegacyMotionTransferTool.CaptureIspant06SheathLeftArmReview,
-                        "The static left arm and four slot-6 sheath phases were captured for direct visual review; the visual verdict remains pending user review.");
                     break;
                 case "InspectIspant06EmbeddedSheathingSource":
                     RunSynchronous(
@@ -9999,12 +10047,6 @@ namespace Bellerophon.Editor.Validation
                         Bellerophon.Editor.TergoCargoRunScene.TergoRunChaseAnimation.ValidateTergoBackRushNormalRun,
                         "Tergo BackRush normal run validated.");
                     break;
-                case "RestoreFugaAndLongaArmaPlacementsFromRecoveryScene":
-                    RunSynchronous(
-                        request,
-                        FugaLongaArmaPlacementRecovery.RestoreFugaAndLongaArmaPlacementsFromRecoveryScene,
-                        "Fuga and Longa Arma placement roots restored from recovery scene.");
-                    break;
                 case "MoveApprovedSupplyRoomShellBelowEngineRoom":
                     RunSynchronous(
                         request,
@@ -10100,6 +10142,66 @@ namespace Bellerophon.Editor.Validation
                         request,
                         ApprovedArmoryShellBootstrap.CaptureCurrentEditorObjects,
                         "Approved armory 01 current state capture saved:");
+                    break;
+                case "CaptureWeaponRoomCurrentState":
+                    RunSynchronous(
+                        request,
+                        ApprovedArmoryShellBootstrap.CaptureCurrentEditorObjects,
+                        "Weapon-room current Unity state captured exactly into its restore script.");
+                    break;
+                case "InspectWeaponRoomSnapshotReflection":
+                    RunSynchronous(
+                        request,
+                        ApprovedArmoryShellBootstrap.InspectCurrentEditorObjectsAgainstSnapshot,
+                        "Weapon-room current Unity state matches its restore script exactly.");
+                    break;
+                case "ApplyTurretEnterAnimation":
+                    RunSynchronous(
+                        request,
+                        TurretEnterAnimationTools.Apply,
+                        "Turret_Enter two-hand control grip animation applied.");
+                    break;
+                case "InspectTurretEnterAnimation":
+                    RunSynchronous(
+                        request,
+                        TurretEnterAnimationTools.InspectAnimation,
+                        "Turret_Enter animation inspected without manipulating the target.");
+                    break;
+                case "CaptureTurretEnterFinal":
+                    RunSynchronous(
+                        request,
+                        TurretEnterAnimationTools.CaptureFinal,
+                        "Turret_Enter final direct visual contact sheet captured.");
+                    break;
+                case "CaptureTurretEnterWristCorrectionFinal":
+                    RunSynchronous(
+                        request,
+                        TurretEnterAnimationTools.CaptureWristCorrectionFinal,
+                        "Turret_Enter wrist-correction direct visual contact sheet captured.");
+                    break;
+                case "CaptureTurretEnterFingerGripCorrectionFinal":
+                    RunSynchronous(
+                        request,
+                        TurretEnterAnimationTools.CaptureFingerGripCorrectionFinal,
+                        "Turret_Enter finger-grip correction direct visual contact sheet captured.");
+                    break;
+                case "ApplyTurretExitAnimation":
+                    RunSynchronous(
+                        request,
+                        TurretEnterAnimationTools.ApplyExit,
+                        "Turret_Exit exact reverse animation applied from Turret_Enter.");
+                    break;
+                case "InspectTurretExitAnimation":
+                    RunSynchronous(
+                        request,
+                        TurretEnterAnimationTools.InspectExitAnimation,
+                        "Turret_Exit exact reverse animation inspected without target manipulation.");
+                    break;
+                case "CaptureTurretExitFinal":
+                    RunSynchronous(
+                        request,
+                        TurretEnterAnimationTools.CaptureExitFinal,
+                        "Turret_Exit final direct visual contact sheet captured once.");
                     break;
                 case "RestoreApprovedArmoryShellCurrentState":
                     RunSynchronous(
@@ -10395,12 +10497,6 @@ namespace Bellerophon.Editor.Validation
                         DetailedStep19SaveSettingsPlatformEditorValidation.Run,
                         "Detailed step 19 save settings platform editor validation passed.");
                     break;
-                case "EnsurePhase20Presentation":
-                    RunSynchronous(
-                        request,
-                        Phase20PresentationBootstrap.EnsurePhase20Assets,
-                        "Phase 20 presentation polish assets are ready.");
-                    break;
                 case "ValidatePhase20Presentation":
                     RunSynchronous(
                         request,
@@ -10418,12 +10514,6 @@ namespace Bellerophon.Editor.Validation
                         request,
                         DetailedStep21BalancePlaytestHardeningEditorValidation.Run,
                         "Detailed step 21 balance playtest hardening editor validation passed.");
-                    break;
-                case "ValidatePostDetailedStage2ShipInterior":
-                    RunSynchronous(
-                        request,
-                        PostDetailedStage2ShipInteriorEditorValidation.Run,
-                        "Post-detailed stage 2 ship interior editor validation passed.");
                     break;
                 case "ValidatePostDetailedStage3GameplayProps":
                     RunSynchronous(
@@ -11692,6 +11782,7 @@ namespace Bellerophon.Editor.Validation
 
         private static void OpenCargoRunMvpScene()
         {
+            AssertCurrentCargoRunScene();
             var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(Phase4CargoShipGrayboxBootstrap.CargoRunScenePath);
             if (sceneAsset == null)
             {
@@ -11715,9 +11806,76 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException("CargoRunMvp did not become the active scene. ActiveScene=" + activeScene.path);
             }
 
+            AssertCurrentCargoRunScene();
+
             Selection.activeObject = sceneAsset;
             EditorGUIUtility.PingObject(sceneAsset);
             Debug.Log("CargoRunMvp scene opened from validation bridge.");
+        }
+
+        private static void AssertCurrentCargoRunScene()
+        {
+            var projectRoot = Path.GetFullPath(Directory.GetCurrentDirectory());
+            var relativeScenePath = Phase4CargoShipGrayboxBootstrap.CargoRunScenePath.Replace(
+                '/',
+                Path.DirectorySeparatorChar);
+            var fullScenePath = Path.GetFullPath(Path.Combine(projectRoot, relativeScenePath));
+            var expectedScenePath = Path.GetFullPath(Path.Combine(
+                projectRoot,
+                "Assets",
+                "_Project",
+                "Scenes",
+                "CargoRunMvp.unity"));
+            if (!string.Equals(fullScenePath, expectedScenePath, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp resolved outside the protected current scene path. Expected=" +
+                    expectedScenePath +
+                    "; Actual=" +
+                    fullScenePath);
+            }
+
+            var sceneInfo = new FileInfo(fullScenePath);
+            if (!sceneInfo.Exists)
+            {
+                throw new InvalidOperationException("Protected CargoRunMvp scene was not found: " + fullScenePath);
+            }
+
+            if (sceneInfo.Length != CurrentCargoRunSceneLength)
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp is not the protected current scene. Length mismatch. Expected=" +
+                    CurrentCargoRunSceneLength +
+                    "; Actual=" +
+                    sceneInfo.Length);
+            }
+
+            string actualHash;
+            using (var stream = File.OpenRead(fullScenePath))
+            using (var sha256 = System.Security.Cryptography.SHA256.Create())
+            {
+                actualHash = BitConverter.ToString(sha256.ComputeHash(stream)).Replace("-", string.Empty);
+            }
+
+            if (!string.Equals(actualHash, CurrentCargoRunSceneSha256, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "CargoRunMvp is not the protected current scene. SHA-256 mismatch. Expected=" +
+                    CurrentCargoRunSceneSha256 +
+                    "; Actual=" +
+                    actualHash);
+            }
+
+            var sceneText = File.ReadAllText(fullScenePath, Encoding.UTF8);
+            for (var i = 0; i < CurrentCargoRunSceneMarkers.Length; i++)
+            {
+                if (sceneText.IndexOf(CurrentCargoRunSceneMarkers[i], StringComparison.Ordinal) < 0)
+                {
+                    throw new InvalidOperationException(
+                        "CargoRunMvp is missing a protected current-work marker: " +
+                        CurrentCargoRunSceneMarkers[i]);
+                }
+            }
         }
 
         private static void RunSynchronous(BridgeRequest request, Action action, string successMarker)
@@ -12596,6 +12754,140 @@ namespace Bellerophon.Editor.Validation
                 else
                     DetectorAttachedStaticStartViewPlayModeCapture.Start(
                         completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunTurretEnterStartViewInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (TurretEnterStartViewPlayModeInspection.HasPendingInspection)
+                    TurretEnterStartViewPlayModeInspection.Resume(
+                        completeCallback, failCallback);
+                else
+                    TurretEnterStartViewPlayModeInspection.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunShipRepairStartViewInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ShipRepairStartViewPlayModeInspection.HasPendingInspection)
+                    ShipRepairStartViewPlayModeInspection.Resume(
+                        completeCallback, failCallback);
+                else
+                    ShipRepairStartViewPlayModeInspection.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunShipRepairSharedAnimationFinal(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ShipRepairSharedAnimationPlayModeCapture.HasPendingCapture)
+                    ShipRepairSharedAnimationPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    ShipRepairSharedAnimationPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunShipRepairProgressAndWeldingFinal(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ShipRepairProgressAndWeldingPlayModeCapture.HasPendingCapture)
+                {
+                    ShipRepairProgressAndWeldingPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                }
+                else
+                {
+                    ShipRepairProgressAndWeldingPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+                }
             }
             catch (Exception exception)
             {
@@ -14054,6 +14346,10 @@ namespace Bellerophon.Editor.Validation
                     LightsaberEnterExitLeftArmPopInspectionCommand ||
                 request.Command ==
                     DetectorAttachedStaticStartViewInspectionCommand ||
+                request.Command == TurretEnterStartViewInspectionCommand ||
+                request.Command == ShipRepairStartViewInspectionCommand ||
+                request.Command == ShipRepairSharedAnimationFinalCommand ||
+                request.Command == ShipRepairProgressAndWeldingFinalCommand ||
                 request.Command == LightsaberThrustStartPoseInspectionCommand ||
                 request.Command == LightsaberThrustStartPoseFinalCommand ||
                 request.Command == LightsaberThrustMotionInspectionCommand ||
@@ -14169,6 +14465,82 @@ namespace Bellerophon.Editor.Validation
                     "Resuming Detector_Attached_Static startup-view natural " +
                     "Play Mode inspection after mode transition.");
                 DetectorAttachedStaticStartViewPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == TurretEnterStartViewInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Turret_Enter startup-view natural Play Mode inspection after mode transition.");
+                TurretEnterStartViewPlayModeInspection.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == ShipRepairStartViewInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming ShipRepair startup-view natural Play Mode inspection after mode transition.");
+                ShipRepairStartViewPlayModeInspection.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == ShipRepairSharedAnimationFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming ShipRepair/SabotageRepair natural shared-animation capture after Play Mode transition.");
+                ShipRepairSharedAnimationPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == ShipRepairProgressAndWeldingFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming ShipRepair/SabotageRepair progress and welding natural Play Mode capture after mode transition.");
+                ShipRepairProgressAndWeldingPlayModeCapture.Resume(
                     successMarker =>
                     {
                         TryDelete(ActiveRequestPath);
