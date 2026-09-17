@@ -1,0 +1,18 @@
+Player damage reaction animation application
+sourceAnimationCurvesModified=False
+retargetedCompatibilityClipsGenerated=True
+retargetPoseInference=False
+retargetSamplingRate=OriginalSourceFrameRate
+sourceBinaryCopiesExact=True
+humanoidRetargeting=True
+applyRootMotion=False
+targetTransformsChanged=False
+targetRenderersChanged=False
+targetAvatarsChanged=False
+Hit_Reaction=mixamo.com,length=1.2,frameRate=30,humanMotion=True,loop=True
+KnockdownFront=mixamo.com,length=3.1,frameRate=30,humanMotion=True,loop=False
+KnockdownBack=mixamo.com,length=1.566667,frameRate=30,humanMotion=True,loop=False
+KnockdownSequence=FrontFall->BackFall->FrontFall
+KnockdownTransitionDurationSeconds=0
+Knockdown_GetUp=mixamo.com,length=2.7,frameRate=30,humanMotion=True,loop=True
+Death=mixamo.com,length=3.366667,frameRate=30,humanMotion=True,loop=True

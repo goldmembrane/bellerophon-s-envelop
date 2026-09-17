@@ -327,8 +327,7 @@ namespace Bellerophon.Editor.Validation
             float maximumProgressDifference,
             float maximumWeldingWorldPositionDrift,
             Vector3 weldingFixedWorldPosition,
-            float minimumArcIntensity,
-            float maximumArcIntensity,
+            float maximumArcTravelNormalized,
             float maximumSparkTravelNormalized,
             float maximumSmokeTravelNormalized,
             int approvedSampleLayerCount,
@@ -384,9 +383,11 @@ namespace Bellerophon.Editor.Validation
                     .AppendLine("weldingParticleSystems=0")
                     .AppendLine("weldingApprovedSampleSpriteLayers=" +
                         approvedSampleLayerCount)
-                    .AppendLine("weldingArcIntensityRange=" +
-                        Num(minimumArcIntensity) + ".." +
-                        Num(maximumArcIntensity))
+                    .AppendLine("weldingStationaryCyanWhiteArcLayer=False")
+                    .AppendLine("weldingMovingCyanWhiteArcLayers=2")
+                    .AppendLine("weldingMovingVfxLayersOnly=True")
+                    .AppendLine("weldingMaximumArcTravelNormalized=" +
+                        Num(maximumArcTravelNormalized))
                     .AppendLine("weldingMaximumSparkTravelNormalized=" +
                         Num(maximumSparkTravelNormalized))
                     .AppendLine("weldingMaximumSmokeTravelNormalized=" +
@@ -489,11 +490,19 @@ namespace Bellerophon.Editor.Validation
             vfxObject.transform.SetParent(ship.transform, false);
             RepairWeldingVfxPresenter presenter =
                 vfxObject.GetComponent<RepairWeldingVfxPresenter>();
-            SpriteRenderer arcLayer = CreateApprovedSampleLayer(
-                vfxObject.transform,
-                "ApprovedSample_Arc",
-                sprite,
-                animatedMaterial);
+            SpriteRenderer[] arcFlowLayers =
+            {
+                CreateApprovedSampleLayer(
+                    vfxObject.transform,
+                    "ApprovedSample_ArcFlow_A",
+                    sprite,
+                    animatedMaterial),
+                CreateApprovedSampleLayer(
+                    vfxObject.transform,
+                    "ApprovedSample_ArcFlow_B",
+                    sprite,
+                    animatedMaterial)
+            };
             SpriteRenderer[] sparkLayers =
             {
                 CreateApprovedSampleLayer(
@@ -524,7 +533,7 @@ namespace Bellerophon.Editor.Validation
                 ship.transform,
                 sprite,
                 fixedWorldPosition,
-                arcLayer,
+                arcFlowLayers,
                 sparkLayers,
                 smokeLayers,
                 RepairWeldingVfxPresenter.DesignForwardDistanceMeters,
@@ -713,11 +722,17 @@ namespace Bellerophon.Editor.Validation
                 throw new InvalidOperationException(
                     "ShipRepair welding VFX still renders the static approved PNG on its root.");
             }
-            if (layers.Length != 5 || welding.ApprovedSampleLayerCount != 5)
+            if (layers.Length != 6 || welding.ApprovedSampleLayerCount != 6)
             {
                 throw new InvalidOperationException(
-                    "ShipRepair welding VFX requires five dynamic approved-sample layers; actual=" +
+                    "ShipRepair welding VFX requires six moving approved-sample layers; actual=" +
                     layers.Length);
+            }
+
+            if (welding.transform.Find("ApprovedSample_Arc") != null)
+            {
+                throw new InvalidOperationException(
+                    "ShipRepair welding VFX still contains the stationary cyan-white arc layer.");
             }
 
             foreach (SpriteRenderer layer in layers)
@@ -739,7 +754,8 @@ namespace Bellerophon.Editor.Validation
             string[] names = layers.Select(layer => layer.name).OrderBy(name => name).ToArray();
             string[] expectedNames =
             {
-                "ApprovedSample_Arc",
+                "ApprovedSample_ArcFlow_A",
+                "ApprovedSample_ArcFlow_B",
                 "ApprovedSample_Smoke_A",
                 "ApprovedSample_Smoke_B",
                 "ApprovedSample_Sparks_A",
@@ -1078,8 +1094,7 @@ namespace Bellerophon.Editor.Validation
         private static float maximumProgressDifference;
         private static Vector3 weldingInitialWorldPosition;
         private static float maximumWeldingWorldPositionDrift;
-        private static float minimumArcIntensity;
-        private static float maximumArcIntensity;
+        private static float maximumArcTravelNormalized;
         private static float maximumSparkTravelNormalized;
         private static float maximumSmokeTravelNormalized;
         private static readonly double[] WeldingVisualCaptureTimes =
@@ -1246,8 +1261,7 @@ namespace Bellerophon.Editor.Validation
             maximumProgressDifference = 0f;
             weldingInitialWorldPosition = welding.transform.position;
             maximumWeldingWorldPositionDrift = 0f;
-            minimumArcIntensity = float.MaxValue;
-            maximumArcIntensity = float.MinValue;
+            maximumArcTravelNormalized = 0f;
             maximumSparkTravelNormalized = 0f;
             maximumSmokeTravelNormalized = 0f;
             DestroyVisualPanels();
@@ -1282,12 +1296,9 @@ namespace Bellerophon.Editor.Validation
                     maximumWeldingWorldPositionDrift.ToString("0.######"));
             }
 
-            minimumArcIntensity = Mathf.Min(
-                minimumArcIntensity,
-                welding.CurrentArcIntensity);
-            maximumArcIntensity = Mathf.Max(
-                maximumArcIntensity,
-                welding.CurrentArcIntensity);
+            maximumArcTravelNormalized = Mathf.Max(
+                maximumArcTravelNormalized,
+                welding.CurrentArcTravelNormalized);
             maximumSparkTravelNormalized = Mathf.Max(
                 maximumSparkTravelNormalized,
                 welding.CurrentSparkTravelNormalized);
@@ -1334,17 +1345,15 @@ namespace Bellerophon.Editor.Validation
                     throw new InvalidOperationException(
                         "Three natural welding VFX visual phases were not captured.");
                 }
-                if (maximumArcIntensity - minimumArcIntensity < 0.20f)
-                {
-                    throw new InvalidOperationException(
-                        "ShipRepair welding arc flicker range is too small.");
-                }
-                if (maximumSparkTravelNormalized < 0.145f ||
+                if (maximumArcTravelNormalized < 0.040f ||
+                    maximumSparkTravelNormalized < 0.145f ||
                     maximumSmokeTravelNormalized < 0.075f ||
-                    welding.ApprovedSampleLayerCount != 5)
+                    welding.ApprovedSampleLayerCount != 6)
                 {
                     throw new InvalidOperationException(
                         "ShipRepair approved-sample animation layers did not traverse their designed range. " +
+                        "arc=" + maximumArcTravelNormalized.ToString("0.######") +
+                        "; " +
                         "spark=" + maximumSparkTravelNormalized.ToString("0.######") +
                         "; smoke=" + maximumSmokeTravelNormalized.ToString("0.######") +
                         "; layers=" + welding.ApprovedSampleLayerCount);
@@ -1374,8 +1383,7 @@ namespace Bellerophon.Editor.Validation
                         maximumProgressDifference,
                         maximumWeldingWorldPositionDrift,
                         weldingInitialWorldPosition,
-                        minimumArcIntensity,
-                        maximumArcIntensity,
+                        maximumArcTravelNormalized,
                         maximumSparkTravelNormalized,
                         maximumSmokeTravelNormalized,
                         welding.ApprovedSampleLayerCount,

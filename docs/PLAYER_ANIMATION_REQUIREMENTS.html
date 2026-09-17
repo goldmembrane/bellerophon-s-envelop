@@ -527,9 +527,9 @@
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-INT-002</td><td>P1</td><td>ShipRepair</td><td>화물선 수리</td><td>전신&#183;손</td><td>입력 유지 중 반복</td><td>수리 지점에서 사용 입력</td><td>수리 완료 후 자유 이동</td><td>입력 해제&#183;피격</td><td>사용자 확정</td><td>31행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-INT-006</td><td>P1</td><td>SabotageRepair</td><td>사보타주 복구</td><td>전신&#183;손</td><td>10초 반복</td><td>복구 지점에서 F 유지</td><td>복구 완료 후 자유 이동</td><td>F 해제&#183;이동&#183;피격</td><td>사용자 확정</td><td>247행, 사용자 확정</td></tr>
 </tbody></table>
 <ul>
@@ -558,6 +558,7 @@
 <ul>
 <li>약한&#183;폭발&#183;전방&#183;후방&#183;좌측&#183;우측 피격 반응은 <code>Hit_Reaction</code> 하나를 공용으로 사용한다.</li>
 <li><code>Knockdown</code>은 넘어짐 시작부터 넘어진 마지막 자세 유지까지 포함하며, 회복 가능 시 기존 <code>Knockdown_GetUp</code>으로 이어진다.</li>
+<li><code>Hit_Reaction</code>은 전신의 기준 자세를 <code>Player_Idle</code>에 맞추고 원본 피격 반동만 상대 변화량으로 유지한다. <code>Knockdown</code>의 뒤로 넘어지는 구간은 양팔을 <code>Player_Idle</code> 자세에 맞춘다. <code>Knockdown_GetUp</code>은 기상 초반&#183;중간의 원본 동작을 유지하되 최종 기립이 시작되기 전에 양팔 전환을 끝내며, 일어나는 구간에는 이미 양팔이 <code>Player_Idle</code> 자세인 상태로 몸통을 따라 움직여야 한다. 양팔은 전역 고정하지 않는다.</li>
 <li>사망은 일반 <code>Death</code>, 전신이 날아가는 <code>Death_FullBodyLaunch</code>, 테르고에게 당한 <code>Death_Tergo</code>의 세 원인별 모션으로 구분한다.</li>
 <li>세 사망 유형은 고정 클립의 핵심 연출 뒤 래그돌로 전환하는 혼합 방식을 사용한다.</li>
 <li><code>Death</code>는 짧은 고정 사망 클립이 끝날 때, <code>Death_FullBodyLaunch</code>는 전신이 날아가는 시점에 힘을 이어받으며, <code>Death_Tergo</code>는 테르고의 고정 사망 연출이 끝날 때 래그돌로 전환한다.</li>

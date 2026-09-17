@@ -1,0 +1,21 @@
+Player damage reaction natural Play Mode final contact sheet
+verificationTargetsManipulated=False
+captureMethod=Natural Play Mode playback from connected Animator Controllers
+row1=Hit_Reaction four phases across one source-clip loop
+row2=Knockdown FrontFall early/late then BackFall early/late
+row3=Knockdown_GetUp normalized phases 0.48, 0.58, 0.70, and 0.82 across one source-clip loop
+row4=Death four phases across one source-clip loop
+armPoseReference=Player_Idle scene object local transforms
+Hit_ReactionWholeClipArmCorrection=True
+KnockdownBackFallWholeClipArmCorrection=True
+Knockdown_GetUpStandingArmCorrection=True
+torsoDrivenArmMotionPreserved=True
+armsWorldLocked=False
+retargetedCompatibilityClipsGenerated=True
+retargetSamplingRate=OriginalSourceFrameRate
+retargetPoseInference=False
+sourceAnimationCurvesModified=False
+targetTransformsChanged=False
+directVisualReview=True
+directVisualReviewResult=PASS
+directVisualReviewEvidence=At 0.70 the knees and torso are still in the final rise while both arms have already reached the Player_Idle local pose; the same arm pose remains torso-driven at 0.82 without a late correction.

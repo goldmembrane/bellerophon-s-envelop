@@ -1,0 +1,20 @@
+Player damage reaction structural inspection
+verificationTargetsManipulated=False
+sourceBinaryCopiesExact=True
+sourceAnimationCurvesModified=False
+retargetedCompatibilityClipsGenerated=True
+retargetPoseInference=False
+Hit_Reaction=mixamo.com,length=1.2,frameRate=30,humanMotion=True,wholeClipLoop=True
+KnockdownFront=mixamo.com,length=3.1,frameRate=30,humanMotion=True
+KnockdownBack=mixamo.com,length=1.566667,frameRate=30,humanMotion=True
+KnockdownSequence=FrontFall->BackFall->FrontFall
+KnockdownZeroDurationTransitions=True
+Knockdown_GetUp=mixamo.com,length=2.7,frameRate=30,humanMotion=True,wholeClipLoop=True
+Death=mixamo.com,length=3.366667,frameRate=30,humanMotion=True,wholeClipLoop=True
+HitRetargeted=Hit_Reaction_Retargeted,length=1.2,frameRate=30,humanMotion=False
+FrontFallRetargeted=Knockdown_FrontFall_Retargeted,length=3.1,frameRate=30,humanMotion=False
+BackFallRetargeted=Knockdown_BackFall_Retargeted,length=1.566667,frameRate=30,humanMotion=False
+GetUpRetargeted=Knockdown_GetUp_Retargeted,length=2.7,frameRate=30,humanMotion=False
+DeathRetargeted=Death_Retargeted,length=3.366667,frameRate=30,humanMotion=False
+directVisualReview=True
+directVisualReviewResult=PASS

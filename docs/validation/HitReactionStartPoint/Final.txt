@@ -1,0 +1,7 @@
+Hit_Reaction one-time final startup-view capture
+naturalPlayModeInspectionPassed=True
+targetTransformChanged=False
+cameraOrPlayerChildrenChanged=False
+directVisualReviewPending=False
+directVisualReviewPassed=True
+directVisualReviewResult=Hit_Reaction target is shown from the front, centered, and fully visible without clipping.

@@ -1,0 +1,17 @@
+Player damage reaction posture correction application
+reference=Player_Idle scene object local transforms
+referenceSpace=Local
+Hit_ReactionBasePoseRebasedToPlayerIdle=True
+Hit_ReactionOriginalRelativeRecoilPreserved=True
+Hit_ReactionArmLocalPose=Player_Idle
+KnockdownBackFallChanged=False
+KnockdownFrontFallChanged=False
+Knockdown_GetUpOriginalArmsPreservedThroughNormalized=0.5
+Knockdown_GetUpStandingBlend=0.5->0.7
+Knockdown_GetUpStandingBlendEasing=SmoothStep
+Knockdown_GetUpNonArmCurvesChanged=False
+fingerCurvesChanged=False
+renderersChanged=False
+sceneRootTransformsChanged=False
+armsWorldLocked=False
+clipTimingAndLoopSettingsPreserved=True

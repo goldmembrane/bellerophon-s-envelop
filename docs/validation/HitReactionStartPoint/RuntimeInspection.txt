@@ -1,0 +1,12 @@
+Hit_Reaction natural Play Mode startup inspection
+naturalPlayMode=True
+targetTransformChanged=False
+cameraOrPlayerChildrenChanged=False
+fullTargetBoundsVisible=True
+targetFrontViewConfirmed=True
+cameraFacesTarget=True
+horizontalDistanceMeters=4.500000
+frontAxisDot=1.000000
+facingDot=0.986779
+minimumViewportMargin=0.071590
+runtimeInspectionPassed=True

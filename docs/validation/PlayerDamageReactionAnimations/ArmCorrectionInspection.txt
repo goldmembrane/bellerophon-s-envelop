@@ -1,0 +1,18 @@
+Player damage reaction posture correction inspection
+Hit_ReactionFirstFramePlayerIdleMatch=True
+Hit_ReactionOriginalRelativeRecoilPreserved=True
+Hit_ReactionWholeClipArmLocalPoseMatch=True
+KnockdownBackFallWholeClipMatch=True
+KnockdownFrontFallStillOriginal=True
+Knockdown_GetUpOriginalArmsThroughNormalized=0.5
+Knockdown_GetUpSmoothStandingBlendVerified=True
+Knockdown_GetUpPlayerIdleArmsBeforeFinalRise=True
+Knockdown_GetUpFullyStandingArmsMatch=True
+Hit_ReactionMaximumHandTravel=left=0.192539,right=0.244394
+KnockdownBackFallMaximumHandTravel=left=1.673984,right=1.513903
+Knockdown_GetUpMaximumHandTravel=left=1.140344,right=1.012205
+torsoDrivenArmMotionPreserved=True
+armsWorldLocked=False
+directVisualReview=True
+directVisualReviewResult=PASS
+directVisualReviewEvidence=Final.png row3 directly reviewed at normalized phases 0.48, 0.58, 0.70, and 0.82; Player_Idle arm pose is complete before the final rise.

@@ -1,0 +1,18 @@
+Player damage reaction posture-correction source inspection
+sourceTarget=Player_Idle
+sourceClipPresence=Assets/_Project/Art/Player/Animations/Player_Idle.anim
+sourcePose=Player_Idle scene object serialized local pose
+poseSpace=Local
+Hit_ReactionOriginalSource=Assets/_Project/Animations/PlayerDamageReactions/Sources/Hit_Reaction_Source.fbx
+Hit_ReactionRebasedBoneCount=56
+Hit_ReactionBasePose=Player_Idle
+Hit_ReactionRelativeRecoil=Original source motion
+Hit_ReactionArmLocalPose=Player_Idle
+KnockdownBackFallRange=WholeClip arms unchanged from prior correction
+KnockdownFrontFallChanged=False
+Knockdown_GetUpOriginalSource=Assets/_Project/Animations/PlayerDamageReactions/Sources/Knockdown_GetUp_Source.fbx
+Knockdown_GetUpOriginalArmRange=0->0.5
+Knockdown_GetUpStandingArmBlend=0.5->0.7
+Knockdown_GetUpStandingArmBlendEasing=SmoothStep
+Knockdown_GetUpNonArmCurvesChanged=False
+armsWillFollowTorsoHierarchy=True

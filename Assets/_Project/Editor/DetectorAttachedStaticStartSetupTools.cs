@@ -20,6 +20,7 @@ namespace Bellerophon.Editor.Validation
         private const string HelmTargetName = "Helm_Enter";
         private const string TurretTargetName = "Turret_Enter";
         private const string ShipRepairTargetName = "ShipRepair";
+        private const string HitReactionTargetName = "Hit_Reaction";
         private const string TurretReviewFolder = "Temp/TurretEnterStart";
         private const string TurretRuntimeReportRelativePath =
             TurretReviewFolder + "/RuntimeInspection.txt";
@@ -34,6 +35,14 @@ namespace Bellerophon.Editor.Validation
             ShipRepairReviewFolder + "/Final.png";
         private const string ShipRepairFinalReportRelativePath =
             ShipRepairReviewFolder + "/Final.txt";
+        private const string HitReactionReviewFolder =
+            "docs/validation/HitReactionStartPoint";
+        private const string HitReactionRuntimeReportRelativePath =
+            HitReactionReviewFolder + "/RuntimeInspection.txt";
+        private const string HitReactionFinalImageRelativePath =
+            HitReactionReviewFolder + "/Final.png";
+        private const string HitReactionFinalReportRelativePath =
+            HitReactionReviewFolder + "/Final.txt";
         internal const string ReviewImageRelativePath =
             "Temp/DetectorAttachedStaticStartView/UnityPlayModeReview.png";
         internal const string ReviewReportRelativePath =
@@ -96,6 +105,12 @@ namespace Bellerophon.Editor.Validation
         internal static void ApplyShipRepairReviewStart()
         {
             ApplyStartView(ShipRepairTargetName);
+        }
+
+        [MenuItem("Bellerophon/Player/Apply Hit Reaction Start View")]
+        internal static void ApplyHitReactionReviewStart()
+        {
+            ApplyStartView(HitReactionTargetName);
         }
 
         private static void ApplyStartView(string targetName)
@@ -222,6 +237,11 @@ namespace Bellerophon.Editor.Validation
             InspectAppliedStartView(ShipRepairTargetName);
         }
 
+        internal static void InspectHitReactionReviewStart()
+        {
+            InspectAppliedStartView(HitReactionTargetName);
+        }
+
         internal static void InspectTurretEnterRuntimeStart()
         {
             if (!EditorApplication.isPlaying)
@@ -298,6 +318,48 @@ namespace Bellerophon.Editor.Validation
             File.WriteAllText(reportPath, report.ToString(), new UTF8Encoding(false));
             RequireNoUnityConsoleErrors();
             Debug.Log("[ShipRepairStart] Natural Play Mode startup inspection passed.\n" +
+                report);
+        }
+
+        internal static void InspectHitReactionRuntimeStart()
+        {
+            if (!EditorApplication.isPlaying)
+                throw new InvalidOperationException(
+                    "Hit_Reaction runtime start-view inspection requires Play Mode.");
+            Scene scene = RequireScene();
+            Transform player = FindUnique(scene, PlayerName);
+            Transform target = FindUnique(scene, HitReactionTargetName);
+            Camera camera = RequirePlayerCamera(player);
+            Vector3 targetPositionBefore = target.position;
+            Quaternion targetRotationBefore = target.rotation;
+            Vector3 targetScaleBefore = target.localScale;
+            StartViewMetrics metrics = RequireStartView(player, target, camera);
+            RequireNear(target.position, targetPositionBefore,
+                HitReactionTargetName + " position");
+            RequireNear(target.rotation, targetRotationBefore,
+                HitReactionTargetName + " rotation");
+            RequireNear(target.localScale, targetScaleBefore,
+                HitReactionTargetName + " scale");
+            string reportPath = Absolute(HitReactionRuntimeReportRelativePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(reportPath) ??
+                throw new InvalidOperationException(
+                    "Hit_Reaction runtime report folder is unavailable."));
+            var report = new StringBuilder()
+                .AppendLine("Hit_Reaction natural Play Mode startup inspection")
+                .AppendLine("naturalPlayMode=True")
+                .AppendLine("targetTransformChanged=False")
+                .AppendLine("cameraOrPlayerChildrenChanged=False")
+                .AppendLine("fullTargetBoundsVisible=True")
+                .AppendLine("targetFrontViewConfirmed=True")
+                .AppendLine("cameraFacesTarget=True")
+                .AppendLine("horizontalDistanceMeters=" + Num(metrics.HorizontalDistance))
+                .AppendLine("frontAxisDot=" + Num(metrics.FrontAxisDot))
+                .AppendLine("facingDot=" + Num(metrics.FacingDot))
+                .AppendLine("minimumViewportMargin=" + Num(metrics.MinimumViewportMargin))
+                .AppendLine("runtimeInspectionPassed=True");
+            File.WriteAllText(reportPath, report.ToString(), new UTF8Encoding(false));
+            RequireNoUnityConsoleErrors();
+            Debug.Log("[HitReactionStart] Natural Play Mode startup inspection passed.\n" +
                 report);
         }
 
@@ -393,6 +455,55 @@ namespace Bellerophon.Editor.Validation
                 new UTF8Encoding(false));
             RequireNoUnityConsoleErrors();
             Debug.Log("[ShipRepairStart] One-time final startup-view capture completed.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Hit Reaction Start View Final")]
+        internal static void CaptureHitReactionReviewStart()
+        {
+            RequireEditMode();
+            InspectAppliedStartView(HitReactionTargetName);
+            string runtimeReportPath = Absolute(HitReactionRuntimeReportRelativePath);
+            if (!File.Exists(runtimeReportPath))
+                throw new InvalidOperationException(
+                    "Hit_Reaction natural Play Mode inspection report is missing.");
+            string runtimeReport = File.ReadAllText(runtimeReportPath, Encoding.UTF8);
+            if (!runtimeReport.Contains("naturalPlayMode=True") ||
+                !runtimeReport.Contains("targetTransformChanged=False") ||
+                !runtimeReport.Contains("runtimeInspectionPassed=True"))
+                throw new InvalidOperationException(
+                    "Hit_Reaction natural Play Mode inspection has not passed.");
+
+            Scene scene = RequireScene();
+            Transform target = FindUnique(scene, HitReactionTargetName);
+            Camera camera = RequirePlayerCamera(FindUnique(scene, PlayerName));
+            Vector3 targetPositionBefore = target.position;
+            Quaternion targetRotationBefore = target.rotation;
+            Vector3 targetScaleBefore = target.localScale;
+            string finalImagePath = Absolute(HitReactionFinalImageRelativePath);
+            string finalReportPath = Absolute(HitReactionFinalReportRelativePath);
+            if (File.Exists(finalImagePath) || File.Exists(finalReportPath))
+                throw new InvalidOperationException(
+                    "Hit_Reaction one-time final startup capture already exists.");
+            Directory.CreateDirectory(Path.GetDirectoryName(finalImagePath) ??
+                throw new InvalidOperationException(
+                    "Hit_Reaction final capture folder is unavailable."));
+            Render(camera, finalImagePath);
+            RequireNear(target.position, targetPositionBefore,
+                HitReactionTargetName + " position");
+            RequireNear(target.rotation, targetRotationBefore,
+                HitReactionTargetName + " rotation");
+            RequireNear(target.localScale, targetScaleBefore,
+                HitReactionTargetName + " scale");
+            File.WriteAllText(
+                finalReportPath,
+                "Hit_Reaction one-time final startup-view capture\n" +
+                "naturalPlayModeInspectionPassed=True\n" +
+                "targetTransformChanged=False\n" +
+                "cameraOrPlayerChildrenChanged=False\n" +
+                "directVisualReviewPending=True\n",
+                new UTF8Encoding(false));
+            RequireNoUnityConsoleErrors();
+            Debug.Log("[HitReactionStart] One-time final startup-view capture completed.");
         }
 
         private static void InspectAppliedStartView(string targetName)
@@ -937,6 +1048,139 @@ namespace Bellerophon.Editor.Validation
             string message = SessionState.GetString(
                 FailureKey,
                 "ShipRepair startup Play Mode inspection failed.");
+            Action<Exception> callback = fail;
+            Cleanup();
+            callback?.Invoke(new InvalidOperationException(message));
+        }
+
+        private static void Cleanup()
+        {
+            EditorApplication.update -= Tick;
+            complete = null;
+            fail = null;
+            SessionState.EraseBool(PendingKey);
+            SessionState.EraseInt(StateKey);
+            SessionState.EraseFloat(WaitStartKey);
+            SessionState.EraseString(FailureKey);
+        }
+    }
+
+    [InitializeOnLoad]
+    internal static class HitReactionStartViewPlayModeInspection
+    {
+        private const string PendingKey = "Bellerophon.HitReactionStartView.Pending";
+        private const string StateKey = "Bellerophon.HitReactionStartView.State";
+        private const string WaitStartKey = "Bellerophon.HitReactionStartView.WaitStart";
+        private const string FailureKey = "Bellerophon.HitReactionStartView.Failure";
+        private const int WaitingForPlayMode = 0;
+        private const int WaitingForEditModeAfterSuccess = 1;
+        private const int WaitingForEditModeAfterFailure = 2;
+        private static Action<string> complete;
+        private static Action<Exception> fail;
+
+        static HitReactionStartViewPlayModeInspection()
+        {
+        }
+
+        internal static bool HasPendingInspection =>
+            SessionState.GetBool(PendingKey, false);
+
+        internal static void ResetStaleInspection()
+        {
+            if (!EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                Cleanup();
+            }
+        }
+
+        internal static void Start(Action<string> onComplete, Action<Exception> onFail)
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException(
+                    "Hit_Reaction startup inspection must start in Edit Mode.");
+            complete = onComplete;
+            fail = onFail;
+            SessionState.SetBool(PendingKey, true);
+            SessionState.SetInt(StateKey, WaitingForPlayMode);
+            SessionState.SetFloat(WaitStartKey, (float)EditorApplication.timeSinceStartup);
+            SessionState.EraseString(FailureKey);
+            Subscribe();
+            EditorApplication.EnterPlaymode();
+        }
+
+        internal static void Resume(Action<string> onComplete, Action<Exception> onFail)
+        {
+            complete = onComplete;
+            fail = onFail;
+            if (!HasPendingInspection)
+                throw new InvalidOperationException(
+                    "Hit_Reaction startup Play Mode inspection has no pending state.");
+            Subscribe();
+        }
+
+        private static void Subscribe()
+        {
+            EditorApplication.update -= Tick;
+            EditorApplication.update += Tick;
+        }
+
+        private static void Tick()
+        {
+            if (!HasPendingInspection)
+            {
+                EditorApplication.update -= Tick;
+                return;
+            }
+            int state = SessionState.GetInt(StateKey, WaitingForPlayMode);
+            try
+            {
+                if (state == WaitingForPlayMode)
+                {
+                    if (!EditorApplication.isPlaying)
+                        return;
+                    double elapsed = EditorApplication.timeSinceStartup -
+                        SessionState.GetFloat(WaitStartKey, 0f);
+                    if (elapsed < 0.75d)
+                        return;
+                    DetectorAttachedStaticStartSetupTools
+                        .InspectHitReactionRuntimeStart();
+                    SessionState.SetInt(StateKey, WaitingForEditModeAfterSuccess);
+                    EditorApplication.ExitPlaymode();
+                    return;
+                }
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    return;
+                if (state == WaitingForEditModeAfterFailure)
+                {
+                    FinishFailure();
+                    return;
+                }
+                DetectorAttachedStaticStartSetupTools
+                    .InspectHitReactionReviewStart();
+                Action<string> callback = complete;
+                Cleanup();
+                callback?.Invoke(
+                    "Hit_Reaction startup view inspected through natural Play Mode and restored to Edit Mode.");
+            }
+            catch (Exception exception)
+            {
+                SessionState.SetString(FailureKey, exception.ToString());
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    SessionState.SetInt(StateKey, WaitingForEditModeAfterFailure);
+                    if (EditorApplication.isPlaying)
+                        EditorApplication.ExitPlaymode();
+                    return;
+                }
+                FinishFailure();
+            }
+        }
+
+        private static void FinishFailure()
+        {
+            string message = SessionState.GetString(
+                FailureKey,
+                "Hit_Reaction startup Play Mode inspection failed.");
             Action<Exception> callback = fail;
             Cleanup();
             callback?.Invoke(new InvalidOperationException(message));

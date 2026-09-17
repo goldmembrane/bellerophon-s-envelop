@@ -19,9 +19,9 @@ namespace Bellerophon.Editor.Validation
         private const string RequestFileName = "UnityEditorBridge.request";
         private const string ActiveRequestFileName = "UnityEditorBridge.active";
         private const string DefaultTestResultsFileName = "TestResults.xml";
-        private const long CurrentCargoRunSceneLength = 17585031;
+        private const long CurrentCargoRunSceneLength = 17589215;
         private const string CurrentCargoRunSceneSha256 =
-            "83B2B8795105A53C5191E8BEF3005A469548D75AFE8C855B09AC5664AAD877FB";
+            "EEF63EFC3101239DF3F81D59C23BB6985AC8FBF8605A202D982BF76CC3A6CFAF";
         private static readonly string[] CurrentCargoRunSceneMarkers =
         {
             "value: Lightsaber_Off_Idle",
@@ -99,8 +99,16 @@ namespace Bellerophon.Editor.Validation
             "InspectTurretEnterReviewStart";
         private const string ShipRepairStartViewInspectionCommand =
             "InspectShipRepairReviewStart";
+        private const string HitReactionStartViewInspectionCommand =
+            "InspectHitReactionReviewStart";
         private const string ShipRepairSharedAnimationFinalCommand =
             "CaptureShipRepairSharedAnimationCorrectionFinal";
+        private const string PlayerDamageReactionFinalCommand =
+            "CapturePlayerDamageReactionAnimations";
+        private const string PlayerDamageReactionArmCorrectionFinalCommand =
+            "CapturePlayerDamageReactionArmPoseCorrectionFinal";
+        private const string PlayerDamageReactionPostureCorrectionFinalCommand =
+            "CapturePlayerDamageReactionPostureCorrectionFinal";
         private const string ShipRepairProgressAndWeldingFinalCommand =
             "CaptureShipRepairProgressAndWeldingFinal";
         private const string LightsaberThrustModeEnterCorrectionInspectionCommand =
@@ -379,6 +387,10 @@ namespace Bellerophon.Editor.Validation
                     DetectorAttachedStaticStartViewInspectionCommand &&
                 request.Command != TurretEnterStartViewInspectionCommand &&
                 request.Command != ShipRepairStartViewInspectionCommand &&
+                request.Command != HitReactionStartViewInspectionCommand &&
+                request.Command != PlayerDamageReactionFinalCommand &&
+                request.Command != PlayerDamageReactionArmCorrectionFinalCommand &&
+                request.Command != PlayerDamageReactionPostureCorrectionFinalCommand &&
                 request.Command != ShipRepairSharedAnimationFinalCommand &&
                 request.Command != ShipRepairProgressAndWeldingFinalCommand &&
                 request.Command != LightsaberThrustStartPoseInspectionCommand &&
@@ -523,6 +535,74 @@ namespace Bellerophon.Editor.Validation
                         request,
                         DetectorAttachedStaticStartSetupTools.CaptureShipRepairReviewStart,
                         "ShipRepair one-time final startup-view capture completed.");
+                    break;
+                case "ApplyHitReactionReviewStart":
+                    RunSynchronous(
+                        request,
+                        DetectorAttachedStaticStartSetupTools.ApplyHitReactionReviewStart,
+                        "Hit_Reaction startup view applied without changing the target.");
+                    break;
+                case HitReactionStartViewInspectionCommand:
+                    RunHitReactionStartViewInspection(request);
+                    break;
+                case "CaptureHitReactionReviewStart":
+                    RunSynchronous(
+                        request,
+                        DetectorAttachedStaticStartSetupTools.CaptureHitReactionReviewStart,
+                        "Hit_Reaction one-time final startup-view capture completed.");
+                    break;
+                case "ApplyPlayerDamageReactionAnimations":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools.ApplyPlayerDamageReactionAnimations,
+                        "Original Mixamo animations connected to Hit_Reaction, Knockdown, Knockdown_GetUp, and Death.");
+                    break;
+                case "InspectPlayerDamageReactionAnimations":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools.InspectPlayerDamageReactionAnimations,
+                        "Player damage reaction animation structure inspected.");
+                    break;
+                case "InspectPlayerDamageReactionArmPoseCorrectionSources":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools.InspectPlayerDamageReactionArmPoseCorrectionSources,
+                        "Player damage reaction arm-correction sources inspected read-only.");
+                    break;
+                case "InspectPlayerDamageReactionPostureCorrectionSources":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools.InspectPlayerDamageReactionPostureCorrectionSources,
+                        "Player damage reaction posture-correction sources inspected read-only.");
+                    break;
+                case "ApplyPlayerDamageReactionArmPoseCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools.ApplyPlayerDamageReactionArmPoseCorrection,
+                        "Player_Idle local arm pose applied to the approved damage-reaction ranges.");
+                    break;
+                case "ApplyPlayerDamageReactionPostureCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools.ApplyPlayerDamageReactionPostureCorrection,
+                        "Player_Idle Hit_Reaction posture and GetUp standing-arm correction applied.");
+                    break;
+                case "InspectPlayerDamageReactionArmPoseCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools.InspectPlayerDamageReactionArmPoseCorrection,
+                        "Player damage reaction arm-pose correction inspected.");
+                    break;
+                case "InspectPlayerDamageReactionPostureCorrection":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools.InspectPlayerDamageReactionPostureCorrection,
+                        "Player damage reaction posture correction inspected.");
+                    break;
+                case PlayerDamageReactionFinalCommand:
+                case PlayerDamageReactionArmCorrectionFinalCommand:
+                case PlayerDamageReactionPostureCorrectionFinalCommand:
+                    RunPlayerDamageReactionFinal(request);
                     break;
                 case "InspectShipRepairSharedAnimationCorrectionSources":
                     RunSynchronous(
@@ -12826,6 +12906,43 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
+        private static void RunHitReactionStartViewInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (HitReactionStartViewPlayModeInspection.HasPendingInspection &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    HitReactionStartViewPlayModeInspection.ResetStaleInspection();
+                }
+                if (HitReactionStartViewPlayModeInspection.HasPendingInspection)
+                    HitReactionStartViewPlayModeInspection.Resume(
+                        completeCallback, failCallback);
+                else
+                    HitReactionStartViewPlayModeInspection.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
         private static void RunShipRepairSharedAnimationFinal(
             BridgeRequest request)
         {
@@ -12850,6 +12967,35 @@ namespace Bellerophon.Editor.Validation
                 else
                     ShipRepairSharedAnimationPlayModeCapture.Start(
                         completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunPlayerDamageReactionFinal(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (PlayerDamageReactionPlayModeCapture.HasPendingCapture)
+                    PlayerDamageReactionPlayModeCapture.Resume(completeCallback, failCallback);
+                else
+                    PlayerDamageReactionPlayModeCapture.Start(completeCallback, failCallback);
             }
             catch (Exception exception)
             {
@@ -14254,7 +14400,19 @@ namespace Bellerophon.Editor.Validation
                 builder.Append(activeLog);
             }
 
-            File.WriteAllText(logPath, builder.ToString());
+            string contents = builder.ToString();
+            for (int attempt = 0; ; attempt++)
+            {
+                try
+                {
+                    File.WriteAllText(logPath, contents);
+                    break;
+                }
+                catch (IOException) when (attempt < 39)
+                {
+                    System.Threading.Thread.Sleep(25);
+                }
+            }
         }
 
         private static void ClearTestRunState(TestRunCallbacks callbackToClear = null, bool cancelActiveRun = false)
@@ -14348,6 +14506,10 @@ namespace Bellerophon.Editor.Validation
                     DetectorAttachedStaticStartViewInspectionCommand ||
                 request.Command == TurretEnterStartViewInspectionCommand ||
                 request.Command == ShipRepairStartViewInspectionCommand ||
+                request.Command == HitReactionStartViewInspectionCommand ||
+                request.Command == PlayerDamageReactionFinalCommand ||
+                request.Command == PlayerDamageReactionArmCorrectionFinalCommand ||
+                request.Command == PlayerDamageReactionPostureCorrectionFinalCommand ||
                 request.Command == ShipRepairSharedAnimationFinalCommand ||
                 request.Command == ShipRepairProgressAndWeldingFinalCommand ||
                 request.Command == LightsaberThrustStartPoseInspectionCommand ||
@@ -14516,12 +14678,52 @@ namespace Bellerophon.Editor.Validation
                 return true;
             }
 
+            if (request.Command == HitReactionStartViewInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Hit_Reaction startup-view natural Play Mode inspection after mode transition.");
+                HitReactionStartViewPlayModeInspection.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
             if (request.Command == ShipRepairSharedAnimationFinalCommand)
             {
                 BeginRequest(request);
                 activeLog.AppendLine(
                     "Resuming ShipRepair/SabotageRepair natural shared-animation capture after Play Mode transition.");
                 ShipRepairSharedAnimationPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == PlayerDamageReactionFinalCommand ||
+                request.Command == PlayerDamageReactionArmCorrectionFinalCommand ||
+                request.Command == PlayerDamageReactionPostureCorrectionFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming player damage-reaction natural Play Mode capture after mode transition.");
+                PlayerDamageReactionPlayModeCapture.Resume(
                     successMarker =>
                     {
                         TryDelete(ActiveRequestPath);

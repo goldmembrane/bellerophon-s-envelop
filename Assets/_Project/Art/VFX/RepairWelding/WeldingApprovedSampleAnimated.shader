@@ -110,7 +110,15 @@ Shader "Bellerophon/Repair/WeldingApprovedSampleAnimated"
                 float phase = frac(_Time.y / loopSeconds + _PhaseOffset);
                 float2 sourceUv = input.uv;
                 float envelope = 1.0;
-                if (_LayerMode > 1.5 && _LayerMode < 2.5)
+                if (_LayerMode < 1.5)
+                {
+                    sourceUv += float2(
+                        sin(phase * 6.2831853) * 0.008,
+                        phase * 0.045);
+                    envelope = smoothstep(0.0, 0.12, phase) *
+                               (1.0 - smoothstep(0.72, 1.0, phase));
+                }
+                else if (_LayerMode < 2.5)
                 {
                     sourceUv += float2(
                         sin((phase + _PhaseOffset) * 6.2831853) * 0.004,
@@ -138,7 +146,7 @@ Shader "Bellerophon/Repair/WeldingApprovedSampleAnimated"
                     float pulseB = sin(phase * 69.1150384 + 0.7) * 0.5 + 0.5;
                     float intensity = lerp(0.58, 1.0,
                         saturate(pulseA * 0.72 + pulseB * 0.28));
-                    mask = arc * intensity;
+                    mask = arc * intensity * envelope;
                 }
                 else if (_LayerMode < 2.5)
                 {

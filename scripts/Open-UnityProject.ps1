@@ -12,8 +12,8 @@ $cargoRunScenePath = Join-Path $projectRoot "Assets\_Project\Scenes\CargoRunMvp.
 $lockPath = Join-Path $projectRoot "Temp\UnityLockfile"
 $sceneOpenLogPath = Join-Path $projectRoot "Logs\OpenCargoRunMvpScene.log"
 $openedNewEditor = $false
-$expectedCargoRunSceneLength = 17560585
-$expectedCargoRunSceneHash = "F12B48063DACAC62E7512EC3E73A1836A9E4D80E985EF121E0A3F4BF85475B64"
+$expectedCargoRunSceneLength = 17589215
+$expectedCargoRunSceneHash = "EEF63EFC3101239DF3F81D59C23BB6985AC8FBF8605A202D982BF76CC3A6CFAF"
 $requiredCargoRunSceneMarkers = @(
   "value: Lightsaber_Off_Idle",
   "value: Lightsaber_DiagonalSlash",

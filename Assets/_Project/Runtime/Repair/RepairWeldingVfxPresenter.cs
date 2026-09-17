@@ -19,7 +19,7 @@ namespace Bellerophon.Repair
         [SerializeField] private Transform ownerRoot;
         [SerializeField] private Vector3 fixedWorldPosition;
         [SerializeField] private bool hasFixedWorldPosition;
-        [SerializeField] private SpriteRenderer arcLayer;
+        [SerializeField] private SpriteRenderer[] arcFlowLayers = Array.Empty<SpriteRenderer>();
         [SerializeField] private SpriteRenderer[] sparkLayers = Array.Empty<SpriteRenderer>();
         [SerializeField] private SpriteRenderer[] smokeLayers = Array.Empty<SpriteRenderer>();
         [SerializeField] private float forwardDistanceMeters = DesignForwardDistanceMeters;
@@ -29,7 +29,9 @@ namespace Bellerophon.Repair
         public Vector3 FixedWorldPosition => fixedWorldPosition;
         public bool HasFixedWorldPosition => hasFixedWorldPosition;
         public bool HasAnimatedVfx =>
-            arcLayer != null &&
+            arcFlowLayers != null &&
+            arcFlowLayers.Length == 2 &&
+            Array.TrueForAll(arcFlowLayers, layer => layer != null) &&
             sparkLayers != null &&
             sparkLayers.Length == 2 &&
             Array.TrueForAll(sparkLayers, layer => layer != null) &&
@@ -39,10 +41,10 @@ namespace Bellerophon.Repair
         public float ForwardDistanceMeters => forwardDistanceMeters;
         public float WorldHeightMeters => worldHeightMeters;
         public float AnimationPhase { get; private set; }
-        public float CurrentArcIntensity { get; private set; } = 1f;
+        public float CurrentArcTravelNormalized { get; private set; }
         public float CurrentSparkTravelNormalized { get; private set; }
         public float CurrentSmokeTravelNormalized { get; private set; }
-        public int ApprovedSampleLayerCount => HasAnimatedVfx ? 5 : 0;
+        public int ApprovedSampleLayerCount => HasAnimatedVfx ? 6 : 0;
 
         private void OnEnable()
         {
@@ -74,7 +76,7 @@ namespace Bellerophon.Repair
             Transform targetOwnerRoot,
             Sprite approvedSprite,
             Vector3 targetWorldPosition,
-            SpriteRenderer targetArcLayer,
+            SpriteRenderer[] targetArcFlowLayers,
             SpriteRenderer[] targetSparkLayers,
             SpriteRenderer[] targetSmokeLayers,
             float distanceMeters,
@@ -83,7 +85,7 @@ namespace Bellerophon.Repair
             ownerRoot = targetOwnerRoot;
             fixedWorldPosition = targetWorldPosition;
             hasFixedWorldPosition = true;
-            arcLayer = targetArcLayer;
+            arcFlowLayers = targetArcFlowLayers ?? Array.Empty<SpriteRenderer>();
             sparkLayers = targetSparkLayers ?? Array.Empty<SpriteRenderer>();
             smokeLayers = targetSmokeLayers ?? Array.Empty<SpriteRenderer>();
             forwardDistanceMeters = Mathf.Max(0f, distanceMeters);
@@ -144,7 +146,11 @@ namespace Bellerophon.Repair
 
         private void ApplyLayerProperties()
         {
-            SetLayerProperties(arcLayer, 1f, 0f);
+            if (arcFlowLayers != null && arcFlowLayers.Length == 2)
+            {
+                SetLayerProperties(arcFlowLayers[0], 1f, 0f);
+                SetLayerProperties(arcFlowLayers[1], 1f, 0.5f);
+            }
             if (sparkLayers != null && sparkLayers.Length == 2)
             {
                 SetLayerProperties(sparkLayers[0], 2f, 0f);
@@ -179,7 +185,7 @@ namespace Bellerophon.Repair
             if (!Application.isPlaying)
             {
                 AnimationPhase = 0f;
-                CurrentArcIntensity = 1f;
+                CurrentArcTravelNormalized = 0f;
                 CurrentSparkTravelNormalized = 0f;
                 CurrentSmokeTravelNormalized = 0f;
                 return;
@@ -188,12 +194,7 @@ namespace Bellerophon.Repair
             AnimationPhase = Mathf.Repeat(
                 Time.unscaledTime,
                 DesignAnimationLoopSeconds) / DesignAnimationLoopSeconds;
-            float pulseA = Mathf.Sin(AnimationPhase * Mathf.PI * 10f) * 0.5f + 0.5f;
-            float pulseB = Mathf.Sin(AnimationPhase * Mathf.PI * 22f + 0.7f) * 0.5f + 0.5f;
-            CurrentArcIntensity = Mathf.Lerp(
-                0.58f,
-                1f,
-                Mathf.Clamp01(pulseA * 0.72f + pulseB * 0.28f));
+            CurrentArcTravelNormalized = AnimationPhase * 0.045f;
             CurrentSparkTravelNormalized = AnimationPhase * 0.16f;
             CurrentSmokeTravelNormalized = AnimationPhase * 0.085f;
         }
@@ -205,7 +206,7 @@ namespace Bellerophon.Repair
                 return;
             }
             transform.position = fixedWorldPosition;
-            Sprite sprite = arcLayer != null ? arcLayer.sprite : null;
+            Sprite sprite = FirstAvailableSprite();
             if (sprite != null && sprite.bounds.size.y > 0.000001f)
             {
                 float uniformScale = worldHeightMeters / sprite.bounds.size.y;
@@ -228,19 +229,35 @@ namespace Bellerophon.Repair
 
         private SpriteRenderer[] AllLayers()
         {
-            SpriteRenderer[] result = new SpriteRenderer[5];
-            result[0] = arcLayer;
+            SpriteRenderer[] result = new SpriteRenderer[6];
+            if (arcFlowLayers != null && arcFlowLayers.Length == 2)
+            {
+                result[0] = arcFlowLayers[0];
+                result[1] = arcFlowLayers[1];
+            }
             if (sparkLayers != null && sparkLayers.Length == 2)
             {
-                result[1] = sparkLayers[0];
-                result[2] = sparkLayers[1];
+                result[2] = sparkLayers[0];
+                result[3] = sparkLayers[1];
             }
             if (smokeLayers != null && smokeLayers.Length == 2)
             {
-                result[3] = smokeLayers[0];
-                result[4] = smokeLayers[1];
+                result[4] = smokeLayers[0];
+                result[5] = smokeLayers[1];
             }
             return result;
+        }
+
+        private Sprite FirstAvailableSprite()
+        {
+            foreach (SpriteRenderer renderer in AllLayers())
+            {
+                if (renderer != null && renderer.sprite != null)
+                {
+                    return renderer.sprite;
+                }
+            }
+            return null;
         }
 
         private void InitializeFixedWorldPositionIfNeeded()
