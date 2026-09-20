@@ -19,9 +19,9 @@ namespace Bellerophon.Editor.Validation
         private const string RequestFileName = "UnityEditorBridge.request";
         private const string ActiveRequestFileName = "UnityEditorBridge.active";
         private const string DefaultTestResultsFileName = "TestResults.xml";
-        private const long CurrentCargoRunSceneLength = 17589215;
+        private const long CurrentCargoRunSceneLength = 17784714;
         private const string CurrentCargoRunSceneSha256 =
-            "EEF63EFC3101239DF3F81D59C23BB6985AC8FBF8605A202D982BF76CC3A6CFAF";
+            "D98034EB253F814B9C9EE6FE1FFB7814772BCF50BC294FD7C7E1294001D850C1";
         private static readonly string[] CurrentCargoRunSceneMarkers =
         {
             "value: Lightsaber_Off_Idle",
@@ -101,6 +101,64 @@ namespace Bellerophon.Editor.Validation
             "InspectShipRepairReviewStart";
         private const string HitReactionStartViewInspectionCommand =
             "InspectHitReactionReviewStart";
+        private const string StunTwistStartViewInspectionCommand =
+            "InspectStunTwistReviewStart";
+        private const string StunTwistAnimationInspectionCommand =
+            "InspectStunTwistAnimation";
+        private const string StunTwistApprovedElectricArcInspectionCommand =
+            "InspectStunTwistApprovedElectricArcSample";
+        private const string PostureBreakChestMountPlayModeCommand =
+            "InspectPostureBreakTergoChestMountPlayMode";
+        private const string PostureBreakLegClosePlayModeCommand =
+            "InspectPostureBreakLegClosePlayMode";
+        private const string PostureBreakUpperBodyTwitchPlayModeCommand =
+            "InspectPostureBreakUpperBodyTwitchPlayMode";
+        private const string PostureBreakTwitchAttackSyncPlayModeCommand =
+            "InspectPostureBreakTwitchAttackSyncPlayMode";
+        private const string FatigueHeadShakeInspectionCommand =
+            "InspectFatigueHeadShakeAnimation";
+        private const string FatigueHeadShakeFinalCommand =
+            "CaptureFatigueHeadShakeFinal";
+        private const string ConfusedWalkForwardFinalCommand =
+            "CaptureConfusedWalkForwardFinal";
+        private const string ConfusedWalkForwardZAlignmentFinalCommand =
+            "CaptureConfusedWalkForwardZAlignmentFinal";
+        private const string ConfusedWalkForwardLocomotionFinalCommand =
+            "CaptureConfusedWalkForwardLocomotionFinal";
+        private const string KnockbackReactionFinalCommand =
+            "CaptureKnockbackReactionFinal";
+        private const string KnockbackReactionFlightPoseFinalCommand =
+            "CaptureKnockbackReactionFlightPoseFinal";
+        private const string KnockbackReactionImmediateLaunchRuntimeCommand =
+            "InspectKnockbackReactionImmediateLaunchRuntime";
+        private const string KnockbackReactionImmediateLaunchFinalCommand =
+            "CaptureKnockbackReactionImmediateLaunchFinal";
+        private const string KnockbackReactionLandingArmRecoveryRuntimeCommand =
+            "InspectKnockbackReactionLandingArmRecoveryRuntime";
+        private const string KnockbackReactionLandingArmRecoveryFinalCommand =
+            "CaptureKnockbackReactionLandingArmRecoveryFinal";
+        private const string ExhaustedWalkForwardInspectionCommand =
+            "InspectExhaustedWalkForwardAnimation";
+        private const string ExhaustedWalkForwardArmDownInspectionCommand =
+            "InspectExhaustedWalkForwardArmDownCorrection";
+        private const string ExhaustedWalkForwardFingerTorsoInspectionCommand =
+            "InspectExhaustedWalkForwardFingerAndTorsoCorrection";
+        private const string ExhaustedWalkForwardArmsStraightInspectionCommand =
+            "InspectExhaustedWalkForwardArmsStraightDownCorrection";
+        private const string ExhaustedWalkForwardRightArmClearanceInspectionCommand =
+            "InspectExhaustedWalkForwardRightArmLegClearance";
+        private const string ExhaustedLocomotionBlendTreesInspectionCommand =
+            "InspectExhaustedLocomotionBlendTrees";
+        private const string ExhaustedLocomotionBlendTreesFinalCommand =
+            "CaptureExhaustedLocomotionBlendTreesFinal";
+        private const string ExhaustedLocomotionForwardDriftInspectionCommand =
+            "InspectExhaustedLocomotionForwardDriftCorrection";
+        private const string ExhaustedLocomotionForwardDriftFinalCommand =
+            "CaptureExhaustedLocomotionForwardDriftCorrectionFinal";
+        private const string ExhaustedLocomotionDirectionalInspectionCommand =
+            "InspectExhaustedLocomotionDirectionalLayerCorrection";
+        private const string ExhaustedLocomotionDirectionalFinalCommand =
+            "CaptureExhaustedLocomotionDirectionalLayerCorrectionFinal";
         private const string ShipRepairSharedAnimationFinalCommand =
             "CaptureShipRepairSharedAnimationCorrectionFinal";
         private const string PlayerDamageReactionFinalCommand =
@@ -109,6 +167,14 @@ namespace Bellerophon.Editor.Validation
             "CapturePlayerDamageReactionArmPoseCorrectionFinal";
         private const string PlayerDamageReactionPostureCorrectionFinalCommand =
             "CapturePlayerDamageReactionPostureCorrectionFinal";
+        private const string DeathRagdollLoopFinalCommand =
+            "CaptureDeathRagdollLoopFinal";
+        private const string DeathGroundAndFullBodyLaunchFinalCommand =
+            "CaptureDeathRagdollGroundAndFullBodyLaunchFinal";
+        private const string DeathTergoReviewCommand =
+            "CaptureDeathTergoLayingRagdollLoopReview";
+        private const string DeathTergoFinalCommand =
+            "CaptureDeathTergoLayingRagdollLoopFinal";
         private const string ShipRepairProgressAndWeldingFinalCommand =
             "CaptureShipRepairProgressAndWeldingFinal";
         private const string LightsaberThrustModeEnterCorrectionInspectionCommand =
@@ -363,6 +429,10 @@ namespace Bellerophon.Editor.Validation
                 request.Command != VacuumUseLocomotionDiagnosticCommand &&
                 request.Command != VacuumUseLocomotionFinalCommand &&
                 request.Command != HoloSprayIdleLocomotionFinalCommand &&
+                request.Command != PostureBreakChestMountPlayModeCommand &&
+                request.Command != PostureBreakLegClosePlayModeCommand &&
+                request.Command != PostureBreakUpperBodyTwitchPlayModeCommand &&
+                request.Command != PostureBreakTwitchAttackSyncPlayModeCommand &&
                 request.Command != LightsaberOffIdleLocomotionInspectionCommand &&
                 request.Command != LightsaberDiagonalSlashInspectionCommand &&
                 request.Command != LightsaberDiagonalSlashBladeTrajectoryInspectionCommand &&
@@ -391,6 +461,10 @@ namespace Bellerophon.Editor.Validation
                 request.Command != PlayerDamageReactionFinalCommand &&
                 request.Command != PlayerDamageReactionArmCorrectionFinalCommand &&
                 request.Command != PlayerDamageReactionPostureCorrectionFinalCommand &&
+                request.Command != DeathRagdollLoopFinalCommand &&
+                request.Command != DeathGroundAndFullBodyLaunchFinalCommand &&
+                request.Command != DeathTergoReviewCommand &&
+                request.Command != DeathTergoFinalCommand &&
                 request.Command != ShipRepairSharedAnimationFinalCommand &&
                 request.Command != ShipRepairProgressAndWeldingFinalCommand &&
                 request.Command != LightsaberThrustStartPoseInspectionCommand &&
@@ -463,6 +537,210 @@ namespace Bellerophon.Editor.Validation
                         request,
                         RefreshAssets,
                         "Unity assets refreshed.");
+                    break;
+                case "InspectPostureBreakSources":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.InspectSources,
+                        "PostureBreak lying-carrier and Tergo attack sources directly captured for inspection.");
+                    break;
+                case "InspectPostureBreakTergoChestMountSources":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.InspectChestMountSources,
+                        "PostureBreak Tergo chest-mount candidates directly captured read-only.");
+                    break;
+                case "InspectPostureBreakTergoWaistMountSources":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.InspectWaistMountSources,
+                        "PostureBreak Tergo waist-mount and upper-chest strike candidates captured read-only.");
+                    break;
+                case "InspectPostureBreakTergoWaistMountTimeline":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.InspectWaistMountTimeline,
+                        "PostureBreak Tergo waist-mount full timeline captured read-only.");
+                    break;
+                case "ApplyPostureBreakTergoChestMount":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.ApplyChestMount,
+                        "Tergo attack duplicate mounted on the PostureBreak chest.");
+                    break;
+                case "InspectPostureBreakTergoChestMount":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.InspectChestMountVisual,
+                        "PostureBreak Tergo chest mount structurally and visually inspected.");
+                    break;
+                case "InspectPostureBreakTergoChestMountRuntime":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.InspectChestMountRuntime,
+                        "PostureBreak Tergo chest-mount animation loops inspected.");
+                    break;
+                case PostureBreakChestMountPlayModeCommand:
+                    RunPostureBreakChestMountPlayModeInspection(request);
+                    break;
+                case "CapturePostureBreakTergoChestMountFinal":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.CaptureChestMountFinal,
+                        "PostureBreak Tergo chest-mount final direct contact sheet captured once.");
+                    break;
+                case "InspectPostureBreakLegCloseSources":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.InspectLegCloseSources,
+                        "PostureBreak forty-percent full-leg closure candidate captured read-only.");
+                    break;
+                case "ApplyPostureBreakLegClose":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.ApplyLegClose,
+                        "PostureBreak forty-percent full-leg closure applied to the target-only clip.");
+                    break;
+                case "InspectPostureBreakLegClose":
+                    RunSynchronous(
+                        request,
+                        () =>
+                        {
+                            if (PostureBreakAnimationSetupTools.LegClosePlayModeCapture
+                                .RecoverStaleCaptureAndExitPlayMode())
+                            {
+                                Debug.Log("[PostureBreak] Stale leg-close Play Mode capture cancelled; exiting Play Mode.");
+                                return;
+                            }
+                            PostureBreakAnimationSetupTools.LegClosePlayModeCapture.ResetStaleCapture();
+                            PostureBreakAnimationSetupTools.InspectLegClose();
+                        },
+                        "PostureBreak forty-percent full-leg closure structurally inspected.");
+                    break;
+                case "InspectPostureBreakLegCloseRuntime":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.InspectLegCloseRuntime,
+                        "PostureBreak leg-close and Tergo runtime loops inspected.");
+                    break;
+                case PostureBreakLegClosePlayModeCommand:
+                    RunPostureBreakLegClosePlayModeInspection(request);
+                    break;
+                case "CapturePostureBreakLegCloseFinal":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.CaptureLegCloseFinal,
+                        "PostureBreak leg-close final direct Play Mode contact sheet captured once.");
+                    break;
+                case "InspectPostureBreakUpperBodyTwitchSources":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.InspectUpperBodyTwitchSources,
+                        "PostureBreak static first-pose legs and synchronized upper-body/knee twitch candidate captured read-only.");
+                    break;
+                case "InspectPostureBreakTwitchAttackSyncSources":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.InspectTwitchAttackSyncSources,
+                        "PostureBreak and Tergo attack-start timing source sheet captured read-only.");
+                    break;
+                case "ApplyPostureBreakTwitchAttackSync":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.ApplyUpperBodyTwitch,
+                        "PostureBreak twitch gated by the first Tergo chest stab and repeated every second.");
+                    break;
+                case "InspectPostureBreakTwitchAttackSync":
+                    RunSynchronous(
+                        request,
+                        () =>
+                        {
+                            if (PostureBreakAnimationSetupTools.UpperBodyTwitchPlayModeCapture
+                                .RecoverStaleCaptureAndExitPlayMode())
+                            {
+                                Debug.Log("[PostureBreak] Stale attack-sync Play Mode capture cancelled; exiting Play Mode.");
+                                return;
+                            }
+                            PostureBreakAnimationSetupTools.UpperBodyTwitchPlayModeCapture.ResetStaleCapture();
+                            PostureBreakAnimationSetupTools.InspectUpperBodyTwitch();
+                        },
+                        "PostureBreak Tergo attack-synchronized twitch structurally inspected.");
+                    break;
+                case "InspectPostureBreakTwitchAttackSyncRuntime":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.InspectUpperBodyTwitchRuntime,
+                        "PostureBreak attack-gated twitch and Tergo runtime cycles inspected.");
+                    break;
+                case PostureBreakTwitchAttackSyncPlayModeCommand:
+                    RunPostureBreakUpperBodyTwitchPlayModeInspection(request);
+                    break;
+                case "CapturePostureBreakTwitchAttackSyncFinal":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.CaptureUpperBodyTwitchFinal,
+                        "PostureBreak attack-synchronized twitch final direct Play Mode contact sheet captured once.");
+                    break;
+                case "ApplyPostureBreakUpperBodyTwitch":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.ApplyUpperBodyTwitch,
+                        "PostureBreak static first-pose legs and synchronized upper-body/knee twitch applied.");
+                    break;
+                case "InspectPostureBreakUpperBodyTwitch":
+                    RunSynchronous(
+                        request,
+                        () =>
+                        {
+                            if (PostureBreakAnimationSetupTools.UpperBodyTwitchPlayModeCapture
+                                .RecoverStaleCaptureAndExitPlayMode())
+                            {
+                                Debug.Log("[PostureBreak] Stale upper-body twitch Play Mode capture cancelled; exiting Play Mode.");
+                                return;
+                            }
+                            PostureBreakAnimationSetupTools.UpperBodyTwitchPlayModeCapture.ResetStaleCapture();
+                            PostureBreakAnimationSetupTools.InspectUpperBodyTwitch();
+                        },
+                        "PostureBreak upper-body twitch structurally inspected.");
+                    break;
+                case "InspectPostureBreakUpperBodyTwitchRuntime":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.InspectUpperBodyTwitchRuntime,
+                        "PostureBreak upper-body twitch, base, and Tergo loops inspected.");
+                    break;
+                case PostureBreakUpperBodyTwitchPlayModeCommand:
+                    RunPostureBreakUpperBodyTwitchPlayModeInspection(request);
+                    break;
+                case "CapturePostureBreakUpperBodyTwitchFinal":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.CaptureUpperBodyTwitchFinal,
+                        "PostureBreak upper-body twitch final direct Play Mode contact sheet captured once.");
+                    break;
+                case "ApplyPostureBreakAnimationAndTergoPlacement":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.Apply,
+                        "PostureBreak exact lying animation and exact Tergo attack duplicate applied.");
+                    break;
+                case "InspectPostureBreakAnimationAndTergoPlacement":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.Inspect,
+                        "PostureBreak animation copy and Tergo placement inspected.");
+                    break;
+                case "InspectPostureBreakAnimationAndTergoPlacementRuntime":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.InspectRuntime,
+                        "PostureBreak and Tergo Animator runtime-state loops inspected.");
+                    break;
+                case "CapturePostureBreakAnimationAndTergoPlacementFinal":
+                    RunSynchronous(
+                        request,
+                        PostureBreakAnimationSetupTools.CaptureFinal,
+                        "PostureBreak and Tergo final direct contact sheet captured once.");
                     break;
                 case "InspectHelmEnterSources":
                     RunSynchronous(
@@ -551,6 +829,352 @@ namespace Bellerophon.Editor.Validation
                         DetectorAttachedStaticStartSetupTools.CaptureHitReactionReviewStart,
                         "Hit_Reaction one-time final startup-view capture completed.");
                     break;
+                case "ApplyStunTwistReviewStart":
+                    RunSynchronous(
+                        request,
+                        DetectorAttachedStaticStartSetupTools.ApplyStunTwistReviewStart,
+                        "Stun_Twist startup view applied without changing the target.");
+                    break;
+                case StunTwistStartViewInspectionCommand:
+                    RunStunTwistStartViewInspection(request);
+                    break;
+                case "CaptureStunTwistReviewStartFinal":
+                    RunSynchronous(
+                        request,
+                        DetectorAttachedStaticStartSetupTools.CaptureStunTwistReviewStartFinal,
+                        "Stun_Twist reviewed Play Mode start view captured once as final evidence.");
+                    break;
+                case "InspectStunTwistAnimationAndElectricArcSources":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools
+                            .InspectStunTwistAnimationAndElectricArcSources,
+                        "Stun_Twist animation and electric-arc sample sources inspected read-only.");
+                    break;
+                case "ApplyStunTwistAnimation":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools.ApplyStunTwistAnimation,
+                        "Exact transfer stunned Mixamo animation connected and looped on Stun_Twist.");
+                    break;
+                case StunTwistAnimationInspectionCommand:
+                    RunStunTwistAnimationInspection(request);
+                    break;
+                case "ApplyStunTwistApprovedElectricArcSample":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools
+                            .ApplyStunTwistApprovedElectricArcSample,
+                        "Approved cyan-white electric-arc sample connected unchanged to Stun_Twist.");
+                    break;
+                case StunTwistApprovedElectricArcInspectionCommand:
+                    RunStunTwistApprovedElectricArcInspection(request);
+                    break;
+                case "CaptureStunTwistApprovedElectricArcSampleFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools
+                            .CaptureStunTwistApprovedElectricArcSampleFinal,
+                        "Approved sample and applied Stun_Twist Play Mode review combined once as final evidence.");
+                    break;
+                case "BuildStunTwistElectricArcArtSample":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools
+                            .BuildStunTwistElectricArcArtSample,
+                        "Unity-applicable standalone cyan-white Stun_Twist torso electric-arc art sample built without gameplay linkage.");
+                    break;
+                case "InspectStunTwistElectricArcArtSample":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools
+                            .InspectStunTwistElectricArcArtSample,
+                        "Standalone Stun_Twist cyan-white torso electric-arc sample inspected and captured from front and rear.");
+                    break;
+                case "CaptureStunTwistAnimationAndElectricArcFinal":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools
+                            .CaptureStunTwistAnimationAndElectricArcFinal,
+                        "Reviewed Stun_Twist animation and standalone electric-arc sample combined once as final evidence.");
+                    break;
+                case "ApplyFatigueHeadShakeAnimation":
+                    RunSynchronous(
+                        request,
+                        FatigueHeadShakeAnimationSetupTools
+                            .ApplyFatigueHeadShakeAnimation,
+                        "Fatigue_HeadShake six-phase cycle, continuous source upper body, and approved one-second four-cycle wake head shake applied.");
+                    break;
+                case FatigueHeadShakeInspectionCommand:
+                    RunSynchronous(
+                        request,
+                        FatigueHeadShakeAnimationSetupTools
+                            .InspectFatigueHeadShakeAnimation,
+                        "Fatigue_HeadShake six-phase locomotion blend, upper-body preservation, and exact wake head-shake schedule inspected.");
+                    break;
+                case FatigueHeadShakeFinalCommand:
+                    RunFatigueHeadShakeInspection(request);
+                    break;
+                case "ApplyConfusedWalkForwardAnimation":
+                    RunSynchronous(
+                        request,
+                        ConfusedAnimationSetupTools
+                            .ApplyConfusedWalkForwardAnimation,
+                        "Exact transfer dizzy embedded Mixamo motion connected directly and looped on Confused_Walk_Forward.");
+                    break;
+                case "InspectConfusedWalkForwardAnimation":
+                    RunSynchronous(
+                        request,
+                        ConfusedAnimationSetupTools
+                            .InspectConfusedWalkForwardAnimation,
+                        "Confused_Walk_Forward exact copied source, direct controller connection, and loop settings inspected.");
+                    break;
+                case ConfusedWalkForwardFinalCommand:
+                    RunConfusedWalkForwardInspection(request);
+                    break;
+                case "ApplyConfusedWalkForwardZAlignment":
+                    RunSynchronous(
+                        request,
+                        ConfusedAnimationSetupTools
+                            .ApplyConfusedWalkForwardZAlignment,
+                        "Confused_Walk_Forward world Z aligned with Fatigue_HeadShake while preserving all other target root and animation properties.");
+                    break;
+                case "InspectConfusedWalkForwardZAlignment":
+                    RunSynchronous(
+                        request,
+                        ConfusedAnimationSetupTools
+                            .InspectConfusedWalkForwardZAlignment,
+                        "Confused_Walk_Forward and Fatigue_HeadShake world Z alignment inspected.");
+                    break;
+                case "InspectConfusedWalkForwardVisualZAlignment":
+                    RunSynchronous(
+                        request,
+                        ConfusedAnimationSetupTools
+                            .InspectConfiguredVisualZAlignment,
+                        "Confused_Walk_Forward target-only visual Hips Z alignment configuration inspected without modifying source animation curves.");
+                    break;
+                case "ApplyConfusedWalkForwardVisualZAlignment":
+                    RunSynchronous(
+                        request,
+                        ConfusedAnimationSetupTools
+                            .ApplyConfusedWalkForwardVisualZAlignment,
+                        "Confused_Walk_Forward target-only runtime Hips Z alignment applied against Fatigue_HeadShake.");
+                    break;
+                case ConfusedWalkForwardZAlignmentFinalCommand:
+                    RunConfusedWalkForwardZAlignmentInspection(request);
+                    break;
+                case "ApplyConfusedWalkForwardLocomotionBlendTree":
+                    RunSynchronous(
+                        request,
+                        ConfusedWalkForwardLocomotionSetupTools.Apply,
+                        "Confused_Walk_Forward idle, forward, and backward exact lower-body copies applied in a one-second 2D Blend Tree cycle with continuous confused upper body.");
+                    break;
+                case "InspectConfusedWalkForwardLocomotionBlendTree":
+                    RunSynchronous(
+                        request,
+                        ConfusedWalkForwardLocomotionSetupTools.Inspect,
+                        "Confused_Walk_Forward three-phase 2D locomotion cycle and continuous source upper body inspected.");
+                    break;
+                case ConfusedWalkForwardLocomotionFinalCommand:
+                    RunConfusedWalkForwardLocomotionInspection(request);
+                    break;
+                case "ApplyKnockbackReactionAnimation":
+                    RunSynchronous(
+                        request,
+                        KnockbackReactionAnimationSetupTools.Apply,
+                        "Knockback_Reaction exact upper source, Player_Idle lower 2D Blend Tree, and physical active-ragdoll cycle applied.");
+                    break;
+                case "InspectKnockbackReactionAnimation":
+                    RunSynchronous(
+                        request,
+                        KnockbackReactionAnimationSetupTools.Inspect,
+                        "Knockback_Reaction layered animation and physical-cycle structure inspected.");
+                    break;
+                case "ApplyKnockbackReactionFlightPose":
+                    RunSynchronous(
+                        request,
+                        KnockbackReactionAnimationSetupTools.ApplyFlightPose,
+                        "Knockback_Reaction carrier-forward flight pose and jointed lower-body physics applied.");
+                    break;
+                case "InspectKnockbackReactionFlightPose":
+                    RunSynchronous(
+                        request,
+                        KnockbackReactionAnimationSetupTools.InspectFlightPose,
+                        "Knockback_Reaction flight-pose structure inspected.");
+                    break;
+                case "ApplyKnockbackReactionImmediateLaunch":
+                    RunSynchronous(
+                        request,
+                        KnockbackReactionAnimationSetupTools.ApplyImmediateLaunch,
+                        "Knockback_Reaction immediate physical launch, explosion-driven path and reactive jointed legs applied.");
+                    break;
+                case "InspectKnockbackReactionImmediateLaunch":
+                    RunSynchronous(
+                        request,
+                        KnockbackReactionAnimationSetupTools.InspectImmediateLaunch,
+                        "Knockback_Reaction immediate-launch structure inspected.");
+                    break;
+                case KnockbackReactionImmediateLaunchRuntimeCommand:
+                    RunKnockbackReactionImmediateLaunchInspection(request, false);
+                    break;
+                case KnockbackReactionImmediateLaunchFinalCommand:
+                    RunKnockbackReactionImmediateLaunchInspection(request, true);
+                    break;
+                case "ApplyKnockbackReactionLandingArmRecovery":
+                    RunSynchronous(
+                        request,
+                        KnockbackReactionAnimationSetupTools.ApplyLandingArmRecovery,
+                        "Knockback_Reaction natural bilateral Player_Idle landing arm recovery applied.");
+                    break;
+                case "InspectKnockbackReactionLandingArmRecovery":
+                    RunSynchronous(
+                        request,
+                        KnockbackReactionAnimationSetupTools.InspectLandingArmRecovery,
+                        "Knockback_Reaction landing arm recovery structure inspected.");
+                    break;
+                case KnockbackReactionLandingArmRecoveryRuntimeCommand:
+                    RunKnockbackReactionLandingArmRecoveryInspection(request, false);
+                    break;
+                case KnockbackReactionLandingArmRecoveryFinalCommand:
+                    RunKnockbackReactionLandingArmRecoveryInspection(request, true);
+                    break;
+                case KnockbackReactionFinalCommand:
+                    RunKnockbackReactionInspection(request);
+                    break;
+                case KnockbackReactionFlightPoseFinalCommand:
+                    RunKnockbackReactionFlightPoseInspection(request);
+                    break;
+                case "InspectExhaustedWalkForwardSource":
+                    RunSynchronous(
+                        request,
+                        ExhaustedAnimationSetupTools
+                            .InspectExhaustedWalkForwardSource,
+                        "Exhausted_Walk_Forward source inspected without altering its motion.");
+                    break;
+                case "ApplyExhaustedWalkForwardAnimation":
+                    RunSynchronous(
+                        request,
+                        ExhaustedAnimationSetupTools
+                            .ApplyExhaustedWalkForwardAnimation,
+                        "Exact transfer exhausted walking Mixamo motion connected and looped on Exhausted_Walk_Forward.");
+                    break;
+                case ExhaustedWalkForwardInspectionCommand:
+                    RunExhaustedWalkForwardInspection(request);
+                    break;
+                case "CaptureExhaustedWalkForwardFinal":
+                    RunSynchronous(
+                        request,
+                        ExhaustedAnimationSetupTools
+                            .CaptureExhaustedWalkForwardFinal,
+                        "Reviewed Exhausted_Walk_Forward natural loop saved once as final evidence.");
+                    break;
+                case "ApplyExhaustedWalkForwardArmDownCorrection":
+                    RunSynchronous(
+                        request,
+                        ExhaustedAnimationSetupTools
+                            .ApplyExhaustedWalkForwardArmDownCorrection,
+                        "Both Exhausted_Walk_Forward upper arms lowered 15 degrees while preserving source swing.");
+                    break;
+                case ExhaustedWalkForwardArmDownInspectionCommand:
+                    RunExhaustedWalkForwardArmDownInspection(request);
+                    break;
+                case "CaptureExhaustedWalkForwardArmDownFinal":
+                    RunSynchronous(
+                        request,
+                        ExhaustedAnimationSetupTools
+                            .CaptureExhaustedWalkForwardArmDownFinal,
+                        "Baseline and 15-degree arm-down result combined once as final evidence.");
+                    break;
+                case "ApplyExhaustedWalkForwardFingerAndTorsoCorrection":
+                    RunSynchronous(
+                        request,
+                        ExhaustedAnimationSetupTools
+                            .ApplyExhaustedWalkForwardFingerAndTorsoCorrection,
+                        "All finger chains point straight down and the torso bends forward 15 degrees with anatomical joint distribution.");
+                    break;
+                case ExhaustedWalkForwardFingerTorsoInspectionCommand:
+                    RunExhaustedWalkForwardFingerTorsoInspection(request);
+                    break;
+                case "CaptureExhaustedWalkForwardFingerAndTorsoFinal":
+                    RunSynchronous(
+                        request,
+                        ExhaustedAnimationSetupTools
+                            .CaptureExhaustedWalkForwardFingerAndTorsoFinal,
+                        "Arm-down baseline and finger-down torso-forward result combined once as final evidence.");
+                    break;
+                case "ApplyExhaustedWalkForwardArmsStraightDownCorrection":
+                    RunSynchronous(
+                        request,
+                        ExhaustedAnimationSetupTools
+                            .ApplyExhaustedWalkForwardArmsStraightDownCorrection,
+                        "Both exhausted arm chains extend neutral-straight downward without elbow hyperextension.");
+                    break;
+                case ExhaustedWalkForwardArmsStraightInspectionCommand:
+                    RunExhaustedWalkForwardArmsStraightInspection(request);
+                    break;
+                case "CaptureExhaustedWalkForwardArmsStraightDownFinal":
+                    RunSynchronous(
+                        request,
+                        ExhaustedAnimationSetupTools
+                            .CaptureExhaustedWalkForwardArmsStraightDownFinal,
+                        "Finger-torso baseline and straight-down arms result combined once as final evidence.");
+                    break;
+                case "ApplyExhaustedWalkForwardRightArmLegClearance":
+                    RunSynchronous(
+                        request,
+                        ExhaustedAnimationSetupTools
+                            .ApplyExhaustedWalkForwardRightArmLegClearance,
+                        "The complete straight right arm was shifted minimally outward from the right leg.");
+                    break;
+                case ExhaustedWalkForwardRightArmClearanceInspectionCommand:
+                    RunExhaustedWalkForwardRightArmClearanceInspection(request);
+                    break;
+                case "CaptureExhaustedWalkForwardRightArmLegClearanceFinal":
+                    RunSynchronous(
+                        request,
+                        ExhaustedAnimationSetupTools
+                            .CaptureExhaustedWalkForwardRightArmLegClearanceFinal,
+                        "Straight-arm baseline and right-arm leg-clearance result combined once as final evidence.");
+                    break;
+                case "ApplyExhaustedLocomotionBlendTrees":
+                    RunSynchronous(
+                        request,
+                        ExhaustedLocomotionBlendTreeTools
+                            .ApplyExhaustedLocomotionBlendTrees,
+                        "Four independent exhausted locomotion 2D Blend Trees applied with copied upper forward accumulation removed and exact lower sources.");
+                    break;
+                case ExhaustedLocomotionBlendTreesInspectionCommand:
+                    RunExhaustedLocomotionBlendTreesInspection(request, false);
+                    break;
+                case ExhaustedLocomotionBlendTreesFinalCommand:
+                    RunExhaustedLocomotionBlendTreesInspection(request, true);
+                    break;
+                case "ApplyExhaustedLocomotionForwardDriftCorrection":
+                    RunSynchronous(
+                        request,
+                        ExhaustedLocomotionBlendTreeTools
+                            .ApplyExhaustedLocomotionForwardDriftCorrection,
+                        "Forward accumulation removed only from the copied Hips translation curve of four exhausted locomotion targets.");
+                    break;
+                case ExhaustedLocomotionForwardDriftInspectionCommand:
+                    RunExhaustedLocomotionForwardDriftInspection(request, false);
+                    break;
+                case ExhaustedLocomotionForwardDriftFinalCommand:
+                    RunExhaustedLocomotionForwardDriftInspection(request, true);
+                    break;
+                case "ApplyExhaustedLocomotionDirectionalLayerCorrection":
+                    RunSynchronous(
+                        request,
+                        ExhaustedLocomotionBlendTreeTools
+                            .ApplyExhaustedLocomotionDirectionalLayerCorrection,
+                        "Exact Player motion now owns each target's hips and legs while the exhausted source drives only the Spine02 upper branch.");
+                    break;
+                case ExhaustedLocomotionDirectionalInspectionCommand:
+                    RunExhaustedLocomotionDirectionalInspection(request, false);
+                    break;
+                case ExhaustedLocomotionDirectionalFinalCommand:
+                    RunExhaustedLocomotionDirectionalInspection(request, true);
+                    break;
                 case "ApplyPlayerDamageReactionAnimations":
                     RunSynchronous(
                         request,
@@ -599,10 +1223,46 @@ namespace Bellerophon.Editor.Validation
                         PlayerDamageReactionAnimationSetupTools.InspectPlayerDamageReactionPostureCorrection,
                         "Player damage reaction posture correction inspected.");
                     break;
+                case "ApplyDeathRagdollLoop":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools.ApplyDeathRagdollLoop,
+                        "Death original animation now transitions to a 0.5-second full-body ragdoll before immediate first-pose reset.");
+                    break;
+                case "ApplyDeathRagdollGroundAndFullBodyLaunch":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools.ApplyDeathRagdollGroundAndFullBodyLaunch,
+                        "Death now uses its lying position as physical ground and Death_FullBodyLaunch uses the same ground for its 0.3-second delayed launch loop.");
+                    break;
+                case "ApplyDeathTergoLayingRagdollLoop":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools.ApplyDeathTergoLayingRagdollLoop,
+                        "Death_Tergo now plays the exact laying source, then a 0.5-second grounded ragdoll, and resets immediately.");
+                    break;
+                case "InspectDeathTergoLayingRagdollLoop":
+                    RunSynchronous(
+                        request,
+                        PlayerDamageReactionAnimationSetupTools.InspectDeathTergoLayingRagdollLoop,
+                        "Death_Tergo laying source, controller, grounded ragdoll, and loop configuration inspected.");
+                    break;
                 case PlayerDamageReactionFinalCommand:
                 case PlayerDamageReactionArmCorrectionFinalCommand:
                 case PlayerDamageReactionPostureCorrectionFinalCommand:
                     RunPlayerDamageReactionFinal(request);
+                    break;
+                case DeathRagdollLoopFinalCommand:
+                    RunDeathRagdollLoopFinal(request);
+                    break;
+                case DeathGroundAndFullBodyLaunchFinalCommand:
+                    RunDeathGroundAndFullBodyLaunchFinal(request);
+                    break;
+                case DeathTergoReviewCommand:
+                    RunDeathTergoLayingRagdollCapture(request, false);
+                    break;
+                case DeathTergoFinalCommand:
+                    RunDeathTergoLayingRagdollCapture(request, true);
                     break;
                 case "InspectShipRepairSharedAnimationCorrectionSources":
                     RunSynchronous(
@@ -12943,6 +13603,819 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
+        private static void RunStunTwistStartViewInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (StunTwistStartViewPlayModeInspection.HasPendingInspection &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    StunTwistStartViewPlayModeInspection.ResetStaleInspection();
+                }
+                if (StunTwistStartViewPlayModeInspection.HasPendingInspection)
+                    StunTwistStartViewPlayModeInspection.Resume(
+                        completeCallback, failCallback);
+                else
+                    StunTwistStartViewPlayModeInspection.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunStunTwistAnimationInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (StunTwistAnimationPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    StunTwistAnimationPlayModeCapture.ResetStaleCapture();
+                if (StunTwistAnimationPlayModeCapture.HasPendingCapture)
+                    StunTwistAnimationPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    StunTwistAnimationPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunStunTwistApprovedElectricArcInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (StunTwistApprovedElectricArcPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    StunTwistApprovedElectricArcPlayModeCapture.ResetStaleCapture();
+                if (StunTwistApprovedElectricArcPlayModeCapture.HasPendingCapture)
+                    StunTwistApprovedElectricArcPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    StunTwistApprovedElectricArcPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunExhaustedWalkForwardInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ExhaustedWalkForwardPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    ExhaustedWalkForwardPlayModeCapture.ResetStaleCapture();
+                if (ExhaustedWalkForwardPlayModeCapture.HasPendingCapture)
+                    ExhaustedWalkForwardPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    ExhaustedWalkForwardPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunFatigueHeadShakeInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (FatigueHeadShakePlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    FatigueHeadShakePlayModeCapture.ResetStaleCapture();
+                if (FatigueHeadShakePlayModeCapture.HasPendingCapture)
+                    FatigueHeadShakePlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    FatigueHeadShakePlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunPostureBreakChestMountPlayModeInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (PostureBreakAnimationSetupTools.ChestMountPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    PostureBreakAnimationSetupTools.ChestMountPlayModeCapture.ResetStaleCapture();
+                if (PostureBreakAnimationSetupTools.ChestMountPlayModeCapture.HasPendingCapture)
+                    PostureBreakAnimationSetupTools.ChestMountPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    PostureBreakAnimationSetupTools.ChestMountPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunPostureBreakLegClosePlayModeInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (PostureBreakAnimationSetupTools.LegClosePlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    PostureBreakAnimationSetupTools.LegClosePlayModeCapture.ResetStaleCapture();
+                if (PostureBreakAnimationSetupTools.LegClosePlayModeCapture.HasPendingCapture)
+                    PostureBreakAnimationSetupTools.LegClosePlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    PostureBreakAnimationSetupTools.LegClosePlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunPostureBreakUpperBodyTwitchPlayModeInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (PostureBreakAnimationSetupTools.UpperBodyTwitchPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    PostureBreakAnimationSetupTools.UpperBodyTwitchPlayModeCapture.ResetStaleCapture();
+                if (PostureBreakAnimationSetupTools.UpperBodyTwitchPlayModeCapture.HasPendingCapture)
+                    PostureBreakAnimationSetupTools.UpperBodyTwitchPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    PostureBreakAnimationSetupTools.UpperBodyTwitchPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunConfusedWalkForwardInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ConfusedWalkForwardPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    ConfusedWalkForwardPlayModeCapture.ResetStaleCapture();
+                if (ConfusedWalkForwardPlayModeCapture.HasPendingCapture)
+                    ConfusedWalkForwardPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    ConfusedWalkForwardPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunConfusedWalkForwardZAlignmentInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ConfusedWalkForwardZAlignmentPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    ConfusedWalkForwardZAlignmentPlayModeCapture.ResetStaleCapture();
+                if (ConfusedWalkForwardZAlignmentPlayModeCapture.HasPendingCapture)
+                    ConfusedWalkForwardZAlignmentPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    ConfusedWalkForwardZAlignmentPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunConfusedWalkForwardLocomotionInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ConfusedWalkForwardLocomotionPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    ConfusedWalkForwardLocomotionPlayModeCapture.ResetStaleCapture();
+                if (ConfusedWalkForwardLocomotionPlayModeCapture.HasPendingCapture)
+                    ConfusedWalkForwardLocomotionPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    ConfusedWalkForwardLocomotionPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunKnockbackReactionInspection(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (KnockbackReactionPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    KnockbackReactionPlayModeCapture.ResetStaleCapture();
+                if (KnockbackReactionPlayModeCapture.HasPendingCapture)
+                    KnockbackReactionPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    KnockbackReactionPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunKnockbackReactionFlightPoseInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (KnockbackReactionFlightPosePlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    KnockbackReactionFlightPosePlayModeCapture.ResetStaleCapture();
+                if (KnockbackReactionFlightPosePlayModeCapture.HasPendingCapture)
+                    KnockbackReactionFlightPosePlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    KnockbackReactionFlightPosePlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunKnockbackReactionImmediateLaunchInspection(
+            BridgeRequest request,
+            bool captureFinal)
+        {
+            BeginRequest(request);
+            try
+            {
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (KnockbackReactionFlightPosePlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    KnockbackReactionFlightPosePlayModeCapture.ResetStaleCapture();
+                if (KnockbackReactionFlightPosePlayModeCapture.HasPendingCapture)
+                    KnockbackReactionFlightPosePlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    KnockbackReactionFlightPosePlayModeCapture.Start(
+                        captureFinal,
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunKnockbackReactionLandingArmRecoveryInspection(
+            BridgeRequest request,
+            bool captureFinal)
+        {
+            BeginRequest(request);
+            try
+            {
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (KnockbackReactionFlightPosePlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    KnockbackReactionFlightPosePlayModeCapture.ResetStaleCapture();
+                if (KnockbackReactionFlightPosePlayModeCapture.HasPendingCapture)
+                    KnockbackReactionFlightPosePlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    KnockbackReactionFlightPosePlayModeCapture.StartLandingArmReview(
+                        captureFinal,
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunExhaustedWalkForwardArmDownInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ExhaustedWalkForwardPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    ExhaustedWalkForwardPlayModeCapture.ResetStaleCapture();
+                if (ExhaustedWalkForwardPlayModeCapture.HasPendingCapture)
+                    ExhaustedWalkForwardPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    ExhaustedWalkForwardPlayModeCapture.StartArmDown(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunExhaustedWalkForwardFingerTorsoInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ExhaustedWalkForwardPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    ExhaustedWalkForwardPlayModeCapture.ResetStaleCapture();
+                if (ExhaustedWalkForwardPlayModeCapture.HasPendingCapture)
+                    ExhaustedWalkForwardPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    ExhaustedWalkForwardPlayModeCapture.StartFingerAndTorso(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunExhaustedWalkForwardArmsStraightInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ExhaustedWalkForwardPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    ExhaustedWalkForwardPlayModeCapture.ResetStaleCapture();
+                if (ExhaustedWalkForwardPlayModeCapture.HasPendingCapture)
+                    ExhaustedWalkForwardPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    ExhaustedWalkForwardPlayModeCapture.StartArmsStraightDown(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunExhaustedWalkForwardRightArmClearanceInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ExhaustedWalkForwardPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    ExhaustedWalkForwardPlayModeCapture.ResetStaleCapture();
+                if (ExhaustedWalkForwardPlayModeCapture.HasPendingCapture)
+                    ExhaustedWalkForwardPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    ExhaustedWalkForwardPlayModeCapture.StartRightArmLegClearance(
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunExhaustedLocomotionBlendTreesInspection(
+            BridgeRequest request,
+            bool final)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ExhaustedLocomotionBlendTreesPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    ExhaustedLocomotionBlendTreesPlayModeCapture.ResetStaleCapture();
+                if (ExhaustedLocomotionBlendTreesPlayModeCapture.HasPendingCapture)
+                    ExhaustedLocomotionBlendTreesPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    ExhaustedLocomotionBlendTreesPlayModeCapture.Start(
+                        final,
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunExhaustedLocomotionForwardDriftInspection(
+            BridgeRequest request,
+            bool final)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ExhaustedLocomotionBlendTreesPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    ExhaustedLocomotionBlendTreesPlayModeCapture.ResetStaleCapture();
+                if (ExhaustedLocomotionBlendTreesPlayModeCapture.HasPendingCapture)
+                    ExhaustedLocomotionBlendTreesPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    ExhaustedLocomotionBlendTreesPlayModeCapture.StartForwardDrift(
+                        final,
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunExhaustedLocomotionDirectionalInspection(
+            BridgeRequest request,
+            bool final)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (ExhaustedLocomotionBlendTreesPlayModeCapture.HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                    ExhaustedLocomotionBlendTreesPlayModeCapture.ResetStaleCapture();
+                if (ExhaustedLocomotionBlendTreesPlayModeCapture.HasPendingCapture)
+                    ExhaustedLocomotionBlendTreesPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    ExhaustedLocomotionBlendTreesPlayModeCapture.StartDirectional(
+                        final,
+                        completeCallback,
+                        failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
         private static void RunShipRepairSharedAnimationFinal(
             BridgeRequest request)
         {
@@ -12996,6 +14469,102 @@ namespace Bellerophon.Editor.Validation
                     PlayerDamageReactionPlayModeCapture.Resume(completeCallback, failCallback);
                 else
                     PlayerDamageReactionPlayModeCapture.Start(completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunDeathRagdollLoopFinal(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (DeathRagdollLoopPlayModeCapture.HasPendingCapture)
+                    DeathRagdollLoopPlayModeCapture.Resume(completeCallback, failCallback);
+                else
+                    DeathRagdollLoopPlayModeCapture.Start(completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunDeathGroundAndFullBodyLaunchFinal(BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (DeathRagdollGroundAndFullBodyLaunchPlayModeCapture.HasPendingCapture)
+                    DeathRagdollGroundAndFullBodyLaunchPlayModeCapture.Resume(
+                        completeCallback, failCallback);
+                else
+                    DeathRagdollGroundAndFullBodyLaunchPlayModeCapture.Start(
+                        completeCallback, failCallback);
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
+        private static void RunDeathTergoLayingRagdollCapture(
+            BridgeRequest request,
+            bool final)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (DeathTergoLayingRagdollPlayModeCapture.HasPendingCapture)
+                    DeathTergoLayingRagdollPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                else
+                    DeathTergoLayingRagdollPlayModeCapture.Start(
+                        final,
+                        completeCallback,
+                        failCallback);
             }
             catch (Exception exception)
             {
@@ -14482,6 +16051,10 @@ namespace Bellerophon.Editor.Validation
                 request.Command == VacuumUseLocomotionDiagnosticCommand ||
                 request.Command == VacuumUseLocomotionFinalCommand ||
                 request.Command == HoloSprayIdleLocomotionFinalCommand ||
+                request.Command == PostureBreakChestMountPlayModeCommand ||
+                request.Command == PostureBreakLegClosePlayModeCommand ||
+                request.Command == PostureBreakUpperBodyTwitchPlayModeCommand ||
+                request.Command == PostureBreakTwitchAttackSyncPlayModeCommand ||
                 request.Command == LightsaberOffIdleLocomotionInspectionCommand ||
                 request.Command == LightsaberDiagonalSlashInspectionCommand ||
                 request.Command == LightsaberDiagonalSlashBladeTrajectoryInspectionCommand ||
@@ -14507,9 +16080,28 @@ namespace Bellerophon.Editor.Validation
                 request.Command == TurretEnterStartViewInspectionCommand ||
                 request.Command == ShipRepairStartViewInspectionCommand ||
                 request.Command == HitReactionStartViewInspectionCommand ||
+                request.Command == StunTwistStartViewInspectionCommand ||
+                request.Command == StunTwistAnimationInspectionCommand ||
+                request.Command == StunTwistApprovedElectricArcInspectionCommand ||
+                request.Command == ExhaustedWalkForwardInspectionCommand ||
+                request.Command == ExhaustedWalkForwardArmDownInspectionCommand ||
+                request.Command == ExhaustedWalkForwardFingerTorsoInspectionCommand ||
+                request.Command == ExhaustedWalkForwardArmsStraightInspectionCommand ||
+                request.Command ==
+                    ExhaustedWalkForwardRightArmClearanceInspectionCommand ||
+                request.Command == ExhaustedLocomotionBlendTreesInspectionCommand ||
+                request.Command == ExhaustedLocomotionBlendTreesFinalCommand ||
+                request.Command == ExhaustedLocomotionForwardDriftInspectionCommand ||
+                request.Command == ExhaustedLocomotionForwardDriftFinalCommand ||
+                request.Command == ExhaustedLocomotionDirectionalInspectionCommand ||
+                request.Command == ExhaustedLocomotionDirectionalFinalCommand ||
                 request.Command == PlayerDamageReactionFinalCommand ||
                 request.Command == PlayerDamageReactionArmCorrectionFinalCommand ||
                 request.Command == PlayerDamageReactionPostureCorrectionFinalCommand ||
+                request.Command == DeathRagdollLoopFinalCommand ||
+                request.Command == DeathGroundAndFullBodyLaunchFinalCommand ||
+                request.Command == DeathTergoReviewCommand ||
+                request.Command == DeathTergoFinalCommand ||
                 request.Command == ShipRepairSharedAnimationFinalCommand ||
                 request.Command == ShipRepairProgressAndWeldingFinalCommand ||
                 request.Command == LightsaberThrustStartPoseInspectionCommand ||
@@ -14557,7 +16149,13 @@ namespace Bellerophon.Editor.Validation
                 request.Command == NegatifClawAttackVisualReviewCommand ||
                 request.Command == NegatifHitReactionVisualReviewCommand ||
                 request.Command == NegatifFleeVisualReviewCommand ||
-                request.Command == NegatifDeathVisualReviewCommand)
+                request.Command == NegatifDeathVisualReviewCommand ||
+                request.Command == KnockbackReactionFinalCommand ||
+                request.Command == KnockbackReactionFlightPoseFinalCommand ||
+                request.Command == KnockbackReactionImmediateLaunchRuntimeCommand ||
+                request.Command == KnockbackReactionImmediateLaunchFinalCommand ||
+                request.Command == KnockbackReactionLandingArmRecoveryRuntimeCommand ||
+                request.Command == KnockbackReactionLandingArmRecoveryFinalCommand)
             {
                 return false;
             }
@@ -14617,6 +16215,64 @@ namespace Bellerophon.Editor.Validation
             {
                 TryDelete(ActiveRequestPath);
                 return false;
+            }
+
+            if (request.Command == PostureBreakChestMountPlayModeCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming PostureBreak Tergo waist-mount direct Play Mode inspection after mode transition.");
+                PostureBreakAnimationSetupTools.ChestMountPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == PostureBreakLegClosePlayModeCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming PostureBreak leg-close direct Play Mode inspection after mode transition.");
+                PostureBreakAnimationSetupTools.LegClosePlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == PostureBreakUpperBodyTwitchPlayModeCommand ||
+                request.Command == PostureBreakTwitchAttackSyncPlayModeCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming PostureBreak upper-body twitch direct Play Mode inspection after mode transition.");
+                PostureBreakAnimationSetupTools.UpperBodyTwitchPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
             }
 
             if (request.Command ==
@@ -14697,6 +16353,337 @@ namespace Bellerophon.Editor.Validation
                 return true;
             }
 
+            if (request.Command == StunTwistStartViewInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Stun_Twist startup-view natural Play Mode inspection after mode transition.");
+                StunTwistStartViewPlayModeInspection.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == StunTwistAnimationInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Stun_Twist natural animation inspection after Play Mode transition.");
+                StunTwistAnimationPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == StunTwistApprovedElectricArcInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming approved Stun_Twist electric-arc natural Play Mode inspection after mode transition.");
+                StunTwistApprovedElectricArcPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == FatigueHeadShakeFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Fatigue_HeadShake natural Play Mode inspection after mode transition.");
+                FatigueHeadShakePlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == ConfusedWalkForwardFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Confused_Walk_Forward natural Play Mode inspection after mode transition.");
+                ConfusedWalkForwardPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == ConfusedWalkForwardZAlignmentFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Confused_Walk_Forward and Fatigue_HeadShake Z-alignment direct Play Mode comparison after mode transition.");
+                ConfusedWalkForwardZAlignmentPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == ConfusedWalkForwardLocomotionFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Confused_Walk_Forward three-phase locomotion direct Play Mode review after mode transition.");
+                ConfusedWalkForwardLocomotionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == KnockbackReactionFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Knockback_Reaction physical active-ragdoll direct Play Mode review after mode transition.");
+                KnockbackReactionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == KnockbackReactionFlightPoseFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Knockback_Reaction forward flight-pose direct Play Mode review after mode transition.");
+                KnockbackReactionFlightPosePlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == KnockbackReactionImmediateLaunchRuntimeCommand ||
+                request.Command == KnockbackReactionImmediateLaunchFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Knockback_Reaction immediate-launch direct Play Mode review after mode transition.");
+                KnockbackReactionFlightPosePlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == KnockbackReactionLandingArmRecoveryRuntimeCommand ||
+                request.Command == KnockbackReactionLandingArmRecoveryFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Knockback_Reaction landing arm recovery direct Play Mode review after mode transition.");
+                KnockbackReactionFlightPosePlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == ExhaustedWalkForwardInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Exhausted_Walk_Forward natural Play Mode inspection after mode transition.");
+                ExhaustedWalkForwardPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == ExhaustedWalkForwardArmDownInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Exhausted_Walk_Forward 15-degree arm-down natural Play Mode inspection after mode transition.");
+                ExhaustedWalkForwardPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == ExhaustedWalkForwardFingerTorsoInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Exhausted_Walk_Forward straight-finger and 15-degree torso-forward natural Play Mode inspection after mode transition.");
+                ExhaustedWalkForwardPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == ExhaustedWalkForwardArmsStraightInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Exhausted_Walk_Forward straight-down arms natural Play Mode inspection after mode transition.");
+                ExhaustedWalkForwardPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command ==
+                ExhaustedWalkForwardRightArmClearanceInspectionCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Exhausted_Walk_Forward right-arm and right-leg clearance natural Play Mode inspection after mode transition.");
+                ExhaustedWalkForwardPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == ExhaustedLocomotionBlendTreesInspectionCommand ||
+                request.Command == ExhaustedLocomotionBlendTreesFinalCommand ||
+                request.Command == ExhaustedLocomotionForwardDriftInspectionCommand ||
+                request.Command == ExhaustedLocomotionForwardDriftFinalCommand ||
+                request.Command == ExhaustedLocomotionDirectionalInspectionCommand ||
+                request.Command == ExhaustedLocomotionDirectionalFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming exhausted locomotion independent 2D Blend Tree direct Play Mode review after mode transition.");
+                ExhaustedLocomotionBlendTreesPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
             if (request.Command == ShipRepairSharedAnimationFinalCommand)
             {
                 BeginRequest(request);
@@ -14724,6 +16711,64 @@ namespace Bellerophon.Editor.Validation
                 activeLog.AppendLine(
                     "Resuming player damage-reaction natural Play Mode capture after mode transition.");
                 PlayerDamageReactionPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == DeathRagdollLoopFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Death animation-to-ragdoll natural Play Mode capture after mode transition.");
+                DeathRagdollLoopPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == DeathGroundAndFullBodyLaunchFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Death shared-ground/full-body launch natural Play Mode capture after mode transition.");
+                DeathRagdollGroundAndFullBodyLaunchPlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == DeathTergoReviewCommand ||
+                request.Command == DeathTergoFinalCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Death_Tergo laying/ragdoll natural Play Mode capture after mode transition.");
+                DeathTergoLayingRagdollPlayModeCapture.Resume(
                     successMarker =>
                     {
                         TryDelete(ActiveRequestPath);

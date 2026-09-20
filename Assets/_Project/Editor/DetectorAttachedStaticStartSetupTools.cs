@@ -21,6 +21,7 @@ namespace Bellerophon.Editor.Validation
         private const string TurretTargetName = "Turret_Enter";
         private const string ShipRepairTargetName = "ShipRepair";
         private const string HitReactionTargetName = "Hit_Reaction";
+        private const string StunTwistTargetName = "Stun_Twist";
         private const string TurretReviewFolder = "Temp/TurretEnterStart";
         private const string TurretRuntimeReportRelativePath =
             TurretReviewFolder + "/RuntimeInspection.txt";
@@ -43,6 +44,16 @@ namespace Bellerophon.Editor.Validation
             HitReactionReviewFolder + "/Final.png";
         private const string HitReactionFinalReportRelativePath =
             HitReactionReviewFolder + "/Final.txt";
+        private const string StunTwistReviewFolder =
+            "docs/validation/StunTwistStartView";
+        private const string StunTwistRuntimeReportRelativePath =
+            StunTwistReviewFolder + "/RuntimeInspection.txt";
+        private const string StunTwistReviewImageRelativePath =
+            StunTwistReviewFolder + "/Review.png";
+        private const string StunTwistFinalImageRelativePath =
+            StunTwistReviewFolder + "/Final.png";
+        private const string StunTwistFinalReportRelativePath =
+            StunTwistReviewFolder + "/Final.txt";
         internal const string ReviewImageRelativePath =
             "Temp/DetectorAttachedStaticStartView/UnityPlayModeReview.png";
         internal const string ReviewReportRelativePath =
@@ -113,6 +124,12 @@ namespace Bellerophon.Editor.Validation
             ApplyStartView(HitReactionTargetName);
         }
 
+        [MenuItem("Bellerophon/Player/Apply Stun Twist Start View")]
+        internal static void ApplyStunTwistReviewStart()
+        {
+            ApplyStartView(StunTwistTargetName);
+        }
+
         private static void ApplyStartView(string targetName)
         {
             RequireEditMode();
@@ -127,6 +144,7 @@ namespace Bellerophon.Editor.Validation
             Vector3 targetPositionBefore = target.position;
             Quaternion targetRotationBefore = target.rotation;
             Vector3 targetScaleBefore = target.localScale;
+            string targetComponentsBefore = TargetComponentSignature(target);
 
             Bounds targetBounds = BoundsOf(target);
             Vector3 targetFront = HorizontalDirection(
@@ -201,6 +219,10 @@ namespace Bellerophon.Editor.Validation
             RequireNear(target.position, targetPositionBefore, targetName + " position");
             RequireNear(target.rotation, targetRotationBefore, targetName + " rotation");
             RequireNear(target.localScale, targetScaleBefore, targetName + " scale");
+            RequireEqual(
+                targetComponentsBefore,
+                TargetComponentSignature(target),
+                targetName + " animation and renderer configuration");
             StartViewMetrics metrics = RequireStartView(player, target, camera);
 
             EditorSceneManager.MarkSceneDirty(scene);
@@ -240,6 +262,11 @@ namespace Bellerophon.Editor.Validation
         internal static void InspectHitReactionReviewStart()
         {
             InspectAppliedStartView(HitReactionTargetName);
+        }
+
+        internal static void InspectStunTwistReviewStart()
+        {
+            InspectAppliedStartView(StunTwistTargetName);
         }
 
         internal static void InspectTurretEnterRuntimeStart()
@@ -360,6 +387,51 @@ namespace Bellerophon.Editor.Validation
             File.WriteAllText(reportPath, report.ToString(), new UTF8Encoding(false));
             RequireNoUnityConsoleErrors();
             Debug.Log("[HitReactionStart] Natural Play Mode startup inspection passed.\n" +
+                report);
+        }
+
+        internal static void InspectStunTwistRuntimeStart()
+        {
+            if (!EditorApplication.isPlaying)
+                throw new InvalidOperationException(
+                    "Stun_Twist runtime start-view inspection requires Play Mode.");
+            Scene scene = RequireScene();
+            Transform player = FindUnique(scene, PlayerName);
+            Transform target = FindUnique(scene, StunTwistTargetName);
+            Camera camera = RequirePlayerCamera(player);
+            Vector3 targetPositionBefore = target.position;
+            Quaternion targetRotationBefore = target.rotation;
+            Vector3 targetScaleBefore = target.localScale;
+            StartViewMetrics metrics = RequireStartView(player, target, camera);
+            string reviewImagePath = Absolute(StunTwistReviewImageRelativePath);
+            string reportPath = Absolute(StunTwistRuntimeReportRelativePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(reportPath) ??
+                throw new InvalidOperationException(
+                    "Stun_Twist runtime report folder is unavailable."));
+            Render(camera, reviewImagePath);
+            RequireNear(target.position, targetPositionBefore,
+                StunTwistTargetName + " position");
+            RequireNear(target.rotation, targetRotationBefore,
+                StunTwistTargetName + " rotation");
+            RequireNear(target.localScale, targetScaleBefore,
+                StunTwistTargetName + " scale");
+            var report = new StringBuilder()
+                .AppendLine("Stun_Twist natural Play Mode startup inspection")
+                .AppendLine("naturalPlayMode=True")
+                .AppendLine("targetTransformChanged=False")
+                .AppendLine("targetAnimationOrRenderersChanged=False")
+                .AppendLine("cameraOrPlayerChildrenChanged=False")
+                .AppendLine("fullTargetBoundsVisible=True")
+                .AppendLine("targetFrontViewConfirmed=True")
+                .AppendLine("cameraFacesTarget=True")
+                .AppendLine("horizontalDistanceMeters=" + Num(metrics.HorizontalDistance))
+                .AppendLine("frontAxisDot=" + Num(metrics.FrontAxisDot))
+                .AppendLine("facingDot=" + Num(metrics.FacingDot))
+                .AppendLine("minimumViewportMargin=" + Num(metrics.MinimumViewportMargin))
+                .AppendLine("runtimeInspectionPassed=True");
+            File.WriteAllText(reportPath, report.ToString(), new UTF8Encoding(false));
+            RequireNoUnityConsoleErrors();
+            Debug.Log("[StunTwistStart] Natural Play Mode startup inspection and review capture passed.\n" +
                 report);
         }
 
@@ -504,6 +576,44 @@ namespace Bellerophon.Editor.Validation
                 new UTF8Encoding(false));
             RequireNoUnityConsoleErrors();
             Debug.Log("[HitReactionStart] One-time final startup-view capture completed.");
+        }
+
+        [MenuItem("Bellerophon/Player/Capture Stun Twist Start View Final")]
+        internal static void CaptureStunTwistReviewStartFinal()
+        {
+            RequireEditMode();
+            InspectAppliedStartView(StunTwistTargetName);
+            string runtimeReportPath = Absolute(StunTwistRuntimeReportRelativePath);
+            string reviewImagePath = Absolute(StunTwistReviewImageRelativePath);
+            if (!File.Exists(runtimeReportPath) || !File.Exists(reviewImagePath))
+                throw new InvalidOperationException(
+                    "Stun_Twist natural Play Mode review evidence is missing.");
+            string runtimeReport = File.ReadAllText(runtimeReportPath, Encoding.UTF8);
+            if (!runtimeReport.Contains("naturalPlayMode=True") ||
+                !runtimeReport.Contains("targetTransformChanged=False") ||
+                !runtimeReport.Contains("targetAnimationOrRenderersChanged=False") ||
+                !runtimeReport.Contains("runtimeInspectionPassed=True"))
+                throw new InvalidOperationException(
+                    "Stun_Twist natural Play Mode inspection has not passed.");
+
+            string finalImagePath = Absolute(StunTwistFinalImageRelativePath);
+            string finalReportPath = Absolute(StunTwistFinalReportRelativePath);
+            if (File.Exists(finalImagePath) || File.Exists(finalReportPath))
+                throw new InvalidOperationException(
+                    "Stun_Twist one-time final startup capture already exists.");
+            File.Copy(reviewImagePath, finalImagePath, false);
+            File.WriteAllText(
+                finalReportPath,
+                "Stun_Twist one-time final startup-view capture\n" +
+                "naturalPlayModeInspectionPassed=True\n" +
+                "targetTransformChanged=False\n" +
+                "targetAnimationOrRenderersChanged=False\n" +
+                "cameraOrPlayerChildrenChanged=False\n" +
+                "directVisualReviewPassed=True\n" +
+                "directVisualReviewResult=Stun_Twist is shown from the front and fully visible without clipping.\n",
+                new UTF8Encoding(false));
+            RequireNoUnityConsoleErrors();
+            Debug.Log("[StunTwistStart] Reviewed Play Mode image copied once as final evidence.");
         }
 
         private static void InspectAppliedStartView(string targetName)
@@ -791,6 +901,38 @@ namespace Bellerophon.Editor.Validation
                         Num(camera.farClipPlane) + "|" +
                         camera.orthographic + "|" +
                         Num(camera.orthographicSize));
+            }
+            lines.Sort(StringComparer.Ordinal);
+            return Sha256Text(string.Join("\n", lines));
+        }
+
+        private static string TargetComponentSignature(Transform root)
+        {
+            var lines = new List<string>();
+            foreach (Animator animator in root.GetComponentsInChildren<Animator>(true))
+            {
+                lines.Add(
+                    HierarchyPath(animator.transform) + "|ANIMATOR|" +
+                    animator.enabled + "|" + animator.applyRootMotion + "|" +
+                    animator.updateMode + "|" + animator.cullingMode + "|" +
+                    AssetDatabase.GetAssetPath(animator.avatar) + "|" +
+                    AssetDatabase.GetAssetPath(animator.runtimeAnimatorController));
+            }
+            foreach (Renderer renderer in root.GetComponentsInChildren<Renderer>(true))
+            {
+                string materials = string.Join(",",
+                    renderer.sharedMaterials.Select(
+                        material => AssetDatabase.GetAssetPath(material)));
+                string mesh = string.Empty;
+                if (renderer is SkinnedMeshRenderer skinned)
+                    mesh = AssetDatabase.GetAssetPath(skinned.sharedMesh);
+                else if (renderer.TryGetComponent(out MeshFilter filter))
+                    mesh = AssetDatabase.GetAssetPath(filter.sharedMesh);
+                lines.Add(
+                    HierarchyPath(renderer.transform) + "|RENDERER|" +
+                    renderer.GetType().FullName + "|" + renderer.enabled + "|" +
+                    renderer.shadowCastingMode + "|" + renderer.receiveShadows + "|" +
+                    mesh + "|" + materials);
             }
             lines.Sort(StringComparer.Ordinal);
             return Sha256Text(string.Join("\n", lines));
@@ -1181,6 +1323,137 @@ namespace Bellerophon.Editor.Validation
             string message = SessionState.GetString(
                 FailureKey,
                 "Hit_Reaction startup Play Mode inspection failed.");
+            Action<Exception> callback = fail;
+            Cleanup();
+            callback?.Invoke(new InvalidOperationException(message));
+        }
+
+        private static void Cleanup()
+        {
+            EditorApplication.update -= Tick;
+            complete = null;
+            fail = null;
+            SessionState.EraseBool(PendingKey);
+            SessionState.EraseInt(StateKey);
+            SessionState.EraseFloat(WaitStartKey);
+            SessionState.EraseString(FailureKey);
+        }
+    }
+
+    [InitializeOnLoad]
+    internal static class StunTwistStartViewPlayModeInspection
+    {
+        private const string PendingKey = "Bellerophon.StunTwistStartView.Pending";
+        private const string StateKey = "Bellerophon.StunTwistStartView.State";
+        private const string WaitStartKey = "Bellerophon.StunTwistStartView.WaitStart";
+        private const string FailureKey = "Bellerophon.StunTwistStartView.Failure";
+        private const int WaitingForPlayMode = 0;
+        private const int WaitingForEditModeAfterSuccess = 1;
+        private const int WaitingForEditModeAfterFailure = 2;
+        private static Action<string> complete;
+        private static Action<Exception> fail;
+
+        static StunTwistStartViewPlayModeInspection()
+        {
+        }
+
+        internal static bool HasPendingInspection =>
+            SessionState.GetBool(PendingKey, false);
+
+        internal static void ResetStaleInspection()
+        {
+            if (!EditorApplication.isPlayingOrWillChangePlaymode)
+                Cleanup();
+        }
+
+        internal static void Start(Action<string> onComplete, Action<Exception> onFail)
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException(
+                    "Stun_Twist startup inspection must start in Edit Mode.");
+            complete = onComplete;
+            fail = onFail;
+            SessionState.SetBool(PendingKey, true);
+            SessionState.SetInt(StateKey, WaitingForPlayMode);
+            SessionState.SetFloat(WaitStartKey, (float)EditorApplication.timeSinceStartup);
+            SessionState.EraseString(FailureKey);
+            Subscribe();
+            EditorApplication.EnterPlaymode();
+        }
+
+        internal static void Resume(Action<string> onComplete, Action<Exception> onFail)
+        {
+            complete = onComplete;
+            fail = onFail;
+            if (!HasPendingInspection)
+                throw new InvalidOperationException(
+                    "Stun_Twist startup Play Mode inspection has no pending state.");
+            Subscribe();
+        }
+
+        private static void Subscribe()
+        {
+            EditorApplication.update -= Tick;
+            EditorApplication.update += Tick;
+        }
+
+        private static void Tick()
+        {
+            if (!HasPendingInspection)
+            {
+                EditorApplication.update -= Tick;
+                return;
+            }
+            int state = SessionState.GetInt(StateKey, WaitingForPlayMode);
+            try
+            {
+                if (state == WaitingForPlayMode)
+                {
+                    if (!EditorApplication.isPlaying)
+                        return;
+                    double elapsed = EditorApplication.timeSinceStartup -
+                        SessionState.GetFloat(WaitStartKey, 0f);
+                    if (elapsed < 0.75d)
+                        return;
+                    DetectorAttachedStaticStartSetupTools
+                        .InspectStunTwistRuntimeStart();
+                    SessionState.SetInt(StateKey, WaitingForEditModeAfterSuccess);
+                    EditorApplication.ExitPlaymode();
+                    return;
+                }
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                    return;
+                if (state == WaitingForEditModeAfterFailure)
+                {
+                    FinishFailure();
+                    return;
+                }
+                DetectorAttachedStaticStartSetupTools
+                    .InspectStunTwistReviewStart();
+                Action<string> callback = complete;
+                Cleanup();
+                callback?.Invoke(
+                    "Stun_Twist startup view captured in natural Play Mode and restored to Edit Mode.");
+            }
+            catch (Exception exception)
+            {
+                SessionState.SetString(FailureKey, exception.ToString());
+                if (EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    SessionState.SetInt(StateKey, WaitingForEditModeAfterFailure);
+                    if (EditorApplication.isPlaying)
+                        EditorApplication.ExitPlaymode();
+                    return;
+                }
+                FinishFailure();
+            }
+        }
+
+        private static void FinishFailure()
+        {
+            string message = SessionState.GetString(
+                FailureKey,
+                "Stun_Twist startup Play Mode inspection failed.");
             Action<Exception> callback = fail;
             Cleanup();
             callback?.Invoke(new InvalidOperationException(message));

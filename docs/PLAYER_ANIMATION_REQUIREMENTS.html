@@ -542,18 +542,18 @@
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-DMG-001</td><td>P0</td><td>Hit_Reaction</td><td>피격 반응</td><td>전신&#183;상체</td><td>1회</td><td>피격 판정 후 생존</td><td>기존 상태</td><td>넘어짐&#183;사망</td><td>사용자 확정</td><td>피해 전반, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-DMG-007</td><td>P1</td><td>Knockdown</td><td>넘어짐 모션</td><td>전신</td><td>1회 후 마지막 자세 유지</td><td>폭발&#183;강한 넉백</td><td>넘어진 상태</td><td>일어나기&#183;사망</td><td>사용자 확정</td><td>폭발&#183;넉백 피해, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-DMG-009</td><td>P1</td><td>Knockdown_GetUp</td><td>일어나기</td><td>전신</td><td>1회</td><td>회복 가능</td><td>서 있는 대기</td><td>피격&#183;사망</td><td>필수 파생</td><td>폭발&#183;넉백 피해</td></tr>
-<tr>
-<td>PLR-DMG-010</td><td>P0</td><td>Death</td><td>사망</td><td>전신&#183;물리</td><td>고정 사망 클립 1회 후 래그돌</td><td>체력 0 또는 특수 사망 외 즉사 판정</td><td>래그돌 사망 상태</td><td>없음</td><td>사용자 확정</td><td>29행, 사용자 확정</td></tr>
-<tr>
-<td>PLR-DMG-012</td><td>P0</td><td>Death_FullBodyLaunch</td><td>온몸이 날아가 사망</td><td>전신&#183;물리</td><td>고정 시작 구간 후 래그돌</td><td>전신이 날아가는 사망 판정</td><td>힘을 적용한 래그돌 사망 상태</td><td>없음</td><td>사용자 확정</td><td>사용자 확정</td></tr>
-<tr>
-<td>PLR-DMG-013</td><td>P0</td><td>Death_Tergo</td><td>테르고에게 당해서 사망</td><td>전신&#183;물리</td><td>테르고 사망 고정 클립 후 래그돌</td><td>테르고의 꿰뚫기 또는 후속 드릴 공격으로 사망</td><td>래그돌 사망 상태</td><td>없음</td><td>사용자 확정</td><td>208행, 사용자 확정</td></tr>
+<tr class="animation-complete" data-completion="완료">
+<td>PLR-DMG-010</td><td>P0</td><td>Death</td><td>사망</td><td>전신&#183;물리</td><td>고정 사망 클립 1회 후 현재 누운 위치를 바닥으로 한 전신 래그돌 0.5초, 첫 자세 즉시 복귀 반복</td><td>체력 0 또는 특수 사망 외 즉사 판정</td><td>공통 물리 바닥에서 0.5초 래그돌 후 첫 자세 복귀</td><td>없음</td><td>사용자 확정</td><td>29행, 사용자 확정</td></tr>
+<tr class="animation-complete" data-completion="완료">
+<td>PLR-DMG-012</td><td>P0</td><td>Death_FullBodyLaunch</td><td>온몸이 날아가 사망</td><td>전신&#183;물리</td><td>시작 0.3초 후 무작위 횡방향&#183;상향 전신 래그돌, 인간형 골격을 유지하면서 정자세로 고정되지 않은 전신 물리 회전, 3m 안쪽 착지 후 0.5초 유지, 첫 자세 복귀 반복</td><td>전신이 날아가는 사망 판정</td><td><code>Death</code>와 같은 물리 바닥에 착지 후 첫 자세 복귀</td><td>없음</td><td>사용자 확정</td><td>사용자 확정</td></tr>
+<tr class="animation-complete" data-completion="완료">
+<td>PLR-DMG-013</td><td>P0</td><td>Death_Tergo</td><td>테르고에게 당해서 사망</td><td>전신&#183;물리</td><td><code>transfer laying.fbx</code> 내장 Mixamo 애니메이션 전체 재생 후 현재 누운 위치를 바닥으로 한 전신 래그돌 0.5초, 첫 자세 즉시 복귀 반복</td><td>테르고의 꿰뚫기 또는 후속 드릴 공격으로 사망</td><td>0.5초 래그돌 뒤 첫 자세로 복귀</td><td>없음</td><td>사용자 확정</td><td>208행, 사용자 확정</td></tr>
 </tbody></table>
 <ul>
 <li>약한&#183;폭발&#183;전방&#183;후방&#183;좌측&#183;우측 피격 반응은 <code>Hit_Reaction</code> 하나를 공용으로 사용한다.</li>
@@ -561,40 +561,43 @@
 <li><code>Hit_Reaction</code>은 전신의 기준 자세를 <code>Player_Idle</code>에 맞추고 원본 피격 반동만 상대 변화량으로 유지한다. <code>Knockdown</code>의 뒤로 넘어지는 구간은 양팔을 <code>Player_Idle</code> 자세에 맞춘다. <code>Knockdown_GetUp</code>은 기상 초반&#183;중간의 원본 동작을 유지하되 최종 기립이 시작되기 전에 양팔 전환을 끝내며, 일어나는 구간에는 이미 양팔이 <code>Player_Idle</code> 자세인 상태로 몸통을 따라 움직여야 한다. 양팔은 전역 고정하지 않는다.</li>
 <li>사망은 일반 <code>Death</code>, 전신이 날아가는 <code>Death_FullBodyLaunch</code>, 테르고에게 당한 <code>Death_Tergo</code>의 세 원인별 모션으로 구분한다.</li>
 <li>세 사망 유형은 고정 클립의 핵심 연출 뒤 래그돌로 전환하는 혼합 방식을 사용한다.</li>
-<li><code>Death</code>는 짧은 고정 사망 클립이 끝날 때, <code>Death_FullBodyLaunch</code>는 전신이 날아가는 시점에 힘을 이어받으며, <code>Death_Tergo</code>는 테르고의 고정 사망 연출이 끝날 때 래그돌로 전환한다.</li>
+<li><code>Death</code>는 짧은 고정 사망 클립이 끝날 때, <code>Death_FullBodyLaunch</code>는 전신이 날아가는 시점에 힘을 이어받으며, <code>Death_Tergo</code>는 <code>transfer laying.fbx</code>의 내장 Mixamo 애니메이션 전체 재생이 끝날 때 래그돌로 전환한다.</li>
+<li><code>Death</code> 검토 루프는 원본 사망 클립 종료 즉시 Animator와 물리의 중복 구동 없이 전신 래그돌로 전환하고, 중력&#183;바닥 충돌을 0.5초간 적용한 뒤 본 위치&#183;회전과 Rigidbody 속도를 초기화해 첫 자세로 즉시 복귀한다. 이 요구사항 기록은 통과 체크를 의미하지 않는다.</li>
+<li><code>Death</code>의 현재 누운 위치를 공통 물리 바닥으로 사용해 래그돌 전환 뒤 더 아래로 떨어지지 않게 하며, <code>Death_FullBodyLaunch</code>도 같은 바닥 높이와 충돌 기준을 사용한다. <code>Death_FullBodyLaunch</code>는 시작 0.3초 후 무작위 수평 방향과 위쪽 힘을 Rigidbody에 적용한다. 비행 중 척추와 팔다리의 인간형 골격 연결은 유지하되 정자세로 고정하지 않고 전신이 물리적으로 기울고 회전해야 한다. 시작점 기준 최대 3m 안의 바닥에 쓰러진 뒤 0.5초 유지한 다음 본 위치&#183;회전과 Rigidbody 속도를 초기화해 첫 자세로 즉시 복귀한다. 이 요구사항 기록은 통과 체크를 의미하지 않는다.</li>
+<li><code>Death_Tergo</code>는 SHA-256으로 원본과 동일한 <code>transfer laying.fbx</code> 복사본의 내장 애니메이션을 원본 30fps&#183;3.466667초 타이밍 그대로 재생한다. 종료 즉시 Animator를 끄고 17개 실제 뼈의 전신 래그돌을 0.5초간 적용하되, 현재 누운 위치를 물리 바닥으로 사용해 더 아래로 떨어지거나 머리가 들리지 않게 한다. 이후 본 위치&#183;회전과 Rigidbody 속도를 초기화해 첫 자세로 즉시 복귀하고 전체를 반복한다. 이 요구사항 기록은 통과 체크를 의미하지 않는다.</li>
 <li>제거된 <code>PLR-DMG-002~006</code>, <code>PLR-DMG-008</code>, <code>PLR-DMG-011</code>은 재번호하거나 다른 동작에 재사용하지 않는다.</li>
 </ul>
 <h2>23. 상태 이상과 물리 반응</h2>
 <table><thead><tr>
 <th>ID</th><th>우선</th><th>제작 키</th><th>개별 애니메이션</th><th>부위</th><th>반복/시간</th><th>시작 조건</th><th>종료 상태</th><th>취소 조건</th><th>판정</th><th>근거</th></tr>
 </thead><tbody>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-STS-002</td><td>P1</td><td>Stun_Twist</td><td>감전 비틀림</td><td>전신</td><td>상태 지속 중 반복</td><td>정지 상태 부여</td><td>상태 종료 후 기존 상태</td><td>사망</td><td>사용자 확정</td><td>288행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-STS-007</td><td>P1</td><td>Exhausted_Idle</td><td>탈진 대기</td><td>전신</td><td>반복</td><td>탈진 상태 부여와 이동 입력 없음</td><td>자체 유지</td><td>이동&#183;상태 종료&#183;사망</td><td>사용자 확정</td><td>291행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-STS-008</td><td>P1</td><td>Exhausted_Walk_Forward</td><td>탈진 전진 걷기</td><td>전신</td><td>반복</td><td>탈진 중 W</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>명시</td><td>291행</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-STS-009</td><td>P1</td><td>Exhausted_Walk_Backward</td><td>탈진 후진 걷기</td><td>전신</td><td>반복</td><td>탈진 중 S</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>291행</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-STS-010</td><td>P1</td><td>Exhausted_Walk_Sidestep</td><td>탈진 옆걸음</td><td>전신</td><td>반복</td><td>탈진 중 A 또는 D</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>사용자 확정</td><td>291행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-STS-012</td><td>P1</td><td>Exhausted_Walk_Diagonal</td><td>탈진 대각선 걷기</td><td>전신</td><td>반복</td><td>탈진 중 W+A 또는 W+D</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>사용자 확정</td><td>291행, 사용자 확정</td></tr>
 <tr>
 <td>PLR-STS-014</td><td>P1</td><td>Exhausted_Walk_DiagonalBackward</td><td>탈진 대각선 후진</td><td>전신</td><td>반복</td><td>탈진 중 S+A 또는 S+D</td><td>탈진 대기</td><td>입력 해제&#183;사망</td><td>사용자 확정</td><td>291행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-STS-017</td><td>P1</td><td>Fatigue_HeadShake</td><td>피로 머리 흔들기</td><td>머리&#183;상체</td><td>1회 반복</td><td>피로 상태의 주기 이벤트</td><td>기존 상태</td><td>피격&#183;사망</td><td>명시</td><td>292행</td></tr>
 <tr>
 <td>PLR-STS-018</td><td>P1</td><td>Fatigue_Wall_Enter</td><td>피로 벽 짚기 시작</td><td>전신&#183;손</td><td>1회</td><td>피로 중 벽 근처에서 정지</td><td>벽 짚기 대기</td><td>이동&#183;피격</td><td>필수 파생</td><td>292행</td></tr>
 <tr>
 <td>PLR-STS-019</td><td>P1</td><td>Fatigue_Wall_Idle</td><td>피로 벽 짚기 대기</td><td>전신&#183;손</td><td>반복</td><td>피로 중 벽에 손 접촉</td><td>자체 유지</td><td>이동&#183;피격</td><td>명시</td><td>292행</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-STS-021</td><td>P1</td><td>Confused_Walk_Forward</td><td>혼란 전진 걷기</td><td>전신 하체</td><td>반복</td><td>혼란 중 W</td><td>혼란 정지</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>294행</td></tr>
 <tr>
 <td>PLR-STS-022</td><td>P1</td><td>Confused_Walk_Backward</td><td>혼란 후진 걷기</td><td>전신 하체</td><td>반복</td><td>혼란 중 S</td><td>혼란 정지</td><td>입력 해제&#183;사망</td><td>필수 파생</td><td>294행</td></tr>
 <tr>
 <td>PLR-STS-023</td><td>P1</td><td>Confused_Walk_Sidestep</td><td>혼란 옆걸음 걷기</td><td>전신 하체</td><td>반복</td><td>혼란 중 A 또는 D</td><td>혼란 정지</td><td>입력 해제&#183;사망</td><td>사용자 확정</td><td>294행, 사용자 확정</td></tr>
-<tr>
+<tr class="animation-complete" data-completion="완료">
 <td>PLR-STS-025</td><td>P2</td><td>Knockback_Reaction</td><td>넉백 반응</td><td>전신&#183;물리</td><td>1회</td><td>강제 이동 판정</td><td>공중 물리 반응</td><td>사망</td><td>사용자 확정</td><td>넉백 공격 전반, 사용자 확정</td></tr>
 <tr>
 <td>PLR-STS-026</td><td>P2</td><td>Physics_Airborne</td><td>공중 물리 반응</td><td>전신&#183;물리</td><td>조건 반복</td><td>폭발&#183;사출&#183;강제 추락</td><td>물리 착지</td><td>사망</td><td>필수 파생</td><td>121행, 138행, 143행</td></tr>
@@ -607,10 +610,21 @@
 </tbody></table>
 <ul>
 <li><code>Stun_Twist</code>는 감전 시작&#183;비틀림&#183;회복을 한 상태 모션으로 통합한다.</li>
+<li><code>Stun_Twist</code> 검토용 실행 시작 위치를 개체 정면 전신 확인 위치로 반영했다. 이 기록은 모션 통과 판정이 아니다.</li>
+<li><code>Stun_Twist</code>에는 <code>player model/transfer stunned.fbx</code>의 내장 Mixamo 애니메이션을 원본 동작 그대로 반복 연결했다. 승인된 청백색 전기 아크 샘플을 변경 없이 실제 개체에 연결했으며, 가슴&#183;복부&#183;등 주변을 불규칙하게 순환하며 점멸하는 상태를 전면&#183;후면 실행모드에서 직접 확인했다. 이 기록은 모션 또는 VFX 통과 판정이 아니다.</li>
 <li>화상과 출혈은 별도 신체 모션을 제작하지 않고 <code>PLR-LNK-012~013</code>의 VFX로 표현한다.</li>
 <li><code>Exhausted_Idle</code>은 탈진 시작과 대기를 포함하며, 탈진 종료 시 별도 회복 모션 없이 기존 상태로 전환한다.</li>
+<li><code>Exhausted_Walk_Forward</code>에는 <code>player model/transfer exhausted walking.fbx</code>의 내장 Mixamo 애니메이션을 원본 타이밍 그대로 반복 연결했다. 골반은 고정하고 <code>Spine02</code>, <code>Spine01</code>, <code>Spine</code>에 각각 5도씩 회전을 분산해 상체를 정면 아래로 총 15도 더 숙였다. 양팔은 전 구간에서 상완과 전완을 어깨 아래 방향의 해부학적 중립 직선으로 펴 팔꿈치 굽힘과 과신전 없이 축 늘어지게 하되, 어깨 위치에는 몸통 보행의 흔들림이 전달되도록 유지했다. 오른팔 전체는 오른쪽 다리와 겹치지 않도록 수송자 기준 오른쪽으로 8도만 추가 이동했고, 오른손 세계 방향과 손가락 하향 자세는 유지했다. 양손 엄지를 포함한 모든 손가락은 전 구간에서 곧게 펴 아래를 향하게 하고 손목은 전완과 자연스럽게 이어지도록 보정했다. 자연 실행모드 한 바퀴의 동일 구도 여섯 전신 구간과 여섯 팔 확대 구간을 직접 확인해 양팔 직선 하향, 오른팔과 오른쪽 다리의 분리, 손가락 방향, 상체 숙임, 어깨 흔들림 유지, 메시 변형&#183;몸통·허벅지 관통&#183;포즈 튐 없음을 확인했다. 이 기록은 통과 판정이 아니다.</li>
+<li><code>Exhausted_Idle</code>, <code>Exhausted_Walk_Backward</code>, <code>Exhausted_Walk_Sidestep</code>, <code>Exhausted_Walk_Diagonal</code>은 하나의 공용 트리가 아니라 각각 독립된 <code>FreeformCartesian2D</code> Blend Tree와 컨트롤러를 사용한다. 각 개체의 기준층은 순서대로 <code>Player_Idle</code>, <code>Player_Walk_Backward</code>, <code>Player_Sidestep</code>, <code>Player_Walk_Diagonal</code>에 연결된 원본 모션의 정확한 복사본을 선택하며, 이 기준층이 루트&#183;골반&#183;양다리와 방향별 이동을 주도한다. 상체 오버레이에는 현재 <code>Exhausted_Walk_Forward</code> 클립의 <code>Spine02</code> 가지인 몸통&#183;머리&#183;양팔&#183;양손 곡선만 정확히 복사하고 같은 상체 전용 Avatar Mask를 적용한다. 탈진 오버레이에는 루트&#183;골반&#183;다리 곡선이 없으므로 네 개체가 전진 방향을 공통으로 따르지 않는다. 기본 2D 좌표는 각각 <code>(0,0)</code>, <code>(0,-1)</code>, <code>(1,0)</code>, <code>(0.70710677,0.70710677)</code>로 대응 Player 원본을 선택하며 대각선 내부의 <code>ForwardSidestepBlend</code> 파라미터와 기본값도 원본 그대로 복사한다. 실행모드 네 재생 구간에서 각 수정 개체를 대응 Player 원본과 탈진 원본에 나란히 비교해 골반&#183;양다리 위상은 방향별 Player 원본과 같고 상체는 탈진 자세와 흔들림을 유지하는 것을 직접 확인했다. 허리 경계 포즈 튐&#183;발 미끄러짐&#183;몸통·사지 관통&#183;메시 뒤틀림은 보이지 않았다. <code>Exhausted_Walk_Forward</code>와 <code>Exhausted_Walk_DiagonalBackward</code>는 변경하지 않았다. 이 기록은 통과 판정이 아니다.</li>
+<li><code>Fatigue_HeadShake</code>에는 <code>player model/transfer tired.fbx</code>의 내장 Mixamo 클립 <code>mixamo.com</code>을 원본 바이너리와 동일한 프로젝트 복사본에서 Generic 무압축&#183;비재샘플링 상태로 직접 참조했다. 기준층은 <code>FreeformCartesian2D</code> Blend Tree이며 <code>Player_Idle</code>, <code>Player_Walk_Forward</code>, <code>Player_Walk_Backward</code>, <code>Player_Sidestep</code>, <code>Player_Walk_Diagonal</code>의 현재 연결 모션을 정확히 복사해 각각 <code>(0,0)</code>, <code>(0,1)</code>, <code>(0,-1)</code>, <code>(1,0)</code>, <code>(0.70710677,0.70710677)</code>에 배치했다. 대기&#8594;전진&#8594;후진&#8594;옆걸음&#8594;대각선을 각각 1초씩 재생한 뒤 여섯 번째 1초에는 대기 하체를 사용하면서 고개를 아래로 10도 숙이고 좌우 20도로 네 번 흔든다. 한 번은 중앙&#8594;왼쪽&#8594;오른쪽&#8594;중앙이며 각 시간은 <code>0.4초</code>, <code>0.3초</code>, <code>0.15초</code>, <code>0.15초</code>로 첫 두 번보다 마지막 두 번이 빠르다. 별도의 <code>Spine02</code> 상체 전용 레이어는 원본 피로 클립을 재생 속도 <code>1</code>로 중단 없이 계속 재생하므로 머리&#183;척추&#183;어깨&#183;양팔과 몸통 흔들림이 하체 전환과 머리 보정 중에도 유지된다. 전체 6초 뒤 대기로 복귀해 반복하며, 실행모드에서 다섯 이동 구간&#183;여덟 머리 극점&#183;반복 복귀를 직접 확인해 방향별 하체 자세, 상체 움직임 보존, 자연스러운 목&#183;허리 연결, 메시 뒤틀림&#183;사지 관통&#183;개체 소실 없음과 Unity 콘솔 오류 0을 확인했다. 루트 모션은 사용하지 않는다. 이 기록은 통과 판정이 아니다.</li>
+<li><code>Confused_Walk_Forward</code>에는 <code>player model/transfer dizzy.fbx</code>의 내장 Mixamo 클립 <code>mixamo.com</code>을 원본과 SHA-256이 같은 프로젝트 복사본에서 Generic 무압축&#183;비재샘플링 상태로 직접 참조했다. 기준층은 <code>FreeformCartesian2D</code> Blend Tree이며 <code>Player_Idle</code>, <code>Player_Walk_Forward</code>, <code>Player_Walk_Backward</code> 각 개체의 현재 연결 클립을 직렬화 데이터 그대로 복사해 각각 <code>(0,0)</code>, <code>(0,1)</code>, <code>(0,-1)</code>에 배치했다. 대기&#8594;전진&#8594;후진을 각각 1초씩 순회하고 전체 3초 뒤 대기로 돌아가 반복한다. 별도의 <code>Spine02</code> 상체 전용 레이어는 원본 혼란 클립을 재생 속도 <code>1</code>로 중단 없이 계속 재생하므로 머리&#183;몸통&#183;어깨&#183;양팔의 혼란 자세와 움직임에 따른 흔들림이 하체 전환 때 재시작하거나 사라지지 않는다. 루트 모션은 사용하지 않는다. 원본 <code>Armature/Hips</code> Z 곡선에는 <code>0.808539~0.836336m</code>의 오프셋과 <code>0.027796m</code>의 동적 변동이 있어 대상 전용 <code>ConfusedWalkForwardVisualZAlignment</code>이 매 프레임 대상과 <code>Fatigue_HeadShake</code>의 <code>Armature/Hips</code> 월드 Z를 일치시킨다. 실행모드에서 대기&#183;전진&#183;후진&#183;대기 복귀 네 구간을 직접 확인해 방향별 하체 변화와 연속적인 혼란 상체 흔들림, 자연스러운 허리 연결, 메시 뒤틀림&#183;관절 튐&#183;개체 소실 없음, 시각 Z 오차 0과 Unity 콘솔 오류 0을 확인했다. X&#183;Y 위치, 회전, 스케일, Renderer 구성, Avatar, 원본 Player 애니메이션과 원본 혼란 애니메이션 곡선은 변경하지 않았다. 이 기록은 통과 판정이 아니다.</li>
+<li><code>Knockback_Reaction</code>에는 <code>player model/transfer knockback.fbx</code>의 내장 Mixamo 클립을 원본과 SHA-256이 같은 프로젝트 복사본에서 Generic 무압축&#183;비재샘플링 상태로 직접 참조했다. 하체 기준층은 <code>FreeformCartesian2D</code> Blend Tree의 중립 좌표 <code>(0,0)</code>에서 현재 <code>Player_Idle</code> 연결 클립의 정확한 복사본을 재생하고, 별도의 <code>Spine02</code> 상체 전용 Override 레이어는 가져온 넉백 원본 클립을 그대로 반복한다. 사전 대기 없이 모션 첫 물리 스텝부터 개체 후방 3m&#183;좌우 0.65m의 폭발 원점을 주기마다 번갈아 사용해 루트 <code>Rigidbody</code>에 <code>AddExplosionForce</code>를 적용한다. <code>Collider</code>와 제한된 회전 복원력을 가진 <code>ConfigurableJoint</code> active-ragdoll이 중력&#183;폭발 힘&#183;회전 토크에 따라 측면 성분이 포함된 약 2.5m 궤적을 만들며 Transform 경로 이동은 사용하지 않는다. 이동 뒤 0.1초 동안 전신 <code>Player_Idle</code>로 회복하고 1.5초 유지한 뒤 시작 위치로 즉시 복귀하면서 같은 물리 스텝에 다음 반동을 시작해 반복한다. 실제 폭발 VFX는 넣지 않았다. 비행 구간에는 양쪽 상완과 전완을 실제 폭발 반동의 수평 이동 방향으로 곧게 펴고 양손바닥도 같은 방향을 향하게 한다. 양쪽 넓적다리&#183;정강이&#183;발은 6개 런타임 물리 바디와 제한된 <code>ConfigurableJoint</code>로 연결하며 구간·좌우별 반응량을 달리해 정자세로 고정하지 않되 뼈 길이와 관절 연결을 유지한다. 실행모드 직접 확인에서 첫 프레임 반동&#183;물리 비행&#183;회복&#183;대기 유지&#183;두 번째 즉시 반동의 골격 연결과 메시 형태를 확인했다. 반복 폭발 <code>2회</code>, 폭발 시작 <code>0초</code>, 총 이동 <code>2.537081m</code>, 측면 이동 <code>0.500893m</code>, 최대 기울기 <code>32.13734도</code>, 이동 방향 일치도 <code>0.985289</code>, 다리 자세 최대 변화 <code>32.26263도</code>, 팔 방향 최대 오차 <code>2.008766도</code>, 팔 굽힘 <code>0.019782도</code>, 손바닥 방향 오차 <code>0도</code>, 관절 앵커 최대 오차 <code>0.000811m</code>, 뼈 길이 최대 오차 <code>0.000704m</code>, Unity 콘솔 오류 <code>0</code>을 확인했다. 이 기록은 통과 판정이 아니다.</li>
+<li><code>Knockback_Reaction</code> 착지 시 양팔은 물리 비행 종료 자세에서 실행 중인 실제 <code>Player_Idle</code> 씬 개체의 같은 프레임 양팔 자세까지 기존 회복 구간 전체에 걸쳐 전환한다. 좌우 상완&#183;전완&#183;손은 라이브 참조의 로컬 위치&#183;회전을 매 프레임 읽어 선형 시간 보간하며, 착지 직후와 1.5초 유지 구간에도 Animator 갱신 뒤 실제 <code>Player_Idle</code> 양팔 자세를 계속 적용한다. 몸통 상체 레이어 감쇠와 하체 물리 회복은 기존대로 유지한다. 실행모드에서 비행 후반&#183;회복 초반&#183;중간&#183;후반&#183;유지 구간의 대상 양팔과 실제 <code>Player_Idle</code> 양팔을 나란히 직접 확인했고, 첫 회전 오차 <code>81.14946도</code>에서 최종 회전&#183;위치 오차 <code>0</code>으로 수렴했다. 어깨&#183;팔꿈치&#183;손목 튐, 몸통 관통, 메시 뒤틀림과 유지 중 자세 이탈은 보이지 않았으며 이 기록은 통과 판정이 아니다.</li>
 <li>피로 벽 짚기와 물리 착지의 종료에는 별도 해제&#183;회복 모션을 사용하지 않는다.</li>
 <li><code>PostureBreak</code>는 자세 무너짐 시작과 대기를 포함하며, 회복 시 <code>PLR-DMG-009 / Knockdown_GetUp</code>을 재사용한다.</li>
+<li><code>PostureBreak</code>에는 씬의 누운 수송자 <code>Death_Tergo</code>에 연결된 <code>Death_Tergo_Retargeted.anim</code>의 곡선&#183;키&#183;이벤트&#183;타이밍&#183;클립 설정을 변경하지 않은 복사본을 연결했다. 원본의 <code>loopTime=False</code>를 유지하고 종료 시점 1.0에서 전환 시간 0초인 자기 전환으로 전체 동작을 반복한다. 양쪽 드릴 팔을 번갈아 아래로 내리치는 <code>Tergo_07_Downed_Pounce</code>의 계층&#183;컴포넌트&#183;머티리얼&#183;Animator Controller&#183;애니메이션&#183;스케일을 그대로 복제했다. 20:25 사용자 실행 영상을 프레임 단위로 다시 직접 확인해 이전 배치가 얼굴&#183;헬멧을 공격한다는 사실을 확인하고, 원본 공격 애니메이션을 변경하지 않은 채 복제본 루트를 수송자 발 방향으로 <code>0.28m</code> 이동했다. 이어 20:44 사용자 실행 영상 54프레임에서 골반&#183;허벅지 아래 공중 간격을 직접 확인해 수평 배치와 회전은 유지하고 루트 높이만 <code>0.32m</code>에서 <code>0.20m</code>로 낮췄다. 최종 루트 위치 <code>110.104431, 0.2, -334.805328</code>, 회전 <code>0, 4.209275, 0</code>에서 실제 Play Mode 씬 개체를 이동&#183;복제&#183;레이어 변경하지 않고 머리 왼쪽&#183;발 오른쪽 측면 구도의 0%&#183;12.5%&#183;25%&#183;35%&#183;41.6667%&#183;50%&#183;75%&#183;87.5%를 확인했다. 착석 위상에서 양 허벅지&#183;무릎은 공중 간격이나 메시 관통 없이 노란 복부&#183;허리 영역 양옆에 맞닿아 걸터앉고, 양쪽 드릴 끝은 얼굴&#183;바이저를 벗어나 빨간 박스의 상부 가슴으로 내려온다. 보조 검증은 위치&#183;회전 오차 <code>0</code>, 평균 골반 수평 중심 오차 <code>0.000013m</code>, 반복 관측 각 <code>2회</code>, Unity 콘솔 오류 <code>0</code>이다. 손목 뼈 거리는 드릴 끝 타격점 판정에 사용하지 않고 구조 확인으로만 유지한다. 원본 두 개체와 원본 애니메이션은 변경하지 않았으며 이 기록은 통과 판정이 아니다.</li>
+<li><code>PostureBreak</code>의 양다리는 허벅지부터 발까지 약 <code>40%</code> 안쪽으로 모은 대상 전용 첫 자세를 기준으로 삼고, <code>PostureBreak_Lying.anim</code>의 좌우 <code>UpLeg</code>&#183;<code>Leg</code>&#183;<code>Foot</code>&#183;<code>ToeBase</code> 전체 체인을 그 첫 프레임 값으로 고정했다. 원본 <code>Death_Tergo_Retargeted.anim</code>은 변경하지 않았다. 실제 PlayMode 두 연속 주기의 측면&#183;누운 몸 정면 확인에서 움찔 이외 구간의 양다리는 같은 첫 자세를 유지했고, 기본 클립 다리 자세 최대 드리프트는 <code>0도</code>였다. 다리 교차&#183;뒤집힘&#183;발목 꺾임&#183;메시 관통, 루트 이동과 Tergo 배치 변화는 보이지 않았으며 Unity 콘솔 오류는 <code>0</code>이다. 이 기록은 통과 판정이 아니다.</li>
+<li><code>PostureBreak</code>에는 <code>Armature/Hips/Spine02</code>와 좌우 <code>UpLeg</code>만 사용하는 독립 가산 레이어를 적용했다. Tergo 공격 클립의 준비&#183;접근&#183;가슴 찌르기 구간을 실제 PlayMode에서 직접 비교해, 공격 시작 후 정규화 위상 <code>35%</code>인 <code>2.525833초</code>를 첫 가슴 찌르기 시작으로 고정했다. 가산 클립은 Tergo와 같은 <code>7.216667초</code> 주기로 반복하며 <code>0.00~2.525833초</code>에는 추가 움찔이 없다. 첫 가슴 찌르기부터 상체 약 <code>20도</code>와 양 무릎 바깥쪽 약 <code>7도</code> 움찔이 1초마다 반복되고, 각 회차는 시작 후 <code>0.10초</code> 정점과 <code>0.20초</code> 복귀를 사용한다. 실제 PlayMode의 두 공격 주기를 측면과 누운 몸 정면에서 확인해 공격 전 기준 자세 유지, 첫 가슴 찌르기와 동시 시작, 두 번째&#183;세 번째 1초 주기, 상체와 양 무릎의 동시 복귀, 자연스러운 좌우 대칭과 관절 연결을 확인했다. 두 Animator의 최대 시간 오차는 <code>0초</code>, 직렬화 곡선의 상체 변화는 <code>19.99998도</code>, 왼쪽과 오른쪽 무릎 변화는 각각 <code>6.999901도</code>이며 Unity 콘솔 오류는 <code>0</code>이다. Tergo 원본 애니메이션&#183;배치와 씬은 변경하지 않았고 이 기록은 통과 판정이 아니다.</li>
 <li>제거된 <code>PLR-STS-001</code>, <code>PLR-STS-003~006</code>, <code>PLR-STS-011</code>, <code>PLR-STS-013</code>, <code>PLR-STS-015~016</code>, <code>PLR-STS-020</code>, <code>PLR-STS-024</code>, <code>PLR-STS-028</code>, <code>PLR-STS-030~031</code>과 후속 <code>PLR-STS</code> ID는 재번호하거나 다른 동작에 재사용하지 않는다.</li>
 </ul>
 <h2>24. 애니메이션 외 연계</h2>
