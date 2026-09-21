@@ -1,5 +1,6 @@
 param(
   [switch]$Restart,
+  [switch]$ValidateCargoRunScene,
   [int]$TimeoutSeconds = 120
 )
 
@@ -9,11 +10,12 @@ $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $projectRootForward = $projectRoot.Replace("\", "/")
 $projectVersionPath = Join-Path $projectRoot "ProjectSettings\ProjectVersion.txt"
 $cargoRunScenePath = Join-Path $projectRoot "Assets\_Project\Scenes\CargoRunMvp.unity"
+$pegasusScenePath = Join-Path $projectRoot "Assets\_Project\Scenes\Pegasus.unity"
 $lockPath = Join-Path $projectRoot "Temp\UnityLockfile"
-$sceneOpenLogPath = Join-Path $projectRoot "Logs\OpenCargoRunMvpScene.log"
+$sceneOpenLogPath = Join-Path $projectRoot "Logs\OpenPegasusScene.log"
 $openedNewEditor = $false
-$expectedCargoRunSceneLength = 17589215
-$expectedCargoRunSceneHash = "EEF63EFC3101239DF3F81D59C23BB6985AC8FBF8605A202D982BF76CC3A6CFAF"
+$expectedCargoRunSceneLength = 17784840
+$expectedCargoRunSceneHash = "8BA694A01DA24953AD6EA73814D0D9FFCA9D07738F498AA3C967309D1E1E3D52"
 $requiredCargoRunSceneMarkers = @(
   "value: Lightsaber_Off_Idle",
   "value: Lightsaber_DiagonalSlash",
@@ -24,8 +26,36 @@ $requiredCargoRunSceneMarkers = @(
   "value: PresenceDetector_Attached",
   "value: ElectricMine_Idle",
   "value: ElectricMine_Activate",
-  "value: ElectricMine_Armed_Idle"
+  "value: ElectricMine_Armed_Idle",
+  "value: Stun_Twist",
+  "value: Exhausted_Idle",
+  "value: Exhausted_Walk_Forward",
+  "value: Fatigue_HeadShake",
+  "value: Confused_Walk_Forward",
+  "value: Knockback_Reaction",
+  "value: PostureBreak"
 )
+$requiredPegasusSceneMarkers = @(
+  "m_Name: Approved Engine Room 01 Shell",
+  "m_Name: Approved Cockpit 01 Structure",
+  "m_Name: Approved Cargo Hold 01 Shell",
+  "m_Name: Approved Ship Corridor Segments"
+)
+
+function Assert-CurrentPegasusScene {
+  $resolvedScenePath = (Resolve-Path -LiteralPath $pegasusScenePath).Path
+  $expectedScenePath = [IO.Path]::GetFullPath((Join-Path $projectRoot "Assets\_Project\Scenes\Pegasus.unity"))
+  if (-not $resolvedScenePath.Equals($expectedScenePath, [StringComparison]::OrdinalIgnoreCase)) {
+    throw "Pegasus resolved outside the current scene path. Expected=$expectedScenePath; Actual=$resolvedScenePath"
+  }
+
+  $sceneText = [IO.File]::ReadAllText($resolvedScenePath, [Text.Encoding]::UTF8)
+  foreach ($marker in $requiredPegasusSceneMarkers) {
+    if ($sceneText.IndexOf($marker, [StringComparison]::Ordinal) -lt 0) {
+      throw "Pegasus is missing a current-layout marker: $marker"
+    }
+  }
+}
 
 function Assert-CurrentCargoRunScene {
   $resolvedScenePath = (Resolve-Path -LiteralPath $cargoRunScenePath).Path
@@ -56,11 +86,18 @@ if (-not (Test-Path -LiteralPath $projectVersionPath)) {
   throw "ProjectSettings\ProjectVersion.txt was not found. Refusing to open Unity outside the project root: $projectRoot"
 }
 
-if (-not (Test-Path -LiteralPath $cargoRunScenePath)) {
-  throw "CargoRunMvp scene was not found. Refusing to open an incomplete Unity project: $cargoRunScenePath"
+if (-not (Test-Path -LiteralPath $pegasusScenePath)) {
+  throw "Pegasus scene was not found. Refusing to open an incomplete Unity project: $pegasusScenePath"
 }
 
-Assert-CurrentCargoRunScene
+Assert-CurrentPegasusScene
+if ($ValidateCargoRunScene) {
+  if (-not (Test-Path -LiteralPath $cargoRunScenePath)) {
+    throw "CargoRunMvp scene was not found. Refusing requested CargoRunMvp validation: $cargoRunScenePath"
+  }
+
+  Assert-CurrentCargoRunScene
+}
 
 $unity = & (Join-Path $PSScriptRoot "unity-path.ps1")
 $unityEditorDir = Split-Path -Parent $unity
@@ -143,7 +180,7 @@ if ($openedNewEditor -or $Restart) {
 }
 
 Remove-Item -LiteralPath $sceneOpenLogPath -Force -ErrorAction SilentlyContinue
-& (Join-Path $PSScriptRoot "Invoke-UnityEditorBridge.ps1") -Command "OpenCargoRunMvpScene" -LogPath $sceneOpenLogPath -TimeoutSeconds $TimeoutSeconds
+& (Join-Path $PSScriptRoot "Invoke-UnityEditorBridge.ps1") -Command "OpenPegasusScene" -LogPath $sceneOpenLogPath -TimeoutSeconds $TimeoutSeconds
 $sceneOpenExitCode = $LASTEXITCODE
 
 $sceneOpenLog = ""
@@ -152,9 +189,12 @@ if (Test-Path -LiteralPath $sceneOpenLogPath) {
 }
 
 if ($sceneOpenExitCode -ne 0 -or
-    $sceneOpenLog -notmatch "CargoRunMvp scene opened\." -or
-    $sceneOpenLog -match "Unity editor bridge failed|Unknown bridge command: OpenCargoRunMvpScene|Scripts have compiler errors|error CS\d+") {
-  throw "Unity editor opened the project, but failed to open CargoRunMvp scene. See $sceneOpenLogPath"
+    $sceneOpenLog -notmatch "Pegasus scene opened\." -or
+    $sceneOpenLog -match "Unity editor bridge failed|Unknown bridge command: OpenPegasusScene|Scripts have compiler errors|error CS\d+") {
+  throw "Unity editor opened the project, but failed to open Pegasus scene. See $sceneOpenLogPath"
 }
 
-Assert-CurrentCargoRunScene
+Assert-CurrentPegasusScene
+if ($ValidateCargoRunScene) {
+  Assert-CurrentCargoRunScene
+}

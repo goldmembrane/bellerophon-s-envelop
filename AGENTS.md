@@ -143,9 +143,9 @@ Unity 작업이 아닌 경우 4번 표식은 다음과 같이 쓴다.
 - 새 기능은 설계상 최소 하나 이상의 검증 경로를 가져야 한다. 순수 로직은 EditMode 테스트, 씬·입력·물리·UI는 PlayMode 테스트를 우선한다. 실제 실행은 검증 명령 선제 금지 규칙을 따른다.
 - Unity 에디터를 열거나 재시작할 때 `Unity.exe`, `.unity` 씬 파일, 임의의 `Start-Process` 명령을 직접 쓰지 않는다. 에디터 실행은 `./scripts/Open-UnityProject.ps1`를 쓴다.
 - 코드·에셋 변경을 열린 에디터에 반영할 때는 재시작보다 `./scripts/Refresh-UnityProject.ps1`를 먼저 쓴다.
-- stale 컴파일, 잘못 열린 에디터, `Temp/UnityLockfile`, AssetImportWorker 잔여 프로세스가 의심되어도 먼저 리프레시와 열린 에디터 브리지 재시도를 시도한다. `./scripts/Open-UnityProject.ps1 -Restart -ValidateCargoRunScene`는 리프레시 실패 또는 잘못된 프로젝트가 열린 경우의 최후 수단이다.
-- `Open-UnityProject.ps1`는 `ProjectSettings/ProjectVersion.txt`와 `Assets/_Project/Scenes/CargoRunMvp.unity`의 존재를 확인하고, `-projectPath D:\Bellerophon2\Bellerophon`으로 열린 실제 프로젝트 에디터만 정상으로 인정한다.
-- 에디터가 기본 `Untitled` 씬만 보여주는 상태는 정상 실행이 아니다. `Open-UnityProject.ps1`는 열린 에디터 브리지에 `OpenCargoRunMvpScene` 명령을 보내 `CargoRunMvp`가 활성 씬이 되게 해야 한다.
+- stale 컴파일, 잘못 열린 에디터, `Temp/UnityLockfile`, AssetImportWorker 잔여 프로세스가 의심되어도 먼저 리프레시와 열린 에디터 브리지 재시도를 시도한다. `./scripts/Open-UnityProject.ps1 -Restart`는 리프레시 실패 또는 잘못된 프로젝트가 열린 경우의 최후 수단이다.
+- `Open-UnityProject.ps1`는 `ProjectSettings/ProjectVersion.txt`와 `Assets/_Project/Scenes/Pegasus.unity`의 존재 및 현재 배치 식별자를 확인하고, `-projectPath D:\Bellerophon2\Bellerophon`으로 열린 실제 프로젝트 에디터만 정상으로 인정한다.
+- 에디터가 기본 `Untitled` 씬만 보여주는 상태는 정상 실행이 아니다. `Open-UnityProject.ps1`는 열린 에디터 브리지에 `OpenPegasusScene` 명령을 보내 `Pegasus`가 활성 씬이 되게 해야 한다.
 - Unity 복원, 재생성, Ensure, Validate, Smoke, Test, Build 계열 명령은 사용자가 명령명과 대상 범위를 명시적으로 승인한 경우에만 실행한다.
 
 ## 완료 기준과 알림

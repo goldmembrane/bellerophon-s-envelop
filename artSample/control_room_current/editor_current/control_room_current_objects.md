@@ -2,7 +2,7 @@
 
 현재 열린 CargoRunMvp 씬에서 `Approved Control Room ...` 루트 전체를 재생성 없이 캡처한 최종 복구 기준입니다.
 
-- 캡처 시각: 2026-06-24 16:26:37 +09:00
+- 캡처 시각: 2026-09-21 15:58:55 +09:00
 - 씬: `Assets/_Project/Scenes/CargoRunMvp.unity`
 - 생성된 복구 스크립트: `Assets/_Project/Editor/Validation/ApprovedControlRoomCurrentStateSnapshot.cs`
 - 캡처 루트 수: `4`
@@ -29,21 +29,19 @@
 | `1/11` | `Walls - individually editable/CR-01 west wall separated sealed segment 2` | `true` | `-4.4,1.6,-2.375` | `0,0,0,1` | `0.34,3.2,0.6` | `enabled` | `M_Cr01_Wall` |
 | `1/12` | `Walls - individually editable/CR-01 west wall separated sealed final segment` | `true` | `-4.4,1.6,1.4375` | `0,0,0,1` | `0.34,3.2,3.925` | `enabled` | `M_Cr01_Wall` |
 | `1/13` | `Walls - individually editable/CR-01 west cockpit angled doorway upper header` | `true` | `-4.4,2.66,-1.3` | `0,0,0,1` | `0.34,1.08,1.55` | `enabled` | `M_Cr01_Wall` |
-| `1/14` | `Walls - individually editable/CR-01 west cockpit angled doorway lower frame` | `true` | `-4.4,1.06,-2.075` | `0,0,0,1` | `0.44,2.12,0.18` | `enabled` | `M_Cr01_DoorFrame` |
-| `1/15` | `Walls - individually editable/CR-01 west cockpit angled doorway upper frame` | `true` | `-4.4,1.06,-0.525` | `0,0,0,1` | `0.44,2.12,0.18` | `enabled` | `M_Cr01_DoorFrame` |
-| `1/16` | `Walls - individually editable/CR-01 west engine room doorway upper header` | `true` | `-4.4,2.66,-3.45` | `0,0,0,1` | `0.34,1.08,1.55` | `enabled` | `M_Cr01_Wall` |
-| `1/17` | `Walls - individually editable/CR-01 east solid control room wall with no corridor` | `true` | `4.4,1.6,-0.975` | `0,0,0,1` | `0.34,3.2,9.09` | `enabled` | `M_Cr01_Wall` |
+| `1/14` | `Walls - individually editable/CR-01 west engine room doorway upper header` | `true` | `-4.4,2.66,-3.45` | `0,0,0,1` | `0.34,1.08,1.55` | `enabled` | `M_Cr01_Wall` |
+| `1/15` | `Walls - individually editable/CR-01 east solid control room wall with no corridor` | `true` | `4.4,1.6,-0.975` | `0,0,0,1` | `0.34,3.2,9.09` | `enabled` | `M_Cr01_Wall` |
 | `2` | `Corridors - individually editable` | `true` | `0,0,0` | `0,0,0,1` | `1,1,1` | `none` | `` |
-| `2/0` | `Corridors - individually editable/CR-01 cockpit 40 degree outside only corridor floor continuation` | `true` | `-5.23,0,-1.295` | `0,1,0,0` | `2.15,0.18,1.91` | `enabled` | `M_Cr01_CorridorFloor` |
-| `2/1` | `Corridors - individually editable/CR-01 cockpit 40 degree outside only corridor side wall -0.96` | `true` | `-5.2,1.05,-0.398` | `0,1,0,0` | `2.15,2.1,0.2` | `enabled` | `M_Cr01_WallDark` |
-| `2/2` | `Corridors - individually editable/CR-01 cockpit 40 degree outside only corridor side wall +0.96` | `true` | `-5.446,1.031,-2.192` | `0,1,0,0` | `2.15,2.1,0.2` | `enabled` | `M_Cr01_WallDark` |
-| `2/3` | `Corridors - individually editable/CR-01 engine room left separated corridor floor continuation` | `true` | `-5.485,0,-3.45` | `0,1,0,0` | `2.05,0.18,1.97` | `enabled` | `M_Cr01_CorridorFloor` |
-| `2/4` | `Corridors - individually editable/CR-01 engine room left separated corridor side wall -0.99` | `true` | `-5.485,1.05,-2.465` | `0,1,0,0` | `2.05,2.1,0.2` | `enabled` | `M_Cr01_WallDark` |
-| `2/5` | `Corridors - individually editable/CR-01 engine room left separated corridor side wall +0.99` | `true` | `-5.485,1.05,-4.435` | `0,1,0,0` | `2.05,2.1,0.2` | `enabled` | `M_Cr01_WallDark` |
-| `2/6` | `Corridors - individually editable/CR-01 cargo bay south attached corridor floor continuation` | `true` | `-0.86,0,-6.41` | `0,0.707107,0,0.707107` | `2,0.18,1.83` | `enabled` | `M_Cr01_CorridorFloor` |
+| `2/0` | `Corridors - individually editable/CR-01 cockpit 40 degree outside only corridor floor continuation` | `true` | `-5.432,-0.023,-1.279` | `0,1,0,0` | `2.15,0.18,1.91` | `enabled` | `M_Cr01_CorridorFloor` |
+| `2/1` | `Corridors - individually editable/CR-01 cockpit 40 degree outside only corridor side wall -0.96` | `true` | `-5.436,1.112,-0.422` | `0,1,0,0` | `2.15,2.1,0.2` | `enabled` | `M_Cr01_WallDark` |
+| `2/2` | `Corridors - individually editable/CR-01 cockpit 40 degree outside only corridor side wall +0.96` | `true` | `-5.425,1.05,-2.142` | `0,1,0,0` | `2.15,2.1,0.2` | `enabled` | `M_Cr01_WallDark` |
+| `2/3` | `Corridors - individually editable/CR-01 engine room left separated corridor floor continuation` | `true` | `-5.432,-0.023,-3.45` | `0,1,0,0` | `2.05,0.18,1.97` | `enabled` | `M_Cr01_CorridorFloor` |
+| `2/4` | `Corridors - individually editable/CR-01 engine room left separated corridor side wall -0.99` | `true` | `-5.43,1.112,-2.567` | `0,1,0,0` | `2.05,2.1,0.2` | `enabled` | `M_Cr01_WallDark` |
+| `2/5` | `Corridors - individually editable/CR-01 engine room left separated corridor side wall +0.99` | `true` | `-5.431,1.05,-4.331` | `0,1,0,0` | `2.05,2.1,0.2` | `enabled` | `M_Cr01_WallDark` |
+| `2/6` | `Corridors - individually editable/CR-01 cargo bay south attached corridor floor continuation` | `true` | `-0.86,-0.023,-6.341` | `0,0.707107,0,0.707107` | `2,0.18,1.83` | `enabled` | `M_Cr01_CorridorFloor` |
 | `2/7` | `Corridors - individually editable/CR-01 cargo bay south attached corridor side wall -0.92` | `true` | `-1.775,1.05,-6.41` | `0,0.707107,0,0.707107` | `2,2.1,0.2` | `enabled` | `M_Cr01_WallDark` |
 | `2/8` | `Corridors - individually editable/CR-01 cargo bay south attached corridor side wall +0.92` | `true` | `0.055,1.05,-6.41` | `0,0.707107,0,0.707107` | `2,2.1,0.2` | `enabled` | `M_Cr01_WallDark` |
-| `2/9` | `Corridors - individually editable/CR-01 weapon room south attached corridor floor continuation` | `true` | `0.86,0,-6.41` | `0,0.707107,0,0.707107` | `2,0.18,1.83` | `enabled` | `M_Cr01_CorridorFloor` |
+| `2/9` | `Corridors - individually editable/CR-01 weapon room south attached corridor floor continuation` | `true` | `0.86,-0.023,-6.341` | `0,0.707107,0,0.707107` | `2,0.18,1.83` | `enabled` | `M_Cr01_CorridorFloor` |
 | `2/10` | `Corridors - individually editable/CR-01 weapon room south attached corridor side wall -0.92` | `true` | `-0.055,1.05,-6.41` | `0,0.707107,0,0.707107` | `2,2.1,0.2` | `enabled` | `M_Cr01_WallDark` |
 | `2/11` | `Corridors - individually editable/CR-01 weapon room south attached corridor side wall +0.92` | `true` | `1.775,1.05,-6.41` | `0,0.707107,0,0.707107` | `2,2.1,0.2` | `enabled` | `M_Cr01_WallDark` |
 | `3` | `Internal Partition - individually editable` | `true` | `0,0,0` | `0,0,0,1` | `1,1,1` | `none` | `` |
@@ -55,25 +53,17 @@
 | `4` | `Direction Markers - individually editable` | `true` | `0,0,0` | `0,0,0,1` | `1,1,1` | `none` | `` |
 | `4/0` | `Direction Markers - individually editable/CR-01 cargo bay large direction color plate` | `true` | `-0.886,2.349,-5.164` | `0,0,0,1` | `1.4,0.44,0.07` | `enabled` | `M_Cr01_CargoMarker` |
 | `4/1` | `Direction Markers - individually editable/CR-01 weapon room large direction color plate` | `true` | `0.86,2.358,-5.136` | `0,0,0,1` | `1.4,0.44,0.07` | `enabled` | `M_Cr01_WeaponMarker` |
-| `4/2` | `Direction Markers - individually editable/CR-01 cockpit angled colored doorway threshold` | `true` | `-4.69,0.072,-1.392` | `0,1,0,0` | `0.72,0.06,2.13` | `enabled` | `M_Cr01_CockpitMarker` |
-| `4/3` | `Direction Markers - individually editable/CR-01 cockpit angled floor guide stripe` | `true` | `-3.576,0.082,-1.37` | `0,1,0,0` | `1.52,0.045,0.22` | `enabled` | `M_Cr01_CockpitMarker` |
-| `4/4` | `Direction Markers - individually editable/CR-01 engine room left colored doorway threshold` | `true` | `-4.58,0.215,-3.45` | `0,1,0,0` | `0.72,0.06,2.13` | `enabled` | `M_Cr01_EngineMarker` |
-| `4/5` | `Direction Markers - individually editable/CR-01 engine room left colored doorway upper banner` | `true` | `-4.46,2.38,-3.45` | `0,1,0,0` | `0.16,0.34,2.33` | `enabled` | `M_Cr01_EngineMarker` |
-| `4/6` | `Direction Markers - individually editable/CR-01 engine room left colored doorway jamb -0.93` | `true` | `-4.46,1.03,-2.515` | `0,1,0,0` | `0.16,1.78,0.14` | `enabled` | `M_Cr01_EngineMarker` |
-| `4/7` | `Direction Markers - individually editable/CR-01 engine room left colored doorway jamb +0.93` | `true` | `-4.46,1.03,-4.385` | `0,1,0,0` | `0.16,1.78,0.14` | `enabled` | `M_Cr01_EngineMarker` |
-| `4/8` | `Direction Markers - individually editable/CR-01 engine room left floor guide stripe` | `true` | `-3.44,0.19,-3.45` | `0,1,0,0` | `1.52,0.045,0.22` | `enabled` | `M_Cr01_EngineMarker` |
-| `4/9` | `Direction Markers - individually editable/CR-01 cargo south colored doorway threshold` | `true` | `-0.86,0.215,-5.53` | `0,0.707107,0,0.707107` | `0.72,0.06,2.13` | `enabled` | `M_Cr01_CargoMarker` |
-| `4/10` | `Direction Markers - individually editable/CR-01 cargo south colored doorway upper banner` | `true` | `-0.86,2.38,-5.41` | `0,0.707107,0,0.707107` | `0.16,0.34,2.33` | `enabled` | `M_Cr01_CargoMarker` |
-| `4/11` | `Direction Markers - individually editable/CR-01 cargo south colored doorway jamb -0.93` | `true` | `-1.795,1.03,-5.41` | `0,0.707107,0,0.707107` | `0.16,1.78,0.14` | `enabled` | `M_Cr01_CargoMarker` |
-| `4/12` | `Direction Markers - individually editable/CR-01 cargo south colored doorway jamb +0.93` | `true` | `0.075,1.03,-5.41` | `0,0.707107,0,0.707107` | `0.16,1.78,0.14` | `enabled` | `M_Cr01_CargoMarker` |
-| `4/13` | `Direction Markers - individually editable/CR-01 cargo south floor guide stripe` | `true` | `-0.86,0.19,-4.39` | `0,0.707107,0,0.707107` | `1.52,0.045,0.22` | `enabled` | `M_Cr01_CargoMarker` |
-| `4/14` | `Direction Markers - individually editable/CR-01 weapon south colored doorway threshold` | `true` | `0.86,0.215,-5.53` | `0,0.707107,0,0.707107` | `0.72,0.06,2.13` | `enabled` | `M_Cr01_WeaponMarker` |
-| `4/15` | `Direction Markers - individually editable/CR-01 weapon south colored doorway upper banner` | `true` | `0.86,2.38,-5.41` | `0,0.707107,0,0.707107` | `0.16,0.34,2.33` | `enabled` | `M_Cr01_WeaponMarker` |
-| `4/16` | `Direction Markers - individually editable/CR-01 weapon south colored doorway jamb -0.93` | `true` | `-0.075,1.03,-5.41` | `0,0.707107,0,0.707107` | `0.16,1.78,0.14` | `enabled` | `M_Cr01_WeaponMarker` |
-| `4/17` | `Direction Markers - individually editable/CR-01 weapon south colored doorway jamb +0.93` | `true` | `1.795,1.03,-5.41` | `0,0.707107,0,0.707107` | `0.16,1.78,0.14` | `enabled` | `M_Cr01_WeaponMarker` |
-| `4/18` | `Direction Markers - individually editable/CR-01 weapon south floor guide stripe` | `true` | `0.86,0.19,-4.39` | `0,0.707107,0,0.707107` | `1.52,0.045,0.22` | `enabled` | `M_Cr01_WeaponMarker` |
-| `4/19` | `Direction Markers - individually editable/CR-01 left side cockpit engine separation wall pier` | `true` | `-4.38,1.35,-2.38` | `0,0,0,1` | `0.2,2.7,0.48` | `enabled` | `M_Cr01_DoorFrame` |
-| `4/20` | `Direction Markers - individually editable/CR-01 south cargo weapon shared divider` | `true` | `0,1.3,-5.33` | `0,0,0,1` | `0.18,2.6,0.28` | `enabled` | `M_Cr01_DoorFrame` |
+| `4/2` | `Direction Markers - individually editable/CR-01 engine room left colored doorway upper banner` | `true` | `-4.46,2.38,-3.45` | `0,1,0,0` | `0.16,0.34,2.33` | `enabled` | `M_Cr01_EngineMarker` |
+| `4/3` | `Direction Markers - individually editable/CR-01 engine room left colored doorway jamb -0.93` | `true` | `-4.46,1.03,-2.515` | `0,1,0,0` | `0.16,1.78,0.14` | `enabled` | `M_Cr01_EngineMarker` |
+| `4/4` | `Direction Markers - individually editable/CR-01 engine room left colored doorway jamb +0.93` | `true` | `-4.46,1.03,-4.385` | `0,1,0,0` | `0.16,1.78,0.14` | `enabled` | `M_Cr01_EngineMarker` |
+| `4/5` | `Direction Markers - individually editable/CR-01 cargo south colored doorway upper banner` | `true` | `-0.86,2.38,-5.41` | `0,0.707107,0,0.707107` | `0.16,0.34,2.33` | `enabled` | `M_Cr01_CargoMarker` |
+| `4/6` | `Direction Markers - individually editable/CR-01 cargo south colored doorway jamb -0.93` | `true` | `-1.795,1.03,-5.41` | `0,0.707107,0,0.707107` | `0.16,1.78,0.14` | `enabled` | `M_Cr01_CargoMarker` |
+| `4/7` | `Direction Markers - individually editable/CR-01 cargo south colored doorway jamb +0.93` | `true` | `0.075,1.03,-5.41` | `0,0.707107,0,0.707107` | `0.16,1.78,0.14` | `enabled` | `M_Cr01_CargoMarker` |
+| `4/8` | `Direction Markers - individually editable/CR-01 weapon south colored doorway upper banner` | `true` | `0.86,2.38,-5.41` | `0,0.707107,0,0.707107` | `0.16,0.34,2.33` | `enabled` | `M_Cr01_WeaponMarker` |
+| `4/9` | `Direction Markers - individually editable/CR-01 weapon south colored doorway jamb -0.93` | `true` | `-0.075,1.03,-5.41` | `0,0.707107,0,0.707107` | `0.16,1.78,0.14` | `enabled` | `M_Cr01_WeaponMarker` |
+| `4/10` | `Direction Markers - individually editable/CR-01 weapon south colored doorway jamb +0.93` | `true` | `1.795,1.03,-5.41` | `0,0.707107,0,0.707107` | `0.16,1.78,0.14` | `enabled` | `M_Cr01_WeaponMarker` |
+| `4/11` | `Direction Markers - individually editable/CR-01 left side cockpit engine separation wall pier` | `true` | `-4.38,1.35,-2.38` | `0,0,0,1` | `0.2,2.7,0.48` | `enabled` | `M_Cr01_DoorFrame` |
+| `4/12` | `Direction Markers - individually editable/CR-01 south cargo weapon shared divider` | `true` | `0,1.3,-5.33` | `0,0,0,1` | `0.18,2.6,0.28` | `enabled` | `M_Cr01_DoorFrame` |
 | `5` | `Dressing - individually editable` | `true` | `0,0,0` | `0,0,0,1` | `1,1,1` | `none` | `` |
 | `5/0` | `Dressing - individually editable/CR-01 blank future main screen recessed wall bay` | `true` | `0,1.82,3.178` | `0,0,0,1` | `4.7,1.18,0.08` | `enabled` | `M_Cr01_BlankPanel` |
 | `5/1` | `Dressing - individually editable/CR-01 main screen bay upper structural lintel` | `true` | `0,2.52,3.138` | `0,0,0,1` | `5.05,0.18,0.14` | `enabled` | `M_Cr01_DoorFrame` |
@@ -216,11 +206,7 @@
 | `1/4` | `CR-17 Floor Direction Arrows - individually editable/CR-17 engine room floor arrow left chevron` | `true` | `-3.8584,0.05,-3.62` | `0,-0.953717,0,-0.300706` | `0.333,0.03,0.0612` | `enabled` | `M_Cr17_EngineAmber` |
 | `1/5` | `CR-17 Floor Direction Arrows - individually editable/CR-17 engine room floor arrow right chevron` | `true` | `-3.8584,0.05,-3.62` | `0,-0.953717,0,0.300706` | `0.333,0.03,0.0612` | `enabled` | `M_Cr17_EngineAmber` |
 | `1/6` | `CR-17 Floor Direction Arrows - individually editable/CR-17 cargo hold floor arrow shaft` | `true` | `-0.72,0.05,-4.9936` | `0,-0.707107,0,-0.707107` | `0.4176,0.028,0.18` | `enabled` | `M_Cr17_CargoGreen` |
-| `1/7` | `CR-17 Floor Direction Arrows - individually editable/CR-17 cargo hold floor arrow left chevron` | `true` | `-0.72,0.05,-5.2384` | `0,-0.461749,0,-0.887011` | `0.333,0.03,0.0612` | `enabled` | `M_Cr17_CargoGreen` |
-| `1/8` | `CR-17 Floor Direction Arrows - individually editable/CR-17 cargo hold floor arrow right chevron` | `true` | `-0.72,0.05,-5.2384` | `0,-0.887011,0,-0.461749` | `0.333,0.03,0.0612` | `enabled` | `M_Cr17_CargoGreen` |
-| `1/9` | `CR-17 Floor Direction Arrows - individually editable/CR-17 armory floor arrow shaft` | `true` | `0.72,0.05,-4.9936` | `0,-0.707107,0,-0.707107` | `0.4176,0.028,0.18` | `enabled` | `M_Cr17_ArmoryRed` |
-| `1/10` | `CR-17 Floor Direction Arrows - individually editable/CR-17 armory floor arrow left chevron` | `true` | `0.72,0.05,-5.2384` | `0,-0.461749,0,-0.887011` | `0.333,0.03,0.0612` | `enabled` | `M_Cr17_ArmoryRed` |
-| `1/11` | `CR-17 Floor Direction Arrows - individually editable/CR-17 armory floor arrow right chevron` | `true` | `0.72,0.05,-5.2384` | `0,-0.887011,0,-0.461749` | `0.333,0.03,0.0612` | `enabled` | `M_Cr17_ArmoryRed` |
+| `1/7` | `CR-17 Floor Direction Arrows - individually editable/CR-17 armory floor arrow shaft` | `true` | `0.72,0.05,-4.9936` | `0,-0.707107,0,-0.707107` | `0.4176,0.028,0.18` | `enabled` | `M_Cr17_ArmoryRed` |
 | `2` | `CR-17 Layout Relation Markers - individually editable` | `true` | `0,0,0` | `0,0,0,1` | `1,1,1` | `none` | `` |
 | `2/0` | `CR-17 Layout Relation Markers - individually editable/CR-17 left corridor separated relation marker` | `true` | `-4.05,0.04,-1.96` | `0,0,0,1` | `0.06,0.035,1.24` | `enabled` | `M_Cr17_RelationMarker` |
 | `2/1` | `CR-17 Layout Relation Markers - individually editable/CR-17 south corridor adjacent relation marker` | `true` | `-0.03,0.04,-4.55` | `0,0,0,1` | `1.62,0.035,0.055` | `enabled` | `M_Cr17_RelationMarker` |

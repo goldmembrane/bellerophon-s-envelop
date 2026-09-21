@@ -538,6 +538,162 @@ namespace Bellerophon.Editor.Validation
                         RefreshAssets,
                         "Unity assets refreshed.");
                     break;
+                case "InspectShipSpaceCeilingSources":
+                    RunSynchronous(
+                        request,
+                        ShipSpaceCeilingSampleTools.InspectSources,
+                        "Ship-space ceiling sources inspected and current corridor scene state saved.");
+                    break;
+                case "BuildShipSpaceCeilingSamples":
+                    RunSynchronous(
+                        request,
+                        ShipSpaceCeilingSampleTools.BuildSamples,
+                        "Ship-space ceiling Unity art samples built without production scene application.");
+                    break;
+                case "InspectShipSpaceCeilingSamples":
+                    RunSynchronous(
+                        request,
+                        ShipSpaceCeilingSampleTools.InspectSamples,
+                        "Ship-space ceiling Unity art samples inspected directly.");
+                    break;
+                case "CaptureShipSpaceCeilingSamplesFinal":
+                    RunSynchronous(
+                        request,
+                        ShipSpaceCeilingSampleTools.CaptureFinal,
+                        "Ship-space ceiling Unity art sample final capture completed once.");
+                    break;
+                case "ApplyApprovedShipSpaceCeilingsToCargoRunMvp":
+                    RunSynchronous(
+                        request,
+                        ShipSpaceCeilingSampleTools.ApplyApprovedToCargoRunMvp,
+                        "Approved ship-space ceilings applied to CargoRunMvp.");
+                    break;
+                case "InspectAppliedShipSpaceCeilings":
+                    RunSynchronous(
+                        request,
+                        ShipSpaceCeilingSampleTools.InspectAppliedCargoRunMvp,
+                        "Applied ship-space ceilings inspected directly in CargoRunMvp.");
+                    break;
+                case "CaptureAppliedShipSpaceCeilingsFinal":
+                    RunSynchronous(
+                        request,
+                        ShipSpaceCeilingSampleTools.CaptureAppliedFinal,
+                        "Applied ship-space ceiling final production capture completed once.");
+                    break;
+                case "InspectPegasusLayoutSources":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectSources,
+                        "Pegasus layout source room and corridor objects inspected read-only.");
+                    break;
+                case "InspectPegasusInteriorParity":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectInteriorParity,
+                        "Pegasus room interiors compared with CargoRunMvp read-only.");
+                    break;
+                case "RestorePegasusInteriorsFromCargoRunMvp":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.RestoreInteriorsFromCargoRunMvp,
+                        "CargoRunMvp room interiors restored to Pegasus unchanged.");
+                    break;
+                case "CapturePegasusInteriorParityFinal":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CaptureInteriorParityFinal,
+                        "Verified Pegasus room-interior comparison promoted to final evidence.");
+                    break;
+                case "InspectPegasusHorizontalCorridorLengthSources":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectHorizontalCorridorLengthSources,
+                        "Pegasus horizontal corridor length sources inspected read-only.");
+                    break;
+                case "ResizePegasusHorizontalCorridorsForFiveSecondTravel":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.ResizeHorizontalCorridorsForFiveSecondTravel,
+                        "Pegasus horizontal corridors resized for five-second walking travel.");
+                    break;
+                case "CapturePegasusHorizontalCorridorLengthFinal":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CaptureHorizontalCorridorLengthFinal,
+                        "Pegasus horizontal corridor length evidence captured or promoted.");
+                    break;
+                case "InspectPegasusHorizontalCorridorLength":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectHorizontalCorridorLength,
+                        "Pegasus horizontal corridor length inspected after direct review.");
+                    break;
+                case "InspectPegasusTriRoomCorridorConnectionSources":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectTriRoomCorridorConnectionSources,
+                        "Pegasus tri-room corridor connection sources inspected read-only.");
+                    break;
+                case "ConnectPegasusTriRoomCorridors":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.ConnectTriRoomCorridors,
+                        "Pegasus tri-room corridors aligned without forced overlap.");
+                    break;
+                case "CapturePegasusTriRoomCorridorConnectionFinal":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CaptureTriRoomCorridorConnectionFinal,
+                        "Pegasus tri-room corridor connection evidence captured or promoted.");
+                    break;
+                case "InspectPegasusTriRoomCorridorConnection":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectTriRoomCorridorConnection,
+                        "Pegasus tri-room corridor connection inspected after direct review.");
+                    break;
+                case "InspectPegasusTriRoomUniformGapSources":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectTriRoomUniformGapSources,
+                        "Pegasus tri-room uniform-gap sources inspected read-only.");
+                    break;
+                case "RepositionPegasusTriRoomForUniformGaps":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.RepositionTriRoomForUniformGaps,
+                        "Pegasus tri-room rooms and corridors repositioned for uniform one-meter gaps.");
+                    break;
+                case "CapturePegasusTriRoomUniformGapFinal":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CaptureTriRoomUniformGapFinal,
+                        "Pegasus tri-room uniform-gap evidence captured or promoted.");
+                    break;
+                case "InspectPegasusTriRoomUniformGap":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectTriRoomUniformGap,
+                        "Pegasus tri-room uniform one-meter gaps inspected after direct review.");
+                    break;
+                case "CreatePegasusSceneLayout":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CreateSceneLayout,
+                        "Pegasus scene created from the current CargoRunMvp space objects.");
+                    break;
+                case "InspectPegasusSceneLayout":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectSceneLayout,
+                        "Pegasus room and detached corridor layout inspected directly.");
+                    break;
+                case "CapturePegasusSceneLayoutFinal":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CaptureFinal,
+                        "Pegasus final layout capture completed once.");
+                    break;
                 case "InspectPostureBreakSources":
                     RunSynchronous(
                         request,
@@ -12404,6 +12560,12 @@ namespace Bellerophon.Editor.Validation
                         OpenCargoRunMvpScene,
                         "CargoRunMvp scene opened.");
                     break;
+                case "OpenPegasusScene":
+                    RunSynchronous(
+                        request,
+                        OpenPegasusScene,
+                        "Pegasus scene opened.");
+                    break;
                 case "ClearUnityConsole":
                     RunSynchronous(
                         request,
@@ -12551,6 +12713,71 @@ namespace Bellerophon.Editor.Validation
             Selection.activeObject = sceneAsset;
             EditorGUIUtility.PingObject(sceneAsset);
             Debug.Log("CargoRunMvp scene opened from validation bridge.");
+        }
+
+        private static void OpenPegasusScene()
+        {
+            const string scenePath = Bellerophon.Editor.PegasusLayoutSetupTools.TargetScenePath;
+            var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath);
+            if (sceneAsset == null)
+            {
+                throw new InvalidOperationException("Pegasus scene asset was not found: " + scenePath);
+            }
+
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    EditorApplication.ExitPlaymode();
+                }
+
+                throw new InvalidOperationException("Cannot open Pegasus while Unity is entering or leaving Play Mode.");
+            }
+
+            var activeScene = SceneManager.GetActiveScene();
+            if (!string.Equals(activeScene.path, scenePath, StringComparison.Ordinal))
+            {
+                if (activeScene.IsValid() && activeScene.isDirty && activeScene.rootCount > 0)
+                {
+                    throw new InvalidOperationException(
+                        "Cannot open Pegasus while the active scene has unsaved changes: " + activeScene.path);
+                }
+
+                EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+                activeScene = SceneManager.GetActiveScene();
+            }
+
+            for (var sceneIndex = SceneManager.sceneCount - 1; sceneIndex >= 0; sceneIndex--)
+            {
+                var loadedScene = SceneManager.GetSceneAt(sceneIndex);
+                if (!loadedScene.isLoaded ||
+                    string.Equals(loadedScene.path, scenePath, StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                if (loadedScene.isDirty)
+                {
+                    throw new InvalidOperationException(
+                        "Cannot close an additive scene with unsaved changes while opening Pegasus: " +
+                        loadedScene.path);
+                }
+
+                if (!EditorSceneManager.CloseScene(loadedScene, true))
+                {
+                    throw new InvalidOperationException(
+                        "Failed to close additive scene while opening Pegasus: " + loadedScene.path);
+                }
+            }
+
+            if (!string.Equals(activeScene.path, scenePath, StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException("Pegasus did not become the active scene. ActiveScene=" + activeScene.path);
+            }
+
+            Selection.activeObject = sceneAsset;
+            EditorGUIUtility.PingObject(sceneAsset);
+            Debug.Log("Pegasus scene opened from validation bridge. ActiveScene=" + activeScene.path);
         }
 
         private static void AssertCurrentCargoRunScene()
