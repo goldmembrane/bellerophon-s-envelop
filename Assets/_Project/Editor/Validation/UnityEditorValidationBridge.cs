@@ -115,6 +115,8 @@ namespace Bellerophon.Editor.Validation
             "InspectPostureBreakUpperBodyTwitchPlayMode";
         private const string PostureBreakTwitchAttackSyncPlayModeCommand =
             "InspectPostureBreakTwitchAttackSyncPlayMode";
+        private const string PegasusTriRoomConnectorPlayModeCommand =
+            "InspectPegasusTriRoomConnectorPlayModeSweep";
         private const string FatigueHeadShakeInspectionCommand =
             "InspectFatigueHeadShakeAnimation";
         private const string FatigueHeadShakeFinalCommand =
@@ -586,6 +588,135 @@ namespace Bellerophon.Editor.Validation
                         PegasusLayoutSetupTools.InspectSources,
                         "Pegasus layout source room and corridor objects inspected read-only.");
                     break;
+                case "InspectPegasusTriRoomConnectorSampleSources":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectPegasusTriRoomConnectorSampleSources,
+                        "Pegasus tri-room connector art-sample sources inspected read-only.");
+                    break;
+                case "InspectConnectorLiveView":
+                    RunSynchronous(request, PegasusLayoutSetupTools.InspectConnectorLiveView,
+                        "Live editor view observed without geometry changes.");
+                    break;
+                case "InspectApprovedConnectorTransfer":
+                    RunSynchronous(request, PegasusLayoutSetupTools.InspectApprovedConnectorTransfer,
+                        "Approved sample and Pegasus target objects inspected without saving either scene.");
+                    break;
+                case "ApplyApprovedConnectorTransfer":
+                    RunSynchronous(request, PegasusLayoutSetupTools.ApplyApprovedConnectorTransfer,
+                        "Approved connectors transferred without regeneration; visual review pending.");
+                    break;
+                case "ReviewApprovedConnectorTransfer":
+                    RunSynchronous(request, PegasusLayoutSetupTools.ReviewApprovedConnectorTransfer,
+                        "Approved transfer live-view operation performed; visual acceptance is manual.");
+                    break;
+                case "CreatePegasusArmorySupplySample":
+                    RunSynchronous(request, PegasusLayoutSetupTools.CreatePegasusArmorySupplySample, "Separate armory supply sample saved; direct review pending.");
+                    break;
+                case "InspectPegasusCargoConnections":
+                    RunSynchronous(request, PegasusCargoConnectionsSampleTools.Inspect, "Cargo entrances inspected read-only; no placement accepted.");
+                    break;
+                case "CreatePegasusCargoConnectionsSample":
+                    RunSynchronous(request, PegasusCargoConnectionsSampleTools.Create, "Cargo sample created; direct review pending.");
+                    break;
+                case "ReviewPegasusCargoConnectionsSample":
+                    RunSynchronous(request, PegasusCargoConnectionsSampleTools.Review, "Cargo connection observation; no automatic visual acceptance.");
+                    break;
+                case "ApplyApprovedArmorySupplySampleToPegasus":
+                    RunSynchronous(request, PegasusLayoutSetupTools.ApplyApprovedArmorySupplySampleToPegasus, "Approved sample applied; direct visual comparison pending.");
+                    break;
+                case "ReviewApprovedArmorySupplyTransfer":
+                    RunSynchronous(request, PegasusLayoutSetupTools.ReviewApprovedArmorySupplyTransfer, "Transfer observation; no automatic visual acceptance.");
+                    break;
+                case "ResizePegasusArmorySupplyTriangle":
+                    RunSynchronous(request, PegasusLayoutSetupTools.ResizePegasusArmorySupplyTriangle, "Isolated triangle shortened; direct enclosure review pending.");
+                    break;
+                case "ReviewPegasusArmorySupplySample":
+                    RunSynchronous(request, PegasusLayoutSetupTools.ReviewPegasusArmorySupplySample, "Sample observation only; no automatic visual acceptance.");
+                    break;
+                case "InspectConnectorGeometry":
+                    RunSynchronous(request, PegasusLayoutSetupTools.InspectConnectorGeometry, "Source geometry read only.");
+                    break;
+                case "FocusConnectorEngine":
+                    RunSynchronous(request, PegasusLayoutSetupTools.FocusConnectorEngine, "Scene view focused on Engine entrance.");
+                    break;
+                case "RepairConnectorTwoContacts":
+                    RunSynchronous(request, PegasusLayoutSetupTools.RepairConnectorTwoContacts,
+                        "Two contact meshes updated; direct review pending.");
+                    break;
+                case "OperateConnectorLiveReview":
+                    RunSynchronous(request, PegasusLayoutSetupTools.OperateConnectorLiveReview,
+                        "Live review operation performed; no automatic acceptance decision.");
+                    break;
+                case "CreatePegasusTriRoomConnectorSample":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CreatePegasusTriRoomConnectorSample,
+                        "Pegasus tri-room intermediate connector Unity art sample created without production application.");
+                    break;
+                case "CapturePegasusTriRoomConnectorSampleReview":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CapturePegasusTriRoomConnectorSampleReview,
+                        "Pegasus tri-room connector art-sample final direct-review sheet captured once.");
+                    break;
+                case "InspectPegasusTriRoomConnectorSample":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectPegasusTriRoomConnectorSample,
+                        "Pegasus tri-room connector sample inspected after direct visual review.");
+                    break;
+                case PegasusTriRoomConnectorPlayModeCommand:
+                    RunPegasusTriRoomConnectorPlayModeInspection(request);
+                    break;
+                case "InspectPegasusRoomProportionExpansionSources":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectRoomProportionExpansionSources,
+                        "Pegasus six-room proportion expansion sources inspected read-only.");
+                    break;
+                case "ApplyPegasusRoomProportionExpansion":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.ApplyRoomProportionExpansion,
+                        "Pegasus six-room proportions expanded to the corridor outside width standard.");
+                    break;
+                case "CapturePegasusRoomProportionExpansionReview":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CaptureRoomProportionExpansionReview,
+                        "Pegasus six-room proportion direct-review capture completed once.");
+                    break;
+                case "InspectPegasusRoomProportionExpansion":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectRoomProportionExpansion,
+                        "Pegasus six-room proportion expansion inspected after direct visual review.");
+                    break;
+                case "InspectPegasusRoomInteriorProportionSources":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectRoomInteriorProportionSources,
+                        "CargoRunMvp and Pegasus room-interior proportions inspected read-only.");
+                    break;
+                case "ApplyPegasusRoomInteriorProportionAdjustment":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.ApplyRoomInteriorProportionAdjustment,
+                        "Pegasus room interiors adjusted to the CargoRunMvp room-relative proportions.");
+                    break;
+                case "CapturePegasusRoomInteriorProportionReview":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CaptureRoomInteriorProportionReview,
+                        "Pegasus room-interior source/target direct comparison captured once.");
+                    break;
+                case "InspectPegasusRoomInteriorProportion":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectRoomInteriorProportion,
+                        "Pegasus room-interior proportions inspected after direct visual review.");
+                    break;
                 case "InspectPegasusInteriorParity":
                     RunSynchronous(
                         request,
@@ -652,6 +783,78 @@ namespace Bellerophon.Editor.Validation
                         PegasusLayoutSetupTools.InspectTriRoomCorridorConnection,
                         "Pegasus tri-room corridor connection inspected after direct review.");
                     break;
+                case "InspectPegasusTriRoomEntranceConnectionSources":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectTriRoomEntranceConnectionSources,
+                        "Pegasus tri-room flush entrance connection sources inspected read-only.");
+                    break;
+                case "ApplyPegasusTriRoomEntranceConnection":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.ApplyTriRoomEntranceConnection,
+                        "Pegasus tri-room corridors connected flush to their designated entrances.");
+                    break;
+                case "CapturePegasusTriRoomEntranceConnectionReview":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CaptureTriRoomEntranceConnectionReview,
+                        "Pegasus tri-room flush entrance direct-review capture completed once.");
+                    break;
+                case "InspectPegasusTriRoomEntranceConnection":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectTriRoomEntranceConnection,
+                        "Pegasus tri-room flush entrance connection inspected after direct visual review.");
+                    break;
+                case "InspectPegasusCockpitOrientationSources":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectCockpitOrientationSources,
+                        "Pegasus cockpit orientation sources inspected read-only.");
+                    break;
+                case "ApplyPegasusCockpitOrientation":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.ApplyCockpitOrientation,
+                        "Pegasus cockpit orientation restored to the approved 180-degree yaw.");
+                    break;
+                case "CapturePegasusCockpitOrientationReview":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CaptureCockpitOrientationReview,
+                        "Pegasus cockpit orientation direct-review capture completed once.");
+                    break;
+                case "InspectPegasusCockpitOrientation":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectCockpitOrientation,
+                        "Pegasus cockpit orientation inspected after direct visual review.");
+                    break;
+                case "InspectPegasusCockpitCorridorConnectionSources":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectCockpitCorridorConnectionSources,
+                        "Pegasus cockpit H01/H02 connection sources inspected read-only.");
+                    break;
+                case "ApplyPegasusCockpitCorridorConnection":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.ApplyCockpitCorridorConnection,
+                        "Pegasus H01/H02 re-aligned to the restored cockpit orientation.");
+                    break;
+                case "CapturePegasusCockpitCorridorConnectionReview":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CaptureCockpitCorridorConnectionReview,
+                        "Pegasus cockpit H01/H02 direct-review capture completed once.");
+                    break;
+                case "InspectPegasusCockpitCorridorConnection":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectCockpitCorridorConnection,
+                        "Pegasus cockpit H01/H02 connection inspected after direct visual review.");
+                    break;
                 case "InspectPegasusTriRoomUniformGapSources":
                     RunSynchronous(
                         request,
@@ -675,6 +878,42 @@ namespace Bellerophon.Editor.Validation
                         request,
                         PegasusLayoutSetupTools.InspectTriRoomUniformGap,
                         "Pegasus tri-room uniform one-meter gaps inspected after direct review.");
+                    break;
+                case "ApplyPegasusEngineControlAlignment":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.ApplyEngineControlAlignmentAndSixSecondCorridor,
+                        "Pegasus engine-control entrances aligned and SC-H05 resized for six-second walking travel.");
+                    break;
+                case "CapturePegasusEngineControlAlignmentReview":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CaptureEngineControlAlignmentReview,
+                        "Pegasus engine-control alignment direct-review capture completed.");
+                    break;
+                case "InspectPegasusEngineControlAlignment":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectEngineControlAlignment,
+                        "Pegasus engine-control alignment inspected after direct review.");
+                    break;
+                case "ApplyPegasusCockpitMidpointAlignment":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.ApplyCockpitMidpointAlignment,
+                        "Pegasus cockpit X aligned to the engine-control midpoint and target corridors re-aligned.");
+                    break;
+                case "CapturePegasusCockpitMidpointAlignmentReview":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.CaptureCockpitMidpointAlignmentReview,
+                        "Pegasus cockpit midpoint alignment direct-review capture completed.");
+                    break;
+                case "InspectPegasusCockpitMidpointAlignment":
+                    RunSynchronous(
+                        request,
+                        PegasusLayoutSetupTools.InspectCockpitMidpointAlignment,
+                        "Pegasus cockpit midpoint alignment inspected after direct review.");
                     break;
                 case "CreatePegasusSceneLayout":
                     RunSynchronous(
@@ -14089,6 +14328,53 @@ namespace Bellerophon.Editor.Validation
             }
         }
 
+        private static void RunPegasusTriRoomConnectorPlayModeInspection(
+            BridgeRequest request)
+        {
+            BeginRequest(request);
+            try
+            {
+                RequireScriptsCompiled();
+                request.Write(ActiveRequestPath);
+                Action<string> completeCallback = successMarker =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    CompleteRequest(request, successMarker);
+                };
+                Action<Exception> failCallback = exception =>
+                {
+                    TryDelete(ActiveRequestPath);
+                    FailRequest(request, exception);
+                };
+                if (PegasusLayoutSetupTools.TriRoomConnectorPlayModeCapture
+                        .HasPendingCapture &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode)
+                {
+                    PegasusLayoutSetupTools.TriRoomConnectorPlayModeCapture
+                        .ResetStaleCapture();
+                }
+
+                if (PegasusLayoutSetupTools.TriRoomConnectorPlayModeCapture
+                    .HasPendingCapture)
+                {
+                    PegasusLayoutSetupTools.TriRoomConnectorPlayModeCapture.Resume(
+                        completeCallback,
+                        failCallback);
+                }
+                else
+                {
+                    PegasusLayoutSetupTools.TriRoomConnectorPlayModeCapture.Start(
+                        completeCallback,
+                        failCallback);
+                }
+            }
+            catch (Exception exception)
+            {
+                TryDelete(ActiveRequestPath);
+                FailRequest(request, exception);
+            }
+        }
+
         private static void RunPostureBreakUpperBodyTwitchPlayModeInspection(
             BridgeRequest request)
         {
@@ -16282,6 +16568,7 @@ namespace Bellerophon.Editor.Validation
                 request.Command == PostureBreakLegClosePlayModeCommand ||
                 request.Command == PostureBreakUpperBodyTwitchPlayModeCommand ||
                 request.Command == PostureBreakTwitchAttackSyncPlayModeCommand ||
+                request.Command == PegasusTriRoomConnectorPlayModeCommand ||
                 request.Command == LightsaberOffIdleLocomotionInspectionCommand ||
                 request.Command == LightsaberDiagonalSlashInspectionCommand ||
                 request.Command == LightsaberDiagonalSlashBladeTrajectoryInspectionCommand ||
@@ -16469,6 +16756,25 @@ namespace Bellerophon.Editor.Validation
                 activeLog.AppendLine(
                     "Resuming PostureBreak leg-close direct Play Mode inspection after mode transition.");
                 PostureBreakAnimationSetupTools.LegClosePlayModeCapture.Resume(
+                    successMarker =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        CompleteRequest(request, successMarker);
+                    },
+                    exception =>
+                    {
+                        TryDelete(ActiveRequestPath);
+                        FailRequest(request, exception);
+                    });
+                return true;
+            }
+
+            if (request.Command == PegasusTriRoomConnectorPlayModeCommand)
+            {
+                BeginRequest(request);
+                activeLog.AppendLine(
+                    "Resuming Pegasus tri-room connector actual Play Mode sweep after mode transition.");
+                PegasusLayoutSetupTools.TriRoomConnectorPlayModeCapture.Resume(
                     successMarker =>
                     {
                         TryDelete(ActiveRequestPath);
