@@ -619,6 +619,21 @@ namespace Bellerophon.Editor.Validation
                 case "CreatePegasusCargoConnectionsSample":
                     RunSynchronous(request, PegasusCargoConnectionsSampleTools.Create, "Cargo sample created; direct review pending.");
                     break;
+                case "InspectPegasusExteriorSource":
+                    RunSynchronous(request, PegasusExteriorSampleTools.Inspect, "Pegasus exterior source inspected read-only.");
+                    break;
+                case "CreatePegasusExteriorSample":
+                    RunSynchronous(request, PegasusExteriorSampleTools.Create, "Pegasus exterior sample created; direct review pending.");
+                    break;
+                case "InspectPegasusInput":
+                    RunSynchronous(request, PegasusInputFixTools.Inspect, "Input scene inspected.");
+                    break;
+                case "RepairPegasusInput":
+                    RunSynchronous(request, PegasusInputFixTools.Run, "Scoped input operation completed; not a gameplay acceptance result.");
+                    break;
+                case "ReviewPegasusExteriorSample":
+                    RunSynchronous(request, PegasusExteriorSampleTools.Review, "Pegasus exterior sample observation.");
+                    break;
                 case "ReviewPegasusCargoConnectionsSample":
                     RunSynchronous(request, PegasusCargoConnectionsSampleTools.Review, "Cargo connection observation; no automatic visual acceptance.");
                     break;

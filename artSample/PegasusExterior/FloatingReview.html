@@ -1,0 +1,11 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><title>외형 부유 부품 삭제 비교</title>
+<style>body{background:#111a22;color:#e0e9ed;font-family:system-ui;max-width:1500px;margin:40px auto;padding:20px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}img{width:100%;background:#080f15}a{color:#91d1e9}figure{margin:0}figcaption{padding:12px}section{margin:30px 0}</style>
+<h1>우주선 외형 — 떠 있는 부품만 삭제</h1>
+<p>별도 샘플 씬 전용 수정입니다. 실제 Unity 실행모드의 동일 구도 비교입니다. 원본 Pegasus와 내부 구성은 변경하지 않았습니다. 정상 부품의 위치·재질을 바꾸거나 새 지지대를 추가하지 않았습니다.</p>
+<div class="pair"><figure><img src="BeforeFloatingRemoval/Exterior_Removal_Final.png"><figcaption>작업 전</figcaption></figure><figure><img src="../../docs/validation/PegasusExterior/Floating_Final.png"><figcaption>작업 후 최종 화면</figcaption></figure></div>
+<p>상·하부 이격 외장판과 그 위 장비, 양측 트러스, 후방 장비함과 안테나 묶음, 분리된 작은 장식을 제거했습니다. 연결된 측면 화물 모듈·추진기·보조 탱크·전방 안테나는 유지했습니다. 원본 제작 단위 641개 제거이며 Unity 오브젝트 개수가 아닙니다.</p>
+<div id="pairs"></div>
+<script>for(const [key,label] of [['Top','상부'],['Aft','후방 상부'],['Bottom','하부'],['Left','측면 트러스'],['RearBank','후방 장비함'],['Bow','전방 고정구'],['Radar','레이더 앞 막대'],['Bridge','분리된 창 장식'],['Dock','도킹 장식'],['Nozzle','노즐 발광 장식']]){const s=document.createElement('section'),h=document.createElement('h2'),p=document.createElement('div');h.textContent=label;p.className='pair';for(const [state,caption] of [['Before','삭제 전'],['After','삭제 후']]){const f=document.createElement('figure'),i=document.createElement('img'),c=document.createElement('figcaption');i.src='../../docs/validation/PegasusExterior/Floating_'+state+key+'.png';i.alt=label+' '+caption;i.loading='lazy';c.textContent=caption;f.append(i,c);p.append(f)}s.append(h,p);document.getElementById('pairs').append(s)}</script>
+<h2>내부 보존</h2><img src="../../docs/validation/PegasusExterior/Floating_AfterInterior.png" alt="유지된 내부 표지판과 통로">
+<p>기존 누수 진단과 그림자 경고는 남아 있습니다. 자동 테스트·빌드·Git 미실행.</p>
+<p><a href="../../docs/validation/PegasusExterior/FloatingRemovalReview.md">판정 근거와 제한</a> · <a href="FloatingRemoval.json">삭제 부품 전체 목록</a> · <a href="../../Assets/_Project/ArtSamples/PegasusExterior/PegasusExterior.unity">Unity 샘플 씬</a> · <a href="BeforeFloatingRemoval/">삭제 전 백업</a></p></html>
