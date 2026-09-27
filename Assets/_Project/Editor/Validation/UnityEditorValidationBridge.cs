@@ -628,6 +628,27 @@ namespace Bellerophon.Editor.Validation
                 case "InspectPegasusInput":
                     RunSynchronous(request, PegasusInputFixTools.Inspect, "Input scene inspected.");
                     break;
+                case "InspectPegasusEntranceDoors":
+                    RunSynchronous(request, PegasusEntranceDoorTools.Inspect, "Entrance door inventory only; direct review pending.");
+                    break;
+                case "InspectParvumGameplay":
+                    RunSynchronous(request, ParvumGameplayTools.Inspect, "Parvum source bindings inspected; no gameplay acceptance.");
+                    break;
+                case "ApplyParvumGameplay":
+                    RunSynchronous(request, ParvumGameplayTools.Apply, "Parvum gameplay applied; direct verification pending.");
+                    break;
+                case "ReviewParvumGameplay":
+                    RunSynchronous(request, ParvumGameplayTools.Review, "Parvum observation operation; not visual acceptance.");
+                    break;
+                case "ObservePegasusEntranceDoors":
+                    RunSynchronous(request, PegasusEntranceDoorTools.Observe, "Door views captured for direct inspection, not acceptance.");
+                    break;
+                case "ApplyPegasusEntranceDoors":
+                    RunSynchronous(request, PegasusEntranceDoorTools.Apply, "Door state wiring saved; direct walking review pending.");
+                    break;
+                case "ReviewPegasusEntranceDoors":
+                    RunSynchronous(request, PegasusEntranceDoorTools.Run, "Scoped door operation completed; no automatic visual acceptance.");
+                    break;
                 case "RepairPegasusInput":
                     RunSynchronous(request, PegasusInputFixTools.Run, "Scoped input operation completed; not a gameplay acceptance result.");
                     break;

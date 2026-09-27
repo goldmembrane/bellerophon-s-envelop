@@ -13,6 +13,9 @@ namespace Bellerophon.Core.Player
         private CombatStatusEffectState[] activeStatusEffects = new CombatStatusEffectState[0];
         private ScheduledStatusEffect[] scheduledStatusEffects = new ScheduledStatusEffect[0];
         private PlayerPostureState postureState = PlayerPostureState.Standing;
+        // Parvum bites have a non-stacking, non-refreshing window independent of other statuses.
+        private readonly Bellerophon.Enemies.Parvum.ParvumSlowWindow parvumSlow = new Bellerophon.Enemies.Parvum.ParvumSlowWindow();
+        public void ApplyParvumBiteSlow(float duration) => parvumSlow.TryApply(duration);
 
         public int CurrentHealth => currentHealth;
 
@@ -41,7 +44,7 @@ namespace Bellerophon.Core.Player
                                        CombatStatusEffectRules.BlocksSprint(activeStatusEffects);
 
         public float MovementMultiplier => postureState == PlayerPostureState.Standing
-            ? CombatStatusEffectRules.CalculateMovementMultiplier(activeStatusEffects)
+            ? CombatStatusEffectRules.CalculateMovementMultiplier(activeStatusEffects) * (parvumSlow.Remaining > 0f ? .7f : 1f)
             : 0f;
 
         public void Configure(FirstPersonPlayerSettings playerSettings)
@@ -60,11 +63,13 @@ namespace Bellerophon.Core.Player
 
         private void Update()
         {
+            parvumSlow.Tick(Time.deltaTime);
             TickStatusEffects(Time.deltaTime);
         }
 
         public void ResetVitals()
         {
+            parvumSlow.Clear();
             if (settings == null)
             {
                 return;

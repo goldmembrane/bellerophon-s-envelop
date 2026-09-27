@@ -935,7 +935,7 @@ namespace Bellerophon.Core.Session
                         (ShipRoomId)room.roomId,
                         new ShipRoomState(
                             room.currentDurability,
-                            room.maxDurability <= 0 ? 100 : room.maxDurability,
+                            room.maxDurability <= 0 ? ShipState.DefaultRoomMaxDurability : room.maxDurability,
                             room.isFunctionOffline,
                             room.isBlackout,
                             room.isSealed));

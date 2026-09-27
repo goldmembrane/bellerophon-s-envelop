@@ -803,12 +803,33 @@ namespace Bellerophon.Core.Ship
         {
             EnsureInitialized();
             ResolvePlayerStatus();
+            var gameplayParvum = UnityEngine.Object.FindObjectsByType<Bellerophon.Enemies.Parvum.ParvumBrain>(FindObjectsSortMode.None);
+            Bellerophon.Enemies.Parvum.ParvumBrain aimedParvum = null;
+            if (gameplayParvum.Length > 0 && playerStatus != null && !equipmentState.ActiveHandSlot.IsEmpty)
+            {
+                var camera = playerStatus.GetComponentInChildren<Camera>();
+                var definition = EquipmentRules.GetDefinition(equipmentState.ActiveHandSlot.ItemKind);
+                float range = alternateMode && equipmentState.ActiveHandSlot.ItemKind == EquipmentItemKind.Stick
+                    ? EquipmentRules.StickThrowMaxRange : definition.MaxRange;
+                if (camera != null && Physics.Raycast(camera.transform.position, camera.transform.forward, out var hit,
+                    range, ~0, QueryTriggerInteraction.Ignore))
+                    aimedParvum = hit.collider.GetComponentInParent<Bellerophon.Enemies.Parvum.ParvumBrain>();
+            }
             lastEquipmentUseResult = EquipmentRules.UseActiveEquipment(
                 equipmentState,
                 alternateMode,
-                seedIntruderState.IsActive,
+                gameplayParvum.Length > 0 ? aimedParvum != null && aimedParvum.Health > 0 : seedIntruderState.IsActive,
                 playerStatus == null ? null : playerStatus.ActiveStatusEffects);
             equipmentState = lastEquipmentUseResult.State;
+
+            if (gameplayParvum.Length > 0)
+            {
+                if (aimedParvum != null && (lastEquipmentUseResult.AppliesIntruderDamage || lastEquipmentUseResult.StatusEffectToApply.HasEffect))
+                    aimedParvum.ReceiveDamage(lastEquipmentUseResult.Damage,
+                        playerStatus.GetComponent<Bellerophon.Enemies.Parvum.ParvumTarget>(), lastEquipmentUseResult.StatusEffectToApply);
+                lastInteractionSummary = lastEquipmentUseResult.Summary;
+                return lastEquipmentUseResult;
+            }
 
             if (seedIntruderState.IsActive &&
                 (lastEquipmentUseResult.AppliesIntruderDamage ||

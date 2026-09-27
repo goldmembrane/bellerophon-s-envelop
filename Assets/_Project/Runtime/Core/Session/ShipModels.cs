@@ -110,6 +110,8 @@ namespace Bellerophon.Core.Session
 
     public sealed class ShipState
     {
+        // Shared by new sessions and the missing-maximum save-data fallback.
+        public const int DefaultRoomMaxDurability = 500;
         private static readonly ShipRoomId[] RequiredRoomIds =
         {
             ShipRoomId.Cockpit,
@@ -164,7 +166,7 @@ namespace Bellerophon.Core.Session
 
         public bool IsTransportFailed => RequiresTowing || RunState == ShipRunState.Failed;
 
-        public static ShipState CreateDefault(int roomMaxDurability = 100)
+        public static ShipState CreateDefault(int roomMaxDurability = DefaultRoomMaxDurability)
         {
             var rooms = new Dictionary<ShipRoomId, ShipRoomState>();
             foreach (var roomId in RequiredRoomIds)

@@ -1432,7 +1432,7 @@ namespace Bellerophon.Core.Session
             }
         }
 
-        private static CargoMaterial ResolveCargoMaterial(GameSessionState session)
+        public static CargoMaterial ResolveCargoMaterial(GameSessionState session)
         {
             if (session == null || !session.ActiveTransportContract.HasValue)
             {
