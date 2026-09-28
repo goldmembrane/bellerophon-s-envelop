@@ -457,8 +457,8 @@ namespace Bellerophon.Core.Session
         public const float ParvumMovementSlowDurationSeconds = 0.8f;
 
         public const int FugaHealth = 65;
-        public const float FugaMovementSpeed = 3.5f;
-        public const float FugaAttackRange = 1f;
+        public const float FugaMovementSpeed = 3.15f;
+        public const float FugaAttackRange = 1.5f;
         public const float FugaAttackDelaySeconds = 1f;
         public const int FugaDamage = 10;
 

@@ -37,6 +37,9 @@ namespace Bellerophon.Enemies.Parvum
         private ParvumCargoLedger cargoLedger=new ParvumCargoLedger();
         private readonly ParvumSlowWindow slow=new ParvumSlowWindow();
         private double playerDamageRemainder;
+        // Separate feeding ledger: Fuga consumes initial cargo durability over 50 active seconds.
+        private double fugaFacilityRemainder;
+        private float fugaCargoInitial=-1;
         private string resolvedContractId;
         private int resolvedTransportNumber=-1;
         private CargoMaterial resolvedCargoMaterial;
@@ -67,7 +70,7 @@ namespace Bellerophon.Enemies.Parvum
             {
                 resolvedContractId=id;resolvedTransportNumber=session.CompletedTransportCount;
                 resolvedCargoMaterial=SeedIntruderRules.ResolveCargoMaterial(session);
-                cargoLedger=new ParvumCargoLedger(); // A new cargo run has its own consumption ledger.
+                cargoLedger=new ParvumCargoLedger();fugaCargoInitial=-1; // A new cargo run has its own consumption ledger.
             }
             return resolvedCargoMaterial;
         }
@@ -201,6 +204,28 @@ namespace Bellerophon.Enemies.Parvum
                 slow.TryApply(duration);
             }
             Bitten?.Invoke(attacker,damage);
+        }
+        public void ReceiveFugaConsumption(float seconds)
+        {
+            if(!IsAlive || !IsMetal || seconds<=0)return;
+            if(IsRoomWall)
+            {
+                AccumulateConsumption(seconds);fugaFacilityRemainder+=20d*seconds;
+                int damage=(int)System.Math.Floor(fugaFacilityRemainder+1e-7);fugaFacilityRemainder-=damage;ApplyFacilityDamage(damage);
+            }
+            else if(kind==ParvumTargetKind.MetalCargo)
+            {
+                var cargo=ship.CurrentCargoState;if(fugaCargoInitial<0)fugaCargoInitial=cargo.DurabilityPercent;
+                ship.SetCargoState(cargo.WithDurabilityPercent(Mathf.Max(0,cargo.DurabilityPercent-fugaCargoInitial*seconds/50f)));
+            }
+        }
+        public void ReceiveFugaStrike(float damage)
+        {
+            if(!IsAlive)return;
+            if(kind==ParvumTargetKind.Speaker){health=0;speakerAudible=false;if(speakerAudio)speakerAudio.Stop();gameObject.SetActive(false);return;}
+            if(kind!=ParvumTargetKind.Creature)return;
+            if(player){playerDamageRemainder+=damage;int whole=(int)System.Math.Floor(playerDamageRemainder+1e-7);playerDamageRemainder-=whole;player.ApplyDamage(whole);}
+            else if(shield>0)shield=Mathf.Max(0,shield-damage);else health=Mathf.Max(0,health-damage);
         }
         private void ApplyFacilityDamage(int damage)
         {

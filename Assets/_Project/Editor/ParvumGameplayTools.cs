@@ -21,13 +21,59 @@ namespace Bellerophon.Editor
         static ParvumGameplayTools(){EditorApplication.playModeStateChanged+=OnObservationPlayEntry;}
         internal const string DirectoryPath = "docs/validation/PegasusParvumAI";
         private const string SourcePath = "Assets/_Project/Scenes/CargoRunMvp.unity";
-        [Serializable] private sealed class ReviewAction { public string mode; public string label; public float cargoDurability; public int startRoom; public int roomCount; }
+        [Serializable] private sealed class ReviewAction { public string mode; public string label; public float cargoDurability; public int startRoom; public int roomCount; public Vector3 cameraPosition; public Vector3 cameraLookAt; }
         internal static void Review()
         {
             Directory.CreateDirectory(DirectoryPath);
             var action=JsonUtility.FromJson<ReviewAction>(File.ReadAllText(DirectoryPath+"/Action.json"));
             switch(action.mode)
             {
+                case "DoorRoomPathSurvey":
+                    if(!EditorApplication.isPlaying)throw new InvalidOperationException("Play required.");
+                    var surveyActor=UnityEngine.Object.FindFirstObjectByType<ParvumBrain>();
+                    var surveyFilter=new NavMeshQueryFilter{agentTypeID=new SerializedObject(surveyActor).FindProperty("navigationAgentType").intValue,areaMask=NavMesh.AllAreas};
+                    var roomBelowMethod=typeof(ParvumBrain).GetMethod("RoomBelow",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+                    var clearMethod=typeof(ParvumBrain).GetMethod("RelocationRouteClear",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+                    var pathSurvey=new StringBuilder($"Actor {surveyActor.transform.position:F4}\n");
+                    NavMesh.SamplePosition(surveyActor.transform.position,out var surveyStart,.35f,surveyFilter);
+                    foreach(var group in ParvumTarget.Active.Where(x=>x.IsRoomWall && x.Surface).GroupBy(x=>x.Room))
+                    {
+                        var bounds=group.First().Surface.bounds;foreach(var wall in group)bounds.Encapsulate(wall.Surface.bounds);
+                        int probes=0,surfaces=0,floors=0,complete=0,clear=0;var failures=new Dictionary<string,int>();
+                        var example=new StringBuilder();
+                        for(float x=bounds.min.x+.6f;x<=bounds.max.x-.6f;x+=1.5f)
+                        for(float z=bounds.min.z+.6f;z<=bounds.max.z-.6f;z+=1.5f)
+                        {
+                            probes++;var probe=new Vector3(x,bounds.min.y+.15f,z);
+                            if(!NavMesh.SamplePosition(probe,out var hit,1f,surveyFilter))continue;surfaces++;
+                            var floorRoom=roomBelowMethod.Invoke(surveyActor,new object[]{hit.position}) as ParvumTarget;
+                            if(!floorRoom || floorRoom.Room!=group.Key)continue;floors++;
+                            var route=new NavMeshPath();if(!NavMesh.CalculatePath(surveyStart.position,hit.position,surveyFilter,route) || route.status!=NavMeshPathStatus.PathComplete)continue;complete++;
+                            string failure="";var valid=(bool)clearMethod.Invoke(surveyActor,new object[]{route.corners,(Action<string>)(s=>failure=s)});
+                            if(valid)clear++;else {if(!failures.ContainsKey(failure))failures.Add(failure,0);failures[failure]++;}
+                            if(complete<=3)example.AppendLine($"goal={hit.position:F4} clear={valid} reason={failure} corners="+string.Join(";",route.corners.Select(p=>p.ToString("F3"))));
+                        }
+                        pathSurvey.AppendLine($"ROOM {group.Key} bounds={bounds} probes={probes} nav={surfaces} roomFloors={floors} complete={complete} clear={clear}");pathSurvey.Append(example);
+                        foreach(var failure in failures.OrderByDescending(p=>p.Value).Take(5))pathSurvey.AppendLine($"FAIL {failure.Value}: {failure.Key}");
+                    }
+                    File.WriteAllText(DirectoryPath+"/DoorRoomPathSurvey_"+action.label+".txt",pathSurvey.ToString());break;
+                case "FinalDoorEntryCapture":
+                    if(!EditorApplication.isPlaying || File.Exists(DirectoryPath+"/DoorEntryFinal.png"))throw new InvalidOperationException("Fresh final Play capture required.");
+                    Capture(UnityEngine.Object.FindFirstObjectByType<ParvumBrain>().transform,DirectoryPath+"/DoorEntryFinal.png");ConsoleReport("DoorEntryFinal");break;
+                case "RoomDoorContext":
+                    CaptureDoorContext(action.cameraPosition,action.cameraLookAt,DirectoryPath+"/"+action.label+".png");break;
+                case "RoomDoorPlaneSurvey":
+                    var portalSurvey=new StringBuilder();
+                    foreach(var root in SceneManager.GetActiveScene().GetRootGameObjects().Where(x=>!x.name.Contains("Corridor")))
+                    foreach(var mesh in root.GetComponentsInChildren<MeshFilter>().Where(x=>(root.name=="Approved Engine Room 01 Shell" && (x.transform.parent.name.StartsWith("Walls") || x.transform.parent.name.StartsWith("Entrances"))) || (root.name=="Approved Cargo Hold 01 Shell" && x.name.Contains("wall")) || System.Text.RegularExpressions.Regex.IsMatch(x.name,"doorway|threshold|entrance|Entrance|passage|corridor side|wall segment|bay wall|direction sign black|warehouse wall|door frame|inner.*ring|[Ff]rame|[Jj]amb")))
+                    {
+                        var renderer=mesh.GetComponent<Renderer>();if(!renderer)continue;
+                        portalSurvey.AppendLine($"{root.name}/{mesh.transform.parent.name}/{mesh.name} position={mesh.transform.position:F3} bounds={renderer.bounds.center:F3}/{renderer.bounds.size:F3} right={mesh.transform.right:F3} forward={mesh.transform.forward:F3} mesh={mesh.sharedMesh.bounds}");
+                    }
+                    File.WriteAllText(DirectoryPath+"/RoomDoorPlaneSurvey.txt",portalSurvey.ToString());break;
+                case "FinalEntryAdvanceTwoMetresCapture":
+                    if(!EditorApplication.isPlaying || File.Exists(DirectoryPath+"/EntryAdvanceTwoMetresFinal.png"))throw new InvalidOperationException("Fresh final Play capture required.");
+                    Capture(UnityEngine.Object.FindFirstObjectByType<ParvumBrain>().transform,DirectoryPath+"/EntryAdvanceTwoMetresFinal.png");ConsoleReport("EntryAdvanceTwoMetresFinal");break;
                 case "FinalEntryAdvanceCapture":
                     if(!EditorApplication.isPlaying || File.Exists(DirectoryPath+"/EntryAdvanceFinal.png"))throw new InvalidOperationException("Fresh final Play capture required.");
                     Capture(UnityEngine.Object.FindFirstObjectByType<ParvumBrain>().transform,DirectoryPath+"/EntryAdvanceFinal.png");ConsoleReport("EntryAdvanceFinal");break;
@@ -102,6 +148,11 @@ namespace Bellerophon.Editor
                     {
                         var id=conditionActor.OccupiedRoom.Value;
                         conditionShip.SetShipState(conditionShip.CurrentShipState.WithRoom(id,conditionShip.CurrentShipState.GetRoom(id).WithSealed(action.label=="SealSource")));
+                    }
+                    else if(action.label=="DoorDestinationOnly")
+                    {
+                        foreach(ShipRoomId id in Enum.GetValues(typeof(ShipRoomId)))
+                            conditionShip.SetShipState(conditionShip.CurrentShipState.WithRoom(id,new ShipRoomState((int)id==action.startRoom?500:0,500)));
                     }
                     else if(action.label=="ExhaustAll" || action.label=="RestoreRooms")
                     {
@@ -1107,7 +1158,7 @@ namespace Bellerophon.Editor
             if(Time.time<relocationNext)return;relocationNext=Time.time+(relocationLabel.StartsWith("EntryAdvance")?.08f:.5f);
             var actor=UnityEngine.Object.FindFirstObjectByType<ParvumBrain>();
             var ship=UnityEngine.Object.FindFirstObjectByType<ShipDeviceInteractionState>();
-            if(relocationLabel.StartsWith("EntryAdvance"))relocationReport.AppendLine($"ENTRY pending={actor.EntryPending} cleared={actor.EntryCleared} start={actor.EntryStart:F4} advance={actor.EntryAdvance:F4}");
+            if(relocationLabel.StartsWith("EntryAdvance"))relocationReport.AppendLine($"ENTRY pending={actor.EntryPending} cleared={actor.EntryCleared} start={actor.EntryStart:F4} advance={actor.EntryAdvance:F4} door={actor.EntryDoorName} plane={actor.EntryDoorPoint:F4} inward={actor.EntryInward:F4}");
             if(relocationLabel.Contains("Interrupt") && !entryStimulusSent && actor.EntryPending && actor.EntryAdvance>.15f && actor.EntryAdvance<.9f)
             {
                 entryStimulusSent=true;entryStimulusAt=Time.time;
@@ -1124,6 +1175,12 @@ namespace Bellerophon.Editor
             if(actor.CurrentTarget && actor.CurrentTarget.name.StartsWith("Relocation runtime"))
             {var mouth=actor.GetComponentInChildren<ParvumAnimationView>().MouthTip;relocationReport.AppendLine($"STIMULUS health={actor.CurrentTarget.Health} mouth={mouth:F4} point={actor.CurrentTarget.ClosestPoint(mouth):F4} bounds={actor.CurrentTarget.Surface.bounds}");}
             if(relocationFrame%4==0 || (relocationLabel.StartsWith("EntryAdvance") && actor.Behaviour==ParvumBehaviour.AdvanceIntoRoom))Capture(actor.transform,DirectoryPath+"/"+relocationLabel+"_"+relocationFrame.ToString("D4")+".png");
+            if(relocationLabel.Contains("Door") && actor.EntryDoorName!=null && relocationFrame%2==0)
+            {
+                var doorway=actor.EntryDoorPoint;doorway.y=actor.transform.position.y+.8f;
+                var side=Vector3.Cross(Vector3.up,actor.EntryInward);
+                CaptureDoorContext(doorway+actor.EntryInward*4.5f+side*1.6f+Vector3.up*.8f,doorway,DirectoryPath+"/"+relocationLabel+"_Door_"+relocationFrame.ToString("D4")+".png");
+            }
             relocationFrame++;File.WriteAllText(DirectoryPath+"/"+relocationLabel+".txt",relocationReport.ToString());
             if(Time.time-relocationStart>120){EditorApplication.update-=RelocationTick;ConsoleReport(relocationLabel);}
         }
@@ -1228,6 +1285,18 @@ namespace Bellerophon.Editor
                 SceneManager.SetActiveScene(active);
                 if(opened) EditorSceneManager.CloseScene(source,true);
             }
+        }
+        private static void CaptureDoorContext(Vector3 position,Vector3 lookAt,string output)
+        {
+            var go=new GameObject("Parvum temporary doorway observation camera");var camera=go.AddComponent<Camera>();
+            var texture=new RenderTexture(960,720,24);var previous=RenderTexture.active;
+            try
+            {
+                camera.fieldOfView=75;camera.nearClipPlane=.02f;camera.transform.position=position;camera.transform.LookAt(lookAt);camera.targetTexture=texture;
+                camera.Render();RenderTexture.active=texture;var image=new Texture2D(960,720,TextureFormat.RGB24,false);
+                image.ReadPixels(new Rect(0,0,960,720),0,0);image.Apply();File.WriteAllBytes(output,image.EncodeToPNG());UnityEngine.Object.DestroyImmediate(image);
+            }
+            finally{RenderTexture.active=previous;camera.targetTexture=null;texture.Release();UnityEngine.Object.DestroyImmediate(texture);UnityEngine.Object.DestroyImmediate(go);}
         }
         private static void Capture(Transform target, string path)
         {

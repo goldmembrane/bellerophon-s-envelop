@@ -20,6 +20,7 @@ namespace Bellerophon.Core.Player
         [SerializeField] private Text interactionPromptText;
         [SerializeField] private Image healthFillImage;
         [SerializeField] private Image shieldFillImage;
+        private Font interactionFallbackFont;
 
         public Text HealthText => healthText;
 
@@ -59,7 +60,7 @@ namespace Bellerophon.Core.Player
             ResolveGeneratedHudReferences();
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             Refresh();
         }
@@ -134,7 +135,14 @@ namespace Bellerophon.Core.Player
             interactionPromptText.enabled = true;
             if (interactionController.CurrentTargetCanInteract)
             {
-                interactionPromptText.text = $"F - {interactionController.CurrentTargetPrompt} {interactionController.CurrentTargetDisplayName}";
+                if(interactionController.CurrentInteractable is PegasusThrownStick && interactionPromptText.font && !interactionPromptText.font.HasCharacter('회'))
+                {
+                    if(!interactionFallbackFont)interactionFallbackFont=Font.CreateDynamicFontFromOSFont(new[]{"Malgun Gothic","맑은 고딕","Arial Unicode MS"},22);
+                    interactionPromptText.font=interactionFallbackFont;
+                }
+                interactionPromptText.text = interactionController.CurrentInteractable is PegasusThrownStick
+                    ? interactionController.CurrentTargetPrompt
+                    : $"F - {interactionController.CurrentTargetPrompt} {interactionController.CurrentTargetDisplayName}";
                 return;
             }
 
@@ -147,6 +155,7 @@ namespace Bellerophon.Core.Player
         {
             return Mathf.RoundToInt(CalculateRatio(current, max) * 100f) + "%";
         }
+        private void OnDestroy(){if(interactionFallbackFont)Destroy(interactionFallbackFont);}
 
         private static float CalculateRatio(int current, int max)
         {

@@ -123,6 +123,27 @@ namespace Bellerophon.Core.Player
             }
 
             var ray = new Ray(interactionOrigin.position, interactionOrigin.forward);
+            // Forgiving selection only for this player's loose stick. Physical size is unchanged.
+            var stickOwner=GetComponent<PegasusStickController>();
+            if(stickOwner && stickOwner.Projectile && stickOwner.CanRecover(stickOwner.Projectile))
+            {
+                var loose=stickOwner.Projectile;var physical=loose.GetComponent<Collider>();
+                var point=physical.ClosestPoint(ray.origin+ray.direction*Mathf.Clamp(Vector3.Dot(physical.bounds.center-ray.origin,ray.direction),0,settings.InteractionDistance));
+                float along=Vector3.Dot(point-ray.origin,ray.direction);
+                float offset=Vector3.Distance(point,ray.GetPoint(Mathf.Max(0,along)));
+                if(along>0 && Vector3.Distance(ray.origin,point)<=settings.InteractionDistance && offset<=.4f)
+                {
+                    bool blocked=false;
+                    foreach(var hit in Physics.RaycastAll(ray.origin,point-ray.origin,Vector3.Distance(ray.origin,point),Physics.DefaultRaycastLayers,QueryTriggerInteraction.Ignore))
+                        if(!hit.collider.transform.IsChildOf(transform) && hit.collider!=physical){blocked=true;break;}
+                    if(!blocked)
+                    {
+                        currentHit=default;CurrentInteractable=loose;
+                        CurrentTargetCanInteract=loose.CanInteract(new PlayerInteractionContext(gameObject,interactionOrigin,currentHit),out var reason);
+                        CurrentTargetFailureReason=reason;return;
+                    }
+                }
+            }
             if (!Physics.Raycast(ray, out currentHit, settings.InteractionDistance, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
             {
                 return;

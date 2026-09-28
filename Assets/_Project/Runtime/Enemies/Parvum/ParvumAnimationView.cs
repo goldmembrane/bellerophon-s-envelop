@@ -39,6 +39,10 @@ namespace Bellerophon.Enemies.Parvum
             elapsed%sources[(int)Motion].clip.length/sources[(int)Motion].clip.length>=.55f &&
             elapsed%sources[(int)Motion].clip.length/sources[(int)Motion].clip.length<=.9f;
         public ParvumMotion Motion { get; private set; }
+        public event Action DeathPlaybackCompleted;
+        public bool IsDeathPlaybackComplete { get; private set; }
+        public float MotionTime => elapsed;
+        public float DeathDuration => sources[(int)ParvumMotion.Death].clip.length;
 
         public void Configure(Animator target, SkinnedMeshRenderer renderer, Transform modelRoot, MotionSource[] motions)
         { animator=target; body=renderer; model=modelRoot; sources=motions; }
@@ -65,6 +69,7 @@ namespace Bellerophon.Enemies.Parvum
             if(graph.IsValid()) graph.Destroy();
             model.localPosition=restPosition;model.localRotation=restRotation;model.localScale=restScale;
             Motion=motion;elapsed=0;initialized=true;
+            IsDeathPlaybackComplete=false;
             contactCycle=-1;
             if(motion==ParvumMotion.Death)hitElapsed=-1;
             var source=sources[(int)motion];body.sharedMesh=source.mesh;
@@ -99,6 +104,8 @@ namespace Bellerophon.Enemies.Parvum
             layers.SetInputWeight(1,hitElapsed>=0?1:0);
             hitPlayable.SetTime(Math.Max(0,hitElapsed));
             graph.Evaluate(0);
+            if(Motion==ParvumMotion.Death && !IsDeathPlaybackComplete && elapsed>=clip.length)
+            {IsDeathPlaybackComplete=true;DeathPlaybackCompleted?.Invoke();}
         }
         private void LateUpdate()
         {

@@ -61,6 +61,11 @@ namespace Bellerophon.Enemies.Fuga
         private Quaternion initialUpperLipRotation;
         private Quaternion initialLowerLipRotation;
         private bool initialPoseCaptured;
+        private bool gameplayVisualOnly;
+        private Vector3 gameplayVisualPosition;
+        // Gameplay owns root physics; reuse this exact pose sequence without its review path.
+        public void ConfigureGameplay(Rigidbody owner)
+        {body=owner;gameplayVisualOnly=true;gameplayVisualPosition=visualRoot.localPosition;initialPoseCaptured=false;}
         private float elapsedSeconds;
         private float currentLoopTime;
         private float currentBodyTiltDegrees;
@@ -142,7 +147,8 @@ namespace Bellerophon.Enemies.Fuga
             if (lowerLipRoot != null) lowerLipRoot.localRotation = initialLowerLipRotation;
             currentUpperLipAngleDegrees = 0f;
             currentLowerLipAngleDegrees = 0f;
-            if (body != null)
+            if (gameplayVisualOnly && visualRoot != null)visualRoot.localPosition=gameplayVisualPosition;
+            if (body != null && !gameplayVisualOnly)
             {
                 body.linearVelocity = Vector3.zero;
                 body.angularVelocity = Vector3.zero;
@@ -169,7 +175,8 @@ namespace Bellerophon.Enemies.Fuga
             completedWingbeatCount = Mathf.FloorToInt(elapsedSeconds * wingbeatFrequency);
             currentLoopTime = Mathf.Repeat(elapsedSeconds, loopDuration);
             ApplyVisualPose(currentLoopTime);
-            ApplyRigidbodyForwardMotion();
+            if(gameplayVisualOnly)visualRoot.position=transform.TransformPoint(gameplayVisualPosition)+transform.forward*currentForwardOffsetMeters*body.GetComponent<Fuga.FugaBrain>().BodySize;
+            else ApplyRigidbodyForwardMotion();
             loopPeakBodyTiltDegrees = Mathf.Max(loopPeakBodyTiltDegrees, currentBodyTiltDegrees);
             loopPeakForwardOffsetMeters = Mathf.Max(loopPeakForwardOffsetMeters, currentForwardOffsetMeters);
             loopPeakMouthWeight = Mathf.Max(loopPeakMouthWeight, currentMouthWeight);

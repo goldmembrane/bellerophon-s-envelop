@@ -640,6 +640,12 @@ namespace Bellerophon.Editor.Validation
                 case "ReviewParvumGameplay":
                     RunSynchronous(request, ParvumGameplayTools.Review, "Parvum observation operation; not visual acceptance.");
                     break;
+                case "ReviewPegasusStick":
+                    RunSynchronous(request, PegasusStickTools.Review, "Stick operation; direct review required.");
+                    break;
+                case "ReviewPegasusFuga":
+                    RunSynchronous(request, PegasusFugaTools.Review, "Fuga operation; direct review required.");
+                    break;
                 case "ObservePegasusEntranceDoors":
                     RunSynchronous(request, PegasusEntranceDoorTools.Observe, "Door views captured for direct inspection, not acceptance.");
                     break;

@@ -8,7 +8,7 @@ namespace Bellerophon.Enemies.Parvum
     public static class ParvumGameplayRules
     {
         public const float MetalRange = 5f;
-        public const float RoomEntryAdvanceDistance = 1f;
+        public const float RoomEntryAdvanceDistance = Bellerophon.Enemies.Seed.SeedRoomEntry.AdvanceDistance;
         public const float PursuitRange = 10f;
         public const float SpeakerRange = 20f;
         // Navigation and physical stepping share one limit; never enlarge scene floor geometry.

@@ -1,11 +1,12 @@
 using Bellerophon.Core.Session;
+using Bellerophon.Enemies.Seed;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 
 namespace Bellerophon.Enemies.Parvum
 {
-    [RequireComponent(typeof(Rigidbody),typeof(CapsuleCollider))]
+    [RequireComponent(typeof(Rigidbody))]
     public sealed class ParvumBrain : MonoBehaviour
     {
         [SerializeField] private ParvumAnimationView animationView;
@@ -33,16 +34,18 @@ namespace Bellerophon.Enemies.Parvum
         // Remember an exhausted source across corridor travel and combat interruptions.
         private ParvumTarget occupiedRoom, relocationSource, relocationDestination;
         private float relocationRetryAt;
-        // Arrival remains pending through interruptions. Distance is forward displacement,
-        // not elapsed time or accumulated pacing, and starts after the capsule clears the exit.
-        private ParvumTarget entryRoom;
-        private Vector3 entryDirection, entryStart;
-        private bool entryCleared;
-        private float completedEntryAdvance;
-        public bool EntryPending => entryRoom;
-        public bool EntryCleared => entryCleared;
-        public Vector3 EntryStart => entryStart;
-        public float EntryAdvance => entryRoom ? (entryCleared ? Vector3.Dot(body.position-entryStart,entryDirection) : 0f) : completedEntryAdvance;
+        private readonly SeedRoomEntry entry=new SeedRoomEntry();
+        public IReadOnlyList<SeedRoomDoor> Doorways=>entry.Doors;
+        public Vector3 EntryDoorPoint => entry.Door.Point;
+        public Vector3 EntryInward => entry.Door.Inward;
+        public string EntryDoorName => entry.Door.Name;
+        public string ActiveEntryName=>entry.Pending?entry.Door.Name:"";
+        public string LastCompletedEntryName=>entry.LastCompletedName;
+        public float LastCompletedEntryAdvance=>entry.LastCompletedAdvance;
+        public bool EntryPending => entry.Pending;
+        public bool EntryCleared => entry.Crossed;
+        public Vector3 EntryStart => entry.Door.Point;
+        public float EntryAdvance => entry.Pending ? (entry.Crossed ? entry.Depth(body.position) : 0f) : entry.LastCompletedAdvance;
         private readonly Dictionary<ShipRoomId,float> blockedRoomsUntil=new Dictionary<ShipRoomId,float>();
         public ShipRoomId? OccupiedRoom => occupiedRoom ? occupiedRoom.Room : (ShipRoomId?)null;
         public ShipRoomId? DestinationRoom => relocationDestination ? relocationDestination.Room : (ShipRoomId?)null;
@@ -55,7 +58,12 @@ namespace Bellerophon.Enemies.Parvum
         public float MovementSpeed => SeedIntruderRules.ParvumMovementSpeed+(IsUrzereSupported?SeedIntruderRules.UrzereSeedMovementSpeedBonus:0);
         public ParvumBehaviour Behaviour { get; private set; }
         public float Health => health;
+        public float DeathStartedAt { get; private set; } = -1;
+        public float DeathAnimationEndedAt { get; private set; } = -1;
         public ParvumTarget CurrentTarget => target;
+        // Read-only review diagnostics, updated by the normal decision path.
+        public string ApproachDiagnostic { get; private set; }
+        public string PursuitLossDiagnostic { get; private set; }
         public void Configure(ParvumAnimationView view,int agentType) { animationView=view;navigationAgentType=agentType; }
         public void SetUrzereSupport(Object source,bool supported)
         {if(!source)return;if(supported)urzereSources.Add(source);else urzereSources.Remove(source);}
@@ -70,10 +78,13 @@ namespace Bellerophon.Enemies.Parvum
         private void Awake()
         {
             path=new NavMeshPath();
+            animationView.DeathPlaybackCompleted+=OnDeathPlaybackCompleted;
             body=GetComponent<Rigidbody>();capsule=GetComponent<CapsuleCollider>();
+            // Required while alive, but removable at death; RequireComponent would block removal.
+            if(!capsule)capsule=gameObject.AddComponent<CapsuleCollider>();
             body.useGravity=true;body.isKinematic=false;body.constraints=RigidbodyConstraints.FreezeRotation;
             body.collisionDetectionMode=CollisionDetectionMode.ContinuousDynamic;
-            previousPosition=body.position;
+            previousPosition=body.position;entry.Initialize(body.position);
             // Keep animation bindings unchanged. Tilt only an outer visual pivot about the feet.
             if(animationView && animationView.transform.parent==transform)
             {
@@ -85,7 +96,18 @@ namespace Bellerophon.Enemies.Parvum
         {
             if(health<=0) return;
             health=Mathf.Max(0,health-Mathf.Max(0,damage));
-            if(health<=0) { Behaviour=ParvumBehaviour.Dead;target=null;attacker=null;corners=null;animationView.SetMotion(ParvumMotion.Death);return; }
+            if(health<=0)
+            {
+                Behaviour=ParvumBehaviour.Dead;target=null;attacker=null;corners=null;DeathStartedAt=Time.time;
+                foreach(var driver in GetComponentsInChildren<ParvumPhysicsMotionDriver>(true))driver.enabled=false;
+                foreach(var rigidbody in GetComponentsInChildren<Rigidbody>(true))
+                {
+                    if(!rigidbody.isKinematic){rigidbody.linearVelocity=Vector3.zero;rigidbody.angularVelocity=Vector3.zero;}
+                    rigidbody.useGravity=false;rigidbody.isKinematic=true;rigidbody.detectCollisions=false;
+                }
+                foreach(var collider in GetComponentsInChildren<Collider>(true)){collider.enabled=false;Destroy(collider);}
+                animationView.SetMotion(ParvumMotion.Death);return;
+            }
             if(source && source.Faction!=IntruderFaction.SeedEntity && !attacker)
             {
                 suppressSpeakers=Behaviour==ParvumBehaviour.ApproachSpeaker || Behaviour==ParvumBehaviour.DestroySpeaker;
@@ -98,7 +120,7 @@ namespace Bellerophon.Enemies.Parvum
         private void FixedUpdate()
         {
             float dt=Time.fixedDeltaTime;
-            if(health<=0) {Stop();return;}
+            if(health<=0)return;
             if(surfaceAlignment && Physics.Raycast(body.position+Vector3.up*.15f,Vector3.down,out var visualGround,.25f,~0,QueryTriggerInteraction.Ignore) && visualGround.normal.y>.45f)
             {
                 var tilt=Quaternion.FromToRotation(Vector3.up,transform.InverseTransformDirection(visualGround.normal));
@@ -111,10 +133,10 @@ namespace Bellerophon.Enemies.Parvum
             if(CombatStatusEffectRules.BlocksActions(effects)) {Stop();animationView.SetMotion(ParvumMotion.Idle);return;}
 
             if(attacker && (!attacker.IsAlive || Vector3.Distance(body.position,attacker.ClosestPoint(body.position))>ParvumGameplayRules.PursuitRange || !Visible(attacker)))
-            {attacker=null;target=null;suppressSpeakers=false;corners=null;scanIn=0;}
+            {PursuitLossDiagnostic=$"{Time.time:F3}: alive={attacker.IsAlive} distance={Vector3.Distance(body.position,attacker.ClosestPoint(body.position)):F3} visible={Visible(attacker)}";attacker=null;target=null;suppressSpeakers=false;corners=null;scanIn=0;}
             scanIn-=dt;
             UpdateOccupiedRoom();
-            if(Behaviour==ParvumBehaviour.AdvanceIntoRoom && entryCleared && EntryAdvance>=ParvumGameplayRules.RoomEntryAdvanceDistance-.0001f)scanIn=0;
+            if(Behaviour==ParvumBehaviour.AdvanceIntoRoom && entry.Crossed && EntryAdvance>=SeedRoomEntry.AdvanceDistance)scanIn=0;
             if(scanIn<=0)
             {
                 scanIn=.25f;
@@ -130,7 +152,7 @@ namespace Bellerophon.Enemies.Parvum
                     ChooseMetal();
                 if(target) PlanApproach(target);
             }
-            if(target && target.IsAlive && Vector3.Distance(MouthOrigin,target.ClosestPoint(MouthOrigin))<=biteApproachDistance && Visible(target))
+            if(target && target.IsAlive && Vector3.Distance(MouthOrigin,target.ClosestPoint(MouthOrigin))<=biteApproachDistance && Visible(target) && (!target.IsMetal || SeedMetalApproach.HasSurface(target,MouthOrigin,transform)))
             {
                 Stop();Face(target.ClosestPoint(body.position));
                 var toward=target.ClosestPoint(MouthOrigin)-body.position;toward.y=0;
@@ -142,10 +164,10 @@ namespace Bellerophon.Enemies.Parvum
                 return;
             }
             lastBiteCycle=-1;
-            if(!target && !relocationSource) Behaviour=ParvumBehaviour.Search;
+            if(!target && !relocationSource && !entry.Pending) Behaviour=ParvumBehaviour.Search;
             if(corners==null || corner>=corners.Length)
             {
-                if(!target && !relocationSource && scanIn<=.05f) PlanSearch();
+                if(!target && !relocationSource && !entry.Pending && scanIn<=.05f) PlanSearch();
                 Stop();animationView.SetMotion(ParvumMotion.Idle);return;
             }
             Vector3 delta=corners[corner]-body.position;delta.y=0;
@@ -154,10 +176,10 @@ namespace Bellerophon.Enemies.Parvum
             if(delta.magnitude<(Behaviour==ParvumBehaviour.AdvanceIntoRoom ? .001f : target ? .03f : .12f)){corner++;Stop();return;}
             var direction=delta.normalized;
             Vector3 velocity=direction*MovementSpeed*CombatStatusEffectRules.CalculateMovementMultiplier(effects);
-            if(Behaviour==ParvumBehaviour.AdvanceIntoRoom && entryCleared)
-                // Do not asymptotically stall below one metre against floor friction.
+            if(Behaviour==ParvumBehaviour.AdvanceIntoRoom && entry.Crossed)
+                // Do not asymptotically stall below the entry distance against floor friction.
                 // Final fixed-step overshoot is bounded by 0.25 m/s * fixedDeltaTime.
-                velocity=direction*Mathf.Min(velocity.magnitude,Mathf.Max(.25f,Mathf.Max(0,ParvumGameplayRules.RoomEntryAdvanceDistance-EntryAdvance)/dt));
+                velocity=direction*Mathf.Min(velocity.magnitude,Mathf.Max(.25f,Mathf.Max(0,SeedRoomEntry.AdvanceDistance-EntryAdvance)/dt));
             if(Physics.Raycast(body.position+Vector3.up*.15f,Vector3.down,out var ground,.4f,~0,QueryTriggerInteraction.Ignore))
                 velocity=Vector3.ProjectOnPlane(velocity,ground.normal).normalized*velocity.magnitude;
             // Follow a grounded incline with its tangent velocity. Preserve falling velocity in air.
@@ -181,35 +203,38 @@ namespace Bellerophon.Enemies.Parvum
         {
             var room=RoomBelow(body.position);
             if(room)occupiedRoom=room;
-            if(entryRoom && !entryRoom.IsAlive){entryRoom=null;entryCleared=false;relocationDestination=null;corners=null;}
-            if(!entryRoom && room && room.IsAlive && relocationSource && room.Room!=relocationSource.Room && Behaviour==ParvumBehaviour.RelocateRoom)
-            {
-                entryRoom=room;entryCleared=false;completedEntryAdvance=0;scanIn=0;
-                entryDirection=Vector3.ProjectOnPlane(body.linearVelocity,Vector3.up).normalized;
-                if(entryDirection.sqrMagnitude<.1f)entryDirection=Vector3.ProjectOnPlane(transform.forward,Vector3.up).normalized;
-            }
-            if(entryRoom && !entryCleared && (Behaviour==ParvumBehaviour.RelocateRoom || Behaviour==ParvumBehaviour.AdvanceIntoRoom))
-            {
-                var rear=RoomBelow(body.position-entryDirection*(BodyRadius+.02f));
-                if(room && rear && room.Room==entryRoom.Room && rear.Room==entryRoom.Room)
-                {entryCleared=true;entryStart=body.position;scanIn=0;}
-            }
+            if(entry.Observe(body.position))
+            {corners=null;scanIn=0;if(entry.Pending && !attacker && (!target || target.IsMetal))Choose(null,ParvumBehaviour.AdvanceIntoRoom);}
             if(room && !room.IsAlive && !relocationSource)relocationSource=room;
         }
         private bool TryRelocateRoom()
         {
-            if(!relocationSource)return false;
-            if(entryRoom)
+            if(entry.Pending)
             {
+                if(entry.TryComplete(body.position))
+                {
+                    if(entry.Door.Room && entry.Door.Room.IsAlive){relocationSource=null;relocationDestination=null;}
+                    corners=null;
+                }
+                else
+                {
                 Choose(null,ParvumBehaviour.AdvanceIntoRoom);
-                var room=RoomBelow(body.position);
-                if(entryCleared && EntryAdvance>=ParvumGameplayRules.RoomEntryAdvanceDistance-.0001f && room && room.Room==entryRoom.Room)
-                {completedEntryAdvance=EntryAdvance;entryRoom=null;relocationSource=null;relocationDestination=null;corners=null;return false;}
                 // Keep the goal just beyond the threshold so corner tolerance cannot finish early.
-                var goal=entryCleared ? entryStart+entryDirection*(ParvumGameplayRules.RoomEntryAdvanceDistance+.02f) : body.position+entryDirection*.5f;
-                corners=new[]{body.position,goal};corner=1;
+                var goal=entry.Goal;
+                // Probe below the actual door header, not at the current ramp's elevation.
+                foreach(var floor in Physics.RaycastAll(goal-Vector3.up*.1f,Vector3.down,10,~0,QueryTriggerInteraction.Ignore))
+                    if(floor.normal.y>.45f && floor.transform.root==entry.Door.Room.transform.root)
+                        if(goal.y==entry.Goal.y || floor.point.y>goal.y)goal.y=floor.point.y;
+                var entryFilter=new NavMeshQueryFilter{agentTypeID=navigationAgentType,areaMask=NavMesh.AllAreas};
+                if(NavMesh.SamplePosition(body.position,out var entryFrom,.35f,entryFilter) &&
+                    NavMesh.SamplePosition(goal,out var entryTo,.35f,entryFilter) &&
+                    NavMesh.CalculatePath(entryFrom.position,entryTo.position,entryFilter,path) && path.status==NavMeshPathStatus.PathComplete)
+                {corners=path.corners;corner=corners.Length>1?1:0;}
+                else corners=null;
                 return true;
+                }
             }
+            if(!relocationSource)return false;
             // A repaired source permits normal local feeding again.
             if(occupiedRoom && occupiedRoom.Room==relocationSource.Room && relocationSource.IsAlive)
             {relocationSource=null;relocationDestination=null;corners=null;return false;}
@@ -292,7 +317,10 @@ namespace Bellerophon.Enemies.Parvum
                 {
                     var next=Vector3.Lerp(route[i-1],route[i],(float)sample/samples);
                     // Query the real floor, not a bake surface sitting above a decorative deck.
-                    if(!Physics.Raycast(next+Vector3.up*.1f,Vector3.down,out var floor,1f,~0,QueryTriggerInteraction.Ignore)){trace?.Invoke($"No floor {next:F3}");return false;}
+                    // A baked corner can sit below a real connector/raised deck. Start above
+                    // the existing step allowance, then still reject excessive real floor rises.
+                    float floorProbe=ParvumGameplayRules.MaximumStepHeight+.1f;
+                    if(!Physics.Raycast(next+Vector3.up*floorProbe,Vector3.down,out var floor,1f+floorProbe,~0,QueryTriggerInteraction.Ignore)){trace?.Invoke($"No floor {next:F3}");return false;}
                     next.y=floor.point.y;
                     if(next.y-previous.y>ParvumGameplayRules.MaximumStepHeight+.02f || previous.y-next.y>.5f){trace?.Invoke($"Floor step {previous:F3} -> {next:F3} {floor.collider.name}");return false;}
                     var step=next-previous;
@@ -308,7 +336,7 @@ namespace Bellerophon.Enemies.Parvum
         {if(target!=next){target=next;corners=null;lastBiteCycle=-1;animationView.SetMotion(ParvumMotion.Idle);}Behaviour=state;}
         internal void CommitMouthContact(Vector3 mouth,Vector3 previousMouth,bool sameCycle)
         {
-            if(health<=0 || !target || !target.IsAlive || !animationView.IsBiteContactPhase || animationView.BiteCycle==lastBiteCycle)return;
+            if(health<=0 || !target || !target.IsAlive || (entry.Pending && target.IsMetal) || !animationView.IsBiteContactPhase || animationView.BiteCycle==lastBiteCycle)return;
             var point=target.ClosestPoint(mouth);
             bool touching=Vector3.Distance(mouth,point)<=.015f;
             var sweep=mouth-previousMouth;
@@ -335,6 +363,7 @@ namespace Bellerophon.Enemies.Parvum
                 float d=Vector3.Distance(body.position,candidate.ClosestPoint(body.position));
                 if(d<distance && CanApproach(candidate,out _)){nearest=candidate;distance=d;}
             }
+            if(entry.DeferMetal(nearest,body.position)){Choose(null,ParvumBehaviour.AdvanceIntoRoom);corners=null;scanIn=0;return;}
             Choose(nearest,nearest ? ParvumBehaviour.ApproachMetal : ParvumBehaviour.Search);
             if(!nearest && (corners==null || corner>=corners.Length)) PlanSearch();
         }
@@ -363,8 +392,14 @@ namespace Bellerophon.Enemies.Parvum
                 var wallPoint=candidate.ClosestPoint(probe);var away=probe-wallPoint;away.y=0;
                 if(away.sqrMagnitude<.0001f)continue;
                 if(candidate.IsMetal && Vector3.Distance(body.position,wallPoint)>ParvumGameplayRules.MetalRange)continue;
-                if(!NavMesh.SamplePosition(wallPoint+away.normalized*biteApproachDistance,out var hit,Mathf.Max(.4f,BodyHeight*.6f),filter)){trace?.Invoke($"{i}: no approach surface");continue;}
+                var approachProbe=wallPoint+away.normalized*biteApproachDistance;
+                // A moving actor can be above/below us on a ramp. Sample at its feet,
+                // not at our mouth height projected onto its vertical capsule.
+                if(!candidate.IsMetal && candidate.Kind!=ParvumTargetKind.Speaker && candidate.Surface)
+                    approachProbe.y=candidate.Surface.bounds.min.y;
+                if(!NavMesh.SamplePosition(approachProbe,out var hit,Mathf.Max(.4f,BodyHeight*.6f),filter)){trace?.Invoke($"{i}: no approach surface");continue;}
                 var mouthHeight=hit.position+Vector3.up*(BodyHeight*.5f);
+                if(candidate.IsMetal && !SeedMetalApproach.HasSurface(candidate,mouthHeight,transform))continue;
                 if(Vector3.Distance(mouthHeight,candidate.ClosestPoint(mouthHeight))>biteApproachDistance+.2f){trace?.Invoke($"{i}: out of mouth approach reach {hit.position:F3}");continue;}
                 if(!VisibleFrom(mouthHeight,candidate)){trace?.Invoke($"{i}: sight blocked {hit.position:F3}");continue;}
                 if(NavMesh.CalculatePath(start.position,hit.position,filter,path) && path.status==NavMeshPathStatus.PathComplete)
@@ -389,7 +424,7 @@ namespace Bellerophon.Enemies.Parvum
             point=default;return false;
         }
         private void PlanApproach(ParvumTarget candidate)
-        {if(CanApproach(candidate,out _)){corners=path.corners;corner=corners.Length>1?1:0;}else{corners=null;}}
+        {if(CanApproach(candidate,out _,message=>ApproachDiagnostic=message)){corners=path.corners;corner=corners.Length>1?1:0;ApproachDiagnostic="Complete";}else{corners=null;}}
         private void PlanSearch()
         {
             var filter=new NavMeshQueryFilter{agentTypeID=navigationAgentType,areaMask=NavMesh.AllAreas};
@@ -412,7 +447,13 @@ namespace Bellerophon.Enemies.Parvum
                 if(!hit.transform.IsChildOf(transform) && hit.collider!=candidate.Surface && !hit.transform.IsChildOf(candidate.transform))return false;
             return true;
         }
-        private void Stop(){body.linearVelocity=new Vector3(0,body.linearVelocity.y,0);}
+        private void Stop(){if(body && !body.isKinematic)body.linearVelocity=new Vector3(0,body.linearVelocity.y,0);}
+        private void OnDeathPlaybackCompleted()
+        {
+            if(health>0 || DeathAnimationEndedAt>=0)return;
+            DeathAnimationEndedAt=Time.time;Destroy(gameObject,1.5f);
+        }
+        private void OnDestroy(){if(animationView)animationView.DeathPlaybackCompleted-=OnDeathPlaybackCompleted;}
         private bool TryStep(Vector3 direction,out float rise)
         {
             rise=0;
@@ -420,10 +461,16 @@ namespace Bellerophon.Enemies.Parvum
             // Raised deck plates can have a gap beneath them: feet miss the rim while the
             // capsule's middle hits it. Both probes retain the same maximum landing height.
             float stepProbe=BodyRadius+.15f;
-            if(!Physics.Raycast(body.position+Vector3.up*.04f,direction,out var obstacle,stepProbe,~0,QueryTriggerInteraction.Ignore) &&
-               !Physics.Raycast(body.position+Vector3.up*.2f,direction,out obstacle,stepProbe,~0,QueryTriggerInteraction.Ignore) &&
-               !Physics.Raycast(MouthOrigin,direction,out obstacle,stepProbe,~0,QueryTriggerInteraction.Ignore))return false;
-            if(obstacle.normal.y>.6f)return false;
+            bool obstacleFound=false;
+            // A low probe can hit the ramp itself before the deck lip. It must not
+            // suppress the higher probes that can see the actual vertical step face.
+            for(int probe=0;probe<3 && !obstacleFound;probe++)
+            {
+                float height=probe==0?.04f:probe==1?.2f:BodyHeight*.5f;
+                foreach(var obstacle in Physics.RaycastAll(body.position+Vector3.up*height,direction,stepProbe,~0,QueryTriggerInteraction.Ignore))
+                    if(!obstacle.transform.IsChildOf(transform) && obstacle.normal.y<=.6f){obstacleFound=true;break;}
+            }
+            if(!obstacleFound)return false;
             if(!Physics.Raycast(body.position+direction*stepProbe+Vector3.up*(max+.04f),Vector3.down,out var landing,max+.02f,~0,QueryTriggerInteraction.Ignore))return false;
             rise=landing.point.y-body.position.y;
             if(rise<=.015f || rise>max || landing.normal.y<.5f)return false;
