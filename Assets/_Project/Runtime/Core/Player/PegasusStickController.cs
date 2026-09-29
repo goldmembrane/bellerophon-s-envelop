@@ -40,6 +40,12 @@ namespace Bellerophon.Core.Player
         public bool HasStick { get; private set; } = true;
         public int HitCount { get; private set; }
         public string LastHit { get; private set; }
+        public double LastSweepMilliseconds { get; private set; }
+        public double PeakSweepMilliseconds { get; private set; }
+        public double PeakCaptureMilliseconds { get; private set; }
+        public double PeakDamageMilliseconds { get; private set; }
+        public double PeakBakeMilliseconds { get; private set; }
+        public double PeakRefitMilliseconds { get; private set; }
         public float PhaseTime => elapsed;
         public PegasusThrownStick Projectile { get; private set; }
         const float GripSeconds = .32f;
@@ -64,10 +70,23 @@ namespace Bellerophon.Core.Player
         void QueueAim(){pendingAimInput=!pendingAimInput;}
         void OnDestroy(){ClearSurfaces();}
         void ClearSurfaces(){foreach(var surface in surfaces)surface.Dispose();surfaces=Array.Empty<StickAnimatedSurface>();}
+        void RefreshSurfaces()
+        {
+            var live=surfaces.Where(s=>s.Alive).ToList();
+            foreach(var old in surfaces)if(!old.Alive)old.Dispose();
+            var enemies=FindObjectsByType<ParvumBrain>(FindObjectsSortMode.None).Cast<MonoBehaviour>()
+                .Concat(FindObjectsByType<Bellerophon.Enemies.Fuga.FugaBrain>(FindObjectsSortMode.None))
+                .Concat(FindObjectsByType<Bellerophon.Enemies.LongaArma.LongaArmaBrain>(FindObjectsSortMode.None));
+            foreach(var enemy in enemies)if(!live.Any(s=>s.Enemy==enemy))
+            {var surface=new StickAnimatedSurface(enemy);if(surface.Alive)live.Add(surface);else surface.Dispose();}
+            surfaces=live.ToArray();
+        }
         void Start()
         {
             if(ship){reservedSlot=ship.CurrentEquipmentState.ActiveHandSlotIndex;ship.SetEquipmentState(ship.CurrentEquipmentState.WithHandSlot(reservedSlot,EquipmentSlotState.One(EquipmentItemKind.Stick)));}
             SetPhase(Phase.Carry);
+            RefreshSurfaces();
+            foreach(var surface in surfaces)surface.Capture();
         }
         public void Use()
         {
@@ -136,9 +155,8 @@ namespace Bellerophon.Core.Player
             CurrentPhase=phase;elapsed=0;animator.speed=1;
             if(phase==Phase.Strike)
             {
-                sweepReady=false;raisedForStrike=false;ContactWindow=false;ClearSurfaces();
-                surfaces=FindObjectsByType<ParvumBrain>(FindObjectsSortMode.None).Where(e=>e.Health>0).Select(e=>new StickAnimatedSurface(e))
-                    .Concat(FindObjectsByType<Bellerophon.Enemies.Fuga.FugaBrain>(FindObjectsSortMode.None).Where(e=>e.Health>0).Select(e=>new StickAnimatedSurface(e))).ToArray();
+                sweepReady=false;raisedForStrike=false;ContactWindow=false;
+                RefreshSurfaces();foreach(var surface in surfaces)surface.ResetHistory();
             }
             else ContactWindow=false;
             animator.SetLayerWeight(2,phase==Phase.Carry || phase==Phase.Empty ? 0:1);
@@ -164,8 +182,23 @@ namespace Bellerophon.Core.Player
         }
         void SweepStrike()
         {
+            long started=System.Diagnostics.Stopwatch.GetTimestamp();
+            try { SweepStrikeSurface(); }
+            finally
+            {
+                LastSweepMilliseconds=(System.Diagnostics.Stopwatch.GetTimestamp()-started)*1000.0/System.Diagnostics.Stopwatch.Frequency;
+                PeakSweepMilliseconds=Math.Max(PeakSweepMilliseconds,LastSweepMilliseconds);
+            }
+        }
+        void SweepStrikeSurface()
+        {
+            if(impacted)return;
             StickSegment(out var start,out var end,out float radius);
+            long captured=System.Diagnostics.Stopwatch.GetTimestamp();
             foreach(var surface in surfaces)surface.Capture();
+            foreach(var surface in surfaces)
+            {PeakBakeMilliseconds=Math.Max(PeakBakeMilliseconds,surface.BakeMilliseconds);PeakRefitMilliseconds=Math.Max(PeakRefitMilliseconds,surface.RefitMilliseconds);}
+            PeakCaptureMilliseconds=Math.Max(PeakCaptureMilliseconds,(System.Diagnostics.Stopwatch.GetTimestamp()-captured)*1000.0/System.Diagnostics.Stopwatch.Frequency);
             // Measure the animated tip relative to its camera-mounted rig, not camera motion.
             float height=visual.InverseTransformPoint(end).y;
             if(!sweepReady){previousBase=start;previousTip=end;previousTipHeight=lowestTipHeight=highestTipHeight=height;sweepReady=true;return;}
@@ -183,19 +216,23 @@ namespace Bellerophon.Core.Player
                 {
                     var a=Vector3.Lerp(previousBase,start,(float)i/steps);var b=Vector3.Lerp(previousTip,end,(float)i/steps);
                     Collider solid=null;StickAnimatedSurface enemy=null;Vector3 point=default;float nearest=float.PositiveInfinity;
-                    foreach(var collider in Physics.OverlapCapsule(a,b,radius,Physics.DefaultRaycastLayers,QueryTriggerInteraction.Ignore))
-                    {
-                        if(collider.transform.IsChildOf(transform) || collider.GetComponentInParent<ParvumBrain>() || collider.GetComponentInParent<Bellerophon.Enemies.Fuga.FugaBrain>())continue;
-                        // Non-convex room meshes do not support Collider.ClosestPoint. The overlap
-                        // already proves a solid shaft contact; keep that sample conservatively blocked.
-                        var contact=collider is MeshCollider mesh && !mesh.convex?a:collider.ClosestPoint((a+b)*.5f);float distance=(contact-a).sqrMagnitude;
-                        if(distance<nearest){nearest=distance;solid=collider;point=contact;}
-                    }
                     foreach(var surface in candidates)
                     {
                         if(!surface.Touches(a,b,radius,(float)i/steps,out var contact))continue;
                         float distance=(contact-a).sqrMagnitude;
-                        if(distance<nearest){nearest=distance;enemy=surface;solid=null;point=contact;}
+                        if(distance<nearest){nearest=distance;enemy=surface;point=contact;}
+                    }
+                    // World contacts do not consume the swing. Resolve them at every possible
+                    // body hit (preserving occlusion), plus the final sample for wall feedback.
+                    // Empty temporal samples need no full-scene physics query.
+                    if(enemy==null && i<steps)continue;
+                    foreach(var collider in Physics.OverlapCapsule(a,b,radius,Physics.DefaultRaycastLayers,QueryTriggerInteraction.Ignore))
+                    {
+                        if(collider.transform.IsChildOf(transform) || collider.GetComponentInParent<ParvumBrain>() || collider.GetComponentInParent<Bellerophon.Enemies.Fuga.FugaBrain>() || collider.GetComponentInParent<Bellerophon.Enemies.LongaArma.LongaArmaBrain>())continue;
+                        // Non-convex room meshes do not support Collider.ClosestPoint. The overlap
+                        // already proves a solid shaft contact; keep that sample conservatively blocked.
+                        var contact=collider is MeshCollider mesh && !mesh.convex?a:collider.ClosestPoint((a+b)*.5f);float distance=(contact-a).sqrMagnitude;
+                        if(distance<nearest){nearest=distance;solid=collider;enemy=null;point=contact;}
                     }
                     if(!solid && enemy==null)continue;
                     // Keep world occlusion: accurate body contact is not permission to hit through walls.
@@ -205,7 +242,12 @@ namespace Bellerophon.Core.Player
                     // A ceiling/wall brush blocks this sample, not the rest of the animated swing.
                     // Only a delivered body hit consumes the attack; every later sample still
                     // checks solid overlap and line of sight before it can damage anything.
-                    if(enemy!=null && !blocked){impacted=true;enemy.Damage(EquipmentRules.StickDamage,attacker);HitCount++;}
+                    if(enemy!=null && !blocked)
+                    {
+                        impacted=true;long damaged=System.Diagnostics.Stopwatch.GetTimestamp();
+                        enemy.Damage(EquipmentRules.StickDamage,attacker);HitCount++;
+                        PeakDamageMilliseconds=Math.Max(PeakDamageMilliseconds,(System.Diagnostics.Stopwatch.GetTimestamp()-damaged)*1000.0/System.Diagnostics.Stopwatch.Frequency);
+                    }
                 }
             }
             previousBase=start;previousTip=end;previousTipHeight=height;

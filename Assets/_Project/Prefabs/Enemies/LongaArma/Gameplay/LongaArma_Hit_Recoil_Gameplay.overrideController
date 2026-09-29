@@ -1,0 +1,13 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LongaArma_Hit_Recoil_Gameplay
+  m_Controller: {fileID: 9100000, guid: db49000168f6f464ab5af4b73cde9356, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 13e474d7d61ae4a4dab7c448b3d436c3, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 266686d3e3799ef4d95ff15c6338682d, type: 2}

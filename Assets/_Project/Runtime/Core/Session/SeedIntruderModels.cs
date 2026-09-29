@@ -463,7 +463,7 @@ namespace Bellerophon.Core.Session
         public const int FugaDamage = 10;
 
         public const int LongaArmaHealth = 110;
-        public const float LongaArmaMovementSpeed = 3f;
+        public const float LongaArmaMovementSpeed = 2.4f;
         public const float LongaArmaAttackRange = 4f;
         public const float LongaArmaAttackDelaySeconds = 2.5f;
         public const int LongaArmaDamage = 30;

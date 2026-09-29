@@ -40,6 +40,9 @@ namespace Bellerophon.Enemies.Parvum
         // Separate feeding ledger: Fuga consumes initial cargo durability over 50 active seconds.
         private double fugaFacilityRemainder;
         private float fugaCargoInitial=-1;
+        // Longa Arma has its own 23 s facility / 48 s cargo feeding cadence.
+        private double longaFacilityRemainder;
+        private float longaCargoInitial=-1;
         private string resolvedContractId;
         private int resolvedTransportNumber=-1;
         private CargoMaterial resolvedCargoMaterial;
@@ -70,7 +73,7 @@ namespace Bellerophon.Enemies.Parvum
             {
                 resolvedContractId=id;resolvedTransportNumber=session.CompletedTransportCount;
                 resolvedCargoMaterial=SeedIntruderRules.ResolveCargoMaterial(session);
-                cargoLedger=new ParvumCargoLedger();fugaCargoInitial=-1; // A new cargo run has its own consumption ledger.
+                cargoLedger=new ParvumCargoLedger();fugaCargoInitial=-1;longaCargoInitial=-1; // A new cargo run has its own consumption ledger.
             }
             return resolvedCargoMaterial;
         }
@@ -219,6 +222,22 @@ namespace Bellerophon.Enemies.Parvum
                 ship.SetCargoState(cargo.WithDurabilityPercent(Mathf.Max(0,cargo.DurabilityPercent-fugaCargoInitial*seconds/50f)));
             }
         }
+        public void ReceiveLongaArmaConsumption(float seconds)
+        {
+            if(!IsAlive || !IsMetal || seconds<=0)return;
+            if(IsRoomWall)
+            {
+                AccumulateConsumption(seconds);longaFacilityRemainder+=(500d/23d)*seconds;
+                int damage=(int)System.Math.Floor(longaFacilityRemainder+1e-7);
+                longaFacilityRemainder-=damage;ApplyFacilityDamage(damage);
+            }
+            else if(kind==ParvumTargetKind.MetalCargo)
+            {
+                var cargo=ship.CurrentCargoState;if(longaCargoInitial<0)longaCargoInitial=cargo.DurabilityPercent;
+                ship.SetCargoState(cargo.WithDurabilityPercent(Mathf.Max(0,cargo.DurabilityPercent-longaCargoInitial*seconds/48f)));
+            }
+        }
+        public void ReceiveLongaArmaStrike(float damage) => ReceiveFugaStrike(damage);
         public void ReceiveFugaStrike(float damage)
         {
             if(!IsAlive)return;

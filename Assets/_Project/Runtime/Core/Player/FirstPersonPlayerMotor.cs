@@ -19,6 +19,18 @@ namespace Bellerophon.Core.Player
         private float bodyHeightVelocity;
         private float cameraHeightVelocity;
         private bool bodySettingsInitialized;
+        private float authoredStepOffset;
+        private readonly RaycastHit[] overheadHits=new RaycastHit[16];
+        private readonly RaycastHit[] planarHits=new RaycastHit[32];
+        private readonly Collider[] nearbyWalls=new Collider[32];
+#if UNITY_EDITOR
+        public string MovementDiagnostic { get; private set; }
+        private string movementContacts;
+        private void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            if(movementContacts.Length<600)movementContacts+=$" {hit.collider.name}:{hit.normal:F2}";
+        }
+#endif
 
         public Transform PlayerCamera => playerCamera;
 
@@ -50,6 +62,7 @@ namespace Bellerophon.Core.Player
         private void Awake()
         {
             characterController = GetComponent<CharacterController>();
+            authoredStepOffset=characterController.stepOffset;
             if (input == null)
             {
                 input = GetComponent<FirstPersonPlayerInput>();
@@ -113,6 +126,24 @@ namespace Bellerophon.Core.Player
 
             var crouching = input.CrouchHeld;
             ApplyBodySettings(crouching, false);
+            // Do not auto-step onto a wall lip if that lift would wedge the head into its header.
+            // This preserves the standing capsule and all physical wall collisions.
+            float step=authoredStepOffset;
+            var upper=transform.TransformPoint(characterController.center)+Vector3.up*(characterController.height*.5f-characterController.radius);
+            var plannedDirection=(transform.right*input.Move.x+transform.forward*input.Move.y).normalized;
+            for(int probe=0;probe<2;probe++)
+            {
+                var origin=upper+plannedDirection*(probe*(characterController.radius+authoredStepOffset));
+                int overheadCount=Physics.SphereCastNonAlloc(origin,characterController.radius-.01f,Vector3.up,overheadHits,
+                    authoredStepOffset+characterController.skinWidth+.02f,~0,QueryTriggerInteraction.Ignore);
+                for(int i=0;i<overheadCount;i++)
+                    if(!overheadHits[i].transform.IsChildOf(transform) &&
+                        !(overheadHits[i].rigidbody && !overheadHits[i].rigidbody.isKinematic) && overheadHits[i].normal.y<-.3f)
+                        // skinWidth is collision tolerance, not extra geometric head height.
+                        // Subtracting it here incorrectly forbids the doorway's small floor lip.
+                        step=Mathf.Min(step,Mathf.Max(0,overheadHits[i].distance-.04f));
+            }
+            if(!Mathf.Approximately(characterController.stepOffset,step))characterController.stepOffset=step;
 
             if (characterController.isGrounded && verticalVelocity < 0f)
             {
@@ -135,7 +166,89 @@ namespace Bellerophon.Core.Player
             var velocity = planarMove * speed;
             velocity.y = verticalVelocity;
 
-            characterController.Move(velocity * Time.deltaTime);
+#if UNITY_EDITOR
+            movementContacts="";var before=transform.position;
+#endif
+            var planarStep=SafePlanarStep(new Vector3(velocity.x,0,velocity.z)*Time.deltaTime);
+            characterController.Move(planarStep+Vector3.up*velocity.y*Time.deltaTime);
+#if UNITY_EDITOR
+            MovementDiagnostic=$"input={moveInput} desired={velocity:F3} moved={transform.position-before:F4} step={characterController.stepOffset:F3} height={characterController.height:F3} flags={characterController.collisionFlags} contacts={movementContacts}";
+#endif
+        }
+
+        private Vector3 SafePlanarStep(Vector3 displacement)
+        {
+            // Extra seam protection is only needed under a low header; preserve ordinary
+            // controller sliding and step clearance throughout the rest of the ship.
+            if(characterController.stepOffset>=authoredStepOffset-.001f)return displacement;
+            // Reserve the controller's skin before entering a concave wall seam. Once embedded,
+            // PhysX can reject even an outward move; preventing entry still permits tangent sliding.
+            var center=transform.TransformPoint(characterController.center);
+            float radius=characterController.radius;
+            float queryRadius=radius+characterController.skinWidth+.01f;
+            // Concave liners can present reversed triangle winding. Query both sides of local
+            // wall faces before the capsule sweep, keeping skin outside rather than recovering it.
+            float reach=queryRadius+displacement.magnitude+.08f;
+            int wallCount=Physics.OverlapSphereNonAlloc(center,reach,nearbyWalls,~0,QueryTriggerInteraction.Ignore);
+            for(int i=0;i<wallCount;i++)
+            {
+                var wall=nearbyWalls[i];if(wall.transform.IsChildOf(transform) || wall.attachedRigidbody && !wall.attachedRigidbody.isKinematic)continue;
+                for(int ray=0;ray<8;ray++)
+                {
+                    var direction=Quaternion.AngleAxis(ray*45,Vector3.up)*Vector3.forward;
+                    if(!wall.Raycast(new Ray(center,direction),out var face,reach) &&
+                        !wall.Raycast(new Ray(center+direction*reach,-direction),out face,reach))continue;
+                    if(Mathf.Abs(face.normal.y)>.6f)continue;
+                    var normal=Vector3.ProjectOnPlane(face.normal,Vector3.up).normalized;
+                    if(Vector3.Dot(normal,center-face.point)<0)normal=-normal;
+                    float clearance=Mathf.Max(0,Vector3.Dot(center-face.point,normal)-queryRadius-.01f);
+                    float into=Vector3.Dot(displacement,normal);
+                    if(into < -clearance)
+                    {
+#if UNITY_EDITOR
+                        if(movementContacts.Length<600)movementContacts+=$" Guard:{wall.name}:{normal:F2}/{clearance:F3}";
+#endif
+                        displacement+=normal*(-clearance-into);
+                    }
+                }
+            }
+            // This is a lateral query only: leave the existing controller responsible for feet/head.
+            // Its extra radial skin must not extend the query through the supporting floor.
+            var half=Vector3.up*Mathf.Max(0,characterController.height*.5f-queryRadius-.12f);
+            var result=Vector3.zero;var remaining=displacement;
+            for(int pass=0;pass<3 && remaining.sqrMagnitude>.0000001f;pass++)
+            {
+                float length=remaining.magnitude;var direction=remaining/length;
+                int count=Physics.CapsuleCastNonAlloc(center-half+result,center+half+result,
+                    queryRadius,direction,planarHits,length+.01f,~0,QueryTriggerInteraction.Ignore);
+                float distance=length;var normal=Vector3.zero;
+                for(int i=0;i<count;i++)
+                {
+                    var hit=planarHits[i];
+                    // Moving bodies retain normal CharacterController collision; they are not wall seams.
+                    if(hit.transform.IsChildOf(transform) || hit.rigidbody && !hit.rigidbody.isKinematic)continue;
+                    // An inflated query overlaps its supporting deck. Unity reports -direction
+                    // for that zero-distance overlap; it is not a real horizontal wall normal.
+                    if(hit.distance<=.0001f && hit.collider.Raycast(new Ray(center,Vector3.down),out var deck,characterController.height) &&
+                        deck.normal.y>.6f && deck.point.y<transform.position.y+.25f)continue;
+                    if(hit.distance<=.0001f)
+                    {
+                        // Initial-overlap sweep normals are synthetic (-travel direction).
+                        // Require a real surface ahead; never block an outward escape on that normal.
+                        if(!hit.collider.Raycast(new Ray(center,direction),out var ahead,length+queryRadius+.02f))continue;
+                        hit.normal=ahead.normal;hit.distance=Mathf.Max(0,ahead.distance-queryRadius);
+                    }
+                    if(Mathf.Abs(hit.normal.y)>.6f || Vector3.Dot(direction,hit.normal)>=-.001f || hit.distance>distance)continue;
+#if UNITY_EDITOR
+                    if(movementContacts.Length<600)movementContacts+=$" Sweep:{hit.collider.name}:{hit.distance:F3}/{hit.normal:F2}";
+#endif
+                    distance=hit.distance;normal=Vector3.ProjectOnPlane(hit.normal,Vector3.up).normalized;
+                }
+                if(normal==Vector3.zero){result+=remaining;break;}
+                var advance=direction*Mathf.Max(0,distance-.01f);result+=advance;
+                remaining=Vector3.ProjectOnPlane(remaining-advance,normal);
+            }
+            return result;
         }
 
         private bool ShouldUseEditorPlaytestFreeMovement()
@@ -272,9 +385,10 @@ namespace Bellerophon.Core.Player
                 currentCameraHeight = SnapWhenClose(currentCameraHeight, targetCameraHeight, 0.001f);
             }
 
-            characterController.height = currentBodyHeight;
-            characterController.radius = settings.CharacterRadius;
-            characterController.center = new Vector3(0f, currentBodyHeight * 0.5f, 0f);
+            if(!Mathf.Approximately(characterController.height,currentBodyHeight))characterController.height = currentBodyHeight;
+            if(!Mathf.Approximately(characterController.radius,settings.CharacterRadius))characterController.radius = settings.CharacterRadius;
+            var center=new Vector3(0f, currentBodyHeight * 0.5f, 0f);
+            if(characterController.center!=center)characterController.center = center;
 
             if (playerCamera != null)
             {

@@ -9,6 +9,9 @@ namespace Bellerophon.Core.Player
         [SerializeField] private int currentHealth;
         [SerializeField] private int currentShield;
 
+        // Raised only after a real health/shield loss, never for reset or validation setters.
+        public event System.Action DamageTaken;
+
         // Runtime-only source status effects; pure rules live in PlayerCombatRules.
         private CombatStatusEffectState[] activeStatusEffects = new CombatStatusEffectState[0];
         private ScheduledStatusEffect[] scheduledStatusEffects = new ScheduledStatusEffect[0];
@@ -186,10 +189,13 @@ namespace Bellerophon.Core.Player
 
         private void ApplyCombatState(PlayerCombatState state)
         {
+            bool tookDamage = currentHealth > 0 &&
+                (state.CurrentHealth < currentHealth || state.CurrentShield < currentShield);
             currentHealth = Mathf.Clamp(state.CurrentHealth, 0, MaxHealth);
             currentShield = Mathf.Clamp(state.CurrentShield, 0, MaxShield);
             activeStatusEffects = state.StatusEffects;
             postureState = state.PostureState;
+            if (tookDamage) DamageTaken?.Invoke();
         }
 
         private void TickScheduledStatusEffects(float deltaSeconds)

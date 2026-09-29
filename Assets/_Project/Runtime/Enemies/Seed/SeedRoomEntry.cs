@@ -41,6 +41,12 @@ namespace Bellerophon.Enemies.Seed
                     foreach(var door in ParvumRoomEntrance.Read(group.Key))
                         doors.Add(new SeedRoomDoor(group.First(),door.Point,door.Inward,door.Name));
             bool changed=false;
+            // A deferred food route can cross just outside the generic 1.6 m entrance
+            // probe while still entering the real room. Once it is 2 m beyond the
+            // tracked doorway, do not leave the creature indefinitely pending.
+            if(Pending && !Crossed && Depth(position)>=AdvanceDistance &&
+                Mathf.Abs(Vector3.Dot(position-Door.Point,Vector3.Cross(Vector3.up,Door.Inward)))<2.5f)
+            {Crossed=true;Diagnostic+=$"; entered tracked doorway at {Time.time:F3}";changed=true;}
             if(Pending && Crossed && Depth(position)<-.1f){Pending=false;Crossed=false;changed=true;}
             foreach(var door in doors)
             {

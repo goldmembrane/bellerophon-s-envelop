@@ -32,6 +32,8 @@ namespace Bellerophon.Core.Player
             if(!damagePending)return;
             var enemy=collision.collider.GetComponentInParent<ParvumBrain>();
             var fuga=collision.collider.GetComponentInParent<Bellerophon.Enemies.Fuga.FugaBrain>();
+            var longa=collision.collider.GetComponentInParent<Bellerophon.Enemies.LongaArma.LongaArmaBrain>();
+            if(longa && longa.Health>0){damagePending=false;HitCount++;HitTarget=longa.name;HitTime=Time.time;longa.ReceiveDamage(EquipmentRules.StickDamage,attacker);return;}
             if(fuga && fuga.Health>0){damagePending=false;HitCount++;HitTarget=fuga.name;HitTime=Time.time;fuga.ReceiveDamage(EquipmentRules.StickDamage,attacker);return;}
             if(!enemy || enemy.Health<=0)return;
             damagePending=false;HitCount++;HitTarget=enemy.name;HitTime=Time.time;

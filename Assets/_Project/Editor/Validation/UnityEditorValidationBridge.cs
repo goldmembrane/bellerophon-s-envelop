@@ -646,6 +646,123 @@ namespace Bellerophon.Editor.Validation
                 case "ReviewPegasusFuga":
                     RunSynchronous(request, PegasusFugaTools.Review, "Fuga operation; direct review required.");
                     break;
+                case "InspectPegasusLongaArma":
+                    RunSynchronous(request, PegasusLongaArmaTools.Inspect, "Existing Longa Arma source inspected; no scene changes.");
+                    break;
+                case "ApplyPegasusPlayerHitFlash":
+                    RunSynchronous(request, PegasusPlayerHitFlashTools.Apply, "Approved hit flash applied to Pegasus player.");
+                    break;
+                case "InspectPegasusSeedPlacement":
+                    RunSynchronous(request, PegasusSeedPlacementTools.Inspect, "Existing seed placement inspected.");
+                    break;
+                case "HidePegasusParvumFuga":
+                    RunSynchronous(request, PegasusSeedPlacementTools.HideParvumFuga, "Parvum/Fuga disabled without deletion.");
+                    break;
+                case "ObservePegasusLongaAttackContact":
+                    RunSynchronous(request, PegasusLongaArmaTools.ObserveAttackContact, "Actual attack contact observation started.");
+                    break;
+                case "ObserveLongaJitter":
+                    RunSynchronous(request, PegasusLongaArmaTools.ObserveJitter, "Continuous unforced movement observation started.");break;
+                case "EnableLongaMovementReviewSurvival":
+                    RunSynchronous(request, PegasusLongaArmaTools.EnableMovementReviewSurvival, "Temporary editor-only player death suppression enabled.");break;
+                case "DisableLongaMovementReviewSurvival":
+                    RunSynchronous(request, PegasusLongaArmaTools.DisableMovementReviewSurvival, "Temporary player death suppression removed.");break;
+                case "ReviewLongaEnginePin":
+                    RunSynchronous(request, PegasusLongaArmaTools.ReviewEnginePin, "Actual-input wall pin review started.");break;
+                case "ReviewLongaEnginePinWest":
+                    RunSynchronous(request, PegasusLongaArmaTools.ReviewEnginePinWest, "Actual-input west wall pin review started.");break;
+                case "ReviewLongaEngineInterior":
+                    RunSynchronous(request, PegasusLongaArmaTools.ReviewEngineInterior, "Actual-input engine interior review started.");break;
+                case "InspectLongaEngineInterior":
+                    RunSynchronous(request, PegasusLongaArmaTools.InspectEngineInterior, "Engine geometry inspected without modifications.");break;
+                case "ReviewLongaEngineViaCockpit":
+                    RunSynchronous(request, PegasusLongaArmaTools.ReviewEngineViaCockpit, "Actual-input engine approach via cockpit started.");break;
+                case "ReviewLongaEngineViaControl":
+                    RunSynchronous(request, PegasusLongaArmaTools.ReviewEngineViaControl, "Actual-input engine approach via control room started.");break;
+                case "ReviewLongaCockpitCorridor":
+                    RunSynchronous(request, PegasusLongaArmaTools.ReviewCockpitCorridor, "Actual-input cockpit corridor review started.");break;
+                case "ReviewLongaEngineCorridor":
+                    RunSynchronous(request, PegasusLongaArmaTools.ReviewEngineCorridor, "Actual-input engine corridor review started.");break;
+                case "ReviewLongaControlCorridor":
+                    RunSynchronous(request, PegasusLongaArmaTools.ReviewControlCorridor, "Actual-input control corridor review started.");break;
+                case "ReviewLongaArmoryCorridor":
+                    RunSynchronous(request, PegasusLongaArmaTools.ReviewArmoryCorridor, "Actual-input armory corridor review started.");break;
+                case "ReviewLongaSupplyCorridor":
+                    RunSynchronous(request, PegasusLongaArmaTools.ReviewSupplyCorridor, "Actual-input supply corridor review started.");break;
+                case "ReviewLongaWarehouseCorridor":
+                    RunSynchronous(request, PegasusLongaArmaTools.ReviewWarehouseCorridor, "Actual-input warehouse return review started.");break;
+                case "ApplyPegasusSeedPlacement":
+                    RunSynchronous(request, PegasusSeedPlacementTools.Apply, "Existing Parvum/Fuga activated and placed.");
+                    break;
+                case "ObservePegasusSeedPlacement":
+                    RunSynchronous(request, PegasusSeedPlacementTools.Observe, "Seed placement directly rendered.");
+                    break;
+                case "CapturePegasusSeedPlacementFinal":
+                    RunSynchronous(request, PegasusSeedPlacementTools.Final, "Final seed placement capture.");
+                    break;
+                case "ReviewPegasusSeedPlacementConsole":
+                    RunSynchronous(request, PegasusSeedPlacementTools.ReviewConsole, "Placement console inspected.");
+                    break;
+                case "SavePegasusSeedPlacement":
+                    RunSynchronous(request, PegasusSeedPlacementTools.SavePlacement, "Placement saved after temporary observation cameras were removed.");
+                    break;
+                case "ObservePegasusPlayerHitFlash":
+                    RunSynchronous(request, PegasusPlayerHitFlashTools.Observe, "Player hit flash observation started.");
+                    break;
+                case "ReviewPegasusPlayerHitFlash":
+                    RunSynchronous(request, PegasusPlayerHitFlashTools.Review, "Player hit flash reviewed.");
+                    break;
+                case "CapturePegasusPlayerHitFlashFinal":
+                    RunSynchronous(request, PegasusPlayerHitFlashTools.CaptureFinal, "Final Game view capture requested.");
+                    break;
+                case "InspectPegasusLongaArmaClips":
+                    RunSynchronous(request, PegasusLongaArmaTools.InspectImportedClips, "Existing Longa Arma imported animation clips inspected.");
+                    break;
+                case "FixPegasusLongaArmaAnimations":
+                    RunSynchronous(request, PegasusLongaArmaTools.FixGameplayAnimations, "Gameplay Longa Arma clips rebound to original detailed-rig actions.");
+                    break;
+                case "ApplyPegasusLongaArma":
+                    RunSynchronous(request, PegasusLongaArmaTools.Apply, "Longa Arma placed; direct review required.");
+                    break;
+                case "AlignPegasusLongaArma":
+                    RunSynchronous(request, PegasusLongaArmaTools.AlignExisting, "Longa Arma presentation aligned; direct review required.");
+                    break;
+                case "EnlargePegasusLongaArma":
+                    RunSynchronous(request, PegasusLongaArmaTools.EnlargeExisting, "Longa enlarged; direct review required.");
+                    break;
+                case "InspectPegasusLongaGroundDeath":
+                    RunSynchronous(request, PegasusLongaArmaTools.InspectGroundAndDeath, "Ground and death source inspected.");
+                    break;
+                case "PlayPegasusLongaArma":
+                    RunSynchronous(request, PegasusLongaArmaTools.Play, "Pegasus Play mode requested for direct review.");
+                    break;
+                case "ProvokePegasusLongaArmaReview":
+                    RunSynchronous(request, PegasusLongaArmaTools.ProvokeForReview, "Actual player keyboard/mouse stick review started; no direct damage injected.");
+                    break;
+                case "ProvokePegasusLongaArmaRetreat":
+                    RunSynchronous(request, PegasusLongaArmaTools.ProvokeRetreat, "Actual player retreat input started.");
+                    break;
+                case "ProvokePegasusLongaArmaDeath":
+                    RunSynchronous(request, PegasusLongaArmaTools.ProvokeDeath, "Actual player strikes for death review started.");
+                    break;
+                case "DefeatPegasusLongaArmaReview":
+                    RunSynchronous(request, PegasusLongaArmaTools.DefeatForReview, "Longa Arma death event applied for animation review.");
+                    break;
+                case "ReviewPegasusLongaArmaDeathPresence":
+                    RunSynchronous(request, PegasusLongaArmaTools.ReviewDeathPresence, "Longa Arma death/removal presence reviewed.");
+                    break;
+                case "StopPegasusLongaArma":
+                    RunSynchronous(request, PegasusLongaArmaTools.Stop, "Pegasus Play mode stop requested.");
+                    break;
+                case "ReviewPegasusLongaArma":
+                    RunSynchronous(request, PegasusLongaArmaTools.Review, "Longa Arma live state inspected; visual review remains authoritative.");
+                    break;
+                case "ViewPegasusLongaArmaLive":
+                    RunSynchronous(request, PegasusLongaArmaTools.ViewLive, "Live Longa Arma frame rendered for direct observation.");
+                    break;
+                case "CapturePegasusLongaArmaFinal":
+                    RunSynchronous(request, PegasusLongaArmaTools.CaptureFinal, "Longa Arma final image captured for direct visual review.");
+                    break;
                 case "ObservePegasusEntranceDoors":
                     RunSynchronous(request, PegasusEntranceDoorTools.Observe, "Door views captured for direct inspection, not acceptance.");
                     break;

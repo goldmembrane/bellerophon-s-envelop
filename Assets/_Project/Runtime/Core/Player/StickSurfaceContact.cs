@@ -6,13 +6,16 @@ namespace Bellerophon.Core.Player
     internal static class StickSurfaceContact
     {
         public static bool Touches(Vector3 start,Vector3 end,float radius,Vector3[] vertices,int[] triangles,out Vector3 point)
+            => Touches(start,end,radius,vertices,triangles,triangles.Length,out point);
+
+        public static bool Touches(Vector3 start,Vector3 end,float radius,Vector3[] vertices,int[] triangles,int count,out Vector3 point)
         {
             float squared=radius*radius;
-            for(int i=0;i<triangles.Length;i+=3)
+            var segmentBounds=new Bounds(start,Vector3.zero);segmentBounds.Encapsulate(end);
+            for(int i=0;i<count;i+=3)
             {
                 var a=vertices[triangles[i]];var b=vertices[triangles[i+1]];var c=vertices[triangles[i+2]];
                 var bounds=new Bounds(a,Vector3.zero);bounds.Encapsulate(b);bounds.Encapsulate(c);bounds.Expand(radius*2);
-                var segmentBounds=new Bounds(start,Vector3.zero);segmentBounds.Encapsulate(end);
                 if(!bounds.Intersects(segmentBounds))continue;
                 var normal=Vector3.Cross(b-a,c-a);float denominator=Vector3.Dot(normal,end-start);
                 if(Mathf.Abs(denominator)>1e-10f)
